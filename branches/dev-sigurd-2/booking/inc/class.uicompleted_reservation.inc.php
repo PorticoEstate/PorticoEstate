@@ -27,7 +27,7 @@ phpgw::import_class('booking.sopermission');
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation');
 			$this->customer_id = CreateObject('booking.customer_identifier');
-			self::set_active_menu('booking::completed_reservations');
+			self::set_active_menu('booking::invoice_exports::completed_reservations');
 			$this->url_prefix = 'booking.uicompleted_reservation';
 			$this->restore_export_filters();
 		}

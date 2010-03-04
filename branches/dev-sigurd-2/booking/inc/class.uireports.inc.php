@@ -8,6 +8,7 @@ class booking_uireports extends booking_uicommon
 	public $public_functions = array(
 			'index'                 =>      true,
 			'participants'          =>      true,
+			'freetime'              =>      true,
 		);
 
 	public function __construct()
@@ -20,37 +21,37 @@ class booking_uireports extends booking_uicommon
 
 	public function index()
 	{
-
 		$reports[] = array('name' => lang('Participants Per Age Group Per Month'), 'url' => self::link(array('menuaction' => 'booking.uireports.participants')));
+		$reports[] = array('name' => lang('Free time'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime')));
 
 		self::render_template('report_index',
 		array('reports' => $reports));
-
 	}
 
 	public function participants()
 	{
+		self::set_active_menu('booking::reportcenter::participants');
 		$errors = array();
 		$buildings = $this->building_bo->read();
 		$to = '2009-01-01';
 		$from = '2009-01-01';
 
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 
-			$to = phpgw::get_var('to', 'POST'); 
+			$to = phpgw::get_var('to', 'POST');
 			$from = phpgw::get_var('from', 'POST');
 
 			$output_type = phpgw::get_var('otype', 'POST');
 			$building_list = phpgw::get_var('building', 'POST');
 
-			if (!count($building_list)) 
+			if (!count($building_list))
 			{
 				$errors[] = lang('No buildings selected');
 			}
 
-			if (!count($errors)) 
-			{ 
+			if (!count($errors))
+			{
 				$jasper_parameters = sprintf("\"BK_DATE_FROM|%s;BK_DATE_TO|%s;BK_BUILDINGS|%s\"",
 					$from,
 					$to,
@@ -70,15 +71,102 @@ class booking_uireports extends booking_uicommon
 					$errors[] = $e->getMessage();
 				}
 			}
-		} 
-		else 
+		}
+		else
 		{
 			$to = date("Y-m-d", time());
 			$from = date("Y-m-d", time());
 		}
 
 		$this->flash_form_errors($errors);
-		self::render_template('report_participants', 
+		self::render_template('report_participants',
 		array('from' => $from, 'to' => $to, 'buildings' => $buildings['results']));
+	}
+
+	public function freetime()
+	{
+		self::set_active_menu('booking::reportcenter::free_time');
+		$errors = array();
+		$buildings = $this->building_bo->read();
+
+		$show = '';
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			$show = 'report';
+			$allocations = $this->get_free_allocations(
+					phpgw::get_var('building', 'POST'),
+					phpgw::get_var('from', 'POST'),
+					phpgw::get_var('to', 'POST'),
+					phpgw::get_var('weekdays', 'POST')
+					);
+			
+			foreach($allocations['results'] as &$allocation)
+			{
+				$temp = array();
+				$temp[] = array('from_', $allocation['from_']);
+				$temp[] = array('to_', $allocation['to_']);
+				$temp[] = array('building_id', $allocation['building_id']);
+				$temp[] = array('building_name', $allocation['building_name']);
+				$temp[] = array('resources[]', array(11));
+				$temp[] = array('reminder', 0);
+				$allocation['event_params'] = json_encode($temp);
+			}
+			if (count($allocations['results']) == 0)
+			{
+				$show = 'gui';
+				$errors[] = lang('no records found.');
+				$to = phpgw::get_var('to', 'POST');
+				$from = phpgw::get_var('from', 'POST');
+			}
+		}
+		else
+		{
+			$to = date("Y-m-d", time());
+			$from = date("Y-m-d", time());
+			$show = 'gui';
+		}
+
+		$this->flash_form_errors($errors);
+
+		self::render_template('report_freetime',
+				array('show' => $show, 'from' => $from, 'to' => $to, 'buildings' => $buildings['results'], 'allocations' => $allocations['results']));
+	}
+
+	private function get_free_allocations($buildings, $from, $to, $weekdays)
+	{
+		$db = & $GLOBALS['phpgw']->db;
+
+		$buildings = implode(",", $buildings);
+		$weekdays = implode(",", $weekdays);
+
+		$sql = "select distinct al.id, al.from_, al.to_, EXTRACT(DOW FROM al.to_) as day_of_week, bu.id as building_id, bu.name as building_name, br.id as resource_id, br.name as resource_name
+				from bb_allocation al
+				inner join bb_allocation_resource ar on ar.allocation_id = al.id
+				inner join bb_resource br on br.id = ar.resource_id
+				inner join bb_building bu on bu.id = br.building_id
+				left join bb_booking bb on bb.allocation_id = al.id
+				where bb.id is null 
+				and al.from_ >= '".$from." 00:00:00'
+				and al.to_ <= '".$to." 23:59:59' ";
+		
+		if ($buildings)
+			$sql .= "and building_id in (".$buildings.") ";
+
+		if ($weekdays)
+			$sql .= "and EXTRACT(DOW FROM al.from_) in (".$weekdays.") ";
+		
+		$sql .= "order by building_name, from_, to_, resource_name";
+		$db->query($sql);
+
+		$result = $db->resultSet;
+
+		$retval = array();
+		$retval['total_records'] = count($result);
+		$retval['results'] = $result;
+		$retval['start'] = 0;
+		$retval['sort'] = null;
+		$retval['dir'] = 'asc';
+
+		return $retval;
 	}
 }

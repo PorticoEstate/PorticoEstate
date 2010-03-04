@@ -177,12 +177,18 @@
                     'image' => array('property', 'location'),
                     'children' => array
                     (   
-                        'reports' => array
-                        (   
+                        'participants' => array
+                        (
                             'text'  => lang('Participants'),
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.participants') ),
 							'image' => array('property', 'location'),
-                        )       
+                        ),
+                        'free_time' => array
+                        (
+                            'text'  => lang('Free time'),
+                            'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
+							'image' => array('property', 'location'),
+                        )
                     )       
                 ),      
 			);
