@@ -39,8 +39,8 @@
         public $public_functions = array
             (
             'index'     	=> true,
-            'add_ticket'	=> true,
-            'view'	=> true,
+            'add_ticket'    => true,
+            'view'          => true,
         );
 
         public function __construct()
@@ -385,6 +385,9 @@
         public function add_ticket()
         {
             $bo	= CreateObject('property.botts',true);
+            $boloc	= CreateObject('property.bolocation',true);
+
+            $location_details = $boloc->read_single('1101-01', array('noattrib' => true));
 
             $values         = phpgw::get_var('values');
             $missingfields  = false;
@@ -402,13 +405,32 @@
 
                 if(!$missingfields)
                 {
+                    $loc_code = explode('-', $this->location_code);
+                    /* TODO: Clear away those not in use, add support for location description */
+                    $ticket = array(
+                        'origin'    => null,
+                        'origin_id' => null,
+                        'cat_id'    => 11, // Melding om skade
+                        'group_id'  => null,
+                        'assignedto'=> null, // TODO: Få inn byggansv. her?
+                        'priority'  => 3, // TODO: Retningslinje for default priority?
+                        'status'    => 'O', // O for Open
+                        'subject'   => $values['title'],
+                        'details'   => $values['description'],
+                        'apply'     => 'Lagre',
+                        'contact_id'=> 0,
+                        'location'  => array(
+                            // TODO: Get these from building select box
+                            'loc1'  => $location_details['loc1'],
+                            'loc2'  => $location_details['loc2']
+                        ),
+                        'street_name'   => $location_details['street_name'],
+                        'street_number' => $location_details['street_number'],
+                        'location_name' => $location_details['loc1_name'],
+                        'locationdesc'  => $values['locationdesc']
+                    );
 
-
-                    $ticket = new frontend_ticket();
-                    $ticket->set_date(time());
-                    $ticket->set_title($values('title'));
-                    $ticket->set_location_description($values('locationdesc'));
-                    $ticket->set_messages(array($values('title')));
+                    $bo->add($ticket);
                 }
                 else
                 {
@@ -417,11 +439,11 @@
             }
 
             $data = array(
-                'msgbox_data'       => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-                'from_name'         => $GLOBALS['phpgw_info']['user']['fullname'],
-                'from_address'      => $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
-                'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket')),
-                'support_address'	=> $GLOBALS['phpgw_info']['server']['support_address'],
+                'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+                'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket')),
+                'title'         => $values['title'],
+                'locationdesc'  => $values['locationdesc'],
+                'description'   => $values['description']
             );
 
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk'));
