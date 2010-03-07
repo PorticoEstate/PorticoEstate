@@ -62,7 +62,8 @@
 			$var['debug_url'] = "javascript:openwindow('"
 			 . $GLOBALS['phpgw']->link('/index.php', array
 			 (
-			 	'menuaction'=> 'property.uidebug_json.index'
+			 	'menuaction'=> 'property.uidebug_json.index',
+			 	'app'		=> $GLOBALS['phpgw_info']['flags']['currentapp']
 			 )) . "','','')";
 
 			$var['debug_text'] = lang('debug');
