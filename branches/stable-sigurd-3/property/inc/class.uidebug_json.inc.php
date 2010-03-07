@@ -56,13 +56,15 @@
 				echo lang('no access');
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
+			
+			$app = phpgw::get_var('app', 'string', 'GET');
 
 			//get session's values
-			$data = phpgwapi_cache::session_get($GLOBALS['phpgw_info']['flags']['currentapp'],"id_debug");
+			$data = phpgwapi_cache::session_get($app,'id_debug');
 			if(isset($data))
 			{
 				//clear session
-				phpgwapi_cache::session_clear($GLOBALS['phpgw_info']['flags']['currentapp'], "id_debug");
+				phpgwapi_cache::session_clear($app, 'id_debug');
 				//replace '<' and '>'
 				if (is_array($data))
 				{

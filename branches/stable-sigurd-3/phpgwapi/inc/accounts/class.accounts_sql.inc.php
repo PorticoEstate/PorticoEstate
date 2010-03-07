@@ -6,7 +6,7 @@
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	* @package phpgroupware
 	* @subpackage phpgwapi
@@ -609,10 +609,11 @@
 		* Get a list of members of the group
 		*
 		* @param integer $group_id the group to check
+		* @param bool $active only return active members
 		*
 		* @return array list of members
 		*/
-		public function member($group_id = 0)
+		public function member($group_id = 0, $active = false)
 		{
 			$group_id = get_account_id($group_id);
 
@@ -623,9 +624,18 @@
 
 			$this->members[$group_id] = array();
 
-			$sql = 'SELECT account_id'
-				. ' FROM phpgw_group_map'
-				. " WHERE group_id = {$group_id}";
+			$Where = 'WHERE';
+			$sql = 'SELECT phpgw_group_map.account_id'
+				. ' FROM phpgw_group_map';
+
+			if($active)
+			{
+				$sql .= " {$this->join} phpgw_accounts ON phpgw_group_map.account_id = phpgw_accounts.account_id"
+				. " WHERE account_status = 'A'";
+				$Where = 'AND';
+			}
+
+			$sql .= " {$Where} group_id = {$group_id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -640,7 +650,7 @@
 
 			foreach ( $this->members[$group_id] as $id => &$acct )
 			{
-				$acct['account_name'] = (string) $this->get($id);
+				$acct['account_name'] = $this->get($id)->__toString();
 			}
 			return $this->members[$group_id];
 		}

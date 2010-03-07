@@ -221,6 +221,13 @@ dl.proplist-col dd.address {
 #agegroup td, #agegroup th { padding: .1em .3em;}
 #agegroup td input { width: 3em; }
 
+table#report {
+    background: #eee;
+    white-space: nowrap;
+	border: 1px solid #7F7F7F;
+}
+
+table#report td, table#report th { padding: .2em .5em;}
 
 div.allocation-list
 {

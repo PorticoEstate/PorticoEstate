@@ -619,7 +619,7 @@
 
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-				'tabs'							=> $id ? phpgwapi_yui::tabview_generate($tabs, 'general') : '',
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 			);
 
 			$schedule = array();

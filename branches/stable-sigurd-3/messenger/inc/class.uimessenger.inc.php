@@ -18,16 +18,17 @@
 		var $template;
 		var $public_functions = array
 		(
-			'inbox'          => true,
-			'compose'        => true,
-			'compose_global' => true,
-			'read_message'   => true,
-			'reply'          => true,
-			'forward'        => true,
-			'delete'         => true
+			'inbox'				=> true,
+			'compose'			=> true,
+			'compose_groups'	=> true,
+			'compose_global'	=> true,
+			'read_message'		=> true,
+			'reply'				=> true,
+			'forward'			=> true,
+			'delete'			=> true
 		);
 
-		function uimessenger()
+		function __construct()
 		{
 			$this->template   = $GLOBALS['phpgw']->template;
 			$this->bo         = CreateObject('messenger.bomessenger');
@@ -40,6 +41,13 @@
 
 		function compose($errors = '')
 		{
+			if (!$GLOBALS['phpgw']->acl->check('.compose', PHPGW_ACL_ADD, 'messenger'))
+			{
+				$this->_no_access('compose');
+			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'messenger::compose';
+
 			$message = isset($_POST['message']) ? $_POST['message'] : array('subject' => '', 'content' => '');
 
 			$this->_display_headers();
@@ -77,15 +85,105 @@
 			$this->template->pfp('out','form');
 		}
 
+		function compose_groups()
+		{
+			if (!$GLOBALS['phpgw']->acl->check('.compose_groups', PHPGW_ACL_ADD, 'messenger'))
+			{
+				$this->_no_access('compose_groups');
+			}
+
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'messenger::compose_groups';
+
+			$values = phpgw::get_var('values');
+			$values['account_groups'] = (array) phpgw::get_var('account_groups', 'int', 'POST');
+			$receipt = array();
+
+			if (isset($values['save']))
+			{
+				if(!$values['account_groups'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Missing groups'));
+				}
+
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					$receipt['error'][]=array('msg'=>lang('repost'));
+				}
+
+				if(!isset($values['subject']) || !$values['subject'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Missing subject'));
+				}
+
+				if(!isset($values['content']) || !$values['content'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Missing content'));
+				}
+
+				if(isset($values['save']) && $values['account_groups'] && !$receipt['error'])
+				{
+					$receipt = $this->bo->send_to_groups($values);
+				}
+			}
+			$group_list = array();
+
+			$all_groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_groups = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$valid_groups	= array_merge($valid_groups,$GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
+					}
+				}
+
+				$valid_groups = array_unique($valid_groups);
+			}
+			else
+			{
+				$valid_groups = array_keys($all_groups);
+			}
+
+			foreach ( $all_groups as $group )
+			{
+				$group_list[$group->id] = array
+				(
+					'account_id'	=> $group->id,
+					'account_lid'	=> $group->__toString(),
+					'i_am_admin'	=> in_array($group->id, $valid_groups),
+					'selected'		=> in_array($group->id, $values['account_groups'])
+				);
+			}
+
+			$data = array
+			(
+				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'messenger.uimessenger.compose_groups')),
+				'group_list'	=> $group_list,
+				'value_subject'	=> isset($values['subject']) ? $values['subject'] : '',
+				'value_content'	=> isset($values['content']) ? $values['content'] : ''
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('messenger'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('compose_groups' => $data));
+
+		}
+
 		function compose_global($errors = '')
 		{
-			global $message;
-
-			if (! $GLOBALS['phpgw']->acl->check('run',1,'admin'))
+			if (!$GLOBALS['phpgw']->acl->check('.compose_global', PHPGW_ACL_ADD, 'messenger'))
 			{
-				$this->inbox();
-				return false;
+				$this->_no_access('compose_global');
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'messenger::compose_global';
+
+			global $message;
 
 			$this->_display_headers();
 			$this->_set_compose_read_blocks();
@@ -374,5 +472,25 @@
 			$this->template->set_block('_form','form_buttons');
 			$this->template->set_block('_form','form_read_buttons');
 			$this->template->set_block('_form','form_read_buttons_for_global');
+		}
+
+		function _no_access($location)
+		{
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+
+			$log_args = array
+			(
+				'severity'	=> 'W',
+				'text'		=> 'W-Permissions, Attempted to access %1',
+				'p1'		=> "{$GLOBALS['phpgw_info']['flags']['currentapp']}::{$location}"
+			);
+
+			$GLOBALS['phpgw']->log->warn($log_args);
+
+			$lang_denied = lang('Access not permitted');
+			echo <<<HTML
+			<div class="error">$lang_denied</div>
+HTML;
+			$GLOBALS['phpgw']->common->phpgw_exit(True);
 		}
 	}

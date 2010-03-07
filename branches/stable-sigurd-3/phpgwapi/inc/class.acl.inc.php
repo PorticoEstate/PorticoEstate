@@ -1798,8 +1798,7 @@
 				{
 					if($entry['account_type']=='g')
 					{
-						// Would be nice if inactive members could be filtered out from the result
-						$members = $myaccounts->member($entry['account_id']);
+						$members = $myaccounts->member($entry['account_id'], true);
 
 						if (isset($members) AND is_array($members))
 						{

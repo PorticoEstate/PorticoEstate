@@ -3,7 +3,7 @@
 * phpGroupWare - KnowledgeBase                                             *
 * http://www.phpgroupware.org                                              *
 *                                                                          *
-* Copyright (c) 2003-2006 Free Sofware Foundation Inc                      *
+* Copyright (c) 2003-2010 Free Sofware Foundation Inc                      *
 * Written by Dave Hall skwashd at phpgropware.org                          *
 * ------------------------------------------------------------------------ *
 *  Started off as a port of phpBrain - http://vrotvrot.com/phpBrain/	   *
@@ -19,15 +19,23 @@
 
 	function restrict_to_group($config)
 	{
-		$str = '';
 		$groups = $GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_lid', '', -1);
+
+		$restrict_to_group = isset($config['restrict_to_group']) && $config['restrict_to_group'] ? $config['restrict_to_group'] : array();
+		$out = '';
 		foreach ( $groups as $group )
 		{
-			$str .= '<option value="' . $group->id . '"' . ($config['restrict_to_group'] == $group->id ? ' selected="selected"' : '' ) .'>'
-				. $GLOBALS['phpgw']->common->display_fullname($group->lid, $group->firstname, $group->lastname)
-			."</option>\n";
+			$checked = in_array($group->id, $restrict_to_group) ? 'checked = "checked"' : '';
+			$out .=  <<<HTML
+				<tr>
+					<td>
+						{$group->__toString()}
+					</td>
+					<td>
+						<input type="checkbox" name="newsettings[restrict_to_group][]" value="{$group->id}" {$checked}>
+					</td>
+				</tr>
+HTML;
 		}
-		return $str;
-		$sbox->getAccount('newsettings[restrict_to_group]',$config['restrict_to_group'], true, 'groups', 1);
+		return $out;
 	}
-?>

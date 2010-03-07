@@ -109,6 +109,7 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$start_date				= phpgw::get_var('start_date', 'string');
 			$end_date				= phpgw::get_var('end_date', 'string');
+			$location_code			= phpgw::get_var('location_code');
 
 			$this->start			= $start 							? $start 			: 0;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
@@ -122,6 +123,7 @@
 			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
 			$this->start_date		= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
 			$this->end_date			= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
+			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
 		}
 
 
@@ -292,7 +294,8 @@
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,
-											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run));
+											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
+											'location_code' => $this->location_code));
 			$this->total_records = $this->so->total_records;
 			if(!$external)
 			{

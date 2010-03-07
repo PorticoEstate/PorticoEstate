@@ -194,18 +194,19 @@
 			{
 				$this->category_tree = array();
 			}
+			$db = clone($this->db);
 			$table = "fm_{$this->type}_category";
-			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent}";
-			$this->db->query($sql,__LINE__,__FILE__);
+			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
+			$db->query($sql,__LINE__,__FILE__);
 
-			while ($this->db->next_record())
+			while ($db->next_record())
 			{
-				$id	= $this->db->f('id');
+				$id	= $db->f('id');
 				$this->category_tree[] = array
 				(
 					'id'		=> $id,
-					'name'		=> str_repeat('..',$level).$this->db->f('name'),
-					'parent_id'	=> $this->db->f('parent_id')
+					'name'		=> str_repeat('..',$level).$db->f('name'),
+					'parent_id'	=> $db->f('parent_id')
 				);
 	   			$this->get_children2($entity_id, $id, $level+1);
 			}
@@ -216,7 +217,7 @@
 		{
 			$table = "fm_{$this->type}_category";
 
-			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL)";
+			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL) ORDER BY name ASC";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -257,7 +258,7 @@
 		protected function get_children($entity_id, $parent, $level, $menuaction)
 		{	
 			$table = "fm_{$this->type}_category";
-			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent}";
+			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
 			$this->db2->query($sql,__LINE__,__FILE__);
 
 			$children = array();
@@ -298,7 +299,7 @@
 		{
 			$table = "fm_{$this->type}_category";
 
-			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL)";
+			$sql = "SELECT * FROM $table WHERE entity_id=$entity_id AND (parent_id = 0 OR parent_id IS NULL) ORDER BY name ASC";
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();

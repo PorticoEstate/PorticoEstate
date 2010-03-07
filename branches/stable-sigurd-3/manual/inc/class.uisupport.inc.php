@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Frontend : a simplified tool for end users.
+	 * Support - ask for support
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
@@ -124,23 +124,6 @@
 
             $GLOBALS['phpgw']->xslttpl->add_file('support');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('send' => $data));
-		}
-
-		public function drawings()
-		{
-			$receipt = array();
-
-			$receipt['error'][]=array('msg'=>'Eksempel på feilmelding');
-			$receipt['message'][]=array('msg'=>'Eksempel på gladmelding');
-
-			$data = array
-			(
-				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
-				'tabs'			=> $this->tabs,
-				'date_start'	=> $GLOBALS['phpgw']->yuical->add_listener('date_start', $date_start),
-				'date_end'		=> $GLOBALS['phpgw']->yuical->add_listener('date_end', $date_end),
-			);
-			self::render_template(array('frontend'), array('demo_2' => $data));
 		}
 
 	}

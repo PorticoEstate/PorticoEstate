@@ -154,6 +154,22 @@
 			
 			$filePath = $this->generate_filename($receipt['id'], $document['name']);
 			$this->newFile->save($filePath);
+
+			// make sure that uploaded images are "web friendly"
+			// automatically resize pictures that are too big
+			if ($document['category'] == 'drawing' || $document['category'] == 'picture')
+			{
+				$config	= CreateObject('phpgwapi.config','booking');
+				$config->read();
+				$image_maxwidth = isset($config->config_data['image_maxwidth']) && $config->config_data['image_maxwidth'] ? $config->config_data['image_maxwidth'] : 300;
+				$image_maxheight = isset($config->config_data['image_maxheight']) && $config->config_data['image_maxheight'] ? $config->config_data['image_maxheight'] : 300;
+
+				$thumb = new Imagick($filePath);
+				$thumb->resizeImage($image_maxwidth, $image_maxheight, Imagick::FILTER_LANCZOS, 1, true);
+				$thumb->writeImage($filePath);
+				$thumb->clear();
+				$thumb->destroy();
+			}
 			
 			if ($this->db->transaction_commit()) { 
 				return $receipt;

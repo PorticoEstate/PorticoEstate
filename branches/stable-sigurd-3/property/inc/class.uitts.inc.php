@@ -98,6 +98,7 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
+			$this->location_code		= $this->bo->location_code;
 
 			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
@@ -346,6 +347,7 @@
  	                        						."district_id: '{$this->district_id}',"
  	                        						."start_date: '{$start_date}',"
  	                        						."end_date: '{$end_date}',"
+  	                        						."location_code: '{$this->location_code}',"
  	                        						."allrows:'{$this->allrows}'";
 
 				$link_data = array
@@ -361,6 +363,7 @@
 					'district_id'	=> $this->district_id,
 					'start_date'	=> $start_date,
 					'end_date'		=> $end_date,
+					'location_code'	=> $this->location_code,
 					'allrows'		=> $this->allrows
 				);
 

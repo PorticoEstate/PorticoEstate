@@ -16,7 +16,7 @@
 
 	/* Basic information about this app */
 	$setup_info['messenger']['name']      = 'messenger';
-	$setup_info['messenger']['version']   = '0.9.0';
+	$setup_info['messenger']['version']   = '0.9.17.500';
 	$setup_info['messenger']['app_order'] = '10';
 	$setup_info['messenger']['enable']    = 1;
 	$setup_info['messenger']['app_group']	= 'office';
