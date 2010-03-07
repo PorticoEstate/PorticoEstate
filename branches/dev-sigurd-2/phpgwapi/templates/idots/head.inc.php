@@ -28,9 +28,11 @@
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'idots';
 	}
 
+
 	$stylesheets = array();
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
+
 		$stylesheets = array
 		(
 			'/phpgwapi/js/yahoo/reset-fonts-grids/reset-fonts-grids.css',
@@ -38,6 +40,8 @@
 			'/phpgwapi/js/yahoo/tabview/assets/skins/sam/tabview.css',
 		);
 	}
+
+	phpgwapi_yui::load_widget('button');
 
 	$stylesheets[] = '/phpgwapi/templates/base/css/base.css';
 	$stylesheets[] = '/phpgwapi/templates/idots/css/base.css';
