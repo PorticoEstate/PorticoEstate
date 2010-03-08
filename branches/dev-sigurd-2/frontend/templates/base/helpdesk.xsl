@@ -28,6 +28,7 @@
 </xsl:template>
 
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
+    <xsl:copy-of select="."/>
     <h2>Ny skademelding</h2>
     <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
         <table cellpadding="0" cellspacing="0" width="100%">
@@ -41,55 +42,57 @@
                 </xsl:when>
             </xsl:choose>
 
-            <tr>
-                <td class="th_text" valign="top">
-                    <xsl:value-of select="php:function('lang', 'subject')" />
-                </td>
-                <td class="th_text" valign="top">
-                    <input type="text" name="values[title]" value="{title}"/>
-                </td>
-            </tr>
 
-            <tr>
-                <td class="th_text" valign="top">
-                    <xsl:value-of select="php:function('lang', 'locationdesc')" />
-                </td>
-                <td class="th_text" valign="top">
-                    <input type="text" name="values[locationdesc]" value="{locationdesc}"/>
-                </td>
-            </tr>
+            <xsl:if test="noform != 1">
+                <tr>
+                    <td class="th_text" valign="top">
+                        <xsl:value-of select="php:function('lang', 'subject')" />
+                    </td>
+                    <td class="th_text" valign="top">
+                        <input type="text" name="values[title]" value="{title}"/>
+                    </td>
+                </tr>
 
-            <tr>
-                <td valign="top">
-                    <xsl:value-of select="php:function('lang', 'description')" />
-                </td>
-                <td>
-                    <textarea cols="60" rows="10" name="values[description]" wrap="virtual" onMouseout="window.status='';return true;">
-                        <xsl:value-of select="description"/>
-                    </textarea>
-                </td>
-            </tr>
+                <tr>
+                    <td class="th_text" valign="top">
+                        <xsl:value-of select="php:function('lang', 'locationdesc')" />
+                    </td>
+                    <td class="th_text" valign="top">
+                        <input type="text" name="values[locationdesc]" value="{locationdesc}"/>
+                    </td>
+                </tr>
 
-            <tr>
-                <td valign="top">
-                    <xsl:value-of select="php:function('lang', 'file')" />
-                </td>
-                <td>
-                    <input type="file" name="file" size="50">
-                        <xsl:attribute name="title">
-                            <xsl:value-of select="php:function('lang', 'file')" />
-                        </xsl:attribute>
-                    </input>
-                </td>
-            </tr>
+                <tr>
+                    <td valign="top">
+                        <xsl:value-of select="php:function('lang', 'description')" />
+                    </td>
+                    <td>
+                        <textarea cols="60" rows="10" name="values[description]" wrap="virtual" onMouseout="window.status='';return true;">
+                            <xsl:value-of select="description"/>
+                        </textarea>
+                    </td>
+                </tr>
 
-            <tr height="50">
-                <td>
-                    <xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>
-                    <input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
-                </td>
-            </tr>
+                <tr>
+                    <td valign="top">
+                        <xsl:value-of select="php:function('lang', 'file')" />
+                    </td>
+                    <td>
+                        <input type="file" name="file" size="50">
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="php:function('lang', 'file')" />
+                            </xsl:attribute>
+                        </input>
+                    </td>
+                </tr>
 
+                <tr height="50">
+                    <td>
+                        <xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'send')" /></xsl:variable>
+                        <input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
+                    </td>
+                </tr>
+            </xsl:if>
         </table>
     </form>
 </xsl:template>

@@ -394,17 +394,17 @@
             $missingfields  = false;
             $msglog         = array();
 
-            if (isset($values['save']))
+            if(isset($values['save']))
             {
                 foreach($values as $key => $value)
                 {
-                    if(empty($value) && $key != 'file')
+                    if(empty($value) && $key !== 'file')
                     {
                         $missingfields = true;
                     }
                 }
 
-                if(!$missingfields)
+                if(!$missingfields && !phpgw::get_var('added'))
                 {
                     $loc_code = explode('-', $this->location_code);
                     /* TODO: Clear away those not in use, add support for location description */
@@ -431,7 +431,11 @@
                         'locationdesc'  => $values['locationdesc']
                     );
 
-                    $bo->add($ticket);
+                    $result = $bo->add($ticket);
+                    if($result['message'][0]['msg'] != null && $result['id'] > 0) {
+                        $msglog['message'][] = array('msg' => lang('Ticket added'));
+                        $noform = true;
+                    }
                 }
                 else
                 {
@@ -444,7 +448,8 @@
                 'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket')),
                 'title'         => $values['title'],
                 'locationdesc'  => $values['locationdesc'],
-                'description'   => $values['description']
+                'description'   => $values['description'],
+                'noform'        => $noform
             );
 
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk'));
