@@ -14,3 +14,4 @@ locationdesc	frontend	no	Sted
 description		frontend	no	Beskrivelse
 file	frontend	no	Legg til dokument
 Missing field(s)	frontend	no	Alle felt må fylles ut
+user	frontend	no	Meldt inn av
