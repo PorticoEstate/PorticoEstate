@@ -113,6 +113,10 @@
 		<script language="JavaScript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
+			function add_workorder()
+			{
+				document.add_workorder_form.submit();
+			}
 		</script>
 
 		<table cellpadding="2" cellspacing="2" align="center">
@@ -128,17 +132,12 @@
 			<xsl:choose>
 				<xsl:when test="value_project_id!=''">
 						<td valign="top">
-							<xsl:variable name="add_workorder_action"><xsl:value-of select="add_workorder_action"/>&amp;project_id=<xsl:value-of select="value_project_id"/></xsl:variable>
 							<xsl:variable name="lang_add_workorder"><xsl:value-of select="lang_add_workorder"/></xsl:variable>
-							<form method="post" action="{$add_workorder_action}">
-							<input type="submit" class="forms" name="add_workorder" value="{$lang_add_workorder}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_add_workorder_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
+							<input type="button" name="add_workorder" value="{$lang_add_workorder}" onClick="add_workorder()">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_add_workorder_statustext"/>
 								</xsl:attribute>
 							</input>
-							</form>
 						</td>
 				</xsl:when>
 			</xsl:choose>
@@ -734,6 +733,13 @@
 		</table>
 
 		<!-- AQUI VA EL SCRIPT -->
+
+		<xsl:variable name="add_workorder_action"><xsl:value-of select="add_workorder_action"/>&amp;project_id=<xsl:value-of select="value_project_id"/></xsl:variable>
+		<form method="post" name="add_workorder_form" action="{$add_workorder_action}">
+		</form>
+
+
+
 	</xsl:template>
 
 	<xsl:template match="workorder_budget">
