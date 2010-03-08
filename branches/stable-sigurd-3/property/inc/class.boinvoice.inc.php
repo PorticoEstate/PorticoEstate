@@ -490,14 +490,15 @@
 
 		function set_responsible($values,$user_id='',$b_account_id='')
 		{
+			$config				= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$responsible_supervisor = isset($config->config_data['dimb_responsible_1']) && $config->config_data['dimb_responsible_1'] ? $config->config_data['dimb_responsible_1'] : 0;
+			$responsible_responsible = isset($config->config_data['dimb_responsible_2']) && $config->config_data['dimb_responsible_2'] ? $config->config_data['dimb_responsible_2'] : 0;
+
 			$responsible		= CreateObject('property.soresponsible');
 			if (!$values['budget_responsible'])
 			{
-//		var $bestiller = 85; //cat_id for rolle
-//		var $attestant = 83; //cat_id for rolle
-//		var $budsjettansvarlig = 82; //cat_id for rolle
-
-				$criteria_budget_responsible		= array('ecodimb' => $values['dimb'], 'cat_id' => 83);//$this->budsjettansvarlig); //anviser
+				$criteria_budget_responsible		= array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_responsible);
 				$budget_responsible_contact_id		= $responsible->get_responsible($criteria_budget_responsible);
 				$budget_responsible_user_id			= $responsible->get_contact_user_id($budget_responsible_contact_id);
 				$values['budget_responsible']		= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
@@ -513,7 +514,7 @@
 
 			if(!$values['supervisor'])
 			{
-				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => 84);//$this->attestant); // attestere
+				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_supervisor);
 				$supervisor_contact_id				= $responsible->get_responsible($criteria_supervisor);
 				$supervisor_user_id					= $responsible->get_contact_user_id($supervisor_contact_id);
 				$values['supervisor']				= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
