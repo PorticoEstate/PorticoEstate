@@ -2333,7 +2333,7 @@
 				$values['amount'] 		= str_replace(' ','',$values['amount']);
 				$values['amount'] 		= str_replace(',','.',$values['amount']);
 
-				$values['order_id']		= phpgw::get_var('order_id', 'int');
+				$values['order_id']		= phpgw::get_var('order_id');
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
@@ -2359,6 +2359,7 @@
 			if($add_invoice && is_array($values))
 			{
 
+				$order = false;
 				if($values['order_id'] && !ctype_digit($values['order_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter an integer for order!'));
@@ -2377,7 +2378,7 @@
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select type invoice!'));
 				}
-				if (!$values['vendor_id'] && (!isset($order) || !$order))
+				if (!$values['vendor_id'] && !$order)
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select Vendor!'));
 				}
@@ -2392,7 +2393,7 @@
 					$receipt['error'][] = array('msg'=>lang('Please - select budget responsible!'));
 				}
 
-				if((!isset($order) || !$order) && $values['vendor_id'])
+				if(!$order && $values['vendor_id'])
 				{
 					if (!$this->bo->check_vendor($values['vendor_id']))
 					{
