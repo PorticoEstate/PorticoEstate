@@ -175,7 +175,7 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 
-				$cols .= ",fm_workorder.status as status";
+				$cols .= ",fm_workorder_status.descr as status";
 				$cols_return[] 				= 'status';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'status';
@@ -224,6 +224,9 @@
 				$cols .= ",fm_project.user_id as project_owner";
 
 				$joinmethod .= " $this->join  fm_workorder ON ($entity_table.id = fm_workorder.project_id) $this->join  phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
+				$paranthesis .='(';
+
+				$joinmethod .= " $this->join fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
 				$paranthesis .='(';
 
 				$cols .= ',fm_vendor.org_name';
