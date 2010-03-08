@@ -368,6 +368,10 @@
 					$values['vendor_name']		= $this->get_vendor_name($workorder['vendor_id']);
 					$values['pmwrkord_code']	= $values['order_id'];
 					$values['project_id']			= $workorder['project_id'];
+					if(!$values['dimb'])
+					{
+						$values['dimb']			= $workorder['ecodimb'];
+					}
 
 					$values = $this->set_responsible($values,$workorder['user_id'],$workorder['b_account_id']);
 
