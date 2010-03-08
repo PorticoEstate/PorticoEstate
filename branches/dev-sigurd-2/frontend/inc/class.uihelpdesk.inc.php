@@ -95,6 +95,7 @@
             $uicols['name'][$i++] = 'subject';
             $uicols['name'][$i++] = 'entry_date';
             $uicols['name'][$i++] = 'status';
+            $uicols['name'][$i++] = 'user';
 
             $count_uicols_name = count($uicols['name']);
 
