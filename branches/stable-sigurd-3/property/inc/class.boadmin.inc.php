@@ -302,7 +302,18 @@
 
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, -1,$this->sort, $this->order, $this->query);
 
-			$allusers	= array_intersect_key($allusers, $valid_users);
+//			$allusers	= array_intersect_key($allusers, $valid_users);
+
+			foreach($allusers as  $user)
+			{
+				if(!in_array($user->id, $valid_users))
+				{
+					unset($allusers[$user->id]);
+				}
+			}
+			unset($user);
+			reset($allusers);
+
 			$this->total_records = count($allusers);
 			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 

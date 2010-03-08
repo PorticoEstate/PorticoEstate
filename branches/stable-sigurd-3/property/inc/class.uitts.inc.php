@@ -605,9 +605,9 @@
 			}
 
 			$ticket_list = array();
-			if(!$dry_run)
+//			if(!$dry_run)
 			{
-				$ticket_list = $this->bo->read($start_date, $end_date);
+				$ticket_list = $this->bo->read($start_date, $end_date,'',$dry_run);
 			}
 
 			$this->bo->get_origin_entity_type();

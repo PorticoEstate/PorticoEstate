@@ -352,7 +352,7 @@
 			$values['kildeid'] 			= 1;
 			$values['kidnr'] 			= $values['kid_nr'];
 			$values['typeid'] 			= $values['type'];
-			if($order_type = $this->soXport->check_order(intval($values['order_id'])))
+			if($order_type = $this->soXport->check_order($values['order_id']))
 			{
 				if($order_type=='workorder')
 				{
@@ -493,7 +493,7 @@
 //		var $attestant = 83; //cat_id for rolle
 //		var $budsjettansvarlig = 82; //cat_id for rolle
 
-				$criteria_budget_responsible		= array('ecodimb' => $values['dimb'], 'cat_id' => 82);//$this->budsjettansvarlig); //anviser
+				$criteria_budget_responsible		= array('ecodimb' => $values['dimb'], 'cat_id' => 83);//$this->budsjettansvarlig); //anviser
 				$budget_responsible_contact_id		= $responsible->get_responsible($criteria_budget_responsible);
 				$budget_responsible_user_id			= $responsible->get_contact_user_id($budget_responsible_contact_id);
 				$values['budget_responsible']		= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
@@ -509,7 +509,7 @@
 
 			if(!$values['supervisor'])
 			{
-				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => 83);//$this->attestant); // attestere
+				$criteria_supervisor				= array('ecodimb' => $values['dimb'], 'cat_id' => 84);//$this->attestant); // attestere
 				$supervisor_contact_id				= $responsible->get_responsible($criteria_supervisor);
 				$supervisor_user_id					= $responsible->get_contact_user_id($supervisor_contact_id);
 				$values['supervisor']				= $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
