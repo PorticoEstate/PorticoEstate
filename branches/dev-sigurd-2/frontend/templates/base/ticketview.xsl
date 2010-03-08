@@ -20,8 +20,8 @@
             <div id="ticketinfo">
                 <ul>
                     <li><xsl:value-of select="ticket/last_opened"/></li>
-                    <li>meldt inn av <xsl:value-of select="ticket/user_name"/></li>
-                    <li>sted: TODO</li>
+                    <li>Meldt inn av: <xsl:value-of select="ticket/user_name"/></li>
+                    <li>Sted: TODO</li>
                 </ul>
                 <p>Beskrivelse<br/>
                 <xsl:value-of select="ticket/details"/></p>
