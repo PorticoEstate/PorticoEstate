@@ -1314,6 +1314,20 @@
 			<xsl:call-template name="b_account_form"/>
 			<tr>
 				<td valign="top">
+					<xsl:value-of select="lang_dimb"/>
+				</td>
+				<td valign="top">
+					<xsl:variable name="lang_dimb_statustext"><xsl:value-of select="lang_dimb_statustext"/></xsl:variable>
+					<xsl:variable name="select_dimb"><xsl:value-of select="select_dimb"/></xsl:variable>
+					<select name="{$select_dimb}" class="forms" onMouseover="window.status='{$lang_dimb_statustext}'; return true;" onMouseout="window.status='';return true;">
+						<option value=""><xsl:value-of select="lang_no_dimb"/></option>
+						<xsl:apply-templates select="dimb_list"/>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td valign="top">
 					<xsl:variable name="lang_vendor"><xsl:value-of select="lang_vendor"/></xsl:variable>
 					<input type="button" name="convert" value="{$lang_vendor}" onClick="abook();" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
@@ -1420,19 +1434,6 @@
 					<select name="{$select_type}" class="forms" onMouseover="window.status='{$lang_type_statustext}'; return true;" onMouseout="window.status='';return true;">
 						<option value=""><xsl:value-of select="lang_no_type"/></option>
 						<xsl:apply-templates select="type_list"/>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_dimb"/>
-				</td>
-				<td valign="top">
-					<xsl:variable name="lang_dimb_statustext"><xsl:value-of select="lang_dimb_statustext"/></xsl:variable>
-					<xsl:variable name="select_dimb"><xsl:value-of select="select_dimb"/></xsl:variable>
-					<select name="{$select_dimb}" class="forms" onMouseover="window.status='{$lang_dimb_statustext}'; return true;" onMouseout="window.status='';return true;">
-						<option value=""><xsl:value-of select="lang_no_dimb"/></option>
-						<xsl:apply-templates select="dimb_list"/>
 					</select>
 				</td>
 			</tr>
