@@ -70,7 +70,7 @@
                     ."sort: '{$this->sort}',"
                     ."order: '{$this->order}',"
                     ."cat_id:'{$this->cat_id}',"
-                    ."status_id: '{$this->status_id}',"
+                    ."status_id: 'all',"
                     ."user_id: '{$this->user_id}',"
                     ."query: '{$this->query}',"
                     ."district_id: '{$this->district_id}',"
