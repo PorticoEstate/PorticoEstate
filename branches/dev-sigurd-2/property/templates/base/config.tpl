@@ -70,6 +70,23 @@
     <td>{lang_invoice_ftp_host_basedir_with_NO_trailing_slash}:</td>
     <td><input name="newsettings[invoice_ftp_basedir]" value="{value_invoice_ftp_basedir}"></td>
    </tr>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_dimb_responsible_1}:</td>
+    <td>
+     <select name="newsettings[dimb_responsible_1]">
+{hook_dimb_cat_1}
+     </select>
+    </td>
+   </tr>
+  <tr class="row_on">
+    <td>{lang_dimb_responsible_2}:</td>
+    <td>
+     <select name="newsettings[dimb_responsible_2]">
+{hook_dimb_cat_2}
+     </select>
+    </td>
+   </tr>
    <tr class="row_off">
     <td>{lang_Default_municipal_number}:</td>
     <td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>

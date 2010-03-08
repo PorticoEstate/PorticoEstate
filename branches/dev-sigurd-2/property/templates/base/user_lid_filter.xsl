@@ -25,10 +25,18 @@
 	<xsl:variable name="lid"><xsl:value-of select="lid"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
-				<option value="{$lid}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="firstname"/> <xsl:text> </xsl:text><xsl:value-of select="lastname"/></option>
+				<option value="{$lid}" selected="selected">
+					<xsl:value-of select="lastname"/>
+					<xsl:text>, </xsl:text>
+					<xsl:value-of disable-output-escaping="yes" select="firstname"/>
+				</option>
 			</xsl:when>
 			<xsl:otherwise>
-				<option value="{$lid}"><xsl:value-of disable-output-escaping="yes" select="firstname"/><xsl:text> </xsl:text><xsl:value-of select="lastname"/></option>
+				<option value="{$lid}">
+					<xsl:value-of select="lastname"/>
+					<xsl:text>, </xsl:text>
+					<xsl:value-of disable-output-escaping="yes" select="firstname"/>
+				</option>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

@@ -79,4 +79,40 @@ HTML;
 		return $out;
 	}
 
+	/**
+	* Get HTML listbox with categories that are candidates for the dimb responsibility_1
+	*
+	* @param $config
+	* @return string HTML listbox to be placed in a table
+	*/
+	function dimb_cat_1($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories');
+		$cats->app_name	= 'property.invoice.dimb';
+		$cats->supress_info = true;
+
+		$selected = isset($config['dimb_responsible_1']) ? $config['dimb_responsible_1'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
+
+	/**
+	* Get HTML listbox with categories that are candidates for the dimb responsibility_2
+	*
+	* @param $config
+	* @return string HTML listbox to be placed in a table
+	*/
+	function dimb_cat_2($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories');
+		$cats->app_name	= 'property.invoice.dimb';
+		$cats->supress_info = true;
+
+		$selected = isset($config['dimb_responsible_2']) ? $config['dimb_responsible_2'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
+
 
