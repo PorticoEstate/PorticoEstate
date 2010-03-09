@@ -1,7 +1,7 @@
 
 <xsl:template match="header" >
 	<div id="building_selector">
-        <form action="index.php?menuaction=frontend.uifrontend.index" method="post">
+        <form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
             <label>Velg bygg</label>
             <br/>
             <select name="location" size="7" onchange="this.form.submit();">
