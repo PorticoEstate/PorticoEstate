@@ -25,6 +25,8 @@
 	 */
 
 	phpgw::import_class('frontend.bofrontend');
+	phpgw::import_class('frontend.bofellesdata');
+	phpgw::import_class('frontend.borental');
 	/**
 	 * Frontend main class
 	 *
@@ -75,9 +77,42 @@
 
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
 
-            $this->header_state = array(
-                'selected' => array('-1')
-            );
+			
+			
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'header.list' , 'frontend' );
+			
+			$new_location = phpgw::get_var('location');
+			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
+			
+			if(isset($new_location))
+			{
+				//check to see if location exist
+				$locs = $this->header_state['locations'];
+				$exist = false;
+				foreach($locs as $loc)
+				{
+					if($loc['location_code'] == $new_location)
+					{
+						$exist = true;
+					}
+				}
+				
+				if($exist)
+				{
+					$this->header_state['selected'] = $new_location;
+					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
+				}
+			} 
+			else if(!isset($this->header_state))
+			{
+				$org_units_ids = frontend_bofellesdata::get_organizational_units();
+				$property_locations = frontend_borental::get_property_locations($org_units_ids);
+				$this->header_state = array(
+	                'selected' => array(),
+	            	'locations' => $property_locations
+            	);
+            	phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
+			}
 		}
 
 		/**
