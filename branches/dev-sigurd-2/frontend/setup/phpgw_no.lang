@@ -1,9 +1,10 @@
 Logged in as	frontend	no	Innlogget som
 drawings	frontend	no	Tegninger
+frontend	frontend	no	Frontend
 pictures	frontend	no	Bilder
 maintenance	frontend	no	Vedlikehold
 refurbishment	frontend	no	Oppgraderinger
-services	frontend	no	Tjenester
+services	frontend	no	Byggansvarlig hos BKB
 contract	frontend	no	Kontrakter
 helpdesk	frontend	no	Melding om avvik
 subject	frontend	no	Meldingstittel
