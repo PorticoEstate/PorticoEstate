@@ -109,6 +109,7 @@ class booking_uireports extends booking_uicommon
 				$temp[] = array('building_name', $allocation['building_name']);
 				$temp[] = array('resources[]', array(11));
 				$temp[] = array('reminder', 0);
+				$temp[] = array('from_report', true); // indicate that no error messages should be shown
 				$allocation['event_params'] = json_encode($temp);
 			}
 			if (count($allocations['results']) == 0)
