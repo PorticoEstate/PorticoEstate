@@ -83,7 +83,7 @@
 			
 			$new_location = phpgw::get_var('location');
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
-			
+            
 			if(isset($new_location))
 			{
 				//check to see if location exist
@@ -102,8 +102,8 @@
 					$this->header_state['selected'] = $new_location;
 					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
-			} 
-			else if(!isset($this->header_state))
+			}
+			else if(count($this->header_state['locations']) == 0)
 			{
 				$org_units_ids = frontend_bofellesdata::get_organizational_units();
 				$property_locations = frontend_borental::get_property_locations($org_units_ids);
