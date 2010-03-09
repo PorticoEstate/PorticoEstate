@@ -47,7 +47,7 @@
 
 		public function index()
 		{
-			$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1);
+			/*$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1);
 			$content = array();
 			foreach ($allusers as $user)
 			{
@@ -80,6 +80,7 @@
 
 			$data = array
 			(
+				'header' 			=>$this->header_state,
 				'td_count'			=> 2,
 				'base_java_url'		=> "{menuaction:'frontend.ui_demo_tabs.first'}",
 				'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
@@ -100,7 +101,16 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'demo_tabs.second', 'frontend' );
 
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'demo'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('demo_3' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('demo_3' => $data));*/
+			$data = array
+			(
+				'header' =>$this->header_state,
+				'tabs' => $this->tabs,
+				'pictures'      => lang('not_implemented')
+			);
+			
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
+        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','pictures'));
 
 		}
     }

@@ -52,7 +52,7 @@
   
  			$data = array
 			(
-				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+				//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'header' =>$this->header_state,
 				'tabs' => $this->tabs,
 				'contract'      => 'test'

@@ -47,6 +47,14 @@
 
 		public function index()
 		{
-			parent::demo();
+			$data = array
+			(
+				'header' =>$this->header_state,
+				'tabs' => $this->tabs,
+				'refurbishment'      => lang('not_implemented')
+			);
+			
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
+        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','refurbishment'));
 		}
     }

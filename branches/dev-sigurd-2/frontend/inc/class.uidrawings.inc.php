@@ -47,24 +47,14 @@
 
 		public function index()
 		{
-			$receipt = array();
-
-			$receipt['error'][]=array('msg'=>'Eksempel på feilmelding');
-			$receipt['message'][]=array('msg'=>'Eksempel på gladmelding');
-
 			$data = array
 			(
-				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
-				'tabs'			=> $this->tabs,
-				'date_start'	=> $GLOBALS['phpgw']->yuical->add_listener('date_start', $date_start),
-				'date_end'		=> $GLOBALS['phpgw']->yuical->add_listener('date_end', $date_end),
+				'header' =>$this->header_state,
+				'tabs' => $this->tabs,
+				'drawings'      => lang('not_implemented')
 			);
-
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'header'));
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'demo'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array(
-                'header'    => $this->header_state,
-                'demo_2'    => $data
-            ));
+			
+	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
+        	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','drawings'));
 		}
     }

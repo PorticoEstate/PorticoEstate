@@ -43,8 +43,7 @@
 
 		public $public_functions = array
 		(
-			'index'		=> true,
-			'demo'		=> true
+			'index'		=> true
 		);
 
 		public function __construct()
@@ -76,8 +75,6 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
-
-			
 			
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'header.list' , 'frontend' );
 			
@@ -108,29 +105,17 @@
 				$org_units_ids = frontend_bofellesdata::get_organizational_units();
 				$property_locations = frontend_borental::get_property_locations($org_units_ids);
 				$this->header_state = array(
-	                'selected' => array(),
+	                'selected' => array($property_locations[0]['location_code']),
 	            	'locations' => $property_locations
             	);
             	phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 			}
 		}
 
-		/**
-		 * TODO
-		 */
+		
 		public function index()
 		{
-			$this->demo();
-		}
-
-
-		public function demo()
-		{
-			$data = array
-			(
-				'tabs'		=> $this->tabs
-			);
-            $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'demo'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('demo_1' => $data));
+			//Forward to helpdesk
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index'));
 		}
 	}
