@@ -280,3 +280,10 @@ Short description. For public events, activities and training under the directio
 To borrow premises you must verify that you have read terms and conditions	bookingfrontend	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
 In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
 Private event	bookingfrontend	no	Privat arrangement
+Mass update	bookingfrontend	no	Masseoppdatering
+You are now about to update all bookings from this date and to the end of the season.	bookingfrontend	no	Du er nå i ferd med å oppdatere alle bookinger fra dagens dato og ut sesongen.
+Please update the data and click the Next-button.	bookingfrontend	no	Vennligst oppdater dataene og klikk på Neste-knappen.
+When clicking the Next-button you will be presented to a list of bookings that will be updated.	bookingfrontend	no	Etter at du har klikket på Neste-knappen vil du få oversikt over hvilke bookinger som kommer til å bli oppdatert.
+Update	bookingfrontend	no	Oppdater
+%1 bookings will be updated.	bookingfrontend	no	%1 bookinger vil bli oppdatert.
+%1 bookings were updated.	bookingfrontend	no	%1 bookinger ble oppdatert.
