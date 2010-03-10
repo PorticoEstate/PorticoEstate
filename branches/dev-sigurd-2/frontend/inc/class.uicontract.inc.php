@@ -37,7 +37,10 @@ class frontend_uicontract extends frontend_uifrontend
 		if(!isset($this->contract_state))
 		{
 			$contract = frontend_borental::get_first_contract_per_location($this->header_state['selected']);
-			$this->contract_state['selected'] = $contract->get_id();
+            if(is_object($contract))
+            {
+                $this->contract_state['selected'] = $contract->get_id();
+            }
 			$this->contract_state['contract'] = $contract;
 			phpgwapi_cache::session_set('frontend', 'contract_state', $this->contract_state);
 		}
