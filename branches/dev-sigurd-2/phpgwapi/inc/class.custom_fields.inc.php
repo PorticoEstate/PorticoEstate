@@ -109,7 +109,8 @@
 				'R'		=> lang('Muliple radio'),
 				'CH'	=> lang('Muliple checkbox'),
 				'LB'	=> lang('Listbox'),
-				'AB'	=> lang('Contact'),
+				'AB'	=> lang('Contact'),// Addressbook person
+				'ABO'	=> lang('Organisation'),// Addressbook organisation
 				'VENDOR'=> lang('Vendor'),
 				'email'	=> lang('Email'),
 				'link'	=> lang('Link'),
@@ -301,6 +302,7 @@
 				case 'CH':
 				case 'LB':
 				case 'AB':
+				case 'ABO':
 				case 'VENDOR':
 				case 'event':
 					if ( $attrib['history'] )
@@ -616,6 +618,7 @@
 				case 'CH':
 				case 'LB':
 				case 'AB':
+				case 'ABO':
 				case 'VENDOR':
 				case 'event':
 					if ( $attrib['history'] )
@@ -1532,7 +1535,8 @@
 				'R'			=> 'int',
 				'CH'		=> 'text',
 				'LB'		=> 'int',
-				'AB'		=> 'int',
+				'AB'		=> 'int',// Addressbook person
+				'ABO'		=> 'int',// Addressbook organisation
 				'VENDOR'	=> 'int',
 				'email'		=> 'varchar',
 				'link'		=> 'varchar',
@@ -1564,6 +1568,7 @@
 				'R'			=> 4,
 				'LB'		=> 4,
 				'AB'		=> 4,
+				'ABO'		=> 4,
 				'VENDOR'	=> 4,
 				'email'		=> 64,
 				'link'		=> 255,

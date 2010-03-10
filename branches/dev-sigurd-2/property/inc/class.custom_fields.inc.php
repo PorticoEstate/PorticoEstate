@@ -122,6 +122,21 @@
 					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
+				else if($attributes['datatype'] == 'ABO')
+				{
+					if($attributes['value'])
+					{
+						$contact_data				= $contacts->get_principal_organizations_data($attributes['value']);
+						$attributes['org_name']		= $contact_data[0]['org_name'];
+					}
+
+					$insert_record_values[]			= $attributes['name'];
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.organisation', 'column'=> $attributes['name']));
+
+					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$m++;
+				}
 				else if($attributes['datatype'] == 'VENDOR')
 				{
 					if($attributes['value'])
@@ -285,7 +300,7 @@
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
+					if($entry['datatype']!='AB' && $entry['datatype']!='ABO' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
@@ -368,6 +383,11 @@
 					{
 						$contact_data	= $contacts->read_single_entry($data['value'],array('fn'));
 						$ret[$j][$field] =  $contact_data[0]['fn'];
+					}
+					else if($data['datatype']=='ABO' && $data['value'])
+					{
+						$contact_data	= $contacts->get_principal_organizations_data($data['value']);
+						$ret[$j][$field] = $contact_data[0]['org_name'];
 					}
 					else if($data['datatype']=='VENDOR' && $data['value'])
 					{
