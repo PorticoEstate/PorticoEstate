@@ -318,10 +318,10 @@
             $GLOBALS['phpgw']->js->validate_file('yahoo', 'helpdesk.list' , 'frontend');
 
             $data = array(
-                'header' 		=>	$this->header_state,
-                'tabs'			=> 	$this->tabs,
+                'header' 		=> $this->header_state,
+                'tabs'			=> $this->tabs,
                 'helpdesk' 		=> array('datatable' => $datatable),
-                'lightbox_name'	=> 	lang('add ticket')
+                'lightbox_name'	=> lang('add ticket')
             );
 
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'datatable'));

@@ -12,10 +12,11 @@ entry_date	frontend	no	Dato
 status	frontend	no	Status
 list ticket	frontend	no	Meldingsoversikt
 locationdesc	frontend	no	Sted
-description		frontend	no	Beskrivelse
+description	frontend	no	Beskrivelse
 file	frontend	no	Legg til dokument
 Missing field(s)	frontend	no	Alle felt må fylles ut
 user	frontend	no	Meldt inn av
 Open	frontend	no	Åpen
 Ticket added	frontend	no	Melding
 Opened	frontend	no	Åpnet
+add ticket	frontend	no	Ny avviksmelding
