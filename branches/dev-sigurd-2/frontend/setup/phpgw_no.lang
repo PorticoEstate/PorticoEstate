@@ -17,6 +17,6 @@ file	frontend	no	Legg til dokument
 Missing field(s)	frontend	no	Alle felt må fylles ut
 user	frontend	no	Meldt inn av
 Open	frontend	no	Åpen
-Ticket added	frontend	no	Melding
+Ticket added	frontend	no	Avviksmelding registrert
 Opened	frontend	no	Åpnet
 add ticket	frontend	no	Ny avviksmelding
