@@ -46,7 +46,7 @@
         public function __construct()
         {
             parent::__construct();
-            $this->location_code = phpgw::get_var('location_code');
+            $this->location_code = $this->header_state['selected'];
         }
 
         public function index()
