@@ -79,6 +79,29 @@
                     ."allrows:'{$this->allrows}'";
 
 
+                $datatable['actions']['form'] = array(
+                    array
+                    (
+                        'action'        => $GLOBALS['phpgw']->link('/index.php', array
+                        (
+                        'menuaction' 	=> 'frontend.uihelpdesk.index',
+                        'second_display'=> $second_display,
+                        'status'		=> $this->status
+                        )
+                        ),
+                        'fields'	=> array(
+                            'field' => array(
+                                array(
+                                    'type'      => 'button',
+                                    'id'        => 'btn_new',
+                                    'value'     => lang('add'),
+                                    'tab_index' => 2
+                                ),
+                            ),
+                        )
+                    )
+                );
+
                 $dry_run = true;
             }
 
@@ -88,6 +111,7 @@
                 $bo->location_code = $this->location_code;
                 $ticket_list = $bo->read();
             }
+
 
             $uicols = array();
             $i = 0;
@@ -291,19 +315,18 @@
 
             $GLOBALS['phpgw_info']['flags']['app_header'] = lang('frontend') . ' - ' . $appname . ': ' . $function_msg;
 
-            $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'helpdesk.list' , 'frontend' );
+            $GLOBALS['phpgw']->js->validate_file('yahoo', 'helpdesk.list' , 'frontend');
 
             $data = array(
-            	'header' 		=>	$this->header_state,
+                'header' 		=>	$this->header_state,
                 'tabs'			=> 	$this->tabs,
-                'helpdesk' 		=> array('datatable' => $datatable)
-  
-                //'lightbox_name'	=> 	lang('add ticket')
+                'helpdesk' 		=> array('datatable' => $datatable),
+                'lightbox_name'	=> 	lang('add ticket')
             );
-            
+
             $GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'datatable'));
             $GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
-			//print_r( $GLOBALS['phpgw']->xslttpl->get_vars());
+            //print_r( $GLOBALS['phpgw']->xslttpl->get_vars());
         }
 
         private function cmp($a, $b)
@@ -388,7 +411,7 @@
             $bo	= CreateObject('property.botts',true);
             $boloc	= CreateObject('property.bolocation',true);
 
-            $location_details = $boloc->read_single('1101-01', array('noattrib' => true));
+            $location_details = $boloc->read_single($this->location_code, array('noattrib' => true));
 
             $values         = phpgw::get_var('values');
             $missingfields  = false;
@@ -421,7 +444,7 @@
                         'apply'     => 'Lagre',
                         'contact_id'=> 0,
                         'location'  => array(
-                            // TODO: Get these from building select box
+                        // TODO: Get these from building select box
                             'loc1'  => $location_details['loc1'],
                             'loc2'  => $location_details['loc2']
                         ),
@@ -432,7 +455,8 @@
                     );
 
                     $result = $bo->add($ticket);
-                    if($result['message'][0]['msg'] != null && $result['id'] > 0) {
+                    if($result['message'][0]['msg'] != null && $result['id'] > 0)
+                    {
                         $msglog['message'][] = array('msg' => lang('Ticket added'));
                         $noform = true;
                     }
