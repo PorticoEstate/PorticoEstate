@@ -99,7 +99,8 @@ class booking_uireports extends booking_uicommon
 					phpgw::get_var('to', 'POST'),
 					phpgw::get_var('weekdays', 'POST')
 					);
-			
+
+			$counter = 0;
 			foreach($allocations['results'] as &$allocation)
 			{
 				$temp = array();
@@ -107,10 +108,12 @@ class booking_uireports extends booking_uicommon
 				$temp[] = array('to_', $allocation['to_']);
 				$temp[] = array('building_id', $allocation['building_id']);
 				$temp[] = array('building_name', $allocation['building_name']);
-				$temp[] = array('resources[]', array(11));
+				$temp[] = array('resources[]', array($allocation['resource_id']));
 				$temp[] = array('reminder', 0);
 				$temp[] = array('from_report', true); // indicate that no error messages should be shown
+				$allocation['counter'] = $counter;
 				$allocation['event_params'] = json_encode($temp);
+				$counter++;
 			}
 			if (count($allocations['results']) == 0)
 			{
