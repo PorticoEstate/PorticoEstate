@@ -128,6 +128,23 @@
 					{
 						$contact_data				= $contacts->get_principal_organizations_data($attributes['value']);
 						$attributes['org_name']		= $contact_data[0]['org_name'];
+
+						$comms = $contacts->get_comm_contact_data($attributes['value'], $fields_comms='', $simple=false);
+						
+						$comm_data = array();
+						if(is_array($comms))
+						{
+							foreach($comms as $key => $value)
+							{
+								$comm_data[$value['comm_contact_id']][$value['comm_description']] = $value['comm_data'];
+							}
+						}
+
+						if ( count($comm_data) )
+						{
+							$attributes['org_email'] = isset($comm_data[$attributes['value']]['work email']) ? $comm_data[$attributes['value']]['work email'] : '';
+							$attributes['org_tel'] = isset($comm_data[$attributes['value']]['work phone']) ?  $comm_data[$attributes['value']]['work phone'] : '';
+						}
 					}
 
 					$insert_record_values[]			= $attributes['name'];

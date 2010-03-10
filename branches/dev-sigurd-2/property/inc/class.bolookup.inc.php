@@ -213,6 +213,17 @@
 			$orgs = $addressbook->get_orgs($fields, $this->start, $limit, $orderby='org_name', $sort='ASC', $criteria='', $token_criteria);
 
 			$this->total = $addressbook->total;
+
+			foreach($orgs as &$contact)
+			{
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+				if ( is_array($comms) && count($comms) )
+				{
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
+					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
+				}
+			}
+
 			return $orgs;
 		}
 
