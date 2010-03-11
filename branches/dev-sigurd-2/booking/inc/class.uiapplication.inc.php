@@ -371,16 +371,8 @@
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
 			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
 			
-			if(phpgw::get_var('from_', 'GET'))
-			{
-				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
-				array_set_default($application, 'dates', $default_dates);
-			}
-			else
-			{
-				$default_dates = array_map(array(self, '_combine_dates'), array(0 => date("Y-m-d")), array(0 => date("Y-m-d")));
-				array_set_default($application, 'dates', $default_dates);
-			}
+			$default_dates = array_map(array(self, '_combine_dates'), '','');
+			array_set_default($application, 'dates', $default_dates);
 			
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
