@@ -28,6 +28,14 @@
 			 </select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_document_category_for_building_picture}:</td>
+			<td>
+				<select name="newsettings[picture_building_cat]">
+{hook_picture_building_cat}
+				</select>
+			</td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->

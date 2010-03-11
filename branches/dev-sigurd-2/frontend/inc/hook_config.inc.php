@@ -103,5 +103,23 @@ HTML;
 HTML;
 		}
 		return $out;
-
 	}
+
+	/**
+	* Get HTML listbox with categories that are candidates for the picture_building_cat
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function picture_building_cat($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories');
+		$cats->app_name	= 'property.document';
+		$cats->supress_info = true;
+
+		$selected = isset($config['picture_building_cat']) ? $config['picture_building_cat'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
+
