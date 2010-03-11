@@ -135,7 +135,6 @@
 		</xsl:choose>
     </div>
     <script type="text/javascript">
-        /* YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>; */
 		YAHOO.util.Dom.setStyle(('header'), 'display', 'none');
     </script>
 </xsl:template>

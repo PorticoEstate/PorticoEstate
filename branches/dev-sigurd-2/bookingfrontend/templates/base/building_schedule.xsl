@@ -48,7 +48,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		if(state)
 			handleHistoryNavigation(state);
     });
-   	YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");	
+   	YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");
 });
+<xsl:if test="backend = 'true'">
+	YAHOO.util.Dom.setStyle(('header'), 'display', 'none');
+</xsl:if>
 </script>
 </xsl:template>

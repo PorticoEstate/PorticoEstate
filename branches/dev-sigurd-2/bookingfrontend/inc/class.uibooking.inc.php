@@ -163,6 +163,7 @@
 			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=> $booking['building_id']));
+			//echo '<pre>'; print_r($booking); exit;
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -293,8 +294,6 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking_massupdate.js');
-			//echo '<pre>'; print_r($booking); exit;
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
 			$booking['building_name'] = $booking['building']['name'];
 			$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
