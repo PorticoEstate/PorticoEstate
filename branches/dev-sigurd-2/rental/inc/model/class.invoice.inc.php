@@ -368,7 +368,7 @@
 				}
 				
 				// Checking the contract dates against the temporary price item dates
-				if(isset($contract_start))
+				if(isset($contract_start) && !$contract_price_item->is_one_time())
 				{
 					if($contract_start > $timestamp_invoice_end) // The start of the contract is after the billing period (should never happen)
 					{
@@ -381,9 +381,9 @@
 					}
 				}
 				
-				if(isset($contract_end))
+				if(isset($contract_end) && !$contract_price_item->is_one_time())
 				{
-					if($contract_end < $timestamp_invoice_start) // The end of the contract is befire the billing period (should never happen)
+					if($contract_end < $timestamp_invoice_start) // The end of the contract is before the billing period (should never happen)
 					{
 						continue; //No price items for this contract will be billed
 					}
