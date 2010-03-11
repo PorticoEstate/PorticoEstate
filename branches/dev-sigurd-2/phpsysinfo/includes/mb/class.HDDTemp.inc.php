@@ -106,7 +106,7 @@ class HDDTemp extends Sensors
         // Timo van Roermund: parse the info from the hddtemp daemon.
         foreach ($ar_buf as $line) {
             $data = array();
-            if (ereg("\|(.*)\|(.*)\|(.*)\|(.*)\|", $line, $data)) {
+            if (preg_match("/\|(.*)\|(.*)\|(.*)\|(.*)\|/", $line, $data)) {
                 if (trim($data[3]) != "ERR") {
                     // get the info we need
                     $dev = new SensorDevice();

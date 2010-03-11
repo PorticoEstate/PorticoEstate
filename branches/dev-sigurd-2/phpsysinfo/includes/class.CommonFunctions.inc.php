@@ -30,7 +30,7 @@ class CommonFunctions
      *
      * @var string
      */
-    const PSI_VERSION = '3.0';
+    const PSI_VERSION = '3.0.4';
     
     /**
      * Find a system program, do also path checking when not running on WINNT
@@ -106,7 +106,7 @@ class CommonFunctions
                 if ($arrArgs[$i] == '|') {
                     $strCmd = $arrArgs[$i + 1];
                     $strNewcmd = self::_findProgram($strCmd);
-                    $strArgs = ereg_replace("\| ".$strCmd, "| ".$strNewcmd, $strArgs);
+                    $strArgs = preg_replace("/\| ".$strCmd.'/', "| ".$strNewcmd, $strArgs);
                 }
             }
         }
@@ -258,7 +258,7 @@ class CommonFunctions
      *
      * @return void
      */
-    private static function _timeoutfgets($pipes, &$out, &$err, $sek = 2)
+    private static function _timeoutfgets($pipes, &$out, &$err, $sek = 10)
     {
         // fill output string
         $time = $sek;

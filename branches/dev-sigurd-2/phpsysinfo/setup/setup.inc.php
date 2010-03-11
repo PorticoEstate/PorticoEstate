@@ -16,7 +16,7 @@
 
 	$setup_info['phpsysinfo']['name']      = 'phpsysinfo';
 	$setup_info['phpsysinfo']['title']     = 'phpsysinfo';
-	$setup_info['phpsysinfo']['version']   = '3.0';
+	$setup_info['phpsysinfo']['version']   = '3.0.4';
 	$setup_info['phpsysinfo']['app_order'] = 99;
 	$setup_info['phpsysinfo']['enable']    = 2;
 	$setup_info['phpsysinfo']['tables']    = '';

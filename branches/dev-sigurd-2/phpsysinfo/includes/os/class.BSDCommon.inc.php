@@ -164,7 +164,7 @@ abstract class BSDCommon extends OS
     protected function readdmesg()
     {
         if (count($this->_dmesg) === 0) {
-            if (!PHP_OS == "Darwin") {
+            if (PHP_OS != "Darwin") {
                 if (CommonFunctions::rfts('/var/run/dmesg.boot', $buf)) {
                     $parts = preg_split("/rebooting/", $buf, -1, PREG_SPLIT_NO_EMPTY);
                     $this->_dmesg = preg_split("/\n/", $parts[count($parts) - 1], -1, PREG_SPLIT_NO_EMPTY);
@@ -258,8 +258,8 @@ abstract class BSDCommon extends OS
     protected function loadavg()
     {
         $s = $this->grabkey('vm.loadavg');
-        $s = ereg_replace('{ ', '', $s);
-        $s = ereg_replace(' }', '', $s);
+        $s = preg_replace('/{ /', '', $s);
+        $s = preg_replace('/ }/', '', $s);
         $this->sys->setLoad($s);
         if (PSI_LOAD_BAR) {
             if ($fd = $this->grabkey('kern.cp_time')) {

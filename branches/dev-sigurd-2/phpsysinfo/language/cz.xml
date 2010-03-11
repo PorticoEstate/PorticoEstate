@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: cz.xml 150 2009-03-20 20:19:23Z bigmichi1 $ -->
+<!-- $Id: cz.xml 355 2010-01-26 09:09:05Z jacky672 $ -->
 <!--
 phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
 -->
@@ -10,31 +10,31 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>Informace o systému</exp>
   </expression>
   <expression id="002" name="vitals">
-    <exp>Základ Systému</exp>
+    <exp>Základní informace</exp>
   </expression>
   <expression id="003" name="hostname">
-    <exp>Kanonické Jméno Hostitele</exp>
+    <exp>Kanonické jméno hostitele</exp>
   </expression>
   <expression id="004" name="ip">
     <exp>Poslouchající IP</exp>
   </expression>
   <expression id="005" name="kversion">
-    <exp>Verze Jádra</exp>
+    <exp>Verze jádra</exp>
   </expression>
   <expression id="006" name="dversion">
-    <exp>Jméno Distribuce</exp>
+    <exp>Název distribuce</exp>
   </expression>
   <expression id="007" name="uptime">
-    <exp>Čas od Spuštění</exp>
+    <exp>Čas od spuštění</exp>
   </expression>
   <expression id="008" name="users">
-    <exp>Současní Uživatelé</exp>
+    <exp>Přihlášení uživatelé</exp>
   </expression>
   <expression id="009" name="loadavg">
-    <exp>Průměr Zatížení</exp>
+    <exp>Průměrné zatížení</exp>
   </expression>
   <expression id="010" name="hardware">
-    <exp>Informace o Hardware</exp>
+    <exp>Informace o hardware</exp>
   </expression>
   <expression id="011" name="numcpu">
     <exp>Procesory</exp>
@@ -46,61 +46,61 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>Rychlost procesoru</exp>
   </expression>
   <expression id="014" name="busspeed">
-    <exp>Rychlost zběrnice</exp>
+    <exp>Rychlost sběrnice</exp>
   </expression>
   <expression id="015" name="cache">
     <exp>Velikost cache</exp>
   </expression>
   <expression id="016" name="bogomips">
-    <exp>Bogomipy Systému</exp>
+    <exp>Bogomipsy systému</exp>
   </expression>
   <expression id="017" name="pci">
-    <exp>PCI Zařízení</exp>
+    <exp>PCI zařízení</exp>
   </expression>
   <expression id="018" name="ide">
-    <exp>IDE Zařízení</exp>
+    <exp>IDE zařízení</exp>
   </expression>
   <expression id="019" name="scsi">
-    <exp>SCSI Zařízení</exp>
+    <exp>SCSI zařízení</exp>
   </expression>
   <expression id="020" name="usb">
-    <exp>USB Zařízení</exp>
+    <exp>USB zařízení</exp>
   </expression>
   <expression id="021" name="netusage">
-    <exp>Využití Sítě</exp>
+    <exp>Využití sítě</exp>
   </expression>
   <expression id="022" name="device">
     <exp>Zařízení</exp>
   </expression>
   <expression id="023" name="received">
-    <exp>Přijatých</exp>
+    <exp>Přijaté</exp>
   </expression>
   <expression id="024" name="sent">
-    <exp>Odeslaných</exp>
+    <exp>Odeslané</exp>
   </expression>
   <expression id="025" name="errors">
-    <exp>Chyby/Zahozené</exp>
+    <exp>Chyby/zahozené</exp>
   </expression>
   <expression id="026" name="connections">
-    <exp>Vytvořená Síťová Spojení</exp>
+    <exp>Navázaná síťová spojení</exp>
   </expression>
   <expression id="027" name="memusage">
-    <exp>Využití Paměti</exp>
+    <exp>Využití paměti</exp>
   </expression>
   <expression id="028" name="phymem">
-    <exp>Fyzická Paměť</exp>
+    <exp>Fyzická paměť</exp>
   </expression>
   <expression id="029" name="swap">
-    <exp>Odkládací Prostor na Disku (Swap)</exp>
+    <exp>Odkládací prostor na disku (Swap)</exp>
   </expression>
   <expression id="030" name="fs">
-    <exp>Připojené Souborové Systémy</exp>
+    <exp>Připojené souborové systémy</exp>
   </expression>
   <expression id="031" name="mount">
-    <exp>Místo připojení</exp>
+    <exp>Přípojný bod</exp>
   </expression>
   <expression id="032" name="partition">
-    <exp>Partície</exp>
+    <exp>Oddíl</exp>
   </expression>
   <expression id="033" name="percent">
     <exp>Využití</exp>
@@ -118,7 +118,7 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>Velikost</exp>
   </expression>
   <expression id="038" name="totals">
-    <exp>Spolu</exp>
+    <exp>Celkem</exp>
   </expression>
   <expression id="039" name="kb">
     <exp>KB</exp>
@@ -136,7 +136,7 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>Kapacita</exp>
   </expression>
   <expression id="044" name="template">
-    <exp>Předloha</exp>
+    <exp>Téma vzhledu</exp>
   </expression>
   <expression id="045" name="language">
     <exp>Jazyk</exp>
@@ -160,7 +160,7 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>Teplota</exp>
   </expression>
   <expression id="052" name="voltage">
-    <exp>Voltáž</exp>
+    <exp>Napětí</exp>
   </expression>
   <expression id="053" name="fans">
     <exp>Ventilátory</exp>
@@ -175,7 +175,7 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>Max</exp>
   </expression>
   <expression id="057" name="hysteresis">
-    <exp>Hysterézie</exp>
+    <exp>Hystereze</exp>
   </expression>
   <expression id="058" name="s_limit">
     <exp>Limit</exp>
@@ -193,70 +193,70 @@ phpSysInfo language file Language: Czech Created by: Peter 'Pessoft' Kolínek
     <exp>V</exp>
   </expression>
   <expression id="063" name="rpm_mark">
-    <exp>OZM(RPM)</exp>
+    <exp>RPM</exp>
   </expression>
   <expression id="064" name="app">
     <exp>Jádro + aplikace</exp>
   </expression>
   <expression id="065" name="buffers">
-    <exp>Buffery</exp>
+    <exp>Zásobníky</exp>
   </expression>
   <expression id="066" name="cached">
-    <exp>Cache</exp>
+    <exp>Mezipaměť</exp>
   </expression>
   <expression id="067" name="jumpto">
     <exp>Skoč na</exp>
   </expression>
   <expression id="068" name="ups_title">
-    <exp>UPS information</exp>
+    <exp>Záložní zdroj</exp>
   </expression>
   <expression id="069" name="ups_name">
-    <exp>Name</exp>
+    <exp>Název</exp>
   </expression>
   <expression id="070" name="ups_model">
     <exp>Model</exp>
   </expression>
   <expression id="071" name="ups_mode">
-    <exp>Mode</exp>
+    <exp>Režim</exp>
   </expression>
   <expression id="072" name="ups_start_time">
-    <exp>Started</exp>
+    <exp>Čas od spuštění</exp>
   </expression>
   <expression id="073" name="ups_status">
-    <exp>Status</exp>
+    <exp>Stav</exp>
   </expression>
   <expression id="074" name="ups_outages_count">
-    <exp>Outages</exp>
+    <exp>Výpadky</exp>
   </expression>
   <expression id="075" name="ups_last_outage">
-    <exp>Last outage cause</exp>
+    <exp>Důvod posledního výpadku</exp>
   </expression>
   <expression id="076" name="ups_last_outage_finish">
-    <exp>Last outage timestamp</exp>
+    <exp>Čas posledního výpadku</exp>
   </expression>
   <expression id="077" name="ups_line_voltage">
-    <exp>Line voltage</exp>
+    <exp>Vstupní napětí</exp>
   </expression>
   <expression id="078" name="ups_load_percent">
-    <exp>Load percent</exp>
+    <exp>Aktuální zátížení</exp>
   </expression>
   <expression id="079" name="ups_battery_voltage">
-    <exp>Battery voltage</exp>
+    <exp>Napětí na baterii</exp>
   </expression>
   <expression id="080" name="ups_battery_charge_percent">
-    <exp>Battery charge</exp>
+    <exp>Stav naybtí</exp>
   </expression>
   <expression id="081" name="ups_time_left_minutes">
-    <exp>Time left on batteries</exp>
+    <exp>Zbývající záložní čas</exp>
   </expression>
   <expression id="082" name="ups_voltage_mark">
     <exp>V</exp>
   </expression>
   <expression id="083" name="ups_minutes_mark">
-    <exp>minutes</exp>
+    <exp>minuty</exp>
   </expression>
   <expression id="084" name="ups_temperature">
-    <exp>Temperature</exp>
+    <exp>Teplota</exp>
   </expression>
   <expression id="085" name="tb">
     <exp>TB</exp>

@@ -95,7 +95,7 @@ a:hover {
 }
 
 #filesystemTable .odd {
-    background: #FBFBF9;
+    background: #FFF;
 }
 
 #filesystemTable thead tr .header {
@@ -130,7 +130,7 @@ a:hover {
 }
 
 .even {
-    background-color: #fff;
+    background-color: #FBFBF9;
 }
 
 .bar {

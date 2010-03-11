@@ -55,51 +55,53 @@ class Apcupsd extends UPS
      */
     private function _info()
     {
+        $dev = new UPSDevice();
+
         foreach ($this->_output as $ups) {
             // General info
-            if (preg_match('/^UPSNAME\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^UPSNAME\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setName(trim($data[1]));
             }
-            if (preg_match('/^MODEL\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^MODEL\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setModel(trim($data[1]));
             }
-            if (preg_match('/^UPSMODE\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^UPSMODE\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setMode(trim($data[1]));
             }
-            if (preg_match('/^STARTTIME\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^STARTTIME\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setStartTime(trim($data[1]));
             }
-            if (preg_match('/^STATUS\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^STATUS\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setStatus(trim($data[1]));
             }
-            if (preg_match('/^ITEMP\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^ITEMP\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setTemperatur(trim($data[1]));
             }
             // Outages
-            if (preg_match('/^NUMXFERS\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^NUMXFERS\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setOutages(trim($data[1]));
             }
-            if (preg_match('/^LASTXFER\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^LASTXFER\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setLastOutage(trim($data[1]));
             }
-            if (preg_match('/^XOFFBATT\s*:\s*(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^XOFFBATT\s*:\s*(.*)$/m', $ups, $data)) {
                 $dev->setLastOutageFinish(trim($data[1]));
             }
             // Line
-            if (preg_match('/^LINEV\s*:\s*(\d*\.\d*)(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^LINEV\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setLineVoltage(trim($data[1]));
             }
-            if (preg_match('/^LOADPCT\s*:\s*(\d*\.\d*)(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^LOADPCT\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setLoad(trim($data[1]));
             }
             // Battery
-            if (preg_match('/^BATTV\s*:\s*(\d*\.\d*)(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^BATTV\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setBatteryVoltage(trim($data[1]));
             }
-            if (preg_match('/^BCHARGE\s*:\s*(\d*\.\d*)(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^BCHARGE\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setBatterCharge(trim($data[1]));
             }
-            if (preg_match('/^TIMELEFT\s*:\s*(\d*\.\d*)(.*)$/m', $this->_output[$i], $data)) {
+            if (preg_match('/^TIMELEFT\s*:\s*(\d*\.\d*)(.*)$/m', $ups, $data)) {
                 $dev->setTimeLeft(trim($data[1]));
             }
             $this->upsinfo->setUpsDevices($dev);
