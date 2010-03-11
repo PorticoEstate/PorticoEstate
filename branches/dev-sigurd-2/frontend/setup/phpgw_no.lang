@@ -4,7 +4,7 @@ frontend	frontend	no	Frontend
 pictures	frontend	no	Bilder
 maintenance	frontend	no	Vedlikehold
 refurbishment	frontend	no	Oppgraderinger
-services	frontend	no	Byggansvarlig hos BKB
+services	frontend	no	Tjenester
 contract	frontend	no	Kontrakter
 helpdesk	frontend	no	Melding om avvik
 subject	frontend	no	Meldingstittel
@@ -20,3 +20,7 @@ Open	frontend	no	Åpen
 Ticket added	frontend	no	Avviksmelding registrert
 Opened	frontend	no	Åpnet
 add ticket	frontend	no	Ny avviksmelding
+Apply	frontend	no	Lagre
+Priority changed	frontend	no	Prioritet endret
+tab sorting	frontend	no	Fanesortering
+frontend settings	frontend	no	Frontend-innstillinger

@@ -430,21 +430,25 @@
                 if(!$missingfields && !phpgw::get_var('added'))
                 {
                     $loc_code = explode('-', $this->location_code);
-                    /* TODO: Clear away those not in use, add support for location description */
+
+                    // Read default assign-to-group from config
+                    $config = CreateObject('phpgwapi.config', 'frontend');
+                    $config->read();
+                    $default_group = $config->config_data['tts_default_group'];
+
                     $ticket = array(
                         'origin'    => null,
                         'origin_id' => null,
-                        'cat_id'    => 11, // Melding om skade
-                        'group_id'  => null,
-                        'assignedto'=> null, // TODO: Få inn byggansv. her?
-                        'priority'  => 3, // TODO: Retningslinje for default priority?
-                        'status'    => 'O', // O for Open
+                        'cat_id'    => 11,
+                        'group_id'  => ($default_group ? $default_group : null),
+                        'assignedto'=> null,
+                        'priority'  => 3,
+                        'status'    => 'O', // O = Open
                         'subject'   => $values['title'],
-                        'details'   => $values['description'],
-                        'apply'     => 'Lagre',
+                        'details'   => $values['locationdesc'].":\n\n".$values['description'],
+                        'apply'     => lang('Apply'),
                         'contact_id'=> 0,
                         'location'  => array(
-                        // TODO: Get these from building select box
                             'loc1'  => $location_details['loc1'],
                             'loc2'  => $location_details['loc2']
                         ),
