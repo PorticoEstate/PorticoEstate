@@ -27,7 +27,7 @@
 	 */
 
 	/**
-	* Get HTML selectbox with supported remote authentication
+	* Get HTML table with sections
 	*
 	* @param $config
 	* @return string table-rows with text-input for sorting
@@ -76,3 +76,32 @@ HTML;
 		return $out;
 	}
 
+
+	/**
+	* Get HTML selectbox with user groups
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function tts_default_group($config)
+	{
+		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$group_assigned = isset($config['tts_default_group']) ? $config['tts_default_group'] : '';
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+
+		foreach ( $groups as $group => $label)
+		{
+			$selected = '';
+			if ( $group_assigned == $group )
+			{
+				$selected = ' selected';
+			}
+
+			$out .=  <<<HTML
+				<option value="{$group}"{$selected}>{$label}</option>
+HTML;
+		}
+		return $out;
+
+	}
