@@ -378,7 +378,14 @@
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
-			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+			{
+				$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
+			}
+			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
+			}
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
