@@ -429,8 +429,6 @@
 
                 if(!$missingfields && !phpgw::get_var('added'))
                 {
-                    $loc_code = explode('-', $this->location_code);
-
                     // Read default assign-to-group from config
                     $config = CreateObject('phpgwapi.config', 'frontend');
                     $config->read();
@@ -473,7 +471,7 @@
 
             $data = array(
                 'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-                'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket')),
+                'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket', 'noframework' => '1')),
                 'title'         => $values['title'],
                 'locationdesc'  => $values['locationdesc'],
                 'description'   => $values['description'],
