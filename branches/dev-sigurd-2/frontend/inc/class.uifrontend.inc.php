@@ -73,7 +73,6 @@
 			
 			
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
-			var_dump($type);
 			$selected = isset($type) ? $type : array_shift(array_keys($tabs));
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
