@@ -105,7 +105,7 @@
 				$org_units_ids = frontend_bofellesdata::get_organizational_units();
 				$property_locations = frontend_borental::get_property_locations($org_units_ids);
 				$this->header_state = array(
-	                'selected' => array($property_locations[0]['location_code']),
+	                'selected' => count($property_locations) > 0 ? $property_locations[0]['location_code'] : '' ,
 	            	'locations' => $property_locations
             	);
             	phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
