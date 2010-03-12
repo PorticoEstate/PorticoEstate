@@ -455,7 +455,7 @@
                         'street_name'   => $location_details['street_name'],
                         'street_number' => $location_details['street_number'],
                         'location_name' => $location_details['loc1_name'],
-                        'locationdesc'  => $values['locationdesc']
+                        //'locationdesc'  => $values['locationdesc']
                     );
 
                     $result = $bo->add($ticket);

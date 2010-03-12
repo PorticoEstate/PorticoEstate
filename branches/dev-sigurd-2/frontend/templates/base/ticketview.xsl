@@ -21,7 +21,6 @@
                 <ul>
                     <li><xsl:value-of select="ticket/last_opened"/></li>
                     <li><strong>Meldt inn av: </strong><xsl:value-of select="ticket/user_name"/></li>
-                    <li><strong>Sted: </strong>TODO</li>
                     <li><strong>Status: </strong><xsl:value-of select="ticket/status_name"/></li>
                 </ul>
                 <p><strong>Beskrivelse</strong><br/>
