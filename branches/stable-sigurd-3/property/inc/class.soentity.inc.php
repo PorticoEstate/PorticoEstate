@@ -451,7 +451,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-_debug_array($sql);
+//_debug_array($sql);
 			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
