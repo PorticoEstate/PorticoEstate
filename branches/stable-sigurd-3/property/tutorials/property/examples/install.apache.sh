@@ -45,8 +45,8 @@ PHP_PREFIX="/usr/local"
 #  * @var               string APACHE, APACHETAR
 #  * Download: http://php.net/
 #  */
-APACHETAR="httpd-2.2.14.tar.gz"
-APACHE="httpd-2.2.14"
+APACHETAR="httpd-2.2.15.tar.gz"
+APACHE="httpd-2.2.15"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
@@ -54,8 +54,8 @@ APACHE="httpd-2.2.14"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.1.tar.bz2"
-PHP="php-5.3.1"
+PHPTAR="php-5.3.2.tar.bz2"
+PHP="php-5.3.2"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2

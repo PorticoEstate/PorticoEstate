@@ -1,4 +1,35 @@
-$Id: ChangeLog 340 2009-10-13 11:42:09Z bigmichi1 $
+$Id: ChangeLog 365 2010-02-20 09:00:29Z jacky672 $
+
+phpSysInfo 3.0.4
+
+ - [FIX] Fix bug : some numbers shown in scientific notation
+ 
+ - [UPD] Updated jQuery plugin to 1.4.2
+ - [UPD] Updated jQuery plugin DataTables to 1.6.1
+ - [UPD] Updated jQuery plugin nyroModal to 1.6.1
+ 
+phpSysInfo 3.0.3
+
+ - [FIX] Fix bug : hardware section empty in FreeBSD
+ - [UPD] Patch [ 2943153 ] data option for SMART Plugin (thanks to namiltd)
+
+phpSysInfo 3.0.2
+
+ - [ADD] French, Czech language for IPMI status plugin
+ - [FIX] Fix bug [ 2939239 ] STATIC page don't work
+
+phpSysInfo 3.0.1
+ - [FIX] Fixed APCUPSD bug
+ - [FIX] Remove PSI_SHOW_BIND because not implemented for the moment
+
+ - [ADD] Patch [ 2933516 ] IPMI status plugin
+ - [ADD] Added PSI_SHOW_MOUNT_OPTION to show or hide mount option
+
+ - [UPD] Patch [ 2933473 ] ereg* to preg*
+ - [UPD] Patch [ 2933571 ] Czech translation (main and plugins)
+ - [UPD] Updated jQuery plugin DataTables to 1.5.6
+ - [UPD] Updated jQuery plugin nyroModal to 1.5.5
+ - [UPD] Updated jQuery plugin jGrowl to 1.2.4
 
 phpSysInfo 3.0
  - [FIX] Fixed Bug [ 2864541 ] RC9 and r334-SVN: Error loading XML document!
@@ -14,7 +45,7 @@ phpSysInfo 3.0 RC-9, 2009-09-07
  - [FIX] Fixed Bug [ 2803480 ] Empty page when hddtemp enabled
  - [FIX] Fixed Bug [ 2804624 ] typos in config.php.new
  - [FIX] Fixed Bug [ 2811367 ] xml.php: prints warning in output
- - [FIX] Fixed bug [ 2820488 ] XML Parsing Error with E_ALL enabled
+ - [FIX] Fixed Bug [ 2820488 ] XML Parsing Error with E_ALL enabled
  - [FIX] Fixed Bug [ 2826271 ] LMSensors XML attributes error
  - [FIX] Fixed Bug [ 2825582 ] MDStatus plugin spit error to apache log
  - [FIX] Fixed Bug [ 2825586 ] SMART plugin spit error to apache log

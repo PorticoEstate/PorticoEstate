@@ -40,7 +40,8 @@
 		
 		public $public_functions = array
 		(
-			'index'	=> true
+			'index'	=> true,
+			'import_regulations' => true
 		);
 
 		public function __construct()
@@ -57,6 +58,84 @@
 		public function query()
 		{
 			// Do nothing
+		}
+		
+		public function import_regulations()
+		{
+			setlocale(LC_ALL, 'no_NO');
+			
+			
+			// Set the submit button label to its initial state
+			$this->import_button_label = "Start import";
+
+			// If the parameter 'importsubmit' exist (submit button in import form), set path
+			if (phpgw::get_var("importsubmit")) 
+			{
+				// Get the path for user input or use a default path
+				$this->path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
+				phpgwapi_cache::session_set('rental', 'import_path', $this->path);
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.import_regulations', 'importstep' => 'true'));
+			} 
+			else if(phpgw::get_var("importstep"))
+			{
+				$this->messages = array();
+				$this->warnings = array();
+				$this->errors = array();
+				
+				$start_time = time(); // Start time of import
+				$start = date("G:i:s",$start_time);
+				echo "<h3>Import started at: {$start}</h3>";
+				echo "<ul>";
+				$this->path = phpgwapi_cache::session_get('rental', 'import_path') . '/Intern';
+				
+				$result = $this->import_adjustment_information(); // Do import step, result determines if finished for this area
+				echo '<li class="info">Finished importing adjustment information</li>';
+				
+				echo "</ul>";
+				$end_time = time();
+				$difference = ($end_time - $start_time) / 60;
+				$end = date("G:i:s",$end_time);
+				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.</h3>";
+				
+				 $this->log_messages("adjustments");
+				
+				if ($this->errors) { 
+					echo "<ul>";
+					foreach ($this->errors as $error) {
+						echo '<li class="error">Error: ' . $error . '</li>';
+					}
+		
+					echo "</ul>";
+				}
+		
+				if ($this->warnings) { 
+					echo "<ul>";
+					foreach ($this->warnings as $warning) {
+						echo '<li class="warning">Warning: ' . $warning . '</li>';
+					}
+					echo "</ul>";
+				}
+		
+				if ($this->messages) {
+					echo "<ul>";
+		
+					foreach ($this->messages as $message) {
+						echo '<li class="info">' . $message . '</li>';
+					}
+					echo "</ul>";
+				}
+			}
+			else
+			{
+				$this->render('facilit_import_adjustment.php', array(
+				'messages' => $this->messages,
+				'warnings' => $this->warnings,
+				'errors' => $this->errors, 
+				'button_label' => $this->import_button_label,
+				'facilit_path' => $path,
+				'location_id' => $this->location_id)
+			);
+			}
 		}
 
 		/**
@@ -1270,7 +1349,7 @@
 						if($last_adjusted_year <= $current_year){
 							//update last adjusted on contract.
 							if($contract_id > 0 && $last_adjusted_year > 0){
-								$result = $socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+								//$result = $socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
 								if($result)
 								{
 									$this->messages[] = "Successfully imported regulation. Set last regulation year '" . $last_adjusted_year . "' for contract {$contract_id} with interval '{$interval}'";
@@ -1308,7 +1387,7 @@
 						$contract_id = $contracts[$data[1]];
 						if($year <= $current_year){
 							if($contract_id > 0 && $year > 0){
-								$result = $socontract->update_adjustment_year($contract_id, $year);
+								//$result = $socontract->update_adjustment_year($contract_id, $year);
 								if($result)
 								{
 									$this->messages[] = "Successfully updated regulation information. Set last regulation year '" . $year	 . "' for contract {$contract_id}";
@@ -1324,6 +1403,125 @@
 			
 			$this->messages[] = "Imported events. (" . (time() - $start_time) . " seconds)";
 			return $regulation_id_location_id;
+		}
+		
+		protected function import_adjustment_information()
+		{
+			$start_time = time();
+			
+			$sonotification = rental_sonotification::get_instance();
+			$socontract = rental_socontract::get_instance();
+			
+			$datalines = $this->getcsvdata($this->path . "/u_Hendelse.csv");
+			
+			$this->messages[] = "Read 'u_Hendelse.csv' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'u_Hendelse.csv' contained " . count($datalines) . " lines";
+			
+			foreach ($datalines as $data) {
+				$type_id = $data[2];
+				
+				$date_array = explode(".",$this->decode($data[7]));		
+				if(count($date_array) == 3)
+				{
+					$y = $date_array[2];
+					$m = $date_array[1];
+					$d = $date_array[0];
+					$date = strtotime($y."-".$m."-".$d);
+				}
+					
+				//Which contract the event is linked to
+				$contract_id = $this->decode($data[1]);
+				
+				if(!isset($contract_id) || $contract_id <= 0)
+				{
+					//This event is not bound to a contract that is part of the currently importing respensibiliry area
+					continue;
+				}
+				
+				$location_id = $this->location_id;
+				
+				// Add event description to title
+				$title = $this->decode($data[3]);
+				if (!$this->is_null($data[4])) {
+					$title .= " " . $this->decode($data[4]);
+				}
+				
+				if($type_id == '1') {	//price adjustment
+					$adjusted = $this->decode($data[8]);
+					
+					if($adjusted == 0 || $adjusted == '0'){
+						$current_year = date('Y');
+						$date_tmp = explode(".", $this->decode($data[7]));
+						if(count($date_tmp) == 3){
+							$year = $date_tmp[2];
+							$interval = $this->decode($data[6]);
+							$last_adjusted_year = $year - $interval;
+						}else{
+							$last_adjusted_year = 0;
+						}
+						
+						
+						if($last_adjusted_year <= $current_year){
+							;
+							//update last adjusted on contract.
+							if($contract_id > 0 && $last_adjusted_year > 0){
+								//$this->messages[] = "Should set year {$last_adjusted_year} and interval {$interval} on contract {$contract_id}";
+								$result = $socontract->update_adjustment_year_interval($contract_id, $last_adjusted_year, $interval);
+								if($result)
+								{
+									$this->messages[] = "Successfully imported regulation. Set last regulation year '" . $last_adjusted_year . "' for contract {$contract_id} with interval '{$interval}'";
+								}
+								else
+								{
+									$this->errors[] = "Error importing regulation. Tried to set last regulation year '" . $last_adjusted_year . "' for contract {$contract_id} with interval '{$interval}'";
+								}
+							}
+						}
+						else{
+							$this->warnings[] = "Skipping adjustment on contract ({$contract_id}) because the contract's last adjusted year ({$last_adjusted_year}) is after current year '{$current_year}'.";
+						}
+					}
+				}
+			}
+			
+			//loop through events once more to update previous adjustments
+			foreach ($datalines as $data) {
+				$type_id = $data[2];
+				
+				if($type_id == 1 || $type_id == '1') {	//price adjustment
+					$adjusted = $this->decode($data[8]);
+					if($adjusted == -1 || $adjusted == '-1'){
+						
+						$current_year = date('Y');
+						$date_tmp = explode(".", $this->decode($data[7]));
+						if(count($date_tmp) == 3){
+							$year = $date_tmp[2];
+						}else{
+							$year = 0;
+						}
+						//update last adjusted and interval on contract.
+						if($year <= $current_year){
+							
+							$contract_id = $this->decode($data[1]);
+							
+							if(isset($contract_id) && $contract_id > 0 && $year > 0){
+								$result = $socontract->update_adjustment_year($contract_id, $year);
+								if($result)
+								{
+									$this->messages[] = "Successfully updated regulation information. Set last regulation year '" . $year	 . "' for contract {$contract_id}";
+								}
+								else
+								{
+									$this->errors[] = "Error updating regulation information. Tried to set last regulation year '" . $last_adjusted_year . "' for contract {$contract_id} with interval '{$interval}'";
+								}
+							}
+						}
+						else{
+							$this->warnings[] = "Skipping adjustment-year update on contract {$contract_id} because last adjusted year is after {$current_year}.";
+						}
+					}
+				}
+			}
 		}
 		
 		protected function import_adjustments($contracts, $regulation_id_location_id)

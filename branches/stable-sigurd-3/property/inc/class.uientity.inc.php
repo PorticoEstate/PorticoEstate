@@ -268,15 +268,16 @@
 
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
 										    				(
-										    					'menuaction'			=> 'property.uientity.index',
-										    					'entity_id'        		=> $this->entity_id,
+																'menuaction'			=> 'property.uientity.index',
+																'entity_id'        		=> $this->entity_id,
 																'cat_id'            	=> $this->cat_id,
-									 	                        'district_id'        	=> $this->district_id,
-									 	                        'status'    			=> $this->status,
-									 	                        'filter'        		=> $this->filter,
-									 	                        'query'        			=> $this->query,
-									 	                        'type'					=> $this->type,
-									 	                        'location_code'			=> $this->location_code
+																'district_id'        	=> $this->district_id,
+																'status'    			=> $this->status,
+																'filter'        		=> $this->filter,
+																'query'        			=> $this->query,
+																'type'					=> $this->type,
+																'location_code'			=> $this->location_code,
+																'criteria_id'			=> $this->criteria_id
 									 	                    ));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -288,6 +289,7 @@
 															"filter:'{$this->filter}',".
 															"query:'{$this->query}',".
 															"type:'{$this->type}',".
+						 	                        		"criteria_id:'{$this->criteria_id}',".
 															"location_code:'{$this->location_code}'";
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
@@ -360,6 +362,9 @@
 					$arr_filter_hide[3] = 1;
 				}
 
+				$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				array_unshift ($values_combo_box[4],$default_value);
 
 				$datatable['actions']['form'] = array(
 				array(
@@ -408,6 +413,14 @@
 													'style' => 'filter',
 													'tab_index' => 4
 												),
+												array( //boton 	search criteria
+													'id' => 'btn_criteria_id',
+													'name' => 'criteria_id',
+													'value'	=> lang('search criteria'),
+													'type' => 'button',
+													'style' => 'filter',
+													'tab_index' => 5
+												),
 												array(//for link "columns", next to Export button
 													'type'=> 'link',
 													'id'  => 'btn_columns',
@@ -419,26 +432,26 @@
    												   				'type'			=> $this->type
 															  ))."','link','width=300,height=600,scrollbars=1')",
 													 'value' => lang('columns'),
-													 'tab_index' => 10
+													 'tab_index' => 11
 												),
 												array(
 													'type' => 'button',
 													'id'   => 'btn_export',
 													'value'=> lang('download'),
-													'tab_index' => 9
+													'tab_index' => 10
 													),
 												array(
 													'type' => 'button',
 													'id'   => 'btn_new',
 													'value'=> lang('add'),
-													'tab_index' => 8
+													'tab_index' => 9
 													),
 												array( //boton	 SEARCH
 													'id'   => 'btn_search',
 													'name' => 'search',
 													'value'=> lang('search'),
 													'type' => 'button',
-													'tab_index' => 7
+													'tab_index' => 8
 												),
 												array( // TEXT IMPUT
 													'name' => 'query',
@@ -447,7 +460,7 @@
 													'type' => 'text',
 													'size' => 28,
 													'onkeypress' => 'return pulsar(event)',
-													'tab_index' => 6
+													'tab_index' => 7
 												),
 												 array(//for link "None",
 												  'type'=> 'label_date'
@@ -471,7 +484,7 @@
 														   array(
 																	'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
 													 'value' => lang('Date search'),
-													 'tab_index' => 5
+													 'tab_index' => 6
 												 )),
 								'hidden_value' => array(
 													array(
@@ -489,7 +502,12 @@
 													 array(
 														'id' => 'values_combo_box_3',
 														'value'	=> $this->bocommon->select2String($values_combo_box[3])
-														  ))
+														  ),
+													array(
+														'id' => 'values_combo_box_4',
+														'value'	=> $this->bocommon->select2String($values_combo_box[4])
+														)
+													  )
 						 )));
 
 					//	eliminates those empty filters

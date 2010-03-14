@@ -99,9 +99,9 @@
 								<td><xsl:value-of select="php:function('pretty_timestamp', to_)"/></td>
 								<td>
 									<script type="text/javascript">
-										eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
+										eventParams[<xsl:value-of select="counter"/>] = <xsl:value-of select="event_params"/>;
 									</script>
-									<a href="#" onclick="YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">Lag arrangement</a>
+									<a href="#" onclick="YAHOO.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{counter}]);">Lag arrangement</a>
 								</td>
 							</tr>
 						</xsl:for-each>

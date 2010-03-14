@@ -39,6 +39,7 @@ filter	common	no	Filter
 first name	common	no	Fornavn
 first name of the user, eg. %1	common	no	Fornavnet til brukeren, %1
 friday	common	no	Fredag
+frontend	common	no	Frontend
 ftp	common	no	FTP
 global public	common	no	Global Public
 group access	common	no	Gruppe Access

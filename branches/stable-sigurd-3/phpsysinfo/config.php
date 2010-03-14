@@ -42,6 +42,7 @@ define('PSI_ADD_PATHS', false);
  * - Quotas   - show a table with all quotas that are active and there current state
  * - SMART    - show S.M.A.R.T. information from drives that support it
  * - BAT      - show battery state on a laptop
+ * - ipmi     - show IPMI status
  */
 define('PSI_PLUGINS', false);
 
@@ -178,11 +179,11 @@ define('PSI_HDD_TEMP', false);
 define('PSI_SHOW_MOUNT_POINT', true);
 
 /**
- * Show bind
- * - true = display file system mounted with the bind options under Linux
- * - false = hide them
+ * Show mount option
+ * - true = show mount option
+ * - false = do not show mount option
  */
-define('PSI_SHOW_BIND', false);
+define('PSI_SHOW_MOUNT_OPTION', true);
 
 /**
  * Show inode usage

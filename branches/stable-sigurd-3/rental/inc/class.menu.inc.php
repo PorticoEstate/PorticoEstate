@@ -1,4 +1,5 @@
 <?php
+	phpgw::import_class('rental.uicommon');
 
 	class rental_menu
 	{
@@ -21,34 +22,45 @@
 				)
 			);
 			
-			$billing = array (
-				'invoice' => array
-				(
-					'text'	=> lang('invoice_menu'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-document')
-				),
-				'price_item_list'	=> array
-				(
-					'text'	=> lang('price_list'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-spreadsheet'),
-					'children'	=> array(
-							'manual_adjustment' => array
-							(
-								'text'	=> lang('manual_adjustment'),
-								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.manual_adjustment', 'appname' => 'rental') ),
-								'image'	=> array('rental', 'x-office-spreadsheet')
+			
+			if(
+				$GLOBALS['phpgw']->acl->check(rental_uicommon::LOCATION_IN,PHPGW_ACL_ADD,'rental') ||
+				$GLOBALS['phpgw']->acl->check(rental_uicommon::LOCATION_OUT,PHPGW_ACL_ADD,'rental')	||
+				$GLOBALS['phpgw']->acl->check(rental_uicommon::LOCATION_INTERNAL,PHPGW_ACL_ADD,'rental')
+			)
+			{
+				$billing = array (
+					'invoice' => array
+					(
+						'text'	=> lang('invoice_menu'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uibilling.index', 'appname' => 'rental') ),
+						'image'	=> array('rental', 'x-office-document')
+					),
+					'price_item_list'	=> array
+					(
+						'text'	=> lang('price_list'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.index', 'appname' => 'rental') ),
+						'image'	=> array('rental', 'x-office-spreadsheet'),
+						'children'	=> array(
+								'manual_adjustment' => array
+								(
+									'text'	=> lang('manual_adjustment'),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiprice_item.manual_adjustment', 'appname' => 'rental') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								)
 							)
-						)
-				),
-				'adjustment'	=> array
-				(
-					'text'	=> lang('adjustment'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadjustment.index', 'appname' => 'rental') ),
-					'image'	=> array('rental', 'x-office-spreadsheet')
-				)
-			);
+					),
+					'adjustment'	=> array
+					(
+						'text'	=> lang('adjustment'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiadjustment.index', 'appname' => 'rental') ),
+						'image'	=> array('rental', 'x-office-spreadsheet')
+					)
+				);
+			}
+			
+			
+			
 			
 			$menus['navigation'] =  array
 			(
@@ -89,6 +101,12 @@
 				(
 					'text'	=> lang('facilit_import'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.index', 'appname' => 'rental') ),
+					'image'	=> array('rental', 'document-save')
+				),
+				'import_adjustments'	=> array
+				(
+					'text'	=> lang('import_adjustments'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiimport.import_regulations', 'appname' => 'rental') ),
 					'image'	=> array('rental', 'document-save')
 				)
 			);

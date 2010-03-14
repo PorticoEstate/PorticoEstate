@@ -49,8 +49,8 @@ class Darwin extends BSDCommon
     protected function grabkey($key)
     {
         if (CommonFunctions::executeProgram('sysctl', $key, $s, PSI_DEBUG)) {
-            $s = ereg_replace($key.': ', '', $s);
-            $s = ereg_replace($key.' = ', '', $s);
+            $s = preg_replace('/'.$key.': /', '', $s);
+            $s = preg_replace('/'.$key.' = /', '', $s);
             return $s;
         } else {
             return '';
@@ -67,10 +67,10 @@ class Darwin extends BSDCommon
     private function _grabioreg($key)
     {
         if (CommonFunctions::executeProgram('ioreg', '-cls "'.$key.'" | grep "'.$key.'"', $s, PSI_DEBUG)) {
-            $s = ereg_replace('\|', '', $s);
-            $s = ereg_replace('\+\-\o', '', $s);
-            $s = ereg_replace('[ ]+', '', $s);
-            $s = ereg_replace('<[^>]+>', '', $s);
+            $s = preg_replace('/\|/', '', $s);
+            $s = preg_replace('/\+\-\o/', '', $s);
+            $s = preg_replace('/[ ]+/', '', $s);
+            $s = preg_replace('/<[^>]+>/', '', $s);
             return $s;
         } else {
             return '';
@@ -108,7 +108,7 @@ class Darwin extends BSDCommon
                     }
                 }
             }
-            $dev->setModel(ereg_replace('Processor type: ', '', $buf));
+            $dev->setModel(preg_replace('/Processor type: /', '', $buf));
         }
         $dev->setCpuSpeed(round($this->grabkey('hw.cpufrequency') / 1000000));
         $dev->setBusSpeed(round($this->grabkey('hw.busfrequency') / 1000000));

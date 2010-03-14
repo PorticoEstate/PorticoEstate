@@ -371,22 +371,21 @@
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
 			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
 			
-			if(phpgw::get_var('from_', 'GET'))
-			{
-				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
-				array_set_default($application, 'dates', $default_dates);
-			}
-			else
-			{
-				$default_dates = array_map(array(self, '_combine_dates'), array(0 => date("Y-m-d")), array(0 => date("Y-m-d")));
-				array_set_default($application, 'dates', $default_dates);
-			}
+			$default_dates = array_map(array(self, '_combine_dates'), '','');
+			array_set_default($application, 'dates', $default_dates);
 			
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
-			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+			{
+				$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
+			}
+			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
+			}
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups();

@@ -173,7 +173,10 @@
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret']));
 				}
 			}
-			$this->flash_form_errors($errors);
+			if (!phpgw::get_var('from_report', 'POST'))
+			{
+				$this->flash_form_errors($errors);
+			}
 			self::add_javascript('booking', 'booking', 'event.js');
 			array_set_default($event, 'resources', array());
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));

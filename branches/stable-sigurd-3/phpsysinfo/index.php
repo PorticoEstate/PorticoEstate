@@ -13,10 +13,6 @@
  * @version   SVN: $Id$
  * @link      http://phpsysinfo.sourceforge.net
  */
- /**
- * define the application root path on the webserver
- * @var string
- */
 
 if (file_exists('../header.inc.php'))
 {
@@ -34,7 +30,10 @@ else
 	exit;
 }
 
-
+/**
+ * define the application root path on the webserver
+ * @var string
+ */
 define('APP_ROOT', dirname(__FILE__));
 
 /**

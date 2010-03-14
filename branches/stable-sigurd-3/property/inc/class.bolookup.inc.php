@@ -104,7 +104,6 @@
 
 		function read_addressbook()
 		{
-
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
@@ -119,15 +118,8 @@
 
 		    $fields = array
 		    (
-	//	    	'fn',
-	//	    	'tel_work',
-	//	    	'email',
 		    	'per_first_name',
 		    	'per_last_name',
-	//	    	'per_department',
-	//	    	'per_title',
-	//	    	'addr_add1',
-	//	    	'addr_city',
 		    	'owner',
 		    	'contact_id',
 		    );
@@ -176,6 +168,64 @@
 			return $contacts;
 		}
 
+		/**
+		* Read list of organisation from the addressbook
+		*
+		* @return array of contacts
+		*/
+
+		function read_organisation()
+		{
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
+				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$limit = 15;
+			}
+
+			$limit		= $this->allrows ? 0 : $limit;
+
+			$fields = array
+			(
+				'contact_id',
+				'org_name'
+			);
+
+			if($this->cat_id && $this->cat_id != 0)
+			{
+				$category_filter = $this->cat_id;
+			}
+			else
+			{
+				$category_filter = -3;
+			}
+
+			$addressbook	= CreateObject('addressbook.boaddressbook');
+			
+			$qfield = 'org';
+
+			$criteria		= $addressbook->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields);
+			$token_criteria	= $addressbook->criteria_contacts($access = 1, $category_filter, $qfield, $this->query, $fields);
+
+			$orgs = $addressbook->get_orgs($fields, $this->start, $limit, $orderby='org_name', $sort='ASC', $criteria='', $token_criteria);
+
+			$this->total = $addressbook->total;
+
+			foreach($orgs as &$contact)
+			{
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+				if ( is_array($comms) && count($comms) )
+				{
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
+					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
+				}
+			}
+
+			return $orgs;
+		}
 
 		/**
 		* Get the the person data what you want

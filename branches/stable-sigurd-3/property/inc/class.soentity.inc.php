@@ -89,26 +89,24 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
-				$query			= isset($data['query']) ? $data['query'] : '';
-				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order			= isset($data['order']) ? $data['order'] : '';
-				$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
-				$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
-				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-				$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
-				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-				$status			= isset($data['status']) ? $data['status'] : '';
-				$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
-				$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
-				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-				$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-				$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
+			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$status			= isset($data['status']) ? $data['status'] : '';
+			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
+			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
+			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -363,7 +361,8 @@
 				$where= 'AND';			
 			}
 
-			$querymethod = '';
+			$_querymethod = array();
+			$_joinmethod_datatype = array();
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -371,46 +370,88 @@
 				if(stristr($query, '.'))
 				{
 					$query=explode(".",$query);
-					$querymethod = " $where ($entity_table.location_code $this->like '" . $query[0] . "%' AND $entity_table.location_code $this->like '%" . $query[1] . "')";
+					$_querymethod[] = "($entity_table.location_code $this->like '" . $query[0] . "%' AND $entity_table.location_code $this->like '%" . $query[1] . "')";
 				}
 				else
 				{
-					$filtermethod .= " $where ( $entity_table.location_code $this->like '%$query%' OR $entity_table.num $this->like '%$query%' OR address $this->like '%$query%')";
-					$where= 'OR';
+					if(!$criteria_id)
+					{
+						$_querymethod[] .= "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.num {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
+						$where= 'OR';
+					}
+					else
+					{
+						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
+					}
+//_Debug_array($__querymethod);					
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
 					while ($this->db->next_record())
 					{
-						if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH'):
+						switch ($this->db->f('datatype'))
 						{
-							$querymethod[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
+							case 'V':
+							case 'email':
+							case 'CH':
+						//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+								break;
+							case 'I':
+								if(ctype_digit($query) && !$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'VENDOR':
+								if($criteria_id == 'vendor')
+								{
+									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'AB':
+								if($criteria_id == 'ab')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'ABO':
+								if($criteria_id == 'abo')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							default:
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
+									$__querymethod = array(); // remove block
+								}
 						}
-						elseif($this->db->f('datatype')=='I'):
-						{
-							if(ctype_digit($query))
-							{
-								$querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . intval($query);
-							}
-						}
-						else:
-						{
-							$querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
-						}
-						endif;
-					}
-
-					if (isset($querymethod) AND is_array($querymethod))
-					{
-						$querymethod = " $where (" . implode (' OR ',$querymethod) . ')';
-						$where = 'AND';
 					}
 				}
 			}
 
+			foreach($_joinmethod_datatype as $_joinmethod)
+			{
+				$sql .= $_joinmethod;
+			}
+			
+			$querymethod = '';
+			
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
+				unset($_querymethod);
+			}
+
 			$sql .= " $filtermethod $querymethod";
 
-//_debug_array($sql);
+_debug_array($sql);
 			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');

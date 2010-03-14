@@ -269,12 +269,14 @@ class XML
         $mount->addAttribute('MountPointID', $i);
         $mount->addAttribute('FSType', $dev->getFsType());
         $mount->addAttribute('Name', $dev->getName());
-        $mount->addAttribute('Free', $dev->getFree());
-        $mount->addAttribute('Used', $dev->getUsed());
-        $mount->addAttribute('Total', $dev->getTotal());
+        $mount->addAttribute('Free', sprintf("%.0f", $dev->getFree()));    
+        $mount->addAttribute('Used', sprintf("%.0f", $dev->getUsed()));
+        $mount->addAttribute('Total', sprintf("%.0f", $dev->getTotal()));
         $mount->addAttribute('Percent', $dev->getPercentUsed());
-        if ($dev->getOptions() !== null) {
-            $mount->addAttribute('MountOptions', $dev->getOptions());
+        if (PSI_SHOW_MOUNT_OPTION === true) {
+            if ($dev->getOptions() !== null) {
+                $mount->addAttribute('MountOptions', $dev->getOptions());
+            }
         }
         if ($dev->getPercentInodesUsed() !== null) {
             $mount->addAttribute('Inodes', $dev->getPercentInodesUsed());

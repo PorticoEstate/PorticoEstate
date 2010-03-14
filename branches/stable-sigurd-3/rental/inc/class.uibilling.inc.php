@@ -24,6 +24,7 @@ class rental_uibilling extends rental_uicommon
 	{
 		parent::__construct();
 		self::set_active_menu('rental::contracts::invoice');
+		set_time_limit(300); // Set time limit to 5 minutes
 	}
 	
 	public function index()
