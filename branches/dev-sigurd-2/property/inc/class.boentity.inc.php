@@ -107,6 +107,10 @@
 			$end_date	= phpgw::get_var('end_date');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$type		= phpgw::get_var('type');
+			$criteria_id	= phpgw::get_var('criteria_id');
+
+			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
+
 			$location_code		= phpgw::get_var('location_code');
 			$this->type	= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
 			$this->location_code	= isset($location_code)  && $location_code ? $location_code : '';
@@ -240,6 +244,29 @@
 			return $this->bocommon->select_list($selected,$status_entries);
 		}
 
+		function get_criteria_list($selected='')
+		{
+			$criteria = array
+			(
+				array
+				(
+					'id'	=> 'vendor',
+					'name'	=> lang('vendor')
+				),
+				array
+				(
+					'id'	=> 'ab',
+					'name'	=> lang('contact')
+				),
+				array
+				(
+					'id'	=> 'abo',
+					'name'	=> lang('organisation')
+				)
+			);
+			return $this->bocommon->select_list($selected,$criteria);
+		}
+
 		function read($data= array())
 		{
 			if(isset($this->allrows))
@@ -253,7 +280,8 @@
 											'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
 											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
 											'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
-											'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code));
+											'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
+											'criteria_id' => $this->criteria_id));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
