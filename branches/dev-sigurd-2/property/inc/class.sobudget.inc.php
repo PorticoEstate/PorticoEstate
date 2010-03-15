@@ -848,15 +848,16 @@
 			return $revision_list;
 		}
 
-		function get_grouping_filter_list($year ='',$basis = '')
+		function get_grouping_filter_list($year = 0,$basis = '')
 		{
+			$year = (int)$year;
 			if($basis)
 			{
-				$sql = "SELECT DISTINCT b_group as grouping FROM fm_budget_basis WHERE year =". (int)$year;
+				$sql = "SELECT DISTINCT b_group as grouping FROM fm_budget_basis WHERE year ={$year} ORDER BY b_group ASC";
 			}
 			else
 			{
-				$sql = "SELECT fm_b_account.category as grouping FROM fm_budget $this->join fm_b_account ON fm_budget.b_account_id = fm_b_account.id WHERE year =". (int)$year . "  group by fm_b_account.category";
+				$sql = "SELECT fm_b_account.category as grouping FROM fm_budget $this->join fm_b_account ON fm_budget.b_account_id = fm_b_account.id WHERE year ={$year} GROUP BY fm_b_account.category ORDER BY fm_b_account.category ASC";
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
