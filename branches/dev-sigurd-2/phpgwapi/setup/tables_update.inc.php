@@ -2635,3 +2635,27 @@
 		}
 	}
 
+	$test[] = '0.9.17.525';
+	/**
+	* Add sorting to attribute choice
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_525()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_choice','choice_sort',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True,
+			'default'	=> 0
+		));
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.526';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
