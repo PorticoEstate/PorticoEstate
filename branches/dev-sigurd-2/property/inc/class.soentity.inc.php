@@ -362,6 +362,7 @@
 			}
 
 			$_querymethod = array();
+			$__querymethod = array();
 			$_joinmethod_datatype = array();
 			if($query)
 			{
@@ -377,13 +378,13 @@
 					if(!$criteria_id)
 					{
 						$_querymethod[] .= "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.num {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
-						$where= 'OR';
+//						$where= 'OR';
 					}
 					else
 					{
 						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 					}
-//_Debug_array($__querymethod);					
+//_debug_array($__querymethod);					
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
