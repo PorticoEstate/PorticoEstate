@@ -1000,6 +1000,7 @@
 					$receipt['error'][]=array('msg'=>lang('Please select entity type !'));
 					$error_id=true;
 				}
+
 				if(isset($values_attribute) && is_array($values_attribute))
 				{
 					foreach ($values_attribute as $attribute )
@@ -1007,6 +1008,11 @@
 						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 						{
 							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+
+						if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
 						}
 					}
 				}
