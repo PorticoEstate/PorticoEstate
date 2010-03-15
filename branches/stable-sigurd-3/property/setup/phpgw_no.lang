@@ -1072,6 +1072,7 @@ order_id	property	no	OrdreNr
 order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
 order template	property	no	Standardtekster
 order text	property	no	Bestillingstekst
+organisation	property	no	Organisasjon
 other branch	property	no	Andre fag
 override fraction	property	no	Overstyrt-faktor
 override fraction of common costs	property	no	Overstyringsfaktor for felleskostnader

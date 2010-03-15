@@ -179,35 +179,35 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
-			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_cat_id',
-			                                            'name' => 'cat_id',
-			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 1
-			                                        ),
-			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 3
-			                                        ),
+													array( //boton 	CATEGORY
+														'id' => 'btn_cat_id',
+														'name' => 'cat_id',
+														'value'	=> lang('Category'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 1
+													),
+													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 3
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 2
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+															array( //div values  combo_box_0
+																		'id' => 'values_combo_box_0',
+																		'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 							                                      )
 		                       								)
 												)
@@ -436,35 +436,35 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
-			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_cat_id',
-			                                            'name' => 'cat_id',
-			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 1
-			                                        ),
-			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 3
-			                                        ),
+													array( //boton 	CATEGORY
+														'id' => 'btn_cat_id',
+														'name' => 'cat_id',
+														'value'	=> lang('Category'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 1
+													),
+													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 3
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 2
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+															array( //div values  combo_box_0
+																		'id' => 'values_combo_box_0',
+																		'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 							                                      )
 		                       								)
 												)
@@ -693,35 +693,35 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
-			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_cat_id',
-			                                            'name' => 'cat_id',
-			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 1
-			                                        ),
-			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 3
-			                                        ),
+													array( //boton 	CATEGORY
+														'id' => 'btn_cat_id',
+														'name' => 'cat_id',
+														'value'	=> lang('Category'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 1
+													),
+													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 3
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 2
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+															array( //div values  combo_box_0
+																		'id' => 'values_combo_box_0',
+																		'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 							                                      )
 		                       								)
 												)
@@ -922,22 +922,22 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -1125,22 +1125,22 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -1339,22 +1339,22 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -1543,22 +1543,22 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -1728,6 +1728,7 @@
 			$this->district_id			= $boentity->district_id;
 			$this->entity_id			= $boentity->entity_id;
 			$this->location_code		= $boentity->location_code;
+			$this->criteria_id			= $boentity->criteria_id;
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
@@ -1740,8 +1741,8 @@
 							'district_id'		=> $this->district_id,
 							'query'				=> $this->query,
 							'filter'			=> $this->filter,
-							'location_code'		=> $this->location_code,							
-
+							'location_code'		=> $this->location_code,
+							'criteria_id'		=> $this->criteria_id
 	    				));
 
 	    		$datatable['config']['allow_allrows'] = true;
@@ -1752,6 +1753,7 @@
 						 	                        ."district_id:'{$this->district_id}',"
  	                        						."query:'{$this->query}',"
 						 	                        ."filter:'{$this->filter}',"
+				 	                        		."criteria_id:'{$this->criteria_id}',"
 						 	                        ."location_code:'{$this->location_code}'";
 
 				$values_combo_box[0] = $boentity->select_category_list('filter',$this->cat_id);
@@ -1761,6 +1763,10 @@
 				$values_combo_box[1]  = $bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
 				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2]  = $boentity->get_criteria_list($this->criteria_id);
+				$default_value = array ('id'=>'','name'=>lang('no criteria'));
+				array_unshift ($values_combo_box[2],$default_value);
 
 				$datatable['actions']['form'] = array(
 					array(
@@ -1776,47 +1782,59 @@
 						),
 						'fields'	=> array(
                                     'field' => array(
-			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_cat_id',
-			                                            'name' => 'cat_id',
-			                                            'value'	=> lang('Category'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 1
-			                                        ),
-			                                        array( //boton 	CATEGORY
-			                                            'id' => 'btn_district_id',
-			                                            'name' => 'district_id',
-			                                            'value'	=> lang('District'),
-			                                            'type' => 'button',
-			                                            'style' => 'filter',
-			                                            'tab_index' => 2
-			                                        ),
-			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 4
-			                                        ),
+													array( //boton 	CATEGORY
+														'id' => 'btn_cat_id',
+														'name' => 'cat_id',
+														'value'	=> lang('Category'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 1
+													),
+													array( //boton 	CATEGORY
+														'id' => 'btn_district_id',
+														'name' => 'district_id',
+														'value'	=> lang('District'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 2
+													),
+													array( //boton 	search criteria
+														'id' => 'btn_criteria_id',
+														'name' => 'criteria_id',
+														'value'	=> lang('search criteria'),
+														'type' => 'button',
+														'style' => 'filter',
+														'tab_index' => 3
+													),
+													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 5
+													),
 			   										array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 3
-			                                        )
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
+	                                    				'tab_index' => 4
+													)
 		                           				),
 		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+															array( //div values  combo_box_0
+																		'id' => 'values_combo_box_0',
+																		'value'	=> $bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
 							                                      ),
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $bocommon->select2String($values_combo_box[1]) //i.e.  id,value/id,vale/
+															array( //div values  combo_box_1
+																		'id' => 'values_combo_box_1',
+																		'value'	=> $bocommon->select2String($values_combo_box[1]) //i.e.  id,value/id,vale/
+							                                      ),
+															array( //div values  combo_box_2
+																		'id' => 'values_combo_box_2',
+																		'value'	=> $bocommon->select2String($values_combo_box[2]) //i.e.  id,value/id,vale/
 							                                      )
 		                       								)
 												)
@@ -2065,22 +2083,22 @@ _debug_array();
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -2288,22 +2306,22 @@ _debug_array();
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -2490,22 +2508,22 @@ _debug_array();
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
@@ -2694,22 +2712,22 @@ _debug_array();
 						),
 						'fields'	=> array(
                                     'field' => array(
- 			                                        array( //boton  SEARCH
-			                                            'id' => 'btn_search',
-			                                            'name' => 'search',
-			                                            'value'    => lang('search'),
-			                                            'type' => 'button',
-			                                            'tab_index' => 2
-			                                        ),
+ 													array( //boton  SEARCH
+														'id' => 'btn_search',
+														'name' => 'search',
+														'value'    => lang('search'),
+														'type' => 'button',
+														'tab_index' => 2
+													),
 			   										 array( // TEXT IMPUT
-			                                            'name'     => 'query',
-			                                            'id'     => 'txt_query',
-			                                            'value'    => '',//'',//$query,
-			                                            'type' => 'text',
-			                                            'size'    => 28,
-			                                            'onkeypress' => 'return pulsar(event)',
+														'name'     => 'query',
+														'id'     => 'txt_query',
+														'value'    => '',//'',//$query,
+														'type' => 'text',
+														'size'    => 28,
+														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 1
-			                                        )
+													)
 		                           				),
 		                       		'hidden_value' => array(
 		                       								)
