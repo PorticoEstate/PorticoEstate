@@ -498,22 +498,20 @@
 		function read_obligations($data)
 		{
 //_debug_array($data);			
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter			= isset($data['filter']) ? $data['filter'] : 'none';
-				$query			= isset($data['query']) ? $data['query'] : '';
-				$sort			= isset($data['sort']) ? $data['sort'] : 'DESC';
-				$order			= isset($data['order']) ? $data['order'] : '';
-				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
-				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
-				$year			= isset($data['year']) ? (int)$data['year'] : '';
-				$grouping		= isset($data['grouping']) ? $data['grouping'] : '';
-				$revision		= isset($data['revision']) ? $data['revision'] : 1;
-				$year			= isset($data['year']) ? $data['year'] : '';
-				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
-				$details		= isset($data['details']) ? $data['details'] : '';
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter			= isset($data['filter']) ? $data['filter'] : 'none';
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$sort			= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
+			$year			= isset($data['year']) ? (int)$data['year'] : '';
+			$grouping		= isset($data['grouping']) ? $data['grouping'] : '';
+			$revision		= isset($data['revision']) ? $data['revision'] : 1;
+			$year			= isset($data['year']) ? $data['year'] : '';
+			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$details		= isset($data['details']) ? $data['details'] : '';
+			$dimb_id		= isset($data['dimb_id'])  && $data['dimb_id'] ? (int)$data['dimb_id'] : 0;
 
 			if(!$year)
 			{
@@ -542,6 +540,12 @@
 				$where = 'AND';
 			}
 
+			if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where fm_workorder.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
 			if ($grouping > 0)
 			{
 				$filtermethod .= " $where fm_b_account.category='$grouping' ";
@@ -563,24 +567,26 @@
 				$b_account_field = 'category';
 			}
 
-			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id"
+			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
 				. " $this->join fm_b_account ON fm_workorder.account_id =fm_b_account.id "
 				. " $this->join fm_project ON  fm_workorder.project_id =fm_project.id "
 				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id ";
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_workorder.ecodimb";
 
+//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
 			{
-				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')] = round($this->db->f('combined_cost'));
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')] = $this->db->f('hits');
+				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] = round($this->db->f('combined_cost'));
+				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] = $this->db->f('hits');
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
+				$ecodimb[$this->db->f('ecodimb')] = true;
 			}
 
-//_debug_array($obligations);
+//_debug_array($obligations);die();
 			$this->db->query("select max(revision) as revision from fm_budget where year={$year}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$revision = (int)$this->db->f('revision');
@@ -610,15 +616,21 @@
 				$where = 'AND';
 			}
 
+			if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
 			if( $details )
 			{
-				$sql = "SELECT budget_cost,b_account_id as b_account_field,district_id FROM fm_budget"
-				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_account_id,district_id";
+				$sql = "SELECT budget_cost,b_account_id as b_account_field,district_id,ecodimb FROM fm_budget"
+				 . " {$this->join} fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_account_id,district_id,ecodimb";
 			}
 			else
 			{
-				$sql = "SELECT sum(budget_cost) as budget_cost ,fm_b_account.category as b_account_field,district_id FROM fm_budget"
-				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY fm_b_account.category,district_id";
+				$sql = "SELECT sum(budget_cost) as budget_cost ,fm_b_account.category as b_account_field,district_id,ecodimb FROM fm_budget"
+				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY fm_b_account.category,district_id,ecodimb";
 			}
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -626,12 +638,13 @@
 			$budget_cost = array();
 			while ($this->db->next_record())
 			{
-				$budget_cost[$this->db->f('b_account_field')][$this->db->f('district_id')] = round($this->db->f('budget_cost'));
+				$budget_cost[$this->db->f('b_account_field')][$this->db->f('district_id')][$this->db->f('ecodimb')] = round($this->db->f('budget_cost'));
 				$accout_info[$this->db->f('b_account_field')] = true;
 				$district[$this->db->f('district_id')] = true;
+				$ecodimb[$this->db->f('ecodimb')] = true;
 			}
 
-//_debug_array($budget_cost);
+//_debug_array($budget_cost);die();
 
 			$filtermethod = '';
 			$where = 'AND';
@@ -654,29 +667,36 @@
 				$where = 'AND';
 			}
 
+			if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where dimb={$dimb_id}";
+				$where = 'AND';
+			}
 
 			$start_date1 = date($this->db->date_format(),mktime(2,0,0,3,1,$year));
 			$start_date2 = date($this->db->date_format(),mktime(2,0,0,1,1,$year));
 			$end_date = date($this->db->date_format(),mktime(2,0,0,12,31,$year));
 
-			$sql = "SELECT fm_b_account.{$b_account_field} as $b_account_field, district_id, sum(godkjentbelop) as actual_cost FROM fm_ecobilagoverf"
+			$sql = "SELECT fm_b_account.{$b_account_field} as $b_account_field, district_id, sum(godkjentbelop) as actual_cost,dimb FROM fm_ecobilagoverf"
 				. " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
 				. " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
 				. " WHERE (fakturadato > '$start_date1' AND fakturadato < '$end_date' $filtermethod)"
 				. " OR (fakturadato > '$start_date2' AND fakturadato < '$end_date' AND periode < 3 $filtermethod)"
-				. " GROUP BY fm_b_account.{$b_account_field}, district_id";
+				. " GROUP BY fm_b_account.{$b_account_field}, district_id,dimb";
 
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$actual_cost = array();
 			while ($this->db->next_record())
 			{
-				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')] = round($this->db->f('actual_cost'));
+				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('dimb')] = round($this->db->f('actual_cost'));
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
+				$ecodimb[$this->db->f('dimb')] = true;
 			}
-
+//_debug_array($actual_cost);die();
 			$result = array();
 
 			if (is_array($accout_info))
@@ -703,25 +723,30 @@
 				ksort($district);
 				$accout_info = array_keys($accout_info);
 				$district = array_keys($district);
+				$ecodimb = array_keys($ecodimb);
 
 				$result = array();
 				foreach($accout_info as $b_account)
 				{
 					foreach($district as $district_id)
 					{
-						if( (isset($actual_cost[$b_account][$district_id]) && $actual_cost[$b_account][$district_id])
-						 || (isset($budget_cost[$b_account][$district_id]) && $budget_cost[$b_account][$district_id])
-						 || (isset($obligations[$b_account][$district_id]) && $obligations[$b_account][$district_id]))
+						foreach ($ecodimb as $dimb)
 						{
-							$result[] = array(
-								'grouping'		=> $details ? '' : $b_account, 
-								'b_account'		=> $b_account,
-								'district_id'	=> $district_id,
-								'actual_cost'	=> isset($actual_cost[$b_account][$district_id]) && $actual_cost[$b_account][$district_id] ? round($actual_cost[$b_account][$district_id]) : 0,
-								'budget_cost'	=> isset($budget_cost[$b_account][$district_id]) && $budget_cost[$b_account][$district_id] ? round($budget_cost[$b_account][$district_id]) : 0,
-								'obligation'	=> isset($obligations[$b_account][$district_id]) && $obligations[$b_account][$district_id] ? round($obligations[$b_account][$district_id]) : 0,
-								'hits'			=> isset($hits[$b_account][$district_id])?$hits[$b_account][$district_id]:0,
-							);
+							if( (isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb])
+							 || (isset($budget_cost[$b_account][$district_id][$dimb]) && $budget_cost[$b_account][$district_id][$dimb])
+							 || (isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb]))
+							{
+								$result[] = array(
+									'grouping'		=> $details ? '' : $b_account, 
+									'b_account'		=> $b_account,
+									'district_id'	=> $district_id,
+									'ecodimb'		=> $dimb,
+									'actual_cost'	=> isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb] ? round($actual_cost[$b_account][$district_id][$dimb]) : 0,
+									'budget_cost'	=> isset($budget_cost[$b_account][$district_id][$dimb]) && $budget_cost[$b_account][$district_id][$dimb] ? round($budget_cost[$b_account][$district_id][$dimb]) : 0,
+									'obligation'	=> isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb] ? round($obligations[$b_account][$district_id][$dimb]) : 0,
+									'hits'			=> isset($hits[$b_account][$district_id][$dimb])?$hits[$b_account][$district_id][$dimb]:0,
+								);
+							}
 						}
 					}
 				}

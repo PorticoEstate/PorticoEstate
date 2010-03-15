@@ -175,7 +175,7 @@
 							'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
 							'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
 							'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
-							'details' => $this->details));
+							'details' => $this->details,'dimb_id' => $this->dimb_id));
 
 			$this->total_records = $this->so->total_records;
 			return $obligations;
