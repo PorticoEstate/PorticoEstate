@@ -567,11 +567,8 @@
  	                        						."revision:'{$this->revision}'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
-  				if(count($values_combo_box[0]))
-				{
-					$default_value = array ('id'=>'','name'=>lang('no year'));
-					array_unshift ($values_combo_box[0],$default_value);
-				}
+				$default_value = array ('id'=>'','name'=>lang('no year'));
+				array_unshift ($values_combo_box[0],$default_value);
 				
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision,$basis=true);
 				$default_value = array ('id'=>'','name'=>lang('no revision')); 
