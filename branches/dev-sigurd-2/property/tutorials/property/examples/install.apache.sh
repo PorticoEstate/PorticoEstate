@@ -63,8 +63,8 @@ PHP="php-5.3.2"
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  * Download: http://eaccelerator.net/
 #  */
-EACCELERATORTAR="eaccelerator-svn379.tar.gz"
-EACCELERATOR="eaccelerator-svn379"
+EACCELERATORTAR="eaccelerator-0.9.6.tar.bz2"
+EACCELERATOR="eaccelerator-0.9.6"
 PHP_PREFIX="/usr/local"
 
 # APC as Alternative:
@@ -198,7 +198,7 @@ tar -xzf $LIBXMLTAR &&\
 tar -xzf $LIBXSLTAR &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
-tar -xzf $EACCELERATORTAR &&\
+bunzip2 -c $EACCELERATORTAR | tar xvf - &&\
 cd $LIBXML &&\
 ./configure &&\
 make &&\
