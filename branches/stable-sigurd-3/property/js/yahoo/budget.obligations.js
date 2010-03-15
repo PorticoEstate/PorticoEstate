@@ -3,12 +3,13 @@
 //--------------------------------------------------------
 
 		//define SelectButton
-	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
+	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
 	 	var selectsButtons = [
 		{order:0, var_URL:'year',		name:'btn_year',		style:'',dependiente:[]},
 		{order:1, var_URL:'district_id',name:'btn_district_id',	style:'',dependiente:[]},
 		{order:2, var_URL:'cat_id',		name:'btn_cat_id',		style:'',dependiente:[]},
-		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]}
+		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]},
+		{order:4, var_URL:'dimb_id',	name:'btn_dimb_id',		style:'',dependiente:[]}
 		]
 
 		// define buttons
@@ -120,7 +121,7 @@
 			//Create ROW
 			newTR = document.createElement('tr');
 			
-			td_empty(4);
+			td_empty(5);
 			td_sum(getSumPerPage("hits_ex",0));
 			td_empty(1);
 			td_sum(getSumPerPage("budget_cost_ex",0));
