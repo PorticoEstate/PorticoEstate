@@ -70,7 +70,7 @@
                     ."sort: '{$this->sort}',"
                     ."order: '{$this->order}',"
                     ."cat_id:'{$this->cat_id}',"
-                    ."status_id: 'all',"
+                    ."status_id: '{$this->status_id}',"
                     ."user_id: '{$this->user_id}',"
                     ."query: '{$this->query}',"
                     ."district_id: '{$this->district_id}',"
@@ -78,6 +78,23 @@
                     ."end_date: '{$end_date}',"
                     ."allrows:'{$this->allrows}'";
 
+                $this->bocommon = CreateObject('property.bocommon', true);
+
+                $values_combo_box = array(
+                    0 => array(
+                        'id'        => 'all',
+                        'name'      => lang("All"),
+                        'selected'  => 'selected'
+                    ),
+                    1 => array(
+                        'id'        => 'X',
+                        'name'      => lang("Closed")
+                    ),
+                    2 => array(
+                        'id'        => 'O',
+                        'name'      => lang("Open"),
+                    )
+                );
 
                 $datatable['actions']['form'] = array(
                     array
@@ -91,13 +108,31 @@
                         ),
                         'fields'	=> array(
                             'field' => array(
-                                array(
+                                array
+                                (
                                     'type'      => 'button',
                                     'id'        => 'btn_new',
                                     'value'     => lang('add'),
+                                    'tab_index' => 3
+                                ),
+                                array
+                                (
+                                    'id'        => 'btn_status_id',
+                                    'name'      => 'status_id',
+                                    'value'     => lang('Status'),
+                                    'type'      => 'button',
+                                    'style'     => 'filter',
                                     'tab_index' => 2
                                 ),
                             ),
+                            'hidden_value' => array
+                            (
+                                array
+                                ( //status values
+                                    'id' => 'values_combo_box_2',
+                                    'value'	=> $this->bocommon->select2String($values_combo_box)
+                                )
+                            )
                         )
                     )
                 );
