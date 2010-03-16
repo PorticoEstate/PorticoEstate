@@ -777,18 +777,49 @@
 			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
 			{
 				$choice_id = $this->_next_id('phpgw_cust_choice' ,array('location_id'=> $location_id, 'attrib_id'=>$attrib_id));
+				$choice_sort = $choice_id;
 
 				$values= array(
 					$location_id,
 					$attrib_id,
 					$choice_id,
+					$choice_sort,
 					$attrib['new_choice']
 					);
 
 				$values	= $this->_db->validate_insert($values);
 
-				$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) "
+				$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value) "
 				. "VALUES ($values)",__LINE__,__FILE__);
+			}
+
+
+			if ( count($attrib['edit_choice'])  && !$doubled )
+			{
+				foreach ($attrib['edit_choice'] as $choice_id => $value)
+				{
+					$choice_id = (int) $choice_id;
+					$value = $this->_db->db_addslashes($value);
+					$sql = "UPDATE phpgw_cust_choice SET value = '{$value}'"
+						. " WHERE location_id = {$location_id}"
+							. " AND attrib_id = {$attrib_id}"
+							. " AND id = {$choice_id}";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
+			}
+
+			if ( count($attrib['order_choice'])  && !$doubled )
+			{
+				foreach ($attrib['order_choice'] as $choice_id => $order)
+				{
+					$choice_id = (int) $choice_id;
+					$order = (int) $order;
+					$sql = "UPDATE phpgw_cust_choice SET choice_sort = {$order}"
+						. " WHERE location_id = {$location_id}"
+							. " AND attrib_id = {$attrib_id}"
+							. " AND id = {$choice_id}";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
 			}
 
 			if ( count($attrib['delete_choice'])  && !$doubled )
@@ -1455,7 +1486,7 @@
 			$sql = "SELECT * FROM phpgw_cust_choice " 
 				. " WHERE location_id = {$location_id}"
 					. " AND attrib_id = {$attrib_id}"
-				. " ORDER BY value";
+				. " ORDER BY choice_sort ASC, value";
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$choices = array();
@@ -1466,7 +1497,8 @@
 				$choices[] = array
 				(
 					'id'	=> $this->_db->f('id'),
-					'value'	=> $this->_db->f('value', true)
+					'value'	=> $this->_db->f('value', true),
+					'order'	=> $this->_db->f('choice_sort')
 				);
 			}
 			return $choices;
