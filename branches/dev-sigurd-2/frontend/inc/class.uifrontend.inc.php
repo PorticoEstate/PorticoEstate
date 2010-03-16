@@ -119,6 +119,7 @@
 		public function index()
 		{
 			//Forward to helpdesk
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'type' => '21755'));
+			$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', '.ticket');
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'type' => $location_id));
 		}
 	}
