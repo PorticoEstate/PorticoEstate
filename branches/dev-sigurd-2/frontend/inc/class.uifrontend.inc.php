@@ -119,6 +119,6 @@
 		public function index()
 		{
 			//Forward to helpdesk
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'type' => '21755'));
 		}
 	}
