@@ -514,7 +514,7 @@
 							}
 							else
 							{
-								$bofiles->create_document_dir("fmticket/{$msglog['id']}");
+								$bofiles->create_document_dir("fmticket/{$result['id']}");
 								$bofiles->vfs->override_acl = 1;
 
 								if(!$bofiles->vfs->cp(array (
