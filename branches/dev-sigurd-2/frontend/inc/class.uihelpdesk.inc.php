@@ -129,7 +129,7 @@
                             (
                                 array
                                 ( //status values
-                                    'id' => 'values_combo_box_2',
+                                    'id' => 'values_combo_box',
                                     'value'	=> $this->bocommon->select2String($values_combo_box)
                                 )
                             )

@@ -24,3 +24,6 @@ Apply	frontend	no	Lagre
 Priority changed	frontend	no	Prioritet endret
 tab sorting	frontend	no	Fanesortering
 frontend settings	frontend	no	Frontend-innstillinger
+All	frontend	no	Vis alle
+Closed	frontend	no	Avsluttede
+not_implemented	frontend	no	Ikke implementert
