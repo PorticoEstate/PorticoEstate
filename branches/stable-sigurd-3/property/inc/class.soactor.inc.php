@@ -36,7 +36,7 @@
 	{
 		var $role;
 
-		function property_soactor()
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon		= CreateObject('property.bocommon');

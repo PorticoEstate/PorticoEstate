@@ -43,6 +43,12 @@
 		var $role;
 		var $member_id;
 
+		protected $valid_role = array(
+				'tenant'=>true,
+				'owner'	=>true,
+				'vendor'=>true
+				);
+
 		/**
 		 * @var object $custom reference to custom fields object
 		 */
@@ -57,7 +63,7 @@
 			'check_perms'	=> true
 		);
 
-		function property_boactor($session=false)
+		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.soactor');
 			$this->bocommon 	= & $this->so->bocommon;
@@ -131,6 +137,11 @@
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data','actor_' . $this->role,$data);
 			}
+		}
+
+		public function check_valid_role($role)
+		{
+			return $this->valid_role[$role];
 		}
 
 		function read_sessiondata()

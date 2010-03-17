@@ -4029,3 +4029,33 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+
+	/**
+	* Update property version from 0.9.17.582 to 0.9.17.583
+	* Grant rights on actors
+	* 
+	*/
+
+	$test[] = '0.9.17.582';
+	function property_upgrade0_9_17_582()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.owner');
+		$sql = "UPDATE phpgw_locations SET allow_grant = 1 WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.tenant');
+		$sql = "UPDATE phpgw_locations SET allow_grant = 1 WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
+		$sql = "UPDATE phpgw_locations SET allow_grant = 1 WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.583';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
