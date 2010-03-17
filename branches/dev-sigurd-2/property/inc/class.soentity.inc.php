@@ -395,7 +395,26 @@
 							case 'V':
 							case 'email':
 							case 'CH':
-						//		$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'R':
+							case 'LB':
+								if(!$criteria_id)
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
+									." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+
+									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+									." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$__querymethod = array(); // remove block
+								}
 								break;
 							case 'I':
 								if(ctype_digit($query) && !$criteria_id)
