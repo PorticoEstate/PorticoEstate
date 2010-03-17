@@ -161,34 +161,43 @@
 			$this->bo->allrows = true;
 			$list = $this->bo->read($start_date,$end_date,$external, '', $download = true);
 
-			if (isset($list) AND is_array($list))
-			{
-				$i=0;
-				foreach($list as &$entry)
-				{
-					if($entry['subject'])
-					{
-						$entry['category'] = $entry['subject'];
-					}
+			$custom_status	= $this->bo->get_custom_status();
 
-					if (isset($entry['child_date']) AND is_array($entry['child_date']))
+			$status = array();
+			$status['O'] = isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
+			$status['C'] = lang('Closed');
+			foreach($custom_status as $custom)
+			{
+				$status["C{$custom['id']}"] = $custom['name'];
+			}
+
+			foreach($list as &$entry)
+			{
+				if($entry['subject'])
+				{
+					$entry['category'] = $entry['subject'];
+				}
+
+				$entry['status'] = $status[$entry['status']];
+
+				if (isset($entry['child_date']) AND is_array($entry['child_date']))
+				{
+					$j=0;
+					foreach($entry['child_date'] as $date)
 					{
-						$j=0;
-						foreach($entry['child_date'] as $date)
+						if($date['date_info'][0]['descr'])
 						{
-							if($date['date_info'][0]['descr'])
-							{
-							 	$entry['date_' . $j]=$date['date_info'][0]['entry_date'];
-							 	$name_temp['date_' . $j]=true;
-							 	$descr_temp[$date['date_info'][0]['descr']]=true;
-							 }
-							 $j++;
-						}
-						unset($entry['child_date']);
+						 	$entry['date_' . $j]=$date['date_info'][0]['entry_date'];
+						 	$name_temp['date_' . $j]=true;
+						 	$descr_temp[$date['date_info'][0]['descr']]=true;
+						 }
+						 $j++;
 					}
-					$i++;
+					unset($entry['child_date']);
 				}
 			}
+
+
 //_debug_array($descr_temp);
 
 
@@ -216,6 +225,7 @@
 				$name[] = 'actual_cost';
 			}
 
+			$uicols_related = $this->bo->uicols_related;
 			foreach($uicols_related as $related)
 			{
 				$name[] = $related;			
@@ -226,11 +236,10 @@
 				array_push($name,$name_entry);
 			}
 
-
 			$descr = array();
-			foreach($name as $entry)
+			foreach($name as $_entry)
 			{
-				$descr[] = lang(str_replace('_', ' ', $entry));
+				$descr[] = lang(str_replace('_', ' ', $_entry));
 			}
 
 			$name[] = 'finnish_date';
@@ -242,6 +251,7 @@
 				array_push($descr,$descr_entry);
 			}
 */
+
 			array_push($descr,lang('finnish date'),lang('delay'));
 
 			$this->bocommon->download($list,$name,$descr);
@@ -682,10 +692,18 @@
 			{
 				$status['X'] = array
 				(
-					'bgcolor'			=> '#5EFB6E',
+		//			'bgcolor'			=> '#5EFB6E',
 					'status'			=> lang('closed'),
-					'text_edit_status'	=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
-					'new_status' 		=> 'O'
+				);
+				$status['O'] = array
+				(
+		//			'bgcolor'			=> '#5EFB6E',
+					'status'			=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
+				);
+				$status['C'] = array
+				(
+		//			'bgcolor'			=> '#5EFB6E',
+					'status'			=> lang('closed'),
 				);
 
 				$custom_status	= $this->bo->get_custom_status();
@@ -694,10 +712,8 @@
 				{
 					$status["C{$custom['id']}"] = array
 					(
-						'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
+		//				'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
 						'status'			=> $custom['name'],
-						'text_edit_status'	=> lang('close'),
-						'new_status'		=> 'X'
 					);
 				}
 
@@ -705,17 +721,7 @@
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='O')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
-						}
-						else if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='C')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= lang('Closed');
-						}
-						else if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
+						if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= $status[$ticket[$uicols['name'][$k]]]['status'];
@@ -802,7 +808,8 @@
 				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes'
 				&& $this->acl_edit)
 			{
-				
+
+				unset($status['C']);
 				foreach ($status as $status_code => $status_info)
 				{
 					$datatable['rowactions']['action'][] = array(
