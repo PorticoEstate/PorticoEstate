@@ -58,7 +58,7 @@
 			'columns'	=> true
 		);
 
-		function property_uiactor()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -91,12 +91,7 @@
 			$this->allrows			= $this->bo->allrows;
 			$this->member_id		= $this->bo->member_id;
 
-			$valid_role = array(
-				'tenant'=>true,
-				'owner'	=>true,
-				'vendor'=>true
-				);
-			if(!$valid_role[$this->role])
+			if( !$this->bo->check_valid_role($this->role) )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.index'));
 			}
