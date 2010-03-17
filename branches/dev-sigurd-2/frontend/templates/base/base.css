@@ -23,6 +23,14 @@ div#unit_selector {
 	padding: 2em;	
 }
 
+div#unit_image {
+	float:right;
+}
+
+div#unit_image img {
+	height:170px;
+}
+
 div.yui-navset {
 	padding-left: 2em;
 	padding-right: 2em;

@@ -70,7 +70,7 @@
 						'label' => lang($name),
 						'link'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.ui{$name}.index", 'type'=>$location_id, 'noframework' => $noframework))
 					);
-				}			
+				}
 			}
 			
 			// Check to see whether the user has specified tab or has a selected tab on session
