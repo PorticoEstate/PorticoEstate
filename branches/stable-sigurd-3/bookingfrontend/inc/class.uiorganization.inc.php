@@ -22,6 +22,20 @@
 		{
 			return parent::index_json();
 		}
+
+		public function edit()
+		{
+			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+
+			if (isset($organization['permission']['write']))
+			{
+				parent::edit();
+			}
+			else
+			{
+				self::render_template('access_denied');
+			}
+		}
 		
 		public function show()
 		{

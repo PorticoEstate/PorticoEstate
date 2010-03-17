@@ -287,3 +287,4 @@ When clicking the Next-button you will be presented to a list of bookings that w
 Update	bookingfrontend	no	Oppdater
 %1 bookings will be updated.	bookingfrontend	no	%1 bookinger vil bli oppdatert.
 %1 bookings were updated.	bookingfrontend	no	%1 bookinger ble oppdatert.
+Access denied	bookingfrontend	no	Ingen tilgang

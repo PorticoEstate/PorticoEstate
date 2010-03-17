@@ -149,7 +149,8 @@
  	                        						."district_id:'{$this->district_id}',"
 						 	                        ."year:'{$this->year}',"
 						 	                        ."grouping:'{$this->grouping}',"
- 	                        						."revision:'{$this->revision}'";
+ 	                        						."revision:'{$this->revision}',"
+ 	                        						."download:'budget'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year);
 				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -250,6 +251,13 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 6
 			                                        ),
+													array
+													(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 9
+													),
 			                                        array( //boton     add
 			                                            'id' 		=> 'btn_new',
 			                                            'name' 		=> 'new',
@@ -566,7 +574,8 @@
 						 	                        ."year:'{$this->year}',"
 						 	                        ."grouping:'{$this->grouping}',"
  	                        						."dimb_id: '{$this->dimb_id}',"
- 	                        						."revision:'{$this->revision}'";
+ 	                        						."revision:'{$this->revision}',"
+ 	                        						."download:'basis'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
 				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -655,6 +664,12 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 5
 			                                        ),
+													array(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 9
+													),
 			                                        array( //boton     add
 			                                            'id' 		=> 'btn_new',
 			                                            'name' 		=> 'new',
@@ -962,7 +977,8 @@
 							 	                        ."year:'{$this->year}',"
 	 	                        						."details:'{$this->details}',"
 	 	                        						."dimb_id:'{$this->dimb_id}',"
-	 	                        						."allrows:'{$this->allrows}'";
+	 	                        						."allrows:'{$this->allrows}',"
+ 	                        							."download:'obligations'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=false);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -1034,6 +1050,13 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 5
 			                                        ),
+													array
+													(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 8
+													),
 			                                        array( //boton     SEARCH
 			                                            'id' 		=> 'btn_search',
 			                                            'name' 		=> 'search',
@@ -1776,15 +1799,114 @@
 
 		function download()
 		{
-			$budget_id = phpgw::get_var('budget_id', 'int');
-			$list= $this->bo->read_budget($budget_id,$allrows=true);
-			$uicols	= $this->bo->uicols;
-			foreach($uicols as $col)
+			switch (phpgw::get_var('download'))
 			{
-				$names[] = $col['name'];
-				$descr[] = $col['descr'];
+				case 'basis':
+					$list= $this->bo->read_basis();
+					$names = array
+					(
+						'year',
+						'grouping',
+						'b_account_id',
+						'b_account_name',
+						'district_id',
+						'revision',
+						'budget_cost',
+						'ecodimb',
+						'category', 
+					);
+					$descr = array
+					(
+						'year',
+						lang('grouping'),
+						'b_account_id',
+						'b_account_name',
+						'district_id',
+						'revision',
+						lang('budget'),
+						lang('dimb'),
+						'category', 
+					);
+					break;
+				case 'budget':
+					$list= $this->bo->read();
+					$names = array
+					(
+						'year',
+						'grouping',
+						'b_account_id',
+						'b_account_name',
+						'district_id',
+						'revision',
+						lang('budget'),
+						'ecodimb',
+						'category', 
+					);
+					$descr = array
+					(
+						'year',
+						lang('grouping'),
+						'b_account_id',
+						'b_account_name',
+						'district_id',
+						'revision',
+						lang('budget'),
+						lang('dimb'),
+						'category', 
+					);
+
+					break;
+				case 'obligations':
+					$gross_list= $this->bo->read_obligations();
+					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+					$list = array();
+					foreach($gross_list as $entry)
+					{
+						$list[] = array
+						(
+							'grouping'			=> $entry['grouping'],
+							'b_account'			=> $entry['b_account'],	
+							'district_id'		=> $entry['district_id'],
+							'ecodimb'			=> $entry['ecodimb'],
+							'hits'				=> $entry['hits'],
+							'budget_cost'		=> $entry['budget_cost'],
+							'obligation'		=> $entry['obligation'],
+							'actual_cost'		=> $entry['actual_cost'],
+							'diff'				=> ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
+						);	
+					}
+					$names = array
+					(
+						'grouping',
+						'b_account',
+						'district_id',
+						'ecodimb',
+						'actual_cost',
+						'budget_cost',
+						'obligation',
+						'hits',
+						'diff'
+					);
+					$descr = array
+					(
+						lang('grouping'),
+						'b_account',
+						'district_id',
+						lang('dimb'),
+						'actual_cost',
+						lang('budget'),
+						lang('sum orders'),
+						'hits',
+						'diff'
+					);
+					break;
+				default:
+				return;
 			}
-			$this->bocommon->download($list,$names,$descr);
+			if($list)
+			{
+				$this->bocommon->download($list,$names,$descr);
+			}
 		}
 	}
 
