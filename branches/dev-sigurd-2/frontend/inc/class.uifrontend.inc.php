@@ -52,8 +52,11 @@
 
 			$noframework = phpgw::get_var('noframework', 'bool');
 			$GLOBALS['phpgw_info']['flags']['noframework'] = $noframework;
+			
+			
+			// Get tabs from location hierarchy
+			// tabs [location identidier] = {label => ..., link => ...}
 			$locations = frontend_bofrontend::get_sections();
-
 			$tabs = array();
 			foreach ($locations as $key => $entry)
 			{
@@ -70,23 +73,24 @@
 				}			
 			}
 			
-			
-			
+			// Check to see whether the user has specified tab or has a selected tab on session
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
-			$selected = isset($type) ? $type : array_shift(array_keys($tabs));
-			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
-
+			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab');
+			
+			
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
 			
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'header.list' , 'frontend' );
 			
+			//New location selected from header list
 			$new_location = phpgw::get_var('location');
+			
+			// Get header state ... 
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
             
+			// ... and if new location check to see if user has access (exist in session)
 			if(isset($new_location))
 			{
-				//check to see if location exist
 				$locs = $this->header_state['locations'];
 				$exist = false;
 				foreach($locs as $loc)
@@ -102,9 +106,11 @@
 					$this->header_state['selected'] = $new_location;
 					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
+				
+				$tab = null; // 
 			}
-			else if(count($this->header_state['locations']) == 0)
-			{
+			else if(count($this->header_state['locations']) == 0) // if the user has access to no locations
+			{ 
 				$org_units_ids = frontend_bofellesdata::get_organizational_units();
 				$property_locations = frontend_borental::get_property_locations($org_units_ids);
 				$this->header_state = array(
@@ -113,6 +119,12 @@
             	);
             	phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 			}
+			
+			//Set selected tab; either user specified on this request, session based, or default: first in array
+			$selected = isset($tab) ? $tab : array_shift(array_keys($tabs));
+			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
+			phpgwapi_cache::session_set('frontend','tab',$selected);
 		}
 
 		
