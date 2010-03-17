@@ -191,36 +191,57 @@
 			}
 //_debug_array($descr_temp);
 
-			$name	= array('id',
-						'category',
-						'location_code',
-						'address',
-						'user',
-						'assignedto',
-						'entry_date'
-						);
+
+			$name	= array();
+			$name[] = 'priority';
+			$name[] = 'id';
+			$name[] = 'subject';
+			$name[] = 'loc1_name';
+			$name[] = 'location_code';
+			$name[] = 'address';
+			$name[] = 'user';
+			$name[] = 'assignedto';
+			$name[] = 'entry_date';
+			$name[] = 'status';
+			
+			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
+			{
+				$name[] = 'order_id';
+				$name[] = 'vendor';
+			}
+
+			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
+			{
+				$name[] = 'estimate';
+				$name[] = 'actual_cost';
+			}
+
+			foreach($uicols_related as $related)
+			{
+				$name[] = $related;			
+			}
 
 			while (is_array($name_temp) && list($name_entry,) = each($name_temp))
 			{
 				array_push($name,$name_entry);
 			}
 
-			array_push($name,'finnish_date','delay');
 
-			$descr	= array(lang('ID'),
-					lang('category'),
-					lang('location'),
-					lang('address'),
-					lang('user'),
-					lang('Assigned to'),
-					lang('Started')
-					);
+			$descr = array();
+			foreach($name as $entry)
+			{
+				$descr[] = lang(str_replace('_', ' ', $entry));
+			}
 
+			$name[] = 'finnish_date';
+			$name[] = 'delay';
+
+	/*
 			while (is_array($descr_temp) && list($descr_entry,) = each($descr_temp))
 			{
 				array_push($descr,$descr_entry);
 			}
-
+*/
 			array_push($descr,lang('finnish date'),lang('delay'));
 
 			$this->bocommon->download($list,$name,$descr);
