@@ -107,7 +107,8 @@
 					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
 				
-				$tab = null; // 
+				$tab = null; // No selected tab
+				phpgwapi_cache::session_set('frontend','contract_state',null);
 			}
 			else if(count($this->header_state['locations']) == 0) // if the user has access to no locations
 			{ 
@@ -125,6 +126,7 @@
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 			phpgwapi_cache::session_set('frontend','tab',$selected);
+			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
 		}
 
 		

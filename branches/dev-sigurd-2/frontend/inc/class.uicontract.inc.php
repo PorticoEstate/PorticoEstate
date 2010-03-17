@@ -68,23 +68,27 @@ class frontend_uicontract extends frontend_uifrontend
 		}
 		
 		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
-		$contract_for_selection = array();
+		$contracts_for_selection = array();
 		foreach($contracts_per_location[$this->header_state['selected']] as $contract)
 		{
-			$contract_for_selection[] = $contract->serialize();
+			$contracts_for_selection[] = $contract->serialize();
 		}
+		
 
-		$data = array
-                (
-                //'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-				'header' =>$this->header_state,
-				'tabs' => $this->tabs,
-                'selected_contract' =>  $this->contract_state['selected'],
-				'contracts'      => array('select' => $contract_for_selection),
-                'contract'		=> $this->contract_state['contract']->serialize()
-                );
+		$data = array (
+			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+			'header' 		=>	$this->header_state,
+			'tabs' 			=> 	$this->tabs,
+			'contract_data' => 	array (
+				'select' => $contracts_for_selection, 
+				'selected_contract' =>  $this->contract_state['selected'], 
+				'contract'	=> $this->contract_state['contract']->serialize()
+			)
+		);
+		
+		//var_dump($data);
                 	
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract','datatable'));
+		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
 	}
 }

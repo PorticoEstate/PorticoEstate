@@ -1,8 +1,9 @@
-
-<xsl:template match="header" >
-	<div id="building_selector">
+<xsl:template match="header" xmlns:php="http://php.net/xsl">
+	<div id="unit_selector">
         <form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
-            <label>Velg bygg</label>
+            <label>
+            	<xsl:value-of select="php:function('lang', 'select_unit')"/>
+            </label>
             <br/>
             <select name="location" size="7" onchange="this.form.submit();">
             	

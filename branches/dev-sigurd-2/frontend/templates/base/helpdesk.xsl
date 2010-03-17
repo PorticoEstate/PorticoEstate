@@ -19,12 +19,13 @@
             <div class="toolbar-container">
                 <div class="toolbar">
                     <xsl:apply-templates select="datatable/actions" />
+                    
                 </div>
             </div>
+            <xsl:apply-templates select="datatable" />
         </div>
     </div>
 
-    <xsl:apply-templates select="datatable" />
 </xsl:template>
 
 <xsl:template match="lightbox_name" xmlns:php="http://php.net/xsl">
