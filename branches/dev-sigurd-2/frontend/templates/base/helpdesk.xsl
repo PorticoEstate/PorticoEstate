@@ -27,6 +27,9 @@
     <xsl:apply-templates select="datatable" />
 </xsl:template>
 
+<xsl:template match="lightbox_name" xmlns:php="http://php.net/xsl">
+</xsl:template>
+
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
     <h2>Ny skademelding</h2>
     <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
