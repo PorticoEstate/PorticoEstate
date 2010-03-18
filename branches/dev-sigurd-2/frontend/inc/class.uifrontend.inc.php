@@ -156,6 +156,13 @@
 			$location_code = phpgw::get_var('loc_code') ? phpgw::get_var('loc_code') : 'dummy';
 
 			$directory = "/property/document/{$location_code}/{$doc_type}";
+
+			if(!file_exists($directory))
+			{
+				header("HTTP/1.0 404 Not Found");
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			$dh = opendir($directory);
 
 			$filename = readdir($dh);
