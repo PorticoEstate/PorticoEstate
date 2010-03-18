@@ -1,7 +1,7 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
 	<div id="unit_selector">
 		<div id="unit_image">
-			<img src="http://www.greenofficeprojects.org/blog/images/building.jpg" alt="{loc1_name}" />
+			<img src="index.php?menuaction=frontend.uifrontend.objectimg&amp;loc_code={selected}" alt="" />
 		</div>
 		
 		<form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
