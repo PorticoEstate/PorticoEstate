@@ -736,6 +736,7 @@ export date	property	no	Eksport dato
 export invoice	property	no	Overfør
 export to file	property	no	Eksport til fil
 extra	property	no	Ekstra
+extra mail address	property	no	Ekstra adresse
 f	property	no	F
 failed to copy file !	property	no	Kopiering av fil feilet!
 failed to create directory	property	no	klarte ikke å lage katalog
@@ -1058,6 +1059,8 @@ num	property	no	Num
 number	property	no	Nummer
 obligations	property	no	Regnskap
 of	property	no	av
+on behalf of assigned	property	no	På vegne av tildelt
+on behalf of assigned - vacation mode	property	no	På vegne av tildelt - feriemodus
 old value	property	no	opprinnelig verdi
 only private	property	no	Bare privat
 open	property	no	Åpen
@@ -1584,6 +1587,7 @@ the entrance is public. if the entrance should be private, check this box	proper
 the file is already imported !	property	no	Fila er allerede importert
 the mail server returned	property	no	E-post serveren returnerte
 the number of %1 hour is added!	property	no	%1 poster er lagt til
+The order will also be sent to this one	property	no	Bestillinga blir også sendt til denne
 the project has not been saved	property	no	Prosjektet er ikke lagret
 the property is private. if the property should be public, uncheck this box	property	no	Eiendommen er merket privat. Dersom den skulle være public - fjern krysset i denne boksen
 the property is public. if the property should be private, check this box	property	no	Eiendommen er merket public. Dersom den skulle være privat - kryss av denne boksen
@@ -1612,6 +1616,7 @@ this location id does not exist!	property	no	Denne lokaliserings ID finnes ikke!
 this location is already registered!	property	no	Denne lokaliseringen er allerede registert!
 this location parent id does not exist!	property	no	Denne lokaliserings-forelder ID finnes ikke!
 this meter id is already registered!	property	no	denne måler ID er allrerede registert
+this order is sent by %1 on behalf of %2	property	no	Denne bestillinga er bestilt av %1 på vegne av %2
 this property id does not exist!	property	no	Denne eiendoms ID eksisterer ikke
 this user has not defined an email address !	property	no	Denne brukeren har ikke definert en epost adresse !
 this vendor is already registered for this activity	property	no	Denne leverandøren er allerede registert for denne aktiviteten

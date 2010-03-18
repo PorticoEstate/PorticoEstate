@@ -1094,6 +1094,18 @@
 								<xsl:value-of select="value_order_id"/>
 							</td>
 						</tr>
+						<tr>
+							<td>
+						           <xsl:value-of select="php:function('lang', 'on behalf of assigned')" />
+							</td>
+							<td>
+								<input type="checkbox" name="values[on_behalf_of_assigned]" value="True">
+									<xsl:attribute name="title">
+							            <xsl:value-of select="php:function('lang', 'on behalf of assigned - vacation mode')" />
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
 
 						<xsl:call-template name="vendor_form"/>
 						<xsl:call-template name="ecodimb_form"/>
@@ -1209,6 +1221,18 @@
 					            <xsl:value-of select="php:function('lang', 'send order')" />
 							</td>
 							<td><div id="paging_3"></div><div id="datatable-container_3"></div> </td>
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="php:function('lang', 'extra mail address')" />
+							</td>
+							<td>
+								<input type="text" name="values[vendor_email][]" value="">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')" />
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
 
 						<!--	<td>
 								<table>

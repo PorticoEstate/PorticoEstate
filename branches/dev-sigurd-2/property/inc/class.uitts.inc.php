@@ -2167,8 +2167,21 @@
 				// approval					
 			}
 
-			if(isset($values['vendor_email']) && $values['vendor_email'])
+			$vendor_email = array();
+			
+			foreach ($values['vendor_email'] as $_temp)
 			{
+				if($_temp)
+				{
+					$vendor_email[] = $_temp;
+				}
+			}
+			unset($_temp);
+
+			if($vendor_email)
+			{
+				$historylog	= CreateObject('property.historylog','tts');
+
 				$subject = lang(workorder).": {$ticket['order_id']}";
 
 				$organisation = '';
@@ -2181,7 +2194,19 @@
 					$organisation = $this->bo->config->config_data['org_name'];
 				}
 
-				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				if(isset($values['on_behalf_of_assigned']) && $values['on_behalf_of_assigned'] && isset($ticket['assignedto_name']))
+				{
+					$user_name = $ticket['assignedto_name'];
+					$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+					$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
+					$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $user_name);
+					$historylog->add('C',$id,$_behalf_alert);
+					unset($_behalf_alert);
+				}
+				else
+				{
+					$user_name = $GLOBALS['phpgw_info']['user']['fullname'];				
+				}
 				$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 				$location = lang('Address'). ": {$ticket['address']}<br>";
 
@@ -2268,13 +2293,12 @@
 						$bcc .= ";{$contact_data['value_contact_email']}";
 					}
 
-					$_to = implode(';',$values['vendor_email']);
+					$_to = implode(';',$vendor_email);
 					
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
 					if($rcpt)
 					{
 						$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
-						$historylog	= CreateObject('property.historylog','tts');
 						$historylog->add('M',$id,"{$_to}{$attachment_log}");
 						$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 						$action_params = array
