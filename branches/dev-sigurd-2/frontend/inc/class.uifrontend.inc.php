@@ -22,7 +22,7 @@
 
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 */
+	*/
 
 	phpgw::import_class('frontend.bofrontend');
 	phpgw::import_class('frontend.bofellesdata');
@@ -35,15 +35,16 @@
 
 	class frontend_uifrontend
 	{
-        /**
-         * Used to save state of header (select box, ++) between requests
-         * @var array
-         */
-        public $header_state;
+		/**
+		 * Used to save state of header (select box, ++) between requests
+		 * @var array
+		 */
+		public $header_state;
 
 		public $public_functions = array
-		(
-			'index'		=> true
+			(
+			'index'		=> true,
+			'objectimg' => true
 		);
 
 		public function __construct()
@@ -52,8 +53,8 @@
 
 			$noframework = phpgw::get_var('noframework', 'bool');
 			$GLOBALS['phpgw_info']['flags']['noframework'] = $noframework;
-			
-			
+
+
 			// Get tabs from location hierarchy
 			// tabs [location identidier] = {label => ..., link => ...}
 			$locations = frontend_bofrontend::get_sections();
@@ -72,22 +73,22 @@
 					);
 				}
 			}
-			
+
 			// Check to see whether the user has specified tab or has a selected tab on session
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
 			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab');
-			
-			
+
+
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
-			
+
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'header.list' , 'frontend' );
-			
+
 			//New location selected from header list
 			$new_location = phpgw::get_var('location');
-			
-			// Get header state ... 
+
+			// Get header state ...
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
-            
+
 			// ... and if new location check to see if user has access (exist in session)
 			if(isset($new_location))
 			{
@@ -100,27 +101,28 @@
 						$exist = true;
 					}
 				}
-				
+
 				if($exist)
 				{
 					$this->header_state['selected'] = $new_location;
 					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
-				
+
 				$tab = null; // No selected tab
 				phpgwapi_cache::session_set('frontend','contract_state',null);
 			}
 			else if(count($this->header_state['locations']) == 0) // if the user has access to no locations
-			{ 
+
+			{
 				$org_units_ids = frontend_bofellesdata::get_organizational_units();
 				$property_locations = frontend_borental::get_property_locations($org_units_ids);
 				$this->header_state = array(
-	                'selected' => count($property_locations) > 0 ? $property_locations[0]['location_code'] : '' ,
-	            	'locations' => $property_locations
-            	);
-            	phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
+					'selected' => count($property_locations) > 0 ? $property_locations[0]['location_code'] : '' ,
+					'locations' => $property_locations
+				);
+				phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 			}
-			
+
 			//Set selected tab; either user specified on this request, session based, or default: first in array
 			$selected = isset($tab) ? $tab : array_shift(array_keys($tabs));
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
@@ -129,11 +131,65 @@
 			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
 		}
 
-		
+
 		public function index()
 		{
 			//Forward to helpdesk
 			$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', '.ticket');
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'type' => $location_id));
+		}
+
+
+		public function objectimg()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			
+// Start-------------------------------------------------
+
+			$config = CreateObject('phpgwapi.config','frontend');
+			$config->read();
+			$doc_type = $config->config_data['picture_building_cat'] ? $config->config_data['picture_building_cat'] : 'profilbilder';
+
+			// Get object id from params or use 'dummy'
+			$location_code = phpgw::get_var('loc_code') ? phpgw::get_var('loc_code') : 'dummy';
+
+			$directory = "/property/document/{$location_code}/{$doc_type}";
+			$dh = opendir($directory);
+
+			$filename = readdir($dh);
+			closedir($dh);
+			
+			$file = file_get_contents("$directory/$filename");
+			$imageinfo = getimagesize("$directory/$filename");
+
+			header('Content-type: ' . $imageinfo['mime']);
+			echo $file;
+
+			// The following didnt work :\
+			/*$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$ls_array = $vfs->ls(array(
+				'string' => $directory,
+				'relatives' => array(RELATIVE_NONE)
+			));
+
+			//_debug_array($ls_array);
+
+			$file = isset($ls_array[0]['directory']['name']) ? "{$ls_array[0]['directory']}/{$ls_array[0]['name']}" : '';
+			//_debug_array($file);
+			
+			
+			$document = $vfs->read(array(
+				'string' 	=> $file,
+				'relatives' => array(RELATIVE_NONE))
+			);
+
+			$vfs->override_acl = 0;
+			*/
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 	}
