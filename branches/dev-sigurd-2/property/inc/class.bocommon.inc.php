@@ -1861,11 +1861,6 @@
 			return $this->socommon->get_max_location_level();
 		}
 
-		function active_group_members($group_id)
-		{
-			return $this->socommon->active_group_members($group_id);
-		}
-
 		/**
 		* Preserve attribute values from post in case of an error
 		*

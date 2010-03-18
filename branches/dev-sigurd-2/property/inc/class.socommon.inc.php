@@ -369,20 +369,6 @@
 			return $this->db->f('level');
 		}
 
-		function active_group_members($group_id = '')
-		{
-			$this->db->query("SELECT phpgw_accounts.account_id, phpgw_accounts.account_lid FROM phpgw_acl $this->join phpgw_accounts on phpgw_acl.acl_account = phpgw_accounts.account_id"
-				. " WHERE phpgw_acl.acl_location = $group_id AND phpgw_acl.acl_appname = 'phpgw_group' AND account_status = 'A'");
-
-			while ($this->db->next_record())
-			{
-				$members[] = array (
-				'account_id' => $this->db->f('account_id'),
-				'account_name' => $this->db->f('account_lid')
-				);
-			}
-			return $members;
-		}
 
 		/**
 		* Get list of accessible physical locations for current user

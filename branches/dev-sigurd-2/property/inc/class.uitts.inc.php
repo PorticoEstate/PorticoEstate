@@ -1900,7 +1900,8 @@
 				}
 				$receipt = $this->bo->update_ticket($values,$id);
 
-				if ( isset($values['send_mail']) && $values['send_mail']) 
+				if ( (isset($values['send_mail']) && $values['send_mail']) 
+				|| (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']));
 				{
 					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 				}
