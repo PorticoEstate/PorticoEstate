@@ -17,6 +17,7 @@ accounting voucher type	property	no	Regnskap type faktura
 acl_locastion is missing	property	no	ACL-lokalisering mangler
 acquisition date	property	no	Anskaffelses dato
 action	property	no	Handling
+acivate tracking of dates in helpdesk main list	property	no	Aktiver visning av datoer for denne entiteten i hovedliste for helpdesk
 activities	property	no	Aktiviteter
 activity	property	no	Aktivitet
 activity code	property	no	Aktivitets kode
@@ -735,6 +736,7 @@ export date	property	no	Eksport dato
 export invoice	property	no	Overfør
 export to file	property	no	Eksport til fil
 extra	property	no	Ekstra
+extra mail address	property	no	Ekstra adresse
 f	property	no	F
 failed to copy file !	property	no	Kopiering av fil feilet!
 failed to create directory	property	no	klarte ikke å lage katalog
@@ -802,7 +804,6 @@ id not entered!	property	no	ID er ikke valgt
 if files can be uploaded for this category	property	no	Om filer skal kunne lastes opp for denne kategorien
 if this entity type is to be linked to a location	property	no	Om denne entitetstypen skal linkes til en lokalisering
 if this entity type is to be linked to documents	property	no	Om denne entitetstypen skal linkes til dokumentasjon
-if this entity type is to be tracket in ticket list	property	no	Om denne entiteten skal spores fra helpdesk
 if this entity type is to look up tenants	property	no	Om denne entiteten skal gjøre oppslag på leietakere
 import	property	no	Import
 importance	property	no	Viktighet
@@ -854,6 +855,7 @@ is there a demand from the authorities to correct this condition?	property	no	Fi
 items	property	no	Detaljer
 janitor	property	no	Bestiller
 jasper reports	property	no	JasperReports
+jasper upload	property	no	opplasting av JasperReports
 key deliver location	property	no	Sted for å levere nøkkel
 key fetch location	property	no	Sted for å hente nøkkel
 key location	property	no	Nøkkel lokalisert
@@ -1057,6 +1059,8 @@ num	property	no	Num
 number	property	no	Nummer
 obligations	property	no	Regnskap
 of	property	no	av
+on behalf of assigned	property	no	På vegne av tildelt
+on behalf of assigned - vacation mode	property	no	På vegne av tildelt - feriemodus
 old value	property	no	opprinnelig verdi
 only private	property	no	Bare privat
 open	property	no	Åpen
@@ -1518,6 +1522,7 @@ started	property	no	startet
 start project	property	no	Start prosjekt
 start this entity	property	no	Start denne entiteten
 start this entity from	property	no	Start denne entiteten fra prosjekt
+start ticket	property	no	Start melding
 status	property	no	Status
 status changed	property	no	Status er endret
 status code	property	no	Statuskode
@@ -1582,6 +1587,7 @@ the entrance is public. if the entrance should be private, check this box	proper
 the file is already imported !	property	no	Fila er allerede importert
 the mail server returned	property	no	E-post serveren returnerte
 the number of %1 hour is added!	property	no	%1 poster er lagt til
+The order will also be sent to this one	property	no	Bestillinga blir også sendt til denne
 the project has not been saved	property	no	Prosjektet er ikke lagret
 the property is private. if the property should be public, uncheck this box	property	no	Eiendommen er merket privat. Dersom den skulle være public - fjern krysset i denne boksen
 the property is public. if the property should be private, check this box	property	no	Eiendommen er merket public. Dersom den skulle være privat - kryss av denne boksen
@@ -1610,6 +1616,7 @@ this location id does not exist!	property	no	Denne lokaliserings ID finnes ikke!
 this location is already registered!	property	no	Denne lokaliseringen er allerede registert!
 this location parent id does not exist!	property	no	Denne lokaliserings-forelder ID finnes ikke!
 this meter id is already registered!	property	no	denne måler ID er allrerede registert
+this order is sent by %1 on behalf of %2	property	no	Denne bestillinga er bestilt av %1 på vegne av %2
 this property id does not exist!	property	no	Denne eiendoms ID eksisterer ikke
 this user has not defined an email address !	property	no	Denne brukeren har ikke definert en epost adresse !
 this vendor is already registered for this activity	property	no	Denne leverandøren er allerede registert for denne aktiviteten
@@ -1633,7 +1640,7 @@ todays date, eg. %1	property	no	Dagens dato, %1
 tolerance	property	no	Toleranse
 total cost	property	no	Total
 total sum	property	no	Total sum
-tracking	property	no	Sporing
+tracking helpdesk	property	no	Sporing helpdesk hovedliste
 transfer	property	no	Overfør
 true	property	no	True
 tts	property	no	melding

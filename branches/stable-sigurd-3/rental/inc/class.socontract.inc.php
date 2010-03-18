@@ -146,6 +146,17 @@ class rental_socontract extends rental_socommon
 			$filter_clauses[] = "composite.id = {$composite_id}";
 		}
 		
+		// Affected contracts by regulation
+		if(isset($filters['adjustment_interval']) && isset($filters['adjustment_year']))
+		{
+			$adjustment_interval = $this->marshal($filters['adjustment_interval'],'int');
+			$adjustment_year = $this->marshal($filters['adjustment_year'],'int');
+			
+			$filter_clauses[] = "contract.adjustable IS true";
+			//$filter_clauses[] = "contract.adjustment_interval = {$adjustment_interval}";
+			//$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} = {$adjustment_year}";
+		}
+		
 		/* 
 		 * Contract status is defined by the dates in each contract compared to the target date (default today):
 		 * - contracts under planning: 
@@ -1042,7 +1053,7 @@ class rental_socontract extends rental_socommon
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
     	$new_adjustment_interval = $this->marshal($adjustment_interval, 'int');
-    	$sql = "UPDATE rental_contract SET adjustable=true, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id} AND adjustment_year<{$new_adjusted_year}";
+    	$sql = "UPDATE rental_contract SET adjustable=true, adjustment_interval={$new_adjustment_interval}, adjustment_year={$new_adjusted_year} WHERE id = {$contract_id} AND (adjustment_year IS NULL OR adjustment_year<{$new_adjusted_year})";
     	$this->db->query($sql);
     	return $this->db->affected_rows() > 0 ? true : false;
     }
@@ -1058,13 +1069,9 @@ class rental_socontract extends rental_socommon
 	public function update_adjustment_year($contract_id, $adjusted_year)
     {
     	$new_adjusted_year = $this->marshal($adjusted_year, 'int');
-    	$sql1 = "SELECT adjustment_year FROM rental_contract where id={$contract_id} AND adjustment_year<{$new_adjusted_year}";
-    	$this->db->query($sql1);
-    	while($this->db->next_record()){
-    		$sql = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id={$contract_id}";
-    		$this->db->query($sql);
-    		return $this->db->affected_rows() > 0 ? true : false;
-    	}
+    	$sql = "UPDATE rental_contract SET adjustment_year={$new_adjusted_year} WHERE id={$contract_id} AND(adjustment_year IS NULL OR adjustment_year<{$new_adjusted_year})";
+    	$this->db->query($sql);
+    	return $this->db->affected_rows() > 0 ? true : false;
     }
     
     public function update_adjustment_share($contract_id, $adjustment_share)

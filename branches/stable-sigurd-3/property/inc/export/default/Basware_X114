@@ -597,9 +597,8 @@
 					}
 				}
 
-
 				$oRsOverfBilag				= $line;
-				$oRsOverfBilag['filnavn']	= basename($Filnavn);
+				$oRsOverfBilag['filnavn']	= $Filnavn? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
 				$oRsOverfBilag['ordrebelop']= $line[$BelopFelt];
 				$oRsOverfBilag['pmwrkord_code'] = $line['order_id'];
 
@@ -727,6 +726,11 @@
 			//Fullfør transaksjon
 			if ($download=='on' && !$this->debug)
 			{
+				$file_written = true;
+
+			// aktiver neste blokk for a skrive filer for basware
+			// -- Start
+			/* 
 				$file_written = false;
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp,$buffer);
@@ -735,7 +739,8 @@
 				{
 					$file_written=true;
 				}
-
+			*/
+			// -- END
 				if( $file_written && $this->config->config_data['invoice_export_method'] != 'ftp' )
 				{
 					$transfer_ok = true;

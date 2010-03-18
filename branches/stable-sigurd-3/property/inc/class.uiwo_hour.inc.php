@@ -1238,7 +1238,7 @@
 			$date					= $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
 
 			$from_name =	$GLOBALS['phpgw_info']['user']['fullname'];
-			$from_email =	$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+			$from_email =	"{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 
 			if($this->config->config_data['wo_status_sms'])
 			{

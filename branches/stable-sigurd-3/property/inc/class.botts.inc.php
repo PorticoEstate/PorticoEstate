@@ -744,8 +744,6 @@
 		{
 			$this->send			= CreateObject('phpgwapi.send');
 
-			$members = array();
-
 			$ticket	= $this->so->read_single($id);
 
 			$address_element = $this->get_address_element($ticket['location_code']);
@@ -763,43 +761,25 @@
 			$m=count($history_2)-1;
 			$ticket['status']=$history_2[$m]['status'];
 
-		//	$status = $this->get_status_text();
-
 			$group_name= $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 
 			// build subject
 			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $location_code .' ' .$this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
 
-
-		//	$prefs_user = $GLOBALS['phpgw']->preferences->create_email_preferences($ticket['user_id']);
 			$prefs_user = $this->bocommon->create_preferences('property',$ticket['user_id']);
 
 			$from_address=$prefs_user['email'];
 
 	//-----------from--------
 
-			$current_user_id=$GLOBALS['phpgw_info']['user']['account_id'];
+			$current_user_name= $GLOBALS['phpgw_info']['user']['fullname'];
 
-			$current_user_firstname	= $GLOBALS['phpgw_info']['user']['firstname'];
-
-			$current_user_lastname	=$GLOBALS['phpgw_info']['user']['lastname'];
-
-			$current_user_name= $user_firstname . " " .$user_lastname ;
-
-//			$current_prefs_user = $GLOBALS['phpgw']->preferences->create_email_preferences($current_user_id);
-			$current_prefs_user = $this->bocommon->create_preferences('property',$current_user_id);
-			$current_user_address=$current_prefs_user['email'];
-
-			$headers = "Return-Path: <". $current_user_address .">\r\n";
-			$headers .= "From: " . $current_user_name . "<" . $current_user_address .">\r\n";
-			$headers .= "Bcc: " . $current_user_name . "<" . $current_user_address .">\r\n";
-			$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-			$headers .= "MIME-Version: 1.0\r\n";
+			$current_prefs_user = $this->bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
+			$current_user_address = $current_prefs_user['email'];
 
 	//-----------from--------
 		// build body
 			$body  = '';
-	//		$body .= lang('Ticket').' #'.$id."\n";
 			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
 			$body .= lang('Date Opened').': '.$entry_date."\n";
 			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
@@ -862,59 +842,58 @@
 				$body .= lang('Date Closed').': '.$timestampclosed."\n\n";
 			}
 
-			if ($this->config->config_data['groupnotification'] && $ticket['group_id'])
+			$members = array();
+			$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
+
+			foreach($members_gross as $user)
 			{
-				// select group recipients
-				$members  = $this->bocommon->active_group_members($ticket['group_id']);
+				$GLOBALS['phpgw']->preferences->set_account_id($user['account_id'], true);
+				if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+					|| ($this->config->config_data['groupnotification'] && $ticket['group_id']))
+				{
+					$members[$user['account_id']] = $user['account_name'];
+				}
 			}
+			unset($members_gross);
 
-			if ($this->config->config_data['ownernotification'] && $ticket['user_id'])
+			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
+			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
 			{
-
 				// add owner to recipients
-				$members[] = array('account_id' => $ticket['user_id'], 'account_name' => $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']));
+				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			}
 
-			if ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto']))
 			{
 				// add assigned to recipients
-				$members[] = array('account_id' => $ticket['assignedto'], 'account_name' => $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']));
+				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
 			}
 
-			$error = Array();
-			$toarray = Array();
-			$i=0;
-			for ($i=0;$i<count($members);$i++)
+			$error = array();
+			$toarray = array();
+
+			foreach($members as $account_id => $account_name)
 			{
-				if ($members[$i]['account_id'])
+				$prefs = $this->bocommon->create_preferences('property',$account_id);
+				if (strlen($prefs['email'])> (strlen($account_name)+1))
 				{
-			//		$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences($members[$i]['account_id']);
-					$prefs = $this->bocommon->create_preferences('property',$members[$i]['account_id']);
-					if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
-					{
-						$toarray[$prefs['email']] = $prefs['email'];
-					}
-					else
-					{
-						$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
-						$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $members[$i]['account_name']);
-					}
+					$toarray[] = "{$account_name}<{$prefs['email']}>";
+				}
+				else
+				{
+					$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
+					$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $account_name);
 				}
 			}
 
-			if(count($toarray) > 1)
+			if($toarray)
 			{
-				$to = implode(',',$toarray);
-			}
-			else
-			{
-				$to = current($toarray);
-			}
+				$to = implode(';',$toarray);
+				$body = nl2br($body);
 
-			$body = nl2br($body);
-
-			if($to)
-			{
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
 					try

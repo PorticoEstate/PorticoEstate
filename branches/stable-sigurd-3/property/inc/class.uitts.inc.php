@@ -161,65 +161,96 @@
 			$this->bo->allrows = true;
 			$list = $this->bo->read($start_date,$end_date,$external, '', $download = true);
 
-			if (isset($list) AND is_array($list))
-			{
-				$i=0;
-				foreach($list as &$entry)
-				{
-					if($entry['subject'])
-					{
-						$entry['category'] = $entry['subject'];
-					}
+			$custom_status	= $this->bo->get_custom_status();
 
-					if (isset($entry['child_date']) AND is_array($entry['child_date']))
+			$status = array();
+			$status['O'] = isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
+			$status['C'] = lang('Closed');
+			foreach($custom_status as $custom)
+			{
+				$status["C{$custom['id']}"] = $custom['name'];
+			}
+
+			foreach($list as &$entry)
+			{
+				if($entry['subject'])
+				{
+					$entry['category'] = $entry['subject'];
+				}
+
+				$entry['status'] = $status[$entry['status']];
+
+				if (isset($entry['child_date']) AND is_array($entry['child_date']))
+				{
+					$j=0;
+					foreach($entry['child_date'] as $date)
 					{
-						$j=0;
-						foreach($entry['child_date'] as $date)
+						if($date['date_info'][0]['descr'])
 						{
-							if($date['date_info'][0]['descr'])
-							{
-							 	$entry['date_' . $j]=$date['date_info'][0]['entry_date'];
-							 	$name_temp['date_' . $j]=true;
-							 	$descr_temp[$date['date_info'][0]['descr']]=true;
-							 }
-							 $j++;
-						}
-						unset($entry['child_date']);
+						 	$entry['date_' . $j]=$date['date_info'][0]['entry_date'];
+						 	$name_temp['date_' . $j]=true;
+						 	$descr_temp[$date['date_info'][0]['descr']]=true;
+						 }
+						 $j++;
 					}
-					$i++;
+					unset($entry['child_date']);
 				}
 			}
+
+
 //_debug_array($descr_temp);
 
-			$name	= array('id',
-						'category',
-						'location_code',
-						'address',
-						'user',
-						'assignedto',
-						'entry_date'
-						);
+
+			$name	= array();
+			$name[] = 'priority';
+			$name[] = 'id';
+			$name[] = 'subject';
+			$name[] = 'loc1_name';
+			$name[] = 'location_code';
+			$name[] = 'address';
+			$name[] = 'user';
+			$name[] = 'assignedto';
+			$name[] = 'entry_date';
+			$name[] = 'status';
+			
+			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
+			{
+				$name[] = 'order_id';
+				$name[] = 'vendor';
+			}
+
+			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
+			{
+				$name[] = 'estimate';
+				$name[] = 'actual_cost';
+			}
+
+			$uicols_related = $this->bo->uicols_related;
+			foreach($uicols_related as $related)
+			{
+				$name[] = $related;			
+			}
 
 			while (is_array($name_temp) && list($name_entry,) = each($name_temp))
 			{
 				array_push($name,$name_entry);
 			}
 
-			array_push($name,'finnish_date','delay');
+			$descr = array();
+			foreach($name as $_entry)
+			{
+				$descr[] = lang(str_replace('_', ' ', $_entry));
+			}
 
-			$descr	= array(lang('ID'),
-					lang('category'),
-					lang('location'),
-					lang('address'),
-					lang('user'),
-					lang('Assigned to'),
-					lang('Started')
-					);
+			$name[] = 'finnish_date';
+			$name[] = 'delay';
 
+	/*
 			while (is_array($descr_temp) && list($descr_entry,) = each($descr_temp))
 			{
 				array_push($descr,$descr_entry);
 			}
+*/
 
 			array_push($descr,lang('finnish date'),lang('delay'));
 
@@ -661,10 +692,18 @@
 			{
 				$status['X'] = array
 				(
-					'bgcolor'			=> '#5EFB6E',
+		//			'bgcolor'			=> '#5EFB6E',
 					'status'			=> lang('closed'),
-					'text_edit_status'	=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
-					'new_status' 		=> 'O'
+				);
+				$status['O'] = array
+				(
+		//			'bgcolor'			=> '#5EFB6E',
+					'status'			=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
+				);
+				$status['C'] = array
+				(
+		//			'bgcolor'			=> '#5EFB6E',
+					'status'			=> lang('closed'),
 				);
 
 				$custom_status	= $this->bo->get_custom_status();
@@ -673,10 +712,8 @@
 				{
 					$status["C{$custom['id']}"] = array
 					(
-						'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
+		//				'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
 						'status'			=> $custom['name'],
-						'text_edit_status'	=> lang('close'),
-						'new_status'		=> 'X'
 					);
 				}
 
@@ -684,17 +721,7 @@
 				{
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='O')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
-						}
-						else if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='C')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= lang('Closed');
-						}
-						else if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
+						if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= $status[$ticket[$uicols['name'][$k]]]['status'];
@@ -781,7 +808,8 @@
 				&& $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes'
 				&& $this->acl_edit)
 			{
-				
+
+				unset($status['C']);
 				foreach ($status as $status_code => $status_info)
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -1872,7 +1900,8 @@
 				}
 				$receipt = $this->bo->update_ticket($values,$id);
 
-				if ( isset($values['send_mail']) && $values['send_mail']) 
+				if ( (isset($values['send_mail']) && $values['send_mail']) 
+				|| (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']));
 				{
 					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 				}
@@ -2139,8 +2168,21 @@
 				// approval					
 			}
 
-			if(isset($values['vendor_email']) && $values['vendor_email'])
+			$vendor_email = array();
+			
+			foreach ($values['vendor_email'] as $_temp)
 			{
+				if($_temp)
+				{
+					$vendor_email[] = $_temp;
+				}
+			}
+			unset($_temp);
+
+			if($vendor_email)
+			{
+				$historylog	= CreateObject('property.historylog','tts');
+
 				$subject = lang(workorder).": {$ticket['order_id']}";
 
 				$organisation = '';
@@ -2153,7 +2195,19 @@
 					$organisation = $this->bo->config->config_data['org_name'];
 				}
 
-				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				if(isset($values['on_behalf_of_assigned']) && $values['on_behalf_of_assigned'] && isset($ticket['assignedto_name']))
+				{
+					$user_name = $ticket['assignedto_name'];
+					$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+					$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
+					$_behalf_alert = lang('this order is sent by %1 on behalf of %2',$GLOBALS['phpgw_info']['user']['fullname'], $user_name);
+					$historylog->add('C',$id,$_behalf_alert);
+					unset($_behalf_alert);
+				}
+				else
+				{
+					$user_name = $GLOBALS['phpgw_info']['user']['fullname'];				
+				}
 				$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 				$location = lang('Address'). ": {$ticket['address']}<br>";
 
@@ -2240,13 +2294,12 @@
 						$bcc .= ";{$contact_data['value_contact_email']}";
 					}
 
-					$_to = implode(';',$values['vendor_email']);
+					$_to = implode(';',$vendor_email);
 					
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments , true);
 					if($rcpt)
 					{
 						$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
-						$historylog	= CreateObject('property.historylog','tts');
 						$historylog->add('M',$id,"{$_to}{$attachment_log}");
 						$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 						$action_params = array
