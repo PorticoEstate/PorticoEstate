@@ -2084,8 +2084,6 @@
 
 //_debug_array($link_entity);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
 			$link_file_data = array
 			(
 				'menuaction'	=> 'property.uitts.view_file',
@@ -2169,12 +2167,19 @@
 			}
 
 			$vendor_email = array();
-			
+			$validator = CreateObject('phpgwapi.EmailAddressValidator');			
 			foreach ($values['vendor_email'] as $_temp)
 			{
 				if($_temp)
 				{
-					$vendor_email[] = $_temp;
+					if($validator->check_email_address($_temp))
+					{
+						$vendor_email[] = $_temp;
+					}
+					else
+					{
+						$receipt['error'][]=array('msg'=>lang('%1 is not a valid address',$_temp));				
+					}
 				}
 			}
 			unset($_temp);
@@ -2528,7 +2533,7 @@
 
 			
 			//----------------------------------------------datatable settings--------			
-
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id));
 			$this->cats->app_name		= 'property.project';
 			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));

@@ -772,10 +772,8 @@
 
 	//-----------from--------
 
-			$current_user_name= $GLOBALS['phpgw_info']['user']['fullname'];
-
 			$current_prefs_user = $this->bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
-			$current_user_address = $current_prefs_user['email'];
+			$current_user_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 
 	//-----------from--------
 		// build body
@@ -823,7 +821,8 @@
 				$i=1;
 
 				$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
-				while (is_array($history_array) && list(,$value) = each($history_array))
+
+				foreach($history_array as $value)
 				{
 					$body .= lang('Date') . ': '.$GLOBALS['phpgw']->common->show_date($value['datetime'])."\n";
 					$body .= lang('User') . ': '.$value['owner']."\n";
@@ -832,7 +831,6 @@
 				}
 				$subject.= "-" .$i;
 			}
-
 			/**************************************************************\
 			* Display record history                                       *
 			\**************************************************************/
@@ -875,11 +873,14 @@
 			$error = array();
 			$toarray = array();
 
+			$validator = CreateObject('phpgwapi.EmailAddressValidator');
+
 			foreach($members as $account_id => $account_name)
 			{
 				$prefs = $this->bocommon->create_preferences('property',$account_id);
-				if (strlen($prefs['email'])> (strlen($account_name)+1))
+				if ($validator->check_email_address($prefs['email']))
 				{
+		            // Email address is technically valid
 					$toarray[] = "{$account_name}<{$prefs['email']}>";
 				}
 				else
@@ -898,7 +899,7 @@
 				{
 					try
 					{
-						$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$current_user_name,'html');
+						$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$GLOBALS['phpgw_info']['user']['fullname'],'html');
 					}
 					catch (phpmailerException $e)
 					{
@@ -915,7 +916,7 @@
 			{
 				$receipt['error'][] = array('msg'=> lang('Your message could not be sent by mail!'));
 				$receipt['error'][] = array('msg'=> lang('The mail server returned'));
-				$receipt['error'][] = array('msg'=> 'From :' . $current_user_name . '<' . $current_user_address .'>');
+				$receipt['error'][] = array('msg'=> "From : {$current_user_address}");
 				$receipt['error'][] = array('msg'=> 'to: '.$to);
 				$receipt['error'][] = array('msg'=> 'subject: '.$subject);
 				$receipt['error'][] = array('msg'=> $body );
