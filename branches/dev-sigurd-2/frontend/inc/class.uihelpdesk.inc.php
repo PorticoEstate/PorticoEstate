@@ -398,7 +398,7 @@
 
 			foreach($notes as $note)
 			{
-				if(empty($note['value_publish']) || $note['value_publish'])
+				if($note['value_publish'])
 				{
 					$tickethistory[] = array(
 						'date' => $note['value_date'],
@@ -407,7 +407,6 @@
 					);
 				}
 			}
-
 
 			foreach($history as $story)
 			{
