@@ -162,6 +162,10 @@
 					$load = array('treeview-min');
 					break;
 
+				case 'uploader':
+					$load = array('element-min', 'uploader-min', 'datasource-min', 'datatable-min');
+					break;
+
 				default:
 					$err = "Unsupported YUI widget '%1' supplied to phpgwapi_yui::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);
