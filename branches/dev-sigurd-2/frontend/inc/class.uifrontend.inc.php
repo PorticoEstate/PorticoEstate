@@ -145,9 +145,7 @@
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			
-// Start-------------------------------------------------
-
+		
 			$config = CreateObject('phpgwapi.config','frontend');
 			$config->read();
 			$doc_type = $config->config_data['picture_building_cat'] ? $config->config_data['picture_building_cat'] : 'profilbilder';
@@ -167,6 +165,12 @@
 
 			$filename = readdir($dh);
 			closedir($dh);
+
+			if(!file_exists("$directory/$filename"))
+			{
+				header("HTTP/1.0 404 Not Found");
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 			
 			$file = file_get_contents("$directory/$filename");
 			$imageinfo = getimagesize("$directory/$filename");
