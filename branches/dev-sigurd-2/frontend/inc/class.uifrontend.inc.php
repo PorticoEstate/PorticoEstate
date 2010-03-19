@@ -153,7 +153,7 @@
 			// Get object id from params or use 'dummy'
 			$location_code = phpgw::get_var('loc_code') ? phpgw::get_var('loc_code') : 'dummy';
 
-			$directory = "/property/document/{$location_code}/{$doc_type}";
+			$directory = $GLOBALS['phpgw_info']['server']['files_dir']."/property/document/{$location_code}/{$doc_type}";
 
 			if(!file_exists($directory))
 			{
