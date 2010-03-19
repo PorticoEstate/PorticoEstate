@@ -45,6 +45,11 @@ class rental_agresso_gl07 implements rental_exportable
 	public function get_missing_billing_info($contract)
 	{
 		$missing_billing_info = array();
+		$contract_parties = $contract->get_parties();
+		if($contract_parties == null || count($contract_parties) < 1)
+		{
+			$missing_billing_info[] = 'Missing contract party.';
+		}
 		$account_in = $contract->get_account_in();
 		if($account_in == null || $account_in == '')
 		{

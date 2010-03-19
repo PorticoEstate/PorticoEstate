@@ -572,8 +572,8 @@
 				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'attrib_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
-				'value' => array('type' => 'text','nullable' => false)
-				'choice_sort' => array('type' => 'int','precision' => 4,'nullable' => false, 'default' => 0),
+				'value' => array('type' => 'text','nullable' => false),
+				'choice_sort' => array('type' => 'int','precision' => 4,'nullable' => false, 'default' => 0)
 			),
 			'pk' => array('location_id', 'attrib_id', 'id'),
 			'fk' => array(),

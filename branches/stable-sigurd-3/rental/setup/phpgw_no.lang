@@ -252,6 +252,7 @@ messages_string_too_long	rental	no	Teksten er for lang
 Missing account in.	rental	no	Inngående konto mangler.
 Missing account out.	rental	no	Utgående konto mangler.
 Missing billing information.	rental	no	Ufullstendig konteringsinformasjon for kontrakt med id %1. Dette må rettes for å kunne fakturere kontrakten.
+Missing contract party.	rental	no	Kontraktspart mangler.
 Missing project id.	rental	no	Prosjektnummer mangler.
 Missing responsibility id.	rental	no	Ansvar mangler.
 Missing service id.	rental	no	Tjeneste mangler.
