@@ -340,7 +340,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="view">
+	<xsl:template match="view" xmlns:php="http://php.net/xsl">
 		<xsl:variable name="send_order_action"><xsl:value-of select="send_order_action"/></xsl:variable>
 		<table align="left" width="100%">
 		<form method="post" action="{$send_order_action}">
@@ -358,7 +358,19 @@
 					</xsl:choose>
 					<tr>
 						<td class="th_text"  align="left">
-							<a href="{print_action}" title="{lang_print_statustext}" style="cursor:help"><xsl:value-of select="lang_print"/></a>
+							<a href="{print_action}" title="{lang_print_statustext}" ><xsl:value-of select="lang_print"/></a>
+						</td>
+						<td>
+						</td>
+					</tr>
+					<tr>
+						<td class="th_text"  align="left">
+							<a href="{pdf_action}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'preview pdf')" />
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'pdf')" />
+							</a>
 						</td>
 						<td>
 						</td>
@@ -404,6 +416,18 @@
 											<xsl:text>window.status='</xsl:text>
 												<xsl:value-of select="lang_update_email_statustext"/>
 											<xsl:text>'; return true;</xsl:text>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td class="th_text"  align="left">
+								<xsl:value-of select="php:function('lang', 'send as pdf')" />
+								</td>
+								<td  align="left">
+									<input type="checkbox" name="send_as_pdf" value="true">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Send pdf as attachment to email')" />
 										</xsl:attribute>
 									</input>
 								</td>

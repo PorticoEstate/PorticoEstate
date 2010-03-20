@@ -16,6 +16,17 @@
     <td>{lang_organisation}:</td>
     <td><input name="newsettings[org_name]" value="{value_org_name}"></td>
    </tr>
+   <tr class="row_on">
+    <td>{lang_org_unit_id}:</td>
+    <td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_invoice address}:</td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[invoice_address]" wrap="virtual">{value_invoice_address}</textarea>
+	</td>
+   </tr>
+
    <tr class="row_off">
     <td>{lang_needed_for_invoice_approval}:</td>
     <td>
