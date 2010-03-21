@@ -50,7 +50,6 @@
 		(
 			'columns'		=> true,
 			'download'		=> true,
-			'index_old'			=> true,
 			'view'	 		=> true,
 			'edit'	 		=> true,
 			'delete' 		=> true,
@@ -58,8 +57,8 @@
 			'attrib_history'=> true,
 			'attrib_help'	=> true,
 			'print_pdf'		=> true,
-			'select2String'		=> true,
-			'index'		=> true
+			'index'		=> true,
+			'addfiles'	=> true
 		);
 
 		function property_uientity()
@@ -149,6 +148,84 @@
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
+
+		function addfiles()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$id				= phpgw::get_var('id', 'int');
+			$jasperfile		= phpgw::get_var('jasperfile', 'bool');
+
+			if(!$this->acl_add && !$this->acl_edit)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$test = false;//true;
+			if ($test)
+			{
+				foreach ($_FILES as $fieldName => $file)
+				{
+				    move_uploaded_file($file['tmp_name'], "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . strip_tags(basename($file['name'])));
+				    echo (" ");
+				}
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$loc1 = isset($values['location']['loc1']) && $values['location']['loc1'] ? $values['location']['loc1'] : 'dummy';
+			if($this->type_app[$this->type] == 'catch')
+			{
+				$loc1 = 'dummy';
+			}
+
+			$bofiles	= CreateObject('property.bofiles');
+
+			$files = array();
+			foreach ($_FILES as $fieldName => $file)
+			{
+				$file_name = str_replace(' ','_',strip_tags(basename($file['name'])));
+				if($jasperfile)
+				{
+					$file_name = 'jasper::' . $file_name;
+				}
+				$to_file	= "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
+
+				if ($bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+				{
+					$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+				}
+				else
+				{
+					$files[] = array
+					(
+						'from_file'	=> $file['tmp_name'],
+						'to_file'	=> $to_file
+					);
+				}
+
+				unset($to_file);
+				unset($file_name);
+			}
+			$bofiles->create_document_dir("{$this->category_dir}/{$loc1}/{$id}");
+			$bofiles->vfs->override_acl = 1;
+			foreach ($files as $file)
+			{
+				if(!$bofiles->vfs->cp (array (
+					'from'	=> $file['from_file'],
+					'to'	=> $file['to_file'],
+					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+				{
+					$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+				}
+			    echo (" ");
+			}
+			$bofiles->vfs->override_acl = 0;
+			unset($loc1);
+			unset($files);
+			unset($file);
+		}
 
 		function columns()
 		{
@@ -1443,6 +1520,17 @@
 				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
+				'multiple_uploader'				=> $id ? true : false,
+				'fileuploader_action'			=> "javascript:openwindow('"
+												 . $GLOBALS['phpgw']->link('/index.php', array
+												 (
+												 	'menuaction'	=> 'property.fileuploader.add',
+												 	'upload_target'	=> 'property.uientity.addfiles',
+												 	'id'			=> $id,
+												 	'_entity_id'	=> $this->entity_id,
+												 	'_cat_id'		=> $this->cat_id,
+												 	'_type'			=> $this->type
+												 )) . "','400','400')",
 
 				'value_origin'					=> isset($values['origin'])?$values['origin']:'',
 				'value_origin_type'				=> isset($origin)?$origin:'',

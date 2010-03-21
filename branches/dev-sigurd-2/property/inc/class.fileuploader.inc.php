@@ -51,7 +51,28 @@
 		function add()
 		{
 			$upload_target 	= phpgw::get_var('upload_target');
-			$upload_url = "http://www.yswfblog.com/upload/upload_simple.php";
+			$id			 	= phpgw::get_var('id');
+
+			$link_data = array
+			(
+				'menuaction'			=> $upload_target,
+				'id' 					=> $id,
+				'last_loginid'			=> phpgw::get_var('last_loginid'),
+				'last_domain'			=> phpgw::get_var('last_domain'),
+				'sessionphpgwsessid'	=> phpgw::get_var('sessionphpgwsessid'),
+				'domain'				=> phpgw::get_var('domain')
+			);
+				
+			foreach ($_GET as $varname => $value)
+			{
+				if(strpos($varname, '_')===0)
+				{
+					$link_data[substr($varname,1,strlen($varname)-1)] =  $value;
+				}
+			}
+
+			$upload_url 	= $GLOBALS['phpgw']->link('/index.php', $link_data);
+
 			$js_code = self::get_js($upload_url);
 		
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -136,7 +157,7 @@
 				                   {description:"Videos", extensions:"*.avi;*.mov;*.mpg"});
 
 				// Apply new set of file filters to the uploader.
-				uploader.setFileFilters(ff);
+//				uploader.setFileFilters(ff);
 			}
 
 			// Actually uploads the files. In this case,

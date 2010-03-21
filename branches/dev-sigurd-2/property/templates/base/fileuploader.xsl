@@ -1,4 +1,8 @@
-	<xsl:template match="fileuploader">
+	<xsl:template match="fileuploader" xmlns:php="http://php.net/xsl">
+		<div class="header">
+			<h2><xsl:value-of select="php:function('lang', 'fileuploader')" /></h2>
+		</div>
+
 		<style>
 			#selectFilesLink a, #uploadFilesLink a, #clearFilesLink a {
 				color: #0000CC;
