@@ -471,6 +471,7 @@ delete vendor activity	property	no	slett aktivitet
 delete voucher	property	no	Slett bilag
 delete workorder	property	no	slett arbeidsordre
 delivered	property	no	Levert
+delivery address	property	no	Leveringsadresse
 description	property	no	Beskrivelse
 description order	property	no	Bestilling til leverandør
 descr	property	no	Beskrivelse
@@ -797,6 +798,7 @@ hour %1 has been edited	property	no	post %1 er rettet
 hour %1 is added!	property	no	post %1 er lagt til
 hour category	property	no	Post kategori
 hour id	property	no	Post ID
+html	property	no	HTML
 id	property	no	ID
 id control	property	no	ID kontroll
 id is updated	property	no	ID er oppdatert
@@ -845,6 +847,7 @@ investment id	property	no	investering ID
 investment id:	property	no	investering ID:
 investment value	property	no	Avskrivning
 invoice	property	no	Faktura
+invoice address	property	no	Fakturaadresse
 invoice date	property	no	Faktura dato
 invoice id	property	no	Faktura ID
 invoice is not added!	property	no	Fakturaen er IKKE lagt til!
@@ -1069,11 +1072,11 @@ opened	property	no	Åpnet
 opened by	property	no	Startet av
 open edit in new window	property	no	Åpne endring i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
-order	property	no	bestill
+order	property	no	Bestilling
 order_dim1	property	no	Aktivitet
 order id	property	no	OrdreNr
 order_id	property	no	OrdreNr
-order # that initiated the invoice	property	no	Order nr som referanse for fakturaen
+order # that initiated the invoice	property	no	Bestillingsnr som referanse for fakturaen
 order template	property	no	Standardtekster
 order text	property	no	Bestillingstekst
 organisation	property	no	Organisasjon
@@ -1089,6 +1092,7 @@ paid	property	no	Betalt
 part of town	property	no	Bydel
 part of town id	property	no	Bydel
 payment date	property	no	Forfallsdato
+pdf	property	no	PDF
 per agreement	property	no	pr avtale
 per cent	property	no	Prosent
 percentage addition	property	no	prosentvis tillegg
@@ -1174,6 +1178,8 @@ post	property	no	post
 power meter	property	no	Strømmåler
 precision	property	no	Presisjon
 prefix	property	no	prefiks
+preview html	property	no	Forhåndsvis som HTML
+preview pdf	property	no	Forhåndsvis som PDF
 presumed finnish date	property	no	Antatt ferdig-dato
 pricebook	property	no	prisbok
 print view	property	no	Vis utskrift
@@ -1308,6 +1314,7 @@ search for history at this location	property	no	søk etter historikk for denne l
 search for investment entries	property	no	søk etter investeringsposter
 search for paid invoices	property	no	søk etter betalte bilag
 search for voucher id	property	no	Søk etter bilagsnr
+see attachment	property	no	Se vedlegg
 seksjons nr	property	no	Seksjons nr
 select	property	no	velg
 select a actor type	property	no	Velg en aktør-type
@@ -1474,8 +1481,10 @@ select where to deliver the key	property	no	velg hvor nøkkel skal leveres
 select where to fetch the key	property	no	velk hvor nøkkel kan hentes
 select year	property	no	Velg år
 send	property	no	Send
+send as pdf	property	no	Send som PDF
 send e-mail	property	no	Send epost
 send order	property	no	Send ordre
+Send pdf as attachment to email	property	no	Send PDF som vedlegg til epost
 sendt by email to	property	no	send med e-post til
 send the following sms-message to %1 to update status for this order:	property	no	Send følgende SMS-melding til %1 for å oppdatere status for denne ordren:
 send this order by email	property	no	send denne ordren med e-post
@@ -1739,6 +1748,7 @@ voucher is updated	property	no	Bilag er oppdatert
 voucher is updated:	property	no	Bilag er oppdatert:
 voucher period is updated	property	no	bilags periode er oppdatert
 Warning: the record has to be saved in order to plan an event	property	no	NB! posten må lagres før hendelse kan planlegges
+warning: show cost estimate	property	no	Advarsel: kostnadsestimat blir synlig for leverandør
 w_cost	property	no	Arbeidskostnad
 weekly	property	no	Ukentlig
 weight for prioritising	property	no	Vekting av prioritering

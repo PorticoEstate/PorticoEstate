@@ -139,7 +139,14 @@ YAHOO.PORTICO.NavBar = function()
 
 YAHOO.PORTICO.BorderLayout = function()
 {
-	this.config = border_layout_config.length == 0 ? {} : border_layout_config;
+	if(border_layout_config)
+	{
+		this.config = border_layout_config.length == 0 ? {} : border_layout_config;
+	}
+	else
+	{
+		this.config = {};
+	}
 
 	var self = this;
 

@@ -56,7 +56,8 @@
 			'edit'			=> true,
 			'delete'		=> true,
 			'deviation'		=> true,
-			'edit_deviation'=> true
+			'edit_deviation'=> true,
+			'pdf_order'		=> true
 		);
 
 		function property_uiwo_hour()
@@ -365,7 +366,8 @@
 */
 			$hour_list = $this->bo->read($workorder_id);
 //_debug_array($hour_list);
-			$grouping_descr_old='';
+			$grouping_descr_old	= '';
+			$content			= array();
 
 			if (isset($hour_list) AND is_array($hour_list))
 			{
@@ -1149,6 +1151,7 @@
 			$values			= phpgw::get_var('values');
 			$print			= phpgw::get_var('print', 'bool');
 			$sent_ok		= phpgw::get_var('print', 'bool');
+			$send_as_pdf	= phpgw::get_var('send_as_pdf', 'bool');
 
 			if($update_email)
 			{
@@ -1436,7 +1439,8 @@ HTML;
 				}
 
 				$subject  = lang('Workorder').": ".$workorder_id;
-
+				
+				$attachments = array();
 				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
@@ -1447,11 +1451,42 @@ HTML;
 						$attachment_log = lang('attachments') . ': ' . implode(', ',$values['file_action']);
 					}
 
+					if($send_as_pdf)
+					{
+						$pdfcode = $this->pdf_order($workorder_id, $show_cost);
+						if($pdfcode)
+						{							
+							$dir =  "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+
+							//save the file
+							if (!file_exists($dir))
+							{
+								mkdir ($dir,0777);
+							}
+							$fname = tempnam($dir.'/','PDF_').'.pdf';
+							$fp = fopen($fname,'w');
+							fwrite($fp,$pdfcode);
+							fclose($fp);
+
+							$attachments[] = array
+							(
+								'file' => $fname,
+								'name' => "order_{$workorder_id}.pdf",
+								'type' => 'application/pdf'
+							);						
+						}
+						$body = lang('order') . '.</br></br>' . lang('see attachment');
+					}
+					else
+					{
+						$body = $header . $html . $footer;
+					}
+
 					if (!is_object($GLOBALS['phpgw']->send))
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $header . $html . $footer, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
 				}
 				else
 				{
@@ -1493,7 +1528,6 @@ HTML;
 				}
 			}
 
-
 			if( $this->boworkorder->order_sent_adress )
 			{
 				$to_email= $this->boworkorder->order_sent_adress;
@@ -1509,7 +1543,6 @@ HTML;
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
 
 			$link_file_data = array
 			(
@@ -1615,6 +1648,7 @@ HTML;
 				'lang_view_file_statustext'		=> lang('click to view file'),
 				'lang_file_action_statustext'	=> lang('Check to attach file'),
 				'lang_print'					=> lang('print'),
+				'value_show_cost'						=> $show_cost,
 				'lang_print_statustext'			=> lang('open this page as printerfrendly'),
 				'print_action'					=> "javascript:openwindow('"
 												 . $GLOBALS['phpgw']->link('/index.php', array
@@ -1624,6 +1658,15 @@ HTML;
 												 	'show_cost'		=> $show_cost,
 												 	'show_details'	=> $show_details,
 												 	'print'			=> true
+												 )) . "','1000','1200')",
+				'pdf_action'					=> "javascript:openwindow('"
+												 . $GLOBALS['phpgw']->link('/index.php', array
+												 (
+												 	'menuaction'	=> 'property.uiwo_hour.pdf_order',
+												 	'workorder_id'	=> $workorder_id,
+												 	'show_cost'		=> $show_cost,
+												 	'show_details'	=> $show_details,
+												 	'preview'		=> true,
 												 )) . "','1000','1200')"
 			);
 
@@ -1657,10 +1700,207 @@ HTML;
 		}
 
 
+		protected function _get_order_details($values_hour,	$show_cost = false)
+		{
+			$translations = array
+			(
+				'post'			=> lang('post'),
+				'code'			=> lang('code'),
+				'descr'			=> lang('descr'),
+				'unit'			=> lang('unit'),
+				'quantity'		=> lang('quantity'),
+				'billperae'		=> lang('bill per unit'),
+				'cost'			=> lang('cost')
+			);
+
+			$grouping_descr_old	= '';
+			$content = array();
+			foreach($values_hour as $hour)
+			{
+				$descr= $hour['hours_descr'];
+
+				if($hour['remark'])
+				{
+					$descr .= "\n" . $hour['remark'];
+				}
+
+				if(!$show_cost)
+				{
+					unset($hour['billperae']);
+					unset($hour['cost']);
+				}
+
+				if($hour['grouping_descr']!=$grouping_descr_old)
+				{
+					$content[] = array
+					(
+						$translations['post']		=> $hour['grouping_descr'],
+						$translations['code']		=> '',
+						$translations['descr']		=> '',
+						$translations['unit']		=> '',
+						$translations['quantity']	=> '',
+						$translations['billperae']	=> '',
+						$translations['cost']		=> ''
+					);
+				}
+
+				$grouping_descr_old	= $hour['grouping_descr'];
+
+				$content[] = array
+				(
+					$translations['post']			=> $hour['post'],
+					$translations['code']			=> $hour['code'],
+					$translations['descr']			=> $descr,
+					$translations['unit']			=> $hour['unit'],
+					$translations['quantity']		=> $hour['quantity'],
+					$translations['billperae']		=> $hour['billperae'],
+					$translations['cost']			=> $hour['cost']
+				);
+			}
+
+			return $content;
+		}
+
+
+		function pdf_order($workorder_id = '', $show_cost = false)
+		{
+			$pdf					= CreateObject('phpgwapi.pdf');
+
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+			if(!$workorder_id)
+			{
+				$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			}
+			if(!$show_cost)
+			{
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+			}
+
+			$preview = phpgw::get_var('preview', 'bool');
+			
+			$common_data		= $this->common_data($workorder_id);
+			$project			= $this->boproject->read_single($common_data['workorder']['project_id']);
+
+			$content = $this->_get_order_details($common_data['content'],	$show_cost);
+
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date = $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
+
+			set_time_limit(1800);
+			$pdf -> ezSetMargins(50,70,50,50);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+
+			// put a line top and bottom on all the pages
+			$all = $pdf->openObject();
+			$pdf->saveState();
+			$pdf->setStrokeColor(0,0,0,1);
+			$pdf->line(20,40,578,40);
+			$pdf->line(20,820,578,820);
+			$pdf->addText(50,823,6,lang('order'));
+			$pdf->addText(50,34,6,$this->config->config_data['org_name']);
+			$pdf->addText(300,34,6,$date);
+
+
+			$pdf->restoreState();
+			$pdf->closeObject();
+			// note that object can be told to appear on just odd or even pages by changing 'all' to 'odd'
+			// or 'even'.
+			$pdf->addObject($all,'all');
+
+//			$pdf->ezSetDy(-100);
+
+//_debug_array($common_data['workorder']);die();
+			$pdf->ezStartPageNumbers(500,28,10,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
+
+			$data = array
+			(
+					array('col1'=>"{$this->config->config_data['org_name']}\n\nOrg.nr: {$this->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$workorder_id}")
+			);		
+
+			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>200, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>100, 'justification'=>'center'),
+					'col3'=>array('justification'=>'right','width'=>200),
+				)
+				
+				));
+
+			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
+			$address_element = execMethod('property.botts.get_address_element', $location_code);
+			$address = lang('delivery address'). ':';
+			foreach($address_element as $entry)
+			{
+				$address .= "\n{$entry['text']}: {$entry['value']}";
+			}
+			$invoice_address = lang('invoice address') . ":\n{$this->config->config_data['invoice_address']}";
+
+			$from = lang('date') . ": {$date}\n";
+			$from .= lang('dimb') .": {$common_data['workorder']['ecodimb']}\n";
+			$from .= lang('from') . ":\n   {$GLOBALS['phpgw_info']['user']['fullname']}";
+			$from .= "\n   {$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+			$from .= "\n   {$GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone']}";
+
+			$data = array
+			(
+					array('col1'=>lang('vendor') . ":\n{$common_data['workorder']['vendor_name']}",'col2'=>$address),
+					array('col1'=>$from,'col2'=>$invoice_address)
+			);		
+
+			$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+				)
+				
+				));
+
+			$pdf->ezText(lang('descr').':',20);
+			$pdf->ezText($common_data['workorder']['descr'],14);
+
+			if($content)
+			{
+				$pdf->ezSetDy(-50);
+				$pdf->ezTable($content,'',lang('details'),
+							array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
+							,'cols'=>array(
+							lang('bill per unit')=>array('justification'=>'right','width'=>50)
+							,lang('quantity')=>array('justification'=>'right','width'=>50)
+							,lang('cost')=>array('justification'=>'right','width'=>50)
+							,lang('unit')=>array('width'=>40)
+							,lang('descr')=>array('width'=>120))
+							));
+			}
+
+			$document= $pdf->ezOutput();
+			if($preview)
+			{
+				$pdf->print_pdf($document,'order');
+			}
+			else
+			{
+				return $document;
+			}
+		}
+
 		function tender()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$pdf					= CreateObject('phpgwapi.pdf');
@@ -1673,56 +1913,10 @@ HTML;
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 
 			$common_data		= $this->common_data($workorder_id);
-			$values_hour		= $common_data['content'];
 			$project			= $this->boproject->read_single($common_data['workorder']['project_id']);
 
-			$grouping_descr_old	= '';
+			$content = $this->_get_order_details($common_data['content'],	$show_cost);
 
-			if (isSet($values_hour) AND is_array($values_hour))
-			{
-				foreach($values_hour as $hour)
-				{
-					$descr= $hour['hours_descr'];
-
-					if($hour['remark'])
-					{
-						$descr .= "\n" . $hour['remark'];
-					}
-
-					if(!$show_cost)
-					{
-						unset($hour['billperae']);
-						unset($hour['cost']);
-					}
-
-					if($hour['grouping_descr']!=$grouping_descr_old)
-					{
-						$content[] = array
-						(
-							lang('post')		=> $hour['grouping_descr'],
-							lang('code')		=> '',
-							lang('descr')		=> '',
-							lang('unit')		=> '',
-							lang('quantity')	=> '',
-							lang('bill per unit')	=> '',
-							lang('cost')		=> ''
-						);
-					}
-
-					$grouping_descr_old	= $hour['grouping_descr'];
-
-					$content[] = array
-					(
-						lang('post')			=> $hour['post'],
-						lang('code')			=> $hour['code'],
-						lang('descr')			=> $descr,
-						lang('unit')			=> $hour['unit'],
-						lang('quantity')		=> $hour['quantity'],
-						lang('bill per unit')		=> $hour['billperae'],
-						lang('cost')			=> $hour['cost']
-					);
-				}
-			}
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date = $GLOBALS['phpgw']->common->show_date('',$dateformat);
@@ -1741,7 +1935,7 @@ HTML;
 			$pdf->line(20,40,578,40);
 			$pdf->line(20,822,578,822);
 			$pdf->addText(50,823,6,lang('Chapter') . ' ' .$common_data['workorder']['chapter_id'] . ' ' . $common_data['workorder']['chapter'] );
-			$pdf->addText(50,34,6,'BBB');
+			$pdf->addText(50,34,6,$this->config->config_data['org_name']);
 			$pdf->addText(300,34,6,$date);
 			if($mark_draft)
 			{
@@ -1767,7 +1961,7 @@ HTML;
 			$pdf->ezText(lang('Order') . ': ' . $workorder_id . ' ' .$common_data['workorder']['title'],14);
 			$pdf->ezText(lang('Chapter') . ' ' .$common_data['workorder']['chapter_id'] . ' ' . $common_data['workorder']['chapter'] ,14);
 
-			if(is_array($values_hour))
+			if($content)
 			{
 				$pdf->ezNewPage();
 				$pdf->ezTable($content,'',$project['name'],
