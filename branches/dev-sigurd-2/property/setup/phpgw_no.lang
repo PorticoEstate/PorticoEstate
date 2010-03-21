@@ -798,6 +798,7 @@ hour %1 has been edited	property	no	post %1 er rettet
 hour %1 is added!	property	no	post %1 er lagt til
 hour category	property	no	Post kategori
 hour id	property	no	Post ID
+html	property	no	HTML
 id	property	no	ID
 id control	property	no	ID kontroll
 id is updated	property	no	ID er oppdatert
@@ -1091,6 +1092,7 @@ paid	property	no	Betalt
 part of town	property	no	Bydel
 part of town id	property	no	Bydel
 payment date	property	no	Forfallsdato
+pdf	property	no	PDF
 per agreement	property	no	pr avtale
 per cent	property	no	Prosent
 percentage addition	property	no	prosentvis tillegg
@@ -1176,6 +1178,8 @@ post	property	no	post
 power meter	property	no	Strømmåler
 precision	property	no	Presisjon
 prefix	property	no	prefiks
+preview html	property	no	Forhåndsvis som HTML
+preview pdf	property	no	Forhåndsvis som PDF
 presumed finnish date	property	no	Antatt ferdig-dato
 pricebook	property	no	prisbok
 print view	property	no	Vis utskrift
@@ -1744,6 +1748,7 @@ voucher is updated	property	no	Bilag er oppdatert
 voucher is updated:	property	no	Bilag er oppdatert:
 voucher period is updated	property	no	bilags periode er oppdatert
 Warning: the record has to be saved in order to plan an event	property	no	NB! posten må lagres før hendelse kan planlegges
+warning: show cost estimate	property	no	Advarsel: kostnadsestimat blir synlig for leverandør
 w_cost	property	no	Arbeidskostnad
 weekly	property	no	Ukentlig
 weight for prioritising	property	no	Vekting av prioritering

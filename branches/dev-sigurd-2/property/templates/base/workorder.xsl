@@ -305,6 +305,17 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
+		<script language="JavaScript">
+			function calculate_workorder()
+			{
+				document.calculate_workorder_form.submit();
+			}
+			function send_workorder()
+			{
+				document.send_workorder_form.submit();
+			}
+		</script>
+
 		<table cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -321,30 +332,20 @@
 						<table>
 						<tr>
 						<td valign="top" >
-							<xsl:variable name="calculate_action"><xsl:value-of select="calculate_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
 							<xsl:variable name="lang_calculate"><xsl:value-of select="lang_calculate"/></xsl:variable>
-							<form method="post" action="{$calculate_action}">
-							<input type="submit" class="forms" name="calculate" value="{$lang_calculate}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="button" name="calculate" value="{$lang_calculate}" onClick="calculate_workorder()">
+								<xsl:attribute name="title">
 										<xsl:value-of select="lang_calculate_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
-							</form>
 						</td>
-						<td valign="top">
-							<xsl:variable name="send_action"><xsl:value-of select="send_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
+						<td valign="top" >
 							<xsl:variable name="lang_send"><xsl:value-of select="lang_send"/></xsl:variable>
-							<form method="post" action="{$send_action}">
-							<input type="submit" class="forms" name="send" value="{$lang_send}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="button" name="send" value="{$lang_send}" onClick="send_workorder()">
+								<xsl:attribute name="title">
 										<xsl:value-of select="lang_send_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
-							</form>
 						</td>
 						</tr>
 						</table>
@@ -952,6 +953,13 @@
 			</tr>
 		</table>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
+
+		<xsl:variable name="calculate_action"><xsl:value-of select="calculate_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
+		<form method="post" name="calculate_workorder_form" action="{$calculate_action}">
+		</form>
+		<xsl:variable name="send_action"><xsl:value-of select="send_action"/>&amp;workorder_id=<xsl:value-of select="value_workorder_id"/></xsl:variable>
+		<form method="post" name="send_workorder_form" action="{$send_action}">
+		</form>
 	</xsl:template>
 
 

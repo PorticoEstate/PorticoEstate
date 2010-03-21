@@ -1648,6 +1648,7 @@ HTML;
 				'lang_view_file_statustext'		=> lang('click to view file'),
 				'lang_file_action_statustext'	=> lang('Check to attach file'),
 				'lang_print'					=> lang('print'),
+				'value_show_cost'						=> $show_cost,
 				'lang_print_statustext'			=> lang('open this page as printerfrendly'),
 				'print_action'					=> "javascript:openwindow('"
 												 . $GLOBALS['phpgw']->link('/index.php', array
@@ -1836,7 +1837,8 @@ HTML;
 				
 				));
 
-			$address_element = execMethod('property.botts.get_address_element', $project['location_code']);
+			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
+			$address_element = execMethod('property.botts.get_address_element', $location_code);
 			$address = lang('delivery address'). ':';
 			foreach($address_element as $entry)
 			{

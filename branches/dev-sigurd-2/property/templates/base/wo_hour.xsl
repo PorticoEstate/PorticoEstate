@@ -358,7 +358,12 @@
 					</xsl:choose>
 					<tr>
 						<td class="th_text"  align="left">
-							<a href="{print_action}" title="{lang_print_statustext}" ><xsl:value-of select="lang_print"/></a>
+							<a href="{print_action}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'preview html')" />
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'html')" />
+							</a>
 						</td>
 						<td>
 						</td>
@@ -429,6 +434,23 @@
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'Send pdf as attachment to email')" />
 										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td class="th_text"  align="left">
+								<xsl:value-of select="php:function('lang', 'show calculated cost')" />
+								</td>
+								<td  align="left">
+									<input type="checkbox" name="show_cost" value="true">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'warning: show cost estimate')" />
+										</xsl:attribute>
+										<xsl:if test="value_show_cost = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 									</input>
 								</td>
 							</tr>
