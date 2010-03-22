@@ -1806,26 +1806,22 @@
 					$names = array
 					(
 						'year',
-						'grouping',
-						'b_account_id',
-						'b_account_name',
-						'district_id',
 						'revision',
-						'budget_cost',
+						'grouping',
+						'district_id',
 						'ecodimb',
-						'category', 
+						'category',
+						'budget_cost'
 					);
 					$descr = array
 					(
-						'year',
+						lang('year'),
+						lang('revision'),
 						lang('grouping'),
-						'b_account_id',
-						'b_account_name',
-						'district_id',
-						'revision',
-						lang('budget'),
+						lang('district_id'),
 						lang('dimb'),
-						'category', 
+						lang('category'), 
+						lang('budget')
 					);
 					break;
 				case 'budget':
@@ -1833,26 +1829,26 @@
 					$names = array
 					(
 						'year',
-						'grouping',
+						'revision',
 						'b_account_id',
 						'b_account_name',
+						'grouping',
 						'district_id',
-						'revision',
-						lang('budget'),
 						'ecodimb',
 						'category', 
+						'budget'
 					);
 					$descr = array
 					(
-						'year',
+						lang('year'),
+						lang('revision'),
+						lang('budget account'),
+						lang('name'),
 						lang('grouping'),
-						'b_account_id',
-						'b_account_name',
-						'district_id',
-						'revision',
-						lang('budget'),
+						lang('district_id'),
 						lang('dimb'),
-						'category', 
+						lang('category'), 
+						lang('budget')
 					);
 
 					break;
@@ -1881,23 +1877,23 @@
 						'b_account',
 						'district_id',
 						'ecodimb',
-						'actual_cost',
+						'hits',
 						'budget_cost',
 						'obligation',
-						'hits',
+						'actual_cost',
 						'diff'
 					);
 					$descr = array
 					(
 						lang('grouping'),
-						'b_account',
-						'district_id',
+						lang('budget account'),
+						lang('district_id'),
 						lang('dimb'),
-						'actual_cost',
+						lang('hits'),
 						lang('budget'),
 						lang('sum orders'),
-						'hits',
-						'diff'
+						lang('paid'),
+						lang('difference')
 					);
 					break;
 				default:
