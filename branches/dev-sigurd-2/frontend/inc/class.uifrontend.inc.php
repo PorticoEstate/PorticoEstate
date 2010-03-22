@@ -154,7 +154,7 @@
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-		
+
 			$config = CreateObject('phpgwapi.config','frontend');
 			$config->read();
 			$doc_type = $config->config_data['picture_building_cat'] ? $config->config_data['picture_building_cat'] : 'profilbilder';
@@ -162,33 +162,9 @@
 			// Get object id from params or use 'dummy'
 			$location_code = phpgw::get_var('loc_code') ? phpgw::get_var('loc_code') : 'dummy';
 
-			$directory = $GLOBALS['phpgw_info']['server']['files_dir']."/property/document/{$location_code}/{$doc_type}";
+			$directory = "/property/document/{$location_code}/{$doc_type}";
 
-			if(!file_exists($directory))
-			{
-				header("HTTP/1.0 404 Not Found");
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
-			$dh = opendir($directory);
-
-			$filename = readdir($dh);
-			closedir($dh);
-
-			if(!file_exists("$directory/$filename"))
-			{
-				header("HTTP/1.0 404 Not Found");
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-			
-			$file = file_get_contents("$directory/$filename");
-			$imageinfo = getimagesize("$directory/$filename");
-
-			header('Content-type: ' . $imageinfo['mime']);
-			echo $file;
-
-			// The following didnt work :\
-			/*$vfs = CreateObject('phpgwapi.vfs');
+			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
 			$ls_array = $vfs->ls(array(
@@ -196,20 +172,23 @@
 				'relatives' => array(RELATIVE_NONE)
 			));
 
-			//_debug_array($ls_array);
-
 			$file = isset($ls_array[0]['directory']['name']) ? "{$ls_array[0]['directory']}/{$ls_array[0]['name']}" : '';
-			//_debug_array($file);
-			
-			
+
 			$document = $vfs->read(array(
-				'string' 	=> $file,
+				'string'	=> $file,
 				'relatives' => array(RELATIVE_NONE))
 			);
 
 			$vfs->override_acl = 0;
-			*/
+
+			$mime_type = 'text/plain';
+			if ($ls_array[0]['mime_type'])
+			{
+				$mime_type = $ls_array[0]['mime_type'];
+			}
+			header('Content-type: ' . $mime_type);
+			echo $document;
 
 			$GLOBALS['phpgw']->common->phpgw_exit();
-		}
+ 		}
 	}
