@@ -51,7 +51,6 @@
 
 		public function index()
 		{
-
 			$bo	= CreateObject('property.botts',true);
 
 			$dry_run = false;
@@ -61,8 +60,6 @@
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
-
-
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'frontend.uihelpdesk.index',"
@@ -140,32 +137,34 @@
 				$dry_run = true;
 			}
 
-			$ticket_list = array();
-			if(!$dry_run)
-			{
-				$bo->location_code = $this->location_code;
-				$ticket_list = $bo->read();
-			}
-
+			$bo->location_code = $this->location_code;
+			$ticket_list = $bo->read('','','',$dry_run);
 
 			$uicols = array();
-			$i = 0;
-			$uicols['name'][$i++] = 'id';
-			$uicols['name'][$i++] = 'subject';
-			$uicols['name'][$i++] = 'entry_date';
-			$uicols['name'][$i++] = 'status';
-			$uicols['name'][$i++] = 'user';
+
+			$uicols['name'][] = 'id';
+			$uicols['descr'][] = lang('id');
+			$uicols['name'][] = 'subject';
+			$uicols['descr'][] = lang('subject');
+			$uicols['name'][] = 'entry_date';
+			$uicols['descr'][] = lang('entry_date');
+			$uicols['name'][] = 'status';
+			$uicols['descr'][] = lang('status');
+			$uicols['name'][] = 'user';
+			$uicols['descr'][] = lang('user');
 
 			$count_uicols_name = count($uicols['name']);
 
 			if(is_array($ticket_list))
 			{
 				$status['X'] = array
-					(
-					'bgcolor'			=> '#5EFB6E',
-					'status'			=> lang('closed'),
-					'text_edit_status'	=> isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open'),
-					'new_status' 		=> 'O'
+				(
+					'status'			=> lang('closed')
+				);
+
+				$status['O'] = array
+				(
+					'status'			=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
 				);
 
 				$custom_status	= $bo->get_custom_status();
@@ -173,11 +172,8 @@
 				foreach($custom_status as $custom)
 				{
 					$status["C{$custom['id']}"] = array
-						(
-						'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
+					(
 						'status'			=> $custom['name'],
-						'text_edit_status'	=> lang('close'),
-						'new_status'		=> 'X'
 					);
 				}
 
@@ -186,17 +182,7 @@
 				{
 					for ($k = 0 ; $k < $count_uicols_name ; $k++)
 					{
-						if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='O')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open');
-						}
-						else if($uicols['name'][$k] == 'status' && $ticket[$uicols['name'][$k]]=='C')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= lang('Closed');
-						}
-						else if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
+						if($uicols['name'][$k] == 'status' && array_key_exists($ticket[$uicols['name'][$k]],$status))
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name']		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['value'] 	= $status[$ticket[$uicols['name'][$k]]]['status'];
@@ -207,13 +193,12 @@
 							$datatable['rows']['row'][$j]['column'][$k]['value']	= $ticket[$uicols['name'][$k]];
 						}
 					}
-
 					$j++;
 				}
 			}
 
 			$parameters = array
-				(
+			(
 				'parameter' => array
 				(
 					array
@@ -240,7 +225,7 @@
 			{
 				$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
 				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]);
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 				$datatable['headers']['header'][$i]['visible'] 			= true;
 				$datatable['headers']['header'][$i]['sortable']			= false;
 				if($uicols['name'][$i]=='id' || $uicols['name'][$i]=='user' || $uicols['name'][$i]=='entry_date')
