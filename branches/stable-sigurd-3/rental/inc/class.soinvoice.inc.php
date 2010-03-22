@@ -52,7 +52,7 @@ class rental_soinvoice extends rental_socommon
 		$joins .= "	{$this->left_join} rental_party party ON (rental_contract_party.party_id = party.id)";
 		$joins .= " {$this->left_join} rental_contract contract ON (contract.id = rental_invoice.contract_id)";
 		$joins .= " {$this->left_join} rental_billing ON (rental_billing.id = rental_invoice.billing_id)";
-		$joins .= " {$this->left_join} rental_billing_info ON (rental_billing_info.billing_id = rental_invoice.billing_id)";
+		$joins .= " {$this->left_join} rental_billing_info ON (rental_billing_info.billing_id = rental_billing.id AND rental_billing_info.term_id=contract.term_id)";
 		$order = '';
 		if($return_count) // We should only return a count
 		{

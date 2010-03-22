@@ -176,6 +176,13 @@ class rental_uiparty extends rental_uicommon
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
+					
+					if(isset($value['result_unit_number']))
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index', 'org_unit_id' => $value['result_unit_number'])));
+						$value['labels'][] = lang('frontend_access');
+					}
 				}
 				break;
 		}
