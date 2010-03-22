@@ -74,7 +74,20 @@ class frontend_uicontract extends frontend_uifrontend
 			$contracts_for_selection[] = $contract->serialize();
 		}
 		
-
+		$parties =  $this->contract_state['contract']->get_parties();
+		$party_array = array();
+		foreach($parties as $party)
+		{
+			$party_array[] = $party->serialize();
+		}
+		
+		$composites = $this->contract_state['contract']->get_composites();
+		$composite_array = array();
+		foreach($composites as $composite)
+		{
+			$composite_array[] = $composite->serialize();
+		}
+		
 		$data = array (
 			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			'header' 		=>	$this->header_state,
@@ -82,7 +95,9 @@ class frontend_uicontract extends frontend_uifrontend
 			'contract_data' => 	array (
 				'select' => $contracts_for_selection, 
 				'selected_contract' =>  $this->contract_state['selected'], 
-				'contract'	=> $this->contract_state['contract']->serialize()
+				'contract'	=> $this->contract_state['contract']->serialize(),
+				'party'	=> $party_array,
+				'composite' => $composite_array
 			)
 		);
 		
