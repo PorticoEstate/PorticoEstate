@@ -430,13 +430,15 @@
 			}
 
 			$data = array(
+				'header' 		=> $this->header_state,
 				'tabs'			=> $this->tabs,
-				'ticket'        => $ticket,
-				'tickethistory'	=> $tickethistory2
+				'ticketinfo'	=> array(
+					'ticket'        => $ticket,
+					'tickethistory'	=> $tickethistory2)
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'ticketview'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('ticketinfo' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
 		}
 
 

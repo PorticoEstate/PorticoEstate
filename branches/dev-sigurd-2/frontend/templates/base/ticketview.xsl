@@ -13,9 +13,8 @@
 
 
     <div class="yui-navset" id="ticket_tabview">
-        <xsl:value-of disable-output-escaping="yes" select="tabs" />
         <div class="yui-content">
-
+			<a href="?menuaction=frontend.uihelpdesk.index">Vis alle</a>
             <h1><xsl:value-of select="ticket/subject"/></h1>
             <div id="ticketinfo">
                 <ul>

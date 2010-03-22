@@ -78,6 +78,7 @@
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
 			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab');
 
+			
 
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
 
@@ -85,6 +86,9 @@
 
 			//New location selected from header list
 			$new_location = phpgw::get_var('location');
+			
+			//Get the organisation unit i
+			$org_unit_id = phpgw::get_var('org_unit_id');
 
 			// Get header state ...
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
@@ -111,11 +115,16 @@
 				$tab = null; // No selected tab
 				phpgwapi_cache::session_set('frontend','contract_state',null);
 			}
-			else if(count($this->header_state['locations']) == 0) // if the user has access to no locations
-
+			else if((count($this->header_state['locations']) == 0) || isset($org_unit_id)) // if the user has access to no locations
 			{
-				$org_units_ids = frontend_bofellesdata::get_organizational_units();
-				$property_locations = frontend_borental::get_property_locations($org_units_ids);
+				$org_unit_ids = isset($org_unit_id) ? array(0 =>$org_unit_id) : frontend_bofellesdata::get_organizational_units();
+				
+				if(isset($org_unit_id))
+				{
+					$tab = null;
+				}
+			
+				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
 				$this->header_state = array(
 					'selected' => count($property_locations) > 0 ? $property_locations[0]['location_code'] : '' ,
 					'locations' => $property_locations
