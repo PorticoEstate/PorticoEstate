@@ -160,6 +160,11 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			if(!$id)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			$test = false;//true;
 			if ($test)
 			{
@@ -171,7 +176,9 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$loc1 = isset($values['location']['loc1']) && $values['location']['loc1'] ? $values['location']['loc1'] : 'dummy';
+			$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+
+			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
 			if($this->type_app[$this->type] == 'catch')
 			{
 				$loc1 = 'dummy';
