@@ -422,7 +422,8 @@
 					array_unshift ($values_combo_box[1],$default_value);
 
 					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
-					$default_value = array ('id'=>'','name'=>lang('no user'));
+					array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
+					$default_value = array('id'=>'','name'=>lang('no user'));
 					array_unshift ($values_combo_box[3],$default_value);
 
 					$datatable['actions']['form'] = array
@@ -2293,10 +2294,11 @@
 
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+					$cc = '';
 					$bcc = $coordinator_email;
 					if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 					{
-						$bcc .= ";{$contact_data['value_contact_email']}";
+						$cc .= ";{$contact_data['value_contact_email']}";
 					}
 
 					$_to = implode(';',$vendor_email);

@@ -352,6 +352,7 @@
 			$values['kildeid'] 			= 1;
 			$values['kidnr'] 			= $values['kid_nr'];
 			$values['typeid'] 			= $values['type'];
+//_debug_array($values);die();
 			if($order_type = $this->soXport->check_order($values['order_id']))
 			{
 				if($order_type=='workorder')
