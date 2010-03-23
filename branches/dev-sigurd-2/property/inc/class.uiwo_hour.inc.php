@@ -1667,7 +1667,7 @@ HTML;
 												 	'show_cost'		=> $show_cost,
 												 	'show_details'	=> $show_details,
 												 	'preview'		=> true,
-												 )) . "','1000','1200')"
+												 )) . "','100','100')"
 			);
 
 
@@ -1801,12 +1801,17 @@ HTML;
 			// put a line top and bottom on all the pages
 			$all = $pdf->openObject();
 			$pdf->saveState();
+
+			if(isset($this->config->config_data['order_logo']) && $this->config->config_data['order_logo'])
+			{
+				$pdf->addJpegFromFile($this->config->config_data['order_logo'],40,800,80);
+			}
 			$pdf->setStrokeColor(0,0,0,1);
 			$pdf->line(20,40,578,40);
-			$pdf->line(20,820,578,820);
-			$pdf->addText(50,823,6,lang('order'));
-			$pdf->addText(50,34,6,$this->config->config_data['org_name']);
-			$pdf->addText(300,34,6,$date);
+		//	$pdf->line(20,820,578,820);
+		//	$pdf->addText(50,823,6,lang('order'));
+			$pdf->addText(50,28,6,$this->config->config_data['org_name']);
+			$pdf->addText(300,28,6,$date);
 
 
 			$pdf->restoreState();
@@ -1817,8 +1822,7 @@ HTML;
 
 //			$pdf->ezSetDy(-100);
 
-//_debug_array($common_data['workorder']);die();
-			$pdf->ezStartPageNumbers(500,28,10,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
+			$pdf->ezStartPageNumbers(500,28,6,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
 
 			$data = array
 			(
@@ -1874,7 +1878,7 @@ HTML;
 
 			if($content)
 			{
-				$pdf->ezSetDy(-50);
+				$pdf->ezSetDy(-20);
 				$pdf->ezTable($content,'',lang('details'),
 							array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
 							,'cols'=>array(
@@ -1884,6 +1888,12 @@ HTML;
 							,lang('unit')=>array('width'=>40)
 							,lang('descr')=>array('width'=>120))
 							));
+			}
+
+			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
+			{
+				$pdf->ezText($this->config->config_data['order_footer_header'],12);
+				$pdf->ezText($this->config->config_data['order_footer'],10);
 			}
 
 			$document= $pdf->ezOutput();

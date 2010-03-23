@@ -16,7 +16,7 @@
     <td>{lang_organisation}:</td>
     <td><input name="newsettings[org_name]" value="{value_org_name}"></td>
    </tr>
-   <tr class="row_on">
+   <tr class="row_off">
     <td>{lang_org_unit_id}:</td>
     <td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
    </tr>
@@ -25,6 +25,23 @@
     <td>
 		<textarea cols="40" rows="4" name="newsettings[invoice_address]" wrap="virtual">{value_invoice_address}</textarea>
 	</td>
+   </tr>
+
+   <tr class="row_off">
+    <td>{lang_order_footer_header}:</td>
+    <td><input name="newsettings[order_footer_header]" value="{value_order_footer_header}"></td>
+   </tr>
+
+   <tr class="row_on">
+    <td>{lang_order_footer}:</td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[order_footer]" wrap="virtual">{value_order_footer}</textarea>
+	</td>
+   </tr>
+
+   <tr class="row_off">
+    <td>{lang_order_logo}:</td>
+    <td><input name="newsettings[order_logo]" value="{value_order_logo}"></td>
    </tr>
 
    <tr class="row_off">
