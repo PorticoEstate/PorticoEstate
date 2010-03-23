@@ -2850,7 +2850,7 @@
 				'b_account_id'		=> $values[0]['spbudact_code'],
 				'b_account_name'	=> $values[0]['b_account_name'],
 				'amount'		=> $values[0]['amount'],
-				'order'			=> $values[0]['order'],
+				'order_id'			=> $values[0]['order_id'],
 			);
 
 			$link_data_add		= $link_data_add + $post_data;
