@@ -2298,7 +2298,7 @@
 					$bcc = $coordinator_email;
 					if(isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 					{
-						$cc .= ";{$contact_data['value_contact_email']}";
+						$cc = $contact_data['value_contact_email'];
 					}
 
 					$_to = implode(';',$vendor_email);
