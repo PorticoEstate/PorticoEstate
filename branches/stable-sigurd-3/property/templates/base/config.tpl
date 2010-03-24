@@ -91,8 +91,8 @@
     <td><input name="newsettings[invoice_ftp_user]" value="{value_invoice_ftp_user}"></td>
    </tr>
    <tr class="row_off">
-    <td>{lang_invoice_ftp_host_pw}:</td>
-    <td><input type ="password" name="newsettings[invoice_ftp_pw]" value="{value_invoice_ftp_pw}"></td>
+    <td>{lang_invoice_ftp_host_password}:</td>
+    <td><input type ="password" name="newsettings[invoice_ftp_password]" value="{value_invoice_ftp_password}"></td>
    </tr>
    <tr class="row_on">
     <td>{lang_invoice_ftp_host_basedir_with_NO_trailing_slash}:</td>

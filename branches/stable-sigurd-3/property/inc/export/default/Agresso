@@ -1007,7 +1007,7 @@
 		{
 			$host = $this->config->config_data['invoice_ftp_host'];
 			$user = $this->config->config_data['invoice_ftp_user'];
-			$pass = $this->config->config_data['invoice_ftp_pw'];
+			$pass = $this->config->config_data['invoice_ftp_password'];
 			
 //			echo "connecting to $host with $user and $pass\n <br>";
 			$ftp = ftp_connect($host);
