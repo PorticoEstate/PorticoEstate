@@ -553,6 +553,7 @@
 		
 		public function serialize()
 		{
+//			require_once PHPGW_API_INC.'/adodb/adodb-time.inc.php';
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(!isset($this->total_price))
 			{
@@ -561,8 +562,9 @@
 			return array(
 				'id' => $this->get_id(),
 				'date_start' => $this->get_contract_date() && $this->get_contract_date()->has_start_date() ? date($date_format, $this->get_contract_date()->get_start_date()): '',
+//				'date_end' => $this->get_contract_date() && $this->get_contract_date()->has_end_date() ? adodb_date($date_format, $this->get_contract_date()->get_end_date()): '',
 				'date_end' => $this->get_contract_date() && $this->get_contract_date()->has_end_date() ? date($date_format, $this->get_contract_date()->get_end_date()): '',
-				'type'	=> lang($this->get_contract_type_title()),
+				'type'	=> lang($this->get_contract_type_title()).' / '.lang(rental_socontract::get_instance()->get_contract_type_label($this->get_contract_type_id())),
 				'composite' => $this->get_composite_name(),
 				'party' => $this->get_party_name(),
 				'old_contract_id' => $this->get_old_contract_id(),
