@@ -107,15 +107,20 @@
 			}
 				
 			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";
+			
+			// test the manual on odt2xhtml
+			//$odtfile = PHPGW_SERVER_ROOT . '/phpgwapi/inc/odt2xhtml/odt2xhtml.odt';
 
 			if(is_file($odtfile))
 			{
-				$odt2xhtml	= CreateObject('manual.odt2xhtml',$odtfile);
+				$frontend = '/'; # directory where file odt to converse
+				$root = $GLOBALS['phpgw_info']['server']['temp_dir'];
+
+				$odt2xhtml	= CreateObject('phpgwapi.odt2xhtml', $root, $frontend, $odtfile);
 				$odt2xhtml->convert2xhtml();
 				$odt2xhtml->get_elements_html();
-				//$odt2xhtml->display_elements_html('css',0); 
-				//$odt2xhtml->display_elements_html('title',0); 
-				$odt2xhtml->display_elements_html('body',0); 
+				$odt2xhtml->display_elements_html('css',0); 
+				$odt2xhtml->display_elements_html('body',1);
 				$odt2xhtml->delete_tmp();
 			}
 			else
@@ -128,7 +133,6 @@ HTML;
 			}
 			
 			$GLOBALS['phpgw']->common->phpgw_footer();
-
 		}
 
 		function attrib_help()
