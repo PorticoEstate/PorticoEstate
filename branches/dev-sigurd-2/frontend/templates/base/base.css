@@ -19,13 +19,23 @@ dl.form-col {
     float: left;
 }
 
+
+table#header {
+	margin: 2em;
+	
+	}
+
 div#unit_selector {
-	padding: 2em;	
+	
 }
 
+div#all_units_key_data {
+	padding-left: 2em;
+	}
+
 div#unit_image {
-	float:right;
-}
+	margin-left: 2em;
+	}
 
 div#unit_image img {
 	height:170px;
@@ -40,3 +50,147 @@ div#contract_selector {
 	padding-left: 1em;
 	padding-top: 1em;
 	}
+	
+img.list_image {
+	margin-right: 5px;
+	float:left;
+	}
+
+ol.list_image {
+	float: left;
+	}
+	
+ol.list_image li {
+	padding: 1px;
+}
+	
+dl#key_data  {
+	padding: 2px;
+	}
+	
+	
+dl#key_data dd {
+	padding-bottom: 1em;
+}
+
+table#key_data td {
+	padding-right: 1em;
+	padding: 5px;
+	}
+
+
+.user_menu {
+	list-style:none;
+	height: 100%;
+	padding: 2px;
+	border-style: none none none solid;
+	border-width: 1px;
+	border-color: grey;
+	padding-left: 5px;
+}
+
+.user_menu li {
+	margin: 13px;
+	}
+	
+#area_and_price {
+	list-style:none;
+	height: 100%;
+	padding: 2px;
+	padding-left: 5px;
+	float:right;
+	padding:0.5em 1em 0 0;
+}
+
+#area_and_price li {
+	margin: 13px;
+	}
+	
+#org_units {
+	list-style: none;
+	height: 100%;
+	padding: 2px;
+	padding-left: 5px;
+	float:right;
+	padding:0.5em 1em 0 0;
+}
+
+#org_units li {
+	margin: 13px;
+	}
+	
+#information {
+	list-style:none;
+	height: 100%;
+	padding: 2px;
+	padding-left: 5px;
+	float:right;
+	padding:0.5em 1em 0 0;
+}
+
+#information li {
+	margin: 13px;
+	}
+
+a.header_link {
+	text-decoration: none;
+	float: none;
+	}
+	
+#logo_holder {
+	border: 0 none;
+	font-family:Arial,sans-serif;
+font-size:65%;
+line-height:1.166;
+float:left;
+margin:2em;
+}
+
+div#header a {
+	float: none;
+}
+
+.yui-skin-sam .yui-navset .yui-nav, .yui-skin-sam .yui-navset .yui-navset-top .yui-nav {
+	border-color: #BF0005;
+	border-width:0 0 2px;
+	}
+	
+.yui-skin-sam .yui-navset .yui-content {
+	background: none repeat scroll 0 0 #F4F2ED;
+}
+
+.yui-skin-sam .yui-navset .yui-nav .selected a, .yui-skin-sam .yui-navset .yui-nav .selected a:focus, .yui-skin-sam .yui-navset .yui-nav .selected a:hover {
+	background:url("../../../../assets/skins/sam/sprite.png") repeat-x scroll left -1400px #2647A0;
+	}
+	
+div.tickets {
+	margin-top: 1em;
+	}
+	
+div.toolbar-container {
+	margin-bottom: 1em;
+	}
+
+em.select_header {
+	font-size: larger;
+	padding-top: 10px;
+	}
+
+#contract_price_and_area {
+	float: left;
+	margin: 4em 2em 0 0;
+}
+
+#contract_price_and_area li {
+		margin-bottom: 1em;
+	}
+
+#contract_essentials {
+	float: left;
+	margin: 4em 2em 0 0;
+	}
+	
+	#contract_essentials li {
+		margin-bottom: 1em;
+	}
+

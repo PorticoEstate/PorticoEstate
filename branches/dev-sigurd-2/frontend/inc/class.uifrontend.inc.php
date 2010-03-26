@@ -27,6 +27,8 @@
 	phpgw::import_class('frontend.bofrontend');
 	phpgw::import_class('frontend.bofellesdata');
 	phpgw::import_class('frontend.borental');
+	
+	
 	/**
 	 * Frontend main class
 	 *
@@ -49,10 +51,13 @@
 
 		public function __construct()
 		{
+			//this module uses XSLT templates
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			$noframework = phpgw::get_var('noframework', 'bool');
-			$GLOBALS['phpgw_info']['flags']['noframework'] = $noframework;
+			//check to see if the 
+			$mode = phpgwapi_cache::session_get('frontend', 'noframework');
+			$noframework = isset($mode) ? $mode : true;
+			
 
 
 			// Get tabs from location hierarchy
@@ -78,8 +83,6 @@
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
 			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab');
 
-			
-
 			$this->acl 	= & $GLOBALS['phpgw']->acl;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'header.list' , 'frontend' );
@@ -93,6 +96,19 @@
 			// Get header state ...
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
 
+			$help_url = "javascript:openwindow('"
+			 . $GLOBALS['phpgw']->link('/index.php', array
+			 (
+			 	'menuaction'=> 'manual.uimanual.help',
+			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+			 	'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '',
+			 	'referer' => phpgw::get_var('menuaction')
+			 )) . "','700','600')";
+			 
+			
+			 
+			$this->header_state['help_url'] = $help_url;
+			
 			// ... and if new location check to see if user has access (exist in session)
 			if(isset($new_location))
 			{
@@ -108,7 +124,11 @@
 
 				if($exist)
 				{
+					$tppl = phpgwapi_cache::session_get('frontend','total_price_per_location');
+					$tapl = phpgwapi_cache::session_get('frontend','rented_area_per_location');
 					$this->header_state['selected'] = $new_location;
+					$this->header_state['selected_total_price'] = $tppl[$new_location];
+					$this->header_state['selected_total_area'] = $tapl[$new_location];
 					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
 
@@ -122,12 +142,57 @@
 				if(isset($org_unit_id))
 				{
 					$tab = null;
+					$noframework = false;
+					phpgwapi_cache::session_set('frontend', 'noframework', $noframework);
 				}
 			
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
+				
+				$total_area = 0;
+				$rented_area_per_location = phpgwapi_cache::session_get('frontend','rented_area_per_location');
+				foreach($rented_area_per_location as $area_per_location)
+				{
+					$total_area += $area_per_location;
+				}
+				
+				$total_price = 0;
+				$total_price_per_location = phpgwapi_cache::session_get('frontend','total_price_per_location');
+				foreach($total_price_per_location as $price_per_location)
+				{
+					$total_price += $price_per_location;
+				}
+				
+				$name_of_user = $GLOBALS['phpgw_info']['user']['firstname']." ".$GLOBALS['phpgw_info']['user']['lastname'];
+				
+				 $contact_url = "javascript:openwindow('"
+					 . $GLOBALS['phpgw']->link('/index.php', array
+					 (
+					 	'menuaction'=> 'manual.uimanual.help',
+					 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+					 	'section' => 'contact_BKB'
+					 )) . "','700','600')";
+			 
+				 $folder_url = "javascript:openwindow('"
+					 . $GLOBALS['phpgw']->link('/index.php', array
+					 (
+					 	'menuaction'=> 'manual.uimanual.help',
+					 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+					 	'section' => 'folder'
+					 )) . "','700','600')";
+				
 				$this->header_state = array(
 					'selected' => count($property_locations) > 0 ? $property_locations[0]['location_code'] : '' ,
-					'locations' => $property_locations
+					'selected_total_price' => count($property_locations) > 0 ? $total_price_per_location[$property_locations[0]['location_code']] : '',
+					'selected_total_area' => count($property_locations) > 0 ? $total_area_per_location[$property_locations[0]['location_code']] : '',
+					'locations' => $property_locations,
+					'number_of_locations' => count($property_locations),
+					'total_price' => $total_price,
+					'total_area' => $total_area,
+					'number_of_org_units' => count($org_unit_ids),
+					'name_of_user' => $name_of_user,
+					'help_url' => $help_url,
+					'contact_url' => $contact_url,
+					'folder_url' => $folder_url
 				);
 				phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 			}
@@ -137,7 +202,13 @@
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 			phpgwapi_cache::session_set('frontend','tab',$selected);
+			if($noframework)
+			{
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/bkbooking/css/frontend.css');
+			}
+			
 			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
+			$GLOBALS['phpgw_info']['flags']['noframework'] = $noframework;
 		}
 
 

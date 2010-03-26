@@ -2,6 +2,7 @@
 	phpgw::import_class('rental.soparty');
 	phpgw::import_class('rental.socontract');
 	phpgw::import_class('rental.socomposite');
+	phpgw::import_class('rental.socontract_price_item');
 	include_class('rental', 'contract', 'inc/model/');
 
     class frontend_borental {
@@ -34,6 +35,9 @@
         {
         	
         	$property_locations = array();
+        	
+        	$total_price_all_buildings = 0;
+        	$total_rented_area_all_builings = 0;
         	
         	foreach($org_unit_ids as $org_unit_id){
         		/*
@@ -78,6 +82,10 @@
 			        				$contracts_per_location[$property_location->get_location_code()] = array();	
 			        			}
 			        			array_push($contracts_per_location[$property_location->get_location_code()], $contract);
+			        			
+			        			//TODO: check to see if the contract is active?
+			        			$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
+			        			$rented_price_per_location[$property_location->get_location_code()] += rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
 			        		}        		
 			        	}
 		        	}
@@ -87,6 +95,8 @@
         	
         	
         	phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
+        	phpgwapi_cache::session_set('frontend', 'rented_area_per_location', $rented_area_per_location);
+        	phpgwapi_cache::session_set('frontend', 'total_price_per_location', $rented_price_per_location);
         	
   
         	//Serialize the properties
