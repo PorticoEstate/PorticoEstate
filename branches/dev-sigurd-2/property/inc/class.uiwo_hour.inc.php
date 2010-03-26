@@ -1885,6 +1885,10 @@ HTML;
 				
 				));
 
+			$pdf->ezText(lang('title').':',20);
+			$pdf->ezText($common_data['workorder']['title'],14);
+			$pdf->ezSetDy(-20);
+
 			$pdf->ezText(lang('descr').':',20);
 			$pdf->ezText($common_data['workorder']['descr'],14);
 
