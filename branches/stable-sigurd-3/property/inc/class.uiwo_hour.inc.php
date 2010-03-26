@@ -1804,7 +1804,11 @@ HTML;
 
 			if(isset($this->config->config_data['order_logo']) && $this->config->config_data['order_logo'])
 			{
-				$pdf->addJpegFromFile($this->config->config_data['order_logo'],40,800,80);
+				$pdf->addJpegFromFile($this->config->config_data['order_logo'],
+					40,
+					800,
+					isset($this->config->config_data['order_logo_width']) && $this->config->config_data['order_logo_width'] ? $this->config->config_data['order_logo_width'] : 80
+				);
 			}
 			$pdf->setStrokeColor(0,0,0,1);
 			$pdf->line(20,40,578,40);
@@ -1892,6 +1896,10 @@ HTML;
 
 			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
 			{
+				if(!$content)
+				{
+					$pdf->ezSetDy(-100);
+				}
 				$pdf->ezText($this->config->config_data['order_footer_header'],12);
 				$pdf->ezText($this->config->config_data['order_footer'],10);
 			}
