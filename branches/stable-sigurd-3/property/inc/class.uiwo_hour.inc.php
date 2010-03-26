@@ -1845,13 +1845,21 @@ HTML;
 				
 				));
 
-			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
-			$address_element = execMethod('property.botts.get_address_element', $location_code);
-			$address = lang('delivery address'). ':';
-			foreach($address_element as $entry)
+			$delivery_address = lang('delivery address'). ':';
+			if(isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
 			{
-				$address .= "\n{$entry['text']}: {$entry['value']}";
+				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
 			}
+			else
+			{
+				$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				foreach($address_element as $entry)
+				{
+					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
+				}
+			}
+
 			$invoice_address = lang('invoice address') . ":\n{$this->config->config_data['invoice_address']}";
 
 			$from = lang('date') . ": {$date}\n";
@@ -1862,7 +1870,7 @@ HTML;
 
 			$data = array
 			(
-					array('col1'=>lang('vendor') . ":\n{$common_data['workorder']['vendor_name']}",'col2'=>$address),
+					array('col1'=>lang('vendor') . ":\n{$common_data['workorder']['vendor_name']}",'col2' => $delivery_address),
 					array('col1'=>$from,'col2'=>$invoice_address)
 			);		
 

@@ -21,7 +21,13 @@
     <td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_invoice address}:</td>
+    <td>{lang_delivery_address}:</td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[delivery_address]" wrap="virtual">{value_delivery_address}</textarea>
+	</td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_invoice_address}:</td>
     <td>
 		<textarea cols="40" rows="4" name="newsettings[invoice_address]" wrap="virtual">{value_invoice_address}</textarea>
 	</td>
