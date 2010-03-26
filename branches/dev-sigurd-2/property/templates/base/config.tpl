@@ -44,6 +44,11 @@
     <td><input name="newsettings[order_logo]" value="{value_order_logo}"></td>
    </tr>
 
+   <tr class="row_on">
+    <td>{lang_order_logo_width}:</td>
+    <td><input name="newsettings[order_logo_width]" value="{value_order_logo_width}"></td>
+   </tr>
+
    <tr class="row_off">
     <td>{lang_needed_for_invoice_approval}:</td>
     <td>
