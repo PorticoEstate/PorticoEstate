@@ -1051,7 +1051,7 @@ notify	property	no	varsle
 no type	property	no	Type ikke valgt
 no user	property	no	Bruker ikke valgt
 no user selected	property	no	Bruker ikke valgt
-no vendor	property	no	leverandør ikke valgt
+no vendor	property	no	Leverandør ikke valgt
 no workorder budget	property	no	Ingen budsjett arbeidsordre/bestilling
 no workorder bugdet	property	no	Ingen arbeidsordrer er budsjettert
 no year	property	no	Ingen årstall
@@ -1682,13 +1682,13 @@ users phone is updated	property	no	Brukers telefon er oppdatert
 value	property	no	Verdi
 values	property	no	Verdier
 varchar	property	no	varchar
-vendor	property	no	leverandør
+vendor	property	no	Leverandør
 vendor attributes	property	no	Leverandør attributter
 vendor categories	property	no	Leverandør kategorier
 vendor global categories	property	no	Globale leverandør kategorier
-vendor has been added	property	no	leverandør er lagt til
+vendor has been added	property	no	Leverandør er lagt til
 vendor id	property	no	Lev ID
-vendor name	property	no	leverandør navn
+vendor name	property	no	Leverandør navn
 vendor reminder	property	no	Leverandør purringer
 version	property	no	versjon
 view apartment	property	no	vis leilighet
