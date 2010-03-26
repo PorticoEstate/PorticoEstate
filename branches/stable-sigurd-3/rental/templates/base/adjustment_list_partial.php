@@ -24,6 +24,15 @@
 		}
 	}
 
+	var formatYear = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData,
+			{
+				suffix: " <?php echo lang('year')?>",
+		    });
+		}
+	}
+
 	// Defining columns for datatable
 	var columnDefs = [
 		{
@@ -49,7 +58,8 @@
 		},
 		{
 			key: "interval",
-			label: "<?php echo lang('interval') ?>"
+			label: "<?php echo lang('interval') ?>",
+			formatter: formatYear
 		},
 		{
 			key: "responsibility_title",

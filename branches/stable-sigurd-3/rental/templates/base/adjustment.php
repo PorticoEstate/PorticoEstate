@@ -33,9 +33,9 @@
 		<dd>
 			<?php
 				if ($editable) {
-					echo '<input type="text" name="interval" id="interval" value="' . $adjustment->get_interval() . '"/> ';
+					echo '<input type="text" name="interval" id="interval" value="' . $adjustment->get_interval() . '"/> '.' '.lang('year');
 				} else {
-					echo $adjustment->get_interval();
+					echo $adjustment->get_interval().' '.lang('year');
 				}
 			?>
 		</dd>
