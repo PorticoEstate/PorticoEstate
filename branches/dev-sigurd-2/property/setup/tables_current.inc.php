@@ -1159,7 +1159,35 @@
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
+			'pk' => array('event_id', 'schedule_time'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_event_schedule' => array(
+			'fd' => array(
+				'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'schedule_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'descr' => array('type' => 'text','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
 			'pk' => array('event_id', 'exception_time'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_event_receipt' => array(
+			'fd' => array(
+				'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'receipt_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'descr' => array('type' => 'text','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+			),
+			'pk' => array('event_id', 'receipt_time'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -1244,19 +1272,6 @@
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
 			),
 			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_event_receipt' => array(
-			'fd' => array(
-				'cal_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'year_month_date' => array('type' => 'int','precision' => '4','nullable' => False),
-				'datetime_done' => array('type' => 'int','precision' => '4','nullable' => True),
-				'datetime_reject' => array('type' => 'int','precision' => '4','nullable' => True),
-				'user_id' => array('type' => 'int','precision' => '4','nullable' => True)
-			),
-			'pk' => array('cal_id','year_month_date'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

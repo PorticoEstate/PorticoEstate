@@ -1303,6 +1303,7 @@ save the workorder	property	no	lagre arbeidsordre
 save this workorder as a template for later use	property	no	lagre denne arbeidsordren som mal for senere bruk
 scale	property	no	Scale
 schedule	property	no	planlegge (tid)
+scheduled events	property	no	Planlagte oppgaver
 schedule the method	property	no	Tidsplanlegging
 score	property	no	poengsum
 search by bruk. to show all entries, empty all fields and press the submit button again	property	no	Søk etter BruksNr

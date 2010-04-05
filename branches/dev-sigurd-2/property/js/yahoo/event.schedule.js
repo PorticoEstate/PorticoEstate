@@ -1,10 +1,12 @@
 var  myPaginator_0, myDataTable_0;
-var Button_0_0, Button_0_1;
+var Button_0_0, Button_0_1, Button_0_2;
 var tableYUI;
 
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
 	{
+		YAHOO.util.Dom.get('hd_values[set_receipt]').value = '';
+		YAHOO.util.Dom.get('hd_values[delete_receipt]').value = '';
 		YAHOO.util.Dom.get('hd_values[enable_alarm]').value = '';
 		YAHOO.util.Dom.get('hd_values[disable_alarm]').value = '';
 	}

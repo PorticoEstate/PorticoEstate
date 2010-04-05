@@ -537,6 +537,8 @@
 				$users=$users_extra;
 			}
 
+			$user_list = array();
+
 			while (is_array($users) && list(,$user) = each($users))
 			{
 				$name = (isset($user['account_lastname'])?$user['account_lastname'].' ':'').$user['account_firstname'];
@@ -561,10 +563,7 @@
 				}
 			}
 
-			if(isset($user_list) && is_array($user_list))
-			{
-				return $user_list;
-			}
+			return $user_list;
 		}
 
 		function initiate_ui_vendorlookup($data)

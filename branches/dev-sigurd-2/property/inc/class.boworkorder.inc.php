@@ -482,7 +482,7 @@
 				'location_item_id'	=> $workorder_id
 			);
 
-			$events = execMethod('property.soevent.read', $event_criteria);
+			$events = execMethod('property.soevent.read_at_location', $event_criteria);
 			$workorder['event_id'] = $events ? $events[0]['id'] : '';
 
 			return $workorder;
