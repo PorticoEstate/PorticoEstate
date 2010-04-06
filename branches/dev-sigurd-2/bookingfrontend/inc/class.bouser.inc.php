@@ -81,11 +81,11 @@
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
 			{
-				return true;
+				//return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
-				return false;
+				//return false;
 			}
 			$so = CreateObject('booking.soorganization');
 			$organization = $so->read_single($organization_id);
@@ -103,11 +103,11 @@
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
 			{
-				return true;
+				//return true;
 			}
 			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if(!$this->is_logged_in()) {
-				return false;
+				//return false;
 			}
 			$so = CreateObject('booking.sogroup');
 			$group = $so->read_single($group_id);
