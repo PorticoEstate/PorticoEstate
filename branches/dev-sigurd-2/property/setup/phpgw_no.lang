@@ -730,6 +730,7 @@ event	property	no	Hendelse
 event action	property	no	Handling ved hendelse
 events	property	no	Hendelser
 example	property	no	Eksempel
+exception	property	no	Utgår
 expand all	property	no	Vis alle
 exp date	property	no	Utgått dato
 export contacts	property	no	Eksporter kontakter
@@ -749,6 +750,7 @@ fetch the history for this item	property	no	Hent historikk for dette elementet
 file	property	no	fil
 file deleted	property	no	fil er slettet
 filename	property	no	Filnavn
+fileuploader	property	no	Filopplasting
 find and register all application hooks	property	no	Finn og registrer alle Hooks
 finnish date	property	no	Ferdig dato
 finnish_date	property	no	Ferdig dato
@@ -951,6 +953,7 @@ location config	property	no	Konfigurering av lokalisering
 location form	property	no	Lokaliseringsskjema
 location level	property	no	Lokaliserings-nivå
 location manager	property	no	Forvalter lokasjon
+location name	property	no	Modul
 location not chosen!	property	no	Lokalisering er ikke valgt
 location type	property	no	Lokaliserings type
 location type not chosen!	property	no	Lokaliseringsnivå ikke valgt
@@ -1191,6 +1194,7 @@ prizing	property	no	Priser
 probability	property	no	sansynlighet
 project	property	no	prosjekt
 .project	property	no	Prosjekt
+project.workorder	property	no	Prosjekt::Bestilling
 project %1 has been edited	property	no	Prosjekt %1 er oppdatert
 project %1 has been saved	property	no	Prosjekt %1 er lagret
 project %1 needs approval	property	no	Prosjekt %1 venter på godkjenning
@@ -1220,6 +1224,7 @@ ready for processing claim	property	no	Til fakturering
 re-assigned	property	no	Videresendt
 re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
+receipt date	property	no	Kvitteringsdato
 record	property	no	Post
 related	property	no	Relatert
 related info	property	no	Relatert info
@@ -1672,6 +1677,7 @@ update subject	property	no	Oppdater overskrift
 update the category to not active based on if there is only nonactive apartments	property	no	Oppdater kategori til utgått basert på om det bare finnes utgåtte leiligheter
 update the not active category for locations	property	no	Oppdater kategori til utgått for lokaliseringer
 upload file	property	no	Last opp fil
+upload multiple files	property	no	Last opp flere filer
 url	property	no	URL
 user	property	no	Bruker
 user contact info	property	no	Bruker kontaktinfo
