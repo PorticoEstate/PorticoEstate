@@ -25,7 +25,7 @@
 			<div id="org_units">
     			<ul>
     				<li><em><img src="frontend/templates/base/images/16x16/chart_organisation.png"  class="list_image" /></em>Organisasjonenheter (<xsl:value-of select="number_of_org_units"/>)</li>
-    				<li><select size="3"><option value="">Resultatenhet 1  asdas  asd asd  asd  asdasdas</option><option value="">Resultatenhet 2</option></select></li>
+    				<li><select size="3"><option value="">Seksjon informasjon</option><option value="">Byrådsleders avdeling, stab</option></select></li>
     			</ul>
 			</div>
 			<div id="logo_holder">
