@@ -87,6 +87,9 @@ class rental_uiadjustment extends rental_uicommon {
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.edit', 'id' => $value['id'])));
+				$value['labels'][] = lang('edit');
 			}
 	}
 	
@@ -142,6 +145,7 @@ class rental_uiadjustment extends rental_uicommon {
 				$adjustment->set_new_price(0);
 				$adjustment->set_percent(phpgw::get_var('percent'));
 				$adjustment->set_interval(phpgw::get_var('interval'));
+				$adjustment->set_adjustment_type(phpgw::get_var('adjustment_type'));
 				
 				$so_adjustment = rental_soadjustment::get_instance();
 				if($so_adjustment->store($adjustment))

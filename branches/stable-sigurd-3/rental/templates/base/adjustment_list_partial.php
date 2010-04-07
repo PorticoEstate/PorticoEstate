@@ -52,6 +52,10 @@
 			formatter: formatPrice
 		},
 		{
+			key: "adjustment_type",
+			label: "<?php echo lang('adjustment_type')?>"
+		},
+		{
 			key: "percent",
 			label: "<?php echo lang('percent') ?>",
 			formatter: formatPercent
