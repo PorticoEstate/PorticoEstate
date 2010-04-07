@@ -10,13 +10,14 @@
 	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
 	/**
 	* Log
 	*
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class log
+	class phpgwapi_log
 	{
 
 		/***************************\
@@ -71,8 +72,6 @@
 		
 		public function __construct()
 		{
-//			date_default_timezone_set(date_default_timezone_get());
-			date_default_timezone_set('UTC');
 		}
 
 

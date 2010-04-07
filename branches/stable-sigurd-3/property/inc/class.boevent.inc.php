@@ -101,9 +101,11 @@ if ( !extension_loaded('mcal') )
 			$order				= phpgw::get_var('order');
 			$filter				= phpgw::get_var('filter', 'int');
 			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$location_id		= phpgw::get_var('location_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int');
+			$user_id			= phpgw::get_var('user_id', 'int');
 
 			$this->start		= $start ? $start : 0;
 			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
@@ -111,10 +113,9 @@ if ( !extension_loaded('mcal') )
 			$this->order		= isset($_REQUEST['order']) ? $order : $this->order;
 			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
 			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
+			$this->location_id	= isset($_REQUEST['location_id'])  ? $location_id :  $this->location_id;
+			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  $this->user_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
-
-			//$this->location_info = $this->so->get_location_info($type, $type_id);
-
 		}
 
 		public function save_sessiondata($data)
@@ -131,19 +132,54 @@ if ( !extension_loaded('mcal') )
 
 	//		_debug_array($data);
 
-			$this->start	= $data['start'];
-			$this->query	= $data['query'];
-			$this->filter	= $data['filter'];
-			$this->sort		= $data['sort'];
-			$this->order	= $data['order'];
-			$this->cat_id	= $data['cat_id'];
-			$this->allrows	= $data['allrows'];
+			$this->start		= $data['start'];
+			$this->query		= $data['query'];
+			$this->filter		= $data['filter'];
+			$this->sort			= $data['sort'];
+			$this->order		= $data['order'];
+			$this->cat_id		= $data['cat_id'];
+			$this->allrows		= $data['allrows'];
+			$this->location_id	= $data['location_id'];
+			$this->user_id		= $data['user_id'];
 		}
 
-		public function read()
+		public function read($dry_run='')
 		{
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+											'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run));
+
+			static $locations = array();
+			static $urls = array();
+			$interlink	= CreateObject('property.interlink');
+			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach($values as &$entry)
+			{
+				$entry['date']	= $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],$dateformat);
+				$entry['receipt_date']	= $GLOBALS['phpgw']->common->show_date($entry['receipt_date'],$dateformat);
+
+				if($locations[$entry['location_id']])
+				{
+					 $location = $locations[$entry['location_id']];
+				}
+				else
+				{
+					$location = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+					$locations[$entry['location_id']] = $location;
+				}
+
+				if($urls[$entry['location_id']][$entry['location_item_id']])
+				{
+					$entry['url'] = $urls[$entry['location_id']][$entry['location_item_id']];
+				}
+				else
+				{
+					$entry['url'] = $interlink->get_relation_link($location['location'], $entry['location_item_id']);
+					$urls[$entry['location_id']][$entry['location_item_id']] = $entry['url'];
+				}
+				$entry['location_name'] = $interlink->get_location_name($location['location']);
+				$entry['location'] = $location['location'];
+
+			}
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
@@ -191,6 +227,11 @@ if ( !extension_loaded('mcal') )
 	//		$this->find_scedules($criteria);
 
 			return $values;
+		}
+
+		public function update_receipt($data)
+		{
+			return $this->so->update_receipt($data);
 		}
 
 		public function save($data)
@@ -346,6 +387,25 @@ if ( !extension_loaded('mcal') )
 
 			$this->asyncservice->cancel_timer($id);
 			$this->asyncservice->set_timer($times, $id, 'property.boevent.action', $timer_data, $account_id);
+
+
+
+//
+
+			$event = $this->so->read_single($receipt['id']);
+
+			$criteria = array
+			(
+				'start_date'		=> $event['start_date'],
+				'end_date'			=> $event['end_date'],
+				'location_id'		=> $event['location_id'],
+				'location_item_id'	=> $event['location_item_id']
+			);
+
+			$this->find_scedules($criteria);
+			$schedule =  $this->cached_events;
+			$this->so->create_schedule(array('event_id' => $receipt['id'], 'schedule' => $schedule));
+//
 
 			return $receipt;
 		}
@@ -1155,5 +1215,17 @@ if ( !extension_loaded('mcal') )
 					throw new Exception("property_boevent::set_exceptions - Missing event_id info in input");
 			}
 			$this->so->set_exceptions($data);
+		}
+
+		public function get_event_location()
+		{
+			$interlink	= CreateObject('property.interlink');
+			$locations = $this->so->get_event_location();
+			foreach ($locations as &$location)
+			{
+				$temp = $GLOBALS['phpgw']->locations->get_name($location['id']);
+				$location['name'] = $interlink->get_location_name($temp['location']);
+			}
+			return $locations;
 		}
 	}

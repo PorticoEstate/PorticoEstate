@@ -46,9 +46,6 @@
 							<xsl:attribute name="title">
 									<xsl:value-of select="//lang_file_action_statustext"/>
 							</xsl:attribute>
-							<xsl:attribute name="style">
-								<xsl:text>cursor:help</xsl:text>
-							</xsl:attribute>
 						</input>
 					</td>
 					</tr>

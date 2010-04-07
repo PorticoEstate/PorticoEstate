@@ -4059,3 +4059,59 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.583 to 0.9.17.584
+	* Add schedule to event
+	* 
+	*/
+
+	$test[] = '0.9.17.583';
+	function property_upgrade0_9_17_583()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event_schedule', array(
+				'fd' => array(
+					'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'schedule_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('event_id', 'schedule_time'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_event_receipt');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event_receipt', array(
+				'fd' => array(
+					'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'receipt_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('event_id', 'receipt_time'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.584';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

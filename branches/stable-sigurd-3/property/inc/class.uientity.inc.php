@@ -1527,7 +1527,7 @@
 				'lang_file_action_statustext'	=> lang('Check to delete file'),
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
-				'multiple_uploader'				=> $id ? true : false,
+				'multiple_uploader'				=> $id ? true : '',
 				'fileuploader_action'			=> "javascript:openwindow('"
 												 . $GLOBALS['phpgw']->link('/index.php', array
 												 (

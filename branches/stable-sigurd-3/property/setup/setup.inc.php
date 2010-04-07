@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.583';
+	$setup_info['property']['version']		= '0.9.17.584';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -142,6 +142,7 @@
 		'fm_event',
 		'fm_event_action',
 		'fm_event_exception',
+		'fm_event_schedule',
 		'fm_investment',
 		'fm_investment_value',
 		'fm_event_receipt',

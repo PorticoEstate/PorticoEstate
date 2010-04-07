@@ -652,6 +652,16 @@
 				);
 			}
 
+			if ( $acl->check('.scheduled_events', PHPGW_ACL_READ, 'property') )
+			{
+				$menus['navigation']['scheduled_events'] = array
+				(
+					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uievent.index')),
+					'text'		=> lang('scheduled events'),
+					'image'		=> array('scheduled_events', 'project')
+				);
+			}
+
 			if ( $acl->check('.invoice', PHPGW_ACL_READ, 'property') )
 			{
 				$children = array();

@@ -333,6 +333,22 @@
 			if (is_array($this->data))
 			{
 				reset($this->data);
+
+				// This one should cope with daylight saving time
+				// Create two timezone objects, one for UTC (GMT) and one for
+				// user pref
+				$dateTimeZone_utc = new DateTimeZone('UTC');
+				$dateTimeZone_pref = new DateTimeZone(isset($this->data['common']['timezone']) && $this->data['common']['timezone'] ? $this->data['common']['timezone'] : 'UTC');
+
+				// Create two DateTime objects that will contain the same Unix timestamp, but
+				// have different timezones attached to them.
+				$dateTime_utc = new DateTime("now", $dateTimeZone_utc);
+				$dateTime_pref = new DateTime("now", $dateTimeZone_pref);
+
+				// Calculate the GMT offset for the date/time contained in the $dateTime_utc
+				// object, but using the timezone rules as defined for Tokyo
+
+				$this->data['common']['tz_offset'] = (int)$dateTimeZone_pref->getOffset($dateTime_utc)/3600;
 			}
 			if ($this->debug && substr($GLOBALS['phpgw_info']['flags']['currentapp'],0,3) != 'log') 
 			{
@@ -341,6 +357,7 @@
 				echo "default<pre>"; print_r($this->default); echo "</pre>\n";
 				echo "effectiv<pre>";print_r($this->data); echo "</pre>\n";
 			}
+
 			return $this->data;
 		}
 
