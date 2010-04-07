@@ -146,6 +146,10 @@ float:left;
 margin:2em;
 }
 
+em#bold {
+	font-weight: bold;
+	}
+
 div#header a {
 	float: none;
 }
@@ -178,7 +182,7 @@ em.select_header {
 
 #contract_price_and_area {
 	float: left;
-	margin: 4em 2em 0 0;
+	margin: 1em 2em 0 0;
 }
 
 #contract_price_and_area li {
@@ -187,10 +191,27 @@ em.select_header {
 
 #contract_essentials {
 	float: left;
-	margin: 4em 2em 0 0;
+	margin: 1em 2em 0 2em;
+	}
+	
+#composites {
+	float: left;
+	margin: 1em 2em 0 2em;
 	}
 	
 	#contract_essentials li {
 		margin-bottom: 1em;
 	}
+	
+#contract_parts {
+	float: left;
+	margin: 1em 2em 0 2em;
+	}
+	
+div.toolbar {
+background-color:#EEEEEE;
+border:1px solid #BBBBBB;
+float:left;
+width:100%;
+}
 

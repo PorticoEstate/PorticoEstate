@@ -3,6 +3,8 @@
 phpgw::import_class('frontend.uifrontend');
 phpgw::import_class('rental.uicontract');
 phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.socomposite');
+phpgw::import_class('rental.soparty');
 
 class frontend_uicontract extends frontend_uifrontend
 {
@@ -78,14 +80,14 @@ class frontend_uicontract extends frontend_uifrontend
 		$party_array = array();
 		foreach($parties as $party)
 		{
-			$party_array[] = $party->serialize();
+			$party_array[] = rental_soparty::get_instance()->get_single($party->get_id())->serialize();
 		}
 		
 		$composites = $this->contract_state['contract']->get_composites();
 		$composite_array = array();
 		foreach($composites as $composite)
 		{
-			$composite_array[] = $composite->serialize();
+			$composite_array[] = rental_socomposite::get_instance()->get_single($composite->get_id())->serialize();
 		}
 		
 		$data = array (

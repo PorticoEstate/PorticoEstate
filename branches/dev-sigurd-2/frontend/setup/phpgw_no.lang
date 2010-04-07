@@ -35,3 +35,8 @@ status_unknown	frontend	no	Ukjent status
 old_contract_id	frontend 	no	Kontraktsnummer
 date_start	frontend	no	Startdato
 date_end	frontend	no	Sluttdato
+contract_status	frontend	no	Status
+rented_area	frontend	no	Leid areal
+total_price	frontend	no	Pris
+service_id	frontend	no	Tjenestested
+responsibility_id	frontend	no	Ansvarssted

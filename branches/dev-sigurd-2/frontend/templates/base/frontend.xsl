@@ -29,7 +29,7 @@
     			</ul>
 			</div>
 			<div id="logo_holder">
-				<img src="https://www.bergen.kommune.no/internet/htdocs/images/logo.gif" style="paddign"/>
+				<img src="https://www.bergen.kommune.no/internet/htdocs/images/logo.gif"/>
 			</div>
 		</div>
     </div>
