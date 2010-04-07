@@ -11,6 +11,7 @@ class rental_adjustment extends rental_model
 	protected $adjustment_date;
 	protected $is_manual;
 	protected $interval;
+	protected $adjustment_type;
 
 	public function __construct(int $id = null)
 	{
@@ -103,6 +104,16 @@ class rental_adjustment extends rental_model
 		$this->interval = (int)$interval;
 	}
 	
+	public function get_adjustment_type()
+	{
+		return $this->adjustment_type;
+	}
+	
+	public function set_adjustment_type($adjustment_type)
+	{
+		$this->adjustment_type = $adjustment_type;
+	}
+	
 	public function serialize()
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -113,6 +124,7 @@ class rental_adjustment extends rental_model
 			'new_price' => $this->get_new_price(),
 			'percent' => $this->get_percent(),
 			'interval' => $this->get_interval(),
+			'adjustment_type' => lang(($this->get_adjustment_type())?$this->get_adjustment_type():'none'),
 			'adjustment_date' => date($date_format, $this->get_adjustment_date())
 		);
 	}

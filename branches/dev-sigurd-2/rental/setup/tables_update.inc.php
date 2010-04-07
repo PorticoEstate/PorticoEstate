@@ -26,4 +26,32 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.1';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
+	
+	$test[] = '0.1.0.1';
+	function rental_upgrade0_1_0_1()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_adjustment','adjustment_type', array('type' => 'varchar','precision' => '255','nullable' => true));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.2';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
+	
+/*
+ * 	$test[] = '0.1.0.1';
+	function rental_upgrade0_1_0_1()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_contract','date_end',array(
+			'type' => 'decimal', 
+			'precision' => '20',
+			'scale' => '0',
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.2';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+*/
+ */
+	
 ?>

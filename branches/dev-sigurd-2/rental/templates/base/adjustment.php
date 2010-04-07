@@ -16,6 +16,24 @@
 			<?php echo lang(rental_socontract::get_instance()->get_responsibility_title($adjustment->get_responsibility_id())); ?>
 		</dd>
 		<dt>
+			<label for="adjustment_type"><?php echo lang('adjustment_type')?></label>
+		</dt>
+		<dd>
+			<?php if ($editable) {?>
+				<select name="adjustment_type">
+					<option value="adjustment_type_KPI" <?php echo ($adjustment->get_adjustment_type() == 'adjustment_type_KPI')?'selected':''?>><?php echo lang('adjustment_type_KPI')?></option>
+					<option value="adjustment_type_deflator" <?php echo ($adjustment->get_adjustment_type() == 'adjustment_type_deflator')?'selected':''?>><?php echo lang('adjustment_type_deflator')?></option>
+				</select>
+			<?php }else{
+				if($adjustment->get_adjustment_type()){
+					echo lang($adjustment->get_adjustment_type());
+				}
+				else{
+					echo lang('none');
+				}
+			}?>
+		</dd>
+		<dt>
 			<label for="percent"><?php echo lang('percent') ?></label>
 		</dt>
 		<dd>

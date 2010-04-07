@@ -421,6 +421,7 @@
 				'price_item_id'	=>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'responsibility_id' =>  array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'adjustment_date' =>  	array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'adjustment_type' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'percent' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'interval' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),

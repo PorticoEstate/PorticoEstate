@@ -19,8 +19,11 @@ adjustable	rental	no	Regulerbar
 adjustment_interval	rental	no	Reguleringsintervall
 adjustment_list	rental	no	Reguleringer
 adjustment_share	rental	no	Reguleringsandel
+adjustment_type	rental	no	Reguleringstype
 adjustment_year	rental	no	Sist regulert
 adjustment_date	rental	no	Reguleringsdato
+adjustment_type_KPI	rental	no	KPI
+adjustment_type_deflator	rental	no	Kommunal deflator
 advance	rental	no	Forskudd
 agresso_id	rental	no	Agresso-ID
 agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
@@ -293,6 +296,7 @@ new_adjustment	rental	no	Ny regulering
 new_price	rental	no	Ny pris
 next	rental	no	Neste
 no	rental	no	Nei
+none	rental	no	Ingen
 nobody	rental	no	Ingen
 No billing jobs found	rental	no	Ingen faktureringer funnet
 no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
