@@ -1159,7 +1159,7 @@
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
-			'pk' => array('event_id', 'schedule_time'),
+			'pk' => array('event_id', 'exception_time'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -1173,7 +1173,7 @@
 				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
 			),
-			'pk' => array('event_id', 'exception_time'),
+			'pk' => array('event_id', 'schedule_time'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
