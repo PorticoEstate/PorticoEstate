@@ -163,6 +163,7 @@
     <br/>
     <div id="message"> </div>
    
+    <div id="paging"> </div>
     <div class="datatable-container">
         <table class="datatable">
         </table>
@@ -174,7 +175,6 @@
         </div>
         <div class="bd" style="text-align:center;"> </div>
     </div>
-     <div id="paging"> </div>
     
     <div id="footer"> </div>
     <xsl:call-template name="datatable-yui-definition" />
