@@ -390,6 +390,7 @@
 					$contract->set_adjustment_interval(phpgw::get_var('adjustment_interval'));
 					$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
 					$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
+					$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
 					$validated_numeric = $contract->validate_numeric();
 					
 					if($validated_numeric){

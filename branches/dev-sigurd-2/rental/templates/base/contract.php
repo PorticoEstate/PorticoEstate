@@ -684,6 +684,12 @@ if($contract->get_id() > 0) {
                         }
                         ?>
                     </dd>
+                    <dt>
+						<label for="publish_comment"><?php echo lang('publish_comment') ?></label>
+					</dt>
+					<dd>
+						<input type="checkbox" name="publish_comment" id="publish_comment"<?php echo $contract->get_publish_comment() ? ' checked="checked"' : '' ?> <?php echo !$editable ? ' disabled="disabled"' : '' ?>/>
+					</dd>
                 </dl>
 				<div class="form-buttons">
 					<?php

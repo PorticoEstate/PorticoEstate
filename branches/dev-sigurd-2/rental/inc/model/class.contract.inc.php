@@ -53,6 +53,7 @@
 		protected $adjustment_year;
 		protected $adjustable;
 		protected $bill_only_one_time;
+		protected $publish_comment;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -786,6 +787,16 @@
 		}
 		
 		public function get_rented_area() { return $this->rented_area; }
+		
+		public function get_publish_comment()
+		{
+			return $this->publish_comment;
+		}
+		
+		public function set_publish_comment($publish_comment)
+		{
+			$this->publish_comment = (boolean)$publish_comment;
+		}
 
 		/**
 		 * (non-PHPdoc)
