@@ -70,8 +70,7 @@
 
 			$this->role				= $this->bo->role;
 
-			$this->cats				= CreateObject('phpgwapi.categories');
-			$this->cats->app_name	= 'fm_' . $this->role;
+			$this->cats				= CreateObject('phpgwapi.categories', -1,  'property', ".{$this->role}");
 
 			$this->acl				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.' . $this->role;

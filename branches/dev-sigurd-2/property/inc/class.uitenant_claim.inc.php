@@ -735,8 +735,7 @@
 				'project_id' 	=> $values['project_id']
 			);
 
-			$cats				= CreateObject('phpgwapi.categories');
-			$cats->app_name		= 'property.project';
+			$cats				= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$cats->supress_info	= true;
 
 			$cat_list_project	= $cats->return_array('',0,false,'','','',false);
@@ -1072,8 +1071,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$cats				= CreateObject('phpgwapi.categories');
-			$cats->app_name		= 'property.project';
+			$cats				= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$cats->supress_info	= true;
 
 			$cat_list_project	= $cats->return_array('',0,false,'','','',false);

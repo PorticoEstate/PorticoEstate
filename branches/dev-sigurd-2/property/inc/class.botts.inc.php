@@ -84,8 +84,7 @@
 			$this->historylog			= & $this->so->historylog;
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.ticket';
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$this->cats->supress_info	= true;
 			$this->acl_location			= $this->so->acl_location;
 

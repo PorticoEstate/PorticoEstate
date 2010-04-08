@@ -54,8 +54,7 @@
 		{
 			$this->so 					= CreateObject('property.soproject');
 			$this->bocommon 			= & $this->so->bocommon;
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.project';
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 			= & $this->so->interlink;
 			$this->custom 				= & $this->so->custom;

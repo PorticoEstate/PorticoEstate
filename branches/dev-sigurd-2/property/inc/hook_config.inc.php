@@ -87,8 +87,7 @@ HTML;
 	*/
 	function dimb_cat_1($config)
 	{
-		$cats	= CreateObject('phpgwapi.categories');
-		$cats->app_name	= 'property.invoice.dimb';
+		$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.invoice.dimb');
 		$cats->supress_info = true;
 
 		$selected = isset($config['dimb_responsible_1']) ? $config['dimb_responsible_1'] : '';
@@ -105,8 +104,7 @@ HTML;
 	*/
 	function dimb_cat_2($config)
 	{
-		$cats	= CreateObject('phpgwapi.categories');
-		$cats->app_name	= 'property.invoice.dimb';
+		$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.invoice.dimb');
 		$cats->supress_info = true;
 
 		$selected = isset($config['dimb_responsible_2']) ? $config['dimb_responsible_2'] : '';

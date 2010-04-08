@@ -719,12 +719,11 @@
 				$prefs = $this->bocommon->create_preferences('property',$user_id);
 			}
 
-			$cats		= CreateObject('phpgwapi.categories');
-			$cats->app_name = 'fm_vendor';
+			$cats		= CreateObject('phpgwapi.categories', -1, 'property', '.vendor');
 
 			$cat_data	= $cats->formatted_xslt_list(array('selected' => $prefs['default_vendor_category'],'globals' => true, 'link_data' =>array()));
 
-			$cats->app_name = 'property.ticket';
+			$cats->set_appname('property','.ticket');
 
 			$cat_data_tts	= $cats->formatted_xslt_list(array('selected' => $prefs['tts_category'],'globals' => true, 'link_data' =>array()));
 

@@ -123,8 +123,7 @@
 		function addressbook()
 		{
 			$bocommon	= CreateObject('property.bocommon');
-			$this->cats		= CreateObject('phpgwapi.categories');
-			$this->cats->app_name = 'addressbook';
+			$this->cats		= CreateObject('phpgwapi.categories', -1,  'addressbook');
 			$this->cats->supress_info	= true;
 
 			$second_display = phpgw::get_var('second_display', 'bool');
@@ -380,8 +379,7 @@
 		function organisation()
 		{
 			$bocommon	= CreateObject('property.bocommon');
-			$this->cats		= CreateObject('phpgwapi.categories');
-			$this->cats->app_name = 'addressbook';
+			$this->cats		= CreateObject('phpgwapi.categories', -1, 'addressbook');
 			$this->cats->supress_info	= true;
 
 			$second_display = phpgw::get_var('second_display', 'bool');
@@ -638,8 +636,7 @@
 		{
 			$bocommon	= CreateObject('property.bocommon');
 
-			$this->cats		= CreateObject('phpgwapi.categories');
-			$this->cats->app_name = 'fm_vendor';
+			$this->cats		= CreateObject('phpgwapi.categories', -1,  'property', '.vendor');
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 			$column = phpgw::get_var('column');
