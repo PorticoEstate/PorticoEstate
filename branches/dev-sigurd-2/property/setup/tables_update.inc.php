@@ -4114,4 +4114,54 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.583 to 0.9.17.584
+	* Use locations for categories
+	* 
+	*/
+/*
+	$test[] = '0.9.17.584';
+	function property_upgrade0_9_17_584()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$locations = array
+		(
+			'property.ticket'	=> '.ticket',
+			'property.project'	=> '.project',
+			'property.document' => '.document',
+			'fm_vendor'			=> '.vendor',
+			'fm_tenant'			=> '.tenant',
+			'fm_owner'			=> '.owner'
+		);
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_categories");
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			if(in_array($GLOBALS['phpgw_setup']->oProc->f('cat_appname',true),array_keys($locations)))
+			{
+				$categories[] = array
+				(
+					'id'		=> $GLOBALS['phpgw_setup']->oProc->f('cat_id'),
+					'appname'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_appname',true)
+				);
+			}
+		}
+
+		foreach($categories as $category)
+		{
+			$location = $locations[$category['appname']];
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $location);	
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_categories SET cat_appname = 'property', location_id = {$location_id} WHERE cat_id = {$category['id']}",__LINE__,__FILE__);
+		}
+
+		//FIXME: Add (acl) locations for categories
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.585';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+*/
