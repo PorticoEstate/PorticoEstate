@@ -47,7 +47,7 @@
              * 4. hent ut bygg-ider, location_code, fra leieobjektet
              */
         	
-	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id));
+	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id['ENHET_ID']));
 	        	
 	        	$contracts = array();
 	        	$composites = array();
