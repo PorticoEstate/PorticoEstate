@@ -52,6 +52,5 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 */
- */
 	
 ?>
