@@ -113,7 +113,7 @@
 					'tenant_global_cats'	=> array
 					(
 						'text'	=> lang('Tenant Global Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => 'fm_tenant', 'global_cats' => 'true', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.tenant', 'global_cats' => 'true', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
 					),
 					'tenant_attribs'	=> array
 					(
@@ -137,7 +137,7 @@
 					'vendor_global_cats'	=> array
 					(
 						'text'	=> lang('Vendor Global Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => 'fm_vendor', 'global_cats' => 'true', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.vendor', 'global_cats' => 'true', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
 					),
 					'vendor_attribs'	=> array
 					(
@@ -174,7 +174,7 @@
 					'dimb_roles'	=> array
 					(
 						'text'	=> lang('dimb roles'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => 'property.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 					),
 					'accounting_dimd'	=> array
 					(
@@ -321,7 +321,7 @@
 					'project_cats'	=> array
 					(
 						'text'	=> lang('project categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => 'property.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
 					),
 					'workorder_detail'	=> array
 					(
@@ -360,7 +360,7 @@
 					'doc_cats'	=> array
 					(
 						'text'	=> lang('document categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => 'property.document', 'global_cats' => 'true') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.document', 'global_cats' => 'true') )
 					),
 					'building_part'	=> array
 					(
