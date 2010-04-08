@@ -58,7 +58,7 @@ class rental_soadjustment extends rental_socommon
 		}
 		else
 		{
-			$cols = 'id, price_item_id, responsibility_id, new_price, percent, interval, adjustment_date, adjustment_type';
+			$cols = 'id, price_item_id, responsibility_id, new_price, percent, interval, adjustment_date, adjustment_type, is_executed';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": ' ORDER BY adjustment_date DESC';
 		}
 		
@@ -78,6 +78,7 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 			$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
 			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
+			$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'),'bool'));
 		}
 		
 		return $adjustment;
@@ -105,7 +106,8 @@ class rental_soadjustment extends rental_socommon
 			'interval = '.$adjustment->get_interval(),
             'adjustment_date = ' . $adjustment->get_adjustment_date(),
 			'adjustment_type = \'' . $adjustment->get_adjustment_type() . '\'',
-			'is_manual = ' . ($adjustment->is_manual() ? "true" : "false")
+			'is_manual = ' . ($adjustment->is_manual() ? "true" : "false"),
+			'is_executed = ' . ($adjustment->is_executed() ? "true" : "false")
 		);
 
 		$result = $this->db->query('UPDATE rental_adjustment SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -122,7 +124,7 @@ class rental_soadjustment extends rental_socommon
 	public function add(&$adjustment)
 	{
 		// Build a db-friendly array of the adjustment object
-		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'interval', 'adjustment_date', 'adjustment_type', 'is_manual');
+		$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'interval', 'adjustment_date', 'adjustment_type', 'is_manual', 'is_executed');
 		$values = array(
 			$adjustment->get_price_item_id(),
 			$adjustment->get_responsibility_id(),
@@ -131,7 +133,8 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->get_interval(),
             $adjustment->get_adjustment_date(),
             '\''.$adjustment->get_adjustment_type().'\'',
-            ($adjustment->is_manual() ? "true" : "false")
+            ($adjustment->is_manual() ? "true" : "false"),
+            ($adjustment->is_executed() ? "true" : "false")
 		);
 
 		$query ="INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";

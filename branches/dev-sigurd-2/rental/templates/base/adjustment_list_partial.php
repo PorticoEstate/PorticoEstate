@@ -71,6 +71,11 @@
 		  	sortable: true
 		},
 		{
+			key: "is_executed",
+			label: "<?php echo lang('is_executed')?>",
+			sortable: true
+		},
+		{
 			key: "actions",
 			hidden: true
 		},

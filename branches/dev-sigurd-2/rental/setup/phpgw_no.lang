@@ -17,6 +17,8 @@ adjust_price	rental	no	Juster pris
 adjustment	rental	no	Regulering
 adjustable	rental	no	Regulerbar
 adjustment_interval	rental	no	Reguleringsintervall
+adjustment_is_executed	rental	no	Reguleringen er utført
+adjustment_is_not_executed	rental	no	Reguleringen er ikke utført
 adjustment_list	rental	no	Reguleringer
 adjustment_share	rental	no	Reguleringsandel
 adjustment_type	rental	no	Reguleringstype
@@ -217,6 +219,7 @@ is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 is_inactive	rental	no	Inaktiv
 is_adjustable	rental	no	Regulerbar
+is_executed	rental	no	Utført
 is_one_time	rental	no	Engangsbeløp
 job_title	rental	no	Stillingstittel
 land_title	rental	no	Gnr/Bnr

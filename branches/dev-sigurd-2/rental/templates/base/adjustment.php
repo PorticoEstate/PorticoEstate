@@ -71,6 +71,13 @@
 				}
 			?>
 		</dd>
+		<dt>
+			<?php if($adjustment->is_executed()){?>
+				<label for="is_executed"><?php echo lang("adjustment_is_executed")?></label>
+			<?php }else{?>
+				<label for="is_executed"><?php echo lang("adjustment_is_not_executed")?></label>
+			<?php }?>
+		</dt>
 	</dl>
 
 	<?php

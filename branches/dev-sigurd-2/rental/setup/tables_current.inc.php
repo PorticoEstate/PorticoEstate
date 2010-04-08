@@ -425,7 +425,8 @@
 				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'percent' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'interval' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false')	
+				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'is_executed' =>		array('type' => 'bool','nullable' => false,'default' => 'false')	
 			),
 			'pk' => array('id'),
 				'fk' => array(),

@@ -12,6 +12,7 @@ class rental_adjustment extends rental_model
 	protected $is_manual;
 	protected $interval;
 	protected $adjustment_type;
+	protected $is_executed;
 
 	public function __construct(int $id = null)
 	{
@@ -94,6 +95,21 @@ class rental_adjustment extends rental_model
 		$this->is_manual = (boolean)$is_manual;
 	}
 	
+	public function get_is_executed()
+	{
+		return $this->is_executed;
+	}
+	
+	public function is_executed()
+	{
+		return $this->is_executed;
+	}
+	
+	public function set_is_executed($is_executed)
+	{
+		$this->is_executed = (boolean)$is_executed;
+	}
+	
 	public function get_interval()
 	{
 		return $this->interval;
@@ -125,7 +141,8 @@ class rental_adjustment extends rental_model
 			'percent' => $this->get_percent(),
 			'interval' => $this->get_interval(),
 			'adjustment_type' => lang(($this->get_adjustment_type())?$this->get_adjustment_type():'none'),
-			'adjustment_date' => date($date_format, $this->get_adjustment_date())
+			'adjustment_date' => date($date_format, $this->get_adjustment_date()),
+			'is_executed' => lang(($this->is_executed())?'yes':'no')
 		);
 	}
 }
