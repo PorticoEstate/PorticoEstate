@@ -31,42 +31,61 @@
 	* hook management for categories
 	* @package property
 	*/
-	class property_bo_hooks
+	class property_cat_hooks
 	{
 		
 		/**
 		* Handle a new category being added, create location to hold ACL-data
 		*/
-		function cat_add($cat_data)
+		function cat_add($data)
 		{
-			if ( isset($cat_data['cat_owner']) && $cat_data['cat_owner'] != -1 )
+			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-	//		$GLOBALS['phpgw']->acl->add_location("C{$cat_data['cat_id']}", lang('ticket type: %1', $cat_data['cat_name']), 'tts', true, "phpgw_tts_c{$cat_data['cat_id']}");
+			
+			$location = '';
+			if($data['location_id'])
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location = $location_info['location'];
+			}
+			$GLOBALS['phpgw']->locations->add("{$location}.category.{$data['cat_id']}", $data['cat_name'], 'property');
+
 		}
 
 		/**
 		* Handle a category being deleted, remove the location 
 		*/
-		function cat_delete($cat_data)
+		function cat_delete($data)
 		{
-			if ( isset($cat_data['cat_owner']) && $cat_data['cat_owner'] != -1 )
+			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-			//TODO add code here to delete the ticket types and to clean up the ACL table
+			if($data['location_id'])
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location = "{$location_info['location']}.category.{$data['cat_id']}";
+				$GLOBALS['phpgw']->locations->delete('property', $location, false);
+			}
 		}
 		
 		/**
-		* Handle a category being editted, namely to update the location info
+		* Handle a category being edited, update the location info
 		*/
-		function cat_edit($cat_data)
+		function cat_edit($data)
 		{
-			if ( isset($cat_data['cat_owner']) && $cat_data['cat_owner'] != -1 )
+			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-	//		$GLOBALS['phpgw']->acl->update_location_description("C{$cat_data['cat_id']}", lang('ticket type: %1', $cat_data['cat_name']), 'tts');
+
+			if($data['location_id'])
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location = "{$location_info['location']}.category.{$data['cat_id']}";
+				$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'property');
+			}
 		}
 	}

@@ -4119,7 +4119,7 @@
 	* Use locations for categories
 	* 
 	*/
-/*
+
 	$test[] = '0.9.17.584';
 	function property_upgrade0_9_17_584()
 	{
@@ -4145,7 +4145,8 @@
 				$categories[] = array
 				(
 					'id'		=> $GLOBALS['phpgw_setup']->oProc->f('cat_id'),
-					'appname'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_appname',true)
+					'appname'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_appname',true),
+					'name'		=> $GLOBALS['phpgw_setup']->oProc->f('cat_name',true)
 				);
 			}
 		}
@@ -4155,13 +4156,14 @@
 			$location = $locations[$category['appname']];
 			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $location);	
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_categories SET cat_appname = 'property', location_id = {$location_id} WHERE cat_id = {$category['id']}",__LINE__,__FILE__);
+
+			$GLOBALS['phpgw']->locations->add("{$location}.category.{$category['id']}", $category['name'], 'property');
 		}
 
-		//FIXME: Add (acl) locations for categories
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.585';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-*/
+
