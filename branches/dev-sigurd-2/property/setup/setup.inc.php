@@ -201,10 +201,14 @@
 		'manual',
 		'settings',
 		'help',
-		'menu'	=> 'property.menu.get_menu',
+		'menu'			=> 'property.menu.get_menu',
+		'cat_add'		=> 'property.cat_hooks.cat_add',
+		'cat_delete'	=> 'property.cat_hooks.cat_delete',
+		'cat_edit'		=> 'property.cat_hooks.cat_edit',
 		'config',
 		'home'
 	);
+
 
 	/* Dependencies for this app to work */
 	$setup_info['property']['depends'][] = array
