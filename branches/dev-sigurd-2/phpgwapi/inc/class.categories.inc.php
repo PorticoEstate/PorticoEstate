@@ -697,7 +697,7 @@
 			}
 
 			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access, cat_appname, location_id, cat_name, cat_description, cat_data, cat_main ,cat_level, last_mod)"
-				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',{$this->location_id}"
+				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',{$this->location_id},"
 					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', {$values['main']}, {$values['level']}," . time() . ')',__LINE__,__FILE__);
 
 			if ($values['id'] > 0)
@@ -720,7 +720,8 @@
 				'cat_id'	=> $max,
 				'cat_name'	=> $values['name'],
 				'cat_owner'	=> $this->account_id,
-				'location'	=> 'cat_add'
+				'location'	=> 'cat_add',
+				'location_id' => $this->location_id
 			);
 			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
 
@@ -781,7 +782,9 @@
 			$args = array
 			(
 				'cat_id'	=> $cat_id,
-				'location'	=> 'cat_delete'
+				'cat_owner'	=> $this->account_id,
+				'location'	=> 'cat_delete',
+				'location_id' => $this->location_id
 			);
 			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
 		}
@@ -835,10 +838,12 @@
 				'cat_id'	=> $values['id'],
 				'cat_name'	=> $values['name'],
 				'cat_owner'	=> $this->account_id,
-				'location'	=> 'cat_edit'
+				'location'	=> 'cat_edit',
+				'location_id' => $this->location_id
 			);
+
 			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
-			
+
 			return $values['id'];
 		}
 
