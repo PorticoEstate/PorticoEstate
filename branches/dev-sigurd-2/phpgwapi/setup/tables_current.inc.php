@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Setup
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
@@ -206,7 +206,8 @@
 				'cat_name' => array('type' => 'varchar','precision' => '150','nullable' => False),
 				'cat_description' => array('type' => 'varchar','precision' => 255,'nullable' => False),
 				'cat_data' => array('type' => 'text'),
-				'last_mod' => array('type' => 'int','precision' => 4,'nullable' => False,'default' => '0')
+				'last_mod' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => True),
 			),
 			'pk' => array('cat_id'),
 			'fk' => array(),

@@ -2659,3 +2659,27 @@
 		}
 	}
 
+	$test[] = '0.9.17.526';
+	/**
+	* Add location_id to categories
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_526()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','location_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True,
+			'default'	=> 0
+		));
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.527';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

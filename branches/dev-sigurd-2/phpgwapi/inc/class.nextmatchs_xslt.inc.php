@@ -113,7 +113,7 @@
 				'img_width'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'funkwerk' ? '' : '12',
 				'img_height'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'funkwerk' ? '' : '12',
 				'allow_all_rows'	=> isset($values['allow_all_rows']) ? true : false,
-				'allrows'			=> isset($values['allrows']) ? true : false,
+				'allrows'			=> isset($values['allrows']) && $values['allrows'] ? true : false,
 				'start_record'		=> $start,
 				'record_limit'		=> $this->maxmatches,
 				'num_records'		=> (int) $values['num_records'],
