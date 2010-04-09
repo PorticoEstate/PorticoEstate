@@ -92,6 +92,7 @@ composite_back	rental	no	Leieobjektsliste
 contract	rental	no	Kontrakt
 contract_back	rental	no	Kontraktsliste
 contract_id	rental	no	Kontraktsnummer
+contract_not_adjustable	rental	no	Kontrakten er ikke regulerbar
 contract_number	rental	no	Kontraktnummer
 contract_warning	rental	no	Advarsler
 contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
