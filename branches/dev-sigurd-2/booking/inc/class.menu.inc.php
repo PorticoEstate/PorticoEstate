@@ -226,6 +226,11 @@
 								'text'	=> lang('Account Codes'),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaccount_code_set.index', 'appname' => 'booking') )
 							),
+							'account_code_dimensions'	=> array
+							(
+								'text'	=> lang('Account Code Dimension'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiaccount_code_dimension.index', 'appname' => 'booking') )
+							),
 							'async_settings'	=> array
 							(
 								'text'	=> lang('Asynchronous Tasks'),
