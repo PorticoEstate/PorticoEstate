@@ -840,18 +840,16 @@
 			}
 
 			$members = array();
-			$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
 
-			foreach($members_gross as $user)
+			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
 			{
-				$GLOBALS['phpgw']->preferences->set_account_id($user['account_id'], true);
-				if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
-					|| ($this->config->config_data['groupnotification'] && $ticket['group_id']))
+				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
+				foreach($members_gross as $user)
 				{
 					$members[$user['account_id']] = $user['account_name'];
 				}
+				unset($members_gross);
 			}
-			unset($members_gross);
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
 			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
