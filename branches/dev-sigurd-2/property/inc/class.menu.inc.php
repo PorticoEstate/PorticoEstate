@@ -864,6 +864,13 @@
 						}
 					}
 				}
+
+				$menus['navigation']['documentation']['children']['gallery'] = array
+				(
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigallery.index')),
+					'text'	=> lang('gallery')
+				);
+
 			}
 
 			if ( $acl->check('.custom', PHPGW_ACL_READ, 'property') )
