@@ -134,7 +134,7 @@
 		* @param boolean $globals True or False, includes the global phpgroupware categories or not
 		* @return array $cats Categories
 		*/
-		function return_array($type,$start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $lastmod = -1, $column = '')
+		function return_array($type,$start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $lastmod = -1, $column = '', $use_acl = false)
 		{
 			//casting and addslashes for security
 			$start		= intval($start);
@@ -247,6 +247,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$_cats = array();
 			$cats = array();
 			while ($this->db->next_record())
 			{
@@ -259,7 +260,7 @@
 				}
 				else
 				{
-					$cats[] = array
+					$_cats[] = array
 					(
 						'id'			=> $this->db->f('cat_id'),
 						'owner'			=> $this->db->f('cat_owner'),
@@ -275,10 +276,26 @@
 					);
 				}
 			}
+			if($use_acl)
+			{
+				foreach( $_cats as $cat)
+				{
+					$location = "{$this->location}.category.{$cat['id']}";
+					if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->app_name))
+					{
+						$cats[] = $cat;
+					}
+				}
+			}
+			else
+			{
+				$cats = $_cats;
+			}
+
 			return $cats;
 		}
 
-		function return_sorted_array($start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '')
+		function return_sorted_array($start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $use_acl = false)
 		{
 			//casting and slashes for security
 			$start		= intval($start);
@@ -336,10 +353,11 @@
 			$this->db->query($sql . $parent_select . $ordermethod,__LINE__,__FILE__);
 			$total = $this->db->num_rows();
 
+			$_cats = array();
 			$cats = array();
 			while ($this->db->next_record())
 			{
-				$cats[] = array
+				$_cats[] = array
 				(
 					'id'			=> (int)$this->db->f('cat_id'),
 					'owner'			=> (int)$this->db->f('cat_owner'),
@@ -354,6 +372,23 @@
 				);
 			}
 
+			if($use_acl)
+			{
+				foreach( $_cats as $cat)
+				{
+					$location = "{$this->location}.category.{$cat['id']}";
+					if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->app_name))
+					{
+						$cats[] = $cat;
+					}
+				}
+			}
+			else
+			{
+				$cats = $_cats;
+			}
+			unset($_cats);
+
 			$num_cats = count($cats);
 			for ($i=0;$i < $num_cats;$i++)
 			{
@@ -362,22 +397,42 @@
 				$this->db->query($sql . $sub_select . $ordermethod,__LINE__,__FILE__);
 				$total += $this->db->num_rows();
 
+				$_subcats = array();
 				$subcats = array();
-				$j = 0;
+
 				while ($this->db->next_record())
 				{
-					$subcats[$j]['id']          = (int)$this->db->f('cat_id');
-					$subcats[$j]['owner']       = (int)$this->db->f('cat_owner');
-					$subcats[$j]['access']      = $this->db->f('cat_access');
-					$subcats[$j]['app_name']    = $this->db->f('cat_appname');
-					$subcats[$j]['main']        = (int)$this->db->f('cat_main');
-					$subcats[$j]['level']       = (int)$this->db->f('cat_level');
-					$subcats[$j]['parent']      = (int)$this->db->f('cat_parent');
-					$subcats[$j]['name']        = $this->db->f('cat_name');
-					$subcats[$j]['description'] = $this->db->f('cat_description');
-					$subcats[$j]['data']        = $this->db->f('cat_data');
-					$j++;
+					$_subcats[] = array
+					(
+						'id'			=> (int)$this->db->f('cat_id'),
+						'owner'			=> (int)$this->db->f('cat_owner'),
+						'access'		=> $this->db->f('cat_access'),
+						'app_name'		=> $this->db->f('cat_appname'),
+						'main'			=> (int)$this->db->f('cat_main'),
+						'level'			=> (int)$this->db->f('cat_level'),
+						'parent'		=> (int)$this->db->f('cat_parent'),
+						'name'			=> $this->db->f('cat_name'),
+						'description'	=> $this->db->f('cat_description'),
+						'data'			=> $this->db->f('cat_data')
+					);
 				}
+
+				if($use_acl)
+				{
+					foreach( $_subcats as $cat)
+					{
+						$location = "{$this->location}.category.{$cat['id']}";
+						if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->app_name))
+						{
+							$subcats[] = $cat;
+						}
+					}
+				}
+				else
+				{
+					$subcats = $_subcats;
+				}
+				unset($_subcats);
 
 				$num_subcats = count($subcats);
 				if ($num_subcats != 0)
@@ -467,12 +522,12 @@
 		* @param string $site_link URL
 		* @return array Categories
 		*/
-		function formatted_list($format,$type='',$selected = '',$globals = False,$site_link = 'site')
+		function formatted_list($format,$type='',$selected = '',$globals = False,$site_link = 'site', $use_acl = false)
 		{
-			return $this->formated_list($format,$type,$selected,$globals,$site_link);
+			return $this->formated_list($format,$type,$selected,$globals,$site_link,$use_acl);
 		}
 
-		function formated_list($format, $type='', $selected = '', $globals = False, $site_link = 'site')
+		function formated_list($format, $type='', $selected = '', $globals = False, $site_link = 'site', $use_acl = false)
 		{
 			$self = '';
 			if(is_array($format))
@@ -483,6 +538,7 @@
 				$self = isset($format['self']) ? $format['self'] : '';
 				$globals = isset($format['globals']) ? $format['globals'] : true;
 				$site_link = isset($format['site_link']) ? $format['site_link'] : 'site';
+				$use_acl = isset($format['use_acl']) ? $format['use_acl'] : '';
 				settype($format,'string');
 				$format = $temp_format ? $temp_format : 'select';
 				unset($temp_format);
@@ -495,11 +551,11 @@
 
 			if ($type != 'all')
 			{
-				$cats = $this->return_array($type, 0, False, '', '', '',$globals);
+				$cats = $this->return_array($type, 0, False, '', '', '',$globals, '', '', '', $use_acl);
 			}
 			else
 			{
-				$cats = $this->return_sorted_array(0, False, '', '', '',$globals);
+				$cats = $this->return_sorted_array(0, False, '', '', '',$globals, '', $use_acl);
 			}
 
 			$s = '';
@@ -584,7 +640,8 @@
 				$self			= isset($data['self']) ? $data['self'] : '';
 				$globals		= isset($data['globals']) ? $data['globals'] : true;
 				$link_data		= isset($data['link_data']) ? $data['link_data'] : array();
-				$select_name		= isset($data['select_name'])?$data['select_name'] : 'cat_id';
+				$select_name	= isset($data['select_name'])?$data['select_name'] : 'cat_id';
+				$use_acl		= isset($data['use_acl']) ? $data['use_acl'] : '';
 			}
 			else
 			{
@@ -598,11 +655,11 @@
 
 			if ($type != 'all')
 			{
-				$cats = $this->return_array($type, 0, false, '', '', '',$globals);
+				$cats = $this->return_array($type, 0, false, '', '', '', $globals, '', '', '', $use_acl);
 			}
 			else
 			{
-				$cats = $this->return_sorted_array(0, false, '', '', '',$globals);
+				$cats = $this->return_sorted_array(0, false, '', '', '', $globals, '', $use_acl);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('phpgwapi','base') . '/categories');
