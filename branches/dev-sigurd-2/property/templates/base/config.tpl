@@ -341,6 +341,15 @@
      </select>
     </td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_Use_ACL_for_helpdesk_categories}.</td>
+    <td>
+     <select name="newsettings[acl_at_tts_category]">
+      <option value="" {selected_acl_at_tts_category_}>NO</option>
+      <option value="1" {selected_acl_at_tts_category_1}>YES</option>
+     </select>
+    </td>
+   </tr>
    <tr class="row_on">
     <td>{lang_Use_location_at_workorder}.</td>
     <td>
