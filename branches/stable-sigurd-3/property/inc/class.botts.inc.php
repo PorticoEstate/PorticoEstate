@@ -84,8 +84,7 @@
 			$this->historylog			= & $this->so->historylog;
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.ticket';
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$this->cats->supress_info	= true;
 			$this->acl_location			= $this->so->acl_location;
 
@@ -841,18 +840,16 @@
 			}
 
 			$members = array();
-			$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
 
-			foreach($members_gross as $user)
+			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
 			{
-				$GLOBALS['phpgw']->preferences->set_account_id($user['account_id'], true);
-				if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
-					|| ($this->config->config_data['groupnotification'] && $ticket['group_id']))
+				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
+				foreach($members_gross as $user)
 				{
 					$members[$user['account_id']] = $user['account_name'];
 				}
+				unset($members_gross);
 			}
-			unset($members_gross);
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
 			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)

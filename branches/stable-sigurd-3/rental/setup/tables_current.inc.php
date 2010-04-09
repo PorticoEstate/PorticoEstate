@@ -111,7 +111,8 @@
 				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsintervall
 				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true, 'default' => 100),	//Reguleringsandel
 				'adjustment_year' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Sist regulert
-				'adjustable' =>			array('type' => 'bool','nullable' => true, 'default' => 'false') //Regulerbar
+				'adjustable' =>			array('type' => 'bool','nullable' => true, 'default' => 'false'), //Regulerbar
+				'publish_comment' =>	array('type' => 'bool','nullable' => true,'default' => 'false')	//skal kommentar vises i frontend
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -425,7 +426,8 @@
 				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'percent' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'interval' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false')	
+				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'is_executed' =>		array('type' => 'bool','nullable' => false,'default' => 'false')	
 			),
 			'pk' => array('id'),
 				'fk' => array(),

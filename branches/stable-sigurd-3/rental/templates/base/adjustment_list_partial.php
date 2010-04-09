@@ -71,6 +71,11 @@
 		  	sortable: true
 		},
 		{
+			key: "is_executed",
+			label: "<?php echo lang('is_executed')?>",
+			sortable: true
+		},
+		{
 			key: "actions",
 			hidden: true
 		},
@@ -118,6 +123,5 @@
 	);
 </script>
 
-
-<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

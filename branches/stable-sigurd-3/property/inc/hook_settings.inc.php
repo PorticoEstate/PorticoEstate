@@ -157,8 +157,7 @@
 	}
 	create_select_box('Default Priority TTS','prioritydefault',$priority,'The default priority for tickets in the Helpdesk-submodule');
 
-	$cats		= CreateObject('phpgwapi.categories');
-	$cats->app_name = 'property.ticket';
+	$cats		= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
@@ -206,7 +205,7 @@
 
 	$district_list= $socommon->select_district_list();	
 
-	$cats->app_name = 'property.project';
+	$cats->set_appname('property', '.project');
 
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
@@ -248,7 +247,7 @@
 	$GLOBALS['phpgw']->preferences->add("email","address",$email_property);
 	$GLOBALS['phpgw']->preferences->save_repository();
 
-	$cats->app_name = 'fm_vendor';
+	$cats->set_appname('property', '.vendor');
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
 

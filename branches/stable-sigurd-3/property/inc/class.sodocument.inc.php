@@ -43,8 +43,7 @@
 			$this->vfs 					= CreateObject('phpgwapi.vfs');
 			$this->vfs->fakebase 		= '/property';
 			$this->fakebase 			= $this->vfs->fakebase;
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.document';
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.document');
 			$this->cats->supress_info	= true;
 
 			$this->db           	= & $GLOBALS['phpgw']->db;

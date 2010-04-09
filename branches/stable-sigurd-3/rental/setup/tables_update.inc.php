@@ -36,6 +36,24 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
+	$test[] = '0.1.0.2';
+	function rental_upgrade0_1_0_2()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_adjustment','is_executed', array('type' => 'bool','nullable' => false,'default' => 'false'));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.3';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
+	$test[] = '0.1.0.3';
+	function rental_upgrade0_1_0_3()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract','publish_comment', array('type' => 'bool','nullable' => true,'default' => 'false'));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.4';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
 	
 /*
  * 	$test[] = '0.1.0.1';
@@ -52,6 +70,5 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 */
- */
 	
 ?>

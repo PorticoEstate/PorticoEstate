@@ -1394,7 +1394,7 @@
 
 //--------------------------------------------JSON CODE------------
 
-			$this->cats->app_name		= 'property.project';
+			$this->cats->set_appname('property','.project');
 
 			$data = array
 			(

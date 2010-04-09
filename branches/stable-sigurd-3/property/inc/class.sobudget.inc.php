@@ -36,8 +36,7 @@
 	{
 		function __construct()
 		{
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.project';
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

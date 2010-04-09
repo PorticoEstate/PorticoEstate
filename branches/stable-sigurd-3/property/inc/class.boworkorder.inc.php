@@ -56,8 +56,7 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soworkorder');
 			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.project';
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 	= & $this->so->interlink;
 			if ($session)

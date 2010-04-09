@@ -116,16 +116,38 @@
 				$ordermethod = ' ORDER BY fm_tts_tickets.id DESC';
 			}
 
+			$filtermethod = '';
+
+			$categories = $GLOBALS['phpgw']->locations->get_subs('property', '.ticket.category');
+			
+			$grant_category = array();
+			foreach ($categories as $location)
+			{
+				if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, 'property'))
+				{
+					$category = explode('.',$location);
+					$grant_category[] = $category[3];
+				}
+			}
+
+			$grant_category[] = -1;//If no one found - not breaking the query
+
 			$where= 'WHERE';
 
-			$filtermethod = '';
 			$GLOBALS['phpgw']->config->read();
+
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+			{
+				$filtermethod = " WHERE fm_tts_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+				$where= 'AND';
+			}
+
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
 				$access_location = execMethod('property.socommon.get_location_list', PHPGW_ACL_READ);
 				if($access_location)
 				{
-					$filtermethod = " WHERE fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
+					$filtermethod .= " $where fm_tts_tickets.loc1 in ('" . implode("','", $access_location) . "')";
 					$where= 'AND';
 				}
 			}

@@ -71,8 +71,7 @@
 
 			$this->role				= $this->bo->role;
 
-			$this->cats				= CreateObject('phpgwapi.categories');
-			$this->cats->app_name	= 'fm_tenant';
+			$this->cats				= CreateObject('phpgwapi.categories', -1, 'property', '.tenant');
 
 			$this->acl				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.r_agreement';
