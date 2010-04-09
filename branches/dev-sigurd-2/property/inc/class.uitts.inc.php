@@ -57,6 +57,7 @@
 		 */
 		protected $_simple = false;
 		protected $_show_finnish_date = false;
+		protected $_category_acl = false;
 		var $part_of_town_id;
 		var $status;
 		var $filter;
@@ -111,7 +112,6 @@
 				}
 			}
 
-
 			reset($user_groups);
 			$group_finnish_date = isset($this->bo->config->config_data['fmtts_group_finnish_date']) ? $this->bo->config->config_data['fmtts_group_finnish_date'] : array();
 			foreach ( $user_groups as $group => $dummy)
@@ -122,6 +122,8 @@
 					break;
 				}
 			}
+
+			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
 		}
 
 		function save_sessiondata()
@@ -413,7 +415,7 @@
 
 				if(!$this->_simple)
 				{
-					$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => true,'use_acl' => true));
+					$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => true,'use_acl' => $this->_category_acl));
 					$default_value = array ('cat_id'=>'','name'=> lang('no category'));
 					array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
@@ -1635,7 +1637,7 @@
 				'lang_town_statustext'			=> lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town'				=> lang('Part of town'),
 				'lang_no_part_of_town'			=> lang('No part of town'),
-				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => true)),
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl)),
 
 				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
 				'lang_mailnotification'			=> lang('Send e-mail'),
@@ -2536,7 +2538,7 @@
 			
 			//----------------------------------------------datatable settings--------			
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => true));
+			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl));
 			$this->cats->set_appname('property','.project');
 			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
 			$data = array
@@ -2859,7 +2861,7 @@
 				'priority_list'					=> $this->bo->get_priority_list($ticket['priority']),
 
 				'lang_no_cat'					=> lang('no category'),
-				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => true)),
+				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl)),
 				'lang_category'					=> lang('category'),
 				'value_category_name'			=> $ticket['category_name'],
 
