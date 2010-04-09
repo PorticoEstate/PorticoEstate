@@ -4136,6 +4136,11 @@
 		);
 
 
+		foreach($locations as $dummy => $location)
+		{
+			$GLOBALS['phpgw']->locations->add("{$location}.category", 'Categories', 'property');
+		}
+
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_categories");
 		$categories = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
