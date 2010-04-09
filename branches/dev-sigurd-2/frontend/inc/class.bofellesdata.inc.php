@@ -19,7 +19,8 @@
 		
 		public function get_db()
 		{
-			$db = createObject('phpgwapi.db', null, null, true);		
+			$db = createObject('phpgwapi.db', null, null, true);
+			$db->Debug = true;	
 			$db->Host = '10.11.12.40';
 			$db->Type = 'oci8';
 			$db->Database = 'FELTEST';
