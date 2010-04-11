@@ -110,39 +110,67 @@
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run));
 
+			$mime_magic = createObject('phpgwapi.mime_magic');
+
 			static $locations = array();
 			static $urls = array();
 			$interlink	= CreateObject('property.interlink');
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach($values as &$entry)
 			{
-				$entry['date']	= $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],$dateformat);
-				$entry['receipt_date']	= $GLOBALS['phpgw']->common->show_date($entry['receipt_date'],$dateformat);
-
-				if($locations[$entry['location_id']])
+				if(!$entry['mime_type'])
 				{
-					 $location = $locations[$entry['location_id']];
-				}
-				else
-				{
-					$location = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
-					$locations[$entry['location_id']] = $location;
+					$entry['mime_type'] = $mime_magic->filename2mime($entry['name']);
 				}
 
-				if($urls[$entry['location_id']][$entry['location_item_id']])
-				{
-					$entry['url'] = $urls[$entry['location_id']][$entry['location_item_id']];
-				}
-				else
-				{
-					$entry['url'] = $interlink->get_relation_link($location['location'], $entry['location_item_id']);
-					$urls[$entry['location_id']][$entry['location_item_id']] = $entry['url'];
-				}
-				$entry['location_name'] = $interlink->get_location_name($location['location']);
-				$entry['location'] = $location['location'];
+				$entry['date']	= $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']),$dateformat);
 
+				$directory = explode('/', $entry['directory']);
+
+				switch ($directory[2])
+				{
+					case 'agreement':
+						$entry['location'] = '.agreement';
+						$entry['location_item_id'] = $directory[3];
+						break;
+					case 'document':
+						$entry['location'] = '.document';
+						$entry['location_item_id'] = $directory[4];
+						break;
+					case 'fmticket':
+						$entry['location'] = '.ticket';
+						$entry['location_item_id'] = $directory[3];
+						break;
+					case 'request':
+						$entry['location'] = '.project.request';
+						$entry['location_item_id'] = $directory[4];
+						break;
+					case 'service_agreement':
+						$entry['location'] = '.s_agreement';
+						$entry['location_item_id'] = $directory[3];
+						break;
+					case 'workorder':
+						$entry['location'] = '.project.workorder';
+						$entry['location_item_id'] = $directory[3];
+						break;
+					default:
+						$entry['location'] = '.' . str_replace('_', '.', $directory[2]);
+			//			$entity_info = explode('_', $directory[2]);						
+						$entry['location_item_id'] = $directory[4];
+
+				}
+
+				$entry['url'] = $interlink->get_relation_link($entry['location'], $entry['location_item_id']);
+
+				$entry['location_name'] = $interlink->get_location_name($entry['location']);
+				$entry['document_url'] = $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'	=> 'property.uigallery.view_file',
+											'file'		=> urlencode("{$entry['directory']}/{$entry['name']}")
+										));
+				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['createdby_id'])->__toString();
 			}
-
+//_debug_array($values);
 			$this->total_records = $this->so->total_records;
 
 			return $values;

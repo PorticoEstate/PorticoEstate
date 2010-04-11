@@ -47,6 +47,7 @@
 		var $public_functions = array
 		(
 			'index'		=> true,
+			'view_file'	=> true
 		);
 
 		function __construct()
@@ -86,6 +87,19 @@
 				'user_id'		=> $this->user_id,
 			);
 			$this->bo->save_sessiondata($data);
+		}
+
+		function view_file()
+		{
+			if(!$this->acl_read)
+			{
+//				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$file	= urldecode(phpgw::get_var('file'));
+
+			$bofiles	= CreateObject('property.bofiles');
+			$bofiles->view_file('', $file);
 		}
 
 		function index()
@@ -270,13 +284,13 @@
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= 'hidden';
 
-			$uicols['name'][]		= 'attrib_id';
-			$uicols['descr'][]		= 'dummy';
+			$uicols['name'][]		= 'directory';
+			$uicols['descr'][]		= 'directory';
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
+			$uicols['input_type'][]	= '';//'hidden';
 
 			$uicols['name'][]		= 'id';
 			$uicols['descr'][]		= lang('id');
@@ -294,24 +308,8 @@
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
-			$uicols['name'][]		= 'descr';
-			$uicols['descr'][]		= lang('Descr');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'exception';
-			$uicols['descr'][]		= lang('exception');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'FormatterCenter';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'receipt_date';
-			$uicols['descr'][]		= lang('receipt date');
+			$uicols['name'][]		= 'name';
+			$uicols['descr'][]		= lang('name');
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
@@ -331,6 +329,22 @@
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= 'link';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= '';
+
+			$uicols['name'][]		= 'document_url';
+			$uicols['descr'][]		= lang('document');
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= 'link';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= '';
+
+			$uicols['name'][]		= 'user';
+			$uicols['descr'][]		= lang('user');
+			$uicols['sortable'][]	= '';
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 

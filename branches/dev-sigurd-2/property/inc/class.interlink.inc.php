@@ -211,6 +211,18 @@
 			{
 				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
 			}
+			if($type == '.s_agreement')
+			{
+				$link = array('menuaction' => 'property.uis_agreement.edit', 'id' => $id);
+			}
+			if($type == '.agreement')
+			{
+				$link = array('menuaction' => 'property.uiagreement.edit', 'id' => $id);
+			}
+			if($type == '.document')
+			{
+				$link = array('menuaction' => 'property.uidocument.edit', 'document_id' => $id);
+			}
 			else if($type == '.project.workorder')
 			{
 				$link = array('menuaction' => "property.uiworkorder.{$function}", 'id' => $id);
