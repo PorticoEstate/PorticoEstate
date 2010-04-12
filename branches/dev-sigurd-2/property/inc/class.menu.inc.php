@@ -519,16 +519,17 @@
 			{
 				$children = array();
 
-		//		$soadmin_location	= CreateObject('property.soadmin_location');
-		//		$locations	= $soadmin_location->select_location_type();
 				foreach ( $locations as $location )
 				{
-					$children["loc_{$location['id']}"] = array
-					(
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'type_id' => $location['id'])),
-						'text'	=> $location['name'],
-						'image'	=> array('property', 'location_' . $location['id'])
-					);
+					if ( $acl->check(".location.{$location['id']}", PHPGW_ACL_READ, 'property') )
+					{
+						$children["loc_{$location['id']}"] = array
+						(
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'type_id' => $location['id'])),
+							'text'	=> $location['name'],
+							'image'	=> array('property', 'location_' . $location['id'])
+						);
+					}
 				}
 
 				$children['tenant'] = array
