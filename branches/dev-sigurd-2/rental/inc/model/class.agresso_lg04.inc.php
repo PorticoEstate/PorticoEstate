@@ -214,7 +214,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.$this->get_formatted_amount($item['amount'])			//  6		amount					DATA
 				.'1'													//  7		amount_set
 				.sprintf("%38s", '')									//	8-9		just white space..
-				.sprintf("%-35.35s", $item['article_description'])		// 	10		art_descr				DATA
+				.sprintf("%-35.35s", iconv("UTF-8", "ISO-8859-1", $item['article_description']))		// 	10		art_descr				DATA
 				.sprintf("%-15.15s", $item['article_code'])				// 	11		article					DATA
 				.sprintf("%49s", '')									//	12-19	just white space..
 				.sprintf("%-12s", "BKBPE{$this->date_str}")				// 	20		batch_id				DATA
@@ -279,7 +279,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%110s", '')									//	66-74	just white space..
 				.sprintf("%08s", 1)										// 	75		sequence_no				DATA
 				.sprintf("%28s", '')									//	76-77	just white space..
-				.sprintf("%-60.60s", $text)								// 	78		shot_info				DATA
+				.sprintf("%-60.60s", iconv("UTF-8", "ISO-8859-1", $text))								// 	78		shot_info				DATA
 				.sprintf("%63s", '')									//	79-88	just white space..
 				.'42'													// 	89		trans_type				DATA
 				.sprintf("%79s", '')									//	90-93	just white space..
