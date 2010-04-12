@@ -59,6 +59,10 @@
 			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : -1;
 			$user_id			= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$mime_type			= isset($data['mime_type']) ? $data['mime_type'] : '';
+			$start_date			= isset($data['start_date'])?$data['start_date']:0;
+			$end_date			= isset($data['end_date'])?$data['end_date']:0;
+			$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
 
 			if ($order)
 			{
@@ -81,9 +85,33 @@
 				$ordermethod = ' ORDER BY file_id ASC';
 			}
 
-			$filtermethod = '';
 			$filtermethod = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
 						
+			if($user_id)
+			{
+				$filtermethod .= " AND createdby_id = {$user_id}";
+			}
+
+			if($mime_type)
+			{
+				$filtermethod .= " AND mime_type = '{$mime_type}'";
+			}
+
+			if ($start_date)
+			{
+				$date_format = $this->_db->date_format();
+				$start_date = date($date_format, $start_date);
+				$end_date = date($date_format, $end_date);
+				$filtermethod .= " AND phpgw_vfs.created >= '$start_date' AND phpgw_vfs.created <= '$end_date'";
+			}
+
+
+			if($cat_id)
+			{
+				$cat_id = $this->_db->db_addslashes($cat_id);
+				$filtermethod .= " AND phpgw_vfs.directory {$this->_like} '%{$cat_id}%'";
+			}
+
 			if($query)
 			{
 				$query = $this->_db->db_addslashes($query);
@@ -135,10 +163,30 @@
 			return $values;
 		}
 
+		public function get_filetypes()
+		{
+			$sql = "SELECT DISTINCT mime_type FROM  phpgw_vfs WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
+			$this->_db->query($sql,__LINE__,__FILE__);
+
+			$values = array();
+			while ($this->_db->next_record())
+			{
+				$values[] = $this->_db->f('mime_type',true);
+			}
+
+			return $values;
+		}
 		public function get_gallery_location()
 		{
-			$locations = array();
+			$sql = "SELECT DISTINCT directory FROM  phpgw_vfs WHERE mime_type = 'Directory'";
+			$this->_db->query($sql,__LINE__,__FILE__);
 
-			return $locations;
+			$values = array();
+			while ($this->_db->next_record())
+			{
+				$values[] = $this->_db->f('directory',true);
+			}
+
+			return $values;
 		}
 	}

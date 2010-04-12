@@ -138,15 +138,18 @@
 
 				$values_combo_box = array();
 
-				$values_combo_box[0]  = $this->bo->get_gallery_location();
-				
-				$default_value = array ('id'=> -1, 'name'=>lang('no category'));
+				$values_combo_box[0]  = $this->bo->get_filetypes();
+				$default_value = array ('id'=> '', 'name'=>lang('no filetype'));
 				array_unshift ($values_combo_box[0],$default_value);
 
-				$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
-				array_unshift ($values_combo_box[1],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tasks')));
-				$default_value = array('id'=>'','name'=>lang('no user'));
+				$values_combo_box[1]  = $this->bo->get_gallery_location();
+				$default_value = array ('id'=> -1, 'name'=>lang('no category'));
 				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+				array_unshift ($values_combo_box[2],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine documents')));
+				$default_value = array('id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[2],$default_value);
 
 				$datatable['config']['allow_allrows'] = true;
 
@@ -167,13 +170,22 @@
 	                		'field' => array
 	                		(
 								array
-								( //boton 	CATEGORY
-									'id' => 'btn_location_id',
-									'name' => 'location_id',
-									'value'	=> lang('Category'),
+								( //boton 	filetype
+									'id' => 'btn_mime_type',
+									'name' => 'mime_type',
+									'value'	=> lang('filetype'),
 									'type' => 'button',
 									'style' => 'filter',
 									'tab_index' => 1
+								),
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 2
 								),
 								array
 								( //boton 	USER
@@ -182,15 +194,17 @@
 									'value'	=> lang('User'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 2
+									'tab_index' => 3
 								),
+/*
 								array( // boton SAVE
 									'id'	=> 'btn_save',
 									//'name' => 'save',
 									'value'	=> lang('save'),
-									'tab_index' => 6,
+									'tab_index' => 7,
 									'type'	=> 'button'
 		                            ),
+*/
 								array( //hidden start_date
 									'type' => 'hidden',
 									'id' => 'start_date',
@@ -211,7 +225,7 @@
 									       array(
 									           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 									 'value' => lang('Date search'),
-									 'tab_index' => 5
+									 'tab_index' => 6
 								),
 								array
 								( //button     SEARCH
@@ -219,7 +233,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 4
+									'tab_index' => 5
 								),
 								array
 								( // TEXT INPUT
@@ -229,7 +243,7 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
-									'tab_index' => 3
+									'tab_index' => 4
 								),
 								array
 								( //place holder for selected events
@@ -249,6 +263,11 @@
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
 									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								),
+								array
+								( //div values  combo_box_2
+									'id' => 'values_combo_box_2',
+									'value'	=> $this->bocommon->select2String($values_combo_box[2])
 								)
 							)
 						)
@@ -342,12 +361,12 @@
 
 			$uicols['name'][]		= 'user';
 			$uicols['descr'][]		= lang('user');
-			$uicols['sortable'][]	= '';
+			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
-
+/*
 			$uicols['name'][]		= 'select';
 			$uicols['descr'][]		= lang('select');
 			$uicols['sortable'][]	= false;
@@ -355,7 +374,7 @@
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= 'myFormatterCheck';
 			$uicols['input_type'][]	= '';
-
+*/
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 

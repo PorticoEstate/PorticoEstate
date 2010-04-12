@@ -50,6 +50,8 @@
 		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.sogallery');
+			$this->mime_magic 	= createObject('phpgwapi.mime_magic');
+			$this->interlink	= CreateObject('property.interlink');
 
 			if ($session)
 			{
@@ -62,12 +64,16 @@
 			$sort				= phpgw::get_var('sort');
 			$order				= phpgw::get_var('order');
 			$filter				= phpgw::get_var('filter', 'int');
-			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$cat_id				= urldecode(phpgw::get_var('cat_id', 'string'));
 			$location_id		= phpgw::get_var('location_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int');
 			$user_id			= phpgw::get_var('user_id', 'int');
+			$mime_type			= urldecode(phpgw::get_var('mime_type'));
+			$start_date			= urldecode(phpgw::get_var('start_date', 'string'));
+			$end_date			= urldecode(phpgw::get_var('end_date', 'string'));
+
 
 			$this->start		= $start ? $start : 0;
 			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
@@ -78,6 +84,11 @@
 			$this->location_id	= isset($_REQUEST['location_id'])  ? $location_id :  $this->location_id;
 			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  $this->user_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
+			$this->mime_type	= $mime_type ? $mime_type : '';
+
+			$this->start_date	= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
+			$this->end_date		= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
+
 		}
 
 		public function save_sessiondata($data)
@@ -107,14 +118,16 @@
 
 		public function read($dry_run='')
 		{
-			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run));
+			$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
+			$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
 
-			$mime_magic = createObject('phpgwapi.mime_magic');
+			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+											'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
+											'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
+											'cat_id' => $this->cat_id, 'dry_run'=>$dry_run));
 
 			static $locations = array();
 			static $urls = array();
-			$interlink	= CreateObject('property.interlink');
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach($values as &$entry)
 			{
@@ -160,9 +173,9 @@
 
 				}
 
-				$entry['url'] = $interlink->get_relation_link($entry['location'], $entry['location_item_id']);
+				$entry['url'] = $this->interlink->get_relation_link($entry['location'], $entry['location_item_id']);
 
-				$entry['location_name'] = $interlink->get_location_name($entry['location']);
+				$entry['location_name'] = $this->interlink->get_location_name($entry['location']);
 				$entry['document_url'] = $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uigallery.view_file',
@@ -176,8 +189,67 @@
 			return $values;
 		}
 		
+		public function get_filetypes()
+		{
+			$values = $this->so->get_filetypes();
+
+			$map = array_flip($this->mime_magic->mime_extension_map);
+
+			$filetypes = array();
+			foreach($values as $mime_type)
+			{
+				$filetypes[] = array
+				(
+					'id' => urlencode($mime_type),
+					'name' => $map[$mime_type]
+				);
+			}
+			return $filetypes;
+		}
+
 		public function get_gallery_location()
 		{
-			return $this->so->get_gallery_location();
+			$values = $this->so->get_gallery_location();
+
+			$_locations = array();
+			$locations = array();
+			foreach($values as $entry)
+			{
+				$directory = explode('/', $entry);
+
+				if(isset($directory[2]) && !isset($directory[3]))
+				{
+					switch ($directory[2])
+					{
+						case 'agreement':
+							$location = '.agreement';
+							break;
+						case 'document':
+							$location = '.document';
+							break;
+						case 'fmticket':
+							$location = '.ticket';
+							break;
+						case 'request':
+							$location = '.project.request';
+							break;
+						case 'service_agreement':
+							$location = '.s_agreement';
+							break;
+						case 'workorder':
+							$location = '.project.workorder';
+							break;
+						default:
+							$location = '.' . str_replace('_', '.', $directory[2]);
+					}
+
+					$locations[] = array
+					(
+						'id' => urlencode($entry),
+						'name' => $this->interlink->get_location_name($location)
+					);
+				}
+			}
+			return $locations;
 		}
 	}

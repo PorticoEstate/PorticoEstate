@@ -2,18 +2,19 @@
 // Declaration of gallery.index vars
 //--------------------------------------------------------
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1;//, oMenuButton_2, oMenuButton_3;
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2;//, oMenuButton_3;
  	var selectsButtons = [
-	{order:0, var_URL:'location_id',name:'btn_location_id',style:'locationbutton',dependiente:''},
-	{order:1, var_URL:'user_id', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
+	{order:0, var_URL:'mime_type',name:'btn_mime_type',style:'mime_typebutton',dependiente:''},
+	{order:1, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
+	{order:2, var_URL:'user_id', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
 //	{order:3, var_URL:'status_id',name:'btn_status_id',style:'partOFTownbutton',dependiente:''},
 	];
 
 	// define buttons
 	var oNormalButton_0, oNormalButton_1;//, oNormalButton_2;
 	var normalButtons = [
-	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_save',	funct:"onSave"}
+	{order:0, name:'btn_search', funct:"onSearchClick"}
+//	{order:1, name:'btn_save',	funct:"onSave"}
 //	{order:2, name:'btn_export', funct:"onDownloadClick"}
 	];
 
@@ -44,10 +45,10 @@
 	*/
 	this.myParticularRenderEvent = function()
 	{
-		delete_content_div("message",2); //find it in property.js
-		create_message();
-		tableYUI.deleteTFoot();
-		addFooterDatatable();
+//		delete_content_div("message",2); //find it in property.js
+//		create_message();
+//		tableYUI.deleteTFoot();
+//		addFooterDatatable();
 	}
 
 	/********************************************************************************
