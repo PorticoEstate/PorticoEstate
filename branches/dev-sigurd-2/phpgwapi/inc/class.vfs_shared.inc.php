@@ -227,6 +227,7 @@
 
 			//Load the override_locks
 			$this->locks_restore_session();
+			$this->mime_magic = createObject('phpgwapi.mime_magic');
 		}
 
 		/*
@@ -1230,10 +1231,13 @@
 		{
 			if (!is_array ($data))
 			{
-				$data = array ();
+				return '';
 			}
 
-			$file=basename($data['string']);
+			$file = basename($data['string']);
+
+			return $this->mime_magic->filename2mime($file);
+/*
 			$mimefile=PHPGW_API_INC.'/phpgw_mime.types';
 			$fp=fopen($mimefile,'r');
 			$contents = explode("\n",fread($fp,filesize($mimefile)));
@@ -1261,6 +1265,7 @@
 			}
 
 			return '';
+*/
  		}
 
 		/* PUBLIC functions (mandatory) they don't need to be implemented
