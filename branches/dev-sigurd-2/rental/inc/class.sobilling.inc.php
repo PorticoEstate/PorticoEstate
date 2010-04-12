@@ -28,6 +28,10 @@ class rental_sobilling extends rental_socommon
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		$clauses = array('1=1');
+		if($sort_field == 'description')
+		{
+			$sort_field = "title";
+		}
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "rb.{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
