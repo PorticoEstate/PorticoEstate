@@ -164,7 +164,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%-15.15s", '')									// 	52		ext_ord_ref				
 			.sprintf("%6s", '')											// 	53		intrule_id
 			.sprintf("%8s", '')											//	54-55	just white space..
-			.sprintf("%-120.120s", $header)								// 	56		long_info1				DATA
+			.sprintf("%-120.120s", iconv("UTF-8", "ISO-8859-1", $header))								// 	56		long_info1				DATA
 			.sprintf("%120s", '')										//	57		long_info2
 			.sprintf("%10s", '')										//	58		just white space..
 			.sprintf("%08s", '')										// 	59		main_apar_id

@@ -385,7 +385,7 @@ class rental_sobilling extends rental_socommon
 		$result = $this->db->query($sql, __LINE__, __FILE__);
 		if($result && $this->db->next_record())
 		{
-			return iconv("UTF-8","ISO-8859-1", $this->unmarshal($this->db->f('export_data', true), 'string'));
+			return $this->unmarshal(iconv("UTF-8","ISO-8859-1", $this->db->f('export_data', true)), 'string');
 		}
 		return '';
 	}
