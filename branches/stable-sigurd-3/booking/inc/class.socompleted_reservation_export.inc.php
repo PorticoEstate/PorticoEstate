@@ -400,22 +400,24 @@
 			$export_info = array();
 			$output = array();
 			
-			$columns = array(
-				'amount', 
-				'art_descr', 
-				'art', 
-				'responsible_code', 
-				'service', 
-				'object_number', 
-				'project_number', 
-				'unit_number',
-				'ext_ord_ref',
-				'invoice_instruction', 
-				'order_id',
-				'period',
-				'short_info',
-			);
-			
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
+			$columns[] = 'amount';
+			$columns[] = 'art_descr';
+			$columns[] = 'art';
+			if (isset($config->config_data['dim_1'])) $columns[] = $config->config_data['dim_1'];
+			if (isset($config->config_data['dim_2'])) $columns[] = $config->config_data['dim_2'];
+			if (isset($config->config_data['dim_3'])) $columns[] = $config->config_data['dim_3'];
+			if (isset($config->config_data['article'])) $columns[] = $config->config_data['article'];
+			if (isset($config->config_data['dim_5'])) $columns[] = $config->config_data['dim_5']; 
+			if (isset($config->config_data['dim_value_1'])) $columns[] = $config->config_data['dim_value_1']; 
+			$columns[] = 'ext_ord_ref';
+			$columns[] = 'invoice_instruction';
+			$columns[] = 'order_id';
+			$columns[] = 'period';
+			$columns[] = 'short_info';
+
 			$output[] = $this->format_to_csv_line($columns);
 			
 			foreach ($reservations as $reservation) {
@@ -430,20 +432,38 @@
 				$item = array();
 				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
-				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
+				if (isset($config->config_data['article'])) 
+				{
+					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
+				}
 				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-				$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' '); 
+				if (isset($config->config_data['dim_1'])) 
+				{
+					$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
+				}
 
 				//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-				$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+				if (isset($config->config_data['dim_2'])) 
+				{
+					$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+				}
 
 				//Objektnr. vil være knyttet til hvert hus (FDVU)
-				$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+				if (isset($config->config_data['dim_3'])) 
+				{
+					$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+				}
 
 				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
-				$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+				if (isset($config->config_data['dim_5'])) 
+				{
+					$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+				}
 
-				$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				if (isset($config->config_data['dim_value_1'])) 
+				{
+					$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				}
 				$item['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 				$item['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
 				
@@ -539,6 +559,9 @@
 			 */
 			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
 			//$date = str_pad(date('ymd'), 17, ' ');
+
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
 			
 			$batch_id = strtoupper(sprintf('BO%s%s', $account_codes['unit_prefix'], date('ymd')));
 			$batch_id = str_pad(substr($batch_id, 0, 12), 12, ' ');
@@ -588,7 +611,10 @@
 				$header['deliv_date'] = $header['confirm_date'];
 				
 				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-				$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				if (isset($config->config_data['dim_value_1']))
+				{
+					$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				}
 				
 				//Nøkkelfelt, kundens personnr/orgnr.
 				$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
@@ -624,22 +650,37 @@
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
 				
 				//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
-				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
+				if (isset($config->config_data['article']))
+				{
+					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
+				}
 				
 				$item['batch_id'] = $header['batch_id'];
 				$item['client'] = $header['client'];
 				
 				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-				$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' '); 
+				if (isset($config->config_data['dim_1']))
+				{
+					$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' '); 
+				}
 				
 				//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-				$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+				if (isset($config->config_data['dim_2']))
+				{
+					$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+				}
 				
 				//Objektnr. vil være knyttet til hvert hus (FDVU)
-				$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+				if (isset($config->config_data['dim_3']))
+				{
+					$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+				}
 				
 				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
-				$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+				if (isset($config->config_data['dim_5']))
+				{
+					$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+				}
 				
 				$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 				

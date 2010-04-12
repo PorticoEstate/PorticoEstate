@@ -148,7 +148,7 @@
 			if (!$this->newFile) { throw new LogicException('Missing file'); }
 			
 			$this->db->transaction_begin();
-			
+
 			$document['name'] = $this->newFile->getOriginalName();
 			$receipt = parent::add($document);
 			
@@ -157,7 +157,7 @@
 
 			// make sure that uploaded images are "web friendly"
 			// automatically resize pictures that are too big
-			if ($document['category'] == 'drawing' || $document['category'] == 'picture')
+			if ( preg_match('/(jpg|jpeg|gif|bmp|png)$/i', $this->newFile->getOriginalName()) )
 			{
 				$config	= CreateObject('phpgwapi.config','booking');
 				$config->read();

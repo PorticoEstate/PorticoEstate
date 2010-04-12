@@ -208,7 +208,7 @@ class rental_agresso_gl07 implements rental_exportable
 			.sprintf("%020s", '')										// 21	value_1
 			.sprintf("%020s", '')										// 22	value_2
 			.sprintf("%020s", '')										// 23	value_3
-			.sprintf("%-255.255s", $description)						// 24	description
+			.sprintf("%-255.255s", iconv("UTF-8", "ISO-8859-1", $description))						// 24	description
 			.sprintf("%-8s", '')										// 25	trans_date
 			.$this->date_str											// 26	voucher_date
 			.sprintf("%015s", '')										// 27	voucher_no

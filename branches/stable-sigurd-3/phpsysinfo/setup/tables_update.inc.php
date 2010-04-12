@@ -11,6 +11,19 @@
 
 
 	/**
+	* Update from 1.7 to 3.0
+	*
+	* @return string New version number
+	*/
+
+	$test[] = '1.7';
+	function phpsysinfo_upgrade1_7()
+	{
+		$GLOBALS['setup_info']['phpsysinfo']['currentver'] = '3.0';
+		return $GLOBALS['setup_info']['phpsysinfo']['currentver'];
+	}
+
+	/**
 	* Update from 3.0 to 3.0.4
 	*
 	* @return string New version number

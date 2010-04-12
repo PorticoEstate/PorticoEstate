@@ -422,3 +422,6 @@ customer_ssn contains an invalid Norwegian social security number (11 digits)	bo
 show only unexported	booking	no	Vis bare ikke-eksporterte
 Free time	booking	no	Ledig tid
 Weekdays	booking	no	Ukedager
+Account Code Dimension	booking	no	Konteringsdimensjoner
+Labels	booking	no	Ledetekster
+account_code_dimension_helptext	booking	no	Feltene under lar deg redigere ledetekstene som dukker opp i oversikten over konteringsstrengen samt overskrift i CSV-eksporten. Tomme felter under fører til at tilhørende felter i CSV- og Agressoeksport ikke kommer ut i filene.

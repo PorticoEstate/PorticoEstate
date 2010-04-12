@@ -28,6 +28,10 @@ class rental_sobilling extends rental_socommon
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		$clauses = array('1=1');
+		if($sort_field == 'description')
+		{
+			$sort_field = "title";
+		}
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "rb.{$this->marshal($this->get_id_field_name(),'field')} = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
@@ -319,7 +323,7 @@ class rental_sobilling extends rental_socommon
 		}
 		if($exportable != null)
 		{
-			$sql = "UPDATE rental_billing SET export_data = {$this->marshal($exportable->get_contents(),'string')} WHERE id = {$this->marshal($billing_job->get_id(),'int')}";
+			$sql = "UPDATE rental_billing SET export_data = {$this->marshal(iconv("ISO-8859-1","UTF-8",$exportable->get_contents()),'string')} WHERE id = {$this->marshal($billing_job->get_id(),'int')}";
 			$result = $this->db->query($sql, __LINE__, __FILE__);
 			return true;
 		}
@@ -385,7 +389,7 @@ class rental_sobilling extends rental_socommon
 		$result = $this->db->query($sql, __LINE__, __FILE__);
 		if($result && $this->db->next_record())
 		{
-			return $this->unmarshal($this->db->f('export_data', true), 'string');
+			return $this->unmarshal(iconv("UTF-8","ISO-8859-1", $this->db->f('export_data', true)), 'string');
 		}
 		return '';
 	}

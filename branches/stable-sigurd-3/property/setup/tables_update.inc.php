@@ -4165,10 +4165,33 @@
 			$GLOBALS['phpgw']->locations->add("{$location}.category.{$category['id']}", $category['name'], 'property');
 		}
 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT file_id, mime_type, name FROM  phpgw_vfs WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'",__LINE__,__FILE__);
+
+		$mime = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$mime[] = array
+			(
+				'file_id'		=> $GLOBALS['phpgw_setup']->oProc->f('file_id'),
+				'mime_type'		=> $GLOBALS['phpgw_setup']->oProc->f('mime_type'),
+				'name'			=> $GLOBALS['phpgw_setup']->oProc->f('name'),
+			);
+		}
+
+		$mime_magic = createObject('phpgwapi.mime_magic');
+
+		foreach($mime as $entry)
+		{
+			if(!$entry['mime_type'])
+			{
+				$mime_type = $mime_magic->filename2mime($entry['name']);
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_vfs SET mime_type = '{$mime_type}' WHERE file_id = {$entry['file_id']}",__LINE__,__FILE__);
+			}
+		}
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.585';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-

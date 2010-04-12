@@ -52,6 +52,8 @@ phpgw::import_class('booking.uicommon');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
 			
 			self::add_javascript('booking', 'booking', 'account_code_set.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
@@ -78,49 +80,17 @@ phpgw::import_class('booking.uicommon');
 						),
 					),
 				),
-				'datatable' => array(
-					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'name',
-							'label' => lang('Name'),
-							'formatter' => 'YAHOO.booking.formatLink'
-						),
-						array(
-							'key' => 'object_number',
-							'label' => lang('Object No.'),
-						),
-						array(
-							'key' => 'responsible_code',
-							'label' => lang('Responsible Code'),
-						),
-						array(
-							'key' => 'article',
-							'label' => lang('Article'),
-						),
-						array(
-							'key' => 'service',
-							'label' => lang('Service'),
-						),
-						array(
-							'key' => 'project_number',
-							'label' => lang('Project No.'),
-						),
-						array(
-							'key' => 'unit_number',
-							'label' => lang('Unit No.'),
-						),
-						array(
-							'key' => 'unit_prefix',
-							'label' => lang('Unit prefix'),
-						),
-						array(
-							'key' => 'link',
-							'hidden' => true
-						)
-					)
-				)
 			);
+			$data['datatable']['source'][] = $this->link_to('index', array('phpgw_return_as' => 'json'));
+			$data['datatable']['field'][] = array('key' => 'name', 'label' => lang('Name'), 'formatter' => 'YAHOO.booking.formatLink');
+			if (isset($config->config_data['dim_3'])) $data['datatable']['field'][] = array('key' => 'object_number', 'label' => $config->config_data['dim_3']);
+			if (isset($config->config_data['dim_1'])) $data['datatable']['field'][] = array('key' => 'responsible_code', 'label' => $config->config_data['dim_1']);
+			if (isset($config->config_data['article'])) $data['datatable']['field'][] = array('key' => 'article', 'label' => $config->config_data['article']);
+			if (isset($config->config_data['dim_2'])) $data['datatable']['field'][] = array('key' => 'service', 'label' => $config->config_data['dim_2']);
+			if (isset($config->config_data['dim_5'])) $data['datatable']['field'][] = array('key' => 'project_number', 'label' => $config->config_data['dim_5']);
+			if (isset($config->config_data['dim_value_1'])) $data['datatable']['field'][] = array('key' => 'unit_number', 'label' => $config->config_data['dim_value_1']);
+			$data['datatable']['field'][] = array('key' => 'unit_prefix', 'label' => lang('Unit prefix'));
+			$data['datatable']['field'][] = array('key' => 'link', 'hidden' => true);
 			
 			if ($this->bo->allow_create()) {
 				array_unshift($data['form']['toolbar']['item'], array(
@@ -153,12 +123,16 @@ phpgw::import_class('booking.uicommon');
 		public function show()
 		{
 			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
 			$this->add_default_display_data($account_code_set);
-			self::render_template('account_code_set', array('account_code_set' => $account_code_set));
+			self::render_template('account_code_set', array('account_code_set' => $account_code_set, 'config_data' => $config->config_data));
 		}
 		
 		public function edit() {
 			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
 			
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -179,7 +153,7 @@ phpgw::import_class('booking.uicommon');
 			$this->add_default_display_data($account_code_set);
 			$account_code_set['cancel_link'] = $this->link_to('show', array('id' => $account_code_set['id']));
 			$this->flash_form_errors($errors);
-			self::render_template('account_code_set_form', array('account_code_set' => $account_code_set));
+			self::render_template('account_code_set_form', array('account_code_set' => $account_code_set, 'config_data' => $config->config_data));
 		}
 	
 		public function add() {

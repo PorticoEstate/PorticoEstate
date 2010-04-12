@@ -139,7 +139,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%-12s", "BKBPE{$this->date_str}")					// 	20		batch_id				DATA
 			.'BY'														// 	21		client					DATA
 			.sprintf("%2s", '')											// 	22		client_ref
-			.sprintf("%17s", "{$this->date_str}")						// 	23		confirm_date			DATA
+			.sprintf("%-17s", "{$this->date_str}")						// 	23		confirm_date			DATA
 			.sprintf("%1s", '')											// 	24		control
 			.sprintf("%17s", '')										//	25		just white space..
 			.'NOK'														// 	26		currency				DATA
@@ -148,7 +148,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%255s", '')										// 	29		deliv_addr
 			.sprintf("%50s", '')										// 	30		deliv_attention
 			.sprintf("%3s", '')											// 	31		deliv_countr
-			.sprintf("%17s", "{$this->date_str}")						// 	32		deliv_date				DATA
+			.sprintf("%-17s", "{$this->date_str}")						// 	32		deliv_date				DATA
 			.sprintf("%8s", '')											// 	33		deliv_method
 			.sprintf("%8s", '')											// 	34		deliv_terms
 			.sprintf("%52s", '')										//	35-41	just white space..
@@ -164,7 +164,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%-15.15s", '')									// 	52		ext_ord_ref				
 			.sprintf("%6s", '')											// 	53		intrule_id
 			.sprintf("%8s", '')											//	54-55	just white space..
-			.sprintf("%-120.120s", $header)								// 	56		long_info1				DATA
+			.sprintf("%-120.120s", iconv("UTF-8", "ISO-8859-1", $header))								// 	56		long_info1				DATA
 			.sprintf("%120s", '')										//	57		long_info2
 			.sprintf("%10s", '')										//	58		just white space..
 			.sprintf("%08s", '')										// 	59		main_apar_id
@@ -193,7 +193,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%08s", '')										// 	83		template_id
 			.sprintf("%2s", '')											// 	84		terms_id
 			.sprintf("%12s", '')										// 	85		tekx1
-			.sprintf("%12s", $party_id)									// 	86		tekst2					DATA
+			.sprintf("%-12s", $party_id)								// 	86		tekst2					DATA
 			.sprintf("%12s", '')										// 	87		tekst3
 			.sprintf("%12s", '')										// 	88		text4
 			.'42'														// 	89		trans_type				DATA
@@ -214,7 +214,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.$this->get_formatted_amount($item['amount'])			//  6		amount					DATA
 				.'1'													//  7		amount_set
 				.sprintf("%38s", '')									//	8-9		just white space..
-				.sprintf("%-35.35s", $item['article_description'])		// 	10		art_descr				DATA
+				.sprintf("%-35.35s", iconv("UTF-8", "ISO-8859-1", $item['article_description']))		// 	10		art_descr				DATA
 				.sprintf("%-15.15s", $item['article_code'])				// 	11		article					DATA
 				.sprintf("%49s", '')									//	12-19	just white space..
 				.sprintf("%-12s", "BKBPE{$this->date_str}")				// 	20		batch_id				DATA
@@ -279,7 +279,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%110s", '')									//	66-74	just white space..
 				.sprintf("%08s", 1)										// 	75		sequence_no				DATA
 				.sprintf("%28s", '')									//	76-77	just white space..
-				.sprintf("%-60.60s", $text)								// 	78		shot_info				DATA
+				.sprintf("%-60.60s", iconv("UTF-8", "ISO-8859-1", $text))								// 	78		shot_info				DATA
 				.sprintf("%63s", '')									//	79-88	just white space..
 				.'42'													// 	89		trans_type				DATA
 				.sprintf("%79s", '')									//	90-93	just white space..
