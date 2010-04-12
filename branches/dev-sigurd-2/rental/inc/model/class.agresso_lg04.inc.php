@@ -139,7 +139,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%-12s", "BKBPE{$this->date_str}")					// 	20		batch_id				DATA
 			.'BY'														// 	21		client					DATA
 			.sprintf("%2s", '')											// 	22		client_ref
-			.sprintf("%17s", "{$this->date_str}")						// 	23		confirm_date			DATA
+			.sprintf("%-17s", "{$this->date_str}")						// 	23		confirm_date			DATA
 			.sprintf("%1s", '')											// 	24		control
 			.sprintf("%17s", '')										//	25		just white space..
 			.'NOK'														// 	26		currency				DATA
@@ -148,7 +148,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%255s", '')										// 	29		deliv_addr
 			.sprintf("%50s", '')										// 	30		deliv_attention
 			.sprintf("%3s", '')											// 	31		deliv_countr
-			.sprintf("%17s", "{$this->date_str}")						// 	32		deliv_date				DATA
+			.sprintf("%-17s", "{$this->date_str}")						// 	32		deliv_date				DATA
 			.sprintf("%8s", '')											// 	33		deliv_method
 			.sprintf("%8s", '')											// 	34		deliv_terms
 			.sprintf("%52s", '')										//	35-41	just white space..
@@ -193,7 +193,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%08s", '')										// 	83		template_id
 			.sprintf("%2s", '')											// 	84		terms_id
 			.sprintf("%12s", '')										// 	85		tekx1
-			.sprintf("%12s", $party_id)									// 	86		tekst2					DATA
+			.sprintf("%-12s", $party_id)								// 	86		tekst2					DATA
 			.sprintf("%12s", '')										// 	87		tekst3
 			.sprintf("%12s", '')										// 	88		text4
 			.'42'														// 	89		trans_type				DATA
