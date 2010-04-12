@@ -80,7 +80,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.'10'														//  3	apar_gr_id
 			.sprintf("%-9s", '')										//  4	apar_id
 			.sprintf("%9s", '')											//  5	apar_id_ref
-			.sprintf("%-50.50s", $name)									//  6	apar_name
+			.sprintf("%-50.50s", iconv("UTF-8", "ISO-8859-1", $name))	//  6	apar_name
 			.'R'														//  7	apar_type
 			.sprintf("%-35s", '')										//  8	bank_account
 			.sprintf("%-4s", '')										//  9	bonus_gr
@@ -114,13 +114,13 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-2s", '')										// 37	terms_id
 			.sprintf("%-1s", '')										// 38	terms_set
 			.sprintf("%-25s", '')										// 39	vat_reg_no
-			.sprintf("%-160.160s", $address)							// 40	address
+			.sprintf("%-160.160s", iconv("UTF-8", "ISO-8859-1", $address))							// 40	address
 			.'1'														// 41	address_type
 			.sprintf("%-6s", '')										// 42	agr_user_id
 			.sprintf("%-255s", '')										// 43	cc_name
 			.sprintf("%-3.3s", $country_code)							// 44	country_code
 			.sprintf("%-50s", '')										// 45	description
-			.sprintf("%-40.40s", $postal_place)							// 46	place
+			.sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $postal_place))							// 46	place
 			.sprintf("%-40s", '')										// 47	province
 			.sprintf("%-35.35s", $phone)								// 48	telephone_1
 			.sprintf("%-35s", '')										// 49	telephone_2
@@ -136,6 +136,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-4s", '')										// 59	pay_temp_id
 			.sprintf("%-25s", '')										// 60	reference_1
 		;
+		
 		return str_replace(array("\n", "\r"), '', $line);
 	}
 	
