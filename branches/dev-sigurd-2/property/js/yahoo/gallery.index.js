@@ -161,7 +161,7 @@
 	{
 		if(oRecord.getData('mime_type') == 'image/jpeg')
 		{
-			var oArgs = {menuaction:'property.uigallery.view_file', file:oRecord.getData('directory') + '/' + oRecord.getData('name')};
+			var oArgs = {menuaction:'property.uigallery.view_file', file:oRecord.getData('directory') + '/' + oRecord.getData('name'),thumb:1};
 			var sUrl = phpGWLink('index.php', oArgs);
 
 			elCell.innerHTML =  "<div id= ''> <img src=\""+sUrl+"\" /> </div>";

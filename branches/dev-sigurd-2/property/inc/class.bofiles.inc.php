@@ -40,6 +40,7 @@
 		* @var string $fakebase Fake base directory.
 		*/
 		var $fakebase = '/property';
+		var $rootdir;
 
 		/**
 		* constructor
@@ -49,7 +50,7 @@
 		* @return
 		*/
 
-		function property_bofiles($fakebase='/property')
+		function __construct($fakebase='/property')
 		{
 			$this->vfs     = CreateObject('phpgwapi.vfs');
 			$this->rootdir = $this->vfs->basedir;

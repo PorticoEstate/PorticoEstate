@@ -97,13 +97,27 @@
 			}
 
 			$file	= urldecode(phpgw::get_var('file'));
+			$thumb	= phpgw::get_var('file', 'bool');
 
 			$bofiles	= CreateObject('property.bofiles');
-			$bofiles->view_file('', $file);
+			$source = "{$bofiles->rootdir}/{$file}";
+
+			if($this->is_image($source) && $thumb)
+			{
+				$this->create_thumb($source,'',$thumb_size = 100);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
 		}
 
-		function createThumb($source,$dest,$thumb_size)
+		function create_thumb($source,$dest,$thumb_size = 100)
 		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
 			$size = getimagesize($source);
 			$width = $size[0];
 			$height = $size[1];
@@ -143,7 +157,7 @@
 			}
 		}
 
-		function isImage($fileName)
+		function is_image($fileName)
 		{
 			// Verifies that a file is an image
 			if ($fileName !== '.' && $fileName !== '..')
