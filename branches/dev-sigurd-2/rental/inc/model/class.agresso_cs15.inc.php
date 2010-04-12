@@ -62,7 +62,7 @@ class rental_agresso_cs15 implements rental_exportable
 			{
 				$phone = $party->get_mobile_phone(); // ..so we try mobile phone
 			}
-			$this->lines[] = $this->get_line($party->get_name(), $party->get_identifier(), $party->get_address_1(), $country_code, $place, $phone, $party->get_postal_code());
+			$this->lines[] = $this->get_line($party->get_name(), $party->get_identifier(), $party->get_address_1(), $party->get_address_2(), $country_code, $place, $phone, $party->get_postal_code());
 		}
 	}
 	
@@ -71,7 +71,7 @@ class rental_agresso_cs15 implements rental_exportable
 
 	 * @return string
 	 */
-	protected function get_line($name, $identifier, $address, $country_code, $postal_place, $phone, $postal_code)
+	protected function get_line($name, $identifier, $address1, $address2, $country_code, $postal_place, $phone, $postal_code)
 	{
 		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		$line = 
@@ -106,7 +106,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.'IP'														// 29	pay_method
 			.sprintf("%-13s", '')										// 30	postal_acc
 			.sprintf("%-1s", '')										// 31	priority_no
-			.sprintf("%-10s", '')										// 32	short_name
+			.sprintf("%-10s", '.')										// 32	short_name
 			.'N'														// 33	status
 			.sprintf("%-11s", '')										// 34	swift
 			.sprintf("%-1s", '')										// 35	tax_set
@@ -114,7 +114,10 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-2s", '')										// 37	terms_id
 			.sprintf("%-1s", '')										// 38	terms_set
 			.sprintf("%-25s", '')										// 39	vat_reg_no
-			.sprintf("%-160.160s", iconv("UTF-8", "ISO-8859-1", $address))							// 40	address
+			.sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $address1))							// 40	address1
+			.sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $address2))							// 40	address2
+			.sprintf("%-40.40s", '')									// 40	address3
+			.sprintf("%-40.40s", '')									// 40	address4
 			.'1'														// 41	address_type
 			.sprintf("%-6s", '')										// 42	agr_user_id
 			.sprintf("%-255s", '')										// 43	cc_name
