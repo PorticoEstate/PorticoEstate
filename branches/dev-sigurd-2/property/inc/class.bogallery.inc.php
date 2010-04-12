@@ -133,7 +133,7 @@
 			{
 				if(!$entry['mime_type'])
 				{
-					$entry['mime_type'] = $mime_magic->filename2mime($entry['name']);
+					$entry['mime_type'] = $this->mime_magic->filename2mime($entry['name']);
 				}
 
 				$entry['date']	= $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']),$dateformat);
@@ -198,11 +198,14 @@
 			$filetypes = array();
 			foreach($values as $mime_type)
 			{
-				$filetypes[] = array
-				(
-					'id' => urlencode($mime_type),
-					'name' => $map[$mime_type]
-				);
+				if($mime_type)
+				{
+					$filetypes[] = array
+					(
+						'id' => urlencode($mime_type),
+						'name' => $map[$mime_type]
+					);
+				}
 			}
 			return $filetypes;
 		}
