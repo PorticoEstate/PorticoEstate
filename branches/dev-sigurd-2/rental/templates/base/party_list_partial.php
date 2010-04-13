@@ -135,9 +135,7 @@
 
 	<fieldset>
 		<!-- Filters -->
-		<h3><?php echo lang('filters') ?></h3>
-		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('type') ?></label>
-
+		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('part_of_contract') ?></label>
 		<select name="party_type" id="<?php echo $list_id ?>_ctrl_toggle_party_type">
 			<option value="all"><?php echo lang('all') ?></option>
 			<?php
@@ -148,11 +146,11 @@
 			}
 			?>
 		</select>
-		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('status') ?></label>
+		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('marked_as') ?></label>
 		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
-			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
-			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('active') ?></option>
-			<option value="inactive" <?php echo ($status == 'inactive') ? 'selected' : ''?>><?php echo lang('inactive') ?></option>
+			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('not_available_nor_hidden') ?></option>
+			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('available_for_pick') ?></option>
+			<option value="inactive" <?php echo ($status == 'inactive') ? 'selected' : ''?>><?php echo lang('hidden_for_pick') ?></option>
 		</select>
 	</fieldset>
 	
