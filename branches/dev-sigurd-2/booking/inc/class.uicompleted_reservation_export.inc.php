@@ -19,7 +19,7 @@ phpgw::import_class('booking.uicommon');
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation_export');
 			$this->generated_files_bo = CreateObject('booking.bocompleted_reservation_export_file');
-			self::set_active_menu('booking::invoice_exports');
+			self::set_active_menu('booking::invoice_center::exported_files');
 			$this->url_prefix = 'booking.uicompleted_reservation_export';
 		}
 		
