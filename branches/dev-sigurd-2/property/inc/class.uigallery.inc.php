@@ -676,8 +676,10 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
-			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
-			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
-			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
+
+			//FIXME: have a look at this one: http://thecodecentral.com/2008/01/01/yui-based-lightbox-final
+//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
+//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
+//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
 		}
 	}
