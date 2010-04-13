@@ -97,7 +97,7 @@
 			}
 
 			$file	= urldecode(phpgw::get_var('file'));
-			$thumb	= phpgw::get_var('file', 'bool');
+			$thumb	= phpgw::get_var('thumb', 'bool');
 
 			$bofiles	= CreateObject('property.bofiles');
 			$source = "{$bofiles->rootdir}/{$file}";
@@ -356,7 +356,7 @@
 			$values = $this->bo->read($dry_run);
 			$uicols = array();$this->bo->uicols;
 
-			$uicols['name'][]		= 'mime_type';
+			$uicols['name'][]		= 'img_id';
 			$uicols['descr'][]		= 'dummy';
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
@@ -676,5 +676,8 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
 		}
 	}

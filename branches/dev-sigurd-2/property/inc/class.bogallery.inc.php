@@ -76,13 +76,13 @@
 
 
 			$this->start		= $start ? $start : 0;
-			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
+			$this->query		= isset($_REQUEST['query']) ? $query : '';
 			$this->sort			= isset($_REQUEST['sort']) ? $sort : $this->sort;
 			$this->order		= isset($_REQUEST['order']) ? $order : $this->order;
 			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
-			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
+			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  '';//$this->cat_id;
 			$this->location_id	= isset($_REQUEST['location_id'])  ? $location_id :  $this->location_id;
-			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  $this->user_id;
+			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  '';//$this->user_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
 			$this->mime_type	= $mime_type ? $mime_type : '';
 
@@ -126,14 +126,29 @@
 											'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
 											'cat_id' => $this->cat_id, 'dry_run'=>$dry_run));
 
+
+			$img_types = array
+			(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
 			static $locations = array();
 			static $urls = array();
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$i = 0;
 			foreach($values as &$entry)
 			{
 				if(!$entry['mime_type'])
 				{
 					$entry['mime_type'] = $this->mime_magic->filename2mime($entry['name']);
+				}
+				
+				$entry['img_id'] = '';
+				if(in_array($entry['mime_type'], $img_types))
+				{
+					$entry['img_id'] = "img-{$i}";
+					$i++;
 				}
 
 				$entry['date']	= $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']),$dateformat);

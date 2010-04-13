@@ -772,6 +772,7 @@ funding	property	no	Finansiering
 gaards nr	property	no	GårdsNr
 gab	property	no	GrunnEiendom
 gabnr	property	no	GrunnEiendom
+gallery	property	no	Bildearkiv
 general	property	no	Generelt
 general address	property	no	Generell adresse
 general info	property	no	generell informasjon
