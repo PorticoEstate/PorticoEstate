@@ -97,9 +97,86 @@
 			}
 
 			$file	= urldecode(phpgw::get_var('file'));
+			$thumb	= phpgw::get_var('thumb', 'bool');
 
 			$bofiles	= CreateObject('property.bofiles');
-			$bofiles->view_file('', $file);
+			$source = "{$bofiles->rootdir}/{$file}";
+
+			if($this->is_image($source) && $thumb)
+			{
+				$this->create_thumb($source,'',$thumb_size = 100);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
+		function create_thumb($source,$dest,$thumb_size = 100)
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$size = getimagesize($source);
+			$width = $size[0];
+			$height = $size[1];
+
+			if ($width > $height)
+			{
+				$x = ceil(($width - $height) / 2 );
+				$width = $height;
+			}
+			else if($height > $width)
+			{
+				$y = ceil(($height - $width) / 2);
+				$height = $width;
+			}
+
+			$new_im = ImageCreatetruecolor($thumb_size,$thumb_size);
+
+			@$imgInfo = getimagesize($source);
+
+			if ($imgInfo[2] == IMAGETYPE_JPEG)
+			{
+				$im = imagecreatefromjpeg($source);
+				imagecopyresampled($new_im,$im,0,0,$x,$y,$thumb_size,$thumb_size,$width,$height);
+				imagejpeg($new_im,$dest,75); // Thumbnail quality (Value from 1 to 100)
+			}
+			else if ($imgInfo[2] == IMAGETYPE_GIF)
+			{
+				$im = imagecreatefromgif($source);
+				imagecopyresampled($new_im,$im,0,0,$x,$y,$thumb_size,$thumb_size,$width,$height);
+				imagegif($new_im,$dest);
+			}
+			else if ($imgInfo[2] == IMAGETYPE_PNG)
+			{
+				$im = imagecreatefrompng($source);
+				imagecopyresampled($new_im,$im,0,0,$x,$y,$thumb_size,$thumb_size,$width,$height);
+				imagepng($new_im,$dest);
+			}
+		}
+
+		function is_image($fileName)
+		{
+			// Verifies that a file is an image
+			if ($fileName !== '.' && $fileName !== '..')
+			{
+				@$imgInfo = getimagesize($fileName);
+
+				$imgType = array
+				(
+					IMAGETYPE_JPEG,
+					IMAGETYPE_GIF,
+					IMAGETYPE_PNG,
+				);
+
+				if (in_array($imgInfo[2],$imgType))
+				{
+					return true;
+				}
+				return false;
+			}
 		}
 
 		function index()
@@ -279,23 +356,7 @@
 			$values = $this->bo->read($dry_run);
 			$uicols = array();$this->bo->uicols;
 
-			$uicols['name'][]		= 'schedule_time';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'location';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'location_item_id';
+			$uicols['name'][]		= 'img_id';
 			$uicols['descr'][]		= 'dummy';
 			$uicols['sortable'][]	= false;
 			$uicols['sort_field'][]	= '';
@@ -366,6 +427,15 @@
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
+
+			$uicols['name'][]		= 'picture';
+			$uicols['descr'][]		= lang('picture');
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= 'show_picture';
+			$uicols['input_type'][]	= '';
+
 /*
 			$uicols['name'][]		= 'select';
 			$uicols['descr'][]		= lang('select');
@@ -606,5 +676,8 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
 		}
 	}

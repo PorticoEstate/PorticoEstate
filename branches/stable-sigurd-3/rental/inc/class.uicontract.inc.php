@@ -8,6 +8,7 @@
 	phpgw::import_class('rental.sonotification');
 	phpgw::import_class('rental.soprice_item');
 	phpgw::import_class('rental.socontract_price_item');
+	phpgw::import_class('rental.soadjustment');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
@@ -68,6 +69,13 @@
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
+				case 'contracts_for_adjustment':
+					$adjustment_id = (int)phpgw::get_var('id');
+					$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+					$adjustment_date = $adjustment->get_adjustment_date();
+					$adjustment_year = date('Y',$adjustment_date);
+					$filters = array('contract_type' => $adjustment->get_responsibility_id(), 'adjustment_interval' => $adjustment->get_interval(), 'adjustment_year' => $adjustment_year);
+					break;
 				case 'contracts_part': 						// Contracts for this party
 					$filters = array('party_id' => phpgw::get_var('party_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
 					break;
@@ -82,6 +90,7 @@
 					// Queries that depend on areas of responsibility
 					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$ids = array();
+					$read_access = array();
 					foreach($types as $id => $label)
 					{
 						$names = $this->locations->get_name($id);
@@ -91,9 +100,23 @@
 							{
 								$ids[] = $id;
 							}
+							else
+							{
+								$read_access[] = $id;
+							}
 						}
 					}
-					$comma_seperated_ids = implode(',',$ids);
+					
+					
+					if(count($ids) > 0)
+					{
+						$comma_seperated_ids = implode(',',$ids);
+					}
+					else
+					{
+						$comma_seperated_ids = implode(',',$read_access);
+					}
+					
 					switch($type)
 					{
 						case 'ending_contracts':			// Contracts that are about to end in areas of responsibility
@@ -152,7 +175,7 @@
 			
 			if(!$export){
 				//Add context menu columns (actions and labels)
-				array_walk($rows, array($this, 'add_actions'), array($type));
+				array_walk($rows, array($this, 'add_actions'), array($type,$ids));
 			}
 
 			//Build a YUI result from the data
@@ -174,35 +197,43 @@
 			$value['labels'] = array();
 
 			$type = $params[0];
+			$ids = $params[1];
 			
 			switch($type)
 			{
 				case 'last_edited_by':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
-					break;
 				case 'contracts_for_executive_officer':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
-					break;
 				case 'ending_contracts':
 				case 'ended_contracts':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
+				case 'closing_due_date':
+				case 'terminated_contracts':
+					if(count($ids) > 0)
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('edit_contract');
+					}
+					else
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
+						$value['labels'][] = lang('show');
+					}
 					break;
 				default:
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit');
+					if(!isset($ids) || count($ids) > 0)
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['labels'][] = lang('edit');
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
+						$value['labels'][] = lang('copy');
+					}
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
-					$value['labels'][] = lang('copy');
+					
 				}
 		}
 

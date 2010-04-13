@@ -55,6 +55,7 @@ available_parties	rental	no	Tilgjengelige kontraktsparter
 available_price_items	rental	no	Tilgjengelige priselementer
 available?	rental	no	Kan leies ut?
 available	rental	no	Tilgjengelig
+available_for_pick	rental	no	tilgjengelig
 back	rental	no	Tilbake
 bank_guarantee	rental	no	Bankgaranti
 Billing date	rental	no	Fakturadato
@@ -198,6 +199,8 @@ gab_id	rental	no	GAB
 Generate export	rental	no	Generér eksport
 Generate cs15	rental	no	Generér kundefil
 half-year	rental	no	Halvårig
+hidden	rental	no	Skjult
+hidden_for_pick	rental	no	skjult
 has_custom_address	rental	no	Er adressen overstyrt?
 house_number	rental	no	Husnummer
 id	rental	no	ID
@@ -219,7 +222,7 @@ is_active	rental	no	Aktiv
 is_area	rental	no	Areal
 is_payer	rental	no	Fakturamottaker
 is_inactive	rental	no	Inaktiv
-is_adjustable	rental	no	Regulerbar
+is_adjustable	rental	no	Indeksreguleres
 is_executed	rental	no	Utført
 is_one_time	rental	no	Engangsbeløp
 job_title	rental	no	Stillingstittel
@@ -236,6 +239,7 @@ log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i re
 manual_adjust_price_item	rental	no	Manuell regulering av priselement
 manual_adjust_price_item_select	rental	no	Velg priselement
 manual_adjustment	rental	no	Manuell regulering
+marked_as	rental	no	og er merket
 max_area	rental	no	Areal
 message	rental	no	Melding
 messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
@@ -315,6 +319,7 @@ notifications	rental	no	Varsler
 notification_optgroup_groups	rental	no	Grupper
 notification_optgroup_users	rental	no	Brukere
 not_started	rental	no	Ikke startet
+not_available_nor_hidden	rental	no	tilgjengelig eller skjult
 object_number	rental	no	Objektnummer
 objno_name_address	rental	no	Objektnummer/navn/adresse
 occupied	rental	no	Opptatt
@@ -334,6 +339,7 @@ out_of_operation	rental	no	Ikke i drift
 overridden_address	rental	no	Overstyrt adresse
 override	rental	no	Bruk fakturastart
 panels	rental	no	Vinduer
+part_of_contract	rental	no	Inngår i kontrakt av typen
 parties	rental	no	Kontraktsparter
 party_name	rental	no	Navn til kontraktspart
 party	rental	no	Kontraktspart
@@ -359,8 +365,8 @@ price_item_type_apiece	rental	no	Stk.
 price_item_type_area	rental	no	Areal
 price_item_inactive	rental	no	Inaktiv
 price_item_active	rental	no	Aktiv
-price_item_adjustable	rental	no	Regulerbar
-price_item_not_adjustable	rental	no	Ikke regulerbar
+price_item_adjustable	rental	no	Ja
+price_item_not_adjustable	rental	no	Nei
 price_list	rental	no	Prisbok
 price_per_unit	rental	no	Pris pr kvm
 price	rental	no	Pris
@@ -408,6 +414,7 @@ section	rental	no	Seksjon
 security	rental	no	Sikkerhet
 security_amount	rental	no	Sikkerhetsbeløp
 security_amount_not_numeric	rental	no	Sikkerhetsbeløp må være et tall
+select_all_options	rental	no	&lt;Alle$gt;
 select_date	rental	no	Velg dato
 select_date_valid_year	rental	no	Vennligst velg et gyldig år
 selected_composites	rental	no	Valgte leieobjekter

@@ -86,6 +86,7 @@
 			}
 
 			$filtermethod = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
+			$filtermethod .= " AND (phpgw_vfs.directory {$this->_like} '%/property%' OR phpgw_vfs.directory {$this->_like} '%/catch%')";
 						
 			if($user_id)
 			{

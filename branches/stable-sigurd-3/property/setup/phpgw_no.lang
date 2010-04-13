@@ -772,6 +772,7 @@ funding	property	no	Finansiering
 gaards nr	property	no	GårdsNr
 gab	property	no	GrunnEiendom
 gabnr	property	no	GrunnEiendom
+gallery	property	no	Bildearkiv
 general	property	no	Generelt
 general address	property	no	Generell adresse
 general info	property	no	generell informasjon
@@ -1108,6 +1109,7 @@ per vendor	property	no	pr leverandør
 phone	property	no	Telefon
 php configuration	common	no	php konfigurasjon
 phpinfo	common	no	phpinformasjon
+picture	property	no	Bilde
 plain	property	no	Vanlig
 planned cost	property	no	Planlagt
 pleace select a location - or an equipment !	property	no	velg en lokalisering - eller et utstyr

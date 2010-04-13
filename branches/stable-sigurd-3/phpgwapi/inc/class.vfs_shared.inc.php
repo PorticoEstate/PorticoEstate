@@ -1227,17 +1227,24 @@
 		 *  * string	Real path to file, with or without leading paths
 		 *  * @return String.  MIME type based on file extension.
 		  */
-		function get_ext_mime_type ($data)
+		function get_ext_mime_type($data)
 		{
 			if (!is_array ($data))
 			{
 				return '';
 			}
 
-			$file = basename($data['string']);
+			$path_parts = pathinfo($data['string']);
+
+			if(!isset($path_parts['extension']) || !$path_parts['extension'])
+			{
+				return '';
+			}
+			$file = $path_parts['basename'];
 
 			return $this->mime_magic->filename2mime($file);
 /*
+			$file = basename($data['string']);
 			$mimefile=PHPGW_API_INC.'/phpgw_mime.types';
 			$fp=fopen($mimefile,'r');
 			$contents = explode("\n",fread($fp,filesize($mimefile)));

@@ -159,5 +159,20 @@ class rental_soadjustment extends rental_socommon
 		}
 		return false;
 	}
+	
+	public function delete($id)
+	{
+		//TODO: Should be updated when run status is included in database design
+		if(isset($id) && $id > 0)
+		{
+			$query = "DELETE FROM rental_adjustment WHERE id = {$id}";
+			$result = $this->db->query($query);
+			if($result && ($this->db->affected_rows() > 0))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
 ?>
