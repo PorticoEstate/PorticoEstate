@@ -144,7 +144,7 @@
 				'invoice_center' => array
 				(
 					'text'	=> lang('Invoice Data Exports'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export.index')),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index')),
 					'image'	=> array('property', 'location'),
 					'children' => array
 					(
