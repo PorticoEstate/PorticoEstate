@@ -1286,9 +1286,17 @@
 				{
 					if(isset($date) && is_numeric($date) && $contract_id > 0)
 					{
+						$con = $socontract->get_single($contract_id);
+						if($con->get_contract_date()->has_end_date())
+						{
+							$old_end_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $con->get_contract_date()->get_end_date());
+							$this->errors[] = "Contract ({$con->get_old_contract_id()}) will be updated with 'contract end' event (DATE: {$this->decode($data[7])}) event though it already had an end date {$old_end_date} ";
+						}
+						
+						
 						//Set date as contract date
 						$socontract->update_contract_end_date($contract_id, $date);
-						$this->messages[] = "Successfully updated contract end date to '" . $this->decode($data[7]) . "' for contract {$contract_id}";
+						$this->messages[] = "Successfully updated contract end date to '" . $this->decode($data[7]) . "' for contract {$contract_id} (originaly had end date ({$con->get_contract_date()->get_end_date()}))";
 						if(isset($title) && $title != '')
 						{
 							$this->warnings[] = "Contract event of type end date (" . $this->decode($data[7]) . ") for contract {$contract_id} has a title {$title} which is not imported";
