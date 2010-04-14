@@ -421,7 +421,7 @@
 
 			if($budget['district_id'])
 			{
-				$district_filter =  "AND district_id='{$budget['district_id']}";
+				$district_filter =  "AND district_id='{$budget['district_id']}'";
 			}
 			$sql = "SELECT id FROM fm_budget WHERE year ='{$budget['year']}' AND b_account_id ='{$budget['b_account_id']}' AND revision = '{$budget['revision']}' {$district_filter}";
 
@@ -576,6 +576,8 @@
 //_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
+			$obligations = array();
+
 			while ($this->db->next_record())
 			{
 				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] = round($this->db->f('combined_cost'));
@@ -586,6 +588,75 @@
 			}
 
 //_debug_array($obligations);die();
+
+//----------- ad hoc order
+			$filtermethod = "WHERE fm_tts_tickets.vendor_id > 0 AND budget > 0";
+
+//			$start_date = mktime(1, 1, 1, 1, 1, $year);
+//			$end_date = mktime  (23, 59, 59, 12, 31, $year);
+			$filtermethod .= " AND fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date";
+
+			$where = 'AND';
+
+			if ($cat_id > 0)
+			{
+				$filtermethod .= " $where fm_tts_tickets.cat_id = " . (int)$cat_id;
+				$where = 'AND';
+			}
+
+			if ($district_id > 0)
+			{
+				$filtermethod .= " $where district_id=" . (int)$district_id;
+				$where = 'AND';
+			}
+
+			if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where fm_tts_tickets.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}
+
+			if ($grouping > 0)
+			{
+				$filtermethod .= " $where fm_b_account.category='$grouping' ";
+				$where = 'AND';
+			}
+
+
+			$sql = "SELECT sum(budget) as budget, count(fm_tts_tickets.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_tts_tickets.ecodimb"
+				. " FROM fm_tts_tickets"
+				. " $this->join fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
+				. " $this->join fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+
+//_debug_array($sql);die();
+			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] += round($this->db->f('budget'));
+				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] += $this->db->f('hits');
+				$accout_info[$this->db->f($b_account_field)] = true;
+				$district[$this->db->f('district_id')] = true;
+				$ecodimb[$this->db->f('ecodimb')] = true;
+			}
+//_debug_array($obligations);die();
+
+
+			$sql = str_replace('budget', 'actual_cost', $sql);
+			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+
+			$actual_cost = array();
+			while ($this->db->next_record())
+			{
+				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] = round($this->db->f('actual_cost'));
+				$accout_info[$this->db->f($b_account_field)] = true;
+				$district[$this->db->f('district_id')] = true;
+				$ecodimb[$this->db->f('ecodimb')] = true;
+			}
+//_debug_array($actual_cost);die();
+//----------- end ad hoc order
+
 			$this->db->query("select max(revision) as revision from fm_budget where year={$year}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$revision = (int)$this->db->f('revision');
@@ -687,10 +758,9 @@
 //_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			$actual_cost = array();
 			while ($this->db->next_record())
 			{
-				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('dimb')] = round($this->db->f('actual_cost'));
+				$actual_cost[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('dimb')] += round($this->db->f('actual_cost'));
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[$this->db->f('dimb')] = true;
