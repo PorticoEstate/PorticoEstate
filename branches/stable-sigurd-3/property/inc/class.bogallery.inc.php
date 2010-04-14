@@ -80,7 +80,7 @@
 			$this->sort			= isset($_REQUEST['sort']) ? $sort : $this->sort;
 			$this->order		= isset($_REQUEST['order']) ? $order : $this->order;
 			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
-			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  '';//$this->cat_id;
+			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
 			$this->location_id	= isset($_REQUEST['location_id'])  ? $location_id :  $this->location_id;
 			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  '';//$this->user_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;

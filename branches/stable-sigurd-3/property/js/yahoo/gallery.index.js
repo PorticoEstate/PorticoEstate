@@ -159,19 +159,11 @@
 
 	var show_picture = function(elCell, oRecord, oColumn, oData)
 	{
-//		if(oRecord.getData('mime_type') == 'image/jpeg' || oRecord.getData('mime_type') == 'image/png' || oRecord.getData('mime_type') == 'image/gif')
 		if(oRecord.getData('img_id'))
 		{
 			var oArgs = {menuaction:'property.uigallery.view_file', file:oRecord.getData('directory') + '/' + oRecord.getData('name')};
 			var sUrl = phpGWLink('index.php', oArgs);
-
-		//	elCell.innerHTML =  "<div id= ''> <img src=\""+sUrl+"\" /> </div>";
-			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\"><img src=\""+sUrl+"&thumb=1\"  alt=\""+oRecord.getData('name')+"\" /></a>";
-
-    //  <a href="ubergallery/images/CIMG0109.jpg" title="CIMG0109" id="img-0" rel="colorbox"><img src="ubergallery/cache/CIMG0109.jpg" alt="CIMG0109"/></a>
-    //  <a href="ubergallery/images/strekmann.png" title="strekmann" id="img-1" rel="colorbox"><img src="ubergallery/cache/strekmann.png" alt="strekmann"/></a>
-
-
+			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\"><img src=\""+sUrl+"&thumb=1\"  target=\"_blank\" alt=\""+oRecord.getData('name')+"\" /></a>";
 		}
 	}
 

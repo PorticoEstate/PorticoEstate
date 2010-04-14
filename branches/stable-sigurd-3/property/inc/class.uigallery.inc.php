@@ -58,7 +58,7 @@
 			$this->bocommon				= CreateObject('property.bocommon');
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location			= phpgw::get_var('location');
+			$this->acl_location 		= '.document';
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
@@ -91,9 +91,13 @@
 
 		function view_file()
 		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
 			if(!$this->acl_read)
 			{
-//				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
 			$file	= urldecode(phpgw::get_var('file'));
@@ -101,10 +105,22 @@
 
 			$bofiles	= CreateObject('property.bofiles');
 			$source = "{$bofiles->rootdir}/{$file}";
+			$thumbfile = "$source.thumb";
 
-			if($this->is_image($source) && $thumb)
+			// prevent path traversal
+			if ( preg_match('/\.\./', $source) )
 			{
-				$this->create_thumb($source,'',$thumb_size = 100);
+				return false;
+			}
+
+			if($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if($this->is_image($source) && $thumb)
+			{
+				$this->create_thumb($source,$thumbfile,$thumb_size = 100);
+				readfile($thumbfile);
 			}
 			else
 			{
@@ -114,10 +130,6 @@
 
 		function create_thumb($source,$dest,$thumb_size = 100)
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-
 			$size = getimagesize($source);
 			$width = $size[0];
 			$height = $size[1];
@@ -396,6 +408,14 @@
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
+			$uicols['name'][]		= 'size';
+			$uicols['descr'][]		= lang('size');
+			$uicols['sortable'][]	= true;
+			$uicols['sort_field'][]	= 'size';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= '';
+
 			$uicols['name'][]		= 'location_name';
 			$uicols['descr'][]		= lang('location name');
 			$uicols['sortable'][]	= false;
@@ -466,7 +486,7 @@
 			}
 
 			$datatable['rowactions']['action'] = array();
-
+/*
 			$parameters = array
 			(
 				'parameter' => array
@@ -511,7 +531,7 @@
 				);
 			}
 
-/*
+
 			if($this->acl_delete)
 			{
 				$datatable['rowactions']['action'][] = array
@@ -676,8 +696,10 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
-			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
-			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
-			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
+
+			//FIXME: have a look at this one: http://thecodecentral.com/2008/01/01/yui-based-lightbox-final
+//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
+//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
+//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
 		}
 	}
