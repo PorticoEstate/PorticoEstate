@@ -165,7 +165,7 @@ class rental_soadjustment extends rental_socommon
 		//TODO: Should be updated when run status is included in database design
 		if(isset($id) && $id > 0)
 		{
-			$query = "DELETE FROM rental_adjustment WHERE id = {$id}";
+			$query = "DELETE FROM rental_adjustment WHERE id = {$id} AND NOT is_executed";
 			$result = $this->db->query($query);
 			if($result && ($this->db->affected_rows() > 0))
 			{
@@ -173,6 +173,21 @@ class rental_soadjustment extends rental_socommon
 			}
 		}
 		return false;
+	}
+	
+	public function adjust_contracts()
+	{
+		//TODO: 
+		/* check if there are incomplete adjustments (for today)
+		 * gather all adjustable contracts with 
+		 * 		interval = adjustment interval and this year = last adjusted + interval
+		 * 		or
+		 * 		last adjusted is null / 0 (use contract start year)
+		 * adjust each contract's price items according to adjustment info (percent, adjustment_percent)
+		 * Run as transaction
+		 * update adjustment -> set is_executed to true
+		 * update price book elements according to type if interval=1
+		 */
 	}
 }
 ?>
