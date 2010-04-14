@@ -175,11 +175,6 @@
 
 			foreach($list as &$entry)
 			{
-				if($entry['subject'])
-				{
-					$entry['category'] = $entry['subject'];
-				}
-
 				$entry['status'] = $status[$entry['status']];
 
 				if (isset($entry['child_date']) AND is_array($entry['child_date']))
@@ -199,13 +194,13 @@
 				}
 			}
 
-
 //_debug_array($descr_temp);
 
 
 			$name	= array();
 			$name[] = 'priority';
 			$name[] = 'id';
+			$name[] = 'category';
 			$name[] = 'subject';
 			$name[] = 'loc1_name';
 			$name[] = 'location_code';
