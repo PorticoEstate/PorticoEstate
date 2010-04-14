@@ -312,17 +312,16 @@
 
 			foreach ($tickets as & $ticket)
 			{
+				if(!isset($category_name[$ticket['cat_id']]))
+				{
+					$category_name[$ticket['cat_id']] = $this->get_category_name($ticket['cat_id']);
+				}
+
+				$ticket['category']	= $category_name[$ticket['cat_id']];
+
 				if(!$ticket['subject'])
 				{
-					if(!isset($category_name[$ticket['cat_id']]))
-					{
-						$ticket['subject']= $this->get_category_name($ticket['cat_id']);
-						$category_name[$ticket['cat_id']] = $ticket['subject'];
-					}
-					else
-					{
-						$ticket['subject'] = $category_name[$ticket['cat_id']];
-					}
+					$ticket['subject'] = $category_name[$ticket['cat_id']];
 				}
 
 				if(!isset($account[$ticket['user_id']]))
