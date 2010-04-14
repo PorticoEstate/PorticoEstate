@@ -674,8 +674,11 @@
 				$uicols['name'][$i++] = $related;			
 			}
 
-			$uicols['name'][$i++] = 'finnish_date';
-			$uicols['name'][$i++] = 'delay';
+			if( $this->_show_finnish_date )
+			{
+				$uicols['name'][$i++] = 'finnish_date';
+				$uicols['name'][$i++] = 'delay';
+			}
 
 			$uicols['name'][$i++] = 'child_date';
 			$uicols['name'][$i++] = 'link_view';
