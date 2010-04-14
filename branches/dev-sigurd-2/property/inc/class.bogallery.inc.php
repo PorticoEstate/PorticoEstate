@@ -64,27 +64,27 @@
 			$sort				= phpgw::get_var('sort');
 			$order				= phpgw::get_var('order');
 			$filter				= phpgw::get_var('filter', 'int');
-			$cat_id				= urldecode(phpgw::get_var('cat_id', 'string'));
+			$cat_id				= phpgw::get_var('cat_id', 'string');
 			$location_id		= phpgw::get_var('location_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int');
 			$user_id			= phpgw::get_var('user_id', 'int');
-			$mime_type			= urldecode(phpgw::get_var('mime_type'));
+			$mime_type			= phpgw::get_var('mime_type');
 			$start_date			= urldecode(phpgw::get_var('start_date', 'string'));
 			$end_date			= urldecode(phpgw::get_var('end_date', 'string'));
 
 
 			$this->start		= $start ? $start : 0;
-			$this->query		= isset($_REQUEST['query']) ? $query : '';
+			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
 			$this->sort			= isset($_REQUEST['sort']) ? $sort : $this->sort;
 			$this->order		= isset($_REQUEST['order']) ? $order : $this->order;
 			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
 			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
 			$this->location_id	= isset($_REQUEST['location_id'])  ? $location_id :  $this->location_id;
-			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  '';//$this->user_id;
+			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  $this->user_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
-			$this->mime_type	= $mime_type ? $mime_type : '';
+			$this->mime_type	= isset($_REQUEST['mime_type'])  ? $mime_type :  $this->mime_type;
 
 			$this->start_date	= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
 			$this->end_date		= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
@@ -112,7 +112,7 @@
 			$this->order		= $data['order'];
 			$this->cat_id		= $data['cat_id'];
 			$this->allrows		= $data['allrows'];
-			$this->location_id	= $data['location_id'];
+			$this->mime_type	= $data['mime_type'];
 			$this->user_id		= $data['user_id'];
 		}
 
@@ -217,7 +217,7 @@
 				{
 					$filetypes[] = array
 					(
-						'id' => urlencode($mime_type),
+						'id' => $mime_type,
 						'name' => $map[$mime_type]
 					);
 				}
@@ -263,7 +263,7 @@
 
 					$locations[] = array
 					(
-						'id' => urlencode($entry),
+						'id' => $entry,
 						'name' => $this->interlink->get_location_name($location)
 					);
 				}
