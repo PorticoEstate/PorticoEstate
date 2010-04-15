@@ -231,9 +231,9 @@
 			
 			$this->install_customer_identifier_ui($organization);
 			$this->use_yui_editor();
-			
+            
 			$this->add_template_helpers();
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities));
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 		
 		public function show()
