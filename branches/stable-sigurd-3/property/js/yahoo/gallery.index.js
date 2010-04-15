@@ -102,40 +102,26 @@
 			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 			tableYUI.setAttribute("id","tableYUI");
 
-			//category
-			index = locate_in_array_options(0,"value",path_values.location_id);
+			//mime_type
+			index = locate_in_array_options(0,"value",path_values.mime_type);
 			if(index)
 			{
 				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
 			}
 
+			//category
+			index = locate_in_array_options(1,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
 			//user
-			index = locate_in_array_options(1,"value",path_values.user_id);
-			if(index)
-			{
-				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
-			}
-/*
-			//district
-			index = locate_in_array_options(1,"value",path_values.district_id);
-			if(index)
-			{
-				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
-			}
-			//status
-			index = locate_in_array_options(2,"value",path_values.status_id);
+			index = locate_in_array_options(2,"value",path_values.user_id);
 			if(index)
 			{
 				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
 			}
-			//user
-			index = locate_in_array_options(3,"value",path_values.user_id);
-			if(index)
-			{
-				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
-			}
-*/
-//			oMenuButton_0.focus();
+
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}
 		else if(flag_particular_setting=='update')
@@ -163,7 +149,7 @@
 		{
 			var oArgs = {menuaction:'property.uigallery.view_file', file:oRecord.getData('directory') + '/' + oRecord.getData('name')};
 			var sUrl = phpGWLink('index.php', oArgs);
-			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\"><img src=\""+sUrl+"&thumb=1\"  target=\"_blank\" alt=\""+oRecord.getData('name')+"\" /></a>";
+			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&thumb=1\" alt=\""+oRecord.getData('name')+"\" /></a>";
 		}
 	}
 

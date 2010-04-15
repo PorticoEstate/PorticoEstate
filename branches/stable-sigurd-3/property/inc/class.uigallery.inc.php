@@ -70,8 +70,9 @@
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
-			$this->location_id			= $this->bo->location_id;
+			$this->cat_id				= $this->bo->cat_id;
 			$this->user_id				= $this->bo->user_id;
+			$this->mime_type			= $this->bo->mime_type;
 		}
 
 		function save_sessiondata()
@@ -83,8 +84,9 @@
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'allrows'		=> $this->allrows,
-				'location_id'	=> $this->location_id,
+				'cat_id'		=> $this->cat_id,
 				'user_id'		=> $this->user_id,
+				'mime_type'		=> $this->mime_type
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -217,12 +219,18 @@
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 	    		(
 	    			'menuaction'	=> 'property.uigallery.index',
-					'location_id'	=> $this->location_id,
+					'mime_type'		=> $this->mime_type,
+					'cat_id'		=> $this->cat_id,
+					'query'			=> $this->query,
+					'allrows'		=> $this->allrows,
 					'user_id'		=> $this->user_id
    				));
 
    				$datatable['config']['base_java_url'] = "menuaction:'property.uigallery.index',"
-	    												."location_id:'{$this->location_id}',"
+	    												."mime_type:'{$this->mime_type}',"
+	    												."cat_id:'{$this->cat_id}',"
+	    												."query:'{$this->query}',"
+	    												."allrows:'{$this->allrows}',"
 	    												."user_id:'{$this->user_id}'";
 
 				$values_combo_box = array();
@@ -232,7 +240,7 @@
 				array_unshift ($values_combo_box[0],$default_value);
 
 				$values_combo_box[1]  = $this->bo->get_gallery_location();
-				$default_value = array ('id'=> -1, 'name'=>lang('no category'));
+				$default_value = array ('id'=> '', 'name'=>lang('no category'));
 				array_unshift ($values_combo_box[1],$default_value);
 
 				$values_combo_box[2]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
@@ -616,7 +624,7 @@
 		  	phpgwapi_yui::load_widget('menu');
 		  	phpgwapi_yui::load_widget('connection');
 		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
+//			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
@@ -647,6 +655,7 @@
 	    				else if(isset($column['format']) && $column['format']== "link")
 	    				{
 							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+				//			$json_row[$column['name']] = "<a href='{$column['value']}' title='test' id='img-0' rel='colorbox' target='_blank'><img src='{$column['value']}&thumb=1'  alt='name' /></a>";
 	    				}
 	    				else
 	    				{

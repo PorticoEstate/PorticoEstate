@@ -57,7 +57,6 @@
 			$order				= isset($data['order']) ? $data['order'] : '';
 			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
 			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : -1;
 			$user_id			= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$mime_type			= isset($data['mime_type']) ? $data['mime_type'] : '';
 			$start_date			= isset($data['start_date'])?$data['start_date']:0;
