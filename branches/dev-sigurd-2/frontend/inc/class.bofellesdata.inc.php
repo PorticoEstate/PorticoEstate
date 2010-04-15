@@ -36,51 +36,50 @@
          * @param string $username the username
          * @return an array of (result unit number => result unit name)
          */
-        public function get_result_units(string $username) {
-
+        public function get_result_units(string $username)
+        {
         	/* 1. Get all organizational units this user has access to
              * 2. Check level for each unit and traverse if necessary
              * 3. Build an array of result units this user has access to
              */
         	
-        	$columns = "ORG_ENHET.ORG_ENHET_ID, ORG_ENHET.ORG_NIVAA, ORG_ENHET.ORG_NAVN, ORG_ENHET.ENHET_ID";
-        	$table = "ORG_ENHET";
-        	$joins = 	"LEFT JOIN ORG_PERSON_ENHET (ORG_PERSON_ENHET.ORG_ENHET_ID = ORG_ENHET.ORG_ENHET_ID) ".
-        				"LEFT JOIN ORG_PERSON (ORG_PERSON.ORG_PERSON_ID = ORG_PERSON_ENHET.ORG_PERSON_ID)";
+        	$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID";
+        	$table = "V_ORG_ENHET";
+        	$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_PERSON_ENHET.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID) ".
+        				"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
         	
-        	$sql = "SELECT $columns FROM $table $joins WHERE ORG_PERSON.BRUKERNAVN = $username";
-        	
+        	$sql = "SELECT $columns FROM $table $joins WHERE V_ORG_PERSON.BRUKERNAVN = '$username'";
         	
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	
+			$db1 = clone($db);
         	$result_units = array();
-        	
        		while ($db->next_record())
 			{
-				$identifier  = $db->f('ORG_ENHET_ID','int');
-				$level = $db->f('ORG_NIVAA','int');
-				$name = $db->f('ORG_NAVN','string');
-				$unit_id = $db->f('ENHET_ID','string');
-				
+				$identifier  = (int)$db->f('ORG_ENHET_ID');
+				$level = (int)$db->f('ORG_NIVAA','int');
+				$name = $db->f('ORG_NAVN',true);
+				$unit_id = (int)$db->f('ENHET_ID'); // string or int?
+
 				switch($level)
 				{
 					case 1: break;	// TODO: Access to all result units
 					case 2: 		// LEVEL: Byrådsavdeling 
 						//Must traverse down the hierarchy
-						$tables = "ORG_ENHET";
-						$joins = "LEFT JOIN ORG_KNYTNING (ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = ORG_ENHET.ORG_ENHET_ID)";
-						$sql = "SELECT $columns FROM $tables $joins WHERE ORG_ENHET.ORG_NIVAA = 4 AND ORG_KNYTNING.ORG_ENHET_ID = 2";
+						$tables = "V_ORG_ENHET";
+						$joins = "LEFT JOIN ORG_KNYTNING (ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = V_ORG_ENHET.ORG_ENHET_ID)";
+						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND ORG_KNYTNING.ORG_ENHET_ID = 2";
 						
-        				$db1 = $this->get_db();
+        				//$db1 = $this->get_db();
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
 							$result_unit[] = array(
-								"ORG_ENHET_ID" => $db1->f('ORG_ENHET_ID','int'),
-								"ORG_NIVAA" => $db1->f('ORG_NIVAA','int'),
-								"ORG_NAVN" => $db1->f('ORG_NAVN','string'),
-								"ENHET_ID" => $db1->f('ENHET_ID','int')
+								"ORG_ENHET_ID" => (int)$db1->f('ORG_ENHET_ID'),
+								"ORG_NIVAA" => (int)$db1->f('ORG_NIVAA'),
+								"ORG_NAVN" => $db1->f('ORG_NAVN',true),
+								"ENHET_ID" => (int)$db1->f('ENHET_ID')
 							);
 						}
 						break;
@@ -88,10 +87,10 @@
 					case 4:			// LEVEL: Resultatenhet
 						//Insert in result array	
 						$result_units[] = array(
-							"ORG_ENHET_ID" => $db1->f('ORG_ENHET_ID','int'),
-							"ORG_NIVAA" => $db1->f('ORG_NIVAA','int'),
-							"ORG_NAVN" => $db1->f('ORG_NAVN','string'),
-							"ENHET_ID" => $db1->f('ENHET_ID','int')
+							"ORG_ENHET_ID" => (int)$db1->f('ORG_ENHET_ID'),
+							"ORG_NIVAA" => (int)$db1->f('ORG_NIVAA'),
+							"ORG_NAVN" => $db1->f('ORG_NAVN',true),
+							"ENHET_ID" => (int)$db1->f('ENHET_ID')
 						);
 						break;	
 				}
@@ -105,12 +104,12 @@
          * @param int $number the result unit number
          */
         public function get_organisational_unit_name(int $number) {
-        	$sql = "SELECT ORG_ENHET.ORG_NAVN FROM ORG_ENHET WHERE ORG_ENHET.ORG_ENHET_ID = $number";
+        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
         	{
-        		return 	$db->f('ORG_NAVN','string');
+        		return 	$db->f('ORG_NAVN', true);
         	} 
         	else
         	{

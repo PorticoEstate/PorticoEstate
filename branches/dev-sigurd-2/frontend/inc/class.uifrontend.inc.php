@@ -137,7 +137,7 @@
 			}
 			else if((count($this->header_state['locations']) == 0) || isset($org_unit_id)) // if the user has access to no locations
 			{
-				$org_unit_ids = isset($org_unit_id) ? array(0 =>$org_unit_id) : frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_id']);
+				$org_unit_ids = isset($org_unit_id) ? array(0 =>$org_unit_id) : frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
 				
 				if(isset($org_unit_id))
 				{
