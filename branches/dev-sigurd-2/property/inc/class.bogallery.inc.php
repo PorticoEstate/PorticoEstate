@@ -121,10 +121,11 @@
 			$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
 			$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
 
+			$valid_locations = $this->get_gallery_location();
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
 											'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
-											'cat_id' => $this->cat_id, 'dry_run'=>$dry_run));
+											'cat_id' => $this->cat_id, 'valid_locations' => $valid_locations, 'dry_run'=>$dry_run));
 
 
 			$img_types = array
@@ -155,53 +156,60 @@
 
 				$directory = explode('/', $entry['directory']);
 
-				switch ($directory[2])
-				{
-					case 'agreement':
-						$entry['location'] = '.agreement';
-						$entry['location_item_id'] = $directory[3];
-						break;
-					case 'document':
-						$entry['location'] = '.document';
-						$entry['location_item_id'] = $directory[4];
-						break;
-					case 'fmticket':
-						$entry['location'] = '.ticket';
-						$entry['location_item_id'] = $directory[3];
-						break;
-					case 'request':
-						$entry['location'] = '.project.request';
-						$entry['location_item_id'] = $directory[4];
-						break;
-					case 'service_agreement':
-						$entry['location'] = '.s_agreement';
-						$entry['location_item_id'] = $directory[3];
-						break;
-					case 'workorder':
-						$entry['location'] = '.project.workorder';
-						$entry['location_item_id'] = $directory[3];
-						break;
-					default:
-						$entry['location'] = '.' . str_replace('_', '.', $directory[2]);
-			//			$entity_info = explode('_', $directory[2]);						
-						$entry['location_item_id'] = $directory[4];
+				$location = $this->get_location($directory);
 
-				}
+				$entry['location']			= $location['location'];
+				$entry['location_item_id']	= $location['location_item_id'];
+				$entry['url']				= $this->interlink->get_relation_link($entry['location'], $entry['location_item_id']);
 
-				$entry['url'] = $this->interlink->get_relation_link($entry['location'], $entry['location_item_id']);
-
-				$entry['location_name'] = $this->interlink->get_location_name($entry['location']);
-				$entry['document_url'] = $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uigallery.view_file',
-											'file'		=> urlencode("{$entry['directory']}/{$entry['name']}")
-										));
-				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['createdby_id'])->__toString();
+				$entry['location_name']		= $this->interlink->get_location_name($entry['location']);
+				$entry['document_url']		= $GLOBALS['phpgw']->link('/index.php',array
+											(
+												'menuaction'	=> 'property.uigallery.view_file',
+												'file'		=> urlencode("{$entry['directory']}/{$entry['name']}")
+											));
+				$entry['user']				= $GLOBALS['phpgw']->accounts->get($entry['createdby_id'])->__toString();
 			}
 //_debug_array($values);
 			$this->total_records = $this->so->total_records;
 
 			return $values;
+		}
+
+		public function get_location($directory = array())
+		{
+				$values = array();
+				switch ($directory[2])
+				{
+					case 'agreement':
+						$values['location'] = '.agreement';
+						$values['location_item_id'] = $directory[3];
+						break;
+					case 'document':
+						$values['location'] = '.document';
+						$values['location_item_id'] = $directory[4];
+						break;
+					case 'fmticket':
+						$values['location'] = '.ticket';
+						$values['location_item_id'] = $directory[3];
+						break;
+					case 'request':
+						$values['location'] = '.project.request';
+						$values['location_item_id'] = $directory[4];
+						break;
+					case 'service_agreement':
+						$values['location'] = '.s_agreement';
+						$values['location_item_id'] = $directory[3];
+						break;
+					case 'workorder':
+						$values['location'] = '.project.workorder';
+						$values['location_item_id'] = $directory[3];
+						break;
+					default:
+						$values['location'] = '.' . str_replace('_', '.', $directory[2]);
+						$values['location_item_id'] = $directory[4];
+				}
+				return $values;
 		}
 		
 		public function get_filetypes()
@@ -237,35 +245,15 @@
 
 				if(isset($directory[2]) && !isset($directory[3]))
 				{
-					switch ($directory[2])
+					$location_info = $this->get_location($directory);
+					if($GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
 					{
-						case 'agreement':
-							$location = '.agreement';
-							break;
-						case 'document':
-							$location = '.document';
-							break;
-						case 'fmticket':
-							$location = '.ticket';
-							break;
-						case 'request':
-							$location = '.project.request';
-							break;
-						case 'service_agreement':
-							$location = '.s_agreement';
-							break;
-						case 'workorder':
-							$location = '.project.workorder';
-							break;
-						default:
-							$location = '.' . str_replace('_', '.', $directory[2]);
+						$locations[] = array
+						(
+							'id' => $entry,
+							'name' => $this->interlink->get_location_name($location_info['location'])
+						);
 					}
-
-					$locations[] = array
-					(
-						'id' => $entry,
-						'name' => $this->interlink->get_location_name($location)
-					);
 				}
 			}
 			return $locations;
