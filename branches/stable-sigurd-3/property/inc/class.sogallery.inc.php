@@ -62,6 +62,7 @@
 			$start_date			= isset($data['start_date'])?$data['start_date']:0;
 			$end_date			= isset($data['end_date'])?$data['end_date']:0;
 			$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
+			$valid_locations	= isset($data['valid_locations']) && $data['valid_locations'] ? $data['valid_locations'] : array();
 
 			if ($order)
 			{
@@ -86,6 +87,16 @@
 
 			$filtermethod = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
 			$filtermethod .= " AND (phpgw_vfs.directory {$this->_like} '%/property%' OR phpgw_vfs.directory {$this->_like} '%/catch%')";
+
+
+			$filtermethod .= " AND (phpgw_vfs.directory = 'This_one_is_to_block'";
+
+			foreach ($valid_locations as $location)
+			{
+				$filtermethod .= " OR phpgw_vfs.directory {$this->_like} '%{$location['id']}%'";
+			}
+
+			$filtermethod .= ')';
 						
 			if($user_id)
 			{

@@ -105,6 +105,17 @@
 			$file	= urldecode(phpgw::get_var('file'));
 			$thumb	= phpgw::get_var('thumb', 'bool');
 
+
+			$directory = explode('/', $file);
+
+			$location_info = $this->bo->get_location($directory);
+			
+			if(!$this->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
+			{
+				echo 'sorry - no access';
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			$bofiles	= CreateObject('property.bofiles');
 			$source = "{$bofiles->rootdir}/{$file}";
 			$thumbfile = "$source.thumb";
