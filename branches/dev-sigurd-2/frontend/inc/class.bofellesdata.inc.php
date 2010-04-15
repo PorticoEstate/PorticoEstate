@@ -53,7 +53,7 @@
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	
-			$db1 = clone($db);
+        	$db1 = clone($db);
         	$result_units = array();
        		while ($db->next_record())
 			{
@@ -61,7 +61,7 @@
 				$level = (int)$db->f('ORG_NIVAA','int');
 				$name = $db->f('ORG_NAVN',true);
 				$unit_id = (int)$db->f('ENHET_ID'); // string or int?
-
+				
 				switch($level)
 				{
 					case 1: break;	// TODO: Access to all result units
@@ -117,60 +117,4 @@
         	}
         	
         }
-        
-        
-        
-/*
-        public function database_logic(){
-        	
-		
-		//lister alle tabller og views
-			_debug_array($db->table_names(true));
-		
-			$table1 = 'V_ORG_ENHET';
-			$table2 = 'V_ORG_ENHET_ENDRINGER';
-		 	$table3 = 'V_ORG_PERSON';
-			$table4 = 'V_ORG_PERSON_ENDRINGER';
-		 	$table5 = 'V_ORG_PERSON_ENHET';
-			$table6 = 'V_ORG_PERSON_ENHET_ENDRINGER';
-			$table7 = 'V_AGRESSO_KUNDE_ADRESSE';
-			
-		//	$sql = "SELECT * FROM $table7 WHERE 1=1";
-			$sql = "SELECT * FROM $table3 WHERE 1=1 ORDER BY ETTERNAVN ASC";// AND org_nivaa = 1";
-			
-		//	$sql = "SELECT * FROM $table5 JOIN $table1 ON $table1.ORG_ENHET_ID = $table5.ORG_ENHET_ID JOIN $table3 ON $table5.ORG_PERSON_ID = $table3.ORG_PERSON_ID WHERE 1=1 AND org_nivaa = 1";
-		//	$sql = "SELECT $table3.NAVN FROM $table5 JOIN $table1 ON $table1.ORG_ENHET_ID = $table5.ORG_ENHET_ID JOIN $table3 ON $table5.ORG_PERSON_ID = $table3.ORG_PERSON_ID WHERE 1=1 AND $table1.ORG_ENHET_ID = 1";
-		
-		
-			$start = 0;
-		
-			$limit = false;
-		//	$limit = true;
-			if($limit)
-			{
-				$db->limit_query($sql,$start,__LINE__,__FILE__);
-			}
-			else
-			{
-				$db->query($sql,__LINE__,__FILE__);
-			}
-		
-		//_debug_array($db->num_rows());
-		
-			$values = array();
-			while ($db->next_record())
-			{
-				$values[] = $db->Record;
-			}
-		
-			_debug_array($values);
-			
-			
-		//	_debug_array($db->table_names(true)); die();
-        
-        }
- */       
-
-
-
     }
