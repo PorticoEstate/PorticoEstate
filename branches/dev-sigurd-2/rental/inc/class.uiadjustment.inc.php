@@ -13,7 +13,8 @@ class rental_uiadjustment extends rental_uicommon {
 		'edit'					=> true,
 		'view'					=> true,
 		'show_affected_contracts' =>	true,
-		'delete'				=> true,
+		'delete'				=> true
+//		'run_adjustments'		=> true
 	);
 	
 	public function __construct()
@@ -92,6 +93,9 @@ class rental_uiadjustment extends rental_uicommon {
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.edit', 'id' => $value['id'])));
 				$value['labels'][] = lang('edit');
+				/*$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.run_adjustments')));
+				$value['labels'][] = lang('execute_adjustments');*/
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.delete', 'id' => $value['id'])));
 				$value['labels'][] = lang('delete');
@@ -258,6 +262,11 @@ class rental_uiadjustment extends rental_uicommon {
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
 		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id));
+	}
+	
+	public function run_adjustments()
+	{
+		rental_soadjustment::get_instance()->run_adjustments();
 	}
 }
 ?>
