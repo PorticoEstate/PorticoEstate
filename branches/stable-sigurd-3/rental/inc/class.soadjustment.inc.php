@@ -1,8 +1,13 @@
 <?php
 phpgw::import_class('rental.socommon');
+phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.socontract_price_item');
+phpgw::import_class('rental.soprice_item');
 phpgw::import_class('rental.uicommon');
 
 include_class('rental', 'adjustment', 'inc/model/');
+include_class('rental', 'contract_price_item', 'inc/model/');
+include_class('rental', 'price_item', 'inc/model/');
 
 class rental_soadjustment extends rental_socommon
 {
@@ -175,7 +180,7 @@ class rental_soadjustment extends rental_socommon
 		return false;
 	}
 	
-	public function adjust_contracts()
+	public function run_adjustments()
 	{
 		//TODO: 
 		/* check if there are incomplete adjustments (for today)
@@ -188,6 +193,138 @@ class rental_soadjustment extends rental_socommon
 		 * update adjustment -> set is_executed to true
 		 * update price book elements according to type if interval=1
 		 */
+		$current_date = strtotime('now'); //TODO: fix this
+		$prev_day = mktime(0,0,0,date('m'),date('d')-1,date('Y'));
+		$next_day = mktime(0,0,0,date('m'),date('d')+1,date('Y'));
+
+		//get incomplete adjustments for today
+		$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date > {$prev_day})";
+		var_dump($adjustments_query);
+		$result = $this->db->query($adjustments_query);
+		var_dump("etter spr");
+		//there are un-executed adjustments
+		$adjustments = array();
+		while($this->db->next_record())
+		{
+			$adjustment_id = $this->unmarshal($this->db->f('id', true), 'int');
+			$adjustment = new rental_adjustment($adjustment_id);
+			$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
+			$adjustment->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$adjustment->set_new_price($this->unmarshal($this->db->f('new_price', true), 'float'));
+			$adjustment->set_percent($this->unmarshal($this->db->f('percent', true), 'float'));
+			$adjustment->set_interval($this->unmarshal($this->db->f('interval', true), 'int'));
+			$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
+			$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
+			$adjustment->set_is_manual($this->unmarshal($this->db->f('is_manual'),'bool'));
+			$adjustment->set_is_executed($this->unmarshal($this->db->f('is_executed'),'bool'));
+			$adjustments[] = $adjustment;
+		}
+		
+		if(count($adjustments) > 0)
+		{
+			var_dump("woo");
+			$this->db->transaction_begin();
+			$success = $this->adjust_contracts($adjustments);
+			if($success)
+			{
+				$this->db->transaction_commit();
+			}
+			else
+			{
+				$this->db->transaction_abort();
+			}
+			return $success;
+		}
+		return false;
+	}
+	
+	public function adjust_contracts($adjustments)
+	{
+		/*
+		 * gather all adjustable contracts with 
+		 * 		interval = adjustment interval and this year = last adjusted + interval
+		 * 		or
+		 * 		last adjusted is null / 0 (use contract start year)
+		 * adjust each contract's price items according to adjustment info (percent, adjustment_percent)
+		 * Run as transaction
+		 * update adjustment -> set is_executed to true
+		 * update price book elements according to type if interval=1
+		 */
+		$current_year = (int)date('Y');
+		var_dump("innicontr");
+		foreach ($adjustments as $adjustment)
+		{
+			var_dump("adj");
+			//gather all adjustable contracts
+			$adjustable_contracts = "SELECT id, adjustment_share, date_start, adjustment_year FROM rental_contract ";
+			$adjustable_contracts .= "WHERE location_id = '{$adjustment->get_responsibility_id()}' AND adjustable ";
+			$adjustable_contracts .= "AND (";
+			$adjustable_contracts .= "(adjustment_interval = {$adjustment->get_interval()} AND (adjustment_year + {$adjustment->get_interval()}) = {$current_year})";
+			$adjustable_contracts .= " OR ";
+			$adjustable_contracts .= "(adjustment_year IS NULL OR adjustment_year = 0)";
+			$adjustable_contracts .= ")";
+			var_dump($adjustable_contracts);
+			$result = $this->db->query($adjustable_contracts);
+			while($this->db->next_record())
+			{
+				$contract_id = $this->unmarshal($this->db->f('id', true), 'int');
+				$adjustment_share = $this->unmarshal($this->db->f('adjustment_share', true), 'int');
+				$date_start = $this->unmarshal($this->db->f('date_start', true), 'int');
+				$adj_year = $this->unmarshal($this->db->f('adjustment_year', true), 'int');
+				$start_year = date('Y', $date_start);
+
+				if(($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() == $current_year)))
+				{
+					//update adjustment_year on contract
+					rental_socontract::get_instance()->update_adjustment_year($contract_id, $current_year);
+					//gather price items to be adjusted
+					$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract_id));
+					foreach($contract_price_items as $cpi)
+					{
+						//update price according to adjustment info
+						$cpi_old_price = $cpi->get_price();
+						$cpi_adjustment = ($cpi_old_price*($adjustment->get_percent()/100))*($adjustment_share/100);
+						$cpi_new_price = $cpi_old_price + $cpi_adjustment;
+						$cpi->set_price($cpi_new_price);
+						rental_socontract_price_item::get_instance()->store($cpi);
+					}
+				}
+			}
+			
+			//TODO: update price book
+			if($adjustment->get_interval() == 1){
+				$adjustable_price_items = "SELECT * FROM rental_price_item WHERE responsibility_id = {$adjustment->get_responsibility_id()} AND is_adjustable";
+				$result = $this->db->query($adjustable_price_items);
+				$price_items = array();
+				while($this->db->next_record())
+				{
+					$price_item = new rental_price_item($this->unmarshal($this->db->f('id'),'int'));
+					$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
+					$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
+					$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
+					$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
+					$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable'),'bool'));
+					$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
+					$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+					$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
+					
+					$price_items[] = $price_item;
+				}
+				
+				foreach($price_items as $pi)
+				{
+					$pi_old_price = $pi->get_price();
+					$pi_adjustment = $pi_old_price*$adjustment->get_percent();
+					$pi_new_price = $pi_old_price + $pi_adjustment;
+					$pi->set_price($pi_new_price);
+					rental_soprice_item::get_instance()->store($pi);
+				}
+			}
+			
+			$adjustment->set_is_executed(true);
+			$this->update($adjustment);
+		}
+		return true;
 	}
 }
 ?>

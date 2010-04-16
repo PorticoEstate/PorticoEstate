@@ -196,7 +196,7 @@
 			$this->use_yui_editor();
 			
 			$this->add_template_helpers();
-			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities));
+			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 
 		public function edit()

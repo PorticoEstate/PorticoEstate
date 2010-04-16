@@ -165,6 +165,7 @@ error_no_contract_or_party	rental	no	Ingen kontrakt eller kontraktspart å utfø
 events	rental	no	Hendelser
 every_second_week	rental	no	Hver 14. dag
 Excel	rental	no	Excel
+execute_adjustments	rental	no	Utfør reguleringer
 executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
 export	rental	no	Eksport
