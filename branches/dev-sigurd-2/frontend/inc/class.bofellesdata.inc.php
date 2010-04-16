@@ -21,11 +21,11 @@
 		{
 			$db = createObject('phpgwapi.db', null, null, true);
 			$db->Debug = true;	
-			$db->Host = '10.11.12.40';
+			$db->Host = '10.16.14.5';
 			$db->Type = 'oci8';
-			$db->Database = 'FELTEST';
-			$db->User = 'FELLES1';
-			$db->Password = 'enkel';
+			$db->Database = 'INSTEST';
+			$db->User = 'fellesdata';
+			$db->Password = 'fellesdata';
 			$db->connect();
 			return $db;
 		}
