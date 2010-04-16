@@ -114,10 +114,15 @@
 		$config		= CreateObject('phpgwapi.config','bookingfrontend');
 		$config->read();
 		$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
+		$custom_login_url = isset($config->config_data['custom_login_url']) && $config->config_data['custom_login_url'] ? $config->config_data['custom_login_url'] : '';
 		if($login_parameter)
 		{
 			$login_parameter = ltrim($login_parameter, '&');
 			$tpl_vars['login_url'] .= "&{$login_parameter}";
+		}
+		if($custom_login_url)
+		{
+			$tpl_vars['login_url'] = $custom_login_url;
 		}
 	}
 
