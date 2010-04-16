@@ -552,9 +552,10 @@
 			else
 			{
 				$binarys = array(
-					'php'  => '/usr/bin/php',
-					'php5' => '/usr/bin/php5',		// this is for debian
-					'crontab' => '/usr/bin/crontab'
+					'php_local'		=> '/usr/local/bin/php',
+					'php'			=> '/usr/bin/php',
+					'php5'			=> '/usr/bin/php5',		// this is for debian
+					'crontab'		=> '/usr/bin/crontab'
 				);
 				foreach ($binarys as $name => $path)
 				{
@@ -577,12 +578,15 @@
 					}
 					//echo "<p>$name = '".$this->$name."'</p>\n";
 				}
-				if ($this->php5[0] == '/')	// we found a php5 binary
+				if ($this->php_local[0] == '/')	// we found a homebrewed binary
+				{
+					$this->php = $this->php_local;
+				}
+				else if ($this->php5[0] == '/')	// we found a php5 binary
 				{
 					$this->php = $this->php5;
 				}
 			}
-
 		}
 
 		/**
