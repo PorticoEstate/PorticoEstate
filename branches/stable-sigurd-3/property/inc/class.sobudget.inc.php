@@ -595,6 +595,7 @@
 //			$start_date = mktime(1, 1, 1, 1, 1, $year);
 //			$end_date = mktime  (23, 59, 59, 12, 31, $year);
 			$filtermethod .= " AND fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date";
+			$filtermethod2 = " AND fm_tts_tickets.actual_cost = '0.00' ";
 
 			$where = 'AND';
 
@@ -627,7 +628,7 @@
 				. " FROM fm_tts_tickets"
 				. " $this->join fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
 				. " $this->join fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $filtermethod2 $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 //_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
@@ -641,6 +642,13 @@
 				$ecodimb[$this->db->f('ecodimb')] = true;
 			}
 //_debug_array($obligations);die();
+
+
+			$sql = "SELECT sum(budget) as budget, count(fm_tts_tickets.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_tts_tickets.ecodimb"
+				. " FROM fm_tts_tickets"
+				. " $this->join fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
+				. " $this->join fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 
 			$sql = str_replace('budget', 'actual_cost', $sql);
