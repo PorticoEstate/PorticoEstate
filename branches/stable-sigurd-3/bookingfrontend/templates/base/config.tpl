@@ -21,6 +21,10 @@
 	    </td>
 	   </tr>
 		<tr class="row_on">
+			<td>{lang_custom_login_url}:</td>
+			<td><input name="newsettings[custom_login_url]" value="{value_custom_login_url}"></td>
+		</tr>
+		<tr class="row_on">
 			<td>{lang_custom_login_url_parameter}:</td>
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}"></td>
 		</tr>
