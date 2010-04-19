@@ -2,7 +2,7 @@
 	include("common.php");
 ?>
 
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?php echo lang('showing') ?></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?php echo lang('regulation') ?></h1>
 
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>

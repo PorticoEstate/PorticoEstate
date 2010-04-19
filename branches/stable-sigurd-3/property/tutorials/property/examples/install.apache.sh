@@ -224,7 +224,8 @@ cd ../../ &&\
  --with-mpm=prefork\
  --enable-so\
  --enable-deflate\
- --enable-headers &&\
+ --enable-headers\
+ --enable-rewrite=shared &&\
 make &&\
 make install &&\
 cd ../$PHP &&\

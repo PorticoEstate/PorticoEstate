@@ -382,6 +382,7 @@ quarterly	rental	no	Kvartalvis
 rc	rental	no	Leieobjekter
 recurrence	rental	no	Gjentakelse
 reference	rental	no	Deres ref
+regulation	rental	no	Regulering
 remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
 remove_from_all_workbenches	rental	no	Fjern fra alle skrivebord

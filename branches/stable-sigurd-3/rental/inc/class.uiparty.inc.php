@@ -180,7 +180,7 @@ class rental_uiparty extends rental_uicommon
 					if(isset($value['result_unit_number']))
 					{
 						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index', 'org_unit_id' => $value['result_unit_number'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index', 'only_org_unit_id' => $value['result_unit_number'])));
 						$value['labels'][] = lang('frontend_access');
 					}
 				}
