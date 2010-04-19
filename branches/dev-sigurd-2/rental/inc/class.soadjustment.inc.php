@@ -3,10 +3,12 @@ phpgw::import_class('rental.socommon');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.socontract_price_item');
 phpgw::import_class('rental.soprice_item');
+phpgw::import_class('rental.soworkbench_notification');
 phpgw::import_class('rental.uicommon');
 
 include_class('rental', 'adjustment', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
+include_class('rental', 'notification', 'inc/model/');
 include_class('rental', 'price_item', 'inc/model/');
 
 class rental_soadjustment extends rental_socommon
@@ -222,7 +224,6 @@ class rental_soadjustment extends rental_socommon
 		
 		if(count($adjustments) > 0)
 		{
-			var_dump("woo");
 			$this->db->transaction_begin();
 			$success = $this->adjust_contracts($adjustments);
 			if($success)
@@ -254,7 +255,6 @@ class rental_soadjustment extends rental_socommon
 		var_dump("innicontr");
 		foreach ($adjustments as $adjustment)
 		{
-			var_dump("adj");
 			//gather all adjustable contracts
 			$adjustable_contracts = "SELECT id, adjustment_share, date_start, adjustment_year FROM rental_contract ";
 			$adjustable_contracts .= "WHERE location_id = '{$adjustment->get_responsibility_id()}' AND adjustable ";
@@ -323,6 +323,48 @@ class rental_soadjustment extends rental_socommon
 			
 			$adjustment->set_is_executed(true);
 			$this->update($adjustment);
+			
+			//notify all users with write access on the field of responsibility
+			$location_id = $adjustment->get_responsibility_id();
+			if($location_id)
+			{
+				$location_names = $GLOBALS['phpgw']->locations->get_name($location_id);
+				if($location_names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					$responsible_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT,$location_names['location']);
+					foreach($responsible_accounts as $ra)
+					{
+						$account_ids[] = $ra['account_id'];
+					}
+				}
+				
+			}
+
+			$location_label = rental_socontract::get_instance()->get_responsibility_title($location_id);
+			$adj_interval = $adjustment->get_interval();
+			$day = date("Y-m-d",strtotime('now'));
+			$ts_today = strtotime($day);
+			//notify each unique account
+			foreach($account_ids as $account_id) {
+				if($account_id && $account_id > 0)
+				{
+					
+					$notification = new rental_notification
+					(
+						0,					// No notification identifier
+						$account_id,
+						0,					// No location identifier
+						null,				// No contract id
+						$ts_today,
+						$location_label.'_'.$adj_interval,
+						null,
+						null,
+						null,
+						null
+					);
+					rental_soworkbench_notification::get_instance()->store($notification);
+				}		
+			}
 		}
 		return true;
 	}

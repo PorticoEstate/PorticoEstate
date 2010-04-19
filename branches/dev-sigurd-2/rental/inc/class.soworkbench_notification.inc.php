@@ -44,7 +44,7 @@ class rental_soworkbench_notification extends rental_socommon
 		else
 		{
 			// ID and date from workbench table
-			$columns[] = 'rnw.id as id, rnw.date';
+			$columns[] = 'rnw.id as id, rnw.date, rnw.workbench_message';
 			// The location (responsibility) and contract id from contract 
 			$columns[] = 'rc.location_id, rc.id as contract_id';
 			// The id for the notification origin, the account id, the contract id, the message, and the recurrence
@@ -70,13 +70,18 @@ class rental_soworkbench_notification extends rental_socommon
 	
 	protected function populate(int $notification_id, &$notification)
 	{
+		$message = $this->unmarshal($this->db->f('message', true), 'text');
+		if(!isset($message) || $message == '')
+		{
+			$message = lang($this->unmarshal($this->db->f('workbench_message', true), 'text'));
+		}
 		$notification =  new rental_notification(
 			$this->unmarshal($this->db->f('id', true), 'int'), 
 			$this->unmarshal($this->db->f('account_id', true), 'int'),
 			$this->unmarshal($this->db->f('location_id', true), 'int'),
 			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
 			$this->unmarshal($this->db->f('date', true), 'int'),
-			$this->unmarshal($this->db->f('message', true), 'text'),
+			$message,
 			$this->unmarshal($this->db->f('recurrence', true), 'int'),
 			$this->unmarshal($this->db->f('last_notified', true), 'int'),
 			$this->unmarshal($this->db->f('title', true), 'string'),
@@ -91,8 +96,9 @@ class rental_soworkbench_notification extends rental_socommon
 		$account_id = $this->marshal($notification->get_account_id(),'int');
 		$date = $this->marshal($notification->get_date(),'int');
 		$notification_id = $this->marshal($notification->get_originated_from(),'int');
+		$workbench_message = $this->marshal($notification->get_message(), 'string');
 		
-		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,dismissed) VALUES ({$account_id},{$date},{$notification_id},'FALSE')"; 
+		$sql = "INSERT INTO rental_notification_workbench (account_id,date,notification_id,workbench_message,dismissed) VALUES ({$account_id},{$date},{$notification_id},{$workbench_message},'FALSE')"; 
 		$result = $this->db->query($sql);
 		
 		if($result) { return true; }
