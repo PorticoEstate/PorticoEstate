@@ -314,7 +314,7 @@ class rental_soadjustment extends rental_socommon
 				foreach($price_items as $pi)
 				{
 					$pi_old_price = $pi->get_price();
-					$pi_adjustment = $pi_old_price*$adjustment->get_percent();
+					$pi_adjustment = $pi_old_price*($adjustment->get_percent()/100);
 					$pi_new_price = $pi_old_price + $pi_adjustment;
 					$pi->set_price($pi_new_price);
 					rental_soprice_item::get_instance()->store($pi);
