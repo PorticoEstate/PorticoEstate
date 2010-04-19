@@ -124,7 +124,7 @@
          * @param int $number the result unit number
          */
         public function get_organisational_unit_name(int $number) {
-        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
+        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.ENHET_ID = $number";
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
