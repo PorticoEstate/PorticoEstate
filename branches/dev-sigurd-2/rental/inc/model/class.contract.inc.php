@@ -781,6 +781,20 @@
 			}
 		}
 		
+		public function is_active()
+		{
+			$ts = strtotime(date('Y-m-d')); // timestamp for today
+			
+			$date_start = $this->get_contract_date()->get_start_date();
+			$date_end = $this->get_contract_date()->get_end_date();
+			
+			if(isset($date_start) && $ts >= $date_start && (!isset($date_end) || $ts <= $date_end))								
+			{	
+				return true;	// ACTIVE CONTRACT											
+			}
+			return false;
+		}
+		
 		public function set_rented_area($rented_area)
 		{
 			$this->rented_area = $rented_area;
