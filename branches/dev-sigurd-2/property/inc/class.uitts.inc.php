@@ -2114,16 +2114,19 @@
 						'vendor_id'			=> $ticket['vendor_id'],
 						'vendor_name'		=> $ticket['vendor_name']));
 
-				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
+				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array
+					(
 						'b_account_id'		=> $ticket['b_account_id'] ? $ticket['b_account_id'] : $ticket['b_account_id'],
 						'b_account_name'	=> $ticket['b_account_name'],
-						'disabled'			=> !!$ticket['b_account_id']));
+						'disabled'			=> false
+					)
+				);
 
 				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
 					(
 						'ecodimb'			=> $ticket['ecodimb'] ? $ticket['ecodimb'] : $ticket['ecodimb'],
 						'ecodimb_descr'		=> $ticket['ecodimb_descr'],
-						'disabled'			=> !!$ticket['ecodimb']
+						'disabled'			=> false
 					)
 				);
 			
