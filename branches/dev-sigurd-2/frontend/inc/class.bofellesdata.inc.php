@@ -130,7 +130,7 @@
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
         	{
-        		var_dump("Match");
+        		var_dump($db->f('ORG_NAVN', true));
         		return 	$db->f('ORG_NAVN', true);
         	} 
         	else
