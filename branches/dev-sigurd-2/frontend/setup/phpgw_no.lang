@@ -53,3 +53,4 @@ organisational_units	frontend	no	Organisasjonsenheter
 all_organisational_units	frontend	no	Alle enheter
 chosen_unit	frontend	no	Valgt bygg
 choose_contract	frontend	no	Velg kontrakt
+no_name_organisational_unit	frontend	no	Resultatenheten har ingen navn
