@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Connector command="GetFolders" resourceType="File">
+	<CurrentFolder path="/SampleDir/Test/" url="/UserFiles/File/SampleDir/Test/" />
+	<Folders>
+		<Folder name="Documents" />
+		<Folder name="Files" />
+		<Folder name="Other Files" />
+		<Folder name="Related" />
+	</Folders>
+</Connector>

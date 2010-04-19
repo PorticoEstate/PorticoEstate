@@ -1,0 +1,9 @@
+This is far from a comprehensive todo list.  I just add things here so I don't forget
+* Add accounts management screen
+* Add signature management screen
+* Improve error handling on both client and server side
+* Implement API logging framework
+* Check for full i18n support
+* Readd # of unread message to folder listings
+* Auto refresh
+* Fix client side table sorting - did work at some stage

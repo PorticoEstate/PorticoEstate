@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Connector command="GetFolders" resourceType="File">
+	<CurrentFolder path="/SampleDir/Test/" url="/UserFiles/File/SampleDir/Test/" />
+	<Folders>
+		<Folder name="Documents" />
+		<Folder name="Files" />
+		<Folder name="Other Files" />
+		<Folder name="Related" />
+	</Folders>
+	<Files>
+		<File name="XML Definition.doc" size="14" />
+		<File name="Samples.txt" size="5" />
+		<File name="Definition.txt" size="125" />
+		<File name="External Resources.drw" size="840" />
+		<File name="Todo.txt" size="2" />
+	</Files>
+</Connector>

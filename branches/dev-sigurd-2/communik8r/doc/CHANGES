@@ -1,0 +1,63 @@
+20050804b
+Clean up
+* Added auto links
+* Updated FCKEditor to 2.0-final
+* Updated PHPMailer to 1.73 (security fixes)
+* Redid the sockets class - now based on IlohaMail.sf.net
+* Starting to remove unneeded stuff
+* Updated TODO
+* Switched to doxygen for docs
+* Now considered beta quaility
+
+20050714a
+Features
+* Added reply functionality - reply to and forward coming soon
+* Added attachments
+* Loading status
+* Fix scrolling on summary and message
+* Lots of little things all over the place
+* Added session time out prevention when composing
+
+20050709a
+Get rid of the shit that has been annoying me
+* Removed FCKEditor's file browser, cos it is broken without cookies!
+* Removed irrelevant crap from FCKEditor menu
+* Fixed charset issues - everything is now base64 decoded unicode when it leaves the sockets class
+* Removed duplicated images directory - shouldn't have been in 20050708a
+* Fixed more images in IE
+* Added navbar.png - also used for "favicon"
+* Added initial print stylesheet
+* Added "remember folder" - still to add "remember message"
+* Started building the en lang file
+
+20050708a
+Bug Fixes and UI enhancements
+* Fixed most IE UI issues - thank dean.edwards.name/ie7
+* Made compose send messages again
+* Made FCK work in compose
+* Streamlines Sarissa calls
+* Updated to Sarissa 0.9.6+cvs (added a callback patch)
+* Stopped XSLT choking on some folder summaries - but not all
+* Added selection highlighting
+* Partial code cleanup
+* Tested indexing on my spam folder ~3k msgs  - choked :(
+* Redid contacts patch as a unified diff to avoid confusion
+
+20050701a
+Major changes
+* Rewrote the caching system again! - still working on it
+* Removed/commented most of the error_log calls
+* Bypassed php for grabbing the XSLT files
+* Added some basic mime types to the .htaccess file
+* UI fixes including the summary table problem under layout fuckuperfox
+* Major speed increase
+* Loads more, try it out to find out more
+
+20050514a
+* Fix problem with spaces in filenames
+* Removed/Commented excessive logging - need a proper logging framework
+* Fixed infinite loops/segfaults on failed connections
+* Use CAPABILITY instead of relying on banner for server features
+* Call comm_email::_disconnect when there are login errors
+* Include folders with no "un\\Seen" messages in list
+* Added setup support

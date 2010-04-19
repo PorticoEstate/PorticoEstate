@@ -1,0 +1,39 @@
+Yes this is simple.  It assumes you know what you are doing.
+
+If something is unclear tell me.
+
+Here is the basic install instructions:
+* Untar in your phpgw install directory
+* Install thru setup like any other phpGW app
+* Edit smtp_host in the top of inc/class.boemail.inc.php
+* Grant yourself access
+* Create an account for yourself using phpmyadmin (see note below)
+* Apply contacts patch - see file in this dir
+* Check your perms
+* cp the htaccess file to .htaccess
+* Cross your fingers
+* Once loaded click on a folder to display its contents (hopefully)
+
+Requirements
+* An ability to think for yourself
+* An ability to communicate problems
+* A willingness to put up with some problems
+* PHP 4.3.x (php-domxml and php-mbstring, php-pspell is optional)
+* Firefox 0.8+ / IE 6 (if you must)
+* PECL mailparse installed - see below
+* These will get more flexible shortly
+
+Installing PECL mailparse
+The current version of communik8r doesn't rely on mailparse from PECL. 
+This may change at any time so install it anyway, just incase.  It is pretty
+easy to install.  First check your distro they might ship a pacakge for it, if
+not install the php4-dev and php4-pear packages.  Then just run:
+$ sudo pear install mailparse
+It will then build and install the binary :)
+
+Creating an account
+Use this template
+INSERT INTO phpgw_communik8r_accts(owner_id, acct_name, display_name,acct_uri, username, password, server, port, acct_type_id)
+	VALUES(<phpgw_acct_id>, 'My Account Name', '<First LastName>','<myemail@ddress.com>', '<username>', '<plaintextpassword>','<mailserver>', '<port>', 1);
+
+Enjoy :)

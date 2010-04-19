@@ -1,0 +1,17 @@
+Read the other docs first :P
+
+These are the current known issues, they should probably be merged into the TODO,
+oh well they are here for now.  At least you get some docs :P
+
+* No attachment content writing
+* Reply/Forward is not implemented
+* FCKeditor looses support for keyboard nav sometimes, why? nfi!
+* php-pspell is required for spellchecking
+	- aspell-cli may also be supported in the final version
+* Only tested with desktop, probiz and verilak template sets
+* Password are stored as plain text 
+	- dodgy I know 
+	- it is high on the list of things to fix
+* No signature support
+* No Admin/Prefs support
+* POP3 support is broken atm :(

@@ -1,0 +1,81 @@
+Index: class.contacts_sql.inc.php
+===================================================================
+RCS file: /cvsroot/phpgwapi/phpgwapi/inc/class.contacts_sql.inc.php,v
+retrieving revision 1.17.2.2.2.72
+diff --unified -r1.17.2.2.2.72 class.contacts_sql.inc.php
+--- class.contacts_sql.inc.php	10 Dec 2004 09:41:27 -0000	1.17.2.2.2.72
++++ class.contacts_sql.inc.php	8 Jul 2005 15:36:57 -0000
+@@ -1100,6 +1100,73 @@
+ 		}
+ 
+ 		/**
++		* Retrieve all persons who's name or specified contact type matches the specified string
++		*
++		* This is primarily used for communik8r's auto complete functionality, nothing else
++		* was up to the task so I hacked this in.  It should be included in 0.9.18+ as a 
++		* supported functionality. (skwashd)
++		*
++		* @author skwashd
++		* @param string $lookup the start of the string to lookup
++		* @param string $comm_type the communication type to search for
++		* @param string $comm_descr the communication description to return
++		* @return array Array person with name and contact data
++		*/
++		function get_persons_comm_lookup($lookup, $comm_type, $comm_descr = null)
++		{
++			$persons = array();
++
++			if ( !($lookup = trim($lookup) ) )
++			{
++				return $persons;
++			}
++			$lookup = $this->db->db_addslashes(stripslashes($lookup));//remove any run times
++			
++			$fields = array	('contact_id', 'per_first_name', 'per_last_name', 'comm_data', 'comm_description', 'comm_contact_id');
++
++			$this->request($fields);
++
++			$criteria = array();
++			$criteria_search = array();
++			
++			$criteria_search[] = sql_criteria::token_begin( 'per_first_name', $lookup);
++			$criteria_search[] = sql_criteria::token_begin('per_last_name', $lookup);
++			$criteria_search[] = sql_criteria::token_begin('comm_data', $lookup);
++			
++			$criteria[] = sql_criteria::_append_or($criteria_search);
++			$criteria[] = sql_criteria::_equal('comm_type_description', $comm_type);
++			$criteria[] = $this->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id']);
++
++			if ( isset($comm_descr) )
++			{
++				$criteria[] = sql_criteria::_equal('comm_description', $comm_descr);
++			}
++
++			$this->criteria_token( sql_criteria::_append_and($criteria) );
++
++			$this->order(array('per_first_name'), 'ASC');
++
++			$this->entities['phpgwapi.contact_comm']->set_ilinks('comm_contact_id', 'phpgwapi.contact_central','contact_id', PHPGW_SQL_REQUIRED_KEY);
++			$this->entities['phpgwapi.contact_comm_type']->set_ilinks('comm_type_id', 'phpgwapi.contact_comm_descr','comm_type', PHPGW_SQL_REQUIRED_KEY);
++			$this->entities['phpgwapi.contact_comm_descr']->set_ilinks('comm_descr_id', 'phpgwapi.contact_comm','comm_descr', PHPGW_SQL_REQUIRED_KEY);
++			
++			$sql = $this->get_sql();
++			//die($sql); //cos i suck at adding debugs and echo breaks the xml ... this is the best way to do it :P
++			$this->db->query($sql, __LINE__, __FILE__);
++			
++			while ($this->db->next_record())
++			{
++				$persons[$this->db->f('contact_id')] = array
++									(
++										'first_name'	=> $this->db->f('per_first_name', True),
++										'last_name'	=> $this->db->f('per_last_name', True),
++										$comm_type	=> $this->db->f('comm_data', True)
++									);
++			}
++			return $persons;
++		}
++
++		/**
+ 		* Get all the `principal' information related for organization
+ 		*
+ 		* @param integer|array $contact_id id of the contact or array of the same

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Connector command="GetFolders" resourceType="File">
+	<CurrentFolder path="/SampleDir/Test/" url="/UserFiles/File/SampleDir/Test/" />
+	<Error number="0" />	
+	<!-- 
+	Errors Numbers:
+		0   : No errors found
+		101 : Folder already exists
+		102 : Invalid folder name
+		103 : You have no permissions to create the folder
+		110 : Unknown error creating folder
+	-->
+</Connector>

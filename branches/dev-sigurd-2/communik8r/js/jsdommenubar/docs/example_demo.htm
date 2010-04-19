@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Example Demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="../themes/classic/classic.css" />
+<link rel="stylesheet" type="text/css" href="docs.css" />
+<script type="text/javascript" src="../jsdomenu.js"></script>
+<script type="text/javascript" src="../jsdomenubar.js"></script>
+<script type="text/javascript" src="example.inc.js"></script>
+</head>
+<body onload="initjsDOMenu()">
+<p>
+<br />
+<br />
+</p>
+
+<p>
+Source code for creating menu bar and menus in this page:
+</p>
+
+<pre><code>function createjsDOMenu() {
+  mainMenu1 = new jsDOMenu(130);
+  with (mainMenu1) {
+    addMenuItem(new menuItem("Item 1", "", "example.htm"));
+    addMenuItem(new menuItem("Item 2", "", "example.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 3", "", "example.htm"));
+    addMenuItem(new menuItem("Item 4", "", "example.htm"));
+  }
+  
+  mainMenu2 = new jsDOMenu(150);
+  with (mainMenu2) {
+    addMenuItem(new menuItem("Item 1", "", "example.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 2", "", "example.htm"));
+    addMenuItem(new menuItem("Item 3", "", "example.htm"));
+    addMenuItem(new menuItem("-"));
+    addMenuItem(new menuItem("Item 4", "", "example.htm"));
+  }
+  
+  menuBar = new jsDOMenuBar();
+  with (menuBar) {
+    addMenuBarItem(new menuBarItem("Item 1", mainMenu1));
+    addMenuBarItem(new menuBarItem("Item 2", mainMenu2));
+  }
+  menuBar.moveTo(10, 10);
+}</code></pre>
+</body>
+</html>

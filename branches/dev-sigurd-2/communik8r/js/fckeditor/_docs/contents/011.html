@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-10 19:04:40
+-->
+<html>
+	<head>
+		<title>FCKeditor - License</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Spell Checker</H1>
+		<P>FCKeditor comes with bult-in integration with two spell checkers: <STRONG>ieSpell</STRONG>
+			and <STRONG>Speller Pages</STRONG>. In this page you will find some info about 
+			these spell checkers and how to configure then.</P>
+		<H3>ieSpell</H3>
+		<P>As the name says, ieSpell is an extension for Internet Explorer 
+			that makes possible to make spell checking at client side. It is quite simple 
+			and efficient, but it runs on IE/Windows only.</P>
+		<P>To use ieSpell just set the following configuration ad fckconfig.js:</P>
+		<P><code>FCKConfig.SpellChecker =   '<STRONG>ieSpell</STRONG>' ;</code>
+		</P>
+<P>At the first time a user run the Spell Checker, he/she will be automatically 
+informed that ieSpell is not installed and will be redirected to the download 
+URL (the URL can also be configured).</P>
+<P>When running FCKeditor with ieSpell&nbsp;over browsers different&nbsp;than 
+IE/Win, the "Check Spell" button will be automaticaly disabled.</P>
+<P>Attention, ieSpell is free for personal use. Commercial licenses are 
+available for very low prices. For more info about ieSpell, its&nbsp;licensing, 
+configurations and more, go to <A href="http://www.iespell.com/" 
+target="_blank">http://www.iespell.com/</A>.</P>
+		<H3>Speller Pages</H3>
+		<P>         
+              
+  Speller Pages&nbsp;is a free, Open Source,&nbsp;server side spell 
+checker that uses the powerfull <A href="http://aspell.net/" target="_blank">GNU 
+Aspell</A> engine for the hard work. This 
+should be the preferred spell checker, but it requires some server side 
+configurations (this is why it is not set as the default one).</P>
+<P>To use ieSpell just set the following configuration ad fckconfig.js:</P>
+<P><CODE>FCKConfig.SpellChecker =  '<STRONG>SpellerPages</STRONG>' ;</CODE> </P>
+<P>FCKeditor uses a customized version of Speller Pages, so any specific 
+configuration must be done in the files found at: 
+editor/dialog/fck_spellerpages/spellerpages. All changed lines have been marked 
+with a "by FredCK" comment.
+<P>The files included in the package are set to run over Windows with PHP. 
+Usefull inforrmation about Windows configurations can be found here: <A 
+href="http://sourceforge.net/docman/display_doc.php?docid=19473&amp;group_id=86602" 
+target="_blank">Windows/PHP Installation Instructions</A>.
+<P>For more info about Speller Pages, its licensing, installation, 
+configurations and more, go to <A href="http://spellerpages.sourceforge.net/" 
+target="_blank">http://spellerpages.sourceforge.net/</A>.</P>
+	</body>
+</html>

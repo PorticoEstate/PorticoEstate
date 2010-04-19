@@ -1,0 +1,1084 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Reference &#171; Documentation &#171; jsDOMenuBar &#171; Projects &#171; tohzhiqiang.per.sg</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="docs.css" />
+</head>
+<body id="tohzhiqiang_per_sg">
+<h1>Reference &#171; Documentation</h1>
+
+<h3>Coding Reference for jsDOMenuBar Version 1.1</h3>
+
+<p>
+This reference describes the methods and fields available in jsDOMenuBar. You may also wish to 
+view the <a href="http://www.tohzhiqiang.per.sg/projects/jsdomenu/docs/reference.php" title="Coding Reference for jsDOMenu">
+coding reference for jsDOMenu</a> at the same time.
+</p>
+
+<ul>
+  <li><a href="#constructor" title="Go to global public constructors">
+  Global public constructors</a>
+  </li>
+  <li><a href="#menu" title="Go to public methods for jsDOMenu()">
+  Public methods for jsDOMenu()</a>
+  </li>
+  <li><a href="#menuitem" title='Go to public methods for menuBarObj.items["itemName"] (or menuBarObj.items.itemName)'>
+  Public methods for menuBarObj.items["itemName"] (or menuBarObj.items.itemName)</a>
+  </li>
+  <li><a href="#methods" title="Go to global public methods">
+  Global public methods</a>
+  </li>
+  <li><a href="#properties" title="Go to global public fields">
+  Global public fields</a>
+  </li>
+</ul>
+<h4 id="constructor">Global public constructors</h4>
+
+<h5 class="method">jsDOMenuBar()</h5>
+
+<p>
+Create a new menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj = new jsDOMenuBar(mode, id, draggable, className, width, height);</code></pre>
+
+<h4 class="section">Arguments</h4>
+
+<p>
+<span class="argument">mode</span> - Optional. String that specifies the mode of the menu bar. 
+Defaults to "absolute". Allowed values are "absolute", "fixed" and "static". If the mode = "static", 
+you must also specify an unique id.
+</p>
+
+<p>
+A menu bar is absolutely positioned if it is fixed at a particular position with respect to the 
+<em>document</em>. It will move with the page when you scroll.
+</p>
+
+<p>
+A menu bar is fixed positioned if it is fixed at a particular position with respect to the 
+<em>window</em>. It will always be visible regardless of how much you scroll.
+</p>
+
+<p>
+A menu bar is statically positioned if it is fixed at a particular position with respect to the 
+<em>document structure</em>. Thus, it is not required to call methods like setX(), moveTo(), etc to 
+position the menu bar.
+</p>
+
+<p>
+<span class="argument">id</span> - Optional, except when mode = "static". String that specifies the 
+id of the element that will contain the menu bar. This argument is required when mode = "static". It 
+is recommended that the element you specify is an empty DIV tag. For example:
+</p>
+
+<pre><code>&lt;div id="staticMenuBar"&gt;&lt;/div&gt;</code></pre>
+
+<p>
+Note that the id must be unique.
+</p>
+
+<p>
+<span class="argument">draggable</span> - Optional. Boolean that specifies whether the menu bar 
+is draggable. Defaults to false. If set to true, you can position the cursor to the dragging region 
+(the leftmost region of the menu bar) to drag it.
+</p>
+
+<p>
+<span class="argument">className</span> - Optional. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar. Defaults to 
+"jsdomenubardiv". The class selector "jsdomenubardiv" is defined in the theme file, e.g. classic.css.
+</p>
+
+<p>
+<span class="argument">width</span> - Optional. Integer that specifies the width of the menu bar. 
+Defaults to "auto". Default unit is "px".
+</p>
+
+<p>
+<span class="argument">height</span> - Optional. Integer that specifies the height of the menu bar. 
+Defaults to "auto". Default unit is "px".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The method signature for this constructor has been changed compared with the previous version 
+(v1.0.1).
+</p>
+
+<p>
+You can access the <abbr title="HyperText Markup Language">HTML</abbr> element object of the menu 
+bar using the menuBarObj field. For example, menuBarObj.menuBarObj.style holds the style 
+object of the <abbr title="HyperText Markup Language">HTML</abbr> element.
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">menuBarItem()</h5>
+
+<p>
+Create a new menu bar item.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarItemObj = new menuBarItem(displayText, menuObj, itemName, enabled, 
+                                 actionOnClick, className, classNameOver, classNameClick);</code></pre>
+                           
+<h4 class="section">Arguments</h4>
+
+<p>
+<span class="argument">displayText</span> - Required. String that specifies the text to be 
+displayed on the menu bar item.
+</p>
+
+<p>
+<span class="argument">menuObj</span> - Optional. Menu that is the main menu for the 
+menu bar item. Defaults to null (no menu). If a menu is set, the value of actionOnClick will not be 
+used.
+</p>
+
+<p>
+<span class="argument">itemName</span> - Optional. String that specifies the name of the menu 
+bar item. Defaults to "" (no name). You should set this argument only if you need to reference 
+this menu bar item later on.
+</p>
+
+<p>
+<span class="argument">enabled</span> - Optional. Boolean that specifies whether the menu bar item 
+is enabled/disabled. Defaults to true. The default value can also be set using "".
+</p>
+
+<p>
+<span class="argument">actionOnClick</span> - Optional. String that specifies the action to be 
+done when the menu item is being clicked if no main menu has been set for the menu bar item. 
+Defaults to "" (no action). If a main menu has been set, this value will not be used.
+</p>
+
+<p>
+There are two types of actions allowed:
+</p>
+
+<ul>
+	<li>Link: Loads a new page on click. The value of actionOnClick is a 
+  <abbr title="Uniform Resource Locator">URL</abbr>.
+	</li>
+	<li>Code: Execute Javascript code(s) on click. The value of actionOnClick is the code(s) to be 
+	executed.
+	</li>
+</ul>
+
+<p>
+To distinguish between the two types, prefix "link:" or "code:" respectively to the value. For 
+example, "code:alert('Hello World!');" instead "alert('Hello World!');". For links, prefixing 
+"link:" is optional, as any prefix other than "code:" will be intepreted as a link.
+</p>
+
+<p>
+<span class="argument">className</span> - Optional. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar item. Defaults to 
+"jsdomenubaritem". The default value can also be set using "". The class selector "jsdomenubaritem" 
+is defined in the theme file, e.g. classic.css.
+</p>
+
+<p>
+<span class="argument">classNameOver</span> - Optional. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar item when the 
+cursor is over it. Defaults to "jsdomenubaritemover". The default value can also be set using "". 
+The class selector "jsdomenubaritemover" is defined in the theme file, e.g. classic.css.
+</p>
+
+<p>
+<span class="argument">classNameClick</span> - Optional. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar item when the 
+cursor is clicked on it. Defaults to "jsdomenubaritemclick". The default value can also be set 
+using "". The class selector "jsdomenubaritemclick" is defined in the theme file, e.g. classic.css.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+If you need to define any argument, you must also define the arguments before it. For 
+example, if you need to define the third argument, but not the second, you still need to set the 
+second argument to "" (default value).
+</p>
+
+<p>
+The following codes are equivalent to the above:
+</p>
+
+<pre><code>menuBarItemObj = new menuBarItem();
+menuBarItemObj.displayText = displayText;
+menuBarItemObj.menuObj = menuObj;
+menuBarItemObj.itemName = itemName;
+menuBarItemObj.enabled = enabled;
+menuBarItemObj.actionOnClick = actionOnClick;
+menuBarItemObj.className = className;
+menuBarItemObj.classNameOver = classNameOver;
+menuBarItemObj.classNameClick = classNameClick;</code></pre>
+
+<p>
+You should only define the fields that need to be changed.
+</p>
+
+<hr class="sep" />
+
+<h4 id="menu">Public methods for jsDOMenuBar()</h4>
+
+<h5 class="method">addMenuBarItem()</h5>
+
+<p>
+Add a new menu bar item to the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.addMenuItem(menuBarItemObj);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">menuBarItemObj</span> - Required. Menu bar item that is going to be added 
+to the menu bar.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+You can access the <abbr title="HyperText Markup Language">HTML</abbr> element object of the 
+menu bar item using the items field. For example, menuBarObj.items["itemName"].style 
+(or menuBarObj.items.itemName.style) holds the style object of the 
+<abbr title="HyperText Markup Language">HTML</abbr> element, where "itemName" is the value of 
+itemName field of the menuBarItemObj added.
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setMode()</h5>
+
+<p>
+Set the mode of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setMode(mode);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">mode</span> - Required. String that specifies the mode of the menu. 
+Allowed values are "absolute" and "fixed".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setActivateMode()</h5>
+
+<p>
+Set the activate mode of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setActivateMode(activateMode);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">activateMode</span> - Required. String that specifies the activate mode of the 
+menu bar. Allowed values are "click" and "over".
+</p>
+
+<p>
+The "click" mode requires users to click on the menu bar item to show the menu bar menu, while the 
+"over" mode only requires users to move the cursor over the menu bar item to show the menu bar menu.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setDraggable()</h5>
+
+<p>
+Set whether the menu bar is draggable.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setDraggable(draggable);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">draggable</span> - Required. Boolean that specifies whether the menu bar 
+is draggable. If set to true, you can position the cursor to the dragging region (the leftmost region 
+of the menu bar) to drag it.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setClassName()</h5>
+
+<p>
+Set the class name of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setClassName(className);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">className</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.menuBarObj.className = className;</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setDragClassName()</h5>
+
+<p>
+Set the class name of the dragging region of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setDragClassName(className);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">className</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the dragging region 
+of the menu bar.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.dragObj.className = className;</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">show()</h5>
+
+<p>
+Show the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.show();</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+None
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.menuBarObj.style.visibility = "visible";</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">hide()</h5>
+
+<p>
+Hide the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.hide();</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+None
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.menuBarObj.style.visibility = "hidden";</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setX()</h5>
+
+<p>
+Set the x-coordinate of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setX(x);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">x</span> - Required. Integer that specifies the x-coordinate of the 
+menu bar. Default unit is "px".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setY()</h5>
+
+<p>
+Set the y-coordinate of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setY(y);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">y</span> - Required. Integer that specifies the y-coordinate of 
+the menu bar. Default unit is "px".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">moveTo()</h5>
+
+<p>
+Move the menu bar to the x-coordinate specified by the first argument and the y-coordinate 
+specified by the second argument.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.moveTo(x, y);</code></pre>
+
+<h4 class="section">Arguments</h4>
+
+<p>
+<span class="argument">x</span> - Required. Integer that specifies the x-coordinate of the 
+menu bar. Default unit is "px".
+</p>
+
+<p>
+<span class="argument">y</span> - Required. Integer that specifies the y-coordinate of the 
+menu bar. Default unit is "px".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">moveBy()</h5>
+<p>
+Move the menu bar towards left by the amount specified by the first argument, and away from top by 
+the amount specified by the second argument. If you want to move the menu bar towards right, or 
+away from bottom, specify a negative value respectively.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.moveBy(x, y);</code></pre>
+
+<h4 class="section">Arguments</h4>
+
+<p>
+<span class="argument">x</span> - Required. Integer that specifies how much left/right the menu bar 
+will move. Default unit is "px".
+</p>
+
+<p>
+<span class="argument">y</span> - Required. Integer that specifies how much top/bottom the menu bar 
+will move. Default unit is "px".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+-
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setBorderWidth()</h5>
+
+<p>
+Set the border width of the menu bar.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.setBorderWidth(width);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">width</span> - Required. Integer that specifies the border width of 
+the menu bar. Default unit is "px".
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+<strong>This method may be deprecated in future versions. Therefore, try not to use it in this 
+version.</strong>
+</p>
+
+<p>
+It is recommended that you set the border width using stylesheet instead.
+</p>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.menuBarObj.style.borderWidth = width + "px";</code></pre>
+
+<hr class="sep" />
+
+<h4 id="menuitem">Public methods for menuBarObj.items["itemName"] (or menuBarObj.items.itemName)</h4>
+
+<h5 class="method">setClassName()</h5>
+
+<p>
+Set the class name of the menu bar item.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setClassName(className);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">className</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar item.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setClassName(className);</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setClassNameOver()</h5>
+
+<p>
+Set the class name of the menu bar item when the cursor is over it.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setClassNameOver(classNameOver);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">classNameOver</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar item when 
+the cursor is over it.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setClassNameOver(classNameOver);</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setClassNameClick()</h5>
+
+<p>
+Set the class name of the menu bar item when the cursor is clicked on it.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setClassNameClick(classNameClick);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">classNameClick</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the menu bar item when 
+the cursor is clicked on it.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setClassNameClick(classNameClick);</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setDisplayText()</h5>
+
+<p>
+Set the display text of the menu bar item.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setDisplayText(displayText);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">displayText</span> - Required. String that specifies the text to 
+be displayed on the menu bar item.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setDisplayText(displayText);</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setMenu()</h5>
+
+<p>
+Set the main menu for the menu bar item.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setMenu(menuObj);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">menuObj</span> - Required. Menu that is the main menu for the 
+menu bar item.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setMenu(menuObj);</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">showIcon()</h5>
+
+<p>
+Show the icon before the display text.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].showIcon(className, classNameOver, classNameClick);</code></pre>
+
+<h4 class="section">Arguments</h4>
+
+<p>
+<span class="argument">className</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the icon.
+</p>
+
+<p>
+<span class="argument">classNameOver</span> - Optional. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the icon when 
+the cursor is over the menu item.
+</p>
+
+<p>
+<span class="argument">classNameClick</span> - Optional. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the icon when 
+the cursor is clicked on the menu bar item.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.showIcon(className, classNameOver, classNameClick);</code></pre>
+
+<hr class="sep" />
+
+<h5 class="method">setIconClassName()</h5>
+
+<p>
+Set the class name of the icon.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setIconClassName(className);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">className</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the icon.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setIconClassName(className);</code></pre>
+
+<p>
+This method is available only if the showIcon() method has been called to show the icon 
+before the display text.
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setIconClassNameOver()</h5>
+
+<p>
+Set the class name of the icon when the cursor is over the menu bar item.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setIconClassNameOver(classNameOver);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">classNameOver</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the icon when 
+the cursor is over the menu bar item.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setIconClassNameOver(classNameOver);</code></pre>
+
+<p>
+This method is available only if the showIcon() method has been called to show the icon 
+before the display text.
+</p>
+
+<hr class="sep" />
+
+<h5 class="method">setIconClassNameClick()</h5>
+
+<p>
+Set the class name of the icon when the cursor is clicked on the menu bar item.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>menuBarObj.items["itemName"].setIconClassNameClick(classNameClick);</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+<span class="argument">classNameClick</span> - Required. String that specifies the 
+<abbr title="Cascading Style Sheets">CSS</abbr> class selector for the icon when 
+the cursor is clicked on the menu bar item.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The following code is equivalent to the above:
+</p>
+
+<pre><code>menuBarObj.items.itemName.setIconClassNameClick(classNameClick);</code></pre>
+
+<p>
+This method is available only if the showIcon() method has been called to show the icon 
+before the display text.
+</p>
+
+<hr class="sep" />
+
+<h4 id="methods">Global public methods</h4>
+
+<h5 class="method">hideMenuBarMenus()</h5>
+
+<p>
+Hide all menu bar menus.
+</p>
+
+<h4 class="section">Syntax</h4>
+
+<pre><code>hideMenuBarMenus();</code></pre>
+
+<h4 class="section">Argument</h4>
+
+<p>
+None.
+</p>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+This method may be useful if you wish to control how the menu bar menus hide.
+</p>
+
+<hr class="sep" />
+
+<h4 id="properties">Global public fields</h4>
+
+<p>
+You can define the following global public fields in jsdomenu.config.js to override the default 
+values.
+</p>
+
+<h5 class="property">menuBarClassName</h5>
+
+<p>
+String that specifies the <abbr title="Cascading Style Sheets">CSS</abbr> class selector 
+for the menu bar.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarClassName = "jsdomenubardiv";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The class selector "jsdomenubardiv" is defined in the theme file, e.g. classic.css.
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarItemClassName</h5>
+
+<p>
+String that specifies the <abbr title="Cascading Style Sheets">CSS</abbr> class selector 
+for the menu bar item.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarItemClassName = "jsdomenubaritem";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The class selector "jsdomenubaritem" is defined in the theme file, e.g. classic.css.
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarItemClassNameOver</h5>
+
+<p>
+String that specifies the <abbr title="Cascading Style Sheets">CSS</abbr> class selector 
+for the menu bar item when the cursor is over it.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarItemClassNameOver = "jsdomenubaritemover";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The class selector "jsdomenubaritemover" is defined in the theme file, e.g. classic.css.
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarItemClassNameClick</h5>
+
+<p>
+String that specifies the <abbr title="Cascading Style Sheets">CSS</abbr> class selector 
+for the menu bar item when the cursor is clicked on it.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarItemClassNameClick = "jsdomenubaritemclick";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The class selector "jsdomenubaritemclick" is defined in the theme file, e.g. classic.css.
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarDragClassName</h5>
+
+<p>
+String that specifies the <abbr title="Cascading Style Sheets">CSS</abbr> class selector 
+for the dragging region of the menu bar.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarDragClassName = "jsdomenubardragdiv";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+The class selector "jsdomenubardragdiv" is defined in the theme file, e.g. classic.css.
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarMode</h5>
+
+<p>
+String that specifies the default mode of the menu bars.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarMode = "absolute";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+Allowed values are "absolute", "fixed", and "static".
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarActivateMode</h5>
+
+<p>
+String that specifies the default activate mode of the menu bars.
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarActivateMode = "click";</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+Allowed values are "click" and "over".
+</p>
+
+<hr class="sep" />
+
+<h5 class="property">menuBarBorderWidth</h5>
+
+<p>
+Integer that specifies the border width of the menu bar. Default unit is "px".
+</p>
+
+<h4 class="section">Default Value</h4>
+
+<pre><code>var menuBarBorderWidth = 2;</code></pre>
+
+<h4 class="section">Remarks</h4>
+
+<p>
+<strong>This field may be deprecated in future versions. Therefore, try not to use it in this 
+version.</strong>
+</p>
+
+<p>
+Safari will use the value of this field to render the menu bars when the page loads, and disregard 
+the value set in the stylesheet. Other Gecko-based browsers like Mozilla Firefox or Microsoft 
+Internet Explorer will use the value set in the stylesheet to render the menu bars when the page loads, 
+and disregard the value of this field.
+</p>
+
+<hr class="sep" />
+
+<p>
+View the <a href="example.htm" title="View an example">Example</a> page to see a simple 
+example of how to create jsDOMenuBar.
+</p>
+
+<p class="back">
+<a href="./index.htm" title="Back to Documentation page">
+Back to Documentation</a>
+</p>
+
+<hr />
+
+<p>
+Compiled on 16 Jaunary 2005.
+</p>
+
+<p>
+The latest version is available at <a href="http://www.tohzhiqiang.per.sg/projects/jsdomenubar/docs/reference.php" title="Latest version of jsDOMenuBar Reference">
+http://www.tohzhiqiang.per.sg/projects/jsdomenubar/docs/reference.php</a>.
+</p>
+</body>
+</html>

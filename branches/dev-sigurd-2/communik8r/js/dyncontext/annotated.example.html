@@ -1,0 +1,189 @@
+<html>
+
+<head>
+    <title>dynContext</title>
+    <link rel="stylesheet" href="styles/dynContext.moz.xp.css" type="text/css">
+    <!-- <link rel="stylesheet" href="styles/dynContext.moz.classic.css" type="text/css"> -->
+    <!-- link rel="stylesheet" href="styles/dynContext.moz.alt2.css" type="text/css"> -->
+</head>
+
+<!--
+    The onload event simply resets the style selector, whilst the onunload event closes
+    the menu when the page is refreshed or left. Without this, if the page is refreshed using
+    CTRL+R the menu doesn't close, which can produce errors if the user then tries to use it.
+-->
+<body onload="document.getElementById('menustyle').selectedIndex = 0" onunload="myMenu.hide()">
+
+<!--
+    This line is necessary to include the dynContext library which provides
+    the classes.
+-->
+<script language="JavaScript" src="dynContext.js"></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+    /**
+    * A generic handler function
+    */
+    function myAlert()
+    {
+        alert('Hello world!');
+    }
+    
+    /**
+    * Create main menu object. Variable used is "dynContext_Menu" so that's what is passed
+    * as the first argument. Second is the path to the stylesheet, and third and fourth are
+    * the width/height.
+    */
+    myMenu = new dynContext('myMenu', 'styles/dynContext.xp.css', 180, 0);
+    
+    /**
+    * Here two regular menuitems are added to the menu, the second having an image. When clicked,
+    * they will simply popup a notice saying so, thanks to the generic handler function above.
+    */
+    myMenu.addItem(new dynContext_menuItem('Menuitem 1', 'myAlert'));
+    myMenu.addItem(new dynContext_menuItem('Menuitem 2', 'myAlert', 'images/contact.gif'));
+
+    /**
+    * Here a separator is added to the menu.
+    */
+    myMenu.addItem(new dynContext_separator());
+    
+        /**
+        * Now a submenu is created. Indentation is not necessary, but can be useful to
+        * make reading the code easier. The variable used is "dynContext_submenu1" so that's
+        * what is passed as the first argument. The second is the stylesheet to use, (which can
+        * be different to the parent menu, but would look strange). Third and fourth are the
+        * height/width
+        */
+        mySubmenu1 = new dynContext('mySubmenu1', 'styles/dynContext.xp.css', 180, 0);
+
+        /**
+        * Now we create a set of menuitems in the form of an array. This is so that the array can
+        * simply be passed to the dynContext_radioItem object. The arrays' push() method simply
+        * adds the object to the end of the array. Any image, javascript or submenu for these
+        * menuitems will be ignored. You can however specify the disabled argument and it will be
+        * honored.
+        *
+        * Menuitems for radioitems can be specified in the constructor of the radioItem class using
+        * array literl notation ( [...] ) like so:
+        *
+        *    new dynContext_radioItem('...', 0, [new dynContext_menuItem('Radioitem n'), ...])
+        *
+        * However it can be more difficult to read if there are many menuitems.
+        */
+        radioItems = new Array();
+        radioItems.push(new dynContext_menuItem('Radioitem 1'));
+        radioItems.push(new dynContext_menuItem('Radioitem 2'));
+        radioItems.push(new dynContext_menuItem('Radioitem 3'));
+
+        /**
+        * Now we add a radioitem to the submenu, using the array defined above. The first argument
+        * is the javascript code to run when an item is clicked. In this case the radioItem_handler()
+        * function in the main page is being called, and because it's a second level menu, it's necessary
+        * to call parent. twice. The selected menuitem is set in the second argument, here it's set to
+        * the first menuitem (the index starts at zero). Finally the third argument is the array of menuitems.
+        */
+        mySubmenu1.addItem(radioItem = new dynContext_radioItem('radioItem_handler', 0, radioItems));
+        mySubmenu1.setAutoHeight();
+
+    /**
+    * With the submenu defined above, here it's added to the main menu by way of the fifth argument
+    * on the menuitem constructor. Here an image could be specified if so desired. Also it could be
+    * disabled. The javascript argument however has no effect.
+    */
+    myMenu.addItem(submenu1 = new dynContext_menuItem('First submenu', null, null, false, mySubmenu1));
+    
+    /**
+    * Here a checkitem is added to the menu. This checkbox controls whether the the submenu defined above
+    * is disabled or not. It defaults to true (second argument) and calls the checkItem_handler() function
+    * in the main page (which does the actual disabling/enabling).
+    */
+    myMenu.addItem(new dynContext_checkItem('First submenu enabled', true, 'checkItem_handler'));
+
+    /**
+    * Another separator
+    */
+    myMenu.addItem(new dynContext_separator());
+
+        /**
+        * Here another submenu is created with some sample menuitems
+        */
+        mySubmenu2 = new dynContext('mySubmenu2', 'styles/dynContext.xp.css', 180, 0);
+        mySubmenu2.addItem(new dynContext_menuItem('Submenu item 1', 'myAlert'));
+        mySubmenu2.addItem(new dynContext_menuItem('Submenu item 2', 'myAlert'));
+        mySubmenu2.addItem(new dynContext_menuItem('Submenu item 3', 'myAlert'));
+        
+            /**
+            * Third tier sub menu
+            */
+            mySubmenu3 = new dynContext('mySubmenu3', 'styles/dynContext.xp.css', 180, 0);
+            mySubmenu3.addItem(new dynContext_menuItem('Submenu item 1', 'myAlert'));
+            mySubmenu3.addItem(new dynContext_menuItem('Submenu item 2', 'myAlert'));
+            mySubmenu3.addItem(new dynContext_menuItem('Submenu item 3', 'myAlert'));
+
+            mySubmenu3.setAutoHeight();
+            
+        mySubmenu2.addItem(new dynContext_menuItem('Another Submenu', null, null, false, mySubmenu3));
+        mySubmenu2.setAutoHeight();
+
+    /**
+    * And here the second submenu is added to the main menu.
+    */
+    myMenu.addItem(submenu2 = new dynContext_menuItem('Second submenu', null, null, false, mySubmenu2));
+    
+    myMenu.setAutoHeight();
+
+    /**
+    * This is the handler function (they can be called anything) which
+    * is called when the user clicks on one of the menuitems in the
+    * radioitem (first submenu). It simply uses the getSelected()
+    * method of the radioitem to present which index is now selected.
+    */
+    function radioItem_handler()
+    {
+        var selectedIndex = radioItem.getSelected();
+        alert('Selected radioitem index: ' + selectedIndex);
+    }
+    
+    /**
+    * This is the handler function for the checkitem on the main menu.
+    * Using the toggleDisabled() method of the submenu1 menuitem (NOT
+    * the submenu itself) it disables/enables the submenu1 menuitem
+    * and then using the isDisabled() method presents a message saying
+    * whether it's disabled/enabled.
+    */
+    function checkItem_handler()
+    {
+        submenu1.toggleDisabled();
+        alert('First submenu has been ' + (submenu1.isDisabled() ? 'disabled' : 'enabled'));
+    }
+//-->
+</script>
+
+<!--
+    This layer servers as an area for the user to right click and get the menu. You can
+    use the oncontextmenu event of anything which supports it.
+-->
+<div onmouseup="alert(event.button);if (navigator.userAgent.toLowerCase().indexOf('opera') != -1 && event.button) ;" oncontextmenu="myMenu.show(event); return false" style="background-image: url('images/xpbackground.gif'); padding-left: 30px; background-color: #f6f6f6; border: 1px solid; width: 200px; height: 100px; cursor: default; font-family: MS Sans Serif; font-size: 10pt">
+
+    Right click here to see menu
+</div>
+
+<!--
+    A simple style changer. To change the style it calls the setStyle() method of the
+    main menu, passing it the new full path to the stylesheet. The setStyle() method
+    recursively calls the setStyle() for all submenus, so you don't have to.
+-->
+<p style="background-color: #eeeeee; border: 1px solid #cccccc; padding: 5px; width: 200px">
+    Menu style (Changing styles dynamically only works with MSIE):<br /><br />
+    <select size="5" id="menustyle" onchange="myMenu.setStyle('styles/dynContext.' + document.getElementById('menustyle').options[document.getElementById('menustyle').selectedIndex].value + '.css')">
+        <option value="xp" selected="selected">Office XP</option>
+        <option value="2005">VS.NET 2005</option>
+        <option value="classic">Windows classic</option>
+        <option value="alt1">Alternative 1</option>
+        <option value="alt2">Alternative 2</option>
+    </select>
+</p>
+
+</body>
+</html>

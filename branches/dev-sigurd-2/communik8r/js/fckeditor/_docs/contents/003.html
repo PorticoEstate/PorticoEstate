@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-10 18:21:06
+-->
+<html>
+	<head>
+		<title>FCKeditor - Performance</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Performance</H1>
+		<P>End users who need to work with FCKeditor want the most short loading and
+			response time from it. They want to start reading and editing the content
+			quickly. This is a big problem&nbsp;for almost all on-line&nbsp;text editors.
+			There are many files that have to be downloaded from the server to make the
+			editor work:</P>
+		<UL>
+			<LI>
+			The called page and all images and scripts not related to the editor.
+			<LI>
+			If using Javascript integration, the JS file with the scripts to create the
+			editor
+			<LI>
+			The page that works as the editor area (it's loaded in a IFrame)
+			<LI>
+			All the JS files with the scripts for the editor engine (more than 10 for
+			version 1.x)
+			<LI>
+			The language file
+			<LI>
+			The editor's skin files
+			<LI>
+				All images that are used as the toolbar buttons (every button has it's own
+				image)</LI></UL>
+		<P>All these calls generate a lot of work and traffic throw the client's browser
+			and the server. And worth, as many files are called, even if small
+			size,&nbsp;as much time to wait.</P>
+		<P>Two solutions have been developed for version 2.0 to solve this problem:
+			accurate loading order and scripts compression.</P>
+		<H2>Loading Order</H2>
+		<P>From version 2.0, the editor separe it's loading into steps:</P>
+		<UL>
+			<LI>
+			The called page (that holds the editor) and the script to&nbsp;loaded the
+			editor is loaded.
+			<LI>
+			The basic scripts to create the editor are loaded
+			<LI>
+			The editor's skin and language files&nbsp;are loaded
+			<LI>
+			The editor is created
+			<LI>
+			The content is loaded in the editor
+			<LI>
+			[ At this point the user can start reading and writing with some limitations
+			(drag-and-drop is disabled - cut and paste are disabled - the toolbar is
+			not&nbsp;yet available&nbsp;]
+			<LI>
+			The editor's engine scripts are loaded
+			<LI>
+			The toolbar is created and shown to the user (even if the buttons images are
+			not yet loaded)
+			<LI>
+			[ At this point the editor has all it's feature&nbsp;enabled&nbsp;]
+			<LI>
+				The toolbar icons are loaded.</LI></UL>
+		<H2>Scripts Compression</H2>
+		<P>The editor's scripts (JS files)&nbsp;are now pre-processed before packing any
+			new version. This are the processing steps:</P>
+		<UL>
+			<LI>
+			Remove all comments from the code.
+			<LI>
+			Remove all unuseful blank spaces, tabs and carriage returns
+			<LI>
+				Merge the scripts in fewer files.</LI></UL>
+		<P>With this process we can reduce the file sizes&nbsp;up to 50%. Another good
+			think is that the editor code can now be fully commented (I avoid code
+			commenting on version 1.x to reduce the files size).</P>
+		<P>The original code will still be available in the package in a folder called
+			"_source".</P>
+	</body>
+</html>

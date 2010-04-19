@@ -1,0 +1,10 @@
+<script type="text/javascript">
+window.parent.frames['frmUpload'].OnUploadCompleted(0) ;
+</script>
+<!--
+These are the possible responses:
+
+window.parent.frames['frmUpload'].OnUploadCompleted(0) ;						// No erros found.
+window.parent.frames['frmUpload'].OnUploadCompleted(201, 'FileName(1).ext') ;	// When a file with the same name already exists.
+window.parent.frames['frmUpload'].OnUploadCompleted(202) ;						// Invalid file.
+-->

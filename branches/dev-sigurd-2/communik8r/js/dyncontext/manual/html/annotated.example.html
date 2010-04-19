@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy for Linux/x86 (vers 1st July 2002), see www.w3.org">
+        <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
+
+        <title>Annotated Example</title>
+        <link rel="stylesheet" href="manual.css" type="text/css">
+        <meta name="generator" content="DocBook XSL Stylesheets V1.52.2">
+        <link rel="home" href="index.html" title="dynContext Documentation">
+        <link rel="up" href="index.html" title="dynContext Documentation">
+        <link rel="previous" href="class.dynContext_separator.html" title="Class: dynContext_separator">
+        <link rel="article" href="index.html" title="dynContext Documentation">
+    </head>
+
+    <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+        <div class="navheader">
+            <table width="100%" summary="Navigation header">
+                <tr>
+                    <th colspan="3" align="center">Annotated Example</th>
+                </tr>
+
+                <tr>
+                    <td width="20%" align="left"><a accesskey="p" href="class.dynContext_separator.html">Prev</a>&nbsp;</td>
+
+                    <th width="60%" align="center">&nbsp;</th>
+
+                    <td width="20%" align="right">&nbsp;</td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+
+        <div class="sect1">
+            <div class="titlepage">
+                <div>
+                    <h2 class="title" style="clear: both"><a name="annotated.example"></a>Annotated Example</h2>
+                </div>
+            </div>
+
+            <div class="example">
+                <a name="id2789142"></a>
+
+                <p class="title"><b>Example&nbsp;Annotated example.&nbsp;</b></p>
+<pre class="programlisting">
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;dynContext&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;!--
+    The onload event simply resets the style selector, whilst the onunload event closes
+    the menu when the page is refreshed or left. Without this, if the page is refreshed using
+    CTRL+R the menu doesn't close, which can produce errors if the user then tries to use it.
+--&gt;
+&lt;body onload="document.all('menustyle').selectedIndex = 0" onunload="dynContext_Menu.hide()"&gt;
+
+&lt;!--
+    This line is necessary to include the dynContext library which provides
+    the classes.
+--&gt;
+&lt;script language="JScript.Encode" src="dynContext.jse"&gt;&lt;/script&gt;
+&lt;script language="JavaScript" type="text/javascript"&gt;
+&lt;!--
+    /**
+    * Create main menu object. Variable used is "dynContext_Menu" so that's what is passed
+    * as the first argument. Second is the path to the stylesheet, and third and fourth are
+    * the width/height.
+    */
+    dynContext_Menu = new dynContext('dynContext_Menu', './styles/dynContext.xp.css', 180, 136);
+    
+    /**
+    * Here two regular menuitems are added to the menu, the second having an image. When clicked,
+    * they will simply popup a notice saying so.
+    */
+    dynContext_Menu.addItem(new dynContext_menuItem('Menuitem 1', 'alert(\'Menuitem 1 clicked\')'));
+    dynContext_Menu.addItem(new dynContext_menuItem('Menuitem 2', 'alert(\'Menuitem 2 clicked\')', 'images/contact.gif'));
+
+    /**
+    * Here a separator is added to the menu.
+    */
+    dynContext_Menu.addItem(new dynContext_separator());
+    
+        /**
+        * Now a submenu is created. Indentation is not necessary, but can be useful to
+        * make reading the code easier. The variable used is "dynContext_submenu1" so that's
+        * what is passed as the first argument. The second is the stylesheet to use, (which can
+        * be different to the parent menu, but would look strange). Third and fourth are the
+        * height/width
+        */
+        dynContext_submenu1 = new dynContext('dynContext_submenu1', './styles/dynContext.xp.css', 180, 64);
+
+        /**
+        * Now we create a set of menuitems in the form of an array. This is so that the array can
+        * simply be passed to the dynContext_radioItem object. The arrays' push() method simply
+        * adds the object to the end of the array. Any image, javascript or submenu for these
+        * menuitems will be ignored. You can however specify the disabled argument and it will be
+        * honored.
+        *
+        * Menuitems for radioitems can be specified in the constructor of the radioItem class using
+        * array literl notation ( [...] ) like so:
+        *
+        *    new dynContext_radioItem('...', 0, [new dynContext_menuItem('Radioitem n'), ...])
+        *
+        * However it can be more difficult to read if there are many menuitems.
+        */
+        radioItems = new Array();
+        radioItems.push(new dynContext_menuItem('Radioitem 1'));
+        radioItems.push(new dynContext_menuItem('Radioitem 2'));
+        radioItems.push(new dynContext_menuItem('Radioitem 3'));
+
+        /**
+        * Now we add a radioitem to the submenu, using the array defined above. The first argument
+        * is the javascript code to run when an item is clicked. In this case the radioItem_handler()
+        * function in the main page is being called, and because it's a second level menu, it's necessary
+        * to call parent. twice. The selected menuitem is set in the second argument, here it's set to
+        * the first menuitem (the index starts at zero). Finally the third argument is the array of menuitems.
+        */
+        dynContext_submenu1.addItem(radioItem = new dynContext_radioItem('parent.parent.radioItem_handler()', 0, radioItems));
+
+    /**
+    * With the submenu defined above, here it's added to the main menu by way of the fifth argument
+    * on the menuitem constructor. Here an image could be specified if so desired. Also it could be
+    * disabled. The javascript argument however has no effect.
+    */
+    dynContext_Menu.addItem(submenu1 = new dynContext_menuItem('First submenu', null, null, false, dynContext_submenu1));
+    
+    /**
+    * Here a checkitem is added to the menu. This checkbox controls whether the the submenu defined above
+    * is disabled or not. It defaults to true (second argument) and calls the checkItem_handler() function
+    * in the main page (which does the actual disabling/enabling).
+    */
+    dynContext_Menu.addItem(new dynContext_checkItem('First submenu enabled', true, 'parent.checkItem_handler()'));
+
+    /**
+    * Another separator
+    */
+    dynContext_Menu.addItem(new dynContext_separator());
+
+        /**
+        * Here another submenu is created with some sample menuitems
+        */
+        dynContext_submenu2 = new dynContext('dynContext_submenu2', './styles/dynContext.xp.css', 180, 64);
+        dynContext_submenu2.addItem(new dynContext_menuItem('Submenu item 1', 'alert(\'Submenu item 1 clicked\')'));
+        dynContext_submenu2.addItem(new dynContext_menuItem('Submenu item 2', 'alert(\'Submenu item 2 clicked\')'));
+        dynContext_submenu2.addItem(new dynContext_menuItem('Submenu item 3', 'alert(\'Submenu item 3 clicked\')'));
+
+    /**
+    * And here the second submenu is added to the main menu.
+    */
+    dynContext_Menu.addItem(submenu2 = new dynContext_menuItem('Second submenu', null, null, false, dynContext_submenu2));
+
+    /**
+    * This is the handler function (they can be called anything) which
+    * is called when the user clicks on one of the menuitems in the
+    * radioitem (first submenu). It simply uses the getSelected()
+    * method of the radioitem to present which index is now selected.
+    */
+    function radioItem_handler()
+    {
+        var selectedIndex = radioItem.getSelected();
+        alert('Selected radioitem index: ' + selectedIndex);
+    }
+    
+    /**
+    * This is the handler function for the checkitem on the main menu.
+    * Using the toggleDisabled() method of the submenu1 menuitem (NOT
+    * the submenu itself) it disables/enables the submenu1 menuitem
+    * and then using the isDisabled() method presents a message saying
+    * whether it's disabled/enabled.
+    */
+    function checkItem_handler()
+    {
+        submenu1.toggleDisabled();
+        alert('First submenu has been ' + (submenu1.isDisabled() ? 'disabled' : 'enabled'));
+    }
+//--&gt;
+&lt;/script&gt;
+
+&lt;!--
+    This layer servers as an area for the user to right click and get the menu. You can
+    use the oncontextmenu event of anything which supports it.
+--&gt;
+&lt;div style="background-image: url('images/xpbackground.gif'); padding-left: 30px; background-color: #f6f6f6; border: 1px solid; width: 200px; cursor: default; font-family: MS Sans Serif; font-size: 10pt" oncontextmenu="dynContext_Menu.show(); return false"&gt;
+    Right click here to see menu
+&lt;/div&gt;
+
+&lt;!--
+    A simple style changer. To change the style it calls the setStyle() method of the
+    main menu, passing it the new full path to the stylesheet. The setStyle() method
+    recursively calls the setStyle() for all submenus, so you don't have to.
+--&gt;
+&lt;p style="background-color: #eeeeee; border: 1px solid #cccccc; padding: 5px; width: 200px"&gt;
+    Menu style:&lt;br /&gt;&lt;br /&gt;
+    &lt;select size="4" name="menustyle" onchange="dynContext_Menu.setStyle('./styles/dynContext.' + document.all('menustyle').options[document.all('menustyle').selectedIndex].value + '.css')"&gt;
+        &lt;option value="xp" selected="selected"&gt;Office XP&lt;/option&gt;
+        &lt;option value="classic"&gt;Windows classic&lt;/option&gt;
+        &lt;option value="alt1"&gt;Alternative 1&lt;/option&gt;
+        &lt;option value="alt2"&gt;Alternative 2&lt;/option&gt;
+    &lt;/select&gt;
+&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+
+                       
+</pre>
+            </div>
+        </div>
+
+        <div class="navfooter">
+            <hr>
+
+            <table width="100%" summary="Navigation footer">
+                <tr>
+                    <td width="40%" align="left"><a accesskey="p" href="class.dynContext_separator.html">Prev</a>&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td>
+
+                    <td width="40%" align="right">&nbsp;</td>
+                </tr>
+
+                <tr>
+                    <td width="40%" align="left" valign="top">Class: dynContext_separator&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td>
+
+                    <td width="40%" align="right" valign="top">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+

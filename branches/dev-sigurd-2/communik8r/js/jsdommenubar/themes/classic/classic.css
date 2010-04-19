@@ -1,0 +1,172 @@
+/*
+Menu related selectors
+*/
+.jsdomenudiv {
+	background-color: #CCCCCC;
+	border: 2px outset;
+	border-bottom-color: #000000;
+	border-left-color: #FFFFFF;
+	border-right-color: #000000;
+	border-top-color: #FFFFFF;
+	cursor: default;
+	position: absolute; /* Do not alter this line! */
+	visibility: hidden;
+	z-index: 10;
+}
+
+.jsdomenuitem {
+	background-color: transparent;
+	border: none;
+	color: #000000;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 22px;
+	padding-right: 15px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenuitemover {
+	background-color: #000099;
+	border: none;
+	color: #FFFFFF;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 22px;
+	padding-right: 15px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenuarrow {
+	background-image: url(classic_arrow.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 7px;
+	position: absolute; /* Do not alter this line! */
+	right: 8px;
+	width: 4px;
+}
+
+.jsdomenuarrowover {
+	background-image: url(classic_arrow_o.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 7px;
+	position: absolute; /* Do not alter this line! */
+	right: 8px;
+	width: 4px;
+}
+
+.jsdomenusep {
+}
+
+.jsdomenusep hr {
+	text-align: center;
+	width: 95%;
+}
+
+/*
+Menu bar related selectors
+*/
+.jsdomenubardiv {
+	background-color: #CCCCCC;
+	background-image: url(classic_divider.png);
+	background-position: left;
+	background-repeat: no-repeat;
+	border: 2px outset;
+	border-bottom-color: #000000;
+	border-left-color: #FFFFFF;
+	border-right-color: #000000;
+	border-top-color: #FFFFFF;
+	cursor: default;
+	padding-bottom: 3px;
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 3px;
+	position: absolute; /* Do not alter this line! */
+	visibility: visible;
+}
+
+.jsdomenubardragdiv {
+	cursor: move;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+	visibility: hidden;
+	width: 9px;
+}
+
+.jsdomenubaritem {
+	background-color: #CCCCCC;
+	border: none;
+	color: #000000;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 22px;
+	padding-right: 10px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenubaritemover {
+	background-color: #CCCCCC;
+	border: 1px outset;
+	color: #000000;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 21px;
+	padding-right: 9px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenubaritemclick {
+	background-color: #000099;
+	border: 1px solid #000099;
+	color: #FFFFFF;
+	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 21px;
+	padding-right: 9px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+/*
+Example of selectors for icons. Change the height and width to match the actual 
+height and width of the icon image.
+*/
+.icon1 {
+	background-image: url(icon1.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 16px;
+	left: 2px;
+	position: absolute; /* Do not alter this line! */
+	width: 16px;
+}
+
+.icon2 {
+	background-image: url(icon2.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 16px;
+	left: 2px;
+	position: absolute; /* Do not alter this line! */
+	width: 16px;
+}
+
+.icon3 {
+	background-image: url(icon3.png);
+	background-repeat: no-repeat; /* Do not alter this line! */
+	height: 16px;
+	left: 2px;
+	position: absolute; /* Do not alter this line! */
+	width: 16px;
+}

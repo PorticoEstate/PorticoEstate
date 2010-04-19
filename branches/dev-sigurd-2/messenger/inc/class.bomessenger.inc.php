@@ -388,19 +388,19 @@
 			if(!$message_id)
 			{
 				$message_id = phpgw::get_var('message_id');
-				$n_message  = phpgw::get_var('n_message');
+				$message  = phpgw::get_var('message');
 			}
 
-			$errors = $this->check_for_missing_fields($n_message);
+			$errors = $this->check_for_missing_fields($message);
 
-			if (is_array($errors))
+			if ($errors)
 			{
-				ExecMethod('messenger.uimessenger.forward',array($errors,$n_message));
+				ExecMethod('messenger.uimessenger.forward',array($errors,$message));
 				//$this->ui->forward($errors, $n_message);
 			}
 			else
 			{
-				$this->so->send_message($n_message);
+				$this->so->send_message($message);
 				$this->so->update_message_status('F',$message_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 			}

@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-23 18:05:58
+-->
+<html>
+	<head>
+		<title>FCKeditor - Using FCKeditor with JavaScript</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Using FCKeditor with JavaScript</H1>
+		<P>The "JavaScript Integration Module" is the client side option to include 
+			FCKeditor in your web pages. It is quite easy to use and configure.</P>
+		<H3>Step 1</H3>
+		<P>Suppose that the editor is installed in the /FCKeditor/ path of your web site. 
+			The first thing to do is to include the "JavaScript Integration Module" scripts 
+			inside the &lt;HEAD&gt; of your page, just like this:</P>
+		<code>&lt;script type="text/javascript" src="<STRONG>/FCKeditor/fckeditor.js</STRONG>"&gt;&lt;/script&gt;</code>
+		<H3>Step 2</H3>
+		<P>Now the FCKeditor class is available and ready to use. There are two ways to 
+			create an FCKeditor in you page:</P>
+		<P>Method 1:&nbsp;The inline method (preferred): Go to the body of your page, in 
+			the place you want the editor to be (usually inside a form) and place the 
+			following script:</P>
+		<code>&lt;script type="text/javascript"&gt;<BR>
+			&nbsp;&nbsp;<STRONG> var oFCKeditor = new FCKeditor( 'FCKeditor1' ) ;<BR>
+				&nbsp;&nbsp;oFCKeditor.Create() ;<BR>
+			</STRONG>&lt;/script&gt;</code>
+		<P>Method 2:&nbsp;The TEXTAREA replacement method: In the "onload" method on your 
+			page, add the following code to replace a existing TEXTAREA in the page:</P>
+		<code>&lt;html&gt;<BR>
+			&nbsp; &lt;head&gt;<BR>
+			&nbsp;&nbsp;&nbsp; &lt;script type="text/javascript"&gt;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; window.onload = function()<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <STRONG>var oFCKeditor = new FCKeditor( 
+				'MyTextarea' ) ;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oFCKeditor.ReplaceTextarea() ;<BR>
+			</STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;/script&gt;<BR>
+			&nbsp;&nbsp;&lt;/head&gt;<BR>
+			&nbsp; &lt;body&gt;<BR>
+			&nbsp;&nbsp;&nbsp; &lt;textarea id="<STRONG>MyTextarea</STRONG>" 
+			name="MyTextarea"&gt;This is &lt;b&gt;the&lt;/b&gt; initial 
+			value.&lt;/textarea&gt;<BR>
+			&nbsp; &lt;/body&gt;<BR>
+			&lt;/html&gt;</code>
+		<H3>Step 3</H3>
+		<P>The editor is now ready to be used. Just open the page in your browser to see it 
+			at work.</P>
+		<H2>The FCKeditor Class</H2>
+		<P>This is the main class used to create an instance of FCKeditor in a web page.</P>
+		<div class="classDefinition">
+			<P><A href="#Constructor">Constructor</A></P>
+			<P><A href="#Properties">Properties</A></P>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<P><A href="#pInstanceName">InstanceName</A><BR>
+					<A href="#pWidth">Width</A>
+					<BR>
+					<A href="#pHeight">Height</A>
+					<BR>
+					<A href="#pToolbarSet">ToolbarSet</A>
+					<BR>
+					<A href="#pValue">Value</A>
+					<BR>
+					<A href="#pBasePath">BasePath</A>
+					<BR>
+					<A href="#pCheckBrowser">CheckBrowser</A>
+					<BR>
+					<A href="#pDisplayErrors">DisplayErrors</A></P>
+			</BLOCKQUOTE>
+			<P><A href="#Collections">Collections</A></P>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<P><A href="#cConfig">Config</A></P>
+			</BLOCKQUOTE>
+			<P><A href="#Methods">Methods</A></P>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<P><A href="#mCreate">Create</A><BR>
+					<A href="#mReplaceTextarea">ReplaceTextarea</A></P>
+			</BLOCKQUOTE>
+		</div>
+		<H3 id="Constructor">Contructor</H3>
+		<P class="classPropMeth">FCKeditor( instanceName[, width, height, toolbarSet, 
+			value] )</P>
+		<P>
+			<TABLE class="paramsDefinition" id="Table1" cellSpacing="0" cellPadding="0" border="0">
+				<TR>
+					<TD>instanceName&nbsp;
+					</TD>
+					<TD>The unique name that represents the editor instance.</TD>
+				</TR>
+				<TR>
+					<TD>width</TD>
+					<TD>the width of the editor in pixels or percents. (Optional, Default: "100%").</TD>
+				</TR>
+				<TR>
+					<TD>height</TD>
+					<TD>the height of the editor in pixels or percents. (Optional, Default: "200").</TD>
+				</TR>
+				<TR>
+					<TD>toolbarSet</TD>
+					<TD>the name of the Toolbar set to use. (Optional, Default: "Default").</TD>
+				</TR>
+				<TR>
+					<TD>value</TD>
+					<TD>the initial value (HTML) of the editor. (Optional)</TD>
+				</TR>
+			</TABLE>
+		</P>
+		<P>Example:</P>
+		<code>var oFCKeditor = new <STRONG>FCKeditor( 'FCKeditor1' )</STRONG> ;</code>
+		<H3 id="Properties">Properties</H3>
+		<P class="classPropMeth" id="pInstanceName">InstanceName</P>
+		<P>The name of the this editor instance.</P>
+		<P class="classPropMeth" id="pWidth">Width</P>
+		<P>The width of the editor in pixels or percent. Numeric values are handled as 
+			pixels.</P>
+		<P>Default Value: "100%"</P>
+		<P>Examples:<BR>
+			<code>oFCKeditor.<STRONG>Width</STRONG> = 400 ; // 400 pixels</code> <code>oFCKeditor.<STRONG>Width</STRONG>
+				= "250" ;&nbsp;// 250 pixels</code> <code>oFCKeditor.<STRONG>Width</STRONG> = 
+				"80%" ; // 80 percent</code>
+		</P>
+		<P class="classPropMeth" id="pHeight">Height</P>
+		<P>The height of the editor in pixels or percent. Numeric values are handled as 
+			pixels.</P>
+		<P>Default Value: "200"</P>
+		<P>Examples:<BR>
+			<code>oFCKeditor.<STRONG>Height</STRONG> = 400 ; // 400 pixels</code> <code>oFCKeditor.<STRONG>Height</STRONG>
+				= "250" ;&nbsp;// 250 pixels</code> <code>oFCKeditor.<STRONG>Height</STRONG> = 
+				"100%" ; // 100 percent</code>
+		</P>
+		<P class="classPropMeth" id="pToolbarSet">
+			ToolbarSet</P>
+		<P>The Toolbar set to use. Refers to the configurations set at the fckconfig.js 
+			file.</P>
+		<P>Default Value: "Default"</P>
+		<P>Example:<BR>
+			<code>oFCKeditor.<STRONG>ToolbarSet</STRONG> = "MyToolbar" ;</code></P>
+		<P class="classPropMeth" id="pValue">Value</P>
+		<P>The initial value (the HTML) to show in the editor at startup.</P>
+		<P>Default Value: &lt;empty&gt;</P>
+		<P>Example:<BR>
+			<code>oFCKeditor.<STRONG>Value</STRONG> = "&lt;h1&gt;Testing&lt;/h1&gt;This is a 
+				&lt;b&gt;sample&lt;/b&gt;." ;</code></P>
+		<P class="classPropMeth" id="pBasePath">
+			BasePath</P>
+		<P>The path used by the editor to find its code base. In other words, the directory 
+			where the editors package has been installed in your site.</P>
+		<P>Default Value: "/fckeditor/"</P>
+		<P>Example:<BR>
+			<code>oFCKeditor.<STRONG>BasePath</STRONG> = "/Components/FCKeditor/" ;</code></P>
+		<P>Remarks:<BR>
+			Avoid using relative paths. It is preferable to set the base path starting from 
+			the root (/). Always finish the path with a slash (/).</P>
+		<P class="classPropMeth" id="pCheckBrowser">
+			CheckBrowser</P>
+		<P>Tells this class instance to check the browser compatibility when rendering the 
+			editor.</P>
+		<P>Default Value: true</P>
+		<P>Example:<BR>
+			<code>oFCKeditor.<STRONG>CheckBrowser</STRONG> = true ;</code></P>
+		<P>Remarks:<BR>
+			&nbsp;This option could be useful if the check was made at the server side.</P>
+		<P class="classPropMeth" id="pDisplayErrors">
+			DisplayErrors</P>
+		<P>Tells this class instance to show error messages on errors while rendering the 
+			editor.</P>
+		<P>Default Value: true</P>
+		<P>Example:<BR>
+			oFCKeditor.<STRONG>DisplayErrors</STRONG> = false ;</CODE></P>
+		<H3 id="Collections">Collections</H3>
+		<P class="classPropMeth" id="cConfig">Config[ key ] = value</P>
+		<P>This collection holds all configurations set in the editor instance.</P>
+		<P>Example:<br>
+			<code>oFCKeditor.<STRONG>Config[ "AutoDetectLanguage" ]</STRONG> =&nbsp;false ;<BR>
+				oFCKeditor.<STRONG>Config[ "DefaultLanguage" ]</STRONG> = "pt-BR" ;</code></P>
+		<H3 id="Methods">Methods</H3>
+		<P class="classPropMeth" id="mCreate">
+			Create()</P>
+		<P>Builds and outputs the editor in the exact place where its called.</P>
+		<P>Example:<BR>
+			<code>oFCKeditor.<STRONG>Create()</STRONG> ;</code></P>
+		<P class="classPropMeth" id="mReplaceTextarea">
+			ReplaceTextarea()</P>
+		<P>
+			Replaces an existing &lt;TEXTAREA&gt; in the page with the 
+FCKeditor instance. The Textarea must has 
+			its&nbsp;"id" set to the editor InstanceName. The the "id" is not 
+			found, the editor uses the TEXTAREA "name" for the replacement.</P>
+		<P>Example:<BR>
+			<code>window.onload = function()<BR>
+				{<BR>
+				var oFCKeditor = new FCKeditor( '<STRONG>MyTextarea</STRONG> ' ) ;<BR>
+				oFCKeditor.<STRONG>ReplaceTextarea()</STRONG> ;<BR>
+				}<BR>
+				...<BR>
+				&lt;textarea id="<STRONG>MyTextarea</STRONG>" name= "MyTextarea"&gt;This is 
+				&lt;b&gt;the&lt;/b&gt; initial value.&lt;/textarea&gt;</code>
+		</P>
+		<p>
+			If you are intended to post the editor contents throw a form (the most obvious 
+			use of the editor), you must set the "name" attribute of the TEXTAREA. It is 
+			useful, to not get confused,&nbsp;to use the same value used in the "id" 
+			attribute.
+		</p>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-19 18:14:12
+-->
+<html>
+	<head>
+		<title>FCKeditor - Scripts Compression</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Scripts Compression</H1>
+		<P>The editor&nbsp;scripts source can be found in the package at the
+			"editor/_source/" directory. It is "human readable" as well as
+			commented.&nbsp;There are a lot of files there that are organized on groups.</P>
+		<P>
+			To maximize loading and execution performance, the&nbsp;production
+			distribution&nbsp;code in compressed on <STRONG>fewer</STRONG> and <STRONG>smaller</STRONG>
+			files, as described on "<A href="003.html">Performance</A>". These files can be
+			found at the "editor/js/" directory.</P>
+		<H3>How to develop using the "_source" files?</H3>
+		<P>It is possible to run the editor using the&nbsp;original scripts&nbsp;in the
+			"_source" directory. It is usefull when developing or debugging&nbsp;the
+			editor.&nbsp;It is quite easy to do that. Just&nbsp;go the "editor" directory
+			and overwrite <STRONG>fckeditor.html</STRONG> with <STRONG>fckeditor.original.html</STRONG>
+			(remember to backup the first one).</P>
+		<P>So, to start using again the "compressed" files, just recover the backup
+			"fckeditor.html" file.</P>
+		<H3>Generating the compressed scripts</H3>
+		<P>
+			An application has been developed to make it easy to update the compressed file
+			in the "js" directory. It is called "<STRONG>FCKeditor.Packager</STRONG>". You can find it&nbsp;in the 
+"_packager" directory.
+		<P>Further documentation (readme)&nbsp;is available in the "_packager"&nbsp;directory itself.</P>
+	</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy for Linux/x86 (vers 1st July 2002), see www.w3.org">
+        <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
+
+        <title>Class: dynContext_radioItem</title>
+        <link rel="stylesheet" href="manual.css" type="text/css">
+        <meta name="generator" content="DocBook XSL Stylesheets V1.52.2">
+        <link rel="home" href="index.html" title="dynContext Documentation">
+        <link rel="up" href="api.html" title="API">
+        <link rel="previous" href="class.dynContext_checkItem.html" title="Class: dynContext_checkItem">
+        <link rel="next" href="class.dynContext_separator.html" title="Class: dynContext_separator">
+        <link rel="article" href="index.html" title="dynContext Documentation">
+    </head>
+
+    <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+        <div class="navheader">
+            <table width="100%" summary="Navigation header">
+                <tr>
+                    <th colspan="3" align="center">Class: dynContext_radioItem</th>
+                </tr>
+
+                <tr>
+                    <td width="20%" align="left"><a accesskey="p" href="class.dynContext_checkItem.html">Prev</a>&nbsp;</td>
+
+                    <th width="60%" align="center">API</th>
+
+                    <td width="20%" align="right">&nbsp;<a accesskey="n" href="class.dynContext_separator.html">Next</a></td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+
+        <div class="sect2">
+            <div class="titlepage">
+                <div>
+                    <h3 class="title"><a name="class.dynContext_radioItem"></a>Class: dynContext_radioItem</h3>
+                </div>
+            </div>
+
+            <p>This class provides a radio button style menuitem (ie a collection of menu items of which only one is selected at once). This class is special in that it takes an array of other <a
+            href="class.dynContext_menuItem.html" title="Class: dynContext_menuItem">dynContext_menuItem</a> objects, which it uses to build the html for itself. Only certain properties of these
+            menuItem objects are used, including text, disabled status and javascript code. Image paths and submenu objects are ignored.</p>
+
+            <p>Methods:</p>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">Constructor</b></code> (<var class="pdparam">Javascript</var>, <var class="pdparam">[Selected]</var>, <var class=
+                "pdparam">[Menuitems]</var>);<br>
+                 string <var class="pdparam">Callback Handler</var> ;<br>
+                 integer <var class="pdparam">[Selected]</var> ;<br>
+                 array <var class="pdparam">[Menuitems]</var> ;</code></p>
+<pre class="funcsynopsisinfo">
+The constructor is called automatically when you create the object. The first argument is the function to run
+when a radio item is clicked on. This should be passed as the name of the function only, eg. 'myCallback', and
+NOT 'myCallback()'. Like the <a href="class.dynContext_checkItem.html" title="Class: dynContext_checkItem">checkItem object</a>
+this code runs <span class="emphasis"><em>after</em></span> the current selected item has been updated, so getSelected() will
+return the <span class="emphasis"><em>new</em></span> selected index. The second argument is which menuitem should be selected. This
+is an integer starting from zero. The third argument is the array of <a href="class.dynContext_menuItem.html" title="Class: dynContext_menuItem">dynContext_menuItem</a>
+objects (see above).
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">setSelected</b></code> (<var class="pdparam">Selected</var>);<br>
+                 integer <var class="pdparam">Selected</var> ;</code></p>
+<pre class="funcsynopsisinfo">
+This method can be used to set which menuitem is currently selected. The argument should be the index of the
+menuitem to be selected, which starts from zero.
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">getSelected</b></code> ();<br>
+                ;</code></p>
+<pre class="funcsynopsisinfo">
+This method returns the index of the current selected menuitem. This is an integer starting from zero.
+                               
+</pre>
+            </div>
+
+            <div class="example">
+                <a name="id2791074"></a>
+
+                <p class="title"><b>Example&nbsp;Creating two dynContext_radioItem objects.&nbsp;</b></p>
+<pre class="programlisting">
+&lt;script language="javascript"&gt;
+&lt;!-- 
+        radioItems = new Array();
+        radioItems.push(new dynContext_menuItem('Radioitem 1'));
+        radioItems.push(new dynContext_menuItem('Radioitem 2'));
+        radioItems.push(new dynContext_menuItem('Radioitem 3', null, null, true));
+        radioItem_1 = new dynContext_radioItem('parent.radioItem_onclick()', 0, radioItems);
+        
+        radioItem_2 = new dynContext_radioItem('parent.radioItem_onclick()', 1, [new dynContext_menuItem('Radioitem 1'), new dynContext_menuItem('Radioitem 2')]);
+// --&gt;
+&lt;/script&gt;
+
+                               
+</pre>
+            </div>
+        </div>
+
+        <div class="navfooter">
+            <hr>
+
+            <table width="100%" summary="Navigation footer">
+                <tr>
+                    <td width="40%" align="left"><a accesskey="p" href="class.dynContext_checkItem.html">Prev</a>&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="u" href="api.html">Up</a></td>
+
+                    <td width="40%" align="right">&nbsp;<a accesskey="n" href="class.dynContext_separator.html">Next</a></td>
+                </tr>
+
+                <tr>
+                    <td width="40%" align="left" valign="top">Class: dynContext_checkItem&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td>
+
+                    <td width="40%" align="right" valign="top">&nbsp;Class: dynContext_separator</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+

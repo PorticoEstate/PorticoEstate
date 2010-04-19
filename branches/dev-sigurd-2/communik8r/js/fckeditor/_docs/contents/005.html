@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-10 18:20:46
+-->
+<html>
+	<head>
+		<title>FCKeditor - Localization (Interface Translation)</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Localization (Interface Translation)</H1>
+		<P>The languages files must be created inside the "editor/lang" directory of the
+			project. You can use the file <STRONG>en.js</STRONG> as the base file for your
+			translations. The file names respect the <A href="http://www.faqs.org/rfcs/rfc3066.html" target="_blank">
+				RFC 3066</A> <STRONG></STRONG>standards (but in lowercase). So, for
+			example, a file for the <STRONG>Portuguese language</STRONG> should be called <STRONG>pt.js</STRONG>.</P>
+		<P>Translation could also be localized for a specific country. In this case, for
+			example, a Brazilian Portuguese translation file should be called <STRONG>pt-br.js</STRONG>.</P>
+		<P>The clients language auto detection system uses the first available language
+			that best fits the client settings. For example, if a client computer is set to
+			Brazilian Portuguese and there is no pt-br.js file available, the pt.js is used
+			if available. If not, the default language is used (from the&nbsp;configuration
+			file).</P>
+		<P>When creating new language files, you need to add an entry for it in the
+			"edit/lang/fcklanguagemanager.js" file. Something like this:<BR>
+			<BR>
+			<code>FCKLanguageManager.AvailableLanguages =
+				<BR>
+				{<br>
+				<BLOCKQUOTE dir="ltr" style="PADDING-RIGHT: 0px; MARGIN-TOP: 0px; PADDING-LEFT: 0px; MARGIN-BOTTOM: 0px; PADDING-BOTTOM: 0px; MARGIN-RIGHT: 0px; PADDING-TOP: 0px">
+					en : 'English',<BR>
+					<STRONG>pt : 'Portuguese'</STRONG> </BLOCKQUOTE>}
+				<BR>
+			</code>
+		<p>
+			An important thing is to save the files in a <STRONG>UTF-8</STRONG> encoded
+			format. In other case, some strange characters could appear instead of some
+			special chars, like accented letters, symbols, etc.
+		</p>
+		<P>All translated files must be sent by e-mail to <A href="mailto:fredck@fckeditor.net">
+				fredck@fckeditor.net</A>&nbsp;as well as&nbsp;published in our "<A href="http://sourceforge.net/tracker/?group_id=75348&amp;atid=543655" target="_blank">Patches
+				Tracker</A>" on Sourceforge for availability to other users.
+		</P>
+		<P>
+			Before starting a new translation, please take a look at our web site (<A href="http://www.fckeditor.net/Developers/" target="_blank">http://www.fckeditor.net/Developers/</A>)
+			and check if there is no translator assigned to your language. It&nbsp;is a
+			good practice to contact FredCK (using the same address) asking if the
+			translation was not yet started by another person.
+		</P>
+	</body>
+</html>

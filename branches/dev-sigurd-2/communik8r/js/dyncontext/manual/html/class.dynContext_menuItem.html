@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy for Linux/x86 (vers 1st July 2002), see www.w3.org">
+        <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
+
+        <title>Class: dynContext_menuItem</title>
+        <link rel="stylesheet" href="manual.css" type="text/css">
+        <meta name="generator" content="DocBook XSL Stylesheets V1.52.2">
+        <link rel="home" href="index.html" title="dynContext Documentation">
+        <link rel="up" href="api.html" title="API">
+        <link rel="previous" href="class.dynContext.html" title="Class: dynContext">
+        <link rel="next" href="class.dynContext_checkItem.html" title="Class: dynContext_checkItem">
+        <link rel="article" href="index.html" title="dynContext Documentation">
+    </head>
+
+    <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+        <div class="navheader">
+            <table width="100%" summary="Navigation header">
+                <tr>
+                    <th colspan="3" align="center">Class: dynContext_menuItem</th>
+                </tr>
+
+                <tr>
+                    <td width="20%" align="left"><a accesskey="p" href="class.dynContext.html">Prev</a>&nbsp;</td>
+
+                    <th width="60%" align="center">API</th>
+
+                    <td width="20%" align="right">&nbsp;<a accesskey="n" href="class.dynContext_checkItem.html">Next</a></td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+
+        <div class="sect2">
+            <div class="titlepage">
+                <div>
+                    <h3 class="title"><a name="class.dynContext_menuItem"></a>Class: dynContext_menuItem</h3>
+                </div>
+            </div>
+
+            <p>This class is probably the most used menu item. It provides a simple entry for the menu either with or without an icon.</p>
+
+            <p>Methods:</p>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">Constructor</b></code> (<var class="pdparam">Text</var>, <var class="pdparam">[Javascript]</var>, <var class="pdparam">[Image
+                path]</var>, <var class="pdparam">[Disabled]</var>, <var class="pdparam">[Submenu]</var>);<br>
+                 string <var class="pdparam">Text</var> ;<br>
+                 string <var class="pdparam">[Callback Handler]</var> ;<br>
+                 string <var class="pdparam">[Image path]</var> ;<br>
+                 boolean <var class="pdparam">[Disabled]</var> ;<br>
+                 object <var class="pdparam">[Submenu]</var> ;</code></p>
+<pre class="funcsynopsisinfo">
+The constructor is called automatically when you create the object. The first argument is the text that is
+displayed for this menuitem. This is the only required argument.
+The Callback Handler argument is the function that is run when the menuitem is clicked. This should be passed
+as the name of the function only, eg. 'myCallback', and NOT 'myCallback()'.
+The image path should be the full path to an icon that appears to the left of the text in the menu. For the
+styles supplied with the menu system, the icons should be no larger than 20x20 pixels.
+The disabled argument determines whether this menuitem is disabled or not. If it is disabled, then the text
+will be greyed out, and the item will not be clickable, and will also not trigger a mouseover event (so
+highlighting does not occur).
+The final argument is an optional submenu object. This is a regular dynContext object which has already had
+its menuitems added to it. Simply pass it as the last argument and it will becomes a submenu of whatever menu
+this menuitem is added to. Using this method allows for unlimited submenus with an easy creation method (though
+any more than 2/3 submenus reduces usability drastically).
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef">boolean <b class="fsfunc">hasSubmenu</b></code> ();<br>
+                ;</code></p>
+<pre class="funcsynopsisinfo">
+Returns true or false as to whether the menuitem has a submenu or not.
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">toggleDisabled</b></code> ();<br>
+                ;</code></p>
+<pre class="funcsynopsisinfo">
+Toggles the current disabled status. Thus making the menuitem disabled if it's currently not, and enabled if it's
+currently disabled.
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">setDisabled</b></code> (<var class="pdparam">Disabled status</var>);<br>
+                 boolean <var class="pdparam">Disabled status</var> ;</code></p>
+<pre class="funcsynopsisinfo">
+Use this method to set the status of the menuitem to either disabled (true) or enabled (false).
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef">boolean <b class="fsfunc">isDisabled</b></code> ();<br>
+                ;</code></p>
+<pre class="funcsynopsisinfo">
+Returns true or false as to whether the menuitem is disabled or not.
+                               
+</pre>
+            </div>
+
+            <div class="example">
+                <a name="id2792540"></a>
+
+                <p class="title"><b>Example&nbsp;Creating a few dynContext_menuItem objects.&nbsp;</b></p>
+<pre class="programlisting">
+&lt;script language="javascript"&gt;
+&lt;!-- 
+        menuItem_1 = new dynContext_menuItem('Menuitem 1', 'parent.myFunction(1)', 'images/icon.gif');
+        menuItem_2 = new dynContext_menuItem('Menuitem 2', 'parent.myfunction(2)', 'images/icon.gif', true);
+        menuItem_3 = new dynContext_menuItem('Menuitem 3', null, null, false, subMenu_1);
+        menuItem_4 = new dynContext_menuItem('Menuitem 4', null, 'images/submenu.gif', false, subMenu_2);
+        menuItem_6 = new dynContext_menuItem('Menuitem 5', 'parent.location.href = "http://www.phpguru.org/dynContext/"');
+        menuItem_5 = new dynContext_menuItem('Menuitem 6');
+// --&gt;
+&lt;/script&gt;
+
+                               
+</pre>
+            </div>
+        </div>
+
+        <div class="navfooter">
+            <hr>
+
+            <table width="100%" summary="Navigation footer">
+                <tr>
+                    <td width="40%" align="left"><a accesskey="p" href="class.dynContext.html">Prev</a>&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="u" href="api.html">Up</a></td>
+
+                    <td width="40%" align="right">&nbsp;<a accesskey="n" href="class.dynContext_checkItem.html">Next</a></td>
+                </tr>
+
+                <tr>
+                    <td width="40%" align="left" valign="top">Class: dynContext&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td>
+
+                    <td width="40%" align="right" valign="top">&nbsp;Class: dynContext_checkItem</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+

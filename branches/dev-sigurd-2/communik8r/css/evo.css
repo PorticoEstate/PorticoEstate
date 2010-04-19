@@ -1,0 +1,968 @@
+body, div, input, p, textarea, td, th
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+}
+
+body
+{
+	background-color: #ddd;
+	margin: 0px;
+	padding: 0px;
+}
+
+button img
+{
+	vertical-align: middle;
+}
+
+label
+{
+	font-weight: bold;
+}
+
+span.shortcut
+{
+	text-decoration: underline;
+}
+
+thead
+{
+	background-color: #eee;
+}
+
+thead th
+{
+	border: 1px solid #000;
+	font-weight: bold;
+	text-align: center;
+}
+
+#menu_holder
+{
+	background-color: #ddd;
+	color: #000;
+	height: 20px;
+	left: 0px;
+	/*overflow: hidden;*/
+	padding: 0px;
+	position: fixed;
+	top: 0px;
+	width: 100%;
+}
+
+.menu
+{
+	background-color: transparent;
+	border: none;
+	color: #000;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+	padding-right: 15px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+	width: 150px;
+}
+
+.menu_item
+{
+	background-color: transparent;
+	border: none;
+	color: #000;
+	font-size: 12px;
+	padding-bottom: 2px;
+	padding-left: 22px;
+	padding-right: 15px;
+	padding-top: 2px;
+	position: relative; /* Do not alter this line! */
+}
+
+.jsdomenudiv 
+{
+	background-color: #ddd;
+	border: 2px outset;
+	border-bottom-color: #000;
+	border-left-color: #fff;
+	border-right-color: #000;
+	border-top-color: #fff;
+	cursor: default;
+	position: absolute; /* Do not alter this line! */
+	visibility: hidden;
+	z-index: 10;
+}
+
+.jsdomenubardiv
+{
+	background-color: #ddd;
+	background-image: url(classic_divider.png);
+	background-position: left;
+	background-repeat: no-repeat;
+	border: 2px outset;
+	border-bottom-color: #000000;
+	border-left-color: #FFFFFF;
+	border-right-color: #000000;
+	border-top-color: #FFFFFF;
+	cursor: default;
+	padding-bottom: 3px;
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 3px;
+	position: absolute; /* Do not alter this line! */
+	visibility: visible;
+}
+
+#menuItem1
+{
+	background-image: url('../templates/default/images/new-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem2
+{
+	background-image: url('../templates/default/images/print-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem3
+{
+	background-image: url('../templates/default/images/exit-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem4
+{
+	background-image: url('../templates/default/images/delete-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem5
+{
+	background-image: url('../templates/default/images/undelete-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem8
+{
+	background-image: url('../templates/default/images/settings-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem9
+{
+	background-image: url('../templates/default/images/help-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#menuItem10
+{
+	background-image: url('../templates/default/images/about-16x16.png');
+	background-position: middle left;
+	background-repeat: no-repeat;
+}
+
+#buttons
+{
+	background-color: #ddd;
+	border-bottom: 1px solid #eee;
+	border-top: 1px solid #eee;
+	height: 50px;
+	left: 0px;
+	overflow: hidden;
+	padding: 0px 10px;
+	position: fixed;
+	top: 22px;
+	width: 100%;
+}
+
+#buttons button
+{
+	background-color: #ddd;
+	border: 2px solid #ddd;
+	color: #000;
+	display: inline;
+	float: left;
+	hide-focus: true;/* M$IE Only :( */
+	margin: 0px;
+	padding: 0px 10px;
+	text-align: center;
+	-moz-user-select: none;
+}
+
+#buttons button:hover
+{
+	border: 2px outset #eee;
+	background-color: #eee;
+}
+
+#buttons button:active
+{
+	border: 2px inset #ccc;
+	background-color: #ccc;
+}
+
+#buttons button.inactive
+{
+	background-color: #ddd;
+	color: #999;
+}
+
+#buttons button.inactive:hover
+{
+	border: 2px solid transparent;
+}
+
+#buttons button.inactive img
+{
+	/* CSS 3 */
+	opacity: 0.7;
+	
+	/* Non standard */
+	-moz-opacity: 0.7;
+	filter:alpha(opacity=70);
+}
+
+#buttons img
+{
+	border: 0px;
+	height: 24px;
+	width: 24px;
+}
+
+#fields
+{
+	border-bottom: 2px ridge #ddd;
+	height: 157px;
+	left: 10px;
+	padding-top: 2px;
+	position: fixed;
+	right: 10px;
+	top: 70px;
+}
+
+#compose
+{
+	height: 275px;
+	left: 10px;
+	position: fixed;
+	top: 230px;
+	width: 685px;
+}
+
+#accounts
+{
+	background-color: #fff;
+	border: 1px solid #000;
+	bottom: 10px;
+	left: 10px;
+	overflow: auto;
+	padding: 0px;
+	position: fixed;
+	top: 80px;
+	width: 200px;
+}
+
+#accounts ul
+{
+	display: block;
+	list-style: none inside;
+	margin: 0px;
+	padding: 0px;
+	white-space: nowrap;
+}
+
+#accounts li.new_msgs
+{
+	font-weight: bold;
+}
+
+#accounts ul ul
+{
+	padding-left: 20px;
+}
+
+#accounts li.subs ul
+{
+	font-weight: normal;
+}
+
+#accounts_menu
+{
+	background-color: #ddd;
+	border: 1px solid #000;
+	display: none;
+	margin: 0px;
+	padding: 2px;
+	position: absolute;
+}
+
+#accounts_menu ul
+{
+	border-bottom: 1px solid #000;
+	list-style: none;
+	margin: 0px;
+	padding: 2px;
+}
+
+#accounts_menu li
+{
+	position: relative;
+}
+
+#accounts_menu li:hover
+{
+	background-color: #ccf;
+}
+
+#accounts_menu_props
+{
+	border-width: 0px;
+}
+
+#search
+{
+	height: 24px;
+	left: 230px;
+	position: fixed;
+	right: 10px;
+	top:70px;
+}
+
+#search input, #search select
+{
+	display: block;
+	float: left;
+	margin: 0px;
+}
+
+#search input[type=submit], #search input[type=reset], #search #keywords
+{
+	border: 1px solid #000;
+	margin: 0px 2px;
+}
+
+#search input[type=submit]:hover, #search input[type=reset]:hover, #search select:hover
+{
+	border-style: outset;
+	background-color: #e9e9e9;
+}
+
+#search input.disabled, #search input.disabled:hover
+{
+	background-color: transparent;
+	border: 1px solid #999;
+	color: #999;
+}
+
+#search select
+{
+	background-color: transparent;
+	border-color: transparent;
+	border-style: solid;
+	width: 175px;
+}
+
+#search #keywords
+{
+	width: 200px;
+}
+
+#summary
+{
+	background-color: #fff;
+	border: 1px solid #000;
+	height: 170px;
+	left: 230px;
+	overflow: hidden;
+	padding: 0px;
+	position: fixed;
+	right: 10px;
+	top: 100px;
+}
+
+#summary .sum_hidden
+{
+	display: none;
+}
+
+#summary .sum_img
+{
+	overflow: hidden;
+	text-align: center;
+	width: 18px;
+}
+
+#summary .sum_from, #summary .sum_subject
+{
+	overflow: hidden;
+	width: 32.5%;
+}
+
+#summary .sum_date
+{
+	overflow: hidden;
+	width: 12.5%;
+}
+
+#summary .sum_size
+{
+	overflow: hidden;
+	width: 10%
+}
+
+#summary_tbl
+{
+	border-collapse: collapse;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	table-layout: fixed;
+	top: 0px;
+	width: 100%;
+}
+
+#summary tbody
+{
+	height: 150px;
+	overflow: auto;
+}
+
+#summary tbody tr
+{
+	height: 21px;
+	max-height: 21px;
+}
+
+#summary tbody tr.unread
+{
+	font-weight: bold;
+}
+
+#summary tbody td
+{
+	white-space: nowrap;
+	overflow: hidden;
+	padding-left: 5px;
+}
+
+#summary tbody td.sum_date, #summary tbody td.sum_size
+{
+	text-align: right;
+}
+
+#summary tbody tr.deleted td
+{
+	text-decoration: line-through;
+}
+
+#message
+{
+	background-color: #fff;
+	border: 1px solid #000;
+	bottom: 10px;
+	left: 230px;
+	overflow: auto;
+	padding: 10px;
+	position: fixed;
+	right: 10px;
+	top: 285px;
+}
+
+#headers
+{
+	border: 1px solid #999;
+	background-color: #ddd;
+	line-height: 0.8;
+	margin: 10px 0px;
+	padding: 10px 10px 0px 10px;
+}
+
+#headers br, #fields br
+{
+	clear: left;
+}
+
+span.header_label, span.header_value, #fields input, #fields label, #fields select
+{
+	display: block;
+	float: left;
+	margin-bottom: 5px;
+	width: 100px;
+}
+
+#fields input
+{
+	width: 600px;
+}
+
+#fields #account
+{
+	width: 375px;
+}
+
+#fields #signature_list
+{
+	width: 150px;
+}
+
+#fields .btn, #fields label
+{
+	width: 60px;
+	margin-right: 15px;
+}
+
+#fields label
+{
+	text-align: right;
+}
+
+#signature
+{
+	height: 120px;
+	left: 10px;
+	position: fixed;
+	top: 425px;
+	width: 485px;
+}
+
+/* View */
+.msg_attachment
+{
+	margin: 10px 0px;
+}
+
+.msg_attachment img
+{
+	vertical-align: middle;
+}
+
+.msg_attachment iframe.typetext
+{
+	width: 95%;
+	height: 200px;
+	border: 0px;
+}
+
+.msg_attachment iframe.typeother
+{
+	border: 0px;
+	display: none;
+	height: 0px;
+	width: 0px;
+}
+
+/* Compose attachments */
+#attachments
+{
+	height: 120px;
+	left: 10px;
+	position: fixed;
+	top: 425px;
+	width: 485px;
+}
+
+#signature #signature_selector, #attachments #attachments_selector
+{
+	display: block;
+	height: 20px;
+}
+
+#signature #signature_content, #attachments #attachments_list
+{
+	height: 100px;
+	overflow: auto;
+	width: 685px;
+}
+
+#attachments #attachments_list
+{
+	background-color: #fff;
+}
+
+#attachments_list ul
+{
+	display: block;
+	list-style: none;
+	margin: 2px;
+	padding: 2px;
+	width: 680px;
+}
+
+#attachments_list li
+{
+	float: left;
+	padding: 3px;
+	text-align: center;
+	overflow: hidden;
+	width: 85px;
+}
+
+#attachments_list li img
+{
+	height: 48px;
+	width: 48px;
+}
+
+#ctrl_buttons
+{
+	background-color: #ddd;
+	border-top: 1px solid #fff;
+	bottom: 0px;
+	left: 0px;
+	position: absolute;
+	right: 0px;
+	text-align: right;
+}
+
+#ctrl_buttons button
+{
+	background-color: #ddd;
+	margin: 5px;
+}
+
+#ctrl_buttons button img
+{
+	height: 24px;
+	vertical-align: middle;
+	width: 24px;
+}
+
+span.header_label
+{
+	font-weight: bold;
+	margin-right: 10px;
+	text-align: right;
+}
+
+span.header_value
+{
+	width: auto;
+}
+
+.row_off
+{
+	background-color: #ddd;
+}
+
+.hilite, .selectedTreeRow, #msg_loading div, #settings #tabbar li.activetab
+{
+	background-color: #004d91;
+	color: #fff;
+}
+
+.important
+{
+	color: #c00;
+}
+
+.shortcut
+{
+	text-decoration: underline;
+}
+
+.hidden, .menuName
+{
+	display: none;
+}
+
+.autocomplete
+{
+	background-color: #ddd;
+	border: 1px solid #999;
+	border-top-width: 0px;
+	color: #000;
+}
+
+.autocompleteHighlight, .autocomplete:hover
+{
+	background-color: #00d;
+	color: #000;
+}
+
+/** Common Form Elements **/
+#button_help
+{
+	float: left;
+}
+
+#button_close
+{
+	display: inline;
+	float: right;
+}
+
+/** Attachment popup box **/
+#attach_popup
+{
+	padding: 12px;
+}
+
+#attach_popup table
+{
+	background-color: #fff;
+	border: 1px solid #000;
+	border-collapse: collapse;
+	height: 125px;
+	margin: 15px 22px;
+	overflow: hidden;
+	padding: 0px;
+	table-layout: fixed;
+	width: 390px;
+}
+
+#attach_popup tbody
+{
+	height: 100px;
+	overflow: auto;
+	width: 190px;
+}
+
+#attach_popup th, #attach_popup td
+{
+	height: 15px;
+	overflow: hidden;
+	white-space: nowrap;
+	width: 25px;
+}
+
+#attach_popup .filename
+{
+	width: 190px;
+}
+
+#attach_popup .size
+{
+	text-align: right;
+	width: 35px;
+}
+
+#attach_popup th.size
+{
+	text-align: center;
+}
+
+#attach_popup .remove
+{
+	font-size: 11px;
+	text-align: center;
+	width: 50px;
+}
+
+#attach_popup img
+{
+	height: 16px;
+	width: 16px;
+}
+
+/** Loading Popup **/
+#msg_loading
+{
+	border: 2px outset #ddd;
+	background-color: #ddd;
+	color: #000;
+	display: none;
+	height: 70px;
+	left: 50%;
+	margin: 0px;
+	position: fixed;
+	top: 50%;
+	width: 250px;
+	z-index: 100;
+}
+
+#msg_loading div
+{
+	font-weight: bold;
+	padding: 2px 0px;
+}
+
+#msg_loading span
+{
+	float: right;
+}
+
+
+#msg_loading object
+{
+	padding: 20px 10px;
+	vertical-align: middle;
+}
+
+/* Accounts Management "screens" */
+#account_edit
+{
+	background-color: #c8c8c8;
+	margin: 0px;
+	padding: 0px;
+}
+
+#account_edit h1
+{
+	clear: both;
+	font-size: 14px;
+	text-align: left;
+}
+
+#account_edit h2
+{
+	font-size: 12px;
+}
+
+#account_edit br
+{
+	clear: left;
+}
+
+#account_edit input, #account_edit label, #account_edit select
+{
+	display: block;
+	float: left;
+	margin-bottom: 5px;
+	width: 125px;
+}
+
+#account_edit input
+{
+	width: 300px;
+}
+
+#account_edit label
+{
+	font-weight: normal;
+}
+
+#account_edit #tabbar ul
+{
+	list-style: none;
+	padding: 0px;
+}
+
+#account_edit #tabbar li, #account_edit #tabbar li.inactivetab
+{
+	
+	background-color: #c8c8c8;
+	border-color: #000;
+	border-style: solid;
+	border-width: 1px;
+	float: left;
+	margin: 0px 1px;
+	padding: 3px 5px;
+}
+
+#account_edit #tabbar li.activetab, #account_edit #tabbar li:hover
+{
+	
+	background-color: #ddd;
+	border-width: 1px 1px 0px 1px;
+}
+
+
+#account_edit div.inactivetab
+{
+	display: none;
+	background-color: #c8c8c8;
+	padding: 10px;
+}
+
+#account_edit div.activetab
+{
+	display: block;
+	background-color: #ddd;
+	padding: 10px;
+}
+
+/* Settings Screen */
+#settings
+{
+	background-color: #ddd;
+	margin: 0px;
+	padding: 10px;
+}
+
+#settings #tabbar ul
+{
+	background-color: #fff;
+	bottom: 50px;
+	border: 1px solid #000;
+	left: 10px;
+	list-style: none;
+	margin: 0px;
+	padding: 5px 0px;
+	position: absolute;
+	top: 10px;
+	width: 100px;
+}
+
+#settings #tabbar li, #settings #tabbar li.inactivetab
+{
+	border: none;
+	margin: 10px;
+	padding: 0px;
+	text-align: center;
+}
+
+#settings div#content
+{
+	bottom: 50px;
+	left: 120px;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+#settings #btns;
+{
+	left: 630px;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+#settings table
+{
+	border: 1px solid #000;
+	border-collapse: collapse;
+	background-color: #fff;
+	height: 300px;
+	width: 520px;
+	padding: 0px;
+}
+
+#settings tr
+{
+	height: 20px;
+	max-height: 20px;
+}
+
+#settings table .enabled, #settings table .type
+{
+	text-align: center;
+	width: 100px;
+}
+
+#settings table .name
+{
+	width: 320px;
+}
+
+#settings div.inactivetab
+{
+	display: none;
+	background-color: #c8c8c8;
+	padding: 10px;
+}
+
+#settings div.activetab
+{
+	display: block;
+	background-color: #ddd;
+	padding: 10px;
+}

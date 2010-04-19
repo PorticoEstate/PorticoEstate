@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Untitled</title>
+    <style type="text/css">
+p{border:1px solid red;}
+p.test{color:orange;}
+div{border:1px solid blue;}
+    </style>
+    <script type="text/javascript" src="../../sarissa.js">
+    </script>
+    <script type="text/javascript">
+    <!--
+function test()
+{
+    // create source document
+    var xmlDoc = Sarissa.getXmlHttpRequest();
+	xmlDoc.open("GET", "http://localhost/hsqldb-ds.xml", false);
+	xmlDoc.send(null);
+	alert(xmlDoc.responseXML);
+}
+    //-->
+    </script>
+</head>
+
+<body>
+<div><button onclick="test()">test</button></div>
+	<div id="appendInnerHTML"></div>
+	<div id="appendChild"></div>
+</body>
+</html>

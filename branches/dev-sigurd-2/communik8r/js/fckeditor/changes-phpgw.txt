@@ -1,0 +1,6 @@
+Changes made to FCKeditor for phpGroupWare version.
+
+Initial Import into private SVN 1-May-2005
+* Removed client side wrapper scripts for other languages
+* Made the default theme use CSS System Colors 
+	- now it fits with the rest of communik8r

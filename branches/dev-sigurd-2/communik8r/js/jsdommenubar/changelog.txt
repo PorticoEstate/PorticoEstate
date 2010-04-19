@@ -1,0 +1,56 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~                          jsDOMenuBar Changelog                          ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+12 February 2005 (Version 1.1.1)
+
+ ~ Fixed a bug that causes menu bar items in static menu bars not to appear in 
+   Internet Explorer.
+
+
+16 January 2005 (Version 1.1)
+
+ ~ Changed the method signature of global public constructor jsDOMenuBar(). 
+   Order of arguments is changed, and a new argument id is added. This new 
+   argument is required when mode = "static" (see below).
+ ~ Added new mode of menu bar "static". A static menu bar is fixed at a 
+   particular position with respect to the document structure, i.e. the 
+   position of the menu bar will "flow" with the document when the browser is 
+   resized. Thus, it is not required to call methods like setX(), moveTo(), 
+   etc to position the menu bar. To achieve this, users need to specify the id 
+   of the element that will contain the menu bar.
+ ~ Menu bar item can now have an icon before the display text. However, the 
+   icons will not be shown on absolute/fixed menu bars in Opera due to 
+   positioning problems.
+ ~ Added public method showIcon(). Shows the icon before the display text.
+ ~ Added public method setIconClassName(). Accepts a string that specifies the 
+   CSS class selector for the icon of the menu bar item.
+ ~ Added public method setIconClassNameOver(). Accepts a string that specifies 
+   the CSS class selector for the icon of the menu bar item when the cursor is 
+   over the menu bar item.
+ ~ Added public method setIconClassNameClick(). Accepts a string that 
+   specifies the CSS class selector for the icon of the menu bar item when the 
+   cursor is clicked on the menu bar item.
+ ~ Added public method setActivateMode(). Accepts a string that specifies how 
+   the menu bar is activated, i.e. how to show the menu bar menus. Allowed 
+   values are "click" or "over". The "click" mode requires users to click on 
+   the menu bar item to show the menu bar menu, while the "over" mode only 
+   requires users to move the cursor over the menu bar item to show the menu 
+   bar menu.
+ ~ Added global public property menuBarMode. String that specifies the default 
+   mode of the menu bars.
+ ~ Added global public property menuBarActivateMode. String that specifies the 
+   default activate mode of the menu bars.
+ ~ Some other miscellaneous bug fixes/improvements/changes.
+
+
+15 July 2004 (Version 1.0.1):
+
+ ~ Removed some redundant codes that results in reduced file size.
+ ~ Added some semi-colons so that the script will still work after going 
+   through safe compress, i.e. removing comments and unnecessary whitespaces.
+
+
+04 July 2004 (Version 1.0):
+
+ ~ Initial release.

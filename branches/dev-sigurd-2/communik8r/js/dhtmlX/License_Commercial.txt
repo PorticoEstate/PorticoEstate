@@ -1,0 +1,8 @@
+If you want to use this version of dhtmlXMenu in a commercial product, you are 
+not able to, this version is licensed soley under the terms of the GPL, see
+License_GPL.txt for more information.
+
+Unlike the non GPL licensed versions distributed by Scand LLC, you are allowed
+to make changes to the code of Software, as long as you comply with the GPL
+including you are allowed to distribute changed code.
+

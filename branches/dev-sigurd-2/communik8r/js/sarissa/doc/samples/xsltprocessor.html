@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Untitled</title>
+    <style type="text/css">
+p{border:1px solid red;}
+p.test{color:orange;}
+div{border:1px solid blue;}
+    </style>
+    <script type="text/javascript" src="../../sarissa.js">
+    </script>
+    <script type="text/javascript">
+    <!--
+var processor = new XSLTProcessor();
+var xslDoc = Sarissa.getDomDocument();
+var xslStr = "<?xml version='1.0' encoding='UTF-8'?>"+
+  	"<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' >"+
+    	"<xsl:output method='html' version='1.0' encoding='UTF-8' indent='yes'/>"+
+	"<xsl:param name='title'><xsl:value-of select=\"'default title'\"/></xsl:param>"+
+    	"<xsl:template match='/'><p class='test' title='{$title}'>test</p></xsl:template><xsl:template match='@*'>"+
+    	"</xsl:template></xsl:stylesheet>";
+xslDoc.loadXML(xslStr);
+processor.importStylesheet(xslDoc);
+
+function test(paramValue) {
+	processor.setParameter(null, "title", paramValue);
+    // create source document
+    var xmlDoc = Sarissa.getDomDocument("http://foo.org/ns/uri","foo", null);
+    var newDocument = processor.transformToDocument(xmlDoc);
+    alert(newDocument.xml);
+}
+
+test("test 1");
+   
+    //-->
+    </script>
+</head>
+
+<body>
+</body>
+</html>

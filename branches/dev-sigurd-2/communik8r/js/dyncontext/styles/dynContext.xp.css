@@ -1,0 +1,97 @@
+.dynContext {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    background-color: #f6f6f6;
+    border: 1px #666666 solid;
+    background-image: url('../images/xpbackground.gif');
+}
+
+.dynContext_table {
+    margin: 1px;
+}
+
+.dynContext_cell {
+    font-family: Microsoft Sans Serif, Arial, Sans-Serif;
+    font-size: 8pt;
+    color: black;
+    cursor: default;
+    padding: 0px;
+}
+
+.dynContext_cell_mouseover {
+    font-family: Microsoft Sans Serif, Arial, Sans-Serif;
+    font-size: 8pt;
+    color: black;
+    background-color: #adadd1;
+    border: 1px solid #000080;
+    cursor: default;
+}
+
+.dynContext_textcell {
+}
+
+.dynContext_textcell_mouseover {
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.dynContext_imagecell {
+    text-align: center;
+    width: 30px;
+    filter:	Alpha(Opacity=50);
+    padding: 1px;
+}
+
+.dynContext_imagecell_mouseover {
+    width: 30px;
+    text-align: center;
+    border-right: 0px;
+}
+
+.dynContext_imagecell_empty_mouseover {
+    width: 30px;
+    border-right: 0px;
+}
+
+.dynContext_arrowcell {
+    padding: 1px;
+    width: 20px;
+    text-align: right;
+    font-family: Webdings;
+    font-size: 10pt;
+}
+
+.dynContext_arrowcell_mouseover {
+    border-left: 0px;
+    width: 20px;
+    text-align: right;
+    font-family: Webdings;
+    font-size: 10pt;
+}
+
+.dynContext_checkcell {
+    width: 30px;
+    text-align: center;
+    font-family: Marlett;
+    font-size: 13pt;
+    padding-left: 1px;
+}
+
+.dynContext_checkcell_mouseover {
+    width: 30px;
+    text-align: center;
+    font-family: Marlett;
+    font-size: 13pt;
+    border-right: 0px;
+}
+
+.dynContext_separatorcell {
+}
+
+.dynContext_separator {
+    width: 75%;
+    height: 1px;
+    color: #cacaca;
+    text-align: right;
+}

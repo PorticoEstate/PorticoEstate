@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy for Linux/x86 (vers 1st July 2002), see www.w3.org">
+        <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
+
+        <title>Class: dynContext_checkItem</title>
+        <link rel="stylesheet" href="manual.css" type="text/css">
+        <meta name="generator" content="DocBook XSL Stylesheets V1.52.2">
+        <link rel="home" href="index.html" title="dynContext Documentation">
+        <link rel="up" href="api.html" title="API">
+        <link rel="previous" href="class.dynContext_menuItem.html" title="Class: dynContext_menuItem">
+        <link rel="next" href="class.dynContext_radioItem.html" title="Class: dynContext_radioItem">
+        <link rel="article" href="index.html" title="dynContext Documentation">
+    </head>
+
+    <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+        <div class="navheader">
+            <table width="100%" summary="Navigation header">
+                <tr>
+                    <th colspan="3" align="center">Class: dynContext_checkItem</th>
+                </tr>
+
+                <tr>
+                    <td width="20%" align="left"><a accesskey="p" href="class.dynContext_menuItem.html">Prev</a>&nbsp;</td>
+
+                    <th width="60%" align="center">API</th>
+
+                    <td width="20%" align="right">&nbsp;<a accesskey="n" href="class.dynContext_radioItem.html">Next</a></td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+
+        <div class="sect2">
+            <div class="titlepage">
+                <div>
+                    <h3 class="title"><a name="class.dynContext_checkItem"></a>Class: dynContext_checkItem</h3>
+                </div>
+            </div>
+
+            <p>This class provides a check style menuitem (ie a menu item with a tick instead of an image). It can be defaultly checked or unchecked.</p>
+
+            <p>Methods: <span class="emphasis"><em>This class inherits the toggleDisabled(), setDisabled() and isDisabled() methods from the <a href="class.dynContext_menuItem.html" title=
+            "Class: dynContext_menuItem">dynContext_menuItem</a> class.</em></span></p>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">Constructor</b></code> (<var class="pdparam">Text</var>, <var class="pdparam">[Checked]</var>, <var class=
+                "pdparam">[Javascript]</var>, <var class="pdparam">[disabled]</var>);<br>
+                 string <var class="pdparam">Text</var> ;<br>
+                 boolean <var class="pdparam">[Checked]</var> ;<br>
+                 string <var class="pdparam">[Callback Handler]</var> ;<br>
+                 boolean <var class="pdparam">[disabled]</var> ;</code></p>
+<pre class="funcsynopsisinfo">
+The constructor is called automatically when you create the object. The first argument is the text that should
+appear with the menuitem. This is the only required argument. The second argument is a boolean as to whether the
+menuitem is checked or not. The third is the javascript function that should run when this item is clicked.
+This should be passed as the name of the function only, eg. 'myCallback', and NOT 'myCallback()'.
+You should be aware that this code runs <span class="emphasis"><em>after</em></span> the item has been checked/unchecked so if you refer to
+the checked status of the item you will get the <span class="emphasis"><em>new</em></span> status. The last argument is a boolean and
+dictates whether the menuitem is disabled (true) or not (false).
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">toggleChecked</b></code> ();<br>
+                ;</code></p>
+<pre class="funcsynopsisinfo">
+This method toggles the checked status of the menuitem, unchecking it if it's currently checked, and vice versa.
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">setChecked</b></code> (<var class="pdparam">Checked</var>);<br>
+                 boolean <var class="pdparam">Checked</var> ;</code></p>
+<pre class="funcsynopsisinfo">
+This method can be used to set the checked status of the menuitem. The argument should be true for checked, and
+false for unchecked. Using this method does not cause the javascript for this menuitem to run.
+                               
+</pre>
+            </div>
+
+            <div class="funcsynopsis">
+                <p><code><code class="funcdef"><b class="fsfunc">isChecked</b></code> ();<br>
+                ;</code></p>
+<pre class="funcsynopsisinfo">
+This method returns the current checked status of the menuitem. True for checked, false for unchecked.
+                               
+</pre>
+            </div>
+
+            <div class="example">
+                <a name="id2790810"></a>
+
+                <p class="title"><b>Example&nbsp;Creating a few dynContext_checkItem objects.&nbsp;</b></p>
+<pre class="programlisting">
+&lt;script language="javascript"&gt;
+&lt;!-- 
+        checkItem_1 = new dynContext_checkItem('Checkitem 1');
+        checkItem_2 = new dynContext_checkItem('Checkitem 2', true);
+        checkItem_3 = new dynContext_checkItem('Checkitem 3', false, 'parent.updateFoo()');
+        checkItem_4 = new dynContext_checkItem('Checkitem 4', false, null, true);
+// --&gt;
+&lt;/script&gt;
+
+                               
+</pre>
+            </div>
+        </div>
+
+        <div class="navfooter">
+            <hr>
+
+            <table width="100%" summary="Navigation footer">
+                <tr>
+                    <td width="40%" align="left"><a accesskey="p" href="class.dynContext_menuItem.html">Prev</a>&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="u" href="api.html">Up</a></td>
+
+                    <td width="40%" align="right">&nbsp;<a accesskey="n" href="class.dynContext_radioItem.html">Next</a></td>
+                </tr>
+
+                <tr>
+                    <td width="40%" align="left" valign="top">Class: dynContext_menuItem&nbsp;</td>
+
+                    <td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td>
+
+                    <td width="40%" align="right" valign="top">&nbsp;Class: dynContext_radioItem</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-10 18:21:14
+-->
+<html>
+	<head>
+		<title>FCKeditor - Using FCKeditor with JavaScript</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Server Side Integration Guidelines</H1>
+		<P>This documet offers some guidelines that must be considered when
+			developing&nbsp;server side integration for FCKeditor (alias Server Side
+			Integration Pack).</P>
+		<P>There a few points of integration that every server side technology should have
+			to be completely ready for FCKeditor. These are the main features:</P>
+		<UL>
+			<UL>
+				<LI>
+					<A href="#FCKeditorCreator">FCKeditor Creator</A>
+				<LI>
+					<A href="#FileUploadManager">File Upload Manager</A>
+				<LI>
+					<A href="#FileBrowser">File Browser</A>
+				<LI>
+					<A href="#Samples">Samples</A>
+				<LI>
+					<A href="#Documentation">Documentation</A></LI></UL>
+		</UL>
+		<P>This document will present the basic (minimum) features the integration must
+			accomplish to. Any other feature is a welcome surplus. The scope of this
+			document is to provide a generic pattern&nbsp;in the way the editor can have a
+			homogeneous programming style even throw different languages.</P>
+		<HR width="100%" SIZE="1">
+		<H2 id="FCKeditorCreator">FCKeditor Creator</H2>
+		<P>This is the main integration feature needed. It makes it possible to create an
+			instance of FCKeditor in a page using the desired server side language. Object
+			oriented programming (OOP) should be used wherever is possible. These are the
+			tasks the Integration Pack should propose to the end user programmer:</P>
+		<UL>
+			<UL>
+				<LI>
+				Editor Instance Creation
+				<LI>
+				Configuration and Settings
+				<LI>
+					Automatic Browser Compatibility Detection:
+					<UL>
+						<LI>
+						Output HTML&nbsp;of the editor IFRAME for compatible browsers.
+						<LI>
+							Output HTML of a simple TEXTAREA for not compatible browsers.</LI></UL>
+				</LI>
+			</UL>
+		</UL>
+		<P>Suppose the editor instance is called "MyEditor". For compatible browser the
+			Integration Pack should output HTML like this:</P>
+		<code>&lt;div&gt;<BR>
+			&lt;input type="hidden" id="<STRONG>MyEditor</STRONG>" name="MyEditor" value="<STRONG><EM>initial
+					value (HTML encoded)</EM> </STRONG>"&gt;<BR>
+			&lt;input type="hidden" id="<STRONG>MyEditor</STRONG>___Config" value="<STRONG>Key1=Value1&amp;Key2=Value2&amp;...
+				<EM>(Key/Value:HTML encoded)</EM></STRONG>"&gt;<BR>
+			&lt;iframe id="<STRONG>MyEditor</STRONG>___Frame" src="<STRONG>/FCKeditor/</STRONG>editor/fckeditor.html?InstanceName=<STRONG>MyEditor</STRONG>&amp;Toolbar=<STRONG>Default</STRONG>"
+			width="<STRONG>100%</STRONG>" height="<STRONG>200</STRONG>" frameborder="no"
+			scrolling="no"&gt;&lt;/iframe&gt;<BR>
+			&lt;/div&gt;<BR>
+		</code>
+		<P>While non compatible browsers should get:</P>
+		<code>&lt;div&gt;<BR>
+			&lt;textarea name="<STRONG>MyEditor</STRONG>" rows="4" cols="40" style="WIDTH: <STRONG>
+				100%</STRONG>; HEIGHT: <STRONG>200px</STRONG>" wrap="virtual"&gt;<STRONG><EM>initial
+					value (HTML encoded)</EM></STRONG>&lt;/textarea&gt;<BR>
+			&lt;/div&gt;</code>
+		<H3>FCKeditor Class</H3>
+		<P>The Integration pack should usually offer a main class, called "FCKeditor", in a
+			file called "fckeditor.ext" placed in the root of the editor's distribution
+			package. To be able to use the class the end user should just include a "link"
+			to that file and then easily create an instance of it. Obviously this is the
+			common scenario for scripting languages. Other languages should just reflect
+			this situation in the better way it's possible.</P>
+		<P>This is the basic structure of the FCKeditor Class:</P>
+		<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+			<div class="classDefinition">
+				<P><STRONG>Constructor</STRONG></P>
+				<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+					<P>FCKeditor( instanceName )</P>
+				</BLOCKQUOTE>
+				<P><STRONG>Properties</STRONG></P>
+				<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+					<P>InstanceName<BR>
+						Width
+						<BR>
+						Height
+						<BR>
+						ToolbarSet
+						<BR>
+						Value
+						<BR>
+						BasePath</P>
+				</BLOCKQUOTE>
+				<P><STRONG>Collections</STRONG></P>
+				<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+					<P>Config <EM>(Only if possible to use collections)</EM></P>
+				</BLOCKQUOTE>
+				<P><STRONG>Methods</STRONG></P>
+				<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+					<P>Create()<BR>
+						SetConfig( key, value ) <EM>(Only if not possible to use collections)</EM></P>
+				</BLOCKQUOTE>
+			</div>
+		</BLOCKQUOTE>
+		<P>The implementation should be based on the Javascript implementation (see
+			fckeditor.js file). See <A href="../Using%20FCKeditor/Javascript.html">/_documentation/Developers/Using
+				FCKeditor/Javascript.html</A> for a complete explanation of the class
+			elements.</P>
+		<HR width="100%" SIZE="1">
+		<H2 id="FileUploadManager">File Upload Manager</H2>
+		<P>[&nbsp;Documentation not yet available&nbsp;]</P>
+		<HR width="100%" SIZE="1">
+		<H2 id="FileBrowser">File Browser</H2>
+		<P>The editor gives the end user the flexibility to create a custom file browser
+			that can be integrated on it. This is a powerful feature, because every case is
+			a different case and so different and specific problems must be solved. In any
+			case, the editor package offers a default implementation of the File Browser so
+			the user has a ready to use software without having to develop anything.</P>
+		<P>On prior versions, a sample File Browser was available for each server side
+			technology the editor was integrated. The problem with that approach is that
+			each sample had a different implementation and worked completed different from
+			each other. And worst, on some of then it was really poor.</P>
+		<P>To solve that problems the actual version offers a <STRONG>unique interface</STRONG>
+			that can be used by all server side languages. The interface was developed
+			completely on Javascript DHTML and the integration is available by <STRONG>XML</STRONG>.
+			In this way the developer that wants to integrate with it doesn't have be
+			worried about the presentation layer of it.</P>
+		<H3>The Architecture</H3>
+		<P>The following graphic shows how the File Browser Integration works:</P>
+		<P align="center"><IMG src="002/FileBrowserConnector.gif"></P>
+		<P align="left">The "Connector" is the main file to be developed in this case
+			regarding the server side integration with the File Browser. The following
+			tasks must be done by the Connector:</P>
+		<UL>
+			<UL>
+				<LI>
+					<DIV align="left">Receive the File Manager requests.</DIV>
+				<LI>
+					<DIV align="left">Execute operations in the File System, like folder and files
+						creations and listings.</DIV>
+				<LI>
+					<DIV align="left">Build&nbsp;the XML response in the right format and syntax.</DIV>
+				<LI>
+					<DIV align="left">Receive and handle file uploads from the File Browser.</DIV>
+				</LI>
+			</UL>
+		</UL>
+		<H3>The File Browser Requests</H3>
+		<P>All requests are simply made by the File Browser using the normal HTTP channel.
+			The request info is always passed by QueryString in the URL that reflects the
+			following format:</P>
+		<code>connector.ext?Command=<STRONG>CommandName</STRONG>&amp;Type=<STRONG>ResourceType</STRONG>&amp;CurrentFolder=<STRONG>FolderPath</STRONG>&amp;ServerPath=<STRONG>ServerPath</STRONG></code>
+		<p><STRONG>CommandName</STRONG><BR>
+			Is the command the Connector must execute. For now there are three commands
+			that must be handled: "GetFolders", "GetFoldersAndFiles" and "CreateFolder".</p>
+		<P><STRONG>ResourceType</STRONG><BR>
+			The File Browser is used on many parts of the editor, like the Link and Image
+			dialog boxes and in the future Flash and Multimedia dialogs.&nbsp;So to
+			separate each "Resource Type" the following type names&nbsp;are
+			used:&nbsp;"File", "Image", "Flash" and "Media".</P>
+		<P><STRONG>FolderPath</STRONG><BR>
+			Represents the path of the actual folder visible in the File Browser. This path
+			is not the final URL path for that folder, but it is relative to the Resource
+			Type folder. The final folder is composed by: "Configured User Files Path" +
+			"Resource Type" + "Folder Path". For example, the Folder Path "/Docs/Test/"
+			of&nbsp;resources type "Image"&nbsp;could correspond to the following URL path:
+			"/UserFiles/Image/Docs/Test/".</P>
+		<P>The Folder Path must always begin and finish with a slash ("/").</P>
+		<P><STRONG>ServerPath</STRONG><BR>
+			Is the path to the root directory for the files handled by the connector. This
+			is not the best approach to set the server directory to use but its a option
+			the end user can have.</P>
+		<P>The developer is encouraged to make available an easy and secure way to
+			configure the "Server Path" folder by the end user. For example,&nbsp;for the
+			ASP.NET Connector the user can use the global Web.config file to set witch
+			folder to use the file. In case of absent configuration the Connector must use
+			the "/UserFiles/" folder. The Connector should also automatically create the
+			folder in the case it not exists.</P>
+		<P>Please try to let any configuration setting to be done outside the editor
+			package directory. In this way it is easy to the end user to handle future
+			editor updates (just replacing the entire directory with the new version).</P>
+		<H3>The Connector Responses</H3>
+		<P>All Connector responses have the same base XML structure, like this:</P>
+		<code>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+			<br>
+			&nbsp; &lt;Connector command="<STRONG>RequestedCommandName</STRONG>"
+			resourceType="<STRONG> RequestedResourceType</STRONG>"&gt;<br>
+			&nbsp;&nbsp;&nbsp; &lt;CurrentFolder path="<STRONG>CurrentFolderPath</STRONG>"
+			url="<STRONG>CurrentFolderUrl</STRONG>" /&gt;<BR>
+			&nbsp;&nbsp;&nbsp; <STRONG>&lt;!-- Here goes all specific command data --&gt;</STRONG>
+			<br>
+			&lt;/Connector&gt; </code>
+		<P>Some important things must be considered when building the response:</P>
+		<UL>
+			<UL>
+				<LI>
+				The response encoding must be set to "text/xml".
+				<LI>
+				The "Cache-Control" HTTP header must be set to "no-cache". This is need because
+				the browsers usually cache the requests for XML files and this is not wanted in
+				this case.
+				<LI>
+					The Path and the URL must always start and finish with a slash (/).</LI></UL>
+		</UL>
+		<H3>The Commands</H3>
+		<P>The actual File Browser version&nbsp;has 3 commands that wait for XML responses
+			and 1&nbsp;command that wait for HTML:</P>
+		<UL>
+			<UL>
+				<LI>
+					<STRONG>GetFolders</STRONG>
+				(XML): gets the list of the children folders of a folder.
+				<LI>
+					<STRONG>GetFoldersAndFiles</STRONG>
+				(XML): similar to the above command, gets the list of the children folders and
+				files of a folder.
+				<LI>
+					<STRONG>CreateFolder</STRONG>
+				(XML): creates a child folder.
+				<LI>
+					<STRONG>FileUpload</STRONG> (HTML): adds a file in a folder.</LI></UL>
+		</UL>
+		<P>Sample responses can be found&nbsp;in the&nbsp;"[Docs
+			Path]/contents/002/FileBrowserConnectors/SampleResponses" folder.</P>
+		<P><STRONG>GetFolders<BR>
+			</STRONG>Gets the list of the children folders of a folder.</P>
+		<P>Sample Request:</P>
+		<code>connector.ext?Command=<STRONG>GetFolders</STRONG>&amp;Type=<STRONG>File</STRONG>&amp;CurrentFolder=<STRONG>/Samples/Docs/</STRONG>
+		</code>
+		<P>Sample Response:</P>
+		<CODE>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+			<BR>
+			&nbsp; &lt;Connector command="<STRONG>GetFolders</STRONG>" resourceType="<STRONG>File</STRONG>"&gt;<BR>
+			&nbsp;&nbsp;&nbsp; &lt;CurrentFolder path="<STRONG>/Samples/Docs/</STRONG>"
+			url="<STRONG>/UserFiles/File/Samples/Docs/</STRONG>" /&gt;<BR>
+			<STRONG>&nbsp;&nbsp;&nbsp; &lt;Folders&gt;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Folder name="Documents" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;Folder name="Files" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;Folder name="Other Files" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;Folder name="Related" /&gt;<BR>
+				&nbsp; &nbsp;&lt;/Folders&gt;<BR>
+			</STRONG>&lt;/Connector&gt; </CODE>
+		<P><STRONG><STRONG>GetFoldersAndFiles</STRONG>
+				<BR>
+			</STRONG>Gets the list of the children folders and files&nbsp;of a folder.</P>
+		<P>Sample Request:</P>
+		<p></p>
+		<CODE>connector.ext?Command=<STRONG>GetFoldersAndFiles</STRONG>&amp;Type=<STRONG>File</STRONG>&amp;CurrentFolder=<STRONG>/Samples/Docs/</STRONG></CODE>
+		<P></P>
+		<P>Sample Response:</P>
+		<CODE>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+			<BR>
+			&nbsp; &lt;Connector command="<STRONG>GetFoldersAndFiles</STRONG>"
+			resourceType="<STRONG>File</STRONG>"&gt;<BR>
+			&nbsp;&nbsp;&nbsp; &lt;CurrentFolder path="<STRONG>/Samples/Docs/</STRONG>"
+			url="<STRONG>/UserFiles/File/Samples/Docs/</STRONG>" /&gt;<BR>
+			<STRONG>&nbsp;&nbsp;&nbsp; &lt;Folders&gt;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Folder name="Documents" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;Folder name="Files" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;Folder name="Other Files" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;Folder name="Related" /&gt;<BR>
+				&nbsp; &nbsp; &lt;/Folders&gt;<BR>
+				&nbsp; &nbsp; &lt;Files&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp; &lt;File name="XML Definition.doc" size="14" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;File name="Samples.txt" size="5" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;File name="Definition.txt" size="125" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;File name="External Resources.drw"
+				size="840" /&gt;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&lt;File name="Todo.txt" size="2" /&gt;<BR>
+				&nbsp;&nbsp; &nbsp;&lt;/Files&gt;<BR>
+			</STRONG>&lt;/Connector&gt; </CODE>
+		<P>The file size&nbsp;must be expressed&nbsp;as KBytes (KB).</P>
+		<P><STRONG>CreateFolder<BR>
+			</STRONG>Creates a child folder.</P>
+		<P>Sample Request:</P>
+		<p></p>
+		<CODE>connector.ext?Command=<STRONG>CreateFolder</STRONG>&amp;Type=<STRONG>File</STRONG>&amp;CurrentFolder=<STRONG>/Samples/Docs/</STRONG>&amp;NewFolderName=<STRONG>FolderName</STRONG></CODE>
+		<P></P>
+		<P>Sample Response:</P>
+		<CODE>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+			<BR>
+			&nbsp; &lt;Connector command="<STRONG>CreateFolder</STRONG>" resourceType="<STRONG>File</STRONG>"&gt;<BR>
+			&nbsp;&nbsp;&nbsp; &lt;CurrentFolder path="<STRONG>/Samples/Docs/</STRONG>"
+			url="<STRONG>/UserFiles/File/Samples/Docs/</STRONG>" /&gt;<BR>
+			<STRONG>&nbsp;&nbsp;&nbsp; &lt;Error number="0" /&gt;<BR>
+			</STRONG>&lt;/Connector&gt; </CODE>
+		<P>Possible Error Numbers are:</P>
+		<UL>
+			<UL>
+				<LI>
+					<STRONG>0</STRONG>
+				: No Errors Found. The folder has been created.
+				<LI>
+					<STRONG>101</STRONG>
+				: Folder already exists.
+				<LI>
+					<STRONG>102</STRONG>
+				: Invalid folder name.
+				<LI>
+					<STRONG>103</STRONG>
+				: You have no permissions to create the folder.
+				<LI>
+					<STRONG>110</STRONG> : Unknown error creating folder.</LI></UL>
+		</UL>
+		<P><STRONG>FileUpload<BR>
+			</STRONG>Adds a file in a folder.</P>
+		<P>This is a special command that doesn't require a XML response. A common
+			"multipart/form-data" post goes&nbsp;with the request. The posted file is named
+			"<STRONG>NewFile</STRONG>".</P>
+		<P>In the case a file with the same name already exists, the Connector must
+			automatically rename it adding a&nbsp;progressive number&nbsp;suffix. For
+			example, if the posted file is named "Test.doc", the names to be used, in
+			order, are: "Test(1).doc", "Test(2).doc", Test(3).doc"... and so on.</P>
+		<P>Sample Request:</P>
+		<CODE>connector.ext?Command=<STRONG>FileUpload</STRONG>&amp;Type=<STRONG>File</STRONG>&amp;CurrentFolder=<STRONG>/Samples/Docs/</STRONG></CODE>
+		<P>Sample Response (Simple HTML):</P>
+		<CODE>&lt;script type="text/javascript"&gt;<BR>
+			window.parent.frames['frmUpload'].OnUploadCompleted(<STRONG>0</STRONG>) ;<BR>
+			&lt;/script&gt;</CODE>
+		<p>The "OnUploadCompleted" is a JavaScript function that is called to expose the
+			upload result. The possible values are:</p>
+		<UL>
+			<UL>
+				<LI>
+					OnUploadCompleted( <STRONG>0</STRONG>
+				) : no errors found on the upload process.
+				<LI>
+					OnUploadCompleted( <STRONG>201, 'FileName(1).ext'</STRONG>
+				) : the file has been uploaded successfully, but it's name has been changed to
+				"FileName(1).ext".
+				<LI>
+					OnUploadCompleted( <STRONG>202</STRONG> ) : invalid file.</LI></UL>
+		</UL>
+		<H3>Configuring the Connector</H3>
+		<P>All connectors available in the editor package can be found at the following
+			folder: "editor/filemanager/browser/default/connectors". Each server side
+			language has its own folder there, with the Connector file inside it. To choose
+			witch connector to use, the end-user just go to the configuration file and
+			modify the following key (in this case for the Link Dialog box):</P>
+		<P>FCKConfig.<STRONG>LinkBrowserURL</STRONG> = FCKConfig.BasePath +
+			"filemanager/browser/default/browser.html?Connector=<STRONG>connectors/aspx/connector.aspx</STRONG>"
+			;</P>
+		<P>The Connector path is relative to the "editor/filemanager/browser/default"
+			folder. The user could even written his custom Connector and point the <STRONG>LinkBrowserURL</STRONG>
+			to it, like "?Connector=/<STRONG>MyFolder/MyConnector.php</STRONG>" for
+			example.</P>
+		<HR width="100%" SIZE="1">
+		<H2 id="Samples">Samples</H2>
+		<P>The easiest way to the end user to understand how to use the editor is to see it
+			in action. So it's important to make available samples that clearly show how to
+			use it.</P>
+		<P>The developers are invited to create samples similar to that available for the
+			Javascript Integration Pack. Please take a look at the <STRONG>_samples/html</STRONG>
+			folder. All files must be put together in a&nbsp;folder under the _samples
+			folder.</P>
+		<P>All samples should post the posted data to a single page that shows that data.
+			The Javascript integration module use an ASP file, called <STRONG>sampleposteddata.asp</STRONG>,&nbsp;that
+			does&nbsp;that (just because it doesn't go on server side). That file can be
+			used as a reference for a custom implementation. Please use the same file name,
+			like sampleposteddata.ext.</P>
+		<HR width="100%" SIZE="1">
+		<H2 id="Documentation">Documentation</H2>
+		<P>[ Documentation not yet available ]</P>
+		</STRONG>
+	</body>
+</html>

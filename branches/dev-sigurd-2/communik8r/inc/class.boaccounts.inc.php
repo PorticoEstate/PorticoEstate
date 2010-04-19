@@ -1,0 +1,350 @@
+<?php
+	/**
+	* Communik8r accounts logic class
+	*
+	* @author Dave Hall skwashd@phpgroupware.org
+	* @copyright Copyright (C) 2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
+	* @package communik8r
+	* @subpackage accounts
+	* @version $Id: class.boaccounts.inc.php,v 1.1.1.1 2005/08/23 05:03:51 skwashd Exp $
+	*/
+
+	/**
+	* @see bobase
+	*/
+//	include_once(PHPGW_INCLUDE_ROOT . SEP . 'communik8r' . SEP . 'inc' . SEP . 'class.bobase.inc.php');
+	phpgw::import_class('communik8r.bobase');	
+	/**
+	* Communik8r accounts logic class
+	*/
+	class boaccounts extends bobase
+	{
+		/**
+		* @var object $so storage logic
+		*/
+		var $so;
+
+		/**
+		* @constructor
+		*/
+		function boaccounts()
+		{
+			$this->so = createObject('communik8r.soaccounts');
+		}
+		
+		/**
+		* REST dispatcher for accounts
+		*/
+		function rest($uri_parts)
+		{
+			switch ( $_SERVER['REQUEST_METHOD'] )
+			{
+				case 'GET':
+					switch ( count($uri_parts) )
+					{
+						case 2: //get list of accounts
+							$this->get_accounts();
+							break;
+						case 3: // edit an account
+							$this->edit_account($uri_parts);
+							break;
+					default:
+							die('<phpgw:response><phpgw:error>invalid request - received ' . count($uri_parts) . ' elements</phpgw:error></phpgw:response>');
+							//invalid request
+					}
+					break;
+				
+				case 'PUT':
+					if ( count($uri_parts) == 3 )
+					{
+						$this->_process_edit($uri_parts);
+					}
+			}
+		}
+
+		/**
+		* Edit the details for an account
+		*/
+		function edit_account($uri_parts)
+		{
+			trigger_error('boaccounts::edit_account(' . print_r($uri_parts, true) . ')');
+
+			$acct = array();
+			if ( $uri_parts[2] != 'new' )
+			{
+				$acct = $this->id2array($uri_parts[2]);
+				$type = $acct['handler'];
+			}
+			else
+			{
+				switch( $_GET['type'] )
+				{
+					case 'email':
+						$type = 'email';
+						break;
+
+					default:
+						die('<html><body>' . lang('invalid account') . '<br>'
+							. '<a href="javascript:window.close();">' . lang('close window') . '</a>');
+				}
+			}
+
+			trigger_error( print_r($acct, true) );
+
+			$lang_strs = array
+					(
+						'accounts_title'	=> ($uri_parts[2] == 'new' ? lang('create account') : lang('edit account %1', $acct['acct_name']) ),
+						'identity'		=> lang('identity'),
+						'acct_info'		=> lang('account information'),
+						'acct_name'		=> lang('account name'),
+						'required_info'		=> lang('required information'),
+						'full_name'		=> lang('full name'),
+						'email_address'		=> lang('email address'),
+						'org'			=> lang('organisation'),
+						'receiving'		=> lang('receiving options'),
+						'server_type'		=> lang('server type'),
+						'hostname'		=> lang('hostname'),
+						'username'		=> lang('username'),
+						'password'		=> lang('password'),
+						'port'			=> lang('port'),
+						'server_prefix'		=> lang('namespace prefix'),
+						'sending'		=> lang('sending'),
+						'help'			=> lang('help'),
+						'confirm_cancel_msg'	=> lang('are you sure you want to exit editting this account? all changes will be lost'),
+						'cancel'		=> lang('cancel'),
+						'ok'			=> lang('ok')
+					);
+
+			Header('Content-Type: text/xml');
+
+			$xml = domxml_new_doc('1.0');
+
+			$xsl = $xml->create_processing_instruction('xml-stylesheet', "type=\"text/xsl\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/accounts_{$type}\"");
+			$xml->appendChild($xsl);
+
+			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
+			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
+			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+
+			$info = $xml->create_element('phpgwapi:info');
+
+			$base_url = $xml->create_element('phpgwapi:base_url');
+			$base_url->appendChild( $xml->create_text_node("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($base_url);
+			unset($base_url);
+
+			$skin = $xml->create_element('phpgwapi:skin');
+			$skin->appendChild( $xml->create_text_node('default') );
+			$info->appendChild($skin);
+			unset($skin);
+
+			$langs = $xml->create_element('phpgwapi:langs');
+			foreach ( $lang_strs as $lkey => $lval )
+			{
+				$lang = $xml->create_element('phpgwapi:lang');
+				$lang->setAttribute('id', $lkey);
+				$lang->appendChild($xml->create_text_node($lval) );
+				$langs->appendChild($lang);
+			}
+			$info->appendChild($langs);
+
+			$phpgw->appendChild($info);
+
+			$c8 = $xml->create_element('communik8r:response');
+			
+			$account = $xml->create_element('communik8r:account');
+
+			$account->setAttribute('id', $acct['acct_id']);
+			foreach ( $acct as $key => $val )
+			{
+				if ( $key == 'password' || $key == 'acct_id' )
+				{
+					continue;
+				}
+
+				if ( $key == 'acct_options' )
+				{
+					foreach ( $val as $skey => $val )
+					{
+						if ( strpos($skey, 'passw') )
+						{
+							continue;
+						}
+
+						$elm = $xml->create_element("communik8r:{$key}");
+						$elm->appendChild($xml->create_text_node($val));
+						$account->appendChild($elm);
+					}
+					continue;
+				}
+
+				$elm = $xml->create_element("communik8r:{$key}");
+				$elm->appendChild($xml->create_text_node($val));
+				$account->appendChild($elm);
+			}
+
+			$c8->appendChild($account);
+
+			$phpgw->appendChild($c8);
+
+			$xml->appendChild($phpgw);
+
+			echo $xml->saveXML();
+		}
+
+		/**
+		* Get a list of accounts for the current user as a xml document
+		*
+		* @param bool $inc_mailboxes include mailbox listings
+		*/
+		function get_accounts($inc_mailboxes = True)
+		{
+			$accounts = $this->get_list();
+			trigger_error('boaccounts::get_accounts() ' . print_r($accounts, true));
+
+			Header('Content-Type: text/xml');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
+			
+			/*
+			$xsl = $xml->create_processing_instruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/accounts" . '"');
+			$xml->appendChild($xsl);
+			*/
+
+			$tree = $xml->createElement('tree');
+			$tree->setAttribute('id', 0);
+
+			foreach($accounts as $account)
+			{
+				$acct_icon = $account['handler'] . '-16x16.png'; //$GLOBALS['phpgw']->common->image('communik8r', $account['handler'] . '-16x16');
+				
+				$acct = $xml->createElement('item');
+				$acct->setAttribute('id', $account['acct_id']);
+				$acct->setAttribute('text', $account['acct_name']);
+				$acct->setAttribute('im0', $acct_icon);
+				$acct->setAttribute('im1', $acct_icon);
+				$acct->setAttribute('im2', $acct_icon);
+				$acct->setAttribute('open', 1);
+
+				if ( $inc_mailboxes && $account['handler'] == 'email' )
+				{
+					$acct->appendChild(ExecMethod('communik8r.boemail.get_mailboxes', $account));
+				}
+				$tree->appendChild($acct);
+			}
+			$xml->appendChild($tree);
+
+			echo $xml->saveXML();
+		}
+
+		/**
+		* Get the list of accounts for the current user as a php array
+		*
+		* @param string $acct_handler the handler for the type of accout being sought
+		* @returns array list of accounts
+		*/
+		function get_list($acct_handler = null)
+		{
+			return $this->so->get_list($acct_handler);
+		}
+
+		/**
+		* You work it out
+		*/
+		function name2array($name)
+		{
+			return $this->so->get_account(array('name' => $name) );
+		}
+
+		/**
+		* You work it out :P
+		*/
+		function id2array($id)
+		{
+			return $this->so->get_account(array('id' => $id) );
+		}
+
+		function _process_edit($uri_parts)
+		{
+			$xmldata = '';
+			$putdata = fopen('php://input', 'r');//the TFphpM is fsckd stdin doesn't work!!
+
+			while ( $data = fread($putdata, 1024) )
+			{
+				$xmldata .= "{$data}\n";
+			}
+
+			if( !strlen($xmldata) )
+			{
+				Header('HTTP/1.0 400 ' . lang('invalid account data') );
+				echo lang('invalid account data');
+				exit;
+			}
+
+			$smtp = createObject('communik8r.comm_smtp');
+
+			trigger_error($xmldata);
+			
+			$xml = domxml_open_mem($xmldata);
+			trigger_error($xml->dump_mem());
+
+			error_log(print_r($xml->get_elements_by_tagname('account'), true));
+			
+			$tmp_array = $xml->get_elements_by_tagname('account');
+
+			if ( count($tmp_array) != 1 )
+			{
+				Header('HTTP/1.0 400 ' . lang('invalid account data') );
+				echo lang('invalid account data');
+				exit;
+			}
+			
+			$account_xml = $tmp_array[0];
+			unset($tmp_array);
+			
+			$account_data = array();
+			$account_data['extra'] = array();
+			foreach ( $account_xml->child_nodes() as $node )
+			{
+				/* Initialize elements */
+				$account_data[$node->tagname()] = '';
+				if ( strpos($node->tagname(), 'extra_') === 0 )
+				{
+					$account_data['extra'][substr($node->tagname(), 6)] = '';
+				}
+
+				if ( $node->has_child_nodes() )
+				{
+					$child_nodes = $node->child_nodes();
+
+					$i = 0;
+					while ( $child_nodes[$i]->node_type() != XML_TEXT_NODE )
+					{
+						++$i;
+					}
+					
+					if ( strpos($node->tagname(), 'extra_') === 0 )
+					{
+						$account_data['extra'][substr($node->tagname(), 6)] = $child_nodes[$i]->node_value();
+						continue;
+					}
+					$account_data[$node->tagname()] = $child_nodes[$i]->node_value();
+				}
+				unset($child_nodes);
+			}
+			trigger_error('$account_data = ' . print_r($account_data, true));
+
+			//FIXME Need better error handling
+			if ( $this->so->save_account(intval($uri_parts[2]), $account_data) )
+			{
+				//Header('HTTP/1.0 200 Done!'); //FIXME
+				exit;
+			}
+			Header('HTTP/1.0 500 Not Saved');
+			echo lang('not saved');
+			exit;
+			
+		}
+	}
+?>

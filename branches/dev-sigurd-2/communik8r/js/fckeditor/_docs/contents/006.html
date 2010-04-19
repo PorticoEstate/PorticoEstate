@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * Version:  2.0 RC3
+ * Modified: 2005-02-17 15:39:11
+-->
+<html>
+	<head>
+		<title>FCKeditor - Styles</title>
+		<link href="../fck_docs.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<H1>Styles</H1>
+		<p>The editor offers a complete and powerful support for separating text formatting 
+			definitions from the text itself. And even more, it is possible to offer a 
+			complete set of predefined formatting definitions to the end-user (writer) so 
+			the text can be well designed without messing up the HTML source.</p>
+		<p>To do that, the <STRONG>Style</STRONG> toolbar command has been introduced. It 
+			shows a complete list of available styles with preview for text styles.</p>
+		<H3>Customizing the Styles list</H3>
+		<p>The list of available styles is completely customizable for your needs. It is 
+			based on a <STRONG>XML</STRONG> file. This file can be placed anywhere in your 
+			site. You just need to point the editor to the right path using the following 
+			configuration setting:</p>
+		<code>FCKConfig.<STRONG>StylesXmlPath</STRONG> = '../fckstyles.xml' ;</code>
+		<H3>
+			The Styles XML file</H3>
+		<p>It is a simple file that describes how to name and apply each style available in 
+			the editor. This is a sample:</p>
+		<code>&lt;?xml version="1.0" encoding="utf-8" ?&gt;<br>
+			&lt;<STRONG>Styles</STRONG> &gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;<STRONG>Style</STRONG> name="My Image" 
+			element="img"&gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;<STRONG>Attribute</STRONG> name="style" 
+			value="padding: 5px" /&gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<STRONG>Attribute</STRONG> name="border" 
+			value="2" /&gt;<br>
+			&nbsp;&nbsp;&nbsp; &lt;/<STRONG>Style</STRONG> &gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;<STRONG>Style </STRONG>name="Italic" element="em" 
+			/&gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;<STRONG>Style</STRONG> name="Title" 
+			element="span"&gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;<STRONG>Attribute</STRONG> name="class" 
+			value="Title" /&gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<STRONG>Style</STRONG> &gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&lt;<STRONG>Style</STRONG> name="Title H3" element="h3" 
+			/&gt;<br>
+			&lt;/<STRONG>Styles</STRONG>&gt;</code>
+		<p>The above sample shows how to define four styles, one for a "Object" element (in 
+			this case for images) and&nbsp;three for text. The editor will show the styles 
+			in a context sensitive fashion, so when and image is select only the <STRONG>My 
+				Image</STRONG> style will be available in the list and when text is 
+			selected the <STRONG>Italic</STRONG>, <STRONG>Title</STRONG> and <STRONG>Title 
+				H3</STRONG> will be shown.</p>
+		<p>The root node of the Styles XML file must be named <STRONG>Styles</STRONG>. 
+			Each style definition must be a child of it with a <STRONG>Style</STRONG> 
+			name.</p>
+		<p>The <STRONG>Style</STRONG> nodes have two mandatory attributes:</p>
+		<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+			<p><STRONG>name</STRONG>: defines the text shown in the styles list.<br>
+				<STRONG>element</STRONG>: the element used to apply the style on text selection 
+				or the object element to witch the style can be applied.</p>
+		</BLOCKQUOTE>
+		<p>For example: suppose we have the text This is a Style Command test inside the 
+			editor and we select Style Command. If we apply the Italic style the source 
+			result will be something like this:</p>
+		<code>This is a <STRONG>&lt;em&gt;</STRONG>Style Command<STRONG>&lt;/em&gt;</STRONG>
+			test</code>
+		<p>So the editor used the <STRONG>em</STRONG> tag to apply the style, as defined 
+			in the XML file.</p>
+		<p>We can also combine elements and their attributes when applying a style. To do 
+			this we can add <STRONG>Attribute</STRONG> nodes inside the <STRONG>Style</STRONG> 
+			node definition. We can add as many attributes we want. The <STRONG>Attribute</STRONG> 
+			node has two mandatory attributes:</p>
+		<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+			<p><STRONG>name</STRONG>: the attribute name.<br>
+				<STRONG>value</STRONG>: the value to be set to the attribute.</p>
+		</BLOCKQUOTE>
+		<p>So, using the same sample, but now selection the Title style, the source 
+			result should be:</p>
+		<code>This is a <STRONG>&lt;span class="Title"&gt;</STRONG>Style Command<STRONG>&lt;/span&gt;</STRONG>
+			test</code>
+		<p>We can also combine many styles over the same selection. So with the above 
+			sample, without changing the selection, and applying the Italic style, the 
+			result should be:</p>
+		<code>This is a <STRONG>&lt;span class="Title"&gt;&lt;em&gt;</STRONG>Style Command<STRONG>&lt;/em&gt;&lt;/span&gt;</STRONG>
+			test</code>
+		<p>The user can decide to remove the applied style. He just need to click in the 
+			style name again to remove it.</p>
+		<H3>Object elements</H3>
+		<p>The editor is context sensitive. If the user selects some text, only the text 
+			styles will be available in the styles list. In the other case, if an object is 
+			select, the list will show only styles defined to that object (for now it is 
+			available only over Internet Explorer).</p>
+		<p>The object elements supported by the editor are: <STRONG>IMG</STRONG>, <STRONG>TABLE</STRONG>,
+			<STRONG>TR</STRONG>, <STRONG>TD</STRONG>, <STRONG>INPUT</STRONG>, <STRONG>SELECT</STRONG>,
+			<STRONG>TEXTAREA</STRONG>, <STRONG>HR</STRONG> and <STRONG>OBJECT</STRONG>.</p>
+		<p>When selecting an Object element and applying a style, no tags will be added 
+			surrounding the element, but just the defined attributes will be applied to 
+			that element.</p>
+		<p>For example, if you have and image in the editor and apply the My Image style 
+			(from out sample) the source could be something like this:</p>
+		<code>&lt;img src="Image.jpg" <STRONG>style="padding: 5px" border="2"</STRONG>&gt;</code>
+	</body>
+</html>

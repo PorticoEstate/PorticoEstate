@@ -1,0 +1,30 @@
+body {
+	font-family: Georgia, Arial, Verdana, Tahoma, Helvetica, Sans-Serif;
+}
+
+h1.title {
+	text-align: center;
+}
+
+h3.author {
+	font-size: 12pt;
+	text-align: center;
+	font-weight: normal;
+}
+
+hr {
+	height: 1px;
+	width: 75%;
+	display: none;
+}
+
+.programlisting {
+	background-color: #dddddd;
+	border: 1px outset white;
+	padding: 5px;
+}
+
+.navfooter, .navheader {
+	background-color: #eeeeee;
+	border: 1px solid #cccccc;
+}

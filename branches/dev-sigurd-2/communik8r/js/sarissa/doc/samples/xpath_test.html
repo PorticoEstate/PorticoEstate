@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Untitled</title>
+    <script type="text/javascript" src="../../sarissa.js">
+    </script>
+    <script type="text/javascript">
+    <!--
+function testXpath()
+{
+    var xmlDoc = Sarissa.getDomDocument();
+    var objNodeList;
+    var xmlStr = "<?xml version='1.0' encoding='UTF-8'?>"+
+        "<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>"+
+        "<xsl:output method='xml' version='1.0' encoding='UTF-8' indent='yes'/>"+
+        "<xsl:template match='*'></xsl:template><xsl:template match='@*'>"+
+        "</xsl:template></xsl:stylesheet>";
+    xmlDoc.loadXML(xmlStr);
+	alert("XML used: \n " + xmlDoc.xml);
+    // the following two lines are needed for IE
+    xmlDoc.setProperty("SelectionNamespaces", "xmlns:xsl='http://www.w3.org/1999/XSL/Transform'");
+    xmlDoc.setProperty("SelectionLanguage", "XPath");
+	
+    testSelectNodesOn(xmlDoc, "//xsl:template");
+    testSelectNodesOn(xmlDoc.documentElement, "//xsl:template");
+    testSelectNodesOn((xmlDoc.documentElement.getElementsByTagName("*"))[0], "//xsl:template");
+}
+function testSelectNodesOn(domNode, sXpath)
+{
+    alert("testing selectNodes("+sXpath+") on a "+domNode);
+    var objNodeList = domNode.selectNodes(sXpath);
+    alert("selectNodes('" + sXpath + "') returned " + objNodeList.length + " results");
+    for(i=0;i<objNodeList.length;i++)
+        alert(objNodeList[i].xml); // objNodeList.item(i).xml also works 
+    alert("testing selectSingleNode("+sXpath+") on a "+domNode);
+    var oElem = domNode.selectSingleNode(sXpath);
+    alert("selectNode('" + sXpath+ "') returned " + oElem);
+    alert(oElem+"\n"+oElem.xml);
+}
+    //-->
+    </script>
+</head>
+
+<body>
+<button onclick="testXpath()">test xpath</button>
+</body>
+</html>

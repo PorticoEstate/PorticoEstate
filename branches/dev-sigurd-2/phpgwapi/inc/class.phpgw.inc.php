@@ -364,7 +364,7 @@
 				{
 						return null;
 				}
-				else if ( is_null($value) && !is_null($default) )
+				else if ( (is_null($value) || !$value) && !is_null($default) )
 				{
 						return $default;
 				}

@@ -1,0 +1,63 @@
+.dynContext {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    background-color: #f6f6f6;
+    border: 1px #666666 solid;
+    background-image: url('../images/xpbackground.gif');
+    font-family: Microsoft Sans Serif, Arial, Sans-Serif;
+    font-size: 8pt;
+    color: black;
+}
+
+.dynContext div {
+    cursor: default;
+    padding: 1px;
+}
+
+.dynContext div.row {
+    height: 20px;
+    margin: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.dynContext div.mouseover {
+    background-color: #adadd1;
+    border: 1px solid #000080;
+    padding: 0px;
+}
+
+.dynContext div.image,
+.dynContext div.check,
+.dynContext div.radio {
+    text-align: center;
+    width: 30px;
+    -moz-opacity: 0.4;
+    display: inline;
+}
+
+.dynContext div.check,
+.dynContext div.radio {
+    -moz-opacity: 1;
+}
+
+.dynContext div.text {
+    display: inline;
+}
+
+.dynContext div.arrow {
+    display: inline;
+}
+
+.dynContext .separator {
+    text-align: right;
+}
+
+.dynContext hr {
+    border: 0px;
+    width: 75%;
+    color: #cacaca;
+    background-color: #cacaca;
+    height: 1px;
+}

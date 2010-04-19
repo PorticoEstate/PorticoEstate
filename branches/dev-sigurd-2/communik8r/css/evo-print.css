@@ -1,0 +1,132 @@
+body, div, input, p, textarea
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11pt;
+}
+
+#menubar
+{
+	display: none;
+}
+
+#buttons
+{
+	display: none;
+}
+
+#fields
+{
+	border-bottom: 2px ridge Window;
+	height: 157px;
+	left: 10px;
+	padding-top: 2px;
+	position: fixed;
+	right: 10px;
+	top: 70px;
+}
+
+#compose
+{
+	height: 275px;
+	left: 10px;
+	position: fixed;
+	top: 230px;
+	width: 685px;
+}
+
+#accounts, #accounts_menu, #search, #summary, #msg_loading
+{
+	display: none;
+}
+
+
+#message
+{
+	background-color: #fff;
+	border: 1px solid #000;
+	padding: 10px;
+}
+
+#headers
+{
+	border: 1px solid #999;
+	background-color: #ddd;
+	line-height: 0.5;
+	margin: 10px 0px;
+	padding: 10px 10px 0px 10px;
+}
+
+#headers br, #fields br
+{
+	clear: left;
+}
+
+span.header_label, span.header_value, #fields input, #fields label, #fields select
+{
+	display: block;
+	float: left;
+	margin-bottom: 5px;
+	width: 100px;
+}
+
+#fields input
+{
+	width: 600px;
+}
+
+#fields #account
+{
+	width: 375px;
+}
+
+#fields #signature_list
+{
+	width: 150px;
+}
+
+#fields .btn, #fields label
+{
+	width: 60px;
+	margin-right: 15px;
+}
+
+#fields label
+{
+	text-align: right;
+}
+
+#signature
+{
+	height: 120px;
+	left: 10px;
+	position: fixed;
+	top: 425px;
+	width: 485px;
+}
+
+/* View */
+.msg_attachment
+{
+	margin: 10px 0px;
+}
+
+.msg_attachment img
+{
+	vertical-align: middle;
+}
+
+.msg_attachment iframe.typetext
+{
+	width: 95%;
+	height: 200px;
+	border: 0px;
+}
+
+.msg_attachment iframe.typeother
+{
+	border: 0px;
+	display: none;
+	height: 0px;
+	width: 0px;
+}
+

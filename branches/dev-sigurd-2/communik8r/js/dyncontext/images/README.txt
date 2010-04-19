@@ -1,0 +1,1 @@
+Images used on the left side of the menus MUST be 20x20 pixels

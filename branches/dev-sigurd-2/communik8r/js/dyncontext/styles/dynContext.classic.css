@@ -1,0 +1,87 @@
+.dynContext {
+	margin: 0px;
+	padding: 0px;
+	overflow: hidden;
+	background-color: menu;
+	border: 2px white outset;
+}
+
+.dynContext_table {
+	margin: 1px;
+	width: 100%;
+}
+
+.dynContext_cell {
+	font-family: Microsoft Sans Serif, Arial, Sans-Serif;
+	font-size: 8pt;
+	background-color: menu;
+	color: black;
+	cursor: default;
+}
+
+.dynContext_cell_mouseover {
+	font-family: Microsoft Sans Serif, Arial, Sans-Serif;
+	font-size: 8pt;
+	background-color: highlight;
+	color: white;
+	cursor: default;
+}
+
+.dynContext_textcell {
+}
+
+.dynContext_textcell_mouseover {
+}
+
+.dynContext_imagecell {
+	width: 24px;
+	cursor: default;
+	padding: 1px;
+}
+
+.dynContext_imagecell_mouseover {
+	width: 24px;
+	border: 1px outset;
+	background-color: menu;
+}
+
+.dynContext_imagecell_empty_mouseover {
+	width: 24px;
+	padding: 1px;
+}
+
+.dynContext_arrowcell {
+	width: 24px;
+	text-align: center;
+	font-family: Webdings;
+	font-size: 10pt;
+}
+
+.dynContext_arrowcell_mouseover {
+	width: 24px;
+	text-align: center;
+	font-family: Webdings;
+	font-size: 10pt;
+}
+
+.dynContext_checkcell {
+	width: 24px;
+	text-align: center;
+	font-family: Marlett;
+	font-size: 13pt;
+}
+
+.dynContext_checkcell_mouseover {
+	width: 24px;
+	text-align: center;
+	font-family: Marlett;
+	font-size: 13pt;
+}
+
+.dynContext_separatorcell {
+}
+
+.dynContext_separator {
+	width: 95%;
+	text-align: center;
+}

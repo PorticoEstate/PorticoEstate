@@ -1,0 +1,11 @@
+AddType text/xml .xsl
+
+# RewriteBase *may* be needed - if you have problems try it
+#RewriteBase /path/to/phpgroupware/communik8r
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^xsl/(.*)$ templates/base/$1.xsl [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?url=$1&%{QUERY_STRING}

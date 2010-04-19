@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" 
+	"/usr/local/docbook/dtd/docbookx.dtd" [
+]>
+
+<article>
+	<artheader>
+		<title>dynContext Documentation</title>
+		<author>
+			<firstname>Richard</firstname>
+			<surname>Heyes</surname>
+		</author>
+	</artheader>
+	
+	<sect1 id="introduction">
+		<title>Introduction</title>
+		<para>
+			The dynContext menu system was initially designed to be a contextmenu style widget
+			to enable advanced user interface possibilities for web applications. As it turns out
+			it can now be quite easily used as a normal menu navigation system. With its object oriented
+			style design it's both easy to use, and easy to extend.
+		</para>
+	</sect1>
+	
+	<sect1 id="api">
+		<title>API</title>
+
+		<sect2 id="class.dynContext">
+			<title>Class: dynContext</title>
+			<para>
+				This is the main menu class that you must create before you can start adding
+				menuitems to it.
+			</para>
+			
+			<para>
+			Methods:
+
+			<funcsynopsis label="Constructor">
+				<funcprototype>
+					<funcdef>
+						<function>Constructor</function>
+					</funcdef>
+
+					<paramdef>
+						string <parameter>Object name</parameter>
+					</paramdef>
+
+					<paramdef>
+						string <parameter>Full path of stylesheet</parameter>
+					</paramdef>
+
+					<paramdef>
+						integer <parameter>Menu width</parameter>
+					</paramdef>
+
+					<paramdef>
+						integer <parameter>Menu height</parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+The constructor is called automatically when you create the object. The first argument is the name of the variable you're
+assigning the object to (see example below). The second is the full path to the stylesheet you're using. The third and
+fourth are the menus width and height.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			
+			<funcsynopsis label="addItem">
+				<funcprototype>
+					<funcdef>
+						<function>addItem</function>
+					</funcdef>
+
+					<paramdef>
+						object <parameter>Menuitem object</parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This is the function used to add a menuitem (any type; regular, check or radio) to the menu object. The only 
+argument is the menuitem object.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			
+			<funcsynopsis label="setStyle">
+				<funcprototype>
+					<funcdef>
+						<function>setStyle</function>
+					</funcdef>
+
+					<paramdef>
+						string <parameter>Stylesheet path</parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+If you're using the same menu object multiple times and want them to have different styles then you can call this
+method before the show() method to set the stylesheet. The argument should be the full stylesheet path. This function
+will recursively set the style for any submenus, so you don't have to.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+			
+			
+			<funcsynopsis label="show">
+				<funcprototype>
+					<funcdef>
+						<function>show</function>
+					</funcdef>
+
+					<paramdef>
+						integer <parameter><optional>X Position</optional></parameter>
+					</paramdef>
+
+					<paramdef>
+						integer <parameter><optional>Y Position</optional></parameter>
+					</paramdef>
+
+					<paramdef>
+						object <parameter><optional>Positioning Object</optional></parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This is the method you must call to show the object. It takes three optional parameters. The first two are the
+X and Y co-ordinates that you want the menu to appear at. If no third argument is specified these co-ordinates are
+relative to the users screen, not the browser, so (0, 0) is the very top left of the users screen. The third argument
+if supplied is used as a relative position for the co-ordinates. If supplied, the X/Y co-ordinates become relative to
+this object instead of the users screen. So for example, if you supplied the <emphasis>document.body</emphasis> object
+to the function then the co-ordinates (0, 0) becomes the top left of the browsers displaying area, and not the top left
+of the screen.
+
+				</funcsynopsisinfo>
+			</funcsynopsis>
+			
+			
+			<funcsynopsis label="hide">
+				<funcprototype>
+					<funcdef>
+						<function>hide</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method hides the menu. You probably won't ever need to use this.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+
+			<funcsynopsis label="buildAllMenus">
+				<funcprototype>
+					<funcdef>
+						<function>buildAllMenus</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method will go through all the menuitems and submenus creating and caching the HTML that
+is needed for the menus. It's not necessary, though can save a small amount of processing when
+the menu is to be shown by building the menu in advance (eg. when the page loads).
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+
+			<example label="Creating a dynContext object">
+				<programlisting linenumbering="numbered">
+<![CDATA[
+<script language="javascript">
+<!-- 
+	myContextMenu = new dynContext('myContextMenu', 'styles/dynContext.xp.css', 180, 150);
+// -->
+</script>
+]]>
+				</programlisting>
+			</example>
+			</para>
+		</sect2>
+
+		<sect2 id="class.dynContext_menuItem">
+			<title>Class: dynContext_menuItem</title>
+			<para>
+				This class is probably the most used menu item. It provides a simple entry for the menu
+				either with or without an icon.
+			</para>
+
+			<para>
+			Methods:
+			
+			<funcsynopsis label="constructor">
+				<funcprototype>
+					<funcdef>
+						<function>Constructor</function>
+					</funcdef>
+
+					<paramdef>
+						string <parameter>Text</parameter>
+					</paramdef>
+					<paramdef>
+						string <parameter><optional>Callback Handler</optional></parameter>
+					</paramdef>
+					<paramdef>
+						string <parameter><optional>Image path</optional></parameter>
+					</paramdef>
+					<paramdef>
+						boolean <parameter><optional>Disabled</optional></parameter>
+					</paramdef>
+					<paramdef>
+						object <parameter><optional>Submenu</optional></parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+The constructor is called automatically when you create the object. The first argument is the text that is
+displayed for this menuitem. This is the only required argument.
+The Callback Handler argument is the function that is run when the menuitem is clicked. This should be passed
+as the name of the function only, eg. 'myCallback', and NOT 'myCallback()'.
+The image path should be the full path to an icon that appears to the left of the text in the menu. For the
+styles supplied with the menu system, the icons should be no larger than 20x20 pixels.
+The disabled argument determines whether this menuitem is disabled or not. If it is disabled, then the text
+will be greyed out, and the item will not be clickable, and will also not trigger a mouseover event (so
+highlighting does not occur).
+The final argument is an optional submenu object. This is a regular dynContext object which has already had
+its menuitems added to it. Simply pass it as the last argument and it will becomes a submenu of whatever menu
+this menuitem is added to. Using this method allows for unlimited submenus with an easy creation method (though
+any more than 2/3 submenus reduces usability drastically).
+				</funcsynopsisinfo>
+			</funcsynopsis>
+			
+			<funcsynopsis label="hasSubmenu">
+				<funcprototype>
+					<funcdef>
+						<returnvalue>boolean</returnvalue> <function>hasSubmenu</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+Returns true or false as to whether the menuitem has a submenu or not.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+			
+			<funcsynopsis label="toggleDisabled">
+				<funcprototype>
+					<funcdef>
+						<function>toggleDisabled</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+Toggles the current disabled status. Thus making the menuitem disabled if it's currently not, and enabled if it's
+currently disabled.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+			
+			<funcsynopsis label="setDisabled">
+				<funcprototype>
+					<funcdef>
+						<function>setDisabled</function>
+					</funcdef>
+
+					<paramdef>
+						boolean <parameter>Disabled status</parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+Use this method to set the status of the menuitem to either disabled (true) or enabled (false).
+				</funcsynopsisinfo>
+			</funcsynopsis>
+			
+			<funcsynopsis label="isDisabled">
+				<funcprototype>
+					<funcdef>
+						<returnvalue>boolean</returnvalue> <function>isDisabled</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+Returns true or false as to whether the menuitem is disabled or not.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<example label="Creating a few dynContext_menuItem objects">
+				<programlisting linenumbering="numbered">
+<![CDATA[
+<script language="javascript">
+<!-- 
+	menuItem_1 = new dynContext_menuItem('Menuitem 1', 'parent.myFunction(1)', 'images/icon.gif');
+	menuItem_2 = new dynContext_menuItem('Menuitem 2', 'parent.myfunction(2)', 'images/icon.gif', true);
+	menuItem_3 = new dynContext_menuItem('Menuitem 3', null, null, false, subMenu_1);
+	menuItem_4 = new dynContext_menuItem('Menuitem 4', null, 'images/submenu.gif', false, subMenu_2);
+	menuItem_6 = new dynContext_menuItem('Menuitem 5', 'parent.location.href = "http://www.phpguru.org/dynContext/"');
+	menuItem_5 = new dynContext_menuItem('Menuitem 6');
+// -->
+</script>
+]]>
+				</programlisting>
+			</example>
+			</para>
+		</sect2>
+
+		<sect2 id="class.dynContext_checkItem">
+			<title>Class: dynContext_checkItem</title>
+			<para>
+				This class provides a check style menuitem (ie a menu item with a tick instead of an image).
+				It can be defaultly checked or unchecked.
+			</para>
+
+			<para>
+			Methods:
+			
+			<emphasis>
+				This class inherits the toggleDisabled(), setDisabled() and isDisabled() methods from the
+				<link linkend="class.dynContext_menuItem">dynContext_menuItem</link> class.
+			</emphasis>
+			
+			<funcsynopsis label="constructor">
+				<funcprototype>
+					<funcdef>
+						<function>Constructor</function>
+					</funcdef>
+
+					<paramdef>
+						string <parameter>Text</parameter>
+					</paramdef>
+					<paramdef>
+						boolean <parameter><optional>Checked</optional></parameter>
+					</paramdef>
+					<paramdef>
+						string <parameter><optional>Callback Handler</optional></parameter>
+					</paramdef>
+					<paramdef>
+						boolean <parameter><optional>disabled</optional></parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+The constructor is called automatically when you create the object. The first argument is the text that should
+appear with the menuitem. This is the only required argument. The second argument is a boolean as to whether the
+menuitem is checked or not. The third is the javascript function that should run when this item is clicked.
+This should be passed as the name of the function only, eg. 'myCallback', and NOT 'myCallback()'.
+You should be aware that this code runs <emphasis>after</emphasis> the item has been checked/unchecked so if you refer to
+the checked status of the item you will get the <emphasis>new</emphasis> status. The last argument is a boolean and
+dictates whether the menuitem is disabled (true) or not (false).
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<funcsynopsis label="toggleChecked">
+				<funcprototype>
+					<funcdef>
+						<function>toggleChecked</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method toggles the checked status of the menuitem, unchecking it if it's currently checked, and vice versa.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<funcsynopsis label="setChecked">
+				<funcprototype>
+					<funcdef>
+						<function>setChecked</function>
+					</funcdef>
+
+					<paramdef>
+						boolean <parameter>Checked</parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method can be used to set the checked status of the menuitem. The argument should be true for checked, and
+false for unchecked. Using this method does not cause the javascript for this menuitem to run.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<funcsynopsis label="isChecked">
+				<funcprototype>
+					<funcdef>
+						<function>isChecked</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method returns the current checked status of the menuitem. True for checked, false for unchecked.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<example label="Creating a few dynContext_checkItem objects">
+				<programlisting linenumbering="numbered">
+<![CDATA[
+<script language="javascript">
+<!-- 
+	checkItem_1 = new dynContext_checkItem('Checkitem 1');
+	checkItem_2 = new dynContext_checkItem('Checkitem 2', true);
+	checkItem_3 = new dynContext_checkItem('Checkitem 3', false, 'parent.updateFoo()');
+	checkItem_4 = new dynContext_checkItem('Checkitem 4', false, null, true);
+// -->
+</script>
+]]>
+				</programlisting>
+			</example>
+			</para>
+		</sect2>
+		
+		<sect2 id="class.dynContext_radioItem">
+			<title>Class: dynContext_radioItem</title>
+			<para>
+				This class provides a radio button style menuitem (ie a collection of menu items of which only one
+				is selected at once). This class is special in that it takes an array of other
+				<link linkend="class.dynContext_menuItem">dynContext_menuItem</link> objects, which it uses to
+				build the html for itself. Only certain properties of these menuItem objects are used, including
+				text, disabled status and javascript code. Image paths and submenu objects are ignored.
+			</para>
+
+			<para>
+			Methods:
+			
+			<funcsynopsis label="constructor">
+				<funcprototype>
+					<funcdef>
+						<function>Constructor</function>
+					</funcdef>
+
+					<paramdef>
+						string <parameter>Callback Handler</parameter>
+					</paramdef>
+					<paramdef>
+						integer <parameter><optional>Selected</optional></parameter>
+					</paramdef>
+					<paramdef>
+						array <parameter><optional>Menuitems</optional></parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+The constructor is called automatically when you create the object. The first argument is the function to run
+when a radio item is clicked on. This should be passed as the name of the function only, eg. 'myCallback', and
+NOT 'myCallback()'. Like the <link linkend="class.dynContext_checkItem">checkItem object</link>
+this code runs <emphasis>after</emphasis> the current selected item has been updated, so getSelected() will
+return the <emphasis>new</emphasis> selected index. The second argument is which menuitem should be selected. This
+is an integer starting from zero. The third argument is the array of <link linkend="class.dynContext_menuItem">dynContext_menuItem</link>
+objects (see above).
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+
+			<funcsynopsis label="setSelected">
+				<funcprototype>
+					<funcdef>
+						<function>setSelected</function>
+					</funcdef>
+
+					<paramdef>
+						integer <parameter>Selected</parameter>
+					</paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method can be used to set which menuitem is currently selected. The argument should be the index of the
+menuitem to be selected, which starts from zero.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			
+			<funcsynopsis label="getSelected">
+				<funcprototype>
+					<funcdef>
+						<function>getSelected</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+This method returns the index of the current selected menuitem. This is an integer starting from zero.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<example label="Creating two dynContext_radioItem objects">
+				<programlisting linenumbering="numbered">
+<![CDATA[
+<script language="javascript">
+<!-- 
+	radioItems = new Array();
+	radioItems.push(new dynContext_menuItem('Radioitem 1'));
+	radioItems.push(new dynContext_menuItem('Radioitem 2'));
+	radioItems.push(new dynContext_menuItem('Radioitem 3', null, null, true));
+	radioItem_1 = new dynContext_radioItem('parent.radioItem_onclick()', 0, radioItems);
+	
+	radioItem_2 = new dynContext_radioItem('parent.radioItem_onclick()', 1, [new dynContext_menuItem('Radioitem 1'), new dynContext_menuItem('Radioitem 2')]);
+// -->
+</script>
+]]>
+				</programlisting>
+			</example>
+			</para>
+		</sect2>
+		
+		<sect2 id="class.dynContext_separator">
+			<title>Class: dynContext_separator</title>
+			<para>
+			</para>
+
+			<para>
+			Methods:
+			
+			<funcsynopsis label="constructor">
+				<funcprototype>
+					<funcdef>
+						<function>Constructor</function>
+					</funcdef>
+
+					<paramdef></paramdef>
+				</funcprototype>
+				
+				<funcsynopsisinfo>
+The constructor is called automatically when you create the object. It takes no arguments.
+				</funcsynopsisinfo>
+			</funcsynopsis>
+
+			<example label="Creating a separator object">
+				<programlisting linenumbering="numbered">
+<![CDATA[
+<script language="javascript">
+<!-- 
+	separator = new dynContext_separator();
+// -->
+</script>
+]]>
+				</programlisting>
+			</example>
+			</para>
+		</sect2>
+	</sect1>
+	
+	
+	<sect1 id="annotated.example">
+		<title>Annotated Example</title>
+
+		<example label="Annotated example">
+			<programlisting linenumbering="numbered">
+<![CDATA[
+<html>
+<head>
+    <title>dynContext</title>
+</head>
+
+<!--
+    The onload event simply resets the style selector, whilst the onunload event closes
+    the menu when the page is refreshed or left. Without this, if the page is refreshed using
+    CTRL+R the menu doesn't close, which can produce errors if the user then tries to use it.
+-->
+<body onload="document.all('menustyle').selectedIndex = 0" onunload="dynContext_Menu.hide()">
+
+<!--
+    This line is necessary to include the dynContext library which provides
+    the classes.
+-->
+<script language="JScript.Encode" src="dynContext.jse"></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+    /**
+    * Create main menu object. Variable used is "dynContext_Menu" so that's what is passed
+    * as the first argument. Second is the path to the stylesheet, and third and fourth are
+    * the width/height.
+    */
+    dynContext_Menu = new dynContext('dynContext_Menu', './styles/dynContext.xp.css', 180, 136);
+    
+    /**
+    * Here two regular menuitems are added to the menu, the second having an image. When clicked,
+    * they will simply popup a notice saying so.
+    */
+    dynContext_Menu.addItem(new dynContext_menuItem('Menuitem 1', 'alert(\'Menuitem 1 clicked\')'));
+    dynContext_Menu.addItem(new dynContext_menuItem('Menuitem 2', 'alert(\'Menuitem 2 clicked\')', 'images/contact.gif'));
+
+    /**
+    * Here a separator is added to the menu.
+    */
+    dynContext_Menu.addItem(new dynContext_separator());
+    
+        /**
+        * Now a submenu is created. Indentation is not necessary, but can be useful to
+        * make reading the code easier. The variable used is "dynContext_submenu1" so that's
+        * what is passed as the first argument. The second is the stylesheet to use, (which can
+        * be different to the parent menu, but would look strange). Third and fourth are the
+        * height/width
+        */
+        dynContext_submenu1 = new dynContext('dynContext_submenu1', './styles/dynContext.xp.css', 180, 64);
+
+        /**
+        * Now we create a set of menuitems in the form of an array. This is so that the array can
+        * simply be passed to the dynContext_radioItem object. The arrays' push() method simply
+        * adds the object to the end of the array. Any image, javascript or submenu for these
+        * menuitems will be ignored. You can however specify the disabled argument and it will be
+        * honored.
+        *
+        * Menuitems for radioitems can be specified in the constructor of the radioItem class using
+        * array literl notation ( [...] ) like so:
+        *
+        *    new dynContext_radioItem('...', 0, [new dynContext_menuItem('Radioitem n'), ...])
+        *
+        * However it can be more difficult to read if there are many menuitems.
+        */
+        radioItems = new Array();
+        radioItems.push(new dynContext_menuItem('Radioitem 1'));
+        radioItems.push(new dynContext_menuItem('Radioitem 2'));
+        radioItems.push(new dynContext_menuItem('Radioitem 3'));
+
+        /**
+        * Now we add a radioitem to the submenu, using the array defined above. The first argument
+        * is the javascript code to run when an item is clicked. In this case the radioItem_handler()
+        * function in the main page is being called, and because it's a second level menu, it's necessary
+        * to call parent. twice. The selected menuitem is set in the second argument, here it's set to
+        * the first menuitem (the index starts at zero). Finally the third argument is the array of menuitems.
+        */
+        dynContext_submenu1.addItem(radioItem = new dynContext_radioItem('parent.parent.radioItem_handler()', 0, radioItems));
+
+    /**
+    * With the submenu defined above, here it's added to the main menu by way of the fifth argument
+    * on the menuitem constructor. Here an image could be specified if so desired. Also it could be
+    * disabled. The javascript argument however has no effect.
+    */
+    dynContext_Menu.addItem(submenu1 = new dynContext_menuItem('First submenu', null, null, false, dynContext_submenu1));
+    
+    /**
+    * Here a checkitem is added to the menu. This checkbox controls whether the the submenu defined above
+    * is disabled or not. It defaults to true (second argument) and calls the checkItem_handler() function
+    * in the main page (which does the actual disabling/enabling).
+    */
+    dynContext_Menu.addItem(new dynContext_checkItem('First submenu enabled', true, 'parent.checkItem_handler()'));
+
+    /**
+    * Another separator
+    */
+    dynContext_Menu.addItem(new dynContext_separator());
+
+        /**
+        * Here another submenu is created with some sample menuitems
+        */
+        dynContext_submenu2 = new dynContext('dynContext_submenu2', './styles/dynContext.xp.css', 180, 64);
+        dynContext_submenu2.addItem(new dynContext_menuItem('Submenu item 1', 'alert(\'Submenu item 1 clicked\')'));
+        dynContext_submenu2.addItem(new dynContext_menuItem('Submenu item 2', 'alert(\'Submenu item 2 clicked\')'));
+        dynContext_submenu2.addItem(new dynContext_menuItem('Submenu item 3', 'alert(\'Submenu item 3 clicked\')'));
+
+    /**
+    * And here the second submenu is added to the main menu.
+    */
+    dynContext_Menu.addItem(submenu2 = new dynContext_menuItem('Second submenu', null, null, false, dynContext_submenu2));
+
+    /**
+    * This is the handler function (they can be called anything) which
+    * is called when the user clicks on one of the menuitems in the
+    * radioitem (first submenu). It simply uses the getSelected()
+    * method of the radioitem to present which index is now selected.
+    */
+    function radioItem_handler()
+    {
+        var selectedIndex = radioItem.getSelected();
+        alert('Selected radioitem index: ' + selectedIndex);
+    }
+    
+    /**
+    * This is the handler function for the checkitem on the main menu.
+    * Using the toggleDisabled() method of the submenu1 menuitem (NOT
+    * the submenu itself) it disables/enables the submenu1 menuitem
+    * and then using the isDisabled() method presents a message saying
+    * whether it's disabled/enabled.
+    */
+    function checkItem_handler()
+    {
+        submenu1.toggleDisabled();
+        alert('First submenu has been ' + (submenu1.isDisabled() ? 'disabled' : 'enabled'));
+    }
+//-->
+</script>
+
+<!--
+    This layer servers as an area for the user to right click and get the menu. You can
+    use the oncontextmenu event of anything which supports it.
+-->
+<div style="background-image: url('images/xpbackground.gif'); padding-left: 30px; background-color: #f6f6f6; border: 1px solid; width: 200px; cursor: default; font-family: MS Sans Serif; font-size: 10pt" oncontextmenu="dynContext_Menu.show(); return false">
+    Right click here to see menu
+</div>
+
+<!--
+    A simple style changer. To change the style it calls the setStyle() method of the
+    main menu, passing it the new full path to the stylesheet. The setStyle() method
+    recursively calls the setStyle() for all submenus, so you don't have to.
+-->
+<p style="background-color: #eeeeee; border: 1px solid #cccccc; padding: 5px; width: 200px">
+    Menu style:<br /><br />
+    <select size="4" name="menustyle" onchange="dynContext_Menu.setStyle('./styles/dynContext.' + document.all('menustyle').options[document.all('menustyle').selectedIndex].value + '.css')">
+        <option value="xp" selected="selected">Office XP</option>
+        <option value="classic">Windows classic</option>
+        <option value="alt1">Alternative 1</option>
+        <option value="alt2">Alternative 2</option>
+    </select>
+</p>
+
+</body>
+</html>
+]]>
+			</programlisting>
+		</example>
+	</sect1>
+</article>

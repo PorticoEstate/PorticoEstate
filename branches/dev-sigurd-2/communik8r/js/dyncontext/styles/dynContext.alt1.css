@@ -1,0 +1,101 @@
+.dynContext {
+	margin: 0px;
+	padding: 0px;
+	overflow: hidden;
+	background-color: #dedede;
+	border: 1px #999999 solid;
+	filter: progid:DXImageTransform.Microsoft.Gradient(gradientType=1, startColorStr=#bbbbbb, endColorStr=#ffffff);
+}
+
+.dynContext_table {
+	margin: 1px;
+}
+
+.dynContext_cell {
+	font-family: Verdana, Arial, Sans-Serif;
+	font-size: 10pt;
+	color: #000080;
+	cursor: default;
+	padding: 1px;
+}
+
+.dynContext_cell_mouseover {
+	font-family: Verdana, Arial, Sans-Serif;
+	font-size: 10pt;
+	color: #000080;
+	cursor: default;
+	border: 1px solid #000000;
+	padding: 0px;
+	background-color: #dedede;
+	filter: progid:DXImageTransform.Microsoft.Gradient(gradientType=0, startColorStr=#ffffff, endColorStr=#bbbbbb);
+}
+
+.dynContext_textcell {
+
+}
+
+.dynContext_textcell_mouseover {
+	border-left: 0px;
+	border-right: 0px;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+.dynContext_imagecell {
+	width: 30px;
+}
+
+.dynContext_imagecell_mouseover {
+	width: 30px;
+	border-right: 0px;
+	padding-right: 1px;
+}
+
+.dynContext_imagecell_empty_mouseover {
+	width: 30px;
+	border-right: 0px;
+	padding-right: 1px;
+}
+
+.dynContext_arrowcell {
+	width: 30px;
+	text-align: right;
+	font-family: Webdings;
+	color: black;
+}
+
+.dynContext_arrowcell_mouseover {
+	color: black;
+	width: 30px;
+	text-align: right;
+	font-family: Webdings;
+	border-left: 0px;
+}
+
+.dynContext_checkcell {
+	color: black;
+	width: 30px;
+	text-align: center;
+	font-family: Marlett;
+	font-size: 13pt;
+	paddding-left: 1px;
+}
+
+.dynContext_checkcell_mouseover {
+	color: black;
+	width: 30px;
+	text-align: center;
+	font-family: Marlett;
+	font-size: 13pt;
+	border-right: 0px;
+	padding-right: 1px;
+}
+
+.dynContext_separatorcell {
+}
+
+.dynContext_separator {
+	width: 50%;
+	height: 1px;
+	text-align: center;
+}

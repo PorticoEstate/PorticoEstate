@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Example &#171; Documentation &#171; jsDOMenuBar &#171; Projects &#171; tohzhiqiang.per.sg</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="docs.css" />
+</head>
+<body id="tohzhiqiang_per_sg">
+<h1>Example &#171; Documentation</h1>
+
+<h3>Example for jsDOMenuBar Version 1.1</h3>
+
+<p>
+Suppose you wish to make a menu bar with two menu bar items, and each menu bar item has a main menu. 
+Open jsdomenu.inc.js. You should see the following:
+
+</p>
+
+<pre><code>function createjsDOMenu() {
+	
+}</code></pre>
+
+<p>
+We define a main menu for the first menu bar item, and called it mainMenu1:
+</p>
+
+<pre><code>mainMenu1 = new jsDOMenu(130);</code></pre>
+
+<p>
+Next, we add in some menu items and separators:
+</p>
+
+<pre><code>with (mainMenu1) {
+  addMenuItem(new menuItem("Item 1", "", "example.htm"));
+  addMenuItem(new menuItem("Item 2", "", "example.htm"));
+  addMenuItem(new menuItem("-"));
+  addMenuItem(new menuItem("Item 3", "", "example.htm"));
+  addMenuItem(new menuItem("Item 4", "", "example.htm"));
+}</code></pre>
+
+<p>
+Similarly, we define a main menu for the second menu bar item, and called it mainMenu2. 
+We also add in some menu items and separators:
+</p>
+
+<pre><code>mainMenu2 = new jsDOMenu(150);
+with (mainMenu2) {
+  addMenuItem(new menuItem("Item 1", "", "example.htm"));
+  addMenuItem(new menuItem("-"));
+  addMenuItem(new menuItem("Item 2", "", "example.htm"));
+  addMenuItem(new menuItem("Item 3", "", "example.htm"));
+  addMenuItem(new menuItem("-"));
+  addMenuItem(new menuItem("Item 4", "", "example.htm"));
+}</code></pre>
+
+<p>
+Next, we define a menu bar, and called it menuBar:
+</p>
+
+<pre><code>menuBar = new menuBar();</code></pre>
+
+<p>
+We add in the two menu bar items to menuBar, and assign mainMenu1 to the first menu bar item, 
+mainMenu2 to the second menu bar item:
+
+</p>
+
+<pre><code>with (menuBar) {
+    addMenuBarItem(new menuBarItem("Item 1", mainMenu1));
+    addMenuBarItem(new menuBarItem("Item 2", mainMenu2));
+  }</code></pre>
+
+<p>
+Finally, we move the menu bar to the position we want. Suppose we want it to be 10px left, 100px 
+right:
+</p>
+
+<pre><code>menuBar.moveTo(10, 100);</code></pre>
+
+<p>
+View the <a href="example_demo.htm" title="Example Demo">example demo</a> based on the above codes.
+</p>
+
+<p class="back">
+<a href="./index.htm" title="Back to Documentation page">
+Back to Documentation</a>
+</p>
+
+<hr />
+
+<p>
+Compiled on 16 January 2005.
+</p>
+
+<p>
+The latest version is available at <a href="http://www.tohzhiqiang.per.sg/projects/jsdomenubar/docs/example.php" title="Latest version of jsDOMenuBar Reference">
+http://www.tohzhiqiang.per.sg/projects/jsdomenubar/docs/example.php</a>.
+</p>
+</body>
+</html>

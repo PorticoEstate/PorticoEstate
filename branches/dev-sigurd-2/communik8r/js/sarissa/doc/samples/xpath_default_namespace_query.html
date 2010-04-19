@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Untitled</title>
+    <script type="text/javascript" src="../../sarissa.js">
+    </script>
+    <script type="text/javascript">
+    <!--
+function testXpath()
+{
+	// build out source document
+    var xmlDoc = Sarissa.getDomDocument();
+    var xmlStr = "<?xml version='1.0' encoding='UTF-8'?>"+
+        "<stylesheet version='1.0' xmlns='http://www.w3.org/1999/XSL/Transform' xmlns:xhtml='http://www.w3.org/1999/xhtml'>"+
+        "<output method='xml' version='1.0' encoding='UTF-8' indent='yes'/>"+
+        "<template match='*'><xhtml:html></xhtml:html></template><template match='@*'>"+
+        "</template></stylesheet>";
+    xmlDoc.loadXML(xmlStr);
+	
+    // map namespaces in the document with prefixes of our choice
+    // NOTE 1: If the source document does not have a default namespace, dont use this method 
+    // as it was only build for that purpose. Just use setProperty for IE. Moz will be fine.
+    // NOTE 2: you must map the default namespace to a prefix for queries to work
+    // do NOT use Sarissa.setXpathNamespaces as Mozilla does not need it;
+    // it will map the right prefixes to the right namespaces, as long as they are in 
+    // the document. IE however will need a call to setProperty
+	Sarissa.setXpathNamespaces(xmlDoc, "xmlns:xsl='http://www.w3.org/1999/XSL/Transform'");
+    testSelectNodesOn(xmlDoc, "//xsl:template");
+}
+
+function testSelectNodesOn(domNode, sXpath)
+{
+    alert("testing selectNodes("+sXpath+") on a "+domNode);
+    var objNodeList = domNode.selectNodes(sXpath);
+    for(i=0;i<objNodeList.length;i++)
+        alert(objNodeList.item(i).xml);
+    alert("testing selectSingleNode("+sXpath+") on a "+domNode);
+    var oElem = domNode.selectSingleNode(sXpath);
+    alert(oElem+"\n"+(oElem?oElem.xml:" oElem is null"));
+    return;
+}
+    //-->
+    </script>
+</head>
+
+<body>
+<div><button onclick="testXpath()">test xpath</button></div>
+</body>
+</html>

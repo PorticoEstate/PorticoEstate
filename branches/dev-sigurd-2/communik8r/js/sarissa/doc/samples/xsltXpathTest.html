@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Enter the title of your XHTML document here</title>
+<script type="text/javascript" src="../../sarissa.js"> </script>
+<script type="text/javascript">
+function evaluate_query(xpath){
+try{
+// instantiate the result document
+var source = Sarissa.getDomDocument();
+source.loadXML('<mystuff><todoItem key="EE-456"><value>100.00</value></todoItem><todoItem key="EE-789"><value>25.00</value></todoItem></mystuff>');
+// instantiate the xsl stylesheet
+var evaluateXSLDoc = Sarissa.getDomDocument();
+evaluateXSLDoc.loadXML('<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="yes"/><xsl:template match="/"><root><xsl:apply-templates /></root></xsl:template><xsl:template match="*"><xsl:value-of select="' + xpath + '"/></xsl:template></xsl:stylesheet>');
+var result = source.transformNode(evaluateXSLDoc);
+return result;
+}
+catch(e){
+alert(e);
+throw e;
+}
+}
+</script>
+</head>
+<body>
+<p>
+<script type="text/javascript">
+alert(evaluate_query('/mystuff/todoItem[1]/@key'));
+</script>
+<p>
+</body>
+</html>

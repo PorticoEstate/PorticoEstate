@@ -1,0 +1,65 @@
+about	common	en	About
+account information	communik8r	en	Account Information
+account name	communik8r	en	Account Name
+actions	communik8r	en	Actions
+attach	communik8r	en	Attach
+attachment (%1)	communik8r	en	Attachment (%1)
+bcc	communik8r	en	BCC
+cc	communik8r	en	CC
+close window	communik8r	en	Close Window
+communik8r settings	admin	en	communik8r Settings
+compose email	communik8r	en	Compose Email
+contents	communik8r	en	Contents
+create account	communik8r	en	Create Account
+cut	communik8r	en	Cut
+date: %1	communik8r	en	Date: %1
+edit account %1	communik8r	en	Edit Account %1
+email address	communik8r	en	Email Address
+error: php-pspell is not available, contact your system administrator	communik8r	en	Error: php-pspell is not available, contact your system administrator.
+exit	common	en	Exit
+file	communik8r	en	File
+filename	communik8r	en	Filename
+find	communik8r	en	Find
+forward	communik8r	en	Forward
+from	communik8r	en	From
+from: %1	communik8r	en	From: %1
+full name	communik8r	en	Full Name
+hostname	communik8r	en	Hostname
+identity	communik8r	en	Identity
+invalid account	communik8r	en	Invalid Account
+invalid message content	communik8r	en	Invalid message content
+invalid message number, please contact your system administrator	communik8r	en	Invalid message number, please contact your system administrator
+mark as read	communik8r	en	Mark As Read
+mark as unread	communik8r	en	Mark As Unread
+move	communik8r	en	Move
+namespace prefix	communik8r	en	Namespace Prefix
+new	communik8r	en	New
+not spam	communik8r	en	Not Spam
+organisation	communik8r	en	Organisation
+paste	common	en	Paste
+port	communik8r	en	Port
+receiving options	communik8r	en	Receiving Options
+redo	common	en	Redo
+refresh	common	en	Refresh
+remove	communik8r	en	Remove
+replace	communik8r	en	Replace
+reply	communik8r	en	Reply
+reply to	communik8r	en	Reply To
+reply to all	communik8r	en	Replt to All
+required information	communik8r	en	Required Information
+save draft	communik8r	en	Save Draft
+sending	communik8r	en	Sending
+server type	communik8r	en	Server Type
+size	common	en	Size
+smtp hostname	admin	en	SMTP Hostname
+smtp port	admin	en	SMTP Port
+spam	communik8r	en	Spam
+subject: %1	communik8r	en	Subject: %1
+to	communik8r	en	To
+to: %1	communik8r	en	To: %1
+today %1	communik8r	en	Today %1
+undelete	communik8r	en	Undelete
+undisclosed recipients	communik8r	en	Undisclosed Recipients
+undo	communik8r	en	Undo
+view attachments	communik8r	en	View Attachments
+view signature	communik8r	en	View Signature
