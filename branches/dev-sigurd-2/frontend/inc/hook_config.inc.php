@@ -113,10 +113,8 @@ HTML;
 	*/
 	function picture_building_cat($config)
 	{
-		$cats	= CreateObject('phpgwapi.categories');
-		$cats->app_name	= 'property.document';
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.document');
 		$cats->supress_info = true;
-
 		$selected = isset($config['picture_building_cat']) ? $config['picture_building_cat'] : '';
 		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
