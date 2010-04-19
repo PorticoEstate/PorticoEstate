@@ -206,7 +206,7 @@
 
 			$xml->appendChild($phpgw);
 
-			echo $xml->saveXML();;
+			echo $xml->saveXML();
 			//echo '<pre>' . htmlentities($xml->dump_mem(true)) . '</pre>';
 		}
 
@@ -451,7 +451,7 @@
 				$menu->appendChild($menu_group);
 
 				$xml->appendChild($menu);
-				echo $xml->saveXML();;
+				echo $xml->saveXML();
 			}
 		}
 
@@ -554,7 +554,7 @@
 
 			$xml->appendChild($phpgw);
 
-			echo $xml->saveXML();;
+			echo $xml->saveXML();
 		}
 
 		/**

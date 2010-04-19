@@ -13,7 +13,7 @@
 	/**
 	* @see bobase
 	*/
-	include_once(PHPGW_INCLUDE_ROOT . SEP . 'communik8r' . SEP . 'inc' . SEP . 'class.bobase.inc.php');
+	phpgw::import_class('communik8r.bobase');
 	
 	/**
 	* Communik8r attachment logic class

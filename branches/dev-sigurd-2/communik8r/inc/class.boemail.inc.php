@@ -13,7 +13,8 @@
 	/**
 	 * @see bobase
 	 */
-	include_once(PHPGW_INCLUDE_ROOT . SEP . 'communik8r' . SEP . 'inc' . SEP . 'class.bobase.inc.php');
+
+	phpgw::import_class('communik8r.bobase');
 
 	/**
 	 * Communik8r email logic class
@@ -211,44 +212,46 @@
 
 			Header('Content-Type: text/xml');
 
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/compose" . '"');
-			$xml->append_child($xsl);
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/compose.xsl" . '"');
+			$xml->appendChild($xsl);
 
-			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+			$phpgw = $xml->createElement('phpgw:response', 'phpgw');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgw', 'http://dtds.phpgroupware.org/phpgw.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgwapi', 'http://dtds.phpgroupware.org/phpgwapi.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:communik8r', 'http://dtds.phpgroupware.org/communik8r.dtd');
 
-			$info = $xml->create_element('phpgwapi:info');
+			$info = $xml->createElement('phpgwapi:info');
 
-			$base_url = $xml->create_element('phpgwapi:base_url');
-			$base_url->append_child( $xml->create_text_node("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
-			$info->append_child($base_url);
+			$base_url = $xml->createElement('phpgwapi:base_url');
+			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($base_url);
 			unset($base_url);
 
-			$skin = $xml->create_element('phpgwapi:skin');
-			$skin->append_child( $xml->create_text_node('base') );
-			$info->append_child($skin);
+			$skin = $xml->createElement('phpgwapi:skin');
+			$skin->appendChild( $xml->createTextNode('base') );
+			$info->appendChild($skin);
 			unset($skin);
 
-			$langs = $xml->create_element('phpgwapi:langs');
+			$langs = $xml->createElement('phpgwapi:langs');
 			foreach ( $lang_strs as $lkey => $lval )
 			{
-				$lang = $xml->create_element('phpgwapi:lang');
-				$lang->set_attribute('id', $lkey);
-				$lang->append_child($xml->create_text_node($lval) );
-				$langs->append_child($lang);
+				$lang = $xml->createElement('phpgwapi:lang');
+				$lang->setAttribute('id', $lkey);
+				$lang->appendChild($xml->createTextNode($lval) );
+				$langs->appendChild($lang);
 			}
-			$info->append_child($langs);
+			$info->appendChild($langs);
 
-			$phpgw->append_child($info);
+			$phpgw->appendChild($info);
 
-			$elm = $xml->create_element('communik8r:response');
+			$elm = $xml->createElement('communik8r:response');
 
-			$comm_info = $xml->create_element('communik8r:info');
+			$comm_info = $xml->createElement('communik8r:info');
 
-			$btns = $xml->create_element('communik8r:buttons');
+			$btns = $xml->createElement('communik8r:buttons');
 			foreach($buttons as $id => $attribs)
 			{
 				if ( strpos($attribs['label'], '*') )
@@ -268,49 +271,49 @@
 					}
 				}
 
-				$btn = $xml->create_element('communik8r:button');
+				$btn = $xml->createElement('communik8r:button');
 
 				foreach($attribs as $akey => $aval)
 				{
-					$btn->set_attribute($akey, $aval);
+					$btn->setAttribute($akey, $aval);
 				}
 
-				$btns->append_child($btn);
+				$btns->appendChild($btn);
 			}
-			$elm->append_child($btns);
+			$elm->appendChild($btns);
 
-			$accts = $xml->create_element('communik8r:accounts');
+			$accts = $xml->createElement('communik8r:accounts');
 
 			$accounts = execMethod('communik8r.boaccounts.get_list', 'email');
-			$accts = $xml->create_element('communik8r:accounts');
+			$accts = $xml->createElement('communik8r:accounts');
 			foreach($accounts as $account)
 			{
-				$acct = $xml->create_element('communik8r:account');
-				$acct->set_attribute('id', $account['acct_id']);
-				$acct->set_attribute('sig_id', $account['sig_id']);
+				$acct = $xml->createElement('communik8r:account');
+				$acct->setAttribute('id', $account['acct_id']);
+				$acct->setAttribute('sig_id', $account['sig_id']);
 				if( $account['acct_id'] == $msg_parts[1] )
 				{
-					$acct->set_attribute('current', 1);
+					$acct->setAttribute('current', 1);
 				}
 
-				$acct_name = $xml->create_element('communik8r:account_name');
-				$acct_name->append_child( $xml->create_cdata_section("{$account['display_name']} <{$account['acct_uri']}>") );
-				$acct->append_child($acct_name);
+				$acct_name = $xml->createElement('communik8r:account_name');
+				$acct_name->appendChild( $xml->create_cdata_section("{$account['display_name']} <{$account['acct_uri']}>") );
+				$acct->appendChild($acct_name);
 
-				$accts->append_child($acct);
+				$accts->appendChild($acct);
 			}
-			$elm->append_child($accts);
+			$elm->appendChild($accts);
 
-			$message = $xml->create_element('communik8r:message');
-			$message->set_attribute('id', $msg_id );
+			$message = $xml->createElement('communik8r:message');
+			$message->setAttribute('id', $msg_id );
 
-			$headers = $xml->create_element('communik8r:headers');
+			$headers = $xml->createElement('communik8r:headers');
 
 			if ( isset($msg->from) )
 			{
-				$header = $xml->create_element('communik8r:message_to');
-				$header->append_child( $xml->create_text_node($msg->from) );
-				$headers->append_child($header);
+				$header = $xml->createElement('communik8r:message_to');
+				$header->appendChild( $xml->createTextNode($msg->from) );
+				$headers->appendChild($header);
 			}
 
 			//ADD REPLY-TO-ALL-LOGIC-HERE
@@ -331,22 +334,22 @@
 					$subject = lang("{$prefix} %1", 'no subject');
 				}
 			}
-			$header = $xml->create_element('communik8r:message_subject');
-			$header->append_child( $xml->create_text_node($subject) );
-			$headers->append_child($header);
-			$message->append_child($headers);
+			$header = $xml->createElement('communik8r:message_subject');
+			$header->appendChild( $xml->createTextNode($subject) );
+			$headers->appendChild($header);
+			$message->appendChild($headers);
 
-			$body = $xml->create_element('communik8r:body');
+			$body = $xml->createElement('communik8r:body');
 			$this->_decode_body($msg->body, $msg->entities[0]);
-			$body->append_child( $xml->create_text_node( $body ) );
-			$message->append_child($body);
+			$body->appendChild( $xml->createTextNode( $body ) );
+			$message->appendChild($body);
 
-			$elm->append_child($message);
-			$phpgw->append_child($elm);
+			$elm->appendChild($message);
+			$phpgw->appendChild($elm);
 
-			$xml->append_child($phpgw);
+			$xml->appendChild($phpgw);
 
-			echo $xml->dump_mem(true);
+			echo $xml->saveXML();
 		}
 
 		/**
@@ -384,13 +387,14 @@
 			}
 			$socache = createObject('communik8r.socache_email', $info);
 
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 			
-			$tree = $xml->create_element('tree');
-			$tree->set_attribute('id', $info['acct_id']);
-			$tree->set_attribute('text', $info['acct_name']);
+			$tree = $xml->createElement('tree');
+			$tree->setAttribute('id', $info['acct_id']);
+			$tree->setAttribute('text', $info['acct_name']);
 
-			$elm = $xml->create_element('crap');
+			$elm = $xml->createElement('crap');
 
 			$mboxs = $socache->get_mailboxes();
 			foreach( $mboxs as $mbox => $info)
@@ -401,14 +405,14 @@
 
 			if ( !$output )
 			{
-				return $elm->clone_node(True);
+				return $elm->cloneNode(True);
 			}
 
-			$tree->append_child($elm);
-			$xml->append_child($tree);
+			$tree->appendChild($elm);
+			$xml->appendChild($tree);
 
 			Header('Content-Type: text/xml');
-			echo $xml->dump_mem(true);
+			echo $xml->saveXML();
 		}
 
 		function get_msg($uri_parts)
@@ -434,40 +438,42 @@
 
 			Header('Content-Type: text/xml');
 
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', "type=\"text/xsl\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/message\"");
-			$xml->append_child($xsl);
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', "type=\"text/xsl\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/message.xsl\"");
+			$xml->appendChild($xsl);
 
-			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+			$phpgw = $xml->createElement('phpgw:response', 'phpgw');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgw', 'http://dtds.phpgroupware.org/phpgw.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgwapi', 'http://dtds.phpgroupware.org/phpgwapi.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:communik8r', 'http://dtds.phpgroupware.org/communik8r.dtd');
 
-			$info = $xml->create_element('phpgwapi:info');
+			$info = $xml->createElement('phpgwapi:info');
 
-			$base_url = $xml->create_element('phpgwapi:base_url');
-			$base_url->append_child( $xml->create_text_node($GLOBALS['phpgw_info']['server']['webserver_url']) );
-			$info->append_child($base_url);
+			$base_url = $xml->createElement('phpgwapi:base_url');
+			$base_url->appendChild( $xml->createTextNode($GLOBALS['phpgw_info']['server']['webserver_url']) );
+			$info->appendChild($base_url);
 
 			foreach ( $langs as $lkey => $lval )
 			{
-				$lang = $xml->create_element('phpgwapi:lang');
-				$lang->set_attribute('id', "phpgwapi_$lkey");
-				$lang->append_child($xml->create_text_node($lval) );
-				$info->append_child($lang);
+				$lang = $xml->createElement('phpgwapi:lang');
+				$lang->setAttribute('id', "phpgwapi_$lkey");
+				$lang->appendChild($xml->createTextNode($lval) );
+				$info->appendChild($lang);
 			}
 
-			$phpgw->append_child($info);
+			$phpgw->appendChild($info);
 
-			$elm = $xml->create_element('communik8r:response');
+			$elm = $xml->createElement('communik8r:response');
 
-			$comm_info = $xml->create_element('communik8r:info');
+			$comm_info = $xml->createElement('communik8r:info');
 
-			$message = $xml->create_element('communik8r:message');
+			$message = $xml->createElement('communik8r:message');
 
-			$message->set_attribute('id', "{$acct_info['acct_id']}_{$uri_parts[3]}_{$uri_parts[4]}");
+			$message->setAttribute('id', "{$acct_info['acct_id']}_{$uri_parts[3]}_{$uri_parts[4]}");
 
-			$headers = $xml->create_element('communik8r:headers');
+			$headers = $xml->createElement('communik8r:headers');
 
 			if ( isset($msg->from) )
 			{
@@ -479,16 +485,16 @@
 				}
 				$from_str .= "<{$from['full']}>";
 
-				$header = $xml->create_element('communik8r:message_from');
-				$header->append_child( $xml->create_text_node($from_str) );
-				$headers->append_child($header);
+				$header = $xml->createElement('communik8r:message_from');
+				$header->appendChild( $xml->createTextNode($from_str) );
+				$headers->appendChild($header);
 				unset($from);
 			}
 
 			if ( isset($msg->reply_to) && $msg->reply_to )
 			{
 				$reply_tos = split(',', $msg->reply_to);
-				$header = $xml->create_element('communik8r:message_reply_to');
+				$header = $xml->createElement('communik8r:message_reply_to');
 				$i = 0;
 				foreach ( $reply_tos as $reply_to )
 				{
@@ -505,11 +511,11 @@
 					}
 					$r2_str .= "<{$r2['full']}>";
 
-					$header->append_child( $xml->create_text_node($r2_str) );
+					$header->appendChild( $xml->createTextNode($r2_str) );
 					unset($r2_str);
 					++$i;
 				}
-				$headers->append_child($header);
+				$headers->appendChild($header);
 			}
 
 			$tos = array();
@@ -538,16 +544,16 @@
 			}
 
 			$i = 0;
-			$header = $xml->create_element('communik8r:message_to');
+			$header = $xml->createElement('communik8r:message_to');
 			foreach ( $tos as $hdr )
 			{
 				if( $i == 0 && $hdr['name'] == lang('undisclosed recipients'))
 				{
-					$header = $xml->create_element('communik8r:message_to');
-					$header->append_child( $xml->create_text_node($hdr[3]) );
-					$headers->append_child($header);
-					$header->append_child( $xml->create_text_node($hdr) );
-					$headers->append_child($header);
+					$header = $xml->createElement('communik8r:message_to');
+					$header->appendChild( $xml->createTextNode($hdr[3]) );
+					$headers->appendChild($header);
+					$header->appendChild( $xml->createTextNode($hdr) );
+					$headers->appendChild($header);
 					break;
 				}
 
@@ -558,17 +564,17 @@
 				}
 				$to_str .= "<{$hdr['full']}>";
 
-				$header->append_child( $xml->create_text_node($to_str) );
+				$header->appendChild( $xml->createTextNode($to_str) );
 				unset($to_str);
 				++$i;
 			}
-			$headers->append_child($header);
+			$headers->appendChild($header);
 
 
 			if ( isset($msg->cc) && $msg->cc )
 			{
 				$ccs = split(',', $msg->cc);
-				$header = $xml->create_element('communik8r:message_cc');
+				$header = $xml->createElement('communik8r:message_cc');
 				$i = 0;
 				foreach ( $ccs as $cc )
 				{
@@ -585,62 +591,62 @@
 					}
 					$cc_str .= "<{$cc['full']}>";
 
-					$header->append_child( $xml->create_text_node($cc_str) );
+					$header->appendChild( $xml->createTextNode($cc_str) );
 					unset($cc_str);
 					++$i;
 				}
-				$headers->append_child($header);
+				$headers->appendChild($header);
 			}
 
-			$header = $xml->create_element('communik8r:message_subject');
-			$header->append_child( $xml->create_text_node($msg->subject ) );
-			$headers->append_child($header);
+			$header = $xml->createElement('communik8r:message_subject');
+			$header->appendChild( $xml->createTextNode($msg->subject ) );
+			$headers->appendChild($header);
 
 			$date_fmt = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] . ' '
 				. ( $GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'] == 12
 						? 'g:i a'
 						: 'H:i' );
 
-			$header = $xml->create_element('communik8r:message_date');
-			$header->append_child( $xml->create_text_node( date($date_fmt, $msg->timestamp) ) );
-			$headers->append_child($header);
+			$header = $xml->createElement('communik8r:message_date');
+			$header->appendChild( $xml->createTextNode( date($date_fmt, $msg->timestamp) ) );
+			$headers->appendChild($header);
 
-			$message->append_child($headers);
+			$message->appendChild($headers);
 
-			$body = $xml->create_element('communik8r:body');
+			$body = $xml->createElement('communik8r:body');
 			$this->_decode_body($msg->body, $msg->body_meta);
-			$body->append_child( $xml->create_cdata_section( $msg->body . "\n\n" ) );
+			$body->appendChild( $xml->create_cdata_section( $msg->body . "\n\n" ) );
 
-			$parts = $xml->create_element('communik8r:parts');
+			$parts = $xml->createElement('communik8r:parts');
 			if ( isset($msg->parts) && count($msg->parts) != 1 ) // we don't need it if it is only the body
 			{
-				//$body->append_child( $xml->create_cdata_section( print_r($msg->parts, True) ) );
+				//$body->appendChild( $xml->create_cdata_section( print_r($msg->parts, True) ) );
 				foreach ( $msg->parts as $part_no => $part )
 				{
 					if ( $part_no == 1 )
 					{
 						continue; //skip the body
 					}
-					$prt = $xml->create_element('communik8r:part');
-					$prt->set_attribute('id', $part_no);
-					$prt->set_attribute('mimetype', $part['typestring']);
-					$prt->set_attribute('inline', ($this->_is_inline($part['typestring']) ? 'true' : 'false') );
-					$prt->set_attribute('size', $this->_int2human($part['size']) );
-					$prt->append_child( $xml->create_cdata_section($part['name']) );
-					$prt->set_attribute('icon', $this->mime2icon($part['typestring']) );
-					$parts->append_child($prt);
+					$prt = $xml->createElement('communik8r:part');
+					$prt->setAttribute('id', $part_no);
+					$prt->setAttribute('mimetype', $part['typestring']);
+					$prt->setAttribute('inline', ($this->_is_inline($part['typestring']) ? 'true' : 'false') );
+					$prt->setAttribute('size', $this->_int2human($part['size']) );
+					$prt->appendChild( $xml->create_cdata_section($part['name']) );
+					$prt->setAttribute('icon', $this->mime2icon($part['typestring']) );
+					$parts->appendChild($prt);
 				}
 			}
-			$message->append_child($parts);
+			$message->appendChild($parts);
 
-			$message->append_child($body);
+			$message->appendChild($body);
 
-			$elm->append_child($message);
-			$phpgw->append_child($elm);
+			$elm->appendChild($message);
+			$phpgw->appendChild($elm);
 
-			$xml->append_child($phpgw);
+			$xml->appendChild($phpgw);
 
-			echo $xml->dump_mem(true);
+			echo $xml->saveXML();
 
 			$msg_pref = $this->_get_pref('current_message');
 			//$uri_parts[3] = str_replace('.', '___', $uri_parts[3]);
@@ -711,82 +717,84 @@
 			$socache = createObject('communik8r.socache_email', $acct_info);
 			$msgs = $socache->get_msg_list($uri_parts[3]);
 
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', 'type="text/xsl" href="' 
-					. "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/summary" . '"');
-			$xml->append_child($xsl);
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' 
+					. "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/summary.xsl" . '"');
+			$xml->appendChild($xsl);
 
-			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+			$phpgw = $xml->createElement('phpgw:response', 'phpgw');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgw', 'http://dtds.phpgroupware.org/phpgw.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgwapi', 'http://dtds.phpgroupware.org/phpgwapi.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:communik8r', 'http://dtds.phpgroupware.org/communik8r.dtd');
 
-			$info = $xml->create_element('phpgwapi:info');
-			$base_url = $xml->create_element('phpgwapi:base_url');
-			$base_url->append_child( $xml->create_text_node($GLOBALS['phpgw_info']['server']['webserver_url']) );
-			$info->append_child($base_url);
-			$phpgw->append_child($info);
+			$info = $xml->createElement('phpgwapi:info');
+			$base_url = $xml->createElement('phpgwapi:base_url');
+			$base_url->appendChild( $xml->createTextNode($GLOBALS['phpgw_info']['server']['webserver_url']) );
+			$info->appendChild($base_url);
+			$phpgw->appendChild($info);
 
-			$elm = $xml->create_element('communik8r:response');
+			$elm = $xml->createElement('communik8r:response');
 
-			$comm_info = $xml->create_element('communik8r:info');
-			$msg_sums = $xml->create_element('communik8r:msg_sums');
+			$comm_info = $xml->createElement('communik8r:info');
+			$msg_sums = $xml->createElement('communik8r:msg_sums');
 
-			$acct = $xml->create_element('communik8r:account');
-			$acct->set_attribute('id', $acct_info['acct_id']);
-			$acct->append_child( $xml->create_text_node($uri_parts[2]) );
-			$comm_info->append_child($acct);
+			$acct = $xml->createElement('communik8r:account');
+			$acct->setAttribute('id', $acct_info['acct_id']);
+			$acct->appendChild( $xml->createTextNode($uri_parts[2]) );
+			$comm_info->appendChild($acct);
 
-			$mailbox = $xml->create_element('communik8r:mailbox');
-			$mailbox->append_child( $xml->create_text_node($uri_parts[3]) );
-			$comm_info->append_child($mailbox);
+			$mailbox = $xml->createElement('communik8r:mailbox');
+			$mailbox->appendChild( $xml->createTextNode($uri_parts[3]) );
+			$comm_info->appendChild($mailbox);
 
-			$mailbox = $xml->create_element('communik8r:hide_deleted');
-			$mailbox->append_child( $xml->create_text_node('true') );
-			$comm_info->append_child($mailbox);
+			$mailbox = $xml->createElement('communik8r:hide_deleted');
+			$mailbox->appendChild( $xml->createTextNode('true') );
+			$comm_info->appendChild($mailbox);
 
-			$elm->append_child($comm_info);
+			$elm->appendChild($comm_info);
 
 			foreach ( $msgs as $id => $msg)
 			{
-				$msg_sum = $xml->create_element('communik8r:msg_sum');
-				$msg_sum->set_attribute('id', "email_{$acct_info['acct_id']}_{$msg['mbox_name']}_{$id}");
+				$msg_sum = $xml->createElement('communik8r:msg_sum');
+				$msg_sum->setAttribute('id', "email_{$acct_info['acct_id']}_{$msg['mbox_name']}_{$id}");
 
-				$msg_flags = $xml->create_element('communik8r:msg_flags');
-				$msg_flags->set_attribute('flag_seen', ($msg['flag_seen'] ? 'true' : 'false') );
-				$msg_flags->set_attribute('flag_answered', ($msg['flag_answered'] ? 'true' : 'false') );
-				$msg_flags->set_attribute('flag_deleted', ($msg['flag_deleted'] ? 'true' : 'false') );
-				$msg_flags->set_attribute('flag_flagged', ($msg['flag_flagged'] ? 'true' : 'false') );
-				$msg_flags->set_attribute('flag_draft', ($msg['flag_draft'] ? 'true' : 'false') );
-				$msg_flags->set_attribute('attachments', ($msg['attachments'] ? 'true' : 'false') );
-				$msg_sum->append_child($msg_flags);
+				$msg_flags = $xml->createElement('communik8r:msg_flags');
+				$msg_flags->setAttribute('flag_seen', ($msg['flag_seen'] ? 'true' : 'false') );
+				$msg_flags->setAttribute('flag_answered', ($msg['flag_answered'] ? 'true' : 'false') );
+				$msg_flags->setAttribute('flag_deleted', ($msg['flag_deleted'] ? 'true' : 'false') );
+				$msg_flags->setAttribute('flag_flagged', ($msg['flag_flagged'] ? 'true' : 'false') );
+				$msg_flags->setAttribute('flag_draft', ($msg['flag_draft'] ? 'true' : 'false') );
+				$msg_flags->setAttribute('attachments', ($msg['attachments'] ? 'true' : 'false') );
+				$msg_sum->appendChild($msg_flags);
 
-				$msg_sender = $xml->create_element('communik8r:msg_sender');
-				$msg_sender->append_child( $xml->create_text_node( $msg['sender']) );
-				$msg_sum->append_child($msg_sender);
+				$msg_sender = $xml->createElement('communik8r:msg_sender');
+				$msg_sender->appendChild( $xml->createTextNode( $msg['sender']) );
+				$msg_sum->appendChild($msg_sender);
 
-				$subject = $xml->create_element('communik8r:msg_subject');
-				$subject->append_child( $xml->create_text_node($msg['subject']) );
-				$msg_sum->append_child($subject);
+				$subject = $xml->createElement('communik8r:msg_subject');
+				$subject->appendChild( $xml->createTextNode($msg['subject']) );
+				$msg_sum->appendChild($subject);
 
-				$msg_size = $xml->create_element('communik8r:msg_size');
-				$msg_size->set_attribute('intval', $msg['msg_size']);
-				$msg_size->append_child( $xml->create_text_node( $this->_int2human($msg['msg_size']) ) );
-				$msg_sum->append_child($msg_size);
+				$msg_size = $xml->createElement('communik8r:msg_size');
+				$msg_size->setAttribute('intval', $msg['msg_size']);
+				$msg_size->appendChild( $xml->createTextNode( $this->_int2human($msg['msg_size']) ) );
+				$msg_sum->appendChild($msg_size);
 
-				$msg_date = $xml->create_element('communik8r:msg_date');
-				$msg_date->set_attribute('intval', $msg['date_sent']);
-				$msg_date->append_child( $xml->create_text_node( $this->_date2human($msg['date_sent']) ) );
-				$msg_sum->append_child($msg_date);
+				$msg_date = $xml->createElement('communik8r:msg_date');
+				$msg_date->setAttribute('intval', $msg['date_sent']);
+				$msg_date->appendChild( $xml->createTextNode( $this->_date2human($msg['date_sent']) ) );
+				$msg_sum->appendChild($msg_date);
 
-				$msg_sums->append_child($msg_sum);
+				$msg_sums->appendChild($msg_sum);
 			}
-			$elm->append_child($msg_sums);
-			$phpgw->append_child($elm);
+			$elm->appendChild($msg_sums);
+			$phpgw->appendChild($elm);
 
-			$xml->append_child($phpgw);
+			$xml->appendChild($phpgw);
 
-			echo $xml->dump_mem(true);
+			echo $xml->saveXML();
 			$this->_store_pref('current_selection', "email_{$uri_parts[2]}_{$uri_parts[3]}");
 			//echo '<pre>' . print_r(domxml_xmltree($xml->dump_mem(true)), True) . '</pre>';
 		}
@@ -943,23 +951,23 @@
 		{
 			$pref = $this->_get_pref('current_selection');
 			$parent .= ($parent ? $info['sep'] : '');
-			$elm = $xml->create_element('item');
+			$elm = $xml->createElement('item');
 
-			$elm->set_attribute('id', "{$info['acct_handler']}_{$info['acct_id']}_{$parent}{$mbox}");
-			$elm->set_attribute('text', $mbox);
-			$elm->set_attribute('open', intval($info['open'] || strtolower($mbox) == 'inbox') );
+			$elm->setAttribute('id', "{$info['acct_handler']}_{$info['acct_id']}_{$parent}{$mbox}");
+			$elm->setAttribute('text', $mbox);
+			$elm->setAttribute('open', intval($info['open'] || strtolower($mbox) == 'inbox') );
 			
 			if ( "{$info['acct_handler']}_{$info['acct_id']}_{$parent}{$mbox}" == $pref )
 			{
-				$elm->set_attribute('select', 1);
-				$elm->set_attribute('call', 1);
+				$elm->setAttribute('select', 1);
+				$elm->setAttribute('call', 1);
 			}
 
 			if ( count($info['children']) )
 			{
 				foreach( $info['children'] as $smbox => $sinfo )
 				{
-					$elm->append_child($this->_mbox2xml($xml, $smbox, $sinfo, $parent . $mbox));
+					$elm->appendChild($this->_mbox2xml($xml, $smbox, $sinfo, $parent . $mbox));
 				}
 			}
 

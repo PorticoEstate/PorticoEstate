@@ -13,7 +13,7 @@
 	/**
 	* @see bobase
 	*/
-//	include_once(PHPGW_INCLUDE_ROOT . SEP . 'communik8r' . SEP . 'inc' . SEP . 'class.bobase.inc.php');
+
 	phpgw::import_class('communik8r.bobase');	
 	/**
 	* Communik8r accounts logic class
@@ -36,18 +36,18 @@
 		/**
 		* REST dispatcher for accounts
 		*/
-		function rest($uri_parts)
+		function rest($data)
 		{
 			switch ( $_SERVER['REQUEST_METHOD'] )
 			{
 				case 'GET':
-					switch ( count($uri_parts) )
+					switch ( $data['action'] )
 					{
-						case 2: //get list of accounts
+						case 'new': //get list of accounts
 							$this->get_accounts();
 							break;
-						case 3: // edit an account
-							$this->edit_account($uri_parts);
+						case 'edit': // edit an account
+							$this->edit_account($data);
 							break;
 					default:
 							die('<phpgw:response><phpgw:error>invalid request - received ' . count($uri_parts) . ' elements</phpgw:error></phpgw:response>');
@@ -56,6 +56,8 @@
 					break;
 				
 				case 'PUT':
+					
+					//FIXME
 					if ( count($uri_parts) == 3 )
 					{
 						$this->_process_edit($uri_parts);
@@ -350,4 +352,3 @@
 			
 		}
 	}
-?>

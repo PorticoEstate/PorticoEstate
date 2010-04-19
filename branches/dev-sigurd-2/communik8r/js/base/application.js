@@ -112,8 +112,8 @@ Application.prototype.editAccount = function(strAcctID)
 {
 	var strWinName = 'communik8r_edit_account' + strAcctID;
 	var strWinArgs = 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,height=600,width=800';
-
-	if ( window.open(this.strBaseURL + '/accounts/' + strAcctID + this.strGET + '&type=email', strWinName, strWinArgs) ) //&type is for new accounts
+alert(this.strBaseURL + '&section=accounts&action=' + strAcctID  + '&type=email');
+	if ( window.open(this.strBaseURL + '&section=accounts&action=' + strAcctID  + '&type=email', strWinName, strWinArgs) ) //&type is for new accounts
 	{
 		return strWinName;
 	}

@@ -13,7 +13,8 @@
 	/**
 	* @see Mail_mimeDecode
 	*/
-	include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . './class.Mail_mimeDecode.inc.php');
+
+	phpgw::import_class('communik8r.Mail_mimeDecode');
 
 	/**
 	* Email abstraction library

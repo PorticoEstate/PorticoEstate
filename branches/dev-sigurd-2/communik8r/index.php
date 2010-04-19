@@ -54,8 +54,10 @@
 //	switch ($uri_parts[1])//first is empty!
 	switch ($section)
 	{
-		case 'accounts':
-			ExecMethod('communik8r.boaccounts.rest', $uri_parts);
+		case 'accounts':	
+			$action		= phpgw::get_var('action', 'string');
+			$type		= phpgw::get_var('section', 'type');
+			ExecMethod('communik8r.boaccounts.rest', array('action' => $action, 'type' => $type));
 			break;
 
 		case 'attachments':

@@ -16,13 +16,13 @@
 	/**
 	 *@see comm_email
 	 */
-	include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'class.comm_email.inc.php');
 
+	phpgw::import_class('communik8r.comm_email');
 	/**
 	 * @see Message
 	 */
 	include_once(PHPGW_APP_INC . SEP . 'class.mime.inc.php');
-
+//	phpgw::import_class('communik8r.mime');
 
 	/**
 	 * IMAP Connection
