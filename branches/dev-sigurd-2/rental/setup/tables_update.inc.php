@@ -72,7 +72,7 @@
 	$test[] = '0.1.0.5';
 	function rental_upgrade0_1_0_5()
 	{
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_notifications_workbench','notification_id',array(
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_notification_workbench','notification_id',array(
 			'type' => 'int', 
 			'precision' => '4',
 			'nullable' => true
