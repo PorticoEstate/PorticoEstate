@@ -36,6 +36,48 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td colspan="2">&nbsp;<b>{lang_external_db}</b></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_Debug}:</td>
+			<td>
+				<select name="newsettings[external_db_debug]">
+					<option value="" {selected_external_db_debug_}>NO</option>
+					<option value="1" {selected_external_db_debug_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_login_external_db_host}:</td>
+			<td><input name="newsettings[external_db_host]" value="{value_external_db_host}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_type}:</td>
+			<td>
+				<select name="newsettings[external_db_type]">
+					<option value="" {selected_external_db_type_}>None</option>
+					<option value="mssql" {selected_external_db_type_mssql}>mssql</option>
+					<option value="mysql" {selected_external_db_type_mysql}>mysql</option>
+					<option value="oracle" {selected_external_db_type_oracle}>oracle</option>
+					<option value="postgres" {selected_external_db_type_postgres}>postgres</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_login_external_db_name}:</td>
+			<td><input name="newsettings[external_db_name]" value="{value_external_db_name}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_login_external_db_user}:</td>
+			<td><input name="newsettings[external_db_user]" value="{value_external_db_user}"></td>
+		</tr>
+
+
+		<tr class="row_off">
+			<td>{lang_login_external_db_password}:</td>
+			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->

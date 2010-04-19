@@ -19,13 +19,18 @@
 		
 		public function get_db()
 		{
+			$config	= CreateObject('phpgwapi.config','frontend');
+			$config->read();
+
 			$db = createObject('phpgwapi.db', null, null, true);
-			$db->Debug = true;	
-			$db->Host = '10.16.14.5';
-			$db->Type = 'oci8';
-			$db->Database = 'INSTEST';
-			$db->User = 'fellesdata';
-			$db->Password = 'fellesdata';
+
+			$db->Debug = !!$config->config_data['external_db_debug'];
+			$db->Host = $config->config_data['external_db_host'];
+			$db->Type = $config->config_data['external_db_type'];
+			$db->Database = $config->config_data['external_db_name'];
+			$db->User = $config->config_data['external_db_user'];
+			$db->Password = $config->config_data['external_db_password'];
+
 			$db->connect();
 			return $db;
 		}
