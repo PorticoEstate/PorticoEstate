@@ -301,4 +301,11 @@ $asyncservice->set_timer(
 	'rental.sonotification.populate_workbench_notifications',
 	null
 	);
+	
+$asyncservice->set_timer(
+	array('day' => "*/1"),
+	'rental_run_adjustments',
+	'rental.soadjustment.run_adjustments',
+	null
+	);
 
