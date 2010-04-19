@@ -1,31 +1,59 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
 	<div id="wrapper">
+		
     	<div id="header">
     		<div id="login-bar">
     			<ul class="user_menu">
     				<li><em><img src="frontend/templates/base/images/16x16/user_red.png"  class="list_image" /></em><xsl:value-of select="name_of_user"/></li>
     				<li><em><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/></em>(2)</li>
-    				<li><a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em>Logg ut</a></li>
+    				<li><a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'logout')"/></a></li>
     			</ul>
 			</div>
 			<div id="information">
 				<ul>
-					<li><em><img src="frontend/templates/base/images/16x16/help.png" class="list_image"/></em><a href="{help_url}" class="header_link">Hjelp</a></li>
-    				<li><em><img src="frontend/templates/base/images/16x16/group.png"  class="list_image"/></em><a href="{contact_url}" class="header_link">Kontakt BKB</a></li>
-    				<li><em><img src="frontend/templates/base/images/16x16/page.png" class="list_image"/></em><a href="{folder_url}" class="header_link">Brosjyre</a></li>
+					<li><em><img src="frontend/templates/base/images/16x16/help.png" class="list_image"/></em><a href="{help_url}" class="header_link"><xsl:value-of select="php:function('lang', 'help')"/></a></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/group.png"  class="list_image"/></em><a href="{contact_url}" class="header_link"><xsl:value-of select="php:function('lang', 'contact_BKB')"/></a></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/page.png" class="list_image"/></em><a href="{folder_url}" class="header_link"><xsl:value-of select="php:function('lang', 'folder')"/></a></li>
 				</ul>
 			</div>
 			<div id="area_and_price">
 				<ul>
-					<li ><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em>Antall enheter: <xsl:value-of select="number_of_locations"/> </li>
-    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em>Totalt areal: <xsl:value-of select="total_area"/></li>
-    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em>Total årspris: <xsl:value-of select="total_price"/></li>
+					<li ><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'number_of_units')"/>: <xsl:value-of select="number_of_locations"/> </li>
+    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area')"/>: <xsl:value-of select="total_area"/></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/></li>
     			</ul>
 			</div>
 			<div id="org_units">
     			<ul>
-    				<li><em><img src="frontend/templates/base/images/16x16/chart_organisation.png"  class="list_image" /></em>Organisasjonenheter (<xsl:value-of select="number_of_org_units"/>)</li>
-    				<li><select size="3"><option value="">Seksjon informasjon</option><option value="">Byrådsleders avdeling, stab</option></select></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/chart_organisation.png"  class="list_image" /></em><xsl:value-of select="php:function('lang', 'organisational_units')"/> (<xsl:value-of select="number_of_org_units"/>)</li>
+    				<li>
+    					<form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
+	    					<select size="3" onchange="this.form.submit()" name="org_unit_id">
+	    						<xsl:choose>
+	    							<xsl:when test="selected_org_unit = 'all'">
+	    								<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
+	    								<xsl:for-each select="org_unit">
+			    							<option value="{UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
+			    						</xsl:for-each>
+	    							</xsl:when>
+	    							<xsl:otherwise>
+	    								<option value="all"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
+	    								<xsl:for-each select="org_unit">
+	    									<xsl:choose>
+												<xsl:when test="UNIT_ID = //header/selected_org_unit">
+													<option value="{UNIT_ID}" selected="selected"><xsl:value-of select="ORG_NAME"/></option>
+												</xsl:when>
+												<xsl:otherwise>
+													<option value="{UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
+												</xsl:otherwise>
+											</xsl:choose>
+			    						</xsl:for-each>
+	    							</xsl:otherwise>
+		    						
+	    						</xsl:choose> 
+	    					</select>
+    					</form>
+    				</li>
     			</ul>
 			</div>
 			<div id="logo_holder">
@@ -46,7 +74,7 @@
 						<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
 							<xsl:for-each select="locations">
 								<xsl:choose>
-									<xsl:when test="location_code = //header/selected">
+									<xsl:when test="location_code = //header/selected_location">
 										<option value="{location_code}" selected="selected"><xsl:value-of select="loc1_name"/></option>
 									</xsl:when>
 									<xsl:otherwise>
@@ -62,9 +90,9 @@
 				
 				<div id="area_and_price" style="margin-top: 2em;">
 				<ul>
-					<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em>Valgt enhet:</li>
-    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em>Totalt areal: <xsl:value-of select="selected_total_area"/></li>
-    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em>Total årspris: <xsl:value-of select="selected_total_price"/></li>
+					<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'chosen_unit')"/>:</li>
+    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area')"/>: <xsl:value-of select="selected_total_area"/></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="selected_total_price"/></li>
     			</ul>
 				</div>
 			</td>

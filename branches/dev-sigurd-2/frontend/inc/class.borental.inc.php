@@ -47,7 +47,7 @@
              * 4. hent ut bygg-ider, location_code, fra leieobjektet
              */
         	
-	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id['ENHET_ID']));
+	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id['UNIT_ID']));
 	        	
 	        	$contracts = array();
 	        	$composites = array();
@@ -83,9 +83,11 @@
 			        			}
 			        			array_push($contracts_per_location[$property_location->get_location_code()], $contract);
 			        			
-			        			//TODO: check to see if the contract is active?
-			        			$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
-			        			$rented_price_per_location[$property_location->get_location_code()] += rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+			        			if($contract->is_active())
+			        			{
+			        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
+			        				$rented_price_per_location[$property_location->get_location_code()] += rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+			        			}
 			        		}        		
 			        	}
 		        	}

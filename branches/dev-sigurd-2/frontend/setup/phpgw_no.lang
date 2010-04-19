@@ -27,7 +27,7 @@ frontend settings	frontend	no	Frontend-innstillinger
 All	frontend	no	Vis alle
 Closed	frontend	no	Avsluttede
 not_implemented	frontend	no	Ikke implementert
-select_unit	frontend	no	Velg enhet
+select_unit	frontend	no	Velg bygg
 under_planning	frontend	no	Under planlegging
 active_single	frontend	no	Aktiv
 ended	frontend	no	 Avsluttet
@@ -40,3 +40,16 @@ rented_area	frontend	no	Leid areal
 total_price	frontend	no	Pris
 service_id	frontend	no	Tjenestested
 responsibility_id	frontend	no	Ansvarssted
+logout	frontend	no	Logg ut
+help	frontend	no	Hjelp
+contact_BKB	frontend	no	Kontakt BKB
+folder	frontend	no	Brosjyre
+number_of_units	frontend	no	Antall bygg
+total_area	frontend	no	Totalt areal
+total_price	frontend	no	Total pris
+square_meters	frontend	no	kvm
+currency	frontend	no	kr
+organisational_units	frontend	no	Organisasjonsenheter
+all_organisational_units	frontend	no	Alle enheter
+chosen_unit	frontend	no	Valgt bygg
+choose_contract	frontend	no	Velg kontrakt

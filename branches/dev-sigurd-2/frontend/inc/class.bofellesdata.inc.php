@@ -19,6 +19,7 @@
 		
 		public function get_db()
 		{
+
 			$config	= CreateObject('phpgwapi.config','frontend');
 			$config->read();
 
@@ -31,7 +32,7 @@
 			$db->User = $config->config_data['external_db_user'];
 			$db->Password = $config->config_data['external_db_password'];
 
-			$db->connect();
+			//$db->connect();
 			return $db;
 		}
     	
@@ -102,6 +103,20 @@
 			}
         	
         	return $result_units;
+        	/*
+			return array(
+				array(
+					"ORG_UNIT_ID" => 1,
+					"ORG_NAME" => "Seksjon informasjon",
+					"UNIT_ID" => "0130"
+				),
+				array(
+					"ORG_UNIT_ID" => 1,
+					"ORG_NAME" => "Byrådsleders avdeling, stab",
+					"UNIT_ID" => "0133"
+    			)
+			);
+			*/
         }
         
         /**
@@ -120,6 +135,6 @@
         	{
         		return "Enhet har ingen navn";
         	}
-        	
+        	//return "No name";
         }
     }

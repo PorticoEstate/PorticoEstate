@@ -15,6 +15,7 @@ class frontend_uicontract extends frontend_uifrontend
 
 	public function __construct()
 	{
+		phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.rental.contract'));
 		parent::__construct();
 	}
 
@@ -42,7 +43,7 @@ class frontend_uicontract extends frontend_uifrontend
 		if(!isset($this->contract_state))
 		{
 			//... retrieve the first contract bound to the location (e.g. building)
-			$contract = frontend_borental::get_first_contract_per_location($this->header_state['selected']);
+			$contract = frontend_borental::get_first_contract_per_location($this->header_state['selected_location']);
 			if(is_object($contract))
 			{
 				//... and set this contract as selected
@@ -71,7 +72,7 @@ class frontend_uicontract extends frontend_uifrontend
 		
 		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
 		$contracts_for_selection = array();
-		foreach($contracts_per_location[$this->header_state['selected']] as $contract)
+		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{
 			$contracts_for_selection[] = $contract->serialize();
 		}
