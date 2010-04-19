@@ -130,12 +130,11 @@
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
         	{
-        		var_dump($db->f('ORG_NAVN', true));
+        		$db->next_record();
         		return 	$db->f('ORG_NAVN', true);
         	} 
         	else
         	{
-        		var_dump("No match");
         		return lang('no_name_organisational_unit');
         	}
         	//return "No name";
