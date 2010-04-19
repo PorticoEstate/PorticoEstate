@@ -11,7 +11,7 @@
 	/**
 	*@see phpmailer
 	*/
-	include_once(PHPGW_APP_INC . '/phpmailer/class.phpmailer.php');
+	include_once(PHPGW_SERVER_ROOT . '/communik8r/inc/phpmailer/class.phpmailer.php');
 	
 	/**
 	* class smtp

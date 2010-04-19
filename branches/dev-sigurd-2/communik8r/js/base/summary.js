@@ -51,6 +51,70 @@ function Summary(strTargetID)
 	}
 
 	/**
+	* Click event handler
+	*/
+	this.clicked = function(e)
+	{
+		if(eventsLocked)
+		{
+			return false;
+		}
+		
+		eventsLocked = true;
+
+		activeElement = 'summary';
+		
+		if( window.event ) //Fix Broken IE
+		{
+			var e = window.event;
+		}
+
+		if ( e.currentTarget ) //DOM
+		{
+			oTarget = e.currentTarget;
+		}
+		else if ( e.srcElement ) //IE
+		{
+			var oTmp = e.srcElement;
+			while ( ! ( oTmp.tagName
+				&& oTmp.tagName.toUpperCase() == 'TR') )
+			{
+				oTmp = oTmp.parentNode;
+			}
+			oTarget = oTmp;
+		}
+
+		if( oTarget.tagName
+			&& oTarget.tagName.toUpperCase() == 'TR' )
+		{			
+			if( window.event ) //Crappy IE
+			{
+				e.cancelBubble = true;
+			}
+			else //W3C :)
+			{
+				e.stopPropagation();
+			}
+
+			if ( self.strCurSelect == oTarget.id )
+			{
+				eventsLocked = false;
+				return '';
+			}
+			
+			/*
+			if( self.strCurSelect )
+			{
+				removeClassName(document.getElementById(self.strCurSelect), 'hilite');
+			}
+			*/
+
+			self.loadMessage(oTarget);
+		}
+		eventsLocked = false;
+	}
+
+	/**
 	* Handle the [Page] Up|Down key press event
 	*
 	* @param string direction [up|down]
@@ -174,68 +238,6 @@ function Summary(strTargetID)
 }
 
 /**
-* Click event handler
-*/
-Summary.prototype.clicked = function(e)
-{
-	if(eventsLocked)
-	{
-		return false;
-	}
-	
-	eventsLocked = true;
-
-	activeElement = 'summary';
-	
-	if( window.event ) //Fix Broken IE
-	{
-		var e = window.event;
-	}
-
-	if ( e.currentTarget ) //DOM
-	{
-		oTarget = e.currentTarget;
-	}
-	else if ( e.srcElement ) //IE
-	{
-		var oTmp = e.srcElement;
-		while ( ! ( oTmp.tagName
-			&& oTmp.tagName.toUpperCase() == 'TR') )
-		{
-			oTmp = oTmp.parentNode;
-		}
-		oTarget = oTmp;
-	}
-
-	if( oTarget.tagName
-		&& oTarget.tagName.toUpperCase() == 'TR' )
-	{			
-		if( window.event ) //Crappy IE
-		{
-			e.cancelBubble = true;
-		}
-		else //W3C :)
-		{
-			e.stopPropagation();
-		}
-
-		if ( this.strCurSelect == oTarget.id )
-		{
-			eventsLocked = false;
-			return '';
-		}
-		
-		if( this.strCurSelect )
-		{
-			removeClassName(document.getElementById(this.strCurSelect), 'hilite');
-		}
-
-		self.loadMessage(oTarget);
-	}
-	eventsLocked = false;
-}
-
-/**
 * Delete a message
 *
 * @param string message row id
@@ -290,10 +292,13 @@ Summary.prototype.loadList = function(arListInfo)
 Summary.prototype.loadMessage = function(oTarget)
 {
 	//window.alert('clicked: ' + oTarget.id);
-	if ( this.strCurSelect 
-		&& (oElm = document.getElementById(self.strCurSelect) ) )
+	if ( this.strCurSelect )
 	{
-		removeClassName(oElm, 'hilite');
+		var oElm = document.getElementById(this.strCurSelect);
+		if ( oElm )
+		{
+			removeClassName(oElm, 'hilite');
+		}
 	}
 	addClassName(oTarget, 'hilite');
 

@@ -168,15 +168,15 @@
 
 				if ( $key == 'acct_options' )
 				{
-					foreach ( $val as $skey => $val )
+					foreach ( $val as $skey => $sval )
 					{
 						if ( strpos($skey, 'passw') )
 						{
 							continue;
 						}
 
-						$elm = $xml->createElement("communik8r:{$key}");
-						$elm->appendChild($xml->createTextNode($val));
+						$elm = $xml->createElement("communik8r:{$skey}");
+						$elm->appendChild($xml->createTextNode($sval));
 						$account->appendChild($elm);
 					}
 					continue;

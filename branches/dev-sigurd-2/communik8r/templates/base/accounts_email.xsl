@@ -146,7 +146,7 @@
 						<label for="password"><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='password']"/>:</label>
 						<input type="password" name="password" id="password" /><br />
 
-						<!-- TODO switch to hostname instead of server, needs a lot of changes -->
+						<!-- TODO switch to hostname instead of server, needs a schema change -->
 						<label for="hostname"><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='hostname']"/>:</label>
 						<input type="text" name="hostname" id="hostname" value="{/phpgw:response/communik8r:response/communik8r:account/communik8r:hostname}" /><br />
 

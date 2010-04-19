@@ -146,7 +146,7 @@
 				//ignore me
 				break;
 			case E_USER_NOTICE:
-				error_log("DEBUG: {$errno_str}: {$errstr} in {$errfile_name} at {$errline}, be alert, not alarmed!");
+				//error_log("DEBUG: {$errno_str}: {$errstr} in {$errfile_name} at {$errline}, be alert, not alarmed!");
 				break;
 			
 			case E_USER_ERROR:

@@ -91,7 +91,6 @@
 							'handler'	=> $this->db->f('handler', True)
 						);
 			}
-			error_log("encrypted empty string: '" . $GLOBALS['phpgw']->crypto->encrypt('') . "'");
 			if( count($options) && count($accts) )
 			{
 				return $accts[0];
@@ -139,7 +138,7 @@
 						. ' ' . intval($data['port']) . ','
 						. ' ' . intval($data['is_ssl']) . ','
 						. ' ' . intval($data['is_tls']) . ','
-						. ' ' . intval($data['type']) . ','
+						. ' ' . intval($data['acct_type_id']) . ','
 						. " '" . serialize($data['extra']) . "',"
 						. ' ' . intval($data['signature_id']) . ','
 						. " '" . $this->db->db_addslashes($data['org']) 
