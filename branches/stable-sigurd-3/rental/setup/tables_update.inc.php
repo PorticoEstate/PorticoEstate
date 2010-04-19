@@ -69,6 +69,20 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
+	$test[] = '0.1.0.5';
+	function rental_upgrade0_1_0_5()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_notification_workbench','notification_id',array(
+			'type' => 'int', 
+			'precision' => '4',
+			'nullable' => true
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_notification_workbench','workbench_message', array('type' => 'text'));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.6';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
 	
 	
 /*

@@ -271,7 +271,8 @@
 				'id'                => array('type' => 'auto', 'nullable' => false),
 				'account_id'        => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'date'              => array('type' => 'int', 'precision' => '8', 'nullable' => false), 	// timestamp, deadline
-				'notification_id'   => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'notification_id'   => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'workbench_message' => array('type' => 'text'),
 				'dismissed'         => array('type' => 'bool', 'default' => false)
 			),
 			'pk' => array('id'),

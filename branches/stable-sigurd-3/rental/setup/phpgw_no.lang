@@ -118,6 +118,15 @@ contract_type_investeringskontrakt	rental	no	Investeringskontrakt
 contract_type	rental	no	Kontrakttype
 contract_type_id	rental	no	Kontrakttype
 contract_types	rental	no	Kontrakttyper
+contract_type_internleie_1	rental	no	Utført internleieregulering av kontrakter som reguleres hvert år
+contract_type_internleie_2	rental	no	Utført internleieregulering av kontrakter som reguleres hvert annet år
+contract_type_internleie_10	rental	no	Utført internleieregulering av kontrakter som reguleres hvert tiende år
+contract_type_innleie_1	rental	no	Utført innleieregulering av kontrakter som reguleres hvert år
+contract_type_innleie_2	rental	no	Utført innleieregulering av kontrakter som reguleres hvert annet år
+contract_type_innleie_10	rental	no	Utført innleieregulering av kontrakter som reguleres hvert tiende år
+contract_type_eksternleie_1	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert år
+contract_type_eksternleie_2	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert annet år
+contract_type_eksternleie_10	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert tiende år
 contracts_closing_due_date	rental	no	Kontrakter nær opsjonsfrist
 Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
 count decimal places	rental	no	Antall desimaler for opptelling
