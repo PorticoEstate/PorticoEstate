@@ -118,42 +118,45 @@
 
 			Header('Content-Type: text/xml');
 
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', "type=\"text/xsl\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/accounts_{$type}\"");
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', "type=\"text/xsl\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/accounts_{$type}.xsl\"");
+
 			$xml->appendChild($xsl);
 
-			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+			$phpgw = $xml->createElement('phpgw:response', 'phpgw');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgw', 'http://dtds.phpgroupware.org/phpgw.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgwapi', 'http://dtds.phpgroupware.org/phpgwapi.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:communik8r', 'http://dtds.phpgroupware.org/communik8r.dtd');
 
-			$info = $xml->create_element('phpgwapi:info');
+			$info = $xml->createElement('phpgwapi:info');
 
-			$base_url = $xml->create_element('phpgwapi:base_url');
-			$base_url->appendChild( $xml->create_text_node("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$base_url = $xml->createElement('phpgwapi:base_url');
+			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
 			$info->appendChild($base_url);
 			unset($base_url);
 
-			$skin = $xml->create_element('phpgwapi:skin');
-			$skin->appendChild( $xml->create_text_node('default') );
+			$skin = $xml->createElement('phpgwapi:skin');
+			$skin->appendChild( $xml->createTextNode('base') );
 			$info->appendChild($skin);
 			unset($skin);
 
-			$langs = $xml->create_element('phpgwapi:langs');
+			$langs = $xml->createElement('phpgwapi:langs');
 			foreach ( $lang_strs as $lkey => $lval )
 			{
-				$lang = $xml->create_element('phpgwapi:lang');
+				$lang = $xml->createElement('phpgwapi:lang');
 				$lang->setAttribute('id', $lkey);
-				$lang->appendChild($xml->create_text_node($lval) );
+				$lang->appendChild($xml->createTextNode($lval) );
 				$langs->appendChild($lang);
 			}
 			$info->appendChild($langs);
 
 			$phpgw->appendChild($info);
 
-			$c8 = $xml->create_element('communik8r:response');
+			$c8 = $xml->createElement('communik8r:response');
 			
-			$account = $xml->create_element('communik8r:account');
+			$account = $xml->createElement('communik8r:account');
 
 			$account->setAttribute('id', $acct['acct_id']);
 			foreach ( $acct as $key => $val )
@@ -172,15 +175,15 @@
 							continue;
 						}
 
-						$elm = $xml->create_element("communik8r:{$key}");
-						$elm->appendChild($xml->create_text_node($val));
+						$elm = $xml->createElement("communik8r:{$key}");
+						$elm->appendChild($xml->createTextNode($val));
 						$account->appendChild($elm);
 					}
 					continue;
 				}
 
-				$elm = $xml->create_element("communik8r:{$key}");
-				$elm->appendChild($xml->create_text_node($val));
+				$elm = $xml->createElement("communik8r:{$key}");
+				$elm->appendChild($xml->createTextNode($val));
 				$account->appendChild($elm);
 			}
 
@@ -208,7 +211,7 @@
 			$xml->formatOutput = true;
 			
 			/*
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/accounts" . '"');
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/accounts.xsl" . '"');
 			$xml->appendChild($xsl);
 			*/
 

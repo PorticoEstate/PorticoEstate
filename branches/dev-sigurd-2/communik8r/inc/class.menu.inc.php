@@ -32,7 +32,7 @@
 				'communik8r' => array
 				(
 					'text'	=> lang('communik8r'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'communik8r.uibase.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('index.php', array('section'=> 'index')),
 					'image'	=> array('communik8r', 'navbar'),
 					'order'	=> 35,
 					'group'	=> 'office'
@@ -48,11 +48,10 @@
 					'text'	=> lang('start'),
 					'url'	=> $GLOBALS['phpgw']->link('index.php', array('section'=> 'start'))
 				),
-				'job'	=> array
+				'compose'	=> array
 				(
 					'text'	=> lang('compose'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'communik8r.uibase.compose')),
-					'children' => $job_children
+					'url'	=> $GLOBALS['phpgw']->link('index.php', array('section'=> 'compose'))
 				)
 			);
 			

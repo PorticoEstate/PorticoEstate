@@ -496,7 +496,8 @@
 
 			Header('Content-Type: text/xml');
 
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 
 			$xsl = $xml->createProcessingInstruction('xml-stylesheet', "type=\"text/xsl\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/settings.xsl\"");
 			$xml->appendChild($xsl);
@@ -509,12 +510,17 @@
 			$info = $xml->createElement('phpgwapi:info');
 
 			$base_url = $xml->createElement('phpgwapi:base_url');
-			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/index.php") );
+			$base_url->appendChild( $xml->createTextNode( $GLOBALS['phpgw']->link('index.php') ) );
 			$info->appendChild($base_url);
 			unset($base_url);
 
+			$app_url = $xml->createElement('phpgwapi:app_url');
+			$app_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($app_url);
+			unset($app_url);
+
 			$skin = $xml->createElement('phpgwapi:skin');
-			$skin->appendChild( $xml->createTextNode('default') );
+			$skin->appendChild( $xml->createTextNode('base') );
 			$info->appendChild($skin);
 			unset($skin);
 
@@ -573,17 +579,16 @@
 			$info = $xml->createElement('phpgwapi:info');
 
 			$base_url = $xml->createElement('phpgwapi:base_url');
-	//		$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/index.php") );
 			$base_url->appendChild( $xml->createTextNode( $GLOBALS['phpgw']->link('index.php') ) );
 			$info->appendChild($base_url);
 			unset($base_url);
-			$image_url = $xml->createElement('phpgwapi:image_url');
-			$image_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/") );
-			$info->appendChild($image_url);
-			unset($image_url);
+			$app_url = $xml->createElement('phpgwapi:app_url');
+			$app_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($app_url);
+			unset($app_url);
 
 			$skin = $xml->createElement('phpgwapi:skin');
-			$skin->appendChild( $xml->createTextNode('default') );
+			$skin->appendChild( $xml->createTextNode('base') );
 			$info->appendChild($skin);
 			unset($skin);
 

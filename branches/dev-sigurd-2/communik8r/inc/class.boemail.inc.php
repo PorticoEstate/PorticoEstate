@@ -228,7 +228,7 @@
 			unset($base_url);
 
 			$skin = $xml->create_element('phpgwapi:skin');
-			$skin->append_child( $xml->create_text_node('default') );
+			$skin->append_child( $xml->create_text_node('base') );
 			$info->append_child($skin);
 			unset($skin);
 

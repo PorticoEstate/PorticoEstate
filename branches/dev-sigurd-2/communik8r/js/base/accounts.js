@@ -54,7 +54,7 @@ Accounts.prototype.load = function()
 	this.oTree = new dhtmlXTreeObject(this.oDiv, '100%', '100%', 0);
 	this.oTree.setOnClickHandler(this.loadSummary);
 	this.oTree.setOnOpenHandler(this.updateOpenState);
-	this.oTree.setImagePath(oApplication.strIMageURL + 'images/');
+	this.oTree.setImagePath(oApplication.strAppURL + '/templates/base/images/');
 	this.oTree.imageArray = new Array('folder-16x16.png', 'open-16x16.png', 'folder-16x16.png');
 	this.oTree.setImageArrays('plus', 'sub-16x16.png', 'sub-16x16.png', 'sub-16x16.png', 'sub-16x16.png', 'sub-16x16.png');
 	this.oTree.setImageArrays('minus', 'sub-open-16x16.png', 'sub-open-16x16.png', 'sub-open-16x16.png', 'sub-open-16x16.png', 'sub-open-16x16.png');

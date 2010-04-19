@@ -15,7 +15,7 @@
 				<script type="text/javascript">
 
 					var strBaseURL = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:base_url' />";
-					var strIMageURL = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:image_url' />";
+					var strAppURL = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:app_url' />";
 					var strCurSelection = "<xsl:value-of select='/phpgw:response/communik8r:info/communik8r:current_selection' />";
 					var oCurMsgs = new Object;
 					<xsl:for-each select="/phpgw:response/communik8r:info/communik8r:current_message">

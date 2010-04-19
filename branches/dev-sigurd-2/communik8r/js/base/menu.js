@@ -149,7 +149,7 @@ Menu.prototype.catchClick = function(strID)
 			break;
 
 		default:
-			//alert('clicked: ' + strID);
+			alert('clicked: ' + strID);
 	}
 }
 

@@ -222,7 +222,7 @@ Application.prototype.showHelp = function(strSection)
 	var strWinName = 'communik8r_help';
 	var strWinArgs = 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,height=600,width=800';
 
-	if ( window.open(this.strBaseURL + '/help' + this.strGET + '#' + strSection, strWinName, strWinArgs) )
+	if ( window.open(this.strBaseURL + '&section=help'+ '#' + strSection, strWinName, strWinArgs) )
 	{
 		return strWinName;
 	}
@@ -248,7 +248,8 @@ Application.prototype.showSettings = function()
 	var strWinName = 'communik8r_prefs';
 	var strWinArgs = 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,height=600,width=800';
 
-	if ( window.open(this.strBaseURL + 'settings' + this.strGET, strWinName, strWinArgs) )
+//	if ( window.open(this.strBaseURL + 'settings' + this.strGET, strWinName, strWinArgs) )
+	if ( window.open(this.strBaseURL + '&section=settings', strWinName, strWinArgs) )
 	{
 		return strWinName;
 	}
