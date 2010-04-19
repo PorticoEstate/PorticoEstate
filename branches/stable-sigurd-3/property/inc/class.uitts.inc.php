@@ -167,7 +167,7 @@
 
 			$status = array();
 			$status['O'] = isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open');
-			$status['C'] = lang('Closed');
+			$status['X'] = lang('Closed');
 			foreach($custom_status as $custom)
 			{
 				$status["C{$custom['id']}"] = $custom['name'];
