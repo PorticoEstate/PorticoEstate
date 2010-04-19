@@ -201,9 +201,9 @@ class rental_soadjustment extends rental_socommon
 
 		//get incomplete adjustments for today
 		$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date > {$prev_day})";
-		var_dump($adjustments_query);
+		//var_dump($adjustments_query);
 		$result = $this->db->query($adjustments_query);
-		var_dump("etter spr");
+		//var_dump("etter spr");
 		//there are un-executed adjustments
 		$adjustments = array();
 		while($this->db->next_record())
@@ -252,7 +252,7 @@ class rental_soadjustment extends rental_socommon
 		 * update price book elements according to type if interval=1
 		 */
 		$current_year = (int)date('Y');
-		var_dump("innicontr");
+		//var_dump("innicontr");
 		foreach ($adjustments as $adjustment)
 		{
 			//gather all adjustable contracts
@@ -263,7 +263,7 @@ class rental_soadjustment extends rental_socommon
 			$adjustable_contracts .= " OR ";
 			$adjustable_contracts .= "(adjustment_year IS NULL OR adjustment_year = 0)";
 			$adjustable_contracts .= ")";
-			var_dump($adjustable_contracts);
+			//var_dump($adjustable_contracts);
 			$result = $this->db->query($adjustable_contracts);
 			while($this->db->next_record())
 			{
