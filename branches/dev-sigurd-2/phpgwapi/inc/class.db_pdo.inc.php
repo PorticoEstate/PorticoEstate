@@ -199,10 +199,19 @@
 
 			if ( isset($e) && $e )
 			{
-				echo 'could not connect to server';
-//				echo $e->getMessage();
-				exit;
+				if($this->debug)
+				{
+					$message = $e->getMessage();
+				}
+				else
+				{
+					$message = 'could not connect to server';
+				}
+
+				throw new Exception($message);
+				return false;
 			}
+
 			if($this->Halt_On_Error == 'yes')
 			{
 				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
