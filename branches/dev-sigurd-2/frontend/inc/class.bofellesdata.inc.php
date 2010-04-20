@@ -87,7 +87,7 @@
 							$result_unit[] = array(
 								"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 								"ORG_NAME" => $db1->f('ORG_NAVN',true),
-								"UNIT_ID" => $db1->f('ENHET_ID')
+								"UNIT_ID" => $db1->f('RESULTATENHET')
 							);
 						}
 						break;
