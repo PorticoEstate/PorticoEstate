@@ -409,9 +409,12 @@
 			if (isset($config->config_data['dim_1'])) $columns[] = $config->config_data['dim_1'];
 			if (isset($config->config_data['dim_2'])) $columns[] = $config->config_data['dim_2'];
 			if (isset($config->config_data['dim_3'])) $columns[] = $config->config_data['dim_3'];
-			if (isset($config->config_data['article'])) $columns[] = $config->config_data['article'];
+			if (isset($config->config_data['dim_4'])) $columns[] = $config->config_data['dim_4'];
+			$columns[] = 'article';
 			if (isset($config->config_data['dim_5'])) $columns[] = $config->config_data['dim_5']; 
 			if (isset($config->config_data['dim_value_1'])) $columns[] = $config->config_data['dim_value_1']; 
+			if (isset($config->config_data['dim_value_4'])) $columns[] = $config->config_data['dim_value_4']; 
+			if (isset($config->config_data['dim_value_5'])) $columns[] = $config->config_data['dim_value_5']; 
 			$columns[] = 'ext_ord_ref';
 			$columns[] = 'invoice_instruction';
 			$columns[] = 'order_id';
@@ -419,7 +422,7 @@
 			$columns[] = 'short_info';
 
 			$output[] = $this->format_to_csv_line($columns);
-			
+
 			foreach ($reservations as $reservation) {
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
@@ -432,10 +435,7 @@
 				$item = array();
 				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
-				if (isset($config->config_data['article'])) 
-				{
-					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
-				}
+				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
 				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
 				if (isset($config->config_data['dim_1'])) 
 				{
@@ -454,6 +454,11 @@
 					$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 				}
 
+				if (isset($config->config_data['dim_4'])) 
+				{
+					$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
+				}
+
 				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
 				if (isset($config->config_data['dim_5'])) 
 				{
@@ -464,6 +469,16 @@
 				{
 					$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				}
+
+				if (isset($config->config_data['dim_value_4'])) 
+				{
+					$item['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
+				}
+
+				if (isset($config->config_data['dim_value_5'])) 
+				{
+					$item['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
+				}
 				$item['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 				$item['long_info1'] = str_pad(substr($account_codes['invoice_instruction'], 0, 120), 120, ' ');
 				
@@ -471,14 +486,14 @@
 				
 				$item['period'] = str_pad(substr('00'.date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
 				$item['short_info'] = str_pad(substr($reservation['description'], 0, 60), 60, ' ');
-				
+
 				$output[] = $this->format_to_csv_line(array_values($item));
 			}
 			
 			if (count($export_info) == 0) {
 				return null;
 			}
-			
+
 			return array('data' => join($output, ''), 'info' => $export_info);
 		}
 		
@@ -616,6 +631,16 @@
 					$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				}
 				
+				if (isset($config->config_data['dim_value_4']))
+				{
+					$header['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
+				}
+				
+				if (isset($config->config_data['dim_value_5']))
+				{
+					$header['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
+				}
+				
 				//Nøkkelfelt, kundens personnr/orgnr.
 				$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
@@ -650,10 +675,7 @@
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
 				
 				//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
-				if (isset($config->config_data['article']))
-				{
-					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
-				}
+				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
 				
 				$item['batch_id'] = $header['batch_id'];
 				$item['client'] = $header['client'];
@@ -674,6 +696,11 @@
 				if (isset($config->config_data['dim_3']))
 				{
 					$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+				}
+				
+				if (isset($config->config_data['dim_4']))
+				{
+					$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 				}
 				
 				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 

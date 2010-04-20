@@ -535,7 +535,8 @@
 				$address,
 				phpgwapi_datetime::user_localtime(),
 				$ticket['finnish_date'],
-				$ticket['contact_id']
+				$ticket['contact_id'],
+				1
 			);
 
 			$values	= $this->db->validate_insert($values);
@@ -543,7 +544,7 @@
 
 			$this->db->query("insert into fm_tts_tickets (priority,user_id,"
 				. "assignedto,group_id,subject,cat_id,status,details,location_code,"
-				. "address,entry_date,finnish_date,contact_id $cols)"
+				. "address,entry_date,finnish_date,contact_id,publish_note $cols)"
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			$id = $this->db->get_last_insert_id('fm_tts_tickets','id');
@@ -905,6 +906,9 @@
 			{
 				$this->fields_updated = true;
 				$this->historylog->add('C',$id,$ticket['note'],$old_note);
+				$_history_id = $this->db->get_last_insert_id('fm_tts_history','history_id');
+				$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = $_history_id",__LINE__,__FILE__);
+				unset($_history_id);
 			}
 
 			if(isset($ticket['location']) && $ticket['location'])

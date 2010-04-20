@@ -2179,3 +2179,19 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+  $test[] = '0.1.91';
+	function booking_upgrade0_1_91()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_account_code_set ADD COLUMN dim_4 varchar(8)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_account_code_set ADD COLUMN dim_value_4 varchar(12)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_account_code_set ADD COLUMN dim_value_5 varchar(12)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.92';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

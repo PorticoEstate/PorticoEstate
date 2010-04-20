@@ -11,7 +11,7 @@
 	<p><xsl:value-of select="php:function('lang', 'account_code_dimension_helptext')"/></p>
 
     <form action="" method="POST">
-        <dl class="form">
+        <dl class="form-col">
             <dt><label for="field_dim_1">Dim1 (pos 862 - 869)</label></dt>
             <dd>
 				<input id="field_dim_1" name="dim_1" type="text">
@@ -30,10 +30,10 @@
 					<xsl:attribute name="value"><xsl:value-of select="config_data/dim_3"/></xsl:attribute>
 				</input>
             </dd>
-            <dt><label for="field_article">Article (pos 283 - 297)</label></dt>
+            <dt><label for="field_dim_4">Dim4 (pos 886 - 893)</label></dt>
             <dd>
-				<input id="field_article" name="article" type="text">
-					<xsl:attribute name="value"><xsl:value-of select="config_data/article"/></xsl:attribute>
+				<input id="field_dim_4" name="dim_4" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/dim_4"/></xsl:attribute>
 				</input>
             </dd>
             <dt><label for="field_dim_5">Dim5 (pos 894 - 905)</label></dt>
@@ -42,10 +42,24 @@
 					<xsl:attribute name="value"><xsl:value-of select="config_data/dim_5"/></xsl:attribute>
 				</input>
             </dd>
+        </dl>
+        <dl class="form-col">
             <dt><label for="field_dim_value_1">Dim_value_1 (pos 914 - 925)</label></dt>
             <dd>
 				<input id="field_dim_value_1" name="dim_value_1" type="text">
 					<xsl:attribute name="value"><xsl:value-of select="config_data/dim_value_1"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_dim_value_4">Dim_value_4 (pos 950 - 961)</label></dt>
+            <dd>
+				<input id="field_dim_value_4" name="dim_value_4" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/dim_value_4"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_dim_value_5">Dim_value_5 (pos 962 - 973)</label></dt>
+            <dd>
+				<input id="field_dim_value_5" name="dim_value_5" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/dim_value_5"/></xsl:attribute>
 				</input>
             </dd>
         </dl>
