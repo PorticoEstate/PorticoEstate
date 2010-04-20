@@ -78,7 +78,10 @@
 							break;
 
 						case 'summary': //requesting mailbox summary
-							$this->get_summary($uri_parts);
+							if($data['acct_id'] && $data['mbox_name'])
+							{
+								$this->get_summary($data);
+							}
 							break;
 
 						case 5: //requesting message
@@ -710,13 +713,13 @@
 		 *
 		 * @param array $uri_parts the exploded request uri
 		 */
-		function get_summary($uri_parts)
+		function get_summary($data)//($uri_parts)
 		{
-			trigger_error('boemail::get_summary(' . print_r($uri_parts, true) . ') called');
+		//	trigger_error('boemail::get_summary(' . print_r($data, true) . ') called');
 			Header('Content-Type: text/xml');
-			$acct_info = execMethod('communik8r.boaccounts.id2array', $uri_parts[2]);
+			$acct_info = execMethod('communik8r.boaccounts.id2array', $data['acct_id']);
 			$socache = createObject('communik8r.socache_email', $acct_info);
-			$msgs = $socache->get_msg_list($uri_parts[3]);
+			$msgs = $socache->get_msg_list($data['mbox_name']);
 
 			$xml = new DOMDocument('1.0', 'utf-8');
 			$xml->formatOutput = true;
@@ -743,11 +746,11 @@
 
 			$acct = $xml->createElement('communik8r:account');
 			$acct->setAttribute('id', $acct_info['acct_id']);
-			$acct->appendChild( $xml->createTextNode($uri_parts[2]) );
+			$acct->appendChild( $xml->createTextNode($data['acct_id']) );
 			$comm_info->appendChild($acct);
 
 			$mailbox = $xml->createElement('communik8r:mailbox');
-			$mailbox->appendChild( $xml->createTextNode($uri_parts[3]) );
+			$mailbox->appendChild( $xml->createTextNode($data['mbox_name']) );
 			$comm_info->appendChild($mailbox);
 
 			$mailbox = $xml->createElement('communik8r:hide_deleted');
@@ -796,7 +799,7 @@
 			$xml->appendChild($phpgw);
 
 			echo $xml->saveXML();
-			$this->_store_pref('current_selection', "email_{$uri_parts[2]}_{$uri_parts[3]}");
+			$this->_store_pref('current_selection', "email_{$data['acct_id']}_{$data['mbox_name']}");
 			//echo '<pre>' . print_r(domxml_xmltree($xml->dump_mem(true)), True) . '</pre>';
 		}
 

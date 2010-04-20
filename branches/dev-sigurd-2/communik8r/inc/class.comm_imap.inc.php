@@ -619,7 +619,7 @@
 		 *
 		 * @returns bool did we get the namespaces?
 		 */
-		function namespace()
+		function get_namespace()
 		{
 			if ($this->acct_info['rootdir'])
 			{
@@ -689,13 +689,14 @@
 			if ( $this->acct_info['ssl'] )
 			{
 				$host = "ssl://{$host}";
-				if ( !$this->acct_info['port'] )
+				$port = $this->acct_info['port'] ? $this->acct_info['port'] : 993;
+				
+	/*			if ( !$this->acct_info['port'] )
 				{
 					$port = 993;
 				}
+	*/
 			}
-
-
 
 			//open socket connection
 			$this->conn->fp = @fsockopen($host, $port);
@@ -759,7 +760,7 @@
 
 			if ($result)
 			{
-				$this->namespace($this->conn);
+				$this->get_namespace($this->conn);
 				return True;
 			}
 			else

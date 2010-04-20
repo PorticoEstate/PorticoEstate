@@ -1360,7 +1360,7 @@
 						trigger_error('Unable to connect to IMAP server', E_USER_ERROR);
 					}
 
-					$this->mail->namespace();
+					$this->mail->get_namespace();
 					$sep = $this->db->db_addslashes($this->mail->get_hierarchy_delimiter());
 
 					$mboxes = $this->mail->list_mailboxes();

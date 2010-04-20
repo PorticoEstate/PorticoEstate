@@ -74,7 +74,9 @@
 
 		case 'email':
 			$action		= phpgw::get_var('action', 'string');
-			ExecMethod('communik8r.boemail.rest', array('action' => $action));
+			$acct_id	= phpgw::get_var('acct_id', 'int');
+			$mbox_name = phpgw::get_var('mbox_name', 'string');
+			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name));
 			break;
 
 		case 'help':

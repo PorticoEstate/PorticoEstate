@@ -271,7 +271,9 @@ Summary.prototype.loadList = function(arListInfo)
 	{
 		return false;
 	}
-
+alert(arListInfo[0]);
+alert(arListInfo[1]);
+alert(arListInfo[2]);
 	this.arInfo = arListInfo;
 
 	if ( typeof(this.oXSLDoc) == 'object')
@@ -283,8 +285,8 @@ Summary.prototype.loadList = function(arListInfo)
 		this.oXSLDoc = Sarissa.getDomDocument();
 		this.oXSLDoc.onreadystatechange = this._transform;
 	//	this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/summary');
-		this.oXSLDoc.load(strBaseURL + '&section=email&action=summary');
-		alert(strBaseURL + '&section=email&action=summary');
+		this.oXSLDoc.load(strBaseURL + '&section=email&action=summary&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2]);
+		alert(strBaseURL + '&section=email&action=summary&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2]);
 	//	this.oXSLDoc.load(strAppURL + '/templates/base/summary.xsl');
 	}
 }
