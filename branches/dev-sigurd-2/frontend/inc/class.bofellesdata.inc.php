@@ -44,7 +44,7 @@
          */
         public function get_result_units(string $username)
         {
-        	var_dump($username);
+        	
         	/* 1. Get all organizational units this user has access to
              * 2. Check level for each unit and traverse if necessary
              * 3. Build an array of result units this user has access to
@@ -57,7 +57,7 @@
         	
         	$sql = "SELECT $columns FROM $table $joins WHERE V_ORG_PERSON.BRUKERNAVN = '$username'";
         	
-        	var_dump($sql);
+        	
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	
@@ -69,7 +69,7 @@
 				$name = $db->f('ORG_NAVN',true);
 				$unit_id = $db->f('RESULTATENHET');
 				
-				var_dump(array($identifier,$level,$name,$unit_id));
+				
 				
 				switch($level)
 				{
@@ -102,7 +102,6 @@
 						break;	
 				}
 			}
-        	var_dump($result_units);
         	return $result_units;
         	/*
 			return array(
