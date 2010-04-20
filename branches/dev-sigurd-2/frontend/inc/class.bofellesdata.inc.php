@@ -94,9 +94,9 @@
 					case 4:			// LEVEL: Resultatenhet
 						//Insert in result array	
 						$result_units[] = array(
-							"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
-							"ORG_NAME" => $db1->f('ORG_NAVN',true),
-							"UNIT_ID" => (int)$db1->f('ENHET_ID')
+							"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
+							"ORG_NAME" => $db->f('ORG_NAVN',true),
+							"UNIT_ID" => $db->f('ENHET_ID')
 						);
 						break;	
 				}
