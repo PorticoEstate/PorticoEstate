@@ -92,7 +92,6 @@
 												<xsl:if test="normalize-space(address)">
 													<xsl:value-of select="address" disable-output-escaping="yes"/>
 												</xsl:if>
-												<xsl:if test="normalize-space(gab_id)">- GAB: <xsl:value-of select="gab_id" disable-output-escaping="yes"/></xsl:if>
 											</dd>
 										</dl>
 									</li>

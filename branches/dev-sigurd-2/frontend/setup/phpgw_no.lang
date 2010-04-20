@@ -49,9 +49,10 @@ total_area	frontend	no	Totalt areal
 total_price	frontend	no	Total pris
 square_meters	frontend	no	kvm
 currency	frontend	no	kr
-organisational_units	frontend	no	Organisasjonsenheter
+organisational_units	frontend	no	Resultatenheter
 all_organisational_units	frontend	no	Alle enheter
 chosen_unit	frontend	no	Valgt bygg
 choose_contract	frontend	no	Velg kontrakt
 no_name_organisational_unit	frontend	no	Resultatenheten har ingen navn
 no_name_unit	frontend	no	--Ingen navn--
+new_ticket	frontend	no	Skriv ny melding

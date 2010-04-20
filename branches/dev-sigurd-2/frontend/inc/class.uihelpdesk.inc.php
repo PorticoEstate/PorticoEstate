@@ -110,7 +110,7 @@
 								(
 									'type'      => 'button',
 									'id'        => 'btn_new',
-									'value'     => lang('add'),
+									'value'     => lang('new_ticket'),
 									'tab_index' => 3
 								),
 								array

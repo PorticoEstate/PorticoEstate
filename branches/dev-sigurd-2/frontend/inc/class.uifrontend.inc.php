@@ -160,7 +160,7 @@
 				$this->insert_links_on_header_state();
 			} 
 			/* No state, first visit after login*/
-			else //if(!isset($this->header_state))
+			else if(!isset($this->header_state))
 			{
 				//Specify organisational units
 				$org_unit_ids = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
