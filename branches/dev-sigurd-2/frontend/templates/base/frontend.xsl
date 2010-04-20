@@ -81,7 +81,7 @@
 													<xsl:value-of select="loc1_name"/>
 												</xsl:when>
 												<xsl:otherwise>
-													<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_name"/>)
+													<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_code"/>)
 												</xsl:otherwise>
 											</xsl:choose>
 										</option>
@@ -93,7 +93,7 @@
 												<xsl:value-of select="loc1_name"/>
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_name"/>)
+												<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_code"/>)
 											</xsl:otherwise>
 										</xsl:choose>
 										</option>
