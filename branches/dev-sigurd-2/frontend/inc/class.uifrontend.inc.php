@@ -67,7 +67,7 @@
 			phpgwapi_cache::session_set('frontend','tab',$selected);
 			
 			// Get header state
-			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
+			$this->header_state = phpgwapi_cache::user_get('frontend', 'header_state', $GLOBALS['phpgw_info']['user']['account_lid']);
 			
 			var_dump($this->header_state);
 			
@@ -212,14 +212,14 @@
 					$this->header_state['selected_location'] = $param_selected_location;
 					$this->header_state['selected_total_price'] = number_format($tppl[$param_selected_location],2,","," ")." ".lang('currency');
 					$this->header_state['selected_total_area'] = number_format($tapl[$param_selected_location],2,","," ")." ".lang('square_meters');
-					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
+					phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_lid']);
 				}
 
 				phpgwapi_cache::session_set('frontend','contract_state',null);
 			}
 			
 			/* Store the header state on the session*/
-			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
+			phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_lid']);
 	
 			
 			//Add style sheet for full screen view
