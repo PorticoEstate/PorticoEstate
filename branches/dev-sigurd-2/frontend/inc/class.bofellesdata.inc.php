@@ -85,12 +85,10 @@
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
-							$result_unit_name = $db1->f('ORG_NAVN',true);
-							$name_or_number = isset($result_unit_name) && $result_unit_name != ''  ?  $result_unit_name : lang('no_name_organisational_unit')."(".$db1->f('RESULTATENHET').")";
-							
+							var_dump($db1->f('ORG_NAVN'));
 							$result_units[] = array(
 								"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
-								"ORG_NAME" => $name_or_number,
+								"ORG_NAME" => $db1->f('ORG_NAVN'),
 								"UNIT_ID" => $db1->f('RESULTATENHET')
 							);
 						}
