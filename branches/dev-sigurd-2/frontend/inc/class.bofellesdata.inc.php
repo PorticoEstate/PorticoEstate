@@ -25,14 +25,21 @@
 
 			$db = createObject('phpgwapi.db', null, null, true);
 
-			$db->Debug = !!$config->config_data['external_db_debug'];
+			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
 			$db->Type = $config->config_data['external_db_type'];
 			$db->Database = $config->config_data['external_db_name'];
 			$db->User = $config->config_data['external_db_user'];
 			$db->Password = $config->config_data['external_db_password'];
 
-			$db->connect();
+			try
+			{
+				$db->connect();
+			}
+			catch(Exception $e)
+			{
+				$GLOBALS['phpgw']->redirect_link('/home.php');
+			}
 			return $db;
 		}
     	
