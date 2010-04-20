@@ -77,6 +77,7 @@
 			/* If the user has selected an organisational unit or all units */
 			if(isset($param_selected_org_unit))
 			{
+				var_dump($this->header_state);
 				//Specify which unit(s)
 				if($param_selected_org_unit == 'all')
 				{
