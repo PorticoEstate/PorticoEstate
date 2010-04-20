@@ -81,12 +81,13 @@
 						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
 						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
 						
-						var_dump($sql);
-						
 						$db1 = $this->get_db();;
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
+							$result_unit_name = $db1->f('ORG_NAVN',true);
+							$name_or_number = isset($result_unit_name) && $result_unit_name != ''  ?  $result_unit_name : lang('no_name_organisational_unit')."(".$db1->f('RESULTATENHET').")";
+							
 							$result_units[] = array(
 								"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 								"ORG_NAME" => $db1->f('ORG_NAVN',true),
