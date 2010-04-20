@@ -12,7 +12,7 @@ phpgw::import_class('booking.uicommon');
 			'toggle_show_inactive'	=>	true,
 		);
 		
-		protected $fields = array('name', 'object_number', 'responsible_code', 'article', 'service', 'project_number', 'unit_number', 'unit_prefix', 'invoice_instruction', 'active');
+		protected $fields = array('name', 'object_number', 'responsible_code', 'article', 'service', 'project_number', 'unit_number', 'unit_prefix', 'invoice_instruction', 'active', 'dim_4', 'dim_value_4', 'dim_value_5');
 
 		protected $module = 'booking';
 		
@@ -85,10 +85,13 @@ phpgw::import_class('booking.uicommon');
 			$data['datatable']['field'][] = array('key' => 'name', 'label' => lang('Name'), 'formatter' => 'YAHOO.booking.formatLink');
 			if (isset($config->config_data['dim_3'])) $data['datatable']['field'][] = array('key' => 'object_number', 'label' => $config->config_data['dim_3']);
 			if (isset($config->config_data['dim_1'])) $data['datatable']['field'][] = array('key' => 'responsible_code', 'label' => $config->config_data['dim_1']);
-			if (isset($config->config_data['article'])) $data['datatable']['field'][] = array('key' => 'article', 'label' => $config->config_data['article']);
+			$data['datatable']['field'][] = array('key' => 'article', 'label' => lang('Article'));
 			if (isset($config->config_data['dim_2'])) $data['datatable']['field'][] = array('key' => 'service', 'label' => $config->config_data['dim_2']);
+			if (isset($config->config_data['dim_4'])) $data['datatable']['field'][] = array('key' => 'dim_4', 'label' => $config->config_data['dim_4']);
 			if (isset($config->config_data['dim_5'])) $data['datatable']['field'][] = array('key' => 'project_number', 'label' => $config->config_data['dim_5']);
 			if (isset($config->config_data['dim_value_1'])) $data['datatable']['field'][] = array('key' => 'unit_number', 'label' => $config->config_data['dim_value_1']);
+			if (isset($config->config_data['dim_value_4'])) $data['datatable']['field'][] = array('key' => 'dim_value_4', 'label' => $config->config_data['dim_value_4']);
+			if (isset($config->config_data['dim_value_5'])) $data['datatable']['field'][] = array('key' => 'dim_value_5', 'label' => $config->config_data['dim_value_5']);
 			$data['datatable']['field'][] = array('key' => 'unit_prefix', 'label' => lang('Unit prefix'));
 			$data['datatable']['field'][] = array('key' => 'link', 'hidden' => true);
 			

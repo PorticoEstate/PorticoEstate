@@ -24,14 +24,22 @@
 				<dd><xsl:value-of select="account_code_set/object_number"/></dd>
 			</xsl:if>
 			
-			<xsl:if test="config_data/article">
-				<dt><xsl:value-of select="config_data/article" /></dt>
-				<dd><xsl:value-of select="account_code_set/article"/></dd>
-			</xsl:if>
+			<dt><xsl:value-of select="php:function('lang', 'Article')" /></dt>
+			<dd><xsl:value-of select="account_code_set/article"/></dd>
 			
 			<xsl:if test="config_data/dim_value_1">
 				<dt><xsl:value-of select="config_data/dim_value_1" /></dt>
 				<dd><xsl:value-of select="account_code_set/unit_number"/></dd>
+			</xsl:if>
+			
+			<xsl:if test="config_data/dim_value_4">
+				<dt><xsl:value-of select="config_data/dim_value_4" /></dt>
+				<dd><xsl:value-of select="account_code_set/dim_value_4"/></dd>
+			</xsl:if>
+			
+			<xsl:if test="config_data/dim_value_5">
+				<dt><xsl:value-of select="config_data/dim_value_5" /></dt>
+				<dd><xsl:value-of select="account_code_set/dim_value_5"/></dd>
 			</xsl:if>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></dt>
@@ -49,6 +57,11 @@
 				<dd><xsl:value-of select="account_code_set/service"/></dd>
 			</xsl:if>
 			
+			<xsl:if test="config_data/dim_4">
+				<dt><xsl:value-of select="config_data/dim_4" /></dt>
+				<dd><xsl:value-of select="account_code_set/dim_4"/></dd>
+			</xsl:if>
+
 			<xsl:if test="config_data/dim_5">
 				<dt><xsl:value-of select="config_data/dim_5" /></dt>
 				<dd><xsl:value-of select="account_code_set/project_number"/></dd>

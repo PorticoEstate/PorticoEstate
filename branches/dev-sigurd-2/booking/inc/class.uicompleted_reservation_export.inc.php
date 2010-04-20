@@ -49,10 +49,10 @@ phpgw::import_class('booking.uicommon');
 		protected function generate_files() {
             $filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 			$filter_params = is_null($filter_to) ? array() : array('filter_to' => $filter_to);
-			
+
             if (!($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
-			&& $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')
-            && $this->bo->has_role(booking_sopermission::ROLE_MANAGER)))			
+				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')
+				|| $this->bo->has_role(booking_sopermission::ROLE_MANAGER)))			
             {
     			$this->flash_form_errors(array('access_denied' => lang("Access denied")));
     			$this->redirect_to('index', $filter_params);

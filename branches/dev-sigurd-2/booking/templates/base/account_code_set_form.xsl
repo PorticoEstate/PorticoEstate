@@ -49,6 +49,16 @@
 					<dd><input name="unit_number" type="text" id="field_unit_number" value="{account_code_set/unit_number}" maxlength='12'/></dd>
 				</xsl:if>
 
+				<xsl:if test="config_data/dim_value_4">
+					<dt><label for="field_dim_value_4"><xsl:value-of select="config_data/dim_value_4" /></label></dt>
+					<dd><input name="dim_value_4" type="text" id="field_dim_value_4" value="{account_code_set/dim_value_4}" maxlength='12'/></dd>
+				</xsl:if>
+
+				<xsl:if test="config_data/dim_value_5">
+					<dt><label for="field_dim_value_5"><xsl:value-of select="config_data/dim_value_5" /></label></dt>
+					<dd><input name="dim_value_5" type="text" id="field_dim_value_5" value="{account_code_set/dim_value_5}" maxlength='12'/></dd>
+				</xsl:if>
+
 				<dt><label for="field_unit_prefix"><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></label></dt>
 				<dd><input name="unit_prefix" type="text" id="field_unit_prefix" value="{account_code_set/unit_prefix}" maxlength='1'/></dd>
 			</dl>
@@ -84,6 +94,11 @@
 				<xsl:if test="config_data/dim_2">
 					<dt><label for="field_service"><xsl:value-of select="config_data/dim_2" /></label></dt>
 					<dd><input name="service" type="text" id="field_service" value="{account_code_set/service}" maxlength='8'/></dd>
+				</xsl:if>
+
+				<xsl:if test="config_data/dim_4">
+					<dt><label for="field_dim_4"><xsl:value-of select="config_data/dim_4" /></label></dt>
+					<dd><input name="dim_4" type="text" id="field_dim_4" value="{account_code_set/dim_4}" maxlength='8'/></dd>
 				</xsl:if>
 
 				<xsl:if test="config_data/dim_5">

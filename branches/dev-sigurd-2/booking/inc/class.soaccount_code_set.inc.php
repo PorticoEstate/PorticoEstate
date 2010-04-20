@@ -19,6 +19,9 @@
 					'project_number' 			=> array('type' => 'string', 'required' => True, 'nullable' => False), //c12 A, default 9
 					'unit_number' 				=> array('type' => 'string', 'required' => True, 'nullable' => False), //c12 A
 					'unit_prefix' 				=> array('type' => 'string', 'required' => True, 'nullable' => False), //c1 A (used for batch_id)
+					'dim_4' 				=> array('type' => 'string', 'required' => False, 'nullable' => True), //c8 A
+					'dim_value_4' 				=> array('type' => 'string', 'required' => False, 'nullable' => True), //c12 A
+					'dim_value_5' 				=> array('type' => 'string', 'required' => False, 'nullable' => True), //c12 A
 					'invoice_instruction'	=> array('type' => 'string'), //c120 a
 					'active' 					=> array('type' => 'int'),
 				)
