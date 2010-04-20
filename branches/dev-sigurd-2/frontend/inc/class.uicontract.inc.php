@@ -37,7 +37,7 @@ class frontend_uicontract extends frontend_uifrontend
 		$new_contract = phpgw::get_var('contract_id');
 
 		// The current state of the contract view of this user's session
-		$this->contract_state = phpgwapi_cache::session_get('frontend', 'contract_state');
+		$this->contract_state = phpgwapi_cache::user_get('frontend', 'contract_state', $GLOBALS['phpgw_info']['user']['account_lid']);
 
 		// If the user visits the contract tab for the first time...
 		if(!isset($this->contract_state))
@@ -52,7 +52,7 @@ class frontend_uicontract extends frontend_uifrontend
 
 			//... then store this contract on the session
 			$this->contract_state['contract'] = $contract;
-			phpgwapi_cache::session_set('frontend', 'contract_state', $this->contract_state);
+			phpgwapi_cache::user_set('frontend', 'contract_state', $this->contract_state, $GLOBALS['phpgw_info']['user']['account_lid']);
 		}
 
 		// If the user wants to view another contract connected to this location
@@ -66,11 +66,11 @@ class frontend_uicontract extends frontend_uifrontend
 				$this->contract_state['selected'] = $new_contract;
 				$this->contract = rental_socontract::get_instance()->get_single($new_contract);
 				$this->contract_state['contract'] = $this->contract;
-				phpgwapi_cache::session_set('frontend', 'contract_state', $this->contract_state);
+				phpgwapi_cache::user_set('frontend', 'contract_state', $this->contract_state, $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
 		}
 		
-		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
+		$contracts_per_location = phpgwapi_cache::user_get('frontend', 'contracts_per_location', $GLOBALS['phpgw_info']['user']['account_lid']);
 		$contracts_for_selection = array();
 		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{

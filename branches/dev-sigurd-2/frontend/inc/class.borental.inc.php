@@ -9,7 +9,7 @@
     	
     	public static function contract_exist_per_location($contract_id, $location_code)
     	{
-    		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
+    		$contracts_per_location = phpgwapi_cache::user_get('frontend', 'contracts_per_location', $GLOBALS['phpgw_info']['user']['account_lid']);
     		$exist = false;
     		foreach($contracts_per_location[$location_code] as $contract)
     		{
@@ -23,7 +23,7 @@
     	
     	public static function get_first_contract_per_location($location_code)
     	{
-    		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
+    		$contracts_per_location = phpgwapi_cache::user_get('frontend', 'contracts_per_location', $GLOBALS['phpgw_info']['user']['account_lid']);
     		return $contracts_per_location[$location_code][0];
     	}
     	
@@ -101,9 +101,9 @@
         	
         	
         	
-        	phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
-        	phpgwapi_cache::session_set('frontend', 'rented_area_per_location', $rented_area_per_location);
-        	phpgwapi_cache::session_set('frontend', 'total_price_per_location', $rented_price_per_location);
+        	phpgwapi_cache::user_set('frontend', 'contracts_per_location', $contracts_per_location, $GLOBALS['phpgw_info']['user']['account_lid']);
+        	phpgwapi_cache::user_set('frontend', 'rented_area_per_location', $rented_area_per_location, $GLOBALS['phpgw_info']['user']['account_lid']);
+        	phpgwapi_cache::user_set('frontend', 'total_price_per_location', $rented_price_per_location, $GLOBALS['phpgw_info']['user']['account_lid']);
         	
   
         	//Serialize the properties
