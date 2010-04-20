@@ -73,18 +73,6 @@
 				
 				switch($level)
 				{
-					case 4:			// LEVEL: Resultatenhet
-						//Insert in result array	
-						$result_units[] = array(
-							"ORG_UNIT_ID" => $identifier,
-							"ORG_NAME" => $name,
-							"UNIT_ID" => $unit_id
-						);
-						break;	
-				}
-				
-				/*switch($level)
-				{
 					case 1: break;	// TODO: Access to all result units
 					case 2: 		// LEVEL: Byrådsavdeling 
 						//Must traverse down the hierarchy
@@ -112,7 +100,7 @@
 							"UNIT_ID" => $unit_id
 						);
 						break;	
-				}*/
+				}
 			}
         	var_dump($result_units);
         	return $result_units;

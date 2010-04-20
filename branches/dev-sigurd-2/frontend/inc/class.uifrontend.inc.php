@@ -171,9 +171,8 @@
 				$this->header_state['selected_org_unit'] = 'all';
 				
 				//Update locations
-				//$property_locations = frontend_borental::get_property_locations($org_unit_ids);
+				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
 				
-				$property_locations = array();
 				if(count($property_locations) > 0)
 				{
 					$this->header_state['locations'] = $property_locations;
