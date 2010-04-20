@@ -76,11 +76,12 @@
 					case 1: break;	// TODO: Access to all result units
 					case 2: 		// LEVEL: Byrådsavdeling 
 						//Must traverse down the hierarchy
+						$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
 						$tables = "V_ORG_ENHET";
-						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = V_ORG_ENHET.ORG_ENHET_ID)";
-						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID = {$identifier}";
-						var_dump($sql);
-						/*$db1 = $this->get_db();;
+						$joins = "LEFT JOIN V_ORG_KNYTNING VIEW ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
+						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
+						
+						$db1 = $this->get_db();;
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
@@ -89,7 +90,7 @@
 								"ORG_NAME" => $db1->f('ORG_NAVN',true),
 								"UNIT_ID" => $db1->f('RESULTATENHET')
 							);
-						}*/
+						}
 						break;
 					case 3:	break;	// LEVEL: Seksjon (not in use)
 					case 4:			// LEVEL: Resultatenhet
