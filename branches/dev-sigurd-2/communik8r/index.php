@@ -73,7 +73,8 @@
 			break;
 
 		case 'email':
-			ExecMethod('communik8r.boemail.rest', $uri_parts);
+			$action		= phpgw::get_var('action', 'string');
+			ExecMethod('communik8r.boemail.rest', array('action' => $action));
 			break;
 
 		case 'help':

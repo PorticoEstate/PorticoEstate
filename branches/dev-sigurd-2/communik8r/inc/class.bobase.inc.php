@@ -646,7 +646,7 @@
 			$default_file = PHPGW_SERVER_ROOT . SEP 
 				. 'communik8r' . SEP 
 				. 'templates' . SEP
-				. 'default' . SEP
+				. 'base' . SEP
 				. $uri_parts[2] . '.xsl';
 
 			if ( is_file($user_file) )
@@ -763,10 +763,9 @@
 		 */
 		function _store_pref($pname, $pvalue)
 		{	
-			$this->prefs->read_repository();
+			$this->prefs->read();
 			$this->prefs->add('communik8r', $pname, $pvalue);
 			$this->prefs->save_repository();
 			//error_log(print_r($this->prefs->data['ccomunik8r'], true));
 		}
 	}
-?>

@@ -66,18 +66,18 @@
 		/**
 		 * REST URL handler
 		 */
-		function rest($uri_parts)
+		function rest($data)
 		{
 			switch ( strtoupper($_SERVER['REQUEST_METHOD']) )
 			{
 				case 'GET':
-					switch ( count($uri_parts) )
+					switch ( $data['action'] )
 					{
 						case 3: //requesting mailboxes for account
 							$this->get_mailboxes($uri_parts[2], True);
 							break;
 
-						case 4: //requesting mailbox summary
+						case 'summary': //requesting mailbox summary
 							$this->get_summary($uri_parts);
 							break;
 
@@ -380,7 +380,7 @@
 		 */
 		function get_mailboxes($info, $output = False)
 		{
-			trigger_error('boemail::get_mailboxes(' . print_r($info, true) . ', ' . intval($output) . ') called');
+			//trigger_error('boemail::get_mailboxes(' . print_r($info, true) . ', ' . intval($output) . ') called');
 			if ( is_string($info) )
 			{
 				$info = execMethod('communik8r.boaccounts.name2array', $info);
@@ -405,7 +405,8 @@
 
 			if ( !$output )
 			{
-				return $elm->cloneNode(True);
+				return $elm;
+			//	return $elm->cloneNode(True);
 			}
 
 			$tree->appendChild($elm);

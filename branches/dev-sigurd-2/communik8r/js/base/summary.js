@@ -282,7 +282,10 @@ Summary.prototype.loadList = function(arListInfo)
 	{
 		this.oXSLDoc = Sarissa.getDomDocument();
 		this.oXSLDoc.onreadystatechange = this._transform;
-		this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/summary');
+	//	this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/summary');
+		this.oXSLDoc.load(strBaseURL + '&section=email&action=summary');
+		alert(strBaseURL + '&section=email&action=summary');
+	//	this.oXSLDoc.load(strAppURL + '/templates/base/summary.xsl');
 	}
 }
 

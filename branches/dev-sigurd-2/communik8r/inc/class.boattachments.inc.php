@@ -140,61 +140,62 @@
 					 'size'		=> lang('size')
 				);
 			}
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 			
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/xsl/attach_popup" . '"');
-			$xml->append_child($xsl);
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/attach_popup.xsl" . '"');
+			$xml->appendChild($xsl);
 			
-			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+			$phpgw = $xml->createElement('phpgw:response', 'phpgw');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgw', 'http://dtds.phpgroupware.org/phpgw.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgwapi', 'http://dtds.phpgroupware.org/phpgwapi.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:communik8r', 'http://dtds.phpgroupware.org/communik8r.dtd');
 
-			$info = $xml->create_element('phpgwapi:info');
+			$info = $xml->createElement('phpgwapi:info');
 			
-			$base_url = $xml->create_element('phpgwapi:base_url');
-			$base_url->append_child( $xml->create_text_node("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
-			$info->append_child($base_url);
+			$base_url = $xml->createElement('phpgwapi:base_url');
+			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($base_url);
 			unset($base_url);
 
-			$skin = $xml->create_element('phpgwapi:skin');
-			$skin->append_child( $xml->create_text_node('base') );
-			$info->append_child($skin);
+			$skin = $xml->createElement('phpgwapi:skin');
+			$skin->appendChild( $xml->createTextNode('base') );
+			$info->appendChild($skin);
 			unset($skin);
 
 			if ( $inc_langs )
 			{
-				$langs = $xml->create_element('phpgwapi:langs');
+				$langs = $xml->createElement('phpgwapi:langs');
 				foreach ( $lang_strs as $lkey => $lval )
 				{
-					$lang = $xml->create_element('phpgwapi:lang');
-					$lang->set_attribute('id', $lkey);
-					$lang->append_child($xml->create_text_node($lval) );
-					$langs->append_child($lang);
+					$lang = $xml->createElement('phpgwapi:lang');
+					$lang->setAttribute('id', $lkey);
+					$lang->appendChild($xml->createTextNode($lval) );
+					$langs->appendChild($lang);
 				}
-				$info->append_child($langs);
+				$info->appendChild($langs);
 			}
 			
-			$phpgw->append_child($info);
+			$phpgw->appendChild($info);
 
-			$attachments = $xml->create_element('communik8r:attachments');
+			$attachments = $xml->createElement('communik8r:attachments');
 			
 			foreach( $this->get_raw_list() as $key => $vals )
 			{
-				$attachment = $xml->create_element('communik8r:attachment');
-				$attachment->set_attribute('id', $key);
-				$attachment->set_attribute('icon', $this->mime2icon($vals['type']) );
-				$attachment->set_attribute('size', $this->_int2human($vals['size']) );
-				$attachment->append_child($xml->create_text_node($vals['name']));
-				$attachments->append_child($attachment);
+				$attachment = $xml->createElement('communik8r:attachment');
+				$attachment->setAttribute('id', $key);
+				$attachment->setAttribute('icon', $this->mime2icon($vals['type']) );
+				$attachment->setAttribute('size', $this->_int2human($vals['size']) );
+				$attachment->appendChild($xml->createTextNode($vals['name']));
+				$attachments->appendChild($attachment);
 			}
 
-			$phpgw->append_child($attachments);
+			$phpgw->appendChild($attachments);
 			
-			$xml->append_child($phpgw);
+			$xml->appendChild($phpgw);
 			
 			Header('Content-Type: text/xml');
-			echo $xml->dump_mem(true);
-
+			echo $xml->saveXML();
 		}
 
 		/**
@@ -343,4 +344,3 @@
 			}
 		}
 	}
-?>

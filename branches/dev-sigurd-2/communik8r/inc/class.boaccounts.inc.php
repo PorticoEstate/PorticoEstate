@@ -43,6 +43,7 @@
 				case 'GET':
 					switch ( $data['action'] )
 					{
+						case '': //get list of accounts
 						case 'new': //get list of accounts
 							$this->get_accounts();
 							break;
@@ -234,7 +235,9 @@
 
 				if ( $inc_mailboxes && $account['handler'] == 'email' )
 				{
-					$acct->appendChild(ExecMethod('communik8r.boemail.get_mailboxes', $account));
+				//	$acct->appendChild(ExecMethod('communik8r.boemail.get_mailboxes', $account));
+					$node = $xml->importNode(ExecMethod('communik8r.boemail.get_mailboxes', $account),true);
+					$acct->appendChild($node);
 				}
 				$tree->appendChild($acct);
 			}

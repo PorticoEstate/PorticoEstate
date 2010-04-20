@@ -13,7 +13,8 @@
 	/**
 	*@see comm_email
 	*/
-	include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'class.comm_email.inc.php');
+
+	phpgw::import_class('communik8r.comm_email');
 
 	/**
 	* Email abstraction library for POP3
@@ -297,6 +298,11 @@
 		* @param bool $auto_connect automagically connect if not already connected
 		* @returns bool are we connected?
 		*/
+		function is_connected($auto_connect = True)
+		{
+			return $this->_is_connected($auto_connect);
+		}
+
 		function _is_connected($auto_connect = True)
 		{
 			if ( $this->conn )

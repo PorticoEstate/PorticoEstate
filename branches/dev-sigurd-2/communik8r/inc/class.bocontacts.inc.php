@@ -76,34 +76,35 @@
 			}
 
 			Header('Content-Type: text/xml');
-			$xml = domxml_new_doc('1.0');
+			$xml = new DOMDocument('1.0', 'utf-8');
+			$xml->formatOutput = true;
 			
-			$xsl = $xml->create_processing_instruction('xml-stylesheet', 'type="text/xsl" href="' . $GLOBALS['phpgw']->link('/communik8r/xsl/contacts_lookup') . '"');
-			$xml->append_child($xsl);
+			$xsl = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $GLOBALS['phpgw']->link('/communik8r/templates/base/contacts_lookup.xsl') . '"');
+			$xml->appendChild($xsl);
 
-			$phpgw = $xml->create_element_ns('http://dtds.phpgroupware.org/phpgw.dtd', 'response', 'phpgw');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/phpgwapi.dtd', 'phpgwapi');
-			$phpgw->add_namespace('http://dtds.phpgroupware.org/communik8r.dtd', 'communik8r');
+			$phpgw = $xml->createElement('phpgw:response', 'phpgw');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgw', 'http://dtds.phpgroupware.org/phpgw.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:phpgwapi', 'http://dtds.phpgroupware.org/phpgwapi.dtd');
+			$phpgw->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:communik8r', 'http://dtds.phpgroupware.org/communik8r.dtd');
 
-			$elm = $xml->create_element('communik8r:response');
+			$elm = $xml->createElement('communik8r:response');
 
-			$contacts = $xml->create_element('communik8r:contacts');
+			$contacts = $xml->createElement('communik8r:contacts');
 
 			foreach($results as $id => $data)
 			{
 				$info = "{$data['first_name']} {$data['last_name']} <{$data[$comm_type]}>";
-				$contact = $xml->create_element('communik8r:contact');
-				$contact->set_attribute('id', $id);
-				$contact->set_attribute('type', $comm_type);
-				$contact->append_child( $xml->create_text_node($info) );
-				$contacts->append_child($contact);
+				$contact = $xml->createElement('communik8r:contact');
+				$contact->setAttribute('id', $id);
+				$contact->setAttribute('type', $comm_type);
+				$contact->appendChild( $xml->createTextNode($info) );
+				$contacts->appendChild($contact);
 			}
-			$elm->append_child($contacts);
-			$phpgw->append_child($elm);
+			$elm->appendChild($contacts);
+			$phpgw->appendChild($elm);
 
-			$xml->append_child($phpgw);
+			$xml->appendChild($phpgw);
 
-			echo $xml->dump_mem(true);
+			echo $xml->saveXML();
 		}
 	}
-?>
