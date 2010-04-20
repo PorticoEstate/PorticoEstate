@@ -71,17 +71,7 @@
 				
 				var_dump(array($identifier,$level,$name,$unit_id));
 				
-				switch($level)
-				{
-					case 4:			// LEVEL: Resultatenhet
-						//Insert in result array	
-						$result_units[] = array(
-							"ORG_UNIT_ID" => $identifier,
-							"ORG_NAME" => $name,
-							"UNIT_ID" => $unit_id
-						);
-						break;	
-				}
+				
 				
 				/*switch($level)
 				{
