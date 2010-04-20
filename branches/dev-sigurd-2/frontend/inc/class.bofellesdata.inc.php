@@ -81,16 +81,21 @@
 						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
 						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
 						
+						var_dump($sql);
+						
 						$db1 = $this->get_db();;
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
-							var_dump($db1->f('ORG_NAVN'));
+							
+							
 							$result_units[] = array(
 								"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 								"ORG_NAME" => $db1->f('ORG_NAVN'),
 								"UNIT_ID" => $db1->f('RESULTATENHET')
 							);
+							
+							
 						}
 						break;
 					case 3:	break;	// LEVEL: Seksjon (not in use)
@@ -104,6 +109,7 @@
 						break;	
 				}
 			}
+			var_dump($result_units);
         	return $result_units;
         	/*
 			return array(
