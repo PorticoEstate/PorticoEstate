@@ -78,7 +78,7 @@
 						//Must traverse down the hierarchy
 						$tables = "V_ORG_ENHET";
 						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = V_ORG_ENHET.ORG_ENHET_ID)";
-						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND ORG_KNYTNING.ORG_ENHET_ID = {$identifier}";
+						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID = {$identifier}";
 						var_dump($sql);
 						/*$db1 = $this->get_db();;
         				$db1->query($sql,__LINE__,__FILE__);
