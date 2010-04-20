@@ -71,14 +71,14 @@
 				
 				var_dump(array($identifier,$level,$name,$unit_id));
 				
-				switch($level)
+				/*switch($level)
 				{
 					case 1: break;	// TODO: Access to all result units
 					case 2: 		// LEVEL: Byrådsavdeling 
 						//Must traverse down the hierarchy
 						$tables = "V_ORG_ENHET";
 						$joins = "LEFT JOIN ORG_KNYTNING (ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = V_ORG_ENHET.ORG_ENHET_ID)";
-						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND ORG_KNYTNING.ORG_ENHET_ID = 2";
+						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND ORG_KNYTNING.ORG_ENHET_ID = {$identifier}";
 						
 						$db1 = $this->get_db();;
         				$db1->query($sql,__LINE__,__FILE__);
@@ -87,7 +87,7 @@
 							$result_unit[] = array(
 								"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 								"ORG_NAME" => $db1->f('ORG_NAVN',true),
-								"UNIT_ID" => (int)$db1->f('ENHET_ID')
+								"UNIT_ID" => $db1->f('ENHET_ID')
 							);
 						}
 						break;
@@ -100,7 +100,7 @@
 							"UNIT_ID" => $unit_id
 						);
 						break;	
-				}
+				}*/
 			}
         	var_dump($result_units);
         	return $result_units;
