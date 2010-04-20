@@ -69,6 +69,8 @@
 			// Get header state
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
 			
+			var_dump($this->header_state);
+			
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
