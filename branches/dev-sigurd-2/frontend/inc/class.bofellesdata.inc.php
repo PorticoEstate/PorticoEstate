@@ -50,7 +50,7 @@
              * 3. Build an array of result units this user has access to
              */
         	
-        	$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID";
+        	$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
         	$table = "V_ORG_ENHET";
         	$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_PERSON_ENHET.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID) ".
         				"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
@@ -67,7 +67,7 @@
 				$identifier  = (int)$db->f('ORG_ENHET_ID');
 				$level = (int)$db->f('ORG_NIVAA','int');
 				$name = $db->f('ORG_NAVN',true);
-				$unit_id = $db->f('ENHET_ID');
+				$unit_id = $db->f('RESULTATENHET');
 				
 				var_dump(array($identifier,$level,$name,$unit_id));
 				
