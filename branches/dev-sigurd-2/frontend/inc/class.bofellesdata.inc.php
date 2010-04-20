@@ -66,7 +66,7 @@
 			{
 				$identifier  = (int)$db->f('ORG_ENHET_ID');
 				$level = (int)$db->f('ORG_NIVAA','int');
-				$name = $db->f('ORG_NAVN',true);
+				$name = $db->f('ORG_NAVN');
 				$unit_id = $db->f('RESULTATENHET');
 				
 				
