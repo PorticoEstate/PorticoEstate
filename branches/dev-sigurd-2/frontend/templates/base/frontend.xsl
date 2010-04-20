@@ -75,10 +75,28 @@
 							<xsl:for-each select="locations">
 								<xsl:choose>
 									<xsl:when test="location_code = //header/selected_location">
-										<option value="{location_code}" selected="selected"><xsl:value-of select="loc1_name"/></option>
+										<option value="{location_code}" selected="selected">
+											<xsl:choose>
+												<xsl:when test="loc1_name != ''">
+													<xsl:value-of select="loc1_name"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_name"/>)
+												</xsl:otherwise>
+											</xsl:choose>
+										</option>
 									</xsl:when>
 									<xsl:otherwise>
-										<option value="{location_code}"><xsl:value-of select="loc1_name"/></option>
+										<option value="{location_code}">
+										<xsl:choose>
+											<xsl:when test="loc1_name != ''">
+												<xsl:value-of select="loc1_name"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="php:function('lang', 'no_name_unit')"/> (<xsl:value-of select="location_name"/>)
+											</xsl:otherwise>
+										</xsl:choose>
+										</option>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>
