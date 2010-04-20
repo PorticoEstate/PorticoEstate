@@ -69,6 +69,8 @@
 				$name = $db->f('ORG_NAVN',true);
 				$unit_id = $db->f('ENHET_ID');
 				
+				var_dump(array($identifier,$level,$name,$unit_id));
+				
 				switch($level)
 				{
 					case 1: break;	// TODO: Access to all result units
