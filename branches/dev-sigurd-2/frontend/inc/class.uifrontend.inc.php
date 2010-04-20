@@ -61,15 +61,13 @@
 			/* Get the tabs and check to see whether the user has specified a tab or has a selected tab on session */
 			$tabs = $this->get_tabs();
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
-			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab', $GLOBALS['phpgw_info']['user']['account_lid']);
+			$tab = isset($type) ? $type : phpgwapi_cache::user_get('frontend','tab', $GLOBALS['phpgw_info']['user']['account_lid']);
 			$selected = isset($tab) ? $tab : array_shift(array_keys($tabs));
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			phpgwapi_cache::user_set('frontend','tab',$selected, $GLOBALS['phpgw_info']['user']['account_lid']);
 			
 			// Get header state
 			$this->header_state = phpgwapi_cache::user_get('frontend', 'header_state', $GLOBALS['phpgw_info']['user']['account_lid']);
-			
-			var_dump($this->header_state);
 			
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
