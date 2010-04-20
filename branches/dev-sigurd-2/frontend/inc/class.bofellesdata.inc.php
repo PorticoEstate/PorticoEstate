@@ -61,7 +61,6 @@
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	
-        	$db1 = clone($db);
         	$result_units = array();
        		while ($db->next_record())
 			{
@@ -79,7 +78,7 @@
 						$joins = "LEFT JOIN ORG_KNYTNING (ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = V_ORG_ENHET.ORG_ENHET_ID)";
 						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND ORG_KNYTNING.ORG_ENHET_ID = 2";
 						
-        				//$db1 = $this->get_db();
+						$db1 = $this->get_db();;
         				$db1->query($sql,__LINE__,__FILE__);
         				while ($db1->next_record())
 						{
@@ -94,9 +93,9 @@
 					case 4:			// LEVEL: Resultatenhet
 						//Insert in result array	
 						$result_units[] = array(
-							"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
-							"ORG_NAME" => $db->f('ORG_NAVN',true),
-							"UNIT_ID" => $db->f('ENHET_ID')
+							"ORG_UNIT_ID" => $identifier,
+							"ORG_NAME" => $name,
+							"UNIT_ID" => $unit_id
 						);
 						break;	
 				}
