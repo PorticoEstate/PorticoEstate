@@ -32,7 +32,7 @@
 			$db->User = $config->config_data['external_db_user'];
 			$db->Password = $config->config_data['external_db_password'];
 
-			//$db->connect();
+			$db->connect();
 			return $db;
 		}
     	
@@ -82,10 +82,9 @@
         				while ($db1->next_record())
 						{
 							$result_unit[] = array(
-								"ORG_ENHET_ID" => (int)$db1->f('ORG_ENHET_ID'),
-								"ORG_NIVAA" => (int)$db1->f('ORG_NIVAA'),
-								"ORG_NAVN" => $db1->f('ORG_NAVN',true),
-								"ENHET_ID" => (int)$db1->f('ENHET_ID')
+								"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
+								"ORG_NAME" => $db1->f('ORG_NAVN',true),
+								"UNIT_ID" => (int)$db1->f('ENHET_ID')
 							);
 						}
 						break;
@@ -93,10 +92,9 @@
 					case 4:			// LEVEL: Resultatenhet
 						//Insert in result array	
 						$result_units[] = array(
-							"ORG_ENHET_ID" => (int)$db1->f('ORG_ENHET_ID'),
-							"ORG_NIVAA" => (int)$db1->f('ORG_NIVAA'),
-							"ORG_NAVN" => $db1->f('ORG_NAVN',true),
-							"ENHET_ID" => (int)$db1->f('ENHET_ID')
+							"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
+							"ORG_NAME" => $db1->f('ORG_NAVN',true),
+							"UNIT_ID" => (int)$db1->f('ENHET_ID')
 						);
 						break;	
 				}
