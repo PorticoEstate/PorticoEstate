@@ -218,7 +218,7 @@
 			}
 			
 			/* Store the header state on the session*/
-			phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_lid']);
+			var_dump(phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_lid']));
 	
 			
 			//Add style sheet for full screen view
