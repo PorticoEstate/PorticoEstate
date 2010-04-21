@@ -91,6 +91,12 @@ class frontend_uicontract extends frontend_uifrontend
 			$composite_array[] = rental_socomposite::get_instance()->get_single($composite->get_id())->serialize();
 		}
 		
+		if(isset($this->contract_state['contract']))
+		{
+			$this->contract_state['contract']->set_total_price(number_format($this->contract_state['contract']->get_total_price(),2,","," ")." ".lang('currency'));
+			$this->contract_state['contract']->set_rented_area(number_format($this->contract_state['contract']->get_rented_area(),2,","," ")." ".lang('square_meters'));
+		}
+		
 		$data = array (
 			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			'header' 		=>	$this->header_state,
