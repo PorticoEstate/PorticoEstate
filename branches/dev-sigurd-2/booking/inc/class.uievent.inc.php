@@ -110,6 +110,8 @@
 			{
 				$building_info = $this->bo->so->get_building_info($event['id']);
 				$event['building_name'] = $building_info['name'];
+				$event['from_'] = pretty_timestamp($event['from_']);
+				$event['to_'] = pretty_timestamp($event['to_']);
 			}
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");

@@ -99,6 +99,12 @@
 		{
 			$allocations = $this->bo->read();
 			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
+
+			foreach($allocations['results'] as &$allocation)
+			{
+				$allocation['from_'] = pretty_timestamp($allocation['from_']);
+				$allocation['to_'] = pretty_timestamp($allocation['to_']);
+			}
 			return $this->yui_results($allocations);
 		}
 

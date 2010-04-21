@@ -310,6 +310,8 @@ phpgw::import_class('booking.sopermission');
 				
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
+				$reservation['from_'] = pretty_timestamp($reservation['from_']);
+				$reservation['to_'] = pretty_timestamp($reservation['to_']);
 				$reservation['customer_type'] = lang($reservation['customer_type']);
 
 				$this->add_current_customer_identifier_info($reservation);
