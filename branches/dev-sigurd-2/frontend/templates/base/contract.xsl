@@ -97,7 +97,14 @@
 									</li>
 							</xsl:for-each>
 							</ul>
-						</div>	
+						</div>
+						<div id="comment">
+							<xsl:choose>
+								<xsl:when test="publish_comment">
+									<xsl:value-of select="comment" disable-output-escaping="yes"/>
+								</xsl:when>
+							</xsl:choose>
+						</div>
 					</xsl:for-each>
 				</div>
         	</div>

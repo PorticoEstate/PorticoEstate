@@ -586,7 +586,9 @@
 				'rented_area' => $this->get_rented_area(),
 				'adjustment_interval' => $this->get_adjustment_interval(),
 				'adjustment_share' => $this->get_adjustment_share(),
-				'adjustment_year' => $this->get_adjustment_year()
+				'adjustment_year' => $this->get_adjustment_year(),
+				'comment' => $this->get_comment(),
+				'publish_comment' => $this->get_publish_comment()
 			);
 		}
 		
