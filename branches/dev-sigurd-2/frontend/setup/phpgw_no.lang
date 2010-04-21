@@ -56,3 +56,16 @@ choose_contract	frontend	no	Velg kontrakt
 no_name_organisational_unit	frontend	no	Resultatenheten har ingen navn
 no_name_unit	frontend	no	--Ingen navn--
 new_ticket	frontend	no	Skriv ny melding
+contract_type_eksternleie	rental	no	Eksternleie
+contract_type_eksternleie_feste	rental	no	Feste (1520)
+contract_type_eksternleie_leilighet	rental	no	Leilighet (1530)
+contract_type_eksternleie_annen	rental	no	Annen (1510)
+contract_type_innleie	rental	no	Innleie
+contract_type_internleie	rental	no	Internleie
+contract_type_internleie_egne	rental	no	Egne
+contract_type_internleie_innleie	rental	no	Innleie
+contract_type_internleie_investeringskontrakt	rental	no	Investeringskontrakt
+contract_type_internleie_KF	rental	no	KF
+contract_type_internleie_andre	rental	no	Andre
+contract_type_investeringskontrakt	rental	no	Investeringskontrakt
+contract_type	rental	no	Kontrakttype

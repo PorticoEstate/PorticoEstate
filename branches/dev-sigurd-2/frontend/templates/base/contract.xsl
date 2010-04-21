@@ -28,6 +28,7 @@
 	     	 			<div id="contract_essentials">
 							<ul>
 								<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'old_contract_id')"/>: <xsl:value-of select="old_contract_id"/></li>
+			    				<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'contract_type')"/>: <xsl:value-of select="type"/></li>
 			    				<li><em><img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'contract_status')"/>: <xsl:value-of select="contract_status"/></li>
 			    				<li><em><img src="frontend/templates/base/images/16x16/resultset_first.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'date_start')"/>: <xsl:value-of select="date_start"/></li>
 			    				<li><em><img src="frontend/templates/base/images/16x16/resultset_last.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'date_end')"/>: 
