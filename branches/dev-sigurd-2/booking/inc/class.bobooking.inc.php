@@ -400,9 +400,9 @@ function array_minus($a, $b)
 				$keep = true;
 				foreach($events as &$e)
 				{
-					if(($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
+					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
 					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
-					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_']))
+					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && ($b['resources'][0] == $e['resources'][0]))
 					{
 						$keep = false;
 						$e['conflicts'][] = $b;
