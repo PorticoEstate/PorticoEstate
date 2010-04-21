@@ -15,7 +15,7 @@ class frontend_uicontract extends frontend_uifrontend
 
 	public function __construct()
 	{
-		phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.rental.contract'));
+		phpgwapi_cache::user_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.rental.contract'), $GLOBALS['phpgw_info']['user']['account_id']);
 		parent::__construct();
 	}
 
