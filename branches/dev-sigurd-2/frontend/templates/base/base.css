@@ -56,6 +56,10 @@ img.list_image {
 	float:left;
 	}
 
+a.list_image {
+	float:left;
+	}
+
 ol.list_image {
 	float: left;
 	}
