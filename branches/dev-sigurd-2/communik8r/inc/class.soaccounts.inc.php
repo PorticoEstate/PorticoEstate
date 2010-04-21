@@ -40,9 +40,9 @@
 							. $this->db->db_addslashes($options['name']) . "'";
 			}
 			
-			if ( isset($options['id']) && $options['id'] )
+			if ( isset($options['id']) )
 			{
-				$account_filter .= ' AND phpgw_communik8r_accts.acct_id = ' . intval($options['id']);
+				$account_filter .= ' AND phpgw_communik8r_accts.acct_id = ' . (int)$options['id'];
 			}
 
 			if ( isset($options['acct_handler']) && $options['acct_handler'] )
@@ -177,4 +177,3 @@
 		}
 
 	}
-?>

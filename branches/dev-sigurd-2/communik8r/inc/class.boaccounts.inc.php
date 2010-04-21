@@ -235,9 +235,34 @@
 
 				if ( $inc_mailboxes && $account['handler'] == 'email' )
 				{
-				//	$acct->appendChild(ExecMethod('communik8r.boemail.get_mailboxes', $account));
-					$node = $xml->importNode(ExecMethod('communik8r.boemail.get_mailboxes', $account),true);
-					$acct->appendChild($node);
+				//	$acct->appendChild(ExecMethod('communik8r.boemail.get_mailboxes', $account));	
+				//	$acct->appendChild($node);
+//----------------
+					if ( is_string($account) )
+					{
+				//		$account = execMethod('communik8r.boaccounts.name2array', $account);
+						$account = $this->name2array($account);
+					}
+					$socache = createObject('communik8r.socache_email', $account);
+
+					$elm = $xml->createElement('dummy');
+
+					$mboxs = $socache->get_mailboxes();
+					if($mboxs)
+					{
+						$boemail = createObject('communik8r.boemail');
+
+						foreach( $mboxs as $mbox => $info)
+						{
+							$elm = $boemail->_mbox2xml($xml, $mbox, $info );
+							$acct->appendChild($elm);
+						}
+					}
+					else
+					{
+						$acct->appendChild($elm);					
+					}
+//-------------------
 				}
 				$tree->appendChild($acct);
 			}
@@ -270,7 +295,7 @@
 		*/
 		function id2array($id)
 		{
-			return $this->so->get_account(array('id' => $id) );
+			return $this->so->get_account(array('id' => (int)$id) );
 		}
 
 		function _process_edit($uri_parts)
@@ -293,13 +318,15 @@
 			$smtp = createObject('communik8r.comm_smtp');
 
 			trigger_error($xmldata);
-			
-			$xml = domxml_open_mem($xmldata);
-			trigger_error($xml->dump_mem());
 
-			error_log(print_r($xml->get_elements_by_tagname('account'), true));
+			$xml = new DOMDocument;
+			$xml->loadXML($xmldata);
+
+			trigger_error($xml->saveXML());
+
+			error_log(print_r($xml->getElementsByTagName('account'), true));
 			
-			$tmp_array = $xml->get_elements_by_tagname('account');
+			$tmp_array = $xml->getElementsByTagName('account');
 
 			if ( count($tmp_array) != 1 )
 			{

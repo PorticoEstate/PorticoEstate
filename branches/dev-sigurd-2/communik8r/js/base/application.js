@@ -35,6 +35,7 @@ function Application()
 	* The base URL for communik8r
 	*/
 	this.strBaseURL = strBaseURL;
+	this.strAppURL = strAppURL;
 
 	/**
 	* Currently selected message - tracking used for reply/forward

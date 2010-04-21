@@ -85,11 +85,15 @@ Accounts.prototype.updateOpenState = function (strID, iState)
 {
 	if ( strID.split('_').length >= 3 )
 	{
-		var strPUT = '<communik8:response><communik8r:status id="open">' + (iState > 0 ? 0 : 1) + '</communik8r:status></communik8:response>'; //lazy style
+		var arListInfo = oApplication.id2ListInfo(strID);
+	//	alert('updateOpenState: ' + oApplication.strBaseURL + '&section=email&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2] + '&action=status&status=' + (iState > 0 ? 0 : 1));
+	//	var strPUT = '<communik8:response><communik8r:status id="open">' + (iState > 0 ? 0 : 1) + '</communik8r:status></communik8:response>'; //lazy style
 		var oXMLHTTP = new XMLHttpRequest();
-		oXMLHTTP.open('PUT', oApplication.strBaseURL + oApplication.id2ListInfo(strID).join('/') + '/status'  + oApplication.strGET, false);
-		oXMLHTTP.async = true
-		oXMLHTTP.send(strPUT);
+//		oXMLHTTP.open('PUT', oApplication.strBaseURL + oApplication.id2ListInfo(strID).join('/') + '/status'  + oApplication.strGET, false);
+		oXMLHTTP.open('GET', oApplication.strBaseURL + '&section=email&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2] + '&action=status&status=' + (iState > 0 ? 0 : 1), false);
+		oXMLHTTP.async = true;
+	//	oXMLHTTP.send(strPUT);
+		oXMLHTTP.send(null);
 		if ( oXMLHTTP.status != 200 )
 		{
 			alert('Unable to fetch mailboxes');

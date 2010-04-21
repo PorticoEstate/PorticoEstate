@@ -73,8 +73,12 @@
 				case 'GET':
 					switch ( $data['action'] )
 					{
-						case 3: //requesting mailboxes for account
-							$this->get_mailboxes($uri_parts[2], True);
+						//FIXME
+						case 'something': //requesting mailboxes for account
+							$this->get_mailboxes($data['acct_id'], True);
+							break;
+						case 'status': //requesting mailboxes for account
+							$this->update_mailbox_status($data);
 							break;
 
 						case 'summary': //requesting mailbox summary
@@ -99,11 +103,12 @@
 					break;
 
 				case 'PUT':
-					error_log('PUT: ' . print_r($uri_parts, true));
-					switch ( count($uri_parts) )
+			//	case 'GET':
+					error_log('PUT: ' . print_r($data, true));
+					switch ( $data['action'] )
 					{
-						case 5:
-							$this->update_mailbox_status($uri_parts);
+						case 'status':
+							$this->update_mailbox_status($data);
 							break;
 						default:
 							$this->compose($uri_parts);//no validation for now :P
@@ -388,6 +393,11 @@
 			{
 				$info = execMethod('communik8r.boaccounts.name2array', $info);
 			}
+			else
+			{
+				$info = execMethod('communik8r.boaccounts.id2array', $info);
+			}
+
 			$socache = createObject('communik8r.socache_email', $info);
 
 			$xml = new DOMDocument('1.0', 'utf-8');
@@ -404,15 +414,17 @@
 			{
 				//error_log("fetching data for {$mbox} Line: " . __LINE__ . ' in ' . __FILE__);
 				$elm = $this->_mbox2xml($xml, $mbox, $info );
+				$tree->appendChild($elm);
 			}
 
 			if ( !$output )
 			{
-				return $elm;
+				return $tree;
+			//	return $elm;
 			//	return $elm->cloneNode(True);
 			}
 
-			$tree->appendChild($elm);
+	//		$tree->appendChild($elm);
 			$xml->appendChild($tree);
 
 			Header('Content-Type: text/xml');
@@ -806,38 +818,43 @@
 		/**
 		* Used for updating the status of a mailbox
 		*/
-		function update_mailbox_status($uri_parts)
+		function update_mailbox_status($data)
 		{
+			$acct_info = execMethod('communik8r.boaccounts.id2array', $data['acct_id']);
+			$socache = createObject('communik8r.socache_email', $acct_info);
+
+			$socache->set_open($data['mbox_name'], $data['status'] );
+			return;
+
 			$xmldata = '';
 			$putdata = fopen('php://input', 'r');//the TFphpM is fsckd stdin doesn't work!!
 
-			while ( $data = fread($putdata, 1024) )
+			while ( $_data = fread($putdata, 1024) )
 			{
-				$xmldata .= "{$data}\n";
+				$xmldata .= "{$_data}\n";
 			}
 			fclose($putdata);
-			
-			if ( !$doc = domxml_open_mem($xmldata) )
+
+			$doc = new DOMDocument;
+
+			if ( !$doc->loadXML($xmldata) )
 			{
-				trigger_error('Invalid XML: ' . print_r($xmldata), E_USER_ERROR);
+			//	trigger_error('Invalid XML: ' . print_r($xmldata), E_USER_ERROR);
 			}
 			unset($xmldata);
 
-			$acct_info = execMethod('communik8r.boaccounts.id2array', $uri_parts[2]);
-			$socache = createObject('communik8r.socache_email', $acct_info);
-
-			$elms = $doc->get_elements_by_tagname('status');
+			$elms = $doc->getElementsByTagName('status');
 			
 			foreach ( $elms as $elm )
 			{
-				switch ( trim( $elm->get_attribute('id') ) )
+				switch ( trim( $elm->getAttribute('id') ) )
 				{
 					case 'open' :
-						$socache->set_open($uri_parts[3], $elm->get_content() );
+//						$socache->set_open($data['mbox_name'], $elm->get_content() );
 						break;
 					default:
-						trigger_error("Invalid status request: Mailbox: {$uri_parts[4]} ID: " . $elm->get_attribute('id')  
-						. ' Value: ' . $elm->get_content(), E_USER_ERROR );
+	//					trigger_error("Invalid status request: Mailbox: {$data['action']} ID: " . $elm->getAttribute('id')  
+	//					. ' Value: ' . $elm->get_content(), E_USER_ERROR );
 				}
 			}
 		}
@@ -1052,7 +1069,8 @@
 
 			$smtp = createObject('communik8r.comm_smtp');
 
-			$xml = domxml_open_mem($xmldata);
+			$xml = new DOMDocument;
+			$xml->loadXML($xmldata);
 
 			$smtp->Host = $this->smtp_host;
 			$smtp->Port = $this->smtp_port;
@@ -1064,7 +1082,7 @@
 				$smtp->Password = $GLOBALS['phpgw_info']['user']['password'];
 			}
 
-			$acct_id = $xml->get_elements_by_tagname('message_account_id');
+			$acct_id = $xml->getElementsByTagName('message_account_id');
 			$acct_info = execMethod('communik8r.boaccounts.id2array', $acct_id[0]->get_content() );
 			unset($acct_id);
 			$smtp->Sender = $acct_info['acct_uri'];
@@ -1073,7 +1091,7 @@
 			unset($acct_info);
 
 
-			$tos = $xml->get_elements_by_tagname('message_to');
+			$tos = $xml->getElementsByTagName('message_to');
 			foreach ( $tos as $to )
 			{
 				$rcpt = $this->_address2parts( $to->get_content() );
@@ -1081,7 +1099,7 @@
 			}
 			unset($tos);
 
-			$ccs = $xml->get_elements_by_tagname('message_cc');
+			$ccs = $xml->getElementsByTagName('message_cc');
 			foreach ( $ccs as $cc )
 			{
 				$rcpt = $this->_address2parts( $cc->get_content() );
@@ -1089,7 +1107,7 @@
 			}
 			unset($ccs);
 
-			$bccs = $xml->get_elements_by_tagname('message_cc');
+			$bccs = $xml->getElementsByTagName('message_cc');
 			foreach ( $bccs as $bcc )
 			{
 				$rcpt = $this->_address2parts( $bcc->get_content() );
@@ -1097,7 +1115,7 @@
 			}
 			unset($bccs);
 
-			$subject = $xml->get_elements_by_tagname('message_subject');
+			$subject = $xml->getElementsByTagName('message_subject');
 			$smtp->Subject = $subject[0]->get_content();
 			unset($subject);
 
@@ -1113,7 +1131,7 @@
 			}
 			unset($attachments);
 
-			$msgbody = $xml->get_elements_by_tagname('msgbody');
+			$msgbody = $xml->getElementsByTagName('msgbody');
 			$body = $msgbody[0]->get_content();
 			unset($msgbody);
 			error_log(print_r($smtp, true));

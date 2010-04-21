@@ -76,7 +76,8 @@
 			$action		= phpgw::get_var('action', 'string');
 			$acct_id	= phpgw::get_var('acct_id', 'int');
 			$mbox_name = phpgw::get_var('mbox_name', 'string');
-			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name));
+			$status		= phpgw::get_var('status', 'int', 'REQUEST', 0);
+			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name, 'status' => $status));
 			break;
 
 		case 'help':
