@@ -31,9 +31,6 @@
     					</em>
     					<xsl:value-of select="php:function('lang', 'organisational_units')"/> 
     					(<xsl:value-of select="number_of_org_units"/>) 
-    					<a href="index.php?menuaction=frontend.uihelpdesk.index&amp;refresh=true" class="list_image">
-    						<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
-    					</a>
     				</li>
     				<li>
     					<form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
@@ -62,6 +59,11 @@
 	    						</xsl:choose> 
 	    					</select>
     					</form>
+    				</li>
+    				<li>
+    					<a href="index.php?menuaction=frontend.uihelpdesk.index&amp;refresh=true" class="list_image">
+    						<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
+    					</a>
     				</li>
     			</ul>
 			</div>
