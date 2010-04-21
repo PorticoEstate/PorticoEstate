@@ -74,10 +74,11 @@
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
 			$param_only_org_unit = phpgw::get_var('only_org_unit_id'); 	// Frontend access from rental module regarding specific organisational unit
 			
+			var_dump($this->header_state);
+			
 			/* If the user has selected an organisational unit or all units */
 			if(isset($param_selected_org_unit))
 			{
-				var_dump($this->header_state);
 				//Specify which unit(s)
 				if($param_selected_org_unit == 'all')
 				{
@@ -218,7 +219,7 @@
 			}
 			
 			/* Store the header state on the session*/
-			var_dump(phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']));
+			phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']);
 	
 			
 			//Add style sheet for full screen view
