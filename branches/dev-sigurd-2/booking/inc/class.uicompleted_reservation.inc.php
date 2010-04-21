@@ -377,7 +377,12 @@ phpgw::import_class('booking.sopermission');
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
-			self::render_template('completed_reservation', array('reservation' => $reservation));
+			$show_edit_button = false;
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				$show_edit_button = true;
+			}
+			self::render_template('completed_reservation', array('reservation' => $reservation, 'show_edit_button' => $show_edit_button));
 		}
 		
 		protected function get_customer_identifier() {
@@ -416,6 +421,10 @@ phpgw::import_class('booking.sopermission');
 		public function edit() {
 			//TODO: Display hint to user about primary type of customer identifier
 			
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+    			$this->redirect_to('show', array('id' => phpgw::get_var('id', 'GET')));
+			}
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			
 			if (((int)$reservation['exported']) !== 0) {
