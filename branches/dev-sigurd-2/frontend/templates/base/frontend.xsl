@@ -25,7 +25,16 @@
 			</div>
 			<div id="org_units">
     			<ul>
-    				<li><em><img src="frontend/templates/base/images/16x16/chart_organisation.png"  class="list_image" /></em><xsl:value-of select="php:function('lang', 'organisational_units')"/> (<xsl:value-of select="number_of_org_units"/>) <a href="index.php?menuaction=frontend.uihelpdesk.index&refresh=true"><img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/></a></li>
+    				<li>
+    					<em>
+    						<img src="frontend/templates/base/images/16x16/chart_organisation.png"  class="list_image" />
+    					</em>
+    					<xsl:value-of select="php:function('lang', 'organisational_units')"/> 
+    					(<xsl:value-of select="number_of_org_units"/>) 
+    					<a href="index.php?menuaction=frontend.uihelpdesk.index&amp;refresh=true">
+    						<img src="frontend/templates/base/images/16x16/page_refresh.png" class="list_image"/>
+    					</a>
+    				</li>
     				<li>
     					<form action="index.php?menuaction=frontend.uihelpdesk.index" method="post">
 	    					<select size="3" onchange="this.form.submit()" name="org_unit_id">
