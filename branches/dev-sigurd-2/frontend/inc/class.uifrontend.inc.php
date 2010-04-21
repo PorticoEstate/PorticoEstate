@@ -74,6 +74,8 @@
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
 			$param_only_org_unit = phpgw::get_var('only_org_unit_id'); 	// Frontend access from rental module regarding specific organisational unit
 			
+			$refresh = phpgw::get_var('refresh'); //Refresh organisation list
+			
 			/* If the user has selected an organisational unit or all units */
 			if(isset($param_selected_org_unit))
 			{
@@ -160,7 +162,7 @@
 				$this->insert_links_on_header_state();
 			} 
 			/* No state, first visit after login*/
-			else if(!isset($this->header_state))
+			else if(!isset($this->header_state) || isset($refresh))
 			{
 				//Specify organisational units
 				$org_unit_ids = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
