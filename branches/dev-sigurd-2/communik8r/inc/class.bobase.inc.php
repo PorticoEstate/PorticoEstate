@@ -629,25 +629,24 @@
 		 * Output xsl template to user
 		 * @internal TODO make n-tier ???
 		 */
-		function xsl($uri_parts)
+		function xsl($name)
 		{
-			if ( (count($uri_parts) != 3) || in_array( array('.', '..'), $uri_parts)  
-					|| eregi('[a-z0-9\-_]+', $uri_parts[2]) != 1 )
+			if ( eregi('[a-z0-9\-_]+', $name) != 1 )
 			{
-				trigger_error("Invalid XSL style sheet request - {$uri_parts[2]} ", E_USER_ERROR);
+				trigger_error("Invalid XSL style sheet request - {$name} ", E_USER_ERROR);
 			}
 
-			$user_file = PHPGW_SERVER_ROOT . SEP 
-				. 'communik8r' . SEP 
-				. 'templates' . SEP
-				. $GLOBALS['phpgw_info']['user']['common']['preferences']['template_set'] . SEP
-				. $uri_parts[2] . '.xsl';
+			$user_file = PHPGW_SERVER_ROOT 
+				. '/communik8r' 
+				. '/templates/'
+				. $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] . '/'
+				. $name . '.xsl';
 
-			$default_file = PHPGW_SERVER_ROOT . SEP 
-				. 'communik8r' . SEP 
-				. 'templates' . SEP
-				. 'base' . SEP
-				. $uri_parts[2] . '.xsl';
+			$default_file = PHPGW_SERVER_ROOT 
+				. '/communik8r'
+				. '/templates'
+				. '/base/'
+				. $name . '.xsl';
 
 			if ( is_file($user_file) )
 			{
@@ -665,7 +664,7 @@
 			}
 			else
 			{
-				trigger_error("Invalid XSL style sheet request - {$uri_parts[2]} ", E_USER_ERROR);
+				trigger_error("Invalid XSL style sheet request - {$name} ", E_USER_ERROR);
 			}
 		}
 

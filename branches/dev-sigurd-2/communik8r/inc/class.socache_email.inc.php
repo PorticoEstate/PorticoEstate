@@ -389,7 +389,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ( !$this->db->next_record() )
 			{
-				return $msg;
+				return '';
 			}
 
 			$msg = unserialize($this->db->f('structure', True));

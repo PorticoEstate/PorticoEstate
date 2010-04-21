@@ -246,7 +246,7 @@
 				if ( $this->check_path() )
 				{
 					$id = $this->_get_attach_id($_FILES['attachment']['filename']);
-					$_FILES['attachment']['phpgw_file'] = $this->msg_path . SEP . $id;
+					$_FILES['attachment']['phpgw_file'] = $this->msg_path . '/' . $id;
 					//error_log("Attempting to store: " . $_FILES['attachment']['phpgw_file'] );
 					$attach_data = $_FILES['attachment'];
 					if ( !is_uploaded_file( $_FILES['attachment']['tmp_name'] ) 
@@ -272,7 +272,7 @@
 			$this->_validate_msg_id($this->msg_id);
 			if ( $this->check_path() )
 			{
-				$phpgw_file = $this->msg_path . SEP . $this->_get_attach_id($file_name);
+				$phpgw_file = $this->msg_path . '/' . $this->_get_attach_id($file_name);
 				$fp = fopen($phpgw_file, 'wb');
 				fwrite($fp, $str);
 				$data = array
@@ -334,9 +334,9 @@
 			{
 				$this->msg_id = $msg_id;
 				$this->msg_path = $GLOBALS['phpgw_info']['server']['temp_dir'] 
-						. SEP . 'c8' 
-						. SEP . $this->sess->sessionid 
-						. SEP . $msg_id;
+						. '/c8' 
+						. '/' . $this->sess->sessionid 
+						. '/' . $msg_id;
 			}
 			else
 			{

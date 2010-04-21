@@ -9,7 +9,7 @@
 		<xsl:variable name="base_url" 
 			select="concat(/phpgw:response/phpgwapi:info/phpgwapi:base_url, '/communik8r/')"/>
 		<xsl:variable name="img_url" 
-			select="concat($base_url, 'templates/default/images/')"/>
+			select="concat($base_url, 'templates/base/images/')"/>
 
 		<div>
 			<div id="headers">

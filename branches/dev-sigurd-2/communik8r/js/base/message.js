@@ -76,7 +76,11 @@ Message.prototype.getMsgURI = function()
 		}
 		arTmp = arNew;
 	}
-	return oApplication.strBaseURL + arTmp.join('/') + oApplication.strGET;
+
+	alert(oApplication.strBaseURL + '&section=email&action=get&acct_id=' + arTmp[1] + '&mbox_name=' + arTmp[2] + '&msg_id=' + arTmp[3]);
+
+//	return oApplication.strBaseURL + arTmp.join('/') + oApplication.strGET;
+	return oApplication.strBaseURL + '&section=email&action=get&acct_id=' + arTmp[1] + '&mbox_name=' + arTmp[2] + '&msg_id=' + arTmp[3];
 }
 
 Message.prototype.loadMessage = function(strMsgId)
@@ -99,6 +103,7 @@ Message.prototype.loadMessage = function(strMsgId)
 	{
 		this.oXSLDoc = Sarissa.getDomDocument();
 		this.oXSLDoc.onreadystatechange = this.transform;
-		this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/message');
+	//	this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/message');
+		this.oXSLDoc.load(strBaseURL + '&section=xsl&name=message');
 	}
 }

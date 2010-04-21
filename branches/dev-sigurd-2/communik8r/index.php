@@ -77,7 +77,9 @@
 			$acct_id	= phpgw::get_var('acct_id', 'int');
 			$mbox_name = phpgw::get_var('mbox_name', 'string');
 			$status		= phpgw::get_var('status', 'int', 'REQUEST', 0);
-			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name, 'status' => $status));
+			$msg_id		= phpgw::get_var('msg_id', 'int', 'REQUEST', 0);
+
+			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name, 'status' => $status, 'msg_id' => $msg_id));
 			break;
 
 		case 'help':
@@ -123,7 +125,7 @@
 			break;
 
 		case 'xsl':
-			ExecMethod('communik8r.bobase.xsl', $uri_parts);
+			ExecMethod('communik8r.bobase.xsl', phpgw::get_var('name', 'string'));
 			break;
 
 		default:
@@ -159,7 +161,7 @@
 			case E_USER_WARNING:
 				error_log("{$errno_str}: {$errstr} in {$errfile_name} at {$errline}, please report it at bugs.phpgroupware.org!");
 				header('HTTP/1.0 500 Internal Server Error');
-				exit;
+		//		exit;
 			default: //pass thru
 				error_log("{$errno_str}: {$errstr} in {$errfile_name} at {$errline}");
 				break;

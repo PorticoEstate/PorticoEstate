@@ -59,6 +59,7 @@ Accounts.prototype.load = function()
 	this.oTree.setImageArrays('plus', 'sub-16x16.png', 'sub-16x16.png', 'sub-16x16.png', 'sub-16x16.png', 'sub-16x16.png');
 	this.oTree.setImageArrays('minus', 'sub-open-16x16.png', 'sub-open-16x16.png', 'sub-open-16x16.png', 'sub-open-16x16.png', 'sub-open-16x16.png');
 	this.oTree.lineArray = new Array('nosub-16x16.png', 'nosub-16x16.png', 'nosub-16x16.png', 'nosub-16x16.png', 'nosub-16x16.png');
+//alert('Accounts.load: ' + oApplication.strBaseURL + '&section=accounts');
 	this.oTree.loadXML(oApplication.strBaseURL + '&section=accounts');
 	oApplication.hideLoading();
 }

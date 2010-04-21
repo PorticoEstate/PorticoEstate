@@ -202,8 +202,6 @@ function Summary(strTargetID)
 	*/
 	this._transform = function()
 	{
-alert('_tansform');
-alert(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2]);
 		if ( self.oXSLDoc && self.oXSLDoc.readyState == 4 )
 		{			
 			oTarget = document.getElementById(self.strParentDivID);
@@ -211,7 +209,6 @@ alert(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '
 			oXSLTProc.importStylesheet(self.oXSLDoc);
 			oApplication.showLoading();
 
-	//		Sarissa.updateContentFromURI(oApplication.strBaseURL + self.arInfo[0] + '/' + self.arInfo[1] + '/' + self.arInfo[2] + oApplication.strGET, 
 			Sarissa.updateContentFromURI(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2],
 							oTarget,
 							oXSLTProc,
@@ -275,11 +272,9 @@ Summary.prototype.loadList = function(arListInfo)
 	{
 		return false;
 	}
-alert(arListInfo[0]);
-alert(arListInfo[1]);
-alert(arListInfo[2]);
+
 	this.arInfo = arListInfo;
-		alert(strBaseURL + '&section=email&action=summary&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2]);
+
 	if ( typeof(this.oXSLDoc) == 'object')
 	{
 		this._transform();
@@ -288,10 +283,7 @@ alert(arListInfo[2]);
 	{
 		this.oXSLDoc = Sarissa.getDomDocument();
 		this.oXSLDoc.onreadystatechange = this._transform;
-	//	this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/summary');
-		this.oXSLDoc.load(strBaseURL + '&section=email&action=summary&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2]);
-		alert(strBaseURL + '&section=email&action=summary&acct_id=' + arListInfo[1] + '&mbox_name=' + arListInfo[2]);
-	//	this.oXSLDoc.load(strAppURL + '/templates/base/summary.xsl');
+		this.oXSLDoc.load(strBaseURL + '&section=xsl&name=summary');
 	}
 }
 

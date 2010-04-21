@@ -88,8 +88,8 @@
 							}
 							break;
 
-						case 5: //requesting message
-							$this->get_msg($uri_parts);
+						case 'get': //requesting message
+							$this->get_msg($data);
 							break;
 
 						case 6: //requesting attachment
@@ -305,7 +305,7 @@
 				}
 
 				$acct_name = $xml->createElement('communik8r:account_name');
-				$acct_name->appendChild( $xml->create_cdata_section("{$account['display_name']} <{$account['acct_uri']}>") );
+				$acct_name->appendChild( $xml->createCDATASection("{$account['display_name']} <{$account['acct_uri']}>") );
 				$acct->appendChild($acct_name);
 
 				$accts->appendChild($acct);
@@ -431,11 +431,11 @@
 			echo $xml->saveXML();
 		}
 
-		function get_msg($uri_parts)
+		function get_msg($data)
 		{
-			$acct_info = execMethod('communik8r.boaccounts.id2array', $uri_parts[2]);
+			$acct_info = execMethod('communik8r.boaccounts.id2array', $data['acct_id']);
 			$socache = createObject('communik8r.socache_email', $acct_info);
-			$msg = $socache->get_msg($uri_parts[4]);
+			$msg = $socache->get_msg($data['msg_id']);
 
 			//error_log(print_r($msg, True));
 
@@ -631,12 +631,12 @@
 
 			$body = $xml->createElement('communik8r:body');
 			$this->_decode_body($msg->body, $msg->body_meta);
-			$body->appendChild( $xml->create_cdata_section( $msg->body . "\n\n" ) );
+			$body->appendChild( $xml->createCDATASection( $msg->body . "\n\n" ) );
 
 			$parts = $xml->createElement('communik8r:parts');
 			if ( isset($msg->parts) && count($msg->parts) != 1 ) // we don't need it if it is only the body
 			{
-				//$body->appendChild( $xml->create_cdata_section( print_r($msg->parts, True) ) );
+				//$body->appendChild( $xml->createCDATASection( print_r($msg->parts, True) ) );
 				foreach ( $msg->parts as $part_no => $part )
 				{
 					if ( $part_no == 1 )
@@ -648,7 +648,7 @@
 					$prt->setAttribute('mimetype', $part['typestring']);
 					$prt->setAttribute('inline', ($this->_is_inline($part['typestring']) ? 'true' : 'false') );
 					$prt->setAttribute('size', $this->_int2human($part['size']) );
-					$prt->appendChild( $xml->create_cdata_section($part['name']) );
+					$prt->appendChild( $xml->createCDATASection($part['name']) );
 					$prt->setAttribute('icon', $this->mime2icon($part['typestring']) );
 					$parts->appendChild($prt);
 				}

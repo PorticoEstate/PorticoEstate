@@ -21,7 +21,7 @@
 	/**
 	 * @see Message
 	 */
-	include_once(PHPGW_APP_INC . SEP . 'class.mime.inc.php');
+	include_once(PHPGW_APP_INC . '/class.mime.inc.php');
 //	phpgw::import_class('communik8r.mime');
 
 	/**
@@ -2930,14 +2930,19 @@
 			{
 				$reply_key = "* $id";
 
-				$key = "ftch" . $c++ . ' ';
+	//	$key="ftch".($c++)." ";
+	//	$request=$key."FETCH $id (BODY.PEEK[$part])\r\n";
+ 
+				$key = "ftch" . $c++;
 				$request = "{$key} UID FETCH {$id} (BODY.PEEK[$part])\r\n";
-
+	//			$request = "{$key} FETCH {$id} (BODY.PEEK[$part])\r\n";
 				if (!fputs($this->conn->fp, $request))
 				{
 					return false;
 				}
 
+//_debug_array($request);
+//_debug_array(rtrim($this->read_line(10000)));die();
 				do{
 					$line = rtrim($this->read_line(1000));
 					$a = explode(' ', $line);

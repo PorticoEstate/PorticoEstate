@@ -51,7 +51,7 @@
 							$this->edit_account($data);
 							break;
 					default:
-							die('<phpgw:response><phpgw:error>invalid request - received ' . count($uri_parts) . ' elements</phpgw:error></phpgw:response>');
+							die('<phpgw:response><phpgw:error>invalid request - received: ' . print_r($data) . ' </phpgw:error></phpgw:response>');
 							//invalid request
 					}
 					break;
@@ -235,32 +235,27 @@
 
 				if ( $inc_mailboxes && $account['handler'] == 'email' )
 				{
-				//	$acct->appendChild(ExecMethod('communik8r.boemail.get_mailboxes', $account));	
-				//	$acct->appendChild($node);
 //----------------
 					if ( is_string($account) )
 					{
-				//		$account = execMethod('communik8r.boaccounts.name2array', $account);
 						$account = $this->name2array($account);
 					}
 					$socache = createObject('communik8r.socache_email', $account);
 
-					$elm = $xml->createElement('dummy');
-
-					$mboxs = $socache->get_mailboxes();
-					if($mboxs)
+					if ( $socache->mail->is_connected() )
 					{
-						$boemail = createObject('communik8r.boemail');
+						$mboxs = $socache->get_mailboxes();
 
-						foreach( $mboxs as $mbox => $info)
+						if($mboxs)
 						{
-							$elm = $boemail->_mbox2xml($xml, $mbox, $info );
-							$acct->appendChild($elm);
+							$boemail = createObject('communik8r.boemail');
+
+							foreach( $mboxs as $mbox => $info)
+							{
+								$elm = $boemail->_mbox2xml($xml, $mbox, $info );
+								$acct->appendChild($elm);
+							}
 						}
-					}
-					else
-					{
-						$acct->appendChild($elm);					
 					}
 //-------------------
 				}
