@@ -220,7 +220,7 @@ function array_minus($a, $b)
 			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
-			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids)));
+			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
 			$resources = $resources['results'];
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, $resources);
