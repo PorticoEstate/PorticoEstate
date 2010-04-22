@@ -6,7 +6,7 @@ phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.socomposite');
 phpgw::import_class('rental.soparty');
 
-class frontend_uicontract extends frontend_uifrontend
+class frontend_uicontract_in extends frontend_uifrontend
 {
 
 	public $public_functions = array(
