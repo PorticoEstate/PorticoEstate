@@ -25,6 +25,8 @@
 					           	</xsl:for-each>
 				           	</xsl:otherwise>
 				       </xsl:choose>
+				       <br/>
+				       * <xsl:value-of select="php:function('lang', 'contracts_not_included_in_totals')"/>
 			        </form>
 	 			</div>
 	 		</div>

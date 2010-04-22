@@ -19,8 +19,8 @@
 			<div id="area_and_price">
 				<ul>
 					<li ><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'number_of_units')"/>: <xsl:value-of select="number_of_locations"/> </li>
-    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area')"/>: <xsl:value-of select="total_area"/></li>
-    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="total_area"/></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="total_price"/></li>
     			</ul>
 			</div>
 			<div id="org_units">
@@ -118,8 +118,8 @@
 				<div id="area_and_price" style="margin-top: 2em;">
 				<ul>
 					<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; "><em><img src="frontend/templates/base/images/16x16/house.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'chosen_unit')"/>:</li>
-    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area')"/>: <xsl:value-of select="selected_total_area"/></li>
-    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="selected_total_price"/></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/shading.png"  class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_area_internal')"/>: <xsl:value-of select="selected_total_area"/></li>
+    				<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price_internal')"/>: <xsl:value-of select="selected_total_price"/></li>
     			</ul>
 				</div>
 			</td>

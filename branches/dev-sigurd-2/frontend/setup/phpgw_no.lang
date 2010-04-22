@@ -48,8 +48,11 @@ folder	frontend	no	Brosjyre
 number_of_units	frontend	no	Antall bygg
 total_area	frontend	no	Totalt areal
 total_price	frontend	no	Total pris
+total_area_internal	frontend	no	Totalt areal (internleie)
+toral_price_internal	frontend	no	Total pris (internleie)
 square_meters	frontend	no	kvm
 currency	frontend	no	kr
+contracts_not_included_in_totals	frontend	no	Innleiekontrakter er ikke tatt med i totalt areal og pris
 organisational_units	frontend	no	Resultatenheter
 all_organisational_units	frontend	no	Alle enheter
 chosen_unit	frontend	no	Valgt bygg
@@ -71,5 +74,5 @@ contract_type_internleie_andre	frontend	no	Andre
 contract_type_investeringskontrakt	frontend	no	Investeringskontrakt
 contract_type	frontend	no	Kontrakttype
 no_end_date	frontend	no	Ingen
-no_contracts	frontend	no	Ingen kontrakter på dette bygget
+no_contracts	frontend	no	Ingen kontrakter
 no_contract_details	frontend	no	Ingen konktraktsdetaljer tilgjengelig
