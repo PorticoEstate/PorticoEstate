@@ -216,6 +216,7 @@
 				}
 
 				phpgwapi_cache::user_set('frontend','contract_state',null, $GLOBALS['phpgw_info']['user']['account_id']);
+				phpgwapi_cache::user_set('frontend','contract_state_in',null, $GLOBALS['phpgw_info']['user']['account_id']);
 			}
 			
 			/* Store the header state on the session*/
