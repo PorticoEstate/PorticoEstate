@@ -65,7 +65,7 @@
 			break;
 
 		case 'buttons':
-			ExecMethod('communik8r.bobase.buttons', $uri_parts);
+			ExecMethod('communik8r.bobase.buttons');
 			break;
 
 		case 'contacts':

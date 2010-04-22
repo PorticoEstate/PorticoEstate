@@ -725,12 +725,13 @@
 		 *
 		 * @param array $uri_parts the exploded request uri
 		 */
-		function get_summary($data)//($uri_parts)
+		function get_summary($data)
 		{
 		//	trigger_error('boemail::get_summary(' . print_r($data, true) . ') called');
 			Header('Content-Type: text/xml');
 			$acct_info = execMethod('communik8r.boaccounts.id2array', $data['acct_id']);
 			$socache = createObject('communik8r.socache_email', $acct_info);
+
 			$msgs = $socache->get_msg_list($data['mbox_name']);
 
 			$xml = new DOMDocument('1.0', 'utf-8');

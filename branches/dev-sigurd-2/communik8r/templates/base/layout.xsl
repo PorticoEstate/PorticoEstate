@@ -64,8 +64,8 @@
 					<div class="hilite">[communik8r]</div>
 					<span>Loading, please wait ....</span>
 					<object width="48" height="48">
-						<param name="movie" value="templates/default/images/c8.swf" />
-						<embed src="templates/default/images/c8.swf" width="48" height="48" />
+						<param name="movie" value="templates/base/images/c8.swf" />
+						<embed src="templates/base/images/c8.swf" width="48" height="48" />
 					</object>
 				</div>
 			</body>

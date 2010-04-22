@@ -208,7 +208,7 @@ function Summary(strTargetID)
 			var oXSLTProc = new XSLTProcessor();
 			oXSLTProc.importStylesheet(self.oXSLDoc);
 			oApplication.showLoading();
-
+//alert(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2]);
 			Sarissa.updateContentFromURI(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2],
 							oTarget,
 							oXSLTProc,
@@ -313,6 +313,8 @@ Summary.prototype.loadMessage = function(oTarget)
 */
 Summary.prototype.setList = function( strNewSelection )
 {
+//alert(strNewSelection);
+//alert(strNewSelection.split('_').length);
 	if ( strNewSelection.split('_').length >= 3 ) // is it valid?
 	{
 		this.strCurSelect = strNewSelection;

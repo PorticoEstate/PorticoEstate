@@ -29,7 +29,7 @@
 		/**
 		 * Get a list of buttons as xml
 		 */
-		function buttons($uri_parts)
+		function buttons()
 		{
 			$buttons = array();
 			$buttons['new']		= array

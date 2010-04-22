@@ -43,7 +43,7 @@ function Buttons(strHoldingDiv)
 		{
 			var oXSLTProc = new XSLTProcessor();
 			oXSLTProc.importStylesheet(self.oXSLDoc);
-			Sarissa.updateContentFromURI(oApplication.strBaseURL + 'buttons' + oApplication.strGET, self.oDiv, oXSLTProc, self._addListeners());
+			Sarissa.updateContentFromURI(oApplication.strBaseURL + '&section=buttons', self.oDiv, oXSLTProc, self._addListeners());
 		}
 	}
 	this.init();
@@ -221,7 +221,7 @@ Buttons.prototype.load = function()
 	{
 		this.oXSLDoc = Sarissa.getDomDocument();
 		this.oXSLDoc.onreadystatechange = this.transform;
-		this.oXSLDoc.load(oApplication.strBaseURL + 'xsl/buttons');
+		this.oXSLDoc.load(oApplication.strBaseURL + '&section=xsl&name=buttons');
 	}
 }
 

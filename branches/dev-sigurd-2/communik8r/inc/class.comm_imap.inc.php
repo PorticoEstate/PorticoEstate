@@ -680,7 +680,8 @@
 			$this->conn->cache_dirty = array();
 
 			//check for SSL
-			$port = 143;
+		//	$port = 143;
+			$port = $this->acct_info['port'] ? $this->acct_info['port'] : 143;
 			$host = $this->conn->host;
 			if ( $this->acct_info['tls'] ) 
 			{
@@ -1012,6 +1013,7 @@
 					}
 				} while( substr($line, 0, 2 + strlen($i)) != "mp{$i}" );
 				++$i;
+
 			}
 			return $result;
 		}
@@ -1998,6 +2000,7 @@
 
 			do{
 				$line = rtrim($this->read_line(200));
+
 				$a = explode(" ", $line);
 				if ( $line[0] == '*' && $a[2] == 'FETCH' )
 				{
@@ -2015,6 +2018,7 @@
 					 */
 					$i = 0;
 					$lines = array();
+
 					do{
 						$line = rtrim($this->read_line(300), "\r\n");
 						if ( ord($line[0]) <= 32)
@@ -2026,9 +2030,10 @@
 							$i++;
 							$lines[$i] = trim($line);
 						}
-					} while ($line[0] != ')');
+		//			} while ($line[0] != ')');
+					} while ($line[0] != ')' && $line);
 
-					/* This is crap which does nothing
+					/* This does nothing
 					//process header, fill imap_basic_header obj.
 					//	initialize
 					if ( is_array($headers) )

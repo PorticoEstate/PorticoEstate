@@ -422,6 +422,7 @@
 		function get_msg_list($mbox)
 		{
 			trigger_error("socache_email::get_msg_list({$mbox}) called");
+
 			$this->_update($mbox);
 
 			$msgs = array();
