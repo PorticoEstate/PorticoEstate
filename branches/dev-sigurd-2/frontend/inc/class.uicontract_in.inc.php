@@ -75,24 +75,24 @@ class frontend_uicontract_in extends frontend_uifrontend
 		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{
 			$contracts_for_selection[] = $contract->serialize();
-		}
-		
-		$parties =  $this->contract_state['contract']->get_parties();
-		$party_array = array();
-		foreach($parties as $party)
-		{
-			$party_array[] = rental_soparty::get_instance()->get_single($party->get_id())->serialize();
-		}
-		
-		$composites = $this->contract_state['contract']->get_composites();
-		$composite_array = array();
-		foreach($composites as $composite)
-		{
-			$composite_array[] = rental_socomposite::get_instance()->get_single($composite->get_id())->serialize();
-		}
+		}	
 		
 		if(isset($this->contract_state['contract']))
 		{
+			$parties =  $this->contract_state['contract']->get_parties();
+			$party_array = array();
+			foreach($parties as $party)
+			{
+				$party_array[] = rental_soparty::get_instance()->get_single($party->get_id())->serialize();
+			}
+			
+			$composites = $this->contract_state['contract']->get_composites();
+			$composite_array = array();
+			foreach($composites as $composite)
+			{
+				$composite_array[] = rental_socomposite::get_instance()->get_single($composite->get_id())->serialize();
+			}
+			
 			$this->contract_state['contract']->set_total_price(number_format($this->contract_state['contract']->get_total_price(),2,","," ")." ".lang('currency'));
 			$this->contract_state['contract']->set_rented_area(number_format($this->contract_state['contract']->get_rented_area(),2,","," ")." ".lang('square_meters'));
 		}
@@ -104,7 +104,7 @@ class frontend_uicontract_in extends frontend_uifrontend
 			'contract_data' => 	array (
 				'select' => $contracts_for_selection, 
 				'selected_contract' =>  $this->contract_state['selected'], 
-				'contract'	=> $this->contract_state['contract']->serialize(),
+				'contract'	=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
 				'party'	=> $party_array,
 				'composite' => $composite_array
 			)
