@@ -36,3 +36,9 @@
 			return $GLOBALS['setup_info']['frontend']['currentver'];
 		}
 	}
+	
+	$test[] = '0.2';
+	function frontend_upgrade0_2()
+	{
+		$GLOBALS['phpgw']->locations->add('.rental.contract(in)','contract(in)','frontend', false);
+	}
