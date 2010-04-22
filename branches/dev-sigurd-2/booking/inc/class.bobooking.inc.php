@@ -1,4 +1,4 @@
-	<?php
+<?php
 	phpgw::import_class('booking.bocommon_authorized');
 	
 	require_once "schedule.php";
