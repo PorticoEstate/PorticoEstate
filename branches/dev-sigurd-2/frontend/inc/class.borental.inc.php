@@ -27,6 +27,12 @@
     		return $contracts_per_location[$location_code][0];
     	}
     	
+   		public static function get_first_contract_in_per_location($location_code)
+    	{
+    		$contracts_in_per_location = phpgwapi_cache::user_get('frontend', 'contracts_in_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+    		return $contracts_in_per_location[$location_code][0];
+    	}
+    	
         /**
          *
          * @param integer $org_unit_ids

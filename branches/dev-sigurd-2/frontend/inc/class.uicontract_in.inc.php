@@ -43,7 +43,7 @@ class frontend_uicontract_in extends frontend_uifrontend
 		if(!isset($this->contract_state))
 		{
 			//... retrieve the first contract bound to the location (e.g. building)
-			$contract = frontend_borental::get_first_contract_per_location($this->header_state['selected_location']);
+			$contract = frontend_borental::get_first_contract_in_per_location($this->header_state['selected_location']);
 			if(is_object($contract))
 			{
 				//... and set this contract as selected
