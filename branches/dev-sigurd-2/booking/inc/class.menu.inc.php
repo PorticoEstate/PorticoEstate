@@ -25,7 +25,7 @@
 				(
 					'text'	=> lang('Dashboard'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidashboard.index') ),
-				                    'image'	=> array('property', 'location'),
+					'image'	=> array('property', 'location'),
 				),
 				// 'applications' => array
 				// (
@@ -37,25 +37,25 @@
 				(
 					'text'	=> lang('Applications'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiapplication.index') ),
-                    'image'	=> array('property', 'location'),
+                    'image'	=> array('property', 'project_request'),
 					'children' => array(
 						'allocations' => array
 						(
 							'text'	=> lang('Allocations'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiallocation.index') ),
-						                    'image'	=> array('property', 'location'),
+							'image'	=> array('property', 'project_request'),
 						),
 						'bookings' => array
 						(
 							'text'	=> lang('Bookings'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibooking.index') ),
-						                    'image'	=> array('property', 'location'),
+							'image'	=> array('property', 'project_request'),
 						),
 						'events' => array
 						(
 							'text'	=> lang('Events'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uievent.index') ),
-						                    'image'	=> array('property', 'location'),
+							'image'	=> array('property', 'project_request'),
 						),
 					)
 				),
@@ -63,7 +63,7 @@
 				(
 					'text'	=> lang('Buildings'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uibuilding.index') ),
-                    'image'	=> array('property', 'location'),
+                    'image'	=> array('property', 'location_1'),
 					'children' => array
 					(
 						'documents' => array
@@ -76,6 +76,7 @@
 						(
 							'text'	=> lang('Permissions'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_building.index') ),
+		                    'image'	=> array('property', 'agreement'),
 						),
 						'resources' => array
 						(
@@ -94,6 +95,7 @@
 								(
 									'text'	=> lang('Permissions'),
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_resource.index') ),
+									'image'	=> array('property', 'agreement'),
 								),
 							)
 						),
@@ -101,13 +103,14 @@
 						(
 							'text'	=> lang('Seasons'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiseason.index') ),
-		                    'image'	=> array('property', 'location'),
+		                    'image'	=> array('property', 'location_gabnr'),
 							'children' => array
 							(
 								'permissions' => array
 								(
 									'text'	=> lang('Permissions'),
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uipermission_season.index') ),
+									'image'	=> array('property', 'agreement'),
 								),
 							),
 						),
@@ -123,14 +126,14 @@
 				(
 					'text'	=> lang('Organizations'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiorganization.index') ),
-                    'image'	=> array('property', 'location'),
+                    'image'	=> array('property', 'location_tenant'),
 					'children' => array
 					(
 						'groups' => array
 						(
 							'text'	=> lang('Groups'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uigroup.index') ),
-		                    'image'	=> array('property', 'location'),
+		                    'image'	=> array('property', 'location_tenant'),
 						)
 					)
 				),
@@ -145,26 +148,26 @@
 				(
 					'text'	=> lang('Invoice Data Exports'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index')),
-					'image'	=> array('property', 'location'),
+					'image'	=> array('property', 'invoice'),
 					'children' => array
 					(
 						'completed_reservations' => array
 						(
 							'text'	=> lang('Completed'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation.index') ),
-							'image'	=> array('property', 'location'),
+							'image'	=> array('property', 'invoice'),
 						),
 						'exported_files' => array
 						(
 							'text'	=> lang('Exported Files'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export.index')),
-							'image'	=> array('property', 'location'),
+							'image'	=> array('property', 'invoice'),
 						),
 						'generated_files' => array
 						(
 							'text'	=> lang('Generated Files'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uicompleted_reservation_export_file.index')),
-							'image'	=> array('property', 'location'),
+							'image'	=> array('property', 'invoice'),
 						)
 					)
 				),
@@ -173,27 +176,27 @@
 				(
 					'text'	=> lang('Send e-mail'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uisend_email.index')),
-					'image'	=> array('property', 'location'),
+					'image'	=> array('property', 'helpdesk'),
 				),
 
                 'reportcenter' => array
                 (   
                     'text'  => lang('Reports'),
                     'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.index') ),
-                    'image' => array('property', 'location'),
+                    'image' => array('property', 'report'),
                     'children' => array
                     (   
                         'participants' => array
                         (
                             'text'  => lang('Participants'),
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.participants') ),
-							'image' => array('property', 'location'),
+							'image' => array('property', 'report'),
                         ),
                         'free_time' => array
                         (
                             'text'  => lang('Free time'),
                             'url'   => $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uireports.freetime') ),
-							'image' => array('property', 'location'),
+							'image' => array('property', 'report'),
                         )
                     )       
                 ),      
