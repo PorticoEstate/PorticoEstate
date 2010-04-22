@@ -32,7 +32,7 @@ class frontend_uicontract_in extends frontend_uifrontend
 			'contract_data' => 	array (
 				'select' => $contracts_for_selection, 
 				'selected_contract' =>  $this->contract_state['selected'], 
-				'contract'	=> $this->contract_state['contract']->serialize(),
+				'contract'	=> null,//$this->contract_state['contract']->serialize(),
 				'party'	=> $party_array,
 				'composite' => $composite_array
 			)
