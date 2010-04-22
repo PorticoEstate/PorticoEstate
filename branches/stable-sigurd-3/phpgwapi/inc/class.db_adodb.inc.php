@@ -116,18 +116,48 @@
 				$type = 'mysqlt';
 			}
 			$this->adodb = newADOConnection($this->Type);
-			if(	$this->fetchmode != 'ASSOC')
+
+			if($this->fetchmode == 'ASSOC')
 			{
-				$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
-			}
-			if(isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'])
-			{
-				return @$this->adodb->PConnect($this->Host, $this->User, $this->Password, $this->Database);	
+				$this->adodb->SetFetchMode(ADODB_FETCH_ASSOC);
 			}
 			else
 			{
-				return @$this->adodb->Connect($this->Host, $this->User, $this->Password, $this->Database);
+				$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			}
+
+			if(isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'])
+			{
+				try
+				{
+					$ret = $this->adodb->PConnect($this->Host, $this->User, $this->Password, $this->Database);
+				}
+				catch(Exception $e){}
+			}
+			else
+			{
+				try
+				{
+					$ret = $this->adodb->Connect($this->Host, $this->User, $this->Password, $this->Database);
+				}
+				catch(Exception $e){}
+			}
+
+			if ( isset($e) && $e )
+			{
+				if($this->debug)
+				{
+					$message = $e->getMessage();
+				}
+				else
+				{
+					$message = 'could not connect to server';
+				}
+
+				throw new Exception($message);
+				return false;
+			}
+			return $ret;
 		}
 
 		/**

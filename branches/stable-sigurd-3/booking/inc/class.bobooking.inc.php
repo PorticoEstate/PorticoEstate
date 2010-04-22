@@ -220,7 +220,7 @@ function array_minus($a, $b)
 			$resource_ids = $this->so->resource_ids_for_bookings($booking_ids);
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
-			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids)));
+			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
 			$resources = $resources['results'];
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, $resources);
@@ -400,9 +400,9 @@ function array_minus($a, $b)
 				$keep = true;
 				foreach($events as &$e)
 				{
-					if(($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
+					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
 					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
-					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_']))
+					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
 					{
 						$keep = false;
 						$e['conflicts'][] = $b;

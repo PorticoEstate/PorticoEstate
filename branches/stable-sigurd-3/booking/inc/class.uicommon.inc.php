@@ -52,9 +52,19 @@
 			$date = $date[0]->nodeValue;
 		}
 		preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
-		$text = "{$match[3]}.{$match[2]}.{$match[1]}";
-		if($match[4])
-			$text .= " {$match[5]}:{$match[6]}";
+
+		$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+		if($match[4]) 
+		{
+			$dateformat .= ' H:i';
+			$timestamp = mktime($match[5], $match[6], 0, $match[2], $match[3], $match[1]);
+		}
+		else
+		{
+			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
+		}
+		$text = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
+
 		return $text;
 	}
 

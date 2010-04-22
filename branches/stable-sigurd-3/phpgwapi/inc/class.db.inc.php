@@ -139,7 +139,14 @@
 			
 			if( !$delay_connect )
 			{
-				$this->connect();
+				try
+				{
+					$this->connect();
+				}
+				catch(Exception $e)
+				{
+					throw $e;
+				}
 			}
 
 			if ( !is_null($query) )

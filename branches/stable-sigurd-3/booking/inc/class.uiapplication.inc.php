@@ -417,6 +417,12 @@
 				$application = array_merge($application, extract_values($_POST, $this->fields));
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
+
+				if ($application['frontend_modified'] == '')
+				{
+					unset($application['frontend_modified']);
+				}
+
 				$errors = $this->validate($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				if(!$errors)
