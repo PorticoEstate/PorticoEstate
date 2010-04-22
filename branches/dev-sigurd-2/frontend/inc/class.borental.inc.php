@@ -39,6 +39,10 @@
         	$total_price_all_buildings = 0;
         	$total_rented_area_all_builings = 0;
         	
+        	$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$location_id_internal = array_search('contract_type_internleie', $types);
+        	$location_id_in = array_search('contract_type_innleie', $types);
+        	
         	foreach($org_unit_ids as $org_unit_id){
         		/*
              * 1. hent alle kontraktsparter som har org unit id (foreløpig bruker vi result_unit_number i rentalparty)
@@ -82,16 +86,30 @@
 			        			$property_location = $unit->get_location();
 			        			$property_locations[$property_location->get_location_code()] = $property_location;
 			        			
-			        			if(!is_array($contracts_per_location[$property_location->get_location_code()]))
-			        			{
-			        				$contracts_per_location[$property_location->get_location_code()] = array();	
-			        			}
-			        			array_push($contracts_per_location[$property_location->get_location_code()], $contract);
+			        			// Contract holders: contracts_per_location (internal) and contracts_in_per_location (in)
 			        			
-			        			if($contract->is_active())
+			        			// Internal contract should have impact on total price
+			        			if($contract->get_location_id() == $location_id_internal)
 			        			{
-			        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
-			        				$rented_price_per_location[$property_location->get_location_code()] += rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+			        				if(!is_array($contracts_per_location[$property_location->get_location_code()]))
+				        			{
+				        				$contracts_per_location[$property_location->get_location_code()] = array();	
+				        			}
+				        			array_push($contracts_per_location[$property_location->get_location_code()], $contract);
+				        			
+				        			if($contract->is_active())
+				        			{
+				        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
+				        				$rented_price_per_location[$property_location->get_location_code()] += rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+				        			}
+			        			}
+			        			else if($contract->get_location_id() == $location_id_in)
+			        			{
+			        				if(!is_array($contracts_in_per_location[$property_location->get_location_code()]))
+				        			{
+				        				$contracts_in_per_location[$property_location->get_location_code()] = array();	
+				        			}
+				        			array_push($contracts_in_per_location[$property_location->get_location_code()], $contract);
 			        			}
 			        		}        		
 			        	}
@@ -102,6 +120,7 @@
         	
         	
         	phpgwapi_cache::user_set('frontend', 'contracts_per_location', $contracts_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
+        	phpgwapi_cache::user_set('frontend', 'contracts_in_per_location', $contracts_in_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
         	phpgwapi_cache::user_set('frontend', 'rented_area_per_location', $rented_area_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
         	phpgwapi_cache::user_set('frontend', 'total_price_per_location', $rented_price_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
         	
