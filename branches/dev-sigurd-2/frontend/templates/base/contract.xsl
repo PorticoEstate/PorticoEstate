@@ -8,7 +8,7 @@
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
 			           <xsl:copy-of select="."/>
 			            <xsl:choose>
-			           		<xsl:when test="select/not(node())">
+			           		<xsl:when test="not(normalize-space(select))">
 			           			 <xsl:value-of select="php:function('lang', 'no contract')"/>: 
 			           		</xsl:when>
 			           		<xsl:otherwise>
