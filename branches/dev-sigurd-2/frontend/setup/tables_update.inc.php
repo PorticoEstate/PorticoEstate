@@ -40,5 +40,5 @@
 	$test[] = '0.2';
 	function frontend_upgrade0_2()
 	{
-		$GLOBALS['phpgw']->locations->add('.rental.contract(in)','contract(in)','frontend', false);
+		$GLOBALS['phpgw']->locations->add('.rental.contract_in','contract_in','frontend', false);
 	}
