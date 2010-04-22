@@ -35,19 +35,30 @@
 			$this->log_off();
 			$this->orgnr = $this->get_user_orgnr_from_auth_header();
 
+/*
 			try 
 			{
-				createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($orgnr);
+				createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($this->orgnr);
 			}
 			catch (sfValidatorError $e)
 			{
 //				return null;
 			}
-
+*/
 			if ($this->is_logged_in())
 			{
 				$this->write_user_orgnr_to_session();
 			}
+
+			if($this->debug)
+			{
+				echo 'is_logged_in():<br>';
+				_debug_array($this->is_logged_in());
+				echo 'Session:<br>';
+				_debug_array($_SESSION);
+				die();
+			}
+
 			return $this->is_logged_in();
 		}
 		
@@ -187,12 +198,13 @@
 			require_once PHPGW_SERVER_ROOT."/bookingfrontend/inc/custom/default/{$authentication_method}";
 			
 			$external_user = new booking_external_user($wsdl, $options, $userid, $this->debug);
+			// test values
+			//$external_user = (object) 'ciao'; $external_user->login = 994239929;
 
 			if($this->debug)
 			{
 				echo 'External user:<br>';
 				_debug_array($external_user);
-				die();
 			}
 			try
 			{
