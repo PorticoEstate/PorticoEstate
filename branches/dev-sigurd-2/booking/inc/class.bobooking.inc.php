@@ -1,4 +1,4 @@
-<?php
+	<?php
 	phpgw::import_class('booking.bocommon_authorized');
 	
 	require_once "schedule.php";
@@ -402,7 +402,7 @@ function array_minus($a, $b)
 				{
 					if((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) || 
 					   ($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) || 
-					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && ($b['resources'][0] == $e['resources'][0]))
+					   ($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
 					{
 						$keep = false;
 						$e['conflicts'][] = $b;
