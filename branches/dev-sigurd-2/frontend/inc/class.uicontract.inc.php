@@ -104,7 +104,7 @@ class frontend_uicontract extends frontend_uifrontend
 			'contract_data' => 	array (
 				'select' => $contracts_for_selection, 
 				'selected_contract' =>  $this->contract_state['selected'], 
-				'contract'	=> $this->contract_state['contract']->serialize(),
+				'contract'	=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
 				'party'	=> $party_array,
 				'composite' => $composite_array
 			)
