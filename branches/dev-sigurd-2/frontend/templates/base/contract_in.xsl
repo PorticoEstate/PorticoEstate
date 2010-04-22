@@ -6,18 +6,25 @@
             	<div id="contract_selector">
 			       <form action="index.php?menuaction=frontend.uicontract.index" method="post">
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
-			           <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
-			           	<xsl:for-each select="select">
-			           		<xsl:choose>
-				           		<xsl:when test="id = //selected_contract">
-			           				<input name="contract_id" type="radio" value="{id}" checked="" onchange="this.form.submit();"></input> 
-			           			</xsl:when>
-			           			<xsl:otherwise>
-			           				<input name="contract_id" type="radio" value="{id}" onchange="this.form.submit();"></input>
-			           			</xsl:otherwise>
-			           		</xsl:choose>
-			           		<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
-			           	</xsl:for-each>
+			           <xsl:choose>
+			           		<xsl:when test="count(select) = 0">
+			           			 <xsl:value-of select="php:function('lang', 'no contract')"/>: 
+			           		</xsl:when>
+			           		<xsl:otherwise>
+					           <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
+					           <xsl:for-each select="select">
+					           		<xsl:choose>
+						           		<xsl:when test="id = //selected_contract">
+					           				<input name="contract_id" type="radio" value="{id}" checked="" onchange="this.form.submit();"></input> 
+					           			</xsl:when>
+					           			<xsl:otherwise>
+					           				<input name="contract_id" type="radio" value="{id}" onchange="this.form.submit();"></input>
+					           			</xsl:otherwise>
+					           		</xsl:choose>
+					           		<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
+					           	</xsl:for-each>
+				           	</xsl:otherwise>
+				       </xsl:choose>
 			        </form>
 	 			</div>
 	 		</div>
