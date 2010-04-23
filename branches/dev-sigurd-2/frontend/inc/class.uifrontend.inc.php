@@ -103,7 +103,7 @@
 						$param_selected_org_unit = 'all';
 					}
 				}
-				
+				var_dump("1");
 				$this->header_state['selected_org_unit'] = $param_selected_org_unit;
 
 				//Update locations according to organisational unit specification
@@ -120,6 +120,7 @@
 				{
 					$this->header_state['selected_location'] = '';
 				}
+				var_dump("2");
 			}
 			/* If the user selects a organisational unit in rental module */
 			else if(isset($param_only_org_unit)) 
@@ -195,6 +196,7 @@
 			/* If the user has selected a location or as a side-effect from selecting organisational unit */
 			if(isset($param_selected_location))
 			{
+				var_dump("3");
 				$locs = $this->header_state['locations'];
 				$exist = false;
 				foreach($locs as $loc)
@@ -217,8 +219,9 @@
 
 				phpgwapi_cache::user_set('frontend','contract_state',null, $GLOBALS['phpgw_info']['user']['account_id']);
 				phpgwapi_cache::user_set('frontend','contract_state_in',null, $GLOBALS['phpgw_info']['user']['account_id']);
+				var_dump("4");
 			}
-			
+			var_dump($this-header_state);
 			/* Store the header state on the session*/
 			phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']);
 	
