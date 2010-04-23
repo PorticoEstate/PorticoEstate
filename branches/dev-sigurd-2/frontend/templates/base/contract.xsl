@@ -70,8 +70,8 @@
 											<em>Kontraktsparter</em>
 										</li>
 										<xsl:for-each select="../party">
-												<li><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
-													<ul style="margin-left: 1em;">
+												<li style="margin-bottom: 5px;"><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
+													<ul style="margin-left: 2em;">
 														<xsl:choose>
 															<xsl:when test="normalize-space(address)">
 																<li><xsl:value-of select="address"/></li>
