@@ -79,8 +79,8 @@ class frontend_uicontract_in extends frontend_uifrontend
 		
 		if(isset($this->contract_state['contract']))
 		{
-			$party_array = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
-		    $composite_array = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
+			//$party_array = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
+		    //$composite_array = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
 			
 			/*$parties =  $this->contract_state['contract']->get_parties();
 			$party_array = array();
