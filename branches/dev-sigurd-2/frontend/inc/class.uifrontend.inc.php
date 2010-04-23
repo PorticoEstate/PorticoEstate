@@ -88,13 +88,13 @@
 				{
 					if($this->org_unit_in_selection($param_selected_org_unit,$this->header_state['org_unit']))
 					{
-						$org_unit_ids = array(
+						/*$org_unit_ids = array(
 							array(
 								"ORG_UNIT_ID" => 1,
 								"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_selected_org_unit),
 								"UNIT_ID" => $param_selected_org_unit
 							)
-						);
+						);*/
 					}
 					else
 					{
@@ -103,7 +103,6 @@
 						$param_selected_org_unit = 'all';
 					}
 				}
-				/*var_dump("1");
 				$this->header_state['selected_org_unit'] = $param_selected_org_unit;
 
 				//Update locations according to organisational unit specification
@@ -120,7 +119,6 @@
 				{
 					$this->header_state['selected_location'] = '';
 				}
-				var_dump("2");*/
 			}
 			/* If the user selects a organisational unit in rental module */
 			else if(isset($param_only_org_unit)) 
