@@ -81,6 +81,9 @@
 															<xsl:value-of select="postal_code"/>&nbsp;
 															<xsl:value-of select="place"/><br/>
 														</xsl:when>
+														<xsl:when test="normalize-space(department)">
+															<xsl:value-of select="department"/>
+														</xsl:when>
 													</xsl:choose>
 												</li>
 										</xsl:for-each>
