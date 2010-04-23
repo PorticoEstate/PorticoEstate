@@ -137,8 +137,7 @@
          */
         public function get_organisational_unit_name($number) {
         	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
-        	var_dump($sql);
-        	/*$db = $this->get_db();
+        	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
         	{
@@ -148,7 +147,7 @@
         	else
         	{
         		return lang('no_name_organisational_unit');
-        	}*/
+        	}
         	//return "No name";
         }
     }
