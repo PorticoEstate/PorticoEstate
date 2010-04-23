@@ -16,7 +16,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
         <div class="yui-content">
             <div class="toolbar-container">
-                <div class="toolbar" style="padding: 5px; float:left;">
+                <div class="toolbar" style="padding: 5px;">
                     <xsl:apply-templates select="datatable/actions" />  
                 </div>
             </div>
