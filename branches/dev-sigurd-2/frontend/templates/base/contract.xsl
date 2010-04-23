@@ -92,7 +92,7 @@
 									</div>
 									<div id="composites">
 										<ul> -->
-										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
+										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; margin-top: 1em; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/layers.png" class="list_image" />
 											<em>Leieobjekt:</em>
 										</li>
