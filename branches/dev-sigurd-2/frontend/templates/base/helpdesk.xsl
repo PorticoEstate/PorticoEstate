@@ -18,7 +18,7 @@
         <div class="yui-content">
             <div class="toolbar-container">
                 <div class="toolbar">
-                 <label style="margin:5px;" class="select_header">
+                 <label style="margin:5px; float:left;" class="select_header">
              <img src="frontend/templates/base/images/32x32/comments.png" class="list_image"/><em class="select_header">Meldinger på valgt enhet</em></label>
                     <xsl:apply-templates select="datatable/actions" />  
                 </div>
