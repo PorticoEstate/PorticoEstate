@@ -109,7 +109,7 @@
 									</div>
 									<div id="comment">
 										<ul>
-											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; padding-right: 1em;" >
+											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;" >
 												<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
 												<em>Kommentar</em>
 											</li>
