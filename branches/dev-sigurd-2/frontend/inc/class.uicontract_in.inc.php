@@ -86,7 +86,7 @@ class frontend_uicontract_in extends frontend_uifrontend
 				$party_array[] = rental_soparty::get_instance()->get_single($party->get_id())->serialize();
 			}
 			
-			$composites = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
+			$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
 			$composite_array = array();
 			foreach($composites as $composite)
 			{

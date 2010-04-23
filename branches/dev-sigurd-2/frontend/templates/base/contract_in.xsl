@@ -54,10 +54,6 @@
 													</xsl:otherwise>
 												</xsl:choose>
 											</li>
-					    				</ul>
-						    		</div>
-									<div id="contract_price_and_area" style="block:right;">
-										<ul>
 											<li><em><img src="frontend/templates/base/images/16x16/shading.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'rented_area')"/>: <xsl:value-of select="rented_area"/></li>	
 											<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/></li>	
 											<li><em><img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'service_id')"/>: <xsl:value-of select="service_id"/></li>	
@@ -69,7 +65,7 @@
 										<ul>
 										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/group.png" class="list_image" />
-											<em>Kontraktsparter:</em>
+											<em>Kontraktsparter</em>
 										</li>
 										<xsl:for-each select="../party">
 												<li><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
@@ -90,13 +86,9 @@
 													</xsl:choose>
 												</li>
 										</xsl:for-each>
-										</ul>
-									</div>
-									<div id="composites">
-										<ul>
-										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
+										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; margin-top: 2em; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/layers.png" class="list_image" />
-											<em>Leieobjekt:</em>
+											<em>Leieobjekt</em>
 										</li>
 										<xsl:for-each select="../composite">
 												<li style="margin-top: 1em;"><em class="bold"><img src="frontend/templates/base/images/16x16/layers.png" class="list_image" /></em> <xsl:value-of select="name" />:</li>
@@ -113,7 +105,7 @@
 										</xsl:for-each>
 										</ul>
 									</div>
-									<div id="comment">
+									<div id="comment" style="margin-right: 10px;">
 										<xsl:choose>
 											<xsl:when test="publish_comment">
 												<xsl:value-of select="comment" disable-output-escaping="yes"/>
