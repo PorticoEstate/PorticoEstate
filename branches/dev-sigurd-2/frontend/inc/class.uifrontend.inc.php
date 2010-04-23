@@ -78,7 +78,7 @@
 			
 			/* If the user has selected an organisational unit or all units */
 			if(isset($param_selected_org_unit))
-			{
+			{/*
 				//Specify which unit(s)
 				if($param_selected_org_unit == 'all')
 				{
@@ -120,7 +120,7 @@
 				{
 					$this->header_state['selected_location'] = '';
 				}
-				var_dump("2");
+				var_dump("2");*/
 			}
 			/* If the user selects a organisational unit in rental module */
 			else if(isset($param_only_org_unit)) 
