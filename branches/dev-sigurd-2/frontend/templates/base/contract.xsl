@@ -71,20 +71,22 @@
 										</li>
 										<xsl:for-each select="../party">
 												<li><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
-													<xsl:choose>
-														<xsl:when test="normalize-space(address)">
-															<xsl:value-of select="address"/>
-														</xsl:when>
-														<xsl:when test="normalize-space(address1)">
-															<xsl:value-of select="address1"/><br/>
-															<xsl:value-of select="address2"/><br/>
-															<xsl:value-of select="postal_code"/>&nbsp;
-															<xsl:value-of select="place"/><br/>
-														</xsl:when>
-														<xsl:when test="normalize-space(department)">
-															<xsl:value-of select="department"/>
-														</xsl:when>
-													</xsl:choose>
+													<ul style="margin-left: 1em;">
+														<xsl:choose>
+															<xsl:when test="normalize-space(address)">
+																<li><xsl:value-of select="address"/></li>
+															</xsl:when>
+															<xsl:when test="normalize-space(address1)">
+																<li><xsl:value-of select="address1"/><br/>
+																<xsl:value-of select="address2"/><br/>
+																<xsl:value-of select="postal_code"/>&nbsp;
+																<xsl:value-of select="place"/></li>
+															</xsl:when>
+															<xsl:when test="normalize-space(department)">
+																<li><xsl:value-of select="department"/></li>
+															</xsl:when>
+														</xsl:choose>
+													</ul>
 												</li>
 										</xsl:for-each>
 										<!-- </ul>
