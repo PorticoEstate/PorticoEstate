@@ -78,23 +78,20 @@ class frontend_uicontract_in extends frontend_uifrontend
 		}	
 		
 		if(isset($this->contract_state['contract']))
-		{
-			//$party_array = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
-		    //$composite_array = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
-			
-			/*$parties =  $this->contract_state['contract']->get_parties();
+		{	
+			$parties =  rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
 			$party_array = array();
 			foreach($parties as $party)
 			{
 				$party_array[] = rental_soparty::get_instance()->get_single($party->get_id())->serialize();
 			}
 			
-			$composites = $this->contract_state['contract']->get_composites();
+			$composites = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
 			$composite_array = array();
 			foreach($composites as $composite)
 			{
 				$composite_array[] = rental_socomposite::get_instance()->get_single($composite->get_id())->serialize();
-			}*/
+			}
 			
 			$this->contract_state['contract']->set_total_price(number_format($this->contract_state['contract']->get_total_price(),2,","," ")." ".lang('currency'));
 			$this->contract_state['contract']->set_rented_area(number_format($this->contract_state['contract']->get_rented_area(),2,","," ")." ".lang('square_meters'));
