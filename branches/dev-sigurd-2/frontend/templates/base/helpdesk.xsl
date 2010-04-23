@@ -1,5 +1,4 @@
 <!-- $Id$ -->
-
 <xsl:template match="helpdesk" xmlns:php="http://php.net/xsl">
     <table cellpadding="2" cellspacing="2" width="95%" align="center">
         <xsl:choose>
@@ -18,7 +17,8 @@
         <div class="yui-content">
             <div class="toolbar-container">
                 <div class="toolbar" style="padding: 5px;">
-            		<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>Meldinger på valgt enhet
+            		<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>
+            		Meldinger på valgt enhet
                     <xsl:apply-templates select="datatable/actions" />  
                 </div>
             </div>
