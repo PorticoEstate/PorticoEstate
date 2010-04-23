@@ -52,10 +52,10 @@
 													</xsl:otherwise>
 												</xsl:choose>
 											</li>
-					    				</ul>
+					    				<!-- </ul>
 						    		</div>
 									<div id="contract_price_and_area" style="block:right;">
-										<ul>
+										<ul> -->
 											<li><em><img src="frontend/templates/base/images/16x16/shading.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'rented_area')"/>: <xsl:value-of select="rented_area"/></li>	
 											<li><em><img src="frontend/templates/base/images/16x16/coins.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'total_price')"/>: <xsl:value-of select="total_price"/></li>	
 											<li><em><img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'service_id')"/>: <xsl:value-of select="service_id"/></li>	
@@ -88,10 +88,10 @@
 													</xsl:choose>
 												</li>
 										</xsl:for-each>
-										</ul>
+										<!-- </ul>
 									</div>
 									<div id="composites">
-										<ul>
+										<ul> -->
 										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/layers.png" class="list_image" />
 											<em>Leieobjekt:</em>
