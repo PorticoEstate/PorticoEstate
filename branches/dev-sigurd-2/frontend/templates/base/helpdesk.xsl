@@ -18,14 +18,13 @@
         <div class="yui-content">
             <div class="toolbar-container">
                 <div class="toolbar" style="padding: 5px;">
-             <img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>Meldinger på valgt enhet
+            		<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>Meldinger på valgt enhet
                     <xsl:apply-templates select="datatable/actions" />  
                 </div>
             </div>
             <div class="tickets">
-            <xsl:apply-templates select="datatable" />
+            	<xsl:apply-templates select="datatable" />
             </div>
-           
         </div>
     </div>
 

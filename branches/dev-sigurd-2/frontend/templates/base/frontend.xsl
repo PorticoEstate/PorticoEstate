@@ -126,7 +126,7 @@
 			<td>
 				<br/>
 				<div id="unit_image">
-					<img src="index.php?menuaction=frontend.uifrontend.objectimg&amp;loc_code={selected}" alt="" />
+					<img src="index.php?menuaction=frontend.uifrontend.objectimg&amp;loc_code={//header/selected_location}" alt="" />
 				</div>
 			</td>
 		</tr>
