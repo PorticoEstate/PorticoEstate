@@ -67,7 +67,7 @@
 										<ul>
 										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/group.png" class="list_image" />
-											<em>Kontraktsparter:</em>
+											<em>Kontraktsparter</em>
 										</li>
 										<xsl:for-each select="../party">
 												<li><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
@@ -90,11 +90,11 @@
 										<ul> -->
 										<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; margin-top: 1em; padding-bottom: 5px;" >
 											<img src="frontend/templates/base/images/16x16/layers.png" class="list_image" />
-											<em>Leieobjekt:</em>
+											<em>Leieobjekt</em>
 										</li>
 										<xsl:for-each select="../composite">
 												<li><img src="frontend/templates/base/images/16x16/application_home.png" class="list_image" /> <xsl:value-of select="name" /></li>
-												<li style="margin-bottom: 1em;">
+												<li>
 													<dl style="padding-left: 5px;">
 														<dt style="float: left;"><img src="frontend/templates/base/images/16x16/house.png" class="list_image" /></dt>
 														<dd>
