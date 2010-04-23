@@ -109,8 +109,8 @@
 									</div>
 									<div id="comment">
 										<ul>
-											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
-												<img src="frontend/templates/base/images/16x16/group.png" class="list_image" />
+											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; padding-right: 1em;" >
+												<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
 												<em>Kommentar</em>
 											</li>
 											<li>
