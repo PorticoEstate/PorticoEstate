@@ -399,6 +399,7 @@
 			$body_part = $mime->get_first_text_part(0);
 			$msg->body_meta = $mime->get_part_array($body_part);
 			$msg->parts = $mime->get_part_list(0);
+//_debug_array($msg);
 			unset($mime);
 
 			$this->mail->is_connected();
@@ -912,18 +913,25 @@
 		{
 			$part = array();
 			$msg_info = $this->_db2store($id);
+//_debug_array((array)$msg_info['structure']);
 			if ( !($part_no && $msg_info['mbox'] && $msg_info['uid']) )
 			{
 				trigger_error('Invalid Part Request');
 				return $part;
 			}
-			$mime = createObject('communik8r.mail_mime');
-			error_log(print_r($msg_info->structure, true)); exit;
-			$mime->struct = $msg_info->structure;
-			$part['structure'] = $mime->get_part_list(0);
-			error_log('part info = ' . serialize($part['structure'][$part_no]) ); exit;
+
+			$mime = createObject('communik8r.mail_mime', '');
+			$_temp = (array)$msg_info['structure'];
+			$mime->struct = $_temp['structure'];
+			$part['structure'] = $mime->struct;
+//_debug_array($part);die();
 			$this->mail->is_connected();
-			$part['content'] = $this->mail->handle_body_part($msg_info['mbox'], $msg_info['uid'], $part_no);
+			$mode = 0;
+			if($part['structure'][((int)$part_no)-1][0] == 'APPLICATION')
+			{
+//				$mode = 3; //handle this one in bo
+			}
+			$part['content'] = $this->mail->handle_body_part($msg_info['mbox'], $msg_info['uid'], $part_no, $mode);
 			$this->mail->close();
 			return $part;
 		}

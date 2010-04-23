@@ -13,7 +13,8 @@ function showAttachment(strMsgNo, strPartNo, bInline)
 		oIFrame.id = 'iframe_' + strPartNo;
 		oIFrame.style.display = 'block';
 		oIFrame.className = strCssClass;
-		oIFrame.src = oApplication.strBaseURL + 'email/' + oApplication.strMsgID2URLparts(strMsgNo) + '/' + strPartNo + '?' + oApplication.strGET;
+	alert(oApplication.strBaseURL + '&section=email&action=attachment&' + oApplication.strMsgID2URLparts(strMsgNo) + '&part=' + strPartNo);
+		oIFrame.src = oApplication.strBaseURL + '&section=email&action=attachment&' + oApplication.strMsgID2URLparts(strMsgNo) + '&part=' + strPartNo;
 		document.getElementById('part_' + strPartNo).appendChild(oIFrame);
 	}
 	else

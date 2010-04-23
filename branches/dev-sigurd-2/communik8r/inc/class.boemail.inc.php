@@ -92,8 +92,8 @@
 							$this->get_msg($data);
 							break;
 
-						case 6: //requesting attachment
-							$this->get_part($uri_parts);
+						case 'attachment': //requesting attachment
+							$this->get_part($data);
 							break;
 
 						default:
@@ -487,8 +487,8 @@
 
 			$message = $xml->createElement('communik8r:message');
 
-			$message->setAttribute('id', "{$acct_info['acct_id']}_{$uri_parts[3]}_{$uri_parts[4]}");
-
+			//$message->setAttribute('id', "{$acct_info['acct_id']}_{$uri_parts[3]}_{$uri_parts[4]}");
+			$message->setAttribute('id', "{$acct_info['acct_id']}_{$data['mbox_name']}_{$data['msg_id']}");
 			$headers = $xml->createElement('communik8r:headers');
 
 			if ( isset($msg->from) )
@@ -666,18 +666,22 @@
 
 			$msg_pref = $this->_get_pref('current_message');
 			//$uri_parts[3] = str_replace('.', '___', $uri_parts[3]);
-			$msg_pref["email_{$uri_parts[2]}_{$uri_parts[3]}"] = $uri_parts[4];
+			//$msg_pref["email_{$uri_parts[2]}_{$uri_parts[3]}"] = $uri_parts[4];
+			$msg_pref["email_{$data['acct_id']}_{$data['mbox_name']}"] = $data['msg_id'];
+			
 			$this->_store_pref('current_message', $msg_pref);
 		}
 
-		function get_part($uri_parts)
+		function get_part($data)
 		{
-			$acct_info = execMethod('communik8r.boaccounts.id2array', $uri_parts[2]);
+			$acct_info = execMethod('communik8r.boaccounts.id2array', $data['acct_id']);
 			$socache = createObject('communik8r.socache_email', $acct_info);
 
-			$part = $socache->get_msg($uri_parts[4], False, $uri_parts[5]);
+			$part = $socache->get_msg($data['msg_id'], False,  $data['part']);
+
 			$info =& $part['structure']->structure;//convience
 			//echo '<pre>' . print_r($info, True) . '</pre>';
+
 
 			$attach_name = '';
 			if ( isset($info->header->parameters['name']) && $info->header->parameters['name'] != '')

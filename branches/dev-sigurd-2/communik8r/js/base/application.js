@@ -265,10 +265,11 @@ Application.prototype.showSettings = function()
 */
 Application.prototype.strMsgID2URLparts = function(strMsgNo)
 {
+//alert('strMsgID2URLparts: ' + strMsgNo);
 	if ( strMsgNo != '' && strMsgNo.indexOf('_') )
 	{
 		var arIDparts = strMsgNo.split('_');
-		return arIDparts.join('/');
+		return 'acct_id=' + arIDparts[0] + '&mbox_name=' + arIDparts[1] + '&msg_id=' + arIDparts[2];
 	}
 	return '';
 }

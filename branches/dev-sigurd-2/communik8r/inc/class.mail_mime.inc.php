@@ -590,10 +590,12 @@
 
 			$data = array();
 			$num_parts = $this->get_num_parts(0, $part_a);
+
 			if ($num_parts !== false)
 			{
 				//echo "<!-- ($num_parts parts)//-->\n";
-				for ($i = 0; $i < $num_parts; ++$i)
+				$i = 0;
+				while ( $i < $num_parts )
 				{
 					$part_code = $part . (empty($part) ? '' : "." ) . (++$i) ;
 					$part_type = $this->get_part_type_code($part_code);

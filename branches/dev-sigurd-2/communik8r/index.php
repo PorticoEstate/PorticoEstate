@@ -78,8 +78,8 @@
 			$mbox_name = phpgw::get_var('mbox_name', 'string');
 			$status		= phpgw::get_var('status', 'int', 'REQUEST', 0);
 			$msg_id		= phpgw::get_var('msg_id', 'int', 'REQUEST', 0);
-
-			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name, 'status' => $status, 'msg_id' => $msg_id));
+			$part = phpgw::get_var('part', 'string');
+			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name, 'status' => $status, 'msg_id' => $msg_id, 'part' => $part));
 			break;
 
 		case 'help':
