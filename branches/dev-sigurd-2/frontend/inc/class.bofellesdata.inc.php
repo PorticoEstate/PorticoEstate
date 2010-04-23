@@ -23,7 +23,7 @@
 			$config	= CreateObject('phpgwapi.config','frontend');
 			$config->read();
 
-			$db = createObject('phpgwapi.db', null, null, true);
+			//$db = createObject('phpgwapi.db', null, null, true);
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
@@ -34,7 +34,7 @@
 
 			try
 			{
-				//var_dump($db->connect());
+				var_dump($db->connect());
 			}
 			catch(Exception $e)
 			{
