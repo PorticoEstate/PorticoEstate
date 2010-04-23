@@ -93,6 +93,12 @@ dl.form-2col dd .autocomplete {
     padding-bottom: 2em;
 }
 
+/* ie fix. autocomplete dropdown is displayed behind some elements if the z-index is not set */
+div.autocomplete {
+	z-index: 500;
+	position: relative;
+}
+
 dl.form dt.heading, dl.form-col dt.heading, dl.form-2col dt.heading, div.heading,
 dl.proplist dt.heading, dl.proplist-col dt.heading {
     color: #448;
