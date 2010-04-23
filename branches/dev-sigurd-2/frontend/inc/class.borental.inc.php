@@ -97,13 +97,8 @@
 			        			// Internal contract should have impact on total price
 			        			if($contract->get_location_id() == $location_id_internal)
 			        			{
-			        				if($contract->is_active())
-				        			{
-				        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
-				        				$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
-				        				$rented_price_per_location[$property_location->get_location_code()] += $total_price;
-				        				$contract->set_total_price($total_price);
-				        			}
+			        				$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+			        				$contract->set_total_price($total_price);
 			        				
 			        				if(!is_array($contracts_per_location[$property_location->get_location_code()]))
 				        			{
@@ -111,10 +106,17 @@
 				        			}
 				        			array_push($contracts_per_location[$property_location->get_location_code()], $contract);
 				        			
-				        			
+			        				if($contract->is_active())
+				        			{
+				        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
+				        				$rented_price_per_location[$property_location->get_location_code()] += $total_price;
+				        			}
 			        			}
 			        			else if($contract->get_location_id() == $location_id_in)
 			        			{
+			        				$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+			        				$contract->set_total_price($total_price);
+			        				
 			        				if(!is_array($contracts_in_per_location[$property_location->get_location_code()]))
 				        			{
 				        				$contracts_in_per_location[$property_location->get_location_code()] = array();	
