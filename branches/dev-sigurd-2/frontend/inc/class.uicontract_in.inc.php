@@ -110,7 +110,7 @@ class frontend_uicontract_in extends frontend_uifrontend
 			)
 		);
 		
-		//var_dump($data);
+		var_dump($this->contract_state['contract']);
                 	
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
 		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract_in'));
