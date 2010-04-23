@@ -71,7 +71,6 @@
 										</li>
 										<xsl:for-each select="../party">
 												<li><em><img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image" /></em><xsl:value-of select="name"/><br/>
-												<xsl:value-of select="php:function('lang', 'address')"/>: <br/>
 													<xsl:choose>
 														<xsl:when test="normalize-space(address)">
 															<xsl:value-of select="address"/>
@@ -82,9 +81,6 @@
 															<xsl:value-of select="postal_code"/>&nbsp;
 															<xsl:value-of select="place"/><br/>
 														</xsl:when>
-														<xsl:otherwise>
-															No address
-														</xsl:otherwise>
 													</xsl:choose>
 												</li>
 										</xsl:for-each>
