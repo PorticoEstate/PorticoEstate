@@ -78,7 +78,7 @@
 			
 			/* If the user has selected an organisational unit or all units */
 			if(isset($param_selected_org_unit))
-			{/*
+			{
 				//Specify which unit(s)
 				if($param_selected_org_unit == 'all')
 				{
@@ -103,7 +103,7 @@
 						$param_selected_org_unit = 'all';
 					}
 				}
-				var_dump("1");
+				/*var_dump("1");
 				$this->header_state['selected_org_unit'] = $param_selected_org_unit;
 
 				//Update locations according to organisational unit specification
