@@ -204,6 +204,12 @@ em.select_header {
 	margin: 1em 2em 0 2em;
 	}
 	
+	
+#comment {
+	float: left;
+	margin: 1em 2em 0 2em;
+	}
+	
 	#contract_essentials li {
 		margin-bottom: 1em;
 	}
