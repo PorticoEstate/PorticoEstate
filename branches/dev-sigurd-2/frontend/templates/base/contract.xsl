@@ -108,11 +108,19 @@
 										</ul>
 									</div>
 									<div id="comment">
-										<xsl:choose>
-											<xsl:when test="publish_comment">
-												<xsl:value-of select="comment" disable-output-escaping="yes"/>
-											</xsl:when>
-										</xsl:choose>
+										<ul>
+											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px;" >
+												<img src="frontend/templates/base/images/16x16/group.png" class="list_image" />
+												<em>Kommentar</em>
+											</li>
+											<li>
+												<xsl:choose>
+													<xsl:when test="publish_comment">
+														<xsl:value-of select="comment" disable-output-escaping="yes"/>
+													</xsl:when>
+												</xsl:choose>
+											</li>
+										</ul>
 									</div>
 								</xsl:for-each>
 							</xsl:otherwise>
