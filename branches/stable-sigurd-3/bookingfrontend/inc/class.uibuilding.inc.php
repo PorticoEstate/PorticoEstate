@@ -42,6 +42,10 @@
 			$building                  = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
 			$building['start']         = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "building"));
+			if ( trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])) )
+			{
+				$building['homepage'] = 'http://'.$building['homepage'];
+			}
 			self::render_template('building', array("building" => $building));
 		}
 		
