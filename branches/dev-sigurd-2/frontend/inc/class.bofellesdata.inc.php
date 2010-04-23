@@ -34,7 +34,7 @@
 
 			try
 			{
-				var_dump($db->connect());
+				//var_dump($db->connect());
 			}
 			catch(Exception $e)
 			{
