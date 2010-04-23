@@ -988,6 +988,7 @@
 		 */
 		function get_mailbox_properties($mbox, $props)
 		{
+			$mbox = '"'.$mbox.'"';
 			$result = array();
 			$i = 0;
 			foreach($props as $prop)
@@ -1015,6 +1016,7 @@
 				++$i;
 
 			}
+
 			return $result;
 		}
 
@@ -1962,8 +1964,10 @@
 
 			/* Get cached records where possible */
 			$uids = $this->fetch_header_index($mailbox, $message_set, "UID");
+
 			if (is_array($uids) && count($this->conn->cache[$mailbox] > 0))
 			{
+
 				$needed_set = array();
 				foreach ( $uids as $id => $uid )
 				{
@@ -2031,7 +2035,7 @@
 							$lines[$i] = trim($line);
 						}
 		//			} while ($line[0] != ')');
-					} while ($line[0] != ')' && $line);
+					} while ($line[0] != ')' && $line);//FIXME - this is wrong...
 
 					/* This does nothing
 					//process header, fill imap_basic_header obj.

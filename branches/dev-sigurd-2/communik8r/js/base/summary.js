@@ -208,7 +208,7 @@ function Summary(strTargetID)
 			var oXSLTProc = new XSLTProcessor();
 			oXSLTProc.importStylesheet(self.oXSLDoc);
 			oApplication.showLoading();
-//alert(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2]);
+alert(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2]);
 			Sarissa.updateContentFromURI(strBaseURL + '&section=email&action=summary&acct_id=' + self.arInfo[1] + '&mbox_name=' + self.arInfo[2],
 							oTarget,
 							oXSLTProc,

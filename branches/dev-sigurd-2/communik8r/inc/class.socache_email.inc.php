@@ -393,7 +393,7 @@
 			}
 
 			$msg = unserialize($this->db->f('structure', True));
-
+//	$msg->mailbox = '"'.$msg->mailbox.'"';
 			$mime = createObject('communik8r.mail_mime', '');
 			$mime->struct = $msg->structure;
 			$body_part = $mime->get_first_text_part(0);
@@ -739,6 +739,7 @@
 		{
 			$response = true;
 			$msgs = $this->mail->fetch_headers($mbox, $uids);
+
 			trigger_error("_cache_msgs({$mbox}, {$uids}) returned: " . print_r($msgs, True));
 			foreach( $msgs as $uid => $msg)
 			{
@@ -1271,8 +1272,9 @@
 
 				$this->mail->is_connected();
 				$tmp = $this->mail->get_mailbox_properties($mbox, array('uidnext', 'uidvalidity') );
-				$m_uidnext = intval($tmp['uidnext']);
-				$m_uidvalidity = intval($tmp['uidvalidity']);
+
+				$m_uidnext = (int)$tmp['uidnext'];
+				$m_uidvalidity = (int)$tmp['uidvalidity'];
 				unset($tmp);
 
 				$this->db->query('SELECT mbox_id, uidvalidity, uidnext FROM phpgw_communik8r_email_mboxes'
