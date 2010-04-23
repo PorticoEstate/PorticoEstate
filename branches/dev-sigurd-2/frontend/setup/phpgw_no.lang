@@ -72,7 +72,7 @@ contract_type_internleie_investeringskontrakt	frontend	no	Investeringskontrakt
 contract_type_internleie_KF	frontend	no	KF
 contract_type_internleie_andre	frontend	no	Andre
 contract_type_investeringskontrakt	frontend	no	Investeringskontrakt
-contract_type	frontend	no	Kontrakttype
+contract_type	frontend	no	Kontraktsområde / type
 no_end_date	frontend	no	Ingen
 no_contracts	frontend	no	Ingen kontrakter
 no_contract_details	frontend	no	Ingen konktraktsdetaljer tilgjengelig

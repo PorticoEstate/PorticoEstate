@@ -95,7 +95,7 @@
 										<xsl:for-each select="../composite">
 												<li><img src="frontend/templates/base/images/16x16/application_home.png" class="list_image" /> <xsl:value-of select="name" /></li>
 												<li>
-													<dl style="padding-left: 5px;">
+													<dl style="padding-left: 1em;">
 														<dt style="float: left;"><img src="frontend/templates/base/images/16x16/house.png" class="list_image" /></dt>
 														<dd>
 															<xsl:if test="normalize-space(address)">
