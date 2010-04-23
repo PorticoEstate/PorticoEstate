@@ -88,13 +88,14 @@
 				{
 					if($this->org_unit_in_selection($param_selected_org_unit,$this->header_state['org_unit']))
 					{
-						/*$org_unit_ids = array(
+						//Creating a temporary array holding the single organisational unit in query
+						$org_unit_ids = array(
 							array(
 								"ORG_UNIT_ID" => 1,
 								"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_selected_org_unit),
 								"UNIT_ID" => $param_selected_org_unit
 							)
-						);*/
+						);
 					}
 					else
 					{
