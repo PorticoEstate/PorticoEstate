@@ -93,9 +93,9 @@
 											<em>Leieobjekt:</em>
 										</li>
 										<xsl:for-each select="../composite">
-												<li style="margin-top: 1em;"><em class="bold"><img src="frontend/templates/base/images/16x16/layers.png" class="list_image" /></em> <xsl:value-of select="name" />:</li>
+												<li><img src="frontend/templates/base/images/16x16/application_home.png" class="list_image" /> <xsl:value-of select="name" /></li>
 												<li style="margin-bottom: 1em;">
-													<dl>
+													<dl style="padding-left: 5px;">
 														<dt style="float: left;"><img src="frontend/templates/base/images/16x16/house.png" class="list_image" /></dt>
 														<dd>
 															<xsl:if test="normalize-space(address)">
