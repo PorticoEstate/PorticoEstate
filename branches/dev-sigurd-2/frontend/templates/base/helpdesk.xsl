@@ -16,11 +16,14 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
         <div class="yui-content">
             <div class="toolbar-container">
-                <div class="toolbar" style="padding: 5px;">
+            	<div style="float:left;">
             		<label style="float:left;">
             			<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>
             			Meldinger på valgt enhet
             		</label>
+            	</div>
+                <div class="toolbar" style="padding: 5px; float:left;">
+            		
                     <xsl:apply-templates select="datatable/actions" />  
                 </div>
             </div>
