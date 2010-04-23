@@ -45,7 +45,6 @@
 
 		public function __construct()
 		{
-			var_dump('init');
 			phpgwapi_cache::user_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'), $GLOBALS['phpgw_info']['user']['account_id']);
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
