@@ -676,14 +676,57 @@
 		{
 			$acct_info = execMethod('communik8r.boaccounts.id2array', $data['acct_id']);
 			$socache = createObject('communik8r.socache_email', $acct_info);
-
+			$msg = $socache->get_msg($data['msg_id']);
 			$part = $socache->get_msg($data['msg_id'], False,  $data['part']);
 
 			$info =& $part['structure']->structure;//convience
 			//echo '<pre>' . print_r($info, True) . '</pre>';
 
+			$mime = createObject('communik8r.mail_mime', '');
 
-			$attach_name = '';
+			$part_type = $mime->get_part_type_code($part_no, $info );
+
+			$part_info = $msg->parts[$data['part']];
+			$attach_name = $part_info['name'];
+//_debug_array($part_info);die();
+			$mime_type = '';
+			if($info[((int)$data['part'])-1][0] == 'APPLICATION' || $info[((int)$data['part'])-1][0] == 'IMAGE')
+			{
+				$part['content'] = base64_decode($part['content']);			
+			}
+			elseif ($part_info['typestring'] == 'TEXT/HTML' ) 
+			{
+				$mime_type = 'text/html';
+				$part['content'] = strip_tags($part['content'], '<a><b><blockquote><body><br><div><em><h1><h2><h3><hr><i><li><p><pre><blockquote><img><span><strong><ul>');
+				$part['content'] = quoted_printable_decode($part['content']);
+				if(strtoupper($part_info['charset']) != 'UTF-8')
+				{
+					$part['content'] = utf8_encode($part['content']);
+				}
+			}
+			elseif ($part_info['typestring'] == 'MESSAGE/RFC822' ) 
+			{
+				$mime_type = 'text/plain';
+				$part['content'] = quoted_printable_decode($part['content']);
+				if(strtoupper($part_info['charset']) != 'UTF-8')
+				{
+					$part['content'] = utf8_encode($part['content']);
+				}
+			}
+			else
+			{
+				$attach_name = 'attachment';
+			}
+
+//_debug_array($info);
+//_debug_array($attach_name);
+//die();
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($attach_name, $mime_type, $part_info['size']);
+			echo $part['content'];
+			exit;
+
+/*
 			if ( isset($info->header->parameters['name']) && $info->header->parameters['name'] != '')
 			{
 				$attach_name = $info->header->parameters['name'];
@@ -694,8 +737,8 @@
 			{
 				$attach_name = $info->header->disposition->properties['name'];
 			}
-
-
+*/
+/*
 			if ( strtolower($info->header->encoding) == 'base64' )
 			{
 				$part['content'] = base64_decode($part['content']);
@@ -704,7 +747,7 @@
 			{
 				$part['content'] = quoted_printable_decode($part['content']);
 			}
-
+*/
 			$browser = CreateObject('phpgwapi.browser');
 			if ( ( $info->type0 == 'text' && $info->type1 == 'plain' ) 
 					|| ( $info->type0 == 'message' && $info->type1 == 'rfc822' ) )
@@ -937,7 +980,7 @@
 			}
 
 			$charset = 'us-ascii';
-			for($i = 0; $i > count($headers[2]); $i +=2 )
+			for($i = 0; $i < count($headers[2]); $i +=2 )
 			{
 				if ( strtolower($headers[2][$i]) == 'charset' )
 				{
@@ -945,11 +988,21 @@
 					break;
 				}
 			}
-			if ( $charset != 'us-ascii' || $charset != 'utf-8')
+
+			if ( $charset != 'us-ascii' && $charset != 'utf-8')
 			{
 				$body = mb_convert_encoding($body, 'utf-8', $charset);
+		//		$body = utf8_encode($body);
 			}
-			$body = wordwrap($body, 80); //make it look nice
+
+			if( $headers[1]=='HTML')
+			{
+				$body = $this->_html2plain($body);
+			}
+			else
+			{
+				$body = wordwrap($body, 80); //make it look nice
+			}
 		}
 
 		/**

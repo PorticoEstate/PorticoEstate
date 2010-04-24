@@ -457,10 +457,10 @@
 
 		function mime2icon($mimetype)
 		{
-			$mimetype = str_replace('/', '-', $mimetype);
+			$mimetype = strtolower(str_replace('/', '-', $mimetype));
 			$icon = $GLOBALS['phpgw_info']['server']['webserver_url']
-				. '/communik8r/templates/default/images/mimetypes/';
-			if ( is_file(PHPGW_SERVER_ROOT . "/communik8r/templates/default/images/mimetypes/mime-{$mimetype}.png") )
+				. '/communik8r/templates/base/images/mimetypes/';
+			if ( is_file(PHPGW_SERVER_ROOT . "/communik8r/templates/base/images/mimetypes/mime-{$mimetype}.png") )
 			{
 				$icon .= "mime-{$mimetype}.png";
 			}

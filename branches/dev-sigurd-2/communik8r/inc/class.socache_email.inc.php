@@ -921,18 +921,12 @@
 				return $part;
 			}
 
-			$mime = createObject('communik8r.mail_mime', '');
-			$_temp = (array)$msg_info['structure'];
-			$mime->struct = $_temp['structure'];
-			$part['structure'] = $mime->struct;
+		//	$part['structure'] = $mime->struct;
+			$part['structure'] = $msg_info['structure'];
+
 //_debug_array($part);die();
 			$this->mail->is_connected();
-			$mode = 0;
-			if($part['structure'][((int)$part_no)-1][0] == 'APPLICATION')
-			{
-//				$mode = 3; //handle this one in bo
-			}
-			$part['content'] = $this->mail->handle_body_part($msg_info['mbox'], $msg_info['uid'], $part_no, $mode);
+			$part['content'] = $this->mail->handle_body_part($msg_info['mbox'], $msg_info['uid'], $part_no);
 			$this->mail->close();
 			return $part;
 		}
@@ -1148,43 +1142,42 @@
 				}
 			}
 			trigger_error('socache_email::_mboxes2array(' . print_r($mboxes, true) . ", {$parent}) resulted in : " .  print_r($nu_mboxes['children'], true) );
-					return $nu_mboxes['children'];
-					}
+			return $nu_mboxes['children'];
+		}
 
-					/**
-					 * Convert raw message to an imap_fetchstructure style object
-					 *
-					 * @private
-					 * @param string $msg the raw message string
-					 * @returns object message object
-					 */
-					function _msg_str2structure(&$msg)
-					{
-					if ( ! $GLOBALS['phpgw_info']['flags']['mailparse'] )
-					{
-					$structure = Mail_mimeDecode::decode( 
-						array
-						(
-						 'input'		=> &$msg,
-						 'crlf'		=> "\r\n",
-						 'include_bodies'=> False,
-						 'decode_bodies'	=> False
-						)
-						);
-					if(isset($structure->headers['date']))
-					{
-						$structure->headers['date'] = $this->_hdr_date2epoch($structure->headers['date']);
-					}
-					}
-					else
-					{
-						$handle = mailparse_msg_create();
-						mailparse_msg_parse($handle, $msg);
-						$structure = mailparse_msg_get_part_data($handle);
-					}
-
-					return $structure;
-					}
+		/**
+		 * Convert raw message to an imap_fetchstructure style object
+		 *
+		 * @private
+		 * @param string $msg the raw message string
+		 * @returns object message object
+		 */
+		function _msg_str2structure(&$msg)
+		{
+			if ( ! $GLOBALS['phpgw_info']['flags']['mailparse'] )
+			{
+				$structure = Mail_mimeDecode::decode( 
+					array
+					(
+					 'input'		=> &$msg,
+					 'crlf'		=> "\r\n",
+					 'include_bodies'=> False,
+					 'decode_bodies'	=> False
+					)
+				);
+				if(isset($structure->headers['date']))
+				{
+					$structure->headers['date'] = $this->_hdr_date2epoch($structure->headers['date']);
+				}
+			}
+			else
+			{
+				$handle = mailparse_msg_create();
+				mailparse_msg_parse($handle, $msg);
+				$structure = mailparse_msg_get_part_data($handle);
+			}
+			return $structure;
+		}
 
 			/**
 			 * Clear all RFC 2060 flags from a message
