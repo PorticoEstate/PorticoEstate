@@ -113,7 +113,9 @@
 		case 'forward':
 		case 'reply':
 		case 'reply_to_all':
-			ExecMethod('communik8r.uibase.compose', $uri_parts);
+			$action		= phpgw::get_var('action', 'string');
+			$msg_id		= phpgw::get_var('msg_id', 'int', 'REQUEST', 0);
+			ExecMethod('communik8r.uibase.compose', array('action' => $action, 'msg_id' => $msg_id));
 			break;
 
 		case 'settings':
