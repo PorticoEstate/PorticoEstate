@@ -171,7 +171,7 @@ Application.prototype.id2ListInfo = function(strID)
 */
 Application.prototype.new_message = function()
 {
-	return this._openComposeWin('new/email');
+	return this._openComposeWin('&section=compose&action=new');
 }
 
 /**
@@ -293,10 +293,11 @@ Application.prototype.updateButtons = function (strCurMsg)
 
 Application.prototype._openComposeWin = function(strURL, strTo)
 {
+alert('Application::_openComposeWin: ' + this.strBaseURL + strURL + ( strTo ? '&to=' + strTo : ''));
 	oDate = new Date();
 	var strWinName = 'communik8r_' + (oDate.getMilliseconds() * (oDate.getMinutes() / ( oDate.getFullYear() / oDate.getHours() ) ) ); //FIXME Need to grab message number from server!
 	var strWinArgs = 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,height=600,width=800';
-	if ( window.open(this.strBaseURL + strURL + this.strGET + ( strTo ? '&to=' + strTo : ''), strWinName, strWinArgs) )
+	if ( window.open(this.strBaseURL + strURL + ( strTo ? '&to=' + strTo : ''), strWinName, strWinArgs) )
 	{
 		return strWinName;
 	}
