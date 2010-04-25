@@ -39,6 +39,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
