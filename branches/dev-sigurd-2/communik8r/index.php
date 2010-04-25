@@ -109,10 +109,11 @@
 			echo '<pong>ping</pong>';
 			exit;
 
-		case 'new':
-		case 'forward':
-		case 'reply':
-		case 'reply_to_all':
+	//	case 'new':
+	//	case 'forward':
+	//	case 'reply':
+	//	case 'reply_to_all':
+		case 'compose':
 			$action		= phpgw::get_var('action', 'string');
 			$msg_id		= phpgw::get_var('msg_id', 'int', 'REQUEST', 0);
 			ExecMethod('communik8r.uibase.compose', array('action' => $action, 'msg_id' => $msg_id));

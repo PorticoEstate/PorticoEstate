@@ -2001,6 +2001,8 @@
 			{
 				return array();
 			}
+			$message_set = explode(',',$message_set);
+			$j=-1;
 
 			do{
 				$line = rtrim($this->read_line(200));
@@ -2008,7 +2010,10 @@
 				$a = explode(" ", $line);
 				if ( $line[0] == '*' && $a[2] == 'FETCH' )
 				{
-					$id = $a[4]; //UID not seq
+					$j++;
+					//$id = $a[4]; //UID not seq //FIXME : not working for MsExchange
+					$id = $message_set[$j];
+
 					$result[$id] = new imap_basic_header;
 					$result[$id]->id = $a[1];
 					$result[$id]->uid = $id;
@@ -2035,7 +2040,7 @@
 							$lines[$i] = trim($line);
 						}
 		//			} while ($line[0] != ')');
-					} while ($line[0] != ')' && $line);//FIXME - this is wrong...
+					} while ($line[0] != ')' && $line);//FIXME - this is wrong...needed for MsExchange
 
 					/* This does nothing
 					//process header, fill imap_basic_header obj.
@@ -2080,7 +2085,8 @@
 					$result[$id]->message_id = $message_id;
 				}
 			}while( $a[0] != $key );
-
+//die();
+//_debug_array($result);die();
 			/* 
 			   FETCH uid, size, flags
 			   Sample reply line: "* 3 FETCH (UID 2417 RFC822.SIZE 2730 FLAGS (\Seen \Deleted))"
@@ -2938,20 +2944,14 @@
 			if ( $this->select($mailbox) )
 			{
 				$reply_key = "* $id";
-
-	//	$key="ftch".($c++)." ";
-	//	$request=$key."FETCH $id (BODY.PEEK[$part])\r\n";
- 
 				$key = "ftch" . $c++;
 				$request = "{$key} UID FETCH {$id} (BODY.PEEK[$part])\r\n";
-	//			$request = "{$key} FETCH {$id} (BODY.PEEK[$part])\r\n";
+
 				if (!fputs($this->conn->fp, $request))
 				{
 					return false;
 				}
 
-//_debug_array($request);
-//_debug_array(rtrim($this->read_line(10000)));die();
 				do{
 					$line = rtrim($this->read_line(1000));
 					$a = explode(' ', $line);
@@ -3002,7 +3002,6 @@
 						$received += strlen($line);
 						switch($mode)
 						{
-
 							case 1:
 								$result .= rtrim($line)."\n";
 								break;

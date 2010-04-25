@@ -404,6 +404,7 @@
 
 			$this->mail->is_connected();
 			$msg->body = $this->mail->handle_body_part($msg->mailbox, $msg->uid, $body_part);
+//_debug_array($msg->body);die();
 			$this->mail->close();
 
 			if ( $mark_read )

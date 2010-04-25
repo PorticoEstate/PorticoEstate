@@ -124,7 +124,7 @@
 			}
 		}
 
-		function compose($uri_parts)
+		function compose($data)
 		{
 			$reply = $forward = false;
 			if (  strtoupper($_SERVER['REQUEST_METHOD']) == 'PUT' )
@@ -155,15 +155,15 @@
 			$GLOBALS['phpgw']->session->appsession('composing', 'communik8r', $ids);
 			unset($ids);
 
-			if ( $uri_parts[1] != 'new' )
+			if ( $data['action'] != 'new' )
 			{
 				$msg_parts = explode('_', $uri_parts[3] ); //0 type, 1 acctid, 2 folder, 3 msgid
 				$acct_info = execMethod('communik8r.boaccounts.id2array', $msg_parts[1]);
 				$socache = createObject('communik8r.socache_email', $acct_info);
 				$msg = $socache->get_msg($msg_parts[3]);
 
-				$reply = ( $uri_parts[1] == 'reply' || $uri_parts[1] == 'reply');
-				$forward = ($uri_parts[1] == 'forward');
+				$reply = ( $data['action'] == 'reply' || $data['action'] == 'reply');
+				$forward = ($data['action'] == 'forward');
 				$body = '';
 
 				if ( $reply )
@@ -234,9 +234,13 @@
 			$info = $xml->createElement('phpgwapi:info');
 
 			$base_url = $xml->createElement('phpgwapi:base_url');
-			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$base_url->appendChild( $xml->createTextNode( $GLOBALS['phpgw']->link('index.php') ) );
 			$info->appendChild($base_url);
 			unset($base_url);
+			$app_url = $xml->createElement('phpgwapi:app_url');
+			$app_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($app_url);
+			unset($app_url);
 
 			$skin = $xml->createElement('phpgwapi:skin');
 			$skin->appendChild( $xml->createTextNode('base') );
@@ -690,11 +694,11 @@
 			$attach_name = $part_info['name'];
 //_debug_array($part_info);die();
 			$mime_type = '';
-			if($info[((int)$data['part'])-1][0] == 'APPLICATION' || $info[((int)$data['part'])-1][0] == 'IMAGE')
+			if(strtoupper($info[((int)$data['part'])-1][0]) == 'APPLICATION' || strtoupper($info[((int)$data['part'])-1][0]) == 'IMAGE')
 			{
 				$part['content'] = base64_decode($part['content']);			
 			}
-			elseif ($part_info['typestring'] == 'TEXT/HTML' ) 
+			elseif (strtoupper($part_info['typestring']) == 'TEXT/HTML' ) 
 			{
 				$mime_type = 'text/html';
 				$part['content'] = strip_tags($part['content'], '<a><b><blockquote><body><br><div><em><h1><h2><h3><hr><i><li><p><pre><blockquote><img><span><strong><ul>');
@@ -704,7 +708,7 @@
 					$part['content'] = utf8_encode($part['content']);
 				}
 			}
-			elseif ($part_info['typestring'] == 'MESSAGE/RFC822' ) 
+			elseif (strtoupper($part_info['typestring']) == 'MESSAGE/RFC822' ) 
 			{
 				$mime_type = 'text/plain';
 				$part['content'] = quoted_printable_decode($part['content']);
@@ -839,6 +843,7 @@
 
 				$subject = $xml->createElement('communik8r:msg_subject');
 				$subject->appendChild( $xml->createTextNode($msg['subject']) );
+
 				$msg_sum->appendChild($subject);
 
 				$msg_size = $xml->createElement('communik8r:msg_size');

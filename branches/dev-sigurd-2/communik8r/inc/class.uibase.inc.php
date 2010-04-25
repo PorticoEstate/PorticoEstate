@@ -51,16 +51,19 @@
 		*
 		* @param array $uri_parts the parts of the url used in the page request
 		*/
-		function compose($uri_parts)
+		function compose($data)
 		{
+		/*
 			$msg_types = array('jabber', 'email');
 			
-			if ( !in_array($uri_parts[2], $msg_types) )
+			if ( !in_array($data['section'], $msg_types) )
 			{
 				die('invalid message type - exiting!');
 			}
 
-			ExecMethod('communik8r.bo' . $uri_parts[2] . '.compose', $uri_parts);
+			ExecMethod('communik8r.bo' . $data['section'] . '.compose', $data);
+		*/
+			ExecMethod('communik8r.boemail.compose', $data);
 		}
 
 		/**

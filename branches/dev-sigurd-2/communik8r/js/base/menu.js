@@ -137,7 +137,8 @@ Menu.prototype.catchClick = function(strID)
 			break;
 
 		case 'new':
-			oApplication.compose();
+			//oApplication.compose();//duplicated
+			oApplication.new_message();
 			break;
 
 		case 'prefs':

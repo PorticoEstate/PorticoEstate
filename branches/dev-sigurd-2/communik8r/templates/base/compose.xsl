@@ -8,25 +8,29 @@
 	<xsl:template match="/">
 		<xsl:variable name="base_url"
 			select="/phpgw:response/phpgwapi:info/phpgwapi:base_url" />
+		<xsl:variable name="app_url"
+			select="/phpgw:response/phpgwapi:info/phpgwapi:app_url" />
+
 		<xsl:variable name="skin"
 			select="/phpgw:response/phpgwapi:info/phpgwapi:skin" />
 		<html>
 			<head>
 				<title><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='compose_title']" /></title>
-				<link href="{concat($base_url, '/css/evo.css')}" rel="stylesheet" type="text/css" />
-				<link rel="icon" href="{concat($base_url, '/communik8r/templates/default/images/navbar.png')}" type="image/png" />
+				<link href="{concat($app_url, '/css/evo.css')}" rel="stylesheet" type="text/css" />
+				<link rel="icon" href="{concat($app_url, '/communik8r/templates/default/images/navbar.png')}" type="image/png" />
 				<script type="text/javascript">
 
 					var strBaseURL = "<xsl:value-of select='$base_url' />";
+					var strAppURL = "<xsl:value-of select='$app_url' />";
 					var strMsgID = "<xsl:value-of select='/phpgw:response/communik8r:response/communik8r:message/@id' />";
 					var oComposeWin = window.self;
 				</script>
-				<script type="text/javascript" src="{concat($base_url, '/js/base/application.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/fckeditor/fckeditor.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/sarissa/sarissa.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/sarissa/sarissa_dhtml.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/autocomplete/autocomplete.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/base/compose.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/base/application.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/fckeditor/fckeditor.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/sarissa/sarissa.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/sarissa/sarissa_dhtml.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/autocomplete/autocomplete.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/base/compose.js')}"></script>
 			</head>
 			<body>
 				<form name="composeForm" id="composeForm" method="GET" action="javascript:sendMsg('composeForm');">

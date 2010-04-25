@@ -58,6 +58,7 @@ function Application()
 */
 Application.prototype.compose = function(strRecipient)
 {
+alert('Application::compose: ' + strRecipient);
 	this._openComposeWin('new/email', strRecipient);
 }
 
