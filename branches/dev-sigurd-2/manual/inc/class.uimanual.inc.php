@@ -106,6 +106,18 @@
 				parse_navbar();
 			}
 				
+			$pdffile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.pdf";
+			
+			if(is_file($pdffile))
+			{
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header("{$section}.pdf", '', filesize($pdffile));
+			    ob_clean();
+			    flush();
+				readfile($pdffile);
+				exit;
+			}
+
 			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";
 			
 			// test the manual on odt2xhtml
