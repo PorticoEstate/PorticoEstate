@@ -36,6 +36,7 @@
 			           		</xsl:when>
 			           		<xsl:otherwise>
 				     	 		<xsl:for-each select="contract">
+				     	 			<xsl:copy-of select="."/>
 				     	 			<div id="contract_essentials">
 										<ul>
 											<li><em><img src="frontend/templates/base/images/16x16/page_white.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'old_contract_id')"/>: <xsl:value-of select="old_contract_id"/></li>
