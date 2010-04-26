@@ -396,14 +396,16 @@
 
 			foreach($history as $story)
 			{
-				var_dump($story);
-				$tickethistory[] = array(
-					'date' => $story['value_date'],
-					'user' => $story['value_user'],
-					'action'=> $story['value_action'],
-					'new_value' => $story['value_new_value'],
-					'old_value' => $story['value_old_value']
-				);
+				if($story['value_action'] != '0')
+				{
+					$tickethistory[] = array(
+						'date' => $story['value_date'],
+						'user' => $story['value_user'],
+						'action'=> $story['value_action'],
+						'new_value' => $story['value_new_value'],
+						'old_value' => $story['value_old_value']
+					);
+				}
 			}
 
 			usort($tickethistory, array($this, "cmp"));
