@@ -396,6 +396,7 @@
 
 			foreach($history as $story)
 			{
+				var_dump($story);
 				$tickethistory[] = array(
 					'date' => $story['value_date'],
 					'user' => $story['value_user'],
