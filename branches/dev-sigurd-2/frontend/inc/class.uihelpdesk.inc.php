@@ -228,14 +228,17 @@
 					array('menuaction'	=> 'frontend.uihelpdesk.view','id' => )
 				);*/
 			
-			$function_view_ticket = "";
-			$function_view_ticket .= "console.log(data);";
+			//$function_view_ticket = "";
+			//$function_view_ticket .= "console.log(data);";
 			//$function_view_ticket .= "var id = data.getData('id');";
 			//$function_view_ticket .= "console.log(id);";
 			//$function_view_ticket .= "console.log('/index.php?menuaction=frontend.uihelpdesk.view&id=' + id);";
 			//$function_view_ticket .= "document.location = '/index.php?menuaction=frontend.uihelpdesk.view&id=' + id;";
-			$datatable['exchange_values'] = $function_view_ticket;
+			//$datatable['exchange_values'] = $function_view_ticket;
 
+			$datatable['exchange_values'] = 'console.log(data);';
+			$datatable['valida'] = '';
+			
 			unset($parameters);
 			for ($i = 0 ; $i < $count_uicols_name ; $i++)
 			{
