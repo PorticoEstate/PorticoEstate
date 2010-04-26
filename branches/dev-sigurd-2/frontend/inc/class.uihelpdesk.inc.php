@@ -229,7 +229,7 @@
 				);*/
 			
 			$function_view_ticket = "";
-			$function_view_ticket .= "var id = data.oData.id;";
+			$function_view_ticket .= "var id = data.detData('id');";
 			$function_view_ticket .= "document.location = '/index.php?menuaction=frontend.uihelpdesk.view&id=' + id;";
 			$datatable['exchange_values'] = $function_view_ticket;
 
