@@ -79,9 +79,6 @@
 		        	{
 		        		//... get the composites
 		        		$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contracts[$id]->get_id()));
-		        		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contracts[$id]->get_id()));
-		        		
-		        		$contract->set_parties($parties);
 		        		
 		        		//...and for each composite in the contract in which this contract part is connected
 			        	foreach($composites as $composite)

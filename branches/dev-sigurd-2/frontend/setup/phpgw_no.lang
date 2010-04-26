@@ -5,7 +5,7 @@ pictures	frontend	no	Bilder
 maintenance	frontend	no	Vedlikehold
 refurbishment	frontend	no	Oppgraderinger
 services	frontend	no	Tjenester
-contract	frontend	no	Internleiekontrakter
+contract	frontend	no	Kontrakter
 contract_in	frontend	no	Innleiekontrakter
 helpdesk	frontend	no	Melding om avvik
 subject	frontend	no	Meldingstittel
@@ -77,3 +77,4 @@ no_end_date	frontend	no	Ingen
 no_contracts	frontend	no	Ingen kontrakter
 no_contract_details	frontend	no	Ingen konktraktsdetaljer tilgjengelig
 Ingen	frontend	no	Ingen
+contract_internal	frontend	no	Internleiekontrakter

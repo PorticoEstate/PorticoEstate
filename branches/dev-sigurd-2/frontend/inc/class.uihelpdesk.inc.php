@@ -396,6 +396,10 @@
 
 			foreach($history as $story)
 			{
+				/*
+				 * String search for filtering out ticket history. If the status contains e.g. "Budget changed"
+				 * the history bullet will not be incuded in the ticket history shown to frontend users.
+				 */
 				if(
 					(	
 						strpos($story['value_action'],'Budget changed') === false && 

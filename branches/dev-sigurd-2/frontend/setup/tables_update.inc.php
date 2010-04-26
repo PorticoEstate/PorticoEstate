@@ -23,7 +23,7 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw']->locations->add('.', 'top', 'frontend', false);
 		$GLOBALS['phpgw']->locations->add('.ticket', 'helpdesk', 'frontend', false);
-		$GLOBALS['phpgw']->locations->add('.rental.contract', 'contract', 'frontend', false);
+		$GLOBALS['phpgw']->locations->add('.rental.contract', 'contract_internal', 'frontend', false);
 		$GLOBALS['phpgw']->locations->add('.document.drawings', 'drawings', 'frontend', false);
 		$GLOBALS['phpgw']->locations->add('.document.pictures', 'pictures', 'frontend', false);
 		$GLOBALS['phpgw']->locations->add('.property.maintenance', 'maintenance', 'frontend', false);

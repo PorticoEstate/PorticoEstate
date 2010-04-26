@@ -28,7 +28,6 @@
             </div>
 
             <xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
-            	<xsl:copy-of select="."/>
                 <hr/>
                 Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/><br/>
                 <xsl:choose>
