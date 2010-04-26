@@ -78,3 +78,5 @@ no_contracts	frontend	no	Ingen kontrakter
 no_contract_details	frontend	no	Ingen konktraktsdetaljer tilgjengelig
 Ingen	frontend	no	Ingen
 contract_internal	frontend	no	Internleiekontrakter
+active	frontend	no	Aktive
+not_active	frontend	no	Avsluttede
