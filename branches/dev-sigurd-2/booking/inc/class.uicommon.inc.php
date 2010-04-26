@@ -425,7 +425,8 @@
 			#header("Content-Description: {$options['filename']}");
 			header("Content-Type: $file_type");
 			# IE6 needs this one
-        	header("Cache-Control: no-cache, no-store, must-revalidate, post-check=0, pre-check=0");
+        	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			header("Pragma: cache");
 			readfile($file_path, false);
 			exit;
 		}
