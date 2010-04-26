@@ -396,7 +396,14 @@
 
 			foreach($history as $story)
 			{
-				if($story['value_action'] != '0')
+				if(
+					(	
+						strpos($story['value_action'],'Budget changed') === false && 
+						strpos($story['value_action'],'Priority changed') === false &&
+						strpos($story['value_action'],'actual cost changed') === false &&
+						strpos($story['value_action'],'Billable hours changed') === false
+					)
+				)
 				{
 					$tickethistory[] = array(
 						'date' => $story['value_date'],
