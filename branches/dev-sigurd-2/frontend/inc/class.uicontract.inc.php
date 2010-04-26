@@ -19,7 +19,6 @@ class frontend_uicontract extends frontend_uifrontend
 
 	public function __construct()
 	{
-		phpgwapi_cache::user_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.rental.contract'), $GLOBALS['phpgw_info']['user']['account_id']);
 		parent::__construct();
 	}
 	
@@ -59,6 +58,22 @@ class frontend_uicontract extends frontend_uifrontend
 			phpgwapi_cache::user_set('frontend', $this->contract_state_identifier , $this->contract_state, $GLOBALS['phpgw_info']['user']['account_id']);
 		}
 
+		$contract_filter_param = phpgw::get_var('contract_filter');
+		if(isset($contract_filter_param))
+		{
+			phpgwapi_cache::user_set('frontend', 'contract_filter', $contract_filter_param, $GLOBALS['phpgw_info']['user']['account_id']);
+			$this->contract_filter = $contract_filter_param;
+			
+			//TODO: change selected contract
+		} 
+		else
+		{
+			$filter = phpgwapi_cache::user_get('frontend', 'contract_filter' , $GLOBALS['phpgw_info']['user']['account_id']);
+			$this->contract_filter = isset($filter) ? $filter : 'active';
+		}
+		
+		
+		
 		// If the user wants to view another contract connected to this location
 		if(isset($new_contract))
 		{
@@ -78,7 +93,13 @@ class frontend_uicontract extends frontend_uifrontend
 		$contracts_for_selection = array();
 		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{
-			$contracts_for_selection[] = $contract->serialize();
+			if(	($this->contract_filter == 'active' && $contract->is_active()) ||
+				($this->contract_filter == 'not_active' && !$contract->is_active()) ||
+				$this->contract_filter == 'all'
+			)
+			{
+				$contracts_for_selection[] = $contract->serialize();
+			}			
 		}
 		
 		if(isset($this->contract_state['contract']))
@@ -113,7 +134,8 @@ class frontend_uicontract extends frontend_uifrontend
 				'selected_contract' =>  $this->contract_state['selected'], 
 				'contract'	=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
 				'party'	=> $party_array,
-				'composite' => $composite_array
+				'composite' => $composite_array,
+				'contract_filter' => $this->contract_filter
 			)
 		);
 		

@@ -11,7 +11,33 @@
 			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>
 			           		</xsl:when>
 			           		<xsl:otherwise>
-					           <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
+			           			<select name="contract_filter" onchange="this.form.submit()">
+			           				<xsl:choose>
+			           					<xsl:when test="//contract_filter = 'active'">
+			           						<option value="active" selected="selected"><xsl:value-of select="php:function('lang', 'active')"/></option>
+			           					</xsl:when>
+			           					<xsl:otherwise>
+			           						<option value="active"><xsl:value-of select="php:function('lang', 'no_contracts')"/></option>
+			           					</xsl:otherwise>
+			           				</xsl:choose>
+			           				<xsl:choose>
+			           					<xsl:when test="//contract_filter = 'not_active'">
+			           						<option value="not_active" selected="selected"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+			           					</xsl:when>
+			           					<xsl:otherwise>
+			           						<option value="not_active"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+			           					</xsl:otherwise>
+			           				</xsl:choose>
+			           				<xsl:choose>
+			           					<xsl:when test="//contract_filter = 'all'">
+			           						<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all')"/></option>
+			           					</xsl:when>
+			           					<xsl:otherwise>
+			           						<option value="all"><xsl:value-of select="php:function('lang', 'all')"/></option>
+			           					</xsl:otherwise>
+			           				</xsl:choose>
+			           			</select>
+					            <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
 					           	<xsl:for-each select="select">
 					           		<xsl:choose>
 						           		<xsl:when test="id = //selected_contract">
