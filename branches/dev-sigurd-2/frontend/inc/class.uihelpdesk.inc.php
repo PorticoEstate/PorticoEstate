@@ -220,6 +220,14 @@
 				)),
 				'parameters'	=> $parameters
 			);
+			
+			
+			/*$function_view_ticket = 'document_location = ' . 
+				$GLOBALS['phpgw']->link(
+					'/index.php',
+					array('menuaction'	=> 'frontend.uihelpdesk.view','id' => )
+				);*/
+			$datatable['exchange_values'] = 'console.print(data)';
 
 			unset($parameters);
 			for ($i = 0 ; $i < $count_uicols_name ; $i++)
