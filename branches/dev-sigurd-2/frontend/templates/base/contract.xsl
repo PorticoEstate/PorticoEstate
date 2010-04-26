@@ -8,7 +8,7 @@
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
 			            <xsl:choose>
 			           		<xsl:when test="not(normalize-space(select))">
-			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>: 
+			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>
 			           		</xsl:when>
 			           		<xsl:otherwise>
 					           <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
@@ -32,7 +32,7 @@
 	 			<div id="contract_details">
 	 				 <xsl:choose>
 			           		<xsl:when test="not(normalize-space(contract))">
-			           			 <xsl:value-of select="php:function('lang', 'no_contract_details')"/>: 
+			           			 <!-- <xsl:value-of select="php:function('lang', 'no_contract_details')"/>:  -->
 			           		</xsl:when>
 			           		<xsl:otherwise>
 				     	 		<xsl:for-each select="contract">
