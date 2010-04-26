@@ -241,6 +241,10 @@
 			$app_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
 			$info->appendChild($app_url);
 			unset($app_url);
+			$api_url = $xml->createElement('phpgwapi:api_url');
+			$api_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi") );
+			$info->appendChild($api_url);
+			unset($api_url);
 
 			$skin = $xml->createElement('phpgwapi:skin');
 			$skin->appendChild( $xml->createTextNode('base') );

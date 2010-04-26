@@ -29,7 +29,7 @@
 		/**
 		 * Get a list of buttons as xml
 		 */
-		function buttons()
+		function buttons($output = true)
 		{
 			$buttons = array();
 			$buttons['new']		= array
@@ -155,7 +155,10 @@
 			   );
 			 */
 
-
+			if(!$output)
+			{
+				return $buttons;
+			}
 			Header('Content-Type: text/xml');
 			$xml = new DOMDocument('1.0', 'utf-8');
 			$xml->formatOutput = true;
@@ -562,6 +565,9 @@
 		 */
 		function start()
 		{
+
+			$buttons = $this->buttons(false);
+
 			$stylesheet = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r/templates/base/layout.xsl";
 			Header('Content-Type: text/xml');
 			$xml = new DOMDocument('1.0', 'utf-8');
@@ -621,7 +627,44 @@
 			}
 			$phpgw->appendChild($c8);
 
+
+
+//----buttons
+			$btns = $xml->createElement('communik8r:buttons');
+			foreach($buttons as $id => $attribs)
+			{
+				if ( strpos($attribs['label'], '*') )
+				{
+					$attribs['label'] = substr($attribs['label'], 0, -1);
+				}
+
+				if ( ($attribs['shortcut'] != '') && strpos($attribs['label'], $attribs['shortcut'] ) === false )
+				{
+					if ( strpos($attribs['label'], strtolower($attribs['shortcut']) ) !== false )
+					{
+						$attribs['shortcut'] = strtolower($attribs['shortcut']);
+					}
+					else
+					{
+						$attribs['label'] .= " [{$attribs['shortcut']}]";
+					}
+				}
+
+				$btn = $xml->createElement('communik8r:button');
+
+				foreach($attribs as $akey => $aval)
+				{
+					$btn->setAttribute($akey, $aval);
+				}
+
+				$btns->appendChild($btn);
+			}
+
+			$phpgw->appendChild($btns);
+//----buttons
+
 			$xml->appendChild($phpgw);
+
 			echo $xml->saveXML();
 		}
 

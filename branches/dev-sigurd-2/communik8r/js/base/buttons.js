@@ -37,6 +37,7 @@ function Buttons(strHoldingDiv)
 	 * Prepare to transform XML
 	 * @internal load's onreadystatechange event handler
 	 */
+/*
 	this.transform = function()
 	{
 		if ( self.oXSLDoc.readyState == 4 )
@@ -46,7 +47,10 @@ function Buttons(strHoldingDiv)
 			Sarissa.updateContentFromURI(oApplication.strBaseURL + '&section=buttons', self.oDiv, oXSLTProc, self._addListeners());
 		}
 	}
-	this.init();
+*/
+	self._addListeners()
+
+//	this.init();
 }
 
 /**
@@ -205,12 +209,13 @@ Buttons.prototype.enableAll = function()
  */
 Buttons.prototype.init = function()
 {
-	this.load();
+//	this.load();
 }
 
 /**
  * Load the XML for the buttons
  */
+/*
 Buttons.prototype.load = function()
 {
 	if ( typeof(this.oXSLDoc) == 'object')
@@ -224,10 +229,11 @@ Buttons.prototype.load = function()
 		this.oXSLDoc.load(oApplication.strBaseURL + '&section=xsl&name=buttons');
 	}
 }
-
+*/
 /**
  * Add Event listener to buttons
  */
+
 Buttons.prototype._addListeners = function()
 {
 	this.oDiv = document.getElementById(this.strHoldingDiv);
@@ -236,14 +242,15 @@ Buttons.prototype._addListeners = function()
 	{
 		if( this.oDiv.addEventListener )
 		{
-			oBtns.item(i).addEventListener('click', self.clicked, false);
+			oBtns.item(i).addEventListener('click', this.clicked, false);
 		}
 		else if( this.oDiv.attachEvent )
 		{
-			oBtns.item(i).attachEvent('onclick', self.clicked);
+			oBtns.item(i).attachEvent('onclick', this.clicked);
 		}
-		self.disable( oBtns.item(i) );
+		this.disable( oBtns.item(i) );
 	}
 	eventsLocked = false;
 	//oAccounts.load();
 }
+

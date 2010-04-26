@@ -3,6 +3,7 @@
 	xmlns:phpgw="http://dtds.phpgroupware.org/phpgw.dtd"
 	xmlns:phpgwapi="http://dtds.phpgroupware.org/phpgwapi.dtd"
 	xmlns:communik8r="http://dtds.phpgroupware.org/communik8r.dtd">
+	<xsl:include href="./buttons" />
 	<xsl:output method="html" indent="yes" />
 	<xsl:template match="/">
 		<html>
@@ -54,7 +55,13 @@
 			<body>
 				<div id="content">
 					<div id="menu_holder"></div>
-					<div id="buttons">&#160;</div>
+				<!--	<div id="buttons">&#160;</div> -->
+					<div id="buttons">
+					<xsl:for-each select="/phpgw:response/communik8r:buttons/communik8r:button">
+						<xsl:call-template name="button"/>
+					</xsl:for-each>
+					</div>
+
 					<div id="accounts"></div>
 					<div id="search">&#160;</div>
 					<div id="summary">&#160;</div>
