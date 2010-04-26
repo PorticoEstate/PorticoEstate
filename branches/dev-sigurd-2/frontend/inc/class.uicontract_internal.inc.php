@@ -1,10 +1,12 @@
 <?php
 
 phpgw::import_class('frontend.uifrontend');
+phpgw::import_class('frontend.uicontract');
 phpgw::import_class('rental.uicontract');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.socomposite');
 phpgw::import_class('rental.soparty');
+
 
 class frontend_uicontract_internal extends frontend_uicontract
 {
