@@ -121,7 +121,7 @@
 											</li>
 											<li>
 												<xsl:choose>
-													<xsl:when test="publish_comment">
+													<xsl:when test="publish_comment = 1">
 														<xsl:value-of select="comment" disable-output-escaping="yes"/>
 													</xsl:when>
 												</xsl:choose>
