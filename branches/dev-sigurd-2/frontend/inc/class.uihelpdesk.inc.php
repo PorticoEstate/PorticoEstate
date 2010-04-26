@@ -227,7 +227,7 @@
 					'/index.php',
 					array('menuaction'	=> 'frontend.uihelpdesk.view','id' => )
 				);*/
-			$datatable['exchange_values'] = 'alert(data);';
+			$datatable['exchange_values'] = 'print(data);';
 			$datatable['valida'] = '';
 
 			unset($parameters);
