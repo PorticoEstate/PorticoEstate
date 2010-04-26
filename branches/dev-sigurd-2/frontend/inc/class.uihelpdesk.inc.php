@@ -227,8 +227,11 @@
 					'/index.php',
 					array('menuaction'	=> 'frontend.uihelpdesk.view','id' => )
 				);*/
-			$datatable['exchange_values'] = 'console.log(data);';
-			$datatable['valida'] = '';
+			
+			$function_view_ticket = "";
+			$function_view_ticket .= "var id = data.oData.id;";
+			$function_view_ticket .= "document.location = '/index.php?menuaction=frontend.uihelpdesk.view&id=' + id;";
+			$datatable['exchange_values'] = $function_view_ticket;
 
 			unset($parameters);
 			for ($i = 0 ; $i < $count_uicols_name ; $i++)
