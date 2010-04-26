@@ -103,7 +103,7 @@ class frontend_uicontract extends frontend_uifrontend
 				$contracts_for_selection[] = $contract->serialize();
 			}			
 		}
-		var_dump($contracts_for_selection)
+		var_dump($contracts_for_selection);
 		
 		if(isset($this->contract_state['contract']))
 		{
