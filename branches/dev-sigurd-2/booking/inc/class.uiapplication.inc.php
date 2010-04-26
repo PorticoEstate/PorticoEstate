@@ -515,7 +515,7 @@
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$application = $this->bo->read_single($id);
-			
+
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				if($_POST['create'])
 				{
@@ -587,7 +587,10 @@
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
-			$application['resource_ids'] = $resource_ids;
+			if (count($application['resources']) == 0)
+			{
+				unset($application['dates']);
+			}
 			
 			$this->set_case_officer($application);
 			
