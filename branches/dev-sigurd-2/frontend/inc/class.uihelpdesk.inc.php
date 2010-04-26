@@ -236,7 +236,7 @@
 			//$function_view_ticket .= "document.location = '/index.php?menuaction=frontend.uihelpdesk.view&id=' + id;";
 			//$datatable['exchange_values'] = $function_view_ticket;
 
-			$datatable['exchange_values'] = 'console.log(data);';
+			$datatable['exchange_values'] = 'console.log(data.getId());';
 			$datatable['valida'] = '';
 			
 			unset($parameters);
