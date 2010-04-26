@@ -236,7 +236,10 @@
 			//$function_view_ticket .= "document.location = '/index.php?menuaction=frontend.uihelpdesk.view&id=' + id;";
 			//$datatable['exchange_values'] = $function_view_ticket;
 
-			$datatable['exchange_values'] = "document.location = '/index.php?menuaction=frontend.uihelpdesk.view&id=' + data.getData().id;";
+			$link =	$GLOBALS['phpgw']->link(
+					'/index.php',
+					array('menuaction'	=> 'frontend.uihelpdesk.view'));
+			$datatable['exchange_values'] = "document.location = '{$link}&id=' + data.getData().id;";
 			$datatable['valida'] = '';
 			
 			unset($parameters);
