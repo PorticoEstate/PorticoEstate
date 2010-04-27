@@ -17,7 +17,7 @@
 			           						<option value="active" selected="selected"><xsl:value-of select="php:function('lang', 'active')"/></option>
 			           					</xsl:when>
 			           					<xsl:otherwise>
-			           						<option value="active"><xsl:value-of select="php:function('lang', 'no_contracts')"/></option>
+			           						<option value="active"><xsl:value-of select="php:function('lang', 'active')"/></option>
 			           					</xsl:otherwise>
 			           				</xsl:choose>
 			           				<xsl:choose>
