@@ -36,7 +36,7 @@
 		           		</form>
 			            <xsl:choose>
 			           		<xsl:when test="not(normalize-space(select)) and (count(select) &lt;= 1)">
-			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>
+			           			 <em style="margin_left: 5px;"><xsl:value-of select="php:function('lang', 'no_contracts')"/></em>
 			           		</xsl:when>
 			           		<xsl:otherwise>
 					             <form action="{form_url}" method="post" style="float: left;">
