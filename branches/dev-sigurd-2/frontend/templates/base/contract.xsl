@@ -7,7 +7,7 @@
 			       <form action="index.php?menuaction=frontend.uicontract.index" method="post">
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
 			            <xsl:choose>
-			           		<xsl:when test="not(normalize-space(select)) & count &lt;= 1">
+			           		<xsl:when test="not(normalize-space(select)) & (count(select) &lt;= 1)">
 			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>
 			           		</xsl:when>
 			           		<xsl:otherwise>
