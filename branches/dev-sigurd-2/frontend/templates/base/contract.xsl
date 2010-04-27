@@ -1,5 +1,5 @@
 <xsl:template match="contract_data" xmlns:php="http://php.net/xsl">
-	<xsl:copy-of select="."/>
+	<!-- <xsl:copy-of select="."/> -->
     <div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
         <div class="yui-content">
