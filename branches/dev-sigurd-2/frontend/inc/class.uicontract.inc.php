@@ -59,7 +59,7 @@ class frontend_uicontract extends frontend_uifrontend
 		$new_contract = phpgw::get_var('contract_id');
 		$contracts_per_location = phpgwapi_cache::user_get('frontend', $this->contracts_per_location_identifier, $GLOBALS['phpgw_info']['user']['account_id']);
 		$contracts_for_selection = array();
-		$number_of_valid_locations = 0;
+		$number_of_valid_contracts = 0;
 		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{
 			if(	($this->contract_filter == 'active' && $contract->is_active()) ||
@@ -67,7 +67,7 @@ class frontend_uicontract extends frontend_uifrontend
 				$this->contract_filter == 'all'
 			)
 			{
-				$number_of_valid_locations++;
+				$number_of_valid_contracts += 1;
 				//Only select necessary fields
 				$contracts_for_selection[] = array(
 					'id' 				=> $contract->get_id(),
@@ -105,7 +105,7 @@ class frontend_uicontract extends frontend_uifrontend
 		}
 		
 		
-		if($number_of_valid_locations == 0)
+		if($number_of_valid_contracts == 0)
 		{
 			$this->contract_state['selected'] = '';
 			$this->contract_state['contract'] = null;
