@@ -99,7 +99,7 @@ class frontend_uicontract extends frontend_uifrontend
 				}
 			}			
 		}
-		
+		*/
 		$data = array (
 			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			'header' 		=>	$this->header_state,
@@ -114,7 +114,6 @@ class frontend_uicontract extends frontend_uifrontend
 				'form_url' => $this->form_url
 			)
 		);
-		*/
                 	
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
 		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
