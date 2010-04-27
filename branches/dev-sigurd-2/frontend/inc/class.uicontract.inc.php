@@ -142,6 +142,9 @@ class frontend_uicontract extends frontend_uifrontend
 			$this->contract_state['contract']->set_rented_area(number_format($this->contract_state['contract']->get_rented_area(),2,","," ")." ".lang('square_meters'));
 		}
 		
+		var_dump("Number of contracts for selection: " . count($contracts_for_selection));
+		var_dump("Selected contract" . $this->contract_state['selected']);
+		
 		$data = array (
 			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			'header' 		=>	$this->header_state,
