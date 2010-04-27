@@ -2,7 +2,12 @@
 EcmaUnit changes
 ================
 
-- EcmaUnit 0.3
+- EcmaUnit 0.4
+
+  o Added assertNotEquals function.
+    [fschulze]
+
+- EcmaUnit 0.3 (2005-04-19)
   
   o Added tracebacks for Mozilla and Spidermonkey ('verbose' mode).
 
