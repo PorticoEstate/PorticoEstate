@@ -28,7 +28,7 @@ class frontend_uicontract extends frontend_uifrontend
 	 */
 	public function index()
 	{
-	/*
+	
 		$contractdata = array();	// This is the main container for all contract data sent to XSLT template stuff
 		$msglog = array();			// Array of errors and other notifications displayed to us
 		
@@ -50,6 +50,7 @@ class frontend_uicontract extends frontend_uifrontend
 			$this->contract_filter = isset($filter) ? $filter : 'active';
 		}
 		
+		/*
 		// If the user wants to view another contract connected to this location
 		// Request parameter: the user wants to view details about anther contract
 		// The current state of the contract view of this user's session
