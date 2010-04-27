@@ -31,15 +31,16 @@ class frontend_uicontract extends frontend_uifrontend
 	
 		$contractdata = array();	// This is the main container for all contract data sent to XSLT template stuff
 		$msglog = array();			// Array of errors and other notifications displayed to us
-		/*
+		
+		$filter = phpgw::get_var('contract_filter');
 		// The user wants to change the contract status filter
-		if(isset(phpgw::get_var('contract_filter'))) 
+		if(isset($filter)) 
 		{
-				$this->contract_filter = phpgw::get_var('contract_filter');
-				phpgwapi_cache::user_set('frontend', 'contract_filter', $this->contract_filter, $GLOBALS['phpgw_info']['user']['account_id']);
+				$this->contract_filter = $filter;
+				phpgwapi_cache::user_set('frontend', 'contract_filter', $filter, $GLOBALS['phpgw_info']['user']['account_id']);
 				
 				// ... if the user changes filter that may cause the
-				if($this->contract_filter == 'active' || $this->contract_filter == 'not_active')
+				if($filter == 'active' || $filter == 'not_active')
 				{
 					$change_contract = true;
 				}	
@@ -50,7 +51,7 @@ class frontend_uicontract extends frontend_uifrontend
 			$this->contract_filter = isset($filter) ? $filter : 'active';
 		}
 		
-		*/
+		
 		// If the user wants to view another contract connected to this location
 		// Request parameter: the user wants to view details about anther contract
 		// The current state of the contract view of this user's session
