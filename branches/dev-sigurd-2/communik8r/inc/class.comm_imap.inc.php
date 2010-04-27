@@ -3282,7 +3282,8 @@
 						$line=rtrim($this->read_line(5000));
 						if ($line[0]=="*")
 						{
-							if (ereg("\}$", $line))
+						//	if (ereg("\}$", $line))
+							if (preg_match("/\}$/", $line))
 							{
 								preg_match('/(.+)\{([0-9]+)\}/', $line, $match);  
 								$result = $match[1];

@@ -102,9 +102,9 @@
 					}
 					break;
 
-				case 'PUT':
+				case 'POST':
 			//	case 'GET':
-					error_log('PUT: ' . print_r($data, true));
+					error_log('POST: ' . print_r($data),3,'/tmp/my-errors.log');
 					switch ( $data['action'] )
 					{
 						case 'status':
@@ -127,7 +127,7 @@
 		function compose($data)
 		{
 			$reply = $forward = false;
-			if (  strtoupper($_SERVER['REQUEST_METHOD']) == 'PUT' )
+			if (  strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' )
 			{
 				if ( $data['action'] == 'draft' ) 
 				{
@@ -135,8 +135,7 @@
 				}
 				else //send
 				{
-			//		$this->_process_send($uri_parts[3]);//3 is the unique message id
-					$this->_process_send($data['msg_id']);//3 is the unique message id
+					$this->_process_send($data);
 				}
 			}
 			else if (  strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' )
@@ -358,7 +357,8 @@
 
 			$body = $xml->createElement('communik8r:body');
 			$this->_decode_body($msg->body, $msg->entities[0]);
-			$body->appendChild( $xml->createTextNode( $body ) );
+//			$body->appendChild( $xml->createTextNode( $body ) );
+			$body->appendChild( $xml->createTextNode( $msg->body ) );
 			$message->appendChild($body);
 
 			$elm->appendChild($message);
@@ -1111,23 +1111,21 @@
 		 * @access private
 		 * @param string $msg_id unique message id
 		 */
-		function _process_send($msg_id)
+		function _process_send($data)
 		{
+			
+			$msg_id = $data['msg_id'];
+
 			$ids = $GLOBALS['phpgw']->session->appsession('composing');
 
+			error_log(print_r($data),3, "/tmp/my-errors.log");
 			if ( !isset($ids[$msg_id]) )
 			{
 				trigger_error(array('400' => 'invalid message number, please contact your system administrator'), E_USER_ERROR );
 				exit;
 			}
 
-			$xmldata = '';
-			$putdata = fopen('php://input', 'r');//the TFphpM is fsckd stdin doesn't work!!
-
-			while ( $data = fread($putdata, 1024) )
-			{
-				$xmldata .= "{$data}\n";
-			}
+			$xmldata = $data['msg_data'];
 
 			if( !strlen($xmldata) )
 			{
@@ -1140,83 +1138,105 @@
 			$xml = new DOMDocument;
 			$xml->loadXML($xmldata);
 
-			$smtp->Host = $this->smtp_host;
-			$smtp->Port = $this->smtp_port;
-
-			if ( $this->smtp_auth )
-			{
-				$smtp->SMTPAuth = true;
-				$smtp->Username = $GLOBALS['phpgw_info']['user']['userid'];
-				$smtp->Password = $GLOBALS['phpgw_info']['user']['password'];
-			}
-
 			$acct_id = $xml->getElementsByTagName('message_account_id');
-			$acct_info = execMethod('communik8r.boaccounts.id2array', $acct_id[0]->get_content() );
+			$acct_info = execMethod('communik8r.boaccounts.id2array', $acct_id->item(0)->nodeValue );
 			unset($acct_id);
-			$smtp->Sender = $acct_info['acct_uri'];
-			$smtp->From =& $smtp->Sender;
-			$smtp->FromName = $acct_info['display_name'];
+
+			$from_email = $acct_info['acct_uri'];
+			$from_name = '';
+			if($acct_info['display_name'])
+			{
+				$from_email .= "<{$acct_info['display_name']}>";
+				$from_name = $acct_info['display_name'];
+			}	
+
 			unset($acct_info);
 
-
 			$tos = $xml->getElementsByTagName('message_to');
+			$_to = array();
 			foreach ( $tos as $to )
 			{
-				$rcpt = $this->_address2parts( $to->get_content() );
-				$smtp->AddAddress($rcpt['full'], $rcpt['name']);
-			}
-			unset($tos);
-
-			$ccs = $xml->getElementsByTagName('message_cc');
-			foreach ( $ccs as $cc )
-			{
-				$rcpt = $this->_address2parts( $cc->get_content() );
-				$smtp->AddCC($rcpt['full'], $rcpt['name']);
-			}
-			unset($ccs);
-
-			$bccs = $xml->getElementsByTagName('message_cc');
-			foreach ( $bccs as $bcc )
-			{
-				$rcpt = $this->_address2parts( $bcc->get_content() );
-				$smtp->AddBCC($rcpt['full'], $rcpt['name']);
-			}
-			unset($bccs);
-
-			$subject = $xml->getElementsByTagName('message_subject');
-			$smtp->Subject = $subject[0]->get_content();
-			unset($subject);
-
-			$boattach = createObject('communik8r.boattachments');
-			$boattach->msg_id = $msg_id;
-			$attachments = $boattach->get_raw_list();
-			if ( is_array($attachments) && count($attachments) )
-			{
-				foreach( $attachments as $attachment)
+				$rcpt = $this->_address2parts( $to->nodeValue );
+				if($rcpt['full'])
 				{
-					$smtp->AddAttachment($attachment['phpgw_file'], $attachment['name'], 'base64', $attachment['type']);
+					$_to[] = "{$rcpt['name']}<{$rcpt['full']}>";
 				}
 			}
-			unset($attachments);
+			unset($tos);
+			$to = implode(';', $_to);
+			unset($_to);
+
+			$ccs = $xml->getElementsByTagName('message_cc');
+			$_cc = array();
+			foreach ( $ccs as $cc )
+			{
+				$rcpt = $this->_address2parts( $cc->nodeValue );
+				if($rcpt['full'])
+				{
+					$_cc[] = "{$rcpt['name']}<{$rcpt['full']}>";
+				}
+			}
+			unset($ccs);
+			$cc = implode(';', $_cc);
+			unset($_cc);
+
+			$bccs = $xml->getElementsByTagName('message_bcc');
+			$_bcc = array();
+			foreach ( $bccs as $bcc )
+			{
+				$rcpt = $this->_address2parts( $bcc->nodeValue );
+				if($rcpt['full'])
+				{
+					$_bcc[] = "{$rcpt['name']}<{$rcpt['full']}>";
+				}
+			}
+			unset($bccs);
+			$bcc = implode(';', $_bcc);
+			unset($_bcc);
+
+			$_subject = $xml->getElementsByTagName('message_subject');
+			$subject = $_subject->item(0)->nodeValue;
+
+			$mime_magic = createObject('phpgwapi.mime_magic');
+			$boattach = createObject('communik8r.boattachments');
+			$boattach->msg_id = $msg_id;
+			$_attachments = $boattach->get_raw_list();
+			if ( is_array($_attachments) && count($_attachments) )
+			{
+				foreach( $_attachments as $_attachment)
+				{
+					$attachments[] = array
+					(
+						'file' => $_attachment['phpgw_file'],
+						'name' => $_attachment['name'],
+			//			'type' => $_attachment['type']
+						'type' => $mime_magic->filename2mime($_attachment['name'])
+					);
+				}
+			}
+			unset($_attachments);
 
 			$msgbody = $xml->getElementsByTagName('msgbody');
-			$body = $msgbody[0]->get_content();
+			$body = $msgbody->item(0)->nodeValue;
 			unset($msgbody);
-			error_log(print_r($smtp, true));
+
 			if ( $this->_html_ok() )
 			{
-				$smtp->IsHTML(True);
-				$smtp->Body = $body;
-				$smtp->AltBody = $this->_html2plain($body);
+				$type = 'html';
+//				$smtp->AltBody = $this->_html2plain($body);
 			}
 			else
 			{
+				$type = 'text';
 				$body = $this->_html2plain($body);
-				$smtp->Body = $body;
 			}
-			unset($body);
 
-			error_log( "Message {$msg_id}: " .( $smtp->Send() . ' : ' ? 'Sent ' . $smtp->getHeader() . $smtp->getBody() : "FAILED: {$smtp->ErrorInfo}") );
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+			$rcpt = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, $type, '', $attachments);
+			error_log( "Message {$msg_id}:{$rcpt} Sent ",3, "/tmp/my-errors.log");
 			//$boattach->remove_path();
 		}
 
@@ -1246,4 +1266,3 @@
 
 		}
 	}
-?>
