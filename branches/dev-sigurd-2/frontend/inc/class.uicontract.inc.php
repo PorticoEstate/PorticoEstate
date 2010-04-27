@@ -30,9 +30,10 @@ class frontend_uicontract extends frontend_uifrontend
 	{
 		
 		$contractdata = array();	// This is the main container for all contract data sent to XSLT template stuff
-		$msglog = array();			// Array of errors and other notifications displayed to use
-		$contract = null;			// Holds the contract object (for use in this function only), if any
-
+		$msglog = array();			// Array of errors and other notifications displayed to us
+		
+		var_dump('test');
+		
 		// The user wants to change the contract status filter
 		if(isset(phpgw::get_var('contract_filter'))) 
 		{
@@ -94,7 +95,6 @@ class frontend_uicontract extends frontend_uifrontend
 					{
 						$composite_array[] = $composite->serialize();
 					}
-					
 					
 					$this->contract_state['contract']->set_total_price(number_format($this->contract_state['contract']->get_total_price(),2,","," ")." ".lang('currency'));
 					$this->contract_state['contract']->set_rented_area(number_format($this->contract_state['contract']->get_rented_area(),2,","," ")." ".lang('square_meters'));
