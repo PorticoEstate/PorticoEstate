@@ -92,8 +92,6 @@ class frontend_uicontract extends frontend_uifrontend
 		
 		$contracts_per_location = phpgwapi_cache::user_get('frontend', $this->contracts_per_location_identifier, $GLOBALS['phpgw_info']['user']['account_id']);
 		$contracts_for_selection = array();
-		var_dump($this->contract_filter);
-		var_dump($contracts_per_location[$this->header_state['selected_location']]);
 		foreach($contracts_per_location[$this->header_state['selected_location']] as $contract)
 		{
 			if(	($this->contract_filter == 'active' && $contract->is_active()) ||
@@ -105,7 +103,6 @@ class frontend_uicontract extends frontend_uifrontend
 				$contracts_for_selection[] = $contract->serialize();
 			}			
 		}
-		var_dump($contracts_for_selection);
 		
 		if(isset($this->contract_state['contract']))
 		{
