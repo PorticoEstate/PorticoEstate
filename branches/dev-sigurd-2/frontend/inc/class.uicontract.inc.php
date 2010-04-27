@@ -28,7 +28,7 @@ class frontend_uicontract extends frontend_uifrontend
 	 */
 	public function index()
 	{
-	/*	
+	
 		$contractdata = array();	// This is the main container for all contract data sent to XSLT template stuff
 		$msglog = array();			// Array of errors and other notifications displayed to us
 		
@@ -114,7 +114,7 @@ class frontend_uicontract extends frontend_uifrontend
 				'form_url' => $this->form_url
 			)
 		);
-		
+		/*
 		var_dump($data);
                 	
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
