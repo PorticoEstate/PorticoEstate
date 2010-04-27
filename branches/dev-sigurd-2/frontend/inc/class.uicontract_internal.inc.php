@@ -1,4 +1,7 @@
 <?php
+
+phpgw::import_class('frontend.uicontract');
+
 class frontend_uicontract_internal extends frontend_uicontract
 {
 	public function __construct()
