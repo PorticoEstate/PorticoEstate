@@ -10,7 +10,7 @@
 			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>
 			           		</xsl:when>
 			           		<xsl:otherwise>
-				           		<form action="{form_url}" method="post">
+				           		<form action="{form_url}" method="post" style="float:left;">
 				           			<select name="contract_filter" onchange="this.form.submit()">
 				           				<xsl:choose>
 				           					<xsl:when test="//contract_filter = 'active'">
@@ -39,7 +39,7 @@
 				           			</select>
 				           		</form>
 					            <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
-					             <form action="{form_url}" method="post">
+					             <form action="{form_url}" method="post" style="float: left;">
 						           	<xsl:for-each select="select">
 						           		<xsl:choose>
 							           		<xsl:when test="id = //selected_contract">
