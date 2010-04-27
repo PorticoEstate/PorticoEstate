@@ -226,3 +226,7 @@ float:left;
 width:100%;
 }
 
+.yui-skin-sam .yui-pg-container {
+	white-space:wrap;
+	}
+
