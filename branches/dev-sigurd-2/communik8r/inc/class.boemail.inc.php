@@ -111,7 +111,7 @@
 							$this->update_mailbox_status($data);
 							break;
 						default:
-							$this->compose($uri_parts);//no validation for now :P
+							$this->compose($data);//no validation for now :P
 					}
 					break;
 
@@ -129,13 +129,14 @@
 			$reply = $forward = false;
 			if (  strtoupper($_SERVER['REQUEST_METHOD']) == 'PUT' )
 			{
-				if ( $uri_parts[2] == 'draft' ) 
+				if ( $data['action'] == 'draft' ) 
 				{
 					//not yet supported
 				}
 				else //send
 				{
-					$this->_process_send($uri_parts[3]);//3 is the unique message id
+			//		$this->_process_send($uri_parts[3]);//3 is the unique message id
+					$this->_process_send($data['msg_id']);//3 is the unique message id
 				}
 			}
 			else if (  strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' )

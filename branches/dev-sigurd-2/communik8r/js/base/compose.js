@@ -151,20 +151,28 @@ function exec_replace()
 
 function execCmd(strCmd)
 {
-	var oEditor = FCKeditorAPI.GetInstance('msgbody') ;
-	return oEditor.Commands.GetCommand(strCmd).Execute() ;
+	var oEditor = CKEDITOR.instances.msgbody;
+alert('compose::execCmd: ' + strCmd);
+	return oEditor.execCommand(strCmd)
+
+//	var oEditor = FCKeditorAPI.GetInstance('msgbody') ;
+//	return oEditor.Commands.GetCommand(strCmd).Execute() ;
 }
 
 function exec_send(strFormID)
 {
-	var oFCK = FCKeditorAPI.GetInstance('msgbody');
+//	var oFCK = FCKeditorAPI.GetInstance('msgbody');
+
+//	var oFCK = CKEDITOR.instances.msgbody;
+//	alert( oFCK.getData() );
 
 	var iAccount = document.getElementById('account').options[document.getElementById('account').selectedIndex].value;
 	var strTo = document.getElementById('to').value;
 	var strCC = document.getElementById('cc').value;
 	var strBCC = document.getElementById('bcc').value;
 	var strSubject = document.getElementById('subject').value;
-	var strMsgBody = oFCK.GetXHTML(true);
+//	var strMsgBody = oFCK.GetXHTML(true);
+	var strMsgBody = CKEDITOR.instances.msgbody.getData();
 	var strSignature = document.getElementById('signature_content').value.replace(/^\s+/g, "" ).replace( /\s+$/g, "");
 
 	if( !strTo && !strCC )
@@ -175,7 +183,7 @@ function exec_send(strFormID)
 
 	var oXML = Sarissa.getDomDocument('http://dtds.phpgroupware.org/phpgw.dtd', 'phpgw');
 
-	if ( !document.createElementNS ) // Yes IE is a fucked piece of shit!
+	if ( !document.createElementNS ) //  IE problem
 	{
 		var ophpGWResponse = oXML.createElement('phpgw:response');
 
@@ -271,9 +279,13 @@ function exec_send(strFormID)
 	ophpGWResponse.appendChild(oCommunik8rResponse);
 
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open('PUT', oApplication.strBaseURL + '/email/send/' + strMsgID + oApplication.strGET, false);
+//	xmlhttp.open('PUT', oApplication.strBaseURL + '/email/send/' + strMsgID + oApplication.strGET, false);
+	xmlhttp.open('PUT', oApplication.strBaseURL + '&section=email&action=send&msg_id=' + strMsgID, false);
 	//xmlhttp.async = false;
-	xmlhttp.send( Sarissa.serialize(ophpGWResponse) );
+ 
+//	xmlhttp.send( Sarissa.serialize(ophpGWResponse) );
+	var xmlString = new XMLSerializer().serializeToString(ophpGWResponse);  
+	xmlhttp.send( xmlString );
 
 	if ( xmlhttp.status == 200 )
 	{
