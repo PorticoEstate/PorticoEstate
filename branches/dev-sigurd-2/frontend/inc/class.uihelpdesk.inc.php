@@ -138,8 +138,16 @@
 				$dry_run = true;
 			}
 
-			$bo->location_code = $this->location_code;
-			$ticket_list = $bo->read('','','',$dry_run);
+			if(isset($this->location_code) && $this->location_code != '')
+			{
+				$bo->location_code = $this->location_code;
+				$ticket_list = $bo->read('','','',$dry_run);
+			}
+			else
+			{
+				$ticket_list = null;
+			}
+			
 			
 			$uicols = array();
 
