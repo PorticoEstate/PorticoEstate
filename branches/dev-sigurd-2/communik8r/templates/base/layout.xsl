@@ -6,6 +6,8 @@
 	<xsl:include href="./buttons" />
 	<xsl:output method="html" indent="yes" />
 	<xsl:template match="/">
+		<xsl:variable name="api_url"
+			select="/phpgw:response/phpgwapi:info/phpgwapi:api_url" />
 		<html>
 			<head>
 				<title>[communik8r]</title>
@@ -35,9 +37,9 @@
 					}
 				</script>
 				<!-- CSS compliance fixes -->
-				<script src="js/ie7/ie7-standard-p.js" type="text/javascript"></script>
-				<script type="text/javascript" src="js/sarissa/sarissa.js"></script>
-				<script type="text/javascript" src="js/sarissa/sarissa_dhtml.js"></script>
+			<!--	<script src="js/ie7/ie7-standard-p.js" type="text/javascript"></script> -->
+				<script type="text/javascript" src="{concat($api_url, '/js/sarissa/sarissa-compressed.js')}"></script>
+			<!--	<script type="text/javascript" src="js/sarissa/sarissa_dhtml.js"></script> -->
 				<script type="text/javascript" src="js/base/application.js"></script>
 				<script type="text/javascript" src="js/jsdommenubar/jsdomenu_compressed.js"></script>
 				<script type="text/javascript" src="js/jsdommenubar/jsdomenubar_compressed.js"></script>

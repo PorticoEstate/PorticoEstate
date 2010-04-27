@@ -48,7 +48,7 @@ function Menu(strDiv)
 			return false; //nothing to see here folks, keep moving right along
 		}
 		
-		if ( self.oXML.parseError != 0 )
+		if ( self.oXML.parseError )
 		{
 			return !alert('Invalid XML!');
 		}

@@ -5,26 +5,31 @@
 	xmlns:communik8r="http://dtds.phpgroupware.org/communik8r.dtd">
 	<xsl:output method="html" indent="yes" />
 	<xsl:template match="/">
+		<xsl:variable name="api_url"
+			select="/phpgw:response/phpgwapi:info/phpgwapi:api_url" />
 		<xsl:variable name="base_url"
 			select="/phpgw:response/phpgwapi:info/phpgwapi:base_url" />
+		<xsl:variable name="app_url"
+			select="/phpgw:response/phpgwapi:info/phpgwapi:app_url" />
 		<xsl:variable name="skin"
 			select="/phpgw:response/phpgwapi:info/phpgwapi:skin" />
 		<html>
 			<head>
 				<title><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='accounts_title']" /></title>
-				<link href="{concat($base_url, '/css/evo.css')}" rel="stylesheet" type="text/css" />
-				<link rel="icon" href="{concat($base_url, '/templates/', $skin, '/images/navbar.png')}" type="image/png" />
+				<link href="{concat($app_url, '/css/evo.css')}" rel="stylesheet" type="text/css" />
+				<link rel="icon" href="{concat($app_url, '/templates/', $skin, '/images/navbar.png')}" type="image/png" />
 				<script type="text/javascript">
 
 					var strBaseURL = "<xsl:value-of select='$base_url' />";
+					var strAppURL = "<xsl:value-of select='$app_url' />";
 					var oAccountsWin = window.self;
 				</script>
-				<script type="text/javascript" src="{concat($base_url, '/js/base/application.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/base/ui.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/sarissa/sarissa.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/sarissa/sarissa_dhtml.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/tabs/tabs.js')}"></script>
-				<script type="text/javascript" src="{concat($base_url, '/js/base/emailaccounts.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/base/application.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/base/ui.js')}"></script>
+				<script type="text/javascript" src="{concat($api_url, '/js/sarissa/sarissa-compressed.js')}"></script>
+			<!--	<script type="text/javascript" src="{concat($base_url, '/js/sarissa/sarissa_dhtml.js')}"></script> -->
+				<script type="text/javascript" src="{concat($app_url, '/js/tabs/tabs.js')}"></script>
+				<script type="text/javascript" src="{concat($app_url, '/js/base/emailaccounts.js')}"></script>
 				<script type="text/javascript">
 				<![CDATA[
 					var oApplication = new Application();
@@ -161,15 +166,15 @@
 					</div>
 					<div id="ctrl_buttons">
 						<button name="help" id="button_help" onClick="oApplication.showHelp('account_email_edit');">
-							<img src="{concat($base_url, '/templates/', $skin, '/images/help-24x24.png')}" alt="{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='help']}" />
+							<img src="{concat($app_url, '/templates/', $skin, '/images/help-24x24.png')}" alt="{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='help']}" />
 							<xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='help']"/>
 						</button>
 						<button name="cancel" onClick="oApplication.confirmClose('{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='confirm_cancel_msg']}');">
-							<img src="{concat($base_url, '/templates/', $skin, '/images/cancel-24x24.png')}" alt="{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='cancel']}" />
+							<img src="{concat($app_url, '/templates/', $skin, '/images/cancel-24x24.png')}" alt="{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='cancel']}" />
 							<xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='cancel']"/>
 						</button>
 						<button type="submit" name="ok">
-							<img src="{concat($base_url, '/templates/', $skin, '/images/ok-24x24.png')}" alt="{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='ok']}" />
+							<img src="{concat($app_url, '/templates/', $skin, '/images/ok-24x24.png')}" alt="{/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='ok']}" />
 							<xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='ok']"/>
 						</button>
 					</div>

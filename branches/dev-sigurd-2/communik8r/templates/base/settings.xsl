@@ -5,6 +5,8 @@
 	xmlns:communik8r="http://dtds.phpgroupware.org/communik8r.dtd">
 	<xsl:output method="html" indent="yes" />
 	<xsl:template match="/">
+		<xsl:variable name="api_url"
+			select="/phpgw:response/phpgwapi:info/phpgwapi:api_url" />
 		<xsl:variable name="app_url"
 			select="/phpgw:response/phpgwapi:info/phpgwapi:app_url" />
 		<xsl:variable name="skin"
@@ -23,8 +25,8 @@
 				</script>
 				<script type="text/javascript" src="{concat($app_url, '/js/base/application.js')}"></script>
 				<script type="text/javascript" src="{concat($app_url, '/js/base/ui.js')}"></script>
-				<script type="text/javascript" src="{concat($app_url, '/js/sarissa/sarissa.js')}"></script>
-				<script type="text/javascript" src="{concat($app_url, '/js/sarissa/sarissa_dhtml.js')}"></script>
+				<script type="text/javascript" src="{concat($api_url, '/js/sarissa/sarissa-compressed.js')}"></script>
+			<!--	<script type="text/javascript" src="{concat($app_url, '/js/sarissa/sarissa_dhtml.js')}"></script> -->
 				<script type="text/javascript" src="{concat($app_url, '/js/ie7/ie7-standard-p.js')}"></script>
 				<script type="text/javascript" src="{concat($app_url, '/js/tabs/tabs.js')}"></script>
 				<script type="text/javascript">

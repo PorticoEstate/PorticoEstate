@@ -136,9 +136,17 @@
 			$info = $xml->createElement('phpgwapi:info');
 
 			$base_url = $xml->createElement('phpgwapi:base_url');
-			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$base_url->appendChild( $xml->createTextNode( $GLOBALS['phpgw']->link('index.php') ) );
 			$info->appendChild($base_url);
 			unset($base_url);
+			$app_url = $xml->createElement('phpgwapi:app_url');
+			$app_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($app_url);
+			unset($app_url);
+			$api_url = $xml->createElement('phpgwapi:api_url');
+			$api_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi") );
+			$info->appendChild($api_url);
+			unset($api_url);
 
 			$skin = $xml->createElement('phpgwapi:skin');
 			$skin->appendChild( $xml->createTextNode('base') );
