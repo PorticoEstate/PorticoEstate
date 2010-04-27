@@ -50,7 +50,7 @@ class frontend_uicontract extends frontend_uifrontend
 			$filter = phpgwapi_cache::user_get('frontend', 'contract_filter' , $GLOBALS['phpgw_info']['user']['account_id']);
 			$this->contract_filter = isset($filter) ? $filter : 'active';
 		}
-		/*
+		
 		// If the user wants to view another contract connected to this location
 		// Request parameter: the user wants to view details about anther contract
 		// The current state of the contract view of this user's session
@@ -99,7 +99,7 @@ class frontend_uicontract extends frontend_uifrontend
 					$this->contract_state['contract']->set_rented_area(number_format($this->contract_state['contract']->get_rented_area(),2,","," ")." ".lang('square_meters'));
 				}
 			}			
-		}*/
+		}
 		
 		$data = array (
 			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
@@ -116,8 +116,9 @@ class frontend_uicontract extends frontend_uifrontend
 			)
 		);
 		
+		var_dump($data);
                 	
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
+		//$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
 	}
 }
