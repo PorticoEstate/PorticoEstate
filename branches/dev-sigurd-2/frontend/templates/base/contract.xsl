@@ -43,10 +43,10 @@
 						           	<xsl:for-each select="select">
 						           		<xsl:choose>
 							           		<xsl:when test="id = //selected_contract">
-						           				<input name="contract_id" type="radio" value="{id}" checked="" onclick="this.form.submit();" style="margin-left: 5px;"></input> 
+						           				<input name="contract_id" type="radio" value="{id}" checked="" onclick="this.form.submit();" style="margin-left: 1em;"></input> 
 						           			</xsl:when>
 						           			<xsl:otherwise>	
-						           				<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();" style="margin-left: 5px;"></input>
+						           				<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();" style="margin-left: 1em;"></input>
 						           			</xsl:otherwise>
 						           		</xsl:choose>
 						           		<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
