@@ -159,7 +159,6 @@
             </script>
         </xsl:when>
     </xsl:choose>
-   <br/><br/>
     <div id="paging"> </div>
     <div class="datatable-container">
         <table class="datatable">
