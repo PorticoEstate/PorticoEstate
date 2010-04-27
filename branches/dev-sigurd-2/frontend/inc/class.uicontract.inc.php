@@ -104,6 +104,25 @@ class frontend_uicontract extends frontend_uifrontend
 			}			
 		}
 		
+		if(!isset($party_array) && isset($this->contract_state['contract']))
+		{
+			$parties =  rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
+			$party_array = array();
+			foreach($parties as $party)
+			{
+				$party_array[] = $party->serialize();
+			}
+		}
+		
+		if(!isset($composite_array) && isset($this->contract_state['contract']))
+		{
+			$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->contract_state['contract']->get_id()));
+			$composite_array = array();
+			foreach($composites as $composite)
+			{
+				$composite_array[] = $composite->serialize();
+			}
+		}
 		
 		if($number_of_valid_contracts == 0)
 		{
