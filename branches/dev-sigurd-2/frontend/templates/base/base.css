@@ -178,6 +178,7 @@ div.tickets {
 	
 div.toolbar-container {
 	margin-bottom: 1em;
+	white-space:nowrap;
 	}
 
 em.select_header {
@@ -225,8 +226,4 @@ border:1px solid #BBBBBB;
 float:left;
 width:100%;
 }
-
-.yui-skin-sam .yui-pg-container {
-	white-space:wrap;
-	}
 
