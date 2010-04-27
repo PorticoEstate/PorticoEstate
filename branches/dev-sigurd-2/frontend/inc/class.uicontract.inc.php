@@ -39,10 +39,13 @@ class frontend_uicontract extends frontend_uifrontend
 
 		// Request parameter: the user wants to view details about anther contract
 		$new_contract = phpgw::get_var('contract_id');
+		var_dump("New contract: " + $new_contract);
 
 		// The current state of the contract view of this user's session
 		$this->contract_state = phpgwapi_cache::user_get('frontend', $this->contract_state_identifier , $GLOBALS['phpgw_info']['user']['account_id']);
-
+		var_dump("Current contract state: " + $this->contract_state);
+		var_dump("State: " + $this->contract_state_identifier);
+		
 		// If the user visits the contract tab for the first time...
 		if(!isset($this->contract_state))
 		{
@@ -70,7 +73,6 @@ class frontend_uicontract extends frontend_uifrontend
 			{
 				$change_contract = true;
 			}
-			//TODO: change selected contract
 		} 
 		else
 		{
