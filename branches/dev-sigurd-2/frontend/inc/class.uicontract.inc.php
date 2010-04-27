@@ -11,6 +11,7 @@ class frontend_uicontract extends frontend_uifrontend
 
 	protected $contract_state_identifier;
 	protected $contracts_per_location_identifier;
+	protected $form_url;
 	
 	
 	public $public_functions = array(
@@ -100,6 +101,7 @@ class frontend_uicontract extends frontend_uifrontend
 				$this->contract_filter == 'all'
 			)
 			{
+				//TODO: ony select necessary fields
 				$contracts_for_selection[] = $contract->serialize();
 			}			
 		}
@@ -138,7 +140,8 @@ class frontend_uicontract extends frontend_uifrontend
 				'contract'	=> isset($this->contract_state['contract']) ? $this->contract_state['contract']->serialize() : array(),
 				'party'	=> $party_array,
 				'composite' => $composite_array,
-				'contract_filter' => $this->contract_filter
+				'contract_filter' => $this->contract_filter,
+				'form_url' => $this->form_url
 			)
 		);
 		

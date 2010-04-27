@@ -4,7 +4,7 @@
         <div class="yui-content">
         	<div class="toolbar" style="display: block; padding-bottom: 1em;">
             	<div id="contract_selector">
-			       <form action="index.php?menuaction=frontend.uicontract.index" method="post">
+			       <form action="{form_url}" method="post">
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
 			            <xsl:choose>
 			           		<xsl:when test="not(normalize-space(select)) and (count(select) &lt;= 1)">
