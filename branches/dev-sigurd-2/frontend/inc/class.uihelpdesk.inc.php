@@ -141,7 +141,7 @@
 			$bo->location_code = $this->location_code;
 			var_dump($bo->location_code);
 			$ticket_list = $bo->read('','','',$dry_run);
-			var_dump($bo->location_code);
+			var_dump($ticket_list);
 			
 			$uicols = array();
 
