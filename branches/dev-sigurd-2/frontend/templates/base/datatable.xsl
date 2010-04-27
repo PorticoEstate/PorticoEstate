@@ -160,8 +160,7 @@
         </xsl:when>
     </xsl:choose>
 
-    <br/><br/>
-    <div id="message"> </div>
+    <div id="message" style="white-space: nowrap;"> </div>
    
     <div id="paging"> </div>
     <div class="datatable-container">
