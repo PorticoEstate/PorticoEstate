@@ -4,54 +4,56 @@
         <div class="yui-content">
         	<div class="toolbar" style="display: block; padding-bottom: 1em;">
             	<div id="contract_selector">
-			       <form action="{form_url}" method="post">
 			           <img src="frontend/templates/base/images/16x16/page_white_stack.png" class="list_image"/>
 			            <xsl:choose>
 			           		<xsl:when test="not(normalize-space(select)) and (count(select) &lt;= 1)">
 			           			 <xsl:value-of select="php:function('lang', 'no_contracts')"/>
 			           		</xsl:when>
 			           		<xsl:otherwise>
-			           			<select name="contract_filter" onchange="this.form.submit()">
-			           				<xsl:choose>
-			           					<xsl:when test="//contract_filter = 'active'">
-			           						<option value="active" selected="selected"><xsl:value-of select="php:function('lang', 'active')"/></option>
-			           					</xsl:when>
-			           					<xsl:otherwise>
-			           						<option value="active"><xsl:value-of select="php:function('lang', 'active')"/></option>
-			           					</xsl:otherwise>
-			           				</xsl:choose>
-			           				<xsl:choose>
-			           					<xsl:when test="//contract_filter = 'not_active'">
-			           						<option value="not_active" selected="selected"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
-			           					</xsl:when>
-			           					<xsl:otherwise>
-			           						<option value="not_active"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
-			           					</xsl:otherwise>
-			           				</xsl:choose>
-			           				<xsl:choose>
-			           					<xsl:when test="//contract_filter = 'all'">
-			           						<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all')"/></option>
-			           					</xsl:when>
-			           					<xsl:otherwise>
-			           						<option value="all"><xsl:value-of select="php:function('lang', 'all')"/></option>
-			           					</xsl:otherwise>
-			           				</xsl:choose>
-			           			</select>
+				           		<form action="{form_url}" method="post">
+				           			<select name="contract_filter" onchange="this.form.submit()">
+				           				<xsl:choose>
+				           					<xsl:when test="//contract_filter = 'active'">
+				           						<option value="active" selected="selected"><xsl:value-of select="php:function('lang', 'active')"/></option>
+				           					</xsl:when>
+				           					<xsl:otherwise>
+				           						<option value="active"><xsl:value-of select="php:function('lang', 'active')"/></option>
+				           					</xsl:otherwise>
+				           				</xsl:choose>
+				           				<xsl:choose>
+				           					<xsl:when test="//contract_filter = 'not_active'">
+				           						<option value="not_active" selected="selected"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+				           					</xsl:when>
+				           					<xsl:otherwise>
+				           						<option value="not_active"><xsl:value-of select="php:function('lang', 'not_active')"/></option>
+				           					</xsl:otherwise>
+				           				</xsl:choose>
+				           				<xsl:choose>
+				           					<xsl:when test="//contract_filter = 'all'">
+				           						<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all')"/></option>
+				           					</xsl:when>
+				           					<xsl:otherwise>
+				           						<option value="all"><xsl:value-of select="php:function('lang', 'all')"/></option>
+				           					</xsl:otherwise>
+				           				</xsl:choose>
+				           			</select>
+				           		</form>
 					            <xsl:value-of select="php:function('lang', 'choose_contract')"/>: 
-					           	<xsl:for-each select="select">
-					           		<xsl:choose>
-						           		<xsl:when test="id = //selected_contract">
-					           				<input name="contract_id" type="radio" value="{id}" checked="" onchange="this.form.submit();"></input> 
-					           			</xsl:when>
-					           			<xsl:otherwise>
-					           				<input name="contract_id" type="radio" value="{id}" onchange="this.form.submit();"></input>
-					           			</xsl:otherwise>
-					           		</xsl:choose>
-					           		<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
-					           	</xsl:for-each>
+					             <form action="{form_url}" method="post">
+						           	<xsl:for-each select="select">
+						           		<xsl:choose>
+							           		<xsl:when test="id = //selected_contract">
+						           				<input name="contract_id" type="radio" value="{id}" checked="" onclick="this.form.submit();"></input> 
+						           			</xsl:when>
+						           			<xsl:otherwise>	
+						           				<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();"></input>
+						           			</xsl:otherwise>
+						           		</xsl:choose>
+						           		<label style="margin-right: 1em; padding-left: 5px;"> <xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)</label>
+						           	</xsl:for-each>
+					           	  </form>
 					         </xsl:otherwise>
 					      </xsl:choose>
-			        </form>
 	 			</div>
 	 		</div>
 	 		<div>
