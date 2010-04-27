@@ -1491,7 +1491,7 @@
 					(
 						'value'		=> $this->db->f($field['column_name']),
 						'datatype'	=> $field['datatype'],
-						'attrib_id'	=> $field['attib_id']
+						'attrib_id'	=> $field['attrib_id']
 					);
 				}
 				$j++;				

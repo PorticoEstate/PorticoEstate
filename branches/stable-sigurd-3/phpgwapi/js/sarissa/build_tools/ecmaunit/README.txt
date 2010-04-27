@@ -15,9 +15,9 @@ of them are supposed to fail for the demo).
 EcmaUnit also supports running test from the command-line with a
 proper JavaScript interpreter. Spidermonkey of the Mozilla project has
 proven to work. To run the ecmaunit tests from the command line using
-the spidermonkey interpreter smjs, simply issue the following command:
+the spidermonkey interpreter js, simply issue the following command:
 
-  $ smjs -f ecmaunit.js -f testecmaunit.js runtests.js
+  $ js -f ecmaunit.js -f testecmaunit.js runtests.js
 
 If you have any questions, want to report bugs or have suggestions about how
 to improve the product, please send an email to Guido Wesdorp 

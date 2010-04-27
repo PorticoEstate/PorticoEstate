@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: runtests.js 16502 2006-03-12 13:29:24Z skwashd $
+// $Id$
 
 /*
   Test runner for command-line environments, such as spidermonkey

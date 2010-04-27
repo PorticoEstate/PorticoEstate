@@ -8,51 +8,56 @@
  *
  *****************************************************************************/
 
-// $Id: testecmaunit.js 16502 2006-03-12 13:29:24Z skwashd $
+// $Id$
 
 function TestTestCase() {
     this.name = 'TestTestCase';
 
     this.setUp = function() {
         /* not in use here, didn't have to define it but this might be
-       used as a reference
-    */
+           used as a reference
+        */
     };
 
     this.testAssert = function() {
         this.assert(true);
-    this.assertThrows(this.assert, undefined, this, false);
+        this.assertThrows(this.assert, undefined, this, false);
     };
         
     this.testAssertEquals = function() {
         this.assertEquals('foo', 'foo');
-    this.assertThrows(this.assertEquals, undefined, this, 'foo', 'bar');
+        this.assertThrows(this.assertEquals, undefined, this, 'foo', 'bar');
+    };
+
+    this.testAssertNotEquals = function() {
+        this.assertNotEquals('foo', 'bar');
+        this.assertThrows(this.assertNotEquals, undefined, this, 'foo', 'foo');
     };
 
     this.testAssertTrue = function() {
         this.assertTrue(1);
-    this.assertTrue('foo');
-    this.assertThrows(this.assertTrue, undefined, this, false);
+        this.assertTrue('foo');
+        this.assertThrows(this.assertTrue, undefined, this, false);
     };
 
     this.testAssertFalse = function() {
         this.assertFalse(0);
-    this.assertFalse('');
-    this.assertThrows(this.assertFalse, undefined, this, true);
+        this.assertFalse('');
+        this.assertThrows(this.assertFalse, undefined, this, true);
     };
 
     this.testAssertThrows = function() {
         this.assertThrows(function() {throw('foo')}, 'foo');
-    this.assertThrows(function() {throw(new Array(1,2))}, new Array(1,2));
-    this.assertThrows(function() {throw('bar')});
-    this.assertThrows(this.assertThrows, undefined, this, 
+        this.assertThrows(function() {throw(new Array(1,2))}, new Array(1,2));
+        this.assertThrows(function() {throw('bar')});
+        this.assertThrows(this.assertThrows, undefined, this, 
                             function() {}, 'baz');
     };
 
     this.tearDown = function() {
         /* not in use here, didn't have to define it but this might be
-       used as a reference
-    */
+           used as a reference
+        */
     };
 };
 
@@ -64,14 +69,14 @@ function TestTestCase2() {
 
     this.setUp = function() {
         function Foo() {
-        this.returnfoo = function() {
-          return 'foo';
+            this.returnfoo = function() {
+              return 'foo';
+            };
+            this.throwfoo = function() {
+              throw('foo');
+            };
         };
-        this.throwfoo = function() {
-          throw('foo');
-        };
-    };
-    this.foo = new Foo();
+        this.foo = new Foo();
     };
 
     this.testAssert = function() {
@@ -82,8 +87,12 @@ function TestTestCase2() {
         this.assertEquals(this.foo.returnfoo(), 'foo');
     };
 
+    this.testAssertNotEquals = function() {
+        this.assertNotEquals(this.foo.returnfoo(), 'bar');
+    };
+
     this.testAssertTrue = function() {
-        this.assertTrue(this.foo.returnfoo(), 'foo');
+        this.assertTrue(this.foo.returnfoo() == 'foo');
     };
 
     this.testAssertFalse = function() {
