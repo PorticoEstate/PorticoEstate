@@ -76,7 +76,7 @@
 						<input id="subject" type="text" name="subject" autocomplete="off" value="{/phpgw:response/communik8r:response/communik8r:message/communik8r:headers/communik8r:message_subject}" />
 					</div>
 					<div id="compose">
-						<textarea id="msgbody" name="msgbody" rows="5" cols="80" wrap="soft"><xsl:value-of select="/phpgw:response/communik8r:response/communik8r:message/communik8r:body" /></textarea>
+						<textarea id="msgbody" name="msgbody" rows="6" cols="80" wrap="soft"><xsl:value-of select="/phpgw:response/communik8r:response/communik8r:message/communik8r:body" /></textarea>
 					</div>
 					<div id="signature" class="hidden">
 						<div id="signature_selector"><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='view_attachments']" /></div>	

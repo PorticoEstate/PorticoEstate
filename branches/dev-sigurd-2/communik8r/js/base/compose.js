@@ -8,16 +8,18 @@ window.onload = function()
 {
 	document.getElementById('msgbody').value = document.getElementById('msgbody').value.replace(/\n/g, '<br>');
 	oApplication = new Application();
-/*
-	var oFCKeditor = new FCKeditor('msgbody');
-	oFCKeditor.BasePath = strAppURL + '/js/fckeditor/';
-	oFCKeditor.ReplaceTextarea();
-*/
 
-	CKEDITOR.replace( 'msgbody',
-					{
-						fullPage : false
-					});
+	CKEDITOR.replace('msgbody',
+		{
+			height:150,
+			resize_enabled:false,
+			scayt_autoStartup:true,
+			disableNativeSpellChecker:false,
+			skin:'kama',
+			uiColor:'#e6edf3',
+			toolbar:[['Source','-','Bold','Italic','Underline','-','Undo','Redo','-','Find','Replace','-','SelectAll','-','Scayt','-','About']]
+		});
+
 	//This is done this way to stop firefox placing the button icons in wacky spots
 	document.getElementById('button_undo').className = 'inactive';
 	document.getElementById('button_undo').disabled = true;
