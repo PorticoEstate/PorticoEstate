@@ -160,7 +160,7 @@
         </xsl:when>
     </xsl:choose>
 
-    <br/>
+    <br/><br/><br/><br/>
     <div id="message"> </div>
    
     <div id="paging"> </div>
