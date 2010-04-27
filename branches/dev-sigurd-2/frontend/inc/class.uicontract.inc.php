@@ -59,12 +59,17 @@ class frontend_uicontract extends frontend_uifrontend
 			phpgwapi_cache::user_set('frontend', $this->contract_state_identifier , $this->contract_state, $GLOBALS['phpgw_info']['user']['account_id']);
 		}
 
+		
+		//User has applied a contract filter (active,ended,all)
 		$contract_filter_param = phpgw::get_var('contract_filter');
 		if(isset($contract_filter_param))
 		{
 			phpgwapi_cache::user_set('frontend', 'contract_filter', $contract_filter_param, $GLOBALS['phpgw_info']['user']['account_id']);
 			$this->contract_filter = $contract_filter_param;
-			
+			if($contract_filter_param == 'active' || $contract_filter_param == 'not_active')
+			{
+				$change_contract = true;
+			}
 			//TODO: change selected contract
 		} 
 		else
@@ -73,22 +78,6 @@ class frontend_uicontract extends frontend_uifrontend
 			$this->contract_filter = isset($filter) ? $filter : 'active';
 		}
 		
-		
-		
-		// If the user wants to view another contract connected to this location
-		if(isset($new_contract))
-		{
-			//... first check to see if contract exist
-			$exist = frontend_borental::contract_exist_per_location($new_contract,$this->header_state['selected']);
-			if($exist)
-			{
-				// ... and if it exist set the identifier as selected and update the contract session state
-				$this->contract_state['selected'] = $new_contract;
-				$this->contract = rental_socontract::get_instance()->get_single($new_contract);
-				$this->contract_state['contract'] = $this->contract;
-				phpgwapi_cache::user_set('frontend', $this->contract_state_identifier , $this->contract_state, $GLOBALS['phpgw_info']['user']['account_id']);
-			}
-		}
 		
 		$contracts_per_location = phpgwapi_cache::user_get('frontend', $this->contracts_per_location_identifier, $GLOBALS['phpgw_info']['user']['account_id']);
 		$contracts_for_selection = array();
@@ -99,9 +88,33 @@ class frontend_uicontract extends frontend_uifrontend
 				$this->contract_filter == 'all'
 			)
 			{
-				//TODO: ony select necessary fields
-				$contracts_for_selection[] = $contract->serialize();
+				//Only select necessary fields
+				$contracts_for_selection[] = array(
+					'old_contract_id' => $contract->get_old_contract_id(),
+					'contract_status' => $contract->get_contract_status()
+					
+				);
+				
+				if($change_contract)
+				{
+					$this->contract_state['selected'] = $contract->get_id();
+				}
 			}			
+		}
+		
+		// If the user wants to view another contract connected to this location
+		if(isset($new_contract))
+		{
+			//... first check to see if contract exist
+			$exist = frontend_borental::contract_exist_per_location($new_contract,$this->header_state['selected'], $this->contract_state_identifier);
+			if($exist)
+			{
+				// ... and if it exist set the identifier as selected and update the contract session state
+				$this->contract_state['selected'] = $new_contract;
+				$this->contract = rental_socontract::get_instance()->get_single($new_contract);
+				$this->contract_state['contract'] = $this->contract;
+				phpgwapi_cache::user_set('frontend', $this->contract_state_identifier , $this->contract_state, $GLOBALS['phpgw_info']['user']['account_id']);
+			}
 		}
 		
 		if(isset($this->contract_state['contract']))

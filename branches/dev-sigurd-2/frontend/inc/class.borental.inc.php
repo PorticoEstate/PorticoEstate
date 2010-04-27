@@ -7,9 +7,9 @@
 
     class frontend_borental {
     	
-    	public static function contract_exist_per_location($contract_id, $location_code)
+    	public static function contract_exist_per_location($contract_id, $location_code, $contract_state_identifier)
     	{
-    		$contracts_per_location = phpgwapi_cache::user_get('frontend', 'contracts_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+    		$contracts_per_location = phpgwapi_cache::user_get('frontend', $contract_state_identifier, $GLOBALS['phpgw_info']['user']['account_id']);
     		$exist = false;
     		foreach($contracts_per_location[$location_code] as $contract)
     		{
