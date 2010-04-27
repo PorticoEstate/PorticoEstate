@@ -32,7 +32,6 @@ class frontend_uicontract extends frontend_uifrontend
 		$contractdata = array();	// This is the main container for all contract data sent to XSLT template stuff
 		$msglog = array();			// Array of errors and other notifications displayed to us
 		
-		
 		// The user wants to change the contract status filter
 		if(isset(phpgw::get_var('contract_filter'))) 
 		{
@@ -119,6 +118,6 @@ class frontend_uicontract extends frontend_uifrontend
 		var_dump($data);
                 	
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
-		//$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
+		$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','contract'));
 	}
 }

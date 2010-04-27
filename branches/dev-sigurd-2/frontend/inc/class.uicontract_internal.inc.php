@@ -10,11 +10,6 @@ phpgw::import_class('rental.soparty');
 
 class frontend_uicontract_internal extends frontend_uicontract
 {
-	
-	public $public_functions = array(
-            'index'     => true
-	);
-
 	public function __construct()
 	{
 		$this->contract_state_identifier = "contract_state";
