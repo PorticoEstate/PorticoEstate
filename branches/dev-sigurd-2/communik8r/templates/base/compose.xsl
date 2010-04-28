@@ -29,6 +29,7 @@
 				</script>
 				<script type="text/javascript" src="{concat($app_url, '/js/base/application.js')}"></script>
 				<script type="text/javascript" src="{concat($api_url, '/js/ckeditor/ckeditor.js')}"></script>
+				<script type="text/javascript" src="{concat($api_url, '/js/json/json.js')}"></script>
 				<script type="text/javascript" src="{concat($api_url, '/js/sarissa/sarissa-compressed.js')}"></script>
 			<!--	<script type="text/javascript" src="{concat($app_url, '/js/sarissa/sarissa_dhtml.js')}"></script>-->
 				<script type="text/javascript" src="{concat($app_url, '/js/autocomplete/autocomplete.js')}"></script>

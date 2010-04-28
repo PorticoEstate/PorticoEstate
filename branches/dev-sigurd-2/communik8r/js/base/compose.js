@@ -280,13 +280,14 @@ function exec_send(strFormID)
 
 	var xmlhttp = new XMLHttpRequest();
 //	xmlhttp.open('PUT', oApplication.strBaseURL + '/email/send/' + strMsgID + oApplication.strGET, false);
-	xmlhttp.open('POST', oApplication.strBaseURL + '&section=email&action=send&msg_id=' + strMsgID, false);
+
 	//xmlhttp.async = false;
 // alert(strMsgID);
 //	xmlhttp.send( Sarissa.serialize(ophpGWResponse) );
 	var xmlString = new XMLSerializer().serializeToString(ophpGWResponse);  
-	xmlhttp.send( '&msg_data=' + xmlString );
-alert(xmlString);
+	xmlhttp.open('POST', oApplication.strBaseURL + '&section=email&action=send&msg_id=' + strMsgID + '&msg_data=' + encodeURIComponent(xmlString), false);
+	xmlhttp.send( null );
+//alert(oApplication.strBaseURL + '&section=email&action=send&msg_id=' + strMsgID + '&msg_data=' + encodeURIComponent(xmlString));
 	if ( xmlhttp.status == 200 )
 	{
 		window.close();

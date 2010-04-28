@@ -97,6 +97,8 @@
 							break;
 
 						default:
+						//	$this->compose($data);//testing
+						//	_debug_array($data);
 							die('<error>invalid request</error>');
 							//invalid request
 					}
@@ -104,7 +106,7 @@
 
 				case 'POST':
 			//	case 'GET':
-					error_log('POST: ' . print_r($data),3,'/tmp/my-errors.log');
+			//		error_log("\nPOST: " . print_r($_POST,true),3,'/tmp/my-errors.log');
 					switch ( $data['action'] )
 					{
 						case 'status':
@@ -1118,7 +1120,6 @@
 
 			$ids = $GLOBALS['phpgw']->session->appsession('composing');
 
-			error_log(print_r($data),3, "/tmp/my-errors.log");
 			if ( !isset($ids[$msg_id]) )
 			{
 				trigger_error(array('400' => 'invalid message number, please contact your system administrator'), E_USER_ERROR );
@@ -1133,8 +1134,6 @@
 				exit;
 			}
 
-			$smtp = createObject('communik8r.comm_smtp');
-
 			$xml = new DOMDocument;
 			$xml->loadXML($xmldata);
 
@@ -1142,12 +1141,15 @@
 			$acct_info = execMethod('communik8r.boaccounts.id2array', $acct_id->item(0)->nodeValue );
 			unset($acct_id);
 
-			$from_email = $acct_info['acct_uri'];
 			$from_name = '';
 			if($acct_info['display_name'])
 			{
-				$from_email .= "<{$acct_info['display_name']}>";
+				$from_email = "{{$acct_info['display_name']}}<{$acct_info['acct_uri']}>";
 				$from_name = $acct_info['display_name'];
+			}
+			else
+			{
+				$from_email = $acct_info['acct_uri'];
 			}	
 
 			unset($acct_info);
@@ -1157,23 +1159,33 @@
 			foreach ( $tos as $to )
 			{
 				$rcpt = $this->_address2parts( $to->nodeValue );
-				if($rcpt['full'])
+
+				if($rcpt['name'])
 				{
 					$_to[] = "{$rcpt['name']}<{$rcpt['full']}>";
 				}
+				else
+				{
+					$_to[] = $rcpt['full'];
+				}
 			}
+
 			unset($tos);
 			$to = implode(';', $_to);
 			unset($_to);
-
+_debug_array($to);
 			$ccs = $xml->getElementsByTagName('message_cc');
 			$_cc = array();
 			foreach ( $ccs as $cc )
 			{
 				$rcpt = $this->_address2parts( $cc->nodeValue );
-				if($rcpt['full'])
+				if($rcpt['name'])
 				{
 					$_cc[] = "{$rcpt['name']}<{$rcpt['full']}>";
+				}
+				else
+				{
+					$_cc[] = $rcpt['full'];
 				}
 			}
 			unset($ccs);
@@ -1185,9 +1197,13 @@
 			foreach ( $bccs as $bcc )
 			{
 				$rcpt = $this->_address2parts( $bcc->nodeValue );
-				if($rcpt['full'])
+				if($rcpt['name'])
 				{
 					$_bcc[] = "{$rcpt['name']}<{$rcpt['full']}>";
+				}
+				else
+				{
+					$_bcc[] = $rcpt['full'];
 				}
 			}
 			unset($bccs);
@@ -1236,8 +1252,10 @@
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 			}
 			$rcpt = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, $type, '', $attachments);
-			error_log( "Message {$msg_id}:{$rcpt} Sent ",3, "/tmp/my-errors.log");
+			//error_log( "Message {$msg_id}:{$rcpt} Sent ",3, "/tmp/my-errors.log");
 			//$boattach->remove_path();
+
+			exit;
 		}
 
 		/**

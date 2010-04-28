@@ -75,10 +75,11 @@
 		case 'email':
 			$action		= phpgw::get_var('action', 'string');
 			$acct_id	= phpgw::get_var('acct_id', 'int');
-			$mbox_name = phpgw::get_var('mbox_name', 'string');
+			$mbox_name	= phpgw::get_var('mbox_name', 'string');
 			$status		= phpgw::get_var('status', 'int', 'REQUEST', 0);
-			$msg_id		= phpgw::get_var('msg_id', 'int', 'REQUEST', 0);
-			$msg_data = phpgw::get_var('msg_data', 'string', 'POST');
+			$msg_id		= phpgw::get_var('msg_id', 'string', 'REQUEST', 0);
+			$msg_data 	= $_REQUEST['msg_data'];
+//			_debug_array($msg_data);
 			$part = phpgw::get_var('part', 'string');
 			ExecMethod('communik8r.boemail.rest', array('action' => $action, 'acct_id' => $acct_id, 'mbox_name' => $mbox_name, 'status' => $status, 'msg_id' => $msg_id, 'msg_data' => $msg_data, 'part' => $part));
 			break;
@@ -115,8 +116,9 @@
 	//	case 'reply':
 	//	case 'reply_to_all':
 		case 'compose':
+	//		error_log("\nREQUEST: " . print_r($_REQUEST,true),3,'/tmp/my-errors.log');
 			$action		= phpgw::get_var('action', 'string');
-			$msg_id		= phpgw::get_var('msg_id', 'int', 'REQUEST', 0);
+			$msg_id		= phpgw::get_var('msg_id', 'string');
 			ExecMethod('communik8r.uibase.compose', array('action' => $action, 'msg_id' => $msg_id));
 			break;
 
