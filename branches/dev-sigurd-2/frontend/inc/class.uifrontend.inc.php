@@ -55,20 +55,23 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			// Get the mode: in frame or full screen
-			$mode = phpgwapi_cache::user_get('frontend', 'noframework', $GLOBALS['phpgw_info']['user']['account_id']);
+			//$mode = phpgwapi_cache::user_get('frontend', 'noframework', $GLOBALS['phpgw_info']['user']['account_id']);
+			$mode = phpgwapi_cache::session_get('frontend', 'noframework');
 			$noframework = isset($mode) ? $mode : true;
 			
 			/* Get the tabs and check to see whether the user has specified a tab or has a selected tab on session */
 			$tabs = $this->get_tabs();
 			$type = phpgw::get_var('type', 'int', 'REQUEST');
-			$tab = isset($type) ? $type : phpgwapi_cache::user_get('frontend','tab', $GLOBALS['phpgw_info']['user']['account_id']);
+			//$tab = isset($type) ? $type : phpgwapi_cache::user_get('frontend','tab', $GLOBALS['phpgw_info']['user']['account_id']);
+			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab');
 			$selected = isset($tab) ? $tab : array_shift(array_keys($tabs));
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
-			phpgwapi_cache::user_set('frontend','tab',$selected, $GLOBALS['phpgw_info']['user']['account_id']);
+			//phpgwapi_cache::user_set('frontend','tab',$selected, $GLOBALS['phpgw_info']['user']['account_id']);
+			phpgwapi_cache::session_set('frontend','tab',$selected);
 			
 			// Get header state
-			$this->header_state = phpgwapi_cache::user_get('frontend', 'header_state', $GLOBALS['phpgw_info']['user']['account_id']);
-			
+			//$this->header_state = phpgwapi_cache::user_get('frontend', 'header_state', $GLOBALS['phpgw_info']['user']['account_id']);
+			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
@@ -157,7 +160,8 @@
 				}
 				
 				$noframework = false; // In regular frames
-				phpgwapi_cache::user_set('frontend', 'noframework', $noframework, $GLOBALS['phpgw_info']['user']['account_id']); // Store mode on session
+				//phpgwapi_cache::user_set('frontend', 'noframework', $noframework, $GLOBALS['phpgw_info']['user']['account_id']); // Store mode on session
+				phpgwapi_cache::user_session('frontend', 'noframework', $noframework); // Store mode on session
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 				$this->insert_links_on_header_state();
 			} 
@@ -207,19 +211,25 @@
 
 				if($exist)
 				{
-					$tppl = phpgwapi_cache::user_get('frontend','total_price_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
-					$tapl = phpgwapi_cache::user_get('frontend','rented_area_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+				//	$tppl = phpgwapi_cache::user_get('frontend','total_price_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+				//	$tapl = phpgwapi_cache::user_get('frontend','rented_area_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+					$tppl = phpgwapi_cache::session_get('frontend','total_price_per_location');
+					$tapl = phpgwapi_cache::session_get('frontend','rented_area_per_location');
 					$this->header_state['selected_location'] = $param_selected_location;
 					$this->header_state['selected_total_price'] = number_format($tppl[$param_selected_location],2,","," ")." ".lang('currency');
 					$this->header_state['selected_total_area'] = number_format($tapl[$param_selected_location],2,","," ")." ".lang('square_meters');
-					phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']);
+				//	phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']);
+					phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 				}
 
-				phpgwapi_cache::user_set('frontend','contract_state',null, $GLOBALS['phpgw_info']['user']['account_id']);
-				phpgwapi_cache::user_set('frontend','contract_state_in',null, $GLOBALS['phpgw_info']['user']['account_id']);
+			//	phpgwapi_cache::user_set('frontend','contract_state',null, $GLOBALS['phpgw_info']['user']['account_id']);
+			//	phpgwapi_cache::user_set('frontend','contract_state_in',null, $GLOBALS['phpgw_info']['user']['account_id']);
+				phpgwapi_cache::session_clear('frontend','contract_state');
+				phpgwapi_cache::session_clear('frontend','contract_state_in');
 			}
 			/* Store the header state on the session*/
-			phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']);
+		//	phpgwapi_cache::user_set('frontend', 'header_state', $this->header_state, $GLOBALS['phpgw_info']['user']['account_id']);
+			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
 			//Add style sheet for full screen view
 			//if($noframework)
@@ -295,7 +305,8 @@
 			
 			// Calculate
 			$total_area = 0;
-			$rented_area_per_location = phpgwapi_cache::user_get('frontend','rented_area_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+		//	$rented_area_per_location = phpgwapi_cache::user_get('frontend','rented_area_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+			$rented_area_per_location = phpgwapi_cache::session_get('frontend','rented_area_per_location');
 			foreach($rented_area_per_location as $location_code => $area_per_location)
 			{
 				
@@ -306,7 +317,8 @@
 			}
 			
 			$total_price = 0;
-			$total_price_per_location = phpgwapi_cache::user_get('frontend','total_price_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+		//	$total_price_per_location = phpgwapi_cache::user_get('frontend','total_price_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
+			$total_price_per_location = phpgwapi_cache::session_get('frontend','total_price_per_location');
 			foreach($total_price_per_location as $location_code => $price_per_location)
 			{
 				if($this->location_in_selection($location_code,$property_locations))
