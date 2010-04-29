@@ -12,7 +12,7 @@
 	// Basic information about this app
 	$setup_info['phpgwapi']['name']      = 'phpgwapi';
 	$setup_info['phpgwapi']['title']     = 'phpgwapi';
-	$setup_info['phpgwapi']['version']   = '0.9.17.527';
+	$setup_info['phpgwapi']['version']   = '0.9.17.528';
 	$setup_info['phpgwapi']['versions']['current_header'] = '1.30';
 	$setup_info['phpgwapi']['versions']['system'] = '1.0';
 	$setup_info['phpgwapi']['enable']    = 3;
@@ -23,6 +23,7 @@
 	(
 		'phpgw_access_log',
 		'phpgw_accounts',
+		'phpgw_account_delegates',
 		'phpgw_acl',
 		'phpgw_applications',
 		'phpgw_app_sessions',
