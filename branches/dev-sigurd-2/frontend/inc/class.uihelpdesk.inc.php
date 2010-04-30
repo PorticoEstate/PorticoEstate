@@ -351,10 +351,13 @@
 
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'helpdesk.list' , 'frontend');
 
+			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend','msgbox');
+			
 			$data = array(
 				'header' 		=> $this->header_state,
 				'tabs'			=> $this->tabs,
-				'helpdesk' 		=> array('datatable' => $datatable),
+				'helpdesk' 		=> array('datatable' => $datatable, 'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),),
 				'lightbox_name'	=> lang('add ticket')
 			);
 
