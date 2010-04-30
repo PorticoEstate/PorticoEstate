@@ -33,7 +33,7 @@
 
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
 	<xsl:choose>
-        <xsl:when test="not(normalize-space(redirect))">
+        <xsl:when test="normalize-space(redirect) != ''">
             <script>
             	window.parent.location = '<xsl:value-of select="redirect"/>';
             	window.close();
