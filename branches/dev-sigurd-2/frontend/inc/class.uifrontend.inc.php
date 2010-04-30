@@ -406,12 +406,11 @@
 				header('Content-type: ' . $mime_type);
 				echo $document;
 
-				var_dump($document);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('frontend/templates/base/images/missing_picture.png');
+				$GLOBALS['phpgw']->redirect_link('templates/base/images/missing_picture.png');
 			}
  		}
 	}
