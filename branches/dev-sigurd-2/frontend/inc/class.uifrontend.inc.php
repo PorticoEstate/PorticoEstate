@@ -400,9 +400,17 @@
 			{
 				$mime_type = $ls_array[0]['mime_type'];
 			}
-			header('Content-type: ' . $mime_type);
-			echo $document;
+			
+			if(isset($document) && $document != '')
+			{
+				header('Content-type: ' . $mime_type);
+				echo $document;
 
-			$GLOBALS['phpgw']->common->phpgw_exit();
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link('frontend/templates/base/images/missing_picture.png');
+			}
  		}
 	}
