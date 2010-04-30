@@ -406,6 +406,7 @@
 				header('Content-type: ' . $mime_type);
 				echo $document;
 
+				var_dump($document);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			else
