@@ -32,6 +32,14 @@
 </xsl:template>
 
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
+	<xsl:choose>
+        <xsl:when test="redirect != ''">
+            <script>
+            	window.parent.location = '<xsl:value-of select="redirect"/>';
+            	window.close();
+            </script>
+        </xsl:when>
+    </xsl:choose>
     <h2>Ny skademelding</h2>
     <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
         <table cellpadding="0" cellspacing="0" width="100%">

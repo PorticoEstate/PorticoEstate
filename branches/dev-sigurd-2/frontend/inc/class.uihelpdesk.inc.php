@@ -547,7 +547,6 @@
 						}
 
 						phpgwapi_cache::session_set('frontend', 'msgbox', $msglog);
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index'));
 						// /Files
 					}
 				}
@@ -558,6 +557,7 @@
 			}
 
 			$data = array(
+				'redirect'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')),
 				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket', 'noframework' => '1')),
 				'title'         => $values['title'],
