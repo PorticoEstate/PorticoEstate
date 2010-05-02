@@ -8,16 +8,17 @@
 		<html>
 			<head>
 				<title>[communik8r]</title>
-				<link rel="StyleSheet" type="text/css" href="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/css/evo.css" media="screen" />
-				<link rel="StyleSheet" type="text/css" href="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/css/evo-print.css" media="print" />
+				<link rel="StyleSheet" type="text/css" href="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/css/evo.css" media="screen" />
+				<link rel="StyleSheet" type="text/css" href="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/css/evo-print.css" media="print" />
 				<link rel="icon" href="templates/default/images/navbar.png" type="image/png" />
-				<script type="text/javascript" src="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/js/base/application.js"></script>
-				<script type="text/javascript" src="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/js/sarissa/sarissa.js"></script>
-				<script type="text/javascript" src="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/js/base/ui.js"></script>
+				<script type="text/javascript" src="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/js/base/application.js"></script>
+				<script type="text/javascript" src="{/phpgw:response/phpgwapi:info/phpgwapi:api_url}/js/sarissa/sarissa-compressed.js"></script>
+				<script type="text/javascript" src="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/js/base/ui.js"></script>
 				<script type="text/javascript">
 
 					var strBaseURL = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:base_url' />";
-					var strMsgId = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:base_url' />";
+					var strAppURL = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:app_url' />";
+					var strMsgId = "<xsl:value-of select='/phpgw:response/phpgwapi:info/phpgwapi:msg_id' />";
 					var oApplication = new application();
 					var bClosing = false;
 					window.onload = function()
@@ -51,7 +52,7 @@
 								<xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='filename']" />
 							</label> <input type="file" id="attachment" name="attachment" />
 							<button type="submit">
-								<img src="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/templates/default/images/jump-to-24x24.png" style="vertical-align: middle;" /><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='attach']" />
+								<img src="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/templates/base/images/jump-to-24x24.png" style="vertical-align: middle;" /><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='attach']" />
 							</button>
 						</form>
 					</div>
@@ -77,10 +78,10 @@
 						</table>
 					</div>
 					<button id="button_close" onClick="closeWin();">
-						<img src="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/templates/default/images/close-24x24.png" style="vertical-align: middle;" /><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='close']"/>
+						<img src="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/templates/base/images/close-24x24.png" style="vertical-align: middle;" /><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='close']"/>
 					</button>
 					<button id="button_help" onClick="showHelp();">
-						<img src="{/phpgw:response/phpgwapi:info/phpgwapi:base_url}/templates/default/images/help-24x24.png" style="vertical-align: middle;" /><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='help']"/>
+						<img src="{/phpgw:response/phpgwapi:info/phpgwapi:app_url}/templates/base/images/help-24x24.png" style="vertical-align: middle;" /><xsl:value-of select="/phpgw:response/phpgwapi:info/phpgwapi:langs/phpgwapi:lang[@id='help']"/>
 					</button>
 				</div>
 			</body>

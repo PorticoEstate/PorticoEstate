@@ -1173,7 +1173,7 @@
 			unset($tos);
 			$to = implode(';', $_to);
 			unset($_to);
-_debug_array($to);
+
 			$ccs = $xml->getElementsByTagName('message_cc');
 			$_cc = array();
 			foreach ( $ccs as $cc )

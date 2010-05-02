@@ -43,17 +43,17 @@
 		/**
 		* REST URL handler
 		*/
-		function rest($uri_parts)
+		function rest($data)
 		{
-			$this->_validate_msg_id($uri_parts[2]);
+			$this->_validate_msg_id($data['msg_id']);
 			//error_log("boattachments called with as {$_SERVER['REQUEST_METHOD']} with " . print_r($uri_parts, True) . " uri parts");
 			switch ( strtoupper($_SERVER['REQUEST_METHOD']) )
 			{
 				case 'GET':
-					switch ( count($uri_parts) )
+					switch ( $data['action'] )
 					{
-						case 3: //requesting list of attachments for a message
-							$this->get_attachment_list();
+						case 'full': //requesting list of attachments for a message
+							$this->get_attachment_list($data);
 							break;
 
 						case 4: //requesting mailbox summary
@@ -67,10 +67,10 @@
 				break;
 
 				case 'POST':
-					if ( count($uri_parts) == 3 )//new attachment
+					if ( $data['action'] == 'full' )//new attachment
 					{
 						$this->store_file();
-						$this->get_attachment_list();
+						$this->get_attachment_list($data);
 						exit;
 					}
 					die('<error>invalid request</error>');
@@ -123,9 +123,9 @@
 			return False;
 		}
 
-		function get_attachment_list()
+		function get_attachment_list($data)
 		{
-			$inc_langs = ( isset($_GET['mode']) && $_GET['mode'] == 'full');
+			$inc_langs = ( isset($data['action']) && $data['action'] == 'full');
 			
 			if ( $inc_langs )
 			{
@@ -154,9 +154,22 @@
 			$info = $xml->createElement('phpgwapi:info');
 			
 			$base_url = $xml->createElement('phpgwapi:base_url');
-			$base_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$base_url->appendChild( $xml->createTextNode( $GLOBALS['phpgw']->link('index.php') ) );
 			$info->appendChild($base_url);
 			unset($base_url);
+			$app_url = $xml->createElement('phpgwapi:app_url');
+			$app_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/communik8r") );
+			$info->appendChild($app_url);
+			unset($app_url);
+			$api_url = $xml->createElement('phpgwapi:api_url');
+			$api_url->appendChild( $xml->createTextNode("{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi") );
+			$info->appendChild($api_url);
+			unset($api_url);
+
+			$msg_id = $xml->createElement('phpgwapi:msg_id');
+			$msg_id->appendChild( $xml->createTextNode($data['msg_id']) );
+			$info->appendChild($msg_id);
+			unset($msg_id);
 
 			$skin = $xml->createElement('phpgwapi:skin');
 			$skin->appendChild( $xml->createTextNode('base') );

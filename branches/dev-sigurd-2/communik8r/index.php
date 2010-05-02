@@ -61,7 +61,9 @@
 			break;
 
 		case 'attachments':
-			ExecMethod('communik8r.boattachments.rest', $uri_parts);
+			$action		= phpgw::get_var('action', 'string');
+			$msg_id		= phpgw::get_var('msg_id', 'string', 'REQUEST', 0);
+			ExecMethod('communik8r.boattachments.rest', array('action' => $action, 'msg_id' => $msg_id));
 			break;
 
 		case 'buttons':

@@ -110,7 +110,9 @@ function exec_attach()
 {
 	strMsgID = document.getElementById('msg_id').value;
 	strWinArgs = 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,height=250,width=450';
-	window.open(oApplication.strBaseURL + '/attachments/' + strMsgID + oApplication.strGET + '&mode=full', 'attach' + strMsgID, strWinArgs);	
+	//window.open(oApplication.strBaseURL + '/attachments/' + strMsgID + oApplication.strGET + '&mode=full', 'attach' + strMsgID, strWinArgs);	
+//alert(oApplication.strBaseURL + '&section=attachments&action=full&msg_id=' + strMsgID);
+	window.open(oApplication.strBaseURL + '&section=attachments&action=full&msg_id=' + strMsgID, 'attach' + strMsgID, strWinArgs);
 }
 
 function exec_undo()
