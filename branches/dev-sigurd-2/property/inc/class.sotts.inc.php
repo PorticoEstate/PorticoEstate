@@ -80,6 +80,7 @@
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new			= isset($data['new']) ? $data['new'] : '';
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
+			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -292,10 +293,15 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
-				if(stristr($query, '.'))
+				if(stristr($query, '.') && !$p_num)
 				{
 					$query=explode(".",$query);
 					$querymethod = " $where (fm_tts_tickets.loc1='" . $query[0] . "' AND fm_tts_tickets.loc4='" . $query[1] . "')";
+				}
+				else if(stristr($query, '.') && $p_num)
+				{
+					$query=explode(".",$query);
+					$querymethod = " $where (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='" . (int)$query[3] . "')";
 				}
 				else
 				{

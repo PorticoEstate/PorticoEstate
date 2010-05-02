@@ -384,16 +384,21 @@
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where= 'AND';
 			}
-
+//_debug_array($criteria);
 			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
-				if(stristr($query, '.'))
+				if(stristr($query, '.') && !isset($criteria[0]['field']))
 				{
 					$query=explode(".",$query);
 					$querymethod = " $where (fm_project.loc1='" . $query[0] . "' AND fm_project.loc".$type_id."='" . $query[1] . "')";
+				}
+				else if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.location_id')
+				{
+					$query=explode(".",$query);
+					$querymethod = " $where (fm_project.p_entity_id='" . (int)$query[1] . "' AND fm_project.p_cat_id='" . (int)$query[2] . "' AND fm_project.p_num='" . (int)$query[3] . "')";
 				}
 				else
 				{
@@ -458,7 +463,7 @@
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
-
+//_debug_array($sql2);
 			$project_list = array();
 			$sql .= " $group_method";
 			if(!$allrows)

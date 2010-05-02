@@ -392,37 +392,34 @@
 			</xsl:choose>
 
 		<xsl:call-template name="attributes_values"/>
-
-		<div id="files">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			  
-			<xsl:choose>
-				<xsl:when test="files!=''">
+		  
+		<xsl:choose>
+			<xsl:when test="files!='' or fileupload = 1">
+				<div id="files">
+					<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<!-- <xsl:call-template name="file_list"/> -->
-					<tr>
-						<td align="left" valign="top">
-							<xsl:value-of select="//lang_files"/>
-						</td>
-						<td>
-							<div id="datatable-container_0"></div>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
-		
-			<xsl:choose>
-				<xsl:when test="cat_list='' and fileupload = 1">
-					<xsl:call-template name="file_upload"/>
-				</xsl:when>
-			</xsl:choose>
-		</table>
-		</div>
+						<tr>
+							<td align="left" valign="top">
+								<xsl:value-of select="//lang_files"/>
+							</td>
+							<td>
+								<div id="datatable-container_0"></div>
+							</td>
+						</tr>
+						<xsl:choose>
+							<xsl:when test="cat_list='' and fileupload = 1">
+								<xsl:call-template name="file_upload"/>
+							</xsl:when>
+						</xsl:choose>
+				</table>
+			</div>
+		</xsl:when>
+	</xsl:choose>
 
-		<div id="jasper">
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			  
-			<xsl:choose>
-				<xsl:when test="jasperfiles!=''">
+	<xsl:choose>
+		<xsl:when test="jasperfiles!='' or jasperupload = 1">
+			<div id="jasper">
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<tr>
 						<td align="left" valign="top">
 							<xsl:value-of select="//lang_files"/>
@@ -431,16 +428,32 @@
 							<div id="datatable-container_1"></div>
 						</td>
 					</tr>
-				</xsl:when>
-			</xsl:choose>
-		
-			<xsl:choose>
-				<xsl:when test="cat_list='' and jasperupload = 1">
-					<xsl:call-template name="jasper_upload"/>
-				</xsl:when>
-			</xsl:choose>
-		</table>
-		</div>
+					<xsl:choose>
+						<xsl:when test="cat_list='' and jasperupload = 1">
+							<xsl:call-template name="jasper_upload"/>
+						</xsl:when>
+					</xsl:choose>
+				</table>
+			</div>
+		</xsl:when>
+	</xsl:choose>
+
+	<xsl:choose>
+		<xsl:when test="related_link != ''">
+			<div id="related">
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+					<tr>
+						<td>
+							<table width="100%" cellpadding="2" cellspacing="2" align="center">
+								<xsl:apply-templates select="related_link"/>
+							</table>
+						</td>
+					</tr>
+					</table>
+				</div>
+			</xsl:when>
+	</xsl:choose>
+
 
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
@@ -690,3 +703,14 @@
 				</xsl:when>
 			</xsl:choose>
 	</xsl:template>
+
+	<xsl:template match="related_link">
+		<xsl:variable name="lang_entity_statustext"><xsl:value-of select="lang_entity_statustext"/></xsl:variable>
+		<xsl:variable name="entity_link"><xsl:value-of select="entity_link"/></xsl:variable>
+			<tr >
+				<td class="small_text" align="left">
+					<a href="{$entity_link}" onMouseover="window.status='{$lang_entity_statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text_entity"/></a>
+				</td>
+			</tr>
+	</xsl:template>
+

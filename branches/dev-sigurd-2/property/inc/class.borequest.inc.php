@@ -74,7 +74,7 @@
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$status_id	= phpgw::get_var('status_id');
 			$allrows	= phpgw::get_var('allrows', 'bool');
-
+			$this->p_num			= phpgw::get_var('p_num');
 			if ($start)
 			{
 				$this->start=$start;
@@ -267,7 +267,7 @@
 			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 											'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
-											'dry_run'=>$data['dry_run']));
+											'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;

@@ -100,7 +100,7 @@
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->location_code		= $this->bo->location_code;
-
+			$this->p_num				= $this->bo->p_num;
 			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
 			foreach ( $user_groups as $group => $dummy)
@@ -261,6 +261,7 @@
 				return lang('sorry - insufficient rights');
 			}
 
+
 			$new_status = phpgw::get_var('new_status', 'string', 'GET');
 			$id 		= phpgw::get_var('id', 'int');
 			$receipt 	= $this->bo->update_status(array('status'=>$new_status),$id);
@@ -358,7 +359,8 @@
 						'district_id'		=> $this->district_id,
 						'part_of_town_id'	=> $this->part_of_town_id,
 						'cat_id'			=> $this->cat_id,
-						'status'			=> $this->status
+						'status_id'			=> $this->status_id,
+						'p_num'				=> $this->p_num
 	   				)
 	   			);
 
@@ -372,6 +374,7 @@
 			                						."status_id: '{$this->status_id}',"
  	                        						."user_id: '{$this->user_id}',"
  	                        						."query: '{$this->query}',"
+ 	                        						."p_num: '{$this->p_num}',"
  	                        						."district_id: '{$this->district_id}',"
  	                        						."start_date: '{$start_date}',"
  	                        						."end_date: '{$end_date}',"
@@ -2622,7 +2625,8 @@
 				'record_history'				=> $record_history,
 				'request_link'					=> $request_link,
 				'order_link'					=> $order_link,
-				'add_to_project_link'			=> $add_to_project_link,
+				'add_to_project_link'			=> $add_to_project_link,
+
 				'lang_name'						=> lang('name'),
 				'contact_phone'					=> $ticket['contact_phone'],
 				'mailnotification'				=> isset($this->bo->config->config_data['mailnotification'])?true:'',

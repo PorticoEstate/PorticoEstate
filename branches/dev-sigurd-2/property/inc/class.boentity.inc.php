@@ -532,5 +532,10 @@
 		{
 			return $this->so->read_attrib_help($data);
 		}
-	}
 
+		function read_entity_to_link($data)
+		{
+				return $this->so->read_entity_to_link($data);
+		}
+
+	}
