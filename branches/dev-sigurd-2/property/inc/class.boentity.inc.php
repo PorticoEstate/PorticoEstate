@@ -209,7 +209,7 @@
 			return $column_list;
 		}
 
-		function select_category_list($format='',$selected='')
+		function select_category_list($format='',$selected='', $required = '')
 		{
 			switch($format)
 			{
@@ -221,7 +221,7 @@
 					break;
 			}
 
-			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id));
+			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id, 'required' => $required));
 
 			return $this->bocommon->select_list($selected,$categories);
 		}

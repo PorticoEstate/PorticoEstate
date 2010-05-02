@@ -1058,7 +1058,7 @@
 			}
 			else
 			{
-				$cat_list = $this->bo->select_category_list('select');
+				$cat_list = $this->bo->select_category_list('select', '', PHPGW_ACL_ADD);
 			}
 
 			if (isset($values['cancel']) && $values['cancel'])
