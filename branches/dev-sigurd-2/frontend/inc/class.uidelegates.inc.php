@@ -97,6 +97,7 @@
 				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
 				if(isset($account_id) && !is_numeric($account_id))
 				{
+					var_dump("Problemer med opprettelse av konto");
 					return false;
 				}
 			}
