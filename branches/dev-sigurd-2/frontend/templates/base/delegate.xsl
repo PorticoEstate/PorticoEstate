@@ -47,6 +47,7 @@
 					<xsl:otherwise>
 						<ul>
 							<xsl:foreach select="delegate">
+								<xsl:copy-of select="."/>
 								<li>
 										<xsl:value-of select="account_firstname"/>&amp;nbsp;<xsl:value-of select="account_lastname"/>
 										(<xsl:value-of select="account_lid"/>)

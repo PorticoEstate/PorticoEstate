@@ -19,8 +19,6 @@
 
 		public function index()
 		{			
-			$delegates = frontend_bofrontend::get_delegates(null);
-			
 			if(isset($_POST['search']))
 			{
 				$username = phpgw::get_var('username');
@@ -66,6 +64,7 @@
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
+			$delegates = frontend_bofrontend::get_delegates(null);
 			
 			$data = array (
 				'header' 		=>	$this->header_state,
