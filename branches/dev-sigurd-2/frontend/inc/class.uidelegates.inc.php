@@ -22,6 +22,8 @@
 		{			
 			$delegates = frontend_bofrontend::get_delegates(null);
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'delegate.list' , 'frontend');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
