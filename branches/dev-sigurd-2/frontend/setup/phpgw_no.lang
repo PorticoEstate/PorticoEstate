@@ -86,7 +86,7 @@ firstname	frontend	no	Fornavn
 lastname	frontend	no	Etternavn
 no_hits	frontend	no	Ingen treff
 no_delegates	frontend	no	Ingen delegater
-btn_add	frontend	no	Deleger tigang til bruker
+btn_add	frontend	no	Deleger tilgang til bruker
 btn_search	frontend	no	Finn bruker
 user_found_in_Fellesdata	frontend	no	Personen finnes i Fellesdata.
 user_found_in_PE	frontend	no	Personen er bruker av dette systemet.
