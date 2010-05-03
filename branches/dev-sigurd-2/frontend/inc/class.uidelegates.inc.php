@@ -27,7 +27,7 @@
 				$username = phpgw::get_var('username');
 				if(!isset($username))
 				{
-					$msglog['error'] = 'Vennligst fyll ut et brukernavn';
+					$msglog['error'] = 'lacking_username';
 				}
 				else
 				{
@@ -35,11 +35,11 @@
 					if($account_id)
 					{
 						$search = frontend_bofrontend::get_account_info($account_id);
-						
+						$msglog['message'] = 'user_found_in_PE';
 					}
 					else
 					{
-						$msglog['error'] = 'Ingen treff';
+						$msglog['error'] = 'no_hits';
 					}
 				}
 			} 
