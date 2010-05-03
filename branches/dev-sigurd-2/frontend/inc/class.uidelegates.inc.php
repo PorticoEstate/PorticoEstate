@@ -21,11 +21,6 @@
 		public function index()
 		{			
 			$delegates = frontend_bofrontend::get_delegates(null);
-
-			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
-			phpgwapi_cache::session_clear('frontend','msgbox');
-			
-			
 			
 			if(isset($_POST['search']))
 			{
@@ -40,7 +35,7 @@
 					if($account_id)
 					{
 						$search = frontend_bofrontend::get_account_info($account_id);
-						$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.add_delegate'));
+						
 					}
 					else
 					{
@@ -50,15 +45,52 @@
 			} 
 			else if(isset($_POST['add']))
 			{
-				
 				$search = array();
-				$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
+				$modules = array
+				(
+					'frontend',
+					'preferences'
+				);
 				
+				$acls = array
+				(
+					array
+					(
+						'appname'	=> 'preferences',
+						'location'	=> 'changepassword',
+						'rights'	=> 1
+					),
+					array
+					(
+						'appname'	=> 'frontend',
+						'location'	=> 'run',
+						'rights'	=> 1
+					),
+					array
+					(
+						'appname'	=> 'frontend',
+						'location'	=> '.ticket',
+						'rights'	=> 1
+					),
+					array
+					(
+						'appname'	=> 'frontend',
+						'location'	=> '.rental.contract',
+						'rights'	=> 1
+					),
+					array
+					(
+						'appname'	=> 'frontend',
+						'location'	=> '.rental.contract_in',
+						'rights'	=> 1
+					)
+				);
+				
+				$aclobj =& $GLOBALS['phpgw']->acl;
+				//Add user
 			}
-			else
-			{
-				$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
-			}
+			
+			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
 			
 			$data = array (
 				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
@@ -86,47 +118,7 @@
 			 * 3. Insert delegate user_name and unit leader in database
 			 */
 			
-			$modules = array
-			(
-				'frontend',
-				'preferences'
-			);
 			
-			$acls = array
-			(
-				array
-				(
-					'appname'	=> 'preferences',
-					'location'	=> 'changepassword',
-					'rights'	=> 1
-				),
-				array
-				(
-					'appname'	=> 'frontend',
-					'location'	=> 'run',
-					'rights'	=> 1
-				),
-				array
-				(
-					'appname'	=> 'frontend',
-					'location'	=> '.ticket',
-					'rights'	=> 1
-				),
-				array
-				(
-					'appname'	=> 'frontend',
-					'location'	=> '.rental.contract',
-					'rights'	=> 1
-				),
-				array
-				(
-					'appname'	=> 'frontend',
-					'location'	=> '.rental.contract_in',
-					'rights'	=> 1
-				)
-			);
-			
-			$aclobj =& $GLOBALS['phpgw']->acl;
 		}
 		
 		public function remove_delegate()
