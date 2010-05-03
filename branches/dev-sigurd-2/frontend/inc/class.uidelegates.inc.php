@@ -39,7 +39,7 @@
 					}
 					else
 					{
-						$fellesdata_user = frontend_bofellesdata::get_user($username);
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
 						if($fellesdata_user)
 						{
 							$search = $fellesdata_user;
