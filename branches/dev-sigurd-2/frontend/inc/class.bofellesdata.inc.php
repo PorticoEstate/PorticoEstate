@@ -159,10 +159,10 @@
         	{
         		$db->next_record();
         		return array(
-        		 	'USERNAME' 	=> $db->f('BRUKERNAVN', true),
-        			'FIRSTNAME'	=> $db->f('FORNAVN', true),
-        			'LASTNAME'	=> $db->f('ETTERNAVN', true),
-        			'EMAIL'		=> $db->f('EPOST', true)
+        		 	'username' 	=> $db->f('BRUKERNAVN', true),
+        			'firstname'	=> $db->f('FORNAVN', true),
+        			'lastname'	=> $db->f('ETTERNAVN', true),
+        			'email'		=> $db->f('EPOST', true)
         		);
         	} 
         	else

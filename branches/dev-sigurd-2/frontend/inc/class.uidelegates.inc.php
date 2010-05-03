@@ -39,13 +39,25 @@
 					}
 					else
 					{
-						$msglog['error'] = 'no_hits';
+						$fellesdata_user = frontend_bofellesdata::get_user($username);
+						if($fellesdata_user)
+						{
+							$search = $fellesdata_user;
+							$msglog['message'] = 'user_found_in_Fellesdata';
+						}
+						else
+						{
+							$msglog['error'] = 'no_hits';
+						}
 					}
 				}
 			} 
 			else if(isset($_POST['add']))
 			{
 				$search = array();
+				
+				
+				
 				$modules = array
 				(
 					'frontend',
