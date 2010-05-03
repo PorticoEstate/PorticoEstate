@@ -13,14 +13,14 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-			<div class="add_delegate" style="float: left; padding-left: 2em;">
-				<h2>Ny delegat</h2>
+			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
+				Ny delegat
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 			    	<dl>
 			    		<dt>Brukernavn</dt>
 			    		<dd><input type="text" name="username"/><input type="submit" name="search" value="Søk"/></dd>
 			    		<dt>Fornavn</dt>
-			    		<dd><input type="text" name="firstname"/></dd>
+			    		<dd><input type="text" name="firstname" /></dd>
 			    		<dt>Etternavn</dt>
 			    		<dd><input type="text" name="lastname"/></dd>
 			    		<dt>E-post</dt>
@@ -34,7 +34,8 @@
 			    	</dl>
 				</form>
 			</div>
-			<div class="delegates" style="float: left; padding-left: 2em;">
+			<div class="delegates" style="float: left; padding-left: 2em; padding-top: 2em;">
+				Delegater
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
