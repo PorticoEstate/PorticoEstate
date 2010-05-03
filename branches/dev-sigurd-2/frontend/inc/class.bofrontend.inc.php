@@ -121,8 +121,7 @@
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			
-			$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad WHERE owner_id = {$owner_id}" . 
-					" LEFT JOIN phpgw_accounts pa (pa.account_id = pad.account_id)";
+			$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
 			
 			$db = clone $GLOBALS['phpgw']->db;
 			$db->query($sql,__LINE__,__FILE__);
