@@ -20,11 +20,11 @@
 			    		<dt>Brukernavn</dt>
 			    		<dd><input type="text" name="username"/><input type="submit" name="search" value="Søk"/></dd>
 			    		<dt>Fornavn</dt>
-			    		<dd><input type="text" name="firstname" /></dd>
+			    		<dd><input type="text" name="firstname" readonly=""/></dd>
 			    		<dt>Etternavn</dt>
-			    		<dd><input type="text" name="lastname"/></dd>
+			    		<dd><input type="text" name="lastname" readonly=""/></dd>
 			    		<dt>E-post</dt>
-			    		<dd><input type="text" name="email"/></dd>
+			    		<dd><input type="text" name="email" readonly=""/></dd>
 			    		<dt>Passord</dt>
 			    		<dd><input type="password" name="password1"/></dd>
 			    		<dt>Gjenta passord</dt>
