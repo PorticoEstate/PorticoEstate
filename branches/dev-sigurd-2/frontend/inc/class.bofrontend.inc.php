@@ -106,6 +106,32 @@
 		 */
 		public static function create_delegate_account(string $username, string $firstname, string $lastname, string $password)
 		{
+			
+			if (!$GLOBALS['phpgw']->accounts->exists('frontend_delegates') ) // no rental accounts already exists
+			{
+				$account			= new phpgwapi_group();
+				$account->lid		= 'frontend_delegates';
+				$account->firstname = 'Frontend';
+				$account->lastname	= 'Delegates';
+				$frontend_delegates	= $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
+				
+				$aclobj =& $GLOBALS['phpgw']->acl;
+				$aclobj->set_account_id($frontend_delegates, true);
+				$aclobj->add('frontend', '.', 1);
+				$aclobj->add('frontend', 'run', 1);
+				$aclobj->add('preferences', 'changepassword',1);
+				$aclobj->add('preferences', '.',1);
+				$aclobj->add('preferences', 'run',1);
+				$aclobj->add('frontend', '.ticket', 1);
+				$aclobj->add('frontend', '.rental.contract', 1);
+				$aclobj->add('frontend', '.rental.contract_in', 1);
+				$aclobj->save_repository();
+			}
+			else
+			{
+				$frontend_delegates		= $GLOBALS['phpgw']->accounts->name2id('frontend_delegates');
+			}
+			
 			if(isset($username) && isset($firstname) && isset($lastname) && isset($password))
 			{
 				if (!$GLOBALS['phpgw']->accounts->exists($username) )

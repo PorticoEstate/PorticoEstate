@@ -6,7 +6,6 @@
 		public $public_functions = array
 			(
 			'index'				=> true,
-			'add_delegate'		=> true,
 			'remove_delegate'	=> true
 		);
 
@@ -54,52 +53,16 @@
 			} 
 			else if(isset($_POST['add']))
 			{
-				$search = array();
+				$account_id = phpgw::get_var('account_id'); 
 				
-				
-				
-				$modules = array
-				(
-					'frontend',
-					'preferences'
-				);
-				
-				$acls = array
-				(
-					array
-					(
-						'appname'	=> 'preferences',
-						'location'	=> 'changepassword',
-						'rights'	=> 1
-					),
-					array
-					(
-						'appname'	=> 'frontend',
-						'location'	=> 'run',
-						'rights'	=> 1
-					),
-					array
-					(
-						'appname'	=> 'frontend',
-						'location'	=> '.ticket',
-						'rights'	=> 1
-					),
-					array
-					(
-						'appname'	=> 'frontend',
-						'location'	=> '.rental.contract',
-						'rights'	=> 1
-					),
-					array
-					(
-						'appname'	=> 'frontend',
-						'location'	=> '.rental.contract_in',
-						'rights'	=> 1
-					)
-				);
-				
-				$aclobj =& $GLOBALS['phpgw']->acl;
-				//Add user
+				if($this->add_delegate($account_id))
+				{
+					$msglog['message'] = lang('delegation_successful');	
+				}
+				else
+				{
+					$msglog['message'] = lang('delegation_error');	
+				}
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
@@ -121,16 +84,24 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
 		}
 		
-		public function add_delegate()
+		public function add_delegate(int $account_id, int $owner_id)
 		{
-			/*
-			 * (0). Assume that user is a phpgw user
-			 * 1. Add access to frontend
-			 * 2. Add access to frontend areas (helpdesk, contracts, ...)
-			 * 3. Insert delegate user_name and unit leader in database
-			 */
+			if(!isset($account_id))
+			{
+				//User is only registered in Fellesdata
+				$username = phpgw::get_var('username'); 
+				$firstname = phpgw::get_var('firstname'); 
+				$lastname = phpgw::get_var('lastname'); 
+				$password = 'test123';
+				
+				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
+				if(isset($account_id) && !is_numeric($account_id))
+				{
+					return false;
+				}
+			}
 			
-			
+			return frontend_bofrontend::add_delegate($account_id, null);
 		}
 		
 		public function remove_delegate()
