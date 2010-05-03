@@ -35,7 +35,7 @@
 					if($account_id)
 					{
 						$search = frontend_bofrontend::get_account_info($account_id);
-						$msglog['message'] = 'user_found_in_PE';
+						$msglog['message'] = lang('user_found_in_PE');
 					}
 					else
 					{
@@ -43,11 +43,11 @@
 						if($fellesdata_user)
 						{
 							$search = $fellesdata_user;
-							$msglog['message'] = 'user_found_in_Fellesdata';
+							$msglog['message'] = lang('user_found_in_Fellesdata');
 						}
 						else
 						{
-							$msglog['error'] = 'no_hits';
+							$msglog['error'] = lang('no_hits');
 						}
 					}
 				}
