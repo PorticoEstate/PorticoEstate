@@ -1,4 +1,5 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
+	<xsl:copy-of select="." />
 	<div class="yui-content">
 		<div class="toolbar-container">
 		    <div class="toolbar" style="display: block;">
