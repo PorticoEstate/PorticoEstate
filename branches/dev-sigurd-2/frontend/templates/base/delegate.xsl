@@ -76,18 +76,3 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
-	<xsl:choose>
-        <xsl:when test="normalize-space(redirect) != ''">
-            <script>
-            	window.parent.location = '<xsl:value-of select="redirect"/>';
-            	window.close();
-            </script>
-        </xsl:when>
-    </xsl:choose>
-   
-        </table>
-    </form>
-</xsl:template>
-
-
