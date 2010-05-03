@@ -3,6 +3,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
+				<xsl:value-of select="php:function('lang', 'find_user')"/>
 				<table cellpadding="2" cellspacing="2" align="center">
 			        <xsl:choose>
 			            <xsl:when test="msgbox_data != ''">
@@ -14,11 +15,13 @@
 			            </xsl:when>
 			        </xsl:choose>
 			    </table>
-				<xsl:value-of select="php:function('lang', 'new_delegate')"/>
+			    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
+			    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
+			    
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 			    	<dl>
 			    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
-			    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="Søk"/></dd>
+			    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="{$btn_search}"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
 			    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
@@ -30,7 +33,7 @@
 			    		<dt><xsl:value-of select="php:function('lang', 'repeat_password')"/></dt>
 			    		<dd><input type="password" name="password2"/></dd> -->
 			    		<dt></dt>
-			    		<dd><input type="submit" name="add" value="Legg til bruker"/></dd>
+			    		<dd><input type="submit" name="add" value="{$btn_add}"/></dd>
 			    	</dl>
 				</form>
 			</div>
