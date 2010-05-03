@@ -20,11 +20,11 @@
 			    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
 			    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="Søk"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
-			    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}"/></dd>
+			    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
-			    		<dd><input type="text" name="lastname" readonly="" value="{search/lastname}"/></dd>
+			    		<dd><input type="text" name="lastname" readonly="" value="{search/lastname}" style="background-color: #CCCCCC;"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'email')"/></dt>
-			    		<dd><input type="text" name="email" readonly="" value="{search/email}"/></dd>
+			    		<dd><input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/></dd>
 			    		<!-- <dt><xsl:value-of select="php:function('lang', 'password')"/></dt>
 			    		<dd><input type="password" name="password1"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'repeat_password')"/></dt>
