@@ -189,7 +189,7 @@
 			{
 				$db = clone $GLOBALS['phpgw']->db;
 				$timestamp = time();
-				$sql = "INSERT INTO phpgw_account_delegates VALUES ( {$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
+				$sql = "INSERT INTO phpgw_account_delegates VALUES ({$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{

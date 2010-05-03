@@ -19,7 +19,7 @@
 			    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
 			    
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-			    	<input type="hidden" name="account_id" value="{search/id}"/>
+			    	<input type="hidden" name="account_id" value="{search/account_id}"/>
 			    	<dl>
 			    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
 			    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="{$btn_search}"/></dd>

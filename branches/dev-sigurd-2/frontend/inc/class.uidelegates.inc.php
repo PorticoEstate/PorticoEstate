@@ -54,7 +54,7 @@
 			else if(isset($_POST['add']))
 			{
 				$account_id = phpgw::get_var('account_id'); 
-				
+			
 				if($this->add_delegate($account_id))
 				{
 					$msglog['message'] = lang('delegation_successful');	
