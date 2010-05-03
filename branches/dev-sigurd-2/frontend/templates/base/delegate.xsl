@@ -50,9 +50,8 @@
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
-										<xsl:value-of select="account_firstname"/> 
-										<xsl:value-of select="$nbsp"/> 
-										<xsl:value-of select="account_lastname"/>
+										<xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
+										
 										(<xsl:value-of select="account_lid"/>)
 											<a href="index.php?menuaction=frontend.uidelegate.remove_deletage&amp;account_id={account_id}">Fjern</a>
 								</li>
