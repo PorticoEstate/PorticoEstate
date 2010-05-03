@@ -14,11 +14,11 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
-				Ny delegat
+				<xsl:value-of select="php:function('lang', 'new_delegate')"/>
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 			    	<dl>
 			    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
-			    		<dd><input type="text" name="username"/><input type="submit" name="search" value="Søk"/></dd>
+			    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="Søk"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
 			    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}"/></dd>
 			    		<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
@@ -30,7 +30,7 @@
 			    		<dt><xsl:value-of select="php:function('lang', 'repeat_password')"/></dt>
 			    		<dd><input type="password" name="password2"/></dd> -->
 			    		<dt></dt>
-			    		<dd><input type="submit" name="add" value="Add"/></dd>
+			    		<dd><input type="submit" name="add" value="Legg til bruker"/></dd>
 			    	</dl>
 				</form>
 			</div>
