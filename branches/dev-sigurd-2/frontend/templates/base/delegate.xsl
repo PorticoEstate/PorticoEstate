@@ -3,7 +3,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
-				<table cellpadding="2" cellspacing="2" width="95%" align="center">
+				<table cellpadding="2" cellspacing="2" align="center">
 			        <xsl:choose>
 			            <xsl:when test="msgbox_data != ''">
 			                <tr>
