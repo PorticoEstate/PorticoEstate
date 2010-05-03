@@ -143,4 +143,31 @@
         	}
         	//return "No name";
         }
+        
+        /**
+         * Get user info from Fellesdata based on a username
+         * 
+         * @param $username the username in question
+         * @return an array containing username, firstname, lastname and email if user exist, false otherwise
+         */
+        public function get_user(string $username)
+        {
+        	$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = {$username}";
+        	$db = $this->get_db();
+        	$db->query($sql,__LINE__,__FILE__);
+        	if($db->num_rows() > 0)
+        	{
+        		$db->next_record();
+        		return array(
+        		 	'USERNAME' 	=> $db->f('BRUKERNAVN', true),
+        			'FIRSTNAME'	=> $db->f('FORNAVN', true),
+        			'LASTNAME'	=> $db->f('ETTERNAVN', true),
+        			'EMAIL'		=> $db->f('EPOST', true)
+        		);
+        	} 
+        	else
+        	{
+        		return false;
+        	}		
+        }
     }

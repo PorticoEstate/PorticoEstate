@@ -66,4 +66,121 @@
 
 			return $_locations;
 		}
+		
+		/**
+		 * Checks to see if a user with a given username exist
+		 * 
+		 * @param string $username the username to check
+		 * @return the user id if the user exist, false otherwise
+		 */
+		public static function delegate_exist(string $username)
+		{
+			if(isset($username))
+			{
+				if ($GLOBALS['phpgw']->accounts->exists($username) )
+				{
+					return $GLOBALS['phpgw']->accounts->name2id('rental_group');
+				}
+			}
+			return false;
+		}
+		
+		/**
+		 * Try to create a phpgw user
+		 * 
+		 * @param string $username	the username
+		 * @param string $firstname	the user's first name
+		 * @param string $lastname the user's last name
+		 * @param string $password	the user's password
+		 */
+		public static function create_delegate_account(string $username, string $firstname, string $lastname, string $password)
+		{
+			if(isset($username) && isset($firstname) && isset($lastname) && isset($password))
+			{
+				if (!$GLOBALS['phpgw']->accounts->exists($username) )
+				{	
+					$account			= new phpgwapi_user();
+					$account->lid		= $username;
+					$account->firstname	= $firstname;
+					$account->lastname	= $lastname;
+					$account->passwd	= $password;
+					$account->enabled	= true;
+					$account->expires	= -1;
+					return $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array('frontend'));
+				}
+			}
+			return false;
+		}
+		
+		
+		public static function get_delegates(int $owner_id)
+		{
+			
+			if(!isset($owner_id))
+			{
+				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+			
+			$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad WHERE owner_id = {$owner_id}" . 
+					" LEFT JOIN phpgw_accounts pa (pa.account_id = pad.account_id)";
+			
+			$db = clone $GLOBALS['phpgw']->db;
+			$db->query($sql,__LINE__,__FILE__);
+			
+			
+			$delegates = array();
+        	while($db->next_record())
+        	{
+        		$delegates[] = array(
+        			'account_id'		=>	$db->f('account_id', true),
+        			'owner_id'			=>	$db->f('owner_id',true),
+        			'account_lid'		=>	$db->f('account_lid', true),
+        			'account_firstname'	=>	$db->f('account_firstname', true),
+        			'account_lastname'	=>	$db->f('account_lastname', true)
+        		);
+        	} 
+			return $delegates;
+		}
+		
+		public static function add_delegate(int $account_id, int $owner_id)
+		{
+			if(!isset($owner_id))
+			{
+				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+			
+			if(isset($account_id))
+			{
+				$db = clone $GLOBALS['phpgw']->db;
+				$timestamp = time();
+				$sql = "INSERT INTO phpgw_account_delegates VALUES ( {$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
+				$result = $db->query($sql,__LINE__,__FILE__);
+				if($result)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public static function remove_delegate(int $account_id, int $owner_id)
+		{
+			if(!isset($owner_id))
+			{
+				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+			
+			if(isset($account_id))
+			{
+				$db = clone $GLOBALS['phpgw']->db;
+				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND owner_id = {$owner_id}";
+				$result = $db->query($sql,__LINE__,__FILE__);
+				if($result)
+				{
+					return true;
+				}
+			}
+			return false;	
+		}
 	}
