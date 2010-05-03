@@ -1,6 +1,6 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
 	<ul>
-		<xsl:foreach select="delegate">
+		<!-- <xsl:foreach select="delegate">
 			<li>
 				<dl>
 					<xsl:value-of select="account_firstname"/>&amp;nbsp;<xsl:value-of select="account_lastname"/>
@@ -8,7 +8,7 @@
 					<a href="index.php?menuaction=frontend.uidelegate.remove_deletage&account_id={account_id}">Fjern</a>
 				</dl>
 			</li>
-		</xsl:foreach>
+		</xsl:foreach> -->
 	</ul>
 </xsl:template>
 
