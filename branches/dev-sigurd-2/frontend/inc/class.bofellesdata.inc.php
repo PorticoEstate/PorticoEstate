@@ -152,7 +152,7 @@
          */
         public function get_user(string $username)
         {
-        	$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = {$username}";
+        	$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = '{$username}'";
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
