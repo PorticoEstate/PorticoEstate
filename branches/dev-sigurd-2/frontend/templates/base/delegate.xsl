@@ -46,4 +46,70 @@
 	</div>
 </xsl:template>
 
+<xsl:template match="lightbox_name" xmlns:php="http://php.net/xsl">
+</xsl:template>
+
+<xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
+	<xsl:choose>
+        <xsl:when test="normalize-space(redirect) != ''">
+            <script>
+            	window.parent.location = '<xsl:value-of select="redirect"/>';
+            	window.close();
+            </script>
+        </xsl:when>
+    </xsl:choose>
+    <h2>Ny delegat</h2>
+    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <xsl:choose>
+                <xsl:when test="msgbox_data != ''">
+                    <tr>
+                        <td align="left" colspan="2">
+                            <xsl:call-template name="msgbox"/>
+                        </td>
+                    </tr>
+                </xsl:when>
+            </xsl:choose>
+			<form>
+		<div>
+			<label for="username">Brukernavn
+				<input type="text" name="username"/>
+				<input type="submit" name="Search" value="Søk"/>
+			</label>
+		</div>
+		<div>
+			<ul>
+				<li>
+					<label for="firstname"> Fornavn
+						<input type="text" name="firstname"/>
+					</label>
+				</li>
+				<li>
+					<label for="lastname"> Etternavn
+						<input type="text" name="lastname"/>
+					</label>
+				</li>
+				<li>
+					<label for="email"> E-post
+						<input type="text" name="email"/>
+					</label>
+				</li>
+				
+				<li>
+					<label for="password1"> Passord
+						<input type="password" name="password1"/>
+					</label>
+				</li>
+				<li>
+					<label for="password2"> Gjenta passord
+						<input type="password" name="password2"/>
+					</label>
+				</li>
+			</ul>
+		</div>
+	</form>
+        </table>
+    </form>
+</xsl:template>
+
 
