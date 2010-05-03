@@ -93,13 +93,13 @@
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
 			
 			$data = array (
-				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
 				'delegate_data' => 	array (
 					'form_action' => $form_action,
 					'delegate' 	=> $delegates,
-					'search'	=> isset($search) ? $search : array()
+					'search'	=> isset($search) ? $search : array(),
+					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				),
 				
 			);
