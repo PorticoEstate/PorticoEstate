@@ -1,8 +1,14 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
 	<div class="yui-content">
 		<div class="toolbar-container">
-		    <div class="toolbar">
-		        <xsl:apply-templates select="datatable/actions" />  
+		    <div class="toolbar" style="display: block;">
+		        <div class="field" style="float: right;">
+		        	<span id="btn_new" class="yui-button yui-push-nutton">
+		        		<span class="first-child">
+		        			<button id="btn_new-button" type="button">Legg til delegat</button>
+		        		</span>
+		        	</span>
+		        </div>
 		    </div>
 		</div>
 		<div class="delegates">
@@ -17,7 +23,6 @@
 									<xsl:value-of select="account_firstname"/>&amp;nbsp;<xsl:value-of select="account_lastname"/>
 									(<xsl:value-of select="account_lid"/>)
 										<a href="index.php?menuaction=frontend.uidelegate.remove_deletage&amp;account_id={account_id}">Fjern</a>
-								
 							</li>
 						</xsl:foreach>
 					</ul>
