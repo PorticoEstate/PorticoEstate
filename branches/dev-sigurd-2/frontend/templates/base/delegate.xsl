@@ -17,18 +17,18 @@
 				Ny delegat
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 			    	<dl>
-			    		<dt>Brukernavn</dt>
+			    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
 			    		<dd><input type="text" name="username"/><input type="submit" name="search" value="Søk"/></dd>
-			    		<dt>Fornavn</dt>
-			    		<dd><input type="text" name="firstname" readonly=""/></dd>
-			    		<dt>Etternavn</dt>
-			    		<dd><input type="text" name="lastname" readonly=""/></dd>
-			    		<dt>E-post</dt>
-			    		<dd><input type="text" name="email" readonly=""/></dd>
-			    		<dt>Passord</dt>
+			    		<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
+			    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}"/></dd>
+			    		<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
+			    		<dd><input type="text" name="lastname" readonly="" value="{search/lastname}"/></dd>
+			    		<dt><xsl:value-of select="php:function('lang', 'email')"/></dt>
+			    		<dd><input type="text" name="email" readonly="" value="{search/email}"/></dd>
+			    		<!-- <dt><xsl:value-of select="php:function('lang', 'password')"/></dt>
 			    		<dd><input type="password" name="password1"/></dd>
-			    		<dt>Gjenta passord</dt>
-			    		<dd><input type="password" name="password2"/></dd>
+			    		<dt><xsl:value-of select="php:function('lang', 'repeat_password')"/></dt>
+			    		<dd><input type="password" name="password2"/></dd> -->
 			    		<dt></dt>
 			    		<dd><input type="submit" name="add" value="Add"/></dd>
 			    	</dl>

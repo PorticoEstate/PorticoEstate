@@ -25,14 +25,50 @@
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
 			
+			
+			
+			if(isset($_POST['search']))
+			{
+				$username = phpgw::get_var('username');
+				if(!isset($username))
+				{
+					$msglog['error'] = 'Vennligst fyll ut et brukernavn';
+				}
+				else
+				{
+					$account_id = frontend_bofrontend::delegate_exist($username);
+					if($account_id)
+					{
+						$search = frontend_bofrontend::get_account_info($account_id);
+						$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.add_delegate'));
+					}
+					else
+					{
+						$msglog['error'] = 'Ingen treff';
+					}
+				}
+			} 
+			else if(isset($_POST['add']))
+			{
+				
+				$search = array();
+				$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
+				
+			}
+			else
+			{
+				$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
+			}
+			
 			$data = array (
 				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
 				'delegate_data' => 	array (
-					'delegate' => $delegates
+					'form_action' => $form_action,
+					'delegate' 	=> $delegates,
+					'search'	=> isset($search) ? $search : array()
 				),
-				'lightbox_name'	=> lang('add delegate')
 				
 			);
 			
@@ -50,6 +86,47 @@
 			 * 3. Insert delegate user_name and unit leader in database
 			 */
 			
+			$modules = array
+			(
+				'frontend',
+				'preferences'
+			);
+			
+			$acls = array
+			(
+				array
+				(
+					'appname'	=> 'preferences',
+					'location'	=> 'changepassword',
+					'rights'	=> 1
+				),
+				array
+				(
+					'appname'	=> 'frontend',
+					'location'	=> 'run',
+					'rights'	=> 1
+				),
+				array
+				(
+					'appname'	=> 'frontend',
+					'location'	=> '.ticket',
+					'rights'	=> 1
+				),
+				array
+				(
+					'appname'	=> 'frontend',
+					'location'	=> '.rental.contract',
+					'rights'	=> 1
+				),
+				array
+				(
+					'appname'	=> 'frontend',
+					'location'	=> '.rental.contract_in',
+					'rights'	=> 1
+				)
+			);
+			
+			$aclobj =& $GLOBALS['phpgw']->acl;
 		}
 		
 		public function remove_delegate()

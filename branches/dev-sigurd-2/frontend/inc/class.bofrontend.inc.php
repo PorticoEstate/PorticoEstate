@@ -85,6 +85,17 @@
 			return false;
 		}
 		
+		public static function get_account_info(int $account_id)
+		{
+			$account = $GLOBALS['phpgw']->accounts->get($account_id);
+			return array(
+				'account_id' 	=> $account->__get('id'),
+				'username'		=> $account->__get('lid'),
+				'firstname' 	=> $account->__get('firstname'),
+				'lastname' 		=> $account->__get('lastname')
+			);	
+		}
+		
 		/**
 		 * Try to create a phpgw user
 		 * 
