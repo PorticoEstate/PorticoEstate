@@ -1,4 +1,5 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
+		<xsl:copy-of select="."/>
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
@@ -47,7 +48,6 @@
 					<xsl:otherwise>
 						<ul>
 							<xsl:foreach select="delegate">
-								<xsl:copy-of select="."/>
 								<li>
 										<xsl:value-of select="account_firstname"/>&amp;nbsp;<xsl:value-of select="account_lastname"/>
 										(<xsl:value-of select="account_lid"/>)
