@@ -14,7 +14,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			<div class="toolbar-container">
-			    <div class="toolbar">
+			    <div class="toolbar_manual">
 			        <div class="field" style="float: right;">
 			        	<span id="btn_new" class="yui-button yui-push-nutton">
 			        		<span class="first-child">
