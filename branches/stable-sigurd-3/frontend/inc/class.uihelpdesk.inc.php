@@ -351,10 +351,13 @@
 
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'helpdesk.list' , 'frontend');
 
+			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend','msgbox');
+			
 			$data = array(
 				'header' 		=> $this->header_state,
 				'tabs'			=> $this->tabs,
-				'helpdesk' 		=> array('datatable' => $datatable),
+				'helpdesk' 		=> array('datatable' => $datatable, 'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),),
 				'lightbox_name'	=> lang('add ticket')
 			);
 
@@ -442,8 +445,12 @@
 				$i++;
 			}
 
+			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
+			phpgwapi_cache::session_clear('frontend','msgbox');
+			
 			$data = array(
 				'header' 		=> $this->header_state,
+				'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
 				'tabs'			=> $this->tabs,
 				'ticketinfo'	=> array(
 					'ticket'        => $ticket,
@@ -542,8 +549,9 @@
 							}
 						}
 
+						$redirect = true;
+						phpgwapi_cache::session_set('frontend', 'msgbox', $msglog);
 						// /Files
-
 					}
 				}
 				else
@@ -553,6 +561,7 @@
 			}
 
 			$data = array(
+				'redirect'		=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
 				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket', 'noframework' => '1')),
 				'title'         => $values['title'],

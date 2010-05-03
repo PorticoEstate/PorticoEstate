@@ -71,6 +71,20 @@
 			'ix' => array(),
 			'uc' => array('account_lid')
 		),
+		'phpgw_account_delegates' => array(
+			'fd' => array(
+				'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+			),
+			'pk' => array('account_id','owner_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'phpgw_preferences' => array(
 			'fd' => array(
 				'preference_owner' => array('type' => 'int','precision' => 4,'nullable' => False),

@@ -269,8 +269,8 @@
 		*/
 		function get_attachments($path, $values)
 		{
+			$mime_magic = createObject('phpgwapi.mime_magic');
 			$attachments = array();
-
 			foreach ($values as $file_name)
 			{
 				$file = "{$this->fakebase}{$path}{$file_name}";
@@ -279,7 +279,6 @@
 					'string' => $file,
 					'relatives' => array(RELATIVE_NONE))))
 				{
-					$mime_magic = createObject('phpgwapi.mime_magic');
 					$mime       = $mime_magic->filename2mime($file_name);
 
 					$attachments[] = array

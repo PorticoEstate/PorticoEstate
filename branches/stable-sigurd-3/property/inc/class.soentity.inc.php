@@ -894,5 +894,114 @@
 			$helpmsg = stripslashes($this->db->f('helpmsg'));
 			return $helpmsg;
 		}
-	}
 
+
+		function read_entity_to_link($data)
+		{
+			if(!isset($data['cat_id']) || !$data['cat_id'] || !isset($data['entity_id']) || !$data['entity_id'] || !isset($data['id']) || !$data['id'])
+			{
+				throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
+			}
+
+			$cat_id = (int)$data['cat_id'];
+			$entity_id = (int)$data['entity_id'];
+			$id = (int)$data['id'];
+
+			$entity = array();
+
+			$sql = "SELECT * FROM fm_{$this->type}_category";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			$category = array();
+			while ($this->db->next_record())
+			{
+				$category[] = array
+				(
+					'entity_id'	=> $this->db->f('entity_id'),
+					'cat_id'	=> $this->db->f('id'),
+					'name'		=> $this->db->f('name'),
+					'descr'		=> $this->db->f('descr')
+				);
+			}
+
+			foreach($category as $entry)
+			{
+				$sql = "SELECT count(*) as hits FROM fm_{$this->type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				if($this->db->f('hits'))
+				{
+					$entity['related'][] = array
+					(
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'	=> "property.ui{$this->type}.index",
+															'entity_id'		=> $entry['entity_id'],
+															'cat_id'		=> $entry['cat_id'],
+															'p_entity_id'	=> $entity_id,
+															'p_cat_id' 		=> $cat_id,
+															'p_num' 		=> $id
+														)
+													),
+						'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
+						'descr'			=> $entry['descr']
+					);
+				}
+			}
+
+			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index',
+														//	'p_entity_id'	=> $entity_id,
+														//	'p_cat_id' 		=> $cat_id,
+															'p_num' 		=> $id,
+															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+					'name'		=> lang('Helpdesk') . " [{$hits}]",
+					'descr'		=> lang('Helpdesk')
+				);
+			}
+
+			$sql = "SELECT count(*) as hits FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index',
+													//		'p_entity_id'	=> $entity_id,
+													//		'p_cat_id' 		=> $cat_id,
+															'p_num' 		=> $id,
+															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+					'name'		=> lang('request') . " [{$hits}]",
+					'descr'		=> lang('request')
+				);
+			}
+
+			$sql = "SELECT count(*) as hits FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index',
+															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}",
+															'criteria_id' => 6)), //FIXME: criteria 6 is for entities should be altered to locations
+					'name'		=> lang('project') . " [{$hits}]",
+					'descr'		=> lang('project')
+				);
+			}
+
+			return $entity;
+		}
+	}

@@ -201,6 +201,11 @@
 					'id'	=> '5',
 					'name'	=> lang('title')
 				),
+				array
+				(
+					'id'	=> '6',
+					'name'	=> lang('module')
+				),
 			);
 			return $this->bocommon->select_list($selected,$criteria);
 		}
@@ -248,6 +253,14 @@
 				'matchtype' => 'like',
 				'front' => "'%",
 				'back' => "%'"
+			);
+			$criteria[6] = array
+			(
+				'field'	=> 'fm_project.location_id',
+				'type'	=> 'varchar',
+				'matchtype' => 'exact',
+				'front' => "",
+				'back' => ""
 			);
 
 			if($id)

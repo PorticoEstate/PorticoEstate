@@ -129,19 +129,19 @@
 		{
 			if(is_array($data))
 			{
-				$start = (isset($data['start'])&& $data['start'] ? $data['start'] : 0);
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$allrows = (isset($data['allrows'])?$data['allrows']:'');
-				$entity_id = (isset($data['entity_id'])?$data['entity_id']:'');
+				$start		= isset($data['start'])&& $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort'])?$data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$allrows	= isset($data['allrows'])?$data['allrows']:'';
+				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
 				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+				$required	= isset($data['required'])?$data['required']:'';
 			}
 
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
@@ -164,25 +164,29 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db2->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->db2->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$category = array();
-			while ($this->db->next_record())
+			while ($this->db2->next_record())
 			{
-				$category[] = array
-				(
-					'id'		=> $this->db->f('id'),
-					'name'		=> $this->db->f('name'),
-					'prefix'	=> $this->db->f('prefix'),
-					'descr'		=> $this->db->f('descr'),
-					'level'		=> $this->db->f('level'),
-					'parent_id'	=> $this->db->f('parent_id')
-				);
+				$id	= $this->db2->f('id');
+				if($GLOBALS['phpgw']->acl->check(".{$type}.{$entity_id}.{$id}", $required, $this->type_app[$type]))
+				{
+					$category[] = array
+					(
+						'id'		=> $id,
+						'name'		=> $this->db2->f('name'),
+						'prefix'	=> $this->db2->f('prefix'),
+						'descr'		=> $this->db2->f('descr'),
+						'level'		=> $this->db2->f('level'),
+						'parent_id'	=> $this->db2->f('parent_id')
+					);
+				}
 			}
 			return $category;
 		}

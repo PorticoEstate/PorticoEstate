@@ -2683,3 +2683,35 @@
 		}
 	}
 
+	$test[] = '0.9.17.527';
+	/**
+	* Add delegates - let users manage other users to represent them
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_527()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_account_delegates', array(
+				'fd' => array(
+					'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+				),
+				'pk' => array('account_id','owner_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.528';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

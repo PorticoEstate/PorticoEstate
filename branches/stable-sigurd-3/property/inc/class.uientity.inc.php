@@ -1058,7 +1058,7 @@
 			}
 			else
 			{
-				$cat_list = $this->bo->select_category_list('select');
+				$cat_list = $this->bo->select_category_list('select', '', PHPGW_ACL_ADD);
 			}
 
 			if (isset($values['cancel']) && $values['cancel'])
@@ -1501,12 +1501,36 @@
 									       			array('key' => 'delete_file','label'=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
 			);
 			
+			if ($id)
+			{
+				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+				$related_link = array();
+
+				if(isset($related['related']))
+				{
+					$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
+
+					foreach($related as $related_key => $related_data)
+					{
+						foreach($related_data as $entry)
+						{
+							$related_link[] = array
+							(
+								'entity_link'				=> $entry['entity_link'],
+								'lang_entity_statustext'	=> $entry['descr'],
+								'text_entity'				=> $entry['name'],
+							);
+						}
+					}
+				}
+			}
+
 			$data = array
 			(
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,	
-				
+				'related_link'					=> $related_link,			
 				'link_pdf'						=> $GLOBALS['phpgw']->link('/index.php',$pdf_data),
 				'start_project'					=> $category['start_project'],
 				'lang_start_project'			=> lang('start project'),

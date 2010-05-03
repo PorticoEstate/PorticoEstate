@@ -16,7 +16,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
         <div class="yui-content">
             <div class="toolbar-container">
-                <div class="toolbar" style="padding: 5px;">
+                <div class="toolbar">
                     <xsl:apply-templates select="datatable/actions" />  
                 </div>
             </div>
@@ -32,6 +32,14 @@
 </xsl:template>
 
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
+	<xsl:choose>
+        <xsl:when test="normalize-space(redirect) != ''">
+            <script>
+            	window.parent.location = '<xsl:value-of select="redirect"/>';
+            	window.close();
+            </script>
+        </xsl:when>
+    </xsl:choose>
     <h2>Ny skademelding</h2>
     <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
         <table cellpadding="0" cellspacing="0" width="100%">

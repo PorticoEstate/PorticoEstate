@@ -87,6 +87,7 @@
 			$this->status_id			= $this->bo->status_id;
 
 			$this->allrows				= $this->bo->allrows;
+			$this->p_num				= $this->bo->p_num;
 		}
 
 		function save_sessiondata()
@@ -160,13 +161,13 @@
 									'filter'	=> $this->filter,
 									'status_id'	=> $this->status_id,
 									'project_id'	=> $project_id,
-									'query'		=> $this->query
-
+									'query'		=> $this->query,
+									'p_num'		=> $this->p_num,
 	    				));
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uirequest.index',"
-
+ 	                        						."p_num: '{$this->p_num}',"
 	    											."query:'{$this->query}',"
 						 	                        ."lookup:'{$lookup}',"
 													."project_id:'{$project_id}',"
