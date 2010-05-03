@@ -16,42 +16,22 @@
 			<div class="add_delegate" style="float: left;">
 				<h2>Ny delegat</h2>
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-					<div>
-						<label for="username">Brukernavn
-							<input type="text" name="username"/>
-							<input type="submit" name="Search" value="Søk"/>
-						</label>
-					</div>
-					<div>
-						<ul>
-							<li>
-								<label for="firstname"> Fornavn
-									<input type="text" name="firstname"/>
-								</label>
-							</li>
-							<li>
-								<label for="lastname"> Etternavn
-									<input type="text" name="lastname"/>
-								</label>
-							</li>
-							<li>
-								<label for="email"> E-post
-									<input type="text" name="email"/>
-								</label>
-							</li>
-							
-							<li>
-								<label for="password1"> Passord
-									<input type="password" name="password1"/>
-								</label>
-							</li>
-							<li>
-								<label for="password2"> Gjenta passord
-									<input type="password" name="password2"/>
-								</label>
-							</li>
-						</ul>
-					</div>
+			    	<dl>
+			    		<dt>Brukernavn</dt>
+			    		<dd><input type="text" name="username"/></dd>
+			    		<dt>Fornavn</dt>
+			    		<dd><input type="text" name="firstname"/></dd>
+			    		<dt>Etternavn</dt>
+			    		<dd><input type="text" name="lastname"/></dd>
+			    		<dt>E-post</dt>
+			    		<dd><input type="text" name="email"/></dd>
+			    		<dt>Passord</dt>
+			    		<dd><input type="password" name="password1"/></dd>
+			    		<dt>Gjenta passord</dt>
+			    		<dd><input type="password" name="password2"/></dd>
+			    		<dt><input type="submit" name="search" value="Søk"/></dt>
+			    		<dd><input type="submit" name="add" value="Søk"/></dd>
+			    	</dl>
 				</form>
 			</div>
 			<div class="delegates" style="float: right;">
@@ -75,4 +55,5 @@
 		</div>	
 	</div>
 </xsl:template>
+
 
