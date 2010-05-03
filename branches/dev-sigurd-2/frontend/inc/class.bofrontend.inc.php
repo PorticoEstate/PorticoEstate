@@ -79,7 +79,7 @@
 			{
 				if ($GLOBALS['phpgw']->accounts->exists($username) )
 				{
-					return $GLOBALS['phpgw']->accounts->name2id('rental_group');
+					return $GLOBALS['phpgw']->accounts->name2id($username);
 				}
 			}
 			return false;
