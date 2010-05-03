@@ -214,6 +214,7 @@
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
+					
 					return true;
 				}
 			}
