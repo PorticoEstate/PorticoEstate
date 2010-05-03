@@ -1,4 +1,5 @@
 <xsl:template match="delegate_data" xmlns:php="http://php.net/xsl">
+	<xsl:copy-of select="."/>
 	<ul>
 		<xsl:foreach select="delegate">
 			<li>
