@@ -13,18 +13,48 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-			<div class="toolbar-container">
-			    <div class="toolbar_manual">
-			        <div class="field" style="float: right;">
-			        	<span id="btn_new" class="yui-button yui-push-nutton">
-			        		<span class="first-child">
-			        			<button id="btn_new-button" type="button">Legg til delegat</button>
-			        		</span>
-			        	</span>
-			        </div>
-			    </div>
+			<div class="add_delegate" style="float: left;">
+				<h2>Ny delegat</h2>
+			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+					<div>
+						<label for="username">Brukernavn
+							<input type="text" name="username"/>
+							<input type="submit" name="Search" value="Søk"/>
+						</label>
+					</div>
+					<div>
+						<ul>
+							<li>
+								<label for="firstname"> Fornavn
+									<input type="text" name="firstname"/>
+								</label>
+							</li>
+							<li>
+								<label for="lastname"> Etternavn
+									<input type="text" name="lastname"/>
+								</label>
+							</li>
+							<li>
+								<label for="email"> E-post
+									<input type="text" name="email"/>
+								</label>
+							</li>
+							
+							<li>
+								<label for="password1"> Passord
+									<input type="password" name="password1"/>
+								</label>
+							</li>
+							<li>
+								<label for="password2"> Gjenta passord
+									<input type="password" name="password2"/>
+								</label>
+							</li>
+						</ul>
+					</div>
+				</form>
 			</div>
-			<div class="delegates">
+			<div class="delegates" style="float: right;">
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
@@ -46,9 +76,6 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="lightbox_name" xmlns:php="http://php.net/xsl">
-</xsl:template>
-
 <xsl:template match="add_ticket" xmlns:php="http://php.net/xsl">
 	<xsl:choose>
         <xsl:when test="normalize-space(redirect) != ''">
@@ -58,56 +85,7 @@
             </script>
         </xsl:when>
     </xsl:choose>
-    <h2>Ny delegat</h2>
-    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-        <table cellpadding="0" cellspacing="0" width="100%">
-            <xsl:choose>
-                <xsl:when test="msgbox_data != ''">
-                    <tr>
-                        <td align="left" colspan="2">
-                            <xsl:call-template name="msgbox"/>
-                        </td>
-                    </tr>
-                </xsl:when>
-            </xsl:choose>
-			<form>
-		<div>
-			<label for="username">Brukernavn
-				<input type="text" name="username"/>
-				<input type="submit" name="Search" value="Søk"/>
-			</label>
-		</div>
-		<div>
-			<ul>
-				<li>
-					<label for="firstname"> Fornavn
-						<input type="text" name="firstname"/>
-					</label>
-				</li>
-				<li>
-					<label for="lastname"> Etternavn
-						<input type="text" name="lastname"/>
-					</label>
-				</li>
-				<li>
-					<label for="email"> E-post
-						<input type="text" name="email"/>
-					</label>
-				</li>
-				
-				<li>
-					<label for="password1"> Passord
-						<input type="password" name="password1"/>
-					</label>
-				</li>
-				<li>
-					<label for="password2"> Gjenta passord
-						<input type="password" name="password2"/>
-					</label>
-				</li>
-			</ul>
-		</div>
-	</form>
+   
         </table>
     </form>
 </xsl:template>
