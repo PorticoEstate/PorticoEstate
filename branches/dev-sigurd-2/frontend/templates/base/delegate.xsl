@@ -18,7 +18,7 @@
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 			    	<dl>
 			    		<dt>Brukernavn</dt>
-			    		<dd><input type="text" name="username"/></dd>
+			    		<dd><input type="text" name="username"/><input type="submit" name="search" value="Søk"/></dd>
 			    		<dt>Fornavn</dt>
 			    		<dd><input type="text" name="firstname"/></dd>
 			    		<dt>Etternavn</dt>
@@ -29,8 +29,8 @@
 			    		<dd><input type="password" name="password1"/></dd>
 			    		<dt>Gjenta passord</dt>
 			    		<dd><input type="password" name="password2"/></dd>
-			    		<dt><input type="submit" name="search" value="Søk"/></dt>
-			    		<dd><input type="submit" name="add" value="Søk"/></dd>
+			    		<dt></dt>
+			    		<dd><input type="submit" name="add" value="Add"/></dd>
 			    	</dl>
 				</form>
 			</div>
