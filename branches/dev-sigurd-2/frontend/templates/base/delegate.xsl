@@ -17,6 +17,7 @@
 			    </table>
 			    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
 			    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
+			     <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
 			   
 			    
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
@@ -50,10 +51,13 @@
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
-										<xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
+									  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+									  		<input type="hidden" name="account_id" value="{account_id}"/>
+											<xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 										
-										(<xsl:value-of select="account_lid"/>)
-											<a href="?menuaction=frontend.uidelegates.remove_deletage&amp;account_id={account_id}">Fjern</a>
+											(<xsl:value-of select="account_lid"/>)
+											<input type="submit" name="add" value="{$btn_remove}"/>
+										</form>
 								</li>
 							</xsl:for-each>
 						</ul>

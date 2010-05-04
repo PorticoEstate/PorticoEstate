@@ -62,6 +62,13 @@
 					$msglog['message'] = lang('delegation_error');	
 				}
 			}
+			else if(isset($_POST['remove']))
+			{
+				$account_id = phpgw::get_var('account_id'); 
+				$owner_id = phpgw::get_var('owner_id');
+			
+				frontend_bofrontend::remove_delegate($account_id,$owner_id);
+			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
 			$delegates = frontend_bofrontend::get_delegates(null);
