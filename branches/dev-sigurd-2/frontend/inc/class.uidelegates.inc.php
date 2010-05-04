@@ -109,6 +109,6 @@
 			$owner_id = phpgw::get_var('owner_id');
 			
 			frontend_bofrontend::remove_delegate($account_id,$owner_id);
-			$GLOBALS['phpgw']->redirect_link('index.php', array('menuaction' => 'frontend.uidelegates.index'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uidelegates.index'));
 		}
 	}
