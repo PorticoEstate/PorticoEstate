@@ -372,6 +372,15 @@
 
 				</script>
 			</xsl:when>
+			<xsl:otherwise>
+				<script type="text/javascript">
+					function Exchange_values(data)
+					{
+
+					}
+				</script>
+			</xsl:otherwise>
+
 		</xsl:choose>
 
 	 <br/>
