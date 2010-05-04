@@ -89,6 +89,8 @@ no_delegates	frontend	no	Ingen delegater
 btn_add	frontend	no	Deleger tilgang til bruker
 btn_search	frontend	no	Finn bruker
 btn_remove	frontend	no	Fjern myndighet
+btn_send	frontend	no	Send melding
+send_contract_message	frontend	no	Send melding til BKB angående kontrakten
 user_found_in_Fellesdata	frontend	no	Personen finnes i Fellesdata.
 user_found_in_PE	frontend	no	Personen er bruker av dette systemet.
 delegation_successful	frontend	no	Velykket delegering
@@ -96,3 +98,4 @@ delegation_error	frontend	no	Feil under delegering
 max_5_delegates	frontend	no	Det er en øvre grense på fem delegater pr leder
 delegates	frontend	no	Delegering
 no_buildings	frontend	no	Ingen bygninger tilknyttet resultatenheten
+title_contract_message	frontend	no	Melding angående kontrakt

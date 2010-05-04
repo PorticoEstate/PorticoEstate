@@ -78,7 +78,13 @@
 			<td>{lang_login_external_db_password}:</td>
 			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
 		</tr>
-
+		<tr class="row_off">
+			<td colspan="2">&nbsp;<b>{lang_email_settings}</b></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_email_contract_messages}:</td>
+			<td><input name="newsettings[email_contract_messages]" value="{value_email_contract_messages}"></td>
+		</tr>
 <!-- END body -->
 <!-- BEGIN footer -->
 		<tr class="th">

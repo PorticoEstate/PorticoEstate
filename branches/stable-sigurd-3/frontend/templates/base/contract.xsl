@@ -142,16 +142,30 @@
 									</div>
 									<div id="comment">
 										<ul>
-											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;" >
-												<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
-												<em>Kommentar</em>
+											<xsl:choose>
+												<xsl:when test="publish_comment = 1">
+													<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;" >
+														<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
+														<em><xsl:value-of select="php:function('lang', 'comment')"/></em>
+													</li>
+													<li style="margin-bottom: 10px;">
+														<xsl:value-of select="comment" disable-output-escaping="yes"/>
+													</li>
+												</xsl:when>
+											</xsl:choose>
+											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; margin-right: 1em;">
+												<img src="frontend/templates/base/images/16x16/comment_edit.png" class="list_image" />
+												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 											</li>
 											<li>
-												<xsl:choose>
-													<xsl:when test="publish_comment = 1">
-														<xsl:value-of select="comment" disable-output-escaping="yes"/>
-													</xsl:when>
-												</xsl:choose>
+												<xsl:variable name="btn_send"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
+												<form action="{form_url}" method="post" style="float:left;">
+							           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
+							           				<br/>
+							           				<textarea name="contract_message" cols="80" rows="5">
+							           				</textarea><br/>
+							           				<input type="submit" name="send" value="{$btn_send}"/>
+							           			</form>
 											</li>
 										</ul>
 									</div>

@@ -256,11 +256,11 @@
 			);
 			$criteria[6] = array
 			(
-				'field'	=> 'fm_project.location_id',
+				'field'	=> 'fm_project.p_num',
 				'type'	=> 'varchar',
 				'matchtype' => 'exact',
-				'front' => "",
-				'back' => ""
+				'front' => "'",
+				'back' => "'"
 			);
 
 			if($id)
