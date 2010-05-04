@@ -395,7 +395,7 @@
 					$query=explode(".",$query);
 					$querymethod = " $where (fm_project.loc1='" . $query[0] . "' AND fm_project.loc".$type_id."='" . $query[1] . "')";
 				}
-				else if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.location_id')
+				else if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.p_num')
 				{
 					$query=explode(".",$query);
 					$querymethod = " $where (fm_project.p_entity_id='" . (int)$query[1] . "' AND fm_project.p_cat_id='" . (int)$query[2] . "' AND fm_project.p_num='" . (int)$query[3] . "')";
