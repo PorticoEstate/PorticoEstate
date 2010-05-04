@@ -158,6 +158,7 @@
 												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 											</li>
 											<li>
+												<xsl:variable name="btn_send"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
 												<form action="{send_form_url}" method="post" style="float:left;">
 							           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
 							           				<br/>
