@@ -27,7 +27,7 @@
     		
     		$title = lang('title_contract_message'); 
     		$title .= " ".$contract->get_old_contract_id();
-    		$title .= "(".$contract->get_type().")";
+    		$title .= "(".$contract->get_type_title().")";
     		
     		$to = 'yngve.espelid@bouvet.no';
     		
