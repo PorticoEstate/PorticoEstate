@@ -85,6 +85,23 @@
 			return false;
 		}
 		
+		public static function get_deletations(int $account_id)
+		{
+			
+			$sql = 	"SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
+			
+			$db = clone $GLOBALS['phpgw']->db;
+			$db->query($sql,__LINE__,__FILE__);
+			
+			
+			$delegations = array();
+        	while($db->next_record())
+        	{
+        		$delegations[] = $db->f('account_lid', true);
+        	} 
+			return $delegations;
+		}
+		
 		public static function get_account_info(int $account_id)
 		{
 			$account = $GLOBALS['phpgw']->accounts->get($account_id);
