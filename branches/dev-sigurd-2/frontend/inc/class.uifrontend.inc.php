@@ -168,8 +168,18 @@
 			/* No state, first visit after login*/
 			else if(!isset($this->header_state) || isset($refresh))
 			{
+				$delegations = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
+				
+				var_dump($delegations);
+				
+				$delegations[] = $GLOBALS['phpgw_info']['user']['account_lid'];
+				
+				var_dump($delegations);
+				
 				//Specify organisational units
-				$org_unit_ids = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
+				$org_unit_ids = frontend_bofellesdata::get_instance()->get_result_units($delegations);
+				
+				var_dump($org_unit_ids);
 				
 				//Update org units on header state
 				$this->header_state['org_unit'] = $org_unit_ids;
