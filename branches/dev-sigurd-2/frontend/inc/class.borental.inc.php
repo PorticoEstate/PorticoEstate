@@ -24,38 +24,40 @@
     	public static function send_contract_message(int $contract_id, string $contract_message)
     	{
     		$contract = rental_socontract::get_instance()->get_single($contract_id);
-    		
-    		$title = lang('title_contract_message'); 
-    		$title .= " ".$contract->get_old_contract_id();
-    		$title .= "(".$contract->get_type_title().")";
-    		
-    		$to = 'yngve.espelid@bouvet.no';
-    		
-    		$from_address = $GLOBALS['phpgw_info']['user']['lid']."@bergen.kommune.no";
-    		
-    		if (isset($contract_message))
-			{
-				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+    		if(isset($contract))
+    		{
+	    		$title = lang('title_contract_message'); 
+	    		$title .= " ".$contract->get_old_contract_id();
+	    		$title .= "(".$contract->get_contract_type_title().")";
+	    		
+	    		$to = 'yngve.espelid@bouvet.no';
+	    		
+	    		$from_address = $GLOBALS['phpgw_info']['user']['lid']."@bergen.kommune.no";
+	    		
+	    		if (isset($contract_message))
 				{
-					if (!is_object($GLOBALS['phpgw']->send))
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
 					{
-						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-					}
-				
-					$from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$from_address}>";
-
-					$receive_notification = true;
-					$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
-						 stripslashes(nl2br($contract_message)), '', '', '',
-						 $from , $GLOBALS['phpgw_info']['user']['fullname'],
-						 'html', '', array() , $receive_notification);
-
-					if($rcpt)
-					{
-						return true;
+						if (!is_object($GLOBALS['phpgw']->send))
+						{
+							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+						}
+					
+						$from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$from_address}>";
+	
+						$receive_notification = true;
+						$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
+							 stripslashes(nl2br($contract_message)), '', '', '',
+							 $from , $GLOBALS['phpgw_info']['user']['fullname'],
+							 'html', '', array() , $receive_notification);
+	
+						if($rcpt)
+						{
+							return true;
+						}
 					}
 				}
-			}
+    		}
 			
 			return false;	
     	}
