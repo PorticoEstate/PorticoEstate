@@ -29,7 +29,7 @@
     		$title .= " ".$contract->get_old_contract_id();
     		$title .= "(".$contract->get_type().")";
     		
-    		$to = '<yngve.espelid@bouvet.no>';
+    		$to = 'yngve.espelid@bouvet.no';
     		
     		$from_address = $GLOBALS['phpgw_info']['user']['lid']."@bergen.kommune.no";
     		
