@@ -96,7 +96,6 @@
 				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
 				if(isset($account_id) && !is_numeric($account_id))
 				{
-					var_dump("Problemer med opprettelse av konto");
 					return false;
 				}
 			}
@@ -107,7 +106,7 @@
 		public function remove_delegate()
 		{
 			$account_id = phpgw::get_var('account_id'); 
-			$owner_id = phpgw::get_var('owner_id'); 
+			$owner_id = phpgw::get_var('owner_id');
 			
 			frontend_bofrontend::remove_delegate($account_id,$owner_id);
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uidelegates.index'));
