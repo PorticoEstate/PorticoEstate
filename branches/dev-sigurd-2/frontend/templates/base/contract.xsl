@@ -146,7 +146,7 @@
 												<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
 												<em>Kommentar</em>
 											</li>
-											<li>
+											<li style="margin-bottom: 10;">
 												<xsl:choose>
 													<xsl:when test="publish_comment = 1">
 														<xsl:value-of select="comment" disable-output-escaping="yes"/>
@@ -154,6 +154,7 @@
 												</xsl:choose>
 											</li>
 											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;">
+												<img src="frontend/templates/base/images/16x16/comment_edit.png" class="list_image" />
 												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 											</li>
 											<li>
