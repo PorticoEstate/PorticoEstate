@@ -222,6 +222,13 @@ float:left;
 width:100%;
 }
 
+div.toolbar_manual {
+background-color:#EEEEEE;
+border:1px solid #BBBBBB;
+float:left;
+width:100%;
+}
+
 .yui-pg-container {
 	white-space: normal;
 	}

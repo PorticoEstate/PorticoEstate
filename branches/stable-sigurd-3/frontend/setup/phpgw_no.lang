@@ -44,7 +44,7 @@ responsibility_id	frontend	no	Ansvarssted
 logout	frontend	no	Logg ut
 help	frontend	no	Hjelp
 contact_BKB	frontend	no	Kontakt BKB
-folder	frontend	no	Brosjyre
+folder	frontend	no	Informasjon internleie
 number_of_units	frontend	no	Antall bygg
 total_area	frontend	no	Totalt areal
 total_price	frontend	no	Total pris
@@ -80,3 +80,19 @@ Ingen	frontend	no	Ingen
 contract_internal	frontend	no	Internleiekontrakter
 active	frontend	no	Aktive
 not_active	frontend	no	Avsluttede
+find_user	frontend	no	Finn bruker
+username	frontend	no	Brukernavn
+firstname	frontend	no	Fornavn
+lastname	frontend	no	Etternavn
+no_hits	frontend	no	Ingen treff
+no_delegates	frontend	no	Ingen delegater
+btn_add	frontend	no	Deleger tilgang til bruker
+btn_search	frontend	no	Finn bruker
+btn_remove	frontend	no	Fjern myndighet
+user_found_in_Fellesdata	frontend	no	Personen finnes i Fellesdata.
+user_found_in_PE	frontend	no	Personen er bruker av dette systemet.
+delegation_successful	frontend	no	Velykket delegering
+delegation_error	frontend	no	Feil under delegering
+max_5_delegates	frontend	no	Det er en øvre grense på fem delegater pr leder
+delegates	frontend	no	Delegering
+no_buildings	frontend	no	Ingen bygninger tilknyttet resultatenheten

@@ -45,7 +45,7 @@
 
 		public function __construct()
 		{
-			phpgwapi_cache::user_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'), $GLOBALS['phpgw_info']['user']['account_id']);
+			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.ticket'));
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
 		}
@@ -357,7 +357,7 @@
 			$data = array(
 				'header' 		=> $this->header_state,
 				'tabs'			=> $this->tabs,
-				'helpdesk' 		=> array('datatable' => $datatable, 'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),),
+				'helpdesk' 		=> array('datatable' => $datatable, 'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))),
 				'lightbox_name'	=> lang('add ticket')
 			);
 
