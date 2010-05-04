@@ -1,16 +1,5 @@
 <!-- $Id$ -->
 <xsl:template match="helpdesk" xmlns:php="http://php.net/xsl">
-    <table cellpadding="2" cellspacing="2" width="95%" align="center">
-        <xsl:choose>
-            <xsl:when test="msgbox_data != ''">
-                <tr>
-                    <td align="left" colspan="3">
-                        <xsl:call-template name="msgbox"/>
-                    </td>
-                </tr>
-            </xsl:when>
-        </xsl:choose>
-    </table>
     <xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
     <div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
@@ -23,6 +12,17 @@
 		                </div>
 		            </div>
 		            <div class="tickets">
+		            	<table cellpadding="2" cellspacing="2" width="95%" align="center">
+					        <xsl:choose>
+					            <xsl:when test="msgbox_data != ''">
+					                <tr>
+					                    <td align="left" colspan="3">
+					                        <xsl:call-template name="msgbox"/>
+					                    </td>
+					                </tr>
+					            </xsl:when>
+					        </xsl:choose>
+					    </table>
 		            	<xsl:apply-templates select="datatable" />
 		            </div>
 				</xsl:when>
