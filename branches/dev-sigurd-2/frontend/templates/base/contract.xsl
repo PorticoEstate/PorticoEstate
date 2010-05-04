@@ -153,7 +153,7 @@
 													</xsl:when>
 												</xsl:choose>
 											</li>
-											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;">
+											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; margin-right: 1em;">
 												<img src="frontend/templates/base/images/16x16/comment_edit.png" class="list_image" />
 												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 											</li>
