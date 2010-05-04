@@ -51,9 +51,9 @@
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
-									  
+									  <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/>
 									  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-									  		<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/>
+									  		
 									  		<input type="hidden" name="account_id" value="{account_id}"/>
 											<xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 										
