@@ -44,7 +44,7 @@ responsibility_id	frontend	no	Ansvarssted
 logout	frontend	no	Logg ut
 help	frontend	no	Hjelp
 contact_BKB	frontend	no	Kontakt BKB
-folder	frontend	no	Brosjyre
+folder	frontend	no	Informasjon internleie
 number_of_units	frontend	no	Antall bygg
 total_area	frontend	no	Totalt areal
 total_price	frontend	no	Total pris
