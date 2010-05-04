@@ -153,28 +153,23 @@
 													</xsl:when>
 												</xsl:choose>
 											</li>
+											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;">
+												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
+											</li>
+											<li>
+												<form action="{send_form_url}" method="post" style="float:left;">
+							           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
+							           				<br/>
+							           				<textarea name="contract_message" cols="80" rows="5">
+							           				</textarea><br/>
+							           				<input type="submit" name="send" value="{$btn_send}"/>
+							           			</form>
+											</li>
 										</ul>
 									</div>
 								</xsl:for-each>
 							</xsl:otherwise>
 						</xsl:choose>
-				</div>
-				<div id="contract_messaging" style="display: block;">
-					 <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
-					<xsl:choose>
-		           		<xsl:when test="not(normalize-space(contract))">
-		           			 <!-- <xsl:value-of select="php:function('lang', 'no_contract_details')"/>:  -->
-		           		</xsl:when>
-		           		<xsl:otherwise>
-		           			<form action="{send_form_url}" method="post" style="float:left;">
-		           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
-		           				<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
-		           				<textarea name="contract_message" cols="80" rows="5">
-		           				</textarea><br/>
-		           				<input type="submit" name="send" value="{$btn_send}"/>
-		           			</form>
-		           		</xsl:otherwise>
-		           	</xsl:choose>
 				</div>
         	</div>
     	</div>
