@@ -72,6 +72,7 @@
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
 			$delegates = frontend_bofrontend::get_delegates(null);
+			$number_of_delegates = count($delegates);
 			
 			$data = array (
 				'header' 		=>	$this->header_state,
@@ -79,6 +80,7 @@
 				'delegate_data' => 	array (
 					'form_action' => $form_action,
 					'delegate' 	=> $delegates,
+					'number_of_delegates' => isset($number_of_delegates) ? $number_of_delegates : 0 ,
 					'search'	=> isset($search) ? $search : array(),
 					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				),
