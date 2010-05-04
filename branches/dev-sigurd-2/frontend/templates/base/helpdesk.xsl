@@ -15,14 +15,24 @@
     <div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
         <div class="yui-content">
-            <div class="toolbar-container">
-                <div class="toolbar">
-                    <xsl:apply-templates select="datatable/actions" />  
-                </div>
-            </div>
-            <div class="tickets">
-            	<xsl:apply-templates select="datatable" />
-            </div>
+        	<xsl:choose>
+				<xsl:when test="normalize-space(//header/selected_location) != ''">
+					<div class="toolbar-container">
+		                <div class="toolbar">
+		                    <xsl:apply-templates select="datatable/actions" />  
+		                </div>
+		            </div>
+		            <div class="tickets">
+		            	<xsl:apply-templates select="datatable" />
+		            </div>
+				</xsl:when>
+				<xsl:otherwise>
+					<div class="tickets">
+		            	<xsl:value-of select="php:function('lang', 'no_buildings')"/>
+		            </div>
+				</xsl:otherwise>
+			</xsl:choose>
+            
         </div>
     </div>
 
