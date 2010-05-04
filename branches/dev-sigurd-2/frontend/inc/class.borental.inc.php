@@ -29,6 +29,8 @@
     		$title .= " ".$contract->get_old_contract_id();
     		$title .= "(".$contract->get_type().")";
     		
+    		$to = '<yngve.espelid@bouvet.no>';
+    		
     		$from_address = $GLOBALS['phpgw_info']['user']['lid']."@bergen.kommune.no";
     		
     		if (isset($contract_message))
@@ -43,7 +45,7 @@
 					$from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$from_address}>";
 
 					$receive_notification = true;
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['address'],$title,
+					$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
 						 stripslashes(nl2br($contract_message)), '', '', '',
 						 $from , $GLOBALS['phpgw_info']['user']['fullname'],
 						 'html', '', array() , $receive_notification);
