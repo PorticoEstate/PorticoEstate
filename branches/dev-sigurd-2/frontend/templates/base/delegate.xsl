@@ -5,7 +5,7 @@
 			
 			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
 				<xsl:choose>
-					<xsl:when test="number_of_delegates &lt; 6">
+					<xsl:when test="number_of_delegates &lt; 5">
 						<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
 						<table cellpadding="2" cellspacing="2" align="center">
 					        <xsl:choose>
