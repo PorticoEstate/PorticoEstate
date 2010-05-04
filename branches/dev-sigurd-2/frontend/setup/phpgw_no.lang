@@ -95,3 +95,4 @@ delegation_successful	frontend	no	Velykket delegering
 delegation_error	frontend	no	Feil under delegering
 max_5_delegates	frontend	no	Det er en øvre grense på fem delegater pr leder
 delegates	frontend	no	Delegering
+no_buildings	frontend	no	Ingen bygninger tilknyttet resultatenheten
