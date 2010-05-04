@@ -113,16 +113,17 @@
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
 				if(count($property_locations) > 0)
 				{
-					$this->header_state['locations'] = $property_locations;
-					$this->header_state['number_of_locations'] = count($property_locations);
 					$this->header_state['selected_location'] = $property_locations[0]['location_code'];
 					$param_selected_location = $property_locations[0]['location_code'];
-					$this->calculate_totals($property_locations);
 				}
 				else
 				{
 					$this->header_state['selected_location'] = '';
 				}
+				
+				$this->header_state['locations'] = $property_locations;
+				$this->header_state['number_of_locations'] = count($property_locations);
+				$this->calculate_totals($property_locations);
 			}
 			/* If the user selects a organisational unit in rental module */
 			else if(isset($param_only_org_unit)) 
