@@ -3,7 +3,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
-				<xsl:value-of select="php:function('lang', 'find_user')"/>
+				<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
 				<table cellpadding="2" cellspacing="2" align="center">
 			        <xsl:choose>
 			            <xsl:when test="msgbox_data != ''">
@@ -51,7 +51,9 @@
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
+									  
 									  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+									  		<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/>
 									  		<input type="hidden" name="account_id" value="{account_id}"/>
 											<xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 										
