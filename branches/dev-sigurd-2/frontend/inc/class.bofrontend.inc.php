@@ -85,7 +85,7 @@
 			return false;
 		}
 		
-		public static function get_deletations(int $account_id)
+		public static function get_delegations(int $account_id)
 		{
 			
 			$sql = 	"SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
