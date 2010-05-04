@@ -89,6 +89,7 @@ no_delegates	frontend	no	Ingen delegater
 btn_add	frontend	no	Deleger tilgang til bruker
 btn_search	frontend	no	Finn bruker
 btn_remove	frontend	no	Fjern myndighet
+btn_send	frontend	no	Send melding
 user_found_in_Fellesdata	frontend	no	Personen finnes i Fellesdata.
 user_found_in_PE	frontend	no	Personen er bruker av dette systemet.
 delegation_successful	frontend	no	Velykket delegering
