@@ -142,17 +142,17 @@
 									</div>
 									<div id="comment">
 										<ul>
-											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;" >
-												<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
-												<em>Kommentar</em>
-											</li>
-											<li style="margin-bottom: 10px;">
-												<xsl:choose>
-													<xsl:when test="publish_comment = 1">
+											<xsl:choose>
+												<xsl:when test="publish_comment = 1">
+													<li style="border-style: none none solid none; border-width: 1px; border-color: grey; margin-bottom: 5px; padding-bottom: 5px; margin-right: 1em;" >
+														<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
+														<em><xsl:value-of select="php:function('lang', 'comment')"/></em>
+													</li>
+													<li style="margin-bottom: 10px;">
 														<xsl:value-of select="comment" disable-output-escaping="yes"/>
-													</xsl:when>
-												</xsl:choose>
-											</li>
+													</li>
+												</xsl:when>
+											</xsl:choose>
 											<li style="border-style: none none solid none; border-width: 1px; border-color: grey; padding-bottom: 5px; margin-right: 1em;">
 												<img src="frontend/templates/base/images/16x16/comment_edit.png" class="list_image" />
 												<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
