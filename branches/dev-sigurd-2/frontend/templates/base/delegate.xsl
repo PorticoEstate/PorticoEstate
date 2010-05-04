@@ -17,7 +17,7 @@
 			    </table>
 			    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
 			    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
-			     <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
+			
 			   
 			    
 			    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
@@ -47,7 +47,7 @@
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
 			   		</xsl:when>
 					<xsl:otherwise>
-					 <xsl:variable name="nbsp">&nbsp;</xsl:variable>
+					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
@@ -56,7 +56,7 @@
 											<xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 										
 											(<xsl:value-of select="account_lid"/>)
-											<input type="submit" name="add" value="{$btn_remove}"/>
+											<input type="submit" name="remove" value="{$btn_remove}"/>
 										</form>
 								</li>
 							</xsl:for-each>
