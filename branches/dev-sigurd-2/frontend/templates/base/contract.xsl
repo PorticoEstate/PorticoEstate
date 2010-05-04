@@ -159,7 +159,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 				</div>
-				<div id="contract_messaging">
+				<div id="contract_messaging" style="display: block;">
 					 <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
 					<xsl:choose>
 		           		<xsl:when test="not(normalize-space(contract))">
@@ -168,8 +168,9 @@
 		           		<xsl:otherwise>
 		           			<form action="{send_form_url}" method="post" style="float:left;">
 		           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
-		           				<textarea name="contract_message" cols="60" rows="10">
-		           				</textarea>
+		           				<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
+		           				<textarea name="contract_message" cols="80" rows="5">
+		           				</textarea><br/>
 		           				<input type="submit" name="send" value="{$btn_send}"/>
 		           			</form>
 		           		</xsl:otherwise>
