@@ -146,7 +146,7 @@
 												<img src="frontend/templates/base/images/16x16/comment.png" class="list_image" />
 												<em>Kommentar</em>
 											</li>
-											<li style="margin-bottom: 10;">
+											<li style="margin-bottom: 10px;">
 												<xsl:choose>
 													<xsl:when test="publish_comment = 1">
 														<xsl:value-of select="comment" disable-output-escaping="yes"/>
