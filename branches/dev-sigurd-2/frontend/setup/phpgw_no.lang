@@ -98,3 +98,4 @@ delegation_error	frontend	no	Feil under delegering
 max_5_delegates	frontend	no	Det er en øvre grense på fem delegater pr leder
 delegates	frontend	no	Delegering
 no_buildings	frontend	no	Ingen bygninger tilknyttet resultatenheten
+title_contract_message	frontend	no	Melding angående kontrakt

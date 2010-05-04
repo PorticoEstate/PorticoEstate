@@ -159,7 +159,7 @@
 											</li>
 											<li>
 												<xsl:variable name="btn_send"><xsl:value-of select="php:function('lang', 'btn_send')"/></xsl:variable>
-												<form action="{send_form_url}" method="post" style="float:left;">
+												<form action="{form_url}" method="post" style="float:left;">
 							           				<input type="hidden" name="contract_id" value="{//selected_contract}"/>
 							           				<br/>
 							           				<textarea name="contract_message" cols="80" rows="5">

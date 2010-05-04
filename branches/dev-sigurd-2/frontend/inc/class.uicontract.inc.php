@@ -37,7 +37,6 @@ class frontend_uicontract extends frontend_uifrontend
 		if(isset($filter)) 
 		{
 				$this->contract_filter = $filter;
-	//			phpgwapi_cache::user_set('frontend', 'contract_filter', $filter, $GLOBALS['phpgw_info']['user']['account_id']);
 				phpgwapi_cache::session_set('frontend', 'contract_filter', $filter);				
 
 				// ... if the user changes filter that may cause the
@@ -48,19 +47,24 @@ class frontend_uicontract extends frontend_uifrontend
 		}
 		else
 		{
-	//		$filter = phpgwapi_cache::user_get('frontend', 'contract_filter' , $GLOBALS['phpgw_info']['user']['account_id']);
 			$filter = phpgwapi_cache::session_get('frontend', 'contract_filter');
 			$this->contract_filter = isset($filter) ? $filter : 'active';
+		}
+		
+		if(isset($_POST['send']))
+		{
+			$contract_id = phpgw::get_var('contract_id');
+			$contract_message = phpgw::get_var('contract_message');
+			$result = frontend_borental::send_contract_message($contract_id, $contract_message);
+			$msglog['message'][] = lang('message_sent');
 		}
 		
 		
 		// If the user wants to view another contract connected to this location
 		// Request parameter: the user wants to view details about anther contract
 		// The current state of the contract view of this user's session
-	//	$this->contract_state = phpgwapi_cache::user_get('frontend', $this->contract_state_identifier , $GLOBALS['phpgw_info']['user']['account_id']);
 		$this->contract_state = phpgwapi_cache::session_get('frontend', $this->contract_state_identifier);
 		$new_contract = phpgw::get_var('contract_id');
-	//	$contracts_per_location = phpgwapi_cache::user_get('frontend', $this->contracts_per_location_identifier, $GLOBALS['phpgw_info']['user']['account_id']);
 		$contracts_per_location = phpgwapi_cache::session_get('frontend', $this->contracts_per_location_identifier);
 		$contracts_for_selection = array();
 		$number_of_valid_contracts = 0;
@@ -85,7 +89,6 @@ class frontend_uicontract extends frontend_uifrontend
 					$this->contract_state['selected'] = $contract->get_id();
 					$this->contract_state['contract'] = $contract;
 					//$this->contract = rental_socontract::get_instance()->get_single($new_contract);
-	//				phpgwapi_cache::user_set('frontend', $this->contract_state_identifier , $this->contract_state, $GLOBALS['phpgw_info']['user']['account_id']);
 					phpgwapi_cache::session_set('frontend', $this->contract_state_identifier , $this->contract_state);
 					$change_contract = false;
 					//Get more details on contract parties
@@ -136,7 +139,7 @@ class frontend_uicontract extends frontend_uifrontend
 		}
 		
 		$data = array (
-			//'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+			'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 			'header' 		=>	$this->header_state,
 			'tabs' 			=> 	$this->tabs,
 			'contract_data' => 	array (

@@ -9,7 +9,6 @@
     	
     	public static function contract_exist_per_location($contract_id, $location_code, $contract_state_identifier)
     	{
-    //		$contracts_per_location = phpgwapi_cache::user_get('frontend', $contract_state_identifier, $GLOBALS['phpgw_info']['user']['account_id']);
     		$contracts_per_location = phpgwapi_cache::session_get('frontend', $contract_state_identifier);
     		$exist = false;
     		foreach($contracts_per_location[$location_code] as $contract)
@@ -22,16 +21,51 @@
     		return $exist;
     	}
     	
+    	public static function send_contract_message(int $contract_id, string $contract_message)
+    	{
+    		$contract = rental_socontract::get_instance()->get_single($contract_id);
+    		
+    		$title = lang('title_contract_message'); 
+    		$title .= " ".$contract->get_old_contract_id();
+    		$title .= "(".$contract->get_type().")";
+    		
+    		$from_address = $GLOBALS['phpgw_info']['user']['lid']."@bergen.kommune.no";
+    		
+    		if (isset($contract_message))
+			{
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+				{
+					if (!is_object($GLOBALS['phpgw']->send))
+					{
+						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+					}
+				
+					$from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$from_address}>";
+
+					$receive_notification = true;
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $values['address'],$title,
+						 stripslashes(nl2br($contract_message)), '', '', '',
+						 $from , $GLOBALS['phpgw_info']['user']['fullname'],
+						 'html', '', array() , $receive_notification);
+
+					if($rcpt)
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;	
+    	}
+    	
     	public static function get_first_contract_per_location($location_code)
     	{
-    //		$contracts_per_location = phpgwapi_cache::user_get('frontend', 'contracts_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
     		$contracts_per_location = phpgwapi_cache::session_get('frontend', 'contracts_per_location');
     		return $contracts_per_location[$location_code][0];
     	}
     	
    		public static function get_first_contract_in_per_location($location_code)
     	{
-   // 		$contracts_in_per_location = phpgwapi_cache::user_get('frontend', 'contracts_in_per_location', $GLOBALS['phpgw_info']['user']['account_id']);
     		$contracts_in_per_location = phpgwapi_cache::session_get('frontend', 'contracts_in_per_location');
     		return $contracts_in_per_location[$location_code][0];
     	}
@@ -132,12 +166,6 @@
 	        	}
         	}
         	
-        	
-        	
-  //      	phpgwapi_cache::user_set('frontend', 'contracts_per_location', $contracts_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
-  //      	phpgwapi_cache::user_set('frontend', 'contracts_in_per_location', $contracts_in_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
-  //      	phpgwapi_cache::user_set('frontend', 'rented_area_per_location', $rented_area_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
-  //      	phpgwapi_cache::user_set('frontend', 'total_price_per_location', $rented_price_per_location, $GLOBALS['phpgw_info']['user']['account_id']);
         	phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
         	phpgwapi_cache::session_set('frontend', 'contracts_in_per_location', $contracts_in_per_location);
         	phpgwapi_cache::session_set('frontend', 'rented_area_per_location', $rented_area_per_location);
