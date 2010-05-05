@@ -101,8 +101,8 @@
 				$firstname = phpgw::get_var('firstname'); 
 				$lastname = phpgw::get_var('lastname'); 
 				$password = 'test123';
-				
-				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
+				var_dump("Account id " + $account_id);
+				//$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
 				var_dump("Created account " + $account_id);
 				if(isset($account_id) && !is_numeric($account_id))
 				{
