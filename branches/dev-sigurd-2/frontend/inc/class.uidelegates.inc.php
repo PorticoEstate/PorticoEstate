@@ -102,15 +102,16 @@
 				$lastname = phpgw::get_var('lastname'); 
 				$password = 'test123';
 				var_dump("Account id " + $account_id);
-				//$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
-				var_dump("Created account " + $account_id);
+				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
+				
 				if(isset($account_id) && !is_numeric($account_id))
 				{
 					return false;
 				}
 				else
 				{
-					return frontend_bofrontend::add_delegate($account_id, null);
+					var_dump("Created account " + $account_id);
+					//return frontend_bofrontend::add_delegate($account_id, null);
 				}
 			}
 			return false;
