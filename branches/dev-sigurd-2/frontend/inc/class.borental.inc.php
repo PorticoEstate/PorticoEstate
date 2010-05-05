@@ -21,7 +21,7 @@
     		return $exist;
     	}
     	
-    	public static function send_contract_message(int $contract_id, string $contract_message)
+    	public static function send_contract_message(int $contract_id, string $contract_message, string $from_address)
     	{
     		$contract = rental_socontract::get_instance()->get_single($contract_id);
     		if(isset($contract))
@@ -30,11 +30,11 @@
 	    		$title .= " ".$contract->get_old_contract_id();
 	    		$title .= "(".$contract->get_contract_type_title().")";
 	    		
-	    		$to = 'yngve.espelid@bouvet.no';
+	    		$config	= CreateObject('phpgwapi.config','frontend');
+				$config->read();
+	    		$to = $config->config_data['email_contract_messages'];
 	    		
-	    		$from_address = $GLOBALS['phpgw_info']['user']['lid']."@bergen.kommune.no";
-	    		
-	    		if (isset($contract_message))
+	    		if (isset($contract_message) && isset($to) && isset($from_address))
 				{
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
 					{
