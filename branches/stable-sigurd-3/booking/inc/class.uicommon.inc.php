@@ -63,8 +63,8 @@
 		{
 			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
 		}
-		$text = $GLOBALS['phpgw']->common->show_date($timestamp,$dateformat);
-
+		$text = date($dateformat,$timestamp);
+			
 		return $text;
 	}
 

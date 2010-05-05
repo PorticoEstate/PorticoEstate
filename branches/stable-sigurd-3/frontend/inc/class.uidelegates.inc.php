@@ -94,22 +94,26 @@
 		
 		public function add_delegate(int $account_id, int $owner_id)
 		{
-			if(!isset($account_id))
+			if(!isset($account_id) || $account_id == '')
 			{
 				//User is only registered in Fellesdata
 				$username = phpgw::get_var('username'); 
 				$firstname = phpgw::get_var('firstname'); 
 				$lastname = phpgw::get_var('lastname'); 
-				$password = 'test123';
+				$password = 'TEst1234';
 				
 				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
+				
 				if(isset($account_id) && !is_numeric($account_id))
 				{
 					return false;
 				}
+				else
+				{
+					return frontend_bofrontend::add_delegate($account_id, null);
+				}
 			}
-			
-			return frontend_bofrontend::add_delegate($account_id, null);
+			return false;
 		}
 		
 		public function remove_delegate()
