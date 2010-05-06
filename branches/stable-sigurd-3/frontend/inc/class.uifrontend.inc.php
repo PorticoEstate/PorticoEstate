@@ -138,7 +138,7 @@
 				$property_locations_update = true;
 				
 				$noframework = false; // In regular frames
-				phpgwapi_cache::user_session('frontend', 'noframework', $noframework); // Store mode on session
+				phpgwapi_cache::session_set('frontend', 'noframework', $noframework); // Store mode on session
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 				$this->insert_links_on_header_state();
 			} 

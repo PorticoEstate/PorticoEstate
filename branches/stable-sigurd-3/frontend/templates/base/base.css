@@ -147,8 +147,8 @@ a.header_link {
 	font-family:Arial,sans-serif;
 font-size:65%;
 line-height:1.166;
-float:left;
-margin:2em;
+position: absolute;
+padding:2em;
 }
 
 em#bold {

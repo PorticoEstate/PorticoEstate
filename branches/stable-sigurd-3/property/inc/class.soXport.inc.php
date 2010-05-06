@@ -179,6 +179,7 @@
 
 		function check_order($id)
 		{
+			$id = (int)$id;
 			$this->db->query("select id,type from fm_orders where id='$id'");
 			$this->db->next_record();
 			return $this->db->f('type');
