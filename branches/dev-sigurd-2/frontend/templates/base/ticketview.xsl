@@ -16,13 +16,13 @@
         <div class="yui-content">
         	<div id="ticketinfo">
         		<ul style="margin: 2em;">
-        			<li>
-        				<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/><a href="?menuaction=frontend.uihelpdesk.index">Vis alle avviksmeldinger på bygget</a>
+        			<li style="margin-bottom: 1em;">
+        				<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/><a href="?menuaction=frontend.uihelpdesk.index"> &lt;&lt; Vis alle avviksmeldinger på bygget</a>
         			</li>
         			<li>
         				<ul>
         					<li>
-        						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <xsl:value-of select="ticket/subject"/>
+        						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <strong><xsl:value-of select="ticket/subject"/></strong>
         					</li>
         					<li>
         						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> Registrert <xsl:value-of select="ticket/last_opened"/> av <xsl:value-of select="ticket/user_name"/>
