@@ -394,7 +394,7 @@
 			$ticket = $bo->read_single($ticketid);
 
 			$notes = $bo->read_additional_notes($ticketid);
-			$history = $bo->read_record_history($ticketid);
+			//$history = $bo->read_record_history($ticketid);
 
 			$tickethistory = array();
 
@@ -410,12 +410,13 @@
 				}
 			}
 
+			/*
 			foreach($history as $story)
 			{
-				/*
-				 * String search for filtering out ticket history. If the status contains e.g. "Budget changed"
-				 * the history bullet will not be incuded in the ticket history shown to frontend users.
-				 */
+				
+				 // String search for filtering out ticket history. If the status contains e.g. "Budget changed"
+				 // the history bullet will not be incuded in the ticket history shown to frontend users.
+				 
 				if(
 					(	
 						strpos($story['value_action'],'Budget changed') === false && 
@@ -433,7 +434,7 @@
 						'old_value' => $story['value_old_value']
 					);
 				}
-			}
+			}*/
 
 			usort($tickethistory, array($this, "cmp"));
 
