@@ -10,7 +10,7 @@
             </xsl:when>
         </xsl:choose>
     </table>
-
+	<xsl:copy-of select="."/>
 
     <div class="yui-navset" id="ticket_tabview">
         <div class="yui-content">
@@ -57,6 +57,7 @@
         					<dd>
         						<dl>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
+		        					<xsl:copy-of select="."/>
 						                <dt>Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/></dt>
 						                <dd><xsl:value-of select="note"/></dd>
 						            </xsl:for-each>
