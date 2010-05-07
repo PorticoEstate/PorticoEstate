@@ -24,16 +24,16 @@
         					<li style="margin-bottom: 5px;">
         						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <strong><xsl:value-of select="ticket/subject"/></strong>
         					</li>
-        					<li>
+        					<li class="ticket_detail">
         						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> Meldt inn <xsl:value-of select="ticket/last_opened"/> av <xsl:value-of select="ticket/user_name"/>
         					</li>
-     						<li>
+     						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
-     						<li>
+     						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="ticket/details"/>
      						</li>
-     						<li>
+     						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>
      							<dl>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
