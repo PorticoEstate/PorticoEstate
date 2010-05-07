@@ -36,7 +36,7 @@
      							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
      							<ul>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
-						                <li  class="ticket_detail">Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/><br/>
+						                <li  class="ticket_detail"><xsl:value-of select="user"/> den <xsl:value-of select="date"/><br/>
 						                <xsl:value-of select="note"/></li>
 						            </xsl:for-each>
 				            	</ul>
