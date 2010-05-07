@@ -15,7 +15,7 @@
     <div class="yui-navset" id="ticket_tabview">
         <div class="yui-content">
         	<div id="ticketinfo">
-        		<ul>
+        		<ul style="margin: 2em;">
         			<li>
         				<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/><a href="?menuaction=frontend.uihelpdesk.index">Vis alle avviksmeldinger på bygget</a>
         			</li>
