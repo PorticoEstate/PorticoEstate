@@ -20,51 +20,30 @@
         				<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/><a href="?menuaction=frontend.uihelpdesk.index">Vis alle avviksmeldinger på bygget</a>
         			</li>
         			<li>
-        				<dl>
-        					<dt>
-        						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/>
-        					</dt>
-        					<dd>
-        						<xsl:value-of select="ticket/subject"/>
-        					</dd>
-        					<dt>
-        						Last opened
-        					</dt>
-        					<dd>
-        						<xsl:value-of select="ticket/last_opened"/>
-        					</dd>
-        					<dt>
-        						Meldt inn av:
-        					</dt>
-        					<dd>
-        						<xsl:value-of select="ticket/user_name"/>
-        					</dd>
-        					<dt>
-        						Status:
-        					</dt>
-        					<dd>
-        						<xsl:value-of select="ticket/status_name"/>
-        					</dd>
-        					<dt>
-        						Beskrivelse
-        					</dt>
-        					<dd>
-        						<xsl:value-of select="ticket/details"/>
-        					</dd>
-        					<dt>
-        						Kommentarer
-        					</dt>
-        					<dd>
-        						<dl>
+        				<ul>
+        					<li>
+        						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <xsl:value-of select="ticket/subject"/>
+        					</li>
+        					<li>
+        						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> Registrert <xsl:value-of select="ticket/last_opened"/> av <xsl:value-of select="ticket/user_name"/>
+        					</li>
+     						<li>
+     							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> <xsl:value-of select="ticket/status_name"/>
+     						</li>
+     						<li>
+     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="ticket/details"/>
+     						</li>
+     						<li>
+     							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>
+     							<dl>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
 		        					<xsl:copy-of select="."/>
 						                <dt>Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/></dt>
 						                <dd><xsl:value-of select="note"/></dd>
 						            </xsl:for-each>
 				            	</dl>
-        					
-        					</dd>
-        				</dl>
+     						</li>
+     					</ul>
         			</li>
         		</ul>
         	</div>
