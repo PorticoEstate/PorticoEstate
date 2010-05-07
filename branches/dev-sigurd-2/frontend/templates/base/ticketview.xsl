@@ -14,34 +14,59 @@
 
     <div class="yui-navset" id="ticket_tabview">
         <div class="yui-content">
-			<a href="?menuaction=frontend.uihelpdesk.index">Vis alle</a>
-            <h1><xsl:value-of select="ticket/subject"/></h1>
-            <div id="ticketinfo">
-                <ul>
-                    <li><xsl:value-of select="ticket/last_opened"/></li>
-                    <li><strong>Meldt inn av: </strong><xsl:value-of select="ticket/user_name"/></li>
-                    <li><strong>Status: </strong><xsl:value-of select="ticket/status_name"/></li>
-                </ul>
-                <p><strong>Beskrivelse</strong><br/>
-                <xsl:value-of select="ticket/details"/></p>
-
-            </div>
-
-            <xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
-                <hr/>
-                Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/><br/>
-                <xsl:choose>
-                    <xsl:when test="action">
-                        <xsl:value-of select="action"/>: <xsl:value-of select="old_value"/> -> <xsl:value-of select="new_value"/><br/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <p>
-                            <xsl:value-of select="note"/>
-                        </p>
-                    </xsl:otherwise>
-                </xsl:choose>
-
-            </xsl:for-each>
+        	<div id="ticketinfo">
+        		<ul>
+        			<li>
+        				<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/><a href="?menuaction=frontend.uihelpdesk.index">Vis alle avviksmeldinger på bygget</a>
+        			</li>
+        			<li>
+        				<dl>
+        					<dt>
+        						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/>
+        					</dt>
+        					<dd>
+        						<xsl:value-of select="ticket/subject"/>
+        					</dd>
+        					<dt>
+        						Last opened
+        					</dt>
+        					<dd>
+        						<xsl:value-of select="ticket/last_opened"/>
+        					</dd>
+        					<dt>
+        						Meldt inn av:
+        					</dt>
+        					<dd>
+        						<xsl:value-of select="ticket/user_name"/>
+        					</dd>
+        					<dt>
+        						Status:
+        					</dt>
+        					<dd>
+        						<xsl:value-of select="ticket/status_name"/>
+        					</dd>
+        					<dt>
+        						Beskrivelse
+        					</dt>
+        					<dd>
+        						<xsl:value-of select="ticket/details"/>
+        					</dd>
+        					<dt>
+        						Kommentarer
+        					</dt>
+        					<dd>
+        						<dl>
+		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
+						                <dt>Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/></dt>
+						                <dd><xsl:value-of select="note"/></dd>
+						            </xsl:for-each>
+				            	</dl>
+        					
+        					</dd>
+        				</dl>
+        			</li>
+        		</ul>
+        	</div>
         </div>
     </div>
 </xsl:template>
