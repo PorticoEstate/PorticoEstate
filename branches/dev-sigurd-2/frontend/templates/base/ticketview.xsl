@@ -10,7 +10,6 @@
             </xsl:when>
         </xsl:choose>
     </table>
-	<xsl:copy-of select="."/>
 
     <div class="yui-navset" id="ticket_tabview">
         <div class="yui-content">
@@ -31,17 +30,16 @@
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
      						<li class="ticket_detail">
-     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="ticket/details"/>
+     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding:<br/> <xsl:value-of select="ticket/details"/>
      						</li>
      						<li class="ticket_detail">
-     							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/>
-     							<dl>
+     							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
+     							<ul>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
-		        					<xsl:copy-of select="."/>
-						                <dt>Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/></dt>
-						                <dd><xsl:value-of select="note"/></dd>
+						                <li  class="ticket_detail">Sak oppdatert av <xsl:value-of select="user"/> den <xsl:value-of select="date"/><br/>
+						                <xsl:value-of select="note"/></li>
 						            </xsl:for-each>
-				            	</dl>
+				            	</ul>
      						</li>
      					</ul>
         			</li>
