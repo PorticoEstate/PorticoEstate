@@ -412,15 +412,28 @@
 				$ticket['value_contact_name']		= $contact_data[0]['fn'];
 				$ticket['value_contact_email']		= $contact_data[0]['email'];
 				$ticket['value_contact_tel']		= $contact_data[0]['tel_work'];
+			}	
 				
-				/*
-				 $contact_account = $GLOBALS['phpgw']->accounts->get($contact_id);
-				if(isset($contact_account))
+			$vendor_id = $ticket['vendor_id'];
+			if(isset($vendor_id) && $vendor_id != '')
+			{
+				$contacts	= CreateObject('property.soactor');
+				$contacts->role='vendor';
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
+				if(is_array($vendor_data))
 				{
-					$ticket['contact_name'] = $contact_account->__toString();
+					foreach($vendor_data['attributes'] as $attribute)
+					{
+						if($attribute['name']=='org_name')
+						{
+							$ticket['value_vendor_name']=$attribute['value'];
+							break;
+						}
+					}
 				}
-				
-				 */
 			}
 			
 			$notes = $bo->read_additional_notes($ticketid);

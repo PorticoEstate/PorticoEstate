@@ -31,9 +31,9 @@
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
      						<xsl:choose>
-     							<xsl:when test="ticket/vendor_name">
+     							<xsl:when test="ticket/value_vendor_name">
 		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> Leverandør: <xsl:value-of select="ticket/vendor_name"/>
+		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> Leverandør: <xsl:value-of select="ticket/value_vendor_name"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
