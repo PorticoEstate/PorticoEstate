@@ -48,7 +48,7 @@
      							<xsl:when test="ticket/value_contact_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_green.png" class="list_image"/> Kontakt: <xsl:value-of select="ticket/value_contact_name"/>
-		     							Telefon: <xsl:value-of select="ticket/value_contact_phone"/> 
+		     							Telefon: <xsl:value-of select="ticket/value_contact_tel"/> 
 		     							E-post: <xsl:value-of select="ticket/value_contact_email"/>
 		     						</li>
 		     					</xsl:when>
