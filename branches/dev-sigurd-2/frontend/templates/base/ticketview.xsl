@@ -30,7 +30,7 @@
      						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
-     						<!--<xsl:choose>
+     						<xsl:choose>
      							<xsl:when test="ticket/vendor_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> Leverandør: <xsl:value-of select="ticket/vendor_name"/>
@@ -60,13 +60,6 @@
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
-     						 <xsl:choose>
-     							<xsl:when test="publish_note = 1">
-		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding:<br/> <xsl:value-of select="ticket/details"/>
-		     						</li>
-		     					</xsl:when>
-     						</xsl:choose>-->
      						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
      							<ul>
