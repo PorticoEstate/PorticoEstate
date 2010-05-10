@@ -99,3 +99,13 @@ max_5_delegates	frontend	no	Det er en øvre grense på fem delegater pr leder
 delegates	frontend	no	Delegering
 no_buildings	frontend	no	Ingen bygninger tilknyttet resultatenheten
 title_contract_message	frontend	no	Melding angående kontrakt
+show_all_tickets	frontend	no	Vis alle avviksmeldinger på bygget
+entry_date	frontend	no	Meldt inn
+of	frontend	no	av
+status	frontend	no	Status
+vendor	frontend	no	Leverandør
+assigned_to	frontend	no	Tildelt
+contact	frontend	no	Kontakt
+message	frontend	no	Melding
+comments	frontend	no	Kommentarer
+on	frontend	no	den

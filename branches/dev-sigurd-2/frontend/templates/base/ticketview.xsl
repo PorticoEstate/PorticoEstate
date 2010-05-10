@@ -17,7 +17,7 @@
         	<div id="ticketinfo">
         		<ul style="margin: 2em;">
         			<li style="margin-bottom: 1em;">
-        				<a href="?menuaction=frontend.uihelpdesk.index"> &lt;&lt; Vis alle avviksmeldinger på bygget</a>
+        				<a href="?menuaction=frontend.uihelpdesk.index"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show_all_tickets')"/></a>
         			</li>
         			<li>
         				<ul>
@@ -25,29 +25,29 @@
         						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <strong><xsl:value-of select="ticket/subject"/></strong>
         					</li>
         					<li class="ticket_detail">
-        						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> Meldt inn <xsl:value-of select="ticket/entry_date"/> av <xsl:value-of select="ticket/user_name"/>
+        						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'entry_date')"/> <xsl:value-of select="ticket/entry_date"/><xsl:value-of select="php:function('lang', 'of')"/><xsl:value-of select="ticket/user_name"/>
         					</li>
      						<li class="ticket_detail">
-     							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
+     							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'status')"/>: <xsl:value-of select="ticket/status_name"/>
      						</li>
      						<xsl:choose>
      							<xsl:when test="ticket/value_vendor_name">
 		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> Leverandør: <xsl:value-of select="ticket/value_vendor_name"/>
+		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'vendor')"/>: <xsl:value-of select="ticket/value_vendor_name"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
      						<xsl:choose>
      							<xsl:when test="ticket/assigned_to_name">
 		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_red.png" class="list_image"/> Tildelt: <xsl:value-of select="ticket/assigned_to_name"/>
+		     							<img src="frontend/templates/base/images/16x16/user_red.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'assigned_to')"/>: <xsl:value-of select="ticket/assigned_to_name"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
      						<xsl:choose>
      							<xsl:when test="ticket/value_contact_name">
 		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_green.png" class="list_image"/> Kontakt: <xsl:value-of select="ticket/value_contact_name"/>
+		     							<img src="frontend/templates/base/images/16x16/user_green.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'contact')"/>: <xsl:value-of select="ticket/value_contact_name"/>
 		     							Telefon: <xsl:value-of select="ticket/value_contact_tel"/> 
 		     							E-post: <xsl:value-of select="ticket/value_contact_email"/>
 		     						</li>
@@ -56,18 +56,18 @@
      						<xsl:choose>
      							<xsl:when test="ticket/publish_note = 1">
 		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding: <xsl:value-of select="ticket/details"/>
+		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'message')"/>: <xsl:value-of select="ticket/details"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
      						<li class="ticket_detail">
      							
-     							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
+     							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'comments')"/>:<br/>
      							<hr/>
      							<ul>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
 						                <li  class="ticket_detail">
-						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="user"/> den <xsl:value-of select="date"/><br/>
+						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="user"/> <xsl:value-of select="php:function('lang', 'on')"/> <xsl:value-of select="date"/><br/>
 						                <xsl:value-of select="note"/></li>
 						            </xsl:for-each>
 				            	</ul>
