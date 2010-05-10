@@ -56,7 +56,7 @@
      						<xsl:choose>
      							<xsl:when test="ticket/publish_note = 1">
 		     						<li class="ticket_detail">
-		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'message')"/>: <xsl:value-of select="ticket/details"/>
+		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="php:function('lang', 'message')"/>: <xsl:value-of select="ticket/details"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
@@ -67,7 +67,7 @@
      							<ul>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
 						                <li  class="ticket_detail">
-						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="user"/> <xsl:value-of select="php:function('lang', 'on')"/> <xsl:value-of select="date"/><br/>
+						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="user"/>&nbsp;<xsl:value-of select="php:function('lang', 'on')"/> <xsl:value-of select="date"/><br/>
 						                <xsl:value-of select="note"/></li>
 						            </xsl:for-each>
 				            	</ul>
