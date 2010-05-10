@@ -394,13 +394,13 @@
 			$ticket = $bo->read_single($ticketid);
 
 			$assignedto = $ticket['assignedto'];
-			if(isset($assignedto))
+			if(isset($assignedto) && $assignedto != '')
 			{
 				$ticket['assigned_to_name'] = $GLOBALS['phpgw']->accounts->get($assignedto)->__toString();
 			}
 			
 			$contact_id = $ticket['contact_id'];
-			if(isset($contact_id))
+			if(isset($contact_id) && $contact_id != '')
 			{
 				$ticket['contact_name'] = $GLOBALS['phpgw']->accounts->get($contact_id)->__toString();
 			}
