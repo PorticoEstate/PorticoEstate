@@ -396,13 +396,25 @@
 			$assignedto = $ticket['assignedto'];
 			if(isset($assignedto) && $assignedto != '')
 			{
-				$ticket['assigned_to_name'] = $GLOBALS['phpgw']->accounts->get($assignedto)->__toString();
+				$assignedto_account = $GLOBALS['phpgw']->accounts->get($assignedto);
+				var_dump($assignedto_account);
+				if($assignedto_account)
+				{
+					$ticket['assigned_to_name'] = $assignedto_account->__toString();
+				}
 			}
 			
 			$contact_id = $ticket['contact_id'];
 			if(isset($contact_id) && $contact_id != '')
 			{
-				$ticket['contact_name'] = $GLOBALS['phpgw']->accounts->get($contact_id)->__toString();
+				/*
+				 $contact_account = $GLOBALS['phpgw']->accounts->get($contact_id);
+				if(isset($contact_account))
+				{
+					$ticket['contact_name'] = $contact_account->__toString();
+				}
+				
+				 */
 			}
 			
 			$notes = $bo->read_additional_notes($ticketid);
