@@ -1,4 +1,5 @@
 <xsl:template match="ticketinfo" xmlns:php="http://php.net/xsl">
+	<xsl:copy-of test="."/>
     <table cellpadding="2" cellspacing="2" width="95%" align="center">
         <xsl:choose>
             <xsl:when test="msgbox_data != ''">
@@ -30,6 +31,13 @@
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
      						<xsl:choose>
+     							<xsl:when test="vendor_name">
+		     						<li class="ticket_detail">
+		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> Leverandør: <br/> <xsl:value-of select="ticket/vendor_name"/>
+		     						</li>
+		     					</xsl:when>
+     						</xsl:choose>
+     						<xsl:choose>
      							<xsl:when test="assigned_to_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_red.png" class="list_image"/> Tildelt: <br/> <xsl:value-of select="ticket/assigned_to_name"/>
@@ -37,7 +45,7 @@
 		     					</xsl:when>
      						</xsl:choose>
      						<xsl:choose>
-     							<xsl:when test="assigned_to_name">
+     							<xsl:when test="contact_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_green.png" class="list_image"/> Kontakt: <br/> <xsl:value-of select="ticket/contact_name"/><br/>
 		     							Telefon: <xsl:value-of select="ticket/contact_phone"/> <br/>
