@@ -53,6 +53,13 @@ class rental_agresso_lg04 implements rental_exportable
 		{
 			$missing_billing_info[] = 'Missing contract party.';
 		}
+		
+		$payer_id = $contract->get_payer_id();
+		if($payer_id == null || $payer_id = 0)
+		{
+			$missing_billing_info[] = 'Missing payer id.';
+		}
+		
 		return $missing_billing_info;
 	}
 	
