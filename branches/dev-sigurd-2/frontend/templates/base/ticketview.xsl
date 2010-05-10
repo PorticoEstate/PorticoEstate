@@ -30,8 +30,20 @@
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
      						<li class="ticket_detail">
-     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding:<br/> <xsl:value-of select="ticket/details"/>
+     							<img src="frontend/templates/base/images/16x16/user_red.png" class="list_image"/> Tildelt: <xsl:value-of select="ticket/assignedto"/>
      						</li>
+     						<xsl:choose>
+     							<xsl:when test="publish_note = 1">
+		     						<li class="ticket_detail">
+		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding:<br/> <xsl:value-of select="ticket/details"/>
+		     						</li>
+		     					</xsl:when>
+     						</xsl:choose>
+     						<!-- 
+     						<li class="ticket_detail">
+     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Justert melding:<br/> <xsl:value-of select="ticket/details"/>
+     						</li>
+     						 -->
      						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
      							<ul>
