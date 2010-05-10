@@ -68,7 +68,7 @@
 						                <li  class="ticket_detail">
 						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="date"/> - 
 						                	<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/> <xsl:value-of select="user"/><br/>
-						                	<xsl:value-of select="note"/>
+						                	<p style="padding: 10px;"><xsl:value-of select="note"/></p>
 						                </li>
 						            </xsl:for-each>
 				            	</ul>
