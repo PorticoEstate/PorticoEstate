@@ -24,7 +24,7 @@
         						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <strong><xsl:value-of select="ticket/subject"/></strong>
         					</li>
         					<li class="ticket_detail">
-        						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> Meldt inn <xsl:value-of select="ticket/last_opened"/> av <xsl:value-of select="ticket/user_name"/>
+        						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> Meldt inn <xsl:value-of select="ticket/entry_date"/> av <xsl:value-of select="ticket/user_name"/>
         					</li>
      						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
