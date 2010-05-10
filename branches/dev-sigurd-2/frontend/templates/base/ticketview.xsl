@@ -31,21 +31,21 @@
      							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> Status: <xsl:value-of select="ticket/status_name"/>
      						</li>
      						<xsl:choose>
-     							<xsl:when test="vendor_name">
+     							<xsl:when test="ticket/vendor_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> Leverandør: <br/> <xsl:value-of select="ticket/vendor_name"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
      						<xsl:choose>
-     							<xsl:when test="assigned_to_name">
+     							<xsl:when test="ticket/assigned_to_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_red.png" class="list_image"/> Tildelt: <br/> <xsl:value-of select="ticket/assigned_to_name"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
      						<xsl:choose>
-     							<xsl:when test="contact_name">
+     							<xsl:when test="ticket/contact_name">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/user_green.png" class="list_image"/> Kontakt: <br/> <xsl:value-of select="ticket/contact_name"/><br/>
 		     							Telefon: <xsl:value-of select="ticket/contact_phone"/> <br/>
@@ -54,24 +54,19 @@
 		     					</xsl:when>
      						</xsl:choose>
      						<xsl:choose>
-     							<xsl:when test="publish_note = 1">
+     							<xsl:when test="ticket/publish_note = 1">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding:<br/> <xsl:value-of select="ticket/details"/>
 		     						</li>
 		     					</xsl:when>
      						</xsl:choose>
-     						<xsl:choose>
+     						<!-- <xsl:choose>
      							<xsl:when test="publish_note = 1">
 		     						<li class="ticket_detail">
 		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Melding:<br/> <xsl:value-of select="ticket/details"/>
 		     						</li>
 		     					</xsl:when>
-     						</xsl:choose>
-     						<!-- 
-     						<li class="ticket_detail">
-     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> Justert melding:<br/> <xsl:value-of select="ticket/details"/>
-     						</li>
-     						 -->
+     						</xsl:choose>-->
      						<li class="ticket_detail">
      							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
      							<ul>
