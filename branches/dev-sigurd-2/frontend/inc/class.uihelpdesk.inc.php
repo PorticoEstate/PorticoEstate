@@ -408,7 +408,7 @@
 			if(isset($contact_id) && $contact_id != '')
 			{
 				$contacts							= CreateObject('phpgwapi.contacts');
-				$contact_data						= $contacts->read_single_entry($data['contact_id'], array('fn','tel_work','email'));
+				$contact_data						= $contacts->read_single_entry($contact_id, array('fn','tel_work','email'));
 				$ticket['value_contact_name']		= $contact_data[0]['fn'];
 				$ticket['value_contact_email']		= $contact_data[0]['email'];
 				$ticket['value_contact_tel']		= $contact_data[0]['tel_work'];
