@@ -66,8 +66,10 @@
      							<ul>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
 						                <li  class="ticket_detail">
-						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="user"/>&nbsp;&nbsp;<xsl:value-of select="php:function('lang', 'on')"/> <xsl:value-of select="date"/><br/>
-						                <xsl:value-of select="note"/></li>
+						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="date"/><br/>
+						                	<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/> <xsl:value-of select="user"/><br/>
+						                	<xsl:value-of select="note"/>
+						                </li>
 						            </xsl:for-each>
 				            	</ul>
      						</li>
