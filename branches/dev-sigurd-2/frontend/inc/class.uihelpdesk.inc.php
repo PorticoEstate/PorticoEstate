@@ -397,7 +397,7 @@
 			if(isset($assignedto) && $assignedto != '')
 			{
 				$assignedto_account = $GLOBALS['phpgw']->accounts->get($assignedto);
-				var_dump($assignedto_account);
+				//var_dump($assignedto_account);
 				if($assignedto_account)
 				{
 					$ticket['assigned_to_name'] = $assignedto_account->__toString();
