@@ -61,7 +61,9 @@
 		     					</xsl:when>
      						</xsl:choose>
      						<li class="ticket_detail">
+     							
      							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> Kommentarer:<br/>
+     							<hr/>
      							<ul>
 		        					<xsl:for-each select="tickethistory/*[starts-with(name(), 'record')]">
 						                <li  class="ticket_detail">

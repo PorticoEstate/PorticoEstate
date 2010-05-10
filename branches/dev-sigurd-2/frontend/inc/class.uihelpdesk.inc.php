@@ -378,7 +378,7 @@
 			$timestamp_a = mktime($time_of_day_a[0], $time_of_day_a[1], 0, $timea[1], $timea[0], $year_and_maybe_time_a[0]);
 			$timestamp_b = mktime($time_of_day_b[0], $time_of_day_b[1], 0, $timeb[1], $timeb[0], $year_and_maybe_time_b[0]);
 
-			if($timestamp_a > $timestamp_b)
+			if($timestamp_a < $timestamp_b)
 			{
 				return 1;
 			}
