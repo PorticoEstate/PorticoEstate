@@ -47,13 +47,13 @@
 			</div>
 		
 			<div class="delegates" style="float: left; padding-left: 2em; padding-top: 2em;">
-				Delegater (<xsl:value-of select="number_of_delegates"/>)
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
 			   		</xsl:when>
 					<xsl:otherwise>
 					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
+					 	Delegater (<xsl:value-of select="number_of_delegates"/>)
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
