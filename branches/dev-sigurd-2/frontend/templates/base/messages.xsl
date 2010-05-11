@@ -4,15 +4,15 @@
 		<div class="yui-content" style="padding: 2em;">
 			 	<table>
 			 		<tr>
-			 			<th style="margin-left: 1em;">Dato</th>
-			 			<th style="margin-left: 1em;">Tittel</th>
-			 			<th style="margin-left: 1em;">Fra</th>
+			 			<th>Dato</th>
+			 			<th>Tittel</th>
+			 			<th>Fra</th>
 			 		</tr>
 			 	<xsl:for-each select="message">
 			 		<tr>
-			 			<td><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/> <xsl:value-of disable-output-escaping="yes" select="date"/></td>
-			 		 	<td><a href="index.php?menuaction=frontend.uimessages.index&amp;message_id={id}"><xsl:value-of select="subject" disable-output-escaping="yes"/></a></td>
-			 			<td><xsl:value-of disable-output-escaping="yes" select="from"/></td>
+			 			<td style="padding-left: 1em;"><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/> <xsl:value-of disable-output-escaping="yes" select="date"/></td>
+			 		 	<td style="padding-left: 1em;"><a href="index.php?menuaction=frontend.uimessages.index&amp;message_id={id}"><xsl:value-of select="subject" disable-output-escaping="yes"/></a></td>
+			 			<td style="padding-left: 1em;"><xsl:value-of disable-output-escaping="yes" select="from"/></td>
 			 		</tr>
 			 	</xsl:for-each>
 			 	</table>
