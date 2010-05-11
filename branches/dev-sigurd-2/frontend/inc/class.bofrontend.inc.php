@@ -231,8 +231,11 @@
 				
 				if($result)
 				{
-					$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
-					$owner_name = $GLOBALS['phpgw']->accounts->id2name($owner_id);
+					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
+					
+					$user_name = $user_account->__get('lid');
+					$owner_name = $user_account->__get('lid');
 					
 					var_dump("User name: ".$user_name);
 					var_dump("Owner name: ".$owner_name);
