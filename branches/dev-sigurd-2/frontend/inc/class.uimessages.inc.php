@@ -34,8 +34,8 @@
 			$params = array
 			(
 			'start' => $start,
-			'order' => $order,
-			'sort' => $sort
+			'order' => 'date',
+			'sort' => 'DESC'
 			);
 			$messages = $bomessenger->read_inbox($params);
 		
