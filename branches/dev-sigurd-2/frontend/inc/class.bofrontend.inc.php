@@ -237,7 +237,7 @@
 					
 					var_dump("User name: ".$user_name);
 					var_dump("Owner name: ".$owner_name);
-					
+					 exit;
 					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 					{
 						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
