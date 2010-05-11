@@ -4,9 +4,9 @@
 		<div class="yui-content" style="padding: 2em;">
 			 	<table>
 			 		<tr>
-			 			<th>Dato</th>
-			 			<th>Tittel</th>
-			 			<th>Fra</th>
+			 			<th style="margin-left: 1em;">Dato</th>
+			 			<th style="margin-left: 1em;">Tittel</th>
+			 			<th style="margin-left: 1em;">Fra</th>
 			 		</tr>
 			 	<xsl:for-each select="message">
 			 		<tr>
