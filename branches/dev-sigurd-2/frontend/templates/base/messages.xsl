@@ -25,7 +25,7 @@
 			 				<img src="frontend/templates/base/images/16x16/email_open.png" class="list_image"/><xsl:value-of select="subject" disable-output-escaping="yes"/>
 			 			</li>
 			 			<li class="ticket_detail">
-			 				<img src="frontend/templates/base/images/16x16/clock.png" class="list_image"/>Dato: <xsl:value-of select="date" disable-output-escaping="yes"/>
+			 				<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/><xsl:value-of select="date" disable-output-escaping="yes"/>
 			 			</li>
 			 			<li class="ticket_detail">
 			 				<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="from" disable-output-escaping="yes"/>
