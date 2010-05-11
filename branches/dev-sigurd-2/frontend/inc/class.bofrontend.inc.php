@@ -216,21 +216,18 @@
 		
 		public static function add_delegate(int $account_id, int $owner_id)
 		{
-			var_dump($account_id);
 			
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-			var_dump($owner_id);
-			 die;
+			
 			if(isset($account_id))
 			{
 				$db = clone $GLOBALS['phpgw']->db;
 				$timestamp = time();
 				$sql = "INSERT INTO phpgw_account_delegates VALUES ({$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
-				var_dump($sql);
 				
 				if($result)
 				{
