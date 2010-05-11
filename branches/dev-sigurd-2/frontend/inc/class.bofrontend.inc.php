@@ -297,7 +297,7 @@
 							{
 								
 								$title = "Portico Estate: Innsyn";
-								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.\r\n\r\n';
+								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.<br/>';
 								$message .= ' Systemmelding: ditt innsyn på vegne av '
 											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate er nå tatt vekk.';
 								
