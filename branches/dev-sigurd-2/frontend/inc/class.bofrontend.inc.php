@@ -229,15 +229,22 @@
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
-				$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
+					$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
 					$owner_name = $GLOBALS['phpgw']->accounts->id2name($owner_id);
+					
+					var_dump("User name: ".$user_name);
+					var_dump("Owner name: ".$owner_name);
 					
 					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 					{
 						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
 						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+						
+						
 						if($fellesdata_user && $fellesdata_owner)
 						{
+							var_dump("Both exist in Fellesdata");
+							
 							$email = $fellesdata_user['email'];
 							if(isset($email) && $email != '')
 							{
@@ -289,7 +296,9 @@
 								$message .= ' Dette er en systemmelding: ditt innsyn på vegne av '
 											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' er nå tatt vekk.';
 								
-								frontend_bofrontend::send_system_message($email,$title,$message);
+								$mail_result = frontend_bofrontend::send_system_message($email,$title,$message);
+								var_dump("Mail result". $mail_result);
+								
 							}
 						}
 					}
