@@ -10,7 +10,7 @@
 
 		public function __construct()
 		{
-			phpgwapi_cache::session_clear('frontend','tab');
+			phpgwapi_cache::session_set('frontend','tab',0);
 			parent::__construct();	
 		}
 		
