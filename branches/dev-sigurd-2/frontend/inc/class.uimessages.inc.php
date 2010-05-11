@@ -20,19 +20,29 @@
 		{
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uimessages.index'));
 			
-			$number_of_delegates = count($delegates);
-			
-			// Liste over meldinger
-
+			$message_id = phpgw::get_var('message_id', 'int', 'REQUEST');
 			$bomessenger = CreateObject('messenger.bomessenger');
-			$params = array
-			(
-			'start' => $start,
-			'order' => $order,
-			'sort' => $sort
-			);
-			$messages = $bomessenger->read_inbox($params);
 			
+			if(isset($message_id))
+			{
+				//en enkelt melding
+				$message_id = phpgw::get_var('message_id', 'int', 'REQUEST', 0);
+				$message = $bomessenger->read_message($message_id);
+			}
+			else
+			{
+				// Liste over meldinger
+				$params = array
+				(
+				'start' => $start,
+				'order' => $order,
+				'sort' => $sort
+				);
+				$messages = $bomessenger->read_inbox($params);
+				
+			}
+			
+		
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
