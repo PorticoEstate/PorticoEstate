@@ -2,6 +2,7 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content" style="padding: 2em;">
+			<div style="float: left">
 			 	<table>
 			 		<tr>
 			 			<th>Dato</th>
@@ -16,6 +17,10 @@
 			 		</tr>
 			 	</xsl:for-each>
 			 	</table>
+			 </div>
+		 	<div style="float: left">
+		 		<xsl:copy-of select="view"/>
+		 	</div>
 		</div>	
 	</div>
 </xsl:template>
