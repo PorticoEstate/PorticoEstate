@@ -94,8 +94,6 @@
 		
 		public function add_delegate(int $account_id, int $owner_id)
 		{
-			var_dump($account_id);
-			die;
 			if(!isset($account_id) || $account_id == '')
 			{
 				//User is only registered in Fellesdata
@@ -110,12 +108,8 @@
 				{
 					return false;
 				}
-				else
-				{
-					return frontend_bofrontend::add_delegate($account_id, null);
-				}
-			}
-			return false;
+			}	
+			return frontend_bofrontend::add_delegate($account_id, null);
 		}
 		
 		public function remove_delegate()
