@@ -29,26 +29,23 @@
 				$message_id = phpgw::get_var('message_id', 'int', 'REQUEST', 0);
 				$message = $bomessenger->read_message($message_id);
 			}
-			else
-			{
-				// Liste over meldinger
-				$params = array
-				(
-				'start' => $start,
-				'order' => $order,
-				'sort' => $sort
-				);
-				$messages = $bomessenger->read_inbox($params);
-				
-			}
 			
+			// Liste over meldinger
+			$params = array
+			(
+			'start' => $start,
+			'order' => $order,
+			'sort' => $sort
+			);
+			$messages = $bomessenger->read_inbox($params);
 		
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
 				'messages_data' => 	array (
 					'form_action' => $form_action,
-					'message' 	=> $messages
+					'message' 	=> $messages,
+					'view'		=> $message
 				),
 				
 			);
