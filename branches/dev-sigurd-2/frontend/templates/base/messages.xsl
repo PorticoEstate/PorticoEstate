@@ -7,6 +7,7 @@
 			 		<li class="ticket_detail">
 			 		 <img src="frontend/templates/base/images/16x16/email.png" class="list_image"/>
 			 			<xsl:value-of disable-output-escaping="yes" select="date"/> - <a href="index.php?menuaction=frontend.uimessages.index&amp;message_id={id}"><xsl:value-of select="subject" disable-output-escaping="yes"/></a> <xsl:value-of disable-output-escaping="yes" select="from"/>
+			 		<xsl:value-of disable-output-escaping="yes" select="status"/>
 			 		</li>
 			 	</xsl:for-each>
 			 	</ul>
