@@ -170,10 +170,10 @@
 							if(isset($email) && $email != '')
 							{
 								
-								$title = "Systemmelding: opprettet konto";
-								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.';
-								$message .= " Dette er en systemmelding: det er opprettet en konto for deg i Portico Estate "
-											." med brukernnavn {$username} og passord 'TEst1234'.";
+								$title = "Portico Estate: Nyopprettet konto";
+								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].', <br/><br/>';
+								$message .= "Det er opprettet en konto for deg i Portico Estate.<br/><br/> "
+											."Brukernnavn: {$username} <br/>Passord: TEst1234";
 								
 								frontend_bofrontend::send_system_message($email,$title,$message);
 							}
@@ -252,8 +252,8 @@
 							{
 								
 								$title = "Portico Estate: Innsyn";
-								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.\r\n\r\n';
-								$message .= 'Systemmelding: du har fått innsyn på vegne av '
+								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
+								$message .= 'Du har fått innsyn på vegne av '
 											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate.';
 								frontend_bofrontend::send_system_message($email,$title,$message);							
 							}
@@ -297,9 +297,9 @@
 							{
 								
 								$title = "Portico Estate: Innsyn";
-								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.<br/>';
-								$message .= ' Systemmelding: ditt innsyn på vegne av '
-											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate er nå tatt vekk.';
+								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
+								$message .= 'Din innsynsmulighet på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
 								
 								frontend_bofrontend::send_system_message($email,$title,$message);
 							}
