@@ -220,6 +220,17 @@
 				phpgwapi_cache::session_clear('frontend','contract_state_in');
 			}
 			/* Store the header state on the session*/
+			$bomessenger = CreateObject('messenger.bomessenger');
+			$total_messages = $bomessenger->total_messages(" AND message_status = ''");
+			if($total_messages > 0)
+			{
+				$this->header_state['new_messages'] = "({$total_messages})";
+			}
+			else
+			{
+				$this->header_state['new_messages'] = lang('no_new_messages');	
+			}
+			
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/bkbooking/css/frontend.css');
