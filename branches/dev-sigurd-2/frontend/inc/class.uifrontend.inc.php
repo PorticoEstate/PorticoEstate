@@ -248,6 +248,16 @@
 					);
 				}
 			}
+			
+			$extra_tabs = phpgwapi_cache::session_get('frontend', 'extra_tabs');
+			
+			if(isset($extra_tabs))
+			{
+				$tabs = array_merge($extra_tabs,$tabs);
+			}
+			
+			phpgwapi_cache::session_clear('frontend', 'extra_tabs');
+			
 			return $tabs;
 		}
 		

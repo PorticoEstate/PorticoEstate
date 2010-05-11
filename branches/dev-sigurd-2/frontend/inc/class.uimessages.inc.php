@@ -10,6 +10,12 @@
 
 		public function __construct()
 		{
+			$extra_tabs = array();
+			$extra_tabs[0] = array (
+				'label' => lang('messages'),
+				'link'	=> $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.uimessages.index", 'noframework' => $noframework))
+			);
+			phpgwapi_cache::session_set('frontend', 'extra_tabs', $extra_tabs);
 			phpgwapi_cache::session_set('frontend','tab',0);
 			parent::__construct();	
 		}
@@ -38,11 +44,6 @@
 			'sort' => 'DESC'
 			);
 			$messages = $bomessenger->read_inbox($params);
-		
-			$this->tabs[0] = array(
-				'label' => lang('messages'),
-				'link'	=> $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.uimessages.index", 'noframework' => $noframework))
-			);
 			
 			$data = array (
 				'header' 		=>	$this->header_state,

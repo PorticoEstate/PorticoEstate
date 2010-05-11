@@ -243,6 +243,7 @@
 						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
 						
 						
+						
 						if($fellesdata_user && $fellesdata_owner)
 						{	
 							$email = $fellesdata_user['email'];
