@@ -1,7 +1,7 @@
 <?php
     phpgw::import_class('frontend.uifrontend');
 
-	class frontend_messages extends frontend_uifrontend
+	class frontend_uimessages extends frontend_uifrontend
 	{	
 		public $public_functions = array
 		(
