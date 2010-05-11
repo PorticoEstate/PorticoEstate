@@ -251,18 +251,11 @@
 							if(isset($email) && $email != '')
 							{
 								
-								$title = "Systemmelding: innsyn";
-								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.';
-								$message .= ' Dette er en systemmelding: du har fått innsyn på vegne av '
-											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend.';
-								$mail_result = frontend_bofrontend::send_system_message($email,$title,$message);
-								var_dump("Email". $email);
-								var_dump("Title". $title);
-								var_dump("Message". $message);
-								
-								var_dump("Mail result". $mail_result);
-								die;
-								
+								$title = "Portico Estate: Innsyn";
+								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.\r\n\r\n';
+								$message .= 'Systemmelding: du har fått innsyn på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate.';
+								frontend_bofrontend::send_system_message($email,$title,$message);							
 							}
 						}
 					}
@@ -287,8 +280,11 @@
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
-					$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
-					$owner_name = $GLOBALS['phpgw']->accounts->id2name($owner_id);
+					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
+					
+					$user_name = $user_account->__get('lid');
+					$owner_name = $owner_account->__get('lid');
 					
 					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 					{
@@ -300,14 +296,12 @@
 							if(isset($email) && $email != '')
 							{
 								
-								$title = "Systemmelding: fjernet innsyn";
-								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.';
-								$message .= ' Dette er en systemmelding: ditt innsyn på vegne av '
-											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' er nå tatt vekk.';
+								$title = "Portico Estate: Innsyn";
+								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.\r\n\r\n';
+								$message .= ' Systemmelding: ditt innsyn på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate er nå tatt vekk.';
 								
-								$mail_result = frontend_bofrontend::send_system_message($email,$title,$message);
-								var_dump("Mail result". $mail_result);
-								
+								frontend_bofrontend::send_system_message($email,$title,$message);
 							}
 						}
 					}
