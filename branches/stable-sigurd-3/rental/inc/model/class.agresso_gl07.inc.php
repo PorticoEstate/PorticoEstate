@@ -45,6 +45,14 @@ class rental_agresso_gl07 implements rental_exportable
 	public function get_missing_billing_info($contract)
 	{
 		$missing_billing_info = array();
+		
+		$payer_id = $contract->get_payer_id();
+		if($payer_id == null || $payer_id = 0)
+		{
+			$missing_billing_info[] = 'Missing payer id.';
+		}
+		
+		
 		$contract_parties = $contract->get_parties();
 		if($contract_parties == null || count($contract_parties) < 1)
 		{

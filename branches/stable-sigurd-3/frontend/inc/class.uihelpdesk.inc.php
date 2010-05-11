@@ -378,7 +378,7 @@
 			$timestamp_a = mktime($time_of_day_a[0], $time_of_day_a[1], 0, $timea[1], $timea[0], $year_and_maybe_time_a[0]);
 			$timestamp_b = mktime($time_of_day_b[0], $time_of_day_b[1], 0, $timeb[1], $timeb[0], $year_and_maybe_time_b[0]);
 
-			if($timestamp_a > $timestamp_b)
+			if($timestamp_a < $timestamp_b)
 			{
 				return 1;
 			}
@@ -393,6 +393,49 @@
 			$ticketid = phpgw::get_var('id');
 			$ticket = $bo->read_single($ticketid);
 
+			$assignedto = $ticket['assignedto'];
+			if(isset($assignedto) && $assignedto != '')
+			{
+				$assignedto_account = $GLOBALS['phpgw']->accounts->get($assignedto);
+				//var_dump($assignedto_account);
+				if($assignedto_account)
+				{
+					$ticket['assigned_to_name'] = $assignedto_account->__toString();
+				}
+			}
+			
+			$contact_id = $ticket['contact_id'];
+			if(isset($contact_id) && $contact_id != '')
+			{
+				$contacts							= CreateObject('phpgwapi.contacts');
+				$contact_data						= $contacts->read_single_entry($contact_id, array('fn','tel_work','email'));
+				$ticket['value_contact_name']		= $contact_data[0]['fn'];
+				$ticket['value_contact_email']		= $contact_data[0]['email'];
+				$ticket['value_contact_tel']		= $contact_data[0]['tel_work'];
+			}	
+				
+			$vendor_id = $ticket['vendor_id'];
+			if(isset($vendor_id) && $vendor_id != '')
+			{
+				$contacts	= CreateObject('property.soactor');
+				$contacts->role='vendor';
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data	= $contacts->read_single($vendor_id,$vendor_data);
+				if(is_array($vendor_data))
+				{
+					foreach($vendor_data['attributes'] as $attribute)
+					{
+						if($attribute['name']=='org_name')
+						{
+							$ticket['value_vendor_name']=$attribute['value'];
+							break;
+						}
+					}
+				}
+			}
+			
 			$notes = $bo->read_additional_notes($ticketid);
 			//$history = $bo->read_record_history($ticketid);
 

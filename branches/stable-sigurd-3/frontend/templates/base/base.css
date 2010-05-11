@@ -232,6 +232,11 @@ width:100%;
 .yui-pg-container {
 	white-space: normal;
 	}
+	
+li.ticket_detail {
+	padding: 5px;
+	margin-left: 5px;
+	}
 
 
 
