@@ -230,6 +230,7 @@
 				$sql = "INSERT INTO phpgw_account_delegates VALUES ({$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				var_dump($sql);
+				 die;
 				if($result)
 				{
 					$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
@@ -237,7 +238,7 @@
 					
 					var_dump("User name: ".$user_name);
 					var_dump("Owner name: ".$owner_name);
-					 die;
+					
 					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 					{
 						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
