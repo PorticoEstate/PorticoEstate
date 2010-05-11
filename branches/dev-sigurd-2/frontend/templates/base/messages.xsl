@@ -20,20 +20,23 @@
 			 </div>
 		 	<div style="float: left; padding-left: 2em;">
 		 		<ul>
-			 		<xsl:for-each select="view">
+		 			<xsl:choose>
+		 				<xsl:when test="normalize-space(view)">
+		 				
 			 			<li class="ticket_detail">
-			 				<img src="frontend/templates/base/images/16x16/email_open.png" class="list_image"/><xsl:value-of select="subject" disable-output-escaping="yes"/>
+			 				<img src="frontend/templates/base/images/16x16/email_open.png" class="list_image"/><xsl:value-of select="view/subject" disable-output-escaping="yes"/>
 			 			</li>
 			 			<li class="ticket_detail">
-			 				<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/><xsl:value-of select="date" disable-output-escaping="yes"/>
+			 				<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/><xsl:value-of select="view/date" disable-output-escaping="yes"/>
 			 			</li>
 			 			<li class="ticket_detail">
-			 				<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="from" disable-output-escaping="yes"/>
+			 				<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="view/from" disable-output-escaping="yes"/>
 			 			</li>
 			 			<li class="ticket_detail">
-			 				<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="content" disable-output-escaping="yes"/>
+			 				<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="view/content" disable-output-escaping="yes"/>
 			 			</li>
-			 		</xsl:for-each>
+			 			</xsl:when>
+			 		</xsl:choose>
 			 	</ul>
 		 	</div>
 		</div>	
