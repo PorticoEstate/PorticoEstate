@@ -2,7 +2,7 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content" style="padding: 2em;">
-			 <img src="frontend/templates/base/images/32x32/email.png" class="list_image"/>Innboks<br/>
+			 <img src="frontend/templates/base/images/32x32/email.png" class="list_image"/>
 			 <hr/>
 			 	<ul>
 			 	<xsl:for-each select="message">
