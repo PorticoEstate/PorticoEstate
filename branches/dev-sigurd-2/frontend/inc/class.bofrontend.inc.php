@@ -160,7 +160,26 @@
 					$account->passwd	= $password;
 					$account->enabled	= true;
 					$account->expires	= -1;
-					return $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array('frontend'));
+					$result =  $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array('frontend'));
+					if($result)
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
+						if($fellesdata_user)
+						{
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = "Systemmelding: opprettet konto";
+								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.';
+								$message .= " Dette er en systemmelding: det er opprettet en konto for deg i Portico Estate "
+											." med brukernnavn {$username} og passord 'TEst1234'.";
+								
+								frontend_bofrontend::send_system_message($email,$title,$message);
+							}
+						}
+					}
+					return $result;
 				}
 			}
 			return false;
@@ -210,6 +229,27 @@
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
+				$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
+					$owner_name = $GLOBALS['phpgw']->accounts->id2name($owner_id);
+					
+					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+						if($fellesdata_user && $fellesdata_owner)
+						{
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = "Systemmelding: innsyn";
+								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.';
+								$message .= ' Dette er en systemmelding: du har fått innsyn på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend.';
+								frontend_bofrontend::send_system_message($email,$title,$message);
+							}
+						}
+					}
 					return true;
 				}
 			}
@@ -231,7 +271,52 @@
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
+					$user_name = $GLOBALS['phpgw']->accounts->id2name($account_id);
+					$owner_name = $GLOBALS['phpgw']->accounts->id2name($owner_id);
 					
+					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+						if($fellesdata_user && $fellesdata_owner)
+						{
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = "Systemmelding: fjernet innsyn";
+								$message = 'Hei '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].'.';
+								$message .= ' Dette er en systemmelding: ditt innsyn på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' er nå tatt vekk.';
+								
+								frontend_bofrontend::send_system_message($email,$title,$message);
+							}
+						}
+					}
+					
+					
+					return true;
+				}
+			}
+			return false;	
+		}
+		
+		public static function send_system_message($to, $title, $contract_message, $from = 'noreply@bergen.kommune.no')
+		{
+			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+			{
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+			
+				$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
+					 stripslashes(nl2br($contract_message)), '', '', '',
+					 $from , 'System message',
+					 'html', '', array() , false);
+
+				if($rcpt)
+				{
 					return true;
 				}
 			}
