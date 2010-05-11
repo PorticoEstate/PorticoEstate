@@ -221,7 +221,7 @@
 			}
 			/* Store the header state on the session*/
 			$bomessenger = CreateObject('messenger.bomessenger');
-			$total_messages = $bomessenger->total_messages(" AND message_status = ''");
+			$total_messages = $bomessenger->total_messages(" AND message_status = 'N'");
 			if($total_messages > 0)
 			{
 				$this->header_state['new_messages'] = "({$total_messages})";
