@@ -7,7 +7,7 @@
 			 	<ul>
 			 	<xsl:for-each select="message">
 			 		<li class="ticket_detail">
-			 			<xsl:value-of select="date"/> - <a href="index.php?menuaction=frontend.uimessages.index&message_id={id}"><xsl:value-of select="subject"/></a> <xsl:value-of select="from"/>
+			 			<xsl:value-of select="date"/> - <a href="index.php?menuaction=frontend.uimessages.index&amp;message_id={id}"><xsl:value-of select="subject"/></a> <xsl:value-of select="from"/>
 			 		</li>
 			 	</xsl:for-each>
 			 	</ul>
