@@ -244,9 +244,7 @@
 						
 						
 						if($fellesdata_user && $fellesdata_owner)
-						{
-							var_dump("Both exist in Fellesdata");
-							
+						{	
 							$email = $fellesdata_user['email'];
 							if(isset($email) && $email != '')
 							{

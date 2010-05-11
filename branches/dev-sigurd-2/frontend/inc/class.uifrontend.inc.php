@@ -277,7 +277,7 @@
 				 	'menuaction'=> 'manual.uimanual.help',
 				 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
 				 	'section' => 'folder'
-				 )) . "','700','600')"; 
+				 )) . "','700','600')";
 				 
 			$name_of_user = $GLOBALS['phpgw_info']['user']['firstname']." ".$GLOBALS['phpgw_info']['user']['lastname'];
 				 
