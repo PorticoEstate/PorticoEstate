@@ -39,6 +39,11 @@
 			);
 			$messages = $bomessenger->read_inbox($params);
 		
+			$this->tabs[0] = array(
+				'label' => lang('messages'),
+				'link'	=> $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.uimessages.index", 'noframework' => $noframework))
+			);
+			
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
