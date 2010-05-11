@@ -235,12 +235,8 @@
 					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
 					
 					$user_name = $user_account->__get('lid');
-					$owner_name = $user_account->__get('lid');
-					
-					var_dump("User name: ".$user_name);
-					var_dump("Owner name: ".$owner_name);
-					die;
-					
+					$owner_name = $owner_account->__get('lid');
+										
 					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 					{
 						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
