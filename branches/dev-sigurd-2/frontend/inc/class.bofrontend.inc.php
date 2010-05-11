@@ -256,7 +256,12 @@
 								$message .= ' Dette er en systemmelding: du har fått innsyn på vegne av '
 											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend.';
 								$mail_result = frontend_bofrontend::send_system_message($email,$title,$message);
+								var_dump("Email". $email);
+								var_dump("Title". $title);
+								var_dump("Message". $message);
+								
 								var_dump("Mail result". $mail_result);
+								die;
 								
 							}
 						}
