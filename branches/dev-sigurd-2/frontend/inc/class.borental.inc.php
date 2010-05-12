@@ -47,7 +47,7 @@
 	
 						$receive_notification = true;
 						$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
-							 stripslashes(nl2br($contract_message)), $from_address, '', '',
+							 stripslashes(nl2br($contract_message)), '', $from, '',
 							 $from , $GLOBALS['phpgw_info']['user']['fullname'],
 							 'html', '', array() , $receive_notification);
 	
