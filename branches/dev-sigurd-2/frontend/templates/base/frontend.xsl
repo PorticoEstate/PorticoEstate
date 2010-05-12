@@ -1,5 +1,5 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
-	<xsl:sort select="loc1_name"/>
+	<!-- <xsl:sort select="loc1_name"/> -->
 	<div id="wrapper">
 		
     	<div id="header">
