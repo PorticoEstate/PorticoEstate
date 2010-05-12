@@ -42,12 +42,14 @@
 	    							<xsl:when test="selected_org_unit = 'all'">
 	    								<option value="all" selected="selected"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
 	    								<xsl:for-each select="org_unit">
+	    									<xsl:sort select="ORG_NAME"/>
 			    							<option value="{UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
 			    						</xsl:for-each>
 	    							</xsl:when>
 	    							<xsl:otherwise>
 	    								<option value="all"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
 	    								<xsl:for-each select="org_unit">
+	    									<xsl:sort select="ORG_NAME"/>
 	    									<xsl:choose>
 												<xsl:when test="UNIT_ID = //header/selected_org_unit">
 													<option value="{UNIT_ID}" selected="selected"><xsl:value-of select="ORG_NAME"/></option>
@@ -94,6 +96,7 @@
 								<br/>
 								<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
 									<xsl:for-each select="locations">
+										<xsl:sort select="loc1_name"/>
 										<xsl:choose>
 											<xsl:when test="location_code = //header/selected_location">
 												<option value="{location_code}" selected="selected">

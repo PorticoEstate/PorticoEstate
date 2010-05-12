@@ -50,6 +50,11 @@
 	    sortable: true
 	},
 	{
+		key: "term_label",
+		label: "<?php echo lang('billing_term') ?>",
+		sortable: true
+	},
+	{
 		key: "total_price",
 		formatter: formatPrice,
 		label: "<?php echo lang('total_price') ?>"

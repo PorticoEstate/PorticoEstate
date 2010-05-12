@@ -9,7 +9,7 @@
 
 	        <xsl:if test="group/permission/write">
 	            <span class="loggedin">
-					<a href="{edit_self_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
+					<a href="{edit_self_link}"><img src="{webserver_url}/phpgwapi/templates/base/images/edit.png" /></a>
 				</span>
 	        </xsl:if>
         </ul>

@@ -390,6 +390,7 @@
 			$this->reset_flash_msgs();
 			
 			$this->add_yui_translation($data);
+			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);

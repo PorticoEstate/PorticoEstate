@@ -28,7 +28,7 @@
     		{
 	    		$title = lang('title_contract_message'); 
 	    		$title .= " ".$contract->get_old_contract_id();
-	    		$title .= "(".$contract->get_contract_type_title().")";
+	    		$title .= "(".lang($contract->get_contract_type_title()).")";
 	    		
 	    		$config	= CreateObject('phpgwapi.config','frontend');
 				$config->read();
@@ -47,7 +47,7 @@
 	
 						$receive_notification = true;
 						$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
-							 stripslashes(nl2br($contract_message)), '', '', '',
+							 stripslashes(nl2br($contract_message)), '', $from, '',
 							 $from , $GLOBALS['phpgw_info']['user']['fullname'],
 							 'html', '', array() , $receive_notification);
 	

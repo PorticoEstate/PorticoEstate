@@ -205,7 +205,16 @@
 			$this->term_id_title = $term_id_title;
 		}
 
-		public function get_term_id_title(){ return $this->term_id_title; }
+		public function get_term_id_title(){ 
+			if(isset($this->term_id_title) && $this->term_id_title != '')
+			{	
+				return lang($this->term_id_title); 
+			}
+			else
+			{
+				return null;
+			}
+		}
 		
 		public function set_security_type(int $security_type = null)
 		{
@@ -588,7 +597,8 @@
 				'adjustment_share' => $this->get_adjustment_share(),
 				'adjustment_year' => $this->get_adjustment_year(),
 				'comment' => $this->get_comment(),
-				'publish_comment' => $this->get_publish_comment()
+				'publish_comment' => $this->get_publish_comment(),
+				'term_label' => $this->get_term_id_title()
 			);
 		}
 		
