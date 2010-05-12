@@ -28,7 +28,7 @@
     		{
 	    		$title = lang('title_contract_message'); 
 	    		$title .= " ".$contract->get_old_contract_id();
-	    		$title .= "(".$contract->get_contract_type_title().")";
+	    		$title .= "(".lang($contract->get_contract_type_title()).")";
 	    		
 	    		$config	= CreateObject('phpgwapi.config','frontend');
 				$config->read();
