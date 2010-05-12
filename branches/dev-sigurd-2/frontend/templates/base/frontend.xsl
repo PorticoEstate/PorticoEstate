@@ -83,6 +83,7 @@
 				</tr>
 			</xsl:when>
 			<xsl:otherwise>
+				<xsl:sort select="loc1_name"/>
 				<tr valign="top">
 					<td>
 						<div id="unit_selector">
