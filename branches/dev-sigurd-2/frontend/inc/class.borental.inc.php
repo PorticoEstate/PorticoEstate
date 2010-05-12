@@ -82,6 +82,7 @@
         {
         	
         	$property_locations = array();
+        	$property_locations_active = array();
         	
         	$total_price_all_buildings = 0;
         	$total_rented_area_all_builings = 0;
@@ -133,6 +134,8 @@
 			        			$property_location = $unit->get_location();
 			        			$property_locations[$property_location->get_location_code()] = $property_location;
 			        			
+			        			
+			        			
 			        			// Contract holders: contracts_per_location (internal) and contracts_in_per_location (in)
 			        			
 			        			// Internal contract should have impact on total price
@@ -149,6 +152,7 @@
 				        			
 			        				if($contract->is_active())
 				        			{
+				        				$property_locations_active[$property_location->get_location_code()] = true;
 				        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
 				        				$rented_price_per_location[$property_location->get_location_code()] += $total_price;
 				        			}
@@ -157,6 +161,11 @@
 			        			{
 			        				$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
 			        				$contract->set_total_price($total_price);
+			        				
+			        				if($contract->is_active())
+				        			{
+				        				$property_locations_active[$property_location->get_location_code()] = true;
+				        			}
 			        				
 			        				if(!is_array($contracts_in_per_location[$property_location->get_location_code()]))
 				        			{
@@ -180,7 +189,10 @@
         	$serialized_properties = array();
         	foreach($property_locations as $key => $property_location)
         	{
-        		$serialized_properties[] = $property_location->serialize();
+        		if(isset($property_locations_active[$property_location->get_location_code()]) && $property_locations_active[$property_location->get_location_code()])
+        		{
+        			$serialized_properties[] = $property_location->serialize();
+        		}
         	}
         	return $serialized_properties;
         }

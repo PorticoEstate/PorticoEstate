@@ -170,7 +170,7 @@
 							if(isset($email) && $email != '')
 							{
 								
-								$title = "Portico Estate: Nyopprettet konto";
+								$title = "Portico Estate: Opprettet konto";
 								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].', <br/><br/>';
 								$message .= "Det er opprettet en konto for deg i Portico Estate.<br/><br/> "
 											."Brukernnavn: {$username} <br/>Passord: TEst1234";
