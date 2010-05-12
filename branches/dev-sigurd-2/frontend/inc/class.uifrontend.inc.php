@@ -142,7 +142,7 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
 				$this->insert_links_on_header_state();
 			} 
-			/* No state, first visit after login*/
+			/* No state, first visit after login, or refresh request*/
 			else if(!isset($this->header_state) || isset($refresh))
 			{
 				$delegations = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
