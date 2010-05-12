@@ -60,6 +60,10 @@ class rental_socontract extends rental_socommon
 		else if ($sort_field == 'type'){
 			$sort_field = 'contract.location_id';
 		}
+		else if($sort_field == 'term_label'){
+			$sort_field = 'contract.term_id';
+		}
+		
 		
 		//Contracts for billing should always be sorted on biling start
 		if(isset($filters['contracts_for_billing']))
@@ -268,6 +272,7 @@ class rental_socontract extends rental_socommon
 			$columns[] = 'type.title, type.notify_before, type.notify_before_due_date, type.notify_after_termination_date';
 			$columns[] = 'last_edited.edited_on';
 			$columns[] = 'invoice.timestamp_end';	
+			$columns[] = 'r_b_t.title AS term_title';
 			$cols = implode(',',$columns);
 		}
 		
@@ -278,7 +283,8 @@ class rental_socontract extends rental_socommon
 		$join_units = $this->left_join." rental_unit r_u ON (r_u.composite_id=composite.id)";
 		$join_last_edited = $this->left_join.' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
 		$join_last_billed = "{$this->left_join} rental_invoice invoice ON (contract.id = invoice.contract_id) {$this->left_join} rental_billing billing ON (invoice.billing_id = billing.id)";
-		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_units.' '.$join_last_edited.' '.$join_last_billed;
+		$join_term_title = "{$this->left_join} rental_billing_term r_b_t ON (contract.term_id = r_b_t.id)";
+		$joins = $join_contract_type.' '.$join_parties.' '.$join_composites.' '.$join_units.' '.$join_last_edited.' '.$join_last_billed.' '.$join_term_title;
 
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		
@@ -319,6 +325,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_project_id($this->unmarshal($this->db->f('project_id'),'string'));
 			$contract->set_executive_officer_id($this->unmarshal($this->db->f('executive_officer'),'int'));
 			$contract->set_term_id($this->unmarshal($this->db->f('term_id'),'int'));
+			$contract->set_term_id_title($this->unmarshal($this->db->f('term_title'),'string'));
 			$contract->set_security_type($this->unmarshal($this->db->f('security_type'),'int'));
 			$contract->set_security_amount($this->unmarshal($this->db->f('security_amount'),'string'));
 			$contract->set_due_date($this->unmarshal($this->db->f('due_date'),'int'));
@@ -332,6 +339,7 @@ class rental_socontract extends rental_socommon
 			$contract->set_notify_before($this->unmarshal($this->db->f('notify_before'),'int'));
 			$contract->set_notify_before_due_date($this->unmarshal($this->db->f('notify_before_due_date'),'int'));
 			$contract->set_notify_after_termination_date($this->unmarshal($this->db->f('notify_after_termination_date'),'int'));
+			
 			
 		}
 		
