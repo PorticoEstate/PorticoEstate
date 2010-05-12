@@ -48,6 +48,7 @@
 	    							<xsl:otherwise>
 	    								<option value="all"><xsl:value-of select="php:function('lang', 'all_organisational_units')"/></option>
 	    								<xsl:for-each select="org_unit">
+	    									<xsl:sort select="ORG_NAME"/>
 	    									<xsl:choose>
 												<xsl:when test="UNIT_ID = //header/selected_org_unit">
 													<option value="{UNIT_ID}" selected="selected"><xsl:value-of select="ORG_NAME"/></option>
