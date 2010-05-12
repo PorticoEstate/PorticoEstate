@@ -1,4 +1,5 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
+	<xsl:sort select="loc1_name"/>
 	<div id="wrapper">
 		
     	<div id="header">
@@ -83,7 +84,6 @@
 				</tr>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:sort select="loc1_name"/>
 				<tr valign="top">
 					<td>
 						<div id="unit_selector">
