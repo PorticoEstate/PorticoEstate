@@ -108,12 +108,8 @@
 				{
 					return false;
 				}
-				else
-				{
-					return frontend_bofrontend::add_delegate($account_id, null);
-				}
-			}
-			return false;
+			}	
+			return frontend_bofrontend::add_delegate($account_id, null);
 		}
 		
 		public function remove_delegate()

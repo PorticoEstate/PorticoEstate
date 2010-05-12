@@ -160,7 +160,26 @@
 					$account->passwd	= $password;
 					$account->enabled	= true;
 					$account->expires	= -1;
-					return $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array('frontend'));
+					$result =  $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array('frontend'));
+					if($result)
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
+						if($fellesdata_user)
+						{
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = "Portico Estate: Nyopprettet konto";
+								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].', <br/><br/>';
+								$message .= "Det er opprettet en konto for deg i Portico Estate.<br/><br/> "
+											."Brukernnavn: {$username} <br/>Passord: TEst1234";
+								
+								frontend_bofrontend::send_system_message($email,$title,$message);
+							}
+						}
+					}
+					return $result;
 				}
 			}
 			return false;
@@ -197,6 +216,7 @@
 		
 		public static function add_delegate(int $account_id, int $owner_id)
 		{
+			
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -208,8 +228,36 @@
 				$timestamp = time();
 				$sql = "INSERT INTO phpgw_account_delegates VALUES ({$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
+				
 				if($result)
 				{
+					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
+					
+					$user_name = $user_account->__get('lid');
+					$owner_name = $owner_account->__get('lid');
+										
+					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+						
+						
+						
+						if($fellesdata_user && $fellesdata_owner)
+						{	
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = "Portico Estate: Innsyn";
+								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
+								$message .= 'Du har fått innsyn på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate.';
+								frontend_bofrontend::send_system_message($email,$title,$message);							
+							}
+						}
+					}
 					return true;
 				}
 			}
@@ -231,7 +279,55 @@
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
+					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
 					
+					$user_name = $user_account->__get('lid');
+					$owner_name = $owner_account->__get('lid');
+					
+					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+						if($fellesdata_user && $fellesdata_owner)
+						{
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = "Portico Estate: Innsyn";
+								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
+								$message .= 'Din innsynsmulighet på vegne av '
+											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
+								
+								frontend_bofrontend::send_system_message($email,$title,$message);
+							}
+						}
+					}
+					
+					
+					return true;
+				}
+			}
+			return false;	
+		}
+		
+		public static function send_system_message($to, $title, $contract_message, $from = 'noreply@bergen.kommune.no')
+		{
+			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+			{
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+			
+				$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
+					 stripslashes(nl2br($contract_message)), '', '', '',
+					 $from , 'System message',
+					 'html', '', array() , false);
+
+				if($rcpt)
+				{
 					return true;
 				}
 			}

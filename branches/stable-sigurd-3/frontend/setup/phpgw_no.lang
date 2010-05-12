@@ -109,3 +109,5 @@ contact	frontend	no	Kontakt
 message	frontend	no	Melding
 comments	frontend	no	Kommentarer
 on	frontend	no	den
+messages	frontend	no	Innboks
+no_new_messages	frontend	no	Ingen nye

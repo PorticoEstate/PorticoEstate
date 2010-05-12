@@ -220,6 +220,17 @@
 				phpgwapi_cache::session_clear('frontend','contract_state_in');
 			}
 			/* Store the header state on the session*/
+			$bomessenger = CreateObject('messenger.bomessenger');
+			$total_messages = $bomessenger->total_messages(" AND message_status = 'N'");
+			if($total_messages > 0)
+			{
+				$this->header_state['new_messages'] = "({$total_messages})";
+			}
+			else
+			{
+				$this->header_state['new_messages'] = lang('no_new_messages');	
+			}
+			
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/bkbooking/css/frontend.css');
@@ -248,6 +259,16 @@
 					);
 				}
 			}
+			
+			$extra_tabs = phpgwapi_cache::session_get('frontend', 'extra_tabs');
+			
+			if(isset($extra_tabs))
+			{
+				$tabs = array_merge($extra_tabs,$tabs);
+			}
+			
+			phpgwapi_cache::session_clear('frontend', 'extra_tabs');
+			
 			return $tabs;
 		}
 		
@@ -277,7 +298,7 @@
 				 	'menuaction'=> 'manual.uimanual.help',
 				 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
 				 	'section' => 'folder'
-				 )) . "','700','600')"; 
+				 )) . "','700','600')";
 				 
 			$name_of_user = $GLOBALS['phpgw_info']['user']['firstname']." ".$GLOBALS['phpgw_info']['user']['lastname'];
 				 
