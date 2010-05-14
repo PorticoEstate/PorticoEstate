@@ -493,7 +493,7 @@
 			$fd['p_num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => true);
 			$fd['p_entity_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['p_cat_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['location_code'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
+			$fd['location_code'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
 
 			$location_type = $this->bocommon->next_id('fm_location_type');
 
@@ -501,6 +501,8 @@
 			{
 				$fd['loc' . $i] = array('type' => 'varchar', 'precision' => 4, 'nullable' => true);
 			}
+			//Correct the first one
+			$fd['loc1'] = array('type' => 'varchar', 'precision' => 6, 'nullable' => true);
 
 			$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
 			$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
