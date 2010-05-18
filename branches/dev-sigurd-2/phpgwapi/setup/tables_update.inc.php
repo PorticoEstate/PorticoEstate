@@ -2729,6 +2729,7 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_account_delegates'); // new primary key
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_account_delegates', array(
 				'fd' => array(
+					'delegate_id' => array('type' => 'auto','precision' => 4,'nullable' => false),
 					'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 					'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 					'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
@@ -2738,10 +2739,10 @@
 					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
 					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
 				),
-				'pk' => array('account_id','owner_id','location_id'),
+				'pk' => array('delegate_id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('account_id','owner_id','location_id','data')
 			)
 		);
 
