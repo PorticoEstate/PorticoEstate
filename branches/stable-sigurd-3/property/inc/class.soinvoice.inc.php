@@ -56,9 +56,12 @@
 
 			$valid_order = array
 			(
-				'bilagsnr'		=> true,
-				'spvend_code'	=> true,
-				'fakturadato'	=> true
+				'bilagsnr'			=> true,
+				'spvend_code'		=> true,
+				'fakturadato'		=> true,
+				'oppsynsigndato'	=> true,
+				'saksigndato'		=> true,
+				'budsjettsigndato'	=> true
 			);
 
 			if(is_array($data))
@@ -94,7 +97,7 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
@@ -179,7 +182,7 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
-			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY bilagsnr,spvend_code,fakturadato ";
+			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY bilagsnr,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 			$this->db->query($sql2,__LINE__,__FILE__);

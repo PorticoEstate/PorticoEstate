@@ -73,17 +73,20 @@
 		),
 		'phpgw_account_delegates' => array(
 			'fd' => array(
+				'delegate_id' => array('type' => 'auto','precision' => 4,'nullable' => false),
 				'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'data' => array('type' => 'text','nullable' => true),
 				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
 				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
 				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
 				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
 			),
-			'pk' => array('account_id','owner_id'),
+			'pk' => array('delegate_id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('account_id','owner_id','location_id','data')
 		),
 		'phpgw_preferences' => array(
 			'fd' => array(

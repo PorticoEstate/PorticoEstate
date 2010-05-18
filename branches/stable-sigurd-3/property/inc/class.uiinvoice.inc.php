@@ -887,22 +887,36 @@
 					$datatable['headers']['header'][$i]['sortable']			= false;
 
 					//-- ordemanientos particulares para cada columna
-					if($uicols['name'][$i]=='voucher_id'):
+					if($uicols['name'][$i]=='voucher_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'bilagsnr';
 					}
-					elseif($uicols['name'][$i]=='voucher_date'):
+					else if($uicols['name'][$i]=='voucher_date')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'fakturadato';
 					}
-					elseif($uicols['name'][$i]=='vendor_id'):
+					else if($uicols['name'][$i]=='vendor_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'spvend_code';
 					}
-					endif;
+					else if($uicols['name'][$i]=='janitor')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'oppsynsigndato';
+					}
+					else if($uicols['name'][$i]=='supervisor')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'saksigndato';
+					}
+					else if($uicols['name'][$i]=='budget_responsible')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'budsjettsigndato';
+					}
 				}
 				else
 				{

@@ -2715,3 +2715,40 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.528';
+	/**
+	* Add delegates - let users manage other users to represent them
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_528()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_account_delegates'); // new primary key
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_account_delegates', array(
+				'fd' => array(
+					'delegate_id' => array('type' => 'auto','precision' => 4,'nullable' => false),
+					'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'data' => array('type' => 'text','nullable' => true),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+				),
+				'pk' => array('delegate_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('account_id','owner_id','location_id','data')
+			)
+		);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.529';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
