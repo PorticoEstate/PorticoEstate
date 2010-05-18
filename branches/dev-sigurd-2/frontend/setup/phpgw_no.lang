@@ -110,4 +110,5 @@ message	frontend	no	Melding
 comments	frontend	no	Kommentarer
 on	frontend	no	den
 messages	frontend	no	Innboks
-no_new_messages	frontend	no	Ingen nye
+no_new_messages	frontend	no	Innboks (0)
+home	frontend	no	Hjem

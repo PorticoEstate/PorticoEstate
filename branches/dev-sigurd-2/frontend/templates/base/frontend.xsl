@@ -6,7 +6,14 @@
     			<ul class="user_menu">
     				<li><em><img src="frontend/templates/base/images/16x16/user_red.png"  class="list_image" /></em><xsl:value-of select="name_of_user"/></li>
     				<li><a href="index.php?menuaction=frontend.uimessages.index" class="list_image"><em><img src="frontend/templates/base/images/16x16/email.png" class="list_image"/></em><xsl:value-of select="new_messages"/></a></li>
-    				<li><a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'logout')"/></a></li>
+    				<li>
+	    				<div style="float: left;">
+	    					<a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'logout')"/></a> 
+	    				</div>
+	    				<div style="float: right;">
+	    					<a href="home.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_open.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'home')"/></a>
+	    				</div>
+    				</li>
     			</ul>
 			</div>
 			<div id="information">
