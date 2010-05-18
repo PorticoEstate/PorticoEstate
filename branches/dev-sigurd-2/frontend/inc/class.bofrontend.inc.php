@@ -87,19 +87,22 @@
 		
 		public static function get_delegations(int $account_id)
 		{
+			if(isset($account_id))
+			{
+				$sql = 	"SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
+				
+				$db = clone $GLOBALS['phpgw']->db;
+				$db->query($sql,__LINE__,__FILE__);
+				
+				
+				$delegations = array();
+	        	while($db->next_record())
+	        	{
+	        		$delegations[] = $db->f('account_lid', true);
+	        	} 
+				return $delegations;
+			}
 			
-			$sql = 	"SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
-			
-			$db = clone $GLOBALS['phpgw']->db;
-			$db->query($sql,__LINE__,__FILE__);
-			
-			
-			$delegations = array();
-        	while($db->next_record())
-        	{
-        		$delegations[] = $db->f('account_lid', true);
-        	} 
-			return $delegations;
 		}
 		
 		public static function get_account_info(int $account_id)
@@ -124,7 +127,8 @@
 		public static function create_delegate_account(string $username, string $firstname, string $lastname, string $password)
 		{
 			
-			if (!$GLOBALS['phpgw']->accounts->exists('frontend_delegates') ) // no rental accounts already exists
+			// Create group account if needed
+			if (!$GLOBALS['phpgw']->accounts->exists('frontend_delegates') ) // No group account exist
 			{
 				$account			= new phpgwapi_group();
 				$account->lid		= 'frontend_delegates';
@@ -179,6 +183,7 @@
 							}
 						}
 					}
+					
 					return $result;
 				}
 			}
