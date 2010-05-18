@@ -51,7 +51,6 @@
 						var_dump($contract_message);
 						var_dump($from);
 						var_dump($GLOBALS['phpgw_info']['user']['fullname']);
-						die;
 						$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
 							 stripslashes(nl2br($contract_message)), '', $from, '',
 							 $from , $GLOBALS['phpgw_info']['user']['fullname'],
