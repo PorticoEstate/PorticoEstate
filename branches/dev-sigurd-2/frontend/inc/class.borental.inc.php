@@ -45,9 +45,15 @@
 					
 						$from = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$from_address}>";
 	
-						$receive_notification = true;
+						$receive_notification = false;
+						var_dump($to);
+						var_dump($title);
+						var_dump($contract_message);
+						var_dump($from);
+						var_dump($GLOBALS['phpgw_info']['user']['fullname']);
+						die;
 						$rcpt = $GLOBALS['phpgw']->send->msg('email',$to,$title,
-							 stripslashes(nl2br($contract_message)), '', $from.";", '',
+							 stripslashes(nl2br($contract_message)), '', $from, '',
 							 $from , $GLOBALS['phpgw_info']['user']['fullname'],
 							 'html', '', array() , $receive_notification);
 	
