@@ -182,6 +182,11 @@
 								frontend_bofrontend::send_system_message($email,$title,$message);
 							}
 						}
+						
+						$preferences = createObject('phpgwapi.preferences', $result);
+						$preferences->add('common','default_app','frontend');
+						$preferences->save_repository();
+						
 					}
 					
 					return $result;
