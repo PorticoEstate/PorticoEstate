@@ -77,11 +77,8 @@
 			)
 		);
 
-		var $type_app = array
-		(
-			'entity'	=> 'property',
-			'catch'		=> 'catch'
-		);
+		var $type_app = array();
+		var $type;
 
 		function property_boentity($session=false)
 		{
@@ -112,16 +109,18 @@
 			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
 			$location_code		= phpgw::get_var('location_code');
+			$this->so 			= CreateObject('property.soentity',$entity_id,$cat_id);
+			$this->type_app		= $this->so->get_type_app();
+
 			$this->type	= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
 			$this->location_code	= isset($location_code)  && $location_code ? $location_code : '';
 			
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
-			$this->so 						= CreateObject('property.soentity',$entity_id,$cat_id);
 			$this->custom 					= & $this->so->custom;
 			$this->soadmin_entity->type		= $this->type;
 			$this->soadmin_entity->type_app	= $this->type_app;
 			$this->so->type					= $this->type;
-			$this->so->type_app				= $this->type_app;
+
 
 			$this->category_dir = "{$this->type}_{$entity_id}_{$cat_id}";
 

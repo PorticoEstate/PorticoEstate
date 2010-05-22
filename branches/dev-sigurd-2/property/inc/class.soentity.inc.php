@@ -41,7 +41,13 @@
 		var $cols_extra;
 		var $cols_return_lookup;
 		var $type = 'entity';
-		var $type_app;
+
+
+		protected $type_app = array
+		(
+			'entity'	=> 'property',
+			'catch'		=> 'catch'
+		);
 
 		function __construct($entity_id='',$cat_id='')
 		{
@@ -54,6 +60,11 @@
 			$this->like			= & $this->db->like;
 			$this->entity_id	= $entity_id;
 			$this->cat_id		= $cat_id;
+		}
+
+		public function get_type_app()
+		{
+			return 	$this->type_app;
 		}
 
 		function select_status_list($entity_id,$cat_id)
@@ -909,44 +920,52 @@
 
 			$entity = array();
 
-			$sql = "SELECT * FROM fm_{$this->type}_category";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			$category = array();
-			while ($this->db->next_record())
+			foreach ($this->type_app as $type => $app)
 			{
-				$category[] = array
-				(
-					'entity_id'	=> $this->db->f('entity_id'),
-					'cat_id'	=> $this->db->f('id'),
-					'name'		=> $this->db->f('name'),
-					'descr'		=> $this->db->f('descr')
-				);
-			}
-
-			foreach($category as $entry)
-			{
-				$sql = "SELECT count(*) as hits FROM fm_{$this->type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+				$sql = "SELECT * FROM fm_{$type}_category";
 				$this->db->query($sql,__LINE__,__FILE__);
-				$this->db->next_record();
-				if($this->db->f('hits'))
+
+				$category = array();
+				while ($this->db->next_record())
 				{
-					$entity['related'][] = array
+					$category[] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
-														(
-															'menuaction'	=> "property.ui{$this->type}.index",
-															'entity_id'		=> $entry['entity_id'],
-															'cat_id'		=> $entry['cat_id'],
-															'p_entity_id'	=> $entity_id,
-															'p_cat_id' 		=> $cat_id,
-															'p_num' 		=> $id
-														)
-													),
-						'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
-						'descr'			=> $entry['descr']
+						'entity_id'	=> $this->db->f('entity_id'),
+						'cat_id'	=> $this->db->f('id'),
+						'name'		=> $this->db->f('name'),
+						'descr'		=> $this->db->f('descr')
 					);
+				}
+
+				foreach($category as $entry)
+				{
+					if($type == 'catch' && $entry['entity_id'] == 1 && $entry['cat_id'] == 1)
+					{
+						continue;
+					}
+					
+					$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->next_record();
+					if($this->db->f('hits'))
+					{
+						$entity['related'][] = array
+						(
+							'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+															(
+																'menuaction'	=> "property.ui{$type}.index",
+																'entity_id'		=> $entry['entity_id'],
+																'cat_id'		=> $entry['cat_id'],
+																'p_entity_id'	=> $entity_id,
+																'p_cat_id' 		=> $cat_id,
+																'p_num' 		=> $id,
+																'type'			=> $type
+															)
+														),
+							'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
+							'descr'			=> $entry['descr']
+						);
+					}
 				}
 			}
 
