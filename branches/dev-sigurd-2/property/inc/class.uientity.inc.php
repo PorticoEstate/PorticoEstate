@@ -1452,7 +1452,7 @@
 				'type'			=> $this->type
 			);
 
-			
+			$content_files = array();
 			for($z=0; $z<count($values['files']); $z++)
 			{
 				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
@@ -1472,11 +1472,12 @@
 			$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
-									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
 
 			$link_file_data['jasper']		= true;
+			$content_jasperfiles = array();
 			for($z=0; $z<count($values['jasperfiles']); $z++)
 			{
 				$link_file_data['file_name']	= $values['jasperfiles'][$z]['name'];
@@ -1497,8 +1498,8 @@
 			$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),sortable=>false,resizeable=>true),
-									       			array('key' => 'delete_file','label'=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
 			
 			if ($id)
