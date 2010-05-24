@@ -546,6 +546,13 @@ HTML;
 	unset($server_info_cache);
 */
 
+
+	// In case we use virtual hosts - some of them but not all with ntlm auth. 
+	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && !isset($_SERVER['REMOTE_USER']))
+	{
+		$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	}
+
 	// In the case we use a fall back (mode Half remote_user)
 	if(isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))
 	{
