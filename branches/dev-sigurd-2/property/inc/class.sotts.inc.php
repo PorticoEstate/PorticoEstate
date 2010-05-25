@@ -418,7 +418,8 @@
 
 		function read_single($id)
 		{
-			$sql = "SELECT * FROM fm_tts_tickets WHERE id=$id";
+			$id = (int) $id;
+			$sql = "SELECT * FROM fm_tts_tickets WHERE id = {$id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
