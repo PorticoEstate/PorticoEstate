@@ -70,7 +70,8 @@
 							break;
 
 						case 'string':
-							$value = htmlspecialchars($value , ENT_QUOTES, 'UTF-8');
+							$value = $value;
+					//		$value = htmlspecialchars($value , ENT_QUOTES, 'UTF-8');
 							break;
 
 						case 'object':
