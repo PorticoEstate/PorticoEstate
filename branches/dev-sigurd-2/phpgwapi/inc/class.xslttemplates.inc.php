@@ -17,12 +17,13 @@
 	}
 
 	phpgw::import_class('phpgwapi.browser');	
-	//phpgw::import_class('phpgwapi.xmlhelper');
 
 	/**
 	* Include xml tool
 	*/
-	require_once('class.xmltool.inc.php');
+	phpgw::import_class('phpgwapi.xmlhelper');
+	//phpgw::import_class('phpgwapi.xmltool');
+
 
 	/**
 	* XSLT template engine
@@ -303,15 +304,26 @@ XSLT;
 				$xmldata[$key] = $value;
 			}
 
-			$this->xmldata = var2xml('PHPGW', $xmldata);
+		//	$this->xmldata = var2xml('PHPGW', $xmldata);
 			//use simplexml - it's faster.
-		//	$this->xmldata = phpgwapi_xmlhelper::toXML($xmldata, 'PHPGW');
+			$this->xmldata = phpgwapi_xmlhelper::toXML($xmldata, 'PHPGW');
 
-			/*
+			$debug = false;
+		//	$debug = true;			
+			if ($debug)
+			{
+				//$this->xmldata = str_replace("\n",'' ,$this->xmldata);
+				$doc = new DOMDocument;
+				$doc->preserveWhiteSpace = true;
+				$doc->loadXML( $this->xmldata );
+				$doc->formatOutput = true;
+				$xml = $doc->saveXML();
+				unset($doc);
+
 				echo "<textarea cols='200' rows='20'>";
-				echo $this->xmldata;
+				echo $xml;
 				echo "</textarea><br>";
-			*/
+			}
 			
 			return $this->xmldata;
 		}
