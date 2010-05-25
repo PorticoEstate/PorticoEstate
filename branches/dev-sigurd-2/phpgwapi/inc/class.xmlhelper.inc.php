@@ -1,7 +1,13 @@
 <?php
 	/**
+	* XML helper
 	* Original work by 'djdykes' http://snipplr.com/users/djdykes/
+	* @author Brent Kelly  - Zeald.com
+	* @author Sigurd Nes <sigurdne@online.no>
+	* @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
+	* @subpackage xml
 	* @version $Id: class.xmlhelper.inc.php 4908 2010-02-24 20:49:33Z sigurd $
 	*/
 
@@ -51,7 +57,33 @@
 				else
 				{
 					// add single node.
-					$value = htmlspecialchars( $value , ENT_QUOTES, 'UTF-8');
+					switch ( strtolower(gettype($value)) )
+					{
+						case 'integer':
+						case 'boolean':
+							$value = (int) $value;
+							break;
+
+						case 'double':
+						case 'null':
+							$value = $value;
+							break;
+
+						case 'string':
+							$value = htmlspecialchars($value , ENT_QUOTES, 'UTF-8');
+							break;
+
+						case 'object':
+							$value = htmlspecialchars((string) $value , ENT_QUOTES, 'UTF-8');
+							break;
+
+						case 'resource':
+							trigger_error('Cannot package PHP resource pointers into XML', E_USER_ERROR);
+
+						default:
+							trigger_error('Invalid or unknown data type', E_USER_ERROR);
+					}
+
 					$xml->addChild( $key, $value );
 				}
 			}
