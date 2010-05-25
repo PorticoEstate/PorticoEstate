@@ -595,7 +595,7 @@
 
 			if ( is_object($acct) )
 			{
-				$id_list[$id] = (string) $acct;
+				$id_list[$id] = $acct->__toString();
 			}
 			else
 			{
