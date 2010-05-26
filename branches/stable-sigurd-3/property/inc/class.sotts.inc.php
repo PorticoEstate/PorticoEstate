@@ -86,7 +86,7 @@
 
 			if(!$this->grants)
 			{
-//				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
+				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
 				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
 			}
 

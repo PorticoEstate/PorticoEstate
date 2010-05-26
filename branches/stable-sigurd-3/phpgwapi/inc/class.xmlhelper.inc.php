@@ -70,8 +70,9 @@
 							break;
 
 						case 'string':
-							$value = $value;
-					//		$value = htmlspecialchars($value , ENT_QUOTES, 'UTF-8');
+							//TODO Work out how to solve this properly - this is done this way to stop W3C compliant links breaking
+							$value = html_entity_decode($value);
+							$value = htmlspecialchars($value , ENT_QUOTES, 'UTF-8');
 							break;
 
 						case 'object':

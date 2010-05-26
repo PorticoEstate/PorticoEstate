@@ -68,6 +68,10 @@
 			
 			foreach ($type_app as $type => $app)
 			{
+				if( !$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $app))
+				{
+					continue;
+				}
 
 				$sql = "SELECT * FROM fm_{$type}_category where loc_link=1";
 
