@@ -646,47 +646,46 @@
 			$uicols_related = $this->bo->uicols_related;
 //_debug_array($uicols_related);
 			$uicols = array();
-			$i = 0;
-			//$uicols['name'][0] = 'color';
-			$uicols['name'][$i++] = 'priority';
-			$uicols['name'][$i++] = 'id';
-			$uicols['name'][$i++] = 'bgcolor';
-			$uicols['name'][$i++] = 'subject';
-			$uicols['name'][$i++] = 'loc1_name';
-			$uicols['name'][$i++] = 'location_code';
-			$uicols['name'][$i++] = 'address';
-//			$uicols['name'][$i++] = 'user';
-			$uicols['name'][$i++] = 'assignedto';
-			$uicols['name'][$i++] = 'entry_date';
-			$uicols['name'][$i++] = 'status';
-			
+
+			$uicols['name'][] = 'priority';
+			$uicols['name'][] = 'id';
+			$uicols['name'][] = 'bgcolor';
+			$uicols['name'][] = 'subject';
+			$uicols['name'][] = 'loc1_name';
+			$uicols['name'][] = 'location_code';
+			$uicols['name'][] = 'address';
+//			$uicols['name'][] = 'user';
+			$uicols['name'][] = 'assignedto';
+			$uicols['name'][] = 'entry_date';
+			$uicols['name'][] = 'status';
+
 			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
 			{
-				$uicols['name'][$i++] = 'order_id';
-				$uicols['name'][$i++] = 'vendor';
+				$uicols['name'][] = 'order_id';
+				$uicols['name'][] = 'vendor';
 			}
 
 			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
 			{
-				$uicols['name'][$i++] = 'estimate';
-				$uicols['name'][$i++] = 'actual_cost';
+				$uicols['name'][] = 'estimate';
+				$uicols['name'][] = 'actual_cost';
 			}
 
 			foreach($uicols_related as $related)
 			{
-				$uicols['name'][$i++] = $related;			
+				$uicols['name'][] = $related;			
 			}
 
 			if( $this->_show_finnish_date )
 			{
-				$uicols['name'][$i++] = 'finnish_date';
-				$uicols['name'][$i++] = 'delay';
+				$uicols['name'][] = 'finnish_date';
+				$uicols['name'][] = 'delay';
 			}
 
-			$uicols['name'][$i++] = 'child_date';
-			$uicols['name'][$i++] = 'link_view';
-			$uicols['name'][$i++] = 'lang_view_statustext';
-			$uicols['name'][$i++] = 'text_view';
+			$uicols['name'][] = 'child_date';
+			$uicols['name'][] = 'link_view';
+			$uicols['name'][] = 'lang_view_statustext';
+			$uicols['name'][] = 'text_view';
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -696,17 +695,14 @@
 			{
 				$status['X'] = array
 				(
-		//			'bgcolor'			=> '#5EFB6E',
 					'status'			=> lang('closed'),
 				);
 				$status['O'] = array
 				(
-		//			'bgcolor'			=> '#5EFB6E',
 					'status'			=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
 				);
 				$status['C'] = array
 				(
-		//			'bgcolor'			=> '#5EFB6E',
 					'status'			=> lang('closed'),
 				);
 
@@ -716,7 +712,6 @@
 				{
 					$status["C{$custom['id']}"] = array
 					(
-		//				'bgcolor'			=> $custom['color'] ? $custom['color'] : '',
 						'status'			=> $custom['name'],
 					);
 				}
@@ -1905,7 +1900,10 @@
 				$receipt = $this->bo->update_ticket($values,$id);
 
 				if ( (isset($values['send_mail']) && $values['send_mail']) 
-				|| (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']));
+				|| (isset($this->bo->config->config_data['mailnotification'])
+						&& $this->bo->config->config_data['mailnotification']
+						&& $this->bo->fields_updated
+					))
 				{
 					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 				}

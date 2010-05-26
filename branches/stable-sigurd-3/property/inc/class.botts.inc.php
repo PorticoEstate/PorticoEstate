@@ -880,6 +880,13 @@
 				if ($validator->check_email_address($prefs['email']))
 				{
 		            // Email address is technically valid
+					// avoid problems with the delimiter in the send class
+		            if(strpos($account_name,','))
+		            {
+		            	$_account_name = explode(',', $account_name);
+		            	$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
+		            }
+		            
 					$toarray[] = "{$account_name}<{$prefs['email']}>";
 				}
 				else
