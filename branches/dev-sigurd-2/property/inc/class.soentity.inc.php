@@ -922,6 +922,11 @@
 
 			foreach ($this->type_app as $type => $app)
 			{
+				if( !$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $app))
+				{
+					continue;
+				}
+
 				$sql = "SELECT * FROM fm_{$type}_category";
 				$this->db->query($sql,__LINE__,__FILE__);
 
