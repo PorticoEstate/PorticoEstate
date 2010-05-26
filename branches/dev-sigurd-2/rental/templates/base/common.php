@@ -131,6 +131,10 @@
 					$populate = phpgw::get_var('populate_form'); 
 					echo isset($populate)? 'initialLoad: false,':''
 				?>
+				<?php
+					$initLoad = phpgw::get_var('initial_load'); 
+					echo ($initLoad == 'no')? 'initialLoad: false,':''
+				?>
 				MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
 				MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
 				MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
