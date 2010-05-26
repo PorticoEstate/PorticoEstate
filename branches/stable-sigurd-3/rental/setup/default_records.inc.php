@@ -75,7 +75,7 @@ $loc_id_out			= $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY.OUT',			'Fiel
 // Default groups and users
 $GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
 $GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
-$GLOBALS['phpgw']->acl->enable_inheritance = true;
+//$GLOBALS['phpgw']->acl->enable_inheritance = true;
 
 
 $modules = array
@@ -299,6 +299,13 @@ $asyncservice->set_timer(
 	array('day' => "*/1"),
 	'rental_populate_workbench_notifications',
 	'rental.sonotification.populate_workbench_notifications',
+	null
+	);
+	
+$asyncservice->set_timer(
+	array('day' => "*/1"),
+	'rental_run_adjustments',
+	'rental.soadjustment.run_adjustments',
 	null
 	);
 
