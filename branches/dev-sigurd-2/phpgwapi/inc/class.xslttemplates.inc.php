@@ -22,7 +22,7 @@
 	* Include xml tool
 	*/
 	phpgw::import_class('phpgwapi.xmlhelper');
-	//phpgw::import_class('phpgwapi.xmltool');
+	phpgw::import_class('phpgwapi.xmltool');
 
 
 	/**
@@ -304,9 +304,9 @@ XSLT;
 				$xmldata[$key] = $value;
 			}
 
-		//	$this->xmldata = var2xml('PHPGW', $xmldata);
+			$this->xmldata = var2xml('PHPGW', $xmldata);
 			//use simplexml - it's faster.
-			$this->xmldata = phpgwapi_xmlhelper::toXML($xmldata, 'PHPGW');
+		//	$this->xmldata = phpgwapi_xmlhelper::toXML($xmldata, 'PHPGW');
 
 			$debug = false;
 		//	$debug = true;			
