@@ -66,7 +66,7 @@ class rental_socomposite extends rental_socommon
 			case "both":
 				break;
 		}
-		$special_query = false;
+		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 		switch($filters['has_contract']){
 			case "has_contract":
