@@ -29,6 +29,7 @@
 		protected $term_id;
 		protected $term_label;
 		protected $billing_title;
+		protected $serial_number;
 		
 		public static $so;
 		
@@ -210,6 +211,14 @@
 		}
 	
 		public function get_term_id(){ return $this->term_id; }
+		
+		public function set_serial_number($serial_number)
+		{
+			$this->serial_number = $serial_number;
+		}
+	
+		public function get_serial_number(){ return $this->serial_number; }
+		
 		
 		public function set_term_label($term_label)
 		{
@@ -458,7 +467,8 @@
 				'composite_name'	=> $this->get_composite_names(),
 				'party_name'		=> $party_name,
 				'total_sum'			=> $this->get_total_sum(),
-				'old_contract_id'	=> $this->get_old_contract_id()
+				'old_contract_id'	=> $this->get_old_contract_id(),
+				'serial_number'		=> $this->get_serial_number()
 			);
 		}
 		

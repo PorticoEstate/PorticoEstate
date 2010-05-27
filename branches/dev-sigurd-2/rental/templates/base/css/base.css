@@ -1,3 +1,34 @@
+#invoice_details { float: left; width: 30%; }
+#list_navigation { float: left; width: 30%; }
+#user_messages { float: right; width: 40%;}
+#contract_lists {width: 100%; float: left; background-color: #EFEFEF; border: 1px solid #ABABAB; padding-left: 1em; margin-top: 1em;}
+form#invoice_run {margin: 2em;}
+form#invoice_run th { 
+	background-color: #CDCDCD;
+	padding: 5px;
+	border: 1px solid #ABABAB;
+	 font-weight: bolder;
+	}
+
+div#contract_lists td {
+	margin:0;
+	padding:4px 10px;
+}
+form#invoice_run td { 
+	border: 1px solid #CDCDCD;
+	}
+
+
+div#invoice_details dt{
+	float:left;
+	 font-weight: bolder;
+	 margin-right: 1em;
+	}
+
+div#invoice_details dd{
+	
+	}
+
 div.content {
 	margin: 2em;	
 }

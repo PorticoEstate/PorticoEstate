@@ -84,6 +84,19 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
+	$test[] = '0.1.0.6';
+	function rental_upgrade0_1_0_6()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_invoice','serial_number',array(
+			'type' => 'int', 
+			'precision' => '8',
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.7';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
 	
 /*
  * 	$test[] = '0.1.0.1';

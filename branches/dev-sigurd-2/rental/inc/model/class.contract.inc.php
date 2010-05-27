@@ -116,6 +116,16 @@
 			$this->billing_start_date = $date;
 		}
 		
+		public function set_next_bill_timestamp($next_bill_timestamp)
+		{
+			$this->next_bill_timestamp = $next_bill_timestamp;
+		}
+		
+		public function get_next_bill_timestamp()
+		{
+			return $this->next_bill_timestamp;
+		}
+		
 		public function get_executive_officer_id() {
 			return $this->executive_officer_id;
 		}
