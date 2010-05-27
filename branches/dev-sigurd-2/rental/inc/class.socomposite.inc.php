@@ -66,6 +66,20 @@ class rental_socomposite extends rental_socommon
 			case "both":
 				break;
 		}
+		$special_query = false;
+		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		switch($filters['has_contract']){
+			case "has_contract":
+				$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $ts_query AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $ts_query))))";
+				$special_query=true;
+				break;
+			case "has_no_contract":
+				$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $ts_query AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $ts_query))))))"; 
+				$special_query=true;
+				break;
+			case "both":
+				break;
+		}
 
 		if(isset($filters['not_in_contract'])){
 			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
@@ -95,17 +109,25 @@ class rental_socomposite extends rental_socommon
 		$tables = "rental_composite";
 		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
 		$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
+		$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';
 		}
 		else
 		{
-			$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+			if($special_query)
+			{
+				$cols = 'DISTINCT(rental_composite.id) AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+			}
+			else
+			{
+				$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+			}
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-		
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
