@@ -79,6 +79,7 @@
 					array($GLOBALS['phpgw_info']['flags']['currentapp']);
 			}
 
+			$results = array();
 			/* First include the ordered apps hook file */
 			foreach($order as $appname)
 			{

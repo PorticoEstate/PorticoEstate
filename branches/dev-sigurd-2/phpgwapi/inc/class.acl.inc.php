@@ -1101,7 +1101,7 @@
 		{
 			static $cache_accountid;
 
-			if($cache_accountid[$accountid])
+			if(isset($cache_accountid[$accountid]) && $cache_accountid[$accountid])
 			{
 				$account_id = $cache_accountid[$accountid];
 			}

@@ -648,6 +648,14 @@
 				@rename("{$basedir}{$group->old_loginid}", "{$basedir}/{$group->lid}");
 			}
 
+			$GLOBALS['hook_values'] = array
+			(
+				'account_id'	=> $group->id,
+				'account_lid'	=> $group->lid,
+			);
+
+			$GLOBALS['phpgw']->hooks->process('editgroup');
+
 			return $group->id;
 		}
 
@@ -720,6 +728,15 @@
 				$apps->save_repository();
 			}
 
+			$GLOBALS['hook_values'] = array
+			(
+				'account_id'	=> $user->id,
+				'account_lid'	=> $user->lid,
+				'new_passwd'	=> $user->passwd
+			);
+
+			$GLOBALS['phpgw']->hooks->process('editaccount');
+
 			return true;
 		}
 
@@ -779,6 +796,15 @@
 			{
 				$this->add_user2Group($member, $group->id);
 			}
+
+			$GLOBALS['hook_values'] = array
+			(
+				'account_id'	=> $group->id,
+				'account_lid'	=> $group->lid,
+			);
+
+			$GLOBALS['phpgw']->hooks->process('addgroup');
+
 			return $group->id;
 		}
 

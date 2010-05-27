@@ -33,6 +33,7 @@
 			foreach( $data as $key => $value )
 			{
 				// no numeric keys in our xml please!
+				$numeric = 0;
 				if ( is_numeric( $key ) )
 				{
 					$numeric = 1;
