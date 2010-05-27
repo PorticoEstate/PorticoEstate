@@ -24,6 +24,14 @@
     <td>{lang_currency_suffix}:</td>
     <td><input name="newsettings[currency_suffix]" value="{value_currency_suffix}"></td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_serial_start}:</td>
+    <td><input name="newsettings[serial_start]" value="{value_serial_start}"></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_serial_stop}:</td>
+    <td><input name="newsettings[serial_stop]" value="{value_serial_stop}"></td>
+   </tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->

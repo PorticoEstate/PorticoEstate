@@ -33,6 +33,7 @@
 			foreach( $data as $key => $value )
 			{
 				// no numeric keys in our xml please!
+				$numeric = 0;
 				if ( is_numeric( $key ) )
 				{
 					$numeric = 1;
@@ -138,13 +139,37 @@
 			return $arr;
 		}
 
-		// determine if a variable is an associative array
-		// Returns true if array has elements with non-numeric keys
+		/**
+		 * determine if a variable is an associative array
+		 * Returns true if array has elements with non-numeric keys
+		 *
+		 * @param array $array
+		 * @return bool
+		 */
+
 		public static function is_assoc($array)
 		{
-			return (is_array($array) && (0 !== count(array_diff_key($array, array_keys(array_keys($array)))) || count($array)==0));
-		}
+			$candidates = array();
+			//find candidates 
+			if(is_array($array))
+			{
+				$candidates = array_diff_key($array, array_keys(array_keys($array)));
+			}
 
+			//Final check
+			if(($candidates && (0 !== count($candidates) || count($array)==0)))
+			{
+				foreach ($candidates as $key => $data)
+				{
+					if(! is_numeric( $key ))
+					{
+						return true;
+					}
+				}
+			}
+		// This one won't work if the start key is <> 0 - and there is holes..
+		//	return (is_array($array) && (0 !== count(array_diff_key($array, array_keys(array_keys($array)))) || count($array)==0));
+		}
 		
 		/**
 		* Not for use with big dataset

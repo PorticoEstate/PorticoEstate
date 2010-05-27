@@ -197,7 +197,6 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
 	(
-		'deleteaccount',
 		'manual',
 		'settings',
 		'help',
@@ -206,9 +205,14 @@
 		'cat_delete'	=> 'property.cat_hooks.cat_delete',
 		'cat_edit'		=> 'property.cat_hooks.cat_edit',
 		'config',
-		'home'
+		'home',
+		'addaccount'	=> 'property.hook_helper.clear_userlist',
+		'editaccount'	=> 'property.hook_helper.clear_userlist',
+		'deleteaccount'	=> 'property.hook_helper.clear_userlist',
+		'addgroup'		=> 'property.hook_helper.clear_userlist',
+		'deletegroup'	=> 'property.hook_helper.clear_userlist',
+		'editgroup'		=> 'property.hook_helper.clear_userlist'
 	);
-
 
 	/* Dependencies for this app to work */
 	$setup_info['property']['depends'][] = array

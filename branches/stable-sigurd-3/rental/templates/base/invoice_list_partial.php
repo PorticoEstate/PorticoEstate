@@ -37,6 +37,11 @@
 	    sortable: true
 	},
 	{
+		key: "serial_number",
+		label: "<?php echo lang('serial_number') ?>",
+	    sortable: true
+	},
+	{
 		key: "actions",
 		hidden: true
 	},

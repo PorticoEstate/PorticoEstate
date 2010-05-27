@@ -312,7 +312,7 @@
 
 			$groups = $values['account_groups'];
 			$acls = array();
-			if ( $values['changepassword'] )
+			if ( isset($values['changepassword']) && $values['changepassword'] )
 			{
 				$acls[] = array
 				(
@@ -321,7 +321,7 @@
 					'rights'	=> 1
 				);
 			}
-			if ( $values['anonymous'] )
+			if ( isset($values['anonymous']) && $values['anonymous'] )
 			{
 				$acls[] = array
 				(

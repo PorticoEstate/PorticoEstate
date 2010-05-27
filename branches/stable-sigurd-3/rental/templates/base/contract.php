@@ -217,8 +217,8 @@ function loadDatatables(currTab){
 						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'date_start' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'"})',
-						'date_end' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'"})',
+						'date_start' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'",calendarOptions:{navigator:{strings:{month:"'.lang('month').'",year:"'.lang('year').'",submit:"'.lang('ok').'",cancel:"'.lang('cancel').'"},initialFocus:"month"},start_weekday:1,LOCALE_WEEKDAYS:"short",MONTHS_LONG:'.lang('calendar_months').',WEEKDAYS_SHORT:'.lang('calendar_weekdays').'}})',
+						'date_end' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'",calendarOptions:{navigator:{strings:{month:"'.lang('month').'",year:"'.lang('year').'",submit:"'.lang('ok').'",cancel:"'.lang('cancel').'"},initialFocus:"month"},start_weekday:1,LOCALE_WEEKDAYS:"short",MONTHS_LONG:'.lang('calendar_months').',WEEKDAYS_SHORT:'.lang('calendar_weekdays').'}})',
 						'is_one_time' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 					);
 				}

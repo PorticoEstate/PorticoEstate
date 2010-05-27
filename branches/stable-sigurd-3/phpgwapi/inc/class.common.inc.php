@@ -1569,7 +1569,10 @@ HTML;
 				return;
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . '/msgbox');
+			if(!isset($GLOBALS['phpgw']->xslttpl->xslfiles['msgbox']))
+			{
+				$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . '/msgbox');
+			}
 
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;
 		//	$GLOBALS['phpgw']->translation->translator_helper = '';

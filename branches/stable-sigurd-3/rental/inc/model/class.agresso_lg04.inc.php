@@ -74,6 +74,42 @@ class rental_agresso_lg04 implements rental_exportable
 		$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; 
 		// We need all invoices for this billing
 		$invoices = rental_soinvoice::get_instance()->get(null, null, 'id', true, null, null, array('billing_id' => $this->billing_job->get_id()));
+		
+		
+		$config	= CreateObject('phpgwapi.config','rental');
+		$config->read();
+		$serial_config_start = $config->config_data['serial_start'];
+		$serial_config_stop =  $config->config_data['serial_stop'];
+		
+		
+		if(	isset($serial_config_start) && is_numeric($serial_config_start) &&
+			isset($serial_config_stop) && is_numeric($serial_config_stop))
+		{
+			$max_serial_number_used = rental_soinvoice::get_instance()->get_max_serial_number_used($serial_config_start, $serial_config_stop);
+			
+			if(isset($max_serial_number_used) && is_numeric($max_serial_number_used) && $max_serial_number_used > 0 )
+			{
+				$serial_number = $max_serial_number_used + 1;
+			}
+			else
+			{
+				$serial_number = $serial_config_start;
+			}
+			
+			$number_left_in_sequence = $serial_config_stop - $serial_number;
+			
+			if($number_left_in_sequence < count($invoices))
+			{
+				//var_dump("Out of sequence numbers");
+				//Give error message (out of sequence numbers) and return
+			}
+		}
+		else
+		{
+			//var_dump("Not configured properly");
+			//Give error message (not configured properly) and return
+		}
+		
 		foreach($invoices as $invoice) // Runs through all invoices
 		{
 			// We need all price items in the invoice
@@ -109,8 +145,19 @@ class rental_agresso_lg04 implements rental_exportable
 				$invoice->get_service_id(), 
 				$building_location_code, 
 				$invoice->get_project_id(), 
-				$composite_name
+				$composite_name,
+				$serial_number
 			);
+			$invoice->set_serial_number($serial_number);
+			$serial_number++;
+		}
+		
+		$so_invoice = rental_soinvoice::get_instance();
+		
+		//Store invoices with serial numbers
+		foreach($invoices as $invoice) // Runs through all invoices
+		{
+			$so_invoice->store($invoice);
 		}
 	}
 	
@@ -118,10 +165,10 @@ class rental_agresso_lg04 implements rental_exportable
 	 * Builds one single order of the Agresso file.
 	 * 
 	 */
-	protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text)
+	protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number)
 	{
 		
-		$order_id = $order_id + 39500000;
+		//$order_id = $order_id + 39500000;
 		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		$order = array();
 		
@@ -180,7 +227,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%120s", '')										// 	62		markings
 			.sprintf("%-17s", '')										// 	63		obs_date
 			.sprintf("%-17s", '')										// 	64		order_date
-			.sprintf("%09.9s", $order_id)								// 	65		order_id				DATA
+			.sprintf("%09.9s", $serial_number)							// 	65		order_id				DATA
 			.'FS'														// 	66		order_type				DATA
 			.'IP'														// 	67		pay_method				DATA
 																		//	(68)
@@ -246,7 +293,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%240s", '')									//	56-57	just white space..
 				.sprintf("%10s", '')									// 	58		lot
 				.sprintf("%215s", '')									//	59-64	just white space..
-				.sprintf("%09.9s", $order_id)							// 	65	order_id					DATA
+				.sprintf("%09.9s", $serial_number)							// 	65	order_id					DATA
 				.sprintf("%4s", '')										//	66-67	just white space..
 																		//	(68)
 				.sprintf("%02s", '')
@@ -282,7 +329,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%692s", '')									//	22-53	just white space..
 				.sprintf("%04.4s", $item_counter)						// 	54		line_no					DATA
 				.sprintf("%469s", '')									//	55-64	just white space..
-				.sprintf("%09.9s", $order_id)							// 	65		order_id				DATA
+				.sprintf("%09.9s", $serial_number)						// 	65		order_id				DATA
 				.sprintf("%110s", '')									//	66-74	just white space..
 				.sprintf("%08s", 1)										// 	75		sequence_no				DATA
 				.sprintf("%28s", '')									//	76-77	just white space..

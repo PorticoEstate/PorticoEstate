@@ -21,8 +21,10 @@ if($list_form)
 						$url_add_on .= "&amp;invoice_id={$invoices[$keys[0]]->get_id()}";
 						foreach($invoices as $invoice)
 						{
+							$serial = $invoice->get_serial_number();
+							$serial_number = isset($serial) ?  " - ".$invoice->get_serial_number() : "";
 							?>
-							<option value="<?php echo $invoice->get_id() ?>"><?php echo "{$invoice->get_billing_title()} - " . date($date_format, $invoice->get_timestamp_created()) . " - " . number_format($invoice->get_total_sum(), $decimal_places, $decimal_separator, $thousands_separator) . " {$currency_suffix}" ?></option>
+							<option value="<?php echo $invoice->get_id() ?>"><?php echo "{$invoice->get_billing_title()} - " . date($date_format, $invoice->get_timestamp_created()) . " - " . number_format($invoice->get_total_sum(), $decimal_places, $decimal_separator, $thousands_separator) . " {$currency_suffix}".$serial_number ?></option>
 							<?php
 						}
 					}

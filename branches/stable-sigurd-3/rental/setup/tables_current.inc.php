@@ -296,7 +296,9 @@
 				'title'				=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'deleted'			=> array('type' => 'bool', 'default' => 'false'),
 				'export_format'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'export_data'		=> array('type' => 'blob', 'nullable' => true)
+				'export_data'		=> array('type' => 'blob', 'nullable' => true),
+				'serial_start'		=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'serial_end'		=> array('type' => 'int', 'precision' => '8', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -339,7 +341,8 @@
 				'account_out'		=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
 				'service_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true), // Tjeneste
 				'responsibility_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true), // Ansvar
-				'project_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'project_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'serial_number'		=> array('type' => 'int', 'precision' => '8', 'nullable' => true)		//Sekvensnummer (Agresso)
 			),
 			'pk' => array('id'),
 			'fk' => array(

@@ -60,7 +60,7 @@ class rental_soinvoice extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rental_invoice.id, rental_invoice.contract_id, rental_invoice.billing_id, rental_invoice.party_id, timestamp_created, rental_invoice.timestamp_start, timestamp_end, rental_invoice.total_sum, total_area, header, rental_invoice.account_in, rental_invoice.account_out, rental_invoice.service_id, rental_invoice.responsibility_id, rental_invoice.project_id, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id, party.is_inactive as party_in_active, contract.old_contract_id, rental_billing.title as billing_title, rental_billing_info.term_id, rental_billing_info.month';
+			$cols = 'rental_invoice.id, rental_invoice.contract_id, rental_invoice.billing_id, rental_invoice.party_id, timestamp_created, rental_invoice.timestamp_start, timestamp_end, rental_invoice.total_sum, total_area, header, rental_invoice.account_in, rental_invoice.account_out, rental_invoice.service_id, rental_invoice.responsibility_id, rental_invoice.project_id, rental_invoice.serial_number, rental_composite.name AS composite_name, party.identifier AS party_identifier, party.first_name AS party_first_name, party.last_name AS party_last_name, party.title AS party_title, party.company_name AS party_company_name, party.department AS party_department, party.address_1 AS party_address_1, party.address_2 AS party_address_2, party.postal_code AS party_postal_code, party.place AS party_postal_code, party.phone AS party_phone, party.mobile_phone AS party_mobile_phone, party.fax AS party_fax, party.email AS party_email, party.url AS party_url, party.account_number AS party_account_number, party.reskontro AS party_reskontro, party.location_id AS party_location_id, party.is_inactive as party_in_active, contract.old_contract_id, rental_billing.title as billing_title, rental_billing_info.term_id, rental_billing_info.month';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			if($sort_field == null || $sort_field == '') // Sort field not set
 			{
@@ -91,6 +91,7 @@ class rental_soinvoice extends rental_socommon
 			$invoice->set_term_id($this->unmarshal($this->db->f('term_id'), 'int'));
 			$invoice->set_month($this->unmarshal($this->db->f('month'), 'int'));
 			$invoice->set_billing_title($this->unmarshal($this->db->f('billing_title'), 'string'));
+			$invoice->set_serial_number($this->unmarshal($this->db->f('serial_number'), 'int'));
 			$party = new rental_party(	$this->unmarshal($this->db->f('party_id'),'int'));
 			$party->set_account_number( $this->unmarshal($this->db->f('party_account_number'), 'string'));
             $party->set_address_1(      $this->unmarshal($this->db->f('party_address_1'), 'string'));
@@ -194,10 +195,32 @@ class rental_soinvoice extends rental_socommon
 			'account_out = '		. $this->marshal($invoice->get_account_out(), 'string'),
 			'service_id = '			. $this->marshal($invoice->get_service_id(), 'string'),
 			'responsibility_id = '	. $this->marshal($invoice->get_responsibility_id(), 'string'),
-			'project_id = '			. $this->marshal($invoice->get_project_id(), 'string')
+			'project_id = '			. $this->marshal($invoice->get_project_id(), 'string'),
+			'serial_number = '		. $this->marshal($invoice->get_serial_number(), 'int')
 		);
 		$result = $this->db->query('UPDATE rental_invoice SET ' . join(',', $values) . " WHERE id=" . $invoice->get_id(), __LINE__,__FILE__);
 	}
 	
+	public function get_max_serial_number_used($serial_config_start, $serial_config_stop)
+	{
+		$query = "SELECT MAX(serial_number) AS max_serial FROM rental_invoice WHERE serial_number > ({$serial_config_start} - 1) AND serial_number < ({$serial_config_stop} + 1)";
+		$this->db->query($query);
+		if($this->db->next_record())
+		{
+			return $this->unmarshal($this->db->f('max_serial', true), 'int');
+		}
+		return false;
+	}
+	
+	public function number_of_open_and_exported_rental_billings($location_id)
+	{
+		$query = "SELECT COUNT(id) AS open_and_exported FROM rental_billing WHERE export_data IS NOT NULL AND timestamp_commit IS NULL AND deleted IS FALSE AND location_id = {$location_id}";
+		$this->db->query($query);
+		if($this->db->next_record())
+		{
+			return $this->unmarshal($this->db->f('open_and_exported', true), 'int');
+		}
+		return false;
+	}
 }
 ?>

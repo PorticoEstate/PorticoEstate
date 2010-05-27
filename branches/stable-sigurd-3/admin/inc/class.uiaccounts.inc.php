@@ -662,7 +662,7 @@
 			{
 				if(isset($group_members[$id]))
 				{
-					$member_list[$id] = array
+					$member_list[] = array
 					(
 						'account_id'	=> $id,
 						'account_name'	=> $user->__toString()
@@ -670,7 +670,7 @@
 				}
 				else
 				{
-					$user_list[$id] = array
+					$user_list[] = array
 					(
 						'account_id'	=> $id,
 						'account_name'	=> $user->__toString()
@@ -1106,6 +1106,14 @@
 			{
 				$group_list[$group->id]['selected'] = in_array($group->id, $group_ids);
 			}
+
+			$_group_list = array();
+			
+			foreach($group_list as $group)
+			{
+				$_group_list[] = $group;
+			}
+			unset($group_list);
 			unset($group_ids);
 
 			/* create list of available apps */
@@ -1207,7 +1215,7 @@
 				'anonymous'				=> (int) $user_data['anonymous'],
 				'changepassword'		=> (int) $user_data['changepassword'],
 				'expires_never'			=> $user_data['expires'] == -1,
-				'group_list'			=> $group_list,
+				'group_list'			=> $_group_list,
 				'app_list'				=> $app_list,
 				'url_contacts'			=> $url_contacts,
 				'url_contacts_text'		=> $url_contacts_text,

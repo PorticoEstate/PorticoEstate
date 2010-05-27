@@ -55,7 +55,7 @@
 		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -105,11 +105,13 @@
 	$q = false;
 	$s_type = false;
 	$status = false;
+	$status_contract = false;
 	if(isset($populate))
 	{
 		$q = phpgwapi_cache::session_get('rental', 'composite_query');
 		$s_type = phpgwapi_cache::session_get('rental', 'composite_search_type');
 		$status = phpgwapi_cache::session_get('rental', 'composite_status');
+		$status_contract = phpgwapi_cache::session_get('rental', 'composite_status_contract');
 	} 
 ?>
 	<fieldset>
@@ -136,6 +138,11 @@
 			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('in_operation') ?></option>
 			<option value="non_active" <?php echo ($status == 'non_active') ? 'selected' : ''?>><?php echo lang('out_of_operation') ?></option>
 			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+		</select>
+		<select name="has_contract" id="<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites">
+			<option value="both" <?php echo ($status_contract == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="has_contract" <?php echo ($status_contract == 'has_contract') ? 'selected' : ''?>><?php echo lang('composite_has_contract') ?></option>
+			<option value="has_no_contract" <?php echo ($status_contract == 'has_no_contract') ? 'selected' : ''?>><?php echo lang('composite_has_no_contract') ?></option>
 		</select>
 	</fieldset>
 </form>

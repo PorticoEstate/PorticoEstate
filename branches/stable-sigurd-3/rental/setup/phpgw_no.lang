@@ -67,7 +67,7 @@ billing_terms	rental	no	Terminer
 billing_unit	rental	no	Ansvar-/tjenestested
 billing_removed_KF_contract	rental	no	Fjernet KF-kontrakt med id
 billing_removed_contract_part_1	rental	no	Fjernet kontrakt
-billing_removed_contract_part_2	rental	no	med total pris = 0
+billing_removed_contract_part_2	rental	no	med total pris lik 0 kroner
 bill	rental	no	Faktura
 bill2	rental	no	Fakturér
 building	rental	no	Bygg
@@ -90,6 +90,8 @@ company_name	rental	no	Foretak
 composite_name	rental	no	Navn på leieobjekt
 composite	rental	no	Leieobjekt
 composite_back	rental	no	Leieobjektsliste
+composite_has_contract	rental	no	Leieobjekt med aktive kontrakter
+composite_has_no_contract	rental	no	Leieobjekt uten aktive kontrakter
 contract	rental	no	Kontrakt
 contract_back	rental	no	Kontraktsliste
 contract_id	rental	no	Kontraktsnummer
@@ -102,6 +104,11 @@ contracts_under_dismissal	rental	no	Kontrakter under avslutning
 contract_under_dismissal	rental	no	Under avslutning
 contract_notifications	rental	no	Kontraktens varsler
 contract_notification_status	rental	no	Status
+contracts_removed	rental	no	Kontrakter som er fjernet fra fakturakjøringen
+contracts_with_one_time	rental	no	Kontrakter med engangsbeløp
+contracts_in_cycle	rental	no	Kontrakter som følger vanlig fakturasyklus
+contracts_out_of_cycle	rental	no	Kontrakter som avviker fra vanlig faktureringssyklus
+contracts_not_billed_before	rental	no	Kontrakter som ikke er fakturert tidligere
 contract_status	rental	no	Status
 contract_type_eksternleie	rental	no	Eksternleie
 contract_type_eksternleie_feste	rental	no	Feste (1520)
@@ -293,6 +300,7 @@ month 9	rental	no	september
 month 10	rental	no	oktober
 month 11	rental	no	november
 month 12	rental	no	desember
+month 0 capitalized	rental	no	Ikke tilgjengelig
 month 1 capitalized	rental	no	Januar
 month 2 capitalized	rental	no	Februar
 month 3 capitalized	rental	no	Mars
@@ -340,6 +348,10 @@ old_contract_id	rental	no	Gammelt kontraktsnummer
 ODS	rental	no	ODS
 One or more price items are missing Agresso ids.	rental	no	Ett eller flere priselementer mangler Agresso-id.
 One or more price items have an invalid Agresso id. Id must consist of one capital letter and three digits.	rental	no	Ett eller flere priselementer har en ugyldig Agresso-id. Iden må bestå av én stor bokstav og tre tall.
+only_one_time	rental	no	Status
+only_one_time_yes	rental	no	Avviker fra vanlig faktureringssyklus, kun engangsbeløp
+only_one_time_no	rental	no	Følger vanlig fakturasyklus
+open_and_exported_exist	rental	no	En fakturakjøring som ikke er avsluttet med eksportert til Agresso-format eksisterer for dette ansvarsområdet. Denne må enten slettes eller avsluttes før denne fakturakjøringen kan eksportes.
 organisation_number	rental	no	Organisasjonsnummer
 organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
@@ -348,7 +360,7 @@ other_guarantee	rental	no	Annen garanti
 others	rental	no	Annet
 out_of_operation	rental	no	Ikke i drift
 overridden_address	rental	no	Overstyrt adresse
-override	rental	no	Bruk fakturastart
+override	rental	no	Fakturer fra
 panels	rental	no	Vinduer
 part_of_contract	rental	no	Inngår i kontrakt av typen
 parties	rental	no	Kontraktsparter
@@ -433,6 +445,8 @@ selected_composites	rental	no	Valgte leieobjekter
 selected_parties	rental	no	Valgte kontraktsparter
 selected_price_items	rental	no	Valgte priselementer
 serial	rental	no	Løpenummer
+serial start	rental	no	Start - ordrenummerserie
+serial stop	rental	no	Slutt - ordrenummerserie
 service	rental	no	Tjeneste
 service_id	rental	no	Tjeneste
 Service id must be 5 characters.	rental	no	Tjeneste må være fem tegn.
@@ -468,6 +482,7 @@ t_new_contract	rental	no	Ny kontrakt
 t_new_party	rental	no	Opprett ny kontraktspart
 t_new_price_item	rental	no	Opprett nytt priselement
 to	rental	no	Til
+to_the_top	rental	no	Til toppen
 Total sum	rental	no	Totalt beløp
 total_price	rental	no	Total pris
 type	rental	no	Type

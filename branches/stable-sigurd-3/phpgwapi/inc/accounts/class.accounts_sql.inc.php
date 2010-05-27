@@ -229,6 +229,8 @@
 				{
 					$sql = 'DELETE FROM phpgw_group_map'
 						. " WHERE group_id = {$account_id}";
+
+					$GLOBALS['phpgw']->hooks->process('deletegroup');
 				}
 				else
 				{
