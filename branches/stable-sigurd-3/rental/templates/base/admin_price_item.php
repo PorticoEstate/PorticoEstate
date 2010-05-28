@@ -90,6 +90,16 @@
 				<?php echo $price_item->get_adjustable_text()?>
 			<?php }?>
 		</dd>
+		<dt>
+			<label for="standard"><?php echo lang('is_standard') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+					<input type="checkbox" name="standard" id="standard"<?php echo $price_item->is_standard() ? ' checked="checked"' : '' ?>/>
+			<?php }else{?>
+				<?php echo $price_item->get_standard_text()?>
+			<?php }?>
+		</dd>
 	</dl>
 
 	<?php

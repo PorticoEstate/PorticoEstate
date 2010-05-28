@@ -97,6 +97,19 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
+	$test[] = '0.1.0.7';
+	function rental_upgrade0_1_0_7()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_price_item','standard',array(
+			'type' => 'bool', 
+			'nullable' => true,
+			'default' => 'false'
+		));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.8';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
 	
 /*
  * 	$test[] = '0.1.0.1';

@@ -41,6 +41,7 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 		$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 		$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+		$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 		$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
@@ -68,6 +69,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
@@ -96,6 +98,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
@@ -133,6 +136,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
 			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			
@@ -211,11 +215,12 @@ class rental_soprice_item extends rental_socommon
 			($price_item->is_area() ? "true" : "false"),
 			($price_item->is_inactive() ? "true" : "false"),
 			($price_item->is_adjustable() ? "true" : "false"),
+			($price_item->is_standard() ? "true" : "false"),
 			str_replace(',','.',$price),
 			$price_item->get_responsibility_id()
 		);
 		
-		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'price', 'responsibility_id');
+		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'standard', 'price', 'responsibility_id');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 		
@@ -243,6 +248,7 @@ class rental_soprice_item extends rental_socommon
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
 			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
 			'is_adjustable = ' . ($price_item->is_adjustable() ? "true" : "false"),
+			'standard = ' . ($price_item->is_standard() ? "true" : "false"),
 			'price = ' . str_replace(',','.',$price_item->get_price()),
 			'responsibility_id = ' . $price_item->get_responsibility_id()
 		);
@@ -441,6 +447,7 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
 			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
 			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable'),'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
 			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));

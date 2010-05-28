@@ -16,6 +16,7 @@
 		protected $price;
 		protected $is_inactive;
 		protected $is_adjustable;
+		protected $standard;
 		protected $responsibility_id;
 		protected $responsibility_title;
 		//protected $is_one_time;
@@ -127,6 +128,7 @@
 				'is_area' => $this->get_type_text(),
 				'is_inactive' => $this->get_status_text(),
 				'is_adjustable' => $this->get_adjustable_text(),
+				'standard' => $this->get_standard_text(),
 				'price' => $this->get_price(),
 				'responsibility_id' => $this->get_responsibility_id(),
 				'responsibility_title' => lang($this->get_responsibility_title())
@@ -229,6 +231,23 @@
 		
 		public function set_is_adjustable($is_adjustable){
 			$this->is_adjustable = (boolean)$is_adjustable;
+		}
+		
+		public function is_standard(){
+			return $this->standard;
+		}
+		
+		public function get_standard_text()
+		{
+			if ($this->is_standard()) {
+				return lang('yes');
+			} else {
+				return lang('no');
+			}
+		}
+		
+		public function set_standard($standard){
+			$this->standard = (boolean)$standard;
 		}
 		
 /*		public function is_one_time(){

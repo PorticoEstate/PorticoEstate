@@ -54,7 +54,8 @@
 			'edit_group'				=> true,
 			'view_user'					=> true,
 			'sync_accounts_contacts'	=> true,
-			'clear_user_cache'			=> true
+			'clear_user_cache'			=> true,
+			'global_message'			=> true
 		);
 
 		/**
@@ -1522,5 +1523,41 @@
 				}
 			}
 			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
+		/**
+		* Set a message on top of all screens
+		*
+		* @return void
+		*/
+
+		function global_message()
+		{
+			if(	!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+			}
+
+			if(phpgw::get_var('message', 'string'))
+			{
+				phpgwapi_cache::system_set('phpgwapi', 'phpgw_global_message',phpgw::get_var('message', 'string'));			
+			}
+
+			if(phpgw::get_var('delete_message', 'bool'))
+			{
+				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_global_message');
+			}
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration');
+
+			$data = array
+			(
+				'value_message'		=> phpgwapi_cache::system_get('phpgwapi', 'phpgw_global_message'),
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',
+										array('menuaction' => 'admin.uiaccounts.global_message')),
+				'lang_cancel'		=> lang('cancel'),
+				'lang_submit'		=> lang('submit')
+			);
+			$GLOBALS['phpgw']->xslttpl->add_file('global_message');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('global_message' => $data));
 		}
 	}
