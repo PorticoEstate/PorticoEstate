@@ -66,6 +66,16 @@
 				);
 			}
 
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$menus['admin']['global_message'] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('global message', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',
+								array('menuaction' => 'admin.uiaccounts.global_message'))
+				);
+			}
+
 			if (! $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['users'] = array
