@@ -211,6 +211,7 @@
 					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
 					'is_inactive' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
 					'is_adjustable' =>	array('type' => 'bool','nullable' => true,'default' => 'true'),
+					'standard' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
 					'price' =>      array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false)
 				),

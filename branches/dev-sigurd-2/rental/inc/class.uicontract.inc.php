@@ -341,6 +341,7 @@
 			
 			$message = null;
 			$error = null;
+			$add_default_price_items = false;
 
 			if(isset($_POST['save_contract']))
 			{
@@ -360,6 +361,7 @@
 						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 						$contract->set_location_id($location_id);
 						$contract->set_contract_type_title($fields[$location_id]);
+						$add_default_price_items = true;
 					}
 				}
 				
@@ -441,6 +443,21 @@
 									$db_contract->transaction_abort();
 									$error = lang('messages_form_error');
 								}
+							}
+							else if($add_default_price_items)
+							{
+								$so_price_item = rental_soprice_item::get_instance();
+								//get default price items for location_id
+								$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
+								
+								//add price_items to contract
+								foreach($default_price_items as $price_item_id)
+								{
+									$so_price_item->add_price_item($contract->get_id(), $price_item_id);
+								}
+								$db_contract->transaction_commit();
+								$message = lang('messages_saved_form');
+								$contract_id = $contract->get_id();
 							}
 							else{
 								$db_contract->transaction_commit();

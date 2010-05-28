@@ -1093,6 +1093,22 @@ class rental_socontract extends rental_socommon
     	$sql = "UPDATE rental_contract SET adjustment_share={$new_adjustment_share} WHERE id = {$contract_id}";
     	$this->db->query($sql);
     }
+    
+    public function get_default_price_items($location_id)
+    {
+    	$price_items = array();
+    	$loc_id = $this->marshal($location_id, 'int');
+    	
+    	//select all standard price_items for given location_id 
+    	$sql = "SELECT id FROM rental_price_item WHERE responsibility_id={$loc_id} AND NOT is_inactive AND standard";
+    	$this->db->query($sql);
+    	while($this->db->next_record())
+    	{
+    		$price_item_id = $this->unmarshal($this->db->f('id'),'int');
+    		$price_items[] = $price_item_id;
+    	}
+    	return $price_items;
+    }
 
 }
 ?>

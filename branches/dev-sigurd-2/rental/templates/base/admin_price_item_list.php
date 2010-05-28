@@ -106,6 +106,10 @@
 		  	sortable: true
 		},
 		{
+			key: "standard",
+			label: "<?php echo lang('is_standard') ?>"
+		},
+		{
 			key: "actions",
 			hidden: true
 		},

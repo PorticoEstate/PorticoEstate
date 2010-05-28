@@ -242,6 +242,7 @@ is_inactive	rental	no	Inaktiv
 is_adjustable	rental	no	Indeksreguleres
 is_executed	rental	no	Utført
 is_one_time	rental	no	Engangsbeløp
+is_standard	rental	no	Standard priselement
 job_title	rental	no	Stillingstittel
 land_title	rental	no	Gnr/Bnr
 last_edited_by_current_user	rental	no	Din siste endring
