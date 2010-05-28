@@ -297,10 +297,12 @@
 			else
 			{
 				if($this->isAdministrator() || $this->isExecutiveOfficer()){
-					$contract = new rental_contract();
-					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-					$contract->set_location_id($location_id);
-					$contract->set_contract_type_title($fields[$location_id]);
+					if(!isset($contract)){
+						$contract = new rental_contract();
+						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
+						$contract->set_location_id($location_id);
+						$contract->set_contract_type_title($fields[$location_id]);
+					}
 					if ($contract) {
 						$data = array
 						(
