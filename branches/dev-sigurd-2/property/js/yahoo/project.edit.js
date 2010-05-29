@@ -40,6 +40,7 @@ var  myPaginator_1, myDataTable_1;
 		newTR = document.createElement('tr');
 
 		td_sum('Sum');
+		td_empty(1);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
 		td_sum(tmp_sum3);

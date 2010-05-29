@@ -1142,16 +1142,23 @@
 			}
 
 
-			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
+			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'		=> $values['vendor_id'],
 						'vendor_name'		=> $values['vendor_name']));
 
-			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> $project['b_account_id'] ? $project['b_account_id'] : $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name'],
-						'disabled'			=> !!$project['b_account_id']));
 
-			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
+			$b_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> (int)$project['b_account_id'],
+						'role'				=> 'group'));
+
+			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $values['b_account_id'],
+						'b_account_name'	=> $values['b_account_name'],
+						'disabled'			=> '',
+						'parent'			=> $project['b_account_id']
+						));
+
+			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 					(
 						'ecodimb'			=> $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'],
 						'ecodimb_descr'		=> $values['ecodimb_descr'],
@@ -1349,6 +1356,7 @@
 				'lang_send_statustext'					=> lang('send this workorder to vendor'),
 
 				'project_link'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
+				'b_group_data'							=> $b_group_data,
 				'b_account_data'						=> $b_account_data,
 				'table_header_workorder_budget'			=> $table_header_workorder_budget,
 				'lang_no_workorders'					=> lang('No workorder budget'),

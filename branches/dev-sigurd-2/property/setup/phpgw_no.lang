@@ -221,6 +221,7 @@ b - responsible	property	no	Anviser
 bruks nr	property	no	bruks nr
 budget	property	no	Budsjett
 budget account	property	no	Budsjett konto
+budget account group	property	no	Konto gruppe
 budget account is missing:	property	no	Budsjett konto mangler
 budget changed	property	no	Budsjett er endret
 budget code is missing from sub invoice in :	property	no	Budsjett konto mangler fra underbilag i :
