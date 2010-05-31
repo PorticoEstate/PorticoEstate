@@ -174,6 +174,7 @@ class rental_soparty extends rental_socommon
 		if(isset($filters['sync_parties_res_unit']))
 		{
 			$filter_clauses[] = "NOT party.result_unit_number IS NULL";
+			$filter_clauses[] = "party.result_unit_number != ''";
 		}
 		
 		if(count($filter_clauses))
