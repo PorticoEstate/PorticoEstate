@@ -31,8 +31,7 @@
 	$list_id = 'sync_parties_res_unit';
 	$url_add_on = '&amp;type=sync_parties_res_unit';
 	$extra_cols = array(
-		array("key" => "service_id", "label" => lang('service_id'), "index" => 3),
-		array("key" => "responsibility_id", "label" => lang('responsibility_id'), "index" => 4),
+		array("key" => "result_unit_number", "label" => lang('result_unit_number'), "index" => 3),
 		array("key" => "org_enhet_id", "label" => lang('org_enhet_id'), "index" => 5),
 		array("key" => "sync_message", "label" => lang('sync_message'), "index" => 6),
 		array("key" => "result_unit_exist", "label" => lang('result_unit_exist'), "index" => 7)
