@@ -45,28 +45,34 @@
 		
 		public function service_id_exist($service_id)
 		{
-			$column = "V_ORG_ENHET.ORG_ENHET_ID";
-			$table = "V_ORG_ENHET";
-			$db = $this->get_db();
-			$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.TJENESTESTED = $service_id";
-			$db->query($sql,__LINE__,__FILE__);
-			if($db->next_record())
+			if(isset($service_id) && is_numeric($service_id))
 			{
-				return $db->f('ORG_ENHET_ID');
+				$column = "V_ORG_ENHET.ORG_ENHET_ID";
+				$table = "V_ORG_ENHET";
+				$db = $this->get_db();
+				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.TJENESTESTED = $service_id";
+				$db->query($sql,__LINE__,__FILE__);
+				if($db->next_record())
+				{
+					return $db->f('ORG_ENHET_ID');
+				}
 			}
 			return false;
 		}
 		
   		public function result_unit_exist($result_unit)
 		{
-			$column = "V_ORG_ENHET.ORG_ENHET_ID";
-			$table = "V_ORG_ENHET";
-			$db = $this->get_db();
-			$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
-			$db->query($sql,__LINE__,__FILE__);
-			if($db->next_record())
+			if(isset($result_unit) && is_numeric($result_unit))
 			{
-				return $db->f('ORG_ENHET_ID');
+				$column = "V_ORG_ENHET.ORG_ENHET_ID";
+				$table = "V_ORG_ENHET";
+				$db = $this->get_db();
+				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
+				$db->query($sql,__LINE__,__FILE__);
+				if($db->next_record())
+				{
+					return $db->f('ORG_ENHET_ID');
+				}
 			}
 			return false;
 		}
