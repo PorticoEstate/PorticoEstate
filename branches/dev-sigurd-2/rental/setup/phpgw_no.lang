@@ -467,6 +467,9 @@ status_unknown	rental	no	Ukjent status
 status	rental	no	Status
 Success	rental	no	Suksess
 sum	rental	no	Sum
+sync_menu	rental	no	Synkronisér
+sync_message	rental	no	Synkroniseringsmelding
+sync_parties	rental	no	Synkronisér kontraktsparter mot Fellesdata
 System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
 target_me	rental	no	Meg selv

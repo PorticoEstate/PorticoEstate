@@ -57,7 +57,18 @@
 						'image'	=> array('rental', 'x-office-spreadsheet')
 					)
 				);
+				
+				$sub_parties = array (
+					'sync' => array
+					(
+						'text'	=> lang('sync_menu'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiparty.sync', 'appname' => 'rental') ),
+						'image'	=> array('rental', 'x-office-document')
+					)
+				);
 			}
+			
+			
 			
 			
 			
@@ -81,7 +92,8 @@
 				(
 					'text'	=> lang('parties'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uiparty.index') ),
-					'image'	=> array('rental', 'x-office-address-book')
+					'image'	=> array('rental', 'x-office-address-book'),
+					'children' => $sub_parties
 				)
 			);
 

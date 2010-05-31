@@ -160,6 +160,17 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
+		if(isset($filters['sync_parties']))
+		{
+			// involved in contract with service- and responsibility identifiers
+			$filter_clauses[] = "NOT contract.service_id IS NULL";
+			$filter_clauses[] = "NOT contract.responsibility_id IS NULL";
+			$filter_clauses[] = "party.org_enhet_id IS NULL";
+			// involved in active contracts
+			$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+			$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
+		}
+		
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -195,7 +206,10 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.reskontro';
 			$columns[] = 'party.location_id as org_location_id';
 			$columns[] = 'party.result_unit_number';
+			$columns[] = 'party.org_enhet_id';
 			$columns[] = 'contract.location_id as resp_location_id';
+			$columns[] = 'contract.service_id';
+			$columns[] = 'contract.responsibility_id';
 			$cols = implode(',',$columns);
 		}
 
@@ -315,6 +329,17 @@ class rental_soparty extends rental_socommon
 			$party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));
 			$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
 			$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
+			$sync_message = $party->set_sync_data(
+				array(
+					'service_id' => $this->unmarshal($this->db->f('service_id'), 'string'),
+					'responsibility_id' => $this->unmarshal($this->db->f('responsibility_id'), 'string'),
+					'org_enhet_id' => $this->unmarshal($this->db->f('org_enhet_id'), 'string')
+				)
+			);
+			if(isset($sync_message) && $sync_message != '')
+			{
+				$party->add_sync_problem($sync_message);
+			}
 		}
 		return $party;
 	}

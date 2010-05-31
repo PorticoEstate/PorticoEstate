@@ -3,6 +3,7 @@ phpgw::import_class('rental.uicommon');
 phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.sodocument');
+phpgw::import_class('rental.bofellesdata');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
@@ -17,7 +18,8 @@ class rental_uiparty extends rental_uicommon
 			'query'				=> true,
 			'view'				=> true,
 			'download'			=> true,
-			'download_agresso'	=> true
+			'download_agresso'	=> true,
+			'sync'				=> true
 	);
 
 	public function __construct()
@@ -71,6 +73,11 @@ class rental_uiparty extends rental_uicommon
 			case 'not_included_parties': // ... get all parties not included in the contract
 				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
 				break;
+			case 'sync_parties':
+				$filters = array('sync_parties' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
+				// Create Fellesdata business object
+				$bofelles = rental_bofellesdata::get_instance();
+				break;
 			default: // ... get all parties of a given type
 				phpgwapi_cache::session_set('rental', 'party_query', $search_for);
 				phpgwapi_cache::session_set('rental', 'party_search_type', $search_type);
@@ -88,7 +95,18 @@ class rental_uiparty extends rental_uicommon
 		foreach ($result_objects as $party) {
 			if(isset($party))
 			{
-				$rows[] = $party->serialize($contract);
+				$serialized = $party->serialize($contract);
+				if($type == 'sync_parties')
+				{
+					//$serialized;
+					$sync_data = $party->get_sync_data();
+					$unit_id = $bofelles->service_id_exist($sync_data['service_id']);
+					
+					$serialized['service_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+				
+				
+				}
+				$rows[] = $serialized;
 			}
 		}
 		// ... add result data
@@ -316,6 +334,11 @@ class rental_uiparty extends rental_uicommon
 		$browser = CreateObject('phpgwapi.browser');
 		$browser->content_header('export.txt','text/plain');
 		print rental_soparty::get_instance()->get_export_data();
+	}
+	
+	public function sync()
+	{
+		$this->render('sync_party_list.php');
 	}
 	
 }
