@@ -174,7 +174,19 @@ class rental_soparty extends rental_socommon
 		if(isset($filters['sync_parties_res_unit']))
 		{
 			$filter_clauses[] = "NOT party.result_unit_number IS NULL";
-			$filter_clauses[] = "party.result_unit_number != ''";
+			$filter_clauses[] = "party.result_unit_number = '[0-9][0-9][0-9][0-9]'";
+		}
+		
+		if(isset($filters['sync_parties_org_unit']))
+		{
+			$filter_clauses[] = "NOT party.result_unit_number IS NULL";
+			$filter_clauses[] = "party.result_unit_number = '[0-9][0-9][0-9][0-9]'";
+		}
+		
+		if(isset($filters['sync_parties_identifier']))
+		{
+			$filter_clauses[] = "NOT party.identifier IS NULL";
+			$filter_clauses[] = "party.identifier = '[0-9][0-9][0-9][0-9]'";
 		}
 		
 		if(count($filter_clauses))

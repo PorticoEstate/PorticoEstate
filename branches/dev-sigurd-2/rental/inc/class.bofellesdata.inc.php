@@ -3,6 +3,8 @@
 
     	// Instance variable
 	    protected static $bo;
+	    protected $connected = false;
+	    protected $status;
 		
     	/**
 		 * Get a static reference to the storage object associated with this model object
@@ -35,10 +37,11 @@
 			try
 			{
 				$db->connect();
+				$connected = true;
 			}
 			catch(Exception $e)
 			{
-				$GLOBALS['phpgw']->redirect_link('/home.php');
+				$status = lang('unable_to_connect_to_database');
 			}
 			return $db;
 		}
@@ -98,8 +101,17 @@
 							"UNIT_ID" => $db->f('RESULTATENHET')
 						);
 				}
-			}
-	        
+			}   
+		}
+		
+		public function is_connected()
+		{
+			return $this->connected;
+		}
+		
+		public function get_status()
+		{
+			return $this->status;
 		}
     }
 		

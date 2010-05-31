@@ -20,10 +20,10 @@
 <?php echo rental_uicommon::get_page_error($error) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
 
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('sync_parties') ?></h1>
+<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('sync_parties_service_and_responsibiity') ?></h1>
 
 <fieldset>
-	<input type="submit" name="ctrl_sync_rental_party" id="ctrl_sync_rental_party" value="<?php echo lang('f_sync_party') ?>" />
+	Synkroniser kontraktsparter basert på ansvar- og tjenestested på kontraktene de er part i: <input type="submit" name="ctrl_sync_rental_party" id="ctrl_sync_rental_party" value="<?php echo lang('sync') ?>" />
 </fieldset>
 
 <?php

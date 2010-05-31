@@ -357,6 +357,8 @@ organisation_number	rental	no	Organisasjonsnummer
 organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
 or	rental	no	eller
+org_enhet_id	rental	no	Organisasjonsenhet
+org_unit_exist	rental	no	Eksisterer
 other_guarantee	rental	no	Annen garanti
 others	rental	no	Annet
 out_of_operation	rental	no	Ikke i drift
@@ -452,6 +454,7 @@ service	rental	no	Tjeneste
 service_id	rental	no	Tjeneste
 Service id must be 5 characters.	rental	no	Tjeneste må være fem tegn.
 service_id_not_numeric	rental	no	Tjeneste må være et tall
+service_exist	rental	no	Eksisterer
 set_payer	rental	no	Sett som fakturamottaker
 shortcuts	rental	no	Snarveier
 showing_composite	rental	no	Leieobjekt
@@ -467,9 +470,18 @@ status_unknown	rental	no	Ukjent status
 status	rental	no	Status
 Success	rental	no	Suksess
 sum	rental	no	Sum
+sync	rental	no	Synkroniser
+sync_identifier	rental	no	Identifikasjon
 sync_menu	rental	no	Synkronisér
 sync_message	rental	no	Synkroniseringsmelding
+sync_org_unit	rental	no	Organisasjonsid
+sync_resp_and_service	rental	no	Ansvar- og tjenestested
+sync_res_units	rental	no	Resultatenhet
 sync_parties	rental	no	Synkronisér kontraktsparter mot Fellesdata
+sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar- og tjenestested (Kontrakt)
+sync_parties_result_unit_number	rental	no	Synkronisering: Resultatenhetsnummer (Kontraktspart)
+sync_parties_identifier	rental	no	Synkronisering: Identifikator
+sync_parties_fellesdata_id	rental	no	Synkronisering: Organisasjonsidentifikator
 System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
 target_me	rental	no	Meg selv
@@ -500,6 +512,7 @@ Unable to get a location code for the building.	rental	no	Klarte ikke å hente o
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 view_contract	rental	no	Vis kontrakt
+unable_to_connect_to_database	rental	no	Problemer med å koble til databasen.
 warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
 warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
 warning_lacking_start_date	rental	no	Kontrakten mangler start-dato!

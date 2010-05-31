@@ -19,8 +19,7 @@ class rental_uiparty extends rental_uicommon
 			'view'				=> true,
 			'download'			=> true,
 			'download_agresso'	=> true,
-			'sync'				=> true,
-			'sync_res_units'	=> true
+			'sync'				=> true
 	);
 
 	public function __construct()
@@ -75,12 +74,10 @@ class rental_uiparty extends rental_uicommon
 				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
 				break;
 			case 'sync_parties':
-				$filters = array('sync_parties' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
-				// Create Fellesdata business object
-				$bofelles = rental_bofellesdata::get_instance();
-				break;
 			case 'sync_parties_res_unit':
-				$filters = array('sync_parties_res_unit' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
+			case 'sync_parties_identifier':
+			case 'sync_parties_org_id':
+				$filters = array('sync' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				$bofelles = rental_bofellesdata::get_instance();
 				break;
 			default: // ... get all parties of a given type
@@ -101,23 +98,27 @@ class rental_uiparty extends rental_uicommon
 			if(isset($party))
 			{
 				$serialized = $party->serialize($contract);
+				$sync_data = $party->get_sync_data();
 				if($type == 'sync_parties')
 				{
-					//$serialized;
-					$sync_data = $party->get_sync_data();
 					$unit_id = $bofelles->service_id_exist($sync_data['service_id']);
-					
 					$serialized['service_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
-				
-				
 				}
 				else if($type == 'sync_parties_res_unit')
 				{
-					$sync_data = $party->get_sync_data();
 					$unit_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
 					$serialized['result_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
 				}
-				
+				else if($type == 'sync_parties_identifier')
+				{
+					$unit_id = $bofelles->result_unit_exist($party->get_identifier());
+					$serialized['result_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+				}
+				else if($type == 'sync_parties_org_id')
+				{
+					$unit_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
+					$serialized['org_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+				}
 				$rows[] = $serialized;
 			}
 		}
@@ -350,13 +351,22 @@ class rental_uiparty extends rental_uicommon
 	
 	public function sync()
 	{
-		$this->render('sync_party_list.php');
+		$sync_job	= phpgw::get_var('sync', 'string', 'GET');
+		switch($sync_job)
+		{
+			case 'resp_and_service':
+				$this->render('sync_party_list.php');
+				break;
+			case 'res_unit_number':
+				$this->render('sync_party_list_res_unit.php');
+				break;
+			case 'identifier':
+				$this->render('sync_party_list_identifier.php');
+				break;
+			case 'org_unit':
+				$this->render('sync_party_list_org_id.php');
+				break;
+		}
 	}
-	
-	public function sync_res_units()
-	{
-		$this->render('sync_party_list_res_unit.php');
-	}
-	
 }
 ?>
