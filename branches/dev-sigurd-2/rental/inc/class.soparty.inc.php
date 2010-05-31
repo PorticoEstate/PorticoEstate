@@ -171,6 +171,11 @@ class rental_soparty extends rental_socommon
 			$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
 		}
 		
+		if(isset($filters['sync_parties_res_unit']))
+		{
+			$filter_clauses[] = "NOT party.result_unit_number IS NULL";
+		}
+		
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -333,7 +338,8 @@ class rental_soparty extends rental_socommon
 				array(
 					'service_id' => $this->unmarshal($this->db->f('service_id'), 'string'),
 					'responsibility_id' => $this->unmarshal($this->db->f('responsibility_id'), 'string'),
-					'org_enhet_id' => $this->unmarshal($this->db->f('org_enhet_id'), 'string')
+					'org_enhet_id' => $this->unmarshal($this->db->f('org_enhet_id'), 'string'),
+					'result_unit_number' => $this->unmarshal($this->db->f('result_unit_number'), 'string'),
 				)
 			);
 			if(isset($sync_message) && $sync_message != '')

@@ -64,6 +64,12 @@
 						'text'	=> lang('sync_menu'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiparty.sync', 'appname' => 'rental') ),
 						'image'	=> array('rental', 'x-office-document')
+					),
+					'sync_res_units' => array
+					(
+						'text'	=> lang('sync_menu_res_units'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiparty.sync_res_units', 'appname' => 'rental') ),
+						'image'	=> array('rental', 'x-office-document')
 					)
 				);
 			}
