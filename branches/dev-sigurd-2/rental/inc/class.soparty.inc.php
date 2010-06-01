@@ -162,6 +162,8 @@ class rental_soparty extends rental_socommon
 
 		if(isset($filters['sync']))
 		{
+			$filter_clauses[] = "NOT party.is_inactive";
+			
 			if($filters['sync'] == 'sync_parties')
 			{
 				// involved in contract with service- and responsibility identifiers
