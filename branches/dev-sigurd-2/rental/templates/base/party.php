@@ -324,12 +324,12 @@
 						<dt><label><?php if($party->is_inactive()){?><font style="color: red;"><?php echo lang('inactive_party');?></font><?php }else{ ?><font style="color: green;"><?php echo lang('active_party');?></font><?php } ?></label></dt>
 						<dd>&nbsp;</dd>
 					<?php }?>
-					<dt>
+					<!--<dt>
 						<?php if($party->get_location_id() || $editable) {?>
 						<label for="location_id"><?php echo lang('party_location') ?></label>
 						<?php } ?>
 					</dt>
-					<dd>
+					 <dd>
 						<?php
 						if ($editable)
 						{
@@ -380,6 +380,15 @@
 								echo lang('no_party_location');
 							}*/
 						}
+						?>
+					</dd> -->
+					<dt>
+						Organisasjonstilknytning
+					</dt>
+					<dd>	
+						<?php 
+							$result_units = rental_bofellesdata::get_result_units();
+							echo $result_units;
 						?>
 					</dd>
 				</dl>
