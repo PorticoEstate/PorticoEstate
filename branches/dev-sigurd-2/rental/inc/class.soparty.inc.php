@@ -179,6 +179,8 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "NOT party.result_unit_number IS NULL";
 				$filter_clauses[] = "party.result_unit_number LIKE '____'";
 				$filter_clauses[] = "NOT party.result_unit_number LIKE 'KF__'";
+				$filter_clauses[] = "contract.service_id IS NULL";
+				$filter_clauses[] = "contract.responsibility_id IS NULL";
 			}
 			else if($filters['sync'] == 'sync_parties_org_unit')
 			{
@@ -189,6 +191,8 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "NOT party.identifier IS NULL";
 				$filter_clauses[] = "party.identifier LIKE '____'";
 				$filter_clauses[] = "NOT party.identifier LIKE 'KF__'";
+				$filter_clauses[] = "contract.service_id IS NULL";
+				$filter_clauses[] = "contract.responsibility_id IS NULL";
 			}
 		}
 		
