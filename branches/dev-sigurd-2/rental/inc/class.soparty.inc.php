@@ -316,6 +316,7 @@ class rental_soparty extends rental_socommon
 			'reskontro = '      . $this->marshal($party->get_reskontro(), 'string'),
 			'is_inactive = '    . $this->marshal(($party->is_inactive() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string'),
+			'org_enhet_id = '	. $this->marshal($party->get_org_enhet_id(), 'string'),
 			'location_id = '	. $location_id,
 			'result_unit_number = ' . $result_unit_number
 		);

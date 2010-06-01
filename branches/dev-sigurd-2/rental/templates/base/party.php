@@ -390,6 +390,7 @@
 							<option value=""><?php echo lang('no_party_location') ?></option>
 						<?php 
 							$result_units = rental_bofellesdata::get_instance()->get_result_units();
+							var_dump($result_units);
 							$party_org_enhet_id = $party->get_org_enhet_id();
 							foreach($result_units as $result_unit)
 							{
