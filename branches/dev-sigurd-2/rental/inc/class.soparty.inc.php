@@ -184,7 +184,7 @@ class rental_soparty extends rental_socommon
 			else if($filters['sync'] == 'sync_parties_identifier')
 			{
 				$filter_clauses[] = "NOT party.identifier IS NULL";
-				$filter_clauses[] = "party.identifier LIKE '[0-9][0-9][0-9][0-9]'";
+				$filter_clauses[] = "party.identifier LIKE '\d\d\d\d'";
 			}
 		}
 		
