@@ -76,7 +76,7 @@ class rental_uiparty extends rental_uicommon
 			case 'sync_parties':
 			case 'sync_parties_res_unit':
 			case 'sync_parties_identifier':
-			case 'sync_parties_org_id':
+			case 'sync_parties_org_unit':
 				$filters = array('sync' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				$bofelles = rental_bofellesdata::get_instance();
 				break;
@@ -114,7 +114,7 @@ class rental_uiparty extends rental_uicommon
 					$unit_id = $bofelles->result_unit_exist($party->get_identifier());
 					$serialized['result_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
 				}
-				else if($type == 'sync_parties_org_id')
+				else if($type == 'sync_parties_org_unit')
 				{
 					$unit_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
 					$serialized['org_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
