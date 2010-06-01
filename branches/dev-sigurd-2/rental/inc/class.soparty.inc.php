@@ -160,33 +160,36 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
-		if(isset($filters['sync_parties']))
+		if(isset($filters['sync']))
 		{
-			// involved in contract with service- and responsibility identifiers
-			$filter_clauses[] = "NOT contract.service_id IS NULL";
-			$filter_clauses[] = "NOT contract.responsibility_id IS NULL";
-			$filter_clauses[] = "party.org_enhet_id IS NULL";
-			// involved in active contracts
-			$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-			$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
-		}
-		
-		if(isset($filters['sync_parties_res_unit']))
-		{
-			$filter_clauses[] = "NOT party.result_unit_number IS NULL";
-			$filter_clauses[] = "party.result_unit_number = '[0-9][0-9][0-9][0-9]'";
-		}
-		
-		if(isset($filters['sync_parties_org_unit']))
-		{
-			$filter_clauses[] = "NOT party.org_enhet_id IS NULL";
-			$filter_clauses[] = "party.org_enhet_id != ''";
-		}
-		
-		if(isset($filters['sync_parties_identifier']))
-		{
-			$filter_clauses[] = "NOT party.identifier IS NULL";
-			$filter_clauses[] = "party.identifier = '[0-9][0-9][0-9][0-9]'";
+			if($filters['sync'] == 'sync_parties')
+			{
+				// involved in contract with service- and responsibility identifiers
+				$filter_clauses[] = "NOT contract.service_id IS NULL";
+				$filter_clauses[] = "NOT contract.responsibility_id IS NULL";
+				$filter_clauses[] = "party.org_enhet_id IS NULL";
+				// involved in active contracts
+				$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+				$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
+			}
+			
+			if($filters['sync'] == 'sync_parties_res_unit')
+			{
+				$filter_clauses[] = "NOT party.result_unit_number IS NULL";
+				$filter_clauses[] = "party.result_unit_number = '[0-9][0-9][0-9][0-9]'";
+			}
+			
+			if($filters['sync'] == 'sync_parties_org_unit')
+			{
+				$filter_clauses[] = "NOT party.org_enhet_id IS NULL";
+				$filter_clauses[] = "party.org_enhet_id != ''";
+			}
+			
+			if($filters['sync'] == 'sync_parties_identifier')
+			{
+				$filter_clauses[] = "NOT party.identifier IS NULL";
+				$filter_clauses[] = "party.identifier = '[0-9][0-9][0-9][0-9]'";
+			}
 		}
 		
 		if(count($filter_clauses))
