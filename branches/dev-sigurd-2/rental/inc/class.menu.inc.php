@@ -59,6 +59,12 @@
 				);
 				
 				$sync_choices = array (
+					'sync_org_unit' => array
+					(
+						'text'	=> lang('sync_org_unit'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiparty.sync', 'sync' => 'org_unit', 'appname' => 'rental') ),
+						'image'	=> array('rental', 'x-office-document')
+					),
 					'sync_resp_and_service' => array
 					(
 						'text'	=> lang('sync_resp_and_service'),
@@ -75,12 +81,6 @@
 					(
 						'text'	=> lang('sync_identifier'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiparty.sync', 'sync' => 'identifier','appname' => 'rental') ),
-						'image'	=> array('rental', 'x-office-document')
-					),
-					'sync_org_unit' => array
-					(
-						'text'	=> lang('sync_org_unit'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiparty.sync', 'sync' => 'org_unit', 'appname' => 'rental') ),
 						'image'	=> array('rental', 'x-office-document')
 					)
 				);

@@ -471,12 +471,12 @@ status	rental	no	Status
 Success	rental	no	Suksess
 sum	rental	no	Sum
 sync	rental	no	Synkroniser
-sync_identifier	rental	no	Identifikasjon
-sync_menu	rental	no	Synkronisér
+sync_identifier	rental	no	Kun identifikator
+sync_menu	rental	no	Fellesdata - synkronisering
 sync_message	rental	no	Synkroniseringsmelding
-sync_org_unit	rental	no	Organisasjonsid
+sync_org_unit	rental	no	Eksisterende kobling
 sync_resp_and_service	rental	no	Ansvar- og tjenestested
-sync_res_units	rental	no	Resultatenhet
+sync_res_units	rental	no	Gammelt resultatenhetsnummer
 sync_parties	rental	no	Synkronisér kontraktsparter mot Fellesdata
 sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar- og tjenestested (Kontrakt)
 sync_parties_result_unit_number	rental	no	Synkronisering: Resultatenhetsnummer (Kontraktspart)
