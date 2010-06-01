@@ -355,6 +355,7 @@ class rental_soparty extends rental_socommon
 			$party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));
 			$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
 			$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
+			$party->set_org_enhet_id(   $this->unmarshal($this->db->f('org_enhet_id'), 'string'));
 			$sync_message = $party->set_sync_data(
 				array(
 					'service_id' => $this->unmarshal($this->db->f('service_id'), 'string'),

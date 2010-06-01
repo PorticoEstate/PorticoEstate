@@ -42,6 +42,7 @@ class rental_party extends rental_model
 	
 	protected $sync_data;
 	protected $sync_problems = array();
+	protected $org_enhet_id;
 
 	public function __construct($id = 0)
 	{
@@ -110,6 +111,13 @@ class rental_party extends rental_model
 	public function set_identifier($identifier)
 	{
 		$this->identifier = $identifier;
+	}
+	
+	public function get_org_enhet_id() { return $this->org_enhet_id; }
+
+	public function set_org_enhet_id($org_enhet_id)
+	{
+		$this->org_enhet_id = $org_enhet_id;
 	}
 
 	public function get_sync_data() { return $this->sync_data; }

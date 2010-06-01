@@ -385,11 +385,24 @@
 					<dt>
 						Organisasjonstilknytning
 					</dt>
-					<dd>	
+					<dd>
+						<select name="org_enhet_id">
 						<?php 
 							$result_units = rental_bofellesdata::get_instance()->get_result_units();
-							var_dump($result_units);
+							$party_org_enhet_id = $party->get_org_enhet_id();
+							foreach($result_units as $result_unit)
+							{
+								if($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id)
+								{
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}' selected=selected >{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}</option>";
+								}
+								else
+								{
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}'>{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}</option>";
+								}
+							}
 						?>
+						</select>
 					</dd>
 				</dl>
 		        <dl class="proplist-col">
