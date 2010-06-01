@@ -80,6 +80,23 @@
 			return false;
 		}
 		
+		public function org_unit_exist($org_unit_id)
+		{
+			if(isset($org_unit_id) && is_numeric($org_unit_id))
+			{
+				$column = "V_ORG_ENHET.ORG_ENHET_ID";
+				$table = "V_ORG_ENHET";
+				$db = $this->get_db();
+				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID = $org_unit_id";
+				$db->query($sql,__LINE__,__FILE__);
+				if($db->next_record())
+				{
+					return $db->f('ORG_ENHET_ID');
+				}
+			}
+			return false;
+		}
+		
 		public function get_result_unit($org_unit_id)
 		{   
 	        //Must traverse down u hierarchy
