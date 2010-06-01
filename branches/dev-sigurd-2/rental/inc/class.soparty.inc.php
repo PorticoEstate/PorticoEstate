@@ -193,6 +193,7 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "NOT party.identifier LIKE 'KF__'";
 				$filter_clauses[] = "contract.service_id IS NULL";
 				$filter_clauses[] = "contract.responsibility_id IS NULL";
+				$filter_clauses[] = "party.result_unit_number IS NULL";
 			}
 		}
 		
