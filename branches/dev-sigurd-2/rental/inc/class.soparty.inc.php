@@ -175,7 +175,7 @@ class rental_soparty extends rental_socommon
 			else if($filters['sync'] == 'sync_parties_res_unit')
 			{
 				$filter_clauses[] = "NOT party.result_unit_number IS NULL";
-				$filter_clauses[] = "party.result_unit_number = '[0-9][0-9][0-9][0-9]'";
+				$filter_clauses[] = "party.result_unit_number LIKE '[0-9][0-9][0-9][0-9]'";
 			}
 			else if($filters['sync'] == 'sync_parties_org_unit')
 			{
@@ -184,7 +184,7 @@ class rental_soparty extends rental_socommon
 			else if($filters['sync'] == 'sync_parties_identifier')
 			{
 				$filter_clauses[] = "NOT party.identifier IS NULL";
-				$filter_clauses[] = "party.identifier = '[0-9][0-9][0-9][0-9]'";
+				$filter_clauses[] = "party.identifier LIKE '[0-9][0-9][0-9][0-9]'";
 			}
 		}
 		
