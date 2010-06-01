@@ -36,9 +36,8 @@
 	$url_add_on = '&amp;type=sync_parties_res_unit';
 	$extra_cols = array(
 		array("key" => "result_unit_number", "label" => lang('result_unit_number'), "index" => 3),
-		array("key" => "org_enhet_id", "label" => lang('org_enhet_id'), "index" => 5),
-		array("key" => "sync_message", "label" => lang('sync_message'), "index" => 6),
-		array("key" => "result_unit_exist", "label" => lang('result_unit_exist'), "index" => 7)
+		array("key" => "sync_message", "label" => lang('sync_message'), "index" => 4),
+		array("key" => "org_unit_name", "label" => lang('org_unit_name'), "index" => 5)
 	);
 	include('party_list_partial.php');
 ?>

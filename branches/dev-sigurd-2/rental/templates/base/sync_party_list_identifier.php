@@ -39,7 +39,7 @@
 		array("key" => "responsibility_id", "label" => lang('responsibility_id'), "index" => 4),
 		array("key" => "identifier", "label" => lang('identifier'), "index" => 5),
 		array("key" => "sync_message", "label" => lang('sync_message'), "index" => 6),
-		array("key" => "service_exist", "label" => lang('service_exist'), "index" => 7)
+		array("key" => "org_unit_name", "label" => lang('org_unit_name'), "index" => 7)
 	);
 	include('party_list_partial.php');
 ?>

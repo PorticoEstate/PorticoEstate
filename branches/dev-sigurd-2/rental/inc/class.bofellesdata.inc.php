@@ -50,15 +50,17 @@
 		{
 			if(isset($service_id) && is_numeric($service_id))
 			{
-				$column = "V_ORG_ENHET.ORG_ENHET_ID";
+				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
 				$db = $this->get_db();
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.TJENESTESTED = $service_id";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
-					return $db->f('ORG_ENHET_ID');
-				}
+					return array(
+						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
+						'UNIT_NAME' => $db->f('ORG_NAVN')
+					);				}
 			}
 			return false;
 		}
@@ -67,14 +69,17 @@
 		{
 			if(isset($result_unit) && is_numeric($result_unit))
 			{
-				$column = "V_ORG_ENHET.ORG_ENHET_ID";
+				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
 				$db = $this->get_db();
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
-					return $db->f('ORG_ENHET_ID');
+					return array(
+						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
+						'UNIT_NAME' => $db->f('ORG_NAVN')
+					);
 				}
 			}
 			return false;
@@ -91,8 +96,10 @@
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
-					return $db->f('ORG_NAVN');
-				}
+					return array(
+						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
+						'UNIT_NAME' => $db->f('ORG_NAVN')
+					);				}
 			}
 			return false;
 		}

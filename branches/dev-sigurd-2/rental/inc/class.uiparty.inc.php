@@ -101,23 +101,29 @@ class rental_uiparty extends rental_uicommon
 				$sync_data = $party->get_sync_data();
 				if($type == 'sync_parties')
 				{
-					$unit_id = $bofelles->service_id_exist($sync_data['service_id']);
-					$serialized['service_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+					$unit_name_and_id = $bofelles->service_id_exist($sync_data['service_id']);
 				}
 				else if($type == 'sync_parties_res_unit')
 				{
-					$unit_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
-					$serialized['result_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+					$unit_name_and_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
 				}
 				else if($type == 'sync_parties_identifier')
 				{
-					$unit_id = $bofelles->result_unit_exist($party->get_identifier());
-					$serialized['result_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+					$unit_name_and_id = $bofelles->result_unit_exist($party->get_identifier());
 				}
 				else if($type == 'sync_parties_org_unit')
 				{
-					$unit_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
-					$serialized['org_unit_exist'] = isset($unit_id) && is_numeric($unit_id) ? lang('yes') : lang('no');
+					$unit_name_and_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
+				}
+				
+				if(isset($unit_name_and_id))
+				{
+					$unit_id = $unit_name_and_id['UNIT_ID'];
+					$unit_name = $unit_name_and_id['UNIT_NAME'];
+					if(isset($unit_id) && is_numeric($unit_id))
+					{
+						$serialized['org_unit_name'] =  isset($unit_name) ? $unit_name : lang('no_name');
+					}
 				}
 				$rows[] = $serialized;
 			}

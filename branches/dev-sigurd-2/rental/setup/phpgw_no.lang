@@ -169,6 +169,7 @@ documents	rental	no	Dokumenter
 Download Agresso import file	rental	no	Last ned Agresso-importfil (CS15)
 Download as %1	rental	no	Last tabellen i %1-format
 Download export	rental	no	Last ned eksporten
+do_not_exist	rental	no	Eksisterer ikke
 due_date	rental	no	Opsjonsfrist
 economy	rental	no	Økonomi
 edit_contract	rental	no	Redigér kontrakt
