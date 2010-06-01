@@ -84,14 +84,14 @@
 		{
 			if(isset($org_unit_id) && is_numeric($org_unit_id))
 			{
-				$column = "V_ORG_ENHET.ORG_ENHET_ID";
+				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
 				$db = $this->get_db();
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID = $org_unit_id";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
-					return $db->f('ORG_ENHET_ID');
+					return $db->f('ORG_NAVN');
 				}
 			}
 			return false;
