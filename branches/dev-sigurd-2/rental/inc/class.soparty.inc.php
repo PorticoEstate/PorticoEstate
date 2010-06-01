@@ -180,7 +180,6 @@ class rental_soparty extends rental_socommon
 			else if($filters['sync'] == 'sync_parties_org_unit')
 			{
 				$filter_clauses[] = "NOT party.org_enhet_id IS NULL";
-				$filter_clauses[] = "party.org_enhet_id != ''";
 			}
 			else if($filters['sync'] == 'sync_parties_identifier')
 			{
@@ -237,7 +236,6 @@ class rental_soparty extends rental_socommon
 		{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 
 		$joins = $join_contracts;
-		var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 
