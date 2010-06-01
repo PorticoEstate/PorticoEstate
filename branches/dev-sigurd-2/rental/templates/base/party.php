@@ -390,17 +390,18 @@
 							<option value=""><?php echo lang('no_party_location') ?></option>
 						<?php 
 							$result_units = rental_bofellesdata::get_instance()->get_result_units();
-							var_dump($result_units);
 							$party_org_enhet_id = $party->get_org_enhet_id();
 							foreach($result_units as $result_unit)
 							{
+								$unit_name = utf8_encode($result_unit['ORG_UNIT_NAME']);
+								
 								if($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id)
 								{
-									echo "<option value='{$result_unit['ORG_UNIT_ID']}' selected=selected >{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}</option>";
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}' selected=selected >{$result_unit['UNIT_ID']} - {$unit_name}</option>";
 								}
 								else
 								{
-									echo "<option value='{$result_unit['ORG_UNIT_ID']}'>{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}</option>";
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}'>{$result_unit['UNIT_ID']} - {$unit_name}</option>";
 								}
 							}
 						?>
