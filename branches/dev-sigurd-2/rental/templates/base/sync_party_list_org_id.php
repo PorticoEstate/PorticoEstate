@@ -32,8 +32,8 @@ Synkroniser kontraktsparter allerede tilknyttet en organgisasjonsenhet i Fellesd
 
 <?php
 	$list_form = true;
-	$list_id = 'sync_parties_org_id';
-	$url_add_on = '&amp;type=sync_parties_org_id';
+	$list_id = 'sync_parties_org_unit';
+	$url_add_on = '&amp;type=sync_parties_org_unit';
 	$extra_cols = array(
 		array("key" => "service_id", "label" => lang('service_id'), "index" => 3),
 		array("key" => "responsibility_id", "label" => lang('responsibility_id'), "index" => 4),
