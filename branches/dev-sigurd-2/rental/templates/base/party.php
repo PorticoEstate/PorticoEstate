@@ -393,9 +393,7 @@
 							$party_org_enhet_id = $party->get_org_enhet_id();
 							foreach($result_units as $result_unit)
 							{
-								echo iconv_get_encoding($result_unit['ORG_UNIT_NAME']);
-								$unit_name = utf8_encode($result_unit['ORG_UNIT_NAME']);
-								echo iconv_get_encoding($unit_name);
+								$unit_name = iconv("ISO-8859-1","UTF-8",$result_unit['ORG_UNIT_NAME']);
 								if($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id)
 								{
 									echo "<option value='{$result_unit['ORG_UNIT_ID']}' selected=selected >{$result_unit['UNIT_ID']} - {$unit_name}</option>";
