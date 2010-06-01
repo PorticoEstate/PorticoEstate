@@ -359,6 +359,7 @@ organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
 or	rental	no	eller
 org_enhet_id	rental	no	Organisasjonsenhet
+org_unit_name	rental	no	Navn på tilsvarende enhet i Fellesdata
 org_unit_exist	rental	no	Eksisterer
 other_guarantee	rental	no	Annen garanti
 others	rental	no	Annet
