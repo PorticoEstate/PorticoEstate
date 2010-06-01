@@ -388,7 +388,7 @@
 					<dd>	
 						<?php 
 							$result_units = rental_bofellesdata::get_instance()->get_result_units();
-							echo $result_units;
+							var_dump($result_units);
 						?>
 					</dd>
 				</dl>
