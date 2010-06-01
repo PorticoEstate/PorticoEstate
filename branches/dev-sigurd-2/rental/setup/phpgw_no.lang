@@ -472,8 +472,8 @@ Success	rental	no	Suksess
 sum	rental	no	Sum
 sync	rental	no	Synkroniser
 sync_identifier	rental	no	Kun identifikator
-sync_menu	rental	no	Fellesdata - synkronisering
-sync_message	rental	no	Synkroniseringsmelding
+sync_menu	rental	no	Synkronisering(Fellesdata) 
+sync_message	rental	no	Melding
 sync_org_unit	rental	no	Eksisterende kobling
 sync_resp_and_service	rental	no	Ansvar- og tjenestested
 sync_res_units	rental	no	Gammelt resultatenhetsnummer
