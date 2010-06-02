@@ -141,6 +141,7 @@
 			$result_units = array();
 			while($db->next_record())
 			{
+				$db->p('ORG_NAVN');
 				$result_units[] = array(
 						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
 						"ORG_UNIT_NAME" => $db->f('ORG_NAVN'),
