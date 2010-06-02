@@ -126,14 +126,14 @@
 					array(
 						"ORG_UNIT_ID" => $param_only_org_unit,
 						"ORG_NAME" => $name_and_result_number['UNIT_NAME'],
-						"UNIT_ID" => $name_and_result_number['RESULTATENHET']
+						"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
 					)
 				);
 								
 				//Update header state
 				$this->header_state['org_unit'] = $org_unit_ids;
 				$this->header_state['number_of_org_units'] = '1';
-				$this->header_state['selected_org_unit'] = $name_and_result_number['RESULTATENHET'];
+				$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
 				
 				//Update locations
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
