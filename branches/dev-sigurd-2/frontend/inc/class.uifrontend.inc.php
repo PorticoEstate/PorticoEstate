@@ -130,6 +130,8 @@
 					)
 				);
 				
+				var_dump($org_unit_ids);
+				
 				//Update header state
 				$this->header_state['org_unit'] = $org_unit_ids;
 				$this->header_state['number_of_org_units'] = '1';
