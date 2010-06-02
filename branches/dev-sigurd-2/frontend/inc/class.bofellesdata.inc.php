@@ -42,6 +42,37 @@
 			}
 			return $db;
 		}
+		
+		public function populate_result_units(array $unit_ids)
+		{
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
+	        $table = "V_ORG_ENHET";
+	        	
+	        $db = $this->get_db();
+	       
+	        $result_units = array();
+	        
+	        $unit_ids_string = implode(',',$unit_ids);
+	        
+			foreach($unit_ids as $unit_id)
+			{
+				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string)";
+				$db->query($sql,__LINE__,__FILE__);
+				
+				//possible to check whether correct level?
+				
+				while ($db->next_record())
+				{
+					$result_units[] = array(
+						"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
+						"ORG_NAME" => $db1->f('ORG_NAVN'),
+						"UNIT_ID" => $db1->f('RESULTATENHET')
+					);
+				}
+			}
+			
+			return $result_units;
+		}
     	
         /**
          * Method for retrieving the result units this user has access to
@@ -49,7 +80,7 @@
          * @param string $username the username
          * @return an array of (result unit number => result unit name)
          */
-        public function get_result_units(array $usernames)
+        public function get_result_units($username)
         {
         	/* 1. Get all organizational units this user has access to
              * 2. Check level for each unit and traverse if necessary
@@ -58,69 +89,67 @@
         	$result_units = array();
         	$org_unit_ids = array();
         	
-        	foreach($usernames as $username)
-        	{
-	        	$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
-	        	$table = "V_ORG_ENHET";
-	        	$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_PERSON_ENHET.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID) ".
-	        				"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
-	        	
-	        	$sql = "SELECT $columns FROM $table $joins WHERE V_ORG_PERSON.BRUKERNAVN = '$username'";
-	        	
-	        	$db = $this->get_db();
-				$db1 = $this->get_db();
-	        	$db->query($sql,__LINE__,__FILE__);
-	        	
-	        	
-	        	
-	       		while ($db->next_record())
+        	$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
+        	$table = "V_ORG_ENHET";
+        	$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_PERSON_ENHET.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID) ".
+        				"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
+        	
+        	$sql = "SELECT $columns FROM $table $joins WHERE V_ORG_PERSON.BRUKERNAVN = '$username'";
+        	
+        	$db = $this->get_db();
+			$db1 = $this->get_db();
+        	$db->query($sql,__LINE__,__FILE__);
+        	
+        	
+        	
+       		while ($db->next_record())
+			{
+				$identifier  = (int)$db->f('ORG_ENHET_ID');
+				$level = (int)$db->f('ORG_NIVAA','int');
+				$name = $db->f('ORG_NAVN');
+				$unit_id = $db->f('RESULTATENHET');
+				
+				switch($level)
 				{
-					$identifier  = (int)$db->f('ORG_ENHET_ID');
-					$level = (int)$db->f('ORG_NIVAA','int');
-					$name = $db->f('ORG_NAVN');
-					$unit_id = $db->f('RESULTATENHET');
-					
-					switch($level)
-					{
-						case 1: break;	// TODO: Access to all result units
-						case 2: 		// LEVEL: Byrådsavdeling 
-							//Must traverse down the hierarchy
-							$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
-							$tables = "V_ORG_ENHET";
-							$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
-							$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
-							
-	        				$db1->query($sql,__LINE__,__FILE__);
-	        				while ($db1->next_record())
+					case 1: break;	// TODO: Access to all result units
+					case 2: 		// LEVEL: Byrådsavdeling 
+						//Must traverse down the hierarchy
+						$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
+						$tables = "V_ORG_ENHET";
+						$joins = "LEFT JOIN V_ORG_KNYTNING ON (V_ORG_KNYTNING.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID)";
+						$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = {$identifier}";
+						
+        				$db1->query($sql,__LINE__,__FILE__);
+        				while ($db1->next_record())
+						{
+							if(!isset($org_unit_ids[(int)$db1->f('ORG_ENHET_ID')]))
 							{
-								if(!isset($org_unit_ids[(int)$db1->f('ORG_ENHET_ID')]))
-								{
-									$result_units[] = array(
-										"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
-										"ORG_NAME" => $db1->f('ORG_NAVN'),
-										"UNIT_ID" => $db1->f('RESULTATENHET')
-									);
-									
-									$org_unit_ids[(int)$db1->f('ORG_ENHET_ID')] = true;
-								}
-							}
-							break;
-						case 3:	break;	// LEVEL: Seksjon (not in use)
-						case 4:			// LEVEL: Resultatenhet
-							//Insert in result array
-							if(!isset($org_unit_ids[$identifier]))
-							{	
 								$result_units[] = array(
-									"ORG_UNIT_ID" => $identifier,
-									"ORG_NAME" => $name,
-									"UNIT_ID" => $unit_id
+									"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
+									"ORG_NAME" => $db1->f('ORG_NAVN'),
+									"UNIT_ID" => $db1->f('RESULTATENHET')
 								);
-								$org_unit_ids[$identifier] = true;
+								
+								$org_unit_ids[(int)$db1->f('ORG_ENHET_ID')] = true;
 							}
-							break;	
-					}
+						}
+						break;
+					case 3:	break;	// LEVEL: Seksjon (not in use)
+					case 4:			// LEVEL: Resultatenhet
+						//Insert in result array
+						if(!isset($org_unit_ids[$identifier]))
+						{	
+							$result_units[] = array(
+								"ORG_UNIT_ID" => $identifier,
+								"ORG_NAME" => $name,
+								"UNIT_ID" => $unit_id
+							);
+							$org_unit_ids[$identifier] = true;
+						}
+						break;	
 				}
-        	}
+			}
+        	
         	return $result_units;
         	/*
 			return array(
@@ -143,13 +172,15 @@
          * @param int $number the result unit number
          */
         public function get_organisational_unit_name($number) {
-        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
+        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
         	if($db->num_rows() > 0)
         	{
         		$db->next_record();
-        		return 	$db->f('ORG_NAVN', true);
+        		return 	array( 'UNIT_NAME' => $db->f('ORG_NAVN', true),
+        						'UNIT_NUMBER' => $db->f('RESULTATENHET', true)
+        		);
         	} 
         	else
         	{

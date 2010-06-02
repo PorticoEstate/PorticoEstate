@@ -89,18 +89,21 @@
 		{
 			if(isset($account_id))
 			{
-				$sql = 	"SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
+				//$sql = "SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
+				
+				$sql = "SELECT data FROM phpgw_account_delegates WHERE account_id = {$accoung_id}";
+				
 				
 				$db = clone $GLOBALS['phpgw']->db;
 				$db->query($sql,__LINE__,__FILE__);
 				
 				
-				$delegations = array();
+				$org_ids = array();
 	        	while($db->next_record())
 	        	{
-	        		$delegations[] = $db->f('account_lid', true);
+	        		$org_ids[] = $db->f('data', true);
 	        	} 
-				return $delegations;
+				return $org_ids;
 			}
 			
 		}
@@ -224,7 +227,7 @@
 			return $delegates;
 		}
 		
-		public static function add_delegate(int $account_id, int $owner_id)
+		public static function add_delegate(int $account_id, int $owner_id, int $org_unit_id)
 		{
 			
 			if(!isset($owner_id))
@@ -236,7 +239,10 @@
 			{
 				$db = clone $GLOBALS['phpgw']->db;
 				$timestamp = time();
-				$sql = "INSERT INTO phpgw_account_delegates VALUES ({$account_id},{$owner_id},null,null,{$timestamp},{$owner_id}) ";
+				
+				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+				
+				$sql = "INSERT INTO phpgw_account_delegates VALUES ('',{$account_id},{$owner_id},{$location_id},'{$org_unit_id}',null,null,{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				
 				if($result)
@@ -275,17 +281,19 @@
 			return false;
 		}
 		
-		public static function remove_delegate(int $account_id, int $owner_id)
+		public static function remove_delegate(int $account_id, int $owner_id, int $org_unit_id)
 		{
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			
-			if(isset($account_id))
+			if(isset($org_unit_id))
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+				
 				$db = clone $GLOBALS['phpgw']->db;
-				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND owner_id = {$owner_id}";
+				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND data = '{$org_unit_id}' AND location_id = {$location_id}";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				if($result)
 				{
