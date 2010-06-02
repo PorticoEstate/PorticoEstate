@@ -9,7 +9,7 @@
 	var showTimer,hideTimer;
 	var tt = new YAHOO.widget.Tooltip("myTooltip");
 	var lightbox;
-	var maxRowsPerPage = 10000;
+	var maxRowsPerPage = 50000;
 	var myLoading;
 	var message_delete = "";
 
@@ -1053,7 +1053,7 @@
 		//reset total records always to zero
 		myPaginator.setTotalRecords(0,true);
 
-		//change Paginator¥s configuration.
+		//change Paginator≈Ωs configuration.
 		if(path_values.allrows == 1 )
 		{
 			myPaginator.set("rowsPerPage",values_ds.totalRecords)
@@ -1085,6 +1085,7 @@
 		myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
 
 		//update "sortedBy" values
+
 		(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
 		myDataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
 

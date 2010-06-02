@@ -49,7 +49,8 @@
 			'index'  => true,
 			'view'   => true,
 			'edit'   => true,
-			'delete' => true
+			'delete' => true,
+			'download'	=> true
 		);
 
 		function __construct()
@@ -88,6 +89,13 @@
 				'allrows'	=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
+		}
+
+		function download()
+		{
+			$list = $this->bo->read();
+			$uicols	= $this->bo->uicols;
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function index()
@@ -144,6 +152,13 @@
 					(
 	                		'field' => array
 	                		(
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_export',
+									'value'	=> lang('download'),
+									'tab_index' => 10
+								),
 								array
 								(
 									'type'	=> 'button',

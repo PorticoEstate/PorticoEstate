@@ -47,7 +47,8 @@
 		(
 			'index'  => true,
 			'edit'   => true,
-			'delete' => true
+			'delete' => true,
+			'download'	=> true
 		);
 
 		function property_uib_account()
@@ -87,6 +88,17 @@
 			$this->bo->save_sessiondata($data);
 		}
 
+		function download()
+		{
+			$list = $this->bo->read();
+			$uicols['name'][0]	= 'id';
+			$uicols['descr'][0]	= lang('Budget account');
+			$uicols['name'][1]	= 'descr';
+			$uicols['descr'][1]	= lang('Description');
+
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
 		function index()
 		{
 			if(!$this->acl_read)
@@ -123,6 +135,13 @@
 					'fields'	=> array(
 	                                    'field' => array
 	                                    			(
+														array
+														(
+															'type'	=> 'button',
+															'id'	=> 'btn_export',
+															'value'	=> lang('download'),
+															'tab_index' => 9
+														),
 														array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_new',
