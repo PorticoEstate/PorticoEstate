@@ -154,13 +154,12 @@
 			$sql = "SELECT * FROM V_GATE JOIN V_ADRESSE ON V_GATE.GATENR = V_ADRESSE.GATENR_GAARDSNR"
   			. " JOIN V_BYGNING_ADRESSE ON V_ADRESSE.ADRESSENR = V_BYGNING_ADRESSE.ADRESSENR"
  			 . " WHERE 1=1 AND GATENAVN = 'LØNBORGLIEN'";
- 			 $db = $this->get_db();
+ 			$db = $this->get_db();
 			$db->query($sql,__LINE__,__FILE__);			
 	        
-			$result_units = array();
 			while($db->next_record())
 			{
-				echo $db->f('GATENAVN');;
+				 var_dump($db->f('GATENAVN'));
 			}
  			 
 		}
