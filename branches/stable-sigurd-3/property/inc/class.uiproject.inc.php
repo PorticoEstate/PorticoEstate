@@ -1257,15 +1257,15 @@
 			{
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name']));
-
-
+						'b_account_name'	=> $values['b_account_name'],
+						'role'				=> 'group',
+						'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
+						));
 
 				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
 						'ecodimb'			=> $values['ecodimb'],
 						'ecodimb_descr'		=> $values['ecodimb_descr']));
 			}
-
 
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
 						'contact_id'		=> $values['contact_id'],
@@ -1408,13 +1408,14 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
-									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
-									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
-									       			array(key => actual_cost,label=>lang('actual cost'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
-		       				       			//		array(key => charge_tenant,label=>lang('charge tenant'),sortable=>true,resizeable=>true),
-		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
-		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+									       			array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+									       			array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+									       			array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+									       			array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+		       				       			//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 			$datavalues[1] = array
@@ -1431,11 +1432,11 @@
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
-									       			array(key => value_action,label=>lang('action'),sortable=>true,resizeable=>true),
-									       			array(key => value_old_value,label=>lang('old value'),	sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('new value'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
+									       			array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 			//----------------------------------------------datatable settings--------

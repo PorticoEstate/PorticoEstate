@@ -3,6 +3,7 @@ phpgw::import_class('rental.uicommon');
 phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.sodocument');
+phpgw::import_class('rental.bofellesdata');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
@@ -17,7 +18,8 @@ class rental_uiparty extends rental_uicommon
 			'query'				=> true,
 			'view'				=> true,
 			'download'			=> true,
-			'download_agresso'	=> true
+			'download_agresso'	=> true,
+			'sync'				=> true
 	);
 
 	public function __construct()
@@ -71,6 +73,13 @@ class rental_uiparty extends rental_uicommon
 			case 'not_included_parties': // ... get all parties not included in the contract
 				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
 				break;
+			case 'sync_parties':
+			case 'sync_parties_res_unit':
+			case 'sync_parties_identifier':
+			case 'sync_parties_org_unit':
+				$filters = array('sync' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
+				$bofelles = rental_bofellesdata::get_instance();
+				break;
 			default: // ... get all parties of a given type
 				phpgwapi_cache::session_set('rental', 'party_query', $search_for);
 				phpgwapi_cache::session_set('rental', 'party_search_type', $search_type);
@@ -88,7 +97,35 @@ class rental_uiparty extends rental_uicommon
 		foreach ($result_objects as $party) {
 			if(isset($party))
 			{
-				$rows[] = $party->serialize($contract);
+				$serialized = $party->serialize($contract);
+				$sync_data = $party->get_sync_data();
+				if($type == 'sync_parties')
+				{
+					$unit_name_and_id = $bofelles->service_id_exist($sync_data['service_id']);
+				}
+				else if($type == 'sync_parties_res_unit')
+				{
+					$unit_name_and_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
+				}
+				else if($type == 'sync_parties_identifier')
+				{
+					$unit_name_and_id = $bofelles->result_unit_exist($party->get_identifier());
+				}
+				else if($type == 'sync_parties_org_unit')
+				{
+					$unit_name_and_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
+				}
+				
+				if(isset($unit_name_and_id))
+				{
+					$unit_id = $unit_name_and_id['UNIT_ID'];
+					$unit_name = $unit_name_and_id['UNIT_NAME'];
+					if(isset($unit_id) && is_numeric($unit_id))
+					{
+						$serialized['org_unit_name'] =  isset($unit_name) ? $unit_name : lang('no_name');
+					}
+				}
+				$rows[] = $serialized;
 			}
 		}
 		// ... add result data
@@ -289,7 +326,8 @@ class rental_uiparty extends rental_uicommon
 				$party->set_reskontro(phpgw::get_var('reskontro'));
 				$party->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
 				$party->set_comment(phpgw::get_var('comment'));
-				$party->set_location_id(phpgw::get_var('location_id'));
+				//$party->set_location_id(phpgw::get_var('location_id'));
+				$party->set_org_enhet_id(phpgw::get_var('org_enhet_id'));
 				
 				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
@@ -318,5 +356,24 @@ class rental_uiparty extends rental_uicommon
 		print rental_soparty::get_instance()->get_export_data();
 	}
 	
+	public function sync()
+	{
+		$sync_job	= phpgw::get_var('sync', 'string', 'GET');
+		switch($sync_job)
+		{
+			case 'resp_and_service':
+				$this->render('sync_party_list.php');
+				break;
+			case 'res_unit_number':
+				$this->render('sync_party_list_res_unit.php');
+				break;
+			case 'identifier':
+				$this->render('sync_party_list_identifier.php');
+				break;
+			case 'org_unit':
+				$this->render('sync_party_list_org_id.php');
+				break;
+		}
+	}
 }
 ?>

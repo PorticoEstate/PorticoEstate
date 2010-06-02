@@ -887,6 +887,9 @@
 
 		function b_account()
 		{
+			$role = phpgw::get_var('role');
+			$parent = phpgw::get_var('parent');
+
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 
@@ -896,6 +899,8 @@
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
+								'role'				=> $role,
+								'parent'			=> $parent,
 								'filter'			=> $this->filter
 	    				));
 	    		$datatable['config']['allow_allrows'] = true;
@@ -904,6 +909,8 @@
 	    											."second_display:true,"
  	                        						."cat_id:'{$this->cat_id}',"
 						 	                        ."query:'{$this->query}',"
+						 	                        ."role:'{$role}',"
+						 	                        ."parent:'{$parent}',"
  	                        						."filter:'{$this->filter}'";
 
 				$datatable['actions']['form'] = array(
@@ -951,7 +958,8 @@
 			);
 
 			$b_account_list = array();
-			$b_account_list = $this->bo->read_b_account();
+
+			$b_account_list = $this->bo->read_b_account(array('role'=>$role, 'parent' => $parent));
 
 			$content = array();
 			$j=0;

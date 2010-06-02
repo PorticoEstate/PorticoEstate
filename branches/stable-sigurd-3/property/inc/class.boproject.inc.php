@@ -378,6 +378,7 @@
 				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
 				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
 				$values['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
+				$values['workorder_budget'][$i]['b_account_id'] = $workorder_data[$i]['b_account_id'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{

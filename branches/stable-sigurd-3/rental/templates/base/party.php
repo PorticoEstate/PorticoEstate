@@ -324,12 +324,12 @@
 						<dt><label><?php if($party->is_inactive()){?><font style="color: red;"><?php echo lang('inactive_party');?></font><?php }else{ ?><font style="color: green;"><?php echo lang('active_party');?></font><?php } ?></label></dt>
 						<dd>&nbsp;</dd>
 					<?php }?>
-					<dt>
+					<!--<dt>
 						<?php if($party->get_location_id() || $editable) {?>
 						<label for="location_id"><?php echo lang('party_location') ?></label>
 						<?php } ?>
 					</dt>
-					<dd>
+					 <dd>
 						<?php
 						if ($editable)
 						{
@@ -381,6 +381,30 @@
 							}*/
 						}
 						?>
+					</dd> -->
+					<dt>
+						Organisasjonstilknytning
+					</dt>
+					<dd>
+						<select name="org_enhet_id">
+							<option value=""><?php echo lang('no_party_location') ?></option>
+						<?php 
+							$result_units = rental_bofellesdata::get_instance()->get_result_units();
+							$party_org_enhet_id = $party->get_org_enhet_id();
+							foreach($result_units as $result_unit)
+							{
+								$unit_name = iconv("UTF-8", "ISO-8859-1",$result_unit['ORG_UNIT_NAME']);
+								if($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id)
+								{
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}' selected=selected >{$result_unit['UNIT_ID']} - {$unit_name}</option>";
+								}
+								else
+								{
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}'>{$result_unit['UNIT_ID']} - {$unit_name}</option>";
+								}
+							}
+						?>
+						</select>
 					</dd>
 				</dl>
 		        <dl class="proplist-col">

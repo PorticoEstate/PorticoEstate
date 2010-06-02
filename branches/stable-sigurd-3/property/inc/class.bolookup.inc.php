@@ -266,10 +266,11 @@
 			return $vendor;
 		}
 
-		function read_b_account()
+		function read_b_account($data)
 		{
 			$b_account = $this->so->read_b_account(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
+											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
+											'role' => $data['role'], 'parent' => $data['parent']));
 			$this->total_records = $this->so->total_records;
 
 			return $b_account;

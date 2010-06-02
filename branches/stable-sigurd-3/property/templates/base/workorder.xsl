@@ -658,6 +658,25 @@
 				<xsl:call-template name="event_form"/>
 				<xsl:call-template name="vendor_form"/>
 				<xsl:call-template name="ecodimb_form"/>
+
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="b_group_data/lang_b_account"/>
+				</td>
+				<td>
+					<input type="text"  size="9" value="{b_group_data/value_b_account_id}" readonly="readonly">
+						<xsl:attribute name="disabled">
+							<xsl:text>disabled</xsl:text>
+						</xsl:attribute>
+					</input>
+					<input type="text"  size="30" value="{b_group_data/value_b_account_name}" readonly="readonly">
+						<xsl:attribute name="disabled">
+							<xsl:text>disabled</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+
 				<xsl:call-template name="b_account_form"/>
 
 <!--

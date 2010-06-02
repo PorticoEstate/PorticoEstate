@@ -4195,3 +4195,43 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.585 to 0.9.17.586
+	* Use budget account groups on project level
+	* 
+	*/
+
+	$test[] = '0.9.17.585';
+	function property_upgrade0_9_17_585()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','account_group', array('type' => 'int','precision' => '4','nullable' => true));
+		$sql = "SELECT DISTINCT fm_project.account_id, fm_b_account.category as account_group FROM fm_project JOIN fm_b_account ON fm_project.account_id = fm_b_account.id";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$accounts = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$accounts[] = array
+			(
+				'account_id'		=> $GLOBALS['phpgw_setup']->oProc->f('account_id'),
+				'account_group'		=> $GLOBALS['phpgw_setup']->oProc->f('account_group'),
+			);
+		}
+		foreach ($accounts as $entry)
+		{
+			$sql = "UPDATE fm_project SET account_group = {$entry['account_group']} WHERE account_id = '{$entry['account_id']}'";
+
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_project',array(),'account_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.586';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

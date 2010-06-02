@@ -55,7 +55,8 @@
 			'view'   	=> true,
 			'edit'   	=> true,
 			'delete' 	=> true,
-			'columns'	=> true
+			'columns'	=> true,
+			'download'	=> true
 		);
 
 		function __construct()
@@ -169,6 +170,12 @@
 		}
 
 
+		function download()
+		{
+			$list = $this->bo->read();
+			$uicols	= $this->bo->uicols;
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
 
 		function index()
 		{
@@ -268,8 +275,15 @@
 										                           'role'		=> $this->role
 										                           ))."','','width=350,height=370')",
 										                 'value' => lang('columns'),
-										                 'tab_index' => 6
+										                 'tab_index' => 7
 										            ),
+													array
+													(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 6
+													),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_new',

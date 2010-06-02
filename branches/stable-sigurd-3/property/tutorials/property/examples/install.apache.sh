@@ -63,8 +63,8 @@ PHP="php-5.3.2"
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  * Download: http://eaccelerator.net/
 #  */
-EACCELERATORTAR="eaccelerator-0.9.6.tar.bz2"
-EACCELERATOR="eaccelerator-0.9.6"
+EACCELERATORTAR="eaccelerator-0.9.6.1.tar.bz2"
+EACCELERATOR="eaccelerator-0.9.6.1"
 PHP_PREFIX="/usr/local"
 
 # APC as Alternative:

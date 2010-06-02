@@ -545,7 +545,7 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
 					'ecodimb'				=> $this->db->f('ecodimb'),
-					'b_account_id'			=> $this->db->f('account_id'),
+					'b_account_id'			=> $this->db->f('account_group'),
 					'contact_id'			=> $this->db->f('contact_id'),
 				);
 
@@ -584,7 +584,8 @@
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
-			$this->db->query("SELECT act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id, vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status"
+			$this->db->query("SELECT act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,"
+			." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
 			." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
@@ -597,7 +598,8 @@
 					'act_mtrl_cost'		=> $this->db->f('act_mtrl_cost'),
 					'act_vendor_cost'	=> $this->db->f('act_vendor_cost'),
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
-					'status'			=> $this->db->f('status')
+					'status'			=> $this->db->f('status'),
+					'b_account_id'		=> $this->db->f('b_account_id'),
 					);
 			}
 			return $budget;
@@ -716,7 +718,7 @@
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_id,contact_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -881,7 +883,7 @@
 				'location_code'		=> $project['location_code'],
 				'address'			=> $address,
 				'ecodimb'			=> $project['ecodimb'],
-				'account_id'		=> $project['b_account_id'],
+				'account_group'		=> $project['b_account_id'],
 				'contact_id'		=> $project['contact_id']
 				);
 

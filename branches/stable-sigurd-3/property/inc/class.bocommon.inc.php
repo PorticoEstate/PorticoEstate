@@ -706,6 +706,14 @@
 			return $tenant;
 		}
 
+		/**
+		* initiate design element for lookup to budget account/group
+		*
+		* @param array $data
+		*
+		* @return array with information to include in forms
+		*/
+
 		function initiate_ui_budget_account_lookup($data)
 		{
 			if( isset($data['type']) && $data['type']=='view')
@@ -719,17 +727,31 @@
 
 			$b_account['value_b_account_id']		= $data['b_account_id'];
 			$b_account['value_b_account_name']		= $data['b_account_name'];
-			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.b_account'));
+			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'=> 'property.uilookup.b_account',
+															'role'		=> isset($data['role']) && $data['role'] ? $data['role'] : '',
+															'parent'	=> isset($data['parent']) && $data['parent'] ? $data['parent'] : '',
+															 ));
 			$b_account['lang_select_b_account_help']	= lang('click this link to select budget account');
-			$b_account['lang_b_account']			= lang('Budget account');
+			$b_account['lang_b_account']			= isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
 			{
-				$b_account_object	= CreateObject('property.sob_account');
-				$b_account_data	= $b_account_object->read_single($data['b_account_id']);
+				if(isset($data['role']) && $data['role'] == 'group')
+				{
+					$b_account_object	= CreateObject('property.socategory');
+					$b_account_object->get_location_info('b_account',false);
+					$b_account_data		= $b_account_object->read_single(array('id'=> $data['b_account_id']));
+				}
+				else
+				{
+					$b_account_object	= CreateObject('property.sob_account');
+					$b_account_data		= $b_account_object->read_single($data['b_account_id']);
+				}
 				$b_account['value_b_account_name']	= $b_account_data['descr'];
 			}
+
 			$b_account['disabled']				= isset($data['disabled']) && $data['disabled'] ? true : false;
-//_debug_array($b_account);
 			return $b_account;
 		}
 

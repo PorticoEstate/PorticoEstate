@@ -39,6 +39,10 @@ class rental_party extends rental_model
     protected $reskontro;
 
 	protected $contracts;
+	
+	protected $sync_data;
+	protected $sync_problems = array();
+	protected $org_enhet_id;
 
 	public function __construct($id = 0)
 	{
@@ -107,6 +111,36 @@ class rental_party extends rental_model
 	public function set_identifier($identifier)
 	{
 		$this->identifier = $identifier;
+	}
+	
+	public function get_org_enhet_id() { return $this->org_enhet_id; }
+
+	public function set_org_enhet_id($org_enhet_id)
+	{
+		$this->org_enhet_id = $org_enhet_id;
+	}
+
+	public function get_sync_data() { return $this->sync_data; }
+	
+	public function set_sync_data($sync_data)
+	{
+		if(isset($this->sync_data))
+		{
+			if(	($sync_data['service_id'] != $this->sync_data['service_id']) || 
+				($sync_data['resonsibility_id'] != $this->sync_data['resonsibility_id']))
+			{
+				return "Test";
+			}
+			
+		}
+		$this->sync_data = $sync_data;
+	}
+	
+	public function get_sync_problems() { return $this->sync_problems; }
+
+	public function add_sync_problem($sync_problem)
+	{
+		$this->sync_problems[] = $sync_problem;	
 	}
 
 	public function get_identifier() { return $this->identifier; }
@@ -359,8 +393,14 @@ class rental_party extends rental_model
 			'reskontro' => $this->reskontro,
 			'is_inactive' => $this->is_inactive,
 			'is_payer' => $is_payer,
-			'result_unit_number' => $result_unit_number
+			'result_unit_number' => $result_unit_number,
+			'service_id' => $this->sync_data['service_id'],
+			'responsibility_id' => $this->sync_data['responsibility_id'],
+			'org_enhet_id' => isset($this->sync_data['org_enhet_id']) && $this->sync_data['org_enhet_id'] != ''  ? lang('yes') : lang('no'),
+			'sync_message' => implode('<br/>',$this->get_sync_problems())
 		);
+		
+		
 	}
 
 }
