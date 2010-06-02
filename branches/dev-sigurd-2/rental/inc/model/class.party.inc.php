@@ -396,7 +396,7 @@ class rental_party extends rental_model
 			'result_unit_number' => $result_unit_number,
 			'service_id' => $this->sync_data['service_id'],
 			'responsibility_id' => $this->sync_data['responsibility_id'],
-			'org_enhet_id' => isset($this->sync_data['org_enhet_id']) && $this->sync_data['org_enhet_id'] != ''  ? lang('yes') : lang('no'),
+			'org_enhet_id' => $this->get_org_enhet_id(),
 			'sync_message' => implode('<br/>',$this->get_sync_problems())
 		);
 		

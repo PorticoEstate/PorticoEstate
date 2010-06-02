@@ -101,7 +101,8 @@
 					return array(
 						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
 						'UNIT_NAME' => $db->f('ORG_NAVN')
-					);				}
+					);				
+				}
 			}
 			return false;
 		}
@@ -137,7 +138,6 @@
 			$tables = "V_ORG_ENHET";
 			$sql = "SELECT $columns FROM $tables WHERE V_ORG_ENHET.ORG_NIVAA = 4 ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
 			$db = $this->get_db();
-			var_dump($sql);
 			$db->query($sql,__LINE__,__FILE__);			
 	        
 			$result_units = array();
@@ -150,22 +150,6 @@
 					);
 			}
 			return $result_units;
-			/*
-			
-			$sql = "SELECT * FROM V_GATE JOIN V_ADRESSE ON V_GATE.GATENR = V_ADRESSE.GATENR_GAARDSNR"
-  			. " JOIN V_BYGNING_ADRESSE ON V_ADRESSE.ADRESSENR = V_BYGNING_ADRESSE.ADRESSENR"
- 			 . " WHERE 1=1";
- 			$db = $this->get_db();
-			$result = $db->query($sql,__LINE__,__FILE__);			
-	        var_dump($sql);
-	        var_dump($result);
-	        var_dump($db->num_rows());
-			while($db->next_record())
-			{
-				var_dump("Res");
-				 var_dump($db->f('GATENAVN'));
-			}
- 			 */
 		}
 		
 		public function is_connected()
