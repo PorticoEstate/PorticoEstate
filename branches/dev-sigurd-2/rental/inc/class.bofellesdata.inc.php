@@ -155,8 +155,10 @@
   			. " JOIN V_BYGNING_ADRESSE ON V_ADRESSE.ADRESSENR = V_BYGNING_ADRESSE.ADRESSENR"
  			 . " WHERE 1=1 AND GATENAVN = 'LØNBORGLIEN'";
  			$db = $this->get_db();
-			$db->query($sql,__LINE__,__FILE__);			
+			$result = $db->query($sql,__LINE__,__FILE__);			
 	        var_dump($sql);
+	        var_dump($result);
+	        var_dump($db->numr_rows());
 			while($db->next_record())
 			{
 				var_dump("Res");
