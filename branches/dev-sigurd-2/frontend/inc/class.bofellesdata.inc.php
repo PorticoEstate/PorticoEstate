@@ -171,15 +171,19 @@
          * 
          * @param int $number the result unit number
          */
-        public function get_organisational_unit_name($number) {
-        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
-        	$db = $this->get_db();
-        	$db->query($sql,__LINE__,__FILE__);
-        	if($db->num_rows() > 0)
+        public function get_organisational_unit_name($number) 
+        {
+        	if(isset($number) && is_numeric($number))
         	{
-        		$db->next_record();
-        		return 	$db->f('ORG_NAVN', true);
-        	} 
+	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
+	        	$db = $this->get_db();
+	        	$db->query($sql,__LINE__,__FILE__);
+	        	if($db->num_rows() > 0)
+	        	{
+	        		$db->next_record();
+	        		return 	$db->f('ORG_NAVN', true);
+	        	} 
+        	}
         	else
         	{
         		return lang('no_name_organisational_unit');
@@ -187,17 +191,20 @@
         	//return "No name";
         }
         
-        public function get_organisational_unit_info() 
+        public function get_organisational_unit_info($number) 
         {
-        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
-        	$db = $this->get_db();
-        	$db->query($sql,__LINE__,__FILE__);
-        	if($db->num_rows() > 0)
+        	if(isset($number) && is_numeric($number))
         	{
-        		$db->next_record();
-        		return 	array( 'UNIT_NAME' => $db->f('ORG_NAVN', true),
-        						'UNIT_NUMBER' => $db->f('RESULTATENHET', true)
-        		);
+	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
+	        	$db = $this->get_db();
+	        	$db->query($sql,__LINE__,__FILE__);
+	        	if($db->num_rows() > 0)
+	        	{
+	        		$db->next_record();
+	        		return 	array( 'UNIT_NAME' => $db->f('ORG_NAVN', true),
+	        						'UNIT_NUMBER' => $db->f('RESULTATENHET', true)
+	        		);
+	        	}
         	} 
         	else
         	{
