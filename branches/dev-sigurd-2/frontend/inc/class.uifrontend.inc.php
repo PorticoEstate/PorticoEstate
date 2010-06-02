@@ -234,6 +234,8 @@
 				$this->header_state['new_messages'] = lang('no_new_messages');	
 			}
 			
+			var_dump($this->header_state);
+			
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/bkbooking/css/frontend.css');
