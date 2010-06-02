@@ -94,7 +94,7 @@
 						//Creating a temporary array holding the single organisational unit in query
 						$org_unit_ids = array(
 							array(
-								"ORG_UNIT_ID" => $this_>get_org_enhet_id($param_selected_org_unit),
+								"ORG_UNIT_ID" => $this->get_org_enhet_id($param_selected_org_unit),
 								"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_selected_org_unit),
 								"UNIT_ID" => $param_selected_org_unit
 							)
