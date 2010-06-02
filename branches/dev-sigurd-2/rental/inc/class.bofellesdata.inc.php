@@ -156,9 +156,10 @@
  			 . " WHERE 1=1 AND GATENAVN = 'LØNBORGLIEN'";
  			$db = $this->get_db();
 			$db->query($sql,__LINE__,__FILE__);			
-	        
+	        var_dump("Test");
 			while($db->next_record())
 			{
+				var_dump("Res");
 				 var_dump($db->f('GATENAVN'));
 			}
  			 
