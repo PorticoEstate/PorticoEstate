@@ -119,7 +119,7 @@
 			{
 				//TODO: check permissions
 				
-				$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_only_org_unit);
+				$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_info($param_only_org_unit);
 				
 				//Specify unit
 				$org_unit_ids = array(
