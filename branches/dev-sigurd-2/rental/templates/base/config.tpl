@@ -55,7 +55,7 @@
 					<option value="" {selected_external_db_type_}>None</option>
 					<option value="mssql" {selected_external_db_type_mssql}>mssql</option>
 					<option value="mysql" {selected_external_db_type_mysql}>mysql</option>
-					<option value="oci8" {selected_external_db_type_oracle}>oracle</option>
+					<option value="oracle" {selected_external_db_type_oracle}>oracle</option>
 					<option value="postgres" {selected_external_db_type_postgres}>postgres</option>
 				</select>
 			</td>
