@@ -126,7 +126,7 @@
 					array(
 						"ORG_UNIT_ID" => $param_only_org_unit,
 						"ORG_NAME" => $name_and_result_number['UNIT_NAME'],
-						"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
+						"UNIT_ID" => $name_and_result_number['UNIT_ID']
 					)
 				);
 								
