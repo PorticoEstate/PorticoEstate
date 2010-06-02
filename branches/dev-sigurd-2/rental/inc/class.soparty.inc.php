@@ -156,7 +156,7 @@ class rental_soparty extends rental_socommon
 			$org_unit_id = $this->marshal($filters['org_unit_id'],'string');
 			if(isset($org_unit_id))
 			{
-				$filter_clauses[] = "party.result_unit_number = {$org_unit_id}";
+				$filter_clauses[] = "party.org_enhet_id = {$org_unit_id}";
 			}
 		}
 

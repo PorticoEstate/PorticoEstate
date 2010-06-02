@@ -104,7 +104,7 @@
         			continue;
         		}
         		
-	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id['UNIT_ID']));
+	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id['ORG_UNIT_ID']));
 	        	
 	        	$contracts = array();
 	        	$composites = array();

@@ -139,6 +139,8 @@
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
 				$property_locations_update = true;
 				
+				var_dump();
+				
 				$noframework = false; // In regular frames
 				phpgwapi_cache::session_set('frontend', 'noframework', $noframework); // Store mode on session
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
