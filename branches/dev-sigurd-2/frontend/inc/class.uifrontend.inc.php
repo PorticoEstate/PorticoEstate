@@ -365,7 +365,7 @@
 			return false;
 		}
 		
-		function get_org_enhet_id($result_unit_number)
+		public function get_org_enhet_id($result_unit_number)
 		{
 			foreach($org_units as $org_unit)
 			{
