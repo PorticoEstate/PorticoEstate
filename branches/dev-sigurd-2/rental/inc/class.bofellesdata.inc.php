@@ -158,7 +158,7 @@
 			$result = $db->query($sql,__LINE__,__FILE__);			
 	        var_dump($sql);
 	        var_dump($result);
-	        var_dump($db->numr_rows());
+	        var_dump($db->num_rows());
 			while($db->next_record())
 			{
 				var_dump("Res");
