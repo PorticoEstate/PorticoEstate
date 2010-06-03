@@ -89,8 +89,6 @@
 				}
 				else
 				{
-					
-				
 					if($this->org_unit_in_selection($param_selected_org_unit,$this->header_state['org_unit']))
 					{
 						//Creating a temporary array holding the single organisational unit in query
@@ -101,8 +99,6 @@
 								"UNIT_ID" => $param_selected_org_unit
 							)
 						);
-						var_dump($org_unit_ids);
-						die;
 					}
 					else
 					{
@@ -371,14 +367,10 @@
 		
 		public function get_org_enhet_id($result_unit_number, $org_units)
 		{
-			var_dump($result_unit_number);
 			foreach($org_units as $org_unit)
 			{
-				var_dump($org_unit['UNIT_ID']);
 				if($result_unit_number == $org_unit['UNIT_ID'])
 				{
-					var_dump("Match");
-					die;
 					return $org_unit['ORG_UNIT_ID'];
 				}
 			}
