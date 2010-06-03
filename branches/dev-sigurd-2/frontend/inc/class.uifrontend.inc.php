@@ -90,12 +90,9 @@
 				else
 				{
 					
-					var_dump($param_selected_org_unit);
 				
 					if($this->org_unit_in_selection($param_selected_org_unit,$this->header_state['org_unit']))
 					{
-						var_dump("In header");
-						die;
 						//Creating a temporary array holding the single organisational unit in query
 						$org_unit_ids = array(
 							array(
@@ -104,6 +101,8 @@
 								"UNIT_ID" => $param_selected_org_unit
 							)
 						);
+						var_dump($org_unit_ids);
+						die;
 					}
 					else
 					{
