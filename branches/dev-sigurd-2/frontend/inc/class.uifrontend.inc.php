@@ -367,10 +367,14 @@
 		
 		public function get_org_enhet_id($result_unit_number)
 		{
+			var_dump($result_unit_number);
 			foreach($org_units as $org_unit)
 			{
+				var_dump($org_unit['UNIT_ID']);
 				if($result_unit_number == $org_unit['UNIT_ID'])
 				{
+					var_dump("Match");
+					die;
 					return $org_unit['ORG_UNIT_ID'];
 				}
 			}
