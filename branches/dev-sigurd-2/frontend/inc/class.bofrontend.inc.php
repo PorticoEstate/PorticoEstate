@@ -90,9 +90,8 @@
 			if(isset($account_id))
 			{
 				//$sql = "SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
-				
-				$sql = "SELECT data FROM phpgw_account_delegates WHERE account_id = {$accoung_id}";
-				
+				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+				$sql = "SELECT data FROM phpgw_account_delegates WHERE account_id = {$accoung_id} AND location_id = {$location_id}";
 				
 				$db = clone $GLOBALS['phpgw']->db;
 				$db->query($sql,__LINE__,__FILE__);
@@ -199,15 +198,24 @@
 		}
 		
 		
-		public static function get_delegates(int $owner_id)
+		public static function get_delegates(int $owner_id, $org_unit_id)
 		{
 			
-			if(!isset($owner_id))
+			
+			
+			if(isset($org_unit_id) && $org_unit_id != 'all')
+			{
+				$sql = 	"SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE data = {$org_unit_id}";
+							} 
+			else if(!isset($owner_id) && $org_unit_id != 'all')
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+			} 
+			else
+			{
+				return false;
 			}
-			
-			$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
 			
 			$db = clone $GLOBALS['phpgw']->db;
 			$db->query($sql,__LINE__,__FILE__);

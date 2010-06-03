@@ -56,9 +56,11 @@
 				//Parameter to delegate access to only a single organisational unit
 				$org_unit_id = phpgw::get_var('org_unit_id');
 				
+				
 				$success = true;
 				if(!isset($org_unit_id))
 				{
+					//TODO: Does this include delegated units as well?
 					$org_units = $this->header_state['org_unit'];
 					foreach($org_units as $org_unit)
 					{
@@ -87,7 +89,16 @@
 				//Parameter to remove access to only a single organisational unit
 				$org_unit_id = phpgw::get_var('org_unit_id');
 
-				if(isset($org_unit_id))
+				if(!isset($org_unit_id))
+				{
+					//TODO: Does this include delegated units as well?
+					$org_units = $this->header_state['org_unit'];
+					foreach($org_units as $org_unit)
+					{
+						$success = $success  && $this->remove_delegate($account_id,$org_unit['ORG_UNIT_ID']);
+					}
+				}
+				else
 				{
 					
 				}
@@ -96,7 +107,7 @@
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
-			$delegates = frontend_bofrontend::get_delegates(null);
+			$delegates = frontend_bofrontend::get_delegates(null,$this->header['selected_org_unit']);
 			$number_of_delegates = count($delegates);
 			
 			$data = array (
