@@ -186,7 +186,8 @@
 				$userlang = 'en';
 			}
 
-			$app_name = $force_app ? $GLOBALS['phpgw']->db->db_addslashes($force_app) : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$app_name = $force_app ? $force_app : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$app_name = $GLOBALS['phpgw']->db->db_addslashes($app_name);
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
 			if ( !is_array($this->lang)
