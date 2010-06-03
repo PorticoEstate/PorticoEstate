@@ -369,7 +369,7 @@
 		{
 			foreach($org_units as $org_unit)
 			{
-				if($unit_id == $org_unit['UNIT_ID'])
+				if($result_unit_number == $org_unit['UNIT_ID'])
 				{
 					return $org_unit['ORG_UNIT_ID'];
 				}
