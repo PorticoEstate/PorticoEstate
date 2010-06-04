@@ -84,6 +84,8 @@
 			{
 				$account_id = phpgw::get_var('account_id'); 
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				var_dump($account_id);
+				var_dump($owner_id);
 				frontend_bofrontend::remove_delegate($account_id,$owner_id,null);
 			} 
 			else if(isset($_POST['remove_specific']))
