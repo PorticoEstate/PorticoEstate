@@ -250,7 +250,7 @@
 				
 				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 				
-				$sql = "INSERT INTO phpgw_account_delegates VALUES (null,{$account_id},{$owner_id},{$location_id},'{$org_unit_id}',null,null,{$timestamp},{$owner_id}) ";
+				$sql = "INSERT INTO phpgw_account_delegates (account_id,owner_id,location_id,data,created_on,created_by) VALUES ({$account_id},{$owner_id},{$location_id},'{$org_unit_id}',{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				
 				if($result)
