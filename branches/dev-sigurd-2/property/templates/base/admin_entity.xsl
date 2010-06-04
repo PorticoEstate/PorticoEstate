@@ -518,7 +518,7 @@
 
 
 			<xsl:choose>
-				<xsl:when test="lang_prefix != ''">
+				<xsl:when test="edit_prefix != ''">
 					<tr>
 						<td valign="top">
 							<xsl:value-of select="php:function('lang', 'prefix')" />
