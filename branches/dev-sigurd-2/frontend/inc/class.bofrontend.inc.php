@@ -205,6 +205,7 @@
 		 */
 		public static function get_delegates($org_unit_id)
 		{
+			var_dump($org_unit_id);
 			// The location
 			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 			
