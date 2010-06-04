@@ -54,13 +54,12 @@
 				$account_id = phpgw::get_var('account_id');
 				
 				//Parameter to delegate access to only a single organisational unit
-				$org_unit_id = phpgw::get_var('org_unit_id');
+				$org_unit_id = $this->header_state['selected_org_unit'];
 				
 				
 				$success = true;
-				if(!isset($org_unit_id))
+				if($org_unit_id == 'all')
 				{
-					//TODO: Does this include delegated units as well?
 					$org_units = $this->header_state['org_unit'];
 					foreach($org_units as $org_unit)
 					{
