@@ -83,10 +83,7 @@
 			else if(isset($_POST['remove']))
 			{
 				$account_id = phpgw::get_var('account_id'); 
-				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
-				var_dump($account_id);
-				var_dump($owner_id);
-				frontend_bofrontend::remove_delegate($account_id,$owner_id,null);
+				frontend_bofrontend::remove_delegate($account_id,null,null);
 			} 
 			else if(isset($_POST['remove_specific']))
 			{
@@ -123,7 +120,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
 		}
 		
-		public function add_delegate(int $account_id, int $owner_id)
+		public function add_delegate(int $account_id, $org_unit_id)
 		{
 			if(!isset($account_id) || $account_id == '')
 			{
@@ -140,7 +137,7 @@
 					return false;
 				}
 			}	
-			return frontend_bofrontend::add_delegate($account_id, null);
+			return frontend_bofrontend::add_delegate($account_id, null, $org_unit_id);
 		}
 		
 		public function remove_delegate()

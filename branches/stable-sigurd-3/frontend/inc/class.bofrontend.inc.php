@@ -56,7 +56,7 @@
 					'location'	=> $location,
 					'name'		=> $name,
 					'sort'		=> isset($config->config_data['tab_sorting'][$name]) ? $config->config_data['tab_sorting'][$name] : 99
-				);
+				);	
 			}
 		
 			if(isset($config->config_data['tab_sorting']) && $config->config_data['tab_sorting'])
@@ -207,20 +207,24 @@
 		{
 			// The location
 			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+			$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
+			
 			
 			// If a specific organisational unit is chosen
-			if(isset($org_unit_id) && $org_unit_id != 'all')
+			if(!isset($org_unit_id))
+			{
+				$sql = 	"SELECT pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+			}
+			else if($org_unit_id != 'all')
 			{
 				$sql = 	"SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname 
 				FROM phpgw_account_delegates pad 
 				LEFT JOIN phpgw_accounts pa 
 				ON (pa.account_id = pad.account_id) WHERE data = '{$org_unit_id}' AND location_id = {$location_id}";
-			} 
-			else
-			{
-				$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
-				$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
-			} 
+			}
+			else{
+				return array();
+			}
 			
 			
 			$db = clone $GLOBALS['phpgw']->db;
@@ -247,7 +251,7 @@
 		 * @param int $owner_id	the person who delegates
 		 * @param int $org_unit_id	the target organisational unit
 		 */
-		public static function add_delegate(int $account_id, int $owner_id, int $org_unit_id)
+		public static function add_delegate(int $account_id, int $owner_id, $org_unit_id)
 		{
 			// The owner id is th current user if not set
 			if(!isset($owner_id))
@@ -312,52 +316,56 @@
 		 */
 		public static function remove_delegate(int $account_id, int $owner_id, int $org_unit_id)
 		{
-			// The owner id is the current user if not set
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			
+			// The location
+			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+			
 			// If a specific organisational unit
 			if(isset($org_unit_id))
 			{
-				//Get the location of the module
-				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
-				
-				//Run database query
-				$db = clone $GLOBALS['phpgw']->db;
 				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND data = '{$org_unit_id}' AND location_id = {$location_id}";
-				$result = $db->query($sql,__LINE__,__FILE__);
+			}
+			else
+			{
+				// The owner id is the current user if not set
+				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND owner_id = {$owner_id} AND location_id = {$location_id}";
+			}
+				 
+			$db = clone $GLOBALS['phpgw']->db;
+			$result = $db->query($sql,__LINE__,__FILE__);
+			
+			if($result)
+			{
+				$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+				$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
 				
-				if($result)
+				$user_name = $user_account->__get('lid');
+				$owner_name = $owner_account->__get('lid');
+				
+				if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 				{
-					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
-					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
-					
-					$user_name = $user_account->__get('lid');
-					$owner_name = $owner_account->__get('lid');
-					
-					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+					$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+					if($fellesdata_user && $fellesdata_owner)
 					{
-						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
-						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
-						if($fellesdata_user && $fellesdata_owner)
+						$email = $fellesdata_user['email'];
+						if(isset($email) && $email != '')
 						{
-							$email = $fellesdata_user['email'];
-							if(isset($email) && $email != '')
-							{
-								
-								$title = "Portico Estate: Innsyn";
-								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
-								$message .= 'Din innsynsmulighet på vegne av '
-											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
-								
-								frontend_bofrontend::send_system_message($email,$title,$message);
-							}
+							
+							$title = "Portico Estate: Innsyn";
+							$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
+							$message .= 'Din innsynsmulighet på vegne av '
+										.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
+							
+							frontend_bofrontend::send_system_message($email,$title,$message);
 						}
 					}
-					return true;
 				}
+				return true;
 			}
 			return false;	
 		}

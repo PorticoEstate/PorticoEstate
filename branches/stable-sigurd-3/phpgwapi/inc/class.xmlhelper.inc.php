@@ -112,24 +112,37 @@
 		 */
 		public static function toArray( $xml )
 		{
-			if ( is_string( $xml ) ) $xml = new SimpleXMLElement( $xml );
+			if ( is_string( $xml ) )
+			{
+				$xml = new SimpleXMLElement( $xml );
+			}
+
 			$children = $xml->children();
-			if ( !$children ) return (string) $xml;
+			
+			if ( !$children )
+			{
+				return (string) $xml;
+			}
 			$arr = array();
 			foreach ( $children as $key => $node )
 			{
 				$node = phpgwapi_xmlhelper::toArray( $node );
 
 				// support for 'anon' non-associative arrays
-				if ( $key == 'anon' ) $key = count( $arr );
+				if ( $key == 'anon' )
+				{
+					$key = count( $arr );
+				}
 
 				// if the node is already set, put it into an array
 				if ( isset( $arr[$key] ) )
 				{
-					if ( !is_array( $arr[$key] ) || $arr[$key][0] == null ) $arr[$key] = array( $arr[$key] );
+					if ( !is_array( $arr[$key] ) || $arr[$key][0] == null )
 					{
-						$arr[$key][] = $node;
+						$arr[$key] = array( $arr[$key] );
 					}
+
+					$arr[$key][] = $node;
 				}
 				else
 				{

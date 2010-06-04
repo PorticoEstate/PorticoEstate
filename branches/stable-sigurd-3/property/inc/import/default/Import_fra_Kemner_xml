@@ -27,6 +27,8 @@
  	* @version $Id: Import_fra_Kemner_xml,v 1.13 2007/03/18 16:33:16 sigurdne Exp $
 	*/
 
+	phpgw::import_class('phpgwapi.xmlhelper');
+
 	/**
 	 * Description
 	 * @package property
@@ -82,14 +84,20 @@
 			$this->xmltool->import_xml($xmldata);
 			$var_result = $this->xmltool->export_var();
 */
+/*
 			$xmlparse = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('UTF-8');
 			$var_result = $xmlparse->parseFile($tsvfile);
+*/
+
+			$xmldata = file_get_contents($tsvfile);
+			$var_result = phpgwapi_xmlhelper::toArray($xmldata);
 
 			set_time_limit(300);
 
 //_debug_array($var_result);
 
+			$data = array();
 			if(is_array($var_result['Invoice'][0]))
 			{
 				$data=$var_result['Invoice'];
@@ -102,43 +110,75 @@
 			if (isset($data) AND is_array($data))
 			{
 				$num = count($data);
-				$fakturadato = false;
-				$forfallsdato = false;
-				$periode = false;
 
 				for ($i = 0; $i < $num; ++$i)
 				{
-					$Gnr 		= $data[$i]['Header'][0]['Text1'];
-					$Bnr 		= $data[$i]['Header'][0]['Text2'];
-					$sekjonnr 	= $data[$i]['Header'][0]['Text4'];
+					if(isset($data[$i]['Header']['Text1']))
+					{
+						$Gnr 		= $data[$i]['Header']['Text1'];
+						$Bnr 		= $data[$i]['Header']['Text2'];
+						$sekjonnr 	= $data[$i]['Header']['Text4'];
+					}
+					else if(is_array( $data[$i]['Header'][0]['Text1']))
+					{
+						$Gnr 		= $data[$i]['Header'][0]['Text1'][0];
+						$Bnr 		= $data[$i]['Header'][0]['Text2'][0];
+						$sekjonnr 	= $data[$i]['Header'][0]['Text4'][0];
+					}
+					else
+					{
+						$Gnr 		= $data[$i]['Header'][0]['Text1'];
+						$Bnr 		= $data[$i]['Header'][0]['Text2'];
+						$sekjonnr 	= $data[$i]['Header'][0]['Text4'];
+					}
 
 					$fakturanr 	= $data[$i]['InvoiceNo'];
-					if(!$fakturadato)
+					if(isset($data[$i]['Header']['InvoiceDate']))
+					{
+						$fakturadato	= date($this->dateformat,strtotime($data[$i]['Header']['InvoiceDate']));
+					}
+					else
 					{
 						$fakturadato	= date($this->dateformat,strtotime($data[$i]['Header'][0]['InvoiceDate']));
 					}
 					
-					if(!$forfallsdato)
+					if(isset($data[$i]['Header']['DueDate']))
+					{
+						$forfallsdato	= date($this->dateformat,strtotime($data[$i]['Header']['DueDate']));
+					}
+					else
 					{
 						$forfallsdato	= date($this->dateformat,strtotime($data[$i]['Header'][0]['DueDate']));
 					}
 
-					if(!$periode)
+					if(isset($data[$i]['Header']['InvoiceDate']))
+					{
+						$periode = date('n',strtotime($data[$i]['Header']['InvoiceDate']));
+					}
+					else
 					{
 						$periode = date('n',strtotime($data[$i]['Header'][0]['InvoiceDate']));
 					}
 					
-					$belop 	= $data[$i]['Summary'][0]['TotalInclTax'];
+					$belop 	= $data[$i]['Summary']['TotalInclTax'];
 
 					if( $invoice_common['art'] == 2 ) // kreditnota
 					{
 						$belop = -1 * abs($belop);
 					}
-					$kidnr 	= $data[$i]['Header'][0]['PaymentInfo'][0]['BacsId'];
+					
+					if(isset($data[$i]['Header']['PaymentInfo']['BacsId']))
+					{
+						$kidnr 	= $data[$i]['Header']['PaymentInfo']['BacsId'];
+					}
+					else
+					{
+						$kidnr 	= $data[$i]['Header'][0]['PaymentInfo']['BacsId'];
+					}
 
 					$gid = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
 					$item_type = 1;
-					$item_id = '1201' . $data[$i]['Header'][0]['HeaderText'];
+					$item_id = '1201' . $data[$i]['Header']['HeaderText'];
 					
 					$buffer[$i]['fakturanr'] = $fakturanr;
 					$buffer[$i]['periode'] = $periode;
@@ -189,9 +229,16 @@
 					
 					//finn boei gateadresse for kontroll
 					$boei_gateadresse=$this->soXport->dima_to_address($gabinfo['dima']);
-					$buffer[$i]['boei_gateadresse'] = utf8_encode($boei_gateadresse);
+					$buffer[$i]['boei_gateadresse'] = $boei_gateadress;
 
-					$referanse = utf8_encode($data[$i]['Header'][0]['ShipTo'][0]['AddressInfo'][0]['Address']);
+					if(isset($data[$i]['Header']['ShipTo']['AddressInfo']['Address']))
+					{
+						$referanse = $data[$i]['Header']['ShipTo']['AddressInfo']['Address'];
+					}
+					else
+					{
+						$referanse = $data[$i]['Header'][0]['ShipTo']['AddressInfo']['Address'];
+					}
 	
 					$buffer[$i]['referanse'] = $referanse;                
 
@@ -199,48 +246,84 @@
 
 					$merknad = 'Kemner adr: '.$referanse."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n";
 
-					foreach ($data[$i]['Details'][0]['Detail'] as $detail)
+					$_details = array();
+					if(isset($data[$i]['Details'][0]) && is_array($data[$i]['Details'][0]))
 					{
-						if (is_array($detail['Products'][0]['SellerProductDescr']))
+						foreach($data[$i]['Details'] as $_detail)
 						{
-							$merknad .= implode("",$detail['Products'][0]['SellerProductDescr']) . "\t";
+							$_details[] = $_detail;
 						}
-						else
-						{
-							$merknad .= $detail['Products'][0]['SellerProductDescr'] . "\t";
-						}
-						
+					}
+					else
+					{
+						$_details[0]['Detail'] = $data[$i]['Details']['Detail'];
+					}
 
-						if (is_array($detail['Products'][0]['UnitCode']))
+					foreach ($_details as $details)
+					{
+						foreach ($details as $detail)
 						{
-							$merknad .= implode("",$detail['Products'][0]['UnitCode']) . "\t";
-						}
-						else
-						{
-							$merknad .= $detail['Products'][0]['UnitCode'] . "\t";
-						}
-						
-						if (is_array($detail['Products'][0]['Quantity']))
-						{
-							$merknad .= implode("",$detail['Products'][0]['Quantity']) . "\t";
-						}
-						else
-						{
-							$merknad .= $detail['Products'][0]['Quantity'] . "\t";
-						}
-						
-						if (is_array($detail['Products'][0]['Price']))
-						{
-							$merknad .= implode("",$detail['Products'][0]['Price'])."\r\n";
-						}
-						else
-						{
-							$merknad .= $detail['Products'][0]['Price']."\r\n";
-						}
 
+							$_products = array();
+							if(is_array($detail['Products']))
+							{
+								$_products[] = $detail['Products'];
+							}
+							else
+							{
+								foreach($detail as $_detail)
+								{
+									$_products[] = $_detail['Products'];
+								}
+							}
+
+							foreach($_products as $product)
+							{
+								$merknad .= $product['SellerProductDescr'] . "\r\n";
+
+								if (isset($product['ProductSpecification']['Info']) && !is_array($product['ProductSpecification']['Info']))
+								{
+									$merknad .= $product['ProductSpecification']['Info'] . "\r\n";
+								}
+								else if (is_array($product['ProductSpecification']))
+								{
+									foreach($product['ProductSpecification'] as  $Specification)
+									{
+										$merknad .= $Specification['Info'] . "\r\n";
+									}
+								}
+
+								if (is_array($product['UnitCode']))
+								{
+									$merknad .= implode("",$product['UnitCode']) . "\t";
+								}
+								else
+								{
+									$merknad .= $product['UnitCode'] . "\t";
+								}
+						
+								if (is_array($product['Quantity']))
+								{
+									$merknad .= implode("",$product['Quantity']) . "\t";
+								}
+								else
+								{
+									$merknad .= $product['Quantity'] . "\t";
+								}
+						
+								if (is_array($product['Price']))
+								{
+									$merknad .= implode("",$product['Price'])."\r\n";
+								}
+								else
+								{
+									$merknad .= $product['Price']."\r\n";
+								}
+							}
+						}
 					}
 					
-					$buffer[$i]['merknad'] = utf8_encode($merknad);
+					$buffer[$i]['merknad'] = $merknad;
 					$buffer[$i]['splitt'] = $this->splitt;
 					$buffer[$i]['kildeid'] = $this->kildeid;
 					$buffer[$i]['spbudact_code'] = $this->spbudact_code;

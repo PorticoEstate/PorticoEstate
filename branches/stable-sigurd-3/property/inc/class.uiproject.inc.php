@@ -165,7 +165,8 @@
 	    											."query:'{$this->query}',"
  	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
-						 	                        ."lookup:'{$lookup}',"						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        ."lookup:'{$lookup}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
 						 	                        ."user_id:'{$this->user_id}',"
 						 	                        ."criteria_id:'{$this->criteria_id}',"
 						 	                        ."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
@@ -415,7 +416,8 @@
 						{
 								$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
 								$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
-						}
+						}
+
 
 						if($lookup && $k==($count_uicols_name-1))
 						{
@@ -1258,7 +1260,7 @@
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> $values['b_account_name'],
-						'role'				=> 'group',
+				//		'role'				=> 'group',
 						'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
 						));
 
