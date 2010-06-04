@@ -197,25 +197,31 @@
 			return false;
 		}
 		
-		
-		public static function get_delegates(int $owner_id, $org_unit_id)
+		/**
+		 * Get delegates based on either the organisational unit, the delagations given by this user
+		 * 
+		 * @param int $owner_id	the person who has given the delegation
+		 * @param unknown_type $org_unit_id	the target organisational unit
+		 */
+		public static function get_delegates($org_unit_id)
 		{
+			// The location
+			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 			
-			
-			
+			// If a specific organisational unit is chosen
 			if(isset($org_unit_id) && $org_unit_id != 'all')
 			{
-				$sql = 	"SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE data = {$org_unit_id}";
-							} 
-			else if(!isset($owner_id) && $org_unit_id != 'all')
-			{
-				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
-				$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+				$sql = 	"SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname 
+				FROM phpgw_account_delegates pad 
+				LEFT JOIN phpgw_accounts pa 
+				ON (pa.account_id = pad.account_id) WHERE data = '{$org_unit_id}' AND location_id = {$location_id}";
 			} 
 			else
 			{
-				return false;
-			}
+				$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
+				$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+			} 
+			
 			
 			$db = clone $GLOBALS['phpgw']->db;
 			$db->query($sql,__LINE__,__FILE__);
@@ -235,41 +241,51 @@
 			return $delegates;
 		}
 		
+		/**
+		 * Add a delegate 
+		 * @param int $account_id	the delate
+		 * @param int $owner_id	the person who delegates
+		 * @param int $org_unit_id	the target organisational unit
+		 */
 		public static function add_delegate(int $account_id, int $owner_id, int $org_unit_id)
 		{
-			
+			// The owner id is th current user if not set
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			
+			// The delegate must be set
 			if(isset($account_id))
 			{
-				$db = clone $GLOBALS['phpgw']->db;
+				// Timestamp for delegation
 				$timestamp = time();
 				
+				// The location
 				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 				
+				// Database query
+				$db = clone $GLOBALS['phpgw']->db;
 				$sql = "INSERT INTO phpgw_account_delegates (account_id,owner_id,location_id,data,created_on,created_by) VALUES ({$account_id},{$owner_id},{$location_id},'{$org_unit_id}',{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				
 				if($result)
 				{
+					//Retrieve the usernames
 					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
 					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
-					
 					$user_name = $user_account->__get('lid');
 					$owner_name = $owner_account->__get('lid');
-										
+
+					//If the usernames are set retrieve account data from Fellesdata
 					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 					{
 						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
 						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
 						
-						
-						
 						if($fellesdata_user && $fellesdata_owner)
 						{	
+							//Send email notification to delegate
 							$email = $fellesdata_user['email'];
 							if(isset($email) && $email != '')
 							{
@@ -285,24 +301,34 @@
 					return true;
 				}
 			}
-			
 			return false;
 		}
 		
+		/**
+		 * Remove a delegate
+		 * @param $account_id	the delegate
+		 * @param $owner_id	the person who has delegated
+		 * @param $org_unit_id	the organisational unit in question
+		 */
 		public static function remove_delegate(int $account_id, int $owner_id, int $org_unit_id)
 		{
+			// The owner id is the current user if not set
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			
+			// If a specific organisational unit
 			if(isset($org_unit_id))
 			{
+				//Get the location of the module
 				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 				
+				//Run database query
 				$db = clone $GLOBALS['phpgw']->db;
 				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND data = '{$org_unit_id}' AND location_id = {$location_id}";
 				$result = $db->query($sql,__LINE__,__FILE__);
+				
 				if($result)
 				{
 					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
@@ -330,14 +356,19 @@
 							}
 						}
 					}
-					
-					
 					return true;
 				}
 			}
 			return false;	
 		}
 		
+		/**
+		 * 
+		 * @param unknown_type $to
+		 * @param unknown_type $title
+		 * @param unknown_type $contract_message
+		 * @param unknown_type $from
+		 */
 		public static function send_system_message($to, $title, $contract_message, $from = 'noreply@bergen.kommune.no')
 		{
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )

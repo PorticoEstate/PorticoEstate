@@ -107,16 +107,21 @@
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
-			$delegates = frontend_bofrontend::get_delegates(null,$this->header['selected_org_unit']);
-			$number_of_delegates = count($delegates);
+			$delegates_per_org_unit = frontend_bofrontend::get_delegates($this->header['selected_org_unit']);
+			$delegates_per_user = frontend_bofrontend::get_delegates(null);
+			
+			$number_of_delegates = count($delegates_per_org_unit);
+			$number_of_user_delegates = count($delegates_per_user);
 			
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
 				'delegate_data' => 	array (
 					'form_action' => $form_action,
-					'delegate' 	=> $delegates,
+					'delegate' 	=> $delegates_per_org_unit,
+					'user_delegate' => $delegates_per_user,
 					'number_of_delegates' => isset($number_of_delegates) ? $number_of_delegates : 0 ,
+					'number_of_user_delegates' => isset($number_of_user_delegates) ? $number_of_user_delegates : 0 ,
 					'search'	=> isset($search) ? $search : array(),
 					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				),
