@@ -56,7 +56,7 @@
 					'location'	=> $location,
 					'name'		=> $name,
 					'sort'		=> isset($config->config_data['tab_sorting'][$name]) ? $config->config_data['tab_sorting'][$name] : 99
-				);
+				);	
 			}
 		
 			if(isset($config->config_data['tab_sorting']) && $config->config_data['tab_sorting'])
@@ -207,20 +207,24 @@
 		{
 			// The location
 			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+			$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
+			
 			
 			// If a specific organisational unit is chosen
-			if(isset($org_unit_id) && $org_unit_id != 'all')
+			if(!isset($org_unit_id))
+			{
+				$sql = 	"SELECT pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+			}
+			else if($org_unit_id != 'all')
 			{
 				$sql = 	"SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname 
 				FROM phpgw_account_delegates pad 
 				LEFT JOIN phpgw_accounts pa 
 				ON (pa.account_id = pad.account_id) WHERE data = '{$org_unit_id}' AND location_id = {$location_id}";
-			} 
-			else
-			{
-				$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
-				$sql = 	"SELECT pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
-			} 
+			}
+			else{
+				return array();
+			}
 			
 			
 			$db = clone $GLOBALS['phpgw']->db;
