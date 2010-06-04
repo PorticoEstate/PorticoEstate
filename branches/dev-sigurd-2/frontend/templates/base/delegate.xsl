@@ -69,6 +69,8 @@
 						</ul>
 					</xsl:otherwise>
 				</xsl:choose>
+				</div>
+				<div>
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
