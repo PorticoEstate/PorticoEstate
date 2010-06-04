@@ -205,7 +205,6 @@
 		 */
 		public static function get_delegates($org_unit_id)
 		{
-			var_dump($org_unit_id);
 			// The location
 			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 			
@@ -220,7 +219,7 @@
 			else
 			{
 				$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
-				$sql = 	"SELECT pad.account_id, pad.owner_id, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+				$sql = 	"SELECT pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
 			} 
 			
 			
@@ -238,6 +237,7 @@
         			'account_firstname'	=>	$db->f('account_firstname', true),
         			'account_lastname'	=>	$db->f('account_lastname', true)
         		);
+        		var_dump($db->f('data', true));
         	} 
 			return $delegates;
 		}
