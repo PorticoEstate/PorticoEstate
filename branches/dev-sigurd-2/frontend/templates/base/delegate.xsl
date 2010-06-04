@@ -63,7 +63,7 @@
 									  		<input type="hidden" name="account_id" value="{account_id}"/>
 											 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 											(<xsl:value-of select="account_lid"/>)
-											<input type="submit" name="remove" value="{$btn_remove}"/>
+											<input type="submit" name="remove_specific" value="{$btn_remove}"/>
 										</form>
 								</li>
 							</xsl:for-each>

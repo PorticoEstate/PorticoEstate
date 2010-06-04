@@ -83,26 +83,15 @@
 			else if(isset($_POST['remove']))
 			{
 				$account_id = phpgw::get_var('account_id'); 
-				$owner_id = phpgw::get_var('owner_id');
-			
-				//Parameter to remove access to only a single organisational unit
-				$org_unit_id = phpgw::get_var('org_unit_id');
-
-				if(!isset($org_unit_id))
-				{
-					//TODO: Does this include delegated units as well?
-					$org_units = $this->header_state['org_unit'];
-					foreach($org_units as $org_unit)
-					{
-						$success = $success  && $this->remove_delegate($account_id,$org_unit['ORG_UNIT_ID']);
-					}
-				}
-				else
-				{
-					
-				}
-				
-				frontend_bofrontend::remove_delegate($account_id,$owner_id);
+				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				frontend_bofrontend::remove_delegate($account_id,$owner_id,null);
+			} 
+			else if(isset($_POST['remove_specific']))
+			{
+				$account_id = phpgw::get_var('account_id');
+				//Parameter to delegate access to only a single organisational unit
+				$org_unit_id = $this->header_state['selected_org_unit'];
+				frontend_bofrontend::remove_delegate($account_id,null,$org_unit_id);
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
