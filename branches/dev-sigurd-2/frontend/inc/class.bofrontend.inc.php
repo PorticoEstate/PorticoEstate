@@ -312,7 +312,6 @@
 		 */
 		public static function remove_delegate(int $account_id, int $owner_id, int $org_unit_id)
 		{
-			// The owner id is the current user if not set
 			if(!isset($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -321,43 +320,45 @@
 			// If a specific organisational unit
 			if(isset($org_unit_id))
 			{
-				//Get the location of the module
-				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
-				
-				//Run database query
-				$db = clone $GLOBALS['phpgw']->db;
 				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND data = '{$org_unit_id}' AND location_id = {$location_id}";
-				$result = $db->query($sql,__LINE__,__FILE__);
+			}
+			else
+			{
+				// The owner id is the current user if not set
+				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND owner_id = {$owner_id} AND location_id = {$location_id}";
+			}
+				 
+			$db = clone $GLOBALS['phpgw']->db;
+			$result = $db->query($sql,__LINE__,__FILE__);
+			
+			if($result)
+			{
+				$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+				$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
 				
-				if($result)
+				$user_name = $user_account->__get('lid');
+				$owner_name = $owner_account->__get('lid');
+				
+				if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
 				{
-					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
-					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
-					
-					$user_name = $user_account->__get('lid');
-					$owner_name = $owner_account->__get('lid');
-					
-					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+					$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+					if($fellesdata_user && $fellesdata_owner)
 					{
-						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
-						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
-						if($fellesdata_user && $fellesdata_owner)
+						$email = $fellesdata_user['email'];
+						if(isset($email) && $email != '')
 						{
-							$email = $fellesdata_user['email'];
-							if(isset($email) && $email != '')
-							{
-								
-								$title = "Portico Estate: Innsyn";
-								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
-								$message .= 'Din innsynsmulighet på vegne av '
-											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
-								
-								frontend_bofrontend::send_system_message($email,$title,$message);
-							}
+							
+							$title = "Portico Estate: Innsyn";
+							$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
+							$message .= 'Din innsynsmulighet på vegne av '
+										.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
+							
+							frontend_bofrontend::send_system_message($email,$title,$message);
 						}
 					}
-					return true;
 				}
+				return true;
 			}
 			return false;	
 		}
