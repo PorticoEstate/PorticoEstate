@@ -3,7 +3,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			
-			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
+			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em; margin-right: 2em;">
 				<xsl:choose>
 					<xsl:when test="number_of_delegates &lt; 5">
 						<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
