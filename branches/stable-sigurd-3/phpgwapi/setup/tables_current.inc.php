@@ -127,7 +127,7 @@
 			'fd' => array(
 				'sessionid' => array('type' => 'char','precision' => '32','nullable' => False),
 				'loginid' => array('type' => 'varchar','precision' => 30,'nullable' => False),
-				'ip' => array('type' => 'varchar','precision' => 50,'nullable' => False,'default' => '::1'),
+				'ip' => array('type' => 'varchar','precision' => 100,'nullable' => False,'default' => '::1'),
 				'li' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'lo' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '0'),
 				'account_id' => array('type' => 'int','precision' => 4,'nullable' => False,'default' => '0')

@@ -34,7 +34,7 @@
 			$app_title = lang($app);
 	}
 
-	if ($app)
+	if ($app && isset($GLOBALS['phpgw_info']['apps'][$app]))
 	{
 		if (!($included = $GLOBALS['phpgw']->hooks->single('about',$app)))
 		{

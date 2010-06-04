@@ -1285,4 +1285,9 @@ if (document.getElementById) {
 			}
 			return $js;
 		}
+
+		function __toString()
+		{
+			return $this->name;
+		}
 	};

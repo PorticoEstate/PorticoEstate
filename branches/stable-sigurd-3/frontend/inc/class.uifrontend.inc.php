@@ -72,7 +72,7 @@
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
-			$param_only_org_unit = phpgw::get_var('only_org_unit_id'); 	// Frontend access from rental module regarding specific organisational unit
+			$param_only_org_unit = phpgw::get_var('org_enhet_id'); 	// Frontend access from rental module regarding specific organisational unit
 			
 			//Refresh organisation list
 			$refresh = phpgw::get_var('refresh'); 
@@ -94,7 +94,7 @@
 						//Creating a temporary array holding the single organisational unit in query
 						$org_unit_ids = array(
 							array(
-								"ORG_UNIT_ID" => 1,
+								"ORG_UNIT_ID" => $this->get_org_enhet_id($param_selected_org_unit, $this->header_state['org_unit']),
 								"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_selected_org_unit),
 								"UNIT_ID" => $param_selected_org_unit
 							)
@@ -119,19 +119,21 @@
 			{
 				//TODO: check permissions
 				
+				$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_info($param_only_org_unit);
+				
 				//Specify unit
 				$org_unit_ids = array(
 					array(
-						"ORG_UNIT_ID" => 1,
-						"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_only_org_unit),
-						"UNIT_ID" => $param_only_org_unit
+						"ORG_UNIT_ID" => $param_only_org_unit,
+						"ORG_NAME" => $name_and_result_number['UNIT_NAME'],
+						"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
 					)
 				);
-				
+								
 				//Update header state
 				$this->header_state['org_unit'] = $org_unit_ids;
 				$this->header_state['number_of_org_units'] = '1';
-				$this->header_state['selected_org_unit'] = $param_only_org_unit;
+				$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
 				
 				//Update locations
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
@@ -145,20 +147,21 @@
 			/* No state, first visit after login, or refresh request*/
 			else if(!isset($this->header_state) || isset($refresh))
 			{
-				$delegations = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
-				
-				$delegations[] = $GLOBALS['phpgw_info']['user']['account_lid'];
-				
 				//Specify organisational units
-				$org_unit_ids = frontend_bofellesdata::get_instance()->get_result_units($delegations);
+				$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
+				
+				//Merge with delegation units
+				$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
+				$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
+				$org_units = array_merge($org_units,$delegation_units);
 				
 				//Update org units on header state
-				$this->header_state['org_unit'] = $org_unit_ids;
-				$this->header_state['number_of_org_units'] = count($org_unit_ids);
+				$this->header_state['org_unit'] = $org_units;
+				$this->header_state['number_of_org_units'] = count($org_units);
 				$this->header_state['selected_org_unit'] = 'all';
 				
 				//Update locations
-				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
+				$property_locations = frontend_borental::get_property_locations($org_units);
 				$property_locations_update = true;
 
 				$this->insert_links_on_header_state();
@@ -230,13 +233,13 @@
 			{
 				$this->header_state['new_messages'] = lang('no_new_messages');	
 			}
-			
+						
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/bkbooking/css/frontend.css');
 			
 			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
-			$GLOBALS['phpgw_info']['flags']['noframework'] = $noframework;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 		}
 		
 		function get_tabs()
@@ -357,6 +360,18 @@
 				if($unit_id == $org_unit['UNIT_ID'])
 				{
 					return true;
+				}
+			}
+			return false;
+		}
+		
+		public function get_org_enhet_id($result_unit_number, $org_units)
+		{
+			foreach($org_units as $org_unit)
+			{
+				if($result_unit_number == $org_unit['UNIT_ID'])
+				{
+					return $org_unit['ORG_UNIT_ID'];
 				}
 			}
 			return false;

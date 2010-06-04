@@ -1119,6 +1119,7 @@
 				'value_id'							=> $id,
 				'value_name'						=> $values['name'],
 				'value_prefix'						=> $values['prefix'],
+				'edit_prefix'						=> true,
 				'lang_id_standardtext'				=> lang('Enter the standard ID'),
 				'lang_descr_standardtext'			=> lang('Enter a description of the standard'),
 				'lang_done_standardtext'			=> lang('Back to the list'),
@@ -1153,10 +1154,10 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 			//---datatable settings--------------------
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');

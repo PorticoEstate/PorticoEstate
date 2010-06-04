@@ -51,9 +51,27 @@
 			} 
 			else if(isset($_POST['add']))
 			{
-				$account_id = phpgw::get_var('account_id'); 
-			
-				if($this->add_delegate($account_id))
+				$account_id = phpgw::get_var('account_id');
+				
+				//Parameter to delegate access to only a single organisational unit
+				$org_unit_id = $this->header_state['selected_org_unit'];
+				
+				
+				$success = true;
+				if($org_unit_id == 'all')
+				{
+					$org_units = $this->header_state['org_unit'];
+					foreach($org_units as $org_unit)
+					{
+						$success = $success  && $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID']);
+					}
+				}
+				else
+				{
+					$success = $this->add_delegate($account_id,$org_unit_id);
+				}
+				
+				if($success)
 				{
 					$msglog['message'] = lang('delegation_successful');	
 				}
@@ -65,22 +83,35 @@
 			else if(isset($_POST['remove']))
 			{
 				$account_id = phpgw::get_var('account_id'); 
-				$owner_id = phpgw::get_var('owner_id');
-			
-				frontend_bofrontend::remove_delegate($account_id,$owner_id);
+				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				var_dump($account_id);
+				var_dump($owner_id);
+				frontend_bofrontend::remove_delegate($account_id,$owner_id,null);
+			} 
+			else if(isset($_POST['remove_specific']))
+			{
+				$account_id = phpgw::get_var('account_id');
+				//Parameter to delegate access to only a single organisational unit
+				$org_unit_id = $this->header_state['selected_org_unit'];
+				frontend_bofrontend::remove_delegate($account_id,null,$org_unit_id);
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
-			$delegates = frontend_bofrontend::get_delegates(null);
-			$number_of_delegates = count($delegates);
+			$delegates_per_org_unit = frontend_bofrontend::get_delegates($this->header_state['selected_org_unit']);
+			$delegates_per_user = frontend_bofrontend::get_delegates(null);
+			
+			$number_of_delegates = count($delegates_per_org_unit);
+			$number_of_user_delegates = count($delegates_per_user);
 			
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
 				'delegate_data' => 	array (
 					'form_action' => $form_action,
-					'delegate' 	=> $delegates,
+					'delegate' 	=> $delegates_per_org_unit,
+					'user_delegate' => $delegates_per_user,
 					'number_of_delegates' => isset($number_of_delegates) ? $number_of_delegates : 0 ,
+					'number_of_user_delegates' => isset($number_of_user_delegates) ? $number_of_user_delegates : 0 ,
 					'search'	=> isset($search) ? $search : array(),
 					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
 				),

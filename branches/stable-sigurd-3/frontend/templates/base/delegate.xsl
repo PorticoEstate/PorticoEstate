@@ -3,7 +3,7 @@
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
 			
-			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em;">
+			<div class="add_delegate" style="float: left; padding-left: 2em; padding-top: 2em; margin-right: 2em;">
 				<xsl:choose>
 					<xsl:when test="number_of_delegates &lt; 5">
 						<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
@@ -46,14 +46,15 @@
 				</xsl:choose>
 			</div>
 		
-			<div class="delegates" style="float: left; padding-left: 2em; padding-top: 2em;">
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
+				<h3>Delegater for valgt resultatenhet (<xsl:value-of select="number_of_delegates"/>)</h3>
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
-			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
+			   			 <em style="margin-left: 1em; "><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
 			   		</xsl:when>
 					<xsl:otherwise>
 					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
-					 	Delegater (<xsl:value-of select="number_of_delegates"/>)
+					 	
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
@@ -62,13 +63,39 @@
 									  		<input type="hidden" name="account_id" value="{account_id}"/>
 											 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
 											(<xsl:value-of select="account_lid"/>)
-											<input type="submit" name="remove" value="{$btn_remove}"/>
+											<input type="submit" name="remove_specific" value="{$btn_remove}"/>
 										</form>
 								</li>
 							</xsl:for-each>
 						</ul>
 					</xsl:otherwise>
 				</xsl:choose>
+			</div>
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
+				<h3>Delegater for bruker uavhengig av resultatenhet (<xsl:value-of select="number_of_user_delegates"/>)</h3>
+				<xsl:choose>
+			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
+			   			 <em style="margin-left: 1em;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
+			   		</xsl:when>
+					<xsl:otherwise>
+					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
+						<ul>
+							<xsl:for-each select="user_delegate">
+								<li>
+								  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+								  		<input type="hidden" name="account_id" value="{account_id}"/>
+										 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
+										(<xsl:value-of select="account_lid"/>)
+										<input type="submit" name="remove" value="{$btn_remove}"/>
+									</form>
+								</li>
+							</xsl:for-each>
+						</ul>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+				
+				
 			</div>
 		</div>	
 	</div>
