@@ -237,7 +237,6 @@
         			'account_firstname'	=>	$db->f('account_firstname', true),
         			'account_lastname'	=>	$db->f('account_lastname', true)
         		);
-        		var_dump($db->f('data', true));
         	} 
 			return $delegates;
 		}
@@ -248,7 +247,7 @@
 		 * @param int $owner_id	the person who delegates
 		 * @param int $org_unit_id	the target organisational unit
 		 */
-		public static function add_delegate(int $account_id, int $owner_id, int $org_unit_id)
+		public static function add_delegate(int $account_id, int $owner_id, $org_unit_id)
 		{
 			// The owner id is th current user if not set
 			if(!isset($owner_id))
