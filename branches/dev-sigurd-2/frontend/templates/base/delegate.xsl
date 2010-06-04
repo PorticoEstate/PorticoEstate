@@ -46,7 +46,7 @@
 				</xsl:choose>
 			</div>
 		
-			<div class="delegates" style=" padding-left: 2em; padding-top: 2em;">
+			<div class="delegates" style=" margin-left: 2em; padding-left: 2em; padding-top: 2em;">
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
@@ -70,7 +70,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
-			<div class="delegates" style=" padding-left: 2em; padding-top: 2em;">
+			<div class="delegates" style=" margin-left: 2em; padding-left: 2em; padding-top: 2em;">
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
