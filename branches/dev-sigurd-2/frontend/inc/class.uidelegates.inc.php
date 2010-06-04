@@ -120,7 +120,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
 		}
 		
-		public function add_delegate(int $account_id, int $owner_id)
+		public function add_delegate(int $account_id, $org_unit_id)
 		{
 			if(!isset($account_id) || $account_id == '')
 			{
@@ -137,7 +137,7 @@
 					return false;
 				}
 			}	
-			return frontend_bofrontend::add_delegate($account_id, null);
+			return frontend_bofrontend::add_delegate($account_id, null, $org_unit_id);
 		}
 		
 		public function remove_delegate()
