@@ -46,14 +46,15 @@
 				</xsl:choose>
 			</div>
 		
-			<div class="delegates" style=" margin-left: 2em; padding-left: 2em; padding-top: 2em;">
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
+			Delegater for valgt resultatenhet (<xsl:value-of select="number_of_delegates"/>)
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
 			   		</xsl:when>
 					<xsl:otherwise>
 					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
-					 	Delegater for valgt resultatenhet (<xsl:value-of select="number_of_delegates"/>)
+					 	
 						<ul>
 							<xsl:for-each select="delegate">
 								<li>
@@ -70,14 +71,14 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
-			<div class="delegates" style=" margin-left: 2em; padding-left: 2em; padding-top: 2em;">
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
+				Delegater for bruker uavhengig av resultatenhet (<xsl:value-of select="number_of_user_delegates"/>)
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em; float: left;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
 			   		</xsl:when>
 					<xsl:otherwise>
 					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
-					 	Delegater for bruker uavhengig av resultatenhet (<xsl:value-of select="number_of_user_delegates"/>)
 						<ul>
 							<xsl:for-each select="user_delegate">
 								<li>
