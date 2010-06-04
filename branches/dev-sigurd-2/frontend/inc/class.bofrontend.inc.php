@@ -317,6 +317,9 @@
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			
+			// The location
+			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+			
 			// If a specific organisational unit
 			if(isset($org_unit_id))
 			{
