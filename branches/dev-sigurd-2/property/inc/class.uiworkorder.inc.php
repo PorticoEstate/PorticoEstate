@@ -241,7 +241,8 @@
 									'cat_id'			=> $this->cat_id,
 									'status_id'			=> $this->status_id,
 									'filter'			=> $this->filter,
-									'query'				=> $this->query,									'start_date'		=> $start_date,
+									'query'				=> $this->query,
+									'start_date'		=> $start_date,
 									'end_date'			=> $end_date,
 									'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 									'paid'				=> $this->paid,
@@ -1148,14 +1149,18 @@
 
 
 			$b_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> (int)$project['b_account_id'],
-						'role'				=> 'group'));
+			//			'b_account_id'		=> $project['b_account_id'],
+						'b_account_id'		=> substr(($project['b_account_id'] ? $project['b_account_id'] : $values['b_account_id']),0 , 2),
+						'b_account_name'	=> 'Konto gruppe', // FIXME: To be removed when implemented
+						'role'				=> 'group'
+						));
 
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> $values['b_account_id'],
+						'b_account_id'      => $project['b_account_id'] ? $project['b_account_id'] : $values['b_account_id'],
+			//			'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> $values['b_account_name'],
 						'disabled'			=> '',
-						'parent'			=> $project['b_account_id']
+			//			'parent'			=> $project['b_account_id']
 						));
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array

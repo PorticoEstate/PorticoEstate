@@ -508,6 +508,7 @@
 
 		function read_single($project_id, $values = array())
 		{
+			$b_account_field = 'account_id'; //'account_group';
 			$project_id = (int) $project_id;
 			$sql = "SELECT * from fm_project WHERE id={$project_id}";
 
@@ -545,7 +546,7 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
 					'ecodimb'				=> $this->db->f('ecodimb'),
-					'b_account_id'			=> $this->db->f('account_group'),
+					'b_account_id'			=> $this->db->f($b_account_field),
 					'contact_id'			=> $this->db->f('contact_id'),
 				);
 
@@ -717,8 +718,9 @@
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
+			$b_account_field = 'account_id'; //'account_group';
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,{$b_account_field},contact_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -865,6 +867,7 @@
 			$project['descr'] = $this->db->db_addslashes($project['descr']);
 			$project['name'] = $this->db->db_addslashes($project['name']);
 
+			$b_account_field = 'account_id'; //'account_group';
 			$value_set=array(
 				'project_group'		=> $project['project_group'],
 				'name'				=> $project['name'],
@@ -883,7 +886,7 @@
 				'location_code'		=> $project['location_code'],
 				'address'			=> $address,
 				'ecodimb'			=> $project['ecodimb'],
-				'account_group'		=> $project['b_account_id'],
+				$b_account_field	=> $project['b_account_id'],
 				'contact_id'		=> $project['contact_id']
 				);
 

@@ -4226,7 +4226,7 @@
 			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 		}
 
-		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_project',array(),'account_id');
+//		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_project',array(),'account_id');
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -4235,3 +4235,27 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.586 to 0.9.17.587
+	* restore field
+	* 
+	*/
+
+	$test[] = '0.9.17.586';
+	function property_upgrade0_9_17_586()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_project');
+
+		if(!isset($metadata['account_id']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','account_id',array('type' => 'varchar','precision' => '20','nullable' => True));
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.587';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
