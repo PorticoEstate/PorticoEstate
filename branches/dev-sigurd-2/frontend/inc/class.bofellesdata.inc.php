@@ -57,9 +57,7 @@
 			
 			$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
 			$db->query($sql,__LINE__,__FILE__);
-			
-			//possible to check whether correct level?
-			
+						
 			while ($db->next_record())
 			{
 				$result_units[] = array(

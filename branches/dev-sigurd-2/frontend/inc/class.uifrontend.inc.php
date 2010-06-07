@@ -150,17 +150,14 @@
 			{
 				//Specify organisational units
 				$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
-				var_dump($org_units);
 				
 				//Merge with delegation units
 				$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
-				var_dump($delegation_org_ids);
-				$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
-				var_dump($delegation_units);
-				
-				$org_units = array_merge($org_units,$delegation_units);
-				
-				var_dump($org_units);
+				if(count($delegation_org_ids) > 0)
+				{
+					$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
+					$org_units = array_merge($org_units,$delegation_units);
+				}
 				
 				//Update org units on header state
 				$this->header_state['org_unit'] = $org_units;
