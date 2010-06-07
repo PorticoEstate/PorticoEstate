@@ -99,7 +99,7 @@
              * 4. hent ut bygg-ider, location_code, fra leieobjektet
              */
         	
-        		if(!isset($org_unit_id['UNIT_ID']) || $org_unit_id['UNIT_ID'] == '')
+        		if(!isset($org_unit_id['ORG_UNIT_ID']) || $org_unit_id['ORG_UNIT_ID'] == '')
         		{
         			continue;
         		}
