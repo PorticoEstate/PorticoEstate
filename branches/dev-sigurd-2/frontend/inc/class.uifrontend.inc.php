@@ -154,6 +154,7 @@
 				
 				//Merge with delegation units
 				$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
+				var_dump($delegation_org_ids);
 				$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
 				var_dump($delegation_units);
 				
