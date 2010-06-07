@@ -56,7 +56,7 @@
 	        
 			foreach($unit_ids as $unit_id)
 			{
-				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.RESULTATENHET IN ($unit_ids_string)";
+				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string)";
 				$db->query($sql,__LINE__,__FILE__);
 				
 				//possible to check whether correct level?
@@ -124,6 +124,7 @@
 						{
 							if(!isset($org_unit_ids[(int)$db1->f('ORG_ENHET_ID')]))
 							{
+								var_dump("Byrådsleder" . $db1->f('ORG_ENHET_ID'));
 								$result_units[] = array(
 									"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 									"ORG_NAME" => $db1->f('ORG_NAVN'),
@@ -139,6 +140,7 @@
 						//Insert in result array
 						if(!isset($org_unit_ids[$identifier]))
 						{	
+							var_dump("Resultatenehetsleder" . $identifier);
 							$result_units[] = array(
 								"ORG_UNIT_ID" => $identifier,
 								"ORG_NAME" => $name,
