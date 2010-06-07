@@ -56,10 +56,10 @@
 	    									<xsl:sort select="ORG_NAME"/>
 	    									<xsl:choose>
 												<xsl:when test="UNIT_ID = //header/selected_org_unit">
-													<option value="{UNIT_ID}" selected="selected"><xsl:value-of select="ORG_NAME"/></option>
+													<option value="{ORG_UNIT_ID}" selected="selected"><xsl:value-of select="ORG_NAME"/></option>
 												</xsl:when>
 												<xsl:otherwise>
-													<option value="{UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
+													<option value="{ORG_UNIT_ID}"><xsl:value-of select="ORG_NAME"/></option>
 												</xsl:otherwise>
 											</xsl:choose>
 			    						</xsl:for-each>
