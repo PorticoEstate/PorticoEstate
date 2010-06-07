@@ -49,7 +49,7 @@
 			<xsl:choose>
 			   		<xsl:when test="//selected_org_unit != 'all'">
 			   			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
-							<h3>Delegater for valgt resultatenhet (<xsl:value-of select="number_of_delegates"/>)</h3>
+							<h3><xsl:value-of select="php:function('lang', 'delegates_for_res_unit')"/> (<xsl:value-of select="number_of_delegates"/>)</h3>
 							<xsl:choose>
 						   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
 						   			 <em style="margin-left: 1em; "><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
@@ -74,11 +74,16 @@
 							</xsl:choose>
 						</div>
 			   		</xsl:when>
+			   		<xsl:otherwise>
+			   			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
+			   				<h3 style="color: red;"><xsl:value-of select="php:function('lang', 'deletage_to_all_res_units')"/></h3>
+			   			</div>
+			   		</xsl:otherwise>
 			</xsl:choose>
 			
 			
 			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
-				<h3>Delegater for bruker uavhengig av resultatenhet (<xsl:value-of select="number_of_user_delegates"/>)</h3>
+				<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
 			   			 <em style="margin-left: 1em;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
