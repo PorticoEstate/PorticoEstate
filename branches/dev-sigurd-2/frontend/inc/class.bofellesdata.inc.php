@@ -56,7 +56,7 @@
 	        
 			foreach($unit_ids as $unit_id)
 			{
-				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string)";
+				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.RESULTATENHET IN ($unit_ids_string)";
 				$db->query($sql,__LINE__,__FILE__);
 				
 				//possible to check whether correct level?
