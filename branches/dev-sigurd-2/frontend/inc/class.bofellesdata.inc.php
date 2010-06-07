@@ -54,21 +54,19 @@
 	        
 	        $unit_ids_string = implode(',',$unit_ids);
 	        
-			foreach($unit_ids as $unit_id)
+			
+			$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
+			$db->query($sql,__LINE__,__FILE__);
+			
+			//possible to check whether correct level?
+			
+			while ($db->next_record())
 			{
-				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
-				$db->query($sql,__LINE__,__FILE__);
-				
-				//possible to check whether correct level?
-				
-				while ($db->next_record())
-				{
-					$result_units[] = array(
-						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
-						"ORG_NAME" => $db->f('ORG_NAVN'),
-						"UNIT_ID" => $db->f('RESULTATENHET')
-					);
-				}
+				$result_units[] = array(
+					"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
+					"ORG_NAME" => $db->f('ORG_NAVN'),
+					"UNIT_ID" => $db->f('RESULTATENHET')
+				);
 			}
 			
 			return $result_units;
