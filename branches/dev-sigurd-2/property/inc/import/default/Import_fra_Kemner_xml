@@ -27,8 +27,6 @@
  	* @version $Id: Import_fra_Kemner_xml,v 1.13 2007/03/18 16:33:16 sigurdne Exp $
 	*/
 
-	phpgw::import_class('phpgwapi.xmlhelper');
-
 	/**
 	 * Description
 	 * @package property
@@ -69,117 +67,83 @@
 			$this->bocommon		= CreateObject($this->currentapp.'.bocommon');
 			$this->dateformat	= $this->bocommon->dateformat;
 			$this->datetimeformat	= $this->bocommon->datetimeformat;
-//			$this->xmltool		= CreateObject('phpgwapi.xmltool');
 		}
 
 		function import($invoice_common,$download)
 		{
 			$tsvfile	= $invoice_common['tsvfile'];
-			$valid_data= False;
 			$bilagsnr = $this->invoice->next_bilagsnr();
 
 			$buffer = array();
 
-/*			$xmldata=file_get_contents($tsvfile);
-			$this->xmltool->import_xml($xmldata);
-			$var_result = $this->xmltool->export_var();
-*/
-/*
-			$xmlparse = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('UTF-8');
-			$var_result = $xmlparse->parseFile($tsvfile);
-*/
-
-			$xmldata = file_get_contents($tsvfile);
-			$var_result = phpgwapi_xmlhelper::toArray($xmldata);
-
 			set_time_limit(300);
 
-//_debug_array($var_result);
+			$reader = new XMLReader();
+			$reader->open($tsvfile);
 
-			$data = array();
-			if(is_array($var_result['Invoice'][0]))
+			$i = 0;
+			while ($reader->read())
 			{
-				$data=$var_result['Invoice'];
-			}
-			else
-			{
-				$data[0]=$var_result['Invoice'];
-			}
-
-			if (isset($data) AND is_array($data))
-			{
-				$num = count($data);
-
-				for ($i = 0; $i < $num; ++$i)
+				if ($reader->nodeType == XMLREADER::ELEMENT && $reader->localName == 'Invoice')
 				{
-					if(isset($data[$i]['Header']['Text1']))
-					{
-						$Gnr 		= $data[$i]['Header']['Text1'];
-						$Bnr 		= $data[$i]['Header']['Text2'];
-						$sekjonnr 	= $data[$i]['Header']['Text4'];
-					}
-					else if(is_array( $data[$i]['Header'][0]['Text1']))
-					{
-						$Gnr 		= $data[$i]['Header'][0]['Text1'][0];
-						$Bnr 		= $data[$i]['Header'][0]['Text2'][0];
-						$sekjonnr 	= $data[$i]['Header'][0]['Text4'][0];
-					}
-					else
-					{
-						$Gnr 		= $data[$i]['Header'][0]['Text1'];
-						$Bnr 		= $data[$i]['Header'][0]['Text2'];
-						$sekjonnr 	= $data[$i]['Header'][0]['Text4'];
-					}
+					//print $reader->readOuterXML() . "\n";
+					$xml = new DOMDocument('1.0', 'utf-8');
+					$xml->formatOutput = true;
+					$domnode = $reader->expand();
+					$xml->appendChild($domnode);
+					unset($domnode);
+					$fakturanr = $xml->getElementsByTagName('InvoiceNo')->item(0)->nodeValue;
+					$fakturadato = date($this->dateformat,strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
+					$forfallsdato = date($this->dateformat,strtotime($xml->getElementsByTagName('DueDate')->item(0)->nodeValue));
+					$periode = date('n',strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
 
-					$fakturanr 	= $data[$i]['InvoiceNo'];
-					if(isset($data[$i]['Header']['InvoiceDate']))
-					{
-						$fakturadato	= date($this->dateformat,strtotime($data[$i]['Header']['InvoiceDate']));
-					}
-					else
-					{
-						$fakturadato	= date($this->dateformat,strtotime($data[$i]['Header'][0]['InvoiceDate']));
-					}
+					$Gnr 		= $xml->getElementsByTagName('Text1')->item(0)->nodeValue;
+					$Bnr 		= $xml->getElementsByTagName('Text2')->item(0)->nodeValue;
+					$sekjonnr 	= $xml->getElementsByTagName('Text4')->item(0)->nodeValue;
+					$belop 		= $xml->getElementsByTagName('TotalInclTax')->item(0)->nodeValue;
+					$kidnr 		= $xml->getElementsByTagName('BacsId')->item(0)->nodeValue;
+					$item_id	= '1201' . $xml->getElementsByTagName('HeaderText')->item(0)->nodeValue;
 					
-					if(isset($data[$i]['Header']['DueDate']))
-					{
-						$forfallsdato	= date($this->dateformat,strtotime($data[$i]['Header']['DueDate']));
-					}
-					else
-					{
-						$forfallsdato	= date($this->dateformat,strtotime($data[$i]['Header'][0]['DueDate']));
-					}
+					$Link1 		= $xml->getElementsByTagName('Link1')->item(0)->nodeValue;
+					$TextLink1 		= $xml->getElementsByTagName('TextLink1')->item(0)->nodeValue;
 
-					if(isset($data[$i]['Header']['InvoiceDate']))
+					$ShipTo 	= $xml->getElementsByTagName('ShipTo')->item(0);
+					$xpath		= new DOMXpath($xml);
+					$address = $xpath->query("AddressInfo/Address", $ShipTo)->item(0)->nodeValue;
+
+					$details 	= $xml->getElementsByTagName('Details');
+
+					$Products = $xpath->query("Detail/Products", $details->item(0));	
+
+					$length = $Products->length;
+					$merknad = '';
+					for($j=0; $j<$length; $j++)
 					{
-						$periode = date('n',strtotime($data[$i]['Header']['InvoiceDate']));
+
+						$merknad .= $xpath->query("SellerProductDescr", $Products->item($j))->item(0)->nodeValue . "\n";
+						$merknad .= $xpath->query("UnitCode", $Products->item($j))->item(0)->nodeValue . "\t";
+						$merknad .= $xpath->query("Quantity", $Products->item($j))->item(0)->nodeValue . "\t";
+						$merknad .= $xpath->query("Price", $Products->item($j))->item(0)->nodeValue . "\n";
+		
+						$Info = $xpath->query("ProductSpecification/Info", $Products->item($j));
+						for($k=0; $k<($Info->length-1); $k++)
+						{
+							$merknad .= trim($Info->item($k)->nodeValue) . "\n";
+		
+						}
+				
 					}
-					else
-					{
-						$periode = date('n',strtotime($data[$i]['Header'][0]['InvoiceDate']));
-					}
-					
-					$belop 	= $data[$i]['Summary']['TotalInclTax'];
+					$merknad  .= "\n" . $TextLink1;
+					$merknad  .= "\n" . $Link1;
+					unset($xml);
+					unset($xpath);
+//		print_r($merknad);
 
 					if( $invoice_common['art'] == 2 ) // kreditnota
 					{
 						$belop = -1 * abs($belop);
 					}
-					
-					if(isset($data[$i]['Header']['PaymentInfo']['BacsId']))
-					{
-						$kidnr 	= $data[$i]['Header']['PaymentInfo']['BacsId'];
-					}
-					else
-					{
-						$kidnr 	= $data[$i]['Header'][0]['PaymentInfo']['BacsId'];
-					}
 
-					$gid = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
-					$item_type = 1;
-					$item_id = '1201' . $data[$i]['Header']['HeaderText'];
-					
 					$buffer[$i]['fakturanr'] = $fakturanr;
 					$buffer[$i]['periode'] = $periode;
 					$buffer[$i]['forfallsdato'] = $forfallsdato;
@@ -188,7 +152,7 @@
 					$buffer[$i]['godkjentbelop'] = $belop;
 					
 					$buffer[$i]['kidnr'] = $kidnr;
-					$buffer[$i]['gid'] = $gid;
+					$buffer[$i]['gid'] = $Gnr.'/'.$Bnr.'-'.$sekjonnr;
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
 
 					if(isset($invoice_common['dim_b']) && $invoice_common['dim_b'])
@@ -200,7 +164,7 @@
 						$buffer[$i]['dimb'] = $this->dimb;
 					}
 
-					$buffer[$i]['item_type'] = $item_type;
+					$buffer[$i]['item_type'] = 1;
 					$buffer[$i]['item_id'] = $item_id;
 
 			        //Finn dima fra Boei
@@ -231,99 +195,9 @@
 					$boei_gateadresse=$this->soXport->dima_to_address($gabinfo['dima']);
 					$buffer[$i]['boei_gateadresse'] = $boei_gateadress;
 
-					if(isset($data[$i]['Header']['ShipTo']['AddressInfo']['Address']))
-					{
-						$referanse = $data[$i]['Header']['ShipTo']['AddressInfo']['Address'];
-					}
-					else
-					{
-						$referanse = $data[$i]['Header'][0]['ShipTo']['AddressInfo']['Address'];
-					}
-	
-					$buffer[$i]['referanse'] = $referanse;                
+					$buffer[$i]['referanse'] = $address;                
 
-					$merknad = '';
-
-					$merknad = 'Kemner adr: '.$referanse."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n";
-
-					$_details = array();
-					if(isset($data[$i]['Details'][0]) && is_array($data[$i]['Details'][0]))
-					{
-						foreach($data[$i]['Details'] as $_detail)
-						{
-							$_details[] = $_detail;
-						}
-					}
-					else
-					{
-						$_details[0]['Detail'] = $data[$i]['Details']['Detail'];
-					}
-
-					foreach ($_details as $details)
-					{
-						foreach ($details as $detail)
-						{
-
-							$_products = array();
-							if(is_array($detail['Products']))
-							{
-								$_products[] = $detail['Products'];
-							}
-							else
-							{
-								foreach($detail as $_detail)
-								{
-									$_products[] = $_detail['Products'];
-								}
-							}
-
-							foreach($_products as $product)
-							{
-								$merknad .= $product['SellerProductDescr'] . "\r\n";
-
-								if (isset($product['ProductSpecification']['Info']) && !is_array($product['ProductSpecification']['Info']))
-								{
-									$merknad .= $product['ProductSpecification']['Info'] . "\r\n";
-								}
-								else if (is_array($product['ProductSpecification']))
-								{
-									foreach($product['ProductSpecification'] as  $Specification)
-									{
-										$merknad .= $Specification['Info'] . "\r\n";
-									}
-								}
-
-								if (is_array($product['UnitCode']))
-								{
-									$merknad .= implode("",$product['UnitCode']) . "\t";
-								}
-								else
-								{
-									$merknad .= $product['UnitCode'] . "\t";
-								}
-						
-								if (is_array($product['Quantity']))
-								{
-									$merknad .= implode("",$product['Quantity']) . "\t";
-								}
-								else
-								{
-									$merknad .= $product['Quantity'] . "\t";
-								}
-						
-								if (is_array($product['Price']))
-								{
-									$merknad .= implode("",$product['Price'])."\r\n";
-								}
-								else
-								{
-									$merknad .= $product['Price']."\r\n";
-								}
-							}
-						}
-					}
-					
-					$buffer[$i]['merknad'] = $merknad;
+					$buffer[$i]['merknad'] = 'Kemner adr: '.$address."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n" .$merknad;
 					$buffer[$i]['splitt'] = $this->splitt;
 					$buffer[$i]['kildeid'] = $this->kildeid;
 					$buffer[$i]['spbudact_code'] = $this->spbudact_code;
@@ -336,8 +210,10 @@
 					$buffer[$i]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
 //_debug_array($bilagsnr);
 					$bilagsnr++;
+					$i++;
 				}
 			}
+			$reader->close();
 
 			if(!$download)
 			{
