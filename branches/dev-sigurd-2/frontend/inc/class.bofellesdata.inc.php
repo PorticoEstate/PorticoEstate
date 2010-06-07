@@ -64,9 +64,9 @@
 				while ($db->next_record())
 				{
 					$result_units[] = array(
-						"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
-						"ORG_NAME" => $db1->f('ORG_NAVN'),
-						"UNIT_ID" => $db1->f('RESULTATENHET')
+						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
+						"ORG_NAME" => $db->f('ORG_NAVN'),
+						"UNIT_ID" => $db->f('RESULTATENHET')
 					);
 				}
 			}
