@@ -45,7 +45,7 @@
 		
 		public function populate_result_units(array $unit_ids)
 		{
-			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 	        $table = "V_ORG_ENHET";
 	        	
 	        $db = $this->get_db();
@@ -56,7 +56,7 @@
 	        
 			foreach($unit_ids as $unit_id)
 			{
-				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string)";
+				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
 				$db->query($sql,__LINE__,__FILE__);
 				
 				//possible to check whether correct level?
