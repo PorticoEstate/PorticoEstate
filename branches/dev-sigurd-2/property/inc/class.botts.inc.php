@@ -741,7 +741,7 @@
 			return $address_element;
 		}
 		
-		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='')
+		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
 		{
 			$this->send			= CreateObject('phpgwapi.send');
 
@@ -839,6 +839,12 @@
 			if($timestampclosed)
 			{
 				$body .= lang('Date Closed').': '.$timestampclosed."\n\n";
+			}
+
+
+			if($get_message)
+			{
+				return array('subject' => $subject, 'body' => $body);
 			}
 
 			$members = array();
