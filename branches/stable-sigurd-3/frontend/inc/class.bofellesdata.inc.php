@@ -45,7 +45,7 @@
 		
 		public function populate_result_units(array $unit_ids)
 		{
-			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 	        $table = "V_ORG_ENHET";
 	        	
 	        $db = $this->get_db();
@@ -54,21 +54,17 @@
 	        
 	        $unit_ids_string = implode(',',$unit_ids);
 	        
-			foreach($unit_ids as $unit_id)
+			
+			$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string) AND V_ORG_ENHET.ORG_NIVAA = 4";
+			$db->query($sql,__LINE__,__FILE__);
+						
+			while ($db->next_record())
 			{
-				$sql = "SELECT $columns FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID IN ($unit_ids_string)";
-				$db->query($sql,__LINE__,__FILE__);
-				
-				//possible to check whether correct level?
-				
-				while ($db->next_record())
-				{
-					$result_units[] = array(
-						"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
-						"ORG_NAME" => $db1->f('ORG_NAVN'),
-						"UNIT_ID" => $db1->f('RESULTATENHET')
-					);
-				}
+				$result_units[] = array(
+					"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
+					"ORG_NAME" => $db->f('ORG_NAVN'),
+					"UNIT_ID" => $db->f('RESULTATENHET')
+				);
 			}
 			
 			return $result_units;
@@ -124,6 +120,7 @@
 						{
 							if(!isset($org_unit_ids[(int)$db1->f('ORG_ENHET_ID')]))
 							{
+								var_dump("Byrådsleder" . $db1->f('ORG_ENHET_ID'));
 								$result_units[] = array(
 									"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 									"ORG_NAME" => $db1->f('ORG_NAVN'),
@@ -139,6 +136,7 @@
 						//Insert in result array
 						if(!isset($org_unit_ids[$identifier]))
 						{	
+							var_dump("Resultatenehetsleder" . $identifier);
 							$result_units[] = array(
 								"ORG_UNIT_ID" => $identifier,
 								"ORG_NAME" => $name,

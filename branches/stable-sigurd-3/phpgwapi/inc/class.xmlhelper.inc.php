@@ -46,14 +46,14 @@
 				// if there is another array found recrusively call this function
 				if ( is_array( $value ) )
 				{
-					$node = phpgwapi_xmlhelper::is_assoc( $value ) || $numeric ? $xml->addChild( $key ) : $xml;
+					$node = self::is_assoc( $value ) || $numeric ? $xml->addChild( $key ) : $xml;
 
 					// recrusive call.
 					if ( $numeric )
 					{
 						$key = 'anon';
 					}
-					phpgwapi_xmlhelper::toXml( $value, $key, $node );
+					self::toXml( $value, $key, $node );
 				}
 				else
 				{
@@ -126,7 +126,7 @@
 			$arr = array();
 			foreach ( $children as $key => $node )
 			{
-				$node = phpgwapi_xmlhelper::toArray( $node );
+				$node = self::toArray( $node );
 
 				// support for 'anon' non-associative arrays
 				if ( $key == 'anon' )
@@ -191,7 +191,7 @@
 		{
 			$xml = new XMLReader();
 			$xml->xml($xmldata);
-			$assoc = phpgwapi_xmlhelper::_xml2assoc($xml);
+			$assoc = self::_xml2assoc($xml);
 			$xml->close();
 			return $assoc;
 		}
@@ -206,7 +206,7 @@
 					case XMLReader::END_ELEMENT:
 						return $tree;
 					case XMLReader::ELEMENT:
-						$node = array('tag' => $xml->name, 'value' => $xml->isEmptyElement ? '' : phpgwapi_xmlhelper::_xml2assoc($xml));
+						$node = array('tag' => $xml->name, 'value' => $xml->isEmptyElement ? '' : self::_xml2assoc($xml));
 						if($xml->hasAttributes)
 						{
 							while($xml->moveToNextAttribute())

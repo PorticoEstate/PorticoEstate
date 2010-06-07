@@ -49,7 +49,8 @@
 			'download2'	=> true,
 			'view_file'	=> true,
 			'edit_status'=> true,
-			'get_vendor_email' => true
+			'get_vendor_email' => true,
+			'_print' => true
 		);
 
 		/**
@@ -143,6 +144,29 @@
 				'end_date'		=> $this->end_date
 			);
 			$this->bo->save_sessiondata($data);
+		}
+
+		function _print()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+			}
+			
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$id 	= phpgw::get_var('id', 'int');
+			
+			$ticket = $this->bo->mail_ticket($id, $fields_updated=true, $receipt = array(),$location_code='', $get_message = true);
+
+			$html = "<html><head><title>{$ticket['subject']}</title></head>";
+			$html .= "<body>";
+			$html .= $ticket['subject'] . '</br></br>';
+			$html .= nl2br($ticket['body']);
+			$html .= "</body></html>";
+
+			echo $html;
 		}
 
 		function download2()
@@ -783,6 +807,18 @@
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uitts.view'
+							)),
+				'parameters'	=> $parameters
+				);
+
+				$datatable['rowactions']['action'][] = array(
+					'my_name' 			=> 'print',
+					'statustext' 	=> lang('print the ticket'),
+					'text'			=> lang('print view'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	=> 'property.uitts._print',
+								'target'		=> '_blank'
 							)),
 				'parameters'	=> $parameters
 				);

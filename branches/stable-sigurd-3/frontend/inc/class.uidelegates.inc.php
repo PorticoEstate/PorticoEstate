@@ -53,22 +53,18 @@
 			{
 				$account_id = phpgw::get_var('account_id');
 				
+				$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
+				
 				//Parameter to delegate access to only a single organisational unit
 				$org_unit_id = $this->header_state['selected_org_unit'];
-				
-				
 				$success = true;
-				if($org_unit_id == 'all')
+				
+				foreach($org_units as $org_unit)
 				{
-					$org_units = $this->header_state['org_unit'];
-					foreach($org_units as $org_unit)
+					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 					{
 						$success = $success  && $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID']);
 					}
-				}
-				else
-				{
-					$success = $this->add_delegate($account_id,$org_unit_id);
 				}
 				
 				if($success)

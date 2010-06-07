@@ -94,9 +94,9 @@
 						//Creating a temporary array holding the single organisational unit in query
 						$org_unit_ids = array(
 							array(
-								"ORG_UNIT_ID" => $this->get_org_enhet_id($param_selected_org_unit, $this->header_state['org_unit']),
-								"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_selected_org_unit),
-								"UNIT_ID" => $param_selected_org_unit
+								"ORG_UNIT_ID" => $param_selected_org_unit
+								//"ORG_NAME" => frontend_bofellesdata::get_instance()->get_organisational_unit_name($param_selected_org_unit),
+								//"UNIT_ID" => $param_selected_org_unit
 							)
 						);
 					}
@@ -133,7 +133,8 @@
 				//Update header state
 				$this->header_state['org_unit'] = $org_unit_ids;
 				$this->header_state['number_of_org_units'] = '1';
-				$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
+				//$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
+				$this->header_state['selected_org_unit'] = $param_only_org_unit;
 				
 				//Update locations
 				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
@@ -152,8 +153,11 @@
 				
 				//Merge with delegation units
 				$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
-				$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
-				$org_units = array_merge($org_units,$delegation_units);
+				if(count($delegation_org_ids) > 0)
+				{
+					$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
+					$org_units = array_merge($org_units,$delegation_units);
+				}
 				
 				//Update org units on header state
 				$this->header_state['org_unit'] = $org_units;
@@ -357,7 +361,7 @@
 		{
 			foreach($org_units as $org_unit)
 			{
-				if($unit_id == $org_unit['UNIT_ID'])
+				if($unit_id == $org_unit['ORG_UNIT_ID'])
 				{
 					return true;
 				}
