@@ -91,7 +91,7 @@
 			{
 				//$sql = "SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
 				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
-				$sql = "SELECT data FROM phpgw_account_delegates WHERE account_id = {$accoung_id} AND location_id = {$location_id}";
+				$sql = "SELECT data FROM phpgw_account_delegates WHERE account_id = {$account_id} AND location_id = {$location_id}";
 				
 				$db = clone $GLOBALS['phpgw']->db;
 				$db->query($sql,__LINE__,__FILE__);
