@@ -97,12 +97,6 @@
 		}
 	}
 	
-	if( phpgw::get_var('phpgw_return_as') != 'json' && $global_message = phpgwapi_cache::system_get('phpgwapi', 'phpgw_global_message'))
-	{
-		echo "<div class='msg_good'>";
-		echo nl2br($global_message);
-		echo '</div>';
-	}
 	if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 	{
 		phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');

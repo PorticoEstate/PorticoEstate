@@ -63,7 +63,7 @@
 				{
 					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 					{
-						$success = $success  && $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID']);
+						$success = $success  && $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
 					}
 				}
 				
@@ -116,7 +116,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','delegate'));
 		}
 		
-		public function add_delegate(int $account_id, $org_unit_id)
+		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
 			if(!isset($account_id) || $account_id == '')
 			{
@@ -133,7 +133,7 @@
 					return false;
 				}
 			}	
-			return frontend_bofrontend::add_delegate($account_id, null, $org_unit_id);
+			return frontend_bofrontend::add_delegate($account_id, null, $org_unit_id, $org_name);
 		}
 		
 		public function remove_delegate()

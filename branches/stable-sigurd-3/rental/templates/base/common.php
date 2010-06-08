@@ -559,7 +559,6 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 			}
 	
 	var cal = new YAHOO.widget.Calendar(
-		"calendar",
 		calendarBodyId,
 		{ 	navigator:navConfig,
 			title: '<?php echo lang('select_date') ?>',
