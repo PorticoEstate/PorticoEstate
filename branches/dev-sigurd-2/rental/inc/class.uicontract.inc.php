@@ -171,13 +171,16 @@
 						$rows[] = $result->serialize();
 					}
 				}
+				var_dump("Usage " .memory_get_usage() . " bytes after serializing");
 			}
 			
 			if(!$export){
 				//Add context menu columns (actions and labels)
 				array_walk($rows, array($this, 'add_actions'), array($type,$ids));
 			}
-
+			var_dump("Usage " .memory_get_usage() . " bytes after menu");
+			
+			
 			//Build a YUI result from the data
 			$result_data = array('results' => $rows, 'total_records' => $result_count);
 			return $this->yui_results($result_data, 'total_records', 'results');

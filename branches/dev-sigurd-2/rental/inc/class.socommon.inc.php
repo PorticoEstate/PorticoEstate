@@ -184,6 +184,8 @@ abstract class rental_socommon
 				$results[$result_id] = $this->populate($result_id,$result);
 			}
 		}
+		var_dump("Peak " . memory_get_peak_usage() . " bytes after populating");
+		var_dump("Usage " .memory_get_usage() . " bytes after populating");
 		return $results;
 	}
 	
