@@ -176,11 +176,8 @@
 							if(isset($email) && $email != '')
 							{
 								
-								$title = "Portico Estate: Opprettet konto";
-								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].', <br/><br/>';
-								$message .= "Det er opprettet en konto for deg i Portico Estate.<br/><br/> "
-											."Brukernnavn: {$username} <br/>Passord: TEst1234";
-								
+								$title = lang('email_create_account_title');
+								$message = lang('email_create_account_message',$fellesdata_user['firstname'],$fellesdata_user['lastname']);
 								frontend_bofrontend::send_system_message($email,$title,$message);
 							}
 						}
@@ -251,7 +248,7 @@
 		 * @param int $owner_id	the person who delegates
 		 * @param int $org_unit_id	the target organisational unit
 		 */
-		public static function add_delegate(int $account_id, int $owner_id, $org_unit_id)
+		public static function add_delegate(int $account_id, int $owner_id, $org_unit_id, $org_name)
 		{
 			// The owner id is th current user if not set
 			if(!isset($owner_id))
@@ -294,10 +291,8 @@
 							if(isset($email) && $email != '')
 							{
 								
-								$title = "Portico Estate: Innsyn";
-								$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
-								$message .= 'Du har fått innsyn på vegne av '
-											.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i frontend modulen i Portico Estate.';
+								$title = lang('email_add_delegate_title');
+								$message = lang('email_add_delegate_message',$fellesdata_user['firstname'],$fellesdata_user['lastname'],$fellesdata_owner['firstname'],$fellesdata_owner['lastname'],$org_name);
 								frontend_bofrontend::send_system_message($email,$title,$message);							
 							}
 						}
@@ -356,11 +351,8 @@
 						if(isset($email) && $email != '')
 						{
 							
-							$title = "Portico Estate: Innsyn";
-							$message = 'Systemmelding til '.$fellesdata_user['firstname'].' '.$fellesdata_user['lastname'].',<br/><br/>';
-							$message .= 'Din innsynsmulighet på vegne av '
-										.$fellesdata_owner['firstname'].' '.$fellesdata_owner['lastname'].' i Portico Estate er nå tatt vekk.';
-							
+							$title = lang('email_remove_delegate_title');
+							$message = lang('email_remove_delegate_message',$fellesdata_user['firstname'],$fellesdata_user['lastname'],$fellesdata_owner['firstname'],$fellesdata_owner['lastname']);
 							frontend_bofrontend::send_system_message($email,$title,$message);
 						}
 					}
