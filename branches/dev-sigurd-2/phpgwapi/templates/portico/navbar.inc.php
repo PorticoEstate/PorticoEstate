@@ -110,6 +110,13 @@ HTML;
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
 
+		if( phpgw::get_var('phpgw_return_as') != 'json' && $global_message = phpgwapi_cache::system_get('phpgwapi', 'phpgw_global_message'))
+		{
+			echo "<div class='msg_good'>";
+			echo nl2br($global_message);
+			echo '</div>';
+		}
+
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');
 	}
