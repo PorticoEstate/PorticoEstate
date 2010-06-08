@@ -141,6 +141,33 @@
 			</dd>
         </dl>
         <div class="clr"/>
+		<dl class="form-col">
+			<div class="heading"><br /><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
+			<dd>
+					<xsl:value-of select="application/contact_name"/>
+			</dd>
+			<dt><label for="field_contact_email"><xsl:value-of select="php:function('lang', 'Email')" /></label></dt>
+			<dd>
+					<xsl:value-of select="application/contact_email"/>
+			</dd>
+			<dt><label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>
+			<dd>
+					<xsl:value-of select="application/contact_phone"/>
+			</dd>
+		</dl>
+		<dl class="form-col">
+			<div class="heading"><xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+			<xsl:if test="application/customer_identifier_type = 'organization_number'">
+				<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'organization number')" /></label></dt>
+				<dd><xsl:value-of select="application/customer_organization_number"/></dd>
+			</xsl:if>
+			<xsl:if test="application/customer_identifier_type = 'ssn'">
+				<dt><label for="field_ssn_number"><xsl:value-of select="php:function('lang', 'Date of birth or SSN')" /></label></dt>
+				<dd><xsl:value-of select="application/customer_ssn"/></dd>
+			</xsl:if>
+		</dl>
+        <div class="clr"/>
 		<xsl:if test="application/edit_link">
 	        <button>
 					<xsl:if test="application/case_officer/is_current_user">
