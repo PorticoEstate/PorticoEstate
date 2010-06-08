@@ -171,14 +171,14 @@
 						$rows[] = $result->serialize();
 					}
 				}
-				var_dump("Usage " .memory_get_usage() . " bytes after serializing");
+				//var_dump("Usage " .memory_get_usage() . " bytes after serializing");
 			}
 			
 			if(!$export){
 				//Add context menu columns (actions and labels)
 				array_walk($rows, array($this, 'add_actions'), array($type,$ids));
 			}
-			var_dump("Usage " .memory_get_usage() . " bytes after menu");
+			//var_dump("Usage " .memory_get_usage() . " bytes after menu");
 			
 			
 			//Build a YUI result from the data
