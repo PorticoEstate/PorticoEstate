@@ -78,7 +78,7 @@
 				}
 				else
 				{
-					$msglog['message'][] = array('msg' => lang('delegation_error'));	
+					$msglog['error'][] = array('msg' => lang('delegation_error'));	
 				}
 			}
 			else if(isset($_POST['remove']))
