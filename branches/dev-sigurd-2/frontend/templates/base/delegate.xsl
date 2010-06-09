@@ -88,34 +88,35 @@
 			   			</div>
 			   		</xsl:otherwise>
 			</xsl:choose>
-					       
-			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
-			 
-				<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
-				<xsl:choose>
-			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
-			   			 <em style="margin-left: 1em;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
-			   		</xsl:when>
-					<xsl:otherwise>
-					 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
-						<ul>
-							<xsl:for-each select="user_delegate">
-								<li>
-								  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-								  		<input type="hidden" name="account_id" value="{account_id}"/>
-										 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
-										(<xsl:value-of select="account_lid"/>)
-										<input type="submit" name="remove" value="{$btn_remove}"/>
-									</form>
-								</li>
-							</xsl:for-each>
-						</ul>
-					</xsl:otherwise>
-				</xsl:choose>
 				
 				
-				
-			</div>
+			<xsl:choose>
+				<xsl:when test="count(//user_delegate) > 0">	       
+					<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
+						<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
+						<xsl:choose>
+					   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
+					   			 <em style="margin-left: 1em;"><xsl:value-of select="php:function('lang', 'no_delegates')"/></em>
+					   		</xsl:when>
+							<xsl:otherwise>
+							 <xsl:variable name="btn_remove"><xsl:value-of select="php:function('lang', 'btn_remove')"/></xsl:variable>
+								<ul>
+									<xsl:for-each select="user_delegate">
+										<li>
+										  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+										  		<input type="hidden" name="account_id" value="{account_id}"/>
+												 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
+												(<xsl:value-of select="account_lid"/>)
+												<input type="submit" name="remove" value="{$btn_remove}"/>
+											</form>
+										</li>
+									</xsl:for-each>
+								</ul>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
+				</xsl:when>
+			</xsl:choose>
 		</div>	
 	</div>
 </xsl:template>
