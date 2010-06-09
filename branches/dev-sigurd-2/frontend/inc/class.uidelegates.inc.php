@@ -63,7 +63,15 @@
 				{
 					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 					{
-						$success = $success  && $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
+						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
+						if($res)
+						{
+							$success = $success  && $res;
+						}
+						else
+						{
+							$msglog['warning'] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
+						}
 					}
 				}
 				
