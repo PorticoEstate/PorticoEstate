@@ -32,6 +32,8 @@
 			$db->User = $config->config_data['external_db_user'];
 			$db->Password = $config->config_data['external_db_password'];
 
+			$db->HaltOnError = false;
+			
 			try
 			{
 				$db->connect();
