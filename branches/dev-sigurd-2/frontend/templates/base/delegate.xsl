@@ -2,7 +2,7 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-			<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; margin-right: 2em;">
+			<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
 				<xsl:choose>
 					<xsl:when test="number_of_delegates &lt; 5">
 						<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
@@ -36,7 +36,7 @@
 		
 			<xsl:choose>
 			   		<xsl:when test="//selected_org_unit != 'all'">
-			   			<div class="delegates" style=" float: right; padding-left: 2em; padding-top: 2em; width=70%; text-align: left;">
+			   			<div class="delegates" style=" float: left; padding-left: 2em; padding-top: 2em; width=70%; text-align: left;">
 							<h3><xsl:value-of select="php:function('lang', 'delegates_for_res_unit')"/> (<xsl:value-of select="number_of_delegates"/>)</h3>
 							<xsl:choose>
 						   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
