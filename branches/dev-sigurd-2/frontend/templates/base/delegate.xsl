@@ -6,7 +6,7 @@
 		<xsl:copy-of select="//header/org_unit[ORG_UNIT_ID = '34']"/>
 		
 		<xsl:choose>
-			<xsl:when test="//selected_org_unit = 'all' or //header/org_unit[org_unit_id = //selected_org_unit]/leader = '1'">
+			<xsl:when test="//selected_org_unit = 'all' or //header/org_unit[ORG_UNIT_ID = //selected_org_unit]/LEADER = '1'">
 				<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
 					<xsl:choose>
 						<xsl:when test="number_of_delegates &lt; 5">
