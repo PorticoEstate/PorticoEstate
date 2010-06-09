@@ -24,11 +24,11 @@
 				$username = phpgw::get_var('username');
 				if(!isset($username))
 				{
-					$msglog['error'][] = array('msg' => 'lacking_username');
+					$msglog['error'][] = array('msg' => lang('lacking_username'));
 				}
 				else if($username == $GLOBALS['phpgw_info']['user']['account_lid'])
 				{
-					$msglog['error'][] = array('msg' => 'searching_for_self');
+					$msglog['error'][] = array('msg' => lang('searching_for_self'));
 				}
 				else
 				{
