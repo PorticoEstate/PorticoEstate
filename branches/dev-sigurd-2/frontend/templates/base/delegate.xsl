@@ -7,17 +7,6 @@
 				<xsl:choose>
 					<xsl:when test="number_of_delegates &lt; 5">
 						<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
-						<table cellpadding="2" cellspacing="2" align="center">
-					        <xsl:choose>
-					            <xsl:when test="msgbox_data != ''">
-					                <tr>
-					                    <td align="left" colspan="3">
-					                        <xsl:call-template name="msgbox"/>
-					                    </td>
-					                </tr>
-					            </xsl:when>
-					        </xsl:choose>
-					    </table>
 					    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
 					    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
 					    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
@@ -81,6 +70,14 @@
 			   		</xsl:otherwise>
 			</xsl:choose>
 			
+					        <xsl:choose>
+					            <xsl:when test="msgbox_data != ''">
+					       
+					                        <xsl:call-template name="msgbox"/>
+					                   
+					            </xsl:when>
+					        </xsl:choose>
+					   
 			
 			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
 				<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
