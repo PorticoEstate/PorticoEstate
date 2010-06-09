@@ -64,14 +64,11 @@
 					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 					{
 						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
-						if($res)
+						if(!$res)
 						{
-							$success = $success  && $res;
+							$msglog['message'] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
 						}
-						else
-						{
-							$msglog['warning'] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
-						}
+						$success = $success  && $res;
 					}
 				}
 				
