@@ -34,13 +34,11 @@
 				</xsl:choose>
 			</div>
 			
-			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
 				<xsl:choose>
 		            <xsl:when test="msgbox_data != ''">
 		            	<xsl:call-template name="msgbox"/>
 		            </xsl:when>
 		        </xsl:choose>
-			</div>
 		
 			<xsl:choose>
 			   		<xsl:when test="//selected_org_unit != 'all'">
