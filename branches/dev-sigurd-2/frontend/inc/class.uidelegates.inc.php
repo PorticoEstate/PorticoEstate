@@ -74,11 +74,11 @@
 				
 				if($success)
 				{
-					$msglog['message'][] = lang('delegation_successful');	
+					$msglog['message'] = lang('delegation_successful');	
 				}
 				else
 				{
-					$msglog['message'][] = lang('delegation_error');	
+					$msglog['message'] = lang('delegation_error');	
 				}
 			}
 			else if(isset($_POST['remove']))
