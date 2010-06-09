@@ -267,6 +267,7 @@
 				
 				// Database query
 				$db = clone $GLOBALS['phpgw']->db;
+				$db->Halt_On_Error = 'no';
 				$sql = "INSERT INTO phpgw_account_delegates (account_id,owner_id,location_id,data,created_on,created_by) VALUES ({$account_id},{$owner_id},{$location_id},'{$org_unit_id}',{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				
