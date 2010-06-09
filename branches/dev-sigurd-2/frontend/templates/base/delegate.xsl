@@ -2,37 +2,43 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-			<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
-				<xsl:choose>
-					<xsl:when test="number_of_delegates &lt; 5">
-						<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
-					    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
-					    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
-					    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-					    	<input type="hidden" name="account_id" value="{search/account_id}"/>
-					    	<dl>
-					    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
-					    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="{$btn_search}"/></dd>
-					    		<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
-					    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/></dd>
-					    		<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
-					    		<dd><input type="text" name="lastname" readonly="" value="{search/lastname}" style="background-color: #CCCCCC;"/></dd>
-					    		<dt><xsl:value-of select="php:function('lang', 'email')"/></dt>
-					    		<dd><input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/></dd>
-					    		<!-- <dt><xsl:value-of select="php:function('lang', 'password')"/></dt>
-					    		<dd><input type="password" name="password1"/></dd>
-					    		<dt><xsl:value-of select="php:function('lang', 'repeat_password')"/></dt>
-					    		<dd><input type="password" name="password2"/></dd> -->
-					    		<dt></dt>
-					    		<dd><input type="submit" name="add" value="{$btn_add}"/></dd>
-					    	</dl>
-						</form>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="php:function('lang', 'max_5_delegates')"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
+		
+		<xsl:choose>
+			<xsl:when test="//selected_org_unit = 'all' || /header/org_unit[org_unit_id = //selected_org_unit]/leader">
+				<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
+					<xsl:choose>
+						<xsl:when test="number_of_delegates &lt; 5">
+							<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
+						    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
+						    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
+						    <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+						    	<input type="hidden" name="account_id" value="{search/account_id}"/>
+						    	<dl>
+						    		<dt><xsl:value-of select="php:function('lang', 'username')"/></dt>
+						    		<dd><input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="{$btn_search}"/></dd>
+						    		<dt><xsl:value-of select="php:function('lang', 'firstname')"/></dt>
+						    		<dd><input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/></dd>
+						    		<dt><xsl:value-of select="php:function('lang', 'lastname')"/></dt>
+						    		<dd><input type="text" name="lastname" readonly="" value="{search/lastname}" style="background-color: #CCCCCC;"/></dd>
+						    		<dt><xsl:value-of select="php:function('lang', 'email')"/></dt>
+						    		<dd><input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/></dd>
+						    		<!-- <dt><xsl:value-of select="php:function('lang', 'password')"/></dt>
+						    		<dd><input type="password" name="password1"/></dd>
+						    		<dt><xsl:value-of select="php:function('lang', 'repeat_password')"/></dt>
+						    		<dd><input type="password" name="password2"/></dd> -->
+						    		<dt></dt>
+						    		<dd><input type="submit" name="add" value="{$btn_add}"/></dd>
+						    	</dl>
+							</form>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="php:function('lang', 'max_5_delegates')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</xsl:when>
+		</xsl:choose>
+			
 			
 				<xsl:choose>
 		            <xsl:when test="msgbox_data != ''">
