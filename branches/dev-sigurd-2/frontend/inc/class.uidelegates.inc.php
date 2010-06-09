@@ -24,7 +24,7 @@
 				$username = phpgw::get_var('username');
 				if(!isset($username))
 				{
-					$msglog['error']['msg'] = 'lacking_username';
+					$msglog['error'][] = array('msg' => 'lacking_username');
 				}
 				else
 				{
@@ -40,11 +40,11 @@
 						if($fellesdata_user)
 						{
 							$search = $fellesdata_user;
-							$msglog['message']['msg'] = lang('user_found_in_Fellesdata');
+							$msglog['message'][] = array('msg' => lang('user_found_in_Fellesdata'));
 						}
 						else
 						{
-							$msglog['error']['msg'] = lang('no_hits');
+							$msglog['error'][] = array('msg' => lang('no_hits'));
 						}
 					}
 				}
@@ -66,7 +66,7 @@
 						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
 						if(!$res)
 						{
-							$msglog['error']['msg'] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
+							$msglog['error'][] = array('msg' => lang('error_delegating_unit',$org_unit['ORG_NAME']));
 						}
 						$success = $success  && $res;
 					}
@@ -74,11 +74,11 @@
 				
 				if($success)
 				{
-					$msglog['message']['msg'] = lang('delegation_successful');	
+					$msglog['message'][] = array('msg' => lang('delegation_successful'));	
 				}
 				else
 				{
-					$msglog['message']['msg'] = lang('delegation_error');	
+					$msglog['message'][] = array('msg' => lang('delegation_error'));	
 				}
 			}
 			else if(isset($_POST['remove']))
@@ -100,12 +100,7 @@
 			
 			$number_of_delegates = count($delegates_per_org_unit);
 			$number_of_user_delegates = count($delegates_per_user);
-			
-			var_dump($msglog);
-			$prepared = $GLOBALS['phpgw']->common->msgbox_data($msglog);
-			var_dump($prepared);
-			var_dump($GLOBALS['phpgw']->common->msgbox($prepared));
-			
+						
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,
