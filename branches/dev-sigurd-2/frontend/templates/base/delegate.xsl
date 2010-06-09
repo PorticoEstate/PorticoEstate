@@ -2,9 +2,9 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-		
+		<xsl:variable name="unit_leader" select="//header/org_unit[ORG_UNIT_ID = //selected_org_unit]/LEADER"></xsl:variable>
 		<xsl:choose>
-			<xsl:when test="//selected_org_unit = 'all' or //header/org_unit[ORG_UNIT_ID = //selected_org_unit]/LEADER = '1'">
+			<xsl:when test="//selected_org_unit = 'all' or $unit_leader = '1'">
 				<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
 					<xsl:choose>
 						<xsl:when test="number_of_delegates &lt; 5">
@@ -40,11 +40,11 @@
 		</xsl:choose>
 			
 			
-				<xsl:choose>
-		            <xsl:when test="msgbox_data != ''">
-		            	<xsl:call-template name="msgbox"/>
-		            </xsl:when>
-		        </xsl:choose>
+		<xsl:choose>
+           <xsl:when test="msgbox_data != ''">
+           	<xsl:call-template name="msgbox"/>
+           </xsl:when>
+       </xsl:choose>
 		
 			<xsl:choose>
 			   		<xsl:when test="//selected_org_unit != 'all'">
@@ -60,13 +60,21 @@
 									<ul>
 										<xsl:for-each select="delegate">
 											<li>
-												 
-												  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-												  		<input type="hidden" name="account_id" value="{account_id}"/>
-														 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
-														(<xsl:value-of select="account_lid"/>)
-														<input type="submit" name="remove_specific" value="{$btn_remove}"/>
-													</form>
+												 <xsl:choose>
+												 	<xsl:when test="$unit_leader = '1'">
+													  <form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
+													  		<input type="hidden" name="account_id" value="{account_id}"/>
+															 <img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
+															(<xsl:value-of select="account_lid"/>)
+															<input type="submit" name="remove_specific" value="{$btn_remove}"/>
+														</form>
+													</xsl:when>
+													<xsl:otherwise>
+														<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/><xsl:value-of select="account_lastname"/>, <xsl:value-of select="account_firstname"/> 
+															(<xsl:value-of select="account_lid"/>)
+													</xsl:otherwise>
+												</xsl:choose>
+												
 											</li>
 										</xsl:for-each>
 									</ul>
