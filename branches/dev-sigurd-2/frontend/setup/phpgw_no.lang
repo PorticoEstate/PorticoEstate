@@ -113,7 +113,7 @@ messages	frontend	no	Innboks
 no_new_messages	frontend	no	Innboks (0)
 home	frontend	no	Hjem
 delegates_for_res_unit	frontend	no	Delegater for valgt resultatenhet
-delegates_for_user	frontend	no	Delegater for bruker uavhengig av resultatenhet
+delegates_for_user	frontend	no	Dine delegater uavhengig av resultatenhet
 deletage_to_all_res_units	frontend	no	Myndighet vil bli gitt til alle resultateneheter du er leder
 email_create_account_title	frontend	no	Portico Estate: Opprettet tilgang
 email_create_account_message	frontend	no	Systemmelding til %1 %2 <br/><br/>Det er opprettet en tilgang for deg i Portico Estate
