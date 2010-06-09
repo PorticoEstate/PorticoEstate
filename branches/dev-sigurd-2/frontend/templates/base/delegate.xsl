@@ -36,7 +36,7 @@
 		
 			<xsl:choose>
 			   		<xsl:when test="//selected_org_unit != 'all'">
-			   			<div class="delegates" style=" float: right; padding-left: 2em; padding-top: 2em; width=70%;">
+			   			<div class="delegates" style=" float: right; padding-left: 2em; padding-top: 2em; width=70%; text-align: left;">
 							<h3><xsl:value-of select="php:function('lang', 'delegates_for_res_unit')"/> (<xsl:value-of select="number_of_delegates"/>)</h3>
 							<xsl:choose>
 						   		<xsl:when test="not(normalize-space(delegate)) and (count(delegate) &lt;= 1)">
