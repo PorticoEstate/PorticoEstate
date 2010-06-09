@@ -70,17 +70,19 @@
 			   		</xsl:otherwise>
 			</xsl:choose>
 			
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
+				<xsl:choose>
+		            <xsl:when test="msgbox_data != ''">
+		            	<xsl:call-template name="msgbox"/>
+		            </xsl:when>
+		        </xsl:choose>
+			</div>
+			
 					       
 					   
 			
 			<div class="delegates" style="padding-left: 2em; padding-top: 2em;">
-			 <xsl:choose>
-					            <xsl:when test="msgbox_data != ''">
-					       
-					                        <xsl:call-template name="msgbox"/>
-					               
-					            </xsl:when>
-					        </xsl:choose>
+			 
 				<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
 				<xsl:choose>
 			   		<xsl:when test="not(normalize-space(user_delegate)) and (count(user_delegate) &lt;= 1)">
