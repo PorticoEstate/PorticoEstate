@@ -92,7 +92,7 @@
 			<xsl:copy-of select="/"/>
 				
 			<xsl:choose>
-				<xsl:when test="count(//user_delegate) > 0">	       
+				<xsl:when test="normalize-space(//user_delegate) != ''">	       
 					<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
 						<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
 						<xsl:choose>
