@@ -32,7 +32,7 @@
 					if($account_id)
 					{
 						$search = frontend_bofrontend::get_account_info($account_id);
-						$msglog['message']['msg'] = lang('user_found_in_PE');
+						$msglog['message'][] = array('msg' => lang('user_found_in_PE'));
 					}
 					else
 					{
