@@ -26,6 +26,10 @@
 				{
 					$msglog['error'][] = array('msg' => 'lacking_username');
 				}
+				else if($username == $GLOBALS['phpgw_info']['user']['account_lid'])
+				{
+					$msglog['error'][] = array('msg' => 'searching_for_self');
+				}
 				else
 				{
 					$account_id = frontend_bofrontend::delegate_exist($username);
