@@ -63,13 +63,13 @@
 						</div>
 			   		</xsl:when>
 			   		<xsl:otherwise>
-			   			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%;">
+			   			<div class="delegates" style="float: left; padding-left: 2em; padding-top: 2em; width=70%;">
 			   				<h3 style="color: red;"><xsl:value-of select="php:function('lang', 'deletage_to_all_res_units')"/></h3>
 			   			</div>
 			   		</xsl:otherwise>
 			</xsl:choose>
 			
-			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: right;">
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
 				<xsl:choose>
 		            <xsl:when test="msgbox_data != ''">
 		            	<xsl:call-template name="msgbox"/>
@@ -80,7 +80,7 @@
 					       
 					   
 			
-			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: right;">
+			<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
 			 
 				<h3><xsl:value-of select="php:function('lang', 'delegates_for_user')"/> (<xsl:value-of select="number_of_user_delegates"/>)</h3>
 				<xsl:choose>
