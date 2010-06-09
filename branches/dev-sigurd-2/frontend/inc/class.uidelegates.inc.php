@@ -66,7 +66,7 @@
 						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
 						if(!$res)
 						{
-							$msglog['message'] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
+							$msglog['message'][] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
 						}
 						$success = $success  && $res;
 					}
@@ -74,11 +74,11 @@
 				
 				if($success)
 				{
-					$msglog['message'] = lang('delegation_successful');	
+					$msglog['message'][] = lang('delegation_successful');	
 				}
 				else
 				{
-					$msglog['message'] = lang('delegation_error');	
+					$msglog['message'][] = lang('delegation_error');	
 				}
 			}
 			else if(isset($_POST['remove']))
