@@ -89,6 +89,7 @@
 			   		</xsl:otherwise>
 			</xsl:choose>
 				
+			<xsl:copy-of select="/"/>
 				
 			<xsl:choose>
 				<xsl:when test="count(//user_delegate) > 0">	       
