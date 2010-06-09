@@ -24,7 +24,7 @@
 				$username = phpgw::get_var('username');
 				if(!isset($username))
 				{
-					$msglog['error'][] = 'lacking_username';
+					$msglog['error']['msg'] = 'lacking_username';
 				}
 				else
 				{
@@ -32,7 +32,7 @@
 					if($account_id)
 					{
 						$search = frontend_bofrontend::get_account_info($account_id);
-						$msglog['message'][] = lang('user_found_in_PE');
+						$msglog['message']['msg'] = lang('user_found_in_PE');
 					}
 					else
 					{
@@ -40,11 +40,11 @@
 						if($fellesdata_user)
 						{
 							$search = $fellesdata_user;
-							$msglog['message'][] = lang('user_found_in_Fellesdata');
+							$msglog['message']['msg'] = lang('user_found_in_Fellesdata');
 						}
 						else
 						{
-							$msglog['error'][] = lang('no_hits');
+							$msglog['error']['msg'] = lang('no_hits');
 						}
 					}
 				}
@@ -66,7 +66,7 @@
 						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
 						if(!$res)
 						{
-							$msglog['error'][] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
+							$msglog['error']['msg'] = lang('error_delegating_unit',$org_unit['ORG_NAME']);
 						}
 						$success = $success  && $res;
 					}
@@ -74,11 +74,11 @@
 				
 				if($success)
 				{
-					$msglog['message'][] = lang('delegation_successful');	
+					$msglog['message']['msg'] = lang('delegation_successful');	
 				}
 				else
 				{
-					$msglog['message'][] = lang('delegation_error');	
+					$msglog['message']['msg'] = lang('delegation_error');	
 				}
 			}
 			else if(isset($_POST['remove']))
