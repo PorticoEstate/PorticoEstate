@@ -88,14 +88,30 @@
 			else if(isset($_POST['remove']))
 			{
 				$account_id = phpgw::get_var('account_id'); 
-				frontend_bofrontend::remove_delegate($account_id,null,null);
+				$result = frontend_bofrontend::remove_delegate($account_id,null,null);
+				if($result)
+				{
+					$msglog['message'][] = array('msg' => lang('remove_delegate_successful'));	
+				}
+				else
+				{
+					$msglog['error'][] = array('msg' => lang('remove_delegate_error'));	
+				}
 			} 
 			else if(isset($_POST['remove_specific']))
 			{
 				$account_id = phpgw::get_var('account_id');
 				//Parameter to delegate access to only a single organisational unit
 				$org_unit_id = $this->header_state['selected_org_unit'];
-				frontend_bofrontend::remove_delegate($account_id,null,$org_unit_id);
+				$result = frontend_bofrontend::remove_delegate($account_id,null,$org_unit_id);
+				if($result)
+				{
+					$msglog['message'][] = array('msg' => lang('remove_delegate_successful'));	
+				}
+				else
+				{
+					$msglog['error'][] = array('msg' => lang('remove_delegate_error'));	
+				}
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
