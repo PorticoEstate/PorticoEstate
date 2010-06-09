@@ -88,9 +88,7 @@
 			   			</div>
 			   		</xsl:otherwise>
 			</xsl:choose>
-				
-			<xsl:copy-of select="/"/>
-				
+								
 			<xsl:choose>
 				<xsl:when test="normalize-space(//user_delegate) != ''">	       
 					<div class="delegates" style="padding-left: 2em; padding-top: 2em; width=70%; float: left;">
