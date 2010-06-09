@@ -2,7 +2,7 @@
    	<div class="yui-navset" id="ticket_tabview">
         <xsl:value-of disable-output-escaping="yes" select="tabs" />
 		<div class="yui-content">
-		<xsl:copy-of select="/"/>
+		<xsl:copy-of select="//header/org_unit[org_unit_id = //selected_org_unit]"/>
 		
 		<xsl:choose>
 			<xsl:when test="//selected_org_unit = 'all' or //header/org_unit[org_unit_id = //selected_org_unit]/leader = '1'">
