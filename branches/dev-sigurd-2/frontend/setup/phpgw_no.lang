@@ -123,3 +123,5 @@ email_add_delegate_title	frontend	no	Portico Estate: Innsyn
 email_add_delegate_message	frontend	no	Systemmelding til %1 %2 <br/><br/>Du har fått innsyn på vegne av %3 %4 i frontend modulen i Portico Estate for følgende resultatenhet: %5
 error_delegating_unit	frontend	no	En feil oppstod når det skulle under delegering til resultatenhet: %1
 searching_for_self	frontend	no	Vennligst søk etter et annet brukernavn enn ditt eget
+remove_delegate_successful	frontend	no	Delegaten ble fjernet
+remove_delegate_error	frontend	no	Fjerning av delegaten var mislykket
