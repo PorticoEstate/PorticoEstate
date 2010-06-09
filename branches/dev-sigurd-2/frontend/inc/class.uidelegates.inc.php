@@ -101,6 +101,7 @@
 			$number_of_delegates = count($delegates_per_org_unit);
 			$number_of_user_delegates = count($delegates_per_user);
 			
+			var_dump($msglog);
 			$prepared = $GLOBALS['phpgw']->common->msgbox_data($msglog);
 			var_dump($prepared);
 			var_dump($GLOBALS['phpgw']->common->msgbox($prepared));
