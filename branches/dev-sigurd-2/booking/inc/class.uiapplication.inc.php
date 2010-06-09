@@ -324,7 +324,7 @@
 		{
 			$doc_id = substr($doc, strrpos($doc, ':')+1); // finding the document_building.id
 			$document = $this->document_bo->read_single($doc_id);
-			$comment_text .= $document['description'].' ('.$document['name'].'), ';
+			$comment_text .= $document['description'].' (<a href="/bookingfrontend/?menuaction=bookingfrontend.uidocument_building.download&id='.$doc_id.'&filter_owner_id='.$application['building_id'].'">'.$document['name'].'</a>), ';
 		}
 		$comment_text = substr($comment_text, 0, -2);
 

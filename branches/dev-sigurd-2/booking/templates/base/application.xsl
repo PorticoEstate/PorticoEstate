@@ -65,6 +65,16 @@
             <dd><xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></dd>
         </dl>
 
+		<dl class="proplist">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
+			<xsl:for-each select="application/comments[author]">
+				<dt>
+					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+				</dt>
+				<dd><pre><xsl:value-of select="comment" disable-output-escaping="yes"/></pre></dd>
+			</xsl:for-each>
+		</dl>
+
         <dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Why?')" /></dt>
             <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
@@ -185,15 +195,6 @@
 				<dd><div id="associated_container"/></dd>
 			</dl>
 		</xsl:if>
-		<dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
-			<xsl:for-each select="application/comments[author]">
-				<dt>
-					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
-				</dt>
-				<dd><pre><xsl:value-of select="comment"/></pre></dd>
-			</xsl:for-each>
-		</dl>
 
         <dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Add a comment')" /></dt>
