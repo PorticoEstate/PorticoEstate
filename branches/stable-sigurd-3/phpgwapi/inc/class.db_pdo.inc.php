@@ -97,20 +97,19 @@
 				$this->Password = $Password;
 			}
 
-			$persistent = isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] ? true : false;
 			switch ( $this->Type )
 			{
 				case 'postgres':
 					try
 					{
-						$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
+						$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
 					}
 					catch(PDOException $e){}
 					break;
 				case 'mysql':
 					try
 					{
-						$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
+						$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
 					}
 					catch(PDOException $e){}
 					break;
@@ -122,7 +121,7 @@
 					*/
 					try
 					{
-						$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $persistent));
+						$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
 					}
 					catch(PDOException $e){}
 					break;

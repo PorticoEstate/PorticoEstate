@@ -126,7 +126,7 @@
 				$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			}
 
-			if(isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'])
+			if($this->persistent)
 			{
 				try
 				{

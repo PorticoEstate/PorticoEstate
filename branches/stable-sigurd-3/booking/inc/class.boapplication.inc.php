@@ -29,6 +29,7 @@
 			} else {
 				$body = '<p>Din søknad i AktivBy om leie/lån er endret/oppdatert, og har nå status <strong>'.lang($application['status']).'</strong>.</p>';
 			}
+			$body .= '<p>Praktisk informasjon finner du i dokumenter knyttet til bygget, ref. juridiske betingelser pk.8 i søknad.</p>';
 			$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
 			$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
 			$body .= '<p>Med vennlig hilsen AktivBy - Bergen Kommune</p>';

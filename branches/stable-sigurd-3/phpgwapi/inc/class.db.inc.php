@@ -102,7 +102,9 @@
 		
 		var $fetchmode = 'ASSOC';//'BOTH';
 
-		var $Transaction  = false;		
+		var $Transaction  = false;
+
+		var $persistent = false;
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -125,6 +127,8 @@
 			$this->Host			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_host']);
 			$this->User			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_user']);
 			$this->Password		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_pass']);
+
+			$this->persistent = isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] ? true : false;
 
 			// We do it this way to allow it to be easily extended in the future
 			switch ( $this->Type )

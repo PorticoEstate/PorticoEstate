@@ -24,7 +24,11 @@
 				$username = phpgw::get_var('username');
 				if(!isset($username))
 				{
-					$msglog['error'] = 'lacking_username';
+					$msglog['error'][] = array('msg' => lang('lacking_username'));
+				}
+				else if($username == $GLOBALS['phpgw_info']['user']['account_lid'])
+				{
+					$msglog['error'][] = array('msg' => lang('searching_for_self'));
 				}
 				else
 				{
@@ -32,7 +36,7 @@
 					if($account_id)
 					{
 						$search = frontend_bofrontend::get_account_info($account_id);
-						$msglog['message'] = lang('user_found_in_PE');
+						$msglog['message'][] = array('msg' => lang('user_found_in_PE'));
 					}
 					else
 					{
@@ -40,11 +44,11 @@
 						if($fellesdata_user)
 						{
 							$search = $fellesdata_user;
-							$msglog['message'] = lang('user_found_in_Fellesdata');
+							$msglog['message'][] = array('msg' => lang('user_found_in_Fellesdata'));
 						}
 						else
 						{
-							$msglog['error'] = lang('no_hits');
+							$msglog['error'][] = array('msg' => lang('no_hits'));
 						}
 					}
 				}
@@ -63,30 +67,51 @@
 				{
 					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 					{
-						$success = $success  && $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
+						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
+						if(!$res)
+						{
+							$msglog['error'][] = array('msg' => lang('error_delegating_unit',$org_unit['ORG_NAME']));
+						}
+						$success = $success  && $res;
 					}
 				}
 				
 				if($success)
 				{
-					$msglog['message'] = lang('delegation_successful');	
+					$msglog['message'][] = array('msg' => lang('delegation_successful'));	
 				}
 				else
 				{
-					$msglog['message'] = lang('delegation_error');	
+					$msglog['error'][] = array('msg' => lang('delegation_error'));	
 				}
 			}
 			else if(isset($_POST['remove']))
 			{
 				$account_id = phpgw::get_var('account_id'); 
-				frontend_bofrontend::remove_delegate($account_id,null,null);
+				$result = frontend_bofrontend::remove_delegate($account_id,null,null);
+				if($result)
+				{
+					$msglog['message'][] = array('msg' => lang('remove_delegate_successful'));	
+				}
+				else
+				{
+					$msglog['error'][] = array('msg' => lang('remove_delegate_error'));	
+				}
 			} 
 			else if(isset($_POST['remove_specific']))
 			{
 				$account_id = phpgw::get_var('account_id');
 				//Parameter to delegate access to only a single organisational unit
 				$org_unit_id = $this->header_state['selected_org_unit'];
-				frontend_bofrontend::remove_delegate($account_id,null,$org_unit_id);
+				$result = frontend_bofrontend::remove_delegate($account_id,null,$org_unit_id);
+				if($result)
+				{
+					$msglog['message'][] = array('msg' => lang('remove_delegate_successful'));	
+				}
+				else
+				{
+					$msglog['error'][] = array('msg' => lang('remove_delegate_error'));	
+				}
 			}
 			
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
@@ -95,7 +120,7 @@
 			
 			$number_of_delegates = count($delegates_per_org_unit);
 			$number_of_user_delegates = count($delegates_per_user);
-			
+						
 			$data = array (
 				'header' 		=>	$this->header_state,
 				'tabs' 			=> 	$this->tabs,

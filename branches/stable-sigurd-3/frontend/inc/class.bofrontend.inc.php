@@ -267,10 +267,12 @@
 				
 				// Database query
 				$db = clone $GLOBALS['phpgw']->db;
+				$db->Halt_On_Error = 'no';
+				
 				$sql = "INSERT INTO phpgw_account_delegates (account_id,owner_id,location_id,data,created_on,created_by) VALUES ({$account_id},{$owner_id},{$location_id},'{$org_unit_id}',{$timestamp},{$owner_id}) ";
 				$result = $db->query($sql,__LINE__,__FILE__);
 				
-				if($result)
+				if($result && $db->affected_rows() > 0)
 				{
 					//Retrieve the usernames
 					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
@@ -330,10 +332,12 @@
 				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND owner_id = {$owner_id} AND location_id = {$location_id}";
 			}
 				 
+			
 			$db = clone $GLOBALS['phpgw']->db;
+			$db->Halt_On_Error = 'no';
 			$result = $db->query($sql,__LINE__,__FILE__);
 			
-			if($result)
+			if($result && $db->affected_rows() > 0)
 			{
 				$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
 				$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);

@@ -113,7 +113,7 @@ messages	frontend	no	Innboks
 no_new_messages	frontend	no	Innboks (0)
 home	frontend	no	Hjem
 delegates_for_res_unit	frontend	no	Delegater for valgt resultatenhet
-delegates_for_user	frontend	no	Delegater for bruker uavhengig av resultatenhet
+delegates_for_user	frontend	no	Dine delegater uavhengig av resultatenhet
 deletage_to_all_res_units	frontend	no	Myndighet vil bli gitt til alle resultateneheter du er leder
 email_create_account_title	frontend	no	Portico Estate: Opprettet tilgang
 email_create_account_message	frontend	no	Systemmelding til %1 %2 <br/><br/>Det er opprettet en tilgang for deg i Portico Estate
@@ -121,3 +121,7 @@ email_remove_delegate_title	frontend	no	Portico Estate: Fjerning av innsyn
 email_remove_delegate_message	frontend	no	Systemmelding til %1 %2 <br/><br/>Din innsynsmulighet på vegne av %3 %4 i Portico Estate er nå tatt vekk<br/><br/>
 email_add_delegate_title	frontend	no	Portico Estate: Innsyn
 email_add_delegate_message	frontend	no	Systemmelding til %1 %2 <br/><br/>Du har fått innsyn på vegne av %3 %4 i frontend modulen i Portico Estate for følgende resultatenhet: %5
+error_delegating_unit	frontend	no	En feil oppstod når det skulle under delegering til resultatenhet: %1
+searching_for_self	frontend	no	Vennligst søk etter et annet brukernavn enn ditt eget
+remove_delegate_successful	frontend	no	Delegaten ble fjernet
+remove_delegate_error	frontend	no	Fjerning av delegaten var mislykket

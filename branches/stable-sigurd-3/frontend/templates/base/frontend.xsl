@@ -1,6 +1,5 @@
 <xsl:template match="header" xmlns:php="http://php.net/xsl">
 	<div id="wrapper">
-		
     	<div id="header">
     		<div id="login-bar">
     			<ul class="user_menu">
@@ -153,7 +152,7 @@
 		</xsl:choose>
 	</table>
 </xsl:template>
-
+	
 <xsl:template match="tabs">
 	<xsl:value-of disable-output-escaping="yes" select="." />
 </xsl:template>

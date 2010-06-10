@@ -1260,7 +1260,7 @@
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> $values['b_account_name'],
-				//		'role'				=> 'group',
+						'role'				=> 'group',
 						'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
 						));
 

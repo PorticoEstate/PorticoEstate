@@ -32,6 +32,8 @@
 			$db->User = $config->config_data['external_db_user'];
 			$db->Password = $config->config_data['external_db_password'];
 
+			$db->Halt_On_Error = 'no';
+			
 			try
 			{
 				$db->connect();
@@ -63,7 +65,8 @@
 				$result_units[] = array(
 					"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
 					"ORG_NAME" => $db->f('ORG_NAVN'),
-					"UNIT_ID" => $db->f('RESULTATENHET')
+					"UNIT_ID" => $db->f('RESULTATENHET'),
+					"LEADER" => false
 				);
 			}
 			
@@ -124,7 +127,8 @@
 								$result_units[] = array(
 									"ORG_UNIT_ID" => (int)$db1->f('ORG_ENHET_ID'),
 									"ORG_NAME" => $db1->f('ORG_NAVN'),
-									"UNIT_ID" => $db1->f('RESULTATENHET')
+									"UNIT_ID" => $db1->f('RESULTATENHET'),
+									"LEADER" => true
 								);
 								
 								$org_unit_ids[(int)$db1->f('ORG_ENHET_ID')] = true;
@@ -140,7 +144,8 @@
 							$result_units[] = array(
 								"ORG_UNIT_ID" => $identifier,
 								"ORG_NAME" => $name,
-								"UNIT_ID" => $unit_id
+								"UNIT_ID" => $unit_id,
+								"LEADER" => true
 							);
 							$org_unit_ids[$identifier] = true;
 						}
