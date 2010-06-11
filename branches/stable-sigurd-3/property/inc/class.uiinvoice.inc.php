@@ -2889,10 +2889,10 @@
 				'Fag/Timer/Matr' 	=> 'dimd',
 				'MVA'			=> 'mvakode',
 				'Tjeneste'		=> 'kostra_id',
-				'Beløp [kr]'		=> 'belop'
+				'BelÃ¸p [kr]'		=> 'belop'
 			);
 
-			$header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Tjeneste','Beløp [kr]');
+			$header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Tjeneste','BelÃ¸p [kr]');
 
 			for ($i=0;$i<count($header);$i++)
 			{
