@@ -86,7 +86,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-4s", '')										//  9	bonus_gr
 			.sprintf("%3s", '')											// 10	cash_delay
 			.sprintf("%-13s", '')										// 11	clearing_code
-			.sprintf("%-2s", '')										// 12	client
+			.'BY'														// 12	client
 			.sprintf("%1s", '')											// 13	collect_flag
 			.sprintf("%-25.25s", $identifier)							// 14	comp_reg_no
 			.'P'														// 15	control
@@ -137,7 +137,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-50s", '')										// 57	e_mail
 			.sprintf("%-35s", '')										// 58	pos_title
 			.sprintf("%-4s", '')										// 59	pay_temp_id
-			.sprintf("%-25s", '')										// 60	reference_1
+			.sprintf("%-24s", '')										// 60	reference_1
 		;
 		
 		return str_replace(array("\n", "\r"), '', $line);
