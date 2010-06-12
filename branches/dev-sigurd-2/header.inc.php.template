@@ -66,6 +66,11 @@
 	$GLOBALS['phpgw_info']['server']['header_admin_password'] = '{HEADER_ADMIN_PASSWORD}';
 
 	/**
+	* @global string $phpgw_info['server']['default_lang'] The default language
+	*/
+	$GLOBALS['phpgw_info']['server']['default_lang'] = '{DEFAULT_LANG}';
+
+	/**
 	* @global string $phpgw_info['server']['system_name'] The system name
 	*/
 	$GLOBALS['phpgw_info']['server']['system_name'] = '{SYSTEM_NAME}';
@@ -210,7 +215,7 @@
 	* @global string $phpgw_info['server']['versions']['header']
 	* Version of this header file
 	*/
-	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.30';
+	$GLOBALS['phpgw_info']['server']['versions']['header'] = '1.31';
 
 
 	if ( !isset($GLOBALS['phpgw_info']['flags']['noapi'])

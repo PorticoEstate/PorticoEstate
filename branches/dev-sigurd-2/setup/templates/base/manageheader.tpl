@@ -17,7 +17,10 @@
     <td colspan="2"><b>{lang_adminpass}</b><br><input type="text" name="setting[HEADER_ADMIN_PASSWORD]" size="80" value="{header_admin_password}"></td>
   </tr>
   <tr>
-    <td colspan="2"><b>{lang_system_name}</b><br><input type="text" name="setting[system_name]" size="80" value="{system_name}"></td>
+    <td colspan="2">
+      <input type="hidden" name="setting[default_lang]" size="80" value="{default_lang}">
+      <b>{lang_system_name}</b><br><input type="text" name="setting[system_name]" size="80" value="{system_name}">
+    </td>
   </tr>
   <br><br>
   <tr>

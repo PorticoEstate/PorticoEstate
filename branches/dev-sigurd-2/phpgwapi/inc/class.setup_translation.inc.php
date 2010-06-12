@@ -29,7 +29,7 @@
 		 */
 		public function __construct()
 		{
-			$ConfigLang = phpgw::get_var('ConfigLang');
+			$ConfigLang = phpgw::get_var('ConfigLang', 'string', 'POST');
 			$this->set_userlang($ConfigLang);
 
 			$fn = PHPGW_SERVER_ROOT . "/setup/lang/phpgw_{$this->userlang}.lang";
