@@ -152,7 +152,7 @@ abstract class rental_socommon
 		}
 		
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-		$this->db->query($sql,__LINE__, __FILE__);
+		$this->db->query($sql,__LINE__, __FILE__, false, true);
 
 		while ($this->db->next_record()) // Runs through all of the results
 		{
