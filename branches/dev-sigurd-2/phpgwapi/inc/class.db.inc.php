@@ -257,7 +257,7 @@
 		* @param bool $exec true for exec, false for query
 		* @return integer current query id if sucesful and null if fails
 		*/
-		abstract public function query($sql, $line = '', $file = '', $exec = false);
+		abstract public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false);
 
 		/**
 		* Execute a query with limited result set
