@@ -183,6 +183,11 @@ abstract class rental_socommon
 				$result = &$results[$result_id];
 				$results[$result_id] = $this->populate($result_id,$result);
 			}
+			//Stop looking when found
+			if(count($results) == $num_of_objects)
+			{
+				break;
+			}
 		}
 		//var_dump("Peak " . memory_get_peak_usage() . " bytes after populating");
 		//var_dump("Usage " .memory_get_usage() . " bytes after populating");
