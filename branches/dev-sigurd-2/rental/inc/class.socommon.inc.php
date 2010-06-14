@@ -182,9 +182,10 @@ abstract class rental_socommon
 			{	
 				$result = &$results[$result_id];
 				$results[$result_id] = $this->populate($result_id,$result);
+				$last_result_id = $result_id;
 			}
 			//Stop looking when found
-			if(count($results) == $num_of_objects)
+			if(count($results) == $num_of_objects  && $last_result_id != $result_id)
 			{
 				break;
 			}
