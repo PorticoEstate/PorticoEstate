@@ -139,7 +139,17 @@ abstract class rental_socommon
 		$results = array();
 		
 		$map = array();
-		$id_field_name = $this->get_id_field_name();
+		$id_field_name_info = $this->get_id_field_name(true);
+		if(is_array($id_field_name_info))
+		{
+			$break_on_limit = true;
+			$id_field_name = $id_field_name_info['translated'];
+		}
+		else
+		{
+			$break_on_limit = false;
+			$id_field_name = $id_field_name_info;
+		}
 
 		// Special case: Sort on id field. Always changed to the id field name.
 		if($sort_field == null || $sort_field == 'id' || $sort_field == '')
@@ -162,17 +172,15 @@ abstract class rental_socommon
 
 		// test-input for break on ordered queries
 		$db2 = clone($this->db);
-		$id_field_name_info = explode('_', $id_field_name);
-
 
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-		$sql_info = explode('1=1',$sql);
+		$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
 		$this->db->query($sql,__LINE__, __FILE__, false, true);
 
 		while ($this->db->next_record()) // Runs through all of the results
 		{
 			$should_populate_object = false; // Default value - we won't populate object	
-			$result_id = $this->unmarshal($this->db->f($id_field_name, true), 'int'); // The id of object
+			$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
 			if(in_array($result_id, $added_object_ids)) // Object with this id already added
 			{
 				$should_populate_object = true; // We should populate this object as we already have it in our result array
@@ -206,12 +214,12 @@ abstract class rental_socommon
 			{
 				break;
 			}
-/*			else if(count($results) == $num_of_objects  && $last_result_id != $result_id)
+			else if($break_on_limit && (count($results) == $num_of_objects)  && $last_result_id != $result_id)
 			{
 				$id_ok = 0;
 				foreach ($map as $_result_id => $_count)
 				{
-					$sql2 = "{$sql_info[0]} 1=1 AND {$id_field_name_info[0]}.{$id_field_name_info[1]} = {$_result_id} {$sql_info[1]}";
+					$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
 					$db2->query($sql2,__LINE__, __FILE__);
 					$db2->next_record();
 					if(	$db2->num_rows() == $_count )
@@ -224,7 +232,7 @@ abstract class rental_socommon
 					break;
 				}
 			}
-*/
+
 		}
 		//var_dump("Peak " . memory_get_peak_usage() . " bytes after populating");
 		//var_dump("Usage " .memory_get_usage() . " bytes after populating");

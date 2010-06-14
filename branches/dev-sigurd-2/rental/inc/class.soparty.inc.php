@@ -326,9 +326,22 @@ class rental_soparty extends rental_socommon
 		return isset($result);
 	}
 
-	protected function get_id_field_name()
+	public function get_id_field_name($extended_info = false)
 	{
-		return 'party_id';
+		if(!$extended_info)
+		{
+			$ret = 'party_id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'party', // alias
+				'field'			=> 'id',
+				'translated'	=> 'party_id'
+			);
+		}
+		return $ret;
 	}
 
 	protected function populate(int $party_id, &$party)
