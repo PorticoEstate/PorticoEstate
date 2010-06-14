@@ -139,6 +139,7 @@ abstract class rental_socommon
 		$results = array();
 		
 		$map = array();
+		$check_map = array();
 		$id_field_name_info = $this->get_id_field_name(true);
 		if(is_array($id_field_name_info))
 		{
@@ -219,10 +220,14 @@ abstract class rental_socommon
 				$id_ok = 0;
 				foreach ($map as $_result_id => $_count)
 				{
-					$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
-					$db2->query($sql2,__LINE__, __FILE__);
-					$db2->next_record();
-					if(	$db2->num_rows() == $_count )
+					if(!isset($check_map[$_result_id]))
+					{
+						$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
+						$db2->query($sql2,__LINE__, __FILE__);
+						$db2->next_record();
+						$check_map[$_result_id] = $db2->num_rows();
+					}
+					if(	$check_map[$_result_id] == $_count )
 					{
 						$id_ok++;
 					}
@@ -232,7 +237,6 @@ abstract class rental_socommon
 					break;
 				}
 			}
-
 		}
 		//var_dump("Peak " . memory_get_peak_usage() . " bytes after populating");
 		//var_dump("Usage " .memory_get_usage() . " bytes after populating");
