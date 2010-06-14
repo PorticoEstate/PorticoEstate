@@ -139,9 +139,14 @@ abstract class rental_socommon
 		$results = array();
 		
 		// Special case: Sort on id field. Always changed to the id field name.
-		if($sort_field == 'id')
+		if($sort_field == null || $sort_field == 'id' || $sort_field == '')
 		{
 			$sort_field = $this->get_id_field_name();
+			$break_when_num_of_objects_reached = true;
+		}
+		else
+		{
+			$break_when_num_of_objects_reached = false;
 		}
 		
 		$object_ids = array(); // All of the object ids
@@ -184,8 +189,9 @@ abstract class rental_socommon
 				$results[$result_id] = $this->populate($result_id,$result);
 				$last_result_id = $result_id;
 			}
-			//Stop looking when found
-			if(count($results) == $num_of_objects  && $last_result_id != $result_id)
+			
+			//Stop looking when array not sorted
+			if(count($results) == $num_of_objects  && $last_result_id != $result_id && $break_when_num_of_objects_reached)
 			{
 				break;
 			}
