@@ -29,6 +29,7 @@
 		var $resultSet;
 		protected $fetch_single;
 		protected $statement_object;
+		protected $pdo_fetchmode;
 		
 		/**
 		* Constructor
@@ -283,6 +284,19 @@
 		}
 
 
+		protected function _get_fetchmode()
+		{
+			if($this->fetchmode == 'ASSOC')
+			{
+				$this->pdo_fetchmode =PDO::FETCH_ASSOC;
+			}
+			else
+			{
+				$this->pdo_fetchmode =PDO::FETCH_BOTH;
+			}
+		}
+
+
 		/**
 		* Execute a query
 		*
@@ -295,6 +309,8 @@
 		*/
 		public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false)
 		{
+
+			$this->_get_fetchmode();
 			$this->fetch_single = $fetch_single;
 
 			if ( !$this->db )
@@ -322,18 +338,12 @@
 					$statement_object = $this->db->query($sql);
 					if(!$fetch_single)
 					{
-						if($this->fetchmode == 'ASSOC')
-						{
-							$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
-						}
-						else
-						{
-							$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
-						}
+						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 					}
 					else
 					{
 						$this->statement_object = $statement_object;
+						$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
 					}
 				}
 			}
@@ -372,6 +382,7 @@
 
 		function limit_query($sql, $offset, $line = '', $file = '', $num_rows = 0)
 		{
+			$this->_get_fetchmode();
 			$offset		= (int)$offset;
 			$num_rows	= (int)$num_rows;
 
@@ -416,14 +427,7 @@
 			try
 			{
 				$statement_object = $this->db->query($sql);
-				if($this->fetchmode == 'ASSOC')
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
-				}
+				$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 			}
 
 			catch(PDOException $e)
@@ -456,7 +460,15 @@
 		{
 			if($this->fetch_single)
 			{
-				$this->Record = $this->statement_object->fetch(PDO::FETCH_BOTH);
+				if($this->delayPointer)
+				{
+					$this->delayPointer = false;
+				}
+				else
+				{
+					$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
+				}
+				$this->Record = &$this->resultSet;
 				return !!$this->Record;
 			}
 			if($this->resultSet && current($this->resultSet))
