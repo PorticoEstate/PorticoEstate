@@ -1515,7 +1515,7 @@
 		{
 			if(	$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') )
 			{
-				set_time_limit(500);
+				set_time_limit(1500);
 				$account_list = $GLOBALS['phpgw']->accounts->get_list('both', -1);
 				foreach ( $account_list as  $id => $account)
 				{
