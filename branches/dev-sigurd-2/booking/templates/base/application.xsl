@@ -76,7 +76,7 @@
 						<dd><pre><xsl:value-of select="comment" disable-output-escaping="yes"/></pre></dd>
 					</xsl:when>
 					<xsl:otherwise>				
-						<dd><pre><xsl:value-of select="comment"/></pre></dd>
+						<dd><xsl:value-of select="comment"/></dd>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
