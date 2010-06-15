@@ -73,10 +73,10 @@
 				</dt>
 				<xsl:choose>
 					<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>				
-						<dd><pre><xsl:value-of select="comment" disable-output-escaping="yes"/></pre></dd>
+						<dd><xsl:value-of select="comment" disable-output-escaping="yes"/></dd>
 					</xsl:when>
 					<xsl:otherwise>				
-						<dd><pre><xsl:value-of select="comment"/></pre></dd>
+						<dd><xsl:value-of select="comment"/></dd>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>

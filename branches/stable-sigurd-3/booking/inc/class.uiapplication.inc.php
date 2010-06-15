@@ -591,7 +591,8 @@
 			{
 				unset($application['dates']);
 			}
-			
+			$application['resource_ids'] = $resource_ids;
+
 			$this->set_case_officer($application);
 			
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
