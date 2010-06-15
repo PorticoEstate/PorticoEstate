@@ -145,7 +145,7 @@
 			{
 				$result_units[] = array(
 						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
-						"ORG_UNIT_NAME" => $db->f('ORG_NAVN'),
+						"ORG_UNIT_NAME" => utf8_encode($db->f('ORG_NAVN')),
 						"UNIT_ID" => $db->f('RESULTATENHET')
 					);
 			}
