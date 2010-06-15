@@ -136,10 +136,15 @@ abstract class rental_socommon
 	 */
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
-		$results = array();
+		$results = array();			// Array to store result objects
+		$map = array();				// Array to hold number of records per target object
+		$check_map = array();		// Array to hold the actual number of record read per target object
+		$object_ids = array(); 		// All of the object ids encountered
+		$added_object_ids = array();// All of the added objects ids
 		
-		$map = array();
-		$check_map = array();
+		// Retrieve information about the table name and the name and alias of id column
+		// $break_on_limit - 	flag indicating whether to break the loop when the number of records 
+		// 						for all the result objects are traversed
 		$id_field_name_info = $this->get_id_field_name(true);
 		if(is_array($id_field_name_info))
 		{
@@ -153,6 +158,8 @@ abstract class rental_socommon
 		}
 
 		// Special case: Sort on id field. Always changed to the id field name.
+		// $break_when_num_of_objects_reached - flag indicating to break the loop when the number of 
+		//		results are reached and we are sure that the records are ordered by the id
 		if($sort_field == null || $sort_field == 'id' || $sort_field == '')
 		{
 			$sort_field = $id_field_name;
@@ -163,8 +170,7 @@ abstract class rental_socommon
 			$break_when_num_of_objects_reached = false;
 		}
 		
-		$object_ids = array(); // All of the object ids
-		$added_object_ids = array(); // All of the added objects ids
+		// Only allow positive start index
 		if($start_index < 0)
 		{
 			$start_index = 0;
@@ -210,11 +216,12 @@ abstract class rental_socommon
 				$map[$result_id] = (int)$map[$result_id] +1;
 			}
 			
-			//Stop looking when array not sorted
+			//Stop looping when array not sorted on other then id and wanted number of results is reached
 			if(count($results) == $num_of_objects  && $last_result_id != $result_id && $break_when_num_of_objects_reached)
 			{
 				break;
 			}
+			// else stop looping when wanted number of results is reached all records for result objects are read
 			else if($break_on_limit && (count($results) == $num_of_objects)  && $last_result_id != $result_id)
 			{
 				$id_ok = 0;
@@ -222,6 +229,7 @@ abstract class rental_socommon
 				{
 					if(!isset($check_map[$_result_id]))
 					{
+						// Query the number of records for the specific object in question
 						$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
 						$db2->query($sql2,__LINE__, __FILE__);
 						$db2->next_record();
@@ -238,8 +246,6 @@ abstract class rental_socommon
 				}
 			}
 		}
-		//var_dump("Peak " . memory_get_peak_usage() . " bytes after populating");
-		//var_dump("Usage " .memory_get_usage() . " bytes after populating");
 		return $results;
 	}
 	
