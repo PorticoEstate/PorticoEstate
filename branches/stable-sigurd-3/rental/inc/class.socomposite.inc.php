@@ -219,8 +219,22 @@ class rental_socomposite extends rental_socommon
 		return $composite;
 	}
 	
-	public function get_id_field_name(){
-		return 'composite_id';
+	public function get_id_field_name($extended_info = false)
+	{
+		if(!$extended_info)
+		{
+			$ret = 'composite_id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'rental_composite', // alias
+				'field'			=> 'id',
+				'translated'	=> 'composite_id'
+			);
+		}
+		return $ret;
 	}
 
 	/**

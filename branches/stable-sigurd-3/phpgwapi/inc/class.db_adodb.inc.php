@@ -218,7 +218,7 @@
 		* @param string $file the file method was called from - use __FILE__
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function query($sql, $line = '', $file = '',$exec = false)
+		public function query($sql, $line = '', $file = '',$exec = false, $fetch_single = false)
 		{
 			if ( !$this->adodb->isConnected() )
 			{

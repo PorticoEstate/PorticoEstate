@@ -69,6 +69,7 @@
 	}
 	elseif (!$GLOBALS['phpgw_setup']->auth('Config'))
 	{
+		$_POST['ConfigLang'] = isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : '';
 		$GLOBALS['phpgw_setup']->html->show_header(lang('Please login'),True);
 		$GLOBALS['phpgw_setup']->html->login_form();
 		$GLOBALS['phpgw_setup']->html->show_footer();

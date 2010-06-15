@@ -291,8 +291,22 @@ class rental_socontract extends rental_socommon
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
-	public function get_id_field_name(){
-		return 'contract_id';
+	public function get_id_field_name($extended_info = false)
+	{
+		if(!$extended_info)
+		{
+			$ret = 'contract_id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'contract', // alias
+				'field'			=> 'id',
+				'translated'	=> 'contract_id'
+			);
+		}
+		return $ret;
 	}
 
 	

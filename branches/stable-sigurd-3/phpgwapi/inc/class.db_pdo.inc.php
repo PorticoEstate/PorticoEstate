@@ -27,6 +27,9 @@
 	class phpgwapi_db  extends phpgwapi_db_
 	{		
 		var $resultSet;
+		protected $fetch_single;
+		protected $statement_object;
+		protected $pdo_fetchmode;
 		
 		/**
 		* Constructor
@@ -281,6 +284,19 @@
 		}
 
 
+		protected function _get_fetchmode()
+		{
+			if($this->fetchmode == 'ASSOC')
+			{
+				$this->pdo_fetchmode =PDO::FETCH_ASSOC;
+			}
+			else
+			{
+				$this->pdo_fetchmode =PDO::FETCH_BOTH;
+			}
+		}
+
+
 		/**
 		* Execute a query
 		*
@@ -288,10 +304,14 @@
 		* @param mixed $line the line method was called from - use __LINE__
 		* @param string $file the file method was called from - use __FILE__
 		* @param bool $exec true for exec, false for query
+		* @param bool $fetch_single true for using fetch, false for fetchAll
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function query($sql, $line = '', $file = '', $exec = false)
+		public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false)
 		{
+
+			$this->_get_fetchmode();
+			$this->fetch_single = $fetch_single;
 
 			if ( !$this->db )
 			{
@@ -316,13 +336,14 @@
 				else
 				{
 					$statement_object = $this->db->query($sql);
-					if($this->fetchmode == 'ASSOC')
+					if(!$fetch_single)
 					{
-						$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
+						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 					}
 					else
 					{
-						$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
+						$this->statement_object = $statement_object;
+						$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
 					}
 				}
 			}
@@ -361,6 +382,7 @@
 
 		function limit_query($sql, $offset, $line = '', $file = '', $num_rows = 0)
 		{
+			$this->_get_fetchmode();
 			$offset		= (int)$offset;
 			$num_rows	= (int)$num_rows;
 
@@ -405,14 +427,7 @@
 			try
 			{
 				$statement_object = $this->db->query($sql);
-				if($this->fetchmode == 'ASSOC')
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
-				}
+				$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 			}
 
 			catch(PDOException $e)
@@ -443,6 +458,19 @@
 		*/
 		public function next_record()
 		{
+			if($this->fetch_single)
+			{
+				if($this->delayPointer)
+				{
+					$this->delayPointer = false;
+				}
+				else
+				{
+					$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
+				}
+				$this->Record = &$this->resultSet;
+				return !!$this->Record;
+			}
 			if($this->resultSet && current($this->resultSet))
 			{
 				if($this->delayPointer)

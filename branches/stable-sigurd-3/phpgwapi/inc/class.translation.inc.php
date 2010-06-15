@@ -58,14 +58,13 @@
 		*/
 		public function __construct($reset = false)
 		{
-			$lang = 'en';
+			$lang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
 			{
 				$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 
 			$this->set_userlang($lang);
-			$this->reset_lang($reset);
 
 			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations']) 
 				&& $GLOBALS['phpgw_info']['server']['collect_missing_translations'])
