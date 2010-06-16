@@ -23,9 +23,22 @@ class rental_sodocument extends rental_socommon
 		return self::$so;
 	}
 	
-	public function get_id_field_name()
+	public function get_id_field_name($extended_info = false)
 	{
-		return 'document_id';
+		if(!$extended_info)
+		{
+			$ret = 'document_id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'rental_document', // alias
+				'field'			=> 'id',
+				'translated'	=> 'document_id'
+			);
+		}
+		return $ret;
 	}
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
@@ -325,4 +338,3 @@ class rental_sodocument extends rental_socommon
 		return false;		
 	}
 }
-?>
