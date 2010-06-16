@@ -135,13 +135,23 @@ HTML;
 	{
 		$icon_style = $expand_class = $current_class = $link_class = $parent_class = '';
 		static $blank_image;
+		static $images = array(); // cache
+
 		if ( !isset($blank_image) )
 		{
 			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
 		}
 		if ( isset($item['image']) )
 		{
-			$icon_style = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ')"';
+			if(!isset($images[$item['image'][0]][$item['image'][1]]))
+			{
+				$icon_style = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ')"';
+				$images[$item['image'][0]][$item['image'][1]] = $icon_style;
+			}
+			else
+			{
+				$icon_style = $images[$item['image'][0]][$item['image'][1]];
+			}
 		}
 		if ( $children )
 		{
