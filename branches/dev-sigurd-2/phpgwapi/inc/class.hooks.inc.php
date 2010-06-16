@@ -38,7 +38,7 @@
 		public function __construct($db = null)
 		{
 			$this->db = !is_null($db) ? $db : $GLOBALS['phpgw']->db;	// this is to allow setup to set the db
-			$this->read();
+//			$this->read();
 		}
 
 		/**
