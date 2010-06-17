@@ -226,7 +226,7 @@ class rental_uiparty extends rental_uicommon
 					if(isset($value['org_unit_id']))
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'frontend.uiparty.syncronize_party', 'org_unit_id' => $value['org_unit_id'], 'party_id' => $value['id'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party', 'org_unit_id' => $value['org_unit_id'], 'party_id' => $value['id'])));
 						$value['labels'][] = lang('syncronize_party');
 					}
 				}
