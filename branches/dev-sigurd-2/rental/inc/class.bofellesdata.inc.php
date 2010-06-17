@@ -56,12 +56,19 @@
 				$db = $this->get_db();
 				$sql = "SELECT $column FROM $table $joins WHERE V_ANSVAR.ANSVAR = '$responsibility_id' AND V_ORG_ENHET.ORG_NIVAA = 4";
 				$db->query($sql,__LINE__,__FILE__);
+				var_dump($sql);
 				if($db->next_record())
 				{
+					var_dump(array(
+						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
+						'UNIT_NAME' => $db->f('ORG_NAVN')
+					));
+					
 					return array(
 						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
 						'UNIT_NAME' => $db->f('ORG_NAVN')
-					);				}
+					);				
+				}
 			}
 			return false;
 		}
