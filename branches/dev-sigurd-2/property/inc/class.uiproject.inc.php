@@ -1261,7 +1261,7 @@
 						'b_account_id'		=> $values['b_account_id'],
 						'b_account_name'	=> $values['b_account_name'],
 						'role'				=> 'group',
-						'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
+				//		'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
 						));
 
 				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
