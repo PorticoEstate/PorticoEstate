@@ -1641,6 +1641,7 @@
 		*/
 		function download($list,$name,$descr,$input_type=array())
 		{
+			set_time_limit(500);
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
