@@ -124,7 +124,7 @@ class rental_party extends rental_model
 	
 	public function set_sync_data($sync_data)
 	{
-		if(isset($this->sync_data))
+		/*if(isset($this->sync_data))
 		{
 			if(	($sync_data['service_id'] != $this->sync_data['service_id']) || 
 				($sync_data['resonsibility_id'] != $this->sync_data['resonsibility_id']))
@@ -132,7 +132,7 @@ class rental_party extends rental_model
 				return "Test";
 			}
 			
-		}
+		}*/
 		$this->sync_data = $sync_data;
 	}
 	
