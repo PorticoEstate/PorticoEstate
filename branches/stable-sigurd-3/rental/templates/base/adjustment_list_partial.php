@@ -28,7 +28,7 @@
 		if (oData != undefined) {
 			elCell.innerHTML = YAHOO.util.Number.format( oData,
 			{
-				suffix: " <?php echo lang('year')?>",
+				suffix: " <?php echo lang('year')?>"
 		    });
 		}
 	}
