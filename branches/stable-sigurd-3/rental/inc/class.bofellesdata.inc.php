@@ -46,21 +46,29 @@
 			return $db;
 		}
 		
-		public function service_id_exist($service_id)
+		public function responsibility_id_exist($responsibility_id)
 		{
-			if(isset($service_id) && is_numeric($service_id))
+			if(isset($responsibility_id) && is_numeric($responsibility_id))
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
+				$joins = "LEFT JOIN V_ANSVAR ON (V_ANSVAR.RESULTATENHET = V_ORG_ENHET.RESULTATENHET)";
 				$db = $this->get_db();
-				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.TJENESTESTED = $service_id";
+				$sql = "SELECT $column FROM $table $joins WHERE V_ANSVAR.ANSVAR = '$responsibility_id' AND V_ORG_ENHET.ORG_NIVAA = 4";
 				$db->query($sql,__LINE__,__FILE__);
+				var_dump($sql);
 				if($db->next_record())
 				{
+					var_dump(array(
+						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
+						'UNIT_NAME' => $db->f('ORG_NAVN')
+					));
+					
 					return array(
 						'UNIT_ID' => $db->f('ORG_ENHET_ID'),
 						'UNIT_NAME' => $db->f('ORG_NAVN')
-					);				}
+					);				
+				}
 			}
 			return false;
 		}

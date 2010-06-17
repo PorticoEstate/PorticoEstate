@@ -101,7 +101,7 @@ class rental_uiparty extends rental_uicommon
 				$sync_data = $party->get_sync_data();
 				if($type == 'sync_parties')
 				{
-					$unit_name_and_id = $bofelles->service_id_exist($sync_data['service_id']);
+					$unit_name_and_id = $bofelles->responsibility_id_exist($sync_data['resonsibility_id']);
 				}
 				else if($type == 'sync_parties_res_unit')
 				{
