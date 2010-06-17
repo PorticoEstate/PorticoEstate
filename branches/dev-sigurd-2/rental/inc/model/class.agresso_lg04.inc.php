@@ -278,7 +278,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%464s", '')									//	26-34	just white space..
 				.sprintf("%-8.8s", $responsibility)						// 	35		dim_1					DATA
 				.sprintf("%-8.8s", $service)							// 	36		dim_2					DATA
-				.sprintf("%-8.8s", $building)							// 	37		dim_3					DATA
+				.sprintf("%8s", '')										// 	37		dim_3
 				.sprintf("%8s", '')										// 	38		dim_4
 				.sprintf("%-12.12s", $project)							// 	39		dim_5					DATA
 				.sprintf("%4s", '')										// 	40		dim_6
