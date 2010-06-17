@@ -477,10 +477,10 @@ sync_identifier	rental	no	Kun identifikator
 sync_menu	rental	no	Synkronisering
 sync_message	rental	no	Melding
 sync_org_unit	rental	no	Eksisterende kobling
-sync_resp_and_service	rental	no	Ansvar- og tjenestested
+sync_resp_and_service	rental	no	Ansvar
 sync_res_units	rental	no	Gammelt resultatenhetsnummer
 sync_parties	rental	no	Synkronisér kontraktsparter mot Fellesdata
-sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar- og tjenestested (Kontrakt)
+sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar (Kontrakt)
 sync_parties_result_unit_number	rental	no	Synkronisering: Resultatenhetsnummer (Kontraktspart)
 sync_parties_identifier	rental	no	Synkronisering: Identifikator
 sync_parties_fellesdata_id	rental	no	Synkronisering: Organisasjonsidentifikator

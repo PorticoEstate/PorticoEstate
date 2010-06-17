@@ -167,7 +167,6 @@ class rental_soparty extends rental_socommon
 			if($filters['sync'] == 'sync_parties')
 			{
 				// involved in contract with service- and responsibility identifiers
-				$filter_clauses[] = "NOT contract.service_id IS NULL";
 				$filter_clauses[] = "NOT contract.responsibility_id IS NULL";
 				$filter_clauses[] = "party.org_enhet_id IS NULL";
 				// involved in active contracts
@@ -372,7 +371,6 @@ class rental_soparty extends rental_socommon
 			$party->set_org_enhet_id(   $this->unmarshal($this->db->f('org_enhet_id'), 'string'));
 			$sync_message = $party->set_sync_data(
 				array(
-					'service_id' => $this->unmarshal($this->db->f('service_id'), 'string'),
 					'responsibility_id' => $this->unmarshal($this->db->f('responsibility_id'), 'string'),
 					'org_enhet_id' => $this->unmarshal($this->db->f('org_enhet_id'), 'string'),
 					'result_unit_number' => $this->unmarshal($this->db->f('result_unit_number'), 'string'),
