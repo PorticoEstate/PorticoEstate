@@ -54,7 +54,7 @@
 				$table = "V_ORG_ENHET";
 				$joins = "LEFT JOIN V_ANSVAR ON (V_ANSVAR.RESULTATENHET = V_ORG_ENHET.RESULTATENHET)";
 				$db = $this->get_db();
-				$sql = "SELECT $column FROM $table $joins WHERE V_ANSVAR.ANSVAR = '$responsibility_id'";
+				$sql = "SELECT $column FROM $table $joins WHERE V_ANSVAR.ANSVAR = '$responsibility_id' AND V_ORG_ENHET.ORG_NIVAA = 4";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
