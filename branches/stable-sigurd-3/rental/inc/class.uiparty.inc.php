@@ -19,7 +19,8 @@ class rental_uiparty extends rental_uicommon
 			'view'				=> true,
 			'download'			=> true,
 			'download_agresso'	=> true,
-			'sync'				=> true
+			'sync'				=> true,
+			'syncronize_party'	=> true
 	);
 
 	public function __construct()
@@ -123,6 +124,7 @@ class rental_uiparty extends rental_uicommon
 					if(isset($unit_id) && is_numeric($unit_id))
 					{
 						$serialized['org_unit_name'] =  isset($unit_name) ? $unit_name : lang('no_name');
+						$serialized['org_unit_id'] = $unit_id;
 					}
 				}
 				$rows[] = $serialized;
@@ -219,6 +221,13 @@ class rental_uiparty extends rental_uicommon
 						$value['ajax'][] = false;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index', 'org_enhet_id' => $value['org_enhet_id'])));
 						$value['labels'][] = lang('frontend_access');
+					}
+					
+					if(isset($value['org_unit_id']))
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party', 'org_unit_id' => $value['org_unit_id'], 'party_id' => $value['id'])));
+						$value['labels'][] = lang('syncronize_party');
 					}
 				}
 				break;
@@ -373,6 +382,21 @@ class rental_uiparty extends rental_uicommon
 			case 'org_unit':
 				$this->render('sync_party_list_org_id.php');
 				break;
+		}
+	}
+	
+	public function syncronize_party()
+	{
+		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			$party_id = phpgw::get_var('party_id');
+			$org_unit_id = phpgw::get_var('org_unit_id');
+			if(isset($party_id) && $party_id > 0 && isset($org_unit_id) && $org_unit_id > 0)
+			{	
+				$party = rental_soparty::get_instance()->get_single($party_id);
+				$party->set_org_enhet_id($org_unit_id);
+				rental_soparty::get_instance()->store($party);
+			}
 		}
 	}
 }
