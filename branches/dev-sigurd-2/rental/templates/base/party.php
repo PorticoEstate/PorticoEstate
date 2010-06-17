@@ -386,6 +386,10 @@
 						Organisasjonstilknytning
 					</dt>
 					<dd>
+					<?php
+						if ($editable)
+						{
+						?>
 						<select name="org_enhet_id">
 							<option value=""><?php echo lang('no_party_location') ?></option>
 						<?php 
@@ -404,6 +408,22 @@
 							}
 						?>
 						</select>
+						<?php 
+						}
+						else
+						{
+							$party_org_enhet_id = $party->get_org_enhet_id();
+							if(isset($party_org_enhet_id) && is_numeric($party_org_enhet_id))
+							{
+								$result_unit = rental_bofellesdata::get_instance()->get_result_unit($party_org_enhet_id);
+								echo $result_unit['ORG_NAME'];
+							}
+							else
+							{
+								echo lang('no_party_location');
+							}
+						}
+						?>
 					</dd>
 				</dl>
 		        <dl class="proplist-col">
