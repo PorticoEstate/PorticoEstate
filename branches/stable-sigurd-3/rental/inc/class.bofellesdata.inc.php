@@ -48,7 +48,8 @@
 		
 		public function responsibility_id_exist($responsibility_id)
 		{
-			if(isset($responsibility_id) && is_numeric($responsibility_id))
+			var_dump($responsibility_id);
+			if(isset($responsibility_id))
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
 				$table = "V_ORG_ENHET";
