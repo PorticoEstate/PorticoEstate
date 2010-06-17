@@ -484,6 +484,7 @@ sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar (Kontrak
 sync_parties_result_unit_number	rental	no	Synkronisering: Resultatenhetsnummer (Kontraktspart)
 sync_parties_identifier	rental	no	Synkronisering: Identifikator
 sync_parties_fellesdata_id	rental	no	Synkronisering: Organisasjonsidentifikator
+syncronize_party	rental	no	Synkroniser kontraktspart
 System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
 target_me	rental	no	Meg selv
