@@ -104,6 +104,9 @@
 											<xsl:when test="location_code = //header/selected_location">
 												<option value="{location_code}" selected="selected">
 													<xsl:choose>
+														<xsl:when test="loc2_name != ''">
+															<xsl:value-of select="loc2_name"/>
+														</xsl:when>
 														<xsl:when test="loc1_name != ''">
 															<xsl:value-of select="loc1_name"/>
 														</xsl:when>
