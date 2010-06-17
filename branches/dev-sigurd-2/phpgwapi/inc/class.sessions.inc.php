@@ -318,7 +318,7 @@
 			}
 
 			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
+	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			phpgwapi_cache::session_set('phpgwapi', 'password', base64_encode($this->_passwd));
 			if ( $GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') )
@@ -392,7 +392,7 @@
 			//$this->read_repositories(false);
 
 			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
+	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			$this->appsession('password', 'phpgwapi', base64_encode($this->_passwd));
 			$session_flags = 'S';
@@ -869,7 +869,7 @@
 			{
 				$this->_setup_cache($write_cache);
 			}
-			$this->hooks = $GLOBALS['phpgw']->hooks->read();
+	//		$this->hooks = $GLOBALS['phpgw']->hooks->read();
 		}
 
 		/**
@@ -1183,7 +1183,7 @@
 			}
 
 			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
+	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			$GLOBALS['phpgw_info']['user']['session_ip'] = $session['session_ip'];
 			$GLOBALS['phpgw_info']['user']['passwd']     = phpgwapi_cache::session_get('phpgwapi', 'password');
