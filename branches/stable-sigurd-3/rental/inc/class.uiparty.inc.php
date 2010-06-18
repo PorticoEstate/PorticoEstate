@@ -38,7 +38,7 @@ class rental_uiparty extends rental_uicommon
 		// YUI variables for paging and sorting
 		$start_index	= phpgw::get_var('startIndex', 'int');
 		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
-		$sort_field		= phpgw::get_var('sort');
+		$sort_field		= phpgw::get_var('sort', 'string', 'GET', 'identifier');
 		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 		// Form variables
 		$search_for 	= phpgw::get_var('query');

@@ -42,6 +42,7 @@
 
 		var $num_rows; // Used to store the total of rows returned by a SELECT statement.
 		var $auto_stripslashes = false;
+		var $persistent = false;
 		
 		/* public: constructor */
 		function DB_OCI8($query = "")
@@ -87,7 +88,15 @@
 						return true;
 					}
 				}
-				$this->Link_ID = OCIPLogon($this->User, $this->Password, (($this->Host) ? sprintf($this->full_connection_string, $this->Host, $this->Port, $this->Database) : $this->Database), 'AL32UTF8');
+				
+				if($this->persistent)
+				{
+					$this->Link_ID = oci_pconnect($this->User, $this->Password, (($this->Host) ? sprintf($this->full_connection_string, $this->Host, $this->Port, $this->Database) : $this->Database), 'AL32UTF8');
+				}
+				else
+				{
+					$this->Link_ID = oci_connect($this->User, $this->Password, (($this->Host) ? sprintf($this->full_connection_string, $this->Host, $this->Port, $this->Database) : $this->Database), 'AL32UTF8');
+				}
 
 				if (!$this->Link_ID)
 				{
@@ -108,7 +117,8 @@
 		function connect_failed()
 		{
 			$this->Halt_On_Error = "yes";
-			$this->halt(sprintf("connect ($this->User, \$Password, $this->Database%s) failed", (($this->Host) ? ", $this->Host" : "")));
+//			$this->halt(sprintf("connect ($this->User, \$Password, $this->Database%s) failed", (($this->Host) ? ", $this->Host" : "")));
+			$this->halt('Connect failed');
 		}
 		
 		function free()
@@ -524,7 +534,8 @@
 
 		function f($Name, $strip_slashes = false)
 		{
-			if( isset($this->Record[$Name])
+			$Name = strtolower($Name);
+			if( isset($this->Record[$Name]))
 			{
 				if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 				{
@@ -587,7 +598,7 @@
 			{
 				printf("Disconnecting...<br>\n");
 			}
-			OCILogoff($this->Link_ID);
+			oci_close($this->Link_ID);
 		}
 		
 		function halt($msg)
