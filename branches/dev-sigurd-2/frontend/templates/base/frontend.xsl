@@ -119,6 +119,9 @@
 											<xsl:otherwise>
 												<option value="{location_code}">
 												<xsl:choose>
+													<xsl:when test="loc2_name != ''">
+														<xsl:value-of select="loc2_name"/>
+													</xsl:when>
 													<xsl:when test="loc1_name != ''">
 														<xsl:value-of select="loc1_name"/>
 													</xsl:when>
