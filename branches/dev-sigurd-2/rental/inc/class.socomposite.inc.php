@@ -162,6 +162,7 @@ class rental_socomposite extends rental_socommon
 			{
 				// We get the data from the property module
 				$data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
+				var_dump($data);
 				//var_dump($data);
 				if($data != null)
 				{
