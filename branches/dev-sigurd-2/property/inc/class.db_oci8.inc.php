@@ -117,7 +117,8 @@
 		function connect_failed()
 		{
 			$this->Halt_On_Error = "yes";
-			$this->halt(sprintf("connect ($this->User, \$Password, $this->Database%s) failed", (($this->Host) ? ", $this->Host" : "")));
+//			$this->halt(sprintf("connect ($this->User, \$Password, $this->Database%s) failed", (($this->Host) ? ", $this->Host" : "")));
+			$this->halt('Connect failed');
 		}
 		
 		function free()
