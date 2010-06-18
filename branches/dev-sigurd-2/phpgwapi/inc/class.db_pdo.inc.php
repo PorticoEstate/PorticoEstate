@@ -335,14 +335,21 @@
 				}
 				else
 				{
-					$statement_object = $this->db->query($sql);
+					$this->statement_object = $this->db->query($sql);
+/*
+					$num_rows = $this->statement_object->rowCount();
+					if($num_rows > 200)
+					{
+						$fetch_single = true;
+						$this->fetch_single = $fetch_single;
+					}
+*/
 					if(!$fetch_single)
 					{
-						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
+						$this->resultSet = $this->statement_object->fetchAll($this->pdo_fetchmode);
 					}
 					else
 					{
-						$this->statement_object = $statement_object;
 						$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
 					}
 				}
@@ -654,6 +661,11 @@
 		{
 			if($this->resultSet)
 			{
+				$num_rows = $this->statement_object->rowCount();
+				if($num_rows)
+				{
+					return $num_rows;
+				}
 				return count($this->resultSet);
 			}
 			return 0;
