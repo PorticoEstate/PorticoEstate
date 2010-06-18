@@ -162,20 +162,18 @@ class rental_socomposite extends rental_socommon
 			{
 				// We get the data from the property module
 				$data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
-				//var_dump($data);
 				if($data != null)
 				{
 					$level = -1;
 					$names = array();
 					$levelFound = false;
-					for($i = 1; !$levelFound; $i++)
+					for($i = 1; $i < 6; $i++)
 					{
 						$loc_name = 'loc'.$i.'_name';
 						if(array_key_exists($loc_name, $data))
 						{
 							$level = $i;
 							$names[$level] = $data[$loc_name];
-							$levelFound = true;
 						}
 					}
 					$gab_id = '';

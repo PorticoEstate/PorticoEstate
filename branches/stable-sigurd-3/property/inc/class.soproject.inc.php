@@ -472,7 +472,16 @@
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				if($this->total_records > 200)
+				{
+					$_fetch_single = true;
+				}
+				else
+				{
+					$_fetch_single = false;
+				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				unset($_fetch_single);
 			}
 
 			$project_list = array();

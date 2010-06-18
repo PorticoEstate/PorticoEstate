@@ -142,6 +142,8 @@
 				$aclobj->set_account_id($frontend_delegates, true);
 				$aclobj->add('frontend', '.', 1);
 				$aclobj->add('frontend', 'run', 1);
+				$aclobj->add('manual', '.', 1);
+				$aclobj->add('manual', 'run', 1);
 				$aclobj->add('preferences', 'changepassword',1);
 				$aclobj->add('preferences', '.',1);
 				$aclobj->add('preferences', 'run',1);
