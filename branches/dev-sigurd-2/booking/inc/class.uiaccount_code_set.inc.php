@@ -161,6 +161,8 @@ phpgw::import_class('booking.uicommon');
 	
 		public function add() {
 			$account_code_set = array();
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
 
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -179,11 +181,10 @@ phpgw::import_class('booking.uicommon');
 					}
 				}
 			}
-			
 			$this->add_default_display_data($account_code_set);
 			$account_code_set['project_number'] = '9';
 			$account_code_set['cancel_link'] = $this->link_to('index');
 			$this->flash_form_errors($errors);
-			self::render_template('account_code_set_form', array('new_form' => true, 'account_code_set' => $account_code_set));
+			self::render_template('account_code_set_form', array('new_form' => true, 'account_code_set' => $account_code_set , 'config_data' => $config->config_data));
 		}
 	}
