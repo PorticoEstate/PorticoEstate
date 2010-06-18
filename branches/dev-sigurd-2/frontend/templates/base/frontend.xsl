@@ -99,6 +99,7 @@
 								<br/>
 								<select name="location" size="7" onchange="this.form.submit();" style="margin:5px;">
 									<xsl:for-each select="locations">
+										<xsl:copy-of select="."/>
 										<xsl:sort select="loc1_name"/>
 										<xsl:choose>
 											<xsl:when test="location_code = //header/selected_location">
