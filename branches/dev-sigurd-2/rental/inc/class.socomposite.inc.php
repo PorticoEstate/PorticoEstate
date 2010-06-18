@@ -175,7 +175,7 @@ class rental_socomposite extends rental_socommon
 						{
 							$level = $i;
 							$names[$level] = $data[$loc_name];
-							$levelFound = true;
+							//$levelFound = true;
 						}
 					}
 					$gab_id = '';
