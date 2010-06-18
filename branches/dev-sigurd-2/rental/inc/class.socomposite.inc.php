@@ -168,7 +168,7 @@ class rental_socomposite extends rental_socommon
 					$level = -1;
 					$names = array();
 					$levelFound = false;
-					for($i = 1; !$levelFound; $i++)
+					for($i = 1; $i < 6; $i++)
 					{
 						$loc_name = 'loc'.$i.'_name';
 						if(array_key_exists($loc_name, $data))
