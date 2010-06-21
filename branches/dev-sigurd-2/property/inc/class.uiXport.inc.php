@@ -404,20 +404,22 @@
 
 			$sum=0;
 
-			$import_count = count($import);
-			$table_count = count($table);
-			for ($i=0; $i<$table_count; $i++)
+			$i = 0;
+			foreach ($table as $dummy => $record)
 			{
-				for ($k=0; $k<$import_count; $k++)
+				$k=0;
+				foreach ($import as $text => $key)
 				{
-					$content[$i]['row'][$k]['value'] 	= $table[$i][$import[$header[$k]]];
-					if ($import[$header[$k]]=='belop')
+					$content[$i]['row'][$k]['value'] 	= $record[$key];
+					if ($key=='belop')
 					{
 						$content[$i]['row'][$k]['align'] 	= 'right';
-						$sum=$sum+$table[$i][$import[$header[$k]]];
-						$content[$i]['row'][$k]['value'] 	= number_format($table[$i][$import[$header[$k]]], 2, ',', '');
+						$sum=$sum+$record[$key];
+						$content[$i]['row'][$k]['value'] 	= number_format($record[$key], 2, ',', '');
 					}
+					$k++;
 				}
+				$i++;
 			}
 
 			for ($k=0; $k<count($header); $k++)
