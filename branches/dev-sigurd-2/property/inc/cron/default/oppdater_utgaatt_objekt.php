@@ -120,7 +120,7 @@
 			$m= count($location_types);
 
 
-			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category=99",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category='99'",__LINE__,__FILE__);
 
 			for ($type_id=$m; $type_id>1; $type_id--)
 			{

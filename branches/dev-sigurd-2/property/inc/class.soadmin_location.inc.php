@@ -449,7 +449,7 @@
 				$this->db->query("INSERT INTO fm_location{$type_id}_category (id,descr) "
 					. "VALUES (1,'Category 1')",__LINE__,__FILE__);
 				$this->db->query("INSERT INTO fm_location{$type_id}_category (id,descr) "
-					. "VALUES (99,'Not active')",__LINE__,__FILE__);
+					. "VALUES ('99','Not active')",__LINE__,__FILE__);
 
 				$receipt['message'][] = array('msg' => lang('table %1 has been saved','fm_location'. $receipt['id']));
 				$this->db->transaction_commit();

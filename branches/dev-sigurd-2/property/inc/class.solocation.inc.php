@@ -594,7 +594,7 @@
 			}
 			else
 			{
-				$filtermethod .= " $where  (fm_location{$type_id}.category !=99 OR fm_location{$type_id}.category IS NULL)";
+				$filtermethod .= " $where  (fm_location{$type_id}.category !='99' OR fm_location{$type_id}.category IS NULL)";
 				$where= 'AND';
 			}
 
@@ -1160,7 +1160,7 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category=99",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category='99'",__LINE__,__FILE__);
 
 			for ($type_id=$m; $type_id>1; $type_id--)
 			{
