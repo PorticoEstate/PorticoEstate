@@ -179,10 +179,12 @@ class rental_sobilling extends rental_socommon
 		if($this->billing_terms == null)
 		{
 			$sql = "SELECT id, title FROM rental_billing_term ORDER BY months DESC";
-			$this->db->query($sql, __LINE__, __FILE__);
+			//FIXME Sigurd 21.june 2010: this query trigger fetch_single mode for next_record()
+			$this->db->query($sql, __LINE__, __FILE__,false,true);
 			$results = array();
-			while($this->db->next_record()){
-				$results[$this->db->f('id', true)] = $this->db->f('title', true);
+			while($this->db->next_record())
+			{
+				$results[$this->db->f('id')] = $this->db->f('title', true);
 			}
 			$this->billing_terms = $results;
 		}
