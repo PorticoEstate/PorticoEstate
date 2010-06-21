@@ -274,8 +274,10 @@
 
 //			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " custom = 1 AND location_id = {$location_id}";
+//			$attribute_filter = " custom = 1 AND location_id = {$location_id}";
+			$attribute_filter = " location_id = {$location_id}";
 //			$attribute_choice_filter = " location_id = {$location_id}";
+
 
 			if(!$sql)
 			{
@@ -472,10 +474,10 @@
 				$this->db->query("SELECT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter");
 				while ($this->db->next_record())
 				{
-					$cols .= ",fm_location" . ($type_id) .'.' . $this->db->f('column_name');
+					$cols .= ",fm_location{$type_id}." . $this->db->f('column_name');
 				}
 
-				$from = " FROM $paranthesis fm_location$type_id ";
+				$from = " FROM {$paranthesis} fm_location{$type_id} ";
 
 				$sql = "SELECT $cols $from $joinmethod";
 
