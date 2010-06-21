@@ -152,7 +152,8 @@
 				$GLOBALS['phpgw']->preferences->add('property','location_columns_' . $this->type_id . !!$this->lookup,$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
-			}
+			}
+
 			$function_msg	= lang('Select Column');
 
 			$link_data = array
@@ -406,6 +407,7 @@
 													(
 														'name'     => 'query',
 														'id'     => 'txt_query',
+
 														'value'    => $this->query,//'',//$query,
 														'type' => 'text',
 														'size'    => 28,
@@ -1136,7 +1138,7 @@
 				$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
 			}
 
-			if ($values['cat_id'] > 0)
+			if ($values['cat_id'])
 			{
 				$this->cat_id = $values['cat_id'];
 			}
@@ -1546,6 +1548,7 @@
 			{
 				$this->bocommon->no_access();
 				return;
+
 			}
 			$this->edit($view = true);
 		}
