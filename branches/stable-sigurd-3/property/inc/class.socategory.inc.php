@@ -344,7 +344,7 @@
 						$info = array
 						(
 							'table' => "fm_location{$type_id}_category",
-							'id'				=> array('name' => 'id', 'type' => 'int'),
+							'id'				=> array('name' => 'id', 'type' => 'varchar'),
 							'fields'			=> array
 							(
 								array

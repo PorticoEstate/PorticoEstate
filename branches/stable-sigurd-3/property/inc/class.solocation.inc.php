@@ -252,7 +252,7 @@
 				$query				= isset($data['query']) ? $data['query'] : '';
 				$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order				= isset($data['order']) ? $data['order'] : '';
-				$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
 				$type_id			= isset($data['type_id']) ? $data['type_id'] : '';
 				$lookup_tenant		= isset($data['lookup_tenant']) ? $data['lookup_tenant'] : '';
 				$district_id		= isset($data['district_id']) ? $data['district_id'] : '';
@@ -586,14 +586,15 @@
 				$where= 'AND';
 			}
 
-			if ($cat_id > 0)
+			if ($cat_id)
 			{
-				$filtermethod .= " $where fm_location" . ($type_id). ".category=$cat_id ";
+				$cat_id = $this->db->db_addslashes($cat_id);
+				$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
 				$where= 'AND';
 			}
 			else
 			{
-				$filtermethod .= " $where  (fm_location" . ($type_id). ".category !=99 OR fm_location" . ($type_id). ".category IS NULL)";
+				$filtermethod .= " $where  (fm_location{$type_id}.category !=99 OR fm_location{$type_id}.category IS NULL)";
 				$where= 'AND';
 			}
 
@@ -615,7 +616,7 @@
 
 			if ($status > 0)
 			{
-				$filtermethod .= " $where fm_location" . ($type_id). ".status=$status ";
+				$filtermethod .= " $where fm_location{$type_id}.status = {$status} ";
 				$where= 'AND';
 			}
 			else
@@ -936,7 +937,7 @@
 				return;
 			}
 
-			$cols = 'fm_location' . $type_id .'.category as cat_id';
+			$cols = "fm_location{$type_id}.category as cat_id";
 			$cols_return[] 	= 'cat_id';
 
 			for ($i=1;$i<($type_id);$i++)

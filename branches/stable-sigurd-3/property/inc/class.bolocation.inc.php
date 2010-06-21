@@ -99,7 +99,7 @@
 			$sort					= phpgw::get_var('sort');
 			$order					= phpgw::get_var('order');
 			$filter					= phpgw::get_var('filter', 'int');
-			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$cat_id					= phpgw::get_var('cat_id');
 			$lookup_tenant			= phpgw::get_var('lookup_tenant', 'bool');
 			$district_id			= phpgw::get_var('district_id', 'int');
 			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
