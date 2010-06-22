@@ -813,7 +813,18 @@
 					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 				</td>
 			</tr>
-
+			<tr>
+				<td>
+    		        <xsl:value-of select="php:function('lang', 'billable hours')" />
+				</td>
+				<td>
+					<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="{value_billable_hours}" >
+						<xsl:attribute name="title">
+		    		        <xsl:value-of select="php:function('lang', 'enter the billable hour for the task')" />
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
 </table>
 </div>
 

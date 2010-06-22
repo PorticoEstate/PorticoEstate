@@ -172,6 +172,15 @@
     </td>
    </tr>
    <tr class="row_off">
+    <td>{lang_show_billable_hours}:</td>
+    <td>
+     <select name="newsettings[show_billable_hours]">
+      <option value="" {selected_show_billable_hours_}>NO</option>
+      <option value="1" {selected_show_billable_hours_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
     <td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
    </tr>
    <tr class="row_on">
