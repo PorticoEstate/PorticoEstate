@@ -1269,6 +1269,7 @@
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
+
 			);
 
        		$myColumnDefs[0] = array
@@ -1506,7 +1507,8 @@
 				'lang_view_file_statustext'				=> lang('click to view file'),
 				'lang_file_action_statustext'			=> lang('Check to delete file'),
 				'lang_upload_file'						=> lang('Upload file'),
-				'lang_file_statustext'					=> lang('Select file to upload')
+				'lang_file_statustext'					=> lang('Select file to upload'),
+				'value_billable_hours'					=> $values['billable_hours'],
 			);
 
 			$appname						= lang('Workorder');

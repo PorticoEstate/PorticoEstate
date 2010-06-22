@@ -604,7 +604,8 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
 					'cat_id'				=> $this->db->f('category'),
-					'grants'				=> (int)$this->grants[$this->db->f('user_id')]
+					'grants'				=> (int)$this->grants[$this->db->f('user_id')],
+					'billable_hours'		=> $this->db->f('billable_hours'),
 				);
 			}
 
@@ -774,6 +775,7 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
+			$workorder['billable_hours'] = str_replace(',','.', $workorder['billable_hours']);
 
 			$cols = array();
 			$vals = array();
@@ -851,13 +853,14 @@
 				$workorder['charge_tenant'],
 				$this->account,
 				$workorder['ecodimb'],
-				$workorder['cat_id']
+				$workorder['cat_id'],
+				$workorder['billable_hours']
 			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -911,12 +914,14 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
+			$workorder['billable_hours'] = str_replace(',','.', $workorder['billable_hours']);
 
-			$this->db->query("SELECT status,budget,calculation FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT status,budget,calculation,billable_hours FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			$old_status = $this->db->f('status');
-			$old_budget = $this->db->f('budget');
+			$old_status			= $this->db->f('status');
+			$old_budget			= $this->db->f('budget');
+			$old_billable_hours	= $this->db->f('billable_hours');
 
 			if ($this->db->f('calculation') > 0)
 			{
@@ -931,7 +936,7 @@
 				$combined_cost = $workorder['budget'];
 			}
 
-			$this->db->query("SELECT bilagsnr FROM fm_ecobilag WHERE pmwrkord_code ={$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT bilagsnr FROM fm_ecobilag WHERE pmwrkord_code ='{$workorder['id']}'",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			if($this->db->f('bilagsnr'))
@@ -939,7 +944,7 @@
 				$paid = 1;
 			}
 
-			$this->db->query("SELECT bilagsnr FROM fm_ecobilagoverf where pmwrkord_code = {$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT bilagsnr FROM fm_ecobilagoverf where pmwrkord_code = '{$workorder['id']}'",__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('bilagsnr'))
 			{
@@ -947,7 +952,7 @@
 			}
 
 
-			$value_set=array
+			$value_set = array
 			(
 				'title'			=> $workorder['title'],
 				'status'		=> $workorder['status'],
@@ -964,7 +969,8 @@
 				'charge_tenant'	=> $workorder['charge_tenant'],
 				'vendor_id'		=> $workorder['vendor_id'],
 				'ecodimb'		=> $workorder['ecodimb'],
-				'category'		=> $workorder['cat_id']
+				'category'		=> $workorder['cat_id'],
+				'billable_hours'=> $workorder['billable_hours']
 			);
 
 			if($workorder['status'] == 'closed')
@@ -1014,75 +1020,80 @@
 			$this->update_planned_cost($workorder['project_id']); // at project
 
 			$check_pending_action = false;
-				if ($old_status != $workorder['status'])
+			if ((float)$old_billable_hours != (float)$workorder['billable_hours'])
+			{
+				$historylog->add('H',$workorder['id'],$workorder['billable_hours'],$old_billable_hours);
+				$receipt['message'][]= array('msg' => lang('billable hours has been updated'));
+			}
+
+
+			if ($old_status != $workorder['status'])
+			{
+				$historylog->add('S',$workorder['id'],$workorder['status'], $old_status);
+				$receipt['notice_owner'][]=lang('Status changed') . ': ' . $workorder['status'];
+				$check_pending_action = true;
+			}
+			elseif($workorder['confirm_status'])
+			{
+				$check_pending_action = true;
+				$historylog->add('SC',$workorder['id'],$workorder['status'], $old_status);
+				$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $workorder['status'];
+			}
+
+			if( $check_pending_action )
+			{
+				$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
+				$this->db->next_record();
+				if ($this->db->f('approved') )
 				{
-					$historylog->add('S',$workorder['id'],$workorder['status'], $old_status);
-					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $workorder['status'];
-					$check_pending_action = true;
+					$action_params = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project.workorder',
+						'id'				=> $workorder['id'],
+						'responsible'		=> $this->account,
+						'responsible_type'  => 'user',
+						'action'			=> 'approval',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
+
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
 				}
-				elseif($workorder['confirm_status'])
+				if ($this->db->f('in_progress') )
 				{
-					$check_pending_action = true;
-					$historylog->add('SC',$workorder['id'],$workorder['status'], $old_status);
-					$receipt['notice_owner'][]=lang('Status confirmed') . ': ' . $workorder['status'];
-				}
+					$action_params = array
+					(
+						'appname'			=> 'property',
+						'location'			=> '.project.workorder',
+						'id'				=> $workorder['id'],
+						'responsible'		=> $workorder['vendor_id'],
+						'responsible_type'  => 'vendor',
+						'action'			=> 'remind',
+						'remark'			=> '',
+						'deadline'			=> ''
+					);
 
-				if( $check_pending_action )
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					unset($action_params);
+
+				}
+				if ($this->db->f('delivered') )
 				{
-					$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
-
-					$this->db->next_record();
-
- 					if ($this->db->f('approved') )
- 					{
- 						$action_params = array
-						(
-							'appname'			=> 'property',
-							'location'			=> '.project.workorder',
-							'id'				=> $workorder['id'],
-							'responsible'		=> $this->account,
-							'responsible_type'  => 'user',
-							'action'			=> 'approval',
-							'remark'			=> '',
-							'deadline'			=> ''
-						);
-
-						execMethod('property.sopending_action.close_pending_action', $action_params);
-						unset($action_params);
- 					}
- 					if ($this->db->f('in_progress') )
- 					{
- 						$action_params = array
-						(
-							'appname'			=> 'property',
-							'location'			=> '.project.workorder',
-							'id'				=> $workorder['id'],
-							'responsible'		=> $workorder['vendor_id'],
-							'responsible_type'  => 'vendor',
-							'action'			=> 'remind',
-							'remark'			=> '',
-							'deadline'			=> ''
-						);
-
-						execMethod('property.sopending_action.close_pending_action', $action_params);
-						unset($action_params);
-
- 					}
- 					if ($this->db->f('delivered') )
- 					{
- 						//close
- 					}
+					//close
 				}
+			}
 
-				if ($old_budget != $workorder['budget'])
-				{
-					$historylog->add('B', $workorder['id'], $workorder['budget'], $old_budget);
-				}
+			if ($old_budget != $workorder['budget'])
+			{
+				$historylog->add('B', $workorder['id'], $workorder['budget'], $old_budget);
+			}
 
-				if ($workorder['remark'])
-				{
-					$historylog->add('RM', $workorder['id'], $workorder['remark']);
-				}
+			if ($workorder['remark'])
+			{
+				$historylog->add('RM', $workorder['id'], $workorder['remark']);
+			}
 			if($this->db->transaction_commit())
 			{
 

@@ -523,6 +523,7 @@
 					case 'SC': $type = lang('Status confirmed'); break;
 					case 'AP': $type = lang('Ask for approval'); break;
 					case 'ON': $type = lang('Owner notified'); break;
+					case 'H': $type = lang('Billable hours changed'); break;
 					default: break;
 				}
 

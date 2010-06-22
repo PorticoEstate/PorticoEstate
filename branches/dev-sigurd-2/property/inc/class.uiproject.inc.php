@@ -951,8 +951,8 @@
 
 				if(!isset($values['end_date']) || !$values['end_date'])
 				{
-//					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
-//					$error_id=true;
+					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+					$error_id=true;
 				}
 
 				if(!$values['name'])

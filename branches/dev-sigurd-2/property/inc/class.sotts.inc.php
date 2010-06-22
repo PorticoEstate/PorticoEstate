@@ -464,6 +464,7 @@
 				$ticket['building_part']	= $this->db->f('building_part',true);
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
 				$ticket['publish_note']		= $this->db->f('publish_note');
+				$ticket['billable_hours']	= $this->db->f('billable_hours');
 
 				$user_id=(int)$this->db->f('user_id');
 
@@ -704,7 +705,7 @@
 			$oldcat_id 			= $this->db->f('cat_id');
 			$old_status  		= $this->db->f('status');
 			$old_budget  		= $this->db->f('budget');
-		//	$old_billable_hours	= $this->db->f('billable_hours');
+			$old_billable_hours	= $this->db->f('billable_hours');
 		//	$old_billable_rate	= $this->db->f('billable_rate');
 			$old_subject		= $this->db->f('subject');
 			$old_contact_id		= $this->db->f('contact_id');
@@ -884,6 +885,18 @@
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('S',$id,$ticket['subject'],$old_subject);
 				$receipt['message'][]= array('msg' => lang('Subject has been updated'));
+			}
+
+			if($ticket['billable_hours'])
+			{
+				$ticket['billable_hours'] = str_replace(',','.', $ticket['billable_hours']);
+			}
+			if ((float)$old_billable_hours != (float)$ticket['billable_hours'])
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET billable_hours='{$ticket['billable_hours']}'"
+					. " WHERE id='{$id}'",__LINE__,__FILE__);
+				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);
+				$receipt['message'][]= array('msg' => lang('billable hours has been updated'));
 			}
 
 			if ((int)$old_actual_cost != (int)$ticket['actual_cost'])
