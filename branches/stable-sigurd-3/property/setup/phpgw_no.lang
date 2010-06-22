@@ -213,8 +213,10 @@ base description	property	no	Beskrivelse av grunnlag
 basis	property	no	Basis
 besiktigelse	property	no	Besiktigelse
 bilagsnr	property	no	Bilagsnr
-billable hours changed	property	no	Fakturerbar time endret
+billable hours	property	no	Egne timer
+billable hours changed	property	no	Egne timer endret
 billable rate changed	property	no	Fakturerbar sats endret
+billable hours has been updated	property	no	Egne timer er oppdatert
 bill per unit	property	no	Pris pr enhet, ex mva
 branch	property	no	Fag
 b - responsible	property	no	Anviser
@@ -660,6 +662,7 @@ enter quantity of unit	property	no	angi mengde
 enter request title	property	no	angi tittel for anmodning
 enter the attribute id	property	no	angi attributt ID
 enter the attribute value for this entity	property	no	angi attributt verdi for denne posten
+enter the billable hour for the task	property	no	Angi egne timer for oppgaven
 enter the budget	property	no	Angi budsjett
 enter the budget account	property	no	Angi budsjettkonto
 enter the category id	property	no	Angi kategori ID
@@ -1157,6 +1160,7 @@ please select a location !	property	no	velg lokalisering
 please select a location - or an entity!	property	no	Velg en lokalisering eller en entitet
 please select an agreement !	property	no	velg en avtale
 please select an agreement_group !	property	no	Velg en avtale-gruppe
+Please select an end date!	property	no	Angi slutt-dato
 please select a period for write off !	property	no	velg en avskrivningsperiode
 please select a person or a group to handle the ticket !	property	no	Velg en person eller gruppe for tildeling av melding
 please select a person to handle the ticket !	property	no	velg en person som saksbehandler for denne meldingen

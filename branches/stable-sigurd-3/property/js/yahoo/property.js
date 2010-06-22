@@ -1163,7 +1163,8 @@
 		//validate right ADD.
 		if(YAHOO.util.Dom.inDocument("btn_new-button"))
 		{
-			disabled_button_add = true;
+//			disabled_button_add = true;
+			disabled_button_add = false;
 			for(i=0;i<values_ds.rights.length;i++)
 			{
 				if(values_ds.rights[i].my_name == "add")

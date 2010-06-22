@@ -512,7 +512,8 @@
 				'tenant_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'paid_percent' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0),
-				'event_id' => array('type' => 'int','precision' => 4,'nullable' => True)
+				'event_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True)
  			),
 			'pk' => array('id'),
 			'fk' => array(),

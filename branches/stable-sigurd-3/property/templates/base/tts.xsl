@@ -561,10 +561,8 @@
 						</td>
 						<td>
 							<input type="file" name="file" size="40" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 										<xsl:value-of select="lang_file_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</td>
@@ -1020,6 +1018,23 @@
 				</xsl:when>
 			</xsl:choose>
 
+			<xsl:choose>
+				<xsl:when test="show_billable_hours ='1'">
+					<tr>
+						<td>
+		    		        <xsl:value-of select="php:function('lang', 'billable hours')" />
+						</td>
+						<td>
+							<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="{value_billable_hours}" >
+								<xsl:attribute name="title">
+				    		        <xsl:value-of select="php:function('lang', 'enter the billable hour for the task')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+
 		</xsl:when>
 		<xsl:otherwise>
 				<input type="hidden" name="values[status]" value="{value_status}"></input>
@@ -1028,6 +1043,7 @@
 				<input type="hidden" name="values[priority]" value="{value_priority}"></input>
 				<input type="hidden" name="values[cat_id]" value="{value_cat_id}"></input>
 				<input type="hidden" name="values[finnish_date]" value="{value_finnish_date}"></input>
+				<input type="hidden" name="values[billable_hour]" value="{value_billable_hours}"></input>
 			</xsl:otherwise>
 	</xsl:choose>
 

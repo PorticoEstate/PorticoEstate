@@ -1089,7 +1089,7 @@
 			{
 				$admin_location = & $bolocation->soadmin_location;
 				$location_types	= $admin_location->select_location_type();
-				$max_level = 4;//count($location_types);
+				$max_level = count($location_types);
 
 				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
@@ -1269,6 +1269,8 @@
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
+
+
 			);
 
        		$myColumnDefs[0] = array
@@ -1506,7 +1508,8 @@
 				'lang_view_file_statustext'				=> lang('click to view file'),
 				'lang_file_action_statustext'			=> lang('Check to delete file'),
 				'lang_upload_file'						=> lang('Upload file'),
-				'lang_file_statustext'					=> lang('Select file to upload')
+				'lang_file_statustext'					=> lang('Select file to upload'),
+				'value_billable_hours'					=> $values['billable_hours'],
 			);
 
 			$appname						= lang('Workorder');

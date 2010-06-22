@@ -2654,6 +2654,8 @@
 				'value_opendate'				=> $ticket['entry_date'],
 				'value_assignedfrom'			=> $ticket['user_name'],
 				'value_assignedto_name'			=> isset($ticket['assignedto_name'])?$ticket['assignedto_name']:'',
+				'show_billable_hours'			=> isset($this->bo->config->config_data['show_billable_hours']) ? $this->bo->config->config_data['show_billable_hours'] : '',
+				'value_billable_hours'			=> $ticket['billable_hours'],
 
 				'additional_notes'				=> $additional_notes,
 				'record_history'				=> $record_history,
@@ -2661,7 +2663,7 @@
 				'order_link'					=> $order_link,
 				'add_to_project_link'			=> $add_to_project_link,
 
-				'lang_name'						=> lang('name'),
+	//			'lang_name'						=> lang('name'),
 				'contact_phone'					=> $ticket['contact_phone'],
 				'mailnotification'				=> isset($this->bo->config->config_data['mailnotification'])?true:'',
 				'pref_send_mail'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:'',
