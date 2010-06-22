@@ -1089,7 +1089,7 @@
 			{
 				$admin_location = & $bolocation->soadmin_location;
 				$location_types	= $admin_location->select_location_type();
-				$max_level = 4;//count($location_types);
+				$max_level = count($location_types);
 
 				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
@@ -1269,6 +1269,7 @@
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
+
 
 			);
 
