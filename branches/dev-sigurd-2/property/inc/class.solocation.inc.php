@@ -646,7 +646,9 @@
 				$where= 'AND';			
 			}
 
-			$querymethod = '';
+			$_querymethod = array();
+			$__querymethod = array();
+			$_joinmethod_datatype = array();
 
 			if($query)
 			{
@@ -654,10 +656,10 @@
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
-					$query=explode(".",$query);
-					$querymethod = " $where (fm_location" . ($type_id).".loc1='" . $query[0] . "' AND fm_location" . $type_id .".loc" . ($type_id)."='" . $query[1] . "')";
+					$query_part = explode(".",$query);
+					$_querymethod[] = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
 				}
-				else
+		//		else
 				{
 					$sub_query = '';
 
@@ -677,15 +679,101 @@
 						$query_name .= "OR loc{$i}_name $this->like '%$query%'";
 					}
 
-					$querymethod = " {$where} (fm_location{$type_id}.loc1 {$this->like} '%{$query}%' {$sub_query} OR fm_location{$type_id}.location_code {$this->like} '%{$query}%' {$query_name})";
+					if(!$criteria_id)
+					{
+						$_querymethod[] = " (fm_location{$type_id}.loc1 {$this->like} '%{$query}%' {$sub_query} OR fm_location{$type_id}.location_code {$this->like} '%{$query}%' {$query_name})";
+					}
+					else
+					{
+						$__querymethod = array("fm_location{$type_id}.loc1 = '-1'"); // block query waiting for criteria
+					}
+
+					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
+
+					while ($this->db->next_record())
+					{
+						switch ($this->db->f('datatype'))
+						{
+							case 'V':
+							case 'email':
+							case 'CH':
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'R':
+							case 'LB':
+								if(!$criteria_id)
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON (fm_location{$type_id}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
+									." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+
+									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+									." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'I':
+								if(ctype_digit($query) && !$criteria_id)
+								{
+									$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " = " . (int)$query;
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'VENDOR':
+								if($criteria_id == 'vendor')
+								{
+									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON (fm_location{$type_id}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'AB':
+								if($criteria_id == 'ab')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON (fm_location{$type_id}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'ABO':
+								if($criteria_id == 'abo')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON (fm_location{$type_id}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							default:
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " = '{$query}'";
+									$__querymethod = array(); // remove block
+								}
+						}
+					}
 				}
 				$where= 'AND';
 			}
 
+			foreach($_joinmethod_datatype as $_joinmethod)
+			{
+				$sql .= $_joinmethod;
+			}
+			
+			$querymethod = '';
+			
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
+				unset($_querymethod);
+			}
+
 			$sql .= "$filtermethod $querymethod";
-
-//echo $sql; die();
-
+//_debug_array($sql);
 			$values = array();
 			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
