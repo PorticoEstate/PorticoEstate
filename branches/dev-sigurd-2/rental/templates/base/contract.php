@@ -288,34 +288,37 @@ function loadDatatables(currTab){
 						<label for="executive_officer"><?php echo lang('executive_officer') ?></label>
 					</dt>
 					<dd>
-						<?php if($editable) { ?>
+					<?php 
+						$executive_officer = $contract->get_executive_officer_id();
+						if($editable)
+						{
+							$location_name = $contract->get_field_of_responsibility_name();
+							$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_name, 'rental');
+					?>
 								<select name="executive_officer" id="executive_officer">
 									<option value=""><?php echo lang('nobody') ?></option>
 									<?php
-										$executive_officer = $contract->get_executive_officer_id();
-										$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts',-1,'','account_lastname');
 										foreach($accounts as $account)
 										{
-											$account_id = $account->__get('id');
-											$GLOBALS['phpgw']->acl->set_account_id($account_id);											
-											if($contract->has_permission(PHPGW_ACL_ADD))
+											$selected = '';
+											if($account['account_id'] == $executive_officer)
 											{
-												$selected = '';
-												if($account_id == $executive_officer){
-													$selected = 'selected=\'selected\'';
-												}
-												echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+												$selected = 'selected=\'selected\'';
 											}
+											echo "<option value='{$account['account_id']}' {$selected}>" . $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString() . "</option>";
 										}
-										$GLOBALS['phpgw']->acl->set_account_id(0); // Reset acl to current user
 									?>
 								</select>
-						<?php } else { 
-							$executive_officer = $contract->get_executive_officer_id();
-							if(isset($executive_officer)){
+					<?php
+						}
+						else
+						{ 
+							if(isset($executive_officer))
+							{
 								 $account = $GLOBALS['phpgw']->accounts->get($executive_officer);
-								 if(isset($account)){
-								 	echo $account->__get('firstname')." ".$account->__get('lastname');
+								 if(isset($account))
+								 {
+								 	echo $account->__toString();
 								 } 
 								 else
 								 {
@@ -327,9 +330,9 @@ function loadDatatables(currTab){
 								echo lang('nobody');
 							}
 							
-						}?>
-						
-						
+						}
+					?>
+
 					</dd>
 					<dt>
 						<label for="name"><?php echo lang('date_start') ?></label>
@@ -840,26 +843,24 @@ function loadDatatables(currTab){
 							<option value=""><?php echo lang('target_none') ?></option>
 							
 							<?php
-								$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+								$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'rental');
 								$label = lang('notification_optgroup_users');
 								echo '<optgroup label="'.$label.'">';
 								echo '<option value="'.$GLOBALS['phpgw_info']['user']['account_id'].'">'.lang('target_me').'</option>';
 								foreach($accounts as $account)
 								{
-									$id = $account->__get('id');
-									if($id != $GLOBALS['phpgw_info']['user']['account_id'])
+									if( $account['account_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
 									{
-										echo '<option value="'.$id.'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+										echo "<option value='{$account['account_id']}'>" . $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString() . '</option>';
 									}
 								}
 								echo '</optgroup>';
 								$accounts = $GLOBALS['phpgw']->accounts->get_list('groups');
 								$label = lang('notification_optgroup_groups');
-								echo '<optgroup label="'.$label.'">';
+								echo "<optgroup label='{$label}'>";
 								foreach($accounts as $account)
 								{
-										$id = $account->__get('id');
-										echo '<option value="'.$id.'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+									echo "<option value='{$account->id}'>{$account->firstname}</option>";
 								}
 								echo '</optgroup>';
 							?>
