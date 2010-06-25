@@ -477,6 +477,11 @@
 					$cols .= ",fm_location{$type_id}." . $this->db->f('column_name');
 				}
 
+				$cols.= ",fm_location{$type_id}_category.descr as category_text";
+
+				$joinmethod .= " {$this->left_join} fm_location{$type_id}_category ON ( fm_location{$type_id}.category = fm_location{$type_id}_category.id))";
+				$paranthesis .='(';
+
 				$from = " FROM {$paranthesis} fm_location{$type_id} ";
 
 				$sql = "SELECT $cols $from $joinmethod";
@@ -551,6 +556,20 @@
 							break;
 						default:
 							$uicols['align'][] 	= 'center';
+					}
+
+					if($this->db->f('column_name') == 'category')
+					{
+						$i++;
+						$cols.= ",fm_location{$type_id}_category.descr as category_text";
+						$uicols['input_type'][]		= 'text';
+						$uicols['name'][]			= 'category_text';
+						$uicols['descr'][]			= $this->db->f('input_text') . ' ' . lang('name');
+						$uicols['statustext'][]		= '';
+						$uicols['datatype'][$i]		= 'V';
+						$uicols['exchange'][]		= false;
+						$uicols['align'][]			= 'right';
+						$uicols['cols_return_extra'][$i] = array();
 					}
 					$i++;
 				}

@@ -151,6 +151,100 @@
 			$errors = $this->validate($entity);
 			return array($entity, $errors);
 		}
+		
+		protected function add_comment(&$event, $comment, $type = 'comment') {
+			$event['comments'][] = array(
+				'time'=> 'now',
+				'author'=>$this->current_account_fullname(),
+				'comment'=>$comment,
+				'type' => $type
+			);
+		}
+
+	    protected function create_sendt_mail_notification_comment_text($event,$errors)
+	    {
+			$data = array();
+
+			foreach($errors['allocation'][0] as $e)
+			{ 	
+				foreach($event['resources'] as $res)
+				{
+					$time = $this->bo->so->get_overlap_time_info($res,$e,'allocation');
+					
+					$from_ = new DateTime($time['from']);
+					$to_ = new DateTime($time['to']);
+					$date = $from_->format('d-m-Y');
+					$start = $from_->format('H:i');
+					$end = $to_->format('H:i');
+
+					$resource = $this->bo->so->get_resource_info($res);
+					$_mymail = $this->bo->so->get_contact_mail($e,'allocation');
+				
+					$a = $_mymail[0];
+					if(array_key_exists($a,$data))
+					{
+						$data[$a][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ); 	
+					}
+					else
+					{
+						$data[$a] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end )); 
+					}
+					if ($_mymail[1])
+					{
+						$b = $_mymail[1];
+						if(array_key_exists($a,$data))
+						{
+							$data[$b][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ); 	
+						}
+						else
+						{
+							$data[$b] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end )); 
+						}
+					}
+				}
+			}
+
+			foreach($errors['booking'][0] as $e)
+			{ 	
+				foreach($event['resources'] as $res)
+				{
+					$time = $this->bo->so->get_overlap_time_info($res,$e,'booking');
+
+					$from_ = new DateTime($time['from']);
+					$to_ = new DateTime($time['to']);
+					$date = $from_->format('d-m-Y');
+					$start = $from_->format('H:i');
+					$end = $to_->format('H:i');
+
+					$resource = $this->bo->so->get_resource_info($res);
+					$_mymail = $this->bo->so->get_contact_mail($e,'booking');
+
+					$a = $_mymail[0];
+					if(array_key_exists($a,$data))
+					{
+						$data[$a][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ); 	
+					}
+					else
+					{
+						$data[$a] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end )); 
+					}
+					if ($_mymail[1])
+					{
+						$b = $_mymail[1];
+						if(array_key_exists($a,$data))
+						{
+							$data[$b][] = array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end ); 	
+						}
+						else
+						{
+							$data[$b] =  array( array('date' => $date, 'building' => $event['building_name'], 'resource' => $resource['name'], 'start' => $start, 'end' => $end )); 
+						}
+					}
+
+				}
+			}
+			return $data;
+ 	   }
 
 		public function add()
 		{
@@ -169,15 +263,16 @@
 				$event['is_public'] = 1;
 				
 				list($event, $errors) = $this->extract_and_validate($event);
-				if(!$errors)
+				if(!$errors['event'])
 				{
+					$this->add_comment($event, lang('Event was created'));
 					$receipt = $this->bo->add($event);
-					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret']));
+					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret'], 'warnings'=>$errors));
 				}
 			}
 			if (!phpgw::get_var('from_report', 'POST'))
 			{
-				$this->flash_form_errors($errors);
+					$this->flash_form_errors($errors);
 			}
 			self::add_javascript('booking', 'booking', 'event.js');
 			array_set_default($event, 'resources', array());
@@ -209,7 +304,7 @@
 			{
 				return false;
 			}
-
+			
 			if (strlen($receiver) > 0) 
 			{
 				try
@@ -231,18 +326,69 @@
 			$event['building_id'] = $building_info['id'];
 			$event['building_name'] = $building_info['name'];
 			$errors = array();
+			list($event, $errors) = $this->extract_and_validate($event);
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'resources', array());
-				
-				list($event, $errors) = $this->extract_and_validate($event);
-				
-				if(!$errors)
+
+				if(!$errors['event'])
 				{
+					if (phpgw::get_var('mail', 'POST'))
+					{
+
+						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST'))
+						{
+							$maildata = $this->create_sendt_mail_notification_comment_text($event,$errors);
+							if ($maildata)
+							{	
+								$comment_text_log = lang('Message sent about the changes in the reservations').': ';
+								foreach ($maildata as $data)
+								{
+									foreach ($data as $item)
+									{
+									$comment_text_log .= $item['date'].', '.$item['building'].', '.$item['resource'].', Kl. '.$item['start'].' - '.$item['end']." <br />";
+									}
+								}
+								$comment_text_log .= phpgw::get_var('mail', 'POST');
+								$this->add_comment($event, $comment_text_log);
+							}
+							if(phpgw::get_var('sendtocollision', 'POST'))
+							{
+								foreach (array_keys($maildata) as $mail)
+								{
+									$comment_text_log = lang('There are changes to your reservations').": \n";
+									foreach($maildata[$mail] as $data)
+									{
+										$comment_text_log .= $data['date'].', '.$data['building'].', '.$data['resource'].', Kl. '.$data['start'].' - '.$data['end']." \n";
+									}
+									$comment_text_log .= phpgw::get_var('mail', 'POST');
+									$this->send_mailnotification($mail, lang('Event changed'), $comment_text_log);
+								}
+							}
+							if(phpgw::get_var('sendtocontact', 'POST'))
+							{
+								$comment_text_log = phpgw::get_var('mail', 'POST');
+								$this->send_mailnotification($event['contact_email'], lang('Event changed'), $comment_text_log);
+							}
+						}				
+						else 
+						{
+						$this->add_comment($event, phpgw::get_var('mail', 'POST'));
+						$this->send_mailnotification($event['contact_email'], lang('Event changed'), phpgw::get_var('mail', 'POST'));
+						}
+					}
 					$receipt = $this->bo->update($event);
-					$this->send_mailnotification($event['contact_email'], lang('Event changed'), phpgw::get_var('mail', 'POST'));
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 				}
+			}
+
+			if($errors['allocation'])
+			{
+				$errors['allocation'] = lang('Overlaps other organizations allocation');
+			}
+			elseif($errors['booking'])
+			{
+				$errors['booking'] = lang('Overlaps with existing booking');
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'event.js');
@@ -256,7 +402,6 @@
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($event);
-			
 			$this->add_template_helpers();
 			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}

@@ -36,6 +36,16 @@
             </dd>
 		</dl>
 		<div class="clr"/>
+		<dl class="proplist">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(event/comments/author))" /></dt>
+			<xsl:for-each select="event/comments[author]">
+				<dt>
+					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+				</dt>
+				<dd><xsl:value-of select="comment" disable-output-escaping="yes"/></dd>
+			</xsl:for-each>
+		</dl>
+		<div class="clr"/>
         <dl class="form">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Why')" /></dt>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
@@ -235,7 +245,9 @@
 			<dt><label for="field_mail"><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></label></dt>
 			<dd>
 				<label><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></label><br />
-				<textarea id="field_mail" name="mail" class="full-width"></textarea>
+			<textarea id="field_mail" name="mail" class="full-width"></textarea><br />
+			<label><input type="checkbox" value="1" name="sendtocontact" /> <xsl:value-of select="php:function('lang', 'Send to contact')" /></label><br />
+			<label><input type="checkbox" value="1" name="sendtocollision" /> <xsl:value-of select="php:function('lang', 'Send to contact for overlaping allocations/bookings')" /></label><br />
 			</dd>
 		</dl>
         <div class="form-buttons">
