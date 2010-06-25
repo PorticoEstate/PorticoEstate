@@ -1,6 +1,6 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.1.92';
+	$setup_info['booking']['version'] = '0.1.93';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
@@ -43,6 +43,7 @@
 		'bb_event_resource',
 		'bb_event_targetaudience',
 		'bb_event_agegroup',
+		'bb_event_comment',
 		'bb_completed_reservation_export',
 		'bb_completed_reservation_export_file',
 		'bb_completed_reservation',
