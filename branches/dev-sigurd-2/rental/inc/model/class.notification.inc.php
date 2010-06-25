@@ -146,8 +146,9 @@ class rental_notification extends rental_model
 		}
 
 		$account = $GLOBALS['phpgw']->accounts->get($this->get_account_id());
-		if($account){
-			$name = $account->__get('firstname').' '.$account->__get('lastname');
+		if($account)
+		{
+			$name = $account->__toString();
 		}
 		
 		
