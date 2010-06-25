@@ -8,7 +8,7 @@
     				<li>
     					<a href="logout.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_out.png" class="list_image"/></em><xsl:value-of select="php:function('lang', 'logout')"/></a> 
     					|
-    					<a href="home.php"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_open.png" /></em><xsl:value-of select="php:function('lang', 'home')"/></a>
+    					<a href="{home_url}"  class="header_link"><em><img src="frontend/templates/base/images/16x16/door_open.png" /></em><xsl:value-of select="php:function('lang', 'home')"/></a>
     				</li>
     			</ul>
 			</div>

@@ -309,6 +309,19 @@
 				 
 			$name_of_user = $GLOBALS['phpgw_info']['user']['firstname']." ".$GLOBALS['phpgw_info']['user']['lastname'];
 				 
+			if(count($GLOBALS['phpgw_info']['user']['apps']) > 1)
+			{
+				$home_url = $GLOBALS['phpgw']->link('/home.php');
+			}
+			else
+			{
+				$home_url = $GLOBALS['phpgw']->link('/index.php', array
+					 (
+					 	'menuaction'=> 'frontend.uifrontend.index'
+					 ));
+			}
+
+			$this->header_state['home_url'] = $home_url;
 			$this->header_state['help_url'] = $help_url;
 			$this->header_state['contact_url'] = $contact_url;
 			$this->header_state['folder_url'] = $folder_url;
