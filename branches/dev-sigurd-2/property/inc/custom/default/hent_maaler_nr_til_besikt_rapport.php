@@ -2,6 +2,7 @@
 
 //_debug_array($values);
 //_debug_array($values_attribute);
+//die();
 //_debug_array($action);
 
 		// this routine will only work with the exact configuration of Bergen Bolig og Byfornyelse - but can serve as an example
@@ -19,17 +20,21 @@
 		{
 			if ($maaler_nr)
 			{
-				$sql = "UPDATE fm_entity_2_1 set maaler_nr= '$maaler_nr' WHERE location_code ='" . $values['location_code'] . "'";
+				$sql = "UPDATE fm_entity_2_17 set maaler_nr= '$maaler_nr' WHERE location_code ='" . $values['location_code'] . "'";
 				$this->db->query($sql,__LINE__,__FILE__);
 			}
 		}
 
-		$sql = "SELECT besiktet_dato FROM fm_entity_2_1 WHERE id ='{$receipt['id']}'";
-		$this->db->query($sql,__LINE__,__FILE__);
-		$this->db->next_record();
-		if($this->db->f('besiktet_dato'))
+//		$sql = "SELECT besiktet_dato FROM fm_entity_2_17 WHERE id ='{$receipt['id']}'";
+//		$this->db->query($sql,__LINE__,__FILE__);
+//		$this->db->next_record();
+//		if($this->db->f('besiktet_dato'))
+//		{
+//			$besiktet_dato = $this->db->from_timestamp($this->db->f('besiktet_dato'));
+//		}
+//		else
 		{
-			$besiktet_dato = $this->db->from_timestamp($this->db->f('besiktet_dato'));
+			$besiktet_dato = time();
 		}
 
 		if (isSet($values_attribute) AND is_array($values_attribute))
@@ -61,7 +66,7 @@
 						{
 							$new_value = $entry['value'];
 
-							$this->db->query("select maaler_stand, id from fm_entity_1_11 WHERE ext_meter_id = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);
+							$this->db->query("SELECT maaler_stand, id FROM fm_entity_1_11 WHERE ext_meter_id = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);
 							$this->db->next_record();
 							$old_value = $this->db->f('maaler_stand');
 							$id = $this->db->f('id');
@@ -72,7 +77,7 @@
 								{
 									$historylog	= CreateObject('property.historylog','entity_1_11');
 									$historylog->add('SO',$id,$new_value,false, $attrib_id,$besiktet_dato);
-									$this->db->query("UPDATE fm_entity_1_11 set maaler_stand = '$new_value' WHERE ext_meter_id = '$maaler_nr' AND location_code ='" . $values['location_code']. "'",__LINE__,__FILE__);
+									$this->db->query("UPDATE fm_entity_1_11 SET maaler_stand = '{$new_value}' WHERE ext_meter_id = '{$maaler_nr}' AND location_code ='{$values['location_code']}'",__LINE__,__FILE__);
 								}
 							}
 						}
@@ -80,5 +85,3 @@
 				}
 			}
 		}
-
-
