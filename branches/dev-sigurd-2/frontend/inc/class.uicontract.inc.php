@@ -66,21 +66,21 @@ class frontend_uicontract extends frontend_uifrontend
 					$result = frontend_borental::send_contract_message($contract_id, $contract_message, $from_address);
 					if($result)
 					{
-						$msglog['message'] = 'message_sent';
+						$msglog['message'] = lang('message_sent');
 					}
 					else
 					{
-						$msglog['message'] = 'message_not_sent';
+						$msglog['message'] = lang('message_not_sent');
 					}
 				}
 				else
 				{
-					$msglog['message'] = 'message_empty';
+					$msglog['message'] = lang('message_empty');
 				}
 			}
 			else
 			{
-				$msglog['message'] = 'user_not_in_fellesdata';
+				$msglog['message'] = lang('user_not_in_fellesdata');
 			}
 		}
 		
