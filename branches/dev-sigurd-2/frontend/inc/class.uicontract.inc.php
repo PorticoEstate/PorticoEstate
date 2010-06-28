@@ -70,17 +70,17 @@ class frontend_uicontract extends frontend_uifrontend
 					}
 					else
 					{
-						$msglog['message'] = lang('message_not_sent');
+						$msglog['error'] = lang('message_not_sent');
 					}
 				}
 				else
 				{
-					$msglog['message'] = lang('message_empty');
+					$msglog['error'] = lang('message_empty');
 				}
 			}
 			else
 			{
-				$msglog['message'] = lang('user_not_in_fellesdata');
+				$msglog['error'] = lang('user_not_in_fellesdata');
 			}
 		}
 		
