@@ -48,6 +48,7 @@ class rental_agresso_cs15 implements rental_exportable
 	protected function run()
 	{
 		$this->lines = array();
+		$counter = 0;
 		foreach($this->parties as $party) // Runs through all parties
 		{
 			$country_code = strtoupper($party->get_postal_country_code());
@@ -62,7 +63,8 @@ class rental_agresso_cs15 implements rental_exportable
 			{
 				$phone = $party->get_mobile_phone(); // ..so we try mobile phone
 			}
-			$this->lines[] = $this->get_line($party->get_name(), $party->get_identifier(), $party->get_address_1(), $party->get_address_2(), $country_code, $place, $phone, $party->get_postal_code());
+			$this->lines[] = $this->get_line($party->get_name(), $party->get_identifier(), $party->get_address_1(), $party->get_address_2(), $country_code, $place, $phone, $party->get_postal_code(), $counter);
+			$counter++;
 		}
 	}
 	
@@ -71,14 +73,14 @@ class rental_agresso_cs15 implements rental_exportable
 
 	 * @return string
 	 */
-	protected function get_line($name, $identifier, $address1, $address2, $country_code, $postal_place, $phone, $postal_code)
+	protected function get_line($name, $identifier, $address1, $address2, $country_code, $postal_place, $phone, $postal_code, $counter)
 	{
 		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		$line = 
 			 '1'														//  1	full_record
 			.'I'														//  2	change_status
 			.'10'														//  3	apar_gr_id
-			.sprintf("%-9s", '')										//  4	apar_id
+			.sprintf("%9s", $counter)									//  4	apar_id, sequence number, right justified
 			.sprintf("%9s", '')											//  5	apar_id_ref
 			.sprintf("%-50.50s", iconv("UTF-8", "ISO-8859-1", $name))	//  6	apar_name
 			.'R'														//  7	apar_type
