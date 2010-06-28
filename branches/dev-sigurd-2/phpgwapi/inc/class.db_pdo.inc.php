@@ -1006,18 +1006,13 @@
 
 		public function select($sql, $params, $line = '', $file = '')
 		{		
+			$this->_get_fetchmode();
+			$this->fetch_single = false;
 			try
 			{
 				$statement_object = $this->db->prepare($sql);
 				$statement_object->execute($params);
-				if($this->fetchmode == 'ASSOC')
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
-				}
+				$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 			}
 			catch(PDOException $e)
 			{
