@@ -574,28 +574,72 @@
 			}
 			$contacts = createObject('phpgwapi.contacts');
 
+			if ( !isset($GLOBALS['phpgw_info']['server']['addressmaster']) )
+			{
+				$GLOBALS['phpgw_info']['server']['addressmaster'] = -3;
+			}
+
 			foreach($accounts as $account)
 			{
 				if ( $account )
 				{
+					$GLOBALS['phpgw']->db->transaction_begin();
 					$this->account_id = $account;
 					$user = $this->read_repository();
+					$comms = array();
 
-					$principal = array
-					(
-						'per_prefix'		=> '',
-						'per_first_name'	=> $user->firstname,
-						'per_last_name'		=> $user->lastname,
-						'access'			=> 'public',
-						'owner'				=> isset ($GLOBALS['phpgw_info']['server']['addressmaster']) ? $GLOBALS['phpgw_info']['server']['addressmaster'] : ''
-					);
+					switch ( $user->type )
+					{
+						case phpgwapi_account::TYPE_USER:
+							$primary = array
+							(
+								'per_prefix'		=> '',
+								'per_first_name'	=> $user->firstname,
+								'per_last_name'		=> $user->lastname,
+								'access'			=> 'public',
+								'owner'		=> $GLOBALS['phpgw_info']['server']['addressmaster']
+							);
+							$type = $contacts->search_contact_type('Persons');
 
-					$contact_type = $contacts->search_contact_type('Persons');
-					$user->person_id = $contacts->add_contact($contact_type, $principal);
+							$domain = '';
+							if ( isset($GLOBALS['phpgw_info']['server']['mail_server']) )
+							{
+								$domain = $GLOBALS['phpgw_info']['server']['mail_server'];
+							}
 
-		//			$this->update_data($user);
+							if ( $domain )
+							{
+								$comm = array
+								(
+									'comm_descr'		=> $contacts->search_comm_descr('work email'),
+									'comm_data'			=> "{$user->lid}@{$domain}",
+									'comm_preferred'	=> 'Y'
+								);
+								$comms = array($comm);
+							}
+
+							break;
+
+						case phpgwapi_account::TYPE_GROUP:
+							$primary = array
+							(
+								'owner'		=> $GLOBALS['phpgw_info']['server']['addressmaster'],
+								'access'	=> 'public',
+								'org_name'	=> (string) $user
+							);
+							$type = $contacts->search_contact_type('Organizations');
+							break;
+						default:
+							throw new Exception('Invalid account type');
+					}
+
+					$user->person_id = $contacts->add_contact($type, $primary, $comms);
+
 					$this->account = $user;
-					$this->save_repository();
+					if($this->save_repository())
+					{
+						$GLOBALS['phpgw']->db->transaction_commit();
+					}
 				}
 			}
 		}
