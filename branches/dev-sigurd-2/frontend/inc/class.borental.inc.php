@@ -24,7 +24,7 @@
     	public static function send_contract_message(int $contract_id, string $contract_message, string $from_address)
     	{
     		$contract = rental_socontract::get_instance()->get_single($contract_id);
-    		if(isset($contract))
+    		if(isset($contract) && isset($contract_message) && $contract_message != '')
     		{
 	    		$title = lang('title_contract_message'); 
 	    		$title .= " ".$contract->get_old_contract_id();
