@@ -686,21 +686,47 @@
 		switch($GLOBALS['type'])
 		{
 			case 'user':
+				$accounts = array();
 				$selected = 0;
 				$account_id = phpgw::get_var('account_id', 'int', 'REQUEST', 0);
-				$accounts_at_location = $GLOBALS['phpgw']->acl->get_user_list_right(1, 'run', $appname);
+				if( $appname == 'preferences')	// All users
+				{
+					$_accounts = $GLOBALS['phpgw']->accounts->get_list('accounts',-1,'','account_lastname');
+					foreach($_accounts as $_account)
+					{
+						$accounts[] = array
+						(
+							'id' 	=> $_account->id,
+							'name'	=> $_account->__toString()
+						);
+					}
+					unset($_accounts);
+				}
+				else // only users which has access to the app
+				{
+					$_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(1, 'run', $appname);
+					foreach($_accounts as $_account)
+					{
+						$__account = $GLOBALS['phpgw']->accounts->get($_account['account_id']);
+						$accounts[] = array
+						(
+							'id' 	=>$__account->id,
+							'name'	=> $__account->__toString()
+						);
+					}
+				}
 
 				$account_list = "<form method='POST' action=''>";
 				$account_list .= '<table><tr><td><select name="account_id" onChange="this.form.submit();">';
 				$account_list .= "<option value=''>" . lang('select user') . '</option>';
-				foreach ( $accounts_at_location as $var => $entry )
+				foreach ( $accounts as $account )
 				{
-					$account_list .= "<option value='{$entry['account_id']}'";
-					if ($entry['account_id'] == $account_id)
+					$account_list .= "<option value='{$account['id']}'";
+					if ($account['id'] == $account_id)
 					{
 						$account_list .= ' selected';
 					}
-					$account_list .= "> {$entry['account_lastname']} {$entry['account_firstname']}</option>";
+					$account_list .= "> {$account['name']}</option>";
 				}
 				$account_list .= '</select>';
 				$account_list .= '<noscript><input type="submit" name="user" value="Select"></noscript>';

@@ -100,7 +100,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-6s", '')										// 23	int_rule_id
 			.sprintf("%-12s", '')										// 24	invoice_code
 			.'NO'														// 25	language
-			.sprintf("%8s", '')											// 26	main_apar_id
+			.sprintf("%9s", '')											// 26	main_apar_id
 			.sprintf("%-80s", '')										// 27	message_text
 			.sprintf("%3s", '')											// 28	pay_delay
 			.'IP'														// 29	pay_method

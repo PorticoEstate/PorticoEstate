@@ -25,12 +25,11 @@
 	* @subpackage database
 	*/
 	class phpgwapi_db  extends phpgwapi_db_
-	{		
-		var $resultSet;
+	{
 		protected $fetch_single;
 		protected $statement_object;
 		protected $pdo_fetchmode;
-		
+
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -335,7 +334,7 @@
 				}
 				else
 				{
-					$this->statement_object = $this->db->query($sql);
+					$statement_object = $this->db->query($sql);
 /*
 					$num_rows = $this->statement_object->rowCount();
 					if($num_rows > 200)
@@ -346,11 +345,13 @@
 */
 					if(!$fetch_single)
 					{
-						$this->resultSet = $this->statement_object->fetchAll($this->pdo_fetchmode);
+						$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 					}
 					else
 					{
-						$this->resultSet = $this->statement_object->fetch($this->pdo_fetchmode);
+						$this->resultSet = $statement_object->fetch($this->pdo_fetchmode);
+						$this->statement_object = $statement_object;
+						unset($statement_object);
 					}
 				}
 			}
@@ -661,11 +662,13 @@
 		{
 			if($this->resultSet)
 			{
+/*
 				$num_rows = $this->statement_object->rowCount();
 				if($num_rows)
 				{
 					return $num_rows;
 				}
+*/
 				return count($this->resultSet);
 			}
 			return 0;
@@ -1003,18 +1006,13 @@
 
 		public function select($sql, $params, $line = '', $file = '')
 		{		
+			$this->_get_fetchmode();
+			$this->fetch_single = false;
 			try
 			{
 				$statement_object = $this->db->prepare($sql);
 				$statement_object->execute($params);
-				if($this->fetchmode == 'ASSOC')
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_ASSOC);
-				}
-				else
-				{
-					$this->resultSet = $statement_object->fetchAll(PDO::FETCH_BOTH);
-				}
+				$this->resultSet = $statement_object->fetchAll($this->pdo_fetchmode);
 			}
 			catch(PDOException $e)
 			{

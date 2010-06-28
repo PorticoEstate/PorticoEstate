@@ -57,22 +57,30 @@ class frontend_uicontract extends frontend_uifrontend
 			$contract_message = phpgw::get_var('contract_message');
 			
 			$user_data = frontend_bofellesdata::get_instance()->get_user($GLOBALS['phpgw_info']['user']['account_lid']);
+			
 			if($user_data['email'])
 			{
-				$from_address = $user_data['email'];
-				$result = frontend_borental::send_contract_message($contract_id, $contract_message, $from_address);
-				if($result)
+				if(isset($contract_message) && $contract_message != '')
 				{
-					$msglog['message'] = 'message_sent';
+					$from_address = $user_data['email'];
+					$result = frontend_borental::send_contract_message($contract_id, $contract_message, $from_address);
+					if($result)
+					{
+						$msglog['message'] = lang('message_sent');
+					}
+					else
+					{
+						$msglog['error'] = lang('message_not_sent');
+					}
 				}
 				else
 				{
-					$msglog['message'] = 'message_not_sent';
+					$msglog['error'] = lang('message_empty');
 				}
 			}
 			else
 			{
-				$msglog['message'] = 'user_not_in_fellesdata';
+				$msglog['error'] = lang('user_not_in_fellesdata');
 			}
 		}
 		

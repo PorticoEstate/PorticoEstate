@@ -770,12 +770,14 @@
 			);
 
 			$where_lid = '';
+			//Sigurd 28 june 2010: condition on id should be enough
+/*
 			if ( $this->account->lid != $this->account->old_loginid )
 			{
 				$lid = $this->db->db_addslashes($this->account->old_loginid);
 				$where_lid = " AND account_lid = '{$lid}'";
 			}
-
+*/
 			$sql = 'UPDATE phpgw_accounts'
 					. " SET account_lid = '{$data['lid']}', "
 						. " account_firstname = '{$data['firstname']}', "

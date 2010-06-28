@@ -65,6 +65,8 @@
 			$GLOBALS['phpgw_info']['server']['db_name'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_name'];
 			$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_user'];
 			$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_pass'];
+
+			$GLOBALS['phpgw_info']['server']['db_abstraction'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_abstraction'];
 			$this->db	  = createObject('phpgwapi.db');
 			$this->db->fetchmode= 'BOTH';
 			$GLOBALS['phpgw']->db =& $this->db;
