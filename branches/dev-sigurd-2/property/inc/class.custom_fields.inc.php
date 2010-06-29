@@ -120,6 +120,16 @@
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+
+					$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
+					$confirm_msg = lang('delete') . '?';
+					$clear_functions[$m]['action']	= <<<JS
+					if(confirm("{$confirm_msg}"))
+					{
+						document.getElementsByName('{$attributes['name']}')[0].value = '';
+						document.getElementsByName('{$attributes['name']}_name')[0].value = '';
+					}
+JS;
 					$m++;
 				}
 				else if($attributes['datatype'] == 'ABO')
@@ -297,6 +307,17 @@
 					$values['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
 					$values['lookup_functions'] .= '{'."\r\n";
 					$values['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+					$values['lookup_functions'] .= '}'."\r\n";
+				}
+			}
+
+			if(isset($clear_functions) && is_array($clear_functions))
+			{ 
+				for ($j=0;$j<count($clear_functions);$j++)
+				{
+					$values['lookup_functions'] .= 'function ' . $clear_functions[$j]['name'] ."\r\n";
+					$values['lookup_functions'] .= '{'."\r\n";
+					$values['lookup_functions'] .= $clear_functions[$j]['action'] ."\r\n";
 					$values['lookup_functions'] .= '}'."\r\n";
 				}
 			}
