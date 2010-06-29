@@ -4,7 +4,7 @@
 	</xsl:template>
 
 
-	<xsl:template name="attributes_values">
+	<xsl:template name="attributes_values" xmlns:php="http://php.net/xsl">
 		<xsl:for-each select="attributes_group" >
 			<div id="{link}">
 				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
@@ -84,6 +84,7 @@
 														<td>
 															<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
 															<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+															<xsl:variable name="clear_function"><xsl:text>clear_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
 															<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
 																<xsl:choose>
 																	<xsl:when test="disabled!=''">
@@ -101,6 +102,14 @@
 																		</xsl:attribute>
 																	</xsl:when>
 																</xsl:choose>
+															</input>
+															<input type="checkbox" name="clear_{name}_box"  onClick="{$clear_function}" >
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'delete')" />
+																</xsl:attribute>
+																<xsl:attribute name="readonly">
+																	<xsl:text>readonly</xsl:text>
+																</xsl:attribute>
 															</input>
 														</td>
 													</tr>
