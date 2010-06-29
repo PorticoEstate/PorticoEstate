@@ -56,7 +56,7 @@
 	{
 		var $apps_path;
 
-		function sms_sms_()
+		function __construct()
 		{
 			$this->apps_config = $GLOBALS['phpgw_info']['sms_config']['common']['apps_config'];
 			$this->apps_path = $GLOBALS['phpgw_info']['sms_config']['common']['apps_path'];
