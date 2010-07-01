@@ -91,7 +91,7 @@
 						$buffer = $this->import_new_attrib($buffer, $this->import[$this->header[$c]],$data[$c],$invoice_common);
 					}
 				}
-				if($data[1] && $data[7]) // fakturanr og beløp
+				if($data[1] && $data[6]) // fakturanr og beløp
 				{
 					$buffer = $this->import_end_record($buffer,$invoice_common);
 				}
