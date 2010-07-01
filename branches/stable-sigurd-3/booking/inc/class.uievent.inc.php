@@ -118,6 +118,11 @@
 			return $this->yui_results($events);
 		}
 		
+		private function _combine_dates($from_, $to_)
+		{
+			return array('from_' => $from_, 'to_' => $to_);
+		}
+
 		protected function get_customer_identifier() {
 			return $this->customer_id;
 		}
@@ -253,6 +258,11 @@
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+
+				array_set_default($_POST, 'from_', array());
+				array_set_default($_POST, 'to_', array());
+				$event['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+
 				array_set_default($_POST, 'resources', array());
 				$event['active'] = '1';
 				$event['completed'] = '0';
@@ -261,19 +271,53 @@
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
 				$event['is_public'] = 1;
+
 				
-				list($event, $errors) = $this->extract_and_validate($event);
+				foreach( $event['dates'] as $checkdate)				
+				{
+					$event['from_'] = $checkdate['from_'];
+					$_POST['from_'] = $checkdate['from_'];
+					$event['to_'] = $checkdate['to_'];
+					$_POST['to_'] = $checkdate['to_'];
+					list($event, $errors) = $this->extract_and_validate($event);
+				}						
+
 				if(!$errors['event'])
 				{
-					$this->add_comment($event, lang('Event was created'));
-					$receipt = $this->bo->add($event);
+					$allids = array();
+					foreach( $event['dates'] as $checkdate)				
+					{
+						$event['from_'] = $checkdate['from_'];
+						$event['to_'] = $checkdate['to_'];
+
+						unset($event['comments']);
+						if (count($event['dates']) < 2)					
+						{
+							$this->add_comment($event, lang('Event was created'));
+							$receipt = $this->bo->add($event);
+						}					
+						else
+						{
+							$this->add_comment($event, lang('Multiple Events was created'));
+							$receipt = $this->bo->add($event);
+							$allids[] = array($receipt['id']);
+						}
+					}
+					if ($allids) 
+					{ 
+						$this->bo->so->update_comment($allids);
+					} 
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret'], 'warnings'=>$errors));
 				}
 			}
+			$default_dates = array_map(array(self, '_combine_dates'), '','');
+			array_set_default($event, 'dates', $default_dates);
+
 			if (!phpgw::get_var('from_report', 'POST'))
 			{
 					$this->flash_form_errors($errors);
 			}
+
 			self::add_javascript('booking', 'booking', 'event.js');
 			array_set_default($event, 'resources', array());
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));

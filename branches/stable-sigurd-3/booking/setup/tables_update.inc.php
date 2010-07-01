@@ -2225,3 +2225,32 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+
+  $test[] = '0.1.93';
+	function booking_upgrade0_1_93()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event_date', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'from_' => array('type' => 'timestamp', 'nullable' => False),
+					'to_' => array('type' => 'timestamp', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+				'bb_event' => array('event_id' => 'id')),
+				'ix' => array(),
+				'uc' => array('event_id', 'from_', 'to_')
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.94';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

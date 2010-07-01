@@ -6,13 +6,13 @@
 			<li><a href="index.php?menuaction=bookingfrontend.uisearch.index"><xsl:value-of select="php:function('lang', 'Home')" /></a></li>
             <li><a href="{group/organization_link}"><xsl:value-of select="group/organization_name"/></a></li>
             <li><xsl:value-of select="group/name"/></li>
+        </ul>
 
 	        <xsl:if test="group/permission/write">
 	            <span class="loggedin">
-					<a href="{edit_self_link}"><img src="{webserver_url}/phpgwapi/templates/base/images/edit.png" /></a>
+		        	<button onclick="window.location.href='{edit_self_link}'"><xsl:value-of select="php:function('lang', 'edit')" /></button>
 				</span>
 	        </xsl:if>
-        </ul>
         <xsl:call-template name="msgbox"/>
 
         <dl class="proplist">
