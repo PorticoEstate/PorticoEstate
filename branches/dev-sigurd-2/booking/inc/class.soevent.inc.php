@@ -59,6 +59,12 @@
 							'key' => 'event_id',
 							'column' => 'resource_id'
 					)),
+					'dates' => array('type' => 'timestamp',
+						  'manytomany' => array(
+							'table' => 'bb_event_date',
+							'key' => 'event_id',
+							'column' => array('from_', 'to_', 'id')
+					)),
 				)
 			);
 		}
@@ -128,6 +134,29 @@
 			return $mail;
 		}
 
+		public function update_comment($allids)
+		{
+			$db = $this->db;
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$comment = lang('Multiple Events was created,<br /> Event ');
+			foreach ($allids as $id)
+			{
+				$comment .= '<a href="'.$external_site_address.'/?menuaction=booking.uievent.edit&id='.$id[0].'">#'.$id[0].'</a>, ';
+			}
+			$comment = substr($comment, 0, -2); 
+			$comment .= '.';
+			foreach ($allids as $id)
+			{
+				$myid = $id[0];
+				$sql = "UPDATE bb_event_comment SET comment='".$comment."' WHERE event_id=".intval($myid).";";
+				$db->query($sql, __LINE__, __FILE__);
+			}
+		}
+
+
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
 			$event_id = $entity['id'] ? $entity['id'] : -1;
@@ -136,6 +165,7 @@
 			$to_ = new DateTime($entity['to_']);
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
+			
 			if($from_ > $to_)
 			{
 				$errors['from_'] = lang('Invalid from date');
