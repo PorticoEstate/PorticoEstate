@@ -16,7 +16,7 @@
 
 		<xsl:if test="organization/permission/write">
 			<span class="loggedin">
-				<a href="{organization/edit_link}"><img src="{webserver_url}/phpgwapi/templates/base/images/edit.png" /></a>
+        	<button onclick="window.location.href='{organization/edit_link}'"><xsl:value-of select="php:function('lang', 'edit')" /></button>
 			</span>
 		</xsl:if>
 		
@@ -65,7 +65,7 @@
 		  <h3><xsl:value-of select="php:function('lang', 'Used buildings')" /></h3>
         <div id="buildings_used_by_container"/>
     </div>
-	
+
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2')"/>;
