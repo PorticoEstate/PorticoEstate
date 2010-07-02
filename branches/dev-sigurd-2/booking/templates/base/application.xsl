@@ -308,9 +308,13 @@
 	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document')"/>;
 	var app_id = <xsl:value-of select="application/id"/>;
 	var building_id = <xsl:value-of select="application/building_id"/>;	
+	var resources = <xsl:value-of select="application/resources"/>;
+	
 YAHOO.util.Event.addListener(window, "load", function() {
 	<![CDATA[
 	var url3 = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;		
+		url3 += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources; 
+
 	]]>
 	var colDefs = [{key: 'name', label: lang['Document'], formatter: YAHOO.booking.formatLink}];
     YAHOO.booking.inlineTableHelper('regulation_documents', url3, colDefs);
@@ -331,5 +335,4 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 });
 </script>
-
 </xsl:template>

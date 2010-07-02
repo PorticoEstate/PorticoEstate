@@ -319,14 +319,7 @@
 		{
 			return null;
 		}
-		$comment_text = lang('The user has accepted the following documents').': ';
-		foreach($application['accepted_documents'] as $doc)
-		{
-			$doc_id = substr($doc, strrpos($doc, ':')+1); // finding the document_building.id
-			$document = $this->document_bo->read_single($doc_id);
-			$comment_text .= $document['description'].' (<a href="/bookingfrontend/?menuaction=bookingfrontend.uidocument_building.download&id='.$doc_id.'&filter_owner_id='.$application['building_id'].'">'.$document['name'].'</a>), ';
-		}
-		$comment_text = substr($comment_text, 0, -2);
+		$comment_text = lang('The user has accepted the document under point 8').'.';
 
 		return $comment_text;
     }
@@ -594,7 +587,7 @@
 			$application['resource_ids'] = $resource_ids;
 
 			$this->set_case_officer($application);
-			
+			$comments = array_reverse($application['comments']);
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -604,8 +597,9 @@
 			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
 			$num_associations = $associations['total_records'];
 			self::check_date_availability($application);
+//			echo'<pre>';print_r($application);exit;
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations));
+								  'num_associations'=>$num_associations,'comments' => $comments));
 		}
 	}
