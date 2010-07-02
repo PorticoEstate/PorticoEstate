@@ -37,8 +37,8 @@
 		</dl>
 		<div class="clr"/>
 		<dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(event/comments/author))" /></dt>
-			<xsl:for-each select="event/comments[author]">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(comments/author))" /></dt>
+			<xsl:for-each select="comments[author]">
 				<dt>
 					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
 				</dt>

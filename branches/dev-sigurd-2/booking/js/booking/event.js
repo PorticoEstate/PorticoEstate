@@ -24,7 +24,6 @@ removeDateRow = function(e) {
 	YAHOO.util.Event.stopEvent(e);
 }
 
-
 YAHOO.util.Event.addListener(window, "load", function() {
 	var Dom = YAHOO.util.Dom;
     var building_id = YAHOO.util.Dom.get('field_building_id').value;

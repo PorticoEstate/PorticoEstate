@@ -21,6 +21,8 @@
             <li><xsl:value-of select="php:function('lang', 'schedule')"/></li>
 		</ul>
 
+       	<button onclick="window.location.href='{resource/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+
 		<xsl:call-template name="msgbox"/>
 		<ul id="week-selector">
 			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
@@ -29,9 +31,6 @@
 		</ul>
 
 		<div id="schedule_container"/>
-		<a href="{resource/application_link}">
-			<xsl:value-of select="php:function('lang', 'New booking application')"/>
-		</a>
 	</div>
 
 <script type="text/javascript">

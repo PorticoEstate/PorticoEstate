@@ -310,6 +310,7 @@ Nothing to export	booking	no	Fant ingenting å eksportere
 Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader
 The invoice data in this list already has generated files	booking	no	Filene til fakturaene i listen har allerede blitt generert
 The user has accepted the following documents	booking	no	Brukeren har akseptert følgende dokument
+The user has accepted the document under point 8	booking	no	Brukeren har akseptert dokumentene under punkt 8
 Send e-mail	booking	no	Send e-post
 All fields are required	booking	no	Alle feltene må fylles ut
 Send e-mails	booking	no	Send e-post
@@ -433,4 +434,4 @@ Send to contact	booking	no	Send medling til registrerte kontaktpersoner av arran
 Send to contact for overlaping allocations/bookings	booking	no	Send melding til registrerte kontaktpersoner hvor det er konflikt
 Message sent about the changes in the reservations	booking	no	Melding sendt om endringer på reserverasjoner
 There are changes to your reservations	booking	no	Det er blitt endring på din reserverasjon
-
+Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet 
