@@ -141,7 +141,7 @@
 			$config->read();
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
-			$comment = lang('Multiple Events was created,<br /> Event ');
+			$comment = lang('Multiple Events was created').',<br />'.lang('Event').' ';
 			foreach ($allids as $id)
 			{
 				$comment .= '<a href="'.$external_site_address.'/?menuaction=booking.uievent.edit&id='.$id[0].'">#'.$id[0].'</a>, ';

@@ -255,7 +255,6 @@
 		{
 			$errors = array();
 			$event = array('customer_internal' => 1); 
-			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 
@@ -272,44 +271,58 @@
 				$event['secret'] = $this->generate_secret();
 				$event['is_public'] = 1;
 
-				
-				foreach( $event['dates'] as $checkdate)				
+				if (!$_POST['application_id'])
 				{
-					$event['from_'] = $checkdate['from_'];
-					$_POST['from_'] = $checkdate['from_'];
-					$event['to_'] = $checkdate['to_'];
-					$_POST['to_'] = $checkdate['to_'];
-					list($event, $errors) = $this->extract_and_validate($event);
-				}						
-
-				if(!$errors['event'])
-				{
-					$allids = array();
 					foreach( $event['dates'] as $checkdate)				
 					{
 						$event['from_'] = $checkdate['from_'];
+						$_POST['from_'] = $checkdate['from_'];
 						$event['to_'] = $checkdate['to_'];
+						$_POST['to_'] = $checkdate['to_'];
+						list($event, $errors) = $this->extract_and_validate($event);
+					}						
+				}
+				else
+				{
+					list($event, $errors) = $this->extract_and_validate($event);
+				}
+				if(!$errors['event'])
+				{
+					if (!$_POST['application_id'])
+					{
+						$allids = array();
+						foreach( $event['dates'] as $checkdate)				
+						{
+							$event['from_'] = $checkdate['from_'];
+							$event['to_'] = $checkdate['to_'];
 
-						unset($event['comments']);
-						if (count($event['dates']) < 2)					
-						{
-							$this->add_comment($event, lang('Event was created'));
-							$receipt = $this->bo->add($event);
-						}					
-						else
-						{
-							$this->add_comment($event, lang('Multiple Events was created'));
-							$receipt = $this->bo->add($event);
-							$allids[] = array($receipt['id']);
+							unset($event['comments']);
+							if (count($event['dates']) < 2)					
+							{
+								$this->add_comment($event, lang('Event was created'));
+								$receipt = $this->bo->add($event);
+							}					
+							else
+							{
+								$this->add_comment($event, lang('Multiple Events was created'));
+								$receipt = $this->bo->add($event);
+								$allids[] = array($receipt['id']);
+							}
+						}
+						if ($allids) 
+						{ 
+							$this->bo->so->update_comment($allids);
 						}
 					}
-					if ($allids) 
-					{ 
-						$this->bo->so->update_comment($allids);
-					} 
+					else
+					{
+						$this->add_comment($event, lang('Event was created'));
+						$receipt = $this->bo->add($event);
+					}
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret'], 'warnings'=>$errors));
 				}
 			}
+
 			$default_dates = array_map(array(self, '_combine_dates'), '','');
 			array_set_default($event, 'dates', $default_dates);
 
@@ -441,13 +454,14 @@
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
+			$comments = array_reverse($event['comments']);
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();
-			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
 		}
 
 	}

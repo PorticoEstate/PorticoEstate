@@ -54,7 +54,6 @@
 			
 				<dt><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
 				<dd>
-					<xsl:value-of select="node()"/>
 					<select name='type' id='field_type'>
 						<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
 						<xsl:for-each select="resource/types/*">
