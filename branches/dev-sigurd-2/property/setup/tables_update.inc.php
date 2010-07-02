@@ -4279,3 +4279,27 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.588 to 0.9.17.589
+	* Better precision to period (month) for payment-info
+	* 
+	*/
+
+	$test[] = '0.9.17.588';
+	function property_upgrade0_9_17_588()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','periode',array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => '4','nullable' => True));
+
+// analysis
+//select count (*),EXTRACT(YEAR from fakturadato ) as aar , EXTRACT(MONTH from fakturadato ) as month, periode from fm_ecobilagoverf group by EXTRACT(YEAR from fakturadato ), EXTRACT(MONTH from fakturadato ), periode order by aar, month, periode
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.589';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
