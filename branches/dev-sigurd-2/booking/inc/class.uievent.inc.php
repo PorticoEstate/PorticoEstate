@@ -392,10 +392,10 @@
 				{
 					if (phpgw::get_var('mail', 'POST'))
 					{
-
 						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event,$errors);
+							echo '<pre>';print_r($maildata);exit;
 							if ($maildata)
 							{	
 								$comment_text_log = lang('Message sent about the changes in the reservations').': ';
@@ -440,12 +440,12 @@
 			}
 
 			if($errors['allocation'])
-			{
-				$errors['allocation'] = lang('Overlaps other organizations allocation');
+			{	
+				$errors['allocation'] = lang('Event created, Overlaps with existing allocation, Remember to send a notification');
 			}
 			elseif($errors['booking'])
 			{
-				$errors['booking'] = lang('Overlaps with existing booking');
+				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'event.js');
