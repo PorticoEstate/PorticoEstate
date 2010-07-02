@@ -125,18 +125,19 @@ class rental_agresso_lg04 implements rental_exportable
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
 			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$price_item_data = array();
 			foreach($price_items as $price_item) // Runs through all items
 			{
 				$data = array();
 				$data['amount'] = $price_item->get_total_price();
-				$data['article_description'] = $price_item->get_title();
-				if(isset($price_item->get_timestamp_start()) && isset($price_item->get_timestamp_start()))
+				$description = $price_item->get_title();
+				$start = $price_item->get_timestamp_start();
+				$stop = $price_item->get_timestamp_end();
+				if(isset($start) && isset($stop))
 				{
-					$data['article_description'] .= " ".date($date_format, $price_item->get_timestamp_start());
-					$data['article_description'] .= "-".date($date_format, $price_item->get_timestamp_stop());
-				}				
+					$description .= ' '.date('j/n',$start).'-'.date('j/n',$stop);
+				}
+				$data['article_description'] = $description;
 				$data['article_code'] = $price_item->get_agresso_id();
 				$price_item_data[] = $data;
 			}
