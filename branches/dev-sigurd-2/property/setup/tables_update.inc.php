@@ -4293,9 +4293,58 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','periode',array('type' => 'int','precision' => '4','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 
-// analysis
-//select count (*),EXTRACT(YEAR from fakturadato ) as aar , EXTRACT(MONTH from fakturadato ) as month, periode from fm_ecobilagoverf group by EXTRACT(YEAR from fakturadato ), EXTRACT(MONTH from fakturadato ), periode order by aar, month, periode
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$tables = array('fm_ecobilag', 'fm_ecobilagoverf');
+	
+		foreach($tables as $table)
+		{
+			$sql = 'SELECT count (*), bilagsnr, EXTRACT(YEAR from fakturadato ) as aar ,' 
+			. ' EXTRACT(MONTH from fakturadato ) as month, periode'
+			. " FROM {$table} "
+			. ' GROUP BY bilagsnr, EXTRACT(YEAR from fakturadato ), EXTRACT(MONTH from fakturadato ), periode'
+			. ' ORDER BY aar, month, periode';
+
+			$db->query($sql,__LINE__,__FILE__);
+
+			$result = array();
+			while ($db->next_record())
+			{
+				$aar = $db->f('aar');
+				$month = $db->f('month');
+				$periode = $db->f('periode');
+				$periode_ny = $aar . sprintf("%02d",$periode);
+				$periode_old = $aar . sprintf("%02d",$month);
+
+				if($periode_old != $periode_ny && $month == 1)
+				{
+					$periode_korrigert = ($aar-1) . sprintf("%02d",$periode);
+				}
+				else
+				{
+					$periode_korrigert = $periode_ny;
+				}
+
+				$result[] = array
+				(
+    		   	    'bilagsnr'			=> $db->f('bilagsnr'),
+    	//	   	    'aar'				=> $aar,
+    	//	   		'month'				=> $month,
+    	//	   	    'periode'			=> $periode,
+    	//	   	    'periode_ny'		=> $periode_ny,
+    		   	    'periode_korrigert'	=> $periode_korrigert
+				);
+			}
+
+			foreach ($result as $entry)
+			{
+				$sql = "UPDATE {$table} SET periode = {$entry['periode_korrigert']} WHERE bilagsnr = {$entry['bilagsnr']}";
+				$db->query($sql,__LINE__,__FILE__);
+			}
+		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

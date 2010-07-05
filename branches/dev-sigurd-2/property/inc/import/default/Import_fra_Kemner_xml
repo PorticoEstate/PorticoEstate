@@ -95,7 +95,7 @@
 					$fakturanr = $xml->getElementsByTagName('InvoiceNo')->item(0)->nodeValue;
 					$fakturadato = date($this->dateformat,strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
 					$forfallsdato = date($this->dateformat,strtotime($xml->getElementsByTagName('DueDate')->item(0)->nodeValue));
-					$periode = date('n',strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
+					$periode = date('Ym',strtotime($xml->getElementsByTagName('InvoiceDate')->item(0)->nodeValue));
 
 					$Gnr 		= $xml->getElementsByTagName('Text1')->item(0)->nodeValue;
 					$Bnr 		= $xml->getElementsByTagName('Text2')->item(0)->nodeValue;

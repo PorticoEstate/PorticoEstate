@@ -344,7 +344,7 @@
 			}
 
 			$values['artid'] 			= $values['art'];
-			$values['periode']			= $values['smonth'];
+			$values['periode']			= $values['syear'] . sprintf("%02d",$values['smonth']);
 			$values['dimb']				= $values['dim_b'];
 			$values['oppsynsmannid']	= $values['janitor'];
 			$values['saksbehandlerid']	= $values['supervisor'];

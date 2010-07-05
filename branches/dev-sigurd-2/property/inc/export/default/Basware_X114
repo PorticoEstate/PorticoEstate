@@ -287,7 +287,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-   	   	//Oppdater beløp på arbeidsordre operator="-" ved tilbakerulling
+   	   	//Oppdater belÃ¸p pÃ¥ arbeidsordre operator="-" ved tilbakerulling
 		protected function correct_actual_cost($order_id, $Belop, $actual_cost_field, $operator)
 		{
 			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
@@ -340,7 +340,7 @@
 				$this->log_start($batchid);
 			}
 
-			//Velg ut alle perioder som har bilag som skal overføres
+			//Velg ut alle perioder som har bilag som skal overfÃ¸res
 			$vouchers = $this->select_vouchers_to_transfer();
 
 			foreach ($vouchers as $voucher_id)
@@ -449,7 +449,7 @@
 		protected function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
 		{
 			
-			//Velg ut alle hoved bilag som skal overføres
+			//Velg ut alle hoved bilag som skal overfÃ¸res
 
 			$oRsBilag = $this->get_voucher($voucher_id);
 
@@ -530,14 +530,7 @@
 
 			$accountline = array();
 
-			if($force_period_year)
-			{
-				$periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$oRsBilag[0]['periode']));
-			}
-			else
-			{
-				$periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[0]['fakturadato'])) . sprintf("%02d",$oRsBilag[0]['periode']));
-			}
+			$periode	= $oRsBilag[0]['periode'];
 
 			foreach ($oRsBilag as $line)
 			{
@@ -577,7 +570,7 @@
 
 				if($line['order_id'])
 				{
-					//Oppdater beløp på arbeidsordre
+					//Oppdater belÃ¸p pÃ¥ arbeidsordre
 					if ($download=='on')
 					{
 						if ($line['dimd'] % 2 == 0)
@@ -628,7 +621,7 @@
 					return $message;
 				}
 
-				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: Fødselsnr, type: c50, plass: 430 - 479
+				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: FÃ¸dselsnr, type: c50, plass: 430 - 479
 				$Bank_Postgiro_kontonr = sprintf("%-35s",str_replace(" ","",$vendor_info['konto_nr']));// verdi: konto_nr, type: c35, plass: 740 - 774
 
 */
@@ -657,7 +650,7 @@
 					'DIMENSION.D6.CODE'		=> $dim6, // dummy
 					'DIMENSION.D7.CODE'		=> $dim7, // dummy
 					'DIMENSION.D8.CODE'		=> $dim8, // dummy
-					'POITEMDESCRIPTION'		=> $descr, // Sugerør,plast,fleksibelt,20cm
+					'POITEMDESCRIPTION'		=> $descr, // SugerÃ¸r,plast,fleksibelt,20cm
 					'POITEMNUMBER'			=> $itemnumber, //200200
 					'POITEMTYPE'			=> 'C', // A = Item, B = Special Product (SP), C = Text based  (Misc.)
 					'POLINENUMBER'			=> $linenumber, // 10
@@ -723,7 +716,7 @@
 				$this->soXport->log_transaction($batchid,$voucher_id,lang('Invoice tranferred'));
 			}
 				
-			//Fullfør transaksjon
+			//FullfÃ¸r transaksjon
 			if ($download=='on' && !$this->debug)
 			{
 				$file_written = true;
