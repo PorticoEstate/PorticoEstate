@@ -4293,6 +4293,12 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','periode',array('type' => 'int','precision' => '4','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => '4','nullable' => True));
+
+
+
+$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecobilagoverf','periode','periode_old');
+$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => 4,'nullable' => True));
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 
 		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
@@ -4315,7 +4321,8 @@
 			{
 				$aar = $db->f('aar');
 				$month = $db->f('month');
-				$periode = $db->f('periode');
+//				$periode = $db->f('periode');
+				$periode = $db->f('periode_old');
 				$periode_ny = $aar . sprintf("%02d",$periode);
 				$periode_old = $aar . sprintf("%02d",$month);
 
