@@ -298,7 +298,7 @@
 			$criteria[3] = array
 			(
 				'field'		=> 'fm_workorder.id',
-				'type'		=> 'int',
+				'type'		=> 'varchar',//that is - bigint...
 				'matchtype' => 'exact',
 				'front' => '',
 				'back' => ''
