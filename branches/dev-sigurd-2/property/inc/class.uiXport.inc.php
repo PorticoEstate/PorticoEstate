@@ -557,35 +557,28 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-			$force_period_year[0]['id'] = date('Y');
-			$force_period_year[1]['id'] = date('Y') -1;
-
-
 			$data = array
 			(
-				'menu'							=> $this->bocommon->get_menu(),
+				'menu'						=> $this->bocommon->get_menu(),
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'force_period_year'			=> $force_period_year,
-				'lang_force_period_year'		=> lang('Force year for period'),
-				'lang_force_period_year_statustext'	=> lang('Force year for period'),
-				'lang_select_year'			=> lang('select year'),
+				'lang_export_statustext'	=> lang('click this button to start the export'),
 				'lang_select_conv'			=> lang('Select conversion'),
-				'conv_list'				=> $this->bo->select_export_conv($values['conv_type']),
+				'conv_list'					=> $this->bo->select_export_conv($values['conv_type']),
 				'select_conv'				=> 'values[conv_type]',
-				'lang_conv_statustext'			=> lang('Select conversion'),
+				'lang_conv_statustext'		=> lang('Select conversion'),
 
-				'lang_rollback_file'			=> lang('Roll back'),
-				'link_rollback_file'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.rollback')),
+				'lang_rollback_file'		=> lang('Roll back'),
+				'link_rollback_file'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.rollback')),
 
-				'lang_export_to_file'			=> lang('Export to file'),
+				'lang_export_to_file'		=> lang('Export to file'),
 				'value_debug'				=> $values['debug'],
-				'lang_debug_statustext'			=> lang('Uncheck to debug the result'),
+				'lang_debug_statustext'		=> lang('Uncheck to debug the result'),
 
 				'lang_submit'				=> lang('Submit'),
 				'lang_cancel'				=> lang('Cancel'),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_save'				=> lang('save')
+				'lang_save'					=> lang('save')
 			);
 
 //_debug_array($data);
@@ -595,7 +588,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('export' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function rollback()

@@ -2047,20 +2047,9 @@
 				<td valign="top">
 					<xsl:variable name="lang_conv_statustext"><xsl:value-of select="lang_conv_statustext"/></xsl:variable>
 					<xsl:variable name="select_conv"><xsl:value-of select="select_conv"/></xsl:variable>
-					<select name="{$select_conv}" class="forms" onMouseover="window.status='{$lang_conv_statustext}'; return true;" onMouseout="window.status='';return true;">
+					<select name="{$select_conv}" class="forms" title="{$lang_conv_statustext}">
 						<option value=""><xsl:value-of select="lang_select_conv"/></option>
 						<xsl:apply-templates select="conv_list"/>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<xsl:value-of select="lang_force_period_year"/>
-				</td>
-				<td valign="top">
-					<xsl:variable name="lang_force_period_year_statustext"><xsl:value-of select="lang_force_period_year_statustext"/></xsl:variable>
-					<select name="values[force_period_year]" class="forms" onMouseover="window.status='{$lang_force_period_year_statustext}'; return true;" onMouseout="window.status='';return true;">
-						<xsl:apply-templates select="force_period_year"/>
 					</select>
 				</td>
 			</tr>
@@ -2069,11 +2058,9 @@
 					<xsl:value-of select="lang_export_to_file"/>
 				</td>
 				<td>
-					<input type="checkbox" name="values[download]" value="on" checked="checked" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_debug_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="checkbox" name="values[download]" value="on" checked="checked">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_debug_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -2091,11 +2078,9 @@
 			<tr height="50">
 				<td>
 					<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
-					<input type="submit" name="values[submit]" value="{$lang_submit}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_import_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="submit" name="values[submit]" value="{$lang_submit}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_export_statustext"/>
 						</xsl:attribute>
 					</input>
 				</td>
@@ -2106,11 +2091,9 @@
 					<xsl:variable name="cancel_action"><xsl:value-of select="cancel_action"/></xsl:variable>
 					<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
 					<form method="post" action="{$cancel_action}">
-						<input type="submit" name="done" value="{$lang_cancel}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_cancel_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
+						<input type="submit" name="done" value="{$lang_cancel}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_cancel_statustext"/>
 							</xsl:attribute>
 						</input>
 					</form>
@@ -2166,8 +2149,6 @@
 					</select>
 				</td>
 			</tr>
-
-
 			<tr>
 
 				<td valign="top">
@@ -2516,16 +2497,4 @@
 				</td>
 
 			</tr>
-	</xsl:template>
-
-	<xsl:template match="force_period_year">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected='selected'">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="id"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="id"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>

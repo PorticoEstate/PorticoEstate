@@ -4293,21 +4293,20 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','periode',array('type' => 'int','precision' => '4','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => '4','nullable' => True));
-
-
-
-$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecobilagoverf','periode','periode_old');
-$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => 4,'nullable' => True));
-
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
+//		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periode_old',array('type' => 'int','precision' => 4,'nullable' => True));
+//		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','periode_old',array('type' => 'int','precision' => 4,'nullable' => True));
 
 		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
 
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$tables = array('fm_ecobilag', 'fm_ecobilagoverf');
 	
 		foreach($tables as $table)
 		{
+			//Backup
+//			$sql = "UPDATE {$table} SET periode_old = periode";
+
+			$db->query($sql,__LINE__,__FILE__);
+
 			$sql = 'SELECT count (*), bilagsnr, EXTRACT(YEAR from fakturadato ) as aar ,' 
 			. ' EXTRACT(MONTH from fakturadato ) as month, periode'
 			. " FROM {$table} "
@@ -4321,8 +4320,7 @@ $GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periode',array('ty
 			{
 				$aar = $db->f('aar');
 				$month = $db->f('month');
-//				$periode = $db->f('periode');
-				$periode = $db->f('periode_old');
+				$periode = $db->f('periode');
 				$periode_ny = $aar . sprintf("%02d",$periode);
 				$periode_old = $aar . sprintf("%02d",$month);
 
