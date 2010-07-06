@@ -500,7 +500,7 @@
 		
 				//Skriv hovedbilag
 
-				$periode_aar	= date("y") . sprintf("%02d",$periode);
+				$periode_aar	= $periode;
 				$f1per		= $periode_aar;//date(ym,strtotime($oRsBilag[$k]['fakturadato']));
 				$f1bilnr	= substr($oRsBilag[$k]['bilagsnr'],-6);
 				$f1bildat	= date(ymd,strtotime($oRsBilag[$k]['fakturadato']));

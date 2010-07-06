@@ -434,4 +434,6 @@ Send to contact	booking	no	Send medling til registrerte kontaktpersoner av arran
 Send to contact for overlaping allocations/bookings	booking	no	Send melding til registrerte kontaktpersoner hvor det er konflikt
 Message sent about the changes in the reservations	booking	no	Melding sendt om endringer på reserverasjoner
 There are changes to your reservations	booking	no	Det er blitt endring på din reserverasjon
-Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet 
+Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet
+Event created, Overlaps with existing allocation, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende tildeling. Husk å sende varsel
+Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel 

@@ -181,7 +181,8 @@
 						$forfall_day = substr($data, 15, 2);
 						$forfall_month = substr($data, 17, 2);
 						$forfall_year = substr($data, 19, 2);
-						$periode = $forfall_month - 1;
+		//				$periode = $forfall_month - 1;
+						$periode = $forfall_year . sprintf("%02d",($forfall_month - 1));
 
 						$forfallsdato = date($this->dateformat,mktime(2,0,0,$forfall_month,$forfall_day,$forfall_year));
 						$fakturadato= date($this->dateformat,mktime(2,0,0,$forfall_month,$forfall_day,$forfall_year)-(86400*30));

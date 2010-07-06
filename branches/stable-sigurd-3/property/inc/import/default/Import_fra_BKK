@@ -293,7 +293,7 @@
 				$buffer[$this->id]['typeid'] = $invoice_common['type'];
 				$buffer[$this->id]['fakturadato'] = $invoice_date;
 				$buffer[$this->id]['forfallsdato'] = $payment_date;
-				$buffer[$this->id]['periode'] = $invoice_common['smonth'];
+				$buffer[$this->id]['periode'] = $invoice_common['syear'] . sprintf("%02d",$invoice_common['smonth']);
 				$buffer[$this->id]['regtid'] = date($this->datetimeformat);
 				$buffer[$this->id]['artid'] = $invoice_common['art'];
 				$buffer[$this->id]['godkjentbelop'] = $godkjentbelop;
