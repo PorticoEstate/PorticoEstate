@@ -4304,8 +4304,7 @@
 		{
 			//Backup
 //			$sql = "UPDATE {$table} SET periode_old = periode";
-
-			$db->query($sql,__LINE__,__FILE__);
+//			$db->query($sql,__LINE__,__FILE__);
 
 			$sql = 'SELECT count (*), bilagsnr, EXTRACT(YEAR from fakturadato ) as aar ,' 
 			. ' EXTRACT(MONTH from fakturadato ) as month, periode'
