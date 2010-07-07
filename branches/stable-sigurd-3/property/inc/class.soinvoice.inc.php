@@ -61,7 +61,8 @@
 				'fakturadato'		=> true,
 				'oppsynsigndato'	=> true,
 				'saksigndato'		=> true,
-				'budsjettsigndato'	=> true
+				'budsjettsigndato'	=> true,
+				'periode'			=> true
 			);
 
 			if(is_array($data))
@@ -73,8 +74,8 @@
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
 				$paid 			= isset($data['paid'])?$data['paid']:'';
-				$start_date 	= isset($data['start_date']) && $data['start_date'] ? date($this->db->datetime_format(), $data['start_date']) : '';
-				$end_date 		= isset($data['end_date']) && $data['end_date'] ? date($this->db->datetime_format(), $data['end_date']) : '';
+				$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+				$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
 				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
 				$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
@@ -168,7 +169,10 @@
 
 				if (!$workorder_id && !$voucher_id  && $start_date)
 				{
-					$filtermethod .= " $where (fakturadato >'$start_date' AND fakturadato < '$end_date')";
+					$start_periode = date('Ym',$start_date);
+					$end_periode = date('Ym',$end_date);
+
+					$filtermethod .= " $where (periode >='$start_periode' AND periode <= '$end_periode')";
 				}
 			}
 			else
@@ -182,7 +186,7 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
-			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY bilagsnr,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
+			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 			$this->db->query($sql2,__LINE__,__FILE__);
@@ -409,8 +413,8 @@
 				$sort 			= isset($data['sort'])?$data['sort']:'DESC';
 				$order 			= isset($data['order'])?$data['order']:'';
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$start_date 	= isset($data['start_date']) && $data['start_date'] ? date($this->db->datetime_format(), $data['start_date']) : '';
-				$end_date 		= isset($data['end_date']) && $data['end_date'] ? date($this->db->datetime_format(), $data['end_date']) : '';
+				$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+				$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
 				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
 				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
@@ -418,7 +422,6 @@
 				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 			}
-//_debug_array($data);
 
 			$where = 'AND';
 
@@ -475,11 +478,14 @@
 				$where= 'AND';
 			}
 
+			$start_periode = date('Ym',$start_date);
+			$end_periode = date('Ym',$end_date);
+
 			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume $select_account_class "
 				. " FROM  fm_ecobilagoverf $this->join fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
 				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
 				. " $this->join fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
-		        	. " WHERE (fakturadato >'$start_date' AND fakturadato < '$end_date' $filtermethod )"
+		        	. " WHERE (periode >='$start_periode' AND periode <= '$end_periode' $filtermethod )"
 		        	. " GROUP BY district_id,periode $group_account_class"
 		        	. " ORDER BY periode";
 //echo $sql;
@@ -609,7 +615,7 @@
 
 					if (!$GLOBALS['phpgw']->db->f('kostra_id') || $GLOBALS['phpgw']->db->f('kostra_id') == 0)
 					{
-						$receipt['error'][] = array('msg'=>'objektet mangler tjeneste - utgÂtt? '. " ".$values['dima'][$n]);
+						$receipt['error'][] = array('msg'=>'objektet mangler tjeneste - utg√•tt? '. " ".$values['dima'][$n]);
 						$local_error= true;
 					}
 

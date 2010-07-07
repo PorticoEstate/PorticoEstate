@@ -581,7 +581,7 @@
 			while ($this->db->next_record())
 			{
 				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] = round($this->db->f('combined_cost'));
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] = $this->db->f('hits');
+				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] = $this->db->f('hits');
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
@@ -636,7 +636,7 @@
 			while ($this->db->next_record())
 			{
 				$obligations[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += round($this->db->f('budget'));
-				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][$this->db->f('ecodimb')] += $this->db->f('hits');
+				$hits[$this->db->f($b_account_field)][$this->db->f('district_id')][(int)$this->db->f('ecodimb')] += $this->db->f('hits');
 				$accout_info[$this->db->f($b_account_field)] = true;
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
