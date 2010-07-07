@@ -110,21 +110,14 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
-	
-/*
- * 	$test[] = '0.1.0.1';
-	function rental_upgrade0_1_0_1()
+	$test[] = '0.1.0.8';
+	function rental_upgrade0_1_0_8()
 	{
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_contract','date_end',array(
-			'type' => 'decimal', 
-			'precision' => '20',
-			'scale' => '0',
-			'nullable' => true
-		));
-		
-		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.2';
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_contract_responsibility', 'agresso_export_format', 'export_format');
+
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.9';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
-*/
+
 	
 ?>

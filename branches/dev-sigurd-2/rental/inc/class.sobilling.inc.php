@@ -322,6 +322,9 @@ class rental_sobilling extends rental_socommon
 			case 'agresso_lg04':
 				$exportable = new rental_agresso_lg04($billing_job);
 				break;
+			/*default:
+				$exportable = new rental_default_export($billing_job);
+				break;*/
 		}
 		if($exportable != null)
 		{
@@ -398,11 +401,11 @@ class rental_sobilling extends rental_socommon
 	
 	public function get_agresso_export_format($contract_type)
 	{
-		$sql = "SELECT agresso_export_format FROM rental_contract_responsibility WHERE location_id=$contract_type";
+		$sql = "SELECT export_format FROM rental_contract_responsibility WHERE location_id=$contract_type";
 		$result = $this->db->query($sql, __LINE__, __FILE__);
 		if($result && $this->db->next_record())
 		{
-			return $this->unmarshal($this->db->f('agresso_export_format', true), 'string');
+			return $this->unmarshal($this->db->f('export_format', true), 'string');
 		}
 		return '';
 	}
