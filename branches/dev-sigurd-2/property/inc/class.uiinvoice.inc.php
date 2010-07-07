@@ -918,6 +918,11 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'budsjettsigndato';
 					}
+					else if($uicols['name'][$i]=='period')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'periode';
+					}
 				}
 				else
 				{
