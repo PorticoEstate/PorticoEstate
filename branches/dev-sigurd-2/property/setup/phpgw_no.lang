@@ -1135,6 +1135,7 @@ please - enter an amount!	property	no	Angi et beløp!
 please enter a new index for calkulating next value(s)!	property	no	angi en ny index for beregning av neste verdi(er)!
 please enter an integer !	property	no	Angi heltall
 please enter an integer for order!	property	no	Angi heltall for ordrenr
+Please - enter a invoice number	property	no	Angi FakturaNr
 please enter a project name !	property	no	angi prosjekt navn
 please enter a property id !	property	no	angi eiendoms ID
 please enter a request title !	property	no	angi tittel for anmodning
@@ -1702,6 +1703,7 @@ vendor categories	property	no	Leverandør kategorier
 vendor global categories	property	no	Globale leverandør kategorier
 vendor has been added	property	no	Leverandør er lagt til
 vendor id	property	no	Lev ID
+vendor is not defined in order %1	property	no	Leverandør er ikke definert i ordre %1
 vendor name	property	no	Leverandør navn
 vendor reminder	property	no	Leverandør purringer
 version	property	no	versjon
