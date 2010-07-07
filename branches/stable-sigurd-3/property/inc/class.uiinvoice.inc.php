@@ -32,6 +32,7 @@
 	 * @package property
 	 */
 	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.datetime');
 	class property_uiinvoice
 	{
 		var $grants;
@@ -2295,6 +2296,10 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::add';
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','add_receipt');
+			if(!$receipt)
+			{
+				$receipt = array();
+			}
 
 			if(isset($receipt['voucher_id']) && $receipt['voucher_id'])
 			{
@@ -2360,9 +2365,9 @@
 				$GLOBALS['phpgw']->session->appsession('session_data','add_values','');
 			}
 
-			$location_code 			= phpgw::get_var('location_code');
+			$location_code 		= phpgw::get_var('location_code');
 			$debug 				= phpgw::get_var('debug', 'bool');
-			$add_invoice 			= phpgw::get_var('add_invoice', 'bool');
+			$add_invoice 		= phpgw::get_var('add_invoice', 'bool');
 
 
 			if($location_code)
@@ -2372,7 +2377,6 @@
 
 			if($add_invoice && is_array($values))
 			{
-
 				$order = false;
 				if($values['order_id'] && !ctype_digit($values['order_id']))
 				{
@@ -2407,6 +2411,11 @@
 					$receipt['error'][] = array('msg'=>lang('Please - select budget responsible!'));
 				}
 
+				if (!$values['invoice_num'])
+				{
+					$receipt['error'][] = array('msg'=>lang('Please - enter a invoice num!'));
+				}
+
 				if(!$order && $values['vendor_id'])
 				{
 					if (!$this->bo->check_vendor($values['vendor_id']))
@@ -2423,39 +2432,49 @@
 //_debug_array($values);
 				if (!is_array($receipt['error']))
 				{
-					$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-					$dateformat = str_replace(".","",$dateformat);
-					$dateformat = str_replace("-","",$dateformat);
-					$dateformat = str_replace("/","",$dateformat);
-					$y=strpos($dateformat,'y');
-					$d=strpos($dateformat,'d');
-					$m=strpos($dateformat,'m');
-
 					if($values['invoice_date'])
 					{
-			 			$dateparts = explode('/', $values['invoice_date']);
-			 			$values['sday'] = $dateparts[$d];
-			 			$values['smonth'] = $dateparts[$m];
-			 			$values['syear'] = $dateparts[$y];
+						$sdateparts = phpgwapi_datetime::date_array($values['invoice_date']);
+			 			$values['sday'] = $sdateparts['day'];
+			 			$values['smonth'] = $sdateparts['month'];
+			 			$values['syear'] = $sdateparts['year'];
+			 			unset($sdateparts);
 
-			 			$dateparts = explode('/', $values['payment_date']);
-			 			$values['eday'] = $dateparts[$d];
-			 			$values['emonth'] = $dateparts[$m];
-			 			$values['eyear'] = $dateparts[$y];
+						$edateparts = phpgwapi_datetime::date_array($values['payment_date']);
+			 			$values['eday'] = $edateparts['day'];
+			 			$values['emonth'] = $edateparts['month'];
+			 			$values['eyear'] = $edateparts['year'];
+			 			unset($edateparts);
 					}
 
 					$values['regtid'] 		= date($this->bocommon->datetimeformat);
 
+
+					$_receipt = array();//local errors
 					$receipt = $this->bo->add($values,$debug);
+
+					if(!$receipt['message'] && $values['order_id'] && !$receipt[0]['spvend_code'])
+					{
+						$_receipt['error'][] = array('msg'=>lang('vendor is not defined in order %1', $values['order_id']));
+
+						$debug = false;// try again..
+						if($receipt[0]['location_code'])
+						{
+		//					$values['location_data'] = $bolocation->read_single($receipt['location_code'],array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
+						}
+					}
 
 					if($debug)
 					{
 						$this->debug($receipt);
 						return;
 					}
-					unset($values);
-					$GLOBALS['phpgw']->session->appsession('session_data','add_receipt',$receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiinvoice.add'));
+					if(!$_receipt['error']) // all ok
+					{
+						unset($values);
+						$GLOBALS['phpgw']->session->appsession('session_data','add_receipt',$receipt);
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiinvoice.add'));
+					}
 				}
 				else
 				{
@@ -2477,7 +2496,6 @@
    						'lookup_entity'	=> false, //$this->bocommon->get_lookup_entity('project'),
    						'entity_data'	=> false //$values['p']
    						));
-
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> isset($values['b_account_id'])?$values['b_account_id']:'',
 						'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:''));
@@ -2488,15 +2506,10 @@
 				'debug'		=> true
 			);
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
+			if($_receipt)
+			{
+				$receipt = array_merge($receipt, $_receipt);
+			}
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
