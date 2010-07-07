@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -173,26 +175,19 @@
 				}
 				if (!is_array($receipt['error']))
 				{
-
-					$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-					$dateformat = str_replace(".","",$dateformat);
-					$dateformat = str_replace("-","",$dateformat);
-					$dateformat = str_replace("/","",$dateformat);
-					$y=strpos($dateformat,'y');
-					$d=strpos($dateformat,'d');
-					$m=strpos($dateformat,'m');
-
 					if($invoice_date)
 					{
-			 			$dateparts = explode('/', $invoice_date);
-			 			$sday = $dateparts[$d];
-			 			$smonth = $dateparts[$m];
-			 			$syear = $dateparts[$y];
+						$sdateparts = phpgwapi_datetime::date_array($invoice_date);
+			 			$sday = $sdateparts['day'];
+			 			$smonth = $sdateparts['month'];
+			 			$syear = $sdateparts['year'];
+			 			unset($sdateparts);
 
-			 			$dateparts = explode('/', $payment_date);
-			 			$eday = $dateparts[$d];
-			 			$emonth = $dateparts[$m];
-			 			$eyear = $dateparts[$y];
+						$edateparts = phpgwapi_datetime::date_array($payment_date);
+			 			$eday = $edateparts['day'];
+			 			$emonth = $edateparts['month'];
+			 			$eyear = $edateparts['year'];
+			 			unset($edateparts);
 					}
 
 					$old = $tsvfile;
@@ -268,14 +263,6 @@
 				'sub'		=> $sub
 			);
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -411,24 +398,32 @@
 				foreach ($import as $text => $key)
 				{
 					$content[$i]['row'][$k]['value'] 	= $record[$key];
+					$content[$i]['row'][$k]['align'] 	= 'center';
 					if ($key=='belop')
 					{
 						$content[$i]['row'][$k]['align'] 	= 'right';
 						$sum=$sum+$record[$key];
 						$content[$i]['row'][$k]['value'] 	= number_format($record[$key], 2, ',', '');
 					}
+					else if ($key=='stedsnavn')
+					{
+						$content[$i]['row'][$k]['align'] 	= 'left';
+					}
+
 					$k++;
 				}
 				$i++;
 			}
 
-			for ($k=0; $k<count($header); $k++)
+			foreach ($import as $text => $key)
 			{
-				$table_header[$k]['header'] 	= $header[$k];
-				$table_header[$k]['width'] 		= '5%';
-				$table_header[$k]['align'] 		= 'center';
+				$table_header[] = array
+				(
+					'header'	=> $text,
+					'width' 	=> '5%',
+					'align' 	=> 'center'
+				);
 			}
-
 
 			$link_data_add = array
 			(
@@ -449,12 +444,12 @@
 
 			$table_add[] = array
 			(
-				'lang_add'		=> lang('Import'),
-				'lang_add_statustext'	=> lang('Import this invoice'),
-				'add_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data_add),
-				'lang_cancel'		=> lang('cancel'),
-				'lang_cancel_statustext'=> lang('Do not import this invoice'),
-				'cancel_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data_cancel)
+				'lang_add'					=> lang('Import'),
+				'lang_add_statustext'		=> lang('Import this invoice'),
+				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_add),
+				'lang_cancel'				=> lang('cancel'),
+				'lang_cancel_statustext'	=> lang('Do not import this invoice'),
+				'cancel_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_cancel)
 
 			);
 
@@ -627,15 +622,6 @@
 			}
 
 			$link_data = array('menuaction'	=> 'property.uiXport.rollback');
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
 
 //_debug_array($receipt);
 			$jscal = CreateObject('phpgwapi.jscalendar');
