@@ -566,7 +566,9 @@
 		//	$this->update_actual_cost_global();
 		//	$this->update_planned_cost_global();
 
-			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
+			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_workorder.user_id as user_id FROM fm_workorder"
+	//			. " $this->join fm_project on fm_workorder.project_id=fm_project.id"
+				. " $this->left_join fm_chapter on "
 				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -596,7 +598,7 @@
 					'act_vendor_cost'		=> $this->db->f('act_vendor_cost'),
 					'user_id'				=> $this->db->f('user_id'),
 					'vendor_id'				=> $this->db->f('vendor_id'),
-					'coordinator'			=> $this->db->f('coordinator'),
+		//			'coordinator'			=> $this->db->f('coordinator'),
 					'access'				=> $this->db->f('access'),
 					'start_date'			=> $this->db->f('start_date'),
 					'end_date'				=> $this->db->f('end_date'),
