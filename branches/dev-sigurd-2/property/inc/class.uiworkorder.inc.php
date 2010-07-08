@@ -225,6 +225,7 @@
 				array_unshift ($values_combo_box[3],$default_value);
 
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
@@ -1269,6 +1270,7 @@
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
+
 
 
 			);

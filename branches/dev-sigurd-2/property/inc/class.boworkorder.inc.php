@@ -298,10 +298,10 @@
 			$criteria[3] = array
 			(
 				'field'		=> 'fm_workorder.id',
-				'type'		=> 'varchar',//that is - bigint...
+				'type'		=> 'bigint',
 				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'front' => "'",
+				'back' => "'"
 			);
 			$criteria[4] = array
 			(

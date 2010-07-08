@@ -993,6 +993,8 @@ method has been edited	property	no	Metode er rettet
 method id	property	no	Metode ID
 migrate to alternative db	property	no	Migrer til alternativ database
 mine tickets	property	no	Mine meldinger
+mine orders	property	no	Mine Bestillinger
+mine projects	property	no	Mine Prosjekter
 minor	property	no	Liten
 minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
