@@ -9,6 +9,33 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
+	$config		= CreateObject('phpgwapi.config','bookingfrontend');
+	$config->read();
+
+	$tracker_id = isset($config->config_data['tracker_id']) && $config->config_data['tracker_id'] ? $config->config_data['tracker_id'] : '';
+	unset($config);
+	$tracker_code1 = <<<JS
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+JS;
+	$tracker_code2 = <<<JS
+		try 
+		{
+			var pageTracker = _gat._getTracker("{$tracker_id}");
+			pageTracker._trackPageview();
+		}
+		catch(err)
+		{
+			alert(err);
+		}
+JS;
+
+	if($tracker_id)
+	{
+		$GLOBALS['phpgw']->js->add_code('', $tracker_code1);
+		$GLOBALS['phpgw']->js->add_code('', $tracker_code2);
+	}
+
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
@@ -82,6 +109,7 @@
 	}
 
 	$_navbar_config			= json_encode($navbar_config);
+	//TODO Sigurd 8.july 2010: This one should be moved to frontend config
 	$config	= CreateObject('phpgwapi.config','booking');
 	$config->read();
 	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
