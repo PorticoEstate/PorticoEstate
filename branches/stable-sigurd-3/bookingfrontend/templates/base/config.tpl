@@ -77,6 +77,10 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_google_tracker_id}:</td>
+			<td><input name="newsettings[tracker_id]" value="{value_tracker_id}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
