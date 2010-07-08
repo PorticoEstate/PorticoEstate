@@ -1337,8 +1337,11 @@
 			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+			
+			$value_user = isset($values['user_id']) ? $GLOBALS['phpgw']->accounts->get($values['user_id'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 			$data = array
 			(
+				'value_user'							=> $value_user,
 				'event_data'							=> $event_data,
 				'link_claim'							=> $link_claim,
 				'lang_claim'							=> lang('claim'),

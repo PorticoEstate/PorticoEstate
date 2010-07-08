@@ -448,6 +448,14 @@
 				</xsl:for-each>
 			</tr>
 			<tr>
+				<td>
+					<xsl:value-of select="php:function('lang', 'janitor')" />
+				</td>
+				<td>
+					<xsl:value-of select="value_user"/>
+				</td>
+			</tr>
+			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_branch"/>
 				</td>
