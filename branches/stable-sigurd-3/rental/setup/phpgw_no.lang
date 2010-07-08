@@ -59,6 +59,7 @@ available_for_pick	rental	no	tilgjengelig
 back	rental	no	Tilbake
 bank_guarantee	rental	no	Bankgaranti
 Billing date	rental	no	Fakturadato
+billing time limit	rental	no	Faktura - tidsgrense
 billing_external	rental	no	Ekstern
 billing_internal	rental	no	Intern
 billing_start	rental	no	Fakturastart

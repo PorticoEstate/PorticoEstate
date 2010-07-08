@@ -32,6 +32,10 @@
     <td>{lang_serial_stop}:</td>
     <td><input name="newsettings[serial_stop]" value="{value_serial_stop}"></td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_billing_time_limit}:</td>
+    <td><input name="newsettings[billing_time_limit]" value="{value_billing_time_limit}"></td>
+   </tr>
    		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_external_db}</b></td>
 		</tr>

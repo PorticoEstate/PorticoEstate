@@ -375,7 +375,7 @@
 
 			if ($filter)
 			{
-				$filtermethod .= " $where fm_project.user_id={$filter}";
+				$filtermethod .= " $where fm_project.coordinator={$filter}";
 				$where= 'AND';
 			}
 
@@ -426,7 +426,7 @@
 							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
 						}
 
-						$querymethod = $where . ' ' . implode(' OR ', $_querymethod);
+						$querymethod = $where . ' (' . implode(' OR ', $_querymethod) . ')';
 						unset($_querymethod);
 					}
 					else

@@ -225,6 +225,7 @@
 				array_unshift ($values_combo_box[3],$default_value);
 
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
@@ -1271,6 +1272,7 @@
 					'footer'				=> 0
 
 
+
 			);
 
        		$myColumnDefs[0] = array
@@ -1335,8 +1337,11 @@
 			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+			
+			$value_user = isset($values['user_id']) ? $GLOBALS['phpgw']->accounts->get($values['user_id'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 			$data = array
 			(
+				'value_user'							=> $value_user,
 				'event_data'							=> $event_data,
 				'link_claim'							=> $link_claim,
 				'lang_claim'							=> lang('claim'),

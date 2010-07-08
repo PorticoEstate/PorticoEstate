@@ -458,6 +458,10 @@
 							{
 								$_query = (int) $query;
 							}
+							else if($field_info['type'] == 'bigint'  && !ctype_digit($query))
+							{
+								$_query = 0;
+							}
 							else
 							{
 								$_query = $query;
@@ -465,15 +469,19 @@
 
 							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
 						}
-
-						$querymethod = $where . ' ' . implode(' OR ', $_querymethod);
+						$querymethod = $where . ' (' . implode(' OR ', $_querymethod) . ')';
 						unset($_querymethod);
+//_debug_array($querymethod);
 					}
 					else
 					{
-						if($criteria[0]['type'] == int)
+						if($criteria[0]['type'] == 'int')
 						{
 							$_query = (int) $query;
+						}
+						else if($criteria[0]['type'] == 'bigint'  && !ctype_digit($query))
+						{
+							$_query = 0;
 						}
 						else
 						{
