@@ -290,6 +290,7 @@
 
 				$values_combo_box[1]  = $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
 				//$default_value = array ();
+				array_unshift ($values_combo_box[1],array('lid'=> $GLOBALS['phpgw']->accounts->get($this->account)->lid, 'firstname'=>lang('mine vouchers')));
 				$default_value = array ('lid'=>'','firstname'=>lang('no user'));
 				array_unshift ($values_combo_box[1],$default_value);
 
