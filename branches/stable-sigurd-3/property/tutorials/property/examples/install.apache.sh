@@ -27,8 +27,8 @@ FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.82"
 
 # Download: http://xmlsoft.org/downloads.html
-LIBXMLTAR="libxml2-2.7.6.tar.gz"
-LIBXML="libxml2-2.7.6"
+LIBXMLTAR="libxml2-2.7.7.tar.gz"
+LIBXML="libxml2-2.7.7"
 
 LIBXSLTAR="libxslt-1.1.26.tar.gz"
 LIBXSL="libxslt-1.1.26"
@@ -54,8 +54,8 @@ APACHE="httpd-2.2.15"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.2.tar.bz2"
-PHP="php-5.3.2"
+PHPTAR="php-5.3.3RC2.tar.bz2"
+PHP="php-5.3.3RC2"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -75,7 +75,6 @@ PHP_PREFIX="/usr/local"
 #/**
 #  * Oracle PDO-Support
 #  * Download: http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
-#  * http://lacot.org/
 #  */
 
 ORACLETAR="instantclient-basic-linux32-11.2.0.1.zip"
@@ -198,7 +197,7 @@ tar -xzf $LIBXMLTAR &&\
 tar -xzf $LIBXSLTAR &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
-bunzip2 -c $EACCELERATORTAR | tar xvf - &&\
+bunzip2 -c $EACCELERATORTAR | tar xvf -&&\
 cd $LIBXML &&\
 ./configure &&\
 make &&\
@@ -225,7 +224,11 @@ cd ../../ &&\
  --enable-so\
  --enable-deflate\
  --enable-headers\
- --enable-rewrite=shared &&\
+ --enable-rewrite=shared\
+ --enable-dav\
+ --enable-dav-fs\
+ --enable-dav-lock\
+ --enable-auth-digest &&\
 make &&\
 make install &&\
 cd ../$PHP &&\
@@ -244,6 +247,7 @@ export LDFLAGS=-lstdc++ &&\
  --enable-ftp\
  --with-pgsql\
  --with-mysql\
+ --with-mysqli\
  --enable-shmop\
  --enable-sysvsem\
  --enable-sysvshm\

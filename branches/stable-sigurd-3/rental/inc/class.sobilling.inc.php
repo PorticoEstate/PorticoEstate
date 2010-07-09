@@ -11,6 +11,7 @@ class rental_sobilling extends rental_socommon
 {
 	protected static $so;
 	protected $billing_terms; // Used for caching the billing terms
+	public $vfs;
 	
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -21,6 +22,9 @@ class rental_sobilling extends rental_socommon
 	{
 		if (self::$so == null) {
 			self::$so = CreateObject('rental.sobilling');
+			$virtual_file_system = CreateObject('phpgwapi.vfs');
+			$virtual_file_system->override_acl = 1;
+			self::$so->vfs = $virtual_file_system;
 		}
 		return self::$so;
 	}
@@ -58,7 +62,7 @@ class rental_sobilling extends rental_socommon
 		}
 		else
 		{
-			$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.location_id, rb.title, rb.export_format, rb.export_data, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year, rcr.title as responsibility_title';
+			$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.location_id, rb.title, rb.export_format, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year, rcr.title as responsibility_title';
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY rb.{$this->marshal($sort_field, 'field')} {$dir}": 'ORDER BY rb.timestamp_stop DESC';
 		}
@@ -78,10 +82,27 @@ class rental_sobilling extends rental_socommon
 			$billing->set_timestamp_commit($this->db->f('timestamp_commit', true));
 			$billing->set_export_format($this->db->f('export_format', true));
 			$billing->set_responsibility_title(lang($this->unmarshal($this->db->f('responsibility_title'), 'string')));
-			if($this->db->f('export_data', true) != null)
+			
+			$id = $this->db->f('id', true);
+			
+			$export_exist = $this->vfs->file_exists
+			(
+				array
+				(
+					'string' => "/rental/billings/{$id}",
+					RELATIVE_NONE
+				)
+			);
+		
+			if($export_exist)
 			{
 				$billing->set_generated_export(true);
 			}
+			
+			/*if($this->db->f('export_data', true) != null)
+			{
+				$billing->set_generated_export(true);
+			}*/
 		}
 		
 		$billing_info_id = $this->unmarshal($this->db->f('billing_info_id', true), 'int');
@@ -328,10 +349,50 @@ class rental_sobilling extends rental_socommon
 		}
 		if($exportable != null)
 		{
-			$sql = "UPDATE rental_billing SET export_data = {$this->marshal(iconv("ISO-8859-1","UTF-8",$exportable->get_contents()),'string')} WHERE id = {$this->marshal($billing_job->get_id(),'int')}";
-			$result = $this->db->query($sql, __LINE__, __FILE__);
-			return true;
-		}
+			//$sql = "UPDATE rental_billing SET export_data = {$this->marshal(iconv("ISO-8859-1","UTF-8",$exportable->get_contents()),'string')} WHERE id = {$this->marshal($billing_job->get_id(),'int')}";
+			//$result = $this->db->query($sql, __LINE__, __FILE__);
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+			
+			$path = "/rental";
+			$dir = array('string' => $path, RELATIVE_NONE);
+			if(!$vfs->file_exists($dir)){
+				if(!$vfs->mkdir($dir))
+				{
+					return;
+				}
+			}
+			
+			$path .= "/billings";
+			$dir = array('string' => $path, RELATIVE_NONE);
+			if(!$vfs->file_exists($dir)){
+				if(!$vfs->mkdir($dir))
+				{
+					return;
+				}
+			}
+			
+			
+			$id = $billing_job->get_id();
+			$export_data = iconv("ISO-8859-1","UTF-8",$exportable->get_contents());
+			$file_path = $path."/{$id}";
+			if($export_data != ""){			
+				$result = $vfs->write
+				(
+					array
+					(
+						'string' => $file_path,
+						RELATIVE_NONE,
+						'content' => $export_data
+					)
+				);
+				if($result)
+				{
+					return true;
+				}
+			}
+		}	
 		return false;
 	}
 	
