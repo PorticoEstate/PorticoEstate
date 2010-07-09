@@ -860,7 +860,10 @@
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
-			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
+					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1 
+					&& !$GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 2)
+				)
 				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
 			{
 				// add owner to recipients
@@ -868,7 +871,10 @@
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
-			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me']) && $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
+					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1
+					&& !$GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 2)
+				)
 				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto']))
 			{
 				// add assigned to recipients
@@ -883,22 +889,25 @@
 			foreach($members as $account_id => $account_name)
 			{
 				$prefs = $this->bocommon->create_preferences('property',$account_id);
-				if ($validator->check_email_address($prefs['email']))
+				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1)
 				{
-		            // Email address is technically valid
-					// avoid problems with the delimiter in the send class
-		            if(strpos($account_name,','))
-		            {
-		            	$_account_name = explode(',', $account_name);
-		            	$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
-		            }
-		            
-					$toarray[] = "{$account_name}<{$prefs['email']}>";
-				}
-				else
-				{
-					$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
-					$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $account_name);
+					if ($validator->check_email_address($prefs['email']))
+					{
+			            // Email address is technically valid
+						// avoid problems with the delimiter in the send class
+			            if(strpos($account_name,','))
+			            {
+			            	$_account_name = explode(',', $account_name);
+			            	$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
+			            }
+			            
+						$toarray[] = "{$account_name}<{$prefs['email']}>";
+					}
+					else
+					{
+						$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
+						$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $account_name);
+					}
 				}
 			}
 
