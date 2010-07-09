@@ -604,7 +604,23 @@ class rental_uibilling extends rental_uicommon
 			$date = date('Ymd', $stop);
 			header('Content-type: text/plain');
 			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
-			print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
+			
+			$id = phpgw::get_var('id');
+			$path = "/rental/billings/{$id}";
+			
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+			
+			print $vfs->read
+			(
+				array
+				(
+					'string' => $path,
+					RELATIVE_NONE
+				)
+			);
+			
+			//print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
 		}
 		else{
 			$file_ending = 'cs15';
