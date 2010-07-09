@@ -28,7 +28,7 @@ class rental_sobilling extends rental_socommon
 		}
 		return self::$so;
 	}
-	
+
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		$clauses = array('1=1');
@@ -396,7 +396,7 @@ class rental_sobilling extends rental_socommon
 		return false;
 	}
 	
-	public function generate_cs15_export($billing_id)
+	public function generate_customer_export($billing_id)
 	{
 		$parties = array();
 		$contract_ids = array();
@@ -440,13 +440,13 @@ class rental_sobilling extends rental_socommon
 				$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
 				$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
 				
-				if(!in_array($party, $parties)){
+				if(!in_array($party, $parties)) {
 					$parties[] = $party;
 				}
 			}
 		}
-		$cs15_export = new rental_agresso_cs15($parties);
-		return $cs15_export->get_contents();
+		$customer_export = new rental_agresso_cs15($parties);
+		return $customer_export->get_contents();
 	}
 	
 	public function get_export_data(int $billing_job_id)
