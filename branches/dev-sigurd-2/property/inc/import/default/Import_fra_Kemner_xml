@@ -193,7 +193,7 @@
 					
 					//finn boei gateadresse for kontroll
 					$boei_gateadresse=$this->soXport->dima_to_address($gabinfo['dima']);
-					$buffer[$i]['boei_gateadresse'] = $boei_gateadress;
+					$buffer[$i]['boei_gateadresse'] = $boei_gateadresse;
 
 					$buffer[$i]['referanse'] = $address;                
 
