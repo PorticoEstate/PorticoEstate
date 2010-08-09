@@ -505,6 +505,7 @@ to	rental	no	Til
 to_the_top	rental	no	Til toppen
 Total sum	rental	no	Totalt beløp
 total_price	rental	no	Total pris
+total_price_current_year	rental	no	Pris inneværende år
 type	rental	no	Type
 under_dismissal	rental	no	Under oppsigelse
 under_planning	rental	no	Under planlegging

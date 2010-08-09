@@ -54,6 +54,7 @@
 		protected $adjustable;
 		protected $bill_only_one_time;
 		protected $publish_comment;
+		protected $total_price_current_year;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -570,6 +571,170 @@
 			return self::get_so()->get_year_range();
 		}
 		
+	
+		public function get_total_price_current_year()
+		{
+			/* 1. Get current year
+			 * 2. Check contract dates to see if the contract is/has:
+			 * 2.1 ...ended - return 0
+			 * 2.2 ...active alle year - return total price
+			 * 2.3 ...ends or starts current year - calculate price
+			 * 2.3.1 
+			 */
+			$current_year = date("Y");
+			$next_year = $current_year + 1;
+			
+			$timestamp_invoice_start = strtotime("{$current_year}-1-1");
+			$timestamp_invoice_end = strtotime("{$current_year}-12-31");
+			
+			
+			$contract_dates = $this->get_contract_date();
+			if(isset($contract_dates))
+			{
+				$contract_start = $contract_dates->get_start_date();
+				$contract_end = $contract_dates->get_end_date();
+				
+				if(isset($contract_end) && $contract_end < $timestamp_invoice_start)
+				{
+					return 0; // The contract ends before start of current year
+				}
+				else if($contract_start > $timestamp_invoice_end)
+				{
+					return 0; // The contract starts after the end of current year
+				}
+				else if($contract_start < $timestamp_invoice_start && (!isset($contract_end) || $contract_end > $timestamp_invoice_end))
+				{
+					// The contract is active the whole current year
+					return rental_socontract_price_item::get_instance()->get_total_price($this->get_id());
+				}
+			}
+			else
+			{
+				return 0; // The contract has no dates
+			}
+			
+			// The contract is active only parts of the current year, we must calculate the total sum using the billing logic
+			
+			$total_sum = 0; // Holding the total price of the contract current year
+			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->get_id()));
+			
+			
+			// Run through the contract price items
+			foreach($contract_price_items as $contract_price_item)
+			{
+				// ---- Period calculation ---
+				// Determine start date for price item
+				$contract_price_item_start = $contract_price_item->get_date_start();
+				if($contract_price_item_start == null || $contract_price_item_start == '') // Date not set
+				{
+					// We just use the invoice date for our calculations
+					$contract_price_item_start = $timestamp_invoice_start;
+				}
+				
+				// Determine end date for price item
+				$contract_price_item_end = $contract_price_item->get_date_end();
+				if($contract_price_item_end == null || $contract_price_item_end == '') // Date not set
+				{
+					// We just use the invoice date for our calculations
+					$contract_price_item_end = $timestamp_invoice_end;
+				}
+				
+				// Sanity check - end date should never be before start date
+				if($contract_price_item_end < $contract_price_item_start) 
+				{
+					continue; // We don't add this price item - continue to next
+				}
+				
+				// Checking the start date against the invoice dates
+				if($contract_price_item_start < $timestamp_invoice_start) // Start of price item before invoice start
+				{
+					$invoice_price_item_start = $timestamp_invoice_start; // We use the invoice start
+				}
+				else if($contract_price_item_start > $timestamp_invoice_end) // Start of price item after this invoice ends
+				{
+					continue; // We don't add this price item - continue to next
+				}
+				else // Price item start date is somewhere between start and end
+				{
+					$invoice_price_item_start = $contract_price_item_start; // We use the price item start
+				}
+				
+				// Checking the end date against invoice dates
+				if($contract_price_item_end < $timestamp_invoice_start) // End of price item before this invoice starts
+				{
+					continue; // We don't add this price item - continue to next
+				}
+				else if($contract_price_item_end < $timestamp_invoice_end) // End of price item before invoice end
+				{
+					$invoice_price_item_end = $contract_price_item_end; // We use the price item end
+				} 
+				else // Price item end date is somewhere after invoice end
+				{
+					$invoice_price_item_end = $timestamp_invoice_end;	// We use the invoice end
+				}
+				
+				// Checking the contract dates against the temporary price item dates
+				if(isset($contract_start) && !$contract_price_item->is_one_time())
+				{
+					if($contract_start > $timestamp_invoice_end) // The start of the contract is after the billing period (should never happen)
+					{
+						continue; //No price items for this contract will be billed
+					}
+					
+					if($contract_start > $invoice_price_item_start) // The contract start is after the start of the price item
+					{
+						$invoice_price_item_start = $contract_start;
+					}
+				}
+				
+				if(isset($contract_end) && !$contract_price_item->is_one_time())
+				{
+					if($contract_end < $timestamp_invoice_start) // The end of the contract is before the billing period (should never happen)
+					{
+						continue; //No price items for this contract will be billed
+					}
+					
+					if($contract_end < $invoice_price_item_end) // The contract start is after the start of the price item
+					{
+						$invoice_price_item_end = $contract_end;
+					}
+				}
+				
+				// --- End of period calculation ---
+				
+				// Create a new invoice price item
+				$invoice_price_item = new rental_invoice_price_item(
+					2,									// the number of decimals to use for the total price of the price item
+					-1, 										// no price item identifier
+					0, 											// the invoice identifier
+					$contract_price_item->get_title(),			// the contract price item title
+					$contract_price_item->get_agresso_id(), 	// the contract price item agresso identifier
+					$contract_price_item->is_area(), 			// flag for specifying if the contract is of area/piece
+					$contract_price_item->get_price(),			// the price of the contract price item
+					$contract_price_item->get_area(), 			// the rented area on this contract (derived from contract)
+					$contract_price_item->get_count(), 			// the number of items on this price item
+					$invoice_price_item_start, 					// the start date from which this price item should be calculated
+					$invoice_price_item_end						// the end date to which this price item should be calculated
+				);
+				
+				// If the contract price item is of type one-time and it's dates are within the invoice period ...
+				if($contract_price_item->is_one_time()){
+					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end){
+						// ... set the total price of the invoice price item to the total price of the contract price item
+						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
+					}
+				}
+				
+				// Add this price item's total sum to the tota sum of the invoice
+				$total_price_price_item = $invoice_price_item->get_total_price();
+				$total_sum += round($total_price_price_item,2);
+			} // end of looping through the contract price items
+			
+			$total_sum = round($total_sum, 2);
+			return $total_sum;
+			
+		}
+		
 		
 		public function serialize()
 		{
@@ -579,6 +744,14 @@
 			{
 				$this->total_price =  rental_socontract_price_item::get_instance()->get_total_price($this->get_id());
 			}
+			
+		if(!isset($this->total_price_current_year))
+			{
+				$this->total_price_current_year = $this->get_total_price_current_year();
+				
+				//$this->total_price_current_year =  rental_socontract_price_item::get_instance()->get_total_price_invoice($this->get_id());
+			}
+			
 			return array(
 				'id' => $this->get_id(),
 				'date_start' => $this->get_contract_date() && $this->get_contract_date()->has_start_date() ? date($date_format, $this->get_contract_date()->get_start_date()): '',
@@ -608,7 +781,8 @@
 				'adjustment_year' => $this->get_adjustment_year(),
 				'comment' => $this->get_comment(),
 				'publish_comment' => $this->get_publish_comment(),
-				'term_label' => $this->get_term_id_title()
+				'term_label' => $this->get_term_id_title(),
+				'total_price_current_year' => $this->total_price_current_year
 			);
 		}
 		
@@ -636,6 +810,11 @@
 		public function get_total_price()
 		{
 			return $this->total_price;
+		}
+		
+		public function set_total_price_current_year($total_price_current_year)
+		{
+			$this->total_price_current_year = $total_price_current_year;
 		}
 		
 		public function set_max_area($max_area)

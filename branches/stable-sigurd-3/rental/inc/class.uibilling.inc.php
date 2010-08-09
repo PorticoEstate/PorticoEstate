@@ -628,7 +628,7 @@ class rental_uibilling extends rental_uicommon
 			$date = date('Ymd', $stop);
 			header('Content-type: text/plain');
 			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
-			print rental_sobilling::get_instance()->generate_cs15_export((int)phpgw::get_var('id'));
+			print rental_sobilling::get_instance()->generate_customer_export((int)phpgw::get_var('id'));
 		}
     }
 
