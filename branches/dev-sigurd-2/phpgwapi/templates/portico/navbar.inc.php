@@ -49,7 +49,8 @@
 			$var['support_url'] = "javascript:openwindow('"
 			 . $GLOBALS['phpgw']->link('/index.php', array
 			 (
-			 	'menuaction'=> 'manual.uisupport.send'
+			 	'menuaction'=> 'manual.uisupport.send',
+			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
 			 )) . "','700','600')";
 
 			$var['support_text'] = lang('support');
