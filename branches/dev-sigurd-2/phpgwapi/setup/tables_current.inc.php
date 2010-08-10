@@ -642,5 +642,55 @@
 			'fk' => array(),
 			'ix' => array('target_email','is_active'),
 			'uc' => array()
+		),
+		'phpgw_config2_section' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true),
+				'data' => array('type' => 'text','nullable' => true)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_config2_attrib' => array(
+			'fd' => array(
+				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+			),
+			'pk' => array('section_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_config2_choice' => array(
+			'fd' => array(
+				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 50,'nullable' => False)
+			),
+			'pk' => array('section_id','attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('section_id','attrib_id','value')
+		),
+		'phpgw_config2_value' => array(
+			'fd' => array(
+				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('section_id','attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('section_id','attrib_id','value')
 		)
 	);
