@@ -3,7 +3,8 @@
 	$web_title = 'test';
 	$email_footer = 'Mobile Portal System';
 
-	$config	= CreateObject('sms.soconfig');
+	$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+	$config	= CreateObject('admin.soconfig',$location_id);
 	$config->read_repository();
 
 	$GLOBALS['phpgw_info']['sms_config'] = $config->config_data;

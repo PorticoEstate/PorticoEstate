@@ -28,12 +28,13 @@
 
 		var $public_functions = array
 		(
-			'index'  => true,
-			'outbox'   => true,
-			'send'   => true,
-			'send_group'=> true,
-			'delete_in' => true,
-			'delete_out' => true
+			'index'			=> true,
+			'outbox'		=> true,
+			'send'			=> true,
+			'send_group'	=> true,
+			'delete_in'		=> true,
+			'delete_out'	=> true,
+			'daemon_manual'	=> true
 		);
 
 		function sms_uisms()
@@ -44,7 +45,8 @@
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon				= CreateObject('sms.bocommon');
 //			$this->bocategory			= CreateObject('sms.bocategory');
-			$this->config				= CreateObject('sms.soconfig');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+			$this->config				= CreateObject('admin.soconfig',$location_id);
 			$this->config->read_repository();
 			$this->gateway_number			= $this->config->config_data['common']['gateway_number'];
 			$this->bo				= CreateObject('sms.bosms',false);
@@ -629,4 +631,37 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
+
+		function daemon_manual()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::sms::refresh';
+			if(!$this->acl->check('run', PHPGW_ACL_READ,'admin'))
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
+
+			$sms = CreateObject('sms.sms');
+			$sms->getsmsinbox();
+			$sms->getsmsstatus();
+
+			$receipt['message'][]=array('msg'=>lang('Daemon refreshed'));
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'menu'							=> execMethod('sms.menu.links'),
+			);
+
+			$appname	= lang('config');
+			$function_msg	= lang('Daemon manual refresh');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('daemon_manual' => $data));
+		}
+
 	}

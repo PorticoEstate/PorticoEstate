@@ -10,7 +10,7 @@
 	*/
 
 	$setup_info['sms']['name']      = 'sms';
-	$setup_info['sms']['version']   = '0.9.17.508';
+	$setup_info['sms']['version']   = '0.9.17.509';
 	$setup_info['sms']['app_order'] = 8;
 	$setup_info['sms']['enable']    = 1;
 	$setup_info['sms']['app_group']	= 'office';
@@ -29,10 +29,10 @@
 	);
 
 	$setup_info['sms']['tables'] = array(
-		'phpgw_sms_config_type',
-		'phpgw_sms_config_attrib',
-		'phpgw_sms_config_choice',
-		'phpgw_sms_config_value',
+//		'phpgw_sms_config_type',
+//		'phpgw_sms_config_attrib',
+//		'phpgw_sms_config_choice',
+//		'phpgw_sms_config_value',
 		'phpgw_sms_featautoreply',
 		'phpgw_sms_featautoreply_log',
 		'phpgw_sms_featautoreply_scenario',

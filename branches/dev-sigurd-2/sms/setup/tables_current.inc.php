@@ -441,6 +441,7 @@
 			'uc' => array()
 		),
 */
+/*
 		'phpgw_sms_config_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
@@ -489,6 +490,6 @@
 			'ix' => array(),
 			'uc' => array('type_id','attrib_id','value')
 		),
-
+*/
 
 	);

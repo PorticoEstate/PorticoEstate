@@ -74,12 +74,12 @@
 					'config'	=> array
 					(
 						'text'	=> lang('config'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.index'))
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('sms', 'run')))
 					),
 					'refresh'	=> array
 					(
 						'text'	=> lang('Daemon manual refresh'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uiconfig.daemon_manual'))
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.daemon_manual'))
 					),
 					'acl'	=> array
 					(
