@@ -113,13 +113,19 @@
 				}
 			}
 
+			//optional support address per app
+			$app		= phpgw::get_var('app');
+			$config		= CreateObject('phpgwapi.config',$app);
+			$config->read();
+			$support_address = isset($config->config_data['support_address']) && $config->config_data['support_address'] ? $config->config_data['support_address'] : $GLOBALS['phpgw_info']['server']['support_address'];
+
 			$data = array
 			(
 				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
 				'from_name'		=> $GLOBALS['phpgw_info']['user']['fullname'],
 				'from_address'	=> $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
 				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'manual.uisupport.send')),
-				'support_address'	=> $GLOBALS['phpgw_info']['server']['support_address'],
+				'support_address'	=> $support_address,
 			);
 
             $GLOBALS['phpgw']->xslttpl->add_file('support');
