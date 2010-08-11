@@ -249,6 +249,7 @@
 
 		if($test != 'wsdl')
 		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (section_id,attrib_id,id,value) VALUES (1, 1, 5, 'carrot')");
 			$GLOBALS['phpgw_setup']->oProc->query("SELECT max(type_id) as type_id FROM phpgw_sms_config_attrib");
 			$GLOBALS['phpgw_setup']->oProc->next_record();
 			$type_id = $GLOBALS['phpgw_setup']->oProc->f('type_id') +1;
@@ -275,7 +276,7 @@
 		$test = $GLOBALS['phpgw_setup']->oProc->f('name');
 		if(!$test)
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name,descr) VALUES (6, 'Carrot', 'TDC gateway')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name,descr) VALUES (6, 'carrot', 'TDC gateway')");
 		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -390,6 +391,37 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.509';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+
+	/**
+	* Update sms version from 0.9.17.509 to 0.9.17.510
+	* Convert to new config scheme
+	*/
+
+	$test[] = '0.9.17.509';
+	function sms_upgrade0_9_17_509()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$db->query("UPDATE phpgw_config2_attrib SET name = 'gateway_module_get', descr = 'Active gateway module GET' WHERE name = 'gateway_module'");
+
+		$db->query("SELECT * FROM phpgw_config2_attrib WHERE name = 'gateway_number'");
+		$db->next_record();
+		$section_id = $db->f('section_id');
+		$id = $db->f('id') + 1;
+		$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES ({$section_id}, {$id},'listbox', 'gateway_module_send', 'Active gateway module SEND')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 1, 'gnokii')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 2, 'clickatell')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 3, 'uplink')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 4, 'kannel')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 5, 'carrot')");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.510';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}

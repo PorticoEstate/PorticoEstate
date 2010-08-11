@@ -29,22 +29,34 @@
 	$GLOBALS['phpgw_info']['sms_config']['common']['apps_path'] = $apps_path;
 	$GLOBALS['phpgw_info']['sms_config']['common']['feat_command_path'] = $feat_command_path;
 
-	if(!isset($GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']) || !$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module'])
+	if(!isset($GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get']) || !$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get'])
 	{
 		$path_to_sms = dirname(__FILE__);
 
-		include_once($path_to_sms . '/config.php');
+		require $path_to_sms . '/config.php';
 	}
 
-	if (file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']}/fn.php"))
+	if($GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get'] && !$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'])
 	{
-		include_once("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']}/fn.php");
+		$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] = $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get'];
+	}
+
+	if (file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get']}/get.php")
+	 && file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send']}/send.php"))
+	{
+	//	include_once("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module']}/fn.php");
+		require "{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get']}/get.php";
+		require "{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send']}/send.php";
 	}
 	else
 	{
-		if (!$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module'])
+		if ($GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get'] && !file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get']}/get.php"))
 		{
-			die ("ERROR: Gateway module '" . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module'] . "' does not exists - please contact system administrator");
+			die ("ERROR: Gateway get module '" . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get'] . "' does not exists - please contact system administrator");
+		}
+		else if ($GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] && !file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send']}/send.php"))
+		{
+			die ("ERROR: Gateway send module '" . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] . "' does not exists - please contact system administrator");
 		}
 		else
 		{
@@ -52,7 +64,7 @@
 		}
 	}
 
-	class sms_sms_
+	class sms_sms__
 	{
 		var $apps_path;
 
@@ -61,7 +73,8 @@
 			$this->apps_config = $GLOBALS['phpgw_info']['sms_config']['common']['apps_config'];
 			$this->apps_path = $GLOBALS['phpgw_info']['sms_config']['common']['apps_path'];
 			$this->feat_command_path = $GLOBALS['phpgw_info']['sms_config']['common']['feat_command_path'];
-			$this->gateway_module = $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module'];
+			$this->gateway_module_get = $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_get'];
+			$this->gateway_module_send = $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'];
 			$this->gateway_number = $GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'];
 			$this->web_title = $GLOBALS['phpgw_info']['sms_config']['common']['web_title'];
 			$this->email_service = $GLOBALS['phpgw_info']['sms_config']['common']['email_service'];
@@ -166,7 +179,7 @@
 		function websend2pv($username,$sms_to,$message,$sms_type="text",$unicode="0")
 		{
 			$datetime_now = $this->datetime_now();
-			$gateway_module = $this->gateway_module;
+			$gateway_module_send = $this->gateway_module_send;
 			$uid = $this->account;
 
 			$mobile_sender = $this->username2mobile($username);
@@ -203,7 +216,7 @@
 
 				$db_query = "INSERT INTO phpgw_sms_tblsmsoutgoing
 					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_sms_type,unicode)
-					VALUES ('$uid','$gateway_module','$mobile_sender','$c_sms_to','$sms_sender','$message','$datetime_now','$sms_type','$unicode')";
+					VALUES ('$uid','$gateway_module_send','$mobile_sender','$c_sms_to','$sms_sender','$message','$datetime_now','$sms_type','$unicode')";
 
 				$GLOBALS['phpgw']->db->transaction_begin();
 				$GLOBALS['phpgw']->db->query($db_query,__LINE__,__FILE__);
@@ -227,7 +240,7 @@
 		function websend2group($username,$gp_code,$message,$sms_type="text")
 		{
 			$datetime_now = $this->datetime_now();
-			$gateway_module = $this->gateway_module;
+			$gateway_module_send = $this->gateway_module_send;
 			$uid = $GLOBALS['phpgw']->accounts->name2id($username);
 			$mobile_sender = $this->username2mobile($username);
 			$max_length = 160;
@@ -272,7 +285,7 @@
 					$db_query1 = "
 					INSERT INTO phpgw_sms_tblsmsoutgoing
 					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid,p_sms_type)
-					VALUES ('$uid','$gateway_module','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid','$sms_type')
+					VALUES ('$uid','$gateway_module_send','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid','$sms_type')
 					";
 					$smslog_id = @dba_insert_id($db_query1);
 					$to[$j] = $sms_to;
@@ -358,7 +371,7 @@
 			$email_footer = $this->email_footer;
 			$email_service = $this->email_service;
 			$web_title = $this->web_title;
-			$gateway_module = $this->gateway_module;
+			$gateway_module_get = $this->gateway_module_get;
 
 			$ok = false;
 			if ($sms_sender && $target_code && $message)
@@ -368,7 +381,7 @@
 				$sql = "
 					INSERT INTO phpgw_sms_tblsmsincoming
 					(in_gateway,in_sender,in_masked,in_code,in_msg,in_datetime)
-					VALUES ('$gateway_module','$sms_sender','$masked_sender','$target_code','$message','$sms_datetime')
+					VALUES ('$gateway_module_get','$sms_sender','$masked_sender','$target_code','$message','$sms_datetime')
 					";
 				$this->db->query($sql,__LINE__,__FILE__);
 
@@ -448,8 +461,8 @@
 
 		function getsmsstatus()
 		{
-			$gateway_module = $this->gateway_module;
-			$db_query = "SELECT * FROM phpgw_sms_tblsmsoutgoing WHERE p_status='0' AND p_gateway='$gateway_module'";
+			$gateway_module_send = $this->gateway_module_send;
+			$db_query = "SELECT * FROM phpgw_sms_tblsmsoutgoing WHERE p_status='0' AND p_gateway='$gateway_module_send'";
 			$this->db->query($db_query,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
