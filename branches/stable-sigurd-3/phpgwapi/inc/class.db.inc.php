@@ -98,7 +98,7 @@
 		*/
 		var $auto_stripslashes = false;
 		
-		var $resultSet;
+		var $resultSet = array();
 		
 		var $fetchmode = 'ASSOC';//'BOTH';
 
@@ -244,7 +244,8 @@
 		*/
 		public function free()
 		{
-			unset($this->resultSet);
+			//unset($this->resultSet);
+			$this->resultSet = array();
 			return true;
 		}
 
