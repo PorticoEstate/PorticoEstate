@@ -117,7 +117,7 @@
 			}
 
 			$bofiles	= CreateObject('property.bofiles');
-			$source = "{$bofiles->rootdir}/{$file}";
+			$source = "{$bofiles->rootdir}{$file}";
 			$thumbfile = "$source.thumb";
 
 			// prevent path traversal
