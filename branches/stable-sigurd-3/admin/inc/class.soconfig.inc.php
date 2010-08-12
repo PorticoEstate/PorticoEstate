@@ -24,15 +24,16 @@
 
 		public function __construct($location_id = 0)
 		{
-			if($location_id)
-			{
-				$this->set_location($location_id);
-			}
 			$this->db 			= &$GLOBALS['phpgw']->db;
-
 			$this->join			= $this->db->join;
 			$this->left_join	= $this->db->left_join;
 			$this->like			= $this->db->like;
+
+			if($location_id)
+			{
+				$this->set_location($location_id);
+				$this->read_repository();
+			}
 		}
 
 		public function set_location(int $location_id)

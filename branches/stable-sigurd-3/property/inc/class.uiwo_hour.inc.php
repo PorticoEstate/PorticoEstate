@@ -1245,22 +1245,17 @@
 
 			if($this->config->config_data['wo_status_sms'])
 			{
-				$config_sms	= CreateObject('sms.soconfig');
-				if(is_object($config_sms))
-				{
-					$config_sms->read_repository();
-					$sms_data['heading'] = lang('Send the following SMS-message to %1 to update status for this order:',$config_sms->config_data['common']['gateway_number']);
-					$sms_data['message'] = 'status ' . $workorder_id . ' [' . lang('status code') .']';
-					$sms_data['status_code'][0]['name'] = '1 => ' . lang('closed');
-					$sms_data['status_code'][1]['name'] = '2 => ' . lang('No access');
-					$sms_data['status_code'][2]['name'] = '3 => ' . 'I arbeid';
-					$sms_data['status_code_text'] = lang('status code');
-					$sms_data['example'] = 'status ' . $workorder_id . ' 1';
-					$sms_data['lang_example'] = lang('Example');
-
-			//		_debug_array($sms_data);
-
-				}
+				$sms_location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+				$config_sms	= CreateObject('admin.soconfig',$sms_location_id);
+		
+				$sms_data['heading'] = lang('Send the following SMS-message to %1 to update status for this order:',$config_sms->config_data['common']['gateway_number']);
+				$sms_data['message'] = 'status ' . $workorder_id . ' [' . lang('status code') .']';
+				$sms_data['status_code'][0]['name'] = '1 => ' . lang('closed');
+				$sms_data['status_code'][1]['name'] = '2 => ' . lang('No access');
+				$sms_data['status_code'][2]['name'] = '3 => ' . 'I arbeid';
+				$sms_data['status_code_text'] = lang('status code');
+				$sms_data['example'] = 'status ' . $workorder_id . ' 1';
+				$sms_data['lang_example'] = lang('Example');
 			}
 			
 			$action_params = array
