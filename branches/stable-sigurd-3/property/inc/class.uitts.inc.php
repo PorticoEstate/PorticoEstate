@@ -208,18 +208,15 @@
 					{
 						if($date['date_info'][0]['descr'])
 						{
-						 	$entry['date_' . $j]=$date['date_info'][0]['entry_date'];
-						 	$name_temp['date_' . $j]=true;
-						 	$descr_temp[$date['date_info'][0]['descr']]=true;
+						 	$entry["date_{$j}"]			= $date['date_info'][0]['entry_date'];
+						 	$name_temp["date_{$j}"]		= true;
+						 	$descr_temp["date_{$j}"]	= $date['date_info'][0]['descr'];
 						 }
 						 $j++;
 					}
 					unset($entry['child_date']);
 				}
 			}
-
-//_debug_array($descr_temp);
-
 
 			$name	= array();
 			$name[] = 'priority';
@@ -247,31 +244,32 @@
 			}
 
 			$uicols_related = $this->bo->uicols_related;
+
 			foreach($uicols_related as $related)
 			{
-				$name[] = $related;			
-			}
-
-			while (is_array($name_temp) && list($name_entry,) = each($name_temp))
-			{
-				array_push($name,$name_entry);
+//					$name[] = $related;
 			}
 
 			$descr = array();
 			foreach($name as $_entry)
 			{
+//				$descr[] = str_replace('_', ' ', $_entry);
 				$descr[] = lang(str_replace('_', ' ', $_entry));
+			}
+
+			foreach($name_temp as $_key => $_name)
+			{
+				array_push($name,$_key);			
+			}
+
+
+			foreach($descr_temp as $_key => $_name)
+			{
+				array_push($descr,$_name);			
 			}
 
 			$name[] = 'finnish_date';
 			$name[] = 'delay';
-
-	/*
-			while (is_array($descr_temp) && list($descr_entry,) = each($descr_temp))
-			{
-				array_push($descr,$descr_entry);
-			}
-*/
 
 			array_push($descr,lang('finnish date'),lang('delay'));
 
@@ -2209,17 +2207,20 @@
 
 			$vendor_email = array();
 			$validator = CreateObject('phpgwapi.EmailAddressValidator');			
-			foreach ($values['vendor_email'] as $_temp)
+			if(isset($values['vendor_email']) && is_array($values['vendor_email']))
 			{
-				if($_temp)
+				foreach ($values['vendor_email'] as $_temp)
 				{
-					if($validator->check_email_address($_temp))
+					if($_temp)
 					{
-						$vendor_email[] = $_temp;
-					}
-					else
-					{
-						$receipt['error'][]=array('msg'=>lang('%1 is not a valid address',$_temp));				
+						if($validator->check_email_address($_temp))
+						{
+							$vendor_email[] = $_temp;
+						}
+						else
+						{
+							$receipt['error'][]=array('msg'=>lang('%1 is not a valid address',$_temp));				
+						}
 					}
 				}
 			}
@@ -2876,6 +2877,7 @@
 
 				'location_data'					=> $location_data,
 				'lang_location_code'			=> lang('Location Code'),
+
 
 				'lang_ticket'					=> lang('Ticket'),
 				'table_header_additional_notes'	=> $table_header_additional_notes,
