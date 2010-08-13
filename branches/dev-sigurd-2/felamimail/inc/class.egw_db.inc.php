@@ -1318,6 +1318,8 @@ class egw_db
 			case 'float':
 			case 'decimal':
 				return (double) $value;
+			case 'varchar':
+				return str_replace("'''", "'", $this->adodb->qstr("'{$value}'")); // Sigurd: To avoid that the value 1 is translated to true
 		}
 		if (!$this->adodb && !$this->connect())
 		{
