@@ -405,7 +405,6 @@
 			. " FROM fm_entity_category "
 			. " WHERE tracking=1 ORDER by entity_id,cat_id";
 
-
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$i=0;
@@ -414,7 +413,7 @@
 				$entity[$i]['entity_id']=$this->db->f('entity_id');
 				$entity[$i]['cat_id']=$this->db->f('cat_id');
 				$entity[$i]['type']=".entity.{$this->db->f('entity_id')}.{$this->db->f('cat_id')}";
-				$uicols[]	= $this->db->f('name');
+				$uicols[]	=  str_replace(' ', '_', $this->db->f('name',true));
 				$i++;
 			}
 
