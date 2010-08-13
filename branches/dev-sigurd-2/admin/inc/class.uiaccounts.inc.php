@@ -1121,7 +1121,7 @@
 			$apps = createObject('phpgwapi.applications', $account_id ? $account_id : -1);
 			$db_perms = $apps->read_account_specific();
 
-			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id);
+			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id ? $account_id : -1);
 			
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			asort($available_apps);
