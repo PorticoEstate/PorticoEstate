@@ -2209,17 +2209,20 @@
 
 			$vendor_email = array();
 			$validator = CreateObject('phpgwapi.EmailAddressValidator');			
-			foreach ($values['vendor_email'] as $_temp)
+			if(isset($values['vendor_email']) && is_array($values['vendor_email']))
 			{
-				if($_temp)
+				foreach ($values['vendor_email'] as $_temp)
 				{
-					if($validator->check_email_address($_temp))
+					if($_temp)
 					{
-						$vendor_email[] = $_temp;
-					}
-					else
-					{
-						$receipt['error'][]=array('msg'=>lang('%1 is not a valid address',$_temp));				
+						if($validator->check_email_address($_temp))
+						{
+							$vendor_email[] = $_temp;
+						}
+						else
+						{
+							$receipt['error'][]=array('msg'=>lang('%1 is not a valid address',$_temp));				
+						}
 					}
 				}
 			}
