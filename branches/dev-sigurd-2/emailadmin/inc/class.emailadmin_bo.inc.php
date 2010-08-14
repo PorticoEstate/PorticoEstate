@@ -678,7 +678,7 @@
 		function saveProfile($_globalSettings, $_smtpSettings, $_imapSettings)
 		{
 			if(!isset($_imapSettings['imapTLSAuthentication'])) {
-				$_imapSettings['imapTLSAuthentication'] = true;
+				$_imapSettings['imapTLSAuthentication'] = 1;
 			}
 
 			if(!isset($_globalSettings['profileID'])) {
