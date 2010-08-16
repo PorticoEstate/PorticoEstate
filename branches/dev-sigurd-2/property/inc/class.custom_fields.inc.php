@@ -302,22 +302,22 @@ JS;
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{ 
-				for ($j=0;$j<count($lookup_functions);$j++)
+				foreach ( $lookup_functions as $lookup_function)
 				{
-					$values['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
+					$values['lookup_functions'] .= 'function ' . $lookup_function['name'] ."\r\n";
 					$values['lookup_functions'] .= '{'."\r\n";
-					$values['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+					$values['lookup_functions'] .= $lookup_function['action'] ."\r\n";
 					$values['lookup_functions'] .= '}'."\r\n";
 				}
 			}
 
-			if(isset($clear_functions) && is_array($clear_functions))
+			if(isset($clear_functions) && $clear_functions)
 			{ 
-				for ($j=0;$j<count($clear_functions);$j++)
+				foreach ($clear_functions as $clear_function)
 				{
-					$values['lookup_functions'] .= 'function ' . $clear_functions[$j]['name'] ."\r\n";
+					$values['lookup_functions'] .= 'function ' . $clear_function['name'] ."\r\n";
 					$values['lookup_functions'] .= '{'."\r\n";
-					$values['lookup_functions'] .= $clear_functions[$j]['action'] ."\r\n";
+					$values['lookup_functions'] .= $clear_function['action'] ."\r\n";
 					$values['lookup_functions'] .= '}'."\r\n";
 				}
 			}
