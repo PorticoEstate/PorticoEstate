@@ -30,6 +30,13 @@
 		{
 			$result = array();
 			$sms_msg = utf8_decode($sms_msg);
+			
+			$sms_to = ltrim($sms_to, '+');
+			
+			if( strlen($sms_to) > 8)
+			{
+				$sms_to = "+{$sms_to}";
+			}
 
 			$arguments = array
 			(
@@ -40,7 +47,7 @@
 //				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
 				'originator'		=> $this->carrot_param['originator'],//$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
 				'originatortype'	=> $this->carrot_param['originatortype'],//$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
-				'recipient'			=> urlencode($sms_to),
+				'recipient'			=> $sms_to,
 				'username'			=> $this->carrot_param['login'],
 				'password'			=> $this->carrot_param['password'],
 //				'priority'			=> '',
