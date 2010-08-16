@@ -27,7 +27,7 @@
 			$this->db     			= & $GLOBALS['phpgw']->db;
 		}
 
-		function pre_run($data='')
+		function pre_run($data = array())
 		{
 			if(isset($data['enabled']) && $data['enabled']==1)
 			{
@@ -44,7 +44,6 @@
 				$execute	= phpgw::get_var('execute', 'bool', 'GET');
 				$cron = false;
 			}
-
 
 			if (isset($confirm) && $confirm)
 			{
@@ -140,6 +139,7 @@
 			$GLOBALS['phpgw_info']['user']['preferences']['felamimail'] = isset($pref['felamimail']) ? $pref['felamimail'] : '';
 
 			$boPreferences  = CreateObject('felamimail.bopreferences');
+			$boPreferences->setProfileActive(false);
 			$boPreferences->setProfileActive(true,2); //2 for selected user
 			$bofelamimail	= CreateObject('felamimail.bofelamimail');
 
