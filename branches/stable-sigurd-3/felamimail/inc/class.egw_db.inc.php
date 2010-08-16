@@ -1318,6 +1318,15 @@ class egw_db
 			case 'float':
 			case 'decimal':
 				return (double) $value;
+			case 'varchar':
+				if ( $value == 1 )
+				{
+					return str_replace("'''", "'", $this->adodb->qstr("'{$value}'")); // Sigurd: To avoid that the value 1 is translated to true
+				}
+				else
+				{
+					return $this->adodb->qstr($value);
+				}
 		}
 		if (!$this->adodb && !$this->connect())
 		{
