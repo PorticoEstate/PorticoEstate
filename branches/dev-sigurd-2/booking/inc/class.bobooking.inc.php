@@ -222,6 +222,13 @@ function array_minus($a, $b)
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
 			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids, 'active' => 1)));
 			$resources = $resources['results'];
+			foreach ($resources as $key => $row) {
+    			$sort[$key] = $row['sort'];
+			}
+
+			// Sort the resources with sortkey ascending
+			// Add $resources as the last parameter, to sort by the common key
+			array_multisort($sort, SORT_ASC, $resources);
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, $resources);
 			return array('total_records'=>count($results), 'results'=>$results);
