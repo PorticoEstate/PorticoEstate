@@ -228,6 +228,7 @@
 
 	unset($soworkorder);
 	unset($socommon);
+
 	create_select_box('Default project status','project_status',$_status_project,'The default status for your projects');
 	create_select_box('Default workorder status','workorder_status',$_status_workorder,'The default status for your workorders');
 	create_select_box('Default project categories','project_category',$_categories_project,'The default category for your projects and workorders');
@@ -235,6 +236,20 @@
 
 	create_input_box('Your Cellphone','cellphone');
 	create_input_box('RessursNr','ressursnr');
+	$ecodimb	= CreateObject('property.socategory');
+	$ecodimb->get_location_info('dimb',false);
+	$values_dimb = $ecodimb->read(array('sort' => 'ASC','order' => 'id', 'allrows'=>true));
+
+	foreach ( $values_dimb as $entry )
+	{
+		$_dimb[$entry['id']] = "{$entry['id']} - {$entry['descr']}";
+	}
+
+
+	create_select_box('dimb','dimb',$_dimb,'default dimb');
+	unset($_dimb);
+	unset($ecodimb);
+	unset($values_dimb);
 
 	create_select_box('Workorder Approval From','approval_from',$_accounts,'If you need approval from your supervisor for projects/workorders');
 

@@ -998,6 +998,10 @@
 			 	array_unshift ($values_combo_box[3],$default_value);
 							
 				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[4] as & $_dimb)
+				{
+					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
+				}
 				$default_value = array ('id'=>'','name'=>lang('no dimb'));
 				array_unshift ($values_combo_box[4],$default_value);
 

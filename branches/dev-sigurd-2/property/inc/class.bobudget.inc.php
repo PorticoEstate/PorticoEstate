@@ -89,13 +89,13 @@
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : '';
+			$this->dimb_id			= isset($dimb_id) && $dimb_id ? $dimb_id : $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
 			$this->grouping			= isset($grouping) && $grouping ? $grouping : '';
 			$this->revision			= isset($revision) && $revision ? $revision : 1;
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
-			$this->year				= isset($year) && $year ? $year : '';
+			$this->year				= isset($year) && $year ? $year : date('Y');
 			$this->details			= $details;
 
 			if(isset($year) && !$this->year == $year && !$GLOBALS['phpgw_info']['menuaction']=='property.uibudget.obligations')
