@@ -2254,3 +2254,21 @@
 		}
 	}
 
+  $test[] = '0.1.94';
+	function booking_upgrade0_1_94()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$table = "bb_resource";
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN sort integer");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET sort = 0");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.95';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

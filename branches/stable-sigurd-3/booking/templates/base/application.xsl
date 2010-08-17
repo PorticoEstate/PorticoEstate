@@ -24,7 +24,15 @@
 					<xsl:value-of select="php:function('lang', 'Applications')" />
                 </a>
             </li>
-            <li><a href="">#<xsl:value-of select="application/id"/></a></li>
+            <li><a href="">#<xsl:value-of select="application/id"/></a></li> 
+			<li>
+				<xsl:if test="frontend and application/status='CONFIRMED'">
+						<form method="POST">
+						<input type="hidden" name="print" value="CONFIRMED"/>
+						<input type="submit" value="{php:function('lang', 'Print as PDF')}" />
+					</form>
+				</xsl:if>
+			</li>
         </ul>
 
         <xsl:call-template name="msgbox"/>
@@ -133,7 +141,7 @@
             <dt class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></dt>
             <dt><xsl:value-of select="php:function('lang', 'Target audience')" /></dt>
 			<dd>
-				<ul>1
+				<ul>
 					<xsl:for-each select="audience">
 						<xsl:if test="../application/audience=id">
 							<li><xsl:value-of select="name"/></li>
@@ -221,6 +229,7 @@
 				</form>
 			</dd>
         </dl>
+
 
 		<xsl:if test="application/edit_link">
 			<dl class="proplist">

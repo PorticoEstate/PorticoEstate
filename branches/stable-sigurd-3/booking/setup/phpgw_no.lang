@@ -436,4 +436,5 @@ Message sent about the changes in the reservations	booking	no	Melding sendt om e
 There are changes to your reservations	booking	no	Det er blitt endring på din reserverasjon
 Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet
 Event created, Overlaps with existing allocation, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende tildeling. Husk å sende varsel
-Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel 
+Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel
+Print as PDF	booking	no	Skriv ut som PDF

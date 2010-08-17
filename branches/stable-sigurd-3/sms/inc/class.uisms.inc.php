@@ -103,13 +103,13 @@
 				$lang_answer_sms_text	= '';
 			}
 
-
-			while (is_array($sms_info) && list(,$entry) = each($sms_info))
+			$content = array();
+			foreach ($sms_info as $entry)
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
-					$link_delete		= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.delete_in', 'id'=> $entry['id']));
-					$text_delete		= lang('delete');
+					$link_delete			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.delete_in', 'id'=> $entry['id']));
+					$text_delete			= lang('delete');
 					$lang_delete_sms_text 	= lang('delete the sms from inbox');
 				}
 				else

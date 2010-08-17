@@ -35,6 +35,8 @@
 						</xsl:for-each>
 					</select>
 				</dd>
+				<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Sort order')" /></label></dt>
+				<dd><input name="sort" id="field_sort" type="text" value="{resource/sort}"/></dd>
 			</dl>
 			<dl class="form-col">
 				<dt><label for="field_building_name"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
@@ -51,7 +53,6 @@
 						<div id="building_container"/>
 					</div>
 				</dd>
-			
 				<dt><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
 				<dd>
 					<select name='type' id='field_type'>

@@ -855,7 +855,7 @@
 				{
 					foreach ( $entity_list as $entry )
 					{
-						if($entry['documentation'])
+						if($entry['documentation'] &&  $acl->check(".entity.{$entry['id']}", PHPGW_ACL_READ, 'property') )
 						{
 							$menus['navigation']['documentation']['children']["entity_{$entry['id']}"] = array
 							(
@@ -896,25 +896,11 @@
 							'text'	=> $entry['name'],
 							'image'		=> array( 'property', 'entity_' . $entry['id'] )
 						);
-					}
 
-					if ($type != 'horisontal')
-					{
-						$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'],'property.uientity.index', PHPGW_ACL_READ);
-/*
-						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
-						foreach($cat_list as $category)
+						if ($type != 'horisontal')
 						{
-							if ( $acl->check(".entity.{$entry['id']}.{$category['id']}", PHPGW_ACL_READ, 'property') )
-							{
-								$menus['navigation']["entity_{$entry['id']}"]['children']["entity_{$entry['id']}_{$category['id']}"]	= array
-								(
-									'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $entry['id'] , 'cat_id'=> $category['id'])),
-									'text'	=> $category['name']
-								);
-							}
+							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'],'property.uientity.index', PHPGW_ACL_READ);
 						}
-*/					
 					}
 				}
 			}

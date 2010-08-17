@@ -23,7 +23,7 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -62,6 +62,10 @@
 							'key' => 'name',
 							'label' => lang('Resource Name'),
 							'formatter' => 'YAHOO.booking.formatLink'
+						),
+						array(
+							'key' => 'sort',
+							'label' => lang('Order')
 						),
 						array(
 							'key' => 'link',

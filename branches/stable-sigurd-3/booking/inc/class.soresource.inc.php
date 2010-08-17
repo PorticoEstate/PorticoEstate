@@ -12,6 +12,7 @@
 				array(
 					'id'			=> array('type' => 'int'),
 					'active'		=> array('type' => 'int', 'required' => true),
+					'sort'			=> array('type' => 'int', 'required' => false),
 					'building_id'	=> array('type' => 'int', 'required' => true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
 					'type'			=> array('type' => 'string', 'query' => true, 'required' => true),

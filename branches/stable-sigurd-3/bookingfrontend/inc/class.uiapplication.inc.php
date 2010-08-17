@@ -29,9 +29,34 @@
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
 			}
 			
+
 			$building_info = $this->bo->so->get_building_info($id);
 			$application['building_id'] = $building_info['id'];
 			$application['building_name'] = $building_info['name'];
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['print'])
+			{
+				$output_type = 'PDF';
+				$jasper_parameters = sprintf("\"BK_BUILDING_NAME|%s;BK_APPLICATION_ID|%s\"",
+					$application['building_name'],
+					$id);
+				// DEBUG
+				//print_r($jasper_parameters);
+				//exit(0);
+
+				$jasper_wrapper 	= CreateObject('phpgwapi.jasper_wrapper');
+				$report_source		= PHPGW_SERVER_ROOT.'/booking/jasper/templates/application.jrxml';
+				try
+				{
+					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
+				}
+				catch(Exception $e)
+				{
+					$errors[] = $e->getMessage();
+					echo '<pre>';print_r($errors);exit;
+				}
+			}
+
 			$resource_ids = '';
 			foreach($application['resources'] as $res)
 			{
@@ -49,4 +74,8 @@
 			$audience = $audience['results'];
 			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups, 'frontend'=>'true'));
 		}
+		
+		
+
+
 	}
