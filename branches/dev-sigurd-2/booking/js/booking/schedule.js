@@ -18,6 +18,8 @@ YAHOO.booking.link = function(label, link, max) {
 
 YAHOO.booking.scheduleResourceColFormatter = function(elCell, oRecord, oColumn, text) {
 	if(text && oRecord.getData('resource_link')) {
+		elTr = elCell.parentNode.parentNode;
+		elTr.setAttribute("resource", oRecord.getData('resource_id'));
 		elCell.innerHTML = '<a href="' + oRecord.getData('resource_link') + '">' + text + '</a>';
 	}
 	else if (text) {
@@ -39,16 +41,16 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		} else {
 			elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
 		}
-		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking); return false; };
+		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
 	}
 	else {
 		elCell.innerHTML = '...';
 		var data = oRecord.getData();
-		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to); return false; };
+		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };
 	}
 };
 
-YAHOO.booking.showBookingInfo = function(booking) {
+YAHOO.booking.showBookingInfo = function(booking,elCell) {
 	var overlay = new YAHOO.widget.Overlay("overlay-info", { fixedcenter:true, visible:true, width:"400px" } );
 	var callback = {
 		success : function(o) {
@@ -59,7 +61,8 @@ YAHOO.booking.showBookingInfo = function(booking) {
 			alert('Failed to load booking details page');
 		}
 	}
-	var conn = YAHOO.util.Connect.asyncRequest("GET", booking.info_url.replace(/&amp;/gi, '&'), callback);
+	resource = elCell.parentNode.parentNode.getAttribute('resource');
+	var conn = YAHOO.util.Connect.asyncRequest("GET", booking.info_url.replace(/&amp;/gi, '&') + '&resource=' + resource, callback);
 	overlay.setBody('<img src="http://l.yimg.com/a/i/us/per/gr/gp/rel_interstitial_loading.gif" />');
 	overlay.render(document.body);
 }
@@ -174,13 +177,21 @@ YAHOO.booking.nextWeek = function() {
 	YAHOO.util.History.navigate('date', state);
 }
 
-YAHOO.booking.newApplicationForm = function(date, _from, _to) {
+YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
+	if(elCell) 
+	{	
+		resource = elCell.parentNode.parentNode.getAttribute('resource');
+	}
+	else
+	{
+		resource = null;
+	}
 	date = date ? date : YAHOO.booking.date;
 	_from = _from ? '%20' + _from: '';
 	_to = _to ? '%20' + _to: '';
 	var url = YAHOO.booking.newApplicationUrl;
 	var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to;
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource;
 	window.location.href = url;
 }
 

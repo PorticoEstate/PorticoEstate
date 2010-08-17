@@ -91,6 +91,7 @@
 				$booking['season_id'] = $season['id'];
 				$booking['building_id'] = $building['id'];
 				$booking['building_name'] = $building['name'];
+				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
 			}
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
