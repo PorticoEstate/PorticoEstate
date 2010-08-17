@@ -288,3 +288,6 @@ Update	bookingfrontend	no	Oppdater
 %1 bookings will be updated.	bookingfrontend	no	%1 bookinger vil bli oppdatert.
 %1 bookings were updated.	bookingfrontend	no	%1 bookinger ble oppdatert.
 Access denied	bookingfrontend	no	Ingen tilgang
+Print as PDF	bookingfrontend	no	Skriv ut som PDF
+CONFIRMED	bookingfrontend	no	BEKREFTET
+The user has accepted the document under point 8.	bookingfrontend	no	Brukeren har akseptert dokumentene under punkt 8.
