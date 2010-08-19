@@ -371,15 +371,19 @@ class rental_uiparty extends rental_uicommon
 		switch($sync_job)
 		{
 			case 'resp_and_service':
+				self::set_active_menu('rental::parties::sync::sync_resp_and_service');
 				$this->render('sync_party_list.php');
 				break;
 			case 'res_unit_number':
+				self::set_active_menu('rental::parties::sync::sync_res_units');
 				$this->render('sync_party_list_res_unit.php');
 				break;
 			case 'identifier':
+				self::set_active_menu('rental::parties::sync::sync_identifier');
 				$this->render('sync_party_list_identifier.php');
 				break;
 			case 'org_unit':
+				self::set_active_menu('rental::parties::sync::sync_org_unit');
 				$this->render('sync_party_list_org_id.php');
 				break;
 		}
