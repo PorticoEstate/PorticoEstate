@@ -48,7 +48,7 @@ class rental_agresso_cs15 implements rental_exportable
 	protected function run()
 	{
 		$this->lines = array();
-		$counter = 0;
+		$counter = 1;	// set to 1 initially to satisfy agresso requirements 
 		foreach($this->parties as $party) // Runs through all parties
 		{
 			$country_code = strtoupper($party->get_postal_country_code());
