@@ -180,52 +180,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
-/*		'phpgw_sms_gwmodclickatell_config' => array(
-			'fd' => array(
-				'cfg_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => True,'default' => 'gnokii'),
-				'cfg_api_id' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_username' => array('type' => 'varchar', 'precision' => 100,'nullable' => True),
-				'cfg_password' => array('type' => 'varchar', 'precision' => 100,'nullable' => True),
-				'cfg_sender' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_send_url' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_incoming_path' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_credit' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0')
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
-		'phpgw_sms_gwmodgnokii_config' => array(
-			'fd' => array(
-				'cfg_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
-				'cfg_path' => array('type' => 'varchar', 'precision' => 250,'nullable' => False)
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
-		'phpgw_sms_gwmodkannel_config' => array(
-			'fd' => array(
-				'cfg_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_incoming_path' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_username' => array('type' => 'varchar', 'precision' => 100,'nullable' => True),
-				'cfg_password' => array('type' => 'varchar', 'precision' => 100,'nullable' => True),
-				'cfg_global_sender' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_bearerbox_host' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_sendsms_port' => array('type' => 'varchar', 'precision' => 10,'nullable' => True),
-				'cfg_phpgwsms_web' => array('type' => 'varchar', 'precision' => 250,'nullable' => True)
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-*/
 		'phpgw_sms_gwmodkannel_dlr' => array(
 			'fd' => array(
 				'kannel_dlr_id' => array('type' => 'auto','nullable' => False),
@@ -237,18 +191,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
-/*		'phpgw_sms_gwmodtemplate_config' => array(
-			'fd' => array(
-				'cfg_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
-				'cfg_path' => array('type' => 'varchar', 'precision' => 250,'nullable' => False)
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-*/
 		'phpgw_sms_gwmoduplink' => array(
 			'fd' => array(
 				'up_id' => array('type' => 'auto','nullable' => False),
@@ -261,36 +203,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-/*
-		'phpgw_sms_gwmoduplink_config' => array(
-			'fd' => array(
-				'cfg_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_master' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_username' => array('type' => 'varchar', 'precision' => 100,'nullable' => True),
-				'cfg_password' => array('type' => 'varchar', 'precision' => 100,'nullable' => True),
-				'cfg_global_sender' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_incoming_path' => array('type' => 'varchar', 'precision' => 250,'nullable' => True)
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
-		'phpgw_sms_tblconfig_main' => array(
-			'fd' => array(
-				'cfg_web_title' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_email_service' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_email_footer' => array('type' => 'varchar', 'precision' => 250,'nullable' => True),
-				'cfg_gateway_module' => array('type' => 'varchar', 'precision' => 20,'nullable' => True),
-				'cfg_gateway_number' => array('type' => 'varchar', 'precision' => 100,'nullable' => True)
-			),
-			'pk' => array(),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-*/
 		'phpgw_sms_tblsmsincoming' => array(
 			'fd' => array(
 				'in_id' => array('type' => 'auto','nullable' => False),
@@ -343,37 +255,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-/*
-		'phpgw_sms_tbluser' => array(
-			'fd' => array(
-				'uid' => array('type' => 'auto','nullable' => False),
-				'status' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
-				'ticket' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'username' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'password' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'mobile' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'email' => array('type' => 'varchar', 'precision' => 250,'nullable' => False),
-				'sender' => array('type' => 'varchar', 'precision' => 30,'nullable' => False),
-				'dailysms' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'gender' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
-				'age' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
-				'address' => array('type' => 'varchar', 'precision' => 250,'nullable' => False),
-				'city' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'state' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'country' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'birthday' => array('type' => 'varchar', 'precision' => 10,'nullable' => False,'default' => '0000-00-00'),
-				'marital' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
-				'education' => array('type' => 'int', 'precision' => 2,'nullable' => False,'default' => '0'),
-				'zipcode' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
-				'junktimestamp' => array('type' => 'varchar', 'precision' => 30,'nullable' => False)
-			),
-			'pk' => array('uid'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-*/
 		'phpgw_sms_tblusergroupphonebook' => array(
 			'fd' => array(
 				'gpid' => array('type' => 'auto','nullable' => False),
@@ -427,69 +308,5 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		),
-
-/*
-		'phpgw_sms_tbluser_country' => array(
-			'fd' => array(
-				'country_id' => array('type' => 'auto','nullable' => False),
-				'country_name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False)
-			),
-			'pk' => array('country_id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-*/
-/*
-		'phpgw_sms_config_type' => array(
-			'fd' => array(
-				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'phpgw_sms_config_attrib' => array(
-			'fd' => array(
-				'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
-			),
-			'pk' => array('type_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'phpgw_sms_config_choice' => array(
-			'fd' => array(
-				'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'value' => array('type' => 'varchar', 'precision' => 20,'nullable' => False)
-			),
-			'pk' => array('type_id','attrib_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array('type_id','attrib_id','value')
-		),
-		'phpgw_sms_config_value' => array(
-			'fd' => array(
-				'type_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'value' => array('type' => 'varchar', 'precision' => 200,'nullable' => False)
-			),
-			'pk' => array('type_id','attrib_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array('type_id','attrib_id','value')
-		),
-*/
-
+		)
 	);

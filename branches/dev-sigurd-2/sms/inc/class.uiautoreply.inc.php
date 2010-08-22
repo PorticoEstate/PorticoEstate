@@ -31,20 +31,19 @@
 			'delete_scenario'	=> true
 			);
 
-		function sms_uiautoreply()
+		function __construct()
 		{
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('sms.boautoreply',true);
+			$this->bo					= CreateObject('sms.boautoreply',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->acl_location 			= '.autoreply';
+			$this->sms					= CreateObject('sms.sms');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl_location 		= '.autoreply';
 			$this->menu->sub			= '.autoreply';
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
@@ -63,7 +62,6 @@
 			);
 			$this->bo->save_sessiondata($data);
 		}
-
 
 		function index()
 		{
@@ -84,9 +82,8 @@
 
 			$autoreply_info = $this->bo->read();
 
-			while (is_array($autoreply_info) && list(,$entry) = each($autoreply_info))
+			foreach ($autoreply_info as $entry)
 			{
-
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete', 'autoreply_id'=> $entry['id']));
@@ -164,30 +161,30 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($autoreply_info),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header'					=> $table_header,
-				'table_add'					=> $table_add,
-				'values'					=> $content
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'menu'								=> execMethod('sms.menu.links'),
+				'allow_allrows'						=> true,
+				'allrows'							=> $this->allrows,
+				'start_record'						=> $this->start,
+				'record_limit'						=> $record_limit,
+				'num_records'						=> count($autoreply_info),
+				'all_records'						=> $this->bo->total_records,
+				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
+				'query'								=> $this->query,
+				'lang_search'						=> lang('search'),
+				'table_header'						=> $table_header,
+				'table_add'							=> $table_add,
+				'values'							=> $content
 			);
 
-			$appname					= lang('autoreplies');
+			$appname						= lang('autoreplies');
 			$function_msg					= lang('list SMS autoreplies');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
@@ -197,7 +194,6 @@
 
 		function add()
 		{
-
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -269,29 +265,29 @@
 			{
 			    if ($this->sms->checkavailablecode($add_autoreply_code))
 			    {
-				$sql = "INSERT INTO phpgw_sms_featautoreply (uid,autoreply_code) VALUES ('$uid','$add_autoreply_code')";
-				$this->db->transaction_begin();
+					$sql = "INSERT INTO phpgw_sms_featautoreply (uid,autoreply_code) VALUES ('$uid','$add_autoreply_code')";
+					$this->db->transaction_begin();
 
-				$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->query($sql,__LINE__,__FILE__);
 
-				$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply,'autoreply_id');
+					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply,'autoreply_id');
 
-				$this->db->transaction_commit();
+					$this->db->transaction_commit();
 
-				if ($new_uid)
-				{
-					$receipt['message'][]=array('msg'=>lang('SMS autoreply code %1 has been added', $add_autoreply_code));
-					$GLOBALS['phpgw']->session->appsession('session_data','sms_reply_receipt',$receipt);
-					$target = 'index';
-				}
-				else
-				{
-					$error_string = lang('Fail to add SMS autoreply code') . ' ' . $add_autoreply_code;
-				}
+					if ($new_uid)
+					{
+						$receipt['message'][]=array('msg'=>lang('SMS autoreply code %1 has been added', $add_autoreply_code));
+						$GLOBALS['phpgw']->session->appsession('session_data','sms_reply_receipt',$receipt);
+						$target = 'index';
+					}
+					else
+					{
+						$error_string = lang('Fail to add SMS autoreply code') . ' ' . $add_autoreply_code;
+					}
 			    }
 			    else
 			    {
-				$error_string = lang('SMS code %1 already exists, reserved or use by other feature!',$add_autoreply_code);
+					$error_string = lang('SMS code %1 already exists, reserved or use by other feature!',$add_autoreply_code);
 			    }
 			}
 			else
@@ -721,7 +717,6 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($autoreply_id);
 
 				$sql = "SELECT autoreply_code FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
@@ -842,6 +837,4 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
-
 	}
-

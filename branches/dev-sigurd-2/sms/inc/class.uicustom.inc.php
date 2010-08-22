@@ -29,32 +29,27 @@
 			);
 
 
-		function sms_uicustom()
+		function __construct()
 		{
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-		//	$this->bo				= CreateObject('sms.boconfig',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->acl_location 			= '.custom';
+			$this->sms					= CreateObject('sms.sms');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl_location 		= '.custom';
 			$this->menu->sub			=$this->acl_location;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
 			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::custom';
 		}
 
 		function index()
 		{
-
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -248,10 +243,10 @@
 
 			echo parse_navbar();
 
-			$err	= urldecode(phpgw::get_var('err'));
-			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$err			= urldecode(phpgw::get_var('err'));
+			$custom_id		= phpgw::get_var('custom_id', 'int');
 			$custom_code	= phpgw::get_var('custom_code');
-			$custom_url	= phpgw::get_var('custom_url', 'url');
+			$custom_url		= phpgw::get_var('custom_url', 'url');
 
 			if ($err)
 			{
@@ -273,7 +268,7 @@
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 			//FIXME
-			$custom_url = stripslashes($this->db->f('custom_url'));
+			$custom_url = $this->db->f('custom_url',true);
 
 			$content .= "
 			    <p>
@@ -310,9 +305,9 @@
 				return;
 			}
 
-			$custom_id	= phpgw::get_var('custom_id', 'int');
+			$custom_id		= phpgw::get_var('custom_id', 'int');
 			$custom_code	= phpgw::get_var('custom_code');
-			$custom_url	= phpgw::get_var('custom_url', 'url');
+			$custom_url		= phpgw::get_var('custom_url', 'url');
 
 			$uid = $this->account;
 			$target = 'edit';
@@ -369,8 +364,6 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($autoreply_id);
-
 				$sql = "SELECT custom_code FROM phpgw_sms_featcustom WHERE custom_id='$custom_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
@@ -407,10 +400,10 @@
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicustom.delete', 'custom_id'=> $custom_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
-				'lang_yes'			=> lang('yes'),
-				'lang_yes_statustext'		=> lang('Delete the entry'),
-				'lang_no_statustext'		=> lang('Back to the list'),
-				'lang_no'			=> lang('no')
+				'lang_yes'				=> lang('yes'),
+				'lang_yes_statustext'	=> lang('Delete the entry'),
+				'lang_no_statustext'	=> lang('Back to the list'),
+				'lang_no'				=> lang('no')
 			);
 
 			$function_msg	= lang('delete SMS custom code');
@@ -419,4 +412,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-
