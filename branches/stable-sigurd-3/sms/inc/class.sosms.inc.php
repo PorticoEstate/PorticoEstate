@@ -22,10 +22,10 @@
 		var $db;
 		var $account;
 
-		function sms_sosms()
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db 		= clone $GLOBALS['phpgw']->db;
+			$this->db 			= clone $GLOBALS['phpgw']->db;
 
 			$this->left_join	= $this->db->left_join;
 			$this->join			= $this->db->join;
@@ -166,8 +166,7 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND p_dst $this->like '%$query%' OR p_msg $this->like '%$query%'";
 			}
@@ -187,104 +186,31 @@
 			}
 
 
-			$status_array = array(
-					0 => lang('pending'),
-	     				1 => lang('sent'),
-					2 => lang('failed'),
-					3 => lang('delivered')
-					);
+			$status_array = array
+			(
+				0 => lang('pending'),
+	     		1 => lang('sent'),
+				2 => lang('failed'),
+				3 => lang('delivered')
+			);
 
+			$outbox = array();
 			while ($this->db->next_record())
 			{
 				$outbox[] = array
 				(
-					'id'		=> $this->db->f('smslog_id'),
-					'p_dst'		=> stripslashes($this->db->f('p_dst')),
-					'user'		=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('uid')),
-					'dst_group'	=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('p_gpid')),
+					'id'			=> $this->db->f('smslog_id'),
+					'p_dst'			=> $this->db->f('p_dst',true),
+					'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('uid')),
+					'dst_group'		=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('p_gpid')),
 					'entry_time'	=> $this->db->f('p_datetime'),
-					'message'	=> stripslashes($this->db->f('p_msg')),
-					'status'	=> $status_array[$this->db->f('p_status')],
-					'grants'	=> (int)$grants[$this->db->f('uid')]
+					'message'		=> $this->db->f('p_msg',true),
+					'status'		=> $status_array[$this->db->f('p_status')],
+					'grants'		=> (int)$grants[$this->db->f('uid')]
 				);
 
 			}
 			return $outbox;
-		}
-
-
-		function read_single($id)
-		{
-			$sql = 'SELECT * FROM phpgw_hrm_training_place where id=' . intval($id);
-
-			$this->db->query($sql,__LINE__,__FILE__);
-
-			if ($this->db->next_record())
-			{
-				$values['id']		= $id;
-				$values['name']	= stripslashes($this->db->f('name'));
-				$values['address']	= stripslashes($this->db->f('address'));
-				$values['remark']	= stripslashes($this->db->f('remark'));
-				$values['town']	= stripslashes($this->db->f('town'));
-				$values['zip']	= $this->db->f('zip');
-				$values['entry_date']	= $this->db->f('entry_date');
-				$values['owner']	= $this->db->f('owner');
-			}
-			return $values;
-		}
-
-
-		function add($values)
-		{
-			$this->db->transaction_begin();
-
-			$values['name'] = $this->db->db_addslashes($values['name']);
-			$values['address'] = $this->db->db_addslashes($values['address']);
-			$values['town'] = $this->db->db_addslashes($values['town']);
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
-			$values['place_id'] = $this->db->next_id('phpgw_hrm_training_place');
-
-			$insert_values=array(
-				$values['place_id'],
-				$values['name'],
-				$values['address'],
-				$values['zip'],
-				$values['town'],
-				$values['remark'],
-				);
-
-			$insert_values	= $this->db->validate_insert($insert_values);
-			$this->db->query("INSERT INTO phpgw_hrm_training_place (id,name,address,zip,town, remark) "
-				. "VALUES ($insert_values)",__LINE__,__FILE__);
-
-			$receipt['message'][]=array('msg'=>lang('training item has been saved'));
-			$receipt['place_id']= $values['place_id'];
-
-			$this->db->transaction_commit();
-
-			return $receipt;
-		}
-
-		function edit($values)
-		{
-			$this->db->transaction_begin();
-
-			$value_set['name']			= $this->db->db_addslashes($values['name']);
-			$value_set['address']			= $this->db->db_addslashes($values['address']);
-			$value_set['zip']	= $values['zip'];
-			$value_set['remark']		= $this->db->db_addslashes($values['remark']);
-			$value_set['town']			= $this->db->db_addslashes($values['town']);
-
-			$value_set	= $this->db->validate_update($value_set);
-
-			$this->db->query("UPDATE phpgw_hrm_training_place set $value_set WHERE id=" . $values['place_id'],__LINE__,__FILE__);
-
-			$this->db->transaction_commit();
-
-			$receipt['message'][]=array('msg'=>lang('Place item has been edited'));
-
-			$receipt['place_id']= $values['place_id'];
-			return $receipt;
 		}
 
 		function delete_out($id)
@@ -295,20 +221,5 @@
 		function delete_in($id)
 		{
 			$this->db->query("UPDATE phpgw_sms_tbluserinbox SET in_hidden='1' WHERE in_id="  . intval($id),__LINE__,__FILE__);
-		}
-
-
-		function select_place_list()
-		{
-			$this->db->query("SELECT * FROM phpgw_hrm_training_place  ORDER BY name ");
-
-			$i = 0;
-			while ($this->db->next_record())
-			{
-				$place[$i]['id']		= $this->db->f('id');
-				$place[$i]['name']		= stripslashes($this->db->f('name'));
-				$i++;
-			}
-			return $place;
 		}
 	}

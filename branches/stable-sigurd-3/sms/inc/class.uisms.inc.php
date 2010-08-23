@@ -32,32 +32,31 @@
 			'outbox'		=> true,
 			'send'			=> true,
 			'send_group'	=> true,
+			'sendsmstogr_yes'=> true,
 			'delete_in'		=> true,
 			'delete_out'	=> true,
 			'daemon_manual'	=> true
 		);
 
-		function sms_uisms()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon				= CreateObject('sms.bocommon');
-//			$this->bocategory			= CreateObject('sms.bocategory');
-			$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+			$location_id 				= $GLOBALS['phpgw']->locations->get_id('sms', 'run');
 			$this->config				= CreateObject('admin.soconfig',$location_id);
-			$this->config->read_repository();
-			$this->gateway_number			= $this->config->config_data['common']['gateway_number'];
-			$this->bo				= CreateObject('sms.bosms',false);
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->gateway_number		= $this->config->config_data['common']['gateway_number'];
+			$this->bo					= CreateObject('sms.bosms',false);
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->grants 				= $this->bo->grants;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms';
+			$this->db 					= clone $GLOBALS['phpgw']->db;
 		}
 
 		function save_sessiondata()
@@ -211,7 +210,7 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -352,7 +351,7 @@
 			}
 
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -467,7 +466,7 @@
 				'from'		=> $from
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
 				. '<script language="JavaScript">' ."\n"
@@ -542,6 +541,230 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('send' => $data));
 		}
 
+		function send_group()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::outbox';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('SMS').'::'.lang('Send broadcast SMS');
+			$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
+				. '<script language="JavaScript">' ."\n"
+				. 'function SmsCountKeyUp(maxChar)' ."\n"
+				. '{' ."\n"
+				. '    var msg  = document.forms.fm_sendsms.message;' ."\n"
+				. '    var left = document.forms.fm_sendsms.charNumberLeftOutput;' ."\n"
+				. '    var smsLenLeft = maxChar  - msg.value.length;' ."\n"
+				. '    if (smsLenLeft >= 0) ' ."\n"
+				. '    {' ."\n"
+				. '	left.value = smsLenLeft;' ."\n"
+				. '    } ' ."\n"
+				. '    else ' ."\n"
+				. '    {' ."\n"
+				. '	var msgMaxLen = maxChar;' ."\n"
+				. '	left.value = 0;' ."\n"
+				. '	msg.value = msg.value.substring(0, msgMaxLen);' ."\n"
+				. '    }' ."\n"
+				. '}' ."\n"
+				. 'function SmsCountKeyDown(maxChar)' ."\n"
+				. '{' ."\n"
+				. '    var msg  = document.forms.fm_sendsms.message;' ."\n"
+				. '    var left = document.forms.fm_sendsms.charNumberLeftOutput;' ."\n"
+				. '    var smsLenLeft = maxChar  - msg.value.length;' ."\n"
+				. '    if (smsLenLeft >= 0) ' ."\n"
+				. '    {' ."\n"
+				. '	left.value = smsLenLeft;' ."\n"
+				. '    } ' ."\n"
+				. '    else ' ."\n"
+				. '    {' ."\n"
+				. '	var msgMaxLen = maxChar;' ."\n"
+				. '	left.value = 0; ' ."\n"
+				. '	msg.value = msg.value.substring(0, msgMaxLen);' ."\n"
+				. '    }' ."\n"
+				. '}' ."\n"
+				. "</script>\n";
+
+			$GLOBALS['phpgw']->common->phpgw_header();
+
+			echo parse_navbar();
+
+			$message = phpgw::get_var('message');
+			$err = urldecode(phpgw::get_var('err'));
+
+			$link_data = array
+			(
+				'menuaction'	=> 'sms.uisms.sendsmstogr_yes',
+				'sms_id'	=> $sms_id,
+				'from'		=> $from
+			);
+			$form_action = $GLOBALS['phpgw']->link('/index.php',$link_data);
+
+/*
+			$db_query = "SELECT * FROM "._DB_PREF_."_tblUserGroupPhonebook WHERE uid='$uid' ORDER BY gp_name";
+			$db_result = $this->db->query($db_query);
+			while ($db_row = dba_fetch_array($db_result))
+			{
+			    $list_of_group .= "<option value=\"$db_row[gp_code]\" $selected>$db_row[gp_name] ($db_row[gp_code])</option>";
+			}
+			// add shared group
+			$db_query = "
+			    SELECT 
+				"._DB_PREF_."_tblUserGroupPhonebook.gpid as gpid, 
+				"._DB_PREF_."_tblUserGroupPhonebook.gp_name as gp_name,
+				"._DB_PREF_."_tblUserGroupPhonebook.gp_code as gp_code
+			    FROM "._DB_PREF_."_tblUserGroupPhonebook,"._DB_PREF_."_tblUserGroupPhonebook_public 
+			    WHERE 
+				"._DB_PREF_."_tblUserGroupPhonebook.gpid="._DB_PREF_."_tblUserGroupPhonebook_public.gpid AND
+				NOT ("._DB_PREF_."_tblUserGroupPhonebook_public.uid='$uid')
+			    ORDER BY gp_name
+			";
+			$db_result = $this->db->query($db_query);
+			while ($db_row = dba_fetch_array($db_result))
+			{
+			    $list_of_group .= "<option value=\"$db_row[gp_code]\" $selected>$db_row[gp_name] ($db_row[gp_code])</option>";
+			}
+*/
+			$sms 		= CreateObject('sms.sms');
+			$max_length = $core_config['smsmaxlength'] = 160;
+			if ($sms_sender = $sms->username2sender($GLOBALS['phpgw_info']['user']['account_lid']))
+			{
+			    $max_length = $max_length - strlen($sms_sender);
+			}
+			else
+			{
+			    $sms_sender = "<i>not set</i>";
+			}
+			if ($err)
+			{
+			    $content = "<p><font color=red>$err</font><p>";
+			}
+			if ($gateway_number)
+			{
+			    $sms_from = $gateway_number;
+			}
+			else
+			{
+			    $sms_from = $mobile;
+			}
+			// WWW
+			$db_query2 = "SELECT * FROM phpgw_sms_tblsmstemplate WHERE uid='{$this->account}'";
+			$this->db->query($db_query2);
+			$j = 0;
+			$option_values = "<option value=\"\" default>--Please Select--</option>";
+			while ($this->db->next_record())
+			{
+			    $j++;
+			    $option_values .= "<option value=\"".$this->db->f('t_text')."\">".$this->db->f('t_title')."</option>";
+			    $input_values .= "<input type=\"hidden\" name=\"content_$j\" value=\"".$this->db->f('t_text')."\">";
+			}
+		
+			// document.fm_sendsms.message.value = document.fm_smstemplate.content_num.value;
+			$content .= "
+			<!-- WWW -->
+			    <script language=\"javascript\">
+		
+				function setTemplate()
+				{		    
+				    sellength = fm_sendsms.smstemplate.length;
+				    for ( i=0; i<sellength; i++)
+				    {
+					if (fm_sendsms.smstemplate.options[i].selected == true)
+					{
+					    fm_sendsms.message.value = fm_sendsms.smstemplate.options[i].value;
+					}
+				    }
+				}
+			    </script>
+		
+			    <form name=\"fm_smstemplate\">
+			    $input_values
+			    </form>
+		
+			    <h2>Send broadcast SMS</h2>
+			    <p>
+			    <form name='fm_sendsms' id='fm_sendsms' action=$form_action method=POST>
+			    <p>From: $sms_from
+			    <p>
+			    <p>Send to group: <select name=\"gp_code\">$list_of_group</select>
+			    <!--
+			    <table cellpadding=1 cellspacing=0 border=0>
+			    <tr>
+				<td nowrap>
+				    Group(s):<br>
+				    <select name=\"gp_code_dump[]\" size=\"10\" multiple=\"multiple\" onDblClick=\"moveSelectedOptions(this.form['gp_code_dump[]'],this.form['gp_code[]'])\">$list_of_group</select>
+				</td>
+				<td width=10>&nbsp;</td>
+				<td align=center valign=middle>
+				<input type=\"button\" class=\"button\" value=\"&gt;&gt;\" onclick=\"moveSelectedOptions(this.form['gp_code_dump[]'],this.form['gp_code[]'])\"><br><br>
+				<input type=\"button\" class=\"button\" value=\"All &gt;&gt;\" onclick=\"moveAllOptions(this.form['gp_code_dump[]'],this.form['gp_code[]'])\"><br><br>
+				<input type=\"button\" class=\"button\" value=\"&lt;&lt;\" onclick=\"moveSelectedOptions(this.form['gp_code[]'],this.form['gp_code_dump[]'])\"><br><br>
+				<input type=\"button\" class=\"button\" value=\"All &lt;&lt;\" onclick=\"moveAllOptions(this.form['gp_code[]'],this.form['gp_code_dump[]'])\">
+				</td>		
+				<td width=10>&nbsp;</td>
+				<td nowrap>
+				    Send to:<br>
+				    <select name=\"gp_code[]\" size=\"10\" multiple=\"multiple\" onDblClick=\"moveSelectedOptions(this.form['gp_code[]'],this.form['gp_code_dump[]'])\"></select>
+				</td>
+			    </tr>
+			    </table>
+			    -->
+			    <p>Or: <input type=text size=20 maxlength=20 name=gp_code_text value=\"$dst_gp_code\"> (Group name)
+			    <p>SMS Sender ID: $sms_sender 
+			    <p>Message template: <select name=\"smstemplate\">$option_values</select>
+			    <p><input type=\"button\" onClick=\"javascript: setTemplate();\" name=\"nb\" value=\"Use Template\" class=\"button\">
+			    <p>Your message: 
+			    <br><textarea cols=\"39\" rows=\"5\" onKeyUp=\"javascript: SmsCountKeyUp($max_length);\" onKeyDown=\"javascript: SmsCountKeyDown($max_length);\" name=\"message\" id=\"ta_sms_content\">$message</textarea>
+			    <br>Character left: <input value=\"$max_length\" type=\"text\" onKeyPress=\"if (window.event.keyCode == 13){return false;}\" onFocus=\"this.blur();\" size=\"3\" name=\"charNumberLeftOutput\" id=\"charNumberLeftOutput\">
+			    <p><input type=checkbox name=msg_flash> Send as flash message
+			    <p><input type=submit class=button value=Send onClick=\"selectAllOptions(this.form['gp_code[]'])\"> 
+			    </form>
+			";
+			echo $content;		
+		}
+
+	    function sendsmstogr_yes()
+    	{
+			$gp_code = $_POST[gp_code];
+			if (!$gp_code[0])
+			{
+			    $gp_code = $_POST[gp_code_text];
+			}
+			$msg_flash = $_POST[msg_flash];
+			$message = $_POST[message];
+			if ($gp_code && $message)
+			{
+			    $sms_type = "text";
+			    if ($msg_flash == "on")
+			    {
+					$sms_type = "flash";
+			    }
+			    list($ok,$to,$smslog_id) = websend2group($username,$gp_code,$message,$sms_type);
+			    for ($i=0;$i<count($ok);$i++)
+			    {
+			        if ($ok[$i])
+			        {
+			    	    $error_string .= "Your SMS for `".$to[$i]."` has been delivered to queue<br>";
+			        }
+			        else
+			        {
+			    	    $error_string .= "Fail to sent SMS to `".$to[$i]."`<br>";
+					}
+		    	}
+		  //  	header("Location: menu.php?inc=send_sms&op=sendsmstogr&message=".urlencode($message)."&err=".urlencode($error_string));
+			}
+			else
+			{
+			    $error_string = "You must select receiver group and your message should not be empty";
+			//    header("Location: menu.php?inc=send_sms&op=sendsmstogr&message=".urlencode($message)."&err=".urlencode("You must select receiver group and your message should not be empty"));
+			}
+			$link_data = array
+			(
+				'menuaction'	=> 'sms.uisms.send_group',
+				'sms_id'		=> $sms_id,
+				'from'			=> $from,
+				'message'		=> urlencode($message),
+				'err'			=> urlencode($error_string)
+			);
+			$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+		}
 
 		function delete_in()
 		{
@@ -649,7 +872,7 @@
 
 			$receipt['message'][]=array('msg'=>lang('Daemon refreshed'));
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(

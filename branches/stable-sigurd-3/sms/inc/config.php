@@ -1,11 +1,10 @@
 <?php
 
-	$web_title = 'test';
+	$web_title = 'phpgroupware';
 	$email_footer = 'Mobile Portal System';
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
 	$config	= CreateObject('admin.soconfig',$location_id);
-	$config->read_repository();
 
 	$GLOBALS['phpgw_info']['sms_config'] = $config->config_data;
 	$reserved_codes		= array ("PV","BC","GET","PUT","INFO","SAVE","DEL","LIST","RETR","POP3","SMTP","BROWSE","NEW","SET","POLL","VOTE","REGISTER","REG","DO","USE","EXECUTE","EXEC","RUN","ACK");

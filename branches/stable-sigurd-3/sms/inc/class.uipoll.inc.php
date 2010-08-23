@@ -22,11 +22,11 @@
 			'index'			=> true,
 			'add'			=> true,
 			'add_yes'		=> true,
-			'add_choice'		=> true,
+			'add_choice'	=> true,
 			'view'			=> true,
 			'edit'			=> true,
 			'edit_yes'		=> true,
-			'delete_choice'		=> true,
+			'delete_choice'	=> true,
 			'delete'		=> true,
 			'status'		=> true,
 			);
@@ -34,24 +34,22 @@
 
 		function sms_uipoll()
 		{
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('sms.bopoll',true);
+			$this->bo					= CreateObject('sms.bopoll',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
-			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->acl_location 			= '.poll';
+			$this->sms					= CreateObject('sms.sms');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
+			$this->acl_location 		= '.poll';
 			$this->menu->sub			= $this->acl_location;
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
-			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$this->db 					= & $GLOBALS['phpgw']->db;
+			$this->db2 					= clone($this->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::poll';
 		}
 
@@ -87,7 +85,7 @@
 
 			$poll_info = $this->bo->read();
 
-			while (is_array($poll_info) && list(,$entry) = each($poll_info))
+			foreach ($poll_info as $entry)
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
@@ -107,17 +105,17 @@
 
 				$content[] = array
 				(
-					'code'					=> $entry['code'],
-					'title'					=> $entry['title'],
-					'status'				=> $status,
-					'user'					=> $GLOBALS['phpgw']->accounts->id2name($entry['uid']),
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.edit', 'poll_id'=> $entry['id'])),
+					'code'						=> $entry['code'],
+					'title'						=> $entry['title'],
+					'status'					=> $status,
+					'user'						=> $GLOBALS['phpgw']->accounts->id2name($entry['uid']),
+					'link_edit'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.edit', 'poll_id'=> $entry['id'])),
 					'link_delete'				=> $link_delete,
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.view', 'poll_id'=> $entry['id'])),
-					'lang_view_config_text'			=> lang('view the config'),
-					'lang_edit_config_text'			=> lang('manage the poll code'),
-					'text_view'				=> lang('view'),
-					'text_edit'				=> lang('edit'),
+					'link_view'					=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.view', 'poll_id'=> $entry['id'])),
+					'lang_view_config_text'		=> lang('view the config'),
+					'lang_edit_config_text'		=> lang('manage the poll code'),
+					'text_view'					=> lang('view'),
+					'text_edit'					=> lang('edit'),
 					'text_delete'				=> $text_delete,
 					'lang_delete_text'			=> $lang_delete_text,
 				);
@@ -162,11 +160,11 @@
 			$link_data = array
 			(
 				'menuaction'	=> 'sms.uipoll.index',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'cat_id'		=> $this->cat_id,
+				'filter'		=> $this->filter,
+				'query'			=> $this->query
 			);
 
 //			if($this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
@@ -179,27 +177,27 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
+				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($poll_info),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
 				'table_header'					=> $table_header,
-				'table_add'					=> $table_add,
-				'values'					=> $content
+				'table_add'						=> $table_add,
+				'values'						=> $content
 			);
 
 			$appname		= lang('polls');
@@ -408,8 +406,6 @@
 
 			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
 		}
-
-
 
 		function edit()
 		{
@@ -637,36 +633,36 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 			    while ($this->db->next_record())
 			    {
-				$choice_id = $this->db->f('choice_id');
-				$choice_title = $this->db->f('choice_title');
-				$choice_code = $this->db->f('choice_code');
-				$sql2 = "SELECT result_id FROM phpgw_sms_featpoll_result WHERE poll_id='$poll_id' AND choice_id='$choice_id'";
-				$this->db2->query($sql2,__LINE__,__FILE__);
-				$choice_voted = $this->db2->num_rows();
-				if ($total_voters)
-				{
-				    $percentage = round(($choice_voted/$total_voters)*100);
-				}
-				else
-				{
-				    $percentage = "0";
-				}
+					$choice_id = $this->db->f('choice_id');
+					$choice_title = $this->db->f('choice_title');
+					$choice_code = $this->db->f('choice_code');
+					$sql2 = "SELECT result_id FROM phpgw_sms_featpoll_result WHERE poll_id='$poll_id' AND choice_id='$choice_id'";
+					$this->db->query($sql2,__LINE__,__FILE__);
+					$choice_voted = $this->db->num_rows();
+					if ($total_voters)
+					{
+					    $percentage = round(($choice_voted/$total_voters)*100);
+					}
+					else
+					{
+					    $percentage = "0";
+					}
 
-				$bar_img = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/sms/templates/base/images/bar.png';
+					$bar_img = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/sms/templates/base/images/bar.png';
 
-				$content .= "
+					$content .= "
 				    <tr>
-					<td width=90% nowrap class=box_text valign=middle align=left>
-					    <font size=-2>[ <b>$choice_code</b> ] $choice_title</font>
-					</td>
-					<td width=10% nowrap class=box_text valign=middle align=right>
-					    <font size=-2>$percentage%, $choice_voted</font>
-					</td>
-				    </tr>
-				    <tr>
-					<td width=100% nowrap class=box_text valign=middle align=left colspan=2>
-					    <img src=\"$bar_img\" height=\"12\" width=\"".($mult*$percentage)."\" alt=\"".($percentage)."% ($choice_voted)\"></font><br>
-					</td>
+						<td width=90% nowrap class=box_text valign=middle align=left>
+						    <font size=-2>[ <b>$choice_code</b> ] $choice_title</font>
+							</td>
+						<td width=10% nowrap class=box_text valign=middle align=right>
+						    <font size=-2>$percentage%, $choice_voted</font>
+						</td>
+					    </tr>
+					    <tr>
+						<td width=100% nowrap class=box_text valign=middle align=left colspan=2>
+						    <img src=\"$bar_img\" height=\"12\" width=\"".($mult*$percentage)."\" alt=\"".($percentage)."% ($choice_voted)\"></font><br>
+						</td>
 				    </tr>
 				";
 			    }
@@ -675,8 +671,10 @@
 				</table>
 			    ";
 
-				$done_data = array(
-				'menuaction'	=> 'sms.uipoll.index');
+				$done_data = array
+				(
+					'menuaction'	=> 'sms.uipoll.index'
+				);
 
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
@@ -816,20 +814,19 @@
 
 			$data = array
 			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.delete_choice', 'poll_id'=> $poll_id, 'choice_id'=> $choice_id)),
-				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
-				'lang_yes'			=> lang('yes'),
+				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'delete_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uipoll.delete_choice', 'poll_id'=> $poll_id, 'choice_id'=> $choice_id)),
+				'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
+				'lang_yes'					=> lang('yes'),
 				'lang_yes_statustext'		=> lang('Delete the entry'),
 				'lang_no_statustext'		=> lang('Back to the list'),
-				'lang_no'			=> lang('no')
+				'lang_no'					=> lang('no')
 			);
 
-			$appname		= lang('sms');
+			$appname			= lang('sms');
 			$function_msg		= lang('delete poll choice');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-

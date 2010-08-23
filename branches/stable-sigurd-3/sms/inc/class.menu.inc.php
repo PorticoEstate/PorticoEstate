@@ -43,7 +43,7 @@
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'sms';
 
-			$acl = CreateObject('phpgwapi.acl');
+			$acl = & $GLOBALS['phpgw']->acl;
 			$menus = array();
 
 			$start_page = 'sms.index';

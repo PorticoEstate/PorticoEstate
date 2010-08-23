@@ -27,24 +27,23 @@
 			'delete'		=> true,
 			);
 
-		function sms_uicommand()
+		function __construct()
 		{
-			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
-			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
+			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.bocommand');
-			$this->bocommon				= CreateObject('sms.bocommon');
+			$this->bocommon			= CreateObject('sms.bocommon');
 			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
-			$this->acl_location 			= '.command';
-			$this->cat_id				= $this->bo->cat_id;
-			$this->start				= $this->bo->start;
-			$this->query				= $this->bo->query;
+			$this->acl 				= & $GLOBALS['phpgw']->acl;
+			$this->acl_location 	= '.command';
+			$this->cat_id			= $this->bo->cat_id;
+			$this->start			= $this->bo->start;
+			$this->query			= $this->bo->query;
 			$this->sort				= $this->bo->sort;
-			$this->order				= $this->bo->order;
-			$this->allrows				= $this->bo->allrows;
+			$this->order			= $this->bo->order;
+			$this->allrows			= $this->bo->allrows;
 
 			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::command';
 		}
 
@@ -80,9 +79,8 @@
 
 			$command_info = $this->bo->read();
 
-			while (is_array($command_info) && list(,$entry) = each($command_info))
+			foreach ($command_info as $entry)
 			{
-
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.delete', 'command_id'=> $entry['id']));
@@ -162,27 +160,27 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'menu'							=> execMethod('sms.menu.links'),
-				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
-				'num_records'					=> count($command_info),
-				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header'					=> $table_header,
-				'table_add'					=> $table_add,
-				'values'					=> $content
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'menu'								=> execMethod('sms.menu.links'),
+				'allow_allrows'						=> true,
+				'allrows'							=> $this->allrows,
+				'start_record'						=> $this->start,
+				'record_limit'						=> $record_limit,
+				'num_records'						=> count($command_info),
+				'all_records'						=> $this->bo->total_records,
+				'link_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'							=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
+				'query'								=> $this->query,
+				'lang_search'						=> lang('search'),
+				'table_header'						=> $table_header,
+				'table_add'							=> $table_add,
+				'values'							=> $content
 			);
 
 			$appname	= lang('commands');
@@ -297,42 +295,38 @@
 				'command_id'	=> $command_id
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
 
-				'value_code'			=> $values['code'],
-				'value_descr'			=> $values['descr'],
-				'lang_code'			=> lang('SMS command code'),
-				'lang_descr'			=> lang('descr'),
-				'lang_help1'			=> lang('Pass these parameter to command URL field:'),
-				'lang_help2'			=> lang('##SMSDATETIME## replaced by SMS incoming date/time'),
-				'lang_help3'			=> lang('##SMSSENDER## replaced by sender number'),
-				'lang_help4'			=> lang('##COMMANDCODE## replaced by command code'),
-				'lang_help5'			=> lang('##COMMANDPARAM## replaced by command parameter passed to server from SMS'),
-				'lang_binary_path'		=> lang('SMS command binary path'),
-				'value_binary_path'		=> PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}",
-
-				'lang_type'			=> lang('command type'),
-				'type_list'			=> $this->bo->select_type_list($values['type']),
-				'lang_no_type'			=> lang('no exec type'),
+				'value_code'					=> $values['code'],
+				'value_descr'					=> $values['descr'],
+				'lang_code'						=> lang('SMS command code'),
+				'lang_descr'					=> lang('descr'),
+				'lang_help1'					=> lang('Pass these parameter to command URL field:'),
+				'lang_help2'					=> lang('##SMSDATETIME## replaced by SMS incoming date/time'),
+				'lang_help3'					=> lang('##SMSSENDER## replaced by sender number'),
+				'lang_help4'					=> lang('##COMMANDCODE## replaced by command code'),
+				'lang_help5'					=> lang('##COMMANDPARAM## replaced by command parameter passed to server from SMS'),
+				'lang_binary_path'				=> lang('SMS command binary path'),
+				'value_binary_path'				=> PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}",
+				'lang_type'						=> lang('command type'),
+				'type_list'						=> $this->bo->select_type_list($values['type']),
+				'lang_no_type'					=> lang('no exec type'),
 				'lang_lang_type_status_text'	=> lang('input type'),
-
-
-				'value_exec'			=> $values['exec'],
-				'lang_exec'			=> lang('SMS command exec'),
-
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_id'			=> lang('ID'),
-				'lang_save'			=> lang('save'),
-				'lang_cancel'			=> lang('cancel'),
-				'value_id'			=> $command_id,
-				'lang_done_status_text'		=> lang('Back to the list'),
-				'lang_save_status_text'		=> lang('Save the values'),
-				'lang_apply'			=> lang('apply'),
-				'lang_apply_status_text'	=> lang('Apply the values'),
+				'value_exec'					=> $values['exec'],
+				'lang_exec'						=> lang('SMS command exec'),
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_id'						=> lang('ID'),
+				'lang_save'						=> lang('save'),
+				'lang_cancel'					=> lang('cancel'),
+				'value_id'						=> $command_id,
+				'lang_done_status_text'			=> lang('Back to the list'),
+				'lang_save_status_text'			=> lang('Save the values'),
+				'lang_apply'					=> lang('apply'),
+				'lang_apply_status_text'		=> lang('Apply the values'),
 			);
 
 			$appname	= lang('command');
@@ -376,9 +370,8 @@
 
 			$command_info = $this->bo->read_log();
 
-			while (is_array($command_info) && list(,$entry) = each($command_info))
+			foreach ($command_info as $entry)
 			{
-
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.delete', 'command_id'=> $entry['id']));
@@ -388,13 +381,13 @@
 
 				$content[] = array
 				(
-					'id'			=> $entry['id'],
-					'sender'		=> $entry['sender'],
-					'success'		=> $entry['success'],
-					'datetime'		=> $entry['datetime'],
-					'code'			=> $entry['code'],
-					'link_redirect'	=> $entry['success'] == 1 ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.redirect','code' => $entry['code'], 'param'=> urlencode($entry['param']))) : '',
-					'param'			=> $entry['param'],
+					'id'				=> $entry['id'],
+					'sender'			=> $entry['sender'],
+					'success'			=> $entry['success'],
+					'datetime'			=> $entry['datetime'],
+					'code'				=> $entry['code'],
+					'link_redirect'		=> $entry['success'] == 1 ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.redirect','code' => $entry['code'], 'param'=> urlencode($entry['param']))) : '',
+					'param'				=> $entry['param'],
 					'link_delete'		=> $link_delete,
 					'text_delete'		=> $text_delete,
 					'lang_delete_text'	=> $lang_delete_text,
@@ -440,8 +433,8 @@
 														'allrows'	=> $this->allrows)
 										)),
 
-				'lang_id'		=> lang('id'),
-				'lang_code'		=> lang('code'),
+				'lang_id'			=> lang('id'),
+				'lang_code'			=> lang('code'),
 				'lang_sender'		=> lang('sender'),
 				'lang_success'		=> lang('success'),
 				'lang_datetime'		=> lang('datetime'),
@@ -467,30 +460,30 @@
 				'query'		=> $this->query
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
+				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($command_info),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
 				'table_header_log'				=> $table_header,
 				'values_log'					=> $content,
 				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the location belongs to. To do not use a category select NO CATEGORY'),
+				'lang_cat_statustext'			=> lang('Select the category the location belongs to. To do not use a category select NO CATEGORY'),
 				'select_name'					=> 'cat_id',
-				'cat_list'					=> $this->bo->get_category_list(array('format'=>'filter','selected' => $this->cat_id)),
+				'cat_list'						=> $this->bo->get_category_list(array('format'=>'filter','selected' => $this->cat_id)),
 				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 			);
 
@@ -522,8 +515,6 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($command_id);
-
 				$sql = "SELECT command_code FROM phpgw_sms_featcommand WHERE command_id='$command_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
@@ -560,10 +551,10 @@
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.delete', 'command_id'=> $command_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
-				'lang_yes'			=> lang('yes'),
-				'lang_yes_statustext'		=> lang('Delete the entry'),
-				'lang_no_statustext'		=> lang('Back to the list'),
-				'lang_no'			=> lang('no')
+				'lang_yes'				=> lang('yes'),
+				'lang_yes_statustext'	=> lang('Delete the entry'),
+				'lang_no_statustext'	=> lang('Back to the list'),
+				'lang_no'				=> lang('no')
 			);
 
 			$function_msg	= lang('delete SMS command code');
@@ -572,4 +563,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-
