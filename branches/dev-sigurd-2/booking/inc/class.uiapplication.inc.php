@@ -313,15 +313,22 @@
 			return $entity;
     }
 
-    protected function create_accepted_documents_comment_text($application)
+	protected function create_accepted_documents_comment_text($application)
     {
-		if (count($application['accepted_documents']) < 1)
-		{
-			return null;
-		}
-		$comment_text = lang('The user has accepted the document under point 8').'.';
+                if (count($application['accepted_documents']) < 1)
+                {
+                        return null;
+                }
+                $comment_text = lang('The user has accepted the following documents').': ';
+                foreach($application['accepted_documents'] as $doc)
+                {
+                        $doc_id = substr($doc, strrpos($doc, ':')+1); // finding the document_building.id
+                        $document = $this->document_bo->read_single($doc_id);
+                        $comment_text .= $document['description'].' ('.$document['name'].'), ';
+                }
+                $comment_text = substr($comment_text, 0, -2);
 
-		return $comment_text;
+                return $comment_text;
     }
 
     public function add()
