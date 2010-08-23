@@ -94,6 +94,9 @@ class rental_socontract extends rental_socommon
 				case "composite":
 					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
+				case "composite_address":
+					$composite_address = true;
+					break;
 				case "location_id":
 					$like_clauses[] = "r_u.location_code like '{$search_for}%'";
 					break;
@@ -106,6 +109,26 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "party.company_name $this->like $like_pattern";
 					$like_clauses[] = "composite.name $this->like $like_pattern";
 					break;
+			}
+			
+			if($composite_address)
+			{
+				$sql_composite_address = "select rental_composite.id as rc_id from rental_composite,rental_unit,fm_gab_location where rental_unit.composite_id=rental_composite.id and fm_gab_location.location_code=rental_unit.location_code and fm_gab_location.address like upper({$like_pattern})";
+				$this->db->query($sql_composite_address);
+				$array_composites = array();
+				while($this->db->next_record())
+				{
+					$array_composites[] = $this->db->f('rc_id');
+				}
+				if($array_composites)
+				{
+					$composites = implode(',',$array_composites);
+					$like_clauses[] = "composite.id in ($composites)";
+				}
+				else
+				{
+					$like_clauses[] = "composite.id in (-1)";
+				}
 			}
 			
 			

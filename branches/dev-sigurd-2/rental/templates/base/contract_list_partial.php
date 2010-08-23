@@ -184,6 +184,7 @@
 			<option value="id" <?php echo ($s_type == 'id') ? 'selected' : ''?>><?php echo lang('contract_id') ?></option>
 			<option value="party_name" <?php echo ($s_type == 'party_name') ? 'selected' : ''?>><?php echo lang('party_name') ?></option>
 			<option value="composite" <?php echo ($s_type == 'composite') ? 'selected' : ''?>><?php echo lang('composite_name') ?></option>
+			<option value="composite_address" <?php echo ($s_type == 'composite_address') ? 'selected' : ''?>><?php echo lang('composite_address') ?></option>
 			<option value="location_id" <?php echo ($s_type == 'location_id') ? 'selected' : ''?>><?php echo lang('object_number') ?></option>
 		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
