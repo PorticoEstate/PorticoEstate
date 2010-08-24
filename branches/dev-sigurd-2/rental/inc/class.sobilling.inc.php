@@ -407,7 +407,16 @@ class rental_sobilling extends rental_socommon
 		}
 		else
 		{
-			return false;
+			$file = PHPGW_SERVER_ROOT . "/rental/inc/export/default/customer.php";
+			if(is_file($file))
+			{
+				include $file;
+				return $customer_export->get_contents();
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 	
