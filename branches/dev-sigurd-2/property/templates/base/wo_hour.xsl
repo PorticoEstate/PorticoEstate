@@ -643,12 +643,24 @@
 					<xsl:value-of select="lang_from"/>
 				</td>
 				<td  align="left" colspan="2">
+					<xsl:value-of select="from_name"/>
+					<br/>				
+					<xsl:choose>
+						<xsl:when test="ressursnr !=''">
+							<b>
+								<xsl:text>RessursNr: </xsl:text>
+								<xsl:value-of select="ressursnr"/>
+							</b>
+							<br/>
+						</xsl:when>
+					</xsl:choose>
+
+
 					<xsl:value-of select="org_name"/>
 					<xsl:value-of select="lang_district"/>
 					<xsl:text> </xsl:text>
 					<xsl:value-of select="district"/>
 					<br/>
-					<xsl:value-of select="from_name"/>
 					<xsl:text> [ </xsl:text>
 					<xsl:value-of select="from_phone"/>
 					<xsl:text> ] </xsl:text>
