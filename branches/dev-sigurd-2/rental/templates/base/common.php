@@ -362,9 +362,19 @@
 			eval(variableName + " = YAHOO.rental.setupDatasource.shift()");
 			var source_properties = eval("new " + variableName + "()");
 
+<?php
+	if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+	{
+		$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+	}
+	else {
+		$user_rows_per_page = 10;
+	}
+?>
+
 			// ... create a paginator for this datasource
 			var pag = new YAHOO.widget.Paginator({
-				rowsPerPage: 10,
+				rowsPerPage: <?php echo $user_rows_per_page ?>,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
 				firstPageLinkLabel: "<< <?php echo lang('first') ?>",
