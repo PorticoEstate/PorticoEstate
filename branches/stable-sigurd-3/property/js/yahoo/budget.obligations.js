@@ -96,6 +96,21 @@
 		{
 			if(flag_particular_setting=='init')
 			{
+				//year
+				index = locate_in_array_options(0,"value",path_values.year);
+				if(index)
+				{
+					oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+				}
+				//dimb
+				index = locate_in_array_options(4,"value",path_values.dimb_id);
+				if(index)
+				{
+					oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+				}
+
+
+
 				//locate (asign ID) to datatable
 				tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 				tableYUI.setAttribute("id","tableYUI");

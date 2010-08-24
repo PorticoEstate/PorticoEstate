@@ -1320,6 +1320,7 @@
 				'from_phone'					=> $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'],
 				'lang_district'					=> lang('District'),
 				'district'					=> $project['location_data']['district_id'],
+				'ressursnr'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'] : '',
 
 				'lang_to'					=> lang('To'),
 				'to_name'					=> $workorder['vendor_name'],
