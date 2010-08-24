@@ -114,7 +114,7 @@ class rental_socontract extends rental_socommon
 			if($composite_address)
 			{
 				$sql_composite_address = "select rental_composite.id as rc_id from rental_composite,rental_unit,fm_gab_location where rental_unit.composite_id=rental_composite.id and fm_gab_location.location_code=rental_unit.location_code and fm_gab_location.address like upper({$like_pattern})";
-				$this->db->query($sql_composite_address);
+				$this->db->query($sql_composite_address, __LINE__, __FILE__,false,true);
 				$array_composites = array();
 				while($this->db->next_record())
 				{
