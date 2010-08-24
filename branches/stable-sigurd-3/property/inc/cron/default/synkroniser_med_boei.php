@@ -729,7 +729,7 @@
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
 				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
-				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
+				. " innflyttetdato = '" . date("M d Y",strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
