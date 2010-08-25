@@ -368,6 +368,7 @@
 
 			$i = 0;
 
+			$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
 			$invoice = array();
 			while ($this->db->next_record())
 			{
@@ -378,7 +379,7 @@
 					'project_id'			=> $this->db->f('project_id'),
 					'workorder_id'			=> $this->db->f('pmwrkord_code'),
 					'status'				=> $this->db->f('status'),
-					'closed'				=> $this->db->f('status') == 'closed',
+					'closed'				=> $this->db->f('status') == $closed,
 					'voucher_id'			=> $voucher_id,
 					'id'					=> $this->db->f('id'),
 					'invoice_id'			=> $this->db->f('fakturanr'),
@@ -656,11 +657,14 @@
 
 			if (isset($update_status) AND is_array($update_status))
 			{
-				$status_code=array('X'=>'closed','R'=>'re_opened');
+				$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
+				$reopen = isset($this->config->config_data['workorder_reopen_status']) && $this->config->config_data['workorder_reopen_status'] ? $this->config->config_data['workorder_reopen_status'] : 're_opened';
+
+				$status_code=array('X' => $closed,'R' => $reopen);
 
 				$historylog_workorder	= CreateObject('property.historylog','workorder');
 
-				while (list($id,$entry) = each($update_status))
+				foreach ($update_status as $id => $entry)
 				{
 					$this->db->query("SELECT type FROM fm_orders WHERE id={$id}",__LINE__,__FILE__);
 					$this->db->next_record();

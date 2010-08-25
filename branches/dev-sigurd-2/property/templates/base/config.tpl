@@ -126,6 +126,21 @@
      </select>
     </td>
    </tr>
+  <tr class="row_off">
+    <td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
+    <td>
+     <select name="newsettings[workorder_closed_status]">
+{hook_workorder_closed_status}
+     </select>
+    </td>
+  <tr class="row_on">
+    <td>{lang_workorder_reopen_status_that_are_to_be_set_when_invoice_is_processed}:</td>
+    <td>
+     <select name="newsettings[workorder_reopen_status]">
+{hook_workorder_reopen_status}
+     </select>
+    </td>
+   </tr>
    <tr class="row_off">
     <td>{lang_Default_municipal_number}:</td>
     <td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
