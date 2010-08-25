@@ -49,4 +49,4 @@ foreach($contract_ids as $contract_id)
 	}
 }
 $customer_export = new rental_agresso_cs15($parties);
-return $customer_export->get_contents();
+//return $customer_export->get_contents();

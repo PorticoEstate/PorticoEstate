@@ -398,14 +398,25 @@ class rental_sobilling extends rental_socommon
 	
 	public function generate_customer_export($billing_id)
 	{
+		
 		$file = PHPGW_SERVER_ROOT . "/rental/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/customer.php";
 		if(is_file($file))
 		{
 			include $file;
+			return $customer_export->get_contents();
 		}
 		else
 		{
-			return false;
+			$file = PHPGW_SERVER_ROOT . "/rental/inc/export/default/customer.php";
+			if(is_file($file))
+			{
+				include $file;
+				return $customer_export->get_contents();
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 	

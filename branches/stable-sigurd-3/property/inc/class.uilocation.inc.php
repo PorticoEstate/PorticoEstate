@@ -409,6 +409,7 @@
 														'id'     => 'txt_query',
 
 
+
 														'value'    => $this->query,//'',//$query,
 														'type' => 'text',
 														'size'    => 28,
@@ -1549,6 +1550,7 @@
 			{
 				$this->bocommon->no_access();
 				return;
+
 
 
 			}
