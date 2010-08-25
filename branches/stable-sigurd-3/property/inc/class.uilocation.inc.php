@@ -60,7 +60,7 @@
 			'update_location' => true
 		);
 
-		function property_uilocation()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;

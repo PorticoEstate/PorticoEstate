@@ -168,6 +168,23 @@
 			}
 		}
 
+		function column_list($selected = array(),$type_id='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : '';
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = array();
+			$columns[] = array
+			(
+				'id' => 'billable_hours',
+				'name'=> lang('billable hours')
+			);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
+		}
+
 		function next_id()
 		{
 			return $this->so->next_id();
@@ -373,10 +390,19 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$this->uicols	= $this->so->uicols;
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : array();
 
-			for ($i=0; $i<count($workorder); $i++)
+			foreach ($custom_cols as $col)
 			{
-				$workorder[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($workorder[$i]['entry_date'],$dateformat);
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= $col;
+				$this->uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$this->uicols['statustext'][]	= $col;
+			}
+//_debug_array($this->uicols);die();
+			foreach ($workorder as &$entry)
+			{
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
 			}
 
 			return $workorder;

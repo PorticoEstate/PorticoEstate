@@ -379,6 +379,7 @@
 						'actual_cost'		=> $this->db->f('actual_cost'),
 						'estimate'			=> $this->db->f('budget'),
 						'new_ticket'		=> $this->db->f('view') ? false : true,
+						'billable_hours'	=> $this->db->f('billable_hours'),
 					);
 				}
 /*			

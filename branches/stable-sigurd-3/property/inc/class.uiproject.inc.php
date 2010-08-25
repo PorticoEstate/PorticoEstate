@@ -51,12 +51,13 @@
 
 		var $public_functions = array
 		(
-			'download'  => true,
-			'index'  => true,
-			'view'   => true,
-			'edit'   => true,
-			'delete' => true,
-			'date_search'=>true
+			'download'		=> true,
+			'index'			=> true,
+			'view'			=> true,
+			'edit'			=> true,
+			'delete'		=> true,
+			'date_search'	=> true,
+			'columns'		=> true
 		);
 
 		function property_uiproject()
@@ -117,6 +118,50 @@
 			$list 		= $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' => true, 'skip_origin' => true));
 			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function columns()
+		{
+			$receipt = array();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values 		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->add('property','project_columns', $values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+			}
+
+			$function_msg	= lang('Select Column');
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiproject.columns',
+			);
+
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+				'function_msg'		=> $function_msg,
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_columns'		=> lang('columns'),
+				'lang_none'			=> lang('None'),
+				'lang_save'			=> lang('save'),
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 		}
 
 		function index()
@@ -280,6 +325,18 @@
 				                                            'style' => 'filter',
 				                                            'tab_index' => 6
 				                                        ),
+							                            //for link "columns", next to Export button
+											           array(
+							                                'type' => 'link',
+							                                'id' => 'btn_columns',
+							                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+																				           array
+																				              (
+																				               'menuaction' => 'property.uiproject.columns'
+																				              ))."','','width=300,height=600,scrollbars=1')",
+															'value' => lang('columns'),
+															'tab_index' => 12
+														),
 														array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_export',
