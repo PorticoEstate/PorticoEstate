@@ -38,19 +38,20 @@
 	{
 		var $public_functions = array
 		(
-			'index'		=> true,
-			'index2'	=> true,
-			'view'		=> true,
-			'view2'		=> true,
-			'add'		=> true,
-			'add2'		=> true,
-			'delete'	=> true,
-			'download'	=> true,
-			'download2'	=> true,
-			'view_file'	=> true,
-			'edit_status'=> true,
-			'get_vendor_email' => true,
-			'_print' => true
+			'index'				=> true,
+			'index2'			=> true,
+			'view'				=> true,
+			'view2'				=> true,
+			'add'				=> true,
+			'add2'				=> true,
+			'delete'			=> true,
+			'download'			=> true,
+			'download2'			=> true,
+			'view_file'			=> true,
+			'edit_status'		=> true,
+			'get_vendor_email'	=> true,
+			'_print'			=> true,
+			'columns'			=> true
 		);
 
 		/**
@@ -313,6 +314,51 @@
 			}
 		}
 
+		function columns()
+		{
+			$receipt = array();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values 		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->add('property','ticket_columns', $values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+			}
+
+			$function_msg	= lang('Select Column');
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uitts.columns',
+			);
+
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+				'function_msg'		=> $function_msg,
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_columns'		=> lang('columns'),
+				'lang_none'			=> lang('None'),
+				'lang_save'			=> lang('save'),
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
+		}
+
+
 		function index()
 		{
 			if($this->tenant_id)
@@ -503,6 +549,18 @@
 										'style' => 'filter',
 										'tab_index' => 4
 									),
+						                            //for link "columns", next to Export button
+										           array(
+						                                'type' => 'link',
+						                                'id' => 'btn_columns',
+						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+																				           array
+																				              (
+																				               'menuaction' => 'property.uitts.columns'
+																				              ))."','','width=300,height=600,scrollbars=1')",
+														'value' => lang('columns'),
+														'tab_index' => 10
+													),
 									array
 									(
 										'type'	=> 'button',
@@ -709,7 +767,19 @@
 			$uicols['name'][] = 'lang_view_statustext';
 			$uicols['name'][] = 'text_view';
 
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+
+			foreach ($custom_cols as $col)
+			{
+	//			$uicols['input_type'][]	= 'text';
+				$uicols['name'][]			= $col;
+	//			$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+	//			$uicols['statustext'][]	= $col;
+			}
+
+
 			$count_uicols_name = count($uicols['name']);
+
 
 			$j = 0;
 			$k = 0;
@@ -891,7 +961,7 @@
 				{
 					$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= lang($uicols['name'][$i]);
+					$datatable['headers']['header'][$i]['text'] 			= lang(str_replace('_', ' ', $uicols['name'][$i]));
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
 					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date' || $uicols['name'][$i]=='order_id')

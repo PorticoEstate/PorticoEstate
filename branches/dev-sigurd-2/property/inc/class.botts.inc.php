@@ -154,6 +154,23 @@
 			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
 		}
 
+		function column_list($selected = array(),$type_id='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : '';
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = array();
+			$columns[] = array
+			(
+				'id' => 'billable_hours',
+				'name'=> lang('billable hours')
+			);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
+		}
+
 		function filter($data=0)
 		{
 			if(is_array($data))

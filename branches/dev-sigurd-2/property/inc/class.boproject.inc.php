@@ -115,6 +115,23 @@
 			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
 		}
 
+		function column_list($selected = array(),$type_id='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : '';
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = array();
+			$columns[] = array
+			(
+				'id' => 'billable_hours',
+				'name'=> lang('billable hours')
+			);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
+		}
+
 		function select_status_list($format='',$selected='')
 		{
 			switch($format)
@@ -306,7 +323,20 @@
 				$this->uicols['datatype'][]		= 'link';
 			}
 
-//			$cols_extra		= $this->so->cols_extra;
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
+
+			foreach ($custom_cols as $col)
+			{
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= $col;
+				$this->uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$this->uicols['statustext'][]	= $col;
+				$this->uicols['exchange'][]		= false;
+				$this->uicols['align'][] 		= '';
+				$this->uicols['datatype'][]		= false;
+			}
+
+			$cols_extra		= $this->so->cols_extra;
 
 			foreach ($project as & $entry)
 			{

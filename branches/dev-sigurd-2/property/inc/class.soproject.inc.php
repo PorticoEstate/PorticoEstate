@@ -258,6 +258,9 @@
 
 				$cols.= ",$entity_table.user_id";
 
+				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
+				$cols_return[] = 'billable_hours';
+
 				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis ='(';
 

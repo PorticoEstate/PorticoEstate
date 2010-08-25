@@ -285,6 +285,8 @@
 
 
 			$cols_return[] = 'location_code';
+			$cols_return[] = 'billable_hours';
+			$cols .= ',fm_workorder.billable_hours';
 			$no_address = false;
 			if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
 			{
