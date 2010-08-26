@@ -65,25 +65,23 @@
 				'periode'			=> true
 			);
 
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query 			= isset($data['query'])?$data['query']:'';
-				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order 			= isset($data['order']) && $valid_order[$data['order']] ? $data['order']:'';
-				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
-				$paid 			= isset($data['paid'])?$data['paid']:'';
-				$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
-				$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
-				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
-				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
-				$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
-				$allrows 		= isset($data['allrows'])?$data['allrows']:'';
-				$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
-				$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
-				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query 			= isset($data['query'])?$data['query']:'';
+			$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order 			= isset($data['order']) && $valid_order[$data['order']] ? $data['order']:'';
+			$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+			$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
+			$paid 			= isset($data['paid'])?$data['paid']:'';
+			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
+			$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
+			$loc1 			= isset($data['loc1'])?$data['loc1']:'';
+			$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
+			$allrows 		= isset($data['allrows'])?$data['allrows']:'';
+			$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
+			$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
+			$district_id 	= isset($data['district_id'])?$data['district_id']:'';
+
 			$join_tables	= '';
 			$filtermethod	= '';
 			$querymethod	= '';

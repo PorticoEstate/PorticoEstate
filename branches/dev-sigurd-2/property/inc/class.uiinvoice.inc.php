@@ -306,7 +306,7 @@
 				}
 				if (!$paid)
 				{
-				$field_invoice = array(
+					$field_invoice = array(
 	                                array( //boton 	CATEGORY
 	                                    'id' => 'btn_cat_id',
 	                                    'name' => 'cat_id',
@@ -967,19 +967,6 @@
 			}
 
 
-			$appname = lang('location');
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
     		//values for Pagination
@@ -1100,6 +1087,20 @@
 
 			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
+
+
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
@@ -1134,11 +1135,10 @@
   				$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.index', 'property' );
   			}
 
-	}
+		}
 
 		function list_sub()
 		{
-
 			$paid 		= phpgw::get_var('paid', 'bool');
 			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -1161,7 +1161,7 @@
 														'start'			=> $this->start,
 														'paid'			=> $paid,
 														'voucher_id'	=> $voucher_id,
-														'query'			=> $this->query
+														'query'			=> $voucher_id
 													));
 				$datatable['config']['allow_allrows'] = false;
 
@@ -1176,7 +1176,7 @@
 														."start:'{$this->start}',"
 														."paid:'{$paid}',"
 														."voucher_id:'{$voucher_id}',"
-														."query:'{$this->query}'";
+														."query:'{$voucher_id}'";
 
 				$field_invoice = array(array( // mensaje
 											'type'	=> 'label',
@@ -2493,6 +2493,15 @@
 				}
 			}
 
+			if (isset($receipt['voucher_id']) && $receipt['voucher_id'])
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=> 'property.uiinvoice.list_sub',
+						'user_lid'		=> $GLOBALS['phpgw_info']['user']['account_lid'],
+						'voucher_id'	=> $receipt['voucher_id']
+						));
+			}
+
 			$location_data=$bolocation->initiate_ui_location(array(
    						'values'	=> isset($values['location_data'])?$values['location_data']:'',
    						'type_id'	=> -1, // calculated from location_types
@@ -2858,32 +2867,32 @@
 
 			$post_data = array
 			(
-				'location_code'		=> $values[0]['location_code'],
-				'art'			=> $values[0]['art'],
-				'type'			=> $values[0]['type'],
-				'dim_b'			=> $values[0]['dim_b'],
-				'invoice_num'		=> $values[0]['invoice_num'],
-				'kid_nr'		=> $values[0]['kid_nr'],
-				'vendor_id'		=> $values[0]['spvend_code'],
-				'vendor_name'		=> $values[0]['vendor_name'],
-				'janitor'		=> $values[0]['janitor'],
-				'supervisor'		=> $values[0]['supervisor'],
+				'location_code'			=> $values[0]['location_code'],
+				'art'					=> $values[0]['art'],
+				'type'					=> $values[0]['type'],
+				'dim_b'					=> $values[0]['dim_b'],
+				'invoice_num'			=> $values[0]['invoice_num'],
+				'kid_nr'				=> $values[0]['kid_nr'],
+				'vendor_id'				=> $values[0]['spvend_code'],
+				'vendor_name'			=> $values[0]['vendor_name'],
+				'janitor'				=> $values[0]['janitor'],
+				'supervisor'			=> $values[0]['supervisor'],
 				'budget_responsible'	=> $values[0]['budget_responsible'],
-				'invoice_date' 		=> urlencode($values[0]['invoice_date']),
-				'num_days'		=> $values[0]['num_days'],
-				'payment_date' 		=> urlencode($values[0]['payment_date']),
-				'sday' 			=> $values[0]['sday'],
-				'smonth' 		=> $values[0]['smonth'],
-				'syear'			=> $values[0]['syear'],
-				'eday' 			=> $values[0]['eday'],
-				'emonth' 		=> $values[0]['emonth'],
-				'eyear'			=> $values[0]['eyear'],
-				'auto_tax' 		=> $values[0]['auto_tax'],
-				'merknad'		=> $values[0]['merknad'],
-				'b_account_id'		=> $values[0]['spbudact_code'],
-				'b_account_name'	=> $values[0]['b_account_name'],
-				'amount'		=> $values[0]['amount'],
-				'order_id'			=> $values[0]['order_id'],
+				'invoice_date' 			=> urlencode($values[0]['invoice_date']),
+				'num_days'				=> $values[0]['num_days'],
+				'payment_date' 			=> urlencode($values[0]['payment_date']),
+				'sday' 					=> $values[0]['sday'],
+				'smonth' 				=> $values[0]['smonth'],
+				'syear'					=> $values[0]['syear'],
+				'eday' 					=> $values[0]['eday'],
+				'emonth' 				=> $values[0]['emonth'],
+				'eyear'					=> $values[0]['eyear'],
+				'auto_tax' 				=> $values[0]['auto_tax'],
+				'merknad'				=> $values[0]['merknad'],
+				'b_account_id'			=> $values[0]['spbudact_code'],
+				'b_account_name'		=> $values[0]['b_account_name'],
+				'amount'				=> $values[0]['amount'],
+				'order_id'				=> $values[0]['order_id'],
 			);
 
 			$link_data_add		= $link_data_add + $post_data;
@@ -2941,8 +2950,8 @@
 
 			$data = array
 			(
-				'artid'					=> $values[0]['artid'],
-				'lang_type'				=> lang('Type'),
+				'artid'						=> $values[0]['artid'],
+				'lang_type'					=> lang('Type'),
 				'project_id'				=> $values[0]['project_id'],
 				'lang_project_id'			=> lang('Project id'),
 				'lang_vendor'				=> lang('Vendor'),
@@ -2956,13 +2965,13 @@
 				'oppsynsmannid'				=> $values[0]['oppsynsmannid'],
 				'lang_supervisor'			=> lang('Supervisor'),
 				'saksbehandlerid'			=> $values[0]['saksbehandlerid'],
-				'lang_budget_responsible'		=> lang('Budget Responsible'),
-				'budsjettansvarligid'			=> $values[0]['budsjettansvarligid'],
-				'lang_sum'				=> lang('Sum'),
-				'sum'					=> number_format($values[0]['amount'], 2, ',', ''),
+				'lang_budget_responsible'	=> lang('Budget Responsible'),
+				'budsjettansvarligid'		=> $values[0]['budsjettansvarligid'],
+				'lang_sum'					=> lang('Sum'),
+				'sum'						=> number_format($values[0]['amount'], 2, ',', ''),
 				'table_header'				=> $table_header,
-				'values'				=> $content,
-				'table_add'				=> $table_add
+				'values'					=> $content,
+				'table_add'					=> $table_add
 			);
 
 //_debug_array($data);
