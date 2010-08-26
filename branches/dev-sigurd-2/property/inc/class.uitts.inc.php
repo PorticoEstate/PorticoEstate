@@ -274,6 +274,15 @@
 
 			array_push($descr,lang('finnish date'),lang('delay'));
 
+
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+
+			foreach ($custom_cols as $col)
+			{
+				$name[]			= $col;
+				$descr[]		= lang(str_replace('_', ' ', $col));
+			}
+
 			$this->bocommon->download($list,$name,$descr);
 		}
 
@@ -1182,6 +1191,7 @@
 					'date'					=> $ticket['entry_date'],
 					'finnish_date'			=> $ticket['finnish_date'],
 					'delay'					=> (isset($ticket['delay'])?$ticket['delay']:''),
+
 					'user'					=> $ticket['user'],
 					'assignedto'			=> $ticket['assignedto'],
 					'child_date'			=> $ticket['child_date'],
