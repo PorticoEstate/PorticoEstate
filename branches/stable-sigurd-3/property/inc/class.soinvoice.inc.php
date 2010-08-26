@@ -65,25 +65,23 @@
 				'periode'			=> true
 			);
 
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query 			= isset($data['query'])?$data['query']:'';
-				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order 			= isset($data['order']) && $valid_order[$data['order']] ? $data['order']:'';
-				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
-				$paid 			= isset($data['paid'])?$data['paid']:'';
-				$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
-				$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
-				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
-				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
-				$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
-				$allrows 		= isset($data['allrows'])?$data['allrows']:'';
-				$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
-				$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
-				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query 			= isset($data['query'])?$data['query']:'';
+			$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+			$order 			= isset($data['order']) && $valid_order[$data['order']] ? $data['order']:'';
+			$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+			$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
+			$paid 			= isset($data['paid'])?$data['paid']:'';
+			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
+			$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
+			$loc1 			= isset($data['loc1'])?$data['loc1']:'';
+			$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
+			$allrows 		= isset($data['allrows'])?$data['allrows']:'';
+			$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
+			$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
+			$district_id 	= isset($data['district_id'])?$data['district_id']:'';
+
 			$join_tables	= '';
 			$filtermethod	= '';
 			$querymethod	= '';
@@ -368,6 +366,7 @@
 
 			$i = 0;
 
+			$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
 			$invoice = array();
 			while ($this->db->next_record())
 			{
@@ -378,7 +377,7 @@
 					'project_id'			=> $this->db->f('project_id'),
 					'workorder_id'			=> $this->db->f('pmwrkord_code'),
 					'status'				=> $this->db->f('status'),
-					'closed'				=> $this->db->f('status') == 'closed',
+					'closed'				=> $this->db->f('status') == $closed,
 					'voucher_id'			=> $voucher_id,
 					'id'					=> $this->db->f('id'),
 					'invoice_id'			=> $this->db->f('fakturanr'),
@@ -656,11 +655,14 @@
 
 			if (isset($update_status) AND is_array($update_status))
 			{
-				$status_code=array('X'=>'closed','R'=>'re_opened');
+				$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
+				$reopen = isset($this->config->config_data['workorder_reopen_status']) && $this->config->config_data['workorder_reopen_status'] ? $this->config->config_data['workorder_reopen_status'] : 're_opened';
+
+				$status_code=array('X' => $closed,'R' => $reopen);
 
 				$historylog_workorder	= CreateObject('property.historylog','workorder');
 
-				while (list($id,$entry) = each($update_status))
+				foreach ($update_status as $id => $entry)
 				{
 					$this->db->query("SELECT type FROM fm_orders WHERE id={$id}",__LINE__,__FILE__);
 					$this->db->next_record();

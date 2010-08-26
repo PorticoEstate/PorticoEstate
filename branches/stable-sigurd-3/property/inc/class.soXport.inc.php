@@ -38,6 +38,7 @@
 		var $account_id = 0;
 		var $total_records = 0;
 		var $bilagsnr;
+		var $voucher_id;
 
 		function __construct()
 		{
@@ -214,7 +215,8 @@
 					if(!$fields['bilagsnr'])
 					{
 						$fields['bilagsnr']  = $this->soinvoice->next_bilagsnr();
-						$this->bilagsnr = $fields['bilagsnr'];
+						$this->bilagsnr = $fields['bilagsnr'];//FIXME
+						$this->voucher_id = $fields['bilagsnr'];
 					}
 
 					$values= array(
