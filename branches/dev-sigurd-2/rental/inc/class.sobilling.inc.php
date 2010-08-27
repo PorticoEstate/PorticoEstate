@@ -375,7 +375,7 @@ class rental_sobilling extends rental_socommon
 			
 			
 			$id = $billing_job->get_id();
-			$export_data = iconv("ISO-8859-1","UTF-8",$exportable->get_contents());
+			$export_data = $exportable->get_contents();
 			$file_path = $path."/{$id}";
 			if($export_data != ""){			
 				$result = $vfs->write
