@@ -942,7 +942,7 @@
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			//for maintein page number in datatable
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			if ( !(phpgw::get_var('start')) && !phpgw::get_var('order','string'))
 			{
 				//avoid ,in the last page, reformate paginator when records are lower than records_returned
 				if(count($content) <= $datatable['pagination']['records_limit'])
