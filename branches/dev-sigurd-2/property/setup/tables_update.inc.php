@@ -4356,3 +4356,25 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.589 to 0.9.17.590
+	* add billable_hours to workorders
+	* 
+	*/
+
+	$test[] = '0.9.17.589';
+	function property_upgrade0_9_17_589()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.590';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+

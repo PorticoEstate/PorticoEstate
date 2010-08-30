@@ -906,6 +906,17 @@
 			}
 			unset($entity_list);
 			unset($entity);
+
+			if ( $acl->check('.jasper', PHPGW_ACL_READ, 'property') )
+			{
+				$menus['navigation']['jasper'] = array
+				(
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.index')),
+					'text'	=> lang('JasperReports'),
+					'image'		=> array('property', 'report')
+				);
+			}
+
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}
