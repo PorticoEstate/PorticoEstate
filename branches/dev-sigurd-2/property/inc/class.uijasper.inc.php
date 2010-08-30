@@ -70,7 +70,7 @@
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
-			$this->sort			= $this->bo->sort;
+			$this->sort				= $this->bo->sort;
 			$this->order			= $this->bo->order;
 			$this->allrows			= $this->bo->allrows;
 		}
@@ -171,29 +171,35 @@
 			}
 
 			$jasper_list = $this->bo->read($type);
-
-			$uicols['name'][0]	= 'id';
-			$uicols['descr'][0]	= lang('Budget account');
-			$uicols['name'][1]	= 'descr';
-			$uicols['descr'][1]	= lang('Description');
+			$uicols = array();
+			$uicols['name'][]	= 'id';
+			$uicols['descr'][]	= lang('id');
+			$uicols['name'][]	= 'title';
+			$uicols['descr'][]	= lang('title');
+			$uicols['name'][]	= 'descr';
+			$uicols['descr'][]	= lang('Description');
+			$uicols['name'][]	= 'file_name';
+			$uicols['descr'][]	= lang('filename');
+			$uicols['name'][]	= 'location';
+			$uicols['descr'][]	= lang('location');
+			$uicols['name'][]	= 'user';
+			$uicols['descr'][]	= lang('user');
+			$uicols['name'][]	= 'entry_date';
+			$uicols['descr'][]	= lang('entry date');
+			$uicols['name'][]	= 'access';
+			$uicols['descr'][]	= lang('access');
 
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
-			if (isset($jasper_list) AND is_array($jasper_list))
+			foreach($jasper_list as $account_entry)
 			{
-				foreach($jasper_list as $account_entry)
+				for ($k=0;$k<$count_uicols_name;$k++)
 				{
-					for ($k=0;$k<$count_uicols_name;$k++)
-					{
-						if($uicols['input_type'][$k]!='hidden')
-						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']				= $account_entry[$uicols['name'][$k]];
-						}
-					}
-					$j++;
+					$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
+					$datatable['rows']['row'][$j]['column'][$k]['value']			= $account_entry[$uicols['name'][$k]];
 				}
+				$j++;
 			}
 
 			$datatable['rowactions']['action'] = array();
@@ -214,7 +220,7 @@
 			{
 				$datatable['rowactions']['action'][] = array(
 							'my_name' 			=> 'edit',
-							'statustext' 	=> lang('edit the account'),
+							'statustext' 	=> lang('edit the jasper entry'),
 							'text'			=> lang('edit'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 									(
@@ -228,7 +234,7 @@
 			{
 				$datatable['rowactions']['action'][] = array(
 							'my_name' 			=> 'delete',
-							'statustext' 	=> lang('delete the actor'),
+							'statustext' 	=> lang('delete the jasper entry'),
 							'text'			=> lang('delete'),
 							'confirm_msg'	=> lang('do you really want to delete this entry'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -249,18 +255,15 @@
 
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				if($uicols['input_type'][$i]!='hidden')
+				$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= false;
+				if($uicols['name'][$i]=='id')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='id')
-					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= 'id';
-					}
+					$datatable['headers']['header'][$i]['sortable']		= true;
+					$datatable['headers']['header'][$i]['sort_field']	= 'id';
 				}
 			}
 
@@ -273,8 +276,8 @@
 			$datatable['pagination']['records_returned']= count($jasper_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
-			$appname					= lang('budget account');
-			$function_msg				= lang('list budget account');
+			$appname					= 'JasperReport';
+			$function_msg				= lang('list report definitions');
 
 			if ( !phpgw::get_var('start') && !phpgw::get_var('order','string'))
 			{
@@ -313,7 +316,8 @@
 		    			elseif(isset($column['format']) && $column['format']== "link")
 		    			{
 		    			  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    			}else
+		    			}
+		    			else
 		    			{
 		    			  $json_row[$column['name']] = $column['value'];
 		    			}

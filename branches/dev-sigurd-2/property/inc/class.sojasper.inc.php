@@ -58,7 +58,7 @@
 			{
 				$ordermethod = ' ORDER BY id asc';
 			}
-return array();
+
 			$table = 'fm_jasper';
 
 			if($query)
@@ -86,8 +86,17 @@ return array();
 			{
 				$jasper[] = array
 				(
-					'id'		=> $this->db->f('id'),
-					'descr'		=> $this->db->f('descr',true)
+					'id'				=> $this->db->f('id'),
+					'descr'				=> $this->db->f('descr',true),
+					'location_id'		=> $this->db->f('location_id'),
+					'title'				=> $this->db->f('title',true),
+					'file_name'			=> $this->db->f('file_name',true),
+					'version'			=> $this->db->f('version'),
+					'user_id'			=> $this->db->f('user_id'),
+					'access'			=> $this->db->f('access'),
+					'entry_date'		=> $this->db->f('entry_date'),
+					'modified_by'		=> $this->db->f('modified_by'),
+					'modified_date'		=> $this->db->f('modified_date')
 				);
 			}
 			return $jasper;
