@@ -218,7 +218,7 @@
 			$filters['status'] = 'NEW';
 			if(isset($_SESSION['showall']))
 			{
-				$filters['status'] = array('NEW', 'REJECTED', 'ACCEPTED', 'CONFIRMED');
+				$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED', 'CONFIRMED');
 			}
 
 			$params = array(
@@ -547,6 +547,10 @@
 				if(array_key_exists('assign_to_user', $_POST))
 				{
 					$update = $this->assign_to_current_user($application);
+					if ($application['status'] == 'NEW') {
+						$application['status'] = 'PENDING';
+					}
+
 				}
 				elseif(isset($_POST['unassign_user'])) 
 				{
@@ -608,6 +612,7 @@
 			$application['resource_ids'] = $resource_ids;
 
 			$this->set_case_officer($application);
+
 			$comments = array_reverse($application['comments']);
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
@@ -618,7 +623,6 @@
 			$associations = $this->assoc_bo->so->read(array('filters'=>array('application_id'=>$application['id'])));
 			$num_associations = $associations['total_records'];
 			self::check_date_availability($application);
-//			echo'<pre>';print_r($application);exit;
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
 								  'num_associations'=>$num_associations,'comments' => $comments));

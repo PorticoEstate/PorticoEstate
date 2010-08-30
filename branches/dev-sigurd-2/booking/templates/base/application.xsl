@@ -251,6 +251,7 @@
 								<a name="assign"/>
 								<form method="POST">
 									<input type="hidden" name="assign_to_user"/>
+									<input type="hidden" name="status" value="PENDING"/>
 									<input type="submit" value="{php:function('lang', phpgw:conditional(application/case_officer, 'Re-assign to me', 'Assign to me'))}"/>
 							
 									<xsl:if test="application/case_officer">
