@@ -289,5 +289,15 @@ Update	bookingfrontend	no	Oppdater
 %1 bookings were updated.	bookingfrontend	no	%1 bookinger ble oppdatert.
 Access denied	bookingfrontend	no	Ingen tilgang
 Print as PDF	bookingfrontend	no	Skriv ut som PDF
+Out season	bookingfrontend	no	Ut sesong
+Can not repeat from a date in the past	bookingfrontend	no	Du kan ikke repetere fra en dato i fortiden.
+Can not create a booking in the past	bookingfrontend	no	Du kan ikke opprette en booking i fortiden.
+Overlaps with existing event	bookingfrontend	no	Overlapper med eksisterende arrangement
+Overlaps with existing allocation	bookingfrontend	no	Overlapper med eksisterende tildeling
+Overlaps with existing booking	bookingfrontend	no	Overlapper med eksisterende booking
+Overlaps other organizations allocation	bookingfrontend	no	Overlapper med en annen organisasjons tildeling
+The booking uses resources not in the containing allocation	bookingfrontend	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
 CONFIRMED	bookingfrontend	no	BEKREFTET
+Pending	bookingfrontend	no	Under behandling 
 The user has accepted the document under point 8.	bookingfrontend	no	Brukeren har akseptert dokumentene under punkt 8.
+
