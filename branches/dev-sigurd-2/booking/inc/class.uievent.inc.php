@@ -383,6 +383,13 @@
 			$event['building_id'] = $building_info['id'];
 			$event['building_name'] = $building_info['name'];
 			$errors = array();
+			$customer = array();
+			if ($event['customer_organization_number'])
+			{
+				$customer['customer_identifier_type'] = $event['customer_identifier_type'];
+				$customer['customer_ssn'] = $event['customer_ssn'];
+				$customer['customer_organization_number'] = $event['customer_organization_number'];
+			}	
 			list($event, $errors) = $this->extract_and_validate($event);
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -448,6 +455,12 @@
 				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
 			}
 			$this->flash_form_errors($errors);
+			if ($customer['customer_organization_number'])
+			{
+				$event['customer_identifier_type'] = $customer['customer_identifier_type'];
+				$event['customer_ssn'] = $customer['customer_ssn'];
+				$event['customer_organization_number'] = $customer['customer_organization_number'];
+			}			
 			self::add_javascript('booking', 'booking', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id'=> $event['application_id']));
