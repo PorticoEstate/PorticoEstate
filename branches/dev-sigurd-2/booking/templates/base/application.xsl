@@ -275,7 +275,7 @@
 						</form>
 					</dt>
 				</xsl:if>
-				<xsl:if test="application/status='NEW'">
+				<xsl:if test="application/status='PENDING'">
 					<xsl:if test="num_associations='0'">
 						<input type="submit" disabled="" value="{php:function('lang', 'Accept application')}"/>
 						<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
