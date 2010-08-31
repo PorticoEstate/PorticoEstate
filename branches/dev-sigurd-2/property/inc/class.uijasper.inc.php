@@ -54,7 +54,7 @@
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::budget';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::jasper';
 
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -382,7 +382,7 @@
 			$id	= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper','select_location'));
 
 			if ($values['save'])
 			{
@@ -433,41 +433,45 @@
 			);
 //_debug_array($jasper);
 
+			$location_list = array();
+
+			$locations = $GLOBALS['phpgw']->locations->get_locations();
+
+			foreach ( $locations as $loc_id => $loc_descr )
+			{
+				$location_list[] = array
+				(
+					'id'		=> $loc_id,
+					'descr'		=> "{$loc_id} [{$loc_descr}]",
+					'selected'	=> $loc_id == $selected ? 'selected' : ''
+				);
+			}
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.index', 'type'=> $type)),
-				'lang_id'				=> lang('budget account'),
-				'lang_descr'				=> lang('Descr'),
-				'lang_save'				=> lang('save'),
-				'lang_done'				=> lang('done'),
-				'value_id'				=> $id,
-				'lang_id_jaspertext'			=> lang('Enter the budget account'),
-				'lang_descr_jaspertext'		=> lang('Enter a description the budget account'),
-				'lang_done_jaspertext'		=> lang('Back to the list'),
-				'lang_save_jaspertext'		=> lang('Save the budget account'),
-				'value_descr'				=> $jasper['descr'],
-				'lang_responsible'			=> lang('Responsible'),
+				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.index', 'type'=> $type)),
+				'value_id'						=> $id,
+				'value_descr'					=> $jasper['descr'],
+				'lang_responsible'				=> lang('Responsible'),
 				'lang_user_statustext'			=> lang('Select the budget responsible'),
-				'select_user_name'			=> 'values[responsible]',
-				'lang_no_user'				=> lang('Select responsible'),
-				'user_list'				=> $this->bocommon->get_user_list_right2('select',128,$jasper['responsible'],'.invoice'),
+				'select_user_name'				=> 'values[responsible]',
+				'lang_no_user'					=> lang('Select responsible'),
+				'user_list'						=> $this->bocommon->get_user_list_right2('select',128,$jasper['responsible'],'.invoice'),
 
-				'lang_category'				=> lang('category'),
-				'lang_no_cat'				=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the selection belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'				=> 'values[cat_id]',
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $jasper['cat_id'],'type' =>'jasper','order'=>'id')),
+				'lang_no_location'				=> lang('No location'),
+				'lang_location_statustext'		=> lang('Select submodule'),
+				'select_name_location'			=> 'module',
+				'location_list'					=> $location_list
 			);
 
 			$appname						= lang('budget account');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function delete()
