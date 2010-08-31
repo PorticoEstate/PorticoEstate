@@ -13,8 +13,8 @@
 		protected $party_id; // Party that is the recepient of this invoice
 		protected $party;
 		protected $timestamp_created; // Billing date
-		protected $timstamp_start; // Start date of invoice
-		protected $timstamp_end; // End date of invoice
+		protected $timestamp_start; // Start date of invoice
+		protected $timestamp_end; // End date of invoice
 		protected $invoice_price_items;
 		protected $total_sum;
 		protected $total_area;
@@ -30,6 +30,7 @@
 		protected $term_label;
 		protected $billing_title;
 		protected $serial_number;
+		protected $reference;
 		
 		public static $so;
 		
@@ -237,6 +238,13 @@
 		public function set_billing_title($billing_title)
 		{
 			$this->billing_title = $billing_title;
+		}
+
+		public function get_reference(){ return $this->reference; }
+
+		public function set_reference($reference)
+		{
+			$this->reference = $reference;
 		}
 	
 		public function get_billing_title(){ return $this->billing_title; }

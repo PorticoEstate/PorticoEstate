@@ -78,6 +78,8 @@
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
 			$booking['from_'] = phpgw::get_var('from_', 'str', 'GET');
 			$booking['to_'] = phpgw::get_var('to_', 'str', 'GET');
+			$time_from = split(" ",phpgw::get_var('from_', 'str', 'GET'));
+			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
 			$step = phpgw::get_var('step', 'str', 'POST');
 			if (! isset($step)) $step = 1;
 			$invalid_dates = array();
@@ -95,7 +97,14 @@
 			}
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
+				$date_from = array($time_from[0], $_POST['from_']);
+				$booking['from_'] = join(" ",$date_from);
+				$_POST['from_'] = join(" ",$date_from);
+				$date_to = array($time_to[0], $_POST['to_']);
+				$booking['to_'] = join(" ",$date_to); 
+				$_POST['to_'] = join(" ",$date_to);
 				$booking['building_name'] = $building['name'];
 				$booking['building_id'] = $building['id'];
 				$booking['active'] = '1';
@@ -110,23 +119,46 @@
 
 				$errors = $this->bo->validate($booking);
 
+
+				if (strtotime($_POST['from_']) < $today[0])
+				{
+					if($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')
+					{					
+						$errors['booking'] = lang('Can not repeat from a date in the past');
+					}
+					else
+					{
+						$errors['booking'] = lang('Can not create a booking in the past');
+					}
+				} 
+				if (!$allocation_id &&  $_POST['outseason'] == 'on')
+				{
+					$errors['booking'] = lang('This booking is not connected to a season');
+				}	
+
 				if (!$errors)
 				{
 					$step++;
 				}
 
-				if (!$errors && $_POST['recurring'] != 'on')
+				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
 				{
 					$receipt = $this->bo->add($booking);
 					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
 				}
-				else if ( $_POST['recurring'] == 'on' && !$errors && $step > 1)
+				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors && $step > 1)
 				{
-					$repeat_until = strtotime($_POST['repeat_until']);
+					if ($_POST['recurring'] == 'on') {
+						$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
+					} 
+					else
+					{
+						$repeat_until = strtotime($season['to_'])+60*60*24; 
+					} 
+
 					$max_dato = strtotime($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval']*60*60*24*7; // weeks in seconds
-					$i = 1;
-
+					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
 					while (($max_dato+($interval*$i)) <= $repeat_until)
@@ -157,14 +189,14 @@
 					{
 						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
 					}
-				} 
+				}
 			}
+
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
 			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=> $booking['building_id']));
-			//echo '<pre>'; print_r($booking); exit;
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -174,8 +206,12 @@
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$allocation['organization_id'], 'active'=>1)));
 			$groups = $groups['results'];
 			$booking['organization_name'] = $allocation['organization_name'];
-
-
+			$resouces_full = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
+			$res_names = array();
+			foreach($resouces_full['results'] as $res)
+			{
+				$res_names[] = array('id' => $res['id'],'name' => $res['name']);
+			}
 
 			if ($step < 2) 
 			{
@@ -187,7 +223,11 @@
 					'step' => $step, 
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],
-					'recurring' => $_POST['recurring'])
+					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
+					'date_from' => $time_from[0],
+					'date_to' => $time_to[0],
+					'res_names' => $res_names)
 				);
 			} 
 			else if ($step == 2) 
@@ -198,13 +238,17 @@
 					'audience' => $audience,
 					'step' => $step,
 					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],
 					'from_date' => $_POST['from_'],
 					'to_date' => $_POST['to_'],
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
-					'groups' => $groups)
+					'groups' => $groups,
+					'date_from' => $time_from[0],
+					'date_to' => $time_to[0],
+					'res_names' => $res_names)
 				);
 			}
 		}

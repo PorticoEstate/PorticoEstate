@@ -4356,3 +4356,83 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.589 to 0.9.17.590
+	* add billable_hours to workorders
+	* 
+	*/
+
+	$test[] = '0.9.17.589';
+	function property_upgrade0_9_17_589()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'title' => array('type' => 'varchar','precision' => 100,'nullable' => true),
+					'file_name' => array('type' => 'varchar','precision' => 100,'nullable' => true),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+					'version' => array('type' => 'varchar','precision' => 10,'nullable' => true),
+					'access' => array('type' => 'varchar','precision' => 7,'nullable' => true),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => true)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper_input_type', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
+					'input_type' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: date/ integer
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper_input', array(
+				'fd' => array(
+					'input_type_id' => array('type' => 'int','precision' => 4, 'nullable' => false),
+					'jasper_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'name' => array('type' => 'varchar','precision' => 20,'nullable' => false),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+				),
+				'pk' => array('input_type_id', 'jasper_id'),
+				'fk' => array(
+					'fm_jasper_input_type' => array('input_type_id' => 'id'),
+					'fm_jasper' => array('jasper_id' => 'id')),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.590';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
