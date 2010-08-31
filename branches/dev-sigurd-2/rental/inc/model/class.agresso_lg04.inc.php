@@ -154,7 +154,8 @@ class rental_agresso_lg04 implements rental_exportable
 				$building_location_code, 
 				$invoice->get_project_id(), 
 				$composite_name,
-				$serial_number
+				$serial_number,
+				$invoice->get_reference()
 			);
 			$invoice->set_serial_number($serial_number);
 			$serial_number++;
@@ -173,7 +174,7 @@ class rental_agresso_lg04 implements rental_exportable
 	 * Builds one single order of the Agresso file.
 	 * 
 	 */
-	protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number)
+	protected function get_order($header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref)
 	{
 		
 		//$order_id = $order_id + 39500000;
@@ -200,7 +201,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%35s", '')										// 	19		bank_account
 			.sprintf("%-12s", "BKBPE{$this->date_str}")					// 	20		batch_id				DATA
 			.'BY'														// 	21		client					DATA
-			.sprintf("%2s", '')											// 	22		client_ref
+			.sprintf("%2s", '')								// 	22		client_ref
 			.sprintf("%-17s", "{$this->date_str}")						// 	23		confirm_date			DATA
 			.sprintf("%1s", '')											// 	24		control
 			.sprintf("%17s", '')										//	25		just white space..
@@ -223,7 +224,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%12s", '')										// 	48		dim_value_7
 			.sprintf("%17s", '')										//	49-50	just white space..
 			.sprintf("%017s", '')										// 	51		exch_rate
-			.sprintf("%-15.15s", '')									// 	52		ext_ord_ref				
+			.sprintf("%-15.15s", $client_ref)							// 	52		ext_ord_ref
 			.sprintf("%6s", '')											// 	53		intrule_id
 			.sprintf("%8s", '')											//	54-55	just white space..
 			.sprintf("%-120.120s", utf8_decode($header))								// 	56		long_info1				DATA
