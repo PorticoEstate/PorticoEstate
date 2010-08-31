@@ -4400,7 +4400,7 @@
 			'fm_jasper_input_type', array(
 				'fd' => array(
 					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
-					'input_type' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: date/ integer
+					'name' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: date/ integer
 					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
 				),
 				'pk' => array('id'),

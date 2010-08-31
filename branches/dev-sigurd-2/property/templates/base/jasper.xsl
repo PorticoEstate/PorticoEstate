@@ -67,15 +67,32 @@
 					<xsl:value-of select="php:function('lang', 'location')" />
 				</td>
 				<td>
-					<xsl:call-template name="select_location"/>
+					<select name="values[location]">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Select submodule')" />
+						</xsl:attribute>
+						<option value="">
+							<xsl:value-of select="php:function('lang', 'No location')" />
+						</option>
+						<xsl:apply-templates select="location_list"/>
+					</select>			
 				</td>
+
 			</tr>
 			<tr>
 				<td>
 					<xsl:value-of select="php:function('lang', 'input type')" />
 				</td>
 				<td>
-					<xsl:call-template name="user_id_select"/>
+					<select name="values[input type]">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'input type')" />
+						</xsl:attribute>
+						<option value="">
+							<xsl:value-of select="php:function('lang', 'input type')" />
+						</option>
+						<xsl:apply-templates select="input_type_list"/>
+					</select>			
 				</td>
 			</tr>
 			<tr>
@@ -122,3 +139,22 @@
 		</form>
 		</div>
 	</xsl:template>
+
+	<xsl:template match="input_type_list">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+
+	<xsl:template match="location_list">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+

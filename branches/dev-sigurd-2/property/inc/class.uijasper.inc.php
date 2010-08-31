@@ -382,7 +382,7 @@
 			$id	= phpgw::get_var('id', 'int');
 			$values			= phpgw::get_var('values');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper','select_location'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
 
 			if ($values['save'])
 			{
@@ -433,42 +433,38 @@
 			);
 //_debug_array($jasper);
 
-			$location_list = array();
-
 			$locations = $GLOBALS['phpgw']->locations->get_locations();
+			$selected_location = '';
+			if(isset($jasper['location_id']) && $jasper['location_id'])
+			{
+				$locations_info = $GLOBALS['phpgw']->locations->get_name($jasper['location_id']);
+				$selected_location = $locations_info['location'];
+			}
 
-			foreach ( $locations as $loc_id => $loc_descr )
+			$location_list = array();
+			foreach ( $locations as $location => $descr )
 			{
 				$location_list[] = array
 				(
-					'id'		=> $loc_id,
-					'descr'		=> "{$loc_id} [{$loc_descr}]",
-					'selected'	=> $loc_id == $selected ? 'selected' : ''
+					'id'	=> $location,
+					'name'		=> "{$location} [{$descr}]",
+					'selected'		=> $location == $selected_location
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.index', 'type'=> $type)),
 				'value_id'						=> $id,
 				'value_descr'					=> $jasper['descr'],
-				'lang_responsible'				=> lang('Responsible'),
-				'lang_user_statustext'			=> lang('Select the budget responsible'),
-				'select_user_name'				=> 'values[responsible]',
-				'lang_no_user'					=> lang('Select responsible'),
-				'user_list'						=> $this->bocommon->get_user_list_right2('select',128,$jasper['responsible'],'.invoice'),
-
-				'lang_no_location'				=> lang('No location'),
-				'lang_location_statustext'		=> lang('Select submodule'),
-				'select_name_location'			=> 'module',
+				'input_type_list'				=> $this->bo->get_input_type_list($jasper['input_type']),
 				'location_list'					=> $location_list
 			);
 
-			$appname						= lang('budget account');
+			$appname						= 'JasperReports';
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
