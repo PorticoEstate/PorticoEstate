@@ -112,7 +112,6 @@
 				$booking['completed'] = '0';
 				$booking['reminder'] = '1';
 				$booking['secret'] = $this->generate_secret();
-				$season = $this->season_bo->read_single($allocation['season_id']);
 				array_set_default($booking, 'audience', array());
 				array_set_default($booking, 'agegroups', array());
 				array_set_default($_POST, 'resources', array());
@@ -131,6 +130,10 @@
 					{
 						$errors['booking'] = lang('Can not create a booking in the past');
 					}
+				} 
+				if (!$allocation_id &&  $_POST['outseason'] == 'on')
+				{
+					$errors['booking'] = lang('This booking is not connected to a season');
 				}	
 
 				if (!$errors)

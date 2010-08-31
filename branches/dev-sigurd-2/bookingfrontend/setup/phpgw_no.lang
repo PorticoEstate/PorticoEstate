@@ -298,6 +298,7 @@ Overlaps with existing booking	bookingfrontend	no	Overlapper med eksisterende bo
 Overlaps other organizations allocation	bookingfrontend	no	Overlapper med en annen organisasjons tildeling
 The booking uses resources not in the containing allocation	bookingfrontend	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
 CONFIRMED	bookingfrontend	no	BEKREFTET
-Pending	bookingfrontend	no	Under behandling 
+Pending	bookingfrontend	no	Under behandling
+This booking is not connected to a season	bookingfrontend	no	Denne bookingen er ikke koblet mote en sesong
 The user has accepted the document under point 8.	bookingfrontend	no	Brukeren har akseptert dokumentene under punkt 8.
 
