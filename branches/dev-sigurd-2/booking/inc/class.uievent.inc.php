@@ -402,7 +402,6 @@
 						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event,$errors);
-							echo '<pre>';print_r($maildata);exit;
 							if ($maildata)
 							{	
 								$comment_text_log = lang('Message sent about the changes in the reservations').': ';
