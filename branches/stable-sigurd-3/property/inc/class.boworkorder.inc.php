@@ -390,7 +390,7 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$this->uicols	= $this->so->uicols;
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : array();
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : array();
 
 			foreach ($custom_cols as $col)
 			{

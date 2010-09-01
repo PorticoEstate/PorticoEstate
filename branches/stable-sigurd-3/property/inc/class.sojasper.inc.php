@@ -159,4 +159,22 @@
 
 			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
 		}
+
+		public function get_input_type_list($selected)
+		{
+			$this->db->query('SELECT * FROM fm_jasper_input_type',__LINE__,__FILE__);
+
+			$input_types = array();
+			while ($this->db->next_record())
+			{
+				$input_types[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name',true)
+				);
+			}
+			return $input_types;
+
+		}
+
 	}

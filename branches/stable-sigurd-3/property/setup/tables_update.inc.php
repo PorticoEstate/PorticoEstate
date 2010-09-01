@@ -4370,9 +4370,9 @@
 
 		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_jasper', array(
@@ -4400,7 +4400,7 @@
 			'fm_jasper_input_type', array(
 				'fd' => array(
 					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
-					'input_type' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: date/ integer
+					'name' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: date/ integer
 					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
 				),
 				'pk' => array('id'),
@@ -4422,7 +4422,6 @@
 				'fk' => array(
 					'fm_jasper_input_type' => array('input_type_id' => 'id'),
 					'fm_jasper' => array('jasper_id' => 'id')),
-				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 			)

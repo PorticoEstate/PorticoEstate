@@ -130,5 +130,14 @@
 		{
 			$this->so->delete($id);
 		}
-	}
 
+		public function get_input_type_list($selected = 0)
+		{
+			$input_types = $this->so->get_input_type_list();
+			foreach($input_types as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected;
+			}
+			return $input_types;
+		}
+	}

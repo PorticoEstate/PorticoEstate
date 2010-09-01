@@ -776,7 +776,7 @@
 			$uicols['name'][] = 'lang_view_statustext';
 			$uicols['name'][] = 'text_view';
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
 
 			foreach ($custom_cols as $col)
 			{
@@ -2864,6 +2864,7 @@
 						'tenant'	=> (isset($ticket['location_data']['tenant_id'])?$ticket['location_data']['tenant_id']:''),
 						'lookup_type'	=> 'view',
 						'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
+
 						'entity_data'	=> (isset($ticket['p'])?$ticket['p']:'')
 						));
 
