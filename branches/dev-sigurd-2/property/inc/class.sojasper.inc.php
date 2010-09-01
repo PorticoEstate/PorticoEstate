@@ -247,9 +247,12 @@ die();
 
 		function delete($id)
 		{
-			$table = 'fm_jasper';
+			$id = (int)$id;
 
-			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
+			$this->db->transaction_begin();
+			$this->db->query("DELETE FROM fm_jasper_input WHERE jasper_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_jasper WHERE id = {$id}",__LINE__,__FILE__);
+			$this->db->transaction_commit();
 		}
 
 		public function get_input_type_list()
