@@ -167,6 +167,11 @@
 				'id' => 'billable_hours',
 				'name'=> lang('billable hours')
 			);
+			$columns[] = array
+			(
+				'id' => 'district',
+				'name'=> lang('district')
+			);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}

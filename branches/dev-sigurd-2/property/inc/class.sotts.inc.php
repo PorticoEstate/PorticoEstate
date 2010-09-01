@@ -313,9 +313,10 @@
 				}
 			}
 
-			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field} FROM fm_tts_tickets"
+			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field},fm_district.descr as district  FROM fm_tts_tickets"
 			. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 			. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+			. " $this->join fm_district ON fm_district.id = fm_part_of_town.district_id"
 			. " $order_join"
 			. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')"
 			. " $filtermethod $querymethod";
@@ -364,6 +365,7 @@
 						'subject'			=> $this->db->f('subject',true),
 						'loc1_name'			=> $this->db->f('loc1_name',true),
 						'location_code'		=> $this->db->f('location_code'),
+						'district'			=> $this->db->f('district',true),
 						'user_id'			=> $this->db->f('user_id'),
 						'address'			=> $this->db->f('address',true),
 						'assignedto'		=> $this->db->f('assignedto'),
