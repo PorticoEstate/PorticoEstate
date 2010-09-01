@@ -4370,9 +4370,9 @@
 
 		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_jasper', array(
@@ -4413,9 +4413,9 @@
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_jasper_input', array(
 				'fd' => array(
-					'input_type_id' => array('type' => 'int','precision' => 4, 'nullable' => false),
 					'jasper_id' => array('type' => 'int','precision' => 4,'nullable' => false),
-					'name' => array('type' => 'varchar','precision' => 20,'nullable' => false),
+					'input_type_id' => array('type' => 'int','precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => false),
 					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
 				),
 				'pk' => array('input_type_id', 'jasper_id'),

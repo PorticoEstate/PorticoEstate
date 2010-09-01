@@ -124,14 +124,49 @@
 
 		function add($jasper)
 		{
+			$receipt = array();
 			$table = 'fm_jasper';
+//_debug_array($jasper);
+			$value_set= array
+			(
+				'location_id'	=> $GLOBALS['phpgw']->locations->get_id('property', $jasper['location']),
+				'title'			=> $this->db->db_addslashes($jasper['title']),
+				'file_name'		=> $jasper['file_name'],
+				'descr'			=> $this->db->db_addslashes($jasper['descr']),
+				'version'		=> 1,
+				'access'		=> $jasper['access'],
+				'user_id'		=> $this->account,
+				'entry_date'	=> time(),
+				'modified_by'	=> $this->account,
+				'modified_date'	=> time()
+			);
 
-			$jasper['descr'] = $this->db->db_addslashes($jasper['descr']);
+			$values	= $this->db->validate_insert(array_values($value_set));
+			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO $table (id, descr,category,responsible) "
-				. "VALUES ('" . $jasper['id'] . "','" . $jasper['descr']. "','" .$jasper['cat_id'] . "','" . $jasper['responsible'] . "')",__LINE__,__FILE__);
+/*
+_debug_array("INSERT INTO $table (" . implode(',', array_keys($value_set)) .") "
+				. "VALUES ($values)");
+die();
+*/
 
-			$receipt['message'][]=array('msg'=>lang('budget account %1 has been saved',$jasper['id']));
+
+			$this->db->query("INSERT INTO $table (" . implode(',', array_keys($value_set)) .") "
+				. "VALUES ($values)",__LINE__,__FILE__);
+
+			$id = $this->db->get_last_insert_id($table,'id');
+
+			$jasper['input_name'] =  $this->db->db_addslashes($jasper['input_name']);
+			$jasper['input_name'] =  (int)$jasper['input_name'];
+
+			$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name)"
+			." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}')",__LINE__,__FILE__);
+
+			
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('JasperReport %1 has been saved',$id));
+			}
 			return $receipt;
 		}
 
@@ -160,7 +195,7 @@
 			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
 		}
 
-		public function get_input_type_list($selected)
+		public function get_input_type_list()
 		{
 			$this->db->query('SELECT * FROM fm_jasper_input_type',__LINE__,__FILE__);
 
@@ -174,7 +209,5 @@
 				);
 			}
 			return $input_types;
-
 		}
-
 	}

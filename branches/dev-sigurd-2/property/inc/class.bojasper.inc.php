@@ -108,15 +108,20 @@
 		}
 
 
-		function save($jasper,$action='')
+		function save($jasper)
 		{
-			if ($action=='edit')
+			if (isset($jasper['access']) && $jasper['access'])
 			{
-				if ($jasper['id'] != '')
-				{
+				$jasper['access'] = 'private';
+			}
+			else
+			{
+				$jasper['access'] = 'public';
+			}
 
-					$receipt = $this->so->edit($jasper);
-				}
+			if (isset($jasper['id']) && (int)$jasper['id'])
+			{
+				$receipt = $this->so->edit($jasper);
 			}
 			else
 			{

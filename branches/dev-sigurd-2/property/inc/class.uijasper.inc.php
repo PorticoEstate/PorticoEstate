@@ -384,38 +384,52 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
 
-			if ($values['save'])
+			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
-				if(!$id && !ctype_digit($values['id']))
+				if($GLOBALS['phpgw']->session->is_repost())
 				{
-					$receipt['error'][]=array('msg'=>lang('Please enter an integer !'));
-					unset($values['id']);
+	//				$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
 				}
 
-				if(!isset($values['responsible']) || !$values['responsible'])
+
+				if(!isset($values['location']) || !$values['location'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Please select a budget reponsible!'));
+					$receipt['error'][]=array('msg'=>lang('Please select a location!'));
+				}
+
+				if(!isset($values['title']) || !$values['title'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please enter a title!'));
 				}
 
 				if($id)
 				{
 					$values['id']=$id;
-					$action='edit';
 				}
 				else
 				{
-					$id =	$values['id'];
+					$id = $values['id'];
 				}
 
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->save($values,$action);
+					$receipt = $this->bo->save($values);
+					if (isset($values['save']) && $values['save'])
+					{
+						$GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index'));
+					}
 				}
+			}
+
+			if (isset($values['cancel']) && $values['cancel'])
+			{
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index'));
 			}
 
 			if ($id)
 			{
-				$jasper = $this->bo->read_single($id);
+				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit budget account');
 				$action='edit';
 			}
@@ -434,10 +448,10 @@
 //_debug_array($jasper);
 
 			$locations = $GLOBALS['phpgw']->locations->get_locations();
-			$selected_location = '';
-			if(isset($jasper['location_id']) && $jasper['location_id'])
+			$selected_location = isset($values['location']) ? $values['location'] : '';
+			if(isset($values['location_id']) && $values['location_id'])
 			{
-				$locations_info = $GLOBALS['phpgw']->locations->get_name($jasper['location_id']);
+				$locations_info = $GLOBALS['phpgw']->locations->get_name($values['location_id']);
 				$selected_location = $locations_info['location'];
 			}
 
@@ -446,11 +460,48 @@
 			{
 				$location_list[] = array
 				(
-					'id'	=> $location,
+					'id'		=> $location,
 					'name'		=> "{$location} [{$descr}]",
-					'selected'		=> $location == $selected_location
+					'selected'	=> $location == $selected_location
 				);
 			}
+
+
+			$type_def = array
+			(
+				array('key' => 'value_count',	'label'=>'#',		'sortable'=>true,'resizeable'=>true),
+       			array('key' => 'value_type',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+      			array('key' => 'value_name',	'label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
+				array('key' => 'value_value',	'label'=>lang('value'),'sortable'=>true,'resizeable'=>true)
+			);
+
+			$input_types = isset($values['input_types']) && $values['input_types'] ? $values['input_types'] : array();
+
+			if($this->acl_edit)
+			{
+				$type_def[] = array('key' => 'delete_text','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+				foreach($input_types as &$input_type)
+				{
+					$input_type['delete_text'] = '<input type="checkbox" name="values[delete_text][]" value="'.$input_type['value_type'].'" title="'.lang('Check to delete type').'">';
+				}
+			}
+
+			//---datatable settings--------------------------
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($input_types),
+					'total_records'			=> count($input_types),
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+			);					
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+				'values'	=>	json_encode($type_def)
+			);		
+			//-----------------------------------------------
+
 
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
@@ -459,10 +510,35 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'value_id'						=> $id,
-				'value_descr'					=> $jasper['descr'],
-				'input_type_list'				=> $this->bo->get_input_type_list($jasper['input_type']),
-				'location_list'					=> $location_list
+				'value_title'					=> $values['title'],
+				'value_descr'					=> $values['descr'],
+				'input_type_list'				=> $this->bo->get_input_type_list(),
+				'location_list'					=> $location_list,
+				'td_count'						=> '""',
+				'base_java_url'					=> "{menuaction:'property.uijasper.edit'}",
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,
 			);
+
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'jasper.edit', 'property' );
+			//-----------------------datatable settings---
 
 			$appname						= 'JasperReports';
 
