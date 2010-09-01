@@ -97,6 +97,13 @@
 			$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows));
 
+			foreach ($jasper as &$entry)
+			{
+				$entry['entry_date']	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);				
+				$entry['user']			= $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+				$location_info			= $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+				$entry['location']		= $location_info['descr'];
+			}
 			$this->total_records = $this->so->total_records;
 
 			return $jasper;

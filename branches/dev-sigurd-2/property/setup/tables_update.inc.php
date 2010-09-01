@@ -4410,15 +4410,20 @@
 			)
 		);
 
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('date', 'Date')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('integer', 'Integer')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('text', 'Text')");
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_jasper_input', array(
 				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
 					'jasper_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 					'input_type_id' => array('type' => 'int','precision' => 4, 'nullable' => false),
 					'name' => array('type' => 'varchar','precision' => 50,'nullable' => false),
 					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
 				),
-				'pk' => array('input_type_id', 'jasper_id'),
+				'pk' => array('id'),
 				'fk' => array(
 					'fm_jasper_input_type' => array('input_type_id' => 'id'),
 					'fm_jasper' => array('jasper_id' => 'id')),

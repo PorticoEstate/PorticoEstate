@@ -129,6 +129,21 @@
 						</input>			
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'access')" />
+					</td>
+					<td>
+						<input type="checkbox" name="values[access]" value="True">
+							<xsl:if test="value_access = 'private'">
+								<xsl:attribute name="checked">
+									checked
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+				</tr>
+
 			</table>
 			<table cellpadding="2" cellspacing="2" width="50%" align="center">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>

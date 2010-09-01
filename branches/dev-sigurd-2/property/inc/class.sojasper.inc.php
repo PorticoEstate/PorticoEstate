@@ -105,19 +105,48 @@
 		function read_single($id)
 		{
 
+			$id = (int)$id;
 			$table = 'fm_jasper';
 
-			$sql = "SELECT * FROM $table  where id='$id'";
+			$sql = "SELECT * FROM $table  WHERE id = $id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$jasper = array();
 			if ($this->db->next_record())
 			{
-				$jasper['id']		= $this->db->f('id');
-				$jasper['descr']		= $this->db->f('descr');
-				$jasper['cat_id']		= $this->db->f('category');
-				$jasper['responsible']	= $this->db->f('responsible');
+				$jasper = array
+				(
+					'id'				=> $this->db->f('id'),
+					'descr'				=> $this->db->f('descr',true),
+					'location_id'		=> $this->db->f('location_id'),
+					'title'				=> $this->db->f('title',true),
+					'file_name'			=> $this->db->f('file_name',true),
+					'version'			=> $this->db->f('version'),
+					'user_id'			=> $this->db->f('user_id'),
+					'access'			=> $this->db->f('access'),
+					'entry_date'		=> $this->db->f('entry_date'),
+					'modified_by'		=> $this->db->f('modified_by'),
+					'modified_date'		=> $this->db->f('modified_date')
+				);
+
+				$sql = "SELECT fm_jasper_input.id, fm_jasper_input.input_type_id,fm_jasper_input.name as input_name,fm_jasper_input_type.name as type_name"
+				." FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$i = 1;
+				while ($this->db->next_record())
+				{
+					$jasper['input'][] = array
+					(
+						'count'				=> $i,
+						'id'				=> $this->db->f('id'),
+						'input_type_id'		=> $this->db->f('input_type_id'),
+						'input_name'		=> $this->db->f('input_name',true),
+						'type_name'			=> $this->db->f('type_name',true)
+					);
+					$i++;
+				}
+
 			}
 			return $jasper;
 		}
@@ -156,12 +185,14 @@ die();
 
 			$id = $this->db->get_last_insert_id($table,'id');
 
-			$jasper['input_name'] =  $this->db->db_addslashes($jasper['input_name']);
-			$jasper['input_name'] =  (int)$jasper['input_name'];
+			if(isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
+			{
+				$jasper['input_name'] =  $this->db->db_addslashes($jasper['input_name']);
+				$jasper['input_type'] =  (int)$jasper['input_type'];
 
-			$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name)"
-			." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}')",__LINE__,__FILE__);
-
+				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name)"
+				." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}')",__LINE__,__FILE__);
+			}
 			
 			if($this->db->transaction_commit())
 			{
@@ -172,19 +203,45 @@ die();
 
 		function edit($jasper)
 		{
-
+			$receipt = array();
 			$table = 'fm_jasper';
 
-			$jasper['descr'] = $this->db->db_addslashes($jasper['descr']);
+			$value_set= array
+			(
+				'location_id'	=> $GLOBALS['phpgw']->locations->get_id('property', $jasper['location']),
+				'title'			=> $this->db->db_addslashes($jasper['title']),
+				'file_name'		=> $jasper['file_name'],
+				'descr'			=> $this->db->db_addslashes($jasper['descr']),
+				'access'		=> $jasper['access'],
+				'modified_by'	=> $this->account,
+				'modified_date'	=> time()
+			);
 
-			$this->db->query("UPDATE $table set"
-					. " descr='" . $jasper['descr'] . "',"
-					. "responsible=" . $jasper['responsible'] . ","
-					. "category=" . (int)$jasper['cat_id']
-					. " WHERE id='" . $jasper['id']. "'",__LINE__,__FILE__);
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->transaction_begin();
+			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$jasper['id']}" ,__LINE__,__FILE__);
+
+			if(isset($jasper['delete_input']) && $jasper['delete_input'])
+			{
+				foreach($jasper['delete_input'] as $delete_input)
+				{
+					$this->db->query("DELETE FROM fm_jasper_input WHERE id = {$delete_input} AND jasper_id = {$jasper['id']}",__LINE__,__FILE__);
+				}
+			}
+			if(isset($jasper['input_name']) && $jasper['input_name'] && isset($jasper['input_type']) && (int)$jasper['input_type'])
+			{
+				$jasper['input_name'] =  $this->db->db_addslashes($jasper['input_name']);
+				$jasper['input_type'] =  (int)$jasper['input_type'];
+
+				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name)"
+				." VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}')",__LINE__,__FILE__);
+			}
 
 
-			$receipt['message'][]=array('msg'=>lang('budget account %1 has been edited',$jasper['id']));
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('JasperReport %1 has been edited',$jasper['id']));
+			}
 			return $receipt;
 		}
 

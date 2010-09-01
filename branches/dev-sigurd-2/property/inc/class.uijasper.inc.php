@@ -414,6 +414,57 @@
 				if(!$receipt['error'])
 				{
 					$receipt = $this->bo->save($values);
+
+//-------------start files
+					$bofiles	= CreateObject('property.bofiles');
+					$files = array();
+					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
+					{
+_debug_array($_FILES['file']['name']);die();
+//FIXME
+						$file_name = str_replace (' ','_',$_FILES['file']['name']);
+						$to_file	= "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
+
+						if ($bofiles->vfs->file_exists(array(
+								'string' => $to_file,
+								'relatives' => Array(RELATIVE_NONE)
+							)))
+						{
+							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+						}
+						else
+						{
+							$files[] = array
+							(
+								'from_file'	=> $_FILES['file']['tmp_name'],
+								'to_file'	=> $to_file
+							);
+						}
+
+						unset($to_file);
+						unset($file_name);
+					}
+					foreach ($files as $file)
+					{
+						$bofiles->create_document_dir("{$this->category_dir}/{$loc1}/{$id}");
+						$bofiles->vfs->override_acl = 1;
+
+						if(!$bofiles->vfs->cp (array (
+							'from'	=> $file['from_file'],
+							'to'	=> $file['to_file'],
+							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+						{
+							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+						}
+						$bofiles->vfs->override_acl = 0;
+					}
+					unset($loc1);
+					unset($files);
+					unset($file);					
+//-------------end files
+
+
+
 					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
@@ -466,23 +517,22 @@
 				);
 			}
 
-
 			$type_def = array
 			(
-				array('key' => 'value_count',	'label'=>'#',		'sortable'=>true,'resizeable'=>true),
-       			array('key' => 'value_type',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-      			array('key' => 'value_name',	'label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
-				array('key' => 'value_value',	'label'=>lang('value'),'sortable'=>true,'resizeable'=>true)
+				array('key' => 'count',	'label'=>'#','sortable'=>true,'resizeable'=>true),
+       			array('key' => 'type_name',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+      			array('key' => 'input_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
+		//		array('key' => 'value',	'label'=>lang('value'),'sortable'=>true,'resizeable'=>true)
 			);
 
-			$input_types = isset($values['input_types']) && $values['input_types'] ? $values['input_types'] : array();
+			$inputs = isset($values['input']) && $values['input'] ? $values['input'] : array();
 
 			if($this->acl_edit)
 			{
-				$type_def[] = array('key' => 'delete_text','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
-				foreach($input_types as &$input_type)
+				$type_def[] = array('key' => 'delete_input','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+				foreach($inputs as &$input)
 				{
-					$input_type['delete_text'] = '<input type="checkbox" name="values[delete_text][]" value="'.$input_type['value_type'].'" title="'.lang('Check to delete type').'">';
+					$input['delete_input'] = '<input type="checkbox" name="values[delete_input][]" value="'.$input['id'].'" title="'.lang('Check to delete input').'">';
 				}
 			}
 
@@ -490,8 +540,8 @@
 			$datavalues[0] = array
 			(
 					'name'					=> "0",
-					'values' 				=> json_encode($input_types),
-					'total_records'			=> count($input_types),
+					'values' 				=> json_encode($inputs),
+					'total_records'			=> count($inputs),
 					'is_paginator'			=> 0,
 					'footer'				=> 0
 			);					
@@ -512,6 +562,7 @@
 				'value_id'						=> $id,
 				'value_title'					=> $values['title'],
 				'value_descr'					=> $values['descr'],
+				'value_access'					=> $values['access'],
 				'input_type_list'				=> $this->bo->get_input_type_list(),
 				'location_list'					=> $location_list,
 				'td_count'						=> '""',
