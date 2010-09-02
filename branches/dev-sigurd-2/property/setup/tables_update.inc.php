@@ -4370,11 +4370,12 @@
 
 		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 
+/*
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_format_type');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
-
+*/
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_jasper', array(
 				'fd' => array(
