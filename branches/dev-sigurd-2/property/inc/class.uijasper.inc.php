@@ -44,10 +44,11 @@
 
 		var $public_functions = array
 		(
-			'index'  => true,
-			'edit'   => true,
-			'delete' => true,
-			'download'	=> true
+			'index'  	=> true,
+			'edit'   	=> true,
+			'delete' 	=> true,
+			'download'	=> true,
+			'view'		=> true
 		);
 
 		function __construct()
@@ -619,6 +620,15 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+		}
+
+		function view()
+		{
+			$jasper_id		= phpgw::get_var('jasper_id');
+			$values = $this->bo->read_single($jasper_id);
+_debug_array($id);
+			_debug_array($values);die();
+		
 		}
 
 		function delete()

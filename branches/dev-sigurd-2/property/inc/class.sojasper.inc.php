@@ -45,11 +45,12 @@
 
 		public function read($data)
 		{
-			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query		= isset($data['query']) ? $data['query'] : '';
-			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order		= isset($data['order']) ? $data['order'] : '';
-			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 
 			$grants	= & $this->grants;
 
@@ -80,6 +81,11 @@
 				$filtermethod .= ' )';
 			}
 
+			if($location_id)
+			{
+				$filtermethod .= " AND location_id = {$location_id}";
+			}
+			
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
