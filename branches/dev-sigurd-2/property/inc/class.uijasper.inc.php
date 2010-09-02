@@ -657,6 +657,10 @@ _debug_array($id);
 						'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
 						'relatives' => Array(RELATIVE_NONE)
 					));
+					$bofiles->vfs->rm(array(
+						'string' => "{$bofiles->fakebase}/jasper/{$id}",
+						'relatives' => Array(RELATIVE_NONE)
+					));
 					$receipt = lang('file %1 removed',$old_file[0]['name']);
 				}
 
