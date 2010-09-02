@@ -36,10 +36,23 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>	
+
+				<xsl:choose>
+					<xsl:when test="value_file_name != ''">
+						<tr>
+							<td valign="top">
+								<xsl:value-of select="php:function('lang', 'filename')" />
+							</td>
+							<td>
+								<xsl:value-of select="value_file_name"/>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>	
+
 				<tr>
 					<td valign="top">
 						<xsl:value-of select="php:function('lang', 'file')" />
-						<input type="hidden"  name="values[file_name_orig]" value="{value_file_name_orig}" />
 					</td>
 					<td>
 						<input type="file" size="50" name="file">
@@ -91,6 +104,17 @@
 					</td>
 				</tr>
 				<tr>
+					<td valign='top'>
+						<xsl:value-of select="php:function('lang', 'format type')" />
+					</td>
+					<td>
+						<table>
+							<xsl:apply-templates select="format_type_list"/>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
 					<td class="th_text" valign="top">
 						<xsl:value-of select="php:function('lang', 'details')" />
 					</td>
@@ -131,7 +155,17 @@
 				</tr>
 				<tr>
 					<td>
-						<xsl:value-of select="php:function('lang', 'access')" />
+						<xsl:value-of select="php:function('lang', 'is id')" />
+					</td>
+					<td>
+						<input type="checkbox" name="values[is_id]" value="1">
+						</input>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<xsl:value-of select="php:function('lang', 'private')" />
 					</td>
 					<td>
 						<input type="checkbox" name="values[access]" value="True">
@@ -204,6 +238,23 @@
 		</script>
 	</xsl:template>
 
+	<xsl:template match="format_type_list">
+		<tr>
+			<td>
+				<xsl:value-of select="name"/>
+			</td>
+			<td>
+				<input type="checkbox" name="values[formats][]" value="{id}">
+					<xsl:if test="selected != 0">
+						<xsl:attribute name="checked">
+							checked
+						</xsl:attribute>
+					</xsl:if>
+				</input>
+			</td>
+		</tr>
+	</xsl:template>
+
 	<xsl:template match="input_type_list">
 		<option value="{id}">
 			<xsl:if test="selected != 0">
@@ -212,6 +263,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</option>
 	</xsl:template>
+
 
 	<xsl:template match="location_list">
 		<option value="{id}">

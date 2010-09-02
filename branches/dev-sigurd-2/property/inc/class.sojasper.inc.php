@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -40,15 +40,18 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
+			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('property','.jasper');
 		}
 
-		function read($data)
+		public function read($data)
 		{
 			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query		= isset($data['query']) ? $data['query'] : '';
 			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order		= isset($data['order']) ? $data['order'] : '';
 			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+
+			$grants	= & $this->grants;
 
 			if ($order)
 			{
@@ -61,24 +64,41 @@
 
 			$table = 'fm_jasper';
 
+
+			$filtermethod = " WHERE ( {$table}.user_id = {$this->account}";
+			if (is_array($grants))
+			{
+				foreach($grants as $user => $right)
+				{
+					$public_user_list[] = $user;
+				}
+				reset($public_user_list);
+				$filtermethod .= " OR (access='public' AND {$table}.user_id IN(" . implode(',',$public_user_list) . ")))";
+			}
+			else
+			{
+				$filtermethod .= ' )';
+			}
+
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " WHERE id $this->like '%$query%' or descr $this->like '%$query%'";
+				$querymethod = " AND (title {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
 			}
 
-			$sql = "SELECT * FROM $table $querymethod";
-
-			$this->db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 
 			if(!$allrows)
 			{
+				$this->db->query("SELECT count(*) as cnt FROM $table $filtermethod $querymethod",__LINE__,__FILE__);
+				$this->db->next_record();
+				$this->total_records = $this->db->f('cnt');
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				$this->total_records = $this->db->num_rows();
 			}
 
 			$jasper = array();
@@ -90,7 +110,7 @@
 					'descr'				=> $this->db->f('descr',true),
 					'location_id'		=> $this->db->f('location_id'),
 					'title'				=> $this->db->f('title',true),
-					'file_name'			=> $this->db->f('file_name',true),
+					'formats'			=> @unserialize($this->db->f('formats',true)),
 					'version'			=> $this->db->f('version'),
 					'user_id'			=> $this->db->f('user_id'),
 					'access'			=> $this->db->f('access'),
@@ -102,7 +122,7 @@
 			return $jasper;
 		}
 
-		function read_single($id)
+		public function read_single($id)
 		{
 
 			$id = (int)$id;
@@ -121,7 +141,7 @@
 					'descr'				=> $this->db->f('descr',true),
 					'location_id'		=> $this->db->f('location_id'),
 					'title'				=> $this->db->f('title',true),
-					'file_name'			=> $this->db->f('file_name',true),
+					'formats'			=> @unserialize($this->db->f('formats',true)),
 					'version'			=> $this->db->f('version'),
 					'user_id'			=> $this->db->f('user_id'),
 					'access'			=> $this->db->f('access'),
@@ -130,7 +150,7 @@
 					'modified_date'		=> $this->db->f('modified_date')
 				);
 
-				$sql = "SELECT fm_jasper_input.id, fm_jasper_input.input_type_id,fm_jasper_input.name as input_name,fm_jasper_input_type.name as type_name"
+				$sql = "SELECT fm_jasper_input.id, fm_jasper_input.input_type_id,fm_jasper_input.name as input_name,fm_jasper_input_type.name as type_name,is_id"
 				." FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$i = 1;
@@ -142,7 +162,8 @@
 						'id'				=> $this->db->f('id'),
 						'input_type_id'		=> $this->db->f('input_type_id'),
 						'input_name'		=> $this->db->f('input_name',true),
-						'type_name'			=> $this->db->f('type_name',true)
+						'type_name'			=> $this->db->f('type_name',true),
+						'is_id'				=> $this->db->f('is_id')
 					);
 					$i++;
 				}
@@ -151,17 +172,17 @@
 			return $jasper;
 		}
 
-		function add($jasper)
+		public function add($jasper)
 		{
 			$receipt = array();
 			$table = 'fm_jasper';
-//_debug_array($jasper);
+
 			$value_set= array
 			(
 				'location_id'	=> $GLOBALS['phpgw']->locations->get_id('property', $jasper['location']),
 				'title'			=> $this->db->db_addslashes($jasper['title']),
-				'file_name'		=> $jasper['file_name'],
 				'descr'			=> $this->db->db_addslashes($jasper['descr']),
+				'formats'		=> serialize($jasper['formats']),
 				'version'		=> 1,
 				'access'		=> $jasper['access'],
 				'user_id'		=> $this->account,
@@ -173,13 +194,6 @@
 			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
 
-/*
-_debug_array("INSERT INTO $table (" . implode(',', array_keys($value_set)) .") "
-				. "VALUES ($values)");
-die();
-*/
-
-
 			$this->db->query("INSERT INTO $table (" . implode(',', array_keys($value_set)) .") "
 				. "VALUES ($values)",__LINE__,__FILE__);
 
@@ -190,28 +204,43 @@ die();
 				$jasper['input_name'] =  $this->db->db_addslashes($jasper['input_name']);
 				$jasper['input_type'] =  (int)$jasper['input_type'];
 
-				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name)"
-				." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}')",__LINE__,__FILE__);
+				$is_id = (int)$jasper['is_id'];
+				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name,is_id)"
+				." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}',{$is_id})",__LINE__,__FILE__);
 			}
 			
 			if($this->db->transaction_commit())
 			{
 				$receipt['message'][]=array('msg'=>lang('JasperReport %1 has been saved',$id));
+				$receipt['id'] = $id;
 			}
 			return $receipt;
 		}
 
-		function edit($jasper)
+		public function edit($jasper)
 		{
 			$receipt = array();
+			$jasper['id'] = (int)$jasper['id'];
+			$receipt['id'] = $jasper['id'];
+
 			$table = 'fm_jasper';
+
+			$this->db->query("SELECT user_id FROM {$table} WHERE id = {$jasper['id']}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$user_id = $this->db->f('user_id');
+
+			if(! ($this->grants[$user_id] & PHPGW_ACL_EDIT))
+			{
+				$receipt['error'][] = array('msg'=>lang('JasperReport %1 has not been edited',$jasper['id']));
+				return 	$receipt;
+			}
 
 			$value_set= array
 			(
 				'location_id'	=> $GLOBALS['phpgw']->locations->get_id('property', $jasper['location']),
 				'title'			=> $this->db->db_addslashes($jasper['title']),
-				'file_name'		=> $jasper['file_name'],
 				'descr'			=> $this->db->db_addslashes($jasper['descr']),
+				'formats'		=> serialize($jasper['formats']),
 				'access'		=> $jasper['access'],
 				'modified_by'	=> $this->account,
 				'modified_date'	=> time()
@@ -220,6 +249,16 @@ die();
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
 			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$jasper['id']}" ,__LINE__,__FILE__);
+
+			$this->db->query("UPDATE fm_jasper_input SET is_id = 0 WHERE jasper_id = {$jasper['id']}",__LINE__,__FILE__);
+
+			if(isset($jasper['edit_is_id']) && $jasper['edit_is_id'])
+			{
+				foreach($jasper['edit_is_id'] as $edit_is_id)
+				{
+					$this->db->query("UPDATE fm_jasper_input SET is_id = 1 WHERE id = {$edit_is_id} AND jasper_id = {$jasper['id']}",__LINE__,__FILE__);
+				}
+			}
 
 			if(isset($jasper['delete_input']) && $jasper['delete_input'])
 			{
@@ -232,20 +271,21 @@ die();
 			{
 				$jasper['input_name'] =  $this->db->db_addslashes($jasper['input_name']);
 				$jasper['input_type'] =  (int)$jasper['input_type'];
+				$is_id =  (int)$jasper['is_id'];
 
-				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name)"
-				." VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}')",__LINE__,__FILE__);
+				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name,is_id)"
+				." VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}',$is_id)",__LINE__,__FILE__);
 			}
-
 
 			if($this->db->transaction_commit())
 			{
 				$receipt['message'][]=array('msg'=>lang('JasperReport %1 has been edited',$jasper['id']));
 			}
+
 			return $receipt;
 		}
 
-		function delete($id)
+		public function delete($id)
 		{
 			$id = (int)$id;
 
@@ -269,5 +309,21 @@ die();
 				);
 			}
 			return $input_types;
+		}
+
+		public function get_format_type_list()
+		{
+			$this->db->query('SELECT * FROM fm_jasper_format_type',__LINE__,__FILE__);
+
+			$format_types = array();
+			while ($this->db->next_record())
+			{
+				$format_types[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('id')
+				);
+			}
+			return $format_types;
 		}
 	}

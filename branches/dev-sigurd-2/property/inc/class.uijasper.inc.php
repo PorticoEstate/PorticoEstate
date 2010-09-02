@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -40,8 +40,7 @@
 		var $query;
 		var $sort;
 		var $order;
-		var $sub;
-		var $currentapp;
+		var $allrows;
 
 		var $public_functions = array
 		(
@@ -58,7 +57,7 @@
 
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			= CreateObject('property.bojasper',true);
+			$this->bo				= CreateObject('property.bojasper',true);
 			$this->bocommon			= CreateObject('property.bocommon');
 
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
@@ -67,6 +66,7 @@
 			$this->acl_add 			= $this->acl->check('.jasper', PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 		= $this->acl->check('.jasper', PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete 		= $this->acl->check('.jasper', PHPGW_ACL_DELETE, 'property');
+			$this->grants			= & $this->bo->grants;
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
@@ -91,10 +91,25 @@
 		function download()
 		{
 			$list = $this->bo->read();
-			$uicols['name'][0]	= 'id';
-			$uicols['descr'][0]	= lang('Budget account');
-			$uicols['name'][1]	= 'descr';
-			$uicols['descr'][1]	= lang('Description');
+			$uicols = array();
+			$uicols['name'][]	= 'id';
+			$uicols['descr'][]	= lang('id');
+			$uicols['name'][]	= 'title';
+			$uicols['descr'][]	= lang('title');
+			$uicols['name'][]	= 'descr';
+			$uicols['descr'][]	= lang('Description');
+			$uicols['name'][]	= 'file_name';
+			$uicols['descr'][]	= lang('filename');
+			$uicols['name'][]	= 'location';
+			$uicols['descr'][]	= lang('location');
+			$uicols['name'][]	= 'user';
+			$uicols['descr'][]	= lang('user');
+			$uicols['name'][]	= 'entry_date';
+			$uicols['descr'][]	= lang('entry date');
+			$uicols['name'][]	= 'access';
+			$uicols['descr'][]	= lang('access');
+			$uicols['name'][]	= 'formats';
+			$uicols['descr'][]	= lang('formats');
 
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
@@ -188,6 +203,8 @@
 			$uicols['descr'][]	= lang('entry date');
 			$uicols['name'][]	= 'access';
 			$uicols['descr'][]	= lang('access');
+			$uicols['name'][]	= 'formats';
+			$uicols['descr'][]	= lang('formats');
 
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
@@ -379,8 +396,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>2, 'acl_location'=> $this->acl_location));
 			}
 
-			$id	= phpgw::get_var('id', 'int');
-			$values			= phpgw::get_var('values');
+			$id			= phpgw::get_var('id', 'int');
+			$values		= phpgw::get_var('values');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
 
@@ -414,56 +431,63 @@
 				if(!$receipt['error'])
 				{
 					$receipt = $this->bo->save($values);
+					$id = $receipt['id'];
 
 //-------------start files
 					$bofiles	= CreateObject('property.bofiles');
-					$files = array();
+					$file = array();
 					if(isset($_FILES['file']['name']) && $_FILES['file']['name'])
 					{
-_debug_array($_FILES['file']['name']);die();
-//FIXME
 						$file_name = str_replace (' ','_',$_FILES['file']['name']);
-						$to_file	= "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
+						$values['file_name'] = $file_name;
+						
+						$to_file	= "{$bofiles->fakebase}/jasper/{$id}/{$file_name}";
 
-						if ($bofiles->vfs->file_exists(array(
-								'string' => $to_file,
+						if ($old_file = $bofiles->vfs->ls(array(
+								'string' => "{$bofiles->fakebase}/jasper/{$id}",
 								'relatives' => Array(RELATIVE_NONE)
 							)))
 						{
-							$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+							$bofiles->vfs->rm(array(
+								'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
+								'relatives' => Array(RELATIVE_NONE)
+							));
+							$receipt['message'][]=array('msg'=>lang('old file %1 removed',$old_file[0]['name']));
 						}
-						else
-						{
-							$files[] = array
-							(
-								'from_file'	=> $_FILES['file']['tmp_name'],
-								'to_file'	=> $to_file
-							);
-						}
+
+
+						$file = array
+						(
+							'from_file'	=> $_FILES['file']['tmp_name'],
+							'to_file'	=> $to_file
+						);
+
 
 						unset($to_file);
+
+
+						if ($file)
+						{
+							$bofiles->create_document_dir("jasper/{$id}");
+							$bofiles->vfs->override_acl = 1;
+	
+							if($bofiles->vfs->cp (array (
+								'from'	=> $file['from_file'],
+								'to'	=> $file['to_file'],
+								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+							{
+								$receipt['message'][]=array('msg'=>lang('file %1 uploaded', $file_name));
+							}
+							else
+							{
+								$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+						unset($file);
 						unset($file_name);
 					}
-					foreach ($files as $file)
-					{
-						$bofiles->create_document_dir("{$this->category_dir}/{$loc1}/{$id}");
-						$bofiles->vfs->override_acl = 1;
-
-						if(!$bofiles->vfs->cp (array (
-							'from'	=> $file['from_file'],
-							'to'	=> $file['to_file'],
-							'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
-						{
-							$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
-						}
-						$bofiles->vfs->override_acl = 0;
-					}
-					unset($loc1);
-					unset($files);
-					unset($file);					
 //-------------end files
-
-
 
 					if (isset($values['save']) && $values['save'])
 					{
@@ -482,12 +506,16 @@ _debug_array($_FILES['file']['name']);die();
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit budget account');
-				$action='edit';
+				$grants	= $this->acl->get_grants('property','.jasper');
+				if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
+				{
+					$values = array();
+					$receipt['error'][]=array('msg'=>lang('You are not granted sufficient rights for this entry'));
+				}
 			}
 			else
 			{
 				$function_msg = lang('add budget account');
-				$action='add';
 			}
 
 
@@ -496,7 +524,6 @@ _debug_array($_FILES['file']['name']);die();
 				'menuaction'	=> 'property.uijasper.edit',
 				'id'		=> $id
 			);
-//_debug_array($jasper);
 
 			$locations = $GLOBALS['phpgw']->locations->get_locations();
 			$selected_location = isset($values['location']) ? $values['location'] : '';
@@ -517,12 +544,15 @@ _debug_array($_FILES['file']['name']);die();
 				);
 			}
 
+			$formats = isset($values['formats']) && $values['formats'] ? $values['formats'] : array();
+			$format_type_list	= $this->bo->get_format_type_list($formats);
+
 			$type_def = array
 			(
 				array('key' => 'count',	'label'=>'#','sortable'=>true,'resizeable'=>true),
        			array('key' => 'type_name',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
       			array('key' => 'input_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
-		//		array('key' => 'value',	'label'=>lang('value'),'sortable'=>true,'resizeable'=>true)
+				array('key' => 'is_id',	'label'=>lang('is id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
 			);
 
 			$inputs = isset($values['input']) && $values['input'] ? $values['input'] : array();
@@ -532,6 +562,8 @@ _debug_array($_FILES['file']['name']);die();
 				$type_def[] = array('key' => 'delete_input','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
 				foreach($inputs as &$input)
 				{
+					$_checked = $input['is_id'] ? 'checked = "checked"' : '';
+					$input['is_id'] = "<input type='checkbox' name='values[edit_is_id][]' {$_checked} value='".$input['id']."' title='".lang('Check to set as is id')."'>";
 					$input['delete_input'] = '<input type="checkbox" name="values[delete_input][]" value="'.$input['id'].'" title="'.lang('Check to delete input').'">';
 				}
 			}
@@ -552,7 +584,6 @@ _debug_array($_FILES['file']['name']);die();
 			);		
 			//-----------------------------------------------
 
-
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
@@ -560,10 +591,12 @@ _debug_array($_FILES['file']['name']);die();
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'value_id'						=> $id,
+				'value_file_name'				=> $values['file_name'],
 				'value_title'					=> $values['title'],
 				'value_descr'					=> $values['descr'],
 				'value_access'					=> $values['access'],
 				'input_type_list'				=> $this->bo->get_input_type_list(),
+				'format_type_list'				=> $format_type_list,
 				'location_list'					=> $location_list,
 				'td_count'						=> '""',
 				'base_java_url'					=> "{menuaction:'property.uijasper.edit'}",
@@ -575,19 +608,10 @@ _debug_array($_FILES['file']['name']);die();
 			//---datatable settings--------------------
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
 		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
 
-			$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'jasper.edit', 'property' );
 			//-----------------------datatable settings---
 
@@ -601,44 +625,34 @@ _debug_array($_FILES['file']['name']);die();
 		{
 			if(!$this->acl_delete)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
+				return lang('not allowed');
 			}
 
 			$id		= phpgw::get_var('id'); // string
-			//$confirm		= phpgw::get_var('confirm', 'bool', 'POST');
-
-			$link_data = array
-			(
-				'menuaction' => 'property.uijasper.index'
-			);
+			$values = $this->bo->read_single($id);
+			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
+			{
+				return lang('not allowed');
+			}
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
+				$bofiles	= CreateObject('property.bofiles');
+				if ($old_file = $bofiles->vfs->ls(array(
+						'string' => "{$bofiles->fakebase}/jasper/{$id}",
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+				{
+					$bofiles->vfs->rm(array(
+						'string' => "{$bofiles->fakebase}/jasper/{$id}/{$old_file[0]['name']}",
+						'relatives' => Array(RELATIVE_NONE)
+					));
+					$receipt = lang('file %1 removed',$old_file[0]['name']);
+				}
+
 				$this->bo->delete($id);
-				return "id ".$id." ".lang("has been deleted");
-				//$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
+				$receipt .= " and id $id ".lang("has been deleted");
+				return $receipt;
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
-
-			$data = array
-			(
-				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.delete', 'id'=> $id)),
-				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
-				'lang_yes'			=> lang('yes'),
-				'lang_yes_jaspertext'	=> lang('Delete the entry'),
-				'lang_no_jaspertext'		=> lang('Back to the list'),
-				'lang_no'			=> lang('no')
-			);
-
-			$appname		= lang('budget account');
-			$function_msg		= lang('delete budget account');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
-
 	}
-

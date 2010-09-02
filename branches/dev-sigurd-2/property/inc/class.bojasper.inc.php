@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -40,11 +40,12 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		var $grants;
 
 		function __construct($session=false)
 		{
 			$this->so 		= CreateObject('property.sojasper');
-
+			$this->grants	= & $this->so->grants;
 			if ($session)
 			{
 				$this->read_sessiondata();
@@ -69,7 +70,7 @@
 		}
 
 
-		function save_sessiondata($data)
+		public function save_sessiondata($data)
 		{
 			if ($this->use_session)
 			{
@@ -77,7 +78,7 @@
 			}
 		}
 
-		function read_sessiondata()
+		public function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','jasper');
 
@@ -91,11 +92,12 @@
 			$this->allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
-
-		function read()
+		public function read()
 		{
 			$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows));
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
 
 			foreach ($jasper as &$entry)
 			{
@@ -103,19 +105,45 @@
 				$entry['user']			= $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
 				$location_info			= $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
 				$entry['location']		= $location_info['descr'];
+				if($entry['formats'])
+				{
+					$entry['formats'] = implode(',', $entry['formats']);
+				}
+				else
+				{
+					$entry['formats'] = '';
+				}
+
+				if($files = $vfs->ls (array(
+				     'string' => "/property/jasper/{$entry['id']}",
+				     'relatives' => array(RELATIVE_NONE))))
+				{
+					$entry['file_name'] = $files[0]['name'];
+				}
 			}
+
+			$vfs->override_acl = 0;
 			$this->total_records = $this->so->total_records;
 
 			return $jasper;
 		}
 
-		function read_single($id)
+		public function read_single($id)
 		{
-			return $this->so->read_single($id);
+			$jasper = $this->so->read_single($id);
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+			if($files = $vfs->ls (array(
+			     'string' => "/property/jasper/{$jasper['id']}",
+			     'relatives' => array(RELATIVE_NONE))))
+			{
+				$jasper['file_name'] = $files[0]['name'];
+			}
+			$vfs->override_acl = 0;
+			return $jasper;
 		}
 
-
-		function save($jasper)
+		public function save($jasper)
 		{
 			if (isset($jasper['access']) && $jasper['access'])
 			{
@@ -138,7 +166,7 @@
 			return $receipt;
 		}
 
-		function delete($id)
+		public function delete($id)
 		{
 			$this->so->delete($id);
 		}
@@ -151,5 +179,15 @@
 				$entry['selected'] = $entry['id'] == $selected;
 			}
 			return $input_types;
+		}
+
+		public function get_format_type_list($selected = array())
+		{
+			$format_types = $this->so->get_format_type_list();
+			foreach($format_types as &$entry)
+			{
+				$entry['selected'] = in_array($entry['id'], $selected);
+			}
+			return $format_types;
 		}
 	}
