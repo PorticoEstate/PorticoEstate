@@ -47,6 +47,19 @@
 			        </input>
                 </xsl:if>
 			</dd>
+			<dt><label for="field_shortname"><xsl:value-of select="php:function('lang', 'Organization shortname')" /></label></dt>
+			<dd>
+                <xsl:if test="currentapp = 'booking'">
+    			    <input id="field_shortname" name="shortname" type="text">
+			            <xsl:attribute name="value"><xsl:value-of select="organization/shortname"/></xsl:attribute>
+			        </input>
+                </xsl:if>
+                <xsl:if test="currentapp != 'booking'">
+    			    <input id="field_shortname" name="shortname" readonly="true" type="text">
+			            <xsl:attribute name="value"><xsl:value-of select="organization/shortname"/></xsl:attribute>
+			        </input>
+                </xsl:if>
+			</dd>
 			<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'Organization number')" /></label></dt>
 			<dd>
                 <xsl:if test="currentapp = 'booking'">
@@ -159,8 +172,8 @@
 		</dl>
 
 		<div style='clear:left; padding:0; margin:0'/>
-		
-		<xsl:if test='new_form or organization/permission/write/contacts'>
+
+		<xsl:if test='new_form or organization/permission/write'>
 		
 			<dl class="form-col" style='margin-top:0'>
 				<dt class='heading'><xsl:value-of select="php:function('lang', 'Admin 1')" /></dt>
@@ -168,8 +181,7 @@
 				<dt><label for="field_admin_name_1"><xsl:value-of select="php:function('lang', 'Name')" /></label><br /></dt>
 				<dd><input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}'/></dd>
 			
-				<dt><label for="field_admin_ssn_1"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
-				<dd><input type='text' id='field_admin_ssn_1' name="contacts[0][ssn]" value='{organization/contacts[1]/ssn}'/></dd>
+ 			    <input type="hidden" name="contacts[0][ssn]" value=""/>
 			
 				<dt><label for="field_admin_email_1"><xsl:value-of select="php:function('lang', 'Email')" /></label><br /></dt>
 				<dd><input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}'/></dd>
@@ -183,9 +195,8 @@
 			
 				<dt><label for="field_admin_name_2"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
 				<dd><input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{organization/contacts[2]/name}'/></dd>
-			
-				<dt><label for="field_admin_ssn_2"><xsl:value-of select="php:function('lang', 'Social Security Number')" /></label><br /></dt>
-				<dd><input type='text' id='field_admin_ssn_2' name="contacts[1][ssn]" value='{organization/contacts[2]/ssn}'/></dd>
+	
+ 			    <input type="hidden" name="contacts[1][ssn]" value=""/>
 			
 				<dt><label for="field_admin_email_2"><xsl:value-of select="php:function('lang', 'Email')" /></label><br /></dt>
 				<dd><input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}'/></dd>

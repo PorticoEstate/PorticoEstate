@@ -144,6 +144,10 @@
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
+							'key' => 'shortname',
+							'label' => lang('Group shortname'),
+						),
+						array(
 							'key' => 'primary_contact_name',
 							'label' => lang('Primary contact'),
 						),
@@ -234,7 +238,7 @@
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array('name', 'organization_id', 'organization_name', 'description', 'contacts', 'active', 'activity_id')));
+				$group = array_merge($group, extract_values($_POST, array('name', 'shortname', 'organization_id', 'organization_name', 'description', 'contacts', 'active', 'activity_id')));
 				if (!isset($group["active"]))
 				{
 					$group['active'] = '1';

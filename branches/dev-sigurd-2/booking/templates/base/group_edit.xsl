@@ -20,6 +20,9 @@
 			<dt><label for="field_name"><xsl:value-of select="php:function('lang', 'Group')" /></label></dt>
 			<dd><input name="name" type="text" value="{group/name}" /></dd>
 
+			<dt><label for="field_shortname"><xsl:value-of select="php:function('lang', 'Group shortname')" /></label></dt>
+			<dd><input name="shortname" type="text" value="{group/shortname}" /></dd>
+
 			<dt><label for="field_organization"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
 			<dd>
 			    <div class="autocomplete">

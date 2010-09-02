@@ -178,6 +178,7 @@ function array_minus($a, $b)
 		 */
 		function building_schedule($building_id, $date)
 		{
+
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday
@@ -193,6 +194,7 @@ function array_minus($a, $b)
 			foreach($allocations as &$allocation)
 			{
 				$allocation['name'] = $allocation['organization_name'];
+				$allocation['shortname'] = $allocation['organization_shortname'];
 				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
@@ -201,6 +203,7 @@ function array_minus($a, $b)
 			foreach($bookings as &$booking)
 			{
 				$booking['name'] = $booking['group_name'];
+				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
@@ -261,6 +264,7 @@ function array_minus($a, $b)
 			foreach($allocations as &$allocation)
 			{
 				$allocation['name'] = $allocation['organization_name'];
+				$allocation['shortname'] = $allocation['organization_shortname'];
 				$allocation['type'] = 'allocation';
 			}
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
@@ -269,6 +273,7 @@ function array_minus($a, $b)
 			foreach($bookings as &$booking)
 			{
 				$booking['name'] = $booking['group_name'];
+				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
 			}
 			$allocations = $this->split_allocations($allocations, $bookings);
