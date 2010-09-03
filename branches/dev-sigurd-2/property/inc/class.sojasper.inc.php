@@ -192,7 +192,7 @@
 
 			$value_set= array
 			(
-				'location_id'	=> $GLOBALS['phpgw']->locations->get_id('property', $jasper['location']),
+				'location_id'	=> $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
 				'title'			=> $this->db->db_addslashes($jasper['title']),
 				'descr'			=> $this->db->db_addslashes($jasper['descr']),
 				'formats'		=> serialize($jasper['formats']),
@@ -250,7 +250,7 @@
 
 			$value_set= array
 			(
-				'location_id'	=> $GLOBALS['phpgw']->locations->get_id('property', $jasper['location']),
+				'location_id'	=> $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
 				'title'			=> $this->db->db_addslashes($jasper['title']),
 				'descr'			=> $this->db->db_addslashes($jasper['descr']),
 				'formats'		=> serialize($jasper['formats']),

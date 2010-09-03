@@ -92,7 +92,9 @@
 						<xsl:value-of select="php:function('lang', 'application')" />
 					</td>
 					<td>
-						<xsl:value-of select="value_app"/>
+						<xsl:value-of select="value_app_translated"/>
+						<input type="hidden" name="values[app]" value="{value_app}" >
+						</input>			
 					</td>
 				</tr>
 

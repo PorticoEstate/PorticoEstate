@@ -625,7 +625,8 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'value_app'						=> lang($this->app),
+				'value_app'						=> $this->app,
+				'value_app_translated'			=> lang($this->app),
 				'value_id'						=> $id,
 				'value_file_name'				=> $values['file_name'],
 				'value_title'					=> $values['title'],
@@ -676,7 +677,7 @@
 				}
 			}
 
-			if($user_input)
+			if(!$user_input)
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
@@ -705,7 +706,11 @@
 
 				$report_source		= "{$GLOBALS['phpgw_info']['server']['files_dir']}/property/jasper/{$jasper_id}/{$values['file_name']}";
 				$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
-
+/*
+_debug_array($jasper_parameters);
+_debug_array($output_type);
+_debug_array($report_source);
+*/
 				try
 				{
 					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
