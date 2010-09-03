@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $grants;
+		var $app;
 
 		function __construct($session=false)
 		{
@@ -59,6 +60,7 @@
 			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows= phpgw::get_var('allrows', 'bool');
+			$app	= phpgw::get_var('app');
 
 			$this->start			= $start 							? $start 			: 0;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
@@ -67,6 +69,7 @@
 			$this->cat_id			= isset($_REQUEST['cat_id']) 		? $cat_id			: $this->cat_id;
 			$this->user_id			= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
 			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
+			$this->app				= isset($_REQUEST['app'])	 		? $app				: $this->app;
 		}
 
 
@@ -90,12 +93,13 @@
 			$this->order		= isset($data['order']) ? $data['order'] : '';
 			$this->cat_id		= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$this->allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$this->app			= isset($data['app']) && $data['app'] ? $data['app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		public function read()
 		{
 			$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+											'app' => $this->app,'allrows' => $this->allrows));
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
@@ -189,5 +193,28 @@
 				$entry['selected'] = in_array($entry['id'], $selected);
 			}
 			return $format_types;
+		}
+
+		public function get_apps($selected ='')
+		{
+			if(!$selected)
+			{
+				$selected = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
+			$apps = array();
+			foreach ($GLOBALS['phpgw_info']['apps'] as $app => $app_info)
+			{
+				if($app_info['enabled'] == 1 && $app_info['status'] == 1)
+				{
+					$apps[] = array
+					(
+						'id'	=> $app,
+						'name'	=> $app_info['title'],
+						'selected' => $selected == $app
+					);
+				}
+			}
+			return $apps;
 		}
 	}

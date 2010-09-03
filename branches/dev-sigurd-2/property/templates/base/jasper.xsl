@@ -89,6 +89,15 @@
 				</tr>
 				<tr>
 					<td>
+						<xsl:value-of select="php:function('lang', 'application')" />
+					</td>
+					<td>
+						<xsl:value-of select="value_app"/>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
 						<xsl:value-of select="php:function('lang', 'location')" />
 					</td>
 					<td>

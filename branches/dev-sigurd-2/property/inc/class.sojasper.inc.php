@@ -51,8 +51,17 @@
 			$order			= isset($data['order']) ? $data['order'] : '';
 			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
 			$location_id	= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$app			= isset($data['app']) ? $data['app'] : '';
 
 			$grants	= & $this->grants;
+
+			$table = 'fm_jasper';			
+			$app_filter = '';
+			if($app)
+			{
+				$app_id = (int)$GLOBALS['phpgw_info']['apps'][$app]['id'];
+				$app_filter = "{$this->join} phpgw_locations ON (phpgw_locations.app_id = {$app_id} AND phpgw_locations.location_id = {$table}.location_id)";
+			}
 
 			if ($order)
 			{
@@ -63,10 +72,8 @@
 				$ordermethod = ' ORDER BY id asc';
 			}
 
-			$table = 'fm_jasper';
 
-
-			$filtermethod = " WHERE ( {$table}.user_id = {$this->account}";
+			$filtermethod = "WHERE ( {$table}.user_id = {$this->account}";
 			if (is_array($grants))
 			{
 				foreach($grants as $user => $right)
@@ -89,14 +96,14 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND (title {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
+				$querymethod = "AND (title {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
 			}
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod";
+			$sql = "SELECT * FROM {$table} {$app_filter} {$filtermethod} {$querymethod}";
 
 			if(!$allrows)
 			{
-				$this->db->query("SELECT count(*) as cnt FROM $table $filtermethod $querymethod",__LINE__,__FILE__);
+				$this->db->query("SELECT count(*) as cnt FROM {$table} {$filtermethod} {$querymethod}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);

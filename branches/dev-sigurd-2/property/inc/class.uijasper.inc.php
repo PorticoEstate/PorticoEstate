@@ -74,6 +74,7 @@
 			$this->sort				= $this->bo->sort;
 			$this->order			= $this->bo->order;
 			$this->allrows			= $this->bo->allrows;
+			$this->app				= $this->bo->app;
 		}
 
 		function save_sessiondata()
@@ -84,7 +85,8 @@
 				'query'		=> $this->query,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
-				'allrows'	=> $this->allrows
+				'allrows'	=> $this->allrows,
+				'app'		=> $this->app,
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -122,67 +124,98 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
+			$this->save_sessiondata();
 			$datatable = array();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'			=> 'property.uijasper.index'//,
+				(
+					'menuaction'	=> 'property.uijasper.index',
+					'app'			=> $this->app
    				));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uijasper.index'";
+   				$datatable['config']['base_java_url'] = "menuaction:'property.uijasper.index',"
+   				 										."app: '{$this->app}',"
+														."allrows:'{$this->allrows}'";
+
 
 				$link_data = array
 				(
-					'menuaction'	=> 'property.uijasper.index'//,
-					//'id'		=> $id
+					'menuaction'	=> 'property.uijasper.index',
+					'app'			=> $this->app
 				);
+
+				$values_combo_box[0]  = $this->bo->get_apps();
 
 				$datatable['config']['allow_allrows'] = true;
 
-				$datatable['actions']['form'] = array(
-				array(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array(
-								'menuaction'	=> 'property.uijasper.index'//,
+				$datatable['actions']['form'] = array
+				(
+					array
+					(
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
+								array
+								(
+									'menuaction'	=> 'property.uijasper.index'//,
+								)
+							),
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array //boton 	CATEGORY
+								(
+									'id' => 'btn_app_id',
+									'name' => 'app',
+									'value'	=> lang('application'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+									),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_export',
+									'value'	=> lang('download'),
+									'tab_index' => 9
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 8
+								),
+								array //boton  SEARCH
+								(
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'	=> lang('search'),
+									'type' => 'button',
+									'tab_index' => 7
+								),
+				   				array // TEXT INPUT
+				   				(
+									'name'	 => 'query',
+									'id'	 => 'txt_query',
+									'value'	=> '',//$query,
+									'type' => 'text',
+									'onkeypress' => 'return pulsar(event)',
+									'size'	=> 28,
+									'tab_index' => 6
+								)
+							),
+							'hidden_value' => array
+							(
+								array //div values  combo_box_0
+								(
+									'id' => 'values_combo_box_0',
+									'value'	=> $this->bocommon->select2String($values_combo_box[0])
+								)
 							)
-						),
-					'fields'	=> array(
-	                                    'field' => array
-	                                    			(
-														array
-														(
-															'type'	=> 'button',
-															'id'	=> 'btn_export',
-															'value'	=> lang('download'),
-															'tab_index' => 9
-														),
-														array(
-							                                'type'	=> 'button',
-							                            	'id'	=> 'btn_new',
-							                                'value'	=> lang('add'),
-							                                'tab_index' => 8
-							                            ),
-				                                        array( //boton     SEARCH
-				                                            'id' => 'btn_search',
-				                                            'name' => 'search',
-				                                            'value'    => lang('search'),
-				                                            'type' => 'button',
-				                                            'tab_index' => 7
-				                                        ),
-				   										array( // TEXT INPUT
-				                                            'name'     => 'query',
-				                                            'id'     => 'txt_query',
-				                                            'value'    => '',//$query,
-				                                            'type' => 'text',
-				                                            'onkeypress' => 'return pulsar(event)',
-				                                            'size'    => 28,
-				                                            'tab_index' => 6
-				                                        )
-			                           				)
-										)
-					 )
+						)
+					)
 				);
 			}
 
@@ -268,7 +301,8 @@
 					'text' 			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'property.uijasper.edit'
+						'menuaction'	=> 'property.uijasper.edit',
+						'app'			=> $this->app
 					)));
 
 			for ($i=0;$i<$count_uicols_name;$i++)
@@ -309,40 +343,40 @@
 			}
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-    		//values for Pagination
-	    	$json = array
-	    	(
-	    		'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    			'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    		'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+			(
+				'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+				'startIndex' 		=> $datatable['pagination']['records_start'],
 				'sort'				=> $datatable['sorting']['order'],
-	    		'dir'				=> $datatable['sorting']['sort'],
+				'dir'				=> $datatable['sorting']['sort'],
 				'records'			=> array()
-	    	);
+			);
 
 			// values for datatable
-	    	if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    		foreach( $datatable['rows']['row'] as $row )
-	    		{
-		    		$json_row = array();
-		    		foreach( $row['column'] as $column)
-		    		{
-		    			if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    			{
-		    				$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    			}
-		    			elseif(isset($column['format']) && $column['format']== "link")
-		    			{
-		    			  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    			}
-		    			else
-		    			{
-		    			  $json_row[$column['name']] = $column['value'];
-		    			}
-		    		}
-		    		$json['records'][] = $json_row;
-	    		}
-	    	}
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						elseif(isset($column['format']) && $column['format']== "link")
+						{
+						  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+						}
+						else
+						{
+						  $json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -352,7 +386,7 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-		    	return $json;
+				return $json;
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -370,14 +404,14 @@
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+		  	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+		  	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+		  	{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+		  	}
 
-	      	$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
 		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -516,7 +550,7 @@
 			}
 			else
 			{
-				$function_msg = lang('add budget account');
+				$function_msg = lang('add report');
 			}
 
 
@@ -526,7 +560,7 @@
 				'id'		=> $id
 			);
 
-			$locations = $GLOBALS['phpgw']->locations->get_locations();
+			$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->app);
 			$selected_location = isset($values['location']) ? $values['location'] : '';
 			if(isset($values['location_id']) && $values['location_id'])
 			{
@@ -551,8 +585,8 @@
 			$type_def = array
 			(
 				array('key' => 'count',	'label'=>'#','sortable'=>true,'resizeable'=>true),
-       			array('key' => 'type_name',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
-      			array('key' => 'input_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
+	   			array('key' => 'type_name',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+	  			array('key' => 'input_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'is_id',	'label'=>lang('is id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
 			);
 
@@ -578,9 +612,9 @@
 					'is_paginator'			=> 0,
 					'footer'				=> 0
 			);					
-       		$myColumnDefs[0] = array
-       		(
-       			'name'		=> "0",
+	   		$myColumnDefs[0] = array
+	   		(
+	   			'name'		=> "0",
 				'values'	=>	json_encode($type_def)
 			);		
 			//-----------------------------------------------
@@ -591,6 +625,7 @@
 			(
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'value_app'						=> lang($this->app),
 				'value_id'						=> $id,
 				'value_file_name'				=> $values['file_name'],
 				'value_title'					=> $values['title'],
@@ -618,17 +653,70 @@
 
 			$appname						= 'JasperReports';
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::$function_msg::".lang($this->app);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 		function view()
 		{
-			$jasper_id		= phpgw::get_var('jasper_id');
+			$jasper_id	= phpgw::get_var('jasper_id');
 			$values = $this->bo->read_single($jasper_id);
-_debug_array($id);
-			_debug_array($values);die();
-		
+			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
+			{
+				echo lang('not allowed');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+			$user_input = false;
+
+			foreach ($values['input'] as &$input)
+			{
+				if(!($input['value'] = phpgw::get_var($input['input_name'])) || !$input['is_id'])
+				{
+					$user_input = true;
+				}
+			}
+
+			if($user_input)
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+				$jasper_parameters = '';
+				$_parameters = array();
+
+				foreach ($values['input'] as &$input)
+				{
+
+					if(is_array($input['value']))
+					{
+						$_parameters[] =  $input['input_name'] . '|' . implode(',', $input['value']);
+					}
+					else
+					{
+						$_parameters[] =  $input['input_name'] . '|' . $input['value'];
+					}
+				}
+				if($_parameters)
+				{
+					$jasper_parameters = '"' . implode(';', $_parameters) . '"';
+				}
+				unset($_parameters);
+
+				$output_type = isset($values['formats'][0]) && $values['formats'][0] ? $values['formats'][0] : 'PDF';
+
+				$report_source		= "{$GLOBALS['phpgw_info']['server']['files_dir']}/property/jasper/{$jasper_id}/{$values['file_name']}";
+				$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
+
+				try
+				{
+					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
+				}
+				catch(Exception $e)
+				{
+					$error = $e->getMessage();
+					//FIXME Do something clever with the error
+					echo "<H1>{$error}</H1>";
+				}
+			}
 		}
 
 		function delete()
