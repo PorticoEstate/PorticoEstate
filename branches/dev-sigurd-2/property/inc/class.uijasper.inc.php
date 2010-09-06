@@ -671,7 +671,7 @@
 
 			foreach ($values['input'] as &$input)
 			{
-				if(!($input['value'] = phpgw::get_var($input['input_name'])) || !$input['is_id'])
+				if(!($input['value'] = phpgw::get_var(strtolower($input['input_name']))) || !$input['is_id'])
 				{
 					$user_input = true;
 				}
@@ -700,6 +700,7 @@
 				{
 					$jasper_parameters = '"' . implode(';', $_parameters) . '"';
 				}
+
 				unset($_parameters);
 
 				$output_type = isset($values['formats'][0]) && $values['formats'][0] ? $values['formats'][0] : 'PDF';
