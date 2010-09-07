@@ -749,6 +749,34 @@ _debug_array($report_source);
 					echo "<H1>{$error}</H1>";
 				}
 			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+//				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+
+				$receipt['error'][] = array('msg' => lang('enter input'));
+
+				$function_msg	= lang('parameters');
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uijasper.view',
+					'jasper_id'		=> $jasper_id
+				);
+
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+				$data = array
+				(
+					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+				$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
+				$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('user_input' => $data));
+			}
 		}
 
 		function delete()

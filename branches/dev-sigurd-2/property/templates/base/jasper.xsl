@@ -5,9 +5,12 @@
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
 			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="user_input"/>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 
 <!-- add / edit  -->
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
@@ -285,3 +288,52 @@
 		</option>
 	</xsl:template>
 
+
+<!-- user_input  -->
+	<xsl:template match="user_input" xmlns:php="http://php.net/xsl">
+		<div class="yui-content">
+		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+		<form  name="form" method="post" action="{$form_action}">		
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<tr>
+						<td align="left" colspan="3">
+							<xsl:call-template name="msgbox"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+
+			</table>
+			<table cellpadding="2" cellspacing="2" width="50%" align="center">
+				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+				<xsl:variable name="lang_apply"><xsl:value-of select="php:function('lang', 'apply')" /></xsl:variable>
+				<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
+				<tr height="50">
+					<td>
+						<input type="submit" name="values[save]" value="{$lang_save}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'save')" />
+							</xsl:attribute>
+						</input>
+					</td>
+					<td>
+						<input type="submit" name="values[apply]" value="{$lang_apply}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'apply')" />
+							</xsl:attribute>
+						</input>
+					</td>
+					<td>
+						<input type="submit" name="values[cancel]" value="{$lang_cancel}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'cancel')" />
+							</xsl:attribute>
+						</input>
+					</td>
+				</tr>
+			</table>
+		</form>
+		</div>
+	</xsl:template>
