@@ -135,8 +135,11 @@
 							$jasper_info['config']);
 
 			exec($cmd, $cmd_output, $retval);
-		//	echo $cmd . ":retval: " . $retval;
-		//	exit(0);
+//			echo $cmd . ":retval: " . $retval;
+//			_debug_array($parameters);
+//			_debug_array( $cmd_output);
+//			exit(0);
+
 			if(is_file($jasper_info['config']))
 			{
 				unlink($jasper_info['config']);

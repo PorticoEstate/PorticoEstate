@@ -29,7 +29,7 @@
 			
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'homepage', 'phone', 'email', 
+			$this->fields = array('name', 'shortname', 'homepage', 'phone', 'email', 
 								  'street', 'zip_code', 'city', 'district', 
 								  'description', 'contacts', 'active', 
 								  'organization_number', 'activity_id',
@@ -91,6 +91,10 @@
 							'key' => 'name',
 							'label' => lang('Organization'),
 							'formatter' => 'YAHOO.booking.formatLink'
+						),
+						array(
+							'key' => 'shortname',
+							'label' => lang('Organization shortname'),
 						),
 						array(
 							'key' => 'organization_number',
@@ -212,6 +216,7 @@
 				list($organization, $errors) = $this->extract_and_validate($organization);
 				if(!$errors)
 				{
+					$organization['shortname'] = $_POST['shortname'];
 					$receipt = $this->bo->update($organization);
 					if ($this->module == "bookingfrontend") {
 						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $receipt["id"]));

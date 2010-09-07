@@ -912,7 +912,7 @@
 				$menus['navigation']['jasper'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.index')),
-					'text'	=> lang('JasperReports'),
+					'text'	=> JasperReports,
 					'image'		=> array('property', 'report')
 				);
 			}

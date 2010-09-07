@@ -75,7 +75,7 @@
 				$receipt['error'][] = array('msg'=>$message);
 			}
 
-			$msgbox_data = $this->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(

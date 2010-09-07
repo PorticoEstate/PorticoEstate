@@ -441,3 +441,5 @@ Print as PDF	booking	no	Skriv ut som PDF
 Pending	booking	no	Under behandling
 This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mote en sesong
 Message from Bergen county - AktivBy	booking	no	Melding fra Bergen kommune - AktivBy
+Organization shortname	booking	no	Kortnavn
+Group shortname	booking	no	Kortnavn

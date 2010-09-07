@@ -2271,4 +2271,25 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+  $test[] = '0.1.95';
+	function booking_upgrade0_1_95()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$table = "bb_organization";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN shortname varchar(11)");
+
+		$table = "bb_group";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN shortname varchar(11)");
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.96';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 

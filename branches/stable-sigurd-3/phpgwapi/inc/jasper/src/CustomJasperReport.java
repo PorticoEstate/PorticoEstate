@@ -42,7 +42,7 @@ class CustomJasperReport {
 		try {
 			jasperReport = JasperCompileManager.compileReport(this.source);
 		} catch (Exception e) {
-//			System.err.println("Unable to compile template \"" + this.source
+//			System.out.println("Unable to compile template \"" + this.source
 //					+ "\": " + e.getMessage());
 			System.exit(201);
 		}
@@ -60,7 +60,7 @@ class CustomJasperReport {
 			}
 
 		} catch (JRException e1) {
-//			System.err.println("Unable to fill the report for template \""
+//			System.out.println("Unable to fill the report for template \""
 //					+ this.source + "\": " + e1.getMessage());
 			System.exit(202);
 		}

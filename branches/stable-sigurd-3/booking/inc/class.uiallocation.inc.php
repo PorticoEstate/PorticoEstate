@@ -24,7 +24,7 @@
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'organization_id', 'organization_name', 
-			                      'from_', 'to_', 'active');
+			                      'shortname', 'from_', 'to_', 'active');
 		}
 		
 		public function index()
@@ -62,6 +62,10 @@
 							'key' => 'organization_name',
 							'label' => lang('Organization'),
 							'formatter' => 'YAHOO.booking.formatLink'
+						),
+						array(
+							'key' => 'shortname',
+							'label' => lang('Organization shortname')
 						),
 						array(
 							'key' => 'season_name',

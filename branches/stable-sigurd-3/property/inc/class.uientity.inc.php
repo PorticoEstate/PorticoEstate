@@ -739,6 +739,23 @@
 						'parameters'			=> $parameters
 				);
 			}
+			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".entity.{$this->entity_id}.{$this->cat_id}")));
+
+			foreach ($jasper as $report)
+			{
+				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+																'menuaction'	=> 'property.uijasper.view',
+																'jasper_id'			=> $report['id'],
+																'target'		=> '_blank'
+														)),
+						'parameters'			=> $parameters
+				);
+			}
+
 			if($this->acl_delete)
 			{
 				$datatable['rowactions']['action'][] = array(

@@ -39,7 +39,10 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		if (booking.is_public == 0) {
 			elCell.innerHTML = YAHOO.booking.shorten('Privat arr.', 12);
 		} else {
-			elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
+			if (booking.shortname)
+				elCell.innerHTML = YAHOO.booking.shorten(booking.shortname, 12);
+			else	
+				elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
 		}
 		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
 	}
@@ -80,7 +83,11 @@ YAHOO.booking.bookingToHtml = function(booking) {
 	else {
 		var link = null;
 	}
-	var html = YAHOO.booking.link(booking.name, link, 12);
+	if (booking.shortname)
+		var html = YAHOO.booking.link(booking.shortname, link, 12);
+	else 
+		var html = YAHOO.booking.link(booking.name, link, 12);
+
 	if(booking.type == 'event' && booking.conflicts) {
 		for(var i=0; i<booking.conflicts.length;i++) {
 			html += '<div class="conflict">conflicts with: ' + YAHOO.booking.bookingToHtml(booking.conflicts[i]) + '</div>';
@@ -111,7 +118,10 @@ YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, bookin
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);
-		elCell.innerHTML = YAHOO.booking.link(booking.name, null, 12);
+		if (booking.shortname)
+			elCell.innerHTML = YAHOO.booking.link(booking.shortname, null, 12);
+		else
+			elCell.innerHTML = YAHOO.booking.link(booking.name, null, 12);
 	}
 	else {
 		elCell.innerHTML = '...';
@@ -149,7 +159,7 @@ YAHOO.booking.renderSchedule = function(container, url, date, colFormatter, incl
 	YAHOO.booking.oButton.set('label', lang['LBL_WEEK'] + ' ' + YAHOO.booking.weeknumber(date));
 
 	var colDefs = [{key: 'time', label: date.getFullYear() +'<br/>' + lang['LBL_TIME']}];
-	if(includeResource)
+	if(includeResource) 
 		colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: YAHOO.booking.scheduleResourceColFormatter});
 	YAHOO.booking.dates = {};
     var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

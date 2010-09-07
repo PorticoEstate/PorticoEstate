@@ -12,6 +12,7 @@
 					'id'				=> array('type' => 'int'),
 					'organization_number' => array('type' => 'string', 'query'=> true, 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid'))),
 					'name'			=> array('type' => 'string', 'required' => True, 'query' => True),
+					'shortname'		=> array('type' => 'string', 'required' => False, 'query' => True),
 					'homepage'		=> array('type' => 'string', 'required' => False, 'query' => True),
 					'phone'			=> array('type' => 'string'),
 					'email'			=> array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),

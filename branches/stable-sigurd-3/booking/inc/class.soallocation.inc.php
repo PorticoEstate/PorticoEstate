@@ -34,6 +34,14 @@
 							'key' => 'id',
 							'column' => 'name'
 					)),
+					'organization_shortname'	=> array('type' => 'string',
+						  'query' => true,
+						  'join' => array(
+							'table' => 'bb_organization',
+							'fkey' => 'organization_id',
+							'key' => 'id',
+							'column' => 'shortname'
+					)),
 					'building_id'	=> array('type' => 'string',
 						  'join' => array(
 							'table' => 'bb_season',

@@ -201,7 +201,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%35s", '')										// 	19		bank_account
 			.sprintf("%-12s", "BKBPE{$this->date_str}")					// 	20		batch_id				DATA
 			.'BY'														// 	21		client					DATA
-			.sprintf("%2s", '')								// 	22		client_ref
+			.sprintf("%2s", '')											// 	22		client_ref
 			.sprintf("%-17s", "{$this->date_str}")						// 	23		confirm_date			DATA
 			.sprintf("%1s", '')											// 	24		control
 			.sprintf("%17s", '')										//	25		just white space..
@@ -227,7 +227,7 @@ class rental_agresso_lg04 implements rental_exportable
 			.sprintf("%-15.15s", $client_ref)							// 	52		ext_ord_ref
 			.sprintf("%6s", '')											// 	53		intrule_id
 			.sprintf("%8s", '')											//	54-55	just white space..
-			.sprintf("%-120.120s", utf8_decode($header))								// 	56		long_info1				DATA
+			.sprintf("%-120.120s", utf8_decode($header))				// 	56		long_info1				DATA
 			.sprintf("%120s", '')										//	57		long_info2
 			.sprintf("%10s", '')										//	58		just white space..
 			.sprintf("%08s", '')										// 	59		main_apar_id
@@ -277,7 +277,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.$this->get_formatted_amount($item['amount'])			//  6		amount					DATA
 				.'1'													//  7		amount_set
 				.sprintf("%38s", '')									//	8-9		just white space..
-				.sprintf("%-35.35s", utf8_decode($item['article_description']))		// 	10		art_descr				DATA
+				.sprintf("%-35.35s", utf8_decode($item['article_description']))		// 	10	art_descr		DATA
 				.sprintf("%-15.15s", $item['article_code'])				// 	11		article					DATA
 				.sprintf("%49s", '')									//	12-19	just white space..
 				.sprintf("%-12s", "BKBPE{$this->date_str}")				// 	20		batch_id				DATA
@@ -302,7 +302,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%240s", '')									//	56-57	just white space..
 				.sprintf("%10s", '')									// 	58		lot
 				.sprintf("%215s", '')									//	59-64	just white space..
-				.sprintf("%09.9s", $serial_number)							// 	65	order_id					DATA
+				.sprintf("%09.9s", $serial_number)						// 	65	order_id					DATA
 				.sprintf("%4s", '')										//	66-67	just white space..
 																		//	(68)
 				.sprintf("%02s", '')
@@ -342,7 +342,7 @@ class rental_agresso_lg04 implements rental_exportable
 				.sprintf("%110s", '')									//	66-74	just white space..
 				.sprintf("%08s", 1)										// 	75		sequence_no				DATA
 				.sprintf("%28s", '')									//	76-77	just white space..
-				.sprintf("%-60.60s", utf8_decode($text))								// 	78		shot_info				DATA
+				.sprintf("%-60.60s", utf8_decode($text))				// 	78		shot_info				DATA
 				.sprintf("%63s", '')									//	79-88	just white space..
 				.'42'													// 	89		trans_type				DATA
 				.sprintf("%79s", '')									//	90-93	just white space..

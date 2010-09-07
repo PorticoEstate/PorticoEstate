@@ -1,8 +1,12 @@
 //--------------------------------------------------------
 // Declaration of location.index vars
 //--------------------------------------------------------
-	// define buttons
-	var selectsButtons = [];
+	//define SelectButton
+ 	var oMenuButton_0;
+ 	var selectsButtons = [
+	{order:0, var_URL:'app',name:'btn_app_id',style:'categorybutton',dependiente:''}
+	];
+
 
 	var oNormalButton_0, oNormalButton_1, oNormalButton_2;
 	var normalButtons = [
@@ -32,7 +36,14 @@
 	{
 		if(flag_particular_setting=='init')
 		{
-			//oMenuButton_0.focus();
+			//app
+			index = locate_in_array_options(0,"value",path_values.app);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+
+			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
