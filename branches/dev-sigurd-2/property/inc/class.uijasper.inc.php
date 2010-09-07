@@ -267,6 +267,18 @@
 				)
 			);
 
+			$parameters_view = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'jasper_id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
 			if($this->acl_edit)
 			{
 				$datatable['rowactions']['action'][] = array(
@@ -279,6 +291,20 @@
 									)),
 						'parameters'	=> $parameters
 						);
+			}
+
+			if($this->acl_read)
+			{
+				$datatable['rowactions']['action'][] = array(
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+														(
+																'menuaction'	=> 'property.uijasper.view',
+																'target'		=> '_blank'
+														)),
+						'parameters'			=> $parameters_view
+				);
 			}
 
 			if($this->acl_delete)
