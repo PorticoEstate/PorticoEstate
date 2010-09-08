@@ -166,15 +166,16 @@
 				$sql = "SELECT fm_jasper_input.id, fm_jasper_input.input_type_id,fm_jasper_input.name as input_name,fm_jasper_input_type.name as type_name,is_id"
 				." FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
 				$this->db->query($sql,__LINE__,__FILE__);
-				$i = 1;
+				$i = 0;
 				while ($this->db->next_record())
 				{
 					$jasper['input'][] = array
 					(
-						'count'				=> $i,
+						'counter'			=> $i,
 						'id'				=> $this->db->f('id'),
 						'input_type_id'		=> $this->db->f('input_type_id'),
 						'input_name'		=> $this->db->f('input_name',true),
+						'datatype'			=> $this->db->f('type_name',true),
 						'type_name'			=> $this->db->f('type_name',true),
 						'is_id'				=> $this->db->f('is_id')
 					);
@@ -318,7 +319,7 @@
 				$input_types[] = array
 				(
 					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name',true)
+					'descr'	=> $this->db->f('descr',true)
 				);
 			}
 			return $input_types;
