@@ -4359,7 +4359,7 @@
 
 	/**
 	* Update property version from 0.9.17.589 to 0.9.17.590
-	* add billable_hours to workorders
+	* add generic support for JasperReport
 	* 
 	*/
 
@@ -4370,12 +4370,6 @@
 
 		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 
-/*
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_input_type');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper_format_type');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_jasper');
-*/
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_jasper', array(
 				'fd' => array(
@@ -4457,6 +4451,29 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.590';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.590 to 0.9.17.591
+	* Add datatypes for user input at JasperReport
+	* 
+	*/
+
+	$test[] = '0.9.17.590';
+	function property_upgrade0_9_17_590()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('timestamp', 'timestamp')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('AB', 'Address book')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('VENDOR', 'Vendor')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('user', 'system user')");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.591';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

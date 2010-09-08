@@ -5,15 +5,18 @@
 			<xsl:when test="edit">
 				<xsl:apply-templates select="edit"/>
 			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="user_input"/>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 
 <!-- add / edit  -->
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<div class="yui-content">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">		
+		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -35,7 +38,7 @@
 							</td>
 						</tr>
 					</xsl:when>
-				</xsl:choose>	
+				</xsl:choose>
 
 				<xsl:choose>
 					<xsl:when test="value_file_name != ''">
@@ -48,7 +51,7 @@
 							</td>
 						</tr>
 					</xsl:when>
-				</xsl:choose>	
+				</xsl:choose>
 
 				<tr>
 					<td valign="top">
@@ -71,7 +74,7 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'title')" />
 							</xsl:attribute>
-						</input>			
+						</input>
 					</td>
 				</tr>
 				<tr>
@@ -83,7 +86,7 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'descr')" />
 							</xsl:attribute>
-							<xsl:value-of select="value_descr"/>		
+							<xsl:value-of select="value_descr"/>
 						</textarea>
 					</td>
 				</tr>
@@ -94,7 +97,7 @@
 					<td>
 						<xsl:value-of select="value_app_translated"/>
 						<input type="hidden" name="values[app]" value="{value_app}" >
-						</input>			
+						</input>
 					</td>
 				</tr>
 
@@ -111,7 +114,7 @@
 								<xsl:value-of select="php:function('lang', 'No location')" />
 							</option>
 							<xsl:apply-templates select="location_list"/>
-						</select>			
+						</select>
 					</td>
 				</tr>
 				<tr>
@@ -149,7 +152,7 @@
 								<xsl:value-of select="php:function('lang', 'input type')" />
 							</option>
 							<xsl:apply-templates select="input_type_list"/>
-						</select>			
+						</select>
 					</td>
 				</tr>
 				<tr>
@@ -161,7 +164,7 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'input name')" />
 							</xsl:attribute>
-						</input>			
+						</input>
 					</td>
 				</tr>
 				<tr>
@@ -271,7 +274,7 @@
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected" />
 			</xsl:if>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
+			<xsl:value-of disable-output-escaping="yes" select="descr"/>
 		</option>
 	</xsl:template>
 
@@ -285,3 +288,237 @@
 		</option>
 	</xsl:template>
 
+
+<!-- user_input  -->
+	<xsl:template match="user_input" xmlns:php="http://php.net/xsl">
+		<div class="yui-content">
+		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+		<form  name="form" method="post" action="{$form_action}">
+		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+			<xsl:choose>
+				<xsl:when test="msgbox_data != ''">
+					<tr>
+						<td align="left" colspan="3">
+							<xsl:call-template name="msgbox"/>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:for-each select="attributes" >
+				<tr>
+					<td align="left" width="19%" valign="top">
+						<xsl:value-of select="input_name"/>
+					</td>
+					<td align="left">
+						<xsl:choose>
+							<xsl:when test="input_name!=''">
+								<input type="hidden" name="values_attribute[{counter}][input_name]" value="{input_name}"></input>
+								<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"></input>
+								<input type="hidden" name="values_attribute[{counter}][counter]" value="{counter}"></input>
+								<input type="hidden" name="values_attribute[{counter}][is_id]" value="{is_id}"></input>
+								<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"></input>
+								<xsl:choose>
+									<xsl:when test="datatype='R'">
+										<xsl:call-template name="choice"/>
+									</xsl:when>
+									<xsl:when test="datatype='CH'">
+										<xsl:call-template name="choice"/>
+									</xsl:when>
+									<xsl:when test="datatype='LB'">
+										<select name="values_attribute[{counter}][value]" class="forms">
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+											<option value=""><xsl:value-of select="//lang_none"/></option>
+											<xsl:for-each select="choice">
+												<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+												<xsl:choose>
+													<xsl:when test="checked='checked'">
+														<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+													</xsl:when>
+													<xsl:otherwise>
+														<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:for-each>
+										</select>
+									</xsl:when>
+									<xsl:when test="datatype='AB'">
+										<table>
+											<tr>
+												<td>
+													<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
+													<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+													<xsl:variable name="clear_function"><xsl:text>clear_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+													<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
+														<xsl:choose>
+															<xsl:when test="disabled!=''">
+																<xsl:attribute name="disabled">
+																	<xsl:text> disabled</xsl:text>
+																</xsl:attribute>
+															</xsl:when>
+														</xsl:choose>
+													</input>
+													<input  size="30" type="text" name="{$contact_name}" value="{contact_name}"  onClick="{$lookup_function}" readonly="readonly"> 
+														<xsl:choose>
+															<xsl:when test="disabled!=''">
+																<xsl:attribute name="disabled">
+																	<xsl:text> disabled</xsl:text>
+																</xsl:attribute>
+															</xsl:when>
+														</xsl:choose>
+													</input>
+													<input type="checkbox" name="clear_{name}_box"  onClick="{$clear_function}" >
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'delete')" />
+														</xsl:attribute>
+														<xsl:attribute name="readonly">
+															<xsl:text>readonly</xsl:text>
+														</xsl:attribute>
+													</input>
+												</td>
+											</tr>
+											<xsl:choose>
+												<xsl:when test="contact_tel!=''">
+													<tr>
+														<td>
+															<xsl:value-of select="contact_tel"/>
+														</td>
+													</tr>
+												</xsl:when>
+											</xsl:choose>
+											<xsl:choose>
+												<xsl:when test="contact_email!=''">
+													<tr>
+														<td>
+															<a href="mailto:{contact_email}"><xsl:value-of select="contact_email"/></a>
+														</td>
+													</tr>
+												</xsl:when>
+											</xsl:choose>
+										</table>
+									</xsl:when>
+									<xsl:when test="datatype='ABO'">
+										<table>
+											<tr>
+												<td>
+													<xsl:variable name="org_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
+													<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+													<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
+														<xsl:choose>
+															<xsl:when test="disabled!=''">
+																<xsl:attribute name="disabled">
+																	<xsl:text> disabled</xsl:text>
+																</xsl:attribute>
+															</xsl:when>
+														</xsl:choose>
+													</input>
+													<input  size="30" type="text" name="{$org_name}" value="{org_name}"  onClick="{$lookup_function}" readonly="readonly"> 
+														<xsl:choose>
+															<xsl:when test="disabled!=''">
+																<xsl:attribute name="disabled">
+																	<xsl:text> disabled</xsl:text>
+																</xsl:attribute>
+															</xsl:when>
+														</xsl:choose>
+													</input>
+												</td>
+											</tr>
+										</table>
+									</xsl:when>
+									<xsl:when test="datatype='VENDOR'">
+										<xsl:variable name="vendor_name"><xsl:value-of select="name"/><xsl:text>_org_name</xsl:text></xsl:variable>
+										<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+										<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+										<input  size="30" type="text" name="{$vendor_name}" value="{vendor_name}"  onClick="{$lookup_function}" readonly="readonly"> 
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+									</xsl:when>
+									<xsl:when test="datatype='user'">
+										<xsl:variable name="user_name"><xsl:value-of select="name"/><xsl:text>_user_name</xsl:text></xsl:variable>
+										<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+										<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+										<input  size="30" type="text" name="{$user_name}" value="{user_name}"  onClick="{$lookup_function}" readonly="readonly"> 
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+									</xsl:when>
+									<xsl:when test="datatype='date'">
+										<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}"  size="12" maxlength="12" >
+											<xsl:attribute name="readonly">
+												<xsl:text> readonly</xsl:text>
+											</xsl:attribute>
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+										<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+									</xsl:when>
+									<xsl:otherwise>
+										<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+						</xsl:choose>
+					</td>
+				</tr>
+			</xsl:for-each>
+			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+			<xsl:variable name="lang_apply"><xsl:value-of select="php:function('lang', 'apply')" /></xsl:variable>
+			<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
+			<tr height="50">
+				<td align='left'>
+					<input type="submit" name="values[save]" value="{$lang_save}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+			</table>
+		</form>
+		</div>
+	</xsl:template>

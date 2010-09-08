@@ -694,6 +694,11 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, d
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('float', 'Float')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('text', 'Text')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('date', 'Date')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('timestamp', 'timestamp')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('AB', 'Address book')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('VENDOR', 'Vendor')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('user', 'system user')");
+
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('PDF')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('CSV')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XLS')");

@@ -610,7 +610,7 @@
 
 			$type_def = array
 			(
-				array('key' => 'count',	'label'=>'#','sortable'=>true,'resizeable'=>true),
+				array('key' => 'counter',	'label'=>'#','sortable'=>true,'resizeable'=>true),
 	   			array('key' => 'type_name',	'label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
 	  			array('key' => 'input_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
 				array('key' => 'is_id',	'label'=>lang('is id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')
@@ -688,6 +688,14 @@
 		{
 			$jasper_id	= phpgw::get_var('jasper_id');
 			$values = $this->bo->read_single($jasper_id);
+			$values_attribute = phpgw::get_var('values_attribute');
+			$first_run = true;
+
+			if($values_attribute)
+			{
+				$values['input'] = $values_attribute;
+				$first_run = false;
+			}
 			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
 			{
 				echo lang('not allowed');
@@ -695,11 +703,36 @@
 			}
 			$user_input = false;
 
-			foreach ($values['input'] as &$input)
+
+			if($first_run)
 			{
-				if(!($input['value'] = phpgw::get_var(strtolower($input['input_name']))) || !$input['is_id'])
+				foreach ($values['input'] as &$input)
 				{
-					$user_input = true;
+					if(!($input['value'] = phpgw::get_var(strtolower($input['input_name']))) || !$input['is_id'])
+					{
+						$user_input = true;
+					}
+				}
+			}
+			else
+			{
+				foreach ($values['input'] as &$input)
+				{
+					if(!$input['value'])
+					{
+						$user_input = true;
+					}
+					else
+					{
+						if($input['datatype'] == 'date')
+						{
+							$input['value'] = date($GLOBALS['phpgw']->db->date_format(),strtotime($input['value']));
+						}
+						if($input['datatype'] == 'timestamp')
+						{
+							$input['value'] = strtotime($input['value']);
+						}
+					}
 				}
 			}
 
@@ -748,6 +781,38 @@ _debug_array($report_source);
 					//FIXME Do something clever with the error
 					echo "<H1>{$error}</H1>";
 				}
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+
+				$custom_fields			= CreateObject('property.custom_fields');
+				$values['attributes']	= $values['input'];
+				$custom_fields->prepare($values);
+
+				$receipt['error'][] = array('msg' => lang('enter input'));
+
+				$function_msg	= lang('parameters');
+
+				$link_data = array
+				(
+					'menuaction'	=> 'property.uijasper.view',
+					'jasper_id'		=> $jasper_id
+				);
+
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+				$data = array
+				(
+					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'attributes'		=> $values['attributes']
+				);
+
+				$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+				$GLOBALS['phpgw']->xslttpl->add_file(array('jasper'));
+				$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('user_input' => $data));
 			}
 		}
 
