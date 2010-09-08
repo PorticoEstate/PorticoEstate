@@ -689,6 +689,7 @@
 			$jasper_id	= phpgw::get_var('jasper_id');
 			$values = $this->bo->read_single($jasper_id);
 			$values_attribute = phpgw::get_var('values_attribute');
+			$sel_format = phpgw::get_var('sel_format');
 			$first_run = true;
 
 			if($values_attribute)
@@ -712,6 +713,10 @@
 					{
 						$user_input = true;
 					}
+				}
+				if (isset($values['formats'][1]) && $values['formats'][1])// More than one
+				{
+					$user_input = true;
 				}
 			}
 			else
@@ -762,14 +767,21 @@
 
 				unset($_parameters);
 
-				$output_type = isset($values['formats'][0]) && $values['formats'][0] ? $values['formats'][0] : 'PDF';
+				if($sel_format)
+				{
+					$output_type = $sel_format;
+				}
+				else
+				{
+					$output_type = isset($values['formats'][0]) && $values['formats'][0] ? $values['formats'][0] : 'PDF';
+				}
 
 				$report_source		= "{$GLOBALS['phpgw_info']['server']['files_dir']}/property/jasper/{$jasper_id}/{$values['file_name']}";
 				$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
 /*
 _debug_array($jasper_parameters);
 _debug_array($output_type);
-_debug_array($report_source);
+_debug_array($report_source);die();
 */
 				try
 				{
@@ -786,10 +798,14 @@ _debug_array($report_source);
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-
+				if (!isset($values['formats'][0]))
+				{
+					$values['formats'][0] = 'PDF';	
+				}
 				$custom_fields			= CreateObject('property.custom_fields');
 				$values['attributes']	= $values['input'];
-				$custom_fields->prepare($values);
+				unset($values['input']);
+				$values = $custom_fields->prepare($values);
 
 				$receipt['error'][] = array('msg' => lang('enter input'));
 
@@ -802,12 +818,24 @@ _debug_array($report_source);
 				);
 
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+				
+				$formats = array();
+				foreach($values['formats'] as $format)
+				{
+					$formats[] = array
+					(
+						'id'	=> $format,
+						'name'	=> $format,
+						'selected' => $format == $sel_format
+					);
+				}
 
 				$data = array
 				(
 					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'attributes'		=> $values['attributes']
+					'attributes'		=> $values['attributes'],
+					'formats'			=> $formats
 				);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;

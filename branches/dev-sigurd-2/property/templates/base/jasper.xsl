@@ -306,7 +306,7 @@
 			</xsl:choose>
 			<xsl:for-each select="attributes" >
 				<tr>
-					<td align="left" width="19%" valign="top">
+					<td align="left" valign="top">
 						<xsl:value-of select="input_name"/>
 					</td>
 					<td align="left">
@@ -489,6 +489,21 @@
 										</input>
 										<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 									</xsl:when>
+									<xsl:when test="datatype='timestamp'">
+										<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}"  size="12" maxlength="12" >
+											<xsl:attribute name="readonly">
+												<xsl:text> readonly</xsl:text>
+											</xsl:attribute>
+											<xsl:choose>
+												<xsl:when test="disabled!=''">
+													<xsl:attribute name="disabled">
+														<xsl:text> disabled</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+										<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+									</xsl:when>
 									<xsl:otherwise>
 										<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
 											<xsl:choose>
@@ -506,9 +521,20 @@
 					</td>
 				</tr>
 			</xsl:for-each>
+				<tr>
+					<td align="left" valign="top">
+						<xsl:value-of select="php:function('lang', 'format type')" />
+					</td>
+					<td>
+						<select name="sel_format">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select format')" />
+							</xsl:attribute>
+							<xsl:apply-templates select="formats"/>
+						</select>
+					</td>
+				</tr>
 			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-			<xsl:variable name="lang_apply"><xsl:value-of select="php:function('lang', 'apply')" /></xsl:variable>
-			<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 			<tr height="50">
 				<td align='left'>
 					<input type="submit" name="values[save]" value="{$lang_save}">
@@ -522,3 +548,13 @@
 		</form>
 		</div>
 	</xsl:template>
+
+	<xsl:template match="formats">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+
