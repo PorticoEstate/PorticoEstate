@@ -2,7 +2,7 @@
 jasperreports-X.Y.Z-project.tar.gz from
 http://sourceforge.net/projects/jasperreports/files/jasperreports
 
-jasperreports-X.Y.Z.jar from /dist/
+jasperreports-X.Y.Z.jar and jasperreports-font-X.Y.Z.jar from /dist/
 + all jar-files from  /lib/
 
 
@@ -13,5 +13,5 @@ Probably not necesarry:
 	iText-X.X.X.jar from http://itextpdf.com/
 	
 chmod 644  on .jar and .class in phpgwapi/jasper/lib/ and phpgwapi/jasper/bin/
-	
-	
+
+
