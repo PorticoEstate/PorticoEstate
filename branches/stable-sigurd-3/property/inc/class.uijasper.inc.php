@@ -553,20 +553,20 @@
 					if (isset($values['save']) && $values['save'])
 					{
 						$GLOBALS['phpgw']->session->appsession('session_data','jasper_receipt',$receipt);
-						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
 					}
 				}
 			}
 
 			if (isset($values['cancel']) && $values['cancel'])
 			{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uijasper.index', 'app' => $this->app));
 			}
 
 			if ($id)
 			{
 				$values = $this->bo->read_single($id);
-				$function_msg = lang('edit budget account');
+				$function_msg = lang('edit report');
 				$grants	= $this->acl->get_grants('property','.jasper');
 				if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
 				{
@@ -579,11 +579,11 @@
 				$function_msg = lang('add report');
 			}
 
-
 			$link_data = array
 			(
 				'menuaction'	=> 'property.uijasper.edit',
-				'id'		=> $id
+				'id'		=> $id,
+				'app'		=> $this->app
 			);
 
 			$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->app);
@@ -652,12 +652,12 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'value_app'						=> $this->app,
-				'value_app_translated'			=> lang($this->app),
 				'value_id'						=> $id,
 				'value_file_name'				=> $values['file_name'],
 				'value_title'					=> $values['title'],
 				'value_descr'					=> $values['descr'],
 				'value_access'					=> $values['access'],
+				'apps_list'						=> $this->bo->get_apps($this->app),
 				'input_type_list'				=> $this->bo->get_input_type_list(),
 				'format_type_list'				=> $format_type_list,
 				'location_list'					=> $location_list,
