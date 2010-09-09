@@ -103,7 +103,7 @@
 
 			if(!$allrows)
 			{
-				$this->db->query("SELECT count(*) as cnt FROM {$table} {$filtermethod} {$querymethod}",__LINE__,__FILE__);
+				$this->db->query("SELECT count(*) as cnt FROM {$table} {$app_filter} {$filtermethod} {$querymethod}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$this->total_records = $this->db->f('cnt');
 				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);

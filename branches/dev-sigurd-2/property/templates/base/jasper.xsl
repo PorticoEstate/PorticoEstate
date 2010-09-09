@@ -16,7 +16,6 @@
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<div class="yui-content">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -39,6 +38,39 @@
 						</tr>
 					</xsl:when>
 				</xsl:choose>
+				<form name="form_app" method="post" action="{$form_action}">
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'application')" />
+						</td>
+						<td align= 'left'>
+							<select name="app" onChange="this.form.submit();">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'application')" />
+								</xsl:attribute>
+								<xsl:apply-templates select="apps_list"/>
+							</select>
+						</td>
+					</tr>
+					</form>
+				<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+				<tr>
+					<td>
+						<input type="hidden" name="values[app]" value="{value_app}" />
+						<xsl:value-of select="php:function('lang', 'location')" />
+					</td>
+					<td>
+						<select name="values[location]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'Select submodule')" />
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'No location')" />
+							</option>
+							<xsl:apply-templates select="location_list"/>
+						</select>
+					</td>
+				</tr>
 
 				<xsl:choose>
 					<xsl:when test="value_file_name != ''">
@@ -88,33 +120,6 @@
 							</xsl:attribute>
 							<xsl:value-of select="value_descr"/>
 						</textarea>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<xsl:value-of select="php:function('lang', 'application')" />
-					</td>
-					<td>
-						<xsl:value-of select="value_app_translated"/>
-						<input type="hidden" name="values[app]" value="{value_app}" >
-						</input>
-					</td>
-				</tr>
-
-				<tr>
-					<td>
-						<xsl:value-of select="php:function('lang', 'location')" />
-					</td>
-					<td>
-						<select name="values[location]">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'Select submodule')" />
-							</xsl:attribute>
-							<option value="">
-								<xsl:value-of select="php:function('lang', 'No location')" />
-							</option>
-							<xsl:apply-templates select="location_list"/>
-						</select>
 					</td>
 				</tr>
 				<tr>
@@ -191,9 +196,9 @@
 						</input>
 					</td>
 				</tr>
-
-			</table>
-			<table cellpadding="2" cellspacing="2" width="50%" align="center">
+				<tr>
+				<td colspan = '2'>
+				<table cellpadding="2" cellspacing="2" width="50%" align="center">
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 				<xsl:variable name="lang_apply"><xsl:value-of select="php:function('lang', 'apply')" /></xsl:variable>
 				<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
@@ -220,8 +225,11 @@
 						</input>
 					</td>
 				</tr>
-			</table>
+				</table>
+				</td>
+			</tr>
 		</form>
+		</table>
 		</div>
 		<!--  DATATABLE DEFINITIONS-->
 		<script>
@@ -269,6 +277,15 @@
 		</tr>
 	</xsl:template>
 
+	<xsl:template match="apps_list">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
+
 	<xsl:template match="input_type_list">
 		<option value="{id}">
 			<xsl:if test="selected != 0">
@@ -277,7 +294,6 @@
 			<xsl:value-of disable-output-escaping="yes" select="descr"/>
 		</option>
 	</xsl:template>
-
 
 	<xsl:template match="location_list">
 		<option value="{id}">
