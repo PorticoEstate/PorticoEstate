@@ -441,9 +441,9 @@
 
 			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location1);
 			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location2);
-			$id				= (int) $id;
+//			$id				= (int) $id;
 
-			$sql = "DELETE FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = {$id}";
+			$sql = "DELETE FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = '{$id}'";
 
 			$db->query($sql,__LINE__,__FILE__);
 		}
@@ -467,9 +467,9 @@
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$id 		 = (int) $id;
+//			$id 		 = (int) $id;
 
-			$sql		 = "DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}";
+			$sql		 = "DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = '{$id}'";
 
 			$db->query($sql,__LINE__,__FILE__);
 		}
