@@ -166,6 +166,14 @@
 				foreach($language as $lang)
 				{
 					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang], true);
+
+//FIXME: evaluate beenefits from chunking into app_lang
+/*
+					foreach ($lang_set[$lang] as $app => $app_lang)
+					{
+						$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}_{$app}", $app_lang, true);
+					}
+*/
 				}
 			}
 		}
