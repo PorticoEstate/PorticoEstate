@@ -55,6 +55,7 @@
 			'view_user'					=> true,
 			'sync_accounts_contacts'	=> true,
 			'clear_user_cache'			=> true,
+			'clear_cache'				=> true,
 			'global_message'			=> true
 		);
 
@@ -1560,4 +1561,83 @@
 			$GLOBALS['phpgw']->xslttpl->add_file('global_message');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('global_message' => $data));
 		}
+
+		/**
+		 * Render a confirmation form for clear all cache (user,and system)
+		 *
+		 * @return null
+		 */
+		public function clear_cache()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::clear_cache';
+
+			$account_id = phpgw::get_var('account_id', 'int');
+
+			if ( phpgw::get_var('cancel', 'bool', 'POST')
+				|| $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::GROUP_MANAGERS, 'admin') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			$dir = new DirectoryIterator($GLOBALS['phpgw_info']['server']['temp_dir']); 
+			$myfilearray = array();
+
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp(  substr($file->getFilename(),0, 12 ) , 'phpgw_cache_' ) != 0 )
+ 					{
+						continue;
+					}
+					$file_name = $file->getFilename();
+
+					$myfilearray[] = array
+					(
+						'last_modified'=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$file->getMTime()),
+						'file_path'=> $file->getPathname(),
+					);
+				}
+			}
+
+			if (phpgw::get_var('confirm', 'bool', 'POST') )
+			{
+				foreach($myfilearray as $delete_file)
+				{
+					unlink($delete_file['file_path']);
+				}
+				$myfilearray = array();
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			if($myfilearray)
+			{
+				_debug_array($myfilearray);
+			}
+
+			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);
+			$GLOBALS['phpgw']->xslttpl->add_file('confirm_delete');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('clear cache');
+
+			$data = array
+			(
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array
+												(
+													'menuaction' => 'admin.uiaccounts.clear_cache',
+													'account_id' => $account_id
+												)),
+				'lang_yes'					=> lang('yes'),
+				'lang_no'					=> lang('no'),
+				'lang_confirm_msg'			=> lang('are you sure you want to clear cache')
+			);
+
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
+		}
+
 	}

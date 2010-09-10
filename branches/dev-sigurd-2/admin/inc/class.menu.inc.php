@@ -105,6 +105,15 @@
 				);
 			}
 
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$menus['admin']['clear_cache'] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('clear cache', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.clear_cache') )
+				);
+			}
+
 //			if (! $GLOBALS['phpgw']->acl->check('sync_account', PHPGW_ACL_READ, 'admin'))
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
