@@ -197,7 +197,7 @@
 						$app_name   = $GLOBALS['phpgw_setup']->db->db_addslashes($line['app_name']);
 						$content    = $GLOBALS['phpgw_setup']->db->db_addslashes($line['content']);
 
-						$GLOBALS['phpgw_setup']->db->query("SELECT COUNT(*) as cnt FROM phpgw_lang WHERE message_id='$message_id' and lang='{$lang}' ", __LINE__, __FILE__);
+						$GLOBALS['phpgw_setup']->db->query("SELECT COUNT(*) as cnt FROM phpgw_lang WHERE message_id='$message_id' AND app_name = '{$app_name}' AND lang='{$lang}' ", __LINE__, __FILE__);
 						$GLOBALS['phpgw_setup']->db->next_record();
 						if ($GLOBALS['phpgw_setup']->db->f('cnt') == 0)
 						{
@@ -205,9 +205,9 @@
 							{
 								if($DEBUG)
 								{
-									echo "<br>add_langs(): adding - INSERT INTO phpgw_lang VALUES ('{$message_id}','{$app_name}','{$lang}','{$content}')";
+									echo "<br>add_langs(): adding - INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES ('{$message_id}','{$app_name}','{$lang}','{$content}')";
 								}
-								$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_lang VALUES ('{$message_id}','{$app_name}','{$lang}','{$content}')", __LINE__, __FILE__);
+								$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES ('{$message_id}','{$app_name}','{$lang}','{$content}')", __LINE__, __FILE__);
 							}
 						}
 					}

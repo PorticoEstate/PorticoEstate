@@ -242,8 +242,10 @@
 					echo '<li>' . lang('%1 upgraded', lang($appname)) . ".</li>";
 				}
 
-				$terror = $GLOBALS['phpgw_setup']->process->upgrade_langs($terror,$DEBUG);
-				echo '<li>' . lang('%1 translations upgraded', lang($appname)) . ".</li>\n</ul>\n";
+			// Sigurd sep 2010: very slow - run 'Manage Languages' from setup instead. 
+			//	$terror = $GLOBALS['phpgw_setup']->process->upgrade_langs($terror,$DEBUG);
+			//	echo '<li>' . lang('%1 translations upgraded', lang($appname)) . ".</li>\n</ul>\n";
+			echo "<li>To updgrade languages - run <b>'Manage Languages'</b> from setup</li>\n</ul>\n";
 			}
 		}
 
