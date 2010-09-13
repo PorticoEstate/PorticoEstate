@@ -712,11 +712,14 @@
 			$uicols['descr'][2]		= lang('Doc type');
 			$uicols['datatype'][2]	= 'text';
 			$uicols['name'][3]		= 'user';
-			$uicols['descr'][3]		= lang('User');
+			$uicols['descr'][3]		= lang('coordinator');
 			$uicols['datatype'][3]	= 'text';
 			$uicols['name'][4]		= 'document_id';
 			$uicols['descr'][4]		= lang('document id');
 			$uicols['datatype'][4]	= 'text';
+			$uicols['name'][5]		= 'document_date';
+			$uicols['descr'][5]		= lang('document date');
+			$uicols['datatype'][5]	= 'text';
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
