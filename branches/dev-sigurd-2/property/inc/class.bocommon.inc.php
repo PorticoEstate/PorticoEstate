@@ -1272,6 +1272,7 @@
 			$lookup 			= (isset($data['lookup'])?$data['lookup']:'');
 			$location_level 	= (isset($data['location_level'])?$data['location_level']:'');
 			$no_address 		= (isset($data['no_address'])?$data['no_address']:'');
+			$uicol_address		= (isset($data['uicol_address'])?$data['uicol_address']:'');
 			$force_location		= (isset($data['force_location'])?$data['force_location']:'');
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
@@ -1371,6 +1372,17 @@
 			{
 				$cols.= ",$entity_table.address";
 				$cols_return[] 				= 'address';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'address';
+				$uicols['descr'][]			= lang('address');
+				$uicols['statustext'][]		= lang('address');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+			}
+
+			if($uicol_address)
+			{
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'address';
 				$uicols['descr'][]			= lang('address');
