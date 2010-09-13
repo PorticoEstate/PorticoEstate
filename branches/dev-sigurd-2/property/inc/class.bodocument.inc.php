@@ -144,7 +144,7 @@
 
 		function read()
 		{
-			$document = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$documents = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_type'=>$this->doc_type));
 			$this->total_records = $this->so->total_records;
 
@@ -152,17 +152,30 @@
 			$cols_extra		= $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			for ($i=0; $i<count($document); $i++)
+			foreach ($documents as &$document)
 			{
-				$location_data=$this->solocation->read_single($document[$i]['location_code']);
+				$location_data	= $this->solocation->read_single($document['location_code']);
+
+				if(isset($location_data['street_name']) && $location_data['street_name'])
+				{
+					$document['address'] = "{$location_data['street_name']} {$location_data['street_number']}";
+				}
+				elseif($location_data['loc2_name'])
+				{
+					$document['address'] = $location_data['loc2_name'];
+				}
+				elseif($location_data['loc1_name'])
+				{
+					$document['address'] = $location_data['loc1_name'];
+				}
 
 				for ($j=0;$j<count($cols_extra);$j++)
 				{
-					$document[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+					$document[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 				}
 			}
 
-			return $document;
+			return $documents;
 		}
 
 		function get_files_at_location($location_code)
@@ -190,7 +203,7 @@
 			foreach ($document as & $entry)
 			{
 				$entry['user'] = $GLOBALS['phpgw']->accounts->id2name($entry['user_id']);
-				$entry['document_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$entry['document_date'] = $GLOBALS['phpgw']->common->show_date($entry['document_date'],$dateformat);
 				$entry['entry_date'] 	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
 				if($use_svn)
 				{
