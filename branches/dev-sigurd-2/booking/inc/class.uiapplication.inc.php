@@ -429,6 +429,7 @@
 				array_set_default($_POST, 'accepted_documents', array());
 				
 				$application = array_merge($application, extract_values($_POST, $this->fields));
+				$application['message'] = $_POST['comment'];
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
 
@@ -566,6 +567,7 @@
 				}
 				elseif($_POST['comment'])
 				{				
+					$application['comment'] = $_POST['comment'];
 					$this->add_comment($application, $_POST['comment']);
 					$update = true;
 					$notify = true;

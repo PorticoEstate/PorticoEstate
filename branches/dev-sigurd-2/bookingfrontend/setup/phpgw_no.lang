@@ -268,7 +268,7 @@ customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer e
 Used buildings	bookingfrontend	no	Bygg/anlegg som brukes
 Add group	bookingfrontend	no	Ny gruppe
 Internal Customer	bookingfrontend	no	Intern kunde
-Customer number	bookingfrontend	no	Kundenummer
+Customer number	bookingfrontend	no	Ressursnummer
 activity_id	bookingfrontend	no	Aktivitet
 contact_email	bookingfrontend	no	E-post
 contact_name	bookingfrontend	no	Navn
@@ -303,3 +303,7 @@ This booking is not connected to a season	bookingfrontend	no	Denne bookingen er 
 The user has accepted the document under point 8.	bookingfrontend	no	Brukeren har akseptert dokumentene under punkt 8.
 Organization shortname	bookingfrontend	no	Kortnavn
 Group shortname	bookingfrontend	no	Kortnavn
+Edit Group	bookingfrontend	no	Rediger gruppe
+contacts[0][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 1
+contacts[1][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 2
+This booking is outside the organization's allocated time	bookingfrontend	no	Denne bookingen ligger utenfor organisasjonens tildelte tid

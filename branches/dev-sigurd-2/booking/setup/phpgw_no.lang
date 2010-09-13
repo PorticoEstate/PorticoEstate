@@ -389,7 +389,7 @@ Edit document	booking	no	Rediger dokument
 Edit resource	booking	no	Rediger ressurs
 Edit Group	booking	no	Rediger gruppe
 Select Type	booking	no	Velg type
-Customer number	booking	no	Kundenummer
+Customer number	booking	no	Ressursnummer
 Send	booking	no	Send
 Your application has now been registered and a confirmation email has been sent to you.	booking	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	booking	no	En saksbehandler vil behandle søknaden så fort som mulig.
@@ -443,3 +443,6 @@ This booking is not connected to a season	booking	no	Denne bookingen er ikke kob
 Message from Bergen county - AktivBy	booking	no	Melding fra Bergen kommune - AktivBy
 Organization shortname	booking	no	Kortnavn
 Group shortname	booking	no	Kortnavn
+contacts[0][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 1
+contacts[1][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 2
+
