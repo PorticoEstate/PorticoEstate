@@ -1514,14 +1514,16 @@
 
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
 
+			$summary = array();
 			while ($this->db->next_record())
 			{
-				$summary[]=array(
+				$summary[]=array
+				(
 					'number'		=> $this->db->f('number'),
 					'type'			=> '[' . $this->db->f('category') . '] ' .$this->db->f('type'),
 					'part_of_town'	=> $this->db->f('part_of_town'),
 					'district_id'	=> $this->db->f('district_id')
-					);
+				);
 			}
 
 
