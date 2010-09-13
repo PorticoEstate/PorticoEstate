@@ -148,7 +148,9 @@
 															'joinmethod'	=> $joinmethod,
 															'paranthesis'	=> $paranthesis,
 															'query'			=> $query,
-															'force_location'=> true
+															'force_location'=> true,
+															'no_address'	=> true,
+															'uicol_address'=> true
 															));
 
 				$this->bocommon->fm_cache('sql_document_' . $entity_id,$sql);
@@ -172,7 +174,7 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
 
-			$groupmethod= " GROUP BY fm_document.location_code,fm_document.address";
+			$groupmethod= " GROUP BY fm_document.location_code";
 
 			if ($entity_id)
 			{
@@ -349,7 +351,8 @@
 					'link'				=> $this->db->f('link', true),
 					'title'				=> $this->db->f('title', true),
 					'doc_type'			=> $this->db->f('category'),
-					'user_id'			=> $this->db->f('user_id')
+					'user_id'			=> $this->db->f('coordinator'),
+					'document_date'		=> $this->db->f('document_date')
 					);
 			}
 
