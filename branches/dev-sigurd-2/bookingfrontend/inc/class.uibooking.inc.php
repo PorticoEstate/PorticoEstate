@@ -99,12 +99,15 @@
 			{
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
-				$date_from = array($time_from[0], $_POST['from_']);
-				$booking['from_'] = join(" ",$date_from);
-				$_POST['from_'] = join(" ",$date_from);
-				$date_to = array($time_to[0], $_POST['to_']);
-				$booking['to_'] = join(" ",$date_to); 
-				$_POST['to_'] = join(" ",$date_to);
+				if(strlen($_POST['from_']) < 6) 
+				{
+					$date_from = array($time_from[0], $_POST['from_']);
+					$booking['from_'] = join(" ",$date_from);
+					$_POST['from_'] = join(" ",$date_from);
+					$date_to = array($time_to[0], $_POST['to_']);
+					$booking['to_'] = join(" ",$date_to); 
+					$_POST['to_'] = join(" ",$date_to);
+				}				
 				$booking['building_name'] = $building['name'];
 				$booking['building_id'] = $building['id'];
 				$booking['active'] = '1';
@@ -154,6 +157,7 @@
 					else
 					{
 						$repeat_until = strtotime($season['to_'])+60*60*24; 
+						$_POST['repeat_until'] = $season['to_'];
 					} 
 
 					$max_dato = strtotime($_POST['to_']); // highest date from input
@@ -245,10 +249,7 @@
 					'to_date' => $_POST['to_'],
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
-					'groups' => $groups,
-					'date_from' => $time_from[0],
-					'date_to' => $time_to[0],
-					'res_names' => $res_names)
+					'groups' => $groups)
 				);
 			}
 		}

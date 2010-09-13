@@ -19,6 +19,7 @@
 			<input type="hidden" name="repeat_until" value="{repeat_until}" />
 			<input type="hidden" name="field_interval" value="{interval}" />
 			<input type="hidden" name="recurring" value="{recurring}" />
+			<input type="hidden" name="outseason" value="{outseason}" />
 			<input type="hidden" name="activity_id" value="{booking/activity_id}" />
 			<input type="hidden" name="group_id" value="{booking/group_id}" />
 			<xsl:for-each select="booking/audience">
