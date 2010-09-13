@@ -884,7 +884,8 @@
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
 			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
 					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1 
-					&& !$GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 2)
+				//	&& $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] != 2
+					)
 				)
 				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
 			{
@@ -895,9 +896,11 @@
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
 			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
 					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1
-					&& !$GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 2)
+			//		&& $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] != 2
+					)
 				)
-				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto']))
+					|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+				)
 			{
 				// add assigned to recipients
 				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
