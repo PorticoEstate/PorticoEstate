@@ -222,13 +222,6 @@ var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
                { group: 'textstyle', label: ' ',
                     buttons: [
                         { type: 'push', label: 'Bold', value: 'bold' },
-                        { type: 'push', label: 'Italic', value: 'italic' },
-                        { type: 'push', label: 'Underline', value: 'underline' },
-                        { type: 'separator' },
-                        { type: 'spin', label: '13', value: 'fontsize', range: [ 9, 18 ], disabled: true },
-                        { type: 'separator' },
-                        { type: 'push', label: 'Create an Unordered List', value: 'insertunorderedlist' },
-                        { type: 'push', label: 'Create an Ordered List', value: 'insertorderedlist' },
                         { type: 'separator' },
                         { type: 'push', label: 'HTML Link CTRL + SHIFT + L', value: 'createlink'}
                     ]
