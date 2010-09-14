@@ -417,23 +417,11 @@
 	</xsl:choose>
 
 	<xsl:choose>
-		<xsl:when test="jasperfiles!='' or jasperupload = 1">
-			<div id="jasper">
-				<table cellpadding="2" cellspacing="2" width="80%" align="center">
-					<tr>
-						<td align="left" valign="top">
-							<xsl:value-of select="//lang_files"/>
-						</td>
-						<td>
-							<div id="datatable-container_1"></div>
-						</td>
-					</tr>
-					<xsl:choose>
-						<xsl:when test="cat_list='' and jasperupload = 1">
-							<xsl:call-template name="jasper_upload"/>
-						</xsl:when>
-					</xsl:choose>
-				</table>
+		<xsl:when test="integration!=''">
+			<div id="integration">
+				<iframe src="{value_integration_src}" width="100%" height="600">
+					<p>Your browser does not support iframes.</p>
+				</iframe>
 			</div>
 		</xsl:when>
 	</xsl:choose>
