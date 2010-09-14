@@ -1448,15 +1448,45 @@
 				unset($attributes_groups);
 				unset($values['attributes']);
 
-				if($category['fileupload'] || (isset($values['files']) || $values['files']))
+				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
 					$tabs['files']	= array('label' => lang('files'), 'link' => '#files');
 				}
-
+/*
 				if($category['jasperupload'])
 				{
 					$tabs['jasper']	= array('label' => lang('jasper reports'), 'link' => '#jasper');
 				}
+*/
+			}
+
+			$integration = '';
+			if($category['integration_tab'] && $values['id'])
+			{
+				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration');
+				$integration			= true;
+				$category['integration_paramtres'] = htmlspecialchars_decode($category['integration_paramtres']);
+
+				parse_str($category['integration_paramtres'], $output);
+				
+				foreach ($output as $_key => $_value)
+				{
+					$_keys[] = $_key;
+					$_values[] = $values[$_value];
+				}
+
+				if (stripos($category['integration_url'],'?'))
+				{
+					$_sep = '&';
+				}
+				else
+				{
+					$_sep = '?';
+				}
+				$_param = str_replace($_keys, $_values, $category['integration_paramtres']);
+
+			$integration_src = phpgw::safe_redirect("{$category['integration_url']}{$_sep}{$_param}");
+ 
 			}
 
 			$link_file_data = array
@@ -1493,6 +1523,7 @@
 									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
 
+/*
 			$link_file_data['jasper']		= true;
 			$content_jasperfiles = array();
 			for($z=0; $z<count($values['jasperfiles']); $z++)
@@ -1518,7 +1549,7 @@
        			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
 									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
-			
+*/			
 			if ($id)
 			{
 				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
@@ -1557,11 +1588,11 @@
 				'lang_start_ticket'			=> lang('start ticket'),
 				'ticket_link'					=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
 				'fileupload'					=> $category['fileupload'],
-				'jasperupload'					=> $category['jasperupload'],
+		//		'jasperupload'					=> $category['jasperupload'],
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 		//		'link_to_files'					=> $link_to_files,
 				'files'							=> isset($values['files'])?$values['files']:'',
-				'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
+		//		'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
 				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
 				'lang_file_action'				=> lang('Delete file'),
@@ -1620,7 +1651,9 @@
 				'table_apply' 					=> $table_apply,
 				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
+				'integration'					=> $integration,
+				'value_integration_src'			=> $integration_src
 			);
 
 			phpgwapi_yui::load_widget('dragdrop');

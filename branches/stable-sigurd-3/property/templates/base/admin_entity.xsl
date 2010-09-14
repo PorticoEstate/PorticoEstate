@@ -727,6 +727,48 @@
 
 				</xsl:when>
 			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="start_ticket != ''">
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'integration tab')" />
+						</td>
+						<td>
+							<input type="text" name="values[integration_tab]" value="{value_integration_tab}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'integration tab')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'integration url')" />
+						</td>
+						<td>
+							<input type="text" name="values[integration_url]" value="{value_integration_url}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'integration url')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+			<tr>
+				<td valign="top">
+						<xsl:value-of select="php:function('lang', 'integration paramtres')" />
+				</td>
+				<td>
+					<textarea cols="60" rows="10" name="values[integration_paramtres]" wrap="virtual">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'example')" />
+							<xsl:text>: knr=__kommune_nr__&amp;gnr=__gaards_nr__&amp;bnr=__bruks_nr__&amp;fnr=__feste_nr__&amp;snr=__seksjons_nr__</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="value_integration_paramtres"/>		
+					</textarea>
+				</td>
+			</tr>
+				</xsl:when>
+			</xsl:choose>
 
 			<tr height="50">
 				<td>

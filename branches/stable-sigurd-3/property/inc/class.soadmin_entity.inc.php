@@ -428,20 +428,24 @@
 			{
 				$category = array
 				(
-					'id'				=> $this->db->f('id'),
-					'name'				=> $this->db->f('name'),
-					'descr'				=> $this->db->f('descr'),
-					'prefix'			=> $this->db->f('prefix'),
-					'lookup_tenant'		=> $this->db->f('lookup_tenant'),
-					'tracking'			=> $this->db->f('tracking'),
-					'location_level'	=> $this->db->f('location_level'),
-					'fileupload'		=> $this->db->f('fileupload'),
-					'loc_link'			=> $this->db->f('loc_link'),
-					'start_project'		=> $this->db->f('start_project'),
-					'start_ticket'		=> $this->db->f('start_ticket'),
-					'jasperupload'		=> $this->db->f('jasperupload'),
-					'parent_id'			=> $this->db->f('parent_id'),
-					'level'				=> $this->db->f('level')
+					'id'						=> $this->db->f('id'),
+					'name'						=> $this->db->f('name',true),
+					'descr'						=> $this->db->f('descr',true),
+					'prefix'					=> $this->db->f('prefix',true),
+					'lookup_tenant'				=> $this->db->f('lookup_tenant'),
+					'tracking'					=> $this->db->f('tracking'),
+					'location_level'			=> $this->db->f('location_level'),
+					'fileupload'				=> $this->db->f('fileupload'),
+					'loc_link'					=> $this->db->f('loc_link'),
+					'start_project'				=> $this->db->f('start_project'),
+					'start_ticket'				=> $this->db->f('start_ticket'),
+					'jasperupload'				=> $this->db->f('jasperupload'),
+					'parent_id'					=> $this->db->f('parent_id'),
+					'level'						=> $this->db->f('level'),
+					'integration_tab'			=>  $this->db->f('integration_tab',true),
+					'integration_url'			=>  $this->db->f('integration_url',true),
+					'integration_paramtres'		=>  $this->db->f('integration_paramtres',true)
+
 				);
 			}
 			return $category;
@@ -537,7 +541,8 @@
 			}
 
 
-			$values_insert= array(
+			$values_insert= array
+			(
 				$values['entity_id'],
 				$values['id'],
 				$values['name'],
@@ -552,12 +557,15 @@
 				$values['start_ticket'],
 				$values['jasperupload'],
 				$values['parent_id'],
-				$level
-				);
+				$level,
+				$this->db->db_addslashes($values['integration_tab']),
+				$this->db->db_addslashes($values['integration_url']),
+				$this->db->db_addslashes($values['integration_paramtres']),
+			);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket,jasperupload,parent_id,level) "
+			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket,jasperupload,parent_id,level,integration_tab, integration_url, integration_paramtres) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
@@ -737,19 +745,22 @@
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
 				$value_set=array(
-					'descr'			=> $entity['descr'],
-					'name'			=> $entity['name'],
-					'prefix'		=> $entity['prefix'],
-					'lookup_tenant'	=> $entity['lookup_tenant'],
-					'tracking'		=> $entity['tracking'],
-					'location_level'=> $entity['location_level'],
-					'fileupload'	=> $entity['fileupload'],
-					'loc_link'		=> $entity['loc_link'],
-					'start_project'	=> $entity['start_project'],
-					'start_ticket'	=> $entity['start_ticket'],
-					'jasperupload'	=> $entity['jasperupload'],
-					'parent_id'		=> $entity['parent_id'],
-					'level'			=> $level,
+					'descr'					=> $entity['descr'],
+					'name'					=> $entity['name'],
+					'prefix'				=> $entity['prefix'],
+					'lookup_tenant'			=> $entity['lookup_tenant'],
+					'tracking'				=> $entity['tracking'],
+					'location_level'		=> $entity['location_level'],
+					'fileupload'			=> $entity['fileupload'],
+					'loc_link'				=> $entity['loc_link'],
+					'start_project'			=> $entity['start_project'],
+					'start_ticket'			=> $entity['start_ticket'],
+					'jasperupload'			=> $entity['jasperupload'],
+					'parent_id'				=> $entity['parent_id'],
+					'level'					=> $level,
+					'integration_tab'		=> $this->db->db_addslashes($entity['integration_tab']),
+					'integration_url'		=> $this->db->db_addslashes($entity['integration_url']),
+					'integration_paramtres'	=> $this->db->db_addslashes($entity['integration_paramtres'])
 					);
 
 				$value_set	= $this->db->validate_update($value_set);

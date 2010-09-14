@@ -1146,6 +1146,9 @@
 				'jasperupload'						=> true,
 				'category_list'						=> $category_list,
 				'parent_list'						=> $parent_list,
+				'value_integration_tab'				=>  $values['integration_tab'],
+				'value_integration_url'				=>  $values['integration_url'],
+				'value_integration_paramtres'		=>  $values['integration_paramtres']
 			);
 
 			$appname = lang('entity');
