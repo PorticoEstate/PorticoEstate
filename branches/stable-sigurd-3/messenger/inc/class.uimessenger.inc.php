@@ -11,7 +11,7 @@
 	*  Free Software Foundation; either version 2 of the License, or (at your  *
 	*  option) any later version.                                              *
 	\**************************************************************************/
-
+	phpgw::import_class('phpgwapi.yui');
 	class uimessenger
 	{
 		var $bo;
@@ -218,32 +218,29 @@
 
 		function index()
 		{
-//_debug_array($_REQUEST);
-			$this->acl_location = '.scheduled_events';
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$this->acl_location = 'run';
+			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property') )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'messenger');
+			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'messenger');
+			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'messenger');
+			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'messenger');
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::scheduled_events";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "messenger::inbox";
+//			$this->save_sessiondata();
 
 			$values = phpgw::get_var('values');
-			$start_date 	= urldecode(phpgw::get_var('start_date'));
-			$end_date 		= urldecode(phpgw::get_var('end_date'));
-
-
+_Debug_Array($values);
 			$receipt = array();
 			if($values && $this->acl_edit)
 			{
-				$receipt = $this->bo->update_receipt($values);
+				$receipt = $this->bo->delete_message($values);
 			}
-			$this->save_sessiondata();
 
 			$datatable = array();
 
@@ -251,26 +248,15 @@
 			{
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 	    		(
-	    			'menuaction'	=> 'property.uievent.index',
-					'location_id'	=> $this->location_id,
-					'user_id'		=> $this->user_id
+	    			'menuaction'	=> 'messenger.uimessenger.index'
    				));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uievent.index',"
-	    												."location_id:'{$this->location_id}',"
-	    												."user_id:'{$this->user_id}'";
+   				$datatable['config']['base_java_url'] = "menuaction:'messenger.uimessenger.index'";
 
-				$values_combo_box = array();
-
-				$values_combo_box[0]  = $this->bo->get_event_location();
-				
-				$default_value = array ('id'=> -1, 'name'=>lang('no category'));
-				array_unshift ($values_combo_box[0],$default_value);
-
-				$values_combo_box[1]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
-				array_unshift ($values_combo_box[1],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tasks')));
-				$default_value = array('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[1],$default_value);
+				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+	    		(
+	    			'menuaction'	=> 'messenger.uimessenger.index'
+   				));
 
 				$datatable['config']['allow_allrows'] = true;
 
@@ -281,7 +267,7 @@
 					'action'	=> $GLOBALS['phpgw']->link('/index.php',
 								array
 								(
-									'menuaction'	=> 'property.uievent.index',
+									'menuaction'	=> 'property.uicategory.index',
 									'type'			=> $type,
 									'type_id'		=> $type_id
 								)
@@ -290,52 +276,19 @@
 					(
 	                		'field' => array
 	                		(
-								array
-								( //boton 	CATEGORY
-									'id' => 'btn_location_id',
-									'name' => 'location_id',
-									'value'	=> lang('Category'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 1
-								),
-								array
-								( //boton 	USER
-									'id' => 'btn_user_id',
-									'name' => 'user_id',
-									'value'	=> lang('User'),
-									'type' => 'button',
-									'style' => 'filter',
-									'tab_index' => 2
-								),
-								array( // boton SAVE
-									'id'	=> 'btn_save',
-									//'name' => 'save',
-									'value'	=> lang('save'),
-									'tab_index' => 6,
+								array(
+									'id'	=> 'btn_compose',
+									'name' => 'compose',
+									'value'	=> lang('compose'),
+									'tab_index' => 9,
 									'type'	=> 'button'
 		                            ),
-								array( //hidden start_date
-									'type' => 'hidden',
-									'id' => 'start_date',
-									'value' => $start_date
-									),
-								array( //hidden end_date
-									'type' => 'hidden',
-									'id' => 'end_date',
-									'value' => $end_date
-								),
-								array(//for link "None",
-								'type'=> 'label_date'
-								),
-								array(//for link "Date search",
-									'type'=> 'link',
-									'id'  => 'btn_data_search',
-									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									       array(
-									           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-									 'value' => lang('Date search'),
-									 'tab_index' => 5
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_delete',
+									'value'	=> lang('delete'),
+									'tab_index' => 8
 								),
 								array
 								( //button     SEARCH
@@ -343,7 +296,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 4
+									'tab_index' => 7
 								),
 								array
 								( // TEXT INPUT
@@ -353,122 +306,71 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
-									'tab_index' => 3
-								),
-								array
-								( //place holder for selected events
-									'type'	=> 'hidden',
-									'id'	=> 'event',
-									'value'	=> ''
-								)
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+									'tab_index' => 6
 								)
 							)
 						)
 					)
-				);				
-				$dry_run = true;
+				);
+//				$dry_run = true;
 			}
 
-			$values = $this->bo->read($dry_run);
-			$uicols = array();$this->bo->uicols;
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
 
-			$uicols['name'][]		= 'schedule_time';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
+			$params = array(
+				'start' => $start,
+				'order' => $order,
+				'sort'  => $sort
+			);
 
-			$uicols['name'][]		= 'location';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'location_item_id';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
-
-			$uicols['name'][]		= 'attrib_id';
-			$uicols['descr'][]		= 'dummy';
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= 'hidden';
+			$values = $this->bo->read_inbox($params);
+			foreach($values as &$message)
+			{
+				$message['status'] = $message['status'] == '&nbsp;' ? '' : $message['status'];
+				$message['message_date'] = $message['date'];
+				$message['subject'] = "<a href='". $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.read_message', 'message_id' => $message['id']))."'>" .$message['subject']."</a>";
+			}
+			$uicols = array();
 
 			$uicols['name'][]		= 'id';
 			$uicols['descr'][]		= lang('id');
-			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'id';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
-			$uicols['name'][]		= 'date';
+			$uicols['name'][]		= 'status';
+			$uicols['descr'][]		= lang('status');
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= '';
+
+			$uicols['name'][]		= 'message_date';
 			$uicols['descr'][]		= lang('date');
 			$uicols['sortable'][]	= true;
-			$uicols['sort_field'][]	= 'date';
+			$uicols['sort_field'][]	= 'message_date';
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
-			$uicols['name'][]		= 'descr';
-			$uicols['descr'][]		= lang('Descr');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
+			$uicols['name'][]		= 'from';
+			$uicols['descr'][]		= lang('from');
+			$uicols['sortable'][]	= true;
+			$uicols['sort_field'][]	= 'message_from';
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
-			$uicols['name'][]		= 'exception';
-			$uicols['descr'][]		= lang('exception');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'FormatterCenter';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'receipt_date';
-			$uicols['descr'][]		= lang('receipt date');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'location_name';
-			$uicols['descr'][]		= lang('location name');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= '';
-			$uicols['input_type'][]	= '';
-
-			$uicols['name'][]		= 'url';
-			$uicols['descr'][]		= lang('url');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= 'link';
+			$uicols['name'][]		= 'subject';
+			$uicols['descr'][]		= lang('subject');
+			$uicols['sortable'][]	= true;
+			$uicols['sort_field'][]	= 'message_subject';
+			$uicols['format'][]		= '';//'link';
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
@@ -494,7 +396,6 @@
 						$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
 						$datatable['rows']['row'][$j]['column'][$k]['value']		= lang('link');
 						$datatable['rows']['row'][$j]['column'][$k]['link']			= $entry[$uicols['name'][$k]];
-						$datatable['rows']['row'][$j]['column'][$k]['target']	   = '_blank';
 					}
 				}
 				$j++;
@@ -508,24 +409,9 @@
 				(
 					array
 					(
-						'name'		=> 'location',
-						'source'	=> 'location'
-					),
-					array
-					(
-						'name'		=> 'attrib_id',
-						'source'	=> 'attrib_id'
-					),
-					array
-					(
-						'name'		=> 'item_id',
-						'source'	=> 'location_item_id'
-					),
-					array
-					(
 						'name'		=> 'id',
 						'source'	=> 'id'
-					)
+					),
 				)
 			);
 
@@ -533,20 +419,28 @@
 			{
 				$datatable['rowactions']['action'][] = array
 				(
-					'my_name'		=> 'edit',
-					'text' 			=> lang('edit serie'),
+					'my_name' 		=> 'edit',
+					'statustext' 	=> lang('edit the actor'),
+					'text'			=> lang('edit'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'		=> 'property.uievent.edit',
-											'type'				=> $type,
-											'type_id'			=> $type_id,
+											'menuaction'		=> 'messenger.uimessenger.reply'
+										)),
+					'parameters'	=> $parameters
+				);
+				$datatable['rowactions']['action'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('open edit in new window'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'		=> 'messenger.uimessenger.reply',
 											'target'			=> '_blank'
 										)),
 					'parameters'	=> $parameters
 				);
 			}
 
-/*
 			if($this->acl_delete)
 			{
 				$datatable['rowactions']['action'][] = array
@@ -557,14 +451,11 @@
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'	=> 'property.uievent.delete',
-											'type'			=> $type,
-											'type_id'		=> $type_id
+											'menuaction'	=> 'messenger.uimessenger.delete'
 										)),
 					'parameters'	=> $parameters
 				);
 			}
-*/
 			unset($parameters);
 
 			if($this->acl_add)
@@ -576,54 +467,46 @@
 					'text'			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
-											'menuaction'	=> 'property.uievent.edit',
-											'type'			=> $type,
-											'type_id'		=> $type_id
+											'menuaction'	=> 'messenger.uimessenger.compose'
 										))
 				);
 			}
 
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-				$datatable['headers']['header'][$i]['visible'] 			= $uicols['input_type'][$i]!='hidden';
-				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
-				$datatable['headers']['header'][$i]['sort_field']   	= $uicols['sort_field'][$i];
-				$datatable['headers']['header'][$i]['format'] 			= $uicols['format'][$i];
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= $uicols['formatter'][$i] ? $uicols['formatter'][$i] : '""';
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= $uicols['input_type'][$i]!='hidden';
+					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
+					$datatable['headers']['header'][$i]['sort_field']   	= $uicols['sort_field'][$i];
+			//		$datatable['headers']['header'][$i]['format'] 			= $uicols['format'][$i];
+				}
 			}
 
 			//path for property.js
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
 
 			// Pagination and sort values
-			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_start'] 	= (int)$start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($values);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_messages();
 
-			if($dry_run)
+			$appname			= lang('messenger');
+			$function_msg		= lang('inbox');
+
+			if ( ($start == 0) && (!$order))
 			{
-					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
-			}
-			else
-			{
-				$datatable['pagination']['records_returned']= count($values);
-			}
-
-			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-			$appname			= lang('scheduled events');
-			$function_msg		= lang('list %1', $appname);
-
-			if ( ($this->start == 0) && (!$this->order))
-			{
-				$datatable['sorting']['order'] 			= 'date'; // name key Column in myColumnDef
+				$datatable['sorting']['order'] 			= 'message_date'; // name key Column in myColumnDef
 				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
-				$datatable['sorting']['order']			= $this->order; // name of column of Database
-				$datatable['sorting']['sort'] 			= $this->sort; // ASC / DESC
+				$datatable['sorting']['order']			= $order; // name of column of Database
+				$datatable['sorting']['sort'] 			= $sort; // ASC / DESC
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -637,56 +520,55 @@
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
     		//values for Pagination
-    		$json = array
-    		(
-    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-   				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-    			'startIndex' 		=> $datatable['pagination']['records_start'],
-				'sort'				=> $datatable['sorting']['order'],
-    			'dir'				=> $datatable['sorting']['sort'],
-				'records'			=> array()
-    		);
+	    		$json = array
+	    		(
+	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+	    			'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+	    		);
 
-			// values for datatable
-    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-    		{
-    			foreach( $datatable['rows']['row'] as $row )
-    			{
-	    			$json_row = array();
-	    			foreach( $row['column'] as $column)
+				// values for datatable
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    			foreach( $datatable['rows']['row'] as $row )
 	    			{
-	    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-	    				{
-	    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-	    				}
-	    				else if(isset($column['format']) && $column['format']== "link")
-	    				{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-	    				}
-	    				else
-	    				{
-	    				  $json_row[$column['name']] = $column['value'];
-	    				}
+		    			$json_row = array();
+		    			foreach( $row['column'] as $column)
+		    			{
+		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+		    				{
+		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    				}
+		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				{
+		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+		    				}else
+		    				{
+		    				  $json_row[$column['name']] = $column['value'];
+		    				}
+		    			}
+		    			$json['records'][] = $json_row;
 	    			}
-	    			$json['records'][] = $json_row;
-    			}
-    		}
+	    		}
 
-			// right in datatable
-			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
-			{
-				$json ['rights'] = $datatable['rowactions']['action'];
-			}
+				// right in datatable
+				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+				{
+					$json ['rights'] = $datatable['rowactions']['action'];
+				}
 
-			if(isset($receipt) && is_array($receipt) && count($receipt))
-			{
-				$json['message'][] = $receipt;
-			}
+				if(isset($receipt) && is_array($receipt) && count($receipt))
+				{
+					$json['message'][] = $receipt;
+				}
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-	    		return $json;
-			}
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
+		    		return $json;
+				}
+
 
 			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
@@ -708,10 +590,11 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
+			$GLOBALS['phpgw_info']['flags']['app_header'] = "{$appname}::{$function_msg}";
 
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'event.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'messenger.index', 'messenger' );
 		}
+
 
 
 		function inbox()

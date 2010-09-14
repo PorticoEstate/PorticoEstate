@@ -21,17 +21,22 @@
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 
-			$subject = 'Automatisk svar fra Bergen kommune - AktivBy';
+			$subject = 'Melding fra Bergen kommune - AktivBy';
 			$link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id='.$application['id'].'&secret='.$application['secret'];
 
 			if ($created) {
 				$body = '<p>Din søknad om leie/lån er mottatt.</p>';
+				$body .= '<p>Praktisk informasjon finner du i dokumenter knyttet til bygget, ref. juridiske betingelser pk.8 i søknad.</p>';
+				$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
+				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+
 			} else {
-				$body = '<p>Din søknad i AktivBy om leie/lån er endret/oppdatert, og har nå status <strong>'.lang($application['status']).'</strong>.</p>';
+//				$body = '<p>Din søknad i AktivBy om leie/lån er endret/oppdatert, og har nå status <strong>'.lang($application['status']).'</strong>.</p>';
+
+				$body = '<p>Din søknad i AktivBy? om leie/lån er blitt endret/oppdatert. Ber om at du går inn og sjekker om vi trenger ytterligere informasjon, og evt. gir nødvendig tilbakmeldinger slik at saken kan ferdigbehandles.</p>';
+				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				$body .= '<p>'.$application['comment'].'</p>';
 			}
-			$body .= '<p>Praktisk informasjon finner du i dokumenter knyttet til bygget, ref. juridiske betingelser pk.8 i søknad.</p>';
-			$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
-			$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
 			$body .= '<p>Med vennlig hilsen AktivBy - Bergen Kommune</p>';
 
 			try

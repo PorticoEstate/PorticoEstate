@@ -28,7 +28,7 @@
 			    <div class="autocomplete">
 			        <input id="field_organization_id" name="organization_id" type="hidden" value="{group/organization_id}"/>
 			        <input name="organization_name" type="text" id="field_organization_name" value="{group/organization_name}">
-						<xsl:if test="group/filter_organization_id">
+						<xsl:if test="group/organization_id">
 							<xsl:attribute name='disabled'>disabled</xsl:attribute>
 						</xsl:if>
 					</input>
@@ -125,7 +125,19 @@ var descEdit = new YAHOO.widget.SimpleEditor('field-description', {
     width: '522px',
     dompath: true,
     animate: true,
-	handleSubmit: true
+	handleSubmit: true,
+        toolbar: {
+            titlebar: '',
+            buttons: [
+               { group: 'textstyle', label: ' ',
+                    buttons: [
+                        { type: 'push', label: 'Bold', value: 'bold' },
+                        { type: 'separator' },
+                        { type: 'push', label: 'HTML Link CTRL + SHIFT + L', value: 'createlink'}
+                    ]
+                }
+            ]
+        }
 });
 descEdit.render();
 
