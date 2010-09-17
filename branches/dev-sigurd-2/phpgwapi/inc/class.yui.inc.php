@@ -206,8 +206,13 @@ HTML;
 			{
 				$selected = $id == $selection ? ' class="selected"' : '';
 				$label = $tab['label'];
+				$_function = '';
+				if(isset($tab['function']))
+				{
+					$_function = " onclick=\"javascript: {$tab['function']};\"";
+				}
 				$output .= <<<HTML
-					<li{$selected}><a href="{$tab['link']}"><em>{$label}</em></a></li>
+					<li{$selected}><a href="{$tab['link']}"{$_function}><em>{$label}</em></a></li>
 
 HTML;
 			}
