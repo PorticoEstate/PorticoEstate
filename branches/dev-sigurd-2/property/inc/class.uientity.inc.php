@@ -1463,10 +1463,11 @@
 			$integration = '';
 			if($category['integration_tab'] && $values['id'])
 			{
-				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration');
-//				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration', 'function' => 'alert(\'test\')');
+//				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration');
+				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration', 'function' => 'integration()');
 				$integration			= true;
-				$category['integration_paramtres'] = htmlspecialchars_decode($category['integration_paramtres']);
+				$category['integration_url']		= htmlspecialchars_decode($category['integration_url']);
+				$category['integration_paramtres']	= htmlspecialchars_decode($category['integration_paramtres']);
 
 				parse_str($category['integration_paramtres'], $output);
 				
@@ -1486,7 +1487,31 @@
 				}
 				$_param = str_replace($_keys, $_values, $category['integration_paramtres']);
 
-			$integration_src = phpgw::safe_redirect("{$category['integration_url']}{$_sep}{$_param}");
+				$integration_src = phpgw::safe_redirect("{$category['integration_url']}{$_sep}{$_param}");
+/*
+				$code = <<<JS
+					integration = function()
+					{
+						var onDialogShow = function(e, args, o)
+						{
+							var frame = document.createElement('iframe');
+							frame.src = "{$integration_src}";
+							frame.width = "100%";
+							frame.height = "400%";
+							o.setBody(frame);
+						};
+						lightbox.showEvent.subscribe(onDialogShow, lightbox);
+						lightbox.show();
+					}
+JS;
+*/
+				$code = <<<JS
+					integration = function()
+					{
+					}
+JS;
+
+				$GLOBALS['phpgw']->js->add_code($namespace, $code);
  
 			}
 

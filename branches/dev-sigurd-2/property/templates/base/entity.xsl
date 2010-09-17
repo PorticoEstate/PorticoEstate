@@ -419,9 +419,13 @@
 	<xsl:choose>
 		<xsl:when test="integration!=''">
 			<div id="integration">
-				<iframe src="{value_integration_src}" width="100%" height="600">
+				<iframe src="{value_integration_src}" width="100%" height="500">
 					<p>Your browser does not support iframes.</p>
 				</iframe>
+			</div>
+			<div id="test" >
+				<div class="hd" style="background-color:#000000;color:#FFFFFF; border:0; text-align:center"> Integration </div>
+				<div class="bd" style="text-align:center;"> </div>
 			</div>
 		</xsl:when>
 	</xsl:choose>
