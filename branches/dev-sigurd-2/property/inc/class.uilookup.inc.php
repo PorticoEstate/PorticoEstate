@@ -2018,7 +2018,6 @@
 		    		return $json;
 				}
 
-_debug_array();
 			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 

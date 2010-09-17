@@ -1146,9 +1146,12 @@
 				'jasperupload'						=> true,
 				'category_list'						=> $category_list,
 				'parent_list'						=> $parent_list,
-				'value_integration_tab'				=>  $values['integration_tab'],
-				'value_integration_url'				=>  $values['integration_url'],
-				'value_integration_paramtres'		=>  $values['integration_paramtres']
+				'value_integration_tab'				=> $values['integration_tab'],
+				'value_integration_url'				=> $values['integration_url'],
+				'value_integration_parametres'		=> $values['integration_parametres'],
+				'value_integration_action'			=> $values['integration_action'],
+				'value_integration_action_view'		=> $values['integration_action_view'],
+				'value_integration_action_edit'		=> $values['integration_action_edit']
 			);
 
 			$appname = lang('entity');

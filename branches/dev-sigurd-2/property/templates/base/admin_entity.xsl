@@ -753,20 +753,56 @@
 							</input>
 						</td>
 					</tr>
-			<tr>
-				<td valign="top">
-						<xsl:value-of select="php:function('lang', 'integration paramtres')" />
-				</td>
-				<td>
-					<textarea cols="60" rows="10" name="values[integration_paramtres]" wrap="virtual">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'example')" />
-							<xsl:text>: knr=__kommune_nr__&amp;gnr=__gaards_nr__&amp;bnr=__bruks_nr__&amp;fnr=__feste_nr__&amp;snr=__seksjons_nr__</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="value_integration_paramtres"/>		
-					</textarea>
-				</td>
-			</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'integration action parameter')" />
+						</td>
+						<td>
+							<input type="text" name="values[integration_action]" value="{value_integration_action}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'integration action parameter')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'integration action view')" />
+						</td>
+						<td>
+							<input type="text" name="values[integration_action_view]" value="{value_integration_action_view}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'integration action view')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'integration action edit')" />
+						</td>
+						<td>
+							<input type="text" name="values[integration_action_edit]" value="{value_integration_action_edit}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'integration action edit')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+								<xsl:value-of select="php:function('lang', 'integration parametres')" />
+						</td>
+						<td>
+							<textarea cols="60" rows="10" name="values[integration_parametres]" wrap="virtual">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'example')" />
+									<xsl:text>: knr=__kommune_nr__&amp;gnr=__gaards_nr__&amp;bnr=__bruks_nr__&amp;fnr=__feste_nr__&amp;snr=__seksjons_nr__</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of select="value_integration_parametres"/>		
+							</textarea>
+						</td>
+					</tr>
 				</xsl:when>
 			</xsl:choose>
 

@@ -1567,10 +1567,6 @@
 			{
 				$this->bocommon->no_access();
 				return;
-
-
-
-
 			}
 			$this->edit($view = true);
 		}
