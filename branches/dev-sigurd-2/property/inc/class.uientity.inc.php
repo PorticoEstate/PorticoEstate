@@ -1464,6 +1464,7 @@
 			if($category['integration_tab'] && $values['id'])
 			{
 				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration');
+//				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration', 'function' => 'alert(\'test\')');
 				$integration			= true;
 				$category['integration_paramtres'] = htmlspecialchars_decode($category['integration_paramtres']);
 
