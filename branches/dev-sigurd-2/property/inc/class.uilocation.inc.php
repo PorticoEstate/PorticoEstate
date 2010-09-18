@@ -1372,6 +1372,7 @@
 			}
 
 			$documents = array();
+			$file_tree = array();
 			if($location_code)
 			{
 				$related = $this->bo->read_entity_to_link($location_code);
@@ -1385,6 +1386,37 @@
 					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
 					$documents = json_encode($documents);				
 				}
+
+				$_config		= CreateObject('phpgwapi.config','property');
+				$_config->read();
+				$_dirname = '';
+
+				if (isset($_config->config_data['external_files']) &&  $_config->config_data['external_files'])
+				{
+					$_dirname = $_config->config_data['external_files'];
+				}
+				$_files_maxlevel = 0;
+				if (isset($_config->config_data['external_files_maxlevel']) &&  $_config->config_data['external_files_maxlevel'])
+				{
+					$_files_maxlevel = $_config->config_data['external_files_maxlevel'];
+				}
+				$_files_filterlevel = 0;
+				if (isset($_config->config_data['external_files_filterlevel']) &&  $_config->config_data['external_files_filterlevel'])
+				{
+					$_files_filterlevel = $_config->config_data['external_files_filterlevel'];
+				}
+				$_filter_info = explode('-',$location_code);
+
+				unset($_config);
+
+				$file_tree = $document->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
+				if($file_tree)
+				{
+					$tabs['file_tree']	= array('label' => lang('Files'), 'link' => '#file_tree');
+					$file_tree = json_encode($file_tree);				
+				}
+
+
 				if(isset($related['related']))
 				{
 						$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
@@ -1490,6 +1522,7 @@
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 				'documents'						=> $documents,
+				'file_tree'						=> $file_tree,
 				'lang_expand_all'				=> lang('expand all'),
 				'lang_collapse_all'				=> lang('collapse all')
 			);

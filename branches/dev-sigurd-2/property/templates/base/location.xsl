@@ -490,6 +490,29 @@
 				</xsl:when>
 			</xsl:choose>
 			<xsl:choose>
+				<xsl:when test="file_tree != ''">
+					<div id="file_tree">
+						<!-- Some style for the expand/contract section-->
+						<style>
+							#expandcontractdiv2 {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
+							#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
+						</style>
+						<script>
+							var documents2 = <xsl:value-of select="file_tree" />;
+						</script>
+
+						<!-- markup for expand/contract links -->
+						<div id="expandcontractdiv2">
+							<a id="expand2" href="#"><xsl:value-of select="lang_expand_all"/></a>
+							<xsl:text> </xsl:text>
+							<a id="collapse2" href="#"><xsl:value-of select="lang_collapse_all"/></a>
+						</div>
+
+						<div id="treeDiv2"></div>
+					</div>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
 				<xsl:when test="related_link != ''">
 				<div id="related">
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
