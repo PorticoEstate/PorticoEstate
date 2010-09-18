@@ -150,12 +150,13 @@
 			$insert_values = array
 			(
 				$values['section_id'],
+				$this->location_id,
 				$values['name'],
 				$values['descr'],
 			);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
-			$this->db->query("INSERT INTO phpgw_config2_section (id,name,descr) "
+			$this->db->query("INSERT INTO phpgw_config2_section (id,location_id,name,descr) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
 			$receipt['message'][]=array('msg'=>lang('config section has been saved'));
