@@ -239,6 +239,7 @@
 			{
 				$custom_config->config_data['integration']['url']		= htmlspecialchars_decode($custom_config->config_data['integration']['url']);
 				$custom_config->config_data['integration']['parametres']= htmlspecialchars_decode($custom_config->config_data['integration']['parametres']);
+				$integration_name = isset($custom_config->config_data['integration']['name']) && $custom_config->config_data['integration']['name'] ? $custom_config->config_data['integration']['name'] : lang('integration');
 
 				parse_str($custom_config->config_data['integration']['parametres'], $output);
 	
@@ -426,7 +427,7 @@
 			        								(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_integration',
-						                                'value'	=> lang('integration'),
+						                                'value'	=> $integration_name,
 						                                'tab_index' => 10
 						                            );
 				}
