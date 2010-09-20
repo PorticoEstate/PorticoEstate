@@ -235,7 +235,7 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','admin_c_section_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'admin.uiconfig2.index', 'section_id'=> $section_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'admin.uiconfig2.index', 'section_id'=> $section_id, 'location_id' => $this->location_id));
 						}
 					}
 				}
