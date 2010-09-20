@@ -551,25 +551,29 @@
 									),
 									array
 									( //boton 	USER
-										'id' => 'btn_user_id',
+									//	'id' => 'btn_user_id',
+										'id' => 'sel_user_id', // testing traditional listbox for long list
 										'name' => 'user_id',
 										'value'	=> lang('User'),
-										'type' => 'button',
+										'type' => 'select',
 										'style' => 'filter',
+										'values' => $values_combo_box[3],
+										'onchange'=> 'onChangeSelect();',
 										'tab_index' => 4
 									),
-						                            //for link "columns", next to Export button
-										           array(
-						                                'type' => 'link',
-						                                'id' => 'btn_columns',
-						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-																				           array
-																				              (
-																				               'menuaction' => 'property.uitts.columns'
-																				              ))."','','width=300,height=600,scrollbars=1')",
-														'value' => lang('columns'),
-														'tab_index' => 10
-													),
+						           array
+						           (//for link "columns", next to Export button
+										'type' => 'link',
+										'id' => 'btn_columns',
+										'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+															array
+															(
+																'menuaction' => 'property.uitts.columns'
+															)
+														)."','','width=300,height=600,scrollbars=1')",
+										'value' => lang('columns'),
+										'tab_index' => 10
+									),
 									array
 									(
 										'type'	=> 'button',
