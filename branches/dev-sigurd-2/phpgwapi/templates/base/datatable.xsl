@@ -316,6 +316,21 @@
 			<xsl:when test="type='img'">
 				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}" />
 			</xsl:when>
+			<xsl:when test="type='select'">
+				<select id="{id}" name="{name}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}">
+					<xsl:if test="onchange">
+						<xsl:attribute name="onchange"><xsl:value-of select="onchange"/></xsl:attribute>
+					</xsl:if>
+ 		     		<xsl:for-each select="values">
+						<option value="{id}">
+							<xsl:if test="selected != 0">
+								<xsl:attribute name="selected" value="selected" />
+							</xsl:if>
+							<xsl:value-of disable-output-escaping="yes" select="name"/>
+						</option>
+ 		     		</xsl:for-each>
+				</select>			
+			</xsl:when>
 			<xsl:otherwise>
 				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}"  tabindex="{tab_index}">
 					<xsl:if test="size">
