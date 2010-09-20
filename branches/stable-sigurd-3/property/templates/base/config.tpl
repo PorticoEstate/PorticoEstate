@@ -155,6 +155,43 @@
     <td><input name="newsettings[files_url]" value="{value_files_url}"></td>
    </tr>
    <tr class="row_on">
+    <td>{lang_Path_to_external_files_for_use_with_location}:<br>
+    {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
+    <td><input name="newsettings[external_files]" value="{value_external_files}"></td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_max_recursive_level_at_external_files}:</td>
+    <td>
+     <select name="newsettings[external_files_maxlevel]">
+      <option value="0" {selected_external_files_maxlevel_0}>None</option>
+      <option value="1" {selected_external_files_maxlevel_1}>1</option>
+      <option value="2" {selected_external_files_maxlevel_2}>2</option>
+      <option value="3" {selected_external_files_maxlevel_3}>3</option>
+      <option value="4" {selected_external_files_maxlevel_4}>4</option>
+      <option value="5" {selected_external_files_maxlevel_5}>5</option>
+      <option value="6" {selected_external_files_maxlevel_6}>6</option>
+      <option value="7" {selected_external_files_maxlevel_7}>7</option>
+      <option value="8" {selected_external_files_maxlevel_8}>8</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_filter_at_level_at_external_files}: <br/>(loc1)</td>
+    <td>
+     <select name="newsettings[external_files_filterlevel]">
+      <option value="0" {selected_external_files_filterlevel_0}>None</option>
+      <option value="1" {selected_external_files_filterlevel_1}>1</option>
+      <option value="2" {selected_external_files_filterlevel_2}>2</option>
+      <option value="3" {selected_external_files_filterlevel_3}>3</option>
+      <option value="4" {selected_external_files_filterlevel_4}>4</option>
+      <option value="5" {selected_external_files_filterlevel_5}>5</option>
+      <option value="6" {selected_external_files_filterlevel_6}>6</option>
+      <option value="7" {selected_external_files_filterlevel_7}>7</option>
+      <option value="8" {selected_external_files_filterlevel_8}>8</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_on">
     <td>{lang_Enter_MAP_URL} <br>
 	{lang_Example}: http://www.domain.com/map</td>
     <td><input name="newsettings[map_url]" value="{value_map_url}"></td>

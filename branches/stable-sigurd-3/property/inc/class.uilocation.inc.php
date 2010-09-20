@@ -231,6 +231,35 @@
 			$datatable = array();
 			$values_combo_box = array();
 
+    		$integrationurl = '';
+    		$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$custom_config	= CreateObject('admin.soconfig',$location_id);
+
+			if(isset($custom_config->config_data['integration']['url']))
+			{
+				$custom_config->config_data['integration']['url']		= htmlspecialchars_decode($custom_config->config_data['integration']['url']);
+				$custom_config->config_data['integration']['parametres']= htmlspecialchars_decode($custom_config->config_data['integration']['parametres']);
+				$integration_name = isset($custom_config->config_data['integration']['name']) && $custom_config->config_data['integration']['name'] ? $custom_config->config_data['integration']['name'] : lang('integration');
+
+				parse_str($custom_config->config_data['integration']['parametres'], $output);
+	
+				foreach ($output as $_dummy => $_substitute)
+				{
+					$_keys[] = $_substitute;
+					$__substitute = trim($_substitute, '_');
+					$_values[] = $this->$__substitute;
+				}
+
+				$_sep = '?';
+				if (stripos($custom_config->config_data['integration']['url'],'?'))
+				{
+					$_sep = '&';
+				}
+				$_param = str_replace($_keys, $_values, $custom_config->config_data['integration']['parametres']);
+
+				$integrationurl = "{$custom_config->config_data['integration']['url']}{$_sep}{$_param}";
+			}
+
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
 				if(!$lookup)
@@ -392,24 +421,33 @@
 										  )
 				);
 
-				if(!$block_query)
+				if($integrationurl)
 				{	
 			        $datatable['actions']['form'][0]['fields']['field'][] =  array
+			        								(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_integration',
+						                                'value'	=> $integration_name,
+						                                'tab_index' => 10
+						                            );
+				}
+
+
+				if(!$block_query)
+				{	
+					$datatable['actions']['form'][0]['fields']['field'][] =  array
 													(
 														'id' => 'btn_search',
 														'name' => 'search',
 														'value'    => lang('search'),
 														'type' => 'button',
 														'tab_index' => 6
-			                                        );
+													);
 			                                        
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 													(
 														'name'     => 'query',
 														'id'     => 'txt_query',
-
-
-
 														'value'    => $this->query,//'',//$query,
 														'type' => 'text',
 														'size'    => 28,
@@ -811,6 +849,8 @@
 	    			'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
 	    		);
+
+				$json['integrationurl']	= $integrationurl;
 
 				// values for datatable
 	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
@@ -1372,6 +1412,7 @@
 			}
 
 			$documents = array();
+			$file_tree = array();
 			if($location_code)
 			{
 				$related = $this->bo->read_entity_to_link($location_code);
@@ -1385,6 +1426,37 @@
 					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
 					$documents = json_encode($documents);				
 				}
+
+				$_config		= CreateObject('phpgwapi.config','property');
+				$_config->read();
+				$_dirname = '';
+
+				if (isset($_config->config_data['external_files']) &&  $_config->config_data['external_files'])
+				{
+					$_dirname = $_config->config_data['external_files'];
+				}
+				$_files_maxlevel = 0;
+				if (isset($_config->config_data['external_files_maxlevel']) &&  $_config->config_data['external_files_maxlevel'])
+				{
+					$_files_maxlevel = $_config->config_data['external_files_maxlevel'];
+				}
+				$_files_filterlevel = 0;
+				if (isset($_config->config_data['external_files_filterlevel']) &&  $_config->config_data['external_files_filterlevel'])
+				{
+					$_files_filterlevel = $_config->config_data['external_files_filterlevel'];
+				}
+				$_filter_info = explode('-',$location_code);
+
+				unset($_config);
+
+				$file_tree = $document->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
+				if($file_tree)
+				{
+					$tabs['file_tree']	= array('label' => lang('Files'), 'link' => '#file_tree');
+					$file_tree = json_encode($file_tree);				
+				}
+
+
 				if(isset($related['related']))
 				{
 						$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
@@ -1490,6 +1562,7 @@
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 				'documents'						=> $documents,
+				'file_tree'						=> $file_tree,
 				'lang_expand_all'				=> lang('expand all'),
 				'lang_collapse_all'				=> lang('collapse all')
 			);

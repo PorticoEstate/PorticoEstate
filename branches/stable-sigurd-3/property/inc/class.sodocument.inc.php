@@ -527,12 +527,12 @@
 
 			if($old_location_code != $document['location_code'])
 			{
-				$move_file = true;			
+				$move_file = true;
 			}
 
 			if("{$old_p_entity_id}_{$old_p_cat_id}" != "{$document['extra']['p_entity_id']}_{$document['extra']['p_cat_id']}")
 			{
-				$move_file = true;			
+				$move_file = true;
 			}
 
 			if ($old_status != $document['status'])
@@ -679,7 +679,7 @@
 			$categories = $this->cats->return_sorted_array(0, false);
 
 			foreach ($categories as $category)
-			{			
+			{
 				$doc_types = $this->get_sub_doc_types($category['id']);
 
 				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%' AND category IN (". implode(',', $doc_types) . ')';
@@ -705,7 +705,7 @@
 					$map = '$documents'; 
 					for ($i = 0; $i < $level ; $i++)
 					{
-						
+
 						$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
 					}
 
@@ -764,7 +764,7 @@
 			$p_cat_id		= $this->db->f('p_cat_id');
 			$p_num		= $this->db->f('p_num');
 			$category	= $this->db->f('category');
-			
+
 			if($document_name)
 			{
 				if($p_cat_id > 0)
@@ -787,5 +787,119 @@
 			}
 			return $receipt;
 		}
-	}
 
+
+		/**
+		* used for retrive a child-node from a hierarchy
+		*
+		* @param string $dirname current path
+		* @param integer $level is increased when we go deeper into the tree,
+		* @param integer $maks_level is how deep we want to go
+		* @param integer $filter_level search for filter at a predefined level
+		* @param string $filter
+		* @param string $menuaction is used to make an url to the item
+		* @return array $child Children
+		*/
+
+		protected function get_children($dirname, $level, $maks_level = 0, $filter_level=1, $filter = 'hei', $menuaction)
+		{
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+			$children = array();
+
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( ($file->isDot() || !$file->isReadable())
+						|| ($level == $filter_level && !preg_match("/{$filter}/i", $file->getFilename()))
+						)
+ 					{
+						continue;
+					}
+					$children[] =array
+					(
+						'link'			=> $GLOBALS['phpgw']->link('/home.php'),
+						'text'			=> $file->getFilename(),
+						'is_dir'		=> $file->isDir(),
+						'path'			=> $file->getPathname(),
+						'level'			=> $level,
+					);
+				}
+			}
+
+			foreach($children as &$child)
+			{
+				if($child['is_dir'] && $child['level'] < ($maks_level))
+				{
+					if($_children = $this->get_children($child['path'], ($child['level']+1), $maks_level, $menuaction))
+					{
+						$child['children'] = $_children;
+					}
+				}
+			}
+			return $children;
+		}
+
+		/**
+		* used for retrive a filetree from a given start point
+		*
+		* @param string $dirname Start point
+		* @param integer $maks_level is how deep we want to go
+		* @param integer $filter_level search for filter at a predefined level
+		* @param string $filter
+		* @param string $menuaction is used to make an url to the item
+		* @return array $child Children
+		*/
+
+		public function read_file_tree($dirname = '', $maks_level = 2, $filter_level, $filter, $menuaction = '')
+		{
+			$dirname = $dirname ? $dirname : $GLOBALS['phpgw_info']['server']['temp_dir'];
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isReadable()
+						)
+ 					{
+						continue;
+					}
+					$file_list[] =array
+					(
+						'link'			=> $GLOBALS['phpgw']->link('/home.php'),
+						'text'			=> $file->getFilename(),
+						'is_dir'		=> $file->isDir(),
+						'path'			=> $file->getPathname(),
+						'level'			=> 0,
+					);
+				}
+			}
+
+			foreach($file_list as &$file)
+			{
+				if($file['is_dir'])
+				{
+					if ($children = $this->get_children($file['path'], 1, $maks_level, $filter_level, $filter, $menuaction))
+					{
+						$file['children'] = $children;
+					}
+				}
+			}
+			return $file_list;
+		}
+	}

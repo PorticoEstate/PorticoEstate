@@ -498,15 +498,15 @@ disabled	property	no	inaktivt
 district	property	no	Område
 district_id	property	no	Distrikt ID
 doc type	property	no	Dokumenttype
-document	property	no	dokument
+document	property	no	Dokument
 document %1 has been edited	property	no	dokument %1 er rettet
 document %1 has been saved	property	no	dokument %1 er lagret
 documentation	property	no	Dokumentasjon
 documentation for locations	property	no	Dokumentasjon for arealer
 document categories	property	no	Dokument kategorier
-document date	property	no	dokument dato
-document id	property	no	dokument id
-document name	property	no	dokument navn
+document date	property	no	Dokument dato
+document id	property	no	Dokument id
+document name	property	no	Dokument navn
 documents	property	no	Dokumenter
 document status	property	no	Dokument status
 domain name for mail-address, eg. %1	property	no	Domenenavn for e-post adresser

@@ -957,6 +957,12 @@
 			}
 
 			$this->update_request_status($project['id'],$project['status'],$project['cat_id'],$project['coordinator']);
+			$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
+			$workorders = array();
+			while ($this->db->next_record())
+			{
+				$workorders[] = $this->db->f('id');
+			}
 
 			if (($old_status != $project['status']) || $project['confirm_status'])
 			{
@@ -990,14 +996,7 @@
 					unset($action_params);
 				}
  
-				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
-				$workorder = array();
-				while ($this->db->next_record())
-				{
-					$workorder[] = $this->db->f('id');
-				}
-
-				if ($workorder)
+				if ($workorders)
 				{
 					$historylog_workorder	= CreateObject('property.historylog','workorder');
 				}
@@ -1013,22 +1012,20 @@
 
 					$this->db->query("UPDATE fm_workorder SET status='closed' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 
-					if (isset($workorder) AND is_array($workorder))
+					foreach($workorders as $workorder_id)
 					{
-						foreach($workorder as $workorder_id)
-						{
-							$historylog_workorder->add('S',$workorder_id,'closed');
-						}
+						$historylog_workorder->add('S',$workorder_id,'closed');
 					}
+
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $project['status'];
 				}
 				elseif($project['confirm_status'])
 				{
 					$historylog->add('SC',$project['id'],$project['status']);
 
-					if (isset($workorder) && is_array($workorder)  && $close_workorders)
+					if ($close_workorders)
 					{
-						foreach($workorder as $workorder_id)
+						foreach($workorders as $workorder_id)
 						{
 							$historylog_workorder->add('SC',$workorder_id,'closed');
 						}
@@ -1051,12 +1048,21 @@
 					);
 
 
-					foreach($workorder as $workorder_id)
+					foreach($workorders as $workorder_id)
 					{
 						$action_params['id'] =  $workorder_id;
 						execMethod('property.sopending_action.close_pending_action', $action_params);
 					}
 					unset($action_params);
+				}
+			}
+
+			if(isset($project['project_group']) && $project['project_group'])
+			{
+				reset($workorders);
+				foreach($workorders as $workorder_id)
+				{
+					$this->db->query("UPDATE fm_ecobilag SET project_id = '{$project['project_group']}' WHERE pmwrkord_code = '{$workorder_id}' ",__LINE__,__FILE__);
 				}
 			}
 
