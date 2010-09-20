@@ -889,12 +889,12 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
 				}
 
-				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
 
-				if(isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit($values['addition_rs']))
+				if(isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit(ltrim($values['addition_rs'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('Rig addition') . ': ' . lang('Please enter an integer !'));
 				}
