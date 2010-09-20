@@ -1054,13 +1054,13 @@
 					$error_id=true;
 				}
 
-				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
 				}
 
-				if(isset($values['reserve']) && $values['reserve'] && !ctype_digit($values['reserve']))
+				if(isset($values['reserve']) && $values['reserve'] && !ctype_digit(ltrim($values['reserve'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('reserve') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
