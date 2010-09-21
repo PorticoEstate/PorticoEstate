@@ -498,7 +498,7 @@
 					$default_value = array ('id'=>'','name'=>lang('no district'));
 					array_unshift ($values_combo_box[1],$default_value);
 
-					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
 					array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
 					$default_value = array('id'=>'','name'=>lang('no user'));
 					array_unshift ($values_combo_box[3],$default_value);
