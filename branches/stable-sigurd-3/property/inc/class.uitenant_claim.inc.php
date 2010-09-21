@@ -56,7 +56,7 @@
 		function property_uitenant_claim()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::claim';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::claim';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo		= CreateObject('property.botenant_claim',true);
@@ -164,6 +164,7 @@
 				array_unshift ($values_combo_box[2],$default_value);
 
 				$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[3],$default_value);
 
@@ -206,11 +207,13 @@
 				                                        ),
 									array
 									( //boton 	USER
-										'id' => 'btn_user_id',
+										'id' => 'sel_user_id',
 										'name' => 'user_id',
 										'value'	=> lang('User'),
-										'type' => 'button',
+										'type' => 'select',
 										'style' => 'filter',
+										'values' => $values_combo_box[3],
+										'onchange'=> 'onChangeSelect();',
 										'tab_index' => 4
 									),
 				                                        array(
