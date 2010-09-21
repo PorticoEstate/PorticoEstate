@@ -106,11 +106,12 @@
 				$where = 'AND';
 			}
 
+			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%')";
+				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%' OR project_id=" . (int)$query .')';
 			}
 
 			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as category, fm_tenant.last_name, fm_tenant.first_name,district_id"
