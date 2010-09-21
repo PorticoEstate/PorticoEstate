@@ -1477,9 +1477,34 @@
 */
 			}
 
+			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
+
+			
+			//FIXME - convert to use generic config
 			$integration = '';
 			if($category['integration_tab'] && $values['id'])
 			{
+
+				//get session key from remote system
+				
+				$arguments = array('key' => 'value');
+				$query = http_build_query($arguments);
+				$auth_url = 'http://some_url';
+				$request = "{$auth_url}?{$query}";
+
+				$aContext = array
+				(
+				   	'http' => array
+					(
+						'proxy' => "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}",
+						'request_fulluri' => true,
+					),
+				);
+
+				$cxContext = stream_context_create($aContext);
+				$response = file_get_contents($request, False, $cxContext);
+				//FIXME - Figure what to do with the response - i.e remote session key
+
 				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration');
 //				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration', 'function' => 'integration()');
 				$integration			= true;
