@@ -5,7 +5,7 @@
 	//define SelectButton
  	//var oMenuButton_0;
  	var selectsButtons = [
-	{order:0, var_URL:'location',	 		name:'btn_location',			style:'',dependiente:''}
+//	{order:0, var_URL:'location',	 		name:'btn_location',			style:'',dependiente:''}
 	]
 
 	// define buttons
@@ -26,6 +26,20 @@
 	}
 /****************************************************************************************/
 	
+	this.onChangeSelect = function()
+	{
+		var myselect=document.getElementById("sel_location");
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values.location='"+myselect.options[i].value+"'");
+		execute_ds();
+	}
+
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
