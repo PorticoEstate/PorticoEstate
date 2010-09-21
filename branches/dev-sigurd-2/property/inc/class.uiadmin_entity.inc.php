@@ -531,16 +531,23 @@
 			}
 
 			$category_list = $this->bo->read_category($entity_id);
-			$uicols['name'][0]	= 'id';
-			$uicols['descr'][0]	= lang('category ID');
-			$uicols['name'][1]	= 'name';
-			$uicols['descr'][1]	= lang('Name');
-			$uicols['name'][2]	= 'descr';
-			$uicols['descr'][2]	= lang('Descr');
-			$uicols['name'][3]	= 'prefix';
-			$uicols['descr'][3]	= lang('Prefix');
-			$uicols['name'][4]	= 'entity_id';
-			$uicols['descr'][4]	= lang('id');
+			foreach ($category_list as &$entry)
+			{
+				$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$entry['id']}");
+			}			
+
+			$uicols['name'][0]	= 'location_id';
+			$uicols['descr'][0]	= 'location_id';
+			$uicols['name'][1]	= 'id';
+			$uicols['descr'][1]	= lang('category ID');
+			$uicols['name'][2]	= 'name';
+			$uicols['descr'][2]	= lang('Name');
+			$uicols['name'][3]	= 'descr';
+			$uicols['descr'][3]	= lang('Descr');
+			$uicols['name'][4]	= 'prefix';
+			$uicols['descr'][4]	= lang('Prefix');
+			$uicols['name'][5]	= 'entity_id';
+			$uicols['descr'][5]	= lang('id');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -612,7 +619,18 @@
 				)
 			);
 
-			//_debug_array($parameters2);die;
+			$parameters4 = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'location_id',
+						'source'	=> 'location_id'
+					),
+				)
+			);
+
 
 			$datatable['rowactions']['action'][] = array(
 						'my_name' 			=> 'attribute_groups',
@@ -636,6 +654,18 @@
 									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'config',
+						'statustext' 	=> lang('config'),
+						'text'			=> lang('config'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'admin.uiconfig2.index'
+
+								)),
+					'parameters'	=> $parameters4
 					);
 
 			$datatable['rowactions']['action'][] = array(
@@ -691,6 +721,7 @@
 			unset($parameters);
 			unset($parameters2);
 			unset($parameters3);
+			unset($parameters4);
 
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
