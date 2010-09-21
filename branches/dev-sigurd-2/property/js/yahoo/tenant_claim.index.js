@@ -6,8 +6,8 @@
  	var selectsButtons = [
 	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
 	{order:1, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
-	{order:2, var_URL:'status',name:'btn_status_id',style:'partOFTownbutton',dependiente:''},
-	{order:3, var_URL:'user_id', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
+	{order:2, var_URL:'status',name:'btn_status_id',style:'partOFTownbutton',dependiente:''}
+//	{order:3, var_URL:'user_id', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
 	];
 
 	// define buttons
@@ -28,6 +28,20 @@
 		date_search : 0 //if search has link "Data search"
 	}
 /****************************************************************************************/
+	this.onChangeSelect = function()
+	{
+		var myselect=document.getElementById("sel_user_id");
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values.user_id='"+myselect.options[i].value+"'");
+		execute_ds();
+	}
+
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
