@@ -498,7 +498,7 @@
 					$default_value = array ('id'=>'','name'=>lang('no district'));
 					array_unshift ($values_combo_box[1],$default_value);
 
-					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
 					array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
 					$default_value = array('id'=>'','name'=>lang('no user'));
 					array_unshift ($values_combo_box[3],$default_value);
@@ -551,25 +551,29 @@
 									),
 									array
 									( //boton 	USER
-										'id' => 'btn_user_id',
+									//	'id' => 'btn_user_id',
+										'id' => 'sel_user_id', // testing traditional listbox for long list
 										'name' => 'user_id',
 										'value'	=> lang('User'),
-										'type' => 'button',
+										'type' => 'select',
 										'style' => 'filter',
+										'values' => $values_combo_box[3],
+										'onchange'=> 'onChangeSelect();',
 										'tab_index' => 4
 									),
-						                            //for link "columns", next to Export button
-										           array(
-						                                'type' => 'link',
-						                                'id' => 'btn_columns',
-						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-																				           array
-																				              (
-																				               'menuaction' => 'property.uitts.columns'
-																				              ))."','','width=300,height=600,scrollbars=1')",
-														'value' => lang('columns'),
-														'tab_index' => 10
-													),
+						           array
+						           (//for link "columns", next to Export button
+										'type' => 'link',
+										'id' => 'btn_columns',
+										'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+															array
+															(
+																'menuaction' => 'property.uitts.columns'
+															)
+														)."','','width=300,height=600,scrollbars=1')",
+										'value' => lang('columns'),
+										'tab_index' => 10
+									),
 									array
 									(
 										'type'	=> 'button',
