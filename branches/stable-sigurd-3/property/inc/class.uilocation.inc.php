@@ -1095,6 +1095,7 @@
 				if($values['location_code'] && !$location_code)
 				{
 					if($this->bo->check_location($values['location_code'],$type_id))
+
 					{
 						$receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');
 						$error_location_id=true;
@@ -1431,10 +1432,6 @@
 				$_config->read();
 				$_dirname = '';
 
-				if (isset($_config->config_data['external_files']) &&  $_config->config_data['external_files'])
-				{
-					$_dirname = $_config->config_data['external_files'];
-				}
 				$_files_maxlevel = 0;
 				if (isset($_config->config_data['external_files_maxlevel']) &&  $_config->config_data['external_files_maxlevel'])
 				{
@@ -1447,15 +1444,18 @@
 				}
 				$_filter_info = explode('-',$location_code);
 
-				unset($_config);
+				if (isset($_config->config_data['external_files']) &&  $_config->config_data['external_files'])
+				{
+					$_dirname = $_config->config_data['external_files'];
+					$file_tree = $document->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
+				}
 
-				$file_tree = $document->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
+				unset($_config);
 				if($file_tree)
 				{
 					$tabs['file_tree']	= array('label' => lang('Files'), 'link' => '#file_tree');
 					$file_tree = json_encode($file_tree);				
 				}
-
 
 				if(isset($related['related']))
 				{
