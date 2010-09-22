@@ -65,8 +65,7 @@ if($billing_job != null)
 			<?php echo lang('last_updated') ?>
 		</dt>
 		<dd>
-			<?php echo date($date_format, $billing_job->get_timestamp_stop()) ?>
-			<?php echo date('H:i:s', $billing_job->get_timestamp_stop()) ?>
+			<?php echo $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_stop(),$date_format . ' H:i:s');?>
 		</dd>
 		
 		<dt>
@@ -81,8 +80,7 @@ if($billing_job != null)
 			}
 			else
 			{
-				echo date($date_format, $timestamp_commit);
-				echo date('H:i:s', $timestamp_commit);	
+				echo $GLOBALS['phpgw']->common->show_date($billing_job->get_timestamp_commit(),$date_format . ' H:i:s');
 			}
 			?>
 		</dd>

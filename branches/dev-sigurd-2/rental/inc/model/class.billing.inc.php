@@ -163,7 +163,8 @@ class rental_billing extends rental_model
 		$timestamp_commit = '';
 		if($this->get_timestamp_commit() != null && $this->get_timestamp_commit())
 		{
-			$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
+			$timestamp_commit=$GLOBALS['phpgw']->common->show_date($this->get_timestamp_commit(),$date_format . ' H:i:s');
+			//$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
 		}
 		$billing_info_content = array();
 		foreach($this->get_billing_info() as $bi){
@@ -186,7 +187,8 @@ class rental_billing extends rental_model
 			'responsibility_title' => $this->get_responsibility_title(),
 			'billing_info'		=> $billing_info_labels,
 			'total_sum'			=> $this->get_total_sum(),
-			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
+			//'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
+			'timestamp_stop'	=> $GLOBALS['phpgw']->common->show_date($this->get_timestamp_stop(),$date_format . ' H:i:s'),
 			'timestamp_commit'	=> $timestamp_commit,
 			'created_by'		=> "{$account->firstname} {$account->lastname}",
 			'contract_type_title' => $this->get_contract_type_title()
