@@ -1724,18 +1724,15 @@
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data'				=> $location_data,
-				'lang_assign_to'			=> lang('Assign to'),
 				'lang_no_user'				=> lang('Select user'),
-				'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
+				'lang_user_statustext'		=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name'			=> 'values[assignedto]',
-				'user_list'				=> $this->bocommon->get_user_list_right2('select',4,$values['assignedto'],$this->acl_location),
+				'user_list'					=> $this->bocommon->get_user_list_right2('select',4,$values['assignedto'],$this->acl_location),
 
-				'lang_group'				=> lang('Group'),
 				'lang_no_group'				=> lang('No group'),
 				'group_list'				=> $this->bocommon->get_group_list('select',$values['group_id'],$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
 				'select_group_name'			=> 'values[group_id]',
 
-				'lang_priority'				=> lang('Priority'),
 				'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
 				'select_priority_name'			=> 'values[priority]',
 				'priority_list'				=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
@@ -1743,11 +1740,8 @@
 				'status_list'				=> $this->bo->get_status_list('O'),
 
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_subject'				=> lang('Subject'),
-				'lang_subject_statustext'		=> lang('Enter the subject of this ticket'),
 
 				'lang_details'				=> lang('Details'),
-				'lang_details_statustext'		=> lang('Enter the details of this ticket'),
 				'lang_category'				=> lang('category'),
 				'lang_save'					=> lang('save'),
 				'lang_cancel'				=> lang('cancel'),
@@ -1755,7 +1749,6 @@
 				'value_details'				=> (isset($values['details'])?$values['details']:''),
 				'value_subject'				=> (isset($values['subject'])?$values['subject']:''),
 
-				'lang_finnish_date'			=> lang('finnish date'),
 				'value_finnish_date'			=> (isset($values['finnish_date'])?$values['finnish_date']:''),
 				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 				'lang_datetitle'			=> lang('Select date'),
@@ -1769,10 +1762,6 @@
 				'lang_part_of_town'				=> lang('Part of town'),
 				'lang_no_part_of_town'			=> lang('No part of town'),
 				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl)),
-
-				'mailnotification'			=> (isset($this->bo->config->config_data['mailnotification'])?$this->bo->config->config_data['mailnotification']:''),
-				'lang_mailnotification'			=> lang('Send e-mail'),
-				'lang_mailnotification_statustext'	=> lang('Choose to send mailnotification'),
 				'pref_send_mail'			=> (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:''),
 				'fileupload'				=> (isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:''),
 			);
@@ -2767,13 +2756,11 @@
 
 	//			'lang_name'						=> lang('name'),
 				'contact_phone'					=> $ticket['contact_phone'],
-				'mailnotification'				=> isset($this->bo->config->config_data['mailnotification'])?true:'',
 				'pref_send_mail'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:'',
 				'fileupload'					=> isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:'',
 				'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 				'link_to_files'					=> isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'',
 				'files'							=> isset($ticket['files'])?$ticket['files']:'',
-				'lang_files'					=> lang('files'),
 				'lang_filename'					=> lang('Filename'),
 				'lang_file_action'				=> lang('Delete file'),
 				'lang_view_file_statustext'		=> lang('click to view file'),
