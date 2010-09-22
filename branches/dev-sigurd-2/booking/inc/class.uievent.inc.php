@@ -280,13 +280,31 @@
 						$event['to_'] = $checkdate['to_'];
 						$_POST['to_'] = $checkdate['to_'];
 						list($event, $errors) = $this->extract_and_validate($event);
+						$time_from = split(" ",$_POST['from_']);
+						$time_to = split(" ",$_POST['to_']);
+						if ($time_from[0] == $time_to[0]) 
+						{
+							if ($time_from[1] >= $time_to[1])
+							{
+								$errors['time'] = lang('Time is set wrong');
+							}
+						}  
 					}						
 				}
 				else
 				{
 					list($event, $errors) = $this->extract_and_validate($event);
+					$time_from = split(" ",$_POST['from_']);
+					$time_to = split(" ",$_POST['to_']);
+					if ($time_from[0] == $time_to[0]) {
+						if ($time_from[1] >= $time_to[1])
+						{
+							$errors['time'] = lang('Time is set wrong');
+						}
+					}  
 				}
-				if(!$errors['event'])
+
+				if(!$errors['event'] && !$errors['time'])
 				{
 					if (!$_POST['application_id'])
 					{
