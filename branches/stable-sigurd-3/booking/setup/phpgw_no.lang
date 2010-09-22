@@ -445,4 +445,5 @@ Organization shortname	booking	no	Kortnavn
 Group shortname	booking	no	Kortnavn
 contacts[0][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 1
 contacts[1][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 2
+Time is set wrong	booking	no	Et av klokkeslettene er feil
 

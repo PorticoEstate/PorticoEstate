@@ -458,5 +458,5 @@ p.message {
 }
 
 th.yui-dt-sortable div{
-	background: url("phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0pt -100px rgb(216, 216, 218);
+	background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
 }

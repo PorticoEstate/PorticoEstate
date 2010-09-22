@@ -14,9 +14,11 @@
 
 <!-- add / edit  -->
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
-		<div class="yui-content">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
+		<tr>
+		<td>
+		<table  cellpadding="2" cellspacing="2" align="left">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -52,8 +54,12 @@
 							</select>
 						</td>
 					</tr>
-					</form>
-				<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+				</form>
+			</table>
+			<tr>
+			<td>
+			<form ENCTYPE="multipart/form-data" name="form" method="post" action="{$form_action}">
+			<table cellpadding="2" cellspacing="2" align="left">
 				<tr>
 					<td>
 						<input type="hidden" name="values[app]" value="{value_app}" />
@@ -228,9 +234,14 @@
 				</table>
 				</td>
 			</tr>
-		</form>
 		</table>
-		</div>
+		</form>
+		</td>
+		</tr>
+		</td>
+		</tr>
+		</table>
+
 		<!--  DATATABLE DEFINITIONS-->
 		<script>
 			var property_js = <xsl:value-of select="property_js" />;

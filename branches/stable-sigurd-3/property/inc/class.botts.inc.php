@@ -682,14 +682,16 @@
 
 			$ticket['finnish_date']	= $this->bocommon->date_to_timestamp($ticket['finnish_date']);
 
-
 			$receipt = $this->so->add($ticket);
 
 			$this->config->read();
 
-			if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'] && isset($ticket['send_mail']) && $ticket['send_mail'])
+			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
+				|| (isset($this->config->config_data['mailnotification'])
+					&& $this->config->config_data['mailnotification'])
+				)
 			{
-				$receipt_mail = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
+				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);
 			}
 
 			$criteria = array

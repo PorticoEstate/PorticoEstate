@@ -324,6 +324,8 @@
 					)));
 
 			unset($parameters);
+			unset($parameters2);
+			unset($parameters3);
 
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{

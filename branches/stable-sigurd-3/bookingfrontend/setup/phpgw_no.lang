@@ -307,3 +307,4 @@ Edit Group	bookingfrontend	no	Rediger gruppe
 contacts[0][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 1
 contacts[1][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 2
 This booking is outside the organization's allocated time	bookingfrontend	no	Denne bookingen ligger utenfor organisasjonens tildelte tid
+Time is set wrong	bookingfrontend	no	Et av klokkeslettene er feil
