@@ -447,7 +447,7 @@
 			$vfs->override_acl = 1;
 
 			$workorder['files'] = $vfs->ls(array(
-			     'string' => '/property/workorder/' . $workorder_id,
+			     'string' => "/property/workorder/{$workorder_id}",
 			     'relatives' => array(RELATIVE_NONE)
 			     ));
 
@@ -457,11 +457,6 @@
 			for ($i=0;$i<$j;$i++)
 			{
 				$workorder['files'][$i]['file_name']=urlencode($workorder['files'][$i]['name']);
-			}
-
-			if(!isset($workorder['files'][0]['file_id']) || !$workorder['files'][0]['file_id'])
-			{
-				unset($workorder['files']);
 			}
 
 			$workorder['origin'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
