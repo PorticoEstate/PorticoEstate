@@ -4480,7 +4480,7 @@
 
 	/**
 	* Update property version from 0.9.17.591 to 0.9.17.592
-	* Add optional hierarchy on entities
+	* Add integration settings on entities
 	* 
 	*/
 
@@ -4502,7 +4502,7 @@
 
 	/**
 	* Update property version from 0.9.17.592 to 0.9.17.593
-	* Add optional hierarchy on entities
+	* More on integration settings on entities
 	* 
 	*/
 
@@ -4523,3 +4523,27 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.593 to 0.9.17.594
+	* Convert integration settings to generic config on locations
+	* 
+	*/
+
+	$test[] = '0.9.17.593';
+	function property_upgrade0_9_17_593()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_tab');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_url');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_parametres');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_action');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_action_view');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_action_edit');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.594';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

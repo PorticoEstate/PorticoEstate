@@ -1478,40 +1478,59 @@
 			}
 
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
-
+			$_integration_config = isset($custom_config->config_data['integration']) ? $custom_config->config_data['integration'] : array();
 			
-			//FIXME - convert to use generic config
+			//needed settings:
+/*
+			integration_tab
+			integration_url
+			integration_parametres
+			integration_action
+			integration_action_view
+			integration_action_edit
+			integration_auth_key_name
+			integration_auth_url
+			integration_auth_hash_name
+			integration_auth_hash_value
+*/
+
+
 			$integration = '';
-			if($category['integration_tab'] && $values['id'])
+			if(isset($_integration_config['tab']) && $values['id'])
 			{
 
 				//get session key from remote system
 				
-				$arguments = array('key' => 'value');
+				$arguments = array($_integration_config['auth_hash_name'] => $_integration_config['auth_hash_value']);
 				$query = http_build_query($arguments);
-				$auth_url = 'http://some_url';
+				$auth_url = $_integration_config['auth_url'];
 				$request = "{$auth_url}?{$query}";
 
 				$aContext = array
 				(
 				   	'http' => array
 					(
-						'proxy' => "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}",
 						'request_fulluri' => true,
 					),
 				);
 
+				if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+				{
+					$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+				}
+
+
 				$cxContext = stream_context_create($aContext);
-				$response = file_get_contents($request, False, $cxContext);
+				$response = trim(file_get_contents($request, False, $cxContext));
 				//FIXME - Figure what to do with the response - i.e remote session key
 
-				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration');
-//				$tabs['integration']	= array('label' => $category['integration_tab'], 'link' => '#integration', 'function' => 'integration()');
+				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration');
+//				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration', 'function' => 'integration()');
 				$integration			= true;
-				$category['integration_url']		= htmlspecialchars_decode($category['integration_url']);
-				$category['integration_parametres']	= htmlspecialchars_decode($category['integration_parametres']);
+				$_integration_config['url']		= htmlspecialchars_decode($_integration_config['url']);
+				$_integration_config['parametres']	= htmlspecialchars_decode($_integration_config['parametres']);
 
-				parse_str($category['integration_parametres'], $output);
+				parse_str($_integration_config['parametres'], $output);
 				
 				foreach ($output as $_dummy => $_substitute)
 				{
@@ -1520,23 +1539,30 @@
 				}
 
 				$_sep = '?';
-				if (stripos($category['integration_url'],'?'))
+				if (stripos($_integration_config['url'],'?'))
 				{
 					$_sep = '&';
 				}
-				$_param = str_replace($_keys, $_values, $category['integration_parametres']);
+				$_param = str_replace($_keys, $_values, $_integration_config['parametres']);
 
-//				$integration_src = phpgw::safe_redirect("{$category['integration_url']}{$_sep}{$_param}");
-				$integration_src = "{$category['integration_url']}{$_sep}{$_param}";
-				if($category['integration_action'])
+//				$integration_src = phpgw::safe_redirect("{$_integration_config['url']}{$_sep}{$_param}");
+				$integration_src = "{$_integration_config['url']}{$_sep}{$_param}";
+				if($_integration_config['action'])
 				{
 					$_sep = '?';
 					if (stripos($integration_src,'?'))
 					{
 						$_sep = '&';
 					}
-					$integration_src .= "{$_sep}{$category['integration_action']}=" . $category["integration_action_{$mode}"];
+					$integration_src .= "{$_sep}{$_integration_config['action']}=" . $category["integration_action_{$mode}"];
 				}
+
+				$arguments = array($_integration_config['auth_key_name'] => $response);
+
+				$integration_src .= "&{$_integration_config['auth_key_name']}={$response}";
+
+//_debug_array($integration_src);die();
+
 //$integration_src ="http://81.0.146.6/oink-web/index.html?operation=create&komm=1933&cat=1&property=kv2001&objId=50";
 /*
 				$code = <<<JS
