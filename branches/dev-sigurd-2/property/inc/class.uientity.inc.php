@@ -1554,7 +1554,7 @@
 					{
 						$_sep = '&';
 					}
-					$integration_src .= "{$_sep}{$_integration_config['action']}=" . $category["integration_action_{$mode}"];
+					$integration_src .= "{$_sep}{$_integration_config['action']}=" . $_integration_config["action_{$mode}"];
 				}
 
 				$arguments = array($_integration_config['auth_key_name'] => $response);
