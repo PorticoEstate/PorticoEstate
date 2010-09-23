@@ -1524,8 +1524,8 @@
 				$response = trim(file_get_contents($request, False, $cxContext));
 				//FIXME - Figure what to do with the response - i.e remote session key
 
-				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration');
-//				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration', 'function' => 'integration()');
+//				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration');
+
 				$integration			= true;
 				$_integration_config['url']		= htmlspecialchars_decode($_integration_config['url']);
 				$_integration_config['parametres']	= htmlspecialchars_decode($_integration_config['parametres']);
@@ -1561,6 +1561,7 @@
 
 				$integration_src .= "&{$_integration_config['auth_key_name']}={$response}";
 
+				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration', 'function' => "document.getElementById('integration_content').src = '{$integration_src}';");
 //_debug_array($integration_src);die();
 
 //$integration_src ="http://81.0.146.6/oink-web/index.html?operation=create&komm=1933&cat=1&property=kv2001&objId=50";

@@ -431,7 +431,7 @@
 	<xsl:choose>
 		<xsl:when test="integration!=''">
 			<div id="integration">
-				<iframe src="{value_integration_src}" width="100%" height="500">
+				<iframe id = "integration_content" width="100%" height="500">
 					<p>Your browser does not support iframes.</p>
 				</iframe>
 			</div>
