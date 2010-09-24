@@ -130,3 +130,17 @@
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');
 	unset($tpl_vars);
+
+	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
+	{
+		register_shutdown_function('parse_footer_end_noframe');
+	}
+	
+	function parse_footer_end_noframe()
+	{
+		$footer = <<<HTML
+		</body>
+	</html>
+HTML;
+		echo $footer;
+	}

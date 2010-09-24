@@ -332,9 +332,13 @@
 				</select>			
 			</xsl:when>
 			<xsl:otherwise>
-				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}"  tabindex="{tab_index}">
+				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}">
 					<xsl:if test="size">
 						<xsl:attribute name="size"><xsl:value-of select="size"/></xsl:attribute>
+					</xsl:if>
+
+					<xsl:if test="tab_index">
+						<xsl:attribute name="tabindex"><xsl:value-of select="tab_index"/></xsl:attribute>
 					</xsl:if>
 
 					<xsl:if test="type = 'checkbox' and checked = '1'">
@@ -402,11 +406,13 @@
 	<div id="message"> </div>
 	<div id="paging"> </div>
   	<div class="datatable-container">
+    <!-- 
     	<table class="datatable">
-      		<!--  <xsl:apply-templates select="headers" />
+      		 <xsl:apply-templates select="headers" />
       		<xsl:apply-templates select="rows" />
-      		 -->
+      		
     	</table>
+    -->
   	</div>
    	<div id="datatable-detail" style="background-color:#000000;color:#FFFFFF;display:none">
 		<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center"> Record Detail </div>
@@ -759,7 +765,7 @@
  -->
 
 <xsl:template name="datatable-yui-definition">
-	<script>
+	<script type="text/javascript">
 		var allow_allrows = "<xsl:value-of select="//datatable/config/allow_allrows"/>";
 
   		var property_js = "<xsl:value-of select="//datatable/property_js"/>";
