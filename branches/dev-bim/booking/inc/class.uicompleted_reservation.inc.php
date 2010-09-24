@@ -1,5 +1,6 @@
 <?php
 phpgw::import_class('booking.uicommon');
+phpgw::import_class('booking.sopermission');
 
 	class booking_uicompleted_reservation extends booking_uicommon
 	{
@@ -26,7 +27,7 @@ phpgw::import_class('booking.uicommon');
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation');
 			$this->customer_id = CreateObject('booking.customer_identifier');
-			self::set_active_menu('booking::completed_reservations');
+			self::set_active_menu('booking::invoice_center::completed_reservations');
 			$this->url_prefix = 'booking.uicompleted_reservation';
 			$this->restore_export_filters();
 		}
@@ -223,7 +224,59 @@ phpgw::import_class('booking.uicommon');
 		
 		public function index_json()
 		{
-			$reservations = $this->bo->read();
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
+			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
+			$query = phpgw::get_var('query');
+			$sort = phpgw::get_var('sort');
+			$dir = phpgw::get_var('dir');
+
+			$filters = array();
+			foreach($this->bo->so->get_field_defs() as $field => $params) {
+				if(phpgw::get_var("filter_$field")) {
+					$filters[$field] = phpgw::get_var("filter_$field");
+				}
+			}
+
+			$filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
+			if ($filter_to) {
+				$filters['where'][] = "%%table%%".sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+			}
+
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && // admin users should have access to all buildings
+			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) ) { // users with the booking role admin should have access to all buildings
+
+				$accessable_buildings = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+
+				// if no buildings are searched for, show all accessable buildings
+				if ( !isset($filters['building_id']) ) {
+					$filters['building_id'] = $accessable_buildings;
+				} else { // before displaying search result, check if the building search for is accessable
+					if (!in_array($filters['building_id'], $accessable_buildings)) {
+						$filters['building_id'] = -1;
+						unset($filters['building_name']);
+					}
+				}
+			}
+
+			if(!isset($_SESSION['showall'])) {
+				$filters['active'] = "1";
+			}
+
+			if (!isset($_SESSION['show_all_completed_reservations'])) {
+				$filters['exported'] = '';
+			}
+
+			$params = array(
+				'start' => $start,
+				'results' => $results,
+				'query'	=> $query,
+				'sort'	=> $sort,
+				'dir'	=> $dir,
+				'filters' => $filters
+			);
+
+			$reservations = $this->bo->so->read($params);
+
 			array_walk($reservations["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation.show");
 			foreach($reservations["results"] as &$reservation) {
 				
@@ -257,6 +310,8 @@ phpgw::import_class('booking.uicommon');
 				
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
+				$reservation['from_'] = pretty_timestamp($reservation['from_']);
+				$reservation['to_'] = pretty_timestamp($reservation['to_']);
 				$reservation['customer_type'] = lang($reservation['customer_type']);
 
 				$this->add_current_customer_identifier_info($reservation);
@@ -324,7 +379,12 @@ phpgw::import_class('booking.uicommon');
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
-			self::render_template('completed_reservation', array('reservation' => $reservation));
+			$show_edit_button = false;
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+				$show_edit_button = true;
+			}
+			self::render_template('completed_reservation', array('reservation' => $reservation, 'show_edit_button' => $show_edit_button));
 		}
 		
 		protected function get_customer_identifier() {
@@ -363,6 +423,10 @@ phpgw::import_class('booking.uicommon');
 		public function edit() {
 			//TODO: Display hint to user about primary type of customer identifier
 			
+			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			{
+    			$this->redirect_to('show', array('id' => phpgw::get_var('id', 'GET')));
+			}
 			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			
 			if (((int)$reservation['exported']) !== 0) {

@@ -79,4 +79,95 @@ HTML;
 		return $out;
 	}
 
+	/**
+	* Get HTML listbox with categories that are candidates for the dimb responsibility_1
+	*
+	* @param $config
+	* @return string HTML listbox to be placed in a table
+	*/
+	function dimb_cat_1($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.invoice.dimb');
+		$cats->supress_info = true;
+
+		$selected = isset($config['dimb_responsible_1']) ? $config['dimb_responsible_1'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
+
+	/**
+	* Get HTML listbox with categories that are candidates for the dimb responsibility_2
+	*
+	* @param $config
+	* @return string HTML listbox to be placed in a table
+	*/
+	function dimb_cat_2($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.invoice.dimb');
+		$cats->supress_info = true;
+
+		$selected = isset($config['dimb_responsible_2']) ? $config['dimb_responsible_2'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
+
+	/**
+	* Get HTML listbox with workorder status that are to be set when invoice is processed
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function workorder_closed_status($config)
+	{
+		$status_entries = execMethod('property.soworkorder.select_status_list');
+
+		$status_assigned = isset($config['workorder_closed_status']) ? $config['workorder_closed_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = 'selected =  "selected"';
+			}
+
+			$out .=  <<<HTML
+				<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
+	* Get HTML listbox with workorder reopen status that are to be set when invoice is processed
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function workorder_reopen_status($config)
+	{
+		$status_entries = execMethod('property.soworkorder.select_status_list');
+
+		$status_assigned = isset($config['workorder_reopen_status']) ? $config['workorder_reopen_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ( $status_entries as $status)
+		{
+			$selected = '';
+			if ( $status_assigned == $status['id'])
+			{
+				$selected = 'selected =  "selected"';
+			}
+
+			$out .=  <<<HTML
+				<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
 

@@ -17,7 +17,7 @@
 	* @subpackage utilities
 	* @internal Examples can be found in notes app
 	*/
-	class categories
+	class phpgwapi_categories
 	{
 		var $account_id;
 		var $app_name;
@@ -25,7 +25,8 @@
 		var $db;
 		var $total_records;
 		var $grants;
-
+		protected $location;
+		protected $location_id;
 		/**
 		* @var bool $supress_info supress the [' . lang('Global') . '&nbsp;' . lang($this->app_name) . ']'
 		*/
@@ -37,7 +38,7 @@
 		* @param integer $accountid Account id
 		* @param string $app_name Application name defaults to current application
 		*/
-		function categories($accountid = '', $app_name = '')
+		function __construct($accountid = '', $app_name = '', $location = '')
 		{
 			$account_id = (int)get_account_id($accountid);
 
@@ -48,7 +49,7 @@
 
 			$this->account_id	= (int) $account_id;
 			$this->db			=& $GLOBALS['phpgw']->db;
-			$this->set_appname($app_name);
+			$this->set_appname($app_name, $location);
 		}
 
 		/**
@@ -59,6 +60,12 @@
 		*/
 		function filter($type)
 		{
+			
+			$filter_location = '';
+			if($this->location_id)
+			{
+				$filter_location = "AND location_id = {$this->location_id}";
+			}
 			$s = '';
 			switch ($type)
 			{
@@ -69,16 +76,16 @@
 					$s = ' AND cat_parent = 0';
 					break;
 				case 'appandmains':
-					$s = " AND cat_appname='{$this->app_name}' AND cat_parent = 0";
+					$s = " AND cat_appname='{$this->app_name}' {$filter_location} AND cat_parent = 0";
 					 break;
 				case 'appandsubs':
-					$s = " AND cat_appname='{$this->app_name}' AND cat_parent <> 0";
+					$s = " AND cat_appname='{$this->app_name}' {$filter_location} AND cat_parent <> 0";
 					break;
 				case 'noglobal':
-					$s = " AND cat_appname != '{$this->app_name}'";
+					$s = " AND cat_appname != '{$this->app_name}' {$filter_location}";
 					break;
 				case 'noglobalapp':
-					$s = " AND cat_appname = '{$this->app_name}' AND cat_owner <> {$this->account_id}";
+					$s = " AND cat_appname = '{$this->app_name}' {$filter_location} AND cat_owner <> {$this->account_id}";
 					break;
 				default:
 					return '';
@@ -94,11 +101,16 @@
 		*/
 		function total($for = 'app')
 		{
+			$filter_location = '';
+			if($this->location_id)
+			{
+				$filter_location = "AND location_id = {$this->location_id}";
+			}
 			switch($for)
 			{
-				case 'app':			$w = " WHERE cat_appname='" . $this->app_name . "'"; break;
-				case 'appandmains':	$w = " WHERE cat_appname='" . $this->app_name . "' AND cat_parent =0"; break;
-				case 'appandsubs':	$w = " WHERE cat_appname='" . $this->app_name . "' AND cat_parent !=0"; break;
+				case 'app':			$w = " WHERE cat_appname='{$this->app_name}' {$filter_location}"; break;
+				case 'appandmains':	$w = " WHERE cat_appname='{$this->app_name}' {$filter_location} AND cat_parent =0"; break;
+				case 'appandsubs':	$w = " WHERE cat_appname='{$this->app_name}' {$filter_location} AND cat_parent !=0"; break;
 				case 'subs':		$w = ' WHERE cat_parent != 0'; break;
 				case 'mains':		$w = ' WHERE cat_parent = 0'; break;
 				default:			return 0;
@@ -122,7 +134,7 @@
 		* @param boolean $globals True or False, includes the global phpgroupware categories or not
 		* @return array $cats Categories
 		*/
-		function return_array($type,$start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $lastmod = -1, $column = '')
+		function return_array($type,$start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $lastmod = -1, $column = '', $use_acl = false)
 		{
 			//casting and addslashes for security
 			$start		= intval($start);
@@ -214,7 +226,13 @@
 				$table_column = ' * ';
 			}
 
-			$sql = "SELECT $table_column from phpgw_categories WHERE (cat_appname='" . $this->app_name . "' AND" . $grant_cats . $global_cats . ')'
+			$filter_location = '';
+			if($this->location_id)
+			{
+				$filter_location = "AND location_id = {$this->location_id}";
+			}
+
+			$sql = "SELECT $table_column from phpgw_categories WHERE (cat_appname='{$this->app_name}' {$filter_location} AND" . $grant_cats . $global_cats . ')'
 				. $parent_filter . $querymethod . $filter;
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -229,6 +247,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$_cats = array();
 			$cats = array();
 			while ($this->db->next_record())
 			{
@@ -236,12 +255,12 @@
 				{
 					$cats[] = array
 					(
-						"$column" => $this->db->f(0)
+						"$column" => $this->db->f($column)
 					);
 				}
 				else
 				{
-					$cats[] = array
+					$_cats[] = array
 					(
 						'id'			=> $this->db->f('cat_id'),
 						'owner'			=> $this->db->f('cat_owner'),
@@ -257,10 +276,26 @@
 					);
 				}
 			}
+			if($use_acl)
+			{
+				foreach( $_cats as $cat)
+				{
+					$location = "{$this->location}.category.{$cat['id']}";
+					if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->app_name))
+					{
+						$cats[] = $cat;
+					}
+				}
+			}
+			else
+			{
+				$cats = $_cats;
+			}
+
 			return $cats;
 		}
 
-		function return_sorted_array($start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '')
+		function return_sorted_array($start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $use_acl = false)
 		{
 			//casting and slashes for security
 			$start		= intval($start);
@@ -307,15 +342,22 @@
 				$querymethod = " AND (cat_name LIKE '%$query%' OR cat_description LIKE '%$query%') ";
 			}
 
-			$sql = "SELECT * FROM phpgw_categories WHERE (cat_appname='{$this->app_name}' AND $grant_cats $global_cats) $querymethod";
+			$filter_location = '';
+			if($this->location_id)
+			{
+				$filter_location = "AND location_id = {$this->location_id}";
+			}
+
+			$sql = "SELECT * FROM phpgw_categories WHERE (cat_appname='{$this->app_name}' {$filter_location} AND $grant_cats $global_cats) $querymethod";
 
 			$this->db->query($sql . $parent_select . $ordermethod,__LINE__,__FILE__);
 			$total = $this->db->num_rows();
 
+			$_cats = array();
 			$cats = array();
 			while ($this->db->next_record())
 			{
-				$cats[] = array
+				$_cats[] = array
 				(
 					'id'			=> (int)$this->db->f('cat_id'),
 					'owner'			=> (int)$this->db->f('cat_owner'),
@@ -330,6 +372,23 @@
 				);
 			}
 
+			if($use_acl)
+			{
+				foreach( $_cats as $cat)
+				{
+					$location = "{$this->location}.category.{$cat['id']}";
+					if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->app_name))
+					{
+						$cats[] = $cat;
+					}
+				}
+			}
+			else
+			{
+				$cats = $_cats;
+			}
+			unset($_cats);
+
 			$num_cats = count($cats);
 			for ($i=0;$i < $num_cats;$i++)
 			{
@@ -338,22 +397,42 @@
 				$this->db->query($sql . $sub_select . $ordermethod,__LINE__,__FILE__);
 				$total += $this->db->num_rows();
 
+				$_subcats = array();
 				$subcats = array();
-				$j = 0;
+
 				while ($this->db->next_record())
 				{
-					$subcats[$j]['id']          = (int)$this->db->f('cat_id');
-					$subcats[$j]['owner']       = (int)$this->db->f('cat_owner');
-					$subcats[$j]['access']      = $this->db->f('cat_access');
-					$subcats[$j]['app_name']    = $this->db->f('cat_appname');
-					$subcats[$j]['main']        = (int)$this->db->f('cat_main');
-					$subcats[$j]['level']       = (int)$this->db->f('cat_level');
-					$subcats[$j]['parent']      = (int)$this->db->f('cat_parent');
-					$subcats[$j]['name']        = $this->db->f('cat_name');
-					$subcats[$j]['description'] = $this->db->f('cat_description');
-					$subcats[$j]['data']        = $this->db->f('cat_data');
-					$j++;
+					$_subcats[] = array
+					(
+						'id'			=> (int)$this->db->f('cat_id'),
+						'owner'			=> (int)$this->db->f('cat_owner'),
+						'access'		=> $this->db->f('cat_access'),
+						'app_name'		=> $this->db->f('cat_appname'),
+						'main'			=> (int)$this->db->f('cat_main'),
+						'level'			=> (int)$this->db->f('cat_level'),
+						'parent'		=> (int)$this->db->f('cat_parent'),
+						'name'			=> $this->db->f('cat_name'),
+						'description'	=> $this->db->f('cat_description'),
+						'data'			=> $this->db->f('cat_data')
+					);
 				}
+
+				if($use_acl)
+				{
+					foreach( $_subcats as $cat)
+					{
+						$location = "{$this->location}.category.{$cat['id']}";
+						if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->app_name))
+						{
+							$subcats[] = $cat;
+						}
+					}
+				}
+				else
+				{
+					$subcats = $_subcats;
+				}
+				unset($_subcats);
 
 				$num_subcats = count($subcats);
 				if ($num_subcats != 0)
@@ -443,12 +522,12 @@
 		* @param string $site_link URL
 		* @return array Categories
 		*/
-		function formatted_list($format,$type='',$selected = '',$globals = False,$site_link = 'site')
+		function formatted_list($format,$type='',$selected = '',$globals = False,$site_link = 'site', $use_acl = false)
 		{
-			return $this->formated_list($format,$type,$selected,$globals,$site_link);
+			return $this->formated_list($format,$type,$selected,$globals,$site_link,$use_acl);
 		}
 
-		function formated_list($format, $type='', $selected = '', $globals = False, $site_link = 'site')
+		function formated_list($format, $type='', $selected = '', $globals = False, $site_link = 'site', $use_acl = false)
 		{
 			$self = '';
 			if(is_array($format))
@@ -459,6 +538,7 @@
 				$self = isset($format['self']) ? $format['self'] : '';
 				$globals = isset($format['globals']) ? $format['globals'] : true;
 				$site_link = isset($format['site_link']) ? $format['site_link'] : 'site';
+				$use_acl = isset($format['use_acl']) ? $format['use_acl'] : '';
 				settype($format,'string');
 				$format = $temp_format ? $temp_format : 'select';
 				unset($temp_format);
@@ -471,11 +551,11 @@
 
 			if ($type != 'all')
 			{
-				$cats = $this->return_array($type, 0, False, '', '', '',$globals);
+				$cats = $this->return_array($type, 0, False, '', '', '',$globals, '', '', '', $use_acl);
 			}
 			else
 			{
-				$cats = $this->return_sorted_array(0, False, '', '', '',$globals);
+				$cats = $this->return_sorted_array(0, False, '', '', '',$globals, '', $use_acl);
 			}
 
 			$s = '';
@@ -505,7 +585,7 @@
 					}
 					if ($cat['owner'] == '-1' && !$this->supress_info)
 					{
-						$s .= '&nbsp;[' . lang('Global') . '&nbsp;' . lang($this->app_name) . ']';
+						$s .= '&nbsp;[' . lang('Global') . '&nbsp;' . lang($this->app_name) . ($this->location?"::{$this->location}":'') . ']';
 					}
 					$s .= '</option>' . "\n";
 				}
@@ -561,6 +641,7 @@
 				$globals		= isset($data['globals']) ? $data['globals'] : true;
 				$link_data		= isset($data['link_data']) ? $data['link_data'] : array();
 				$select_name		= isset($data['select_name'])?$data['select_name'] : 'cat_id';
+				$use_acl		= isset($data['use_acl']) ? $data['use_acl'] : '';
 			}
 			else
 			{
@@ -574,11 +655,11 @@
 
 			if ($type != 'all')
 			{
-				$cats = $this->return_array($type, 0, false, '', '', '',$globals);
+				$cats = $this->return_array($type, 0, false, '', '', '', $globals, '', '', '', $use_acl);
 			}
 			else
 			{
-				$cats = $this->return_sorted_array(0, false, '', '', '',$globals);
+				$cats = $this->return_sorted_array(0, false, '', '', '', $globals, '', $use_acl);
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file($GLOBALS['phpgw']->common->get_tpl_dir('phpgwapi','base') . '/categories');
@@ -617,7 +698,7 @@
 				}
 				if ($cat['owner'] == '-1' && !$this->supress_info)
 				{
-					$name .= ' [' . lang('Global') . ' ' . lang($this->app_name) . ']';
+					$name .= ' [' . lang('Global') . ' ' . lang($this->app_name) . ($this->location?"::{$this->location}":'') . ']';
 				}
 
 				$cat_list[] = array
@@ -672,8 +753,8 @@
 				$id_val = $values['id'] . ',';
 			}
 
-			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access, cat_appname, cat_name, cat_description, cat_data, cat_main ,cat_level, last_mod)"
-				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',"
+			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access, cat_appname, location_id, cat_name, cat_description, cat_data, cat_main ,cat_level, last_mod)"
+				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',{$this->location_id},"
 					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', {$values['main']}, {$values['level']}," . time() . ')',__LINE__,__FILE__);
 
 			if ($values['id'] > 0)
@@ -696,7 +777,8 @@
 				'cat_id'	=> $max,
 				'cat_name'	=> $values['name'],
 				'cat_owner'	=> $this->account_id,
-				'location'	=> 'cat_add'
+				'location'	=> 'cat_add',
+				'location_id' => $this->location_id
 			);
 			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
 
@@ -730,8 +812,8 @@
 				{
 					if ($cats[$i]['level'] == 1)
 					{
-						$this->db->query('UPDATE phpgw_categories set cat_level=0, cat_parent=0, cat_main=' . intval($cats[$i]['id'])
-										. ' WHERE cat_id=' . intval($cats[$i]['id']) . " AND cat_appname='" . $this->app_name . "'",__LINE__,__FILE__);
+						$this->db->query('UPDATE phpgw_categories set cat_level=0, cat_parent=0, cat_main=' . (int)$cats[$i]['id']
+										. ' WHERE cat_id=' . (int)$cats[$i]['id'] . " AND cat_appname='" . $this->app_name . "'",__LINE__,__FILE__);//FIXME: should not be necesarry with appname
 						$new_main = $cats[$i]['id'];
 					}
 					else
@@ -747,7 +829,7 @@
 						}
 
 						$this->db->query('UPDATE phpgw_categories set cat_level=' . ($cats[$i]['level']-1) . $update_main . $update_parent 
-										. ' WHERE cat_id=' . intval($cats[$i]['id']) . " AND cat_appname='" . $this->app_name . "'",__LINE__,__FILE__);
+										. ' WHERE cat_id=' . (int)$cats[$i]['id'] . " AND cat_appname='" . $this->app_name . "'",__LINE__,__FILE__);
 					}
 				}
 			}
@@ -757,7 +839,9 @@
 			$args = array
 			(
 				'cat_id'	=> $cat_id,
-				'location'	=> 'cat_delete'
+				'cat_owner'	=> $this->account_id,
+				'location'	=> 'cat_delete',
+				'location_id' => $this->location_id
 			);
 			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
 		}
@@ -811,8 +895,10 @@
 				'cat_id'	=> $values['id'],
 				'cat_name'	=> $values['name'],
 				'cat_owner'	=> $this->account_id,
-				'location'	=> 'cat_edit'
+				'location'	=> 'cat_edit',
+				'location_id' => $this->location_id
 			);
+
 			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
 			
 			return $values['id'];
@@ -820,8 +906,14 @@
 
 		function name2id($cat_name)
 		{
+			$filter_location = '';
+			if($this->location_id)
+			{
+				$filter_location = "AND location_id = {$this->location_id}";
+			}
+
 			$this->db->query("SELECT cat_id FROM phpgw_categories WHERE cat_name='" . $this->db->db_addslashes($cat_name) . "' "
-							."AND cat_appname='" . $this->app_name . "' AND (cat_owner=" . $this->account_id . ' OR cat_owner=-1)',__LINE__,__FILE__);
+							."AND cat_appname='{$this->app_name}' {$filter_location} AND (cat_owner=" . $this->account_id . ' OR cat_owner=-1)',__LINE__,__FILE__);
 
 			if(!$this->db->num_rows())
 			{
@@ -914,11 +1006,11 @@
 				$cat_exists = " cat_name='" . $this->db->db_addslashes($cat_name) . "' AND cat_id != $cat_id ";
 			}
 
-			$this->db->query("SELECT COUNT(cat_id) FROM phpgw_categories WHERE $cat_exists $filter",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(cat_id) as cnt FROM phpgw_categories WHERE $cat_exists $filter",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if ($this->db->f(0))
+			if ($this->db->f('cnt'))
 			{
 				return True;
 			}
@@ -933,9 +1025,11 @@
 		 * 
 		 * @param string $appname the new app name
 		 */
-		function set_appname($appname)
+		function set_appname($appname, $location = '')
 		{
 			$this->app_name		= $GLOBALS['phpgw']->db->db_addslashes($appname);
-			$this->grants		= $GLOBALS['phpgw']->acl->get_grants($appname);
+			$this->location		= $GLOBALS['phpgw']->db->db_addslashes($location);
+			$this->location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$this->grants		= $GLOBALS['phpgw']->acl->get_grants($appname, $location);
 		}
 	}

@@ -71,10 +71,8 @@
 
 		function import($invoice_common,$download)
 		{
-
 			$tsvfile	= $invoice_common['tsvfile'];
 			$conv_type	= $invoice_common['conv_type'];
-			$valid_data= False;
 			$buffer = array();
 			$buffer = $this->import_start_file($buffer);
 			$fp = fopen($tsvfile,'r');
@@ -85,38 +83,26 @@
 			{
 				$num = count($data);
 				$buffer = $this->import_start_record($buffer);
-				$valid_data=0;
 				for ($c=0; $c<$num; $c++ )
 				{
 					//Send name/value pairs along with the buffer
 					if ($this->import[$this->header[$c]] != '')
 					{
-
-//echo '<br>'.$c.': '.$this->import[$this->header[$c]].' => '.$data[$c];
 						$buffer = $this->import_new_attrib($buffer, $this->import[$this->header[$c]],$data[$c],$invoice_common);
-						if($data[$c])
-						{
-							$valid_data++;
-						}
 					}
 				}
-				if ($valid_data > 0)
+				if($data[1] && $data[6]) // fakturanr og beløp
 				{
 					$buffer = $this->import_end_record($buffer,$invoice_common);
-					$valid_data= False;
 				}
 			}
 			fclose($fp);
-
-
-//echo 'download'.$download.'<br>';
 
 			if(!$download)
 			{
 				$buffer = $this->import_end_file($buffer,$invoice_common['bilagsnr']);
 			}
 
-//_debug_array($buffer);
 			$this->header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Tjeneste','Belop [kr]');
 
 			return $buffer;
@@ -130,18 +116,15 @@
 
 		function import_start_record($buffer)
 		{
-			$top=array();
 			++$this->id;
-			$this->currentrecord = $top;
+			$this->currentrecord = array();
 			return $buffer;
 		}
 
 		function import_new_attrib($buffer,$name,$value,$invoice_common)
 		{
-
 			$value = $this->bocommon->ascii2utf(trim($value));
-			$value = str_replace('\n','<BR>',$value);
-			$value = str_replace('\r','',$value);
+			$value = str_replace(array('\n','\r'),array('<BR>',''),$value);
 
 			$this->currentrecord += array($name => $value);
 
@@ -150,8 +133,9 @@
 
 		function import_end_record($buffer,$invoice_common)
 		{
-			$buffer[$this->id]='';
-			while ( list($name, $value) = each($this->currentrecord))
+			$buffer[$this->id] = array();
+
+			foreach ($this->currentrecord as $name => $value)
 			{
 				$invoice_date = date($this->dateformat,mktime(2,0,0,$invoice_common['smonth'],$invoice_common['sday'],$invoice_common['syear']));
 
@@ -220,7 +204,7 @@
 				$buffer[$this->id]['typeid'] = $invoice_common['type'];
 				$buffer[$this->id]['fakturadato'] = $invoice_date;
 				$buffer[$this->id]['forfallsdato'] = $payment_date;
-				$buffer[$this->id]['periode'] = $invoice_common['smonth'];
+				$buffer[$this->id]['periode'] = $invoice_common['syear'] . sprintf("%02d",$invoice_common['smonth']);
 				$buffer[$this->id]['regtid'] = date($this->datetimeformat);
 				$buffer[$this->id]['artid'] = $invoice_common['art'];
 				$buffer[$this->id]['godkjentbelop'] = $godkjentbelop;

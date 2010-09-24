@@ -1036,7 +1036,7 @@
 		/* Check if addressmaster exist  */
 		$GLOBALS['phpgw_setup']->db->query("SELECT config_name, config_value FROM phpgw_config WHERE config_name = 'addressmaster'");
 		$GLOBALS['phpgw_setup']->db->next_record();
-		if($GLOBALS['phpgw_setup']->db->f(0))
+		if($GLOBALS['phpgw_setup']->db->f('config_name'))
 		{
 			$addressmaster_id = $GLOBALS['phpgw_setup']->db->f('config_value');
 		}
@@ -2605,3 +2605,238 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.524';
+	/**
+	* support per application admin
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_524()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$apps = array();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT app_name FROM phpgw_applications', __LINE__, __FILE__);
+		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
+		{
+			$apps[] = $GLOBALS['phpgw_setup']->oProc->m_odb->f('app_name', true);
+		}
+
+		foreach ( $apps as $app )
+		{
+			$GLOBALS['phpgw']->locations->add('admin', "Allow app admins - {$app}", $app, false);
+		}
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.525';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.525';
+	/**
+	* Add sorting to attribute choice
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_525()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_choice','choice_sort',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True,
+			'default'	=> 0
+		));
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.526';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.526';
+	/**
+	* Add location_id to categories
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_526()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','location_id',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True,
+			'default'	=> 0
+		));
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.527';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.527';
+	/**
+	* Add delegates - let users manage other users to represent them
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_527()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_account_delegates', array(
+				'fd' => array(
+					'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+				),
+				'pk' => array('account_id','owner_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.528';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.528';
+	/**
+	* Add delegates - let users manage other users to represent them
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_528()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_account_delegates'); // new primary key
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_account_delegates', array(
+				'fd' => array(
+					'delegate_id' => array('type' => 'auto','precision' => 4,'nullable' => false),
+					'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'data' => array('type' => 'text','nullable' => true),
+					'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+				),
+				'pk' => array('delegate_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('account_id','owner_id','location_id','data')
+			)
+		);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.529';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.529';
+	/**
+	* Fix a ipv6 issue
+	*
+	* @return string the new version number
+	*/
+
+	function phpgwapi_upgrade0_9_17_529()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_access_log','ip',array('type' => 'varchar', 'precision' => 100, 'nullable' => False,'default' => '::1'));
+
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.530';
+		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+	}
+
+	$test[] = '0.9.17.530';
+	/**
+	* Add new config schema
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_530()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_config2_section', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true),
+					'data' => array('type' => 'text','nullable' => true)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_config2_attrib', array(
+				'fd' => array(
+					'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+					'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+				),
+				'pk' => array('section_id','id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_config2_choice', array(
+				'fd' => array(
+					'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'value' => array('type' => 'varchar', 'precision' => 50,'nullable' => False)
+				),
+				'pk' => array('section_id','attrib_id','id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('section_id','attrib_id','value')
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_config2_value', array(
+				'fd' => array(
+					'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'value' => array('type' => 'text','nullable' => False)
+				),
+				'pk' => array('section_id','attrib_id','id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('section_id','attrib_id','value')
+			)
+		);
+
+		if ( $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit() )
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.531';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

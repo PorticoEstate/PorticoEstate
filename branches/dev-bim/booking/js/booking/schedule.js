@@ -1,4 +1,5 @@
-colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6'];
+colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8', 'color9', 'color10',
+		  'color11', 'color12', 'color13', 'color14', 'color15', 'color16', 'color17', 'color18', 'color19', 'color20'];
 colorMap = {};
 
 YAHOO.booking.shorten = function(text, max) {
@@ -17,6 +18,8 @@ YAHOO.booking.link = function(label, link, max) {
 
 YAHOO.booking.scheduleResourceColFormatter = function(elCell, oRecord, oColumn, text) {
 	if(text && oRecord.getData('resource_link')) {
+		elTr = elCell.parentNode.parentNode;
+		elTr.setAttribute("resource", oRecord.getData('resource_id'));
 		elCell.innerHTML = '<a href="' + oRecord.getData('resource_link') + '">' + text + '</a>';
 	}
 	else if (text) {
@@ -27,23 +30,30 @@ YAHOO.booking.scheduleResourceColFormatter = function(elCell, oRecord, oColumn, 
 YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
-			colorMap[booking.name] = colors.length ? colors.shift() : 'color6';
+			colorMap[booking.name] = colors.length ? colors.shift() : 'color20';
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, 'info');
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
+		if (booking.is_public == 0) {
+			elCell.innerHTML = YAHOO.booking.shorten('Privat arr.', 12);
+		} else {
+			if (booking.shortname)
+				elCell.innerHTML = YAHOO.booking.shorten(booking.shortname, 12);
+			else	
 		elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
-		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking); return false; };
+		}
+		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
 	}
 	else {
 		elCell.innerHTML = '...';
 		var data = oRecord.getData();
-		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to); return false; };
+		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };
 	}
 };
 
-YAHOO.booking.showBookingInfo = function(booking) {
+YAHOO.booking.showBookingInfo = function(booking,elCell) {
 	var overlay = new YAHOO.widget.Overlay("overlay-info", { fixedcenter:true, visible:true, width:"400px" } );
 	var callback = {
 		success : function(o) {
@@ -54,7 +64,8 @@ YAHOO.booking.showBookingInfo = function(booking) {
 			alert('Failed to load booking details page');
 		}
 	}
-	var conn = YAHOO.util.Connect.asyncRequest("GET", booking.info_url.replace(/&amp;/gi, '&'), callback);
+	resource = elCell.parentNode.parentNode.getAttribute('resource');
+	var conn = YAHOO.util.Connect.asyncRequest("GET", booking.info_url.replace(/&amp;/gi, '&') + '&resource=' + resource, callback);
 	overlay.setBody('<img src="http://l.yimg.com/a/i/us/per/gr/gp/rel_interstitial_loading.gif" />');
 	overlay.render(document.body);
 }
@@ -72,7 +83,11 @@ YAHOO.booking.bookingToHtml = function(booking) {
 	else {
 		var link = null;
 	}
+	if (booking.shortname)
+		var html = YAHOO.booking.link(booking.shortname, link, 12);
+	else 
 	var html = YAHOO.booking.link(booking.name, link, 12);
+
 	if(booking.type == 'event' && booking.conflicts) {
 		for(var i=0; i<booking.conflicts.length;i++) {
 			html += '<div class="conflict">conflicts with: ' + YAHOO.booking.bookingToHtml(booking.conflicts[i]) + '</div>';
@@ -84,7 +99,7 @@ YAHOO.booking.bookingToHtml = function(booking) {
 YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
-			colorMap[booking.name] = colors.length ? colors.shift() : 'color6';
+			colorMap[booking.name] = colors.length ? colors.shift() : 'color20';
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);
@@ -99,10 +114,13 @@ YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn,
 YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, booking) { 
 	if(booking) {
 		if(!colorMap[booking.name]) {
-			colorMap[booking.name] = colors.length ? colors.shift() : 'color6';
+			colorMap[booking.name] = colors.length ? colors.shift() : 'color20';
 		}
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);
+		if (booking.shortname)
+			elCell.innerHTML = YAHOO.booking.link(booking.shortname, null, 12);
+		else
 		elCell.innerHTML = YAHOO.booking.link(booking.name, null, 12);
 	}
 	else {
@@ -169,13 +187,21 @@ YAHOO.booking.nextWeek = function() {
 	YAHOO.util.History.navigate('date', state);
 }
 
-YAHOO.booking.newApplicationForm = function(date, _from, _to) {
+YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
+	if(elCell) 
+	{	
+		resource = elCell.parentNode.parentNode.getAttribute('resource');
+	}
+	else
+	{
+		resource = null;
+	}
 	date = date ? date : YAHOO.booking.date;
 	_from = _from ? '%20' + _from: '';
 	_to = _to ? '%20' + _to: '';
 	var url = YAHOO.booking.newApplicationUrl;
 	var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to;
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource;
 	window.location.href = url;
 }
 

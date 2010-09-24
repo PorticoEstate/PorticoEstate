@@ -43,10 +43,8 @@
 			$this->vfs 					= CreateObject('phpgwapi.vfs');
 			$this->vfs->fakebase 		= '/property';
 			$this->fakebase 			= $this->vfs->fakebase;
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.document';
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.document');
 			$this->cats->supress_info	= true;
-
 
 			$this->db           	= & $GLOBALS['phpgw']->db;
 			$this->join				= & $this->db->join;
@@ -150,7 +148,9 @@
 															'joinmethod'	=> $joinmethod,
 															'paranthesis'	=> $paranthesis,
 															'query'			=> $query,
-															'force_location'=> true
+															'force_location'=> true,
+															'no_address'	=> true,
+															'uicol_address'=> true
 															));
 
 				$this->bocommon->fm_cache('sql_document_' . $entity_id,$sql);
@@ -174,7 +174,7 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
 
-			$groupmethod= " GROUP BY fm_document.location_code,fm_document.address";
+			$groupmethod= " GROUP BY fm_document.location_code";
 
 			if ($entity_id)
 			{
@@ -351,7 +351,8 @@
 					'link'				=> $this->db->f('link', true),
 					'title'				=> $this->db->f('title', true),
 					'doc_type'			=> $this->db->f('category'),
-					'user_id'			=> $this->db->f('user_id')
+					'user_id'			=> $this->db->f('coordinator'),
+					'document_date'		=> $this->db->f('document_date')
 					);
 			}
 
@@ -786,5 +787,119 @@
 			}
 			return $receipt;
 		}
+
+
+		/**
+		* used for retrive a child-node from a hierarchy
+		*
+		* @param string $dirname current path
+		* @param integer $level is increased when we go deeper into the tree,
+		* @param integer $maks_level is how deep we want to go
+		* @param integer $filter_level search for filter at a predefined level
+		* @param string $filter
+		* @param string $menuaction is used to make an url to the item
+		* @return array $child Children
+		*/
+
+		protected function get_children($dirname, $level, $maks_level = 0, $filter_level=1, $filter = 'hei', $menuaction)
+		{
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+			$children = array();
+
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( ($file->isDot() || !$file->isReadable())
+						|| ($level == $filter_level && !preg_match("/{$filter}/i", $file->getFilename()))
+						)
+ 					{
+						continue;
+					}
+					$children[] =array
+					(
+						'link'			=> $GLOBALS['phpgw']->link('/home.php'),
+						'text'			=> $file->getFilename(),
+						'is_dir'		=> $file->isDir(),
+						'path'			=> $file->getPathname(),
+						'level'			=> $level,
+					);
+				}
+			}
+
+			foreach($children as &$child)
+			{
+				if($child['is_dir'] && $child['level'] < ($maks_level))
+				{
+					if($_children = $this->get_children($child['path'], ($child['level']+1), $maks_level, $menuaction))
+					{
+						$child['children'] = $_children;
+					}
+				}
+			}
+			return $children;
 	}
 
+		/**
+		* used for retrive a filetree from a given start point
+		*
+		* @param string $dirname Start point
+		* @param integer $maks_level is how deep we want to go
+		* @param integer $filter_level search for filter at a predefined level
+		* @param string $filter
+		* @param string $menuaction is used to make an url to the item
+		* @return array $child Children
+		*/
+
+		public function read_file_tree($dirname = '', $maks_level = 2, $filter_level, $filter, $menuaction = '')
+		{
+			$dirname = $dirname ? $dirname : $GLOBALS['phpgw_info']['server']['temp_dir'];
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isReadable()
+						)
+ 					{
+						continue;
+					}
+					$file_list[] =array
+					(
+						'link'			=> $GLOBALS['phpgw']->link('/home.php'),
+						'text'			=> $file->getFilename(),
+						'is_dir'		=> $file->isDir(),
+						'path'			=> $file->getPathname(),
+						'level'			=> 0,
+					);
+				}
+			}
+
+			foreach($file_list as &$file)
+			{
+				if($file['is_dir'])
+				{
+					if ($children = $this->get_children($file['path'], 1, $maks_level, $filter_level, $filter, $menuaction))
+					{
+						$file['children'] = $children;
+					}
+				}
+			}
+			return $file_list;
+		}
+	}

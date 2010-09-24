@@ -182,7 +182,7 @@
 			$custom['name'] = $this->db->db_addslashes($custom['name']);
 			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
 
-			$this->db->query("UPDATE fm_custom set sql_text='" . $custom['sql_text'] . "', entry_date='" . time() . "', name='" . $custom['name'] . "' WHERE id=" . (int) $custom['custom_id'],__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_custom set sql_text='{$custom['sql_text']}', entry_date='" . time() . "', name='{$custom['name']}' WHERE id=" . (int) $custom['custom_id'],__LINE__,__FILE__);
 
 			if($custom['new_name'])
 			{

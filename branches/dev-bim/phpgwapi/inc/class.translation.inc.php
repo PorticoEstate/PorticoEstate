@@ -58,14 +58,13 @@
 		*/
 		public function __construct($reset = false)
 		{
-			$lang = 'en';
+			$lang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
 			{
 				$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 
 			$this->set_userlang($lang);
-			$this->reset_lang($reset);
 
 			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations']) 
 				&& $GLOBALS['phpgw_info']['server']['collect_missing_translations'])
@@ -167,6 +166,14 @@
 				foreach($language as $lang)
 				{
 					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang], true);
+
+//FIXME: evaluate beenefits from chunking into app_lang
+/*
+					foreach ($lang_set[$lang] as $app => $app_lang)
+					{
+						$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}_{$app}", $app_lang, true);
+					}
+*/
 				}
 			}
 		}
@@ -186,7 +193,8 @@
 				$userlang = 'en';
 			}
 
-			$app_name = $force_app ? $GLOBALS['phpgw']->db->db_addslashes($force_app) : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$app_name = $force_app ? $force_app : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$app_name = $GLOBALS['phpgw']->db->db_addslashes($app_name);
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
 			if ( !is_array($this->lang)
@@ -351,10 +359,10 @@
 
 					if ($upgrademethod == 'addonlynew')
 					{
-						$GLOBALS['phpgw']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE lang='".$lang."'",__LINE__,__FILE__);
+						$GLOBALS['phpgw']->db->query("SELECT COUNT(*) as cnt FROM phpgw_lang WHERE lang='".$lang."'",__LINE__,__FILE__);
 						$GLOBALS['phpgw']->db->next_record();
 
-						if ($GLOBALS['phpgw']->db->f(0) != 0)
+						if ($GLOBALS['phpgw']->db->f('cnt') != 0)
 						{
 							$error .= "Lang code '{$lang}' already installed: skipping<br>\n";
 							continue;
@@ -423,10 +431,10 @@
 							if ($upgrademethod == 'addmissing')
 							{
 								//echo '<br />Test: addmissing';
-								$GLOBALS['phpgw']->db->query("SELECT COUNT(*) FROM phpgw_lang WHERE message_id='$message_id' AND lang='$lang' AND app_name='$app_name'",__LINE__,__FILE__);
+								$GLOBALS['phpgw']->db->query("SELECT COUNT(*) as cnt FROM phpgw_lang WHERE message_id='$message_id' AND lang='$lang' AND app_name='$app_name'",__LINE__,__FILE__);
 								$GLOBALS['phpgw']->db->next_record();
 
-								if ( $GLOBALS['phpgw']->db->f(0) != 0)
+								if ( $GLOBALS['phpgw']->db->f('cnt') != 0)
 								{
 									continue;
 								}

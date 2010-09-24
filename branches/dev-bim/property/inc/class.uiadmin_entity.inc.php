@@ -58,7 +58,8 @@
 			'edit_attrib_group'		=> true,
 			'edit_attrib' 			=> true,
 			'list_custom_function'	=> true,
-			'edit_custom_function'	=> true
+			'edit_custom_function'	=> true,
+			'get_template_attributes'=> true
 		);
 
 		function property_uiadmin_entity()
@@ -192,7 +193,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$entity_list = $this->bo->read();
@@ -351,8 +352,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -393,8 +392,14 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
+
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
@@ -522,20 +527,27 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$category_list = $this->bo->read_category($entity_id);
-			$uicols['name'][0]	= 'id';
-			$uicols['descr'][0]	= lang('category ID');
-			$uicols['name'][1]	= 'name';
-			$uicols['descr'][1]	= lang('Name');
-			$uicols['name'][2]	= 'descr';
-			$uicols['descr'][2]	= lang('Descr');
-			$uicols['name'][3]	= 'prefix';
-			$uicols['descr'][3]	= lang('Prefix');
-			$uicols['name'][4]	= 'entity_id';
-			$uicols['descr'][4]	= lang('id');
+			foreach ($category_list as &$entry)
+			{
+				$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$entry['id']}");
+			}			
+
+			$uicols['name'][0]	= 'location_id';
+			$uicols['descr'][0]	= 'location_id';
+			$uicols['name'][1]	= 'id';
+			$uicols['descr'][1]	= lang('category ID');
+			$uicols['name'][2]	= 'name';
+			$uicols['descr'][2]	= lang('Name');
+			$uicols['name'][3]	= 'descr';
+			$uicols['descr'][3]	= lang('Descr');
+			$uicols['name'][4]	= 'prefix';
+			$uicols['descr'][4]	= lang('Prefix');
+			$uicols['name'][5]	= 'entity_id';
+			$uicols['descr'][5]	= lang('id');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -607,7 +619,18 @@
 				)
 			);
 
-			//_debug_array($parameters2);die;
+			$parameters4 = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'location_id',
+						'source'	=> 'location_id'
+					),
+				)
+			);
+
 
 			$datatable['rowactions']['action'][] = array(
 						'my_name' 			=> 'attribute_groups',
@@ -631,6 +654,18 @@
 									'type'			=> $this->type
 								)),
 					'parameters'	=> $parameters2
+					);
+
+			$datatable['rowactions']['action'][] = array(
+						'my_name' 			=> 'config',
+						'statustext' 	=> lang('config'),
+						'text'			=> lang('config'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> 'admin.uiconfig2.index'
+
+								)),
+					'parameters'	=> $parameters4
 					);
 
 			$datatable['rowactions']['action'][] = array(
@@ -686,6 +721,7 @@
 			unset($parameters);
 			unset($parameters2);
 			unset($parameters3);
+			unset($parameters4);
 
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
@@ -746,8 +782,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -788,8 +822,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
@@ -956,6 +995,11 @@
 			$entity_id	= phpgw::get_var('entity_id', 'int');
 			$id		= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
+			$template_attrib = phpgw::get_var('template_attrib');
+			if($template_attrib)
+			{
+				$values['template_attrib'] = array_values(explode(',', $template_attrib));
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin_entity'));
 
@@ -1016,64 +1060,177 @@
 //_debug_array($link_data);
 
 			$entity = $this->bo->read_single($entity_id,false);
+			$this->bo->allrows = true;
+
+			$parent_list = $this->bocommon->select_list($values['parent_id'], $this->bo->read_category_tree2($entity_id));
+
+			if($id)
+			{
+				$exclude = array($id);
+				$children = $this->bo->get_children2($entity_id, $id, 0,true);
+
+				foreach($children as $child)
+				{
+					$exclude[] = $child['id']; 
+				}
+
+				$k = count($parent_list);
+				for ($i=0; $i<$k; $i++)
+				{
+					if (in_array($parent_list[$i]['id'],$exclude))
+					{
+						unset($parent_list[$i]);
+					}
+				}
+			}
+
+			$entity_list 	= $this->bo->read(array('allrows' => true));
+
+			$category_list = array();
+			foreach($entity_list as $entry)
+			{
+				$cat_list = $this->bo->read_category($entry['id']);
+
+				foreach($cat_list as $category)
+				{
+					$category_list[] = array
+					(
+						'id'	=> "{$entry['id']}_{$category['id']}",
+						'name'	=> "{$entry['name']}::{$category['name']}"
+					);
+				}
+			}
+
+
+       		$myColumnDefs[0] = array
+       		(
+       			'name'		=> "0",
+       			'values'	=>	json_encode(array(	array('key' => 'attrib_id','label'=> lang('id') ,'sortable'=>false,'resizeable'=>true,'hidden'=>false),
+       												array('key' => 'name',	'label'=> lang('name'),	'sortable'=>false,'resizeable'=>true),
+	       											array('key' => 'datatype',	'label'=>lang('datatype'),	'sortable'=>false,'resizeable'=>true),
+		       				       					array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
+			);	
+
+
+			$content_attributes = array
+			(
+			);
+
+			$datavalues[0] = array
+			(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_attributes),
+					'total_records'			=> 0,
+					'permission'   			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 1
+			);
+
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 			(
+				'td_count'							=> 3,
+				'base_java_url'						=> "{menuaction:'property.uiadmin_entity.get_template_attributes',type:'{$this->type}'}",
+				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'							=> $datavalues,
+				'myColumnDefs'						=> $myColumnDefs,
+
 				'lang_entity'						=> lang('entity'),
-				'entity_name'						=> $entity['name'],
+				'entity_name'						=> $id ? $entity['name'] . ' :: ' . implode(' >> ',$this->bo->get_path($entity_id,$id)) : $entity['name'],
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_prefix_standardtext'			=> lang('Enter a standard prefix for the id'),
 				'lang_name_standardtext'			=> lang('Enter a name of the standard'),
 
 				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.category', 'entity_id'=> $entity_id,'type' => $this->type)),
-				'lang_id'							=> lang('Category'),
-				'lang_name'							=> lang('Name'),
-				'lang_descr'						=> lang('Descr'),
-				'lang_prefix'						=> lang('Prefix'),
 				'lang_save'							=> lang('save'),
 				'lang_done'							=> lang('done'),
 				'value_id'							=> $id,
 				'value_name'						=> $values['name'],
 				'value_prefix'						=> $values['prefix'],
+				'edit_prefix'						=> true,
 				'lang_id_standardtext'				=> lang('Enter the standard ID'),
 				'lang_descr_standardtext'			=> lang('Enter a description of the standard'),
 				'lang_done_standardtext'			=> lang('Back to the list'),
 				'lang_save_standardtext'			=> lang('Save the standard'),
 				'type_id'							=> $values['type_id'],
 				'value_descr'						=> $values['descr'],
-				'lang_lookup_tenant'				=> lang('lookup tenant'),
+				'lookup_tenant'						=> true,
 				'value_lookup_tenant'				=> $values['lookup_tenant'],
-				'lang_lookup_tenant_statustext'		=> lang('If this entity type is to look up tenants'),
 				'lang_location_level'				=> lang('location level'),
 				'location_level_list'				=> $this->bo->get_location_level_list($values['location_level']),
 				'lang_location_level_statustext'	=> lang('select location level'),
 				'lang_no_location_level'			=> lang('None'),
-				'lang_tracking'						=> lang('tracking'),
+				'tracking'							=> true,
 				'value_tracking'					=> $values['tracking'],
-				'lang_tracking_statustext'			=> lang('If this entity type is to be tracket in ticket list'),
-				'lang_fileupload'					=> lang('Enable file upload'),
+				'fileupload'						=> true,
 				'value_fileupload'					=> $values['fileupload'],
 				'value_jasperupload'				=> $values['jasperupload'],
-				'lang_loc_link'						=> lang('Link from location'),
+				'loc_link'							=> true,
 				'value_loc_link'					=> $values['loc_link'],
-				'lang_loc_link_statustext'			=> lang('Enable link from location detail'),
-				'lang_start_project'				=> lang('Start project'),
+				'start_project'						=> true,
 				'value_start_project'				=> $values['start_project'],
-				'lang_start_project_statustext'		=> lang('Enable start project from this category'),
-				'lang_start_ticket'					=> lang('Start ticket'),
+				'start_ticket'						=> true,
 				'value_start_ticket'				=> $values['start_ticket'],
-				'lang_start_ticket_statustext'		=> lang('Enable start ticket from this category'),
-				'jasperupload'						=> true
+				'jasperupload'						=> true,
+				'category_list'						=> $category_list,
+				'parent_list'						=> $parent_list
 			);
 
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+			//---datatable settings--------------------
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+		  	$GLOBALS['phpgw']->css->validate_file('property');
+		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'admin_entity.edit_category', 'property' );
+		}
+
+		function get_template_attributes()
+		{
+			$template_info = explode('_', phpgw::get_var('category_template', 'string', 'GET'));
+			$template_entity_id = $template_info[0];
+			$template_cat_id = $template_info[1];
+
+			$attrib_list = $this->bo->read_attrib($template_entity_id,$template_cat_id, true);
+
+			$content = array();
+			foreach($attrib_list as $_entry )
+			{				
+				$content[] = array
+				(
+				
+					'attrib_id'	=> $_entry['id'],
+					'name'		=> $_entry['input_text'],
+					'datatype'	=> $_entry['trans_datatype'],
+				);
+			}
+
+			if(count($content))
+			{
+				return json_encode($content);
+			}
+			else
+			{
+				return "";
+			}
 		}
 
 		function delete()
@@ -1279,7 +1436,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id);
@@ -1466,8 +1623,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1516,8 +1671,13 @@
 					$json ['current_consult'] = $current_Consult;
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
@@ -1812,7 +1972,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$attrib_list = $this->bo->read_attrib($entity_id,$cat_id);
@@ -2023,8 +2183,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -2072,8 +2230,13 @@
 					$json ['current_consult'] = $current_Consult;
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
@@ -2563,7 +2726,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$custom_function_list = $this->bo->read_custom_function($entity_id,$cat_id);
@@ -2755,8 +2918,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -2803,8 +2964,13 @@
 					$json ['current_consult'] = $current_Consult;
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

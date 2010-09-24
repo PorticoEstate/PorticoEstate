@@ -458,39 +458,28 @@
 
 		function read_task($data)
 		{
-			if(is_array($data))
-			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
-			}
-
+			$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) && $data['sort']? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			$job_id = $data['job_id'];
-			$filter_id = $data['filter_id'];
+			$filter_id = isset($data['filter_id']) ? $data['filter_id'] : '';
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
-
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by value_sort asc';
+				$ordermethod = ' ORDER BY value_sort asc';
 			}
 
 			$sql = "SELECT * from phpgw_hrm_task  WHERE job_id=" . intval($job_id);
 
 			$parent_select = ' AND task_level =0';
 
+			$querymethod = '';
 			if($filter_id)
 			{
 				$querymethod = " AND id != $filter_id";
@@ -498,12 +487,9 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
-				$querymethod .= " AND name $this->like '%$query%'";
+				$query = $this->db->db_addslashes($query);
+				$querymethod .= " AND name {$this->like} '%{$query}%'";
 			}
-
 
 			$this->db->query($sql . $parent_select . $querymethod . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -583,6 +569,8 @@
 
 		function add_job($values)
 		{
+			$receipt = array();
+			$this->db->transaction_begin();
 			$table = 'phpgw_hrm_job';
 
 			if($values['parent_id'])
@@ -610,15 +598,15 @@
 
 			$insert_values	= $this->db->validate_insert($insert_values);
 
-
 			$this->db->query("INSERT INTO $table (name,descr,job_parent,job_level,entry_date,owner) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
-			$receipt['message'][]=array('msg'=>lang('job has been saved'));
-
 			$receipt['id'] = $this->db->get_last_insert_id($table,'id');
 
-			$this->db->transaction_commit();
+			if($this->db->transaction_commit())
+			{
+				$receipt['message'][]=array('msg'=>lang('job has been saved'));
+			}
 			return $receipt;
 		}
 
@@ -814,6 +802,7 @@
 
 		function add_task($values)
 		{
+			$this->db->transaction_begin();
 			$table = 'phpgw_hrm_task';
 
 			$this->db->query("SELECT max(value_sort) as value_sort FROM $table WHERE job_id = " . (int)$values['job_id'],__LINE__,__FILE__);
@@ -823,7 +812,8 @@
 
 			if($values['parent_id'])
 			{
-				$this->db->query("SELECT task_level, max(value_sort) as value_sort FROM $table  where id=" . intval($values['parent_id']),__LINE__,__FILE__);
+				$values['parent_id'] = (int)$values['parent_id'];
+				$this->db->query("SELECT task_level FROM {$table} WHERE id={$values['parent_id']}",__LINE__,__FILE__);
 				$this->db->next_record();
 				$level	= (int)$this->db->f('task_level') +1;
 			}
@@ -1243,6 +1233,7 @@
 				return;
 			}
 
+			$this->db->transaction_begin();
 			$sql = "SELECT value_sort FROM $table where job_id=$job_id AND id=$id";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -1276,6 +1267,6 @@
 					return;
 					break;
 			}
+			$this->db->transaction_commit();
 		}
-
 	}

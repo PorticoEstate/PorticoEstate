@@ -66,6 +66,7 @@
 		var $total_records = 0;
 		var $grants;
 		protected $global_lock = false;
+		protected $local_lock = false;
 		/**
 		* All exporteds fields
 		*
@@ -883,10 +884,12 @@
 		*/
 		function read($start=0,$limit=0,$fields='',$query='',$filter='',$sort='',$order='', $lastmod=-1)
 		{
+			throw new Exception('deprecated method called (contatcts_sql::read)');
+
 			foreach($fields as $field)
 			{
 				// we need search for a this communication media
-				if(@array_key_exists($field, $comm_old))
+				if(@array_key_exists($field, $this->comm_old))
 				{
 					$comms[] = array($field, 'comm_descr');
 					unset($fields[$field]);
@@ -2394,7 +2397,7 @@
 			}
 			else
 			{
-				$this->lock_table($this->contact->table);
+				$this->lock_table($this->contact->table, '', true);
 			}
 
 			$this->contact->insert(array
@@ -2424,6 +2427,7 @@
 			{
 				foreach($comms as $comm)
 				{
+					$comm['comm_preferred'] = isset($comm['comm_preferred']) && $comm['comm_preferred'] ? $comm['comm_preferred'] : 'N';
 					$this->add_communication_media($comm, $cid, PHPGW_SQL_RUN_SQL);
 					$this->unlock_table();
 				}
@@ -2480,7 +2484,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->org->table);
+					$this->lock_table($this->org->table, '', true);
 				}
 			}
 
@@ -2513,7 +2517,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->person->table);
+					$this->lock_table($this->person->table, '', true);
 				}
 			}
 
@@ -2571,7 +2575,7 @@
 					}
 					else
 					{
-						$this->lock_table($this->relations->table);
+						$this->lock_table($this->relations->table, '', true);
 					}
 				}
 				$sql[] = $this->_add($data,'relations', 'my_org_id', $cid, $action);
@@ -2618,7 +2622,7 @@
 						}
 						else
 						{
-							$this->lock_table($this->relations->table);
+							$this->lock_table($this->relations->table, '', true);
 						}
 					}
 					$sql[] = $this->_add($data,'relations', 'my_person_id', $cid, $action);
@@ -2648,7 +2652,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->location->table);
+					$this->lock_table($this->location->table, '', true);
 				}
 			}
 			if(count($addr[0]) == 0)
@@ -2682,13 +2686,13 @@
 			$this->comm = createObject('phpgwapi.contact_comm');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->Transaction && !$this->local_lock)
 				{
 					$this->global_lock = true;
 				}
 				else
 				{
-					$this->lock_table($this->comm->table);
+					$this->lock_table($this->comm->table, '', true);
 				}
 			}
 
@@ -2721,7 +2725,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->note->table);
+					$this->lock_table($this->note->table, '', true);
 				}
 			}
 
@@ -2730,7 +2734,7 @@
 			$note['note_creaton'] = $this->get_mkdate();
 			$note['note_modon'] = $this->get_mkdate();
 
-			unset($comm['key_note_id']);
+			//unset($comm['key_note_id']);
 
 			return $this->_add($note,'note','note_contact_id',$cid,$action);
 		}
@@ -2754,7 +2758,7 @@
 				}
 				else
 				{
-					$this->lock_table($this->others->table);
+					$this->lock_table($this->others->table, '', true);
 				}
 			}
 
@@ -2929,7 +2933,7 @@
 			}
 			else
 			{
-				$this->lock_table($relations->table);
+				$this->lock_table($relations->table, '', true);
 			}
 
 			$criteria = $relations->entity_criteria(phpgwapi_sql_criteria::token_and(phpgwapi_sql_criteria::_equal('my_org_id', $org_id),
@@ -3392,7 +3396,7 @@
 			$this->request('contact_id');
 			$this->request($data);
 			$this->criteria(array('my_person_id' => $person_id));
-			return $this->get_query($aciton, __LINE__, __FILE__);
+			return $this->get_query($action, __LINE__, __FILE__);
 		}
 
 		/**
@@ -3682,7 +3686,7 @@
 			}
 
 			if( isset($search_fields['comm_media'])
-				&& is_array($search_fielss['comm_media'])
+				&& is_array($search_fields['comm_media'])
 				&& count($search_fields['comm_media']) > 0)
 			{
 				$search_fields_comms = $search_fields['comm_media'];
@@ -3749,7 +3753,7 @@
 			$records = $this->get_records(__LINE__, __FILE__);
 			if(is_array($records))
 			{
-				foreach($records as $key => $value)
+				foreach($records as $value)
 				{
 					$info[] = $value['contact_id'];
 				}
@@ -3935,7 +3939,7 @@
 					}
 					else
 					{
-						$this->lock_table($this->relations->table);
+						$this->lock_table($this->relations->table, '', true);
 					}
 
 					$data['my_creaton'] = $this->get_mkdate();
@@ -3969,7 +3973,7 @@
 						}
 						else
 						{
-							$this->lock_table($this->relations->table);
+							$this->lock_table($this->relations->table, '', true);
 						}
 
 						$data['my_creaton'] = $this->get_mkdate();
@@ -4075,13 +4079,17 @@
 			return $this->db->get_last_insert_id($this->$entity->table, $this->$entity->real_field($field));
 		}
 
-		function lock_table($table, $action=PHPGW_SQL_RUN_SQL)
+		function lock_table($table, $action=PHPGW_SQL_RUN_SQL, $local_lock = false)
 		{
 			if ( ( !isset($this->locked[$table]) || !$this->locked[$table] )
 				&& $action == PHPGW_SQL_RUN_SQL)
 			{
 				$this->db->lock($table);
 				$this->locked[$table] = TRUE;
+				if($local_lock)
+				{
+					$this->local_lock = true;
+				}
 			}
 		}
 
@@ -4092,6 +4100,13 @@
 		*/
 		function unlock_table()
 		{
+			if(!$this->global_lock && $this->db->Transaction)
+			{
+				$this->db->transaction_commit();				
+				$this->locked = NULL;
+			}
+			
+/*
 			$this->ldebug('unlock_table', array($this->locked), 'dump');
 			if(count($this->locked))
 			{
@@ -4102,6 +4117,8 @@
 				}
 				$this->locked = NULL;
 			}
+
+*/
 		}
 
 		/**
@@ -4114,7 +4131,7 @@
 		*/
 		function slice_old_fields($fields, $data_type)
 		{
-			foreach ($comm_old as $old_field => $value)
+			foreach ($this->comm_old as $old_field => $value)
 			{
 				if($fields[$old_field])
 				{
@@ -4254,7 +4271,7 @@
 
 			$person = $this->get_principal_persons_data($id);
 
-			$time = gettimeofday();
+			//$time = gettimeofday();
 			$uid = $person[0]['contact_id'].':'.$person[0]['per_full_name'];
 			$dn = 'uid=' . utf8_encode($uid).',' . $GLOBALS['phpgw_info']['server']['ldap_contact_context'];
 

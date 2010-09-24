@@ -45,6 +45,19 @@ class rental_agresso_gl07 implements rental_exportable
 	public function get_missing_billing_info($contract)
 	{
 		$missing_billing_info = array();
+		
+		$payer_id = $contract->get_payer_id();
+		if($payer_id == null || $payer_id = 0)
+		{
+			$missing_billing_info[] = 'Missing payer id.';
+		}
+		
+		
+		$contract_parties = $contract->get_parties();
+		if($contract_parties == null || count($contract_parties) < 1)
+		{
+			$missing_billing_info[] = 'Missing contract party.';
+		}
 		$account_in = $contract->get_account_in();
 		if($account_in == null || $account_in == '')
 		{
@@ -55,7 +68,7 @@ class rental_agresso_gl07 implements rental_exportable
 		{
 			$missing_billing_info[] = 'Missing account out.';
 		}
-		$responsibility_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']; 
+		/*$responsibility_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']; 
 		if($responsibility_id_in == null || $responsibility_id_in == '')
 		{
 			$missing_billing_info[] = 'Missing system setting for responsibility id for the current user.';
@@ -63,7 +76,7 @@ class rental_agresso_gl07 implements rental_exportable
 		else if(strlen($responsibility_id_in) != 6)
 		{
 			$missing_billing_info[] = 'System setting for responsibility id for the current user must be 6 characters.';
-		}
+		}*/
 		$responsibility_id_out = $contract->get_responsibility_id();
 		if($responsibility_id_out == null || $responsibility_id_out == '')
 		{
@@ -92,7 +105,7 @@ class rental_agresso_gl07 implements rental_exportable
 		{
 			$missing_billing_info[] = 'Invalid location code for the building.';
 		}
-		$project_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'];
+		/*$project_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'];
 		if($project_id_in == null || $project_id_in == '')
 		{
 			$missing_billing_info[] = 'Missing system setting for project id.';
@@ -100,7 +113,7 @@ class rental_agresso_gl07 implements rental_exportable
 		else if(strlen($project_id_in) > 6)
 		{
 			$missing_billing_info[] = 'System setting for project id can not be more than 6 characters.';
-		}
+		}*/
 		$project_id_out = $contract->get_project_id();
 		if($project_id_out == null || $project_id_out == '')
 		{
@@ -145,11 +158,15 @@ class rental_agresso_gl07 implements rental_exportable
 			$price_items = rental_soinvoice_price_item::get_instance()->get(null, null, null, null, null, null, array('invoice_id' => $invoice->get_id()));
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($invoice->get_contract_id());
-			$description = "{$invoice->get_contract_id()}, " . number_format($invoice->get_total_area(), 1, $decimal_separator, $thousands_separator) . " m2 - {$invoice->get_header()}"; 
+			$description = "{$invoice->get_old_contract_id()}, " . number_format($invoice->get_total_area(), 1, $decimal_separator, $thousands_separator) . " m2 - {$invoice->get_header()}"; 
+			
+			$responsibility_in = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'] : '028120';
+			$project_id_in = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'] : '9';
+			
 			// The income side
 			foreach($price_items as $price_item) // Runs through all items
 			{
-				$this->lines[] = $this->get_line($invoice->get_account_in(), $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'], $invoice->get_service_id(), $building_location_code, $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'], $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+				$this->lines[] = $this->get_line($invoice->get_account_in(), $responsibility_in , $invoice->get_service_id(), $building_location_code, $project_id_in, $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
 			}
 			// The receiver's outlay side
 			$this->lines[] = $this->get_line($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
@@ -199,18 +216,18 @@ class rental_agresso_gl07 implements rental_exportable
 			.sprintf("%020s", '')										// 21	value_1
 			.sprintf("%020s", '')										// 22	value_2
 			.sprintf("%020s", '')										// 23	value_3
-			.sprintf("%-255.255s", $description)						// 24	description
+			.sprintf("%-255.255s", iconv("UTF-8", "ISO-8859-1", $description))						// 24	description
 			.sprintf("%-8s", '')										// 25	trans_date
 			.$this->date_str											// 26	voucher_date
 			.sprintf("%015s", '')										// 27	voucher_no
 			.sprintf("%04.4s", $bill_year).sprintf("%02.2s", $bill_month)	// 28	period
-			.sprintf("%-8s", '')										// 29
-			.sprintf("%-8s", '')										// 30
-			.sprintf("%-8s", '')										// 31
+			.sprintf("%-1s", '')										// 29
+			.sprintf("%-100s", '')										// 30
+			.sprintf("%-255s", '')										// 31
 			.sprintf("%-8s", '')										// 32
 			.sprintf("%-8s", '')										// 33
-			.sprintf("%-8s", '')										// 34
-			.sprintf("%-8s", '')										// 35
+			.sprintf("%-20s", '')										// 34
+			.sprintf("%-25s", '')										// 35
 			.sprintf("%-15.15s", $contract_id)							// 36	order_id
 			.sprintf("%-27s", '')										// 37
 			.sprintf("%-2s", '')										// 38

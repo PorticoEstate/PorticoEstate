@@ -45,14 +45,17 @@
 		var $start_date;
 		var $end_date;
 		var $fields_updated = false;
+		var $status_id;
+		var $user_id;
+		var $part_of_town_id;
+		var $district_id;
+		var $total_records;
 
 		var $public_functions = array
 		(
 			'read'			=> true,
 			'read_single'		=> true,
 			'save'			=> true,
-			'delete'		=> true,
-			'check_perms'		=> true
 		);
 
 		var $soap_functions = array(
@@ -81,8 +84,7 @@
 			$this->historylog			= & $this->so->historylog;
 			$this->config				= CreateObject('phpgwapi.config','property');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.ticket';
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$this->cats->supress_info	= true;
 			$this->acl_location			= $this->so->acl_location;
 
@@ -106,6 +108,8 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$start_date				= phpgw::get_var('start_date', 'string');
 			$end_date				= phpgw::get_var('end_date', 'string');
+			$location_code			= phpgw::get_var('location_code');
+			
 
 			$this->start			= $start 							? $start 			: 0;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
@@ -119,6 +123,9 @@
 			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
 			$this->start_date		= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
 			$this->end_date			= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
+			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
+
+			$this->p_num			= phpgw::get_var('p_num');
 		}
 
 
@@ -145,6 +152,28 @@
 			$this->allrows		= isset($data['allrows'])?$data['allrows']:'';
 			$this->start_date	= isset($data['start_date'])?$data['start_date']:'';
 			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
+		}
+
+		function column_list($selected = array(),$type_id='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : '';
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = array();
+			$columns[] = array
+			(
+				'id' => 'billable_hours',
+				'name'=> lang('billable hours')
+			);
+			$columns[] = array
+			(
+				'id' => 'district',
+				'name'=> lang('district')
+			);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
 		}
 
 		function filter($data=0)
@@ -191,7 +220,7 @@
 			if(!$leave_out_open)
 			{
 				$status[$i]['id']='O';
-				$status[$i]['name']=lang('Open');
+				$status[$i]['name']= isset($this->config->config_data['tts_lang_open']) && $this->config->config_data['tts_lang_open'] ? $this->config->config_data['tts_lang_open'] : lang('Open');
 				$i++;
 			}
 
@@ -224,7 +253,8 @@
 				'H' => lang('Billing hours'),
 				'F' => lang('finnish date'),
 				'SC' => lang('Status changed'),
-				'M' => lang('Sendt by email to')
+				'M' => lang('Sendt by email to'),
+				'AC'=> lang('actual cost changed'),
 			);
 
 			$custom_status	= $this->so->get_custom_status();
@@ -277,8 +307,9 @@
 
 		function read($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
 		{
-			$category_name = array();
-			$account = array();
+			static $category_name = array();
+			static $account = array();
+			static $vendor_cache = array();
 			
 			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
@@ -287,12 +318,16 @@
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 											'start_date'=>$start_date,'end_date'=>$end_date,
-											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run));
+											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
+											'location_code' => $this->location_code, 'p_num' => $this->p_num));
 			$this->total_records = $this->so->total_records;
 			if(!$external)
 			{
 				$entity	= $this->get_origin_entity_type();
-//				$this->uicols_related = $this->so->uicols_related;
+				$contacts	= CreateObject('property.soactor');
+				$contacts->role='vendor';
+				$custom 		= createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 			else
 			{
@@ -302,18 +337,17 @@
 
 			foreach ($tickets as & $ticket)
 			{
-				if(!$ticket['subject'])
-				{
 					if(!isset($category_name[$ticket['cat_id']]))
 					{
-						$ticket['subject']= $this->get_category_name($ticket['cat_id']);
-						$category_name[$ticket['cat_id']] = $ticket['subject'];
+					$category_name[$ticket['cat_id']] = $this->get_category_name($ticket['cat_id']);
 					}
-					else
+
+				$ticket['category']	= $category_name[$ticket['cat_id']];
+
+				if(!$ticket['subject'])
 					{
 						$ticket['subject'] = $category_name[$ticket['cat_id']];
 					}
-				}
 
 				if(!isset($account[$ticket['user_id']]))
 				{
@@ -377,6 +411,29 @@
 						if($ticket['child_date'][$j]['date_info'] && !$download)
 						{
 							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
+						}
+					}
+				}
+				if( $ticket['vendor_id'])
+				{
+					if(isset($vendor_cache[$ticket['vendor_id']]))
+					{
+						$ticket['vendor'] = $vendor_cache[$ticket['vendor_id']];
+					}
+					else
+					{
+						$vendor_data	= $contacts->read_single($ticket['vendor_id'],$vendor_data);
+						if($vendor_data)
+						{
+							foreach($vendor_data['attributes'] as $attribute)
+							{
+								if($attribute['name']=='org_name')
+								{
+									$vendor_cache[$ticket['vendor_id']]=$attribute['value'];
+									$ticket['vendor'] = $attribute['value'];
+									break;
+								}
+							}
 						}
 					}
 				}
@@ -490,15 +547,18 @@
 		{
 			$additional_notes = array();
 			$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
+
 			$i=2;
-			while (is_array($history_array) && list(,$value) = each($history_array))
+			foreach ($history_array as $value)
 			{
 				$additional_notes[] = array
 				(
+					'value_id'		=> $value['id'],
 					'value_count'	=> $i,
 					'value_date'	=> $GLOBALS['phpgw']->common->show_date($value['datetime']),
 					'value_user'	=> $value['owner'],
 					'value_note'	=> stripslashes($value['new_value']),
+					'value_publish'	=> $value['publish'],
 					);
 				$i++;
 			}
@@ -537,6 +597,7 @@
 						case 'F': $type = lang('finnish date changed'); break;
 						case 'IF': $type = lang('Initial finnish date'); break;
 						case 'L': $type = lang('Location changed'); break;
+						case 'AC': $type = lang('actual cost changed'); break;
 						case 'M':
 							$type = lang('Sendt by email to');
 							$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
@@ -621,14 +682,16 @@
 
 			$ticket['finnish_date']	= $this->bocommon->date_to_timestamp($ticket['finnish_date']);
 
-
 			$receipt = $this->so->add($ticket);
 
 			$this->config->read();
 
-			if (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'] && isset($ticket['send_mail']) && $ticket['send_mail'])
+			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
+				|| (isset($this->config->config_data['mailnotification'])
+					&& $this->config->config_data['mailnotification'])
+				)
 			{
-				$receipt_mail = $this->mail_ticket($receipt['id'],$fields_updated,$receipt,$ticket['location_code']);
+				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);
 			}
 
 			$criteria = array
@@ -702,11 +765,9 @@
 			return $address_element;
 		}
 		
-		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='')
+		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
 		{
 			$this->send			= CreateObject('phpgwapi.send');
-
-			$members = array();
 
 			$ticket	= $this->so->read_single($id);
 
@@ -725,43 +786,23 @@
 			$m=count($history_2)-1;
 			$ticket['status']=$history_2[$m]['status'];
 
-		//	$status = $this->get_status_text();
-
 			$group_name= $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 
 			// build subject
 			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $location_code .' ' .$this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
 
-
-		//	$prefs_user = $GLOBALS['phpgw']->preferences->create_email_preferences($ticket['user_id']);
 			$prefs_user = $this->bocommon->create_preferences('property',$ticket['user_id']);
 
 			$from_address=$prefs_user['email'];
 
 	//-----------from--------
 
-			$current_user_id=$GLOBALS['phpgw_info']['user']['account_id'];
-
-			$current_user_firstname	= $GLOBALS['phpgw_info']['user']['firstname'];
-
-			$current_user_lastname	=$GLOBALS['phpgw_info']['user']['lastname'];
-
-			$current_user_name= $user_firstname . " " .$user_lastname ;
-
-//			$current_prefs_user = $GLOBALS['phpgw']->preferences->create_email_preferences($current_user_id);
-			$current_prefs_user = $this->bocommon->create_preferences('property',$current_user_id);
-			$current_user_address=$current_prefs_user['email'];
-
-			$headers = "Return-Path: <". $current_user_address .">\r\n";
-			$headers .= "From: " . $current_user_name . "<" . $current_user_address .">\r\n";
-			$headers .= "Bcc: " . $current_user_name . "<" . $current_user_address .">\r\n";
-			$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-			$headers .= "MIME-Version: 1.0\r\n";
+			$current_prefs_user = $this->bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
+			$current_user_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 
 	//-----------from--------
 		// build body
 			$body  = '';
-	//		$body .= lang('Ticket').' #'.$id."\n";
 			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
 			$body .= lang('Date Opened').': '.$entry_date."\n";
 			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
@@ -805,7 +846,8 @@
 				$i=1;
 
 				$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
-				while (is_array($history_array) && list(,$value) = each($history_array))
+
+				foreach($history_array as $value)
 				{
 					$body .= lang('Date') . ': '.$GLOBALS['phpgw']->common->show_date($value['datetime'])."\n";
 					$body .= lang('User') . ': '.$value['owner']."\n";
@@ -814,7 +856,6 @@
 				}
 				$subject.= "-" .$i;
 			}
-
 			/**************************************************************\
 			* Display record history                                       *
 			\**************************************************************/
@@ -824,69 +865,106 @@
 				$body .= lang('Date Closed').': '.$timestampclosed."\n\n";
 			}
 
-			if ($this->config->config_data['groupnotification'] && $ticket['group_id'])
+
+			if($get_message)
 			{
-				// select group recipients
-				$members  = $this->bocommon->active_group_members($ticket['group_id']);
+				return array('subject' => $subject, 'body' => $body);
 			}
 
-			if ($this->config->config_data['ownernotification'] && $ticket['user_id'])
+			$members = array();
+
+			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
+			{
+				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
+				foreach($members_gross as $user)
+				{
+					$members[$user['account_id']] = $user['account_name'];
+				}
+				unset($members_gross);
+			}
+
+			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
+			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
+					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1 
+				//	&& $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] != 2
+					)
+				)
+				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
 			{
 				// add owner to recipients
-				$members[] = array('account_id' => $ticket['user_id'], 'account_name' => $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']));
+				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			}
 
-			if ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
+					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1
+			//		&& $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] != 2
+					)
+				)
+					|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+				)
 			{
 				// add assigned to recipients
-				$members[] = array('account_id' => $ticket['assignedto'], 'account_name' => $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']));
+				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
 			}
 
-			$error = Array();
-			$toarray = Array();
-			$i=0;
-			for ($i=0;$i<count($members);$i++)
+			$error = array();
+			$toarray = array();
+
+			$validator = CreateObject('phpgwapi.EmailAddressValidator');
+
+			foreach($members as $account_id => $account_name)
 			{
-				if ($members[$i]['account_id'])
+				$prefs = $this->bocommon->create_preferences('property',$account_id);
+				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1)
+			{
+					if ($validator->check_email_address($prefs['email']))
 				{
-			//		$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences($members[$i]['account_id']);
-					$prefs = $this->bocommon->create_preferences('property',$members[$i]['account_id']);
-					if (strlen($prefs['email'])> (strlen($members[$i]['account_name'])+1))
+			            // Email address is technically valid
+						// avoid problems with the delimiter in the send class
+			            if(strpos($account_name,','))
 					{
-						$toarray[$prefs['email']] = $prefs['email'];
+			            	$_account_name = explode(',', $account_name);
+			            	$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
+			            }
+			            
+						$toarray[] = "{$account_name}<{$prefs['email']}>";
 					}
 					else
 					{
 						$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
-						$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $members[$i]['account_name']);
+						$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $account_name);
 					}
 				}
 			}
 
-			if(count($toarray) > 1)
+			if($toarray)
 			{
-				$to = implode(',',$toarray);
-			}
-			else
-			{
-				$to = current($toarray);
-			}
+				$to = implode(';',$toarray);
+				$body = nl2br($body);
 
-			$body = str_replace("\n" ,"</br>",$body);
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
-				$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$current_user_name,'html');
+					try
+					{
+						$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$GLOBALS['phpgw_info']['user']['fullname'],'html');
+					}
+					catch (phpmailerException $e)
+					{
+						$receipt['error'][] = array('msg' => $e->getMessage());
+					}
 			}
 			else
 			{
 				$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
+			}
 			}
 
 			if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
 			{
 				$receipt['error'][] = array('msg'=> lang('Your message could not be sent by mail!'));
 				$receipt['error'][] = array('msg'=> lang('The mail server returned'));
-				$receipt['error'][] = array('msg'=> 'From :' . $current_user_name . '<' . $current_user_address .'>');
+				$receipt['error'][] = array('msg'=> "From : {$current_user_address}");
 				$receipt['error'][] = array('msg'=> 'to: '.$to);
 				$receipt['error'][] = array('msg'=> 'subject: '.$subject);
 				$receipt['error'][] = array('msg'=> $body );
@@ -904,7 +982,7 @@
 
 		function delete($id)
 		{
-			$this->so->delete($id);
+			return $this->so->delete($id);
 		}
 
 		/**

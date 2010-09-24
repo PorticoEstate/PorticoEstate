@@ -55,7 +55,9 @@
 				'loc_link' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_project' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_ticket' => array('type' => 'int','precision' => '2','nullable' => True),
-				'jasperupload' => array('type' => 'int','precision' => 2,'nullable' => True)
+				'jasperupload' => array('type' => 'int','precision' => 2,'nullable' => True),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'level' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('entity_id','id'),
 			'fk' => array(),

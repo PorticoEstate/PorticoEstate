@@ -265,3 +265,23 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.507 to 0.9.17.508
+	* Add optional hierarchy on entities
+	* 
+	*/
+
+	$test[] = '0.9.17.507';
+	function catch_upgrade0_9_17_507()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','parent_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','level', array('type' => 'int','precision' => '4','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.508';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}

@@ -2,12 +2,9 @@
 
 	class sms_sms extends sms_sms_
 	{	
-		function sms_sms()
+		function __construct()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
-			$this->sms_sms_();		
-		//	$this->gnokii_param[name]= $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module'];
+			parent::__construct();
 			$this->gnokii_param['path']= $GLOBALS['phpgw_info']['sms_config']['gnokii']['gnokii_cfg'];
 		}
 

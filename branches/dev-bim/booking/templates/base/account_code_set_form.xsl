@@ -34,14 +34,30 @@
 			<div class="clr"/>
 			
 			<dl class="form-col">
-				<dt><label for="field_object_number"><xsl:value-of select="php:function('lang', 'Object No.')" /></label></dt>
+				<xsl:if test="config_data/dim_3">
+					<dt><label for="field_object_number"><xsl:value-of select="config_data/dim_3" /></label></dt>
 				<dd><input name="object_number" type="text" id="field_object_number" value="{account_code_set/object_number}" maxlength='8'/></dd>
+				</xsl:if>
 
-				<dt><label for="field_article"><xsl:value-of select="php:function('lang', 'Article')" /></label></dt>
+				<xsl:if test="config_data/article">
+					<dt><label for="field_article"><xsl:value-of select="config_data/article" /></label></dt>
 				<dd><input name="article" type="text" id="field_article" value="{account_code_set/article}" maxlength='15'/></dd>
+				</xsl:if>
 
-				<dt><label for="field_unit_number"><xsl:value-of select="php:function('lang', 'Unit No.')" /></label></dt>
+				<xsl:if test="config_data/dim_value_1">
+					<dt><label for="field_unit_number"><xsl:value-of select="config_data/dim_value_1" /></label></dt>
 				<dd><input name="unit_number" type="text" id="field_unit_number" value="{account_code_set/unit_number}" maxlength='12'/></dd>
+				</xsl:if>
+
+				<xsl:if test="config_data/dim_value_4">
+					<dt><label for="field_dim_value_4"><xsl:value-of select="config_data/dim_value_4" /></label></dt>
+					<dd><input name="dim_value_4" type="text" id="field_dim_value_4" value="{account_code_set/dim_value_4}" maxlength='12'/></dd>
+				</xsl:if>
+
+				<xsl:if test="config_data/dim_value_5">
+					<dt><label for="field_dim_value_5"><xsl:value-of select="config_data/dim_value_5" /></label></dt>
+					<dd><input name="dim_value_5" type="text" id="field_dim_value_5" value="{account_code_set/dim_value_5}" maxlength='12'/></dd>
+				</xsl:if>
 
 				<dt><label for="field_unit_prefix"><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></label></dt>
 				<dd><input name="unit_prefix" type="text" id="field_unit_prefix" value="{account_code_set/unit_prefix}" maxlength='1'/></dd>
@@ -70,14 +86,25 @@
 					</select>
 				</dd>
 
-				<dt><label for="field_responsible_code"><xsl:value-of select="php:function('lang', 'Responsible Code')" /></label></dt>
+				<xsl:if test="config_data/dim_1">
+					<dt><label for="field_responsible_code"><xsl:value-of select="config_data/dim_1" /></label></dt>
 				<dd><input name="responsible_code" type="text" id="field_responsible_code" value="{account_code_set/responsible_code}" maxlength='6'/></dd>
+				</xsl:if>
 
-				<dt><label for="field_service"><xsl:value-of select="php:function('lang', 'Service')" /></label></dt>
+				<xsl:if test="config_data/dim_2">
+					<dt><label for="field_service"><xsl:value-of select="config_data/dim_2" /></label></dt>
 				<dd><input name="service" type="text" id="field_service" value="{account_code_set/service}" maxlength='8'/></dd>
+				</xsl:if>
 
-				<dt><label for="field_project_number"><xsl:value-of select="php:function('lang', 'Project No.')" /></label></dt>
+				<xsl:if test="config_data/dim_4">
+					<dt><label for="field_dim_4"><xsl:value-of select="config_data/dim_4" /></label></dt>
+					<dd><input name="dim_4" type="text" id="field_dim_4" value="{account_code_set/dim_4}" maxlength='8'/></dd>
+				</xsl:if>
+
+				<xsl:if test="config_data/dim_5">
+					<dt><label for="field_project_number"><xsl:value-of select="config_data/dim_5" /></label></dt>
 				<dd><input name="project_number" type="text" id="field_project_number" value="{account_code_set/project_number}" maxlength='12'/></dd>	
+				</xsl:if>
 			</dl>
 
 			<div class="clr"/>

@@ -46,9 +46,6 @@
 							<xsl:attribute name="title">
 									<xsl:value-of select="//lang_file_action_statustext"/>
 							</xsl:attribute>
-							<xsl:attribute name="style">
-								<xsl:text>cursor:help</xsl:text>
-							</xsl:attribute>
 						</input>
 					</td>
 					</tr>
@@ -105,7 +102,7 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template name="file_upload">
+	<xsl:template name="file_upload" xmlns:php="http://php.net/xsl">
 		<tr>
 			<td valign="top">
 				<xsl:value-of select="lang_upload_file"/>
@@ -118,6 +115,22 @@
 				</input>
 			</td>
 		</tr>
+		<xsl:choose>
+			<xsl:when test="multiple_uploader!=''">
+				<tr>
+					<td>
+						<a href="{fileuploader_action}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'upload multiple files')" />
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'upload multiple files')" />
+						</a>
+					</td>
+					<td>
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="jasper_upload" xmlns:php="http://php.net/xsl">

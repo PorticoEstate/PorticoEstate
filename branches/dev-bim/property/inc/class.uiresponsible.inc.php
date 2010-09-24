@@ -203,6 +203,10 @@
 				$values_combo_box[0]  = $this->bolocation->select_location('filter', $this->location);
 				$default_value = array ('id'=>'','descr'=>lang('No location'));
 				array_unshift ($values_combo_box[0],$default_value);
+				foreach($values_combo_box[0] as &$_location)
+				{
+					$_location['name'] = $_location['descr'];
+				}
 
 				$datatable['actions']['form'] = array(
 					array(
@@ -217,11 +221,13 @@
 						'fields'	=> array(
                                     	'field' => array(
 			                                        array(
-			                                        	'type' => 'button',
-			                                            'id' => 'btn_location',
+			                                        	'type' => 'select',
+			                                            'id' => 'sel_location',
 			                                            'name' => 'location',
-			                                            'value'	=> lang('No location'),			                                            
+			                                            'value'	=> lang('location'),			                                            
 			                                            'style' => 'filter',
+			                                            'values' => $values_combo_box[0],
+														'onchange'=> 'onChangeSelect();',
 			                                            'tab_index' => 1
 			                                        ),					                                        	                                        
 													array(
@@ -477,8 +483,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -524,8 +528,13 @@
 				}
 				$json ['message']			= $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT

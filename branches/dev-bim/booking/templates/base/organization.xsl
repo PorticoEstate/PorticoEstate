@@ -15,6 +15,9 @@
             </li>
         </ul>
         <dl class="proplist-col">
+            <dt><xsl:value-of select="php:function('lang', 'Organization shortname')" /></dt>
+            <dd><xsl:value-of select="organization/shortname" /></dd>
+
             <dt><xsl:value-of select="php:function('lang', 'Organization number')" /></dt>
             <dd><xsl:value-of select="organization/organization_number" /></dd>
 
@@ -26,7 +29,9 @@
 
             <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
             <dd>
-				<a target="blank" href="http://{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
+				<xsl:if test="organization/homepage and normalize-space(organization/homepage)">
+					<a target="blank" href="{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
+				</xsl:if>
 			</dd>
 
             <dt><xsl:value-of select="php:function('lang', 'Email')" /></dt>

@@ -69,6 +69,7 @@
 	}
 	elseif (!$GLOBALS['phpgw_setup']->auth('Config'))
 	{
+		$_POST['ConfigLang'] = isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : '';
 		$GLOBALS['phpgw_setup']->html->show_header(lang('Please login'),True);
 		$GLOBALS['phpgw_setup']->html->login_form();
 		$GLOBALS['phpgw_setup']->html->show_footer();
@@ -336,11 +337,11 @@
 			);
 			$GLOBALS['phpgw_setup']->db->query("select config_value FROM phpgw_config WHERE config_name='auth_type'");
 			$GLOBALS['phpgw_setup']->db->next_record();
-			if ($GLOBALS['phpgw_setup']->db->f(0) == 'ldap')
+			if ($GLOBALS['phpgw_setup']->db->f('config_value') == 'ldap')
 			{
 				$GLOBALS['phpgw_setup']->db->query("select config_value FROM phpgw_config WHERE config_name='ldap_host'");
 				$GLOBALS['phpgw_setup']->db->next_record();
-				if ($GLOBALS['phpgw_setup']->db->f(0) != '')
+				if ($GLOBALS['phpgw_setup']->db->f('config_value') != '')
 				{
 					$btn_config_ldap = $GLOBALS['phpgw_setup']->html->make_frm_btn_simple(
 						lang('LDAP account import/export'),
@@ -355,7 +356,7 @@
 				}
 				$GLOBALS['phpgw_setup']->db->query("select config_value FROM phpgw_config WHERE config_name='webserver_url'");
 				$GLOBALS['phpgw_setup']->db->next_record();
-				if ($GLOBALS['phpgw_setup']->db->f(0))
+				if ($GLOBALS['phpgw_setup']->db->f('config_value'))
 				{
 					/* NOTE: we assume here ldap doesn't delete accounts */
 					$link_make_accts = $GLOBALS['phpgw_setup']->html->make_href_link_simple(
@@ -376,13 +377,13 @@
 				/* detect whether anything will be deleted before alerting */
 				$phpgw_setup->db->query("SELECT config_value FROM phpgw_config WHERE config_name = 'account_repository'");
 				$phpgw_setup->db->next_record();
-				$account_repository = $phpgw_setup->db->f(0);
+				$account_repository = $phpgw_setup->db->f('config_value');
 				$account_creation_notice = lang('and optional demo accounts.');
 				if ($account_repository == 'sql')
 				{
-					$phpgw_setup->db->query("select count(*) from phpgw_accounts");
+					$phpgw_setup->db->query("select count(*) as cnt from phpgw_accounts");
 					$phpgw_setup->db->next_record();
-					$number_of_accounts = (int) $phpgw_setup->db->f(0);
+					$number_of_accounts = (int) $phpgw_setup->db->f('cnt');
 					if ($number_of_accounts>0)
 					{
 						$account_creation_notice .= lang('<br /><b>This will delete all existing accounts.</b>');

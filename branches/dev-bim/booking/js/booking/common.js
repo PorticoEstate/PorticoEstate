@@ -455,7 +455,8 @@ YAHOO.booking.setupDatePickerHelper = function(field, args) {
 	};
 
 	oButton.on("click", function () {
-		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), this._calendarMenu.body.id, {START_WEEKDAY: 1});
+		YAHOO.widget.DateMath.WEEK_ONE_JAN_DATE = 4;
+		var oCalendar = new YAHOO.widget.Calendar(Dom.generateId(), this._calendarMenu.body.id, {START_WEEKDAY: 1,SHOW_WEEK_HEADER:true});
 		oCalendar._button = this;
 		if(this._date.getFullYear() == 1901) {
 			var d = new Date();

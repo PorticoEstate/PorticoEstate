@@ -436,11 +436,11 @@
 				foreach ($users_gross as $entry => $user)
 				{
 
-					if( !array_search($user['account_id'], $accounts ) )
+					if( !isset($accounts[$user['account_id']]) )
 					{
 						$users[] = $user;
 					}
-					$accounts[] = $user['account_id'];
+					$accounts[$user['account_id']] = true;
 				}
 				unset($users_gross);
 				unset($accounts);
@@ -537,6 +537,8 @@
 				$users=$users_extra;
 			}
 
+			$user_list = array();
+
 			while (is_array($users) && list(,$user) = each($users))
 			{
 				$name = (isset($user['account_lastname'])?$user['account_lastname'].' ':'').$user['account_firstname'];
@@ -561,11 +563,8 @@
 				}
 			}
 
-			if(isset($user_list) && is_array($user_list))
-			{
 				return $user_list;
 			}
-		}
 
 		function initiate_ui_vendorlookup($data)
 		{
@@ -609,7 +608,6 @@
 			$vendor['lang_vendor']			= lang('Vendor');
 			$vendor['lang_select_vendor_help']	= lang('click this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
-
 //_debug_array($vendor);
 			return $vendor;
 		}
@@ -708,6 +706,14 @@
 			return $tenant;
 		}
 
+		/**
+		* initiate design element for lookup to budget account/group
+		*
+		* @param array $data
+		*
+		* @return array with information to include in forms
+		*/
+
 		function initiate_ui_budget_account_lookup($data)
 		{
 			if( isset($data['type']) && $data['type']=='view')
@@ -721,17 +727,31 @@
 
 			$b_account['value_b_account_id']		= $data['b_account_id'];
 			$b_account['value_b_account_name']		= $data['b_account_name'];
-			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.b_account'));
+			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array
+														(
+															'menuaction'=> 'property.uilookup.b_account',
+															'role'		=> isset($data['role']) && $data['role'] ? $data['role'] : '',
+															'parent'	=> isset($data['parent']) && $data['parent'] ? $data['parent'] : '',
+															 ));
 			$b_account['lang_select_b_account_help']	= lang('click this link to select budget account');
-			$b_account['lang_b_account']			= lang('Budget account');
+			$b_account['lang_b_account']			= isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
 			{
+				if(isset($data['role']) && $data['role'] == 'group')
+				{
+					$b_account_object	= CreateObject('property.socategory');
+					$b_account_object->get_location_info('b_account',false);
+					$b_account_data		= $b_account_object->read_single(array('id'=> $data['b_account_id']));
+				}
+				else
+				{
 				$b_account_object	= CreateObject('property.sob_account');
 				$b_account_data	= $b_account_object->read_single($data['b_account_id']);
+				}
 				$b_account['value_b_account_name']	= $b_account_data['descr'];
 			}
+
 			$b_account['disabled']				= isset($data['disabled']) && $data['disabled'] ? true : false;
-//_debug_array($b_account);
 			return $b_account;
 		}
 
@@ -888,6 +908,13 @@
 				'item_id'		=> isset($event['item_id']) ? $event['item_id'] : '',
 				'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
 			);
+
+			$event['event_link'] = "{menuaction:'property.uievent.edit',"
+									."location:'{$data['location']}',"
+									."attrib_id:'{$event['name']}'";
+			$event['event_link'] .=	isset($event['item_id']) ? ",item_id:{$event['item_id']}" : '';		
+			$event['event_link'] .=	isset($event['value']) ? ",id:{$event['value']}" : '';		
+			$event['event_link'] .= '}';
 
 			$event['function_name']	= 'lookup_'. $event['name'] .'()';
 
@@ -1245,6 +1272,7 @@
 			$lookup 			= (isset($data['lookup'])?$data['lookup']:'');
 			$location_level 	= (isset($data['location_level'])?$data['location_level']:'');
 			$no_address 		= (isset($data['no_address'])?$data['no_address']:'');
+			$uicol_address		= (isset($data['uicol_address'])?$data['uicol_address']:'');
 			$force_location		= (isset($data['force_location'])?$data['force_location']:'');
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
@@ -1344,6 +1372,17 @@
 			{
 				$cols.= ",$entity_table.address";
 				$cols_return[] 				= 'address';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'address';
+				$uicols['descr'][]			= lang('address');
+				$uicols['statustext'][]		= lang('address');
+				$uicols['exchange'][]		= false;
+				$uicols['align'][] 			= '';
+				$uicols['datatype'][]		= '';
+			}
+
+			if($uicol_address)
+			{
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'address';
 				$uicols['descr'][]			= lang('address');
@@ -1504,9 +1543,7 @@
 
 			$socategory = CreateObject('property.socategory');
 
-			$categories= $socategory->select_category_list(array('type'=>$data['type'],
-										'type_id'=>(isset($data['type_id'])?$data['type_id']:''),
-										'order'	=>$data['order']));
+			$categories= $socategory->get_list($data);
 
 			return $this->select_list($data['selected'],$categories);
 		}
@@ -1614,8 +1651,9 @@
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
-		function download($list,$name,$descr,$input_type='')
+		function download($list,$name,$descr,$input_type=array())
 		{
+			set_time_limit(500);
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -1644,7 +1682,7 @@
 		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
 		* @param array $input_type array containing information whether fields are to be suppressed from the output
 		*/
-		function excel_out($list,$name,$descr,$input_type='')
+		function excel_out($list,$name,$descr,$input_type=array())
 		{
  			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
 
@@ -1659,7 +1697,7 @@
 			$m=0;
 			for ($k=0;$k<$count_uicols_name;$k++)
 			{
-				if($input_type[$k]!='hidden')
+				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
 					$worksheet1->write_string(0, $m, $this->utf2ascii($descr[$k]));
 					$m++;
@@ -1674,7 +1712,7 @@
 					$m=0;
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($input_type[$k]!='hidden')
+						if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 						{
 							$content[$j][$m]	= str_replace("\r\n"," ",$entry[$name[$k]]);
 							$m++;
@@ -1722,11 +1760,10 @@
 			$header = array();
 			for ( $i = 0; $i < $count_uicols_name; ++$i )
 			{
-				if ( $input_type[$i] == 'hidden' )
+				if ( !isset($input_type[$i]) || $input_type[$i] != 'hidden' )
 				{
-					continue;
-				}
 				$header[] = $this->utf2ascii($descr[$i]);
+			}
 			}
 			fputcsv($fp, $header);
 			unset($header);
@@ -1738,11 +1775,10 @@
 					$row = array();
 					for ( $i = 0; $i < $count_uicols_name; ++$i )
 					{
-						if ( $input_type[$i] == 'hidden' )
+						if ( !isset($input_type[$i]) || $input_type[$i] != 'hidden' )
 						{
-							continue;
-						}
 						$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
+					}
 					}
 					fputcsv($fp, $row);
 				}
@@ -1771,7 +1807,7 @@
 			$m=0;
 			for ($k=0;$k<$count_uicols_name;$k++)
 			{
-				if($input_type[$k]!='hidden')
+				if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 				{
 					$object->addCell(1, 0, $m, $descr[$k], 'string');
 					$m++;
@@ -1786,7 +1822,7 @@
 					$m=0;
 					for ($k=0;$k<$count_uicols_name;$k++)
 					{
-						if($input_type[$k]!='hidden')
+						if(!isset($input_type[$k]) || $input_type[$k]!='hidden')
 						{
 							$content[$j][$m]	= str_replace(array('&'), array('og'), $entry[$name[$k]]);//str_replace("\r\n"," ",$entry[$name[$k]]);
 							$m++;
@@ -1857,11 +1893,6 @@
 		function get_max_location_level()
 		{
 			return $this->socommon->get_max_location_level();
-		}
-
-		function active_group_members($group_id)
-		{
-			return $this->socommon->active_group_members($group_id);
 		}
 
 		/**
@@ -2012,6 +2043,7 @@
 			{
 				$values['location_name']	= phpgw::get_var('loc' . (count($values['location'])).'_name', 'string', 'POST'); // if not address - get the parent name as address
 			}
+
 			return $values;
 		}
 
@@ -2097,7 +2129,6 @@
 		}
 
 
-
 		public function select2String($array_values, $id = 'id', $name = 'name',$name2 = '' )
         {
              $str_array_values = "";
@@ -2124,6 +2155,7 @@
                  }
                 }
              }
+
              return $str_array_values;
         }
         

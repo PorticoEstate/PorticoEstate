@@ -285,12 +285,15 @@ strong
 	background-color: #FFA500;
 	border: 1px solid #f00;
 	color: #f00;
+	text-align: center;
 }
 
 .msg_good
 {
 	background-color:  #99FF66;
 	border: 1px solid #00CC00;
+	font-weight: bold;
+	text-align: center;
 }
 
 .warn

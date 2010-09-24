@@ -47,14 +47,11 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
 				$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
 				$query		= isset($data['query'])?$data['query']:'';
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order		= isset($data['order'])?$data['order']:'';
 				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-			}
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -67,6 +64,7 @@
 			$uicols['name'][]			= $this->location_info['id']['name'];
 			$uicols['descr'][]			= lang('id');
 			$uicols['datatype'][]		= $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
+			$uicols['sortable'][]		= true;
 
 			foreach($this->location_info['fields'] as $field)
 			{
@@ -74,6 +72,7 @@
 				$uicols['name'][]			= $field['name'];
 				$uicols['descr'][]			= $field['descr'];
 				$uicols['datatype'][]		= 'V';
+				$uicols['sortable'][]		= isset($field['sortable']) && $field['sortable'] ? true : false;
 			}
 
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
@@ -104,7 +103,13 @@
 					$i++;
 				}
 			}
-
+			$where = 'WHERE';
+			$filtermethod = '';
+			if(isset($this->location_info['check_grant']) && $this->location_info['check_grant'])
+			{
+				$filtermethod = "{$where} user_id = {$this->account} OR public = 1";
+				$where = 'AND';
+			}
 			$this->uicols = $uicols;
 
 			if ($order)
@@ -128,7 +133,7 @@
 				}
 
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " WHERE {$table}.{$this->location_info['id']['name']} = {$id_query}";
+				$querymethod = " {$where } {$table}.{$this->location_info['id']['name']} = {$id_query}";
 				foreach($this->location_info['fields'] as $field)
 				{
 					if($field['type'] == 'varchar')
@@ -138,7 +143,7 @@
 				}
 			}
 
-			$sql = "SELECT * FROM $table $querymethod";
+			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -339,7 +344,7 @@
 						$info = array
 						(
 							'table' => "fm_location{$type_id}_category",
-							'id'				=> array('name' => 'id', 'type' => 'int'),
+							'id'				=> array('name' => 'id', 'type' => 'varchar'),
 							'fields'			=> array
 							(
 								array
@@ -777,6 +782,34 @@
 					);
 					break;
 //-------- ID type auto
+				case 'order_dim1':
+					$info = array
+					(
+						'table' 			=> 'fm_order_dim1',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'num',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('order_dim1'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::order_dim1'
+					);
+					break;
 				case 'branch':
 					$info = array
 					(
@@ -932,6 +965,13 @@
 							),
 							array
 							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
 								'name' => 'color',
 								'descr' => lang('color'),
 								'type' => 'varchar'
@@ -997,6 +1037,49 @@
 
 					break;
 
+				case 'order_template':
+
+					$info = array
+					(
+						'table' 			=> 'fm_order_template',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('order template'),
+						'acl_location' 		=> '.ticket.order',
+						'menu_selection'	=> 'property::helpdesk::order_template',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> true
+					);
+
+					break;
+
 				default:
 					$receipt = array();
 					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
@@ -1050,7 +1133,13 @@
 		}
 
 
+		//deprecated
 		function select_category_list($data)
+		{
+			return $this->get_entity_list($data);
+		}
+
+		function get_list($data)
 		{
 			$values = array();
 
@@ -1060,21 +1149,47 @@
 			{
 				return $values;
 			}
+
 			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
 
-			$this->_db->query("SELECT id, descr FROM $table ORDER BY $order");
+			foreach ($this->location_info['fields'] as $field)
+			{
+				$fields[] = $field['name'];
+			}
+
+			// Add extra info to name
+			if(isset($data['id_in_name']) && $data['id_in_name'])
+			{
+				$id_in_name = 'id';	
+				if (in_array($data['id_in_name'], $fields))
+				{
+					$id_in_name = $data['id_in_name'];
+				}
+			}
+
+			$fields = implode(',', $fields);
+
+			$this->_db->query("SELECT id, {$fields} FROM {$table} ORDER BY {$order}");
 
 			while ($this->_db->next_record())
 			{
+				$_extra = $this->_db->f($id_in_name);
+				$id		= $this->_db->f('id');
+				$name	= $this->_db->f('descr', true);
+				
+				if($_extra)
+				{
+					$name = "{$_extra} - {$name}";
+				}
+
 				$values[] = array
 				(
-					'id'	=> $this->_db->f('id'),
-					'name'	=> $this->_db->f('descr', true)
+					'id'	=> $id,
+					'name'	=> $name
 				);
 			}
 			return $values;
 		}
-
 
 		function add($data,$values_attribute)
 		{

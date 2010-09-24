@@ -264,11 +264,11 @@
 				$additon = " and type='accounting'";
 			}
 
-			$this->db->query("select count(*) from $p_table where $column" . $additon,__LINE__,__FILE__);
+			$this->db->query("select count(*) as cnt from $p_table where $column" . $additon,__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if ($this->db->f(0))
+			if ($this->db->f('cnt'))
 			{
 				return True;
 			}
@@ -733,7 +733,7 @@
 			$this->db->query('SELECT event_extra from phpgw_p_events where event_name=' . "'" . $event_name . "'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			return $this->db->f(0);
+			return $this->db->f('event_extra');
 		}
 
 		function list_surcharges( $charge_id = 0 )

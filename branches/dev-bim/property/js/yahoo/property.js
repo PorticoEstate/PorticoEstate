@@ -9,7 +9,7 @@
 	var showTimer,hideTimer;
 	var tt = new YAHOO.widget.Tooltip("myTooltip");
 	var lightbox;
-	var maxRowsPerPage = 1000;
+	var maxRowsPerPage = 500000;
 	var myLoading;
 	var message_delete = "";
 
@@ -299,6 +299,26 @@
 		lightbox.showEvent.subscribe(onDialogShow, lightbox);
 		lightbox.show();
 	}
+
+	// Test for support in lightbox
+	this.onSupportClick = function()
+	{
+		var oArgs = {menuaction:'manual.uisupport.send'};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "300";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
+
 
  /********************************************************************************
  *
@@ -703,13 +723,15 @@
 		{
 			myLoading.show();
 		}
-		try	{
+/*		try	{
 	 		ds = phpGWLink('index.php',path_values,true);
 			}
 		catch(e)
 			{
 				alert(e);
 			}
+*/
+	 		ds = phpGWLink('index.php',path_values,true);
 
 		var callback2 =
 		{
@@ -720,6 +742,24 @@
 					myLoading.hide();
 				}
 				eval('values_ds ='+o.responseText);
+				flag_particular_setting='update';
+				particular_setting();
+				myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
+				update_datatable();
+				update_filter();
+			},
+			failure: function(o) {window.alert('Server or your connection is dead.')},
+			timeout: 10000,
+			cache: false
+		}
+
+		values_ds = json_data;
+
+		if(config_values.PanelLoading)
+		{
+			myLoading.hide();
+		}
+
 				flag_particular_setting='';
 
 				if(flag==0)
@@ -727,31 +767,19 @@
 					init_datatable();
 					init_filter();
 					flag_particular_setting='init';
+			particular_setting();
 				}
 				else
 				{
-					myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
-					update_datatable();
-					update_filter();
-					flag_particular_setting='update';
-
-				}
-				particular_setting();
-
-			},
-			failure: function(o) {window.alert('Server or your connection is dead.')},
-			timeout: 10000,
-			cache: false
-		}
 		try
 		{
-			//First call JSON (POST)
 			YAHOO.util.Connect.asyncRequest('POST',ds,callback2);
 		}
 		catch(e_async)
 		{
 		   alert(e_async.message);
 		}
+	}
 	}
 
 /********************************************************************************
@@ -773,7 +801,7 @@
 
 		myDataSource = new YAHOO.util.DataSource(ds);
 		myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-
+        myDataSource.connXhrMode = "queueRequests"; 
 		// Compute fields from column definitions
 		var fields = new Array();
 		for(var i=0; i < myColumnDefs.length;i++)
@@ -1025,7 +1053,7 @@
 		//reset total records always to zero
 		myPaginator.setTotalRecords(0,true);
 
-		//change Paginator´s configuration.
+		//change PaginatorÅ½s configuration.
 		if(path_values.allrows == 1 )
 		{
 			myPaginator.set("rowsPerPage",values_ds.totalRecords)
@@ -1057,6 +1085,7 @@
 		myPaginator.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
 
 		//update "sortedBy" values
+
 		(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
 		myDataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
 
@@ -1134,7 +1163,8 @@
 		//validate right ADD.
 		if(YAHOO.util.Dom.inDocument("btn_new-button"))
 		{
-			disabled_button_add = true;
+//			disabled_button_add = true;
+			disabled_button_add = false;
 			for(i=0;i<values_ds.rights.length;i++)
 			{
 				if(values_ds.rights[i].my_name == "add")

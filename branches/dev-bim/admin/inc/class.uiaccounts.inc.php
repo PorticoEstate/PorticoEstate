@@ -53,7 +53,10 @@
 			'edit_user'					=> true,
 			'edit_group'				=> true,
 			'view_user'					=> true,
-			'sync_accounts_contacts'	=> true
+			'sync_accounts_contacts'	=> true,
+			'clear_user_cache'			=> true,
+			'clear_cache'				=> true,
+			'global_message'			=> true
 		);
 
 		/**
@@ -121,8 +124,47 @@
 															. ': ' . lang('list groups');
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$valid_users	= array_merge($valid_users, $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$allusers = $GLOBALS['phpgw']->accounts->get_list('groups', -1,$this->sort, $this->order, $this->query);
+				foreach($allusers as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($allusers[$user->id]);
+					}
+				}
+				unset($user);
+
+				$total = count($allusers);
+				$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+				if ($this->allrows)
+				{
+					$start = 0;
+					$length = $total;
+				}
+
+				$account_info = array_slice($allusers, $start , $length, true);
+				unset($allusers);
+			}
+			else
+			{
 			$account_info = $GLOBALS['phpgw']->accounts->get_list('groups', $start, $sort,
 																	$order, $query, $total);
+			}
 
 			$total = $GLOBALS['phpgw']->accounts->total;
 
@@ -270,8 +312,54 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file('users');
 
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$_valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $_app);
+	
+						foreach($_valid_users as $_user)
+						{
+							$valid_users[] = $_user['account_id'];
+						}
+						unset($_user);
+						unset($_valid_users);
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$this->sort, $this->order, $this->query);
+				foreach($allusers as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($allusers[$user->id]);
+					}
+				}
+				unset($user);
+
+				$total = count($allusers);
+				$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+				if ($this->allrows)
+				{
+					$start = 0;
+					$length = $total;
+				}
+
+				$account_info = array_slice($allusers, $start , $length, true);
+				unset($allusers);
+			}
+			else
+			{
 			$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $total);
 			$total = $GLOBALS['phpgw']->accounts->total;
+			}
 
 			$link_data = array
 			(
@@ -481,19 +569,26 @@
 			if ( phpgw::get_var('save', 'bool', 'POST') )
 			{
 				$values			= phpgw::get_var('values', 'string', 'POST', array());
-				$account_apps	= phpgw::get_var('account_apps', 'bool', 'POST');
+				$account_apps	= phpgw::get_var('account_apps', 'string', 'POST');
 				$account_user	= phpgw::get_var('account_user', 'int', 'POST');
 
 				$values['account_user'] = array();
 				if (is_array($account_user))
 				{
+					
 					$values['account_user'] = $account_user;
 				}
 
 				$values['account_apps'] = array();
 				if ( is_array($account_apps) && count($account_apps) )
 				{
-					$values['account_apps'] = $account_apps;
+					foreach($account_apps as $app => $enabled)
+					{					
+						if(isset($enabled) && $enabled)
+						{
+							$values['account_apps'][$app] = true;
+						}
+					}
 				}
 
 				//FIXME exception/error handling needed here!
@@ -514,6 +609,7 @@
 
 			$js =& $GLOBALS['phpgw']->js;
 			$js->validate_file('base', 'groups', 'admin');
+			$js->validate_file('base', 'move', 'admin');
 
 			$accounts =& $GLOBALS['phpgw']->accounts;
 
@@ -525,18 +621,63 @@
 
 			$group_members = $accounts->member($account_id);
 
-			$account_list = $accounts->get_list('accounts');
+			//local application admin
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$_valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $_app);
+	
+						foreach($_valid_users as $_user)
+						{
+							$valid_users[] = $_user['account_id'];
+						}
+						unset($_user);
+						unset($_valid_users);
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$this->sort, $this->order, $this->query);
+				foreach($account_list as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($account_list[$user->id]);
+					}
+				}
+				unset($user);
+			}
+			else
+			{
+				$account_list = $accounts->get_list('accounts', -1, 'ASC', 'account_lastname');
+			}
 
 			$members = array();
 			$user_list = array();
 			foreach ( $account_list as $id => $user )
 			{
-				$user_list[$id] = array
+				if(isset($group_members[$id]))
+				{
+					$member_list[] = array
 				(
 					'account_id'	=> $id,
-					'account_name'	=> (string) $user,
- 					'selected'		=> (int) isset($group_members[$id])
+						'account_name'	=> $user->__toString()
 				);
+			}
+				else
+				{
+					$user_list[] = array
+					(
+						'account_id'	=> $id,
+						'account_name'	=> $user->__toString()
+					);				
+				}
 			}
 
 			//FIXME this needs to be provided by the app itself - thats why we have hooks
@@ -560,6 +701,15 @@
 			$group_apps = $this->_bo->load_apps($account_id);
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
+
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$valid_apps = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']);
+			}
+			else
+			{
+				$valid_apps = $apps;
+			}
 
 			$img_acl = $GLOBALS['phpgw']->common->image('admin', 'share', '.png', false);
 			$img_acl_grey = $GLOBALS['phpgw']->common->image('admin', 'share-grey', '.png', false);
@@ -585,6 +735,7 @@
 				'granting_group'	=> $account_id
 			));
 
+			$app_list = array();
 			foreach ( $apps as $app )
 			{
 
@@ -613,7 +764,8 @@
 						'acl_img_name'	=> $lang_acl,
 						'grant_img'		=> $grants_enabled ? $img_acl : $img_acl_grey,
 						'grant_img_name'=> $lang_grants,
-						'grant_url'		=> $grant_url
+						'grant_url'		=> $grant_url,
+						'i_am_admin'	=> in_array($app, $valid_apps)
 					);
 				}
 			}
@@ -646,16 +798,11 @@
 											'account_id' => $account_id
 										)),
 				'guser_list'		=> $user_list,
+				'member_list'		=> $member_list,
 				'img_close'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_close', '.png', false),
 				'img_save'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_save', '.png', false),
-				'lang_account_name'	=> lang('group name'),
-				'lang_acl'			=> lang('acl'),
-				'lang_application'	=> lang('application'),
 				'lang_cancel'		=> lang('cancel'),
 				'lang_close'		=> lang('close'),
-				'lang_grant'		=> lang('grant'),
-				'lang_include_user'	=> lang('members'),
-				'lang_permissions'	=> lang('applications'),
 				'lang_save'			=> lang('save'),
 				'msgbox_data'		=> $error_list,
 				'select_size'		=> 5,
@@ -710,7 +857,35 @@
 		{
 			$values							= phpgw::get_var('values', 'string', 'POST');
 			$values['account_groups']		= (array) phpgw::get_var('account_groups', 'int', 'POST');
-			$values['account_permissions']	= phpgw::get_var('account_permissions', 'bool', 'POST');
+			$account_permissions					= phpgw::get_var('account_permissions', 'int', 'POST');
+			$account_permissions_admin				= phpgw::get_var('account_permissions_admin', 'int', 'POST');
+
+			$values['account_permissions'] = array();
+			if ( is_array($account_permissions) && count($account_permissions) )
+			{
+				foreach($account_permissions as $app => $enabled)
+				{					
+					if($enabled)
+					{
+						$values['account_permissions'][$app] = true;
+					}
+				}
+			}
+			unset($account_permissions);
+
+			$values['account_permissions_admin'] = array();
+			if ( is_array($account_permissions_admin) && count($account_permissions_admin) )
+			{
+				foreach($account_permissions_admin as $app => $enabled)
+				{					
+					if($enabled)
+					{
+						$values['account_permissions_admin'][$app] = true;
+					}
+				}
+			}
+			unset($account_permissions_admin);
+
 			//FIXME Caeies fix waiting for JSCAL
 			$values['account_expires_year']	= phpgw::get_var('account_expires_year', 'int', 'POST');
 			// we use string here to allow for MMM formatted months
@@ -735,6 +910,7 @@
 					'account_expires_month',
 					'account_expires_day',
 					'account_permissions',
+					'account_permissions_admin',
 					'account_groups'
 				);
 
@@ -895,13 +1071,35 @@
 
 			$group_list = array();
 
+
 			$all_groups = $account->get_list('groups');
+
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_groups = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$valid_groups	= array_merge($valid_groups,$GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
+					}
+				}
+
+				$valid_groups = array_unique($valid_groups);
+			}
+			else
+			{
+				$valid_groups = array_keys($all_groups);
+			}
+
 			foreach ( $all_groups as $group )
 			{
 				$group_list[$group->id] = array
 				(
 					'account_id'	=> $group->id,
-					'account_lid'	=> (string) $group
+					'account_lid'	=> $group->__toString(),
+					'i_am_admin'	=> in_array($group->id, $valid_groups)
 				);
 			}
 
@@ -910,14 +1108,33 @@
 			{
 				$group_list[$group->id]['selected'] = in_array($group->id, $group_ids);
 			}
+
+			$_group_list = array();
+			
+			foreach($group_list as $group)
+			{
+				$_group_list[] = $group;
+			}
+			unset($group_list);
 			unset($group_ids);
 
 			/* create list of available apps */
 			$apps = createObject('phpgwapi.applications', $account_id ? $account_id : -1);
 			$db_perms = $apps->read_account_specific();
 
+			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id ? $account_id : -1);
+			
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			asort($available_apps);
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$valid_apps = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']);
+			}
+			else
+			{
+				$valid_apps = array_keys($available_apps);
+			}
+
 			foreach ( $available_apps as $key => $application )
 			{
 				if ($application['enabled'] && $application['status'] != 3)
@@ -931,6 +1148,7 @@
 			}
 			asort($perm_display);
 
+			$app_list = array();
 			foreach ( $perm_display as $perm )
 			{
 				$checked = false;
@@ -945,7 +1163,10 @@
 				(
 					'app_title'		=> $perm['translated_name'],
 					'checkbox_name'	=> "account_permissions[{$perm['app_name']}]",
-					'checked'		=> $checked
+					'checked'				=> $checked,
+					'checkbox_name_admin'	=> "account_permissions_admin[{$perm['app_name']}]",
+					'checked_admin'			=> in_array($perm['app_name'], $apps_admin),
+					'i_am_admin'			=> in_array($perm['app_name'], $valid_apps)
 				);
 			}
 
@@ -996,7 +1217,7 @@
 				'anonymous'				=> (int) $user_data['anonymous'],
 				'changepassword'		=> (int) $user_data['changepassword'],
 				'expires_never'			=> $user_data['expires'] == -1,
-				'group_list'			=> $group_list,
+				'group_list'			=> $_group_list,
 				'app_list'				=> $app_list,
 				'url_contacts'			=> $url_contacts,
 				'url_contacts_text'		=> $url_contacts_text,
@@ -1283,6 +1504,140 @@
 		{
 			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
 			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
+
+		/**
+		* Clear ACL-cache for all users
+		*
+		* @return void
+		*/
+
+		function clear_user_cache()
+		{
+			if(	$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') )
+			{
+				set_time_limit(1500);
+				$account_list = $GLOBALS['phpgw']->accounts->get_list('both', -1);
+				foreach ( $account_list as  $id => $account)
+				{
+					$GLOBALS['phpgw']->acl->clear_user_cache($id);
+				}
+			}
+			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+		}
+		/**
+		* Set a message on top of all screens
+		*
+		* @return void
+		*/
+
+		function global_message()
+		{
+			if(	!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+			}
+
+			if(phpgw::get_var('message', 'string'))
+			{
+				phpgwapi_cache::system_set('phpgwapi', 'phpgw_global_message',phpgw::get_var('message', 'string'));			
+			}
+
+			if(phpgw::get_var('delete_message', 'bool'))
+			{
+				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_global_message');
+			}
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration');
+
+			$data = array
+			(
+				'value_message'		=> phpgwapi_cache::system_get('phpgwapi', 'phpgw_global_message'),
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',
+										array('menuaction' => 'admin.uiaccounts.global_message')),
+				'lang_cancel'		=> lang('cancel'),
+				'lang_submit'		=> lang('submit')
+			);
+			$GLOBALS['phpgw']->xslttpl->add_file('global_message');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('global_message' => $data));
+		}
+
+		/**
+		 * Render a confirmation form for clear all cache (user,and system)
+		 *
+		 * @return null
+		 */
+		public function clear_cache()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::clear_cache';
+
+			$account_id = phpgw::get_var('account_id', 'int');
+
+			if ( phpgw::get_var('cancel', 'bool', 'POST')
+				|| $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::GROUP_MANAGERS, 'admin') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			$dir = new DirectoryIterator($GLOBALS['phpgw_info']['server']['temp_dir']); 
+			$myfilearray = array();
+
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp(  substr($file->getFilename(),0, 12 ) , 'phpgw_cache_' ) != 0 )
+ 					{
+						continue;
+					}
+					$file_name = $file->getFilename();
+
+					$myfilearray[] = array
+					(
+						'last_modified'=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$file->getMTime()),
+						'file_path'=> $file->getPathname(),
+					);
+				}
+			}
+
+			if (phpgw::get_var('confirm', 'bool', 'POST') )
+			{
+				foreach($myfilearray as $delete_file)
+				{
+					unlink($delete_file['file_path']);
+				}
+				$myfilearray = array();
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			if($myfilearray)
+			{
+				_debug_array($myfilearray);
+			}
+
+			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);
+			$GLOBALS['phpgw']->xslttpl->add_file('confirm_delete');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('clear cache');
+
+			$data = array
+			(
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array
+												(
+													'menuaction' => 'admin.uiaccounts.clear_cache',
+													'account_id' => $account_id
+												)),
+				'lang_yes'					=> lang('yes'),
+				'lang_no'					=> lang('no'),
+				'lang_confirm_msg'			=> lang('are you sure you want to clear cache')
+			);
+
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
 	}

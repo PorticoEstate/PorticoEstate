@@ -96,11 +96,8 @@
 			if (is_array($fn_parts))
 			{
 				$type = $this->ext2mime($fn_parts[count($fn_parts)-1]);
-				if ($type != 'application/octect-stream')
-				{
 					return $type;
 				}
-			}
 			return 'application/octet-stream';
 		}
 		
@@ -236,6 +233,7 @@
 				'aif'	=> 'audio/x-aiff',
 				'aifc'	=> 'audio/x-aiff',
 				'aiff'	=> 'audio/x-aiff',
+				'application' =>  'application/x-ms-application',
 				'asc'	=> 'application/pgp', //changed by skwashd - was text/plain
 				'asf'	=> 'video/x-ms-asf',
 				'asx'	=> 'video/x-ms-asf',
@@ -259,11 +257,25 @@
 				'css'	=> 'text/css',
 				'csv'	=> 'text/comma-separated-values',//added by skwashd
 				'dcr'	=> 'application/x-director',
+				'deploy'=> 'application/octet-stream',
 				'diff'	=> 'text/diff',
 				'dir'	=> 'application/x-director',
 				'dll'	=> 'application/octet-stream',
 				'dms'	=> 'application/octet-stream',
 				'doc'	=> 'application/msword',
+				'docm'	=> 'application/vnd.ms-word.document.macroEnabled.12',
+				'docx'	=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				'dotm'	=> 'application/vnd.ms-word.template.macroEnabled.12',
+				'dotx'	=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+				'potm'	=> 'application/vnd.ms-powerpoint.template.macroEnabled.12',
+				'potx'	=> 'application/vnd.openxmlformats-officedocument.presentationml.template',
+				'dwg'	=> 'application/acad',
+				'xlam'	=> 'application/vnd.ms-excel.addin.macroEnabled.12',
+				'xlsb'	=> 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+				'xlsm'	=> 'application/vnd.ms-excel.sheet.macroEnabled.12',
+				'xlsx'	=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				'xltm'	=> 'application/vnd.ms-excel.template.macroEnabled.12',
+				'xltx'	=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 				'dot'	=> 'application/msword',//added by skwashd
 				'dvi'	=> 'application/x-dvi',
 				'dxr'	=> 'application/x-director',
@@ -302,6 +314,7 @@
 				'lzh'	=> 'application/octet-stream',
 				'm3u'	=> 'audio/x-mpegurl',
 				'man'	=> 'application/x-troff-man',
+				'manifest'	=> 'application/manifest',
 				'me'	=> 'application/x-troff-me',
 				'mesh'	=> 'model/mesh',
 				'mid'	=> 'audio/midi',
@@ -311,6 +324,7 @@
 				'movie'	=> 'video/x-sgi-movie',
 				'mp2'	=> 'audio/mpeg',
 				'mp3'	=> 'audio/mpeg',
+				'mp4'	=> 'video/mp4',	
 				'mpe'	=> 'video/mpeg',
 				'mpeg'	=> 'video/mpeg',
 				'mpg'	=> 'video/mpeg',
@@ -334,8 +348,13 @@
 				'png'	=> 'image/png',
 				'pnm'	=> 'image/x-portable-anymap',
 				'po'	=> 'text/plain',
+				'ppam'	=> 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
 				'ppm'	=> 'image/x-portable-pixmap',
+				'ppsm'	=> 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+				'ppsx'	=> 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
 				'ppt'	=> 'application/vnd.ms-powerpoint',
+				'pptm'	=> 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+				'pptx'	=> 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 				'ps'	=> 'application/postscript',
 				'qt'	=> 'video/quicktime',
 				'ra'	=> 'audio/x-realaudio',
@@ -413,6 +432,8 @@
 				'wmz'	=> 'application/x-ms-wmz',
 				'wrl'	=> 'model/vrml',
 				'wvx'	=> 'video/x-ms-wvx',
+				'xaml'	=> 'application/xaml+xml',
+				'xbap'	=> 'application/x-ms-xbap',
 				'xbm'	=> 'image/x-xbitmap',
 				'xht'	=> 'application/xhtml+xml',
 				'xhtml'	=> 'application/xhtml+xml',
@@ -836,4 +857,3 @@
 			return $mime_magic;
 		}
 	}
-?>

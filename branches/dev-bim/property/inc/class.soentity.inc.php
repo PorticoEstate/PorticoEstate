@@ -41,7 +41,13 @@
 		var $cols_extra;
 		var $cols_return_lookup;
 		var $type = 'entity';
-		var $type_app;
+
+
+		protected $type_app = array
+		(
+			'entity'	=> 'property',
+			'catch'		=> 'catch'
+		);
 
 		function __construct($entity_id='',$cat_id='')
 		{
@@ -49,12 +55,16 @@
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom 		= createObject('property.custom_fields');
 			$this->db           = & $GLOBALS['phpgw']->db;
-
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 			$this->entity_id	= $entity_id;
 			$this->cat_id		= $cat_id;
+		}
+
+		public function get_type_app()
+		{
+			return 	$this->type_app;
 		}
 
 		function select_status_list($entity_id,$cat_id)
@@ -90,8 +100,6 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
 				$query			= isset($data['query']) ? $data['query'] : '';
@@ -109,7 +117,7 @@
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 				$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 				$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
-			}
+			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -285,8 +293,12 @@
 			}
 
 			$this->uicols	= $uicols;
-
 //_debug_array($cols_return_extra);
+			if($dry_run)
+			{
+				return array();
+			}
+
 			if ($order)
 			{
 				switch($order)
@@ -360,7 +372,9 @@
 				$where= 'AND';			
 			}
 
-			$querymethod = '';
+			$_querymethod = array();
+			$__querymethod = array();
+			$_joinmethod_datatype = array();
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -368,56 +382,111 @@
 				if(stristr($query, '.'))
 				{
 					$query=explode(".",$query);
-					$querymethod = " $where ($entity_table.location_code $this->like '" . $query[0] . "%' AND $entity_table.location_code $this->like '%" . $query[1] . "')";
+					$_querymethod[] = "($entity_table.location_code $this->like '" . $query[0] . "%' AND $entity_table.location_code $this->like '%" . $query[1] . "')";
 				}
 				else
 				{
-					$filtermethod .= " $where ( $entity_table.location_code $this->like '%$query%' OR $entity_table.num $this->like '%$query%' OR address $this->like '%$query%')";
-					$where= 'OR';
+					if(!$criteria_id)
+					{
+						$_querymethod[] .= "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.num {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
+//						$where= 'OR';
+				}
+				else
+				{
+						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
+					}
+//_debug_array($__querymethod);					
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
 					while ($this->db->next_record())
 					{
-						if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH'):
+						switch ($this->db->f('datatype'))
 						{
-							$querymethod[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
+							case 'V':
+							case 'email':
+							case 'CH':
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'R':
+							case 'LB':
+								if(!$criteria_id)
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
+									." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+
+									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+									." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'I':
+								if(ctype_digit($query) && !$criteria_id)
+						{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
+									$__querymethod = array(); // remove block
 						}
-						elseif($this->db->f('datatype')=='I'):
+								break;
+							case 'VENDOR':
+								if($criteria_id == 'vendor')
 						{
-							if(ctype_digit($query))
+									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'AB':
+								if($criteria_id == 'ab')
 							{
-								$querymethod[]= "$entity_table." . $this->db->f('column_name') . " = " . intval($query);
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$__querymethod = array(); // remove block
 							}
+								break;
+							case 'ABO':
+								if($criteria_id == 'abo')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$__querymethod = array(); // remove block
 						}
-						else:
+								break;
+							default:
+								if(!$criteria_id)
 						{
-							$querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
+									$__querymethod = array(); // remove block
+								}
 						}
-						endif;
+					}
+						}
 					}
 
-					if (isset($querymethod) AND is_array($querymethod))
+			foreach($_joinmethod_datatype as $_joinmethod)
 					{
-						$querymethod = " $where (" . implode (' OR ',$querymethod) . ')';
-						$where = 'AND';
-					}
+				$sql .= $_joinmethod;
 				}
+			
+			$querymethod = '';
+			
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
+				unset($_querymethod);
 			}
 
 			$sql .= " $filtermethod $querymethod";
 
 //_debug_array($sql);
-			$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
-			$this->total_records = $this->db->f(0);
+			$this->total_records = $this->db->f('cnt');
 
-			if($dry_run)
-			{
-				return array();
-			}
-			else
-			{
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -426,7 +495,6 @@
 				{
 					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
-			}
 
 			$j=0;
 			$cols_return = $uicols['name'];
@@ -509,11 +577,11 @@
 		function check_entity($entity_id,$cat_id,$num)
 		{
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
-			$this->db->query("SELECT count(*) FROM $table where num='$num'");
+			$this->db->query("SELECT count(*) as cnt FROM $table where num='$num'");
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}
@@ -837,5 +905,127 @@
 			$helpmsg = stripslashes($this->db->f('helpmsg'));
 			return $helpmsg;
 		}
+
+
+		function read_entity_to_link($data)
+		{
+			if(!isset($data['cat_id']) || !$data['cat_id'] || !isset($data['entity_id']) || !$data['entity_id'] || !isset($data['id']) || !$data['id'])
+			{
+				throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
+			}
+
+			$cat_id = (int)$data['cat_id'];
+			$entity_id = (int)$data['entity_id'];
+			$id = (int)$data['id'];
+
+			$entity = array();
+
+			foreach ($this->type_app as $type => $app)
+			{
+				if( !$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $app))
+				{
+					continue;
 	}
 
+				$sql = "SELECT * FROM fm_{$type}_category";
+				$this->db->query($sql,__LINE__,__FILE__);
+
+				$category = array();
+				while ($this->db->next_record())
+				{
+					$category[] = array
+					(
+						'entity_id'	=> $this->db->f('entity_id'),
+						'cat_id'	=> $this->db->f('id'),
+						'name'		=> $this->db->f('name'),
+						'descr'		=> $this->db->f('descr')
+					);
+				}
+
+				foreach($category as $entry)
+				{
+					if($type == 'catch' && $entry['entity_id'] == 1 && $entry['cat_id'] == 1)
+					{
+						continue;
+					}
+					
+					$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+					$this->db->query($sql,__LINE__,__FILE__);
+					$this->db->next_record();
+					if($this->db->f('hits'))
+					{
+						$entity['related'][] = array
+						(
+							'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+															(
+																'menuaction'	=> "property.ui{$type}.index",
+																'entity_id'		=> $entry['entity_id'],
+																'cat_id'		=> $entry['cat_id'],
+																'p_entity_id'	=> $entity_id,
+																'p_cat_id' 		=> $cat_id,
+																'p_num' 		=> $id,
+																'type'			=> $type
+															)
+														),
+							'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
+							'descr'			=> $entry['descr']
+						);
+					}
+				}
+			}
+
+			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index',
+														//	'p_entity_id'	=> $entity_id,
+														//	'p_cat_id' 		=> $cat_id,
+															'p_num' 		=> $id,
+															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+					'name'		=> lang('Helpdesk') . " [{$hits}]",
+					'descr'		=> lang('Helpdesk')
+				);
+			}
+
+			$sql = "SELECT count(*) as hits FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index',
+													//		'p_entity_id'	=> $entity_id,
+													//		'p_cat_id' 		=> $cat_id,
+															'p_num' 		=> $id,
+															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+					'name'		=> lang('request') . " [{$hits}]",
+					'descr'		=> lang('request')
+				);
+			}
+
+			$sql = "SELECT count(*) as hits FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+				(
+					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index',
+															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}",
+															'criteria_id' => 6)), //FIXME: criteria 6 is for entities should be altered to locations
+					'name'		=> lang('project') . " [{$hits}]",
+					'descr'		=> lang('project')
+				);
+			}
+
+			return $entity;
+		}
+	}

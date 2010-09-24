@@ -31,7 +31,7 @@ class rental_soprice_item extends rental_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT * FROM rental_price_item WHERE id = " . $id;
+		$sql = "SELECT rpi.*, type.title AS resp_title FROM rental_price_item rpi left join rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id) WHERE rpi.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -39,7 +39,12 @@ class rental_soprice_item extends rental_socommon
 		$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 		$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 		$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+		$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
+		$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+		$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 		$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+		$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+		$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
 		
 		return $price_item;
 	}
@@ -54,7 +59,7 @@ class rental_soprice_item extends rental_socommon
 	{
 		$title = (string)$title;
 		
-		$sql = "SELECT * FROM rental_price_item WHERE title LIKE '" . $title . "'";
+		$sql = "SELECT rpi.*, type.title AS resp_title FROM rental_price_item left join rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id) WHERE rpi.title LIKE '" . $title . "'";
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		
 		if ($this->db->next_record()) {
@@ -62,7 +67,41 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
+			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
+			
+			return $price_item;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get the first price item matching the given agresso-id
+	 * @param string $id
+	 * @return rental_price_item
+	 */
+	function get_single_with_id($id)
+	{
+		$id = (string)$id;
+		$sql = "SELECT * FROM rental_price_item WHERE agresso_id LIKE '" . $id . "'";
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		
+		if ($this->db->next_record()) {
+			$price_item = new rental_price_item($this->unmarshal($this->db->f('id', true), 'int'));
+			$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
+			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
+			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
+			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'string'));
+			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
 			
 			return $price_item;
 		}
@@ -95,7 +134,11 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id', true), 'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area', true), 'bool'));
+			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive', true), 'bool'));
+			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable', true), 'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard', true), 'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price', true), 'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			
 			$results[] = $price_item;
 		}
@@ -170,12 +213,17 @@ class rental_soprice_item extends rental_socommon
 			'\'' . $price_item->get_title() . '\'',
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
-			$price
+			($price_item->is_inactive() ? "true" : "false"),
+			($price_item->is_adjustable() ? "true" : "false"),
+			($price_item->is_standard() ? "true" : "false"),
+			str_replace(',','.',$price),
+			$price_item->get_responsibility_id()
 		);
 		
-		$cols = array('title', 'agresso_id', 'is_area', 'price');
+		$cols = array('title', 'agresso_id', 'is_area', 'is_inactive', 'is_adjustable', 'standard', 'price', 'responsibility_id');
 		
 		$q ="INSERT INTO rental_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
+		
 		$result = $this->db->query($q);
 		$receipt['id'] = $this->db->get_last_insert_id("rental_price_item", 'id');
 		
@@ -198,7 +246,11 @@ class rental_soprice_item extends rental_socommon
 			'title = \'' . $price_item->get_title() . '\'',
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
-			'price = ' . $price_item->get_price()
+			'is_inactive = ' . ($price_item->is_inactive() ? "true" : "false"),
+			'is_adjustable = ' . ($price_item->is_adjustable() ? "true" : "false"),
+			'standard = ' . ($price_item->is_standard() ? "true" : "false"),
+			'price = ' . str_replace(',','.',$price_item->get_price()),
+			'responsibility_id = ' . $price_item->get_responsibility_id()
 		);
 				
 		$this->db->query('UPDATE rental_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -217,22 +269,26 @@ class rental_soprice_item extends rental_socommon
 	function update_contract_price_item(rental_contract_price_item $price_item)
 	{
 		$id = intval($price_item->get_id());
+		$one_time = $price_item->get_is_one_time();
 		
 		$values = array(
 			'price_item_id = ' . $price_item->get_price_item_id(),
 			'contract_id = ' . $price_item->get_contract_id(),
-			'area = ' . $price_item->get_area(),
-			'count = ' . $price_item->get_count(),
+			'area = ' . str_replace(',','.',$price_item->get_area()),
+			'count = ' . str_replace(',','.',$price_item->get_count()),
 			'title = \'' . $price_item->get_title() . '\'',
 			'agresso_id = \'' . $price_item->get_agresso_id() . '\'',
 			'is_area = ' . ($price_item->is_area() ? "true" : "false"),
-			'price = ' . $price_item->get_price()
+			'is_one_time = ' . ((isset($one_time) && ($price_item->is_one_time() || $price_item->get_is_one_time() == 1)) ? "true" : "false"),
+			'price = ' . str_replace(',','.',$price_item->get_price())
 		);
 		
 		if ($price_item->is_area()) {
-			$values[] = 'total_price = ' . ($price_item->get_area() * $price_item->get_price());
+//			var_dump('total_price = '.$price_item->get_area().'*'.$price_item->get_price());
+			$values[] = 'total_price = ' . str_replace(',','.',($price_item->get_area() * $price_item->get_price()));
 		} else {
-			$values[] = 'total_price = ' . ($price_item->get_count() * $price_item->get_price());
+//			var_dump('total_price = '.$price_item->get_count().'*'.$price_item->get_price());
+			$values[] = 'total_price = ' . str_replace(',','.',($price_item->get_count() * $price_item->get_price()));
 		}
 		
 		if ($price_item->get_date_start()) {
@@ -298,11 +354,11 @@ class rental_soprice_item extends rental_socommon
 				$price_item_id,
 				$contract_id,
 				"'" . $price_item->get_title() . "'",
-				$rented_area,
+				str_replace(',','.',$rented_area),
 				"'" . $price_item->get_agresso_id() . "'",
 				$price_item->is_area() ? 'true' : 'false',
-				$price_item->get_price(),
-				$total_price
+				str_replace(',','.',$price_item->get_price()),
+				str_replace(',','.',$total_price)
 			);
 			$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price) VALUES (" . join(',', $values) . ")";
 			//var_dump($q);
@@ -335,13 +391,26 @@ class rental_soprice_item extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		if($sort_field == 'responsibility_title'){
+			$sort_field = 'responsibility_id';
+		}
+		$order = $sort_field ? "ORDER BY $sort_field $dir": "ORDER BY agresso_id ASC";
 		
 		$filter_clauses = array();
+		$filter_clauses[] = "rpi.title != 'UNKNOWN'";
 		
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "{$this->get_id_field_name()} = {$id}";
+		}
+		if(isset($filters['price_item_status'])){
+			$filter_clauses[] = "NOT is_inactive";
+		}
+		if(isset($filters['responsibility_id'])){
+			$filter_clauses[] = "responsibility_id=" . $filters['responsibility_id'];
+		}
+		if(isset($filters['is_adjustable'])){
+			$filter_clauses[] = "NOT is_adjustable";
 		}
 		
 		if(count($filter_clauses))
@@ -353,15 +422,17 @@ class rental_soprice_item extends rental_socommon
 		
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$cols = 'COUNT(DISTINCT(rpi.id)) AS count';
+			$order = '';
 		}
 		else
 		{
-			$cols = '*';
+			$cols = 'rpi.*, type.title AS resp_title';
 		}
 		
-		$tables = "rental_price_item";
-		$joins = '';
+		$tables = "rental_price_item rpi";
+		$join_responsibility = 	$this->left_join.' rental_contract_responsibility type ON (type.location_id = rpi.responsibility_id)';
+		$joins = $join_responsibility;
 		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -374,8 +445,68 @@ class rental_soprice_item extends rental_socommon
 			$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
+			$price_item->set_is_inactive($this->unmarshal($this->db->f('is_inactive'),'bool'));
+			$price_item->set_is_adjustable($this->unmarshal($this->db->f('is_adjustable'),'bool'));
+			$price_item->set_standard($this->unmarshal($this->db->f('standard'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
+			$price_item->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$price_item->set_responsibility_title($this->unmarshal($this->db->f('resp_title', true), 'string'));
 		}
 		return $price_item;
+	}
+	
+	function has_active_contract(int $price_item_id)
+	{
+		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		$q = "SELECT rpi.* FROM rental_price_item rpi, rental_contract_price_item rcpi, rental_contract rc WHERE rpi.id = {$price_item_id} AND rcpi.price_item_id = rpi.id AND rc.id = rcpi.contract_id AND rc.date_start <= {$ts_query} AND (rc.date_end >= {$ts_query} OR rc.date_end IS NULL)";
+		$this->db->query($q);
+		if($this->db->next_record())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	function get_manual_adjustable()
+	{
+		$query = "SELECT id, agresso_id, title, price FROM rental_price_item WHERE NOT is_inactive AND NOT is_adjustable ORDER BY id ASC";
+		$this->db->query($query);
+		while($this->db->next_record())
+		{
+			$id = $this->db->f('id', true);
+			$label = $this->db->f('agresso_id', true).' - '.$this->db->f('title', true).' ; '.lang('price').': '.$this->db->f('price', true);
+			$results[$id] = $label;
+		}
+		return $results;
+	}
+	
+	function adjust_contract_price_items(int $price_item_id, $new_price)
+	{
+		$q_contract_price_items = "SELECT * from rental_contract_price_item where price_item_id=$price_item_id";
+		$this->db->query($q_contract_price_items);
+		while($this->db->next_record()){
+			$total_price = 0.00;
+			$curr_id = $this->db->f('id');
+			$is_area = $this->unmarshal($this->db->f('is_area'),'bool');
+			if($is_area){
+				$area = $this->unmarshal($this->db->f('area'),'float');
+				$total_price = $area * $new_price;
+			}
+			else{
+				$count = $this->unmarshal($this->db->f('count'),'int');
+				$total_price = $count * $new_price;
+			}
+			$query="UPDATE rental_contract_price_item SET price=$new_price, total_price=$total_price WHERE id=$curr_id";
+			$this->db->query($query);
+		}
+		
+		$query2 = "SELECT count(*) as count FROM rental_contract_price_item WHERE price_item_id=$price_item_id";
+		$this->db->query($query2);
+		if($this->db->next_record()){
+			return $this->db->f('count');
+		}
+		else{
+			return 0;
+		}
 	}
 }

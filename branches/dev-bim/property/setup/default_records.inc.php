@@ -23,26 +23,6 @@ $GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHE
 $GLOBALS['phpgw_setup']->oProc->next_record();
 $app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
 
-$GLOBALS['phpgw_setup']->oProc->query("SELECT location_id FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
-
-$locations = array();
-while ($GLOBALS['phpgw_setup']->oProc->next_record())
-{
-	$locations[] = $GLOBALS['phpgw_setup']->oProc->f('location_id');
-}
-
-if(count($locations))
-{
-	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_choice WHERE location_id IN ('. implode (',',$locations) . ')');
-	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_cust_attribute WHERE location_id IN ('. implode (',',$locations). ')');
-	$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM phpgw_acl  WHERE location_id IN ('. implode (',',$locations) . ')');
-}
-
-$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations WHERE app_id = {$app_id} AND name != 'run'");
-
-
-unset($locations);
-
 #
 #  phpgw_locations
 #
@@ -85,18 +65,11 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.s_agreement.detail', 'Service agreement detail',1,'fm_s_agreement_detail')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.r_agreement', 'Rental agreement',1,'fm_r_agreement')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.r_agreement.detail', 'Rental agreement detail',1,'fm_r_agreement_detail')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.tenant', 'Tenant',1,'fm_tenant')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.owner', 'Owner',1,'fm_owner')");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.vendor', 'Vendor',1,'fm_vendor')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.tenant', 'Tenant',1,1,'fm_tenant')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.owner', 'Owner',1,1,'fm_owner')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.vendor', 'Vendor',1,1,'fm_vendor')");
 
-
-
-#
-#fm_workorder_category
-#
-//FIXME: consider adding categories to global categories 'property.project'
-//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_workorder_category (id, descr) VALUES (1, 'Preventive')");
-//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_workorder_category (id, descr) VALUES (2, 'Ad Hoc')");
+$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 
 
 $GLOBALS['phpgw_setup']->oProc->query("DELETE from phpgw_config WHERE config_app='property'");
@@ -235,13 +208,13 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id
 # fm_document_category
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_categories WHERE cat_appname = 'property.document'");
+$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_categories WHERE cat_appname = 'property'");
 $GLOBALS['phpgw_info']['server']['account_repository'] = isset($GLOBALS['phpgw_info']['server']['account_repository']) ? $GLOBALS['phpgw_info']['server']['account_repository'] : '';
 $GLOBALS['phpgw']->accounts		= createObject('phpgwapi.accounts');
 $GLOBALS['phpgw']->db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
 $GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
 $GLOBALS['phpgw']->hooks = CreateObject('phpgwapi.hooks', $GLOBALS['phpgw_setup']->oProc->m_odb);
-$cats = CreateObject('phpgwapi.categories', -1, 'property.document');
+$cats = CreateObject('phpgwapi.categories', -1, 'property','.document');
 
 $cats->add(	array
 	(
@@ -273,15 +246,6 @@ $cats->add(	array
 	)
 );
 
-#
-# fm_tts_category
-#
-
-//FIXME: consider adding categories to global categories 'property.ticket'
-//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('1', 'damage')");
-//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('2', 'user request')");
-//$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_category (id, descr) VALUES ('3', 'warranty')");
-
 
 #
 # fm_document_status
@@ -296,6 +260,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_status (id, descr
 # fm_standard_unit
 #
 
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('mm', 'Millimeter')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m', 'Meter')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m2', 'Square meters')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m3', 'Cubic meters')");
@@ -726,4 +691,17 @@ if($admin_group) // check if admin has been defined yet
 	$aclobj->save_repository();
 }
 
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('integer', 'Integer')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('float', 'Float')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('text', 'Text')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('date', 'Date')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('timestamp', 'timestamp')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('AB', 'Address book')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('VENDOR', 'Vendor')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('user', 'system user')");
 
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('PDF')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('CSV')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XLS')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XHTML')");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('DOCX')");

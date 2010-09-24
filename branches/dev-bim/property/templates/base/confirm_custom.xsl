@@ -32,22 +32,18 @@
 						<xsl:variable name="run_action"><xsl:value-of select="run_action"/></xsl:variable>
 						<xsl:variable name="lang_yes"><xsl:value-of select="lang_yes"/></xsl:variable>
 						<form method="POST" action="{$run_action}">
-							<input type="submit" class="forms" name="confirm" value="{$lang_yes}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="submit" class="forms" name="confirm" value="{$lang_yes}">
+								<xsl:attribute name="title">
 										<xsl:value-of select="lang_yes_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</form>
 					</td>
 					<td align="right">
 						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<a href="{$done_action}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<a href="{$done_action}">
+							<xsl:attribute name="title">
 									<xsl:value-of select="lang_no_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 							<xsl:value-of select="lang_no"/>
 						</a>
@@ -58,19 +54,15 @@
 				<tr>
 					<td align="center">
 						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<a href="{$done_action}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<a href="{$done_action}">
+							<xsl:attribute name="title">
 									<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 							<xsl:value-of select="lang_done"/>
 						</a>
 					</td>
-			
 				</tr>
 			</xsl:otherwise>
 			</xsl:choose>
 			</table>
 	</xsl:template>
-

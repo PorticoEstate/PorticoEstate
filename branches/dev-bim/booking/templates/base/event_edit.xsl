@@ -36,6 +36,16 @@
             </dd>
 		</dl>
 		<div class="clr"/>
+		<dl class="proplist">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(comments/author))" /></dt>
+			<xsl:for-each select="comments[author]">
+				<dt>
+					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+				</dt>
+				<dd><xsl:value-of select="comment" disable-output-escaping="yes"/></dd>
+			</xsl:for-each>
+		</dl>
+		<div class="clr"/>
         <dl class="form">
 			<dt class="heading"><xsl:value-of select="php:function('lang', 'Why')" /></dt>
 			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
@@ -56,6 +66,23 @@
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd>
 				<textarea id="field_description" class="full-width" name="description"><xsl:value-of select="event/description"/></textarea>
+			</dd>
+			<dt><label for="field_public"><xsl:value-of select="php:function('lang', 'Event type')"/></label></dt>
+			<dd>
+			  <select id="field_public" name="is_public">
+				  <option value="1">
+					<xsl:if test="event/is_public=1">
+					  <xsl:attribute name="selected">checked</xsl:attribute>
+					</xsl:if>
+					  <xsl:value-of select="php:function('lang', 'Public event')"/>
+				  </option>
+				  <option value="0">
+					<xsl:if test="event/is_public=0">
+					  <xsl:attribute name="selected">checked</xsl:attribute>
+					</xsl:if>
+					  <xsl:value-of select="php:function('lang', 'Private event')"/>
+				  </option>
+			  </select>
 			</dd>
 		</dl>
 		<dl class="form-col">
@@ -190,16 +217,25 @@
 						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0" selected="selected"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
 					</xsl:if>
 					<xsl:if test="event/reminder = 1">
 						<option value="1" selected="selected"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
 					</xsl:if>
 					<xsl:if test="event/reminder = 2">
 						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
 						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
 						<option value="2" selected="selected"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
+					</xsl:if>
+					<xsl:if test="event/reminder = 3">
+						<option value="1"><xsl:value-of select="php:function('lang', 'Send reminder')" /></option>
+						<option value="0"><xsl:value-of select="php:function('lang', 'Do not send reminder')" /></option>
+						<option value="2"><xsl:value-of select="php:function('lang', 'User has responded to the reminder')" /></option>
+						<option value="3" selected="selected"><xsl:value-of select="php:function('lang', 'Reminder sent. Not responded to')" /></option>
 					</xsl:if>
 				</select>
 			</dd>
@@ -209,7 +245,9 @@
 			<dt><label for="field_mail"><xsl:value-of select="php:function('lang', 'Inform contact persons')" /></label></dt>
 			<dd>
 				<label><xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" /></label><br />
-				<textarea id="field_mail" name="mail" class="full-width"></textarea>
+			<textarea id="field_mail" name="mail" class="full-width"></textarea><br />
+			<label><input type="checkbox" value="1" name="sendtocontact" /> <xsl:value-of select="php:function('lang', 'Send to contact')" /></label><br />
+			<label><input type="checkbox" value="1" name="sendtocollision" /> <xsl:value-of select="php:function('lang', 'Send to contact for overlaping allocations/bookings')" /></label><br />
 			</dd>
 		</dl>
         <div class="form-buttons">

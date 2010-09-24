@@ -1,7 +1,7 @@
 <?php
   
 /*
-V4.80 8 Mar 2006  (c) 2000-2009 John Lim (jlim#natsoft.com). All rights reserved.
+V4.80 8 Mar 2006  (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -60,9 +60,11 @@ if (sizeof($_GET) || !isset($_SERVER['HTTP_HOST'])) {
 	ADOLoadCode2("firebird");
 	ADOLoadCode2("borland_ibase");
 	ADOLoadCode2("informix");
-	ADOLoadCode2("sqlanywhere");
 	ADOLoadCode2('mysqli');
+	if (defined('ODBC_BINMODE_RETURN')) {
+		ADOLoadCode2("sqlanywhere");
 	ADOLoadCode2("access");
+	}
 	ADOLoadCode2("mysql");
 	ADOLoadCode2("oci8");
 }
@@ -311,7 +313,7 @@ if (!empty($testoracle)) {
 	
 	//$db->debug=1;
 	print "<h1>Connecting $db->databaseType...</h1>";
-	if ($db->Connect('', "scott", "natsoft",'condor'))
+	if ($db->Connect('192.168.0.138', "scott", "natsoft",'SID=natsoft'))
 		testdb($db,"create table ADOXYZ (id int, firstname varchar(24), lastname varchar(24),created date)");
 	else 
 		print "ERROR: Oracle test requires an Oracle server setup with scott/natsoft".'<BR>'.$db->ErrorMsg();

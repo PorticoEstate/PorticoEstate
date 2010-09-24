@@ -55,13 +55,24 @@
 			);
 
 			$menus['admin'] = array();
-			if (! $GLOBALS['phpgw']->acl->check('site_config_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('site_config_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['index'] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('global configuration', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',
 								array('menuaction' => 'admin.uiconfig.index', 'appname' => 'admin'))
+				);
+			}
+
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$menus['admin']['global_message'] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('global message', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',
+								array('menuaction' => 'admin.uiaccounts.global_message'))
 				);
 			}
 
@@ -85,7 +96,26 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('sync_account', PHPGW_ACL_READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$menus['admin']['clear_user_cache'] = array
+				(
+					'text'	=> lang('Clear user cache'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.clear_user_cache') )
+				);
+			}
+
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$menus['admin']['clear_cache'] = array
+				(
+					'text'	=> $GLOBALS['phpgw']->translation->translate('clear cache', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.clear_cache') )
+				);
+			}
+
+//			if (! $GLOBALS['phpgw']->acl->check('sync_account', PHPGW_ACL_READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['sync_account'] = array
 				(
@@ -94,7 +124,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('applications_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('applications_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['apps'] = array
 				(
@@ -104,7 +135,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('global_categories_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('global_categories_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['categories'] = array
 				(
@@ -114,7 +146,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['addressmasters'] = array
 				(
@@ -127,8 +160,9 @@
 				);
 			}
 
-			if ( !$GLOBALS['phpgw']->acl->check('mainscreen_message_access', phpgwapi_acl::READ, 'admin')
-				|| !$GLOBALS['phpgw']->acl->check('mainscreen_message_access', phpgwapi_acl::ADD, 'admin'))
+//			if ( !$GLOBALS['phpgw']->acl->check('mainscreen_message_access', phpgwapi_acl::READ, 'admin')
+//				|| !$GLOBALS['phpgw']->acl->check('mainscreen_message_access', phpgwapi_acl::ADD, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['mainscreen'] = array
 				(
@@ -138,7 +172,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('current_sessions_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('current_sessions_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['sessions'] = array
 				(
@@ -148,7 +183,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('access_log_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('access_log_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['access_log'] = array
 				(
@@ -158,7 +194,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('error_log_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('error_log_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['error_log'] = array
 				(
@@ -168,7 +205,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('error_log_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('error_log_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['log_levels'] = array
 				(
@@ -178,7 +216,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('applications_access', phpgwapi_acl::PRIV, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('applications_access', phpgwapi_acl::PRIV, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$text = $GLOBALS['phpgw']->translation->translate('Find and Register all Application Hooks',
 						array(), true);
@@ -191,7 +230,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('asyncservice_access', phpgwapi_acl::READ, 'admin'))
+//			if (! $GLOBALS['phpgw']->acl->check('asyncservice_access', phpgwapi_acl::READ, 'admin'))
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['async'] = array
 				(
@@ -201,7 +241,8 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('info_access', phpgwapi_acl::READ, 'admin')
+//			if (! $GLOBALS['phpgw']->acl->check('info_access', phpgwapi_acl::READ, 'admin')
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
 					&& function_exists('phpinfo') ) // it is possible to disable commands in php.ini
 			{
 				$menus['admin']['phpinfo'] = array

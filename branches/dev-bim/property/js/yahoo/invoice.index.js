@@ -131,6 +131,10 @@
 	*/
     var myPeriodDropDown = function(elCell, oRecord, oColumn, oData)
    	{
+		var d = new Date();
+		Year = d.getFullYear();
+		var _label = new String(oData);
+
 		tmp_count = oRecord._oData.counter_num;
 		voucher_id = oRecord._oData.voucher_id_num
 	    elCell.innerHTML = "<div id=\"divPeriodDropDown"+tmp_count+"\"></div>";
@@ -138,21 +142,22 @@
   	    	var tmp_button = new YAHOO.widget.Button({
                           type:"menu",
                           id:"oPeriodDropDown"+tmp_count,
-                          label: "<en>" +oData+"</en>",
+                          label: "<en>" +_label.substring(4)+"</en>",
                           value: oData,
                           container: "divPeriodDropDown"+tmp_count,
-                          menu: [	{ text: "1", value: 1, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "2", value: 2, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "3", value: 3, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "4", value: 4, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "5", value: 5, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "6", value: 6, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "7", value: 7, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "8", value: 8, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "9", value: 9, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "10", value: 10, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "11", value: 11, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
-							    { text: "12", value: 12, onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} }	]});
+                          menu: [	{ text: Year-1 +"12", value: Year-1 +"12", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+                          		{ text: Year +"01", value: Year +"01", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"02", value: Year +"02", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"03", value: Year +"03", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"04", value: Year +"04", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"05", value: Year +"05", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"06", value: Year +"06", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"07", value: Year +"07", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"08", value: Year +"08", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"09", value: Year +"09", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"10", value: Year +"10", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"11", value: Year +"11", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+							    { text:  Year +"12", value: Year +"12", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} }	]});
 	    //Define this variable in the window scope (GLOBAL)
            eval("window.oPeriodDropDown"+tmp_count+" = tmp_button");
 

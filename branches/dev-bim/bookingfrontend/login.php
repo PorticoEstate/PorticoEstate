@@ -6,9 +6,9 @@
 		'disable_template_class' => true,
 		'login'                  => true,
 		'currentapp'             => 'login',
-		'noheader'   		 		 => true,
-		'nonavbar'   				 => true,
+		'noheader'               => true
 	);
+
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
 	
 	if(file_exists('../header.inc.php'))
@@ -31,7 +31,7 @@
 	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));
 	if(!$after)
 	{
-		$after = 'menuaction=bookingfrontend.uisearch.index';
+		$after = array('menuaction' => 'bookingfrontend.uisearch.index');
 	}
-	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $after);
+	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $after);
 	exit;

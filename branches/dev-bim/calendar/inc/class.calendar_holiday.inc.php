@@ -61,10 +61,10 @@ class calendar_holiday
 
 	function is_network_load_needed($locale)
 	{
-		$sql = "SELECT count(*) FROM phpgw_cal_holidays WHERE locale='".$locale."'";
+		$sql = "SELECT count(*) as cnt FROM phpgw_cal_holidays WHERE locale='".$locale."'";
 		$this->db->query($sql,__LINE__,__FILE__);
 		$this->db->next_record();
-		$rows = $this->db->f(0);
+		$rows = $this->db->f('cnt');
 		if($rows==0)
 		{
 			$this->load_from_network($locale);

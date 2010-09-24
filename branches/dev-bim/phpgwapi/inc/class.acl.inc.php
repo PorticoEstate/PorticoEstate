@@ -537,11 +537,11 @@
 
 			while($this->_db->next_record())
 			{
-				$_acl_account	= $this->_db->f('acl_account');
-				$_acl_rights	= $this->_db->f('acl_rights');
-				$_acl_grantor	= $this->_db->f('acl_grantor');
-				$_acl_type		= $this->_db->f('acl_type');
-				$_location_id	= $this->_db->f('location_id');
+				$_acl_account	= (int) $this->_db->f('acl_account');
+				$_acl_rights	= (int) $this->_db->f('acl_rights');
+				$_acl_grantor	= (int) $this->_db->f('acl_grantor');
+				$_acl_type		= (int) $this->_db->f('acl_type');
+				$_location_id	= (int) $this->_db->f('location_id');
 
 				//avoid doubled set of rights
 		//		if(!$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id])
@@ -577,7 +577,7 @@
 				}
 		//		$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id] = true;
 			}
-
+//_debug_array($unique_data);
 			$sql = 'DELETE FROM phpgw_acl'
 					. " WHERE acl_account = {$acct_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
@@ -752,9 +752,6 @@
 				$this->_read_repository($account_type, $app_id, $location_id);
 			}
 
-
-
-		//	$count = (isset($this->_data[$this->_account_id])?count($this->_data[$this->_account_id]):0);
 			$rights = 0;
 
 			if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
@@ -981,6 +978,35 @@
 		}
 
 		/**
+		* Clear cached permissions for all locations for a given user
+		*
+		* @param integer $account_id Account id - 0 = current user
+		*
+		* @return void
+		*/
+		public function clear_user_cache($account_id = 0)
+		{
+			$account_id = (int)$account_id;
+			if(!$account_id)
+			{
+				$account_id = $this->_account_id;
+			}
+			$locations = array();
+
+			$sql = 'SELECT location_id FROM phpgw_locations';
+			$this->_db->query($sql, __LINE__, __FILE__);
+			while ($this->_db->next_record())
+			{
+				$locations[] = $this->_db->f('location_id');
+			}
+
+			foreach ($locations as $location_id)
+			{
+				$this->_delete_cache($account_id, $location_id);
+			}
+		}
+
+		/**
 		* Delete repository information for an application
 		*
 		* @param string  $app       Application name
@@ -1009,7 +1035,7 @@
 					$account_id = get_account_id($accountid, $this->_account_id);
 					$cache_accountid[$accountid] = $account_id;
 				}
-				$account_sel = " AND acl_account = {$account_id}";
+				$account_sel = " AND (acl_account = {$account_id} OR acl_grantor = {$account_id})";
 			}
 
 			$app = $this->_db->db_addslashes($app);
@@ -1028,17 +1054,22 @@
 				$locations[] = $this->_db->f('location_id');
 			}
 
+			if(!$locations)
+			{
+				return;
+			}
 			$location_filter = implode(',', $locations);
 
 			$sql = 'DELETE FROM phpgw_acl'
 				. " WHERE location_id IN ({$location_filter}) $account_sel";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$ret = !!$this->_db->num_rows();
+			$ret = !!$this->_db->affected_rows();
 
 			if ( $ret )
 			{
-				$location_id	= $GLOBALS['phpgw']->locations->get_id($app, $location);
+				foreach ($locations as $location_id)
+				{
 				if($account_id)
 				{
 					$this->_delete_cache($account_id, $location_id);
@@ -1051,6 +1082,7 @@
 						$this->_delete_cache($account->id, $location_id);
 					}
 				}
+			}
 			}
 			return $ret;
 		}
@@ -1069,7 +1101,7 @@
 		{
 			static $cache_accountid;
 
-			if($cache_accountid[$accountid])
+			if(isset($cache_accountid[$accountid]) && $cache_accountid[$accountid])
 			{
 				$account_id = $cache_accountid[$accountid];
 			}
@@ -1766,8 +1798,7 @@
 				{
 					if($entry['account_type']=='g')
 					{
-						// Would be nice if inactive members could be filtered out from the result
-						$members = $myaccounts->member($entry['account_id']);
+						$members = $myaccounts->member($entry['account_id'], true);
 
 						if (isset($members) AND is_array($members))
 						{

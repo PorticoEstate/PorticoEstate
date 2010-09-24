@@ -388,7 +388,7 @@
 
 <!-- add -->
 
-	<xsl:template match="add">
+	<xsl:template match="add" xmlns:php="http://php.net/xsl">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
@@ -443,7 +443,7 @@
 				<xsl:when test="simple !='1'">
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_group"/>
+							<xsl:value-of select="php:function('lang', 'Group')" />							
 				</td>
 				<td>
 					<xsl:call-template name="group_select"/>
@@ -451,49 +451,33 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_assign_to"/>
+							<xsl:value-of select="php:function('lang', 'Assign to')" />							
 				</td>
 				<td>
 					<xsl:call-template name="user_id_select"/>
 				</td>
 			</tr>
 			<xsl:call-template name="contact_form"/>	
-			<xsl:choose>
-				<xsl:when test="mailnotification != ''">
 					<tr>
 						<td>
-							<xsl:value-of select="lang_mailnotification"/>
+							<xsl:value-of select="php:function('lang', 'Send e-mail')" />							
 						</td>
 						<td>
-							<xsl:choose>
-									<xsl:when test="pref_send_mail = 1">
-										<input type="checkbox" name="values[send_mail]" value="1" checked="checked" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_mailnotification_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
+							<input type="checkbox" name="values[send_mail]" value="1" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
 											</xsl:attribute>
-										</input>
-									</xsl:when>
-									<xsl:otherwise>
-										<input type="checkbox" name="values[send_mail]" value="1" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="lang_mailnotification_statustext"/>
-												<xsl:text>'; return true;</xsl:text>
+								<xsl:if test="pref_send_mail = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
 											</xsl:attribute>
+								</xsl:if>
 										</input>
-									</xsl:otherwise>
-							</xsl:choose>
 						</td>
 					</tr>
-				</xsl:when>
-			</xsl:choose>
-
-
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_priority"/>
+							<xsl:value-of select="php:function('lang', 'Priority')" />							
 				</td>
 				<td>
 				<xsl:variable name="lang_priority_statustext"><xsl:value-of select="lang_priority_statustext"/></xsl:variable>
@@ -503,11 +487,24 @@
 					</select>			
 				</td>
 			</tr>
+					<tr>
+						<td valign="top">
+		    		        <xsl:value-of select="php:function('lang', 'status')" />
+						</td>
+						<td>
+							<select name="values[status]" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Set the status of the ticket')" />
+								</xsl:attribute>
+								<xsl:apply-templates select="status_list"/>
+							</select>			
+						</td>
+					</tr>
 			<xsl:choose>
 				<xsl:when test="show_finnish_date ='1'">
 					<tr>
 						<td>
-							<xsl:value-of select="lang_finnish_date"/>
+									<xsl:value-of select="php:function('lang', 'finnish date')" />							
 						</td>
 						<td>
 							<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;" >
@@ -520,19 +517,16 @@
 					</tr>
 			</xsl:when>
 			</xsl:choose>
-
 			</xsl:when>
 			</xsl:choose>
-
-
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_subject"/>
+					<xsl:value-of select="php:function('lang', 'subject')" />
 				</td>
 				<td>
 					<input type="text" name="values[subject]" value="{value_subject}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_subject_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')" />
 						</xsl:attribute>
 					</input>
 
@@ -540,18 +534,15 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<xsl:value-of select="lang_details"/>
+					<xsl:value-of select="php:function('lang', 'Details')" />
 				</td>
 				<td>
 					<textarea cols="60" rows="10" name="values[details]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_details_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')" />
 						</xsl:attribute>
 						<xsl:value-of select="value_details"/>		
 					</textarea>
-
 				</td>
 			</tr>
 
@@ -563,10 +554,8 @@
 						</td>
 						<td>
 							<input type="file" name="file" size="40" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+								<xsl:attribute name="title">
 										<xsl:value-of select="lang_file_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</td>
@@ -752,6 +741,15 @@
 			{
 				Window1=window.open('<xsl:value-of select="request_link"/>');
 			}		
+
+			function template_lookup()
+			{
+				var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
+
+				var strURL = phpGWLink('index.php', oArgs);
+
+				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			}
 		</script>
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
 			<xsl:choose>
@@ -934,35 +932,23 @@
 					</tr>
 				</xsl:when>
 			</xsl:choose>
-
-			<xsl:choose>
-				<xsl:when test="mailnotification != ''">
 					<tr>
 						<td>
 							<xsl:value-of select="php:function('lang', 'Send e-mail')" />
 						</td>
 						<td>
-							<xsl:choose>
-									<xsl:when test="pref_send_mail = 1">
-										<input type="checkbox" name="values[send_mail]" value="1" checked="checked">
+					<input type="checkbox" name="values[send_mail]" value="1" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
 											</xsl:attribute>
-										</input>
-									</xsl:when>
-									<xsl:otherwise>
-										<input type="checkbox" name="values[send_mail]" value="1">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')" />
+						<xsl:if test="pref_send_mail = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
 											</xsl:attribute>
+						</xsl:if>
 										</input>
-									</xsl:otherwise>
-							</xsl:choose>
 						</td>
 					</tr>
-				</xsl:when>
-			</xsl:choose>
-
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="php:function('lang', 'Priority')" />
@@ -1019,6 +1005,23 @@
 				</xsl:when>
 			</xsl:choose>
 
+			<xsl:choose>
+				<xsl:when test="show_billable_hours ='1'">
+					<tr>
+						<td>
+		    		        <xsl:value-of select="php:function('lang', 'billable hours')" />
+						</td>
+						<td>
+							<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="{value_billable_hours}" >
+								<xsl:attribute name="title">
+				    		        <xsl:value-of select="php:function('lang', 'enter the billable hour for the task')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
+
 		</xsl:when>
 		<xsl:otherwise>
 				<input type="hidden" name="values[status]" value="{value_status}"></input>
@@ -1027,6 +1030,7 @@
 				<input type="hidden" name="values[priority]" value="{value_priority}"></input>
 				<input type="hidden" name="values[cat_id]" value="{value_cat_id}"></input>
 				<input type="hidden" name="values[finnish_date]" value="{value_finnish_date}"></input>
+				<input type="hidden" name="values[billable_hour]" value="{value_billable_hours}"></input>
 			</xsl:otherwise>
 	</xsl:choose>
 
@@ -1093,11 +1097,55 @@
 								<xsl:value-of select="value_order_id"/>
 							</td>
 						</tr>
+						<tr>
+							<td>
+						           <xsl:value-of select="php:function('lang', 'on behalf of assigned')" />
+							</td>
+							<td>
+								<input type="checkbox" name="values[on_behalf_of_assigned]" value="True">
+									<xsl:attribute name="title">
+							            <xsl:value-of select="php:function('lang', 'on behalf of assigned - vacation mode')" />
+									</xsl:attribute>
+								</input>
+							</td>
+						</tr>
 
 						<xsl:call-template name="vendor_form"/>
 						<xsl:call-template name="ecodimb_form"/>
 						<xsl:call-template name="b_account_form"/>
 
+						<tr>
+							<td>
+								<xsl:value-of select="php:function('lang', 'building part')" />
+							</td>
+							<td>
+									<select name="values[building_part]" >
+										<xsl:attribute name="title">
+						            		<xsl:value-of select="php:function('lang', 'select building part')" />
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select building part')" />
+										</option>
+											<xsl:apply-templates select="building_part_list/status_list"/>
+									</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<xsl:value-of select="php:function('lang', 'order_dim1')" />
+							</td>
+							<td>
+									<select name="values[order_dim1]" >
+										<xsl:attribute name="title">
+						            		<xsl:value-of select="php:function('lang', 'order_dim1')" />
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'order_dim1')" />
+										</option>
+											<xsl:apply-templates select="order_dim1_list/status_list"/>
+									</select>
+							</td>
+						</tr>
 						<tr>
 							<td valign="top">
 			            		<xsl:value-of select="php:function('lang', 'cost estimate')" />
@@ -1116,16 +1164,27 @@
 					            <xsl:value-of select="php:function('lang', 'actual cost')" />
 							</td>
 							<td>
-								<xsl:value-of select="value_actual_cost"/>
+								<input type="text" name="values[actual_cost]" value="{value_actual_cost}">
+									<xsl:attribute name="title">
+					            		<xsl:value-of select="php:function('lang', 'Enter actual cost')" />
+									</xsl:attribute>
+								</input>
+							<!--<xsl:value-of select="value_actual_cost"/> -->
 								<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 							</td>
 						</tr>
 						<tr>
 							<td valign="top">
+			 					<a href="javascript:template_lookup()" >
+									<xsl:attribute name="title">
+		    			        		<xsl:value-of select="php:function('lang', 'lookup template')" />
+									</xsl:attribute>
             					<xsl:value-of select="php:function('lang', 'description')" />
+			 					</a>
+            					
 							</td>
 							<td>
-								<textarea cols="{textareacols}" rows="{textarearows}" name="values[order_descr]" wrap="virtual">
+								<textarea cols="{textareacols}" rows="{textarearows}" id='order_descr' name="values[order_descr]" wrap="virtual">
 									<xsl:attribute name="title">
 		    			        		<xsl:value-of select="php:function('lang', 'description order')" />
 									</xsl:attribute>
@@ -1144,16 +1203,14 @@
 											<xsl:for-each select="value_approval_mail_address" >
 												<tr>
 													<td>
-														<input type="checkbox" name="values[approval][{id}]" value="True">
+														<input type="checkbox" name="values[approval][{id}]" value="{address}">
 															<xsl:attribute name="title">
-																<xsl:value-of select="//lang_ask_approval_statustext"/>
+																<xsl:value-of select="php:function('lang', 'ask for approval')" />
 															</xsl:attribute>
 														</input>
 													</td>
 													<td valign='top'>
 														<xsl:value-of select="address"/>
-														<input type="hidden" name="values[mail_address][{id}]" value="{address}">
-														</input>
 													</td>
 												</tr>
 											</xsl:for-each>
@@ -1163,33 +1220,29 @@
 							</xsl:when>
 						</xsl:choose>
 						<tr>
-							<td>
+							<td valign='top'>
 					            <xsl:value-of select="php:function('lang', 'send order')" />
 							</td>
-							<td>
-								<table>
+							<td><div id="paging_3"></div><div id="datatable-container_3"></div> </td>
 									<tr>
-										<td>
-											<input type="checkbox" name="values[send_order]" value="True">
-												<xsl:attribute name="title">
-										            <xsl:value-of select="php:function('lang', 'send order')" />
-												</xsl:attribute>
-											</input>
+							<td valign="top">
+								<xsl:value-of select="php:function('lang', 'extra mail address')" />
 										</td>
 										<td>										            
-											<select name="values[vendor_email]">
+								<input type="text" name="values[vendor_email][]" value="">
 												<xsl:attribute name="title">
-										            <xsl:value-of select="php:function('lang', 'The address to which this order will be sendt')" />
+										<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')" />
 												</xsl:attribute>
-												<option value="">
-													<xsl:value-of select="php:function('lang', 'select email')" />
-												</option>
-												<xsl:apply-templates select="vendor_email"/>
-											</select>
+								</input>
 										</td>
 									</tr>
+
+						<!--	<td>
+								<table>
+									<xsl:apply-templates select="vendor_email"/>
 								</table>
 							</td>
+						-->
 						</tr>
 						<tr>
 							<td valign="top">
@@ -1317,8 +1370,11 @@
 		<!--  DATATABLE DEFINITIONS-->
 		<script>
 			var property_js = <xsl:value-of select="property_js" />;
+			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
+			var myButtons = new Array();
+		    var td_count = <xsl:value-of select="td_count" />;
 	
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
@@ -1326,18 +1382,19 @@
 					values			:	<xsl:value-of select="values"/>,
 					total_records	: 	<xsl:value-of select="total_records"/>,
 					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+			<!--		permission		:	<xsl:value-of select="permission"/>, -->
 					footer			:	<xsl:value-of select="footer"/>
 				}
 				]
 			</xsl:for-each>
-			
 			<xsl:for-each select="myColumnDefs">
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
+			<xsl:for-each select="myButtons">
+				myButtons[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+			</xsl:for-each>
 		</script>	
 	 
-		
-	
 	</xsl:template>
 
 <!-- view2 -->
@@ -1710,38 +1767,34 @@
 
 
 	<xsl:template match="priority_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
 
 	<xsl:template match="status_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
 
-	<xsl:template match="vendor_email">
-	<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$email}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$email}"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+	<xsl:template match="vendor_email" xmlns:php="http://php.net/xsl">
+		<tr>
+			<td>
+				<input type="checkbox" name="values[vendor_email][]" value="{email}" >
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'The address to which this order will be sendt')" />
+					</xsl:attribute>
+				</input>
+			</td>
+			<td>
+				<xsl:value-of select="email"/>
+			</td>
+		</tr>
 	</xsl:template>
-

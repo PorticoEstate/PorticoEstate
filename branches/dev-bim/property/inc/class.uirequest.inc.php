@@ -87,6 +87,7 @@
 			$this->status_id			= $this->bo->status_id;
 
 			$this->allrows				= $this->bo->allrows;
+			$this->p_num				= $this->bo->p_num;
 		}
 
 		function save_sessiondata()
@@ -134,8 +135,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$dry_run = false;
-
 			$datatable = array();
 			$values_combo_box = array();
 
@@ -162,13 +161,13 @@
 									'filter'	=> $this->filter,
 									'status_id'	=> $this->status_id,
 									'project_id'	=> $project_id,
-									'query'		=> $this->query
-
+									'query'		=> $this->query,
+									'p_num'		=> $this->p_num,
 	    				));
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uirequest.index',"
-
+ 	                        						."p_num: '{$this->p_num}',"
 	    											."query:'{$this->query}',"
 						 	                        ."lookup:'{$lookup}',"
 													."project_id:'{$project_id}',"
@@ -311,11 +310,10 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][4]);
 				}
-				$dry_run = true;
 			}
 
 			$request_list = array();
-			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows));
 			$uicols	= $this->bo->uicols;
 
 			$j=0;
@@ -398,6 +396,23 @@
 										)),
 						'parameters'	=> $parameters
 					);
+					$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+					foreach ($jasper as $report)
+					{
+						$datatable['rowactions']['action'][] = array(
+								'my_name'		=> 'edit',
+								'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+																(
+																		'menuaction'	=> 'property.uijasper.view',
+																		'jasper_id'			=> $report['id'],
+																		'target'		=> '_blank'
+																)),
+								'parameters'			=> $parameters
+						);
+					}
+
 				}
 				if($this->acl_edit)
 				{
@@ -571,8 +586,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -614,8 +627,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 

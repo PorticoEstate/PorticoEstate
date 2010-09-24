@@ -16,8 +16,62 @@
     <td>{lang_organisation}:</td>
     <td><input name="newsettings[org_name]" value="{value_org_name}"></td>
    </tr>
+   <tr class="row_off">
+    <td>{lang_org_unit_id}:</td>
+    <td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
+   </tr>
    <tr class="row_on">
-    <td>{lang_Path_to_Invoice_Export_file}: ({lang_mandatory})<br>
+    <td>{lang_delivery_address}:</td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[delivery_address]" wrap="virtual">{value_delivery_address}</textarea>
+	</td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_invoice_address}:</td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[invoice_address]" wrap="virtual">{value_invoice_address}</textarea>
+	</td>
+   </tr>
+
+   <tr class="row_off">
+    <td>{lang_order_footer_header}:</td>
+    <td><input name="newsettings[order_footer_header]" value="{value_order_footer_header}"></td>
+   </tr>
+
+   <tr class="row_on">
+    <td>{lang_order_footer}:</td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[order_footer]" wrap="virtual">{value_order_footer}</textarea>
+	</td>
+   </tr>
+
+   <tr class="row_off">
+    <td>{lang_order_logo}:</td>
+    <td><input name="newsettings[order_logo]" value="{value_order_logo}"></td>
+   </tr>
+
+   <tr class="row_on">
+    <td>{lang_order_logo_width}:</td>
+    <td><input name="newsettings[order_logo_width]" value="{value_order_logo_width}"></td>
+   </tr>
+
+   <tr class="row_off">
+    <td>{lang_needed_for_invoice_approval}:</td>
+    <td>
+     <select name="newsettings[invoice_approval]">
+      <option value="" {selected_invoice_approval_}>2</option>
+      <option value="1" {selected_invoice_approval_1}>1</option>
+     </select>
+    </td>
+   </tr>
+ 
+   <tr class="row_on">
+    <td>{lang_Path_to_Invoice_import_files}:<br>
+    {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
+    <td><input name="newsettings[import_path]" value="{value_import_path}"></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_Path_to_Invoice_Export_files}: ({lang_mandatory})<br>
     {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
     <td><input name="newsettings[export_path]" value="{value_export_path}"></td>
    </tr>
@@ -25,6 +79,10 @@
     <td>{lang_Path_to_Invoice_Export_preregistering}: ({lang_mandatory})<br>
     {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
     <td><input name="newsettings[export_pre_path]" value="{value_export_pre_path}"></td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_baseurl_to_invoice_image}:</td>
+    <td><input name="newsettings[baseurl_invoice]" value="{value_baseurl_invoice}"></td>
    </tr>
    <tr class="row_on">
     <td>{lang_invoice_export_method}:</td>
@@ -44,40 +102,117 @@
     <td><input name="newsettings[invoice_ftp_user]" value="{value_invoice_ftp_user}"></td>
    </tr>
    <tr class="row_off">
-    <td>{lang_invoice_ftp_host_pw}:</td>
-    <td><input type ="password" name="newsettings[invoice_ftp_pw]" value="{value_invoice_ftp_pw}"></td>
+    <td>{lang_invoice_ftp_host_password}:</td>
+    <td><input type ="password" name="newsettings[invoice_ftp_password]" value="{value_invoice_ftp_password}"></td>
    </tr>
    <tr class="row_on">
     <td>{lang_invoice_ftp_host_basedir_with_NO_trailing_slash}:</td>
     <td><input name="newsettings[invoice_ftp_basedir]" value="{value_invoice_ftp_basedir}"></td>
+   </tr>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_dimb_responsible_1}:</td>
+    <td>
+     <select name="newsettings[dimb_responsible_1]">
+{hook_dimb_cat_1}
+     </select>
+    </td>
+   </tr>
+  <tr class="row_on">
+    <td>{lang_dimb_responsible_2}:</td>
+    <td>
+     <select name="newsettings[dimb_responsible_2]">
+{hook_dimb_cat_2}
+     </select>
+    </td>
+   </tr>
+  <tr class="row_off">
+    <td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
+    <td>
+     <select name="newsettings[workorder_closed_status]">
+{hook_workorder_closed_status}
+     </select>
+    </td>
+  <tr class="row_on">
+    <td>{lang_workorder_reopen_status_that_are_to_be_set_when_invoice_is_processed}:</td>
+    <td>
+     <select name="newsettings[workorder_reopen_status]">
+{hook_workorder_reopen_status}
+     </select>
+    </td>
    </tr>
    <tr class="row_off">
     <td>{lang_Default_municipal_number}:</td>
     <td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Tax_[%]}:</td>
+    <td>{lang_Tax}: [%]</td>
     <td><input name="newsettings[fm_tax]" value="{value_fm_tax}"></td>
    </tr>
    <tr class="row_off">
-    <td>{lang_Enter_the_location_of_files_URL.} <br>
-	{lang_Example:_http://www.domain.com/files}:</td>
+    <td>{lang_Enter_the_location_of_files_URL} <br>
+	{lang_Example}: http://www.domain.com/files</td>
     <td><input name="newsettings[files_url]" value="{value_files_url}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Enter_MAP_URL.} <br>
-	{lang_Example:_http://www.domain.com/map}:</td>
+    <td>{lang_Path_to_external_files_for_use_with_location}:<br>
+    {lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
+    <td><input name="newsettings[external_files]" value="{value_external_files}"></td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_max_recursive_level_at_external_files}:</td>
+    <td>
+     <select name="newsettings[external_files_maxlevel]">
+      <option value="0" {selected_external_files_maxlevel_0}>None</option>
+      <option value="1" {selected_external_files_maxlevel_1}>1</option>
+      <option value="2" {selected_external_files_maxlevel_2}>2</option>
+      <option value="3" {selected_external_files_maxlevel_3}>3</option>
+      <option value="4" {selected_external_files_maxlevel_4}>4</option>
+      <option value="5" {selected_external_files_maxlevel_5}>5</option>
+      <option value="6" {selected_external_files_maxlevel_6}>6</option>
+      <option value="7" {selected_external_files_maxlevel_7}>7</option>
+      <option value="8" {selected_external_files_maxlevel_8}>8</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_filter_at_level_at_external_files}: <br/>(loc1)</td>
+    <td>
+     <select name="newsettings[external_files_filterlevel]">
+      <option value="0" {selected_external_files_filterlevel_0}>None</option>
+      <option value="1" {selected_external_files_filterlevel_1}>1</option>
+      <option value="2" {selected_external_files_filterlevel_2}>2</option>
+      <option value="3" {selected_external_files_filterlevel_3}>3</option>
+      <option value="4" {selected_external_files_filterlevel_4}>4</option>
+      <option value="5" {selected_external_files_filterlevel_5}>5</option>
+      <option value="6" {selected_external_files_filterlevel_6}>6</option>
+      <option value="7" {selected_external_files_filterlevel_7}>7</option>
+      <option value="8" {selected_external_files_filterlevel_8}>8</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_Enter_MAP_URL} <br>
+	{lang_Example}: http://www.domain.com/map</td>
     <td><input name="newsettings[map_url]" value="{value_map_url}"></td>
    </tr>
    <tr class="row_off">
-    <td>{lang_Enter_GAB_Location_Level.} <br>
+    <td>{lang_Enter_GAB_Location_Level} <br>
 	{lang_Default_value_is}: 3</td>
     <td><input name="newsettings[gab_insert_level]" value="{value_gab_insert_level}"></td>
    </tr>
    <tr class="row_on">
-    <td>{lang_Enter_GAB_URL.} <br>
-	{lang_Example:_http://www.domain.com/gab}:</td>
+    <td>{lang_Enter_GAB_URL} <br>
+	{lang_Example}: http://www.domain.com/gab</td>
     <td><input name="newsettings[gab_url]" value="{value_gab_url}"></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_gab_url_paramtres}:<br>
+    lang_Example: type=eiendom&knr=__kommune_nr__&Gnr=__gaards_nr__&Bnr=__bruks_nr__&Fnr=__feste_nr__&Snr=__seksjons_nr__
+    </td>
+    <td>
+		<textarea cols="40" rows="4" name="newsettings[gab_url_paramtres]" wrap="virtual">{value_gab_url_paramtres}</textarea>
+    </td>
    </tr>
    <tr class="row_off">
     <td>{lang_suppress_old_tenant}:</td>
@@ -89,7 +224,21 @@
     </td>
    </tr>
    <tr class="row_off">
+    <td>{lang_show_billable_hours}:</td>
+    <td>
+     <select name="newsettings[show_billable_hours]">
+      <option value="" {selected_show_billable_hours_}>NO</option>
+      <option value="1" {selected_show_billable_hours_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
     <td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
+   </tr>
+   <tr class="row_on">
+    <td>{lang_Open_translates_to}: <br>
+	{lang_default}: {lang_Open}</td>
+    <td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
    </tr>
    <tr class="row_on">
     <td valign = 'top'>{lang_TTS_simplified_group}:</td>
@@ -250,6 +399,15 @@
      <select name="newsettings[acl_at_location]">
       <option value="" {selected_acl_at_location_}>NO</option>
       <option value="1" {selected_acl_at_location_1}>YES</option>
+     </select>
+    </td>
+   </tr>
+   <tr class="row_off">
+    <td>{lang_Use_ACL_for_helpdesk_categories}.</td>
+    <td>
+     <select name="newsettings[acl_at_tts_category]">
+      <option value="" {selected_acl_at_tts_category_}>NO</option>
+      <option value="1" {selected_acl_at_tts_category_1}>YES</option>
      </select>
     </td>
    </tr>

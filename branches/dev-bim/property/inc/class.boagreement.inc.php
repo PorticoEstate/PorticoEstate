@@ -406,7 +406,7 @@
 			return $activity_list;
 		}
 
-		function add_activity($values='',$agreement_id='')
+		function add_activity($values,$agreement_id)
 		{
 			return $this->so->add_activity($values,$agreement_id);
 		}

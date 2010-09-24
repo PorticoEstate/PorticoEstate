@@ -18,8 +18,6 @@
 	$javascripts = array();
 
 	$stylesheets = array();
-	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
-	{
 		phpgwapi_yui::load_widget('dragdrop');
 		phpgwapi_yui::load_widget('element');
 		phpgwapi_yui::load_widget('container');
@@ -27,11 +25,15 @@
 		phpgwapi_yui::load_widget('resize');
 		$javascripts = array
 		(
-			"/phpgwapi/js/json/json.js",
-			"/phpgwapi/templates/portico/js/base.js"
+		"/phpgwapi/js/json/json.js"
 		);
-	}
+
+	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
+	{
 	phpgwapi_yui::load_widget('layout');
+		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
+	}
+
 	phpgwapi_yui::load_widget('button');
 
 	$stylesheets = array();

@@ -35,13 +35,10 @@
 			'check_perms'		=> true
 		);
 
-
-		function bosms($session=false)
+		function __construct($session=false)
 		{
-		//	$this->currentapp	= 'sms';//$GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->sms 		= CreateObject('sms.sms');
 			$this->so 		= CreateObject('sms.sosms');
-	//		$this->bocommon 	= CreateObject('sms.bocommon');
 
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -59,14 +56,7 @@
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->start = $start ? $start : 0;
 
 			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
 			{
@@ -152,12 +142,12 @@
 			$p_num = $values['p_num'];
 			if (!$p_num[0])
 			{
-	    			$p_num = $values[p_num_text];
+	    		$p_num = $values['p_num_text'];
 			}
 			$sms_to = $p_num;
-			$msg_flash = $values[msg_flash];
-			$msg_unicode = $values[msg_unicode];
-			$message = $values[message];
+			$msg_flash		= $values['msg_flash'];
+			$msg_unicode	= $values['msg_unicode'];
+			$message		= $values['message'];
 			if (($p_num || $sms_to) && $message)
 			{
 				$sms_type = "text";
@@ -240,11 +230,4 @@
 			return $category_list;
 		}
 
-
-		function select_place_list($selected='')
-		{
-			$places= $this->so->select_place_list();
-			$place_list = $this->bocommon->select_list($selected,$places);
-			return $place_list;
-		}
 	}

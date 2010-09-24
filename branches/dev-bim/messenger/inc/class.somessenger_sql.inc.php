@@ -51,7 +51,7 @@
 					'from'    => $this->db->f('message_from'),
 					'status'  => $this->db->f('message_status'),
 					'date'    => $this->db->f('message_date'),
-					'subject' => $this->db->f('message_subject')
+					'subject' => $this->db->f('message_subject',true)
 				);
 			}
 			return $messages;
@@ -67,8 +67,8 @@
 				'from'    => $this->db->f('message_from'),
 				'status'  => $this->db->f('message_status'),
 				'date'    => $this->db->f('message_date'),
-				'subject' => $this->db->f('message_subject'),
-				'content' => $this->db->f('message_content')
+				'subject' => $this->db->f('message_subject',true),
+				'content' => htmlspecialchars_decode($this->db->f('message_content',true))
 			);
 			if ($this->db->f('message_status') == 'N')
 			{
@@ -98,10 +98,10 @@
 
 		function total_messages($extra_where_clause = '')
 		{
-			$this->db->query("select count(*) from phpgw_messenger_messages where message_owner='"
+			$this->db->query("select count(*) as cnt from phpgw_messenger_messages where message_owner='"
 				. $this->owner . "' " . $extra_where_clause,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 		function delete_message($message_id)

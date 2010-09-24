@@ -44,11 +44,156 @@
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->_db 			= & $GLOBALS['phpgw']->db;
-			$this->_join		= & $this->_db->loin;
+			$this->_join		= & $this->_db->join;
+			$this->_left_join		= & $this->_db->left_join;
 			$this->_like		= & $this->_db->like;
 		}
 
 		function read($data)
+		{
+			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				= isset($data['query']) ? $data['query'] : '';
+			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort']:'ASC';
+			$order				= isset($data['order']) ? $data['order'] : '';
+			$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
+			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : -1;
+			$user_id			= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+
+			if ($order)
+			{
+				switch($order)
+				{
+					case 'id':
+						$_order = 'fm_event.id';
+						break;
+					case 'date':
+						$_order = 'schedule_time';
+						break;
+					default:
+						$_order = $order;	
+				}
+
+				$ordermethod = " ORDER BY $_order $sort";
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY schedule_time ASC';
+			}
+
+
+			$filtermethod = "WHERE location_id = {$location_id}";
+						
+			if($query)
+			{
+				$query = $this->_db->db_addslashes($query);
+
+				$querymethod = " AND fm_event.descr {$this->_like} '%{$query}%'";
+			}
+
+			$sql = "SELECT fm_event.id, fm_event.descr, schedule_time, exception_time, location_id, location_item_id,"
+			 ." attrib_id, responsible_id, enabled, responsible_id, fm_event.user_id, fm_event_receipt.entry_date as receipt_date"
+			 ." FROM  fm_event"
+			 ." {$this->_join} fm_event_schedule ON (fm_event.id = fm_event_schedule.event_id)"
+			 ." {$this->_left_join} fm_event_exception ON (fm_event_schedule.event_id = fm_event_exception.event_id AND fm_event_schedule.schedule_time = fm_event_exception.exception_time)"
+			 ." {$this->_left_join} fm_event_receipt ON (fm_event_schedule.event_id = fm_event_receipt.event_id AND fm_event_schedule.schedule_time = fm_event_receipt.receipt_time)"
+			 ." {$filtermethod} {$querymethod}";
+//_debug_array($sql . $ordermethod);
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->_db->num_rows();
+
+			$events = array();
+			if(!$dry_run)
+			{
+				if(!$allrows)
+				{
+					$this->_db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				}
+				else
+				{
+					$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
+				}
+
+				while ($this->_db->next_record())
+				{
+					$events[] = array
+					(
+						'id'				=> $this->_db->f('id'),
+						'schedule_time'		=> $this->_db->f('schedule_time'),
+						'descr'				=> $this->_db->f('descr',true),
+						'location_id'		=> $this->_db->f('location_id'),
+						'location_item_id'	=> $this->_db->f('location_item_id'),
+						'attrib_id'			=> $this->_db->f('attrib_id'),
+						'responsible_id'	=> $this->_db->f('responsible_id'),
+						'enabled'			=> $this->_db->f('enabled'),
+						'exception'			=> $this->_db->f('exception_time') ? 'X' :'',
+						'receipt_date'		=> $this->_db->f('receipt_date'),
+						'responsible_id'	=> $this->_db->f('responsible_id'),
+						'user_id'			=> $this->_db->f('user_id')
+					);
+				}
+			}
+			return $events;
+		}
+
+		function read_single2($id)
+		{
+			$id = (int) $id;
+			$ordermethod = ' ORDER BY schedule_time ASC';
+
+			$filtermethod = "WHERE fm_event.id = {$id}";
+						
+			$sql = "SELECT fm_event.id, fm_event.descr, schedule_time, exception_time, location_id, location_item_id,"
+			 ." attrib_id, responsible_id, enabled, responsible_id, fm_event.user_id, fm_event_receipt.entry_date as receipt_date"
+			 ." FROM  fm_event"
+			 ." {$this->_join} fm_event_schedule ON (fm_event.id = fm_event_schedule.event_id)"
+			 ." {$this->_left_join} fm_event_exception ON (fm_event_schedule.event_id = fm_event_exception.event_id AND fm_event_schedule.schedule_time = fm_event_exception.exception_time)"
+			 ." {$this->_left_join} fm_event_receipt ON (fm_event_schedule.event_id = fm_event_receipt.event_id AND fm_event_schedule.schedule_time = fm_event_receipt.receipt_time)"
+			 ." {$filtermethod}";
+//_debug_array($sql . $ordermethod);
+			$this->_db->query($sql . $ordermethod,__LINE__,__FILE__);
+
+			$event = array();
+
+			while ($this->_db->next_record())
+			{
+				$event[] = array
+				(
+					'id'				=> $this->_db->f('id'),
+					'schedule_time'		=> $this->_db->f('schedule_time'),
+					'descr'				=> $this->_db->f('descr',true),
+					'location_id'		=> $this->_db->f('location_id'),
+					'location_item_id'	=> $this->_db->f('location_item_id'),
+					'attrib_id'			=> $this->_db->f('attrib_id'),
+					'responsible_id'	=> $this->_db->f('responsible_id'),
+					'enabled'			=> $this->_db->f('enabled'),
+					'exception'			=> $this->_db->f('exception_time') ? 'X' :'',
+					'receipt_date'		=> $this->_db->f('receipt_date'),
+					'responsible_id'	=> $this->_db->f('responsible_id'),
+					'user_id'			=> $this->_db->f('user_id')
+				);
+			}
+
+			return $event;
+		}
+
+		public function get_event_location()
+		{
+			$this->_db->query("SELECT DISTINCT location_id FROM fm_event",__LINE__,__FILE__);
+			
+			$locations = array();
+
+			while ($this->_db->next_record())
+			{
+				$locations[] = array
+				(
+					'id'	=> $this->_db->f('location_id')
+				);
+			}
+			return $locations;
+		}
+
+		function read_at_location($data)
 		{
 			if(!isset($data['location_id']) || !$data['location_id'])
 			{
@@ -63,7 +208,7 @@
 				$location_id = (int) $data['location_id'];
 			}
 
-			$location_item_id 	= isset($data['location_item_id']) && $data['location_item_id'] ? (int)$data['location_item_id'] : '';
+			$location_item_id 	= isset($data['location_item_id']) && $data['location_item_id'] ? $data['location_item_id'] : '';
 			$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query				= isset($data['query']) ? $data['query'] : '';
 			$sort				= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
@@ -329,13 +474,16 @@
 
 		function delete($id)
 		{
+			$id = (int)$id;
 			$receipt = array();
-			$table = 'fm_event';
 			$this->_db->transaction_begin();
-			$ret = !!$this->_db->query("DELETE FROM $table WHERE id='{$id}'",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_event_schedule WHERE event_id ='{$id}'",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_event_exception WHERE event_id ='{$id}'",__LINE__,__FILE__);
+			$this->_db->query("DELETE FROM fm_event WHERE id='{$id}'",__LINE__,__FILE__);
+
 			if($this->_db->transaction_commit())
 			{
-				return $ret;
+				return true;
 			}
 			return false;
 		}
@@ -353,7 +501,7 @@
 			$tz_offset			= $data['tz_offset'] ? $data['tz_offset'] : 0;
 			$owner_id			= $data['owner_id'] ? $data['owner_id'] : 0;
 			$location_id		= (int) $data['location_id'];
-			$location_item_id	= (int) $data['location_item_id'];
+			$location_item_id	= $data['location_item_id'];
 
 			if(!$startYear || !$startMonth || !$startDay || !$location_id || !$location_item_id)
 			{
@@ -415,7 +563,7 @@
 			$eday				= $data['eday'];
 			$owner_id			= $data['owner_id'] ? $data['owner_id'] : 0;
 			$location_id		= (int) $data['location_id'];
-			$location_item_id	= (int) $data['location_item_id'];
+			$location_item_id	= $data['location_item_id'];
 			if(!$syear || !$smonth || !$sday || !$eyear || !$emonth || !$eday || !$location_id || !$location_item_id)
 			{
 				throw new Exception("property_soevent::list_repeated_events - Missing date info");
@@ -472,12 +620,12 @@
 					throw new Exception("property_soevent::set_exceptions - Missing event_id in input");
 			}
 
-			foreach ($data['alarm'] as $exception_id)
+			foreach ($data['alarm'] as $alarm_id)
 			{
-				$exception_time = mktime(13,0,0,intval(substr($exception_id,4,2)),intval(substr($exception_id,6,2)),intval(substr($exception_id,0,4)));
-				if($data['exception'])
+				$schedule_time = mktime(13,0,0,intval(substr($alarm_id,4,2)),intval(substr($alarm_id,6,2)),intval(substr($alarm_id,0,4)));
+				if($data['set_exception'])
 				{
-					$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$exception_time}";
+					$sql = "SELECT * FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$schedule_time}";
 					$this->_db->query($sql,__LINE__,__FILE__);
 					if ($this->_db->next_record())
 					{
@@ -488,7 +636,7 @@
 						$vals = array
 						(
 							$data['event_id'],
-							$exception_time,
+							$schedule_time,
 							$this->account,
 							phpgwapi_datetime::user_localtime(),
 						);						
@@ -497,11 +645,130 @@
 					}
 				
 				}
+				else if($data['enable_alarm'])
+				{
+					$sql = "DELETE FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$schedule_time}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+				}
+				else if($data['set_receipt'])
+				{
+					$sql = "SELECT * FROM fm_event_receipt WHERE event_id ='{$data['event_id']}' AND receipt_time = {$schedule_time}";
+					$this->_db->query($sql,__LINE__,__FILE__);
+					if ($this->_db->next_record())
+					{
+						continue;
+					}
 				else
 				{
-					$sql = "DELETE FROM fm_event_exception WHERE event_id ='{$data['event_id']}' AND exception_time = {$exception_time}";
+						$vals = array
+						(
+							$data['event_id'],
+							$schedule_time,
+							$this->account,
+							phpgwapi_datetime::user_localtime(),
+						);						
+  						$vals	= $this->_db->validate_insert($vals);
+						$this->_db->query("INSERT INTO fm_event_receipt (event_id, receipt_time, user_id, entry_date) VALUES ({$vals})",__LINE__,__FILE__);
+					}
+				}
+				else if($data['delete_receipt'])
+				{
+					$sql = "DELETE FROM fm_event_receipt WHERE event_id ='{$data['event_id']}' AND receipt_time = {$schedule_time}";
 					$this->_db->query($sql,__LINE__,__FILE__);
 				}
 			}
 		}
+
+		public function create_schedule($data = array())
+		{
+			if(!isset($data['event_id']) || !$data['event_id'])
+			{
+					throw new Exception("property_soevent::create_schedule - Missing event_id in input");
+			}
+
+			$this->_db->transaction_begin();
+
+			$this->_db->query("DELETE FROM fm_event_schedule WHERE event_id ='{$data['event_id']}'",__LINE__,__FILE__);
+			$entry_date = phpgwapi_datetime::user_localtime();
+
+			foreach ($data['schedule'] as $schedule_id	=> $values)
+			{
+				$schedule_time = mktime(13,0,0,intval(substr($schedule_id,4,2)),intval(substr($schedule_id,6,2)),intval(substr($schedule_id,0,4)));
+
+				$vals = array
+				(
+					$data['event_id'],
+					$schedule_time,
+					$this->account,
+					$entry_date,
+				);						
+				$vals	= $this->_db->validate_insert($vals);
+				$this->_db->query("INSERT INTO fm_event_schedule (event_id, schedule_time, user_id, entry_date) VALUES ({$vals})",__LINE__,__FILE__);
+			}
+
+			$this->_db->transaction_commit();
+		}
+
+		public function update_receipt($data)
+		{
+			$add_receipt = array();
+			$delete_receipt = array();
+			if($data['events_orig'])
+			{
+				foreach($data['events_orig'] as $schedule_time_id => $event_id)
+				{
+					if(!$data['events'][$schedule_time_id])
+					{
+						$delete_receipt[$schedule_time_id] = $event_id;
+					}
+				}
+			}
+
+			if($data['events'])
+			{
+				foreach($data['events'] as $schedule_time_id => $event_id)
+				{
+					if(!$data['events_orig'][$schedule_time_id])
+					{
+						
+						$add_receipt[$schedule_time_id] = $event_id;
+					}
+				}
+			}
+
+			$this->_db->transaction_begin();
+
+			foreach ($delete_receipt as $schedule_time_id	=> $event_id)
+			{
+				$schedule = explode('_', $schedule_time_id);
+				$schedule_time = $schedule[1];
+				
+				$this->_db->query("DELETE FROM fm_event_receipt WHERE receipt_time = {$schedule_time} AND event_id = {$event_id}",__LINE__,__FILE__);
+				$receipt['error'][] = array('msg'=>"{$event_id}::{$schedule_time}");
+			}
+
+			$entry_date = phpgwapi_datetime::user_localtime();
+
+			foreach ($add_receipt as $schedule_time_id	=> $event_id)
+			{
+				$schedule = explode('_', $schedule_time_id);
+				$schedule_time = $schedule[1];
+
+				$vals = array
+				(
+					$event_id,
+					$schedule_time,
+					$this->account,
+					$entry_date,
+				);						
+				$vals	= $this->_db->validate_insert($vals);
+				$this->_db->query("INSERT INTO fm_event_receipt (event_id, receipt_time, user_id, entry_date) VALUES ({$vals})",__LINE__,__FILE__);
+				$receipt['message'][] = array('msg'=>"{$event_id}::{$schedule_time}");
+			}
+
+			$this->_db->transaction_commit();
+
+			return $receipt;
+		}
+
 	}

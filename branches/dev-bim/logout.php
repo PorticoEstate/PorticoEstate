@@ -67,4 +67,4 @@
 		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 	}
 
-	$GLOBALS['phpgw']->redirect_link('/login.php', array('cd' => 1));
+	$GLOBALS['phpgw']->redirect_link('/login.php', array('cd' => 1, 'logout' => true));

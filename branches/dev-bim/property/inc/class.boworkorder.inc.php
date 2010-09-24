@@ -56,8 +56,7 @@
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soworkorder');
 			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.project';
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 	= & $this->so->interlink;
 			if ($session)
@@ -167,6 +166,23 @@
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data','workorder',$data);
 			}
+		}
+
+		function column_list($selected = array(),$type_id='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : '';
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = array();
+			$columns[] = array
+			(
+				'id' => 'billable_hours',
+				'name'=> lang('billable hours')
+			);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
 		}
 
 		function next_id()
@@ -299,10 +315,10 @@
 			$criteria[3] = array
 			(
 				'field'		=> 'fm_workorder.id',
-				'type'		=> 'int',
+				'type'		=> 'bigint',
 				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'front' => "'",
+				'back' => "'"
 			);
 			$criteria[4] = array
 			(
@@ -374,10 +390,19 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$this->uicols	= $this->so->uicols;
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : array();
 
-			for ($i=0; $i<count($workorder); $i++)
+			foreach ($custom_cols as $col)
 			{
-				$workorder[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($workorder[$i]['entry_date'],$dateformat);
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= $col;
+				$this->uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$this->uicols['statustext'][]	= $col;
+			}
+//_debug_array($this->uicols);die();
+			foreach ($workorder as &$entry)
+			{
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
 			}
 
 			return $workorder;
@@ -422,7 +447,7 @@
 			$vfs->override_acl = 1;
 
 			$workorder['files'] = $vfs->ls(array(
-			     'string' => '/property/workorder/' . $workorder_id,
+			     'string' => "/property/workorder/{$workorder_id}",
 			     'relatives' => array(RELATIVE_NONE)
 			     ));
 
@@ -432,11 +457,6 @@
 			for ($i=0;$i<$j;$i++)
 			{
 				$workorder['files'][$i]['file_name']=urlencode($workorder['files'][$i]['name']);
-			}
-
-			if(!isset($workorder['files'][0]['file_id']) || !$workorder['files'][0]['file_id'])
-			{
-				unset($workorder['files']);
 			}
 
 			$workorder['origin'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
@@ -482,7 +502,7 @@
 				'location_item_id'	=> $workorder_id
 			);
 
-			$events = execMethod('property.soevent.read', $event_criteria);
+			$events = execMethod('property.soevent.read_at_location', $event_criteria);
 			$workorder['event_id'] = $events ? $events[0]['id'] : '';
 
 			return $workorder;
@@ -510,7 +530,9 @@
 					case 'P': $type = lang('Priority changed'); break;
 					case 'M':
 						$type = lang('Sendt by email to');
-						$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+						$_order_sent_adress = explode(' ',$value['new_value']);
+						$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
+						unset($_order_sent_adress);
 						break;
 					case 'B': $type = lang('Budget changed'); break;
 					case 'CO': $type = lang('Initial Coordinator'); break;
@@ -520,6 +542,9 @@
 					case 'SO': $type = lang('Initial Status'); break;
 					case 'S': $type = lang('Status changed'); break;
 					case 'SC': $type = lang('Status confirmed'); break;
+					case 'AP': $type = lang('Ask for approval'); break;
+					case 'ON': $type = lang('Owner notified'); break;
+					case 'H': $type = lang('Billable hours changed'); break;
 					default: break;
 				}
 
@@ -605,7 +630,68 @@
 			else
 			{
 				$receipt = $this->so->add($workorder);
+				$workorder['id'] = $receipt['id'];
 			}
+
+			if(isset($workorder['charge_tenant']) && $workorder['charge_tenant'] && $workorder['id'])
+			{
+				$project = execMethod('property.soproject.read_single',$workorder['project_id']);
+
+				$boclaim = CreateObject('property.botenant_claim');
+
+				$value_set = array
+				(
+					'workorder' 		=> $target,
+					'project_id'		=> $workorder['project_id'],
+				);
+
+				$claim = $boclaim->read(array('project_id' => $project['project_id']));
+				$target = array();
+				if($claim)
+				{
+					$value_set['claim_id'] = $claim[0]['claim_id'];
+					$claim_old  = $boclaim->read_single($claim[0]['claim_id']);
+					if(isset($claim_old['workorder']) && $claim_old['workorder'])
+					{
+						$target = $claim_old['workorder'];
+					}
+					$value_set['amount']		= $claim_old['amount'];
+					$value_set['tenant_id']		= $claim_old['tenant_id'];
+					$value_set['b_account_id']	= $claim_old['b_account_id'];
+					$value_set['cat_id']		= $claim_old['cat_id'];
+					$value_set['status']		= $claim_old['status'];
+					$value_set['remark']		= $claim_old['remark'];					
+			}
+				else
+				{
+					$value_set['amount']		= 0;
+					$value_set['tenant_id']		= $project['tenant_id'];
+					$value_set['b_account_id']	= $workorder['b_account_id'];
+					$value_set['cat_id']		= 99;
+					$value_set['status']		= 'open';
+					$value_set['remark']		= '';
+				}
+
+				if(!in_array($workorder['id'],$target))
+				{
+					$target[] = $workorder['id'];
+				}
+
+				$value_set['workorder']	= $target;
+
+				if(!$value_set['tenant_id'])
+				{
+					$receipt['error'][] = array('msg'=>lang('tenant is not defined, claim not issued'));
+				}
+				else
+				{
+					$receipt_claim = $boclaim->save($value_set);
+					unset($receipt_claim['id']);
+					$receipt['error'] = array_merge($receipt['error'] , $receipt_claim['error']);
+					$receipt['message'] = array_merge($receipt['message'] , $receipt_claim['message']);
+				}
+			}
+
 			return $receipt;
 		}
 

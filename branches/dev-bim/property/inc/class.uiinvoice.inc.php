@@ -32,6 +32,7 @@
 	 * @package property
 	 */
 	phpgw::import_class('phpgwapi.yui');
+	phpgw::import_class('phpgwapi.datetime');
 	class property_uiinvoice
 	{
 		var $grants;
@@ -289,6 +290,7 @@
 
 				$values_combo_box[1]  = $this->bo->get_invoice_user_list('select',$this->user_lid,array('all'),$default='all');
 				//$default_value = array ();
+				array_unshift ($values_combo_box[1],array('lid'=> $GLOBALS['phpgw']->accounts->get($this->account)->lid, 'firstname'=>lang('mine vouchers')));
 				$default_value = array ('lid'=>'','firstname'=>lang('no user'));
 				array_unshift ($values_combo_box[1],$default_value);
 
@@ -316,7 +318,7 @@
 	                                array( //boton 	OWNER
 	                                    'id' => 'btn_user_lid',
 	                                    'name' => 'user_lid',
-	                                    'value'	=> user_lid,
+	                                    'value'	=> 'user_lid',
 	                                    'type' => 'button',
 	                                    'tab_index' => 2,
 	                                    'style' => 'filter'
@@ -606,21 +608,20 @@
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
 			//_debug_array($content);
 			$uicols = array (
-				'input_type'	=>	array(hidden,hidden	,hidden	,hidden	,hidden,hidden,hidden,hidden,hidden	,link,link		,hidden,hidden,hidden,$paid?varchar:input,varchar,link  ,hidden,varchar,varchar,varchar,$paid?hidden:input,$paid?hidden:input,special,special,special,special2),
-				'type'			=>	array(number,''		,''		,''		,number,number,''	  ,number,''	,url ,msg_box	,''    ,''    ,''    ,$paid?'':text	   	,''     ,msg_box,''    ,''     ,''     ,''     ,$paid?'':checkbox ,$paid?'':radio	 ,''     ,''     ,''     ,''  	 ),
+				'input_type'	=>	array('hidden','hidden'	,'hidden'	,'hidden'	,'hidden','hidden','hidden','hidden','hidden'	,'link','link'		,'hidden','hidden','hidden',$paid?'varchar':'input','varchar','link'  ,'hidden','varchar','varchar','varchar',$paid?'hidden':'input',$paid?'hidden':'input','special','special','special','special2'),
+				'type'			=>	array('number',''		,''		,''		,'number','number',''	  ,'number',''	,'url' ,'msg_box'	,''    ,''    ,''    ,$paid?'':'text'	   	,''     ,'msg_box',''    ,''     ,''     ,''     ,$paid?'':'checkbox' ,$paid?'':'radio'	 ,''     ,''     ,''     ,''  	 ),
 
-				'col_name'		=>	array(payment_date,transfer,kreditnota,sign,vendor_name,counter_num,counter,voucher_id_num,voucher_id,voucher_id_lnk,voucher_date_lnk,sign_orig ,num_days_orig,timestamp_voucher_date,num_days,amount_lnk,vendor_id_lnk,invoice_count,invoice_count_lnk,type_lnk,period,kreditnota_tmp,sign_tmp      ,janitor_lnk,supervisor_lnk,budget_responsible_lnk,transfer_lnk),
-				'name'			=>	array(payment_date,dummy,dummy,dummy,vendor,counter,counter,voucher_id    ,voucher_id,voucher_id    ,voucher_date    ,sign_orig,num_days     ,timestamp_voucher_date,num_days,amount    ,vendor_id    ,invoice_count,invoice_count    ,type    ,period,kreditnota,empty_fild,janitor    ,supervisor    ,budget_responsible    ,transfer_id),
+				'col_name'		=>	array('payment_date','transfer','kreditnota','sign','vendor_name','counter_num','counter','voucher_id_num','voucher_id','voucher_id_lnk','voucher_date_lnk','sign_orig' ,'num_days_orig','timestamp_voucher_date','num_days','amount_lnk','vendor_id_lnk','invoice_count','invoice_count_lnk','type_lnk','period','kreditnota_tmp','sign_tmp' ,'janitor_lnk','supervisor_lnk','budget_responsible_lnk','transfer_lnk'),
+				'name'			=>	array('payment_date','dummy','dummy','dummy','vendor','counter','counter','voucher_id'    ,'voucher_id','voucher_id'    ,'voucher_date'    ,'sign_orig','num_days'     ,'timestamp_voucher_date','num_days','amount'    ,'vendor_id'    ,'invoice_count','invoice_count'    ,'type'    ,'period','kreditnota','empty_fild','janitor'    ,'supervisor'    ,'budget_responsible'    ,'transfer_id'),
 
-				'formatter'		=>	array('','','','','','','','','','','','','','','',myFormatDate,'','','','',$paid?'':myPeriodDropDown,'','','','','',''),
+				'formatter'		=>	array('','','','','','','','','','','','','','','','myFormatDate','','','','',$paid?'':'myPeriodDropDown','','','','','',''),
 
-				'descr'			=>	array(dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,lang('voucher'),lang('Voucher Date'),dummy,dummy,dummy,lang('Days'),lang('Sum'),lang('Vendor'),dummy,lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
+				'descr'			=>	array('dummy','dummy','dummy','dummy','dummy','dummy','dummy','dummy','dummy',lang('voucher'),lang('Voucher Date'),'dummy','dummy','dummy',lang('Days'),lang('Sum'),lang('Vendor'),'dummy',lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
 				'className'		=> 	array('','','','','','','','','','','centerClasss','','','',$paid?'rightClasss':'','rightClasss','rightClasss','','rightClasss','',$paid?'centerClasss':'comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
 				);
 
 			//url to detail of voucher
 			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>$this->user_lid));
-
 
 			if($paid)
 			{
@@ -628,12 +629,13 @@
 			}
 
 			$j=0;
+			$count_uicols = count($uicols['name']);
 			//---- llena DATATABLE-ROWS con los valores del READ
 			if (isset($content) && is_array($content))
 			{
 				foreach($content as $invoices)
 				{
-					for ($i=0;$i<count($uicols['name']);$i++)
+					for ($i=0;$i<$count_uicols;$i++)
 					{
 						//values column kreditnota
 						if($uicols['type'][$i]=='checkbox' && $uicols['col_name'][$i]=='kreditnota_tmp')
@@ -687,7 +689,7 @@
 									{
 										if( ($invoices['is_janitor']== 1 && $type_sign == 'janitor') || ($invoices['is_supervisor']== 1 && $type_sign == 'supervisor') || ($invoices['is_budget_responsible']== 1 && $type_sign == 'budget_responsible'))
 										{
-											if( ( ($invoices['jan_date'] == '') && $type_sign == 'janitor') || (($invoices['super_date'] == '') && $type_sign == 'supervisor') || (($invoices['budget_date'] == '') && $type_sign == 'budget_responsible'))
+											if( ( (!$invoices['jan_date']) && $type_sign == 'janitor') || ((!$invoices['super_date']) && $type_sign == 'supervisor') || ((!$invoices['budget_date']) && $type_sign == 'budget_responsible'))
 											{
 												$datatable['rows']['row'][$j]['column'][$i]['name']			= 'sign_tmp';
 												$datatable['rows']['row'][$j]['column'][$i]['type']			= 'radio';
@@ -695,7 +697,7 @@
 												$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= "";
 											}
 
-											elseif( (($invoices['janitor'] == $invoices['current_user']) && $type_sign == 'janitor')  || (($invoices['supervisor'] == $invoices['current_user']) && $type_sign == 'supervisor') || (($invoices['budget_responsible'] == $invoices['current_user']) && $type_sign == 'budget_responsible'))
+											else if( (($invoices['janitor'] == $invoices['current_user']) && $type_sign == 'janitor')  || (($invoices['supervisor'] == $invoices['current_user']) && $type_sign == 'supervisor') || (($invoices['budget_responsible'] == $invoices['current_user']) && $type_sign == 'budget_responsible'))
 											{
 												$datatable['rows']['row'][$j]['column'][$i]['name'] 		= 'sign_tmp';
 												$datatable['rows']['row'][$j]['column'][$i]['type'] 		= 'radio';
@@ -714,7 +716,7 @@
 										}
 										else
 										{
-											if( ($invoices['jan_date']=='' && $type_sign == 'janitor') || ($invoices['super_date']=='' && $type_sign == 'supervisor') || ($invoices['budget_date']=='' && $type_sign == 'budget_responsible') )
+											if( (!$invoices['jan_date'] && $type_sign == 'janitor') || (!$invoices['super_date'] && $type_sign == 'supervisor') || (!$invoices['budget_date'] && $type_sign == 'budget_responsible') )
 											{
 											}
 											else
@@ -725,8 +727,8 @@
 												$datatable['rows']['row'][$j]['column'][$i]['extra_param']	= " disabled=\"disabled\" checked ";
 											}
 										}
-										$datatable['rows']['row'][$j]['column'][$i]['value2'] = ($type_sign == 'janitor'? $invoices['janitor']: ($type_sign == 'supervisor'? $invoices['supervisor'] : $invoices['budget_responsible']));
-										$datatable['rows']['row'][$j]['column'][$i]['value0'] = ($type_sign == 'supervisor'? $invoices['super_date']: "");
+										$datatable['rows']['row'][$j]['column'][$i]['value2'] = $type_sign == 'janitor'? $invoices['janitor']: ($type_sign == 'supervisor'? $invoices['supervisor'] : $invoices['budget_responsible']);
+										$datatable['rows']['row'][$j]['column'][$i]['value0'] = $type_sign == 'janitor'? $invoices['jan_date']: ($type_sign == 'supervisor'? $invoices['super_date'] : $invoices['budget_date']);
 									}
 									else //if($paid)
 									{
@@ -736,7 +738,6 @@
 								//---- speciual2----
 								elseif($uicols['input_type'][$i]=='special2')
 									{
-
 										// the same name of columns
 										$type_sign =  $datatable['rows']['row'][$j]['column'][$i]['format'] = $uicols['name'][$i];
 										$datatable['rows']['row'][$j]['column'][$i]['for_json'] 			= $uicols['col_name'][$i];
@@ -746,7 +747,7 @@
 										{
 											if( ($invoices['is_transfer']==1))
 											{
-												if( ($invoices['transfer_date']==''))
+												if(!$invoices['transfer_date'])
 												{
 													$datatable['rows']['row'][$j]['column'][$i]['name']			= 'transfer_tmp';
 													$datatable['rows']['row'][$j]['column'][$i]['type']			= 'checkbox';
@@ -888,22 +889,41 @@
 					$datatable['headers']['header'][$i]['sortable']			= false;
 
 					//-- ordemanientos particulares para cada columna
-					if($uicols['name'][$i]=='voucher_id'):
+					if($uicols['name'][$i]=='voucher_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'bilagsnr';
 					}
-					elseif($uicols['name'][$i]=='voucher_date'):
+					else if($uicols['name'][$i]=='voucher_date')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'fakturadato';
 					}
-					elseif($uicols['name'][$i]=='vendor_id'):
+					else if($uicols['name'][$i]=='vendor_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field'] 	= 'spvend_code';
 					}
-					endif;
+					else if($uicols['name'][$i]=='janitor')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'oppsynsigndato';
+					}
+					else if($uicols['name'][$i]=='supervisor')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'saksigndato';
+					}
+					else if($uicols['name'][$i]=='budget_responsible')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'budsjettsigndato';
+					}
+					else if($uicols['name'][$i]=='period')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field'] 	= 'periode';
+					}
 				}
 				else
 				{
@@ -922,7 +942,7 @@
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			//for maintein page number in datatable
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			if ( !(phpgw::get_var('start')) && !phpgw::get_var('order','string'))
 			{
 				//avoid ,in the last page, reformate paginator when records are lower than records_returned
 				if(count($content) <= $datatable['pagination']['records_limit'])
@@ -947,23 +967,8 @@
 			}
 
 
-			$appname = lang('location');
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1074,9 +1079,28 @@
 					$json ['message'][] = $receipt;
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
+
+
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
@@ -1115,7 +1139,6 @@
 
 		function list_sub()
 		{
-
 			$paid 		= phpgw::get_var('paid', 'bool');
 			$values		= phpgw::get_var('values');
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -1138,7 +1161,7 @@
 														'start'			=> $this->start,
 														'paid'			=> $paid,
 														'voucher_id'	=> $voucher_id,
-														'query'			=> $this->query
+														'query'			=> $voucher_id
 													));
 				$datatable['config']['allow_allrows'] = false;
 
@@ -1153,7 +1176,7 @@
 														."start:'{$this->start}',"
 														."paid:'{$paid}',"
 														."voucher_id:'{$voucher_id}',"
-														."query:'{$this->query}'";
+														."query:'{$voucher_id}'";
 
 				$field_invoice = array(array( // mensaje
 											'type'	=> 'label',
@@ -1237,34 +1260,42 @@
 
 			$uicols = array (
 				array(
-					'col_name'=>workorder		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'visible'=>true),
+					'col_name'=>'workorder'		,'label'=>lang('Workorder'),	'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'pmwrkord_code',	'visible'=>true),
 				array(
 					'col_name'=>'project_group','label'=>lang('project group'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>close_order,	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'close_order',	'label'=>lang('Close order'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>paid_percent,	'label'=>lang('paid percent'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'paid_percent',	'label'=>lang('paid percent'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>change_tenant,	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'change_tenant',	'label'=>lang('Charge tenant'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>invoice_id,		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'invoice_id',		'label'=>lang('Invoice Id'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>budget_Account,	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'visible'=>true),
+					'col_name'=>'budget_Account',	'label'=>lang('Budget account'),'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'spbudact_code',	'visible'=>true),
 				array(
-					'col_name'=>sum,			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'visible'=>true),
+					'col_name'=>'sum',			'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'visible'=>true),
 				array(
-					'col_name'=>dim_A,			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'visible'=>true),
+					'col_name'=>'dim_A',			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'visible'=>true),
 				array(
-					'col_name'=>dim_B,			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'dim_B',			'label'=>lang('Dim B'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>dim_D,			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'dim_D',			'label'=>lang('Dim D'),			'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>Tax_code,		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'Tax_code',		'label'=>lang('Tax code'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>Remark,			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
+					'col_name'=>'Remark',			'label'=>lang('Remark'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',				'visible'=>true),
 				array(
-					'col_name'=>counter,		'visible'=>false)
+					'col_name'=>'external_ref'		,'label'=>lang('external_ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
+				array(
+					'col_name'=>'counter',		'visible'=>false)
 				);
+
+
+			$config		= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$baseurl_invoice = isset($config->config_data['baseurl_invoice']) && $config->config_data['baseurl_invoice'] ? $config->config_data['baseurl_invoice'] : '';
+			$lang_picture = lang('picture');
 
 			$j=0;
 			//---- llena DATATABLE-ROWS con los valores del READ
@@ -1465,7 +1496,19 @@
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						elseif($i == 13)
+						elseif(($i == 13))
+						{
+							if(isset($invoices['external_ref']) && $invoices['external_ref'])
+							{
+							//	$json_row[$uicols[$i]['col_name']] = " <a target='_blank' href='".$baseurl_invoice. $invoices['external_ref']."'>{$lang_picture}</a>";
+								$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('".$baseurl_invoice. $invoices['external_ref']. "','640','800')\" >{$lang_picture}</a>";
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
+							}
+						}
+						elseif($i == 14)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
 						}					
@@ -1540,8 +1583,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1573,8 +1614,13 @@
 					$json ['current_consult'] = $current_Consult;
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -2106,8 +2152,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -2153,10 +2197,14 @@
 				{
 					$json ['current_consult'] = $current_Consult;
 				}
-	//			_debug_array($json);
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('start_date');
@@ -2254,6 +2302,10 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::add';
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data','add_receipt');
+			if(!$receipt)
+			{
+				$receipt = array();
+			}
 
 			if(isset($receipt['voucher_id']) && $receipt['voucher_id'])
 			{
@@ -2306,7 +2358,7 @@
 				$values['amount'] 		= str_replace(' ','',$values['amount']);
 				$values['amount'] 		= str_replace(',','.',$values['amount']);
 
-				$values['order_id']		= phpgw::get_var('order_id', 'int');
+				$values['order_id']		= phpgw::get_var('order_id');
 
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
@@ -2331,17 +2383,16 @@
 
 			if($add_invoice && is_array($values))
 			{
-
-				if($values['order_id'] && !ctype_digit($values['order_id'])):
+				$order = false;
+				if($values['order_id'] && !ctype_digit($values['order_id']))
 				{
 					$receipt['error'][]=array('msg'=>lang('Please enter an integer for order!'));
 					unset($values['order_id']);
 				}
-				elseif($values['order_id']):
+				else if($values['order_id'])
 				{
 					$order=true;
 				}
-				endif;
 
 				if (!$values['amount'])
 				{
@@ -2351,7 +2402,7 @@
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select type invoice!'));
 				}
-				if (!$values['vendor_id'] && (!isset($order) || !$order))
+				if (!$values['vendor_id'] && !$order)
 				{
 					$receipt['error'][] = array('msg'=>lang('Please - select Vendor!'));
 				}
@@ -2366,7 +2417,12 @@
 					$receipt['error'][] = array('msg'=>lang('Please - select budget responsible!'));
 				}
 
-				if((!isset($order) || !$order) && $values['vendor_id'])
+				if (!$values['invoice_num'])
+				{
+					$receipt['error'][] = array('msg'=>lang('Please - enter a invoice num!'));
+				}
+
+				if(!$order && $values['vendor_id'])
 				{
 					if (!$this->bo->check_vendor($values['vendor_id']))
 					{
@@ -2382,39 +2438,49 @@
 //_debug_array($values);
 				if (!is_array($receipt['error']))
 				{
-					$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-					$dateformat = str_replace(".","",$dateformat);
-					$dateformat = str_replace("-","",$dateformat);
-					$dateformat = str_replace("/","",$dateformat);
-					$y=strpos($dateformat,'y');
-					$d=strpos($dateformat,'d');
-					$m=strpos($dateformat,'m');
-
 					if($values['invoice_date'])
 					{
-			 			$dateparts = explode('/', $values['invoice_date']);
-			 			$values['sday'] = $dateparts[$d];
-			 			$values['smonth'] = $dateparts[$m];
-			 			$values['syear'] = $dateparts[$y];
+						$sdateparts = phpgwapi_datetime::date_array($values['invoice_date']);
+			 			$values['sday'] = $sdateparts['day'];
+			 			$values['smonth'] = $sdateparts['month'];
+			 			$values['syear'] = $sdateparts['year'];
+			 			unset($sdateparts);
 
-			 			$dateparts = explode('/', $values['payment_date']);
-			 			$values['eday'] = $dateparts[$d];
-			 			$values['emonth'] = $dateparts[$m];
-			 			$values['eyear'] = $dateparts[$y];
+						$edateparts = phpgwapi_datetime::date_array($values['payment_date']);
+			 			$values['eday'] = $edateparts['day'];
+			 			$values['emonth'] = $edateparts['month'];
+			 			$values['eyear'] = $edateparts['year'];
+			 			unset($edateparts);
 					}
 
 					$values['regtid'] 		= date($this->bocommon->datetimeformat);
 
+
+					$_receipt = array();//local errors
 					$receipt = $this->bo->add($values,$debug);
+
+					if(!$receipt['message'] && $values['order_id'] && !$receipt[0]['spvend_code'])
+					{
+						$_receipt['error'][] = array('msg'=>lang('vendor is not defined in order %1', $values['order_id']));
+
+						$debug = false;// try again..
+						if($receipt[0]['location_code'])
+						{
+		//					$values['location_data'] = $bolocation->read_single($receipt['location_code'],array('tenant_id'=>$tenant_id,'p_num'=>$p_num));
+						}
+					}
 
 					if($debug)
 					{
 						$this->debug($receipt);
 						return;
 					}
+					if(!$_receipt['error']) // all ok
+					{
 					unset($values);
 					$GLOBALS['phpgw']->session->appsession('session_data','add_receipt',$receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiinvoice.add'));
+				}
 				}
 				else
 				{
@@ -2427,6 +2493,15 @@
 				}
 			}
 
+			if (isset($receipt['voucher_id']) && $receipt['voucher_id'])
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array(
+						'menuaction'	=> 'property.uiinvoice.list_sub',
+						'user_lid'		=> $GLOBALS['phpgw_info']['user']['account_lid'],
+						'voucher_id'	=> $receipt['voucher_id']
+						));
+			}
+
 			$location_data=$bolocation->initiate_ui_location(array(
    						'values'	=> isset($values['location_data'])?$values['location_data']:'',
    						'type_id'	=> -1, // calculated from location_types
@@ -2436,7 +2511,6 @@
    						'lookup_entity'	=> false, //$this->bocommon->get_lookup_entity('project'),
    						'entity_data'	=> false //$values['p']
    						));
-
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> isset($values['b_account_id'])?$values['b_account_id']:'',
 						'b_account_name'	=> isset($values['b_account_name'])?$values['b_account_name']:''));
@@ -2447,15 +2521,10 @@
 				'debug'		=> true
 			);
 
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
+			if($_receipt)
+			{
+				$receipt = array_merge($receipt, $_receipt);
+			}
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
@@ -2585,8 +2654,8 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags'][noheader] = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$voucher_id = phpgw::get_var('voucher_id', 'int');
@@ -2823,7 +2892,7 @@
 				'b_account_id'		=> $values[0]['spbudact_code'],
 				'b_account_name'	=> $values[0]['b_account_name'],
 				'amount'		=> $values[0]['amount'],
-				'order'			=> $values[0]['order'],
+				'order_id'				=> $values[0]['order_id'],
 			);
 
 			$link_data_add		= $link_data_add + $post_data;
@@ -2848,10 +2917,10 @@
 				'Fag/Timer/Matr' 	=> 'dimd',
 				'MVA'			=> 'mvakode',
 				'Tjeneste'		=> 'kostra_id',
-				'Beløp [kr]'		=> 'belop'
+				'BelÃ¸p [kr]'		=> 'belop'
 			);
 
-			$header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Tjeneste','Beløp [kr]');
+			$header = array('Bestilling','Fakt. Nr','Konto','Objekt','Fag/Timer/Matr','MVA','Tjeneste','BelÃ¸p [kr]');
 
 			for ($i=0;$i<count($header);$i++)
 			{

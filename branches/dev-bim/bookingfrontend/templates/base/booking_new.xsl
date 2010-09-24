@@ -57,7 +57,8 @@
             </dd>
             <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')"/></label></dt>
             <dd>
-                <div class="datetime-picker">
+                <div class="time-picker">
+				<xsl:value-of select="date_from"/>
                 <input id="field_from" name="from_" type="text">
                     <xsl:attribute name="value"><xsl:value-of select="booking/from_"/></xsl:attribute>
                 </input>
@@ -65,7 +66,10 @@
             </dd>
             <dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')"/></label></dt>
             <dd>
-                <div class="datetime-picker">
+			</dd>
+            <dd>
+                <div class="time-picker">
+				<xsl:value-of select="date_to"/>
                 <input id="field_to" name="to_" type="text">
                     <xsl:attribute name="value"><xsl:value-of select="booking/to_"/></xsl:attribute>
                 </input>
@@ -74,6 +78,16 @@
 
 
 			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring booking')" /></label></dt>
+			<dd>
+				<label>
+					<input type="checkbox" name="outseason" id="outseason">
+						<xsl:if test="outseason='on'">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+					</input>
+					<xsl:value-of select="php:function('lang', 'Out season')" />
+				</label>
+			</dd>
 			<dd>
 				<label>
 					<input type="checkbox" name="recurring" id="recurring">

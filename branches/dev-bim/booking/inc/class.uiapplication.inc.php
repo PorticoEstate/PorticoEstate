@@ -208,7 +208,29 @@
 
 		public function index_json()
 		{
-			$applications = $this->bo->read();
+			// users with the booking role admin should have access to all buildings
+			// admin users should have access to all buildings
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
+			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) )
+			{
+				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			}
+			$filters['status'] = 'NEW';
+			if(isset($_SESSION['showall']))
+			{
+				$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED', 'CONFIRMED');
+			}
+
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+			$applications = $this->bo->so->read($params);
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
@@ -339,25 +361,45 @@
 
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
-					$this->bo->send_notification($application, false);
+					$this->bo->send_notification($application, true);
 					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
 								 lang("A Case officer will review your application as soon as possible."));
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
 				}
 			}
+			if(phpgw::get_var('resource', 'GET') == 'null')
+			{			
 			array_set_default($application, 'resources', array());
+			}
+			else 
+			{
+			array_set_default($application, 'resources', array(get_var('resource', int, 'GET')));
+			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
 			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
+			
 			if(phpgw::get_var('from_', 'GET'))
 			{
 				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'GET'), phpgw::get_var('to_', 'GET'));
-				array_set_default($application, 'dates', $default_dates);
 			}
+			else
+			{
+				$default_dates = array_map(array(self, '_combine_dates'), '','');
+			}
+			array_set_default($application, 'dates', $default_dates);
+			
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'application.js');
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+			{
 			$application['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
+			}
+			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => phpgw::get_var('building_id', 'GET')));
+			}
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
@@ -387,8 +429,15 @@
 				array_set_default($_POST, 'accepted_documents', array());
 				
 				$application = array_merge($application, extract_values($_POST, $this->fields));
+				$application['message'] = $_POST['comment'];
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
+
+				if ($application['frontend_modified'] == '')
+				{
+					unset($application['frontend_modified']);
+				}
+
 				$errors = $this->validate($application);
 				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				if(!$errors)
@@ -491,9 +540,18 @@
 				$update = false;
 				$notify = false;
 				
+				if ($application['frontend_modified'] == '')
+				{
+					unset($application['frontend_modified']);
+				}
+				
 				if(array_key_exists('assign_to_user', $_POST))
 				{
 					$update = $this->assign_to_current_user($application);
+					if ($application['status'] == 'NEW') {
+						$application['status'] = 'PENDING';
+					}
+
 				}
 				elseif(isset($_POST['unassign_user'])) 
 				{
@@ -509,6 +567,7 @@
 				}
 				elseif($_POST['comment'])
 				{				
+					$application['comment'] = $_POST['comment'];
 					$this->add_comment($application, $_POST['comment']);
 					$update = true;
 					$notify = true;
@@ -548,10 +607,15 @@
 			{
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
+			if (count($application['resources']) == 0)
+			{
+				unset($application['dates']);
+			}
 			$application['resource_ids'] = $resource_ids;
 			
 			$this->set_case_officer($application);
 			
+			$comments = array_reverse($application['comments']);
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -563,6 +627,6 @@
 			self::check_date_availability($application);
 			self::render_template('application', array('application' => $application, 
 								  'audience' => $audience, 'agegroups' => $agegroups,
-								  'num_associations'=>$num_associations));
+								  'num_associations'=>$num_associations,'comments' => $comments));
 		}
 	}

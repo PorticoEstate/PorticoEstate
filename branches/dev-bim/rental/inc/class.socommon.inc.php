@@ -28,6 +28,10 @@ abstract class rental_socommon
 		}
 		else if($type == 'int')
 		{
+			if($value == '')
+			{
+				return 'NULL';
+			}
 			return intval($value);
 		}
 		else if($type == 'float')
@@ -110,6 +114,13 @@ abstract class rental_socommon
 	}
 
 	/**
+	 * Method for retrieving the db-object (security "forgotten")
+	 */
+	public function get_db(){
+		return $this->db;
+	}
+
+	/**
 	 * Method for retreiving objects.
 	 * 
 	 * @param $start_index int with index of first object.
@@ -125,28 +136,58 @@ abstract class rental_socommon
 	 */
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
 	{
-		$results = array();
+		$results = array();			// Array to store result objects
+		$map = array();				// Array to hold number of records per target object
+		$check_map = array();		// Array to hold the actual number of record read per target object
+		$object_ids = array(); 		// All of the object ids encountered
+		$added_object_ids = array();// All of the added objects ids
 		
-		// Special case: Sort on id field. Always changed to the id field name.
-		if($sort_field == 'id')
+		// Retrieve information about the table name and the name and alias of id column
+		// $break_on_limit - 	flag indicating whether to break the loop when the number of records 
+		// 						for all the result objects are traversed
+		$id_field_name_info = $this->get_id_field_name(true);
+		if(is_array($id_field_name_info))
 		{
-			$sort_field = $this->get_id_field_name();
+			$break_on_limit = true;
+			$id_field_name = $id_field_name_info['translated'];
+		}
+		else
+		{
+			$break_on_limit = false;
+			$id_field_name = $id_field_name_info;
 		}
 		
-		$object_ids = array(); // All of the object ids
-		$added_object_ids = array(); // All of the added objects ids
+		// Special case: Sort on id field. Always changed to the id field name.
+		// $break_when_num_of_objects_reached - flag indicating to break the loop when the number of 
+		//		results are reached and we are sure that the records are ordered by the id
+		if($sort_field == null || $sort_field == 'id' || $sort_field == '')
+		{
+			$sort_field = $id_field_name;
+			$break_when_num_of_objects_reached = true;
+		}
+		else
+		{
+			$break_when_num_of_objects_reached = false;
+		}
+		
+		// Only allow positive start index
 		if($start_index < 0)
 		{
 			$start_index = 0;
 		}
 		
+
+		// test-input for break on ordered queries
+		$db2 = clone($this->db);
+
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-		$this->db->query($sql,__LINE__, __FILE__);
+		$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
+		$this->db->query($sql,__LINE__, __FILE__, false, true);
 
 		while ($this->db->next_record()) // Runs through all of the results
 		{
 			$should_populate_object = false; // Default value - we won't populate object	
-			$result_id = $this->unmarshal($this->db->f($this->get_id_field_name(), true), 'int'); // The id of object
+			$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
 			if(in_array($result_id, $added_object_ids)) // Object with this id already added
 			{
 				$should_populate_object = true; // We should populate this object as we already have it in our result array
@@ -171,6 +212,38 @@ abstract class rental_socommon
 			{	
 				$result = &$results[$result_id];
 				$results[$result_id] = $this->populate($result_id,$result);
+				$last_result_id = $result_id;
+				$map[$result_id] = (int)$map[$result_id] +1;
+			}
+			
+			//Stop looping when array not sorted on other then id and wanted number of results is reached
+			if(count($results) == $num_of_objects  && $last_result_id != $result_id && $break_when_num_of_objects_reached)
+			{
+				break;
+			}
+			// else stop looping when wanted number of results is reached all records for result objects are read
+			else if($break_on_limit && (count($results) == $num_of_objects)  && $last_result_id != $result_id)
+			{
+				$id_ok = 0;
+				foreach ($map as $_result_id => $_count)
+				{
+					if(!isset($check_map[$_result_id]))
+					{
+						// Query the number of records for the specific object in question
+						$sql2 = "{$sql_parts[0]} 1=1 AND {$id_field_name_info['table']}.{$id_field_name_info['field']} = {$_result_id} {$sql_parts[1]}";
+						$db2->query($sql2,__LINE__, __FILE__);
+						$db2->next_record();
+						$check_map[$_result_id] = $db2->num_rows();
+					}
+					if(	$check_map[$_result_id] == $_count )
+					{
+						$id_ok++;
+					}
+				}
+				if($id_ok == $num_of_objects)
+				{
+					break;
+				}
 			}
 		}
 		return $results;

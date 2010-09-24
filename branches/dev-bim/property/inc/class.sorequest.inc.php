@@ -178,6 +178,7 @@
 				$allrows		= isset($data['allrows'])?$data['allrows']:'';
 				$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+				$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			}
 
 			$entity_table = 'fm_request';
@@ -288,8 +289,16 @@
 
 			if($query)
 			{
+				if(stristr($query, '.') && $p_num)
+				{
+					$query=explode(".",$query);
+					$querymethod = " $where (fm_request.p_entity_id='" . (int)$query[1] . "' AND fm_request.p_cat_id='" . (int)$query[2] . "' AND fm_request.p_num='" . (int)$query[3] . "')";
+				}
+				else
+				{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where (fm_request.title $this->like '%$query%' or fm_request.address $this->like '%$query%' or fm_request.location_code $this->like '%$query%')";
+			}
 			}
 
 			$sql .= " $filtermethod $querymethod";

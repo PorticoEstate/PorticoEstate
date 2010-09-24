@@ -26,6 +26,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.common');
 	/**
 	* Authentication based on SQL table
 	*

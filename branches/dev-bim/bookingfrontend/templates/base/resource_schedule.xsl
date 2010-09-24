@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_booking_i18n"/>
-	<iframe id="yui-history-iframe" src="../phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<iframe id="yui-history-iframe" src="{webserver_url}/phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	
 	<div id="content">
@@ -21,6 +21,8 @@
             <li><xsl:value-of select="php:function('lang', 'schedule')"/></li>
 		</ul>
 
+       	<button onclick="window.location.href='{resource/application_link}'"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+
 		<xsl:call-template name="msgbox"/>
 		<ul id="week-selector">
 			<li><a href="#" onclick="YAHOO.booking.prevWeek(); return false"><xsl:value-of select="php:function('lang', 'Previous week')"/></a></li>
@@ -29,15 +31,13 @@
 		</ul>
 
 		<div id="schedule_container"/>
-		<a href="{resource/application_link}">
-			<xsl:value-of select="php:function('lang', 'New booking application')"/>
-		</a>
 	</div>
 
 <script type="text/javascript">
 YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.booking.setupWeekPicker('cal_container');
 	YAHOO.booking.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';
+	YAHOO.booking.newApplicationUrl = '<xsl:value-of select="resource/application_link"/>';
 	
     var handleHistoryNavigation = function (state) {
 		YAHOO.booking.date = parseISO8601(state);

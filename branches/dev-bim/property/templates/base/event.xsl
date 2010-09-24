@@ -176,7 +176,7 @@
 				</div>
 				<xsl:variable name="edit_url"><xsl:value-of select="edit_url"/></xsl:variable>
 				<div id="plan">
-					<form method="post" name="alarm" action="{$edit_url}">
+
 					   <input type="hidden" name="values[location_id]" value="{value_location_id}" ></input>
 					   <input type="hidden" name="values[location_item_id]" value="{value_location_item_id}" ></input>
 					   <table cellpadding="2" cellspacing="2" width="79%" align="center" border="0">
@@ -200,7 +200,7 @@
 			      <!-- <xsl:call-template name="alarm_form"/>  -->
 
 				   	  </table>
-					</form>
+
 				</div>
 
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">

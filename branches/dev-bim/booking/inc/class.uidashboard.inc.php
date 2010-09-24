@@ -39,6 +39,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -112,6 +113,8 @@
 
 		public function index_json()
 		{
+			$this->db = $GLOBALS['phpgw']->db;
+
 			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? null : $this->current_account_id());
 			foreach($applications['results'] as &$application)
 			{
@@ -129,6 +132,12 @@
 						$names[] = $res['name'];
 					}
 					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
+				}
+
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$application['case_officer_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$application['case_officer_name'] = $record['account_firstname']." ".$record['account_lastname'];
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");

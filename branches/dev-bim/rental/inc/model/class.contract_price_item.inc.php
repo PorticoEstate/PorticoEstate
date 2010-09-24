@@ -16,6 +16,8 @@
 		protected $total_price;
 		protected $date_start;
 		protected $date_end;
+		protected $is_one_time;
+		protected $is_billed;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -192,6 +194,7 @@
 				'is_area' => $this->get_type_text(),
 				//'price' => money_format($currency_prefix.' %.2n',$this->get_price()),
 				'price' => $this->get_price(),
+				'is_one_time' => $this->is_one_time(),
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not
 				// happy about empty values if a custom parser is set, so we use the YUI built
@@ -200,6 +203,31 @@
 				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):'',  
 				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):''
 			);
+		}
+		
+		public function set_is_billed($is_billed)
+		{
+			$this->is_billed = (boolean)$is_billed;
+		}
+		
+		public function is_billed()
+		{
+			return $this->is_billed;
+		}
+		
+		public function set_is_one_time($is_one_time)
+		{
+			$this->is_one_time = (boolean)$is_one_time;
+		}
+		
+		public function is_one_time()
+		{
+			return $this->is_one_time;
+		}
+		
+		public function get_is_one_time()
+		{
+			return $this->is_one_time;
 		}
 		
 	}

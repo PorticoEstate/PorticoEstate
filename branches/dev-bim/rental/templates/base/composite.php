@@ -11,6 +11,7 @@
 <div class="identifier-header">
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('showing_composite') ?></h1>
 	<div>
+		<button onclick="javascript:window.location.href ='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php echo lang('composite_back');?></button><br/>
 		<label><?php echo lang('name') ?> </label><?php echo $composite->get_name() ?>
 	</div>
 </div>
@@ -46,27 +47,39 @@
 					</dd>
 
 					<dt>
-						<label for="name"><?php echo lang('address') ?></label>
+						<label for="name"><?php echo lang('address');if (!$editable && $composite->has_custom_address()){echo " (<font style='color:red;'>" . lang('custom_address') . "</font>)";} ?></label>
 					</dt>
 					<dd>
 						<?php
 							if (!$editable && $composite->has_custom_address()) {
 								// In view mode the custom address should be displayed if it's filled in
-								echo $composite->get_custom_address_1() . "<br />";
+								echo $composite->get_custom_address_1();
 								if ($composite->get_custom_address_2()) {
-									echo ', ' . $composite->get_custom_address_2();
+									echo ',<br/>' . $composite->get_custom_address_2();
 								}
 								if ($composite->get_custom_house_number()) {
-									echo ' ' . $composite->get_custom_house_number();
+									echo ',<br/>' . $composite->get_custom_house_number();
 								}
 								if ($composite->get_custom_postcode()) {
-									echo '<br />' . $composite->get_custom_postcode() . ' ' . $composite->get_custom_place();
+									echo ',<br />' . $composite->get_custom_postcode() . ' ' . $composite->get_custom_place();
+								}
+							}
+							else if (!$editable){
+								//no custom address
+								foreach($composite->get_units() as $unit){
+									echo $unit->get_location()->get_address_1();
 								}
 							}
 						?>
 					</dd>
 
 					<?php if ($editable) { // Only show custom address fields if we're in edit mode ?>
+					<dt>
+						<label for="has_custom_address"><?php echo lang('has_custom_address') ?></label>
+					</dt>
+					<dd>
+						<input type="checkbox" name="has_custom_address" id="has_custom_address"<?php echo $composite->has_custom_address() ? ' checked="checked"' : '' ?>/>
+					</dd>
 					<dt>
 						<label for="address_1"><?php echo lang('overridden_address') ?></label> / <label for="house_number"><?php echo lang('house_number') ?></label>
 					</dt>
@@ -88,9 +101,9 @@
 
 				<dl class="proplist-col">
 					<dt><?php echo lang('area_gros') ?></dt>
-					<dd><?php echo $composite->get_area_gros().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
+					<dd><?php echo $composite->get_area_gros()?>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt><?php echo lang('area_net') ?></dt>
-					<dd><?php echo $composite->get_area_net().' '.isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
+					<dd><?php echo $composite->get_area_net()?>&nbsp;<?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?></dd>
 					<dt>
 						<label for="is_active"><?php echo lang('available?') ?></label>
 					</dt>
@@ -112,9 +125,6 @@
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_composite" value="' . lang('save') . '"/>';
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('cancel') . '</a>';
-						} else {
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('back') . '</a>';
 						}
 					?>
 				</div>
@@ -153,7 +163,7 @@
 				$extra_cols = array(
 					array("key" => "type", "label" => lang('title'), "index" => 3),
 					array("key" => "party", "label" => lang('party'), "index" => 4),
-					array("key" => "old_contract_id", "label" => lang('old_contract_id'), "index" => 5)
+					array("key" => "contract_notification_status", "label" => lang('notification_status'))
 				);
 				unset($related);
 				include('contract_list_partial.php');

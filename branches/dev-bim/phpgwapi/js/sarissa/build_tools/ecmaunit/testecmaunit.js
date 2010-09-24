@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: testecmaunit.js 16502 2006-03-12 13:29:24Z skwashd $
+// $Id$
 
 function TestTestCase() {
     this.name = 'TestTestCase';
@@ -27,6 +27,11 @@ function TestTestCase() {
     this.testAssertEquals = function() {
         this.assertEquals('foo', 'foo');
     this.assertThrows(this.assertEquals, undefined, this, 'foo', 'bar');
+    };
+
+    this.testAssertNotEquals = function() {
+        this.assertNotEquals('foo', 'bar');
+        this.assertThrows(this.assertNotEquals, undefined, this, 'foo', 'foo');
     };
 
     this.testAssertTrue = function() {
@@ -82,8 +87,12 @@ function TestTestCase2() {
         this.assertEquals(this.foo.returnfoo(), 'foo');
     };
 
+    this.testAssertNotEquals = function() {
+        this.assertNotEquals(this.foo.returnfoo(), 'bar');
+    };
+
     this.testAssertTrue = function() {
-        this.assertTrue(this.foo.returnfoo(), 'foo');
+        this.assertTrue(this.foo.returnfoo() == 'foo');
     };
 
     this.testAssertFalse = function() {

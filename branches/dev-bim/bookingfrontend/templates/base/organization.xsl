@@ -16,7 +16,7 @@
 
 		<xsl:if test="organization/permission/write">
 			<span class="loggedin">
-				<a href="{organization/edit_link}"><img src="../phpgwapi/templates/base/images/edit.png" /></a>
+        	<button onclick="window.location.href='{organization/edit_link}'"><xsl:value-of select="php:function('lang', 'edit')" /></button>
 			</span>
 		</xsl:if>
 		
@@ -33,7 +33,7 @@
 			<xsl:if test="organization/homepage and normalize-space(organization/homepage)">		
 	            <dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
 	            <dd>
-	                <a target="blank" href="http://{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
+	                <a target="blank" href="{organization/homepage}"><xsl:value-of select="organization/homepage" /></a>
 	            </dd>
 			</xsl:if>
 			

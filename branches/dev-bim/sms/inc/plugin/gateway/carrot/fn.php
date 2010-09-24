@@ -2,9 +2,9 @@
 
 	class sms_sms extends sms_sms_
 	{
-		function sms_sms()
+		function __construct()
 		{
-			$this->sms_sms_();
+			parent::__construct();
 			$this->carrot_param = $GLOBALS['phpgw_info']['sms_config']['carrot'];
 		}
 

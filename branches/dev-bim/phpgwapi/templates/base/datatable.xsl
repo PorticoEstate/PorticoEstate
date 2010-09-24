@@ -316,6 +316,21 @@
 			<xsl:when test="type='img'">
 				<img id="{id}" src="{src}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}" />
 			</xsl:when>
+			<xsl:when test="type='select'">
+				<select id="{id}" name="{name}" alt="{alt}" title="{alt}" style="cursor:pointer; cursor:hand;" tabindex="{tab_index}">
+					<xsl:if test="onchange">
+						<xsl:attribute name="onchange"><xsl:value-of select="onchange"/></xsl:attribute>
+					</xsl:if>
+ 		     		<xsl:for-each select="values">
+						<option value="{id}">
+							<xsl:if test="selected != 0">
+								<xsl:attribute name="selected" value="selected" />
+							</xsl:if>
+							<xsl:value-of disable-output-escaping="yes" select="name"/>
+						</option>
+ 		     		</xsl:for-each>
+				</select>			
+			</xsl:when>
 			<xsl:otherwise>
 				<input id="{$id}" type="{type}" name="{name}" value="{value}" class="{type}"  tabindex="{tab_index}">
 					<xsl:if test="size">
@@ -372,6 +387,15 @@
 
 				</script>
 			</xsl:when>
+			<xsl:otherwise>
+				<script type="text/javascript">
+					function Exchange_values(data)
+					{
+
+					}
+				</script>
+			</xsl:otherwise>
+
 		</xsl:choose>
 
 	 <br/>
@@ -384,6 +408,11 @@
       		 -->
     	</table>
   	</div>
+   	<div id="datatable-detail" style="background-color:#000000;color:#FFFFFF;display:none">
+		<div class="hd" style="background-color:#000000;color:#000000; border:0; text-align:center"> Record Detail </div>
+		<div class="bd" style="text-align:center;"> </div>
+	</div>
+
   	<div id="footer"> </div>
   	<xsl:call-template name="datatable-yui-definition" />
 
@@ -736,6 +765,12 @@
   		var property_js = "<xsl:value-of select="//datatable/property_js"/>";
 
 		var base_java_url = "{<xsl:value-of select="//datatable/config/base_java_url"/>}";
+
+		<xsl:choose>
+			<xsl:when test="//datatable/json_data != ''">
+  				var json_data = <xsl:value-of select="//datatable/json_data" disable-output-escaping="yes" />;
+			</xsl:when>
+		</xsl:choose>
 
 		var myColumnDefs = [
 			<xsl:for-each select="//datatable/headers/header">

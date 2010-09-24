@@ -64,7 +64,16 @@
 		{
 			$entity = array();
 
-			$sql = "SELECT * FROM fm_entity_category where loc_link=1";
+			$type_app = execMethod('property.soentity.get_type_app');
+			
+			foreach ($type_app as $type => $app)
+			{
+				if( !$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $app))
+				{
+					continue;
+				}
+
+				$sql = "SELECT * FROM fm_{$type}_category where loc_link=1";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -82,7 +91,7 @@
 
 			foreach($category as $entry)
 			{
-				$sql = "SELECT count(*) as hits FROM fm_entity_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code $this->like '$location_code%'";
+					$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code $this->like '$location_code%'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				if($this->db->f('hits'))
@@ -94,13 +103,15 @@
 															'menuaction'	=> 'property.uientity.index',
 															'entity_id'		=> $entry['entity_id'],
 															'cat_id'		=> $entry['cat_id'],
-															'location_code'	=> $location_code
+																'location_code'	=> $location_code,
+																'type'			=> $type
 														)
 													),
 						'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
 						'descr'			=> $entry['descr']
 					);
 				}
+			}
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE location_code $this->like '$location_code%'";
@@ -222,11 +233,11 @@
 
 		function check_location($location_code='',$type_id='')
 		{
-			$this->db->query("SELECT count(*) FROM fm_location$type_id where location_code='$location_code'");
+			$this->db->query("SELECT count(*) AS cnt FROM fm_location$type_id where location_code='$location_code'");
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}
@@ -241,7 +252,7 @@
 				$query				= isset($data['query']) ? $data['query'] : '';
 				$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order				= isset($data['order']) ? $data['order'] : '';
-				$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
 				$type_id			= isset($data['type_id']) ? $data['type_id'] : '';
 				$lookup_tenant		= isset($data['lookup_tenant']) ? $data['lookup_tenant'] : '';
 				$district_id		= isset($data['district_id']) ? $data['district_id'] : '';
@@ -263,8 +274,10 @@
 
 //			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
-			$attribute_filter = " custom = 1 AND location_id = {$location_id}";
+//			$attribute_filter = " custom = 1 AND location_id = {$location_id}";
+			$attribute_filter = " location_id = {$location_id}";
 //			$attribute_choice_filter = " location_id = {$location_id}";
+
 
 			if(!$sql)
 			{
@@ -461,10 +474,15 @@
 				$this->db->query("SELECT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter");
 				while ($this->db->next_record())
 				{
-					$cols .= ",fm_location" . ($type_id) .'.' . $this->db->f('column_name');
+					$cols .= ",fm_location{$type_id}." . $this->db->f('column_name');
 				}
 
-				$from = " FROM $paranthesis fm_location$type_id ";
+				$cols.= ",fm_location{$type_id}_category.descr as category_text";
+
+				$joinmethod .= " {$this->left_join} fm_location{$type_id}_category ON ( fm_location{$type_id}.category = fm_location{$type_id}_category.id))";
+				$paranthesis .='(';
+
+				$from = " FROM {$paranthesis} fm_location{$type_id} ";
 
 				$sql = "SELECT $cols $from $joinmethod";
 
@@ -539,12 +557,27 @@
 						default:
 							$uicols['align'][] 	= 'center';
 					}
+
+					if($this->db->f('column_name') == 'category')
+					{
+						$i++;
+						$cols.= ",fm_location{$type_id}_category.descr as category_text";
+						$uicols['input_type'][]		= 'text';
+						$uicols['name'][]			= 'category_text';
+						$uicols['descr'][]			= $this->db->f('input_text') . ' ' . lang('name');
+						$uicols['statustext'][]		= '';
+						$uicols['datatype'][$i]		= 'V';
+						$uicols['exchange'][]		= false;
+						$uicols['align'][]			= 'right';
+						$uicols['cols_return_extra'][$i] = array();
+					}
 					$i++;
 				}
 
 //---------------------end custom user cols
 
 			$this->uicols = $uicols;
+
 
 			if ($order)
 			{
@@ -574,14 +607,15 @@
 				$where= 'AND';
 			}
 
-			if ($cat_id > 0)
+			if ($cat_id)
 			{
-				$filtermethod .= " $where fm_location" . ($type_id). ".category=$cat_id ";
+				$cat_id = $this->db->db_addslashes($cat_id);
+				$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
 				$where= 'AND';
 			}
 			else
 			{
-				$filtermethod .= " $where  (fm_location" . ($type_id). ".category !=99 OR fm_location" . ($type_id). ".category IS NULL)";
+				$filtermethod .= " $where  (fm_location{$type_id}.category !='99' OR fm_location{$type_id}.category IS NULL)";
 				$where= 'AND';
 			}
 
@@ -603,7 +637,7 @@
 
 			if ($status > 0)
 			{
-				$filtermethod .= " $where fm_location" . ($type_id). ".status=$status ";
+				$filtermethod .= " $where fm_location{$type_id}.status = {$status} ";
 				$where= 'AND';
 			}
 			else
@@ -612,7 +646,6 @@
 //				$filtermethod .= " $where fm_location" . ($type_id). ".status !=2 ";
 //				$where= 'AND';
 			}
-
 
 			if ($district_id > 0)
 			{
@@ -632,7 +665,9 @@
 				$where= 'AND';			
 			}
 
-			$querymethod = '';
+			$_querymethod = array();
+			$__querymethod = array();
+			$_joinmethod_datatype = array();
 
 			if($query)
 			{
@@ -640,10 +675,10 @@
 				$query = str_replace(",",'.',$query);
 				if(stristr($query, '.'))
 				{
-					$query=explode(".",$query);
-					$querymethod = " $where (fm_location" . ($type_id).".loc1='" . $query[0] . "' AND fm_location" . $type_id .".loc" . ($type_id)."='" . $query[1] . "')";
+					$query_part = explode(".",$query);
+					$_querymethod[] = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
 				}
-				else
+		//		else
 				{
 					$sub_query = '';
 
@@ -663,21 +698,111 @@
 						$query_name .= "OR loc{$i}_name $this->like '%$query%'";
 					}
 
-					$querymethod = " {$where} (fm_location{$type_id}.loc1 {$this->like} '%{$query}%' {$sub_query} OR fm_location{$type_id}.location_code {$this->like} '%{$query}%' {$query_name})";
+					if(!$criteria_id)
+					{
+						$_querymethod[] = " (fm_location{$type_id}.loc1 {$this->like} '%{$query}%' {$sub_query} OR fm_location{$type_id}.location_code {$this->like} '%{$query}%' {$query_name})";
+					}
+					else
+					{
+						$__querymethod = array("fm_location{$type_id}.loc1 = '-1'"); // block query waiting for criteria
+					}
+
+					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
+
+					while ($this->db->next_record())
+					{
+						switch ($this->db->f('datatype'))
+						{
+							case 'V':
+							case 'email':
+							case 'CH':
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'R':
+							case 'LB':
+								if(!$criteria_id)
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON (fm_location{$type_id}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
+									." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+
+									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+									." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'I':
+								if(ctype_digit($query) && !$criteria_id)
+								{
+									$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " = " . (int)$query;
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'VENDOR':
+								if($criteria_id == 'vendor')
+								{
+									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON (fm_location{$type_id}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'AB':
+								if($criteria_id == 'ab')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON (fm_location{$type_id}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							case 'ABO':
+								if($criteria_id == 'abo')
+								{
+									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON (fm_location{$type_id}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$__querymethod = array(); // remove block
+								}
+								break;
+							default:
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "fm_location{$type_id}." . $this->db->f('column_name') . " = '{$query}'";
+									$__querymethod = array(); // remove block
+								}
+						}
+					}
 				}
 				$where= 'AND';
 			}
 
-			$sql .= "$filtermethod $querymethod";
-
-//echo $sql; die();
-			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-			$values = array();
-			if(!$dry_run)
+			foreach($_joinmethod_datatype as $_joinmethod)
 			{
-				$this->db->query('SELECT count(*)' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$sql .= $_joinmethod;
+			}
+			
+			$querymethod = '';
+			
+			$_querymethod = array_merge($__querymethod, $_querymethod);
+			if ($_querymethod)
+			{
+				$querymethod = " $where (" . implode (' OR ',$_querymethod) . ')';
+				unset($_querymethod);
+			}
+
+			$sql .= "$filtermethod $querymethod";
+//_debug_array($sql);
+			$values = array();
+			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->total_records = $this->db->f('cnt');
+
+			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			if($dry_run)
+			{
+				return array();
+			}
 
 				if(!$allrows)
 				{
@@ -685,7 +810,16 @@
 				}
 				else
 				{
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				if($this->total_records > 200)
+				{
+					$_fetch_single = true;
+				}
+				else
+				{
+					$_fetch_single = false;
+				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				unset($_fetch_single);
 				}
 
 				$j=0;
@@ -709,7 +843,6 @@
 				}
 
 				$values = $this->custom->translate_value($dataset, $location_id, $location_count);
-			}
 			return $values;
 		}
 
@@ -913,7 +1046,7 @@
 				return;
 			}
 
-			$cols = 'fm_location' . $type_id .'.category as cat_id';
+			$cols = "fm_location{$type_id}.category as cat_id";
 			$cols_return[] 	= 'cat_id';
 
 			for ($i=1;$i<($type_id);$i++)
@@ -1136,7 +1269,7 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category=99",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_location" . $m. " set	status= 2  WHERE category='99'",__LINE__,__FILE__);
 
 			for ($type_id=$m; $type_id>1; $type_id--)
 			{
@@ -1381,9 +1514,11 @@
 
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
 
+			$summary = array();
 			while ($this->db->next_record())
 			{
-				$summary[]=array(
+				$summary[]=array
+				(
 					'number'		=> $this->db->f('number'),
 					'type'			=> '[' . $this->db->f('category') . '] ' .$this->db->f('type'),
 					'part_of_town'	=> $this->db->f('part_of_town'),
@@ -1408,13 +1543,13 @@
 
 			$table = 'fm_location' . $type_id . '_history';
 
-			$sql = "SELECT count(*) FROM $table WHERE location_code='$location_code'";
+			$sql = "SELECT count(*) AS cnt FROM $table WHERE location_code='$location_code'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if($this->db->f('0')>0)
+			if($this->db->f('cnt')>0)
 			{
 				return true;
 			}
@@ -1488,7 +1623,7 @@
 					(
 						'value'		=> $this->db->f($field['column_name']),
 						'datatype'	=> $field['datatype'],
-						'attrib_id'	=> $field['attib_id']
+						'attrib_id'	=> $field['attrib_id']
 					);
 				}
 				$j++;				

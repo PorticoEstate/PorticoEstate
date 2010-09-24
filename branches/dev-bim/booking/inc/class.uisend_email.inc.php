@@ -20,7 +20,6 @@
 		public function index()
 		{
 			$errors = array();
-			$cancel_link = self::link(array('menuaction' => 'booking.uisend_email.index'));
 			$step = 1;
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -28,7 +27,14 @@
 				$step = phpgw::get_var('step', 'POST');
 				$step++;
 				$building =  phpgw::get_var('building_id', 'POST');
+				if (is_array(phpgw::get_var('seasons', 'POST')))
+				{
 				$season =  implode(',', phpgw::get_var('seasons', 'POST'));
+				}
+				else
+				{
+					$season =  phpgw::get_var('seasons', 'POST');
+				}
 				$mailsubject =  phpgw::get_var('mailsubject', 'POST');
 				$mailbody =  phpgw::get_var('mailbody', 'POST');
 				$contacts = null;
@@ -53,8 +59,11 @@
 				elseif ($step == 3)
 				{
 					$contacts = $this->get_email_addresses($building, $season);
-					$this->send_emails($contacts, $mailsubject, $mailbody);
-					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt'));
+					$result = $this->send_emails($contacts, $mailsubject, $mailbody);
+					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt', 
+						'ok' => count($result['ok']),
+						'failed' => count($result['failed'])
+					));
 				}
 			}
 
@@ -80,17 +89,34 @@
 
 		public function receipt()
 		{
-			self::render_template('email_receipt');
+			$ok_count =  phpgw::get_var('ok', 'GET');
+			$fail_count =  phpgw::get_var('failed', 'GET');
+			self::render_template('email_receipt',
+				array('ok_count' => $ok_count, 'fail_count' => $fail_count));
 		}
 
 		private function send_emails($contacts, $subject, $body)
 		{
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
 			$send = CreateObject('phpgwapi.send');
+			$result = array();
 
 			foreach($contacts as $contact)
 			{
-				$send->msg('email', $contact['email'], $subject, $body);
+				try
+				{
+					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
+					$result['ok'][] = $contact; 
+				}
+				catch (phpmailerException $e)
+				{
+					$result['failed'][] = $contact; 
+				}
 			}
+			return $result;
 		}
 
 		private function get_email_addresses($building_id, $season_id)

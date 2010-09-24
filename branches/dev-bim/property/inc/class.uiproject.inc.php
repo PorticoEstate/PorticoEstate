@@ -56,7 +56,8 @@
 			'view'   => true,
 			'edit'   => true,
 			'delete' => true,
-			'date_search'=>true
+			'date_search'	=> true,
+			'columns'		=> true
 		);
 
 		function property_uiproject()
@@ -119,37 +120,56 @@
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
+		function columns()
+			{
+			$receipt = array();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values 		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
+			if (isset($values['save']) && $values['save'])
+					{
+				$GLOBALS['phpgw']->preferences->add('property','project_columns', $values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+				}
+
+			$function_msg	= lang('Select Column');
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiproject.columns',
+			);
+
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+				'function_msg'		=> $function_msg,
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_columns'		=> lang('columns'),
+				'lang_none'			=> lang('None'),
+				'lang_save'			=> lang('save'),
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
+			}
+
 		function index()
-		{
+			{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.stop', 'perm'=>1,'acl_location'=> $this->acl_location));
-			}
-
-			/*
-			* FIXME:
-			* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about a second
-			* Should be fixed in the js if possible.
-			*/
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$json_get = phpgwapi_cache::session_get('property', 'project_index_json_get');
-				if($json_get == 1)
-				{
-					$json = phpgwapi_cache::session_get('property', 'project_index_json');
-					if($json && is_array($json))
-					{
-						phpgwapi_cache::session_clear('property', 'project_index_json');
-						phpgwapi_cache::session_set('property', 'project_index_json_get', 2);
-						return $json;
-					}
-				}
-			}
-			else
-			{
-				phpgwapi_cache::session_clear('property', 'project_index_json_get');
 			}
 
 			$lookup 		= phpgw::get_var('lookup', 'bool');
@@ -190,7 +210,8 @@
 	    											."query:'{$this->query}',"
  	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
-						 	                        ."lookup:'{$lookup}',"						 	                        ."cat_id:'{$this->cat_id}',"
+						 	                        ."lookup:'{$lookup}',"
+						 	                        ."cat_id:'{$this->cat_id}',"
 						 	                        ."user_id:'{$this->user_id}',"
 						 	                        ."criteria_id:'{$this->criteria_id}',"
 						 	                        ."wo_hour_cat_id:'{$this->wo_hour_cat_id}',"
@@ -235,6 +256,7 @@
 				array_unshift ($values_combo_box[3],$default_value);
 
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->user_id,$this->acl_location);
+				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine projects')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
@@ -303,6 +325,18 @@
 				                                            'style' => 'filter',
 				                                            'tab_index' => 6
 				                                        ),
+							                            //for link "columns", next to Export button
+											           array(
+							                                'type' => 'link',
+							                                'id' => 'btn_columns',
+							                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+																				           array
+																				              (
+																				               'menuaction' => 'property.uiproject.columns'
+																				              ))."','','width=300,height=600,scrollbars=1')",
+															'value' => lang('columns'),
+															'tab_index' => 12
+														),
 														array(
 							                                'type'	=> 'button',
 							                            	'id'	=> 'btn_export',
@@ -424,7 +458,7 @@
 								$datatable['rows']['row'][$j]['column'][$k]['format'] 			= 'link';
 								$datatable['rows']['row'][$j]['column'][$k]['java_link']		= true;
 								$datatable['rows']['row'][$j]['column'][$k]['link']				= $project_entry['query_location'][$uicols['name'][$k]];
-								$uicols['formatter'][$k] = 'myCustom';
+								$uicols['formatter'][$k] = "'myCustom'";
 							}
 							else if (isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && isset($project_entry[$uicols['name'][$k]]) && $project_entry[$uicols['name'][$k]])
 							{
@@ -442,6 +476,7 @@
 								$datatable['rows']['row'][$j]['column'][$k]['value']			= $project_entry[$uicols['name'][$k]];
 						}
 
+
 						if($lookup && $k==($count_uicols_name-1))
 						{
 							$content[$j]['row'][]= array(
@@ -452,11 +487,11 @@
 
 					$j++;
 				}
+			}
 
 				$datatable['rowactions']['action'] = array();
 				if(!$lookup)
 					{
-
 						$parameters = array
 						(
 							'parameter' => array
@@ -468,7 +503,6 @@
 								),
 							)
 						);
-
 						$parameters2 = array
 						(
 							'parameter' => array
@@ -481,8 +515,7 @@
 							)
 						);
 
-
-						if (isset($project_entry) && $this->acl_read && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_READ))
+				if ($this->acl_read)
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'view',
@@ -491,7 +524,6 @@
 								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uiproject.view'
-
 										)),
 								'parameters'	=> $parameters
 							);
@@ -503,17 +535,33 @@
 										(
 											'menuaction'	=> 'property.uiproject.view',
 											'target'		=> '_blank'
+									)),
+						'parameters'	=> $parameters
+					);
 
+					$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+					foreach ($jasper as $report)
+					{
+						$datatable['rowactions']['action'][] = array(
+								'my_name'		=> 'edit',
+								'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+																(
+																		'menuaction'	=> 'property.uijasper.view',
+																		'jasper_id'			=> $report['id'],
+																		'target'		=> '_blank'
 										)),
 								'parameters'	=> $parameters
 							);
 						}
+				}
 						else
 						{
 				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
-						if (isset($project_entry) && $this->acl_edit && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_EDIT))
+				if ($this->acl_edit)
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'edit',
@@ -522,7 +570,6 @@
 								'action'			=> $GLOBALS['phpgw']->link('/index.php',array
 										(
 											'menuaction'	=> 'property.uiproject.edit'
-
 										)),
 								'parameters'	=> $parameters
 							);
@@ -543,10 +590,7 @@
 				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
-
-
-
-						if(isset($project_entry) && $this->acl_delete && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_DELETE))
+				if($this->acl_delete)
 						{
 							$datatable['rowactions']['action'][] = array(
 								'my_name' 			=> 'delete',
@@ -564,7 +608,7 @@
 				//			$datatable['rowactions']['action'][] = array('link'=>'dummy');
 						}
 
-						if (isset($project_entry) && $this->acl_add && $this->bocommon->check_perms($project_entry['grants'],PHPGW_ACL_ADD))
+				if($this->acl_add)
 						{
 							$datatable['rowactions']['action'][] = array(
 												'my_name' 			=> 'add',
@@ -578,7 +622,7 @@
 					}
 
 						unset($parameters);
-			}
+
 			$count_uicols_descr = count($uicols['descr']);
 
 
@@ -670,7 +714,17 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+			if($dry_run)
+			{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+			}
+			else
+			{
 			$datatable['pagination']['records_returned']= count($project_list);
+			}
+
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 			$appname	= lang('Project');
@@ -687,21 +741,7 @@
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 		  	//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -741,26 +781,32 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 		
-				/*
-				* FIXME:
-				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about a second
-				* Should be fixed in the js if possible.
-				*/
-				$json_get = phpgwapi_cache::session_get('property', 'project_index_json_get');
-				if(!$json_get)
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
-						phpgwapi_cache::session_set('property', 'project_index_json',$json);
-						phpgwapi_cache::session_set('property', 'project_index_json_get', 1);
-				}
-
 	    		return $json;
 			}
 //-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$datatable['json_data'] = json_encode($json);
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{
@@ -980,8 +1026,8 @@
 
 				if(!isset($values['end_date']) || !$values['end_date'])
 				{
-//					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
-//					$error_id=true;
+					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
+					$error_id=true;
 				}
 
 				if(!$values['name'])
@@ -1008,13 +1054,13 @@
 					$error_id=true;
 				}
 
-				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
 				}
 
-				if(isset($values['reserve']) && $values['reserve'] && !ctype_digit($values['reserve']))
+				if(isset($values['reserve']) && $values['reserve'] && !ctype_digit(ltrim($values['reserve'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('reserve') . ': ' . lang('Please enter an integer !'));
 					$error_id=true;
@@ -1054,23 +1100,18 @@
 					}
 
 					if ( isset($GLOBALS['phpgw_info']['server']['smtp_server'])
-						&& $GLOBALS['phpgw_info']['server']['smtp_server']
-						&& $config->config_data['project_approval'] )
+						&& $GLOBALS['phpgw_info']['server']['smtp_server'] )
+//						&& $config->config_data['project_approval'] )
 					{
+						$historylog	= CreateObject('property.historylog','project');
 						if (!is_object($GLOBALS['phpgw']->send))
 						{
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
 
-
 						$action_params['responsible'] = $_account_id;
 						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$headers = "Return-Path: <". $from_email .">\r\n";
-						$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
-						$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
-						$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-						$headers .= "MIME-Version: 1.0\r\n";
 
 						$subject = lang(Approval).": ". $id;
 						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit','id'=> $id)).'">' . lang('project %1 needs approval',$id) .'</a>';
@@ -1106,14 +1147,14 @@
 									}
 									else
 									{
+										$historylog->add('AP', $id, lang('%1 is notified',$_address));
 										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 									}
 								}
 							}
 						}
 
-						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) 
-						 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'] == 1)
+						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) )
 						{
 							if($this->account!=$values['coordinator'] && $config->config_data['mailnotification'])
 							{
@@ -1144,6 +1185,7 @@
 								}
 								else
 								{
+									$historylog->add('ON', $id, lang('%1 is notified',$to));
 									$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
 								}
 							}
@@ -1292,15 +1334,15 @@
 			{
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
 						'b_account_id'		=> $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name']));
-
-
+						'b_account_name'	=> $values['b_account_name'],
+						'role'				=> 'group',
+				//		'disabled'			=> isset($values['workorder_budget'][0]['b_account_id']) && $values['workorder_budget'][0]['b_account_id'] ? true : false
+						));
 
 				$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
 						'ecodimb'			=> $values['ecodimb'],
 						'ecodimb_descr'		=> $values['ecodimb_descr']));
 			}
-
 
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
 						'contact_id'		=> $values['contact_id'],
@@ -1443,13 +1485,14 @@
        		$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => workorder_id,label=>lang('Workorder'),sortable=>true,resizeable=>true,formatter=>'YAHOO.widget.DataTable.formatLink'),
-									       			array(key => budget,label=>lang('Budget'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
-									       			array(key => calculation,label=>lang('Calculation'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
-									       			array(key => actual_cost,label=>lang('actual cost'),sortable=>true,resizeable=>true,formatter=>FormatterRight),
-		       				       			//		array(key => charge_tenant,label=>lang('charge tenant'),sortable=>true,resizeable=>true),
-		       				       					array(key => vendor_name,label=>lang('Vendor'),sortable=>true,resizeable=>true),
-		       				       					array(key => status,label=>lang('Status'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+									       			array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+									       			array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+									       			array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+									       			array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
+		       				       			//		array('key' => 'charge_tenant','label'=>lang('charge tenant'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'vendor_name','label'=>lang('Vendor'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'status','label'=>lang('Status'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 			$datavalues[1] = array
@@ -1466,11 +1509,11 @@
        		$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => value_user,label=>lang('User'),Action=>true,resizeable=>true),
-									       			array(key => value_action,label=>lang('action'),sortable=>true,resizeable=>true),
-									       			array(key => value_old_value,label=>lang('old value'),	sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('new value'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user','label'=>lang('User'),'Action'=>true,'resizeable'=>true),
+									       			array('key' => 'value_action','label'=>lang('action'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_old_value','label'=>lang('old value'),	'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_new_value','label'=>lang('new value'),'sortable'=>true,'resizeable'=>true)))
 			);
 
 			//----------------------------------------------datatable settings--------

@@ -14,15 +14,68 @@
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 				return;
 			$send = CreateObject('phpgwapi.send');
-			if($created)
-				$subject = "Søknad #{$application[id]} er mottatt";
-			else
-				$subject = "Søknad #{$application[id]} endret/oppdatert";
-			$link = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiapplication.show', 'id'=>$application['id'], 'secret'=>$application['secret']));
-			$link = 'http://193.161.160.114' . $link; // FIXME: Temporary
-			$link = str_replace('&amp;', '&', $link);
-			$body = "Klikk på linken under for å se på søknaden:\r\n\r\n$link";
-			$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', 'noreply@bergen.kommune.no', 'Bergen Booking', 'plain');
+
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+
+			$subject = 'Melding fra Bergen kommune - AktivBy';
+			$link = $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id='.$application['id'].'&secret='.$application['secret'];
+
+			if ($created) {
+				$body = '<p>Din søknad om leie/lån er mottatt.</p>';
+				$body .= '<p>Praktisk informasjon finner du i dokumenter knyttet til bygget, ref. juridiske betingelser pk.8 i søknad.</p>';
+				$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
+				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+
+			} else {
+//				$body = '<p>Din søknad i AktivBy om leie/lån er endret/oppdatert, og har nå status <strong>'.lang($application['status']).'</strong>.</p>';
+
+				$body = '<p>Din søknad i AktivBy? om leie/lån er blitt endret/oppdatert. Ber om at du går inn og sjekker om vi trenger ytterligere informasjon, og evt. gir nødvendig tilbakmeldinger slik at saken kan ferdigbehandles.</p>';
+				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				$body .= '<p>'.$application['comment'].'</p>';
+			}
+			$body .= '<p>Med vennlig hilsen AktivBy - Bergen Kommune</p>';
+
+			try
+			{
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, '', 'html');
+			}
+			catch (phpmailerException $e)
+			{
+				// TODO: Inform user if something goes wrong
+			}
+		}
+		
+		/**
+		* Returns an array of application ids from applications assocciated with buildings
+		* which the given user has access to
+		*
+		* @param int $user_id
+		*/
+		public function accessable_applications($user_id)
+		{
+			$applications = array();
+			$this->db = & $GLOBALS['phpgw']->db;
+
+			$sql = "select distinct ap.id
+					from bb_application ap
+					inner join bb_application_resource ar on ar.application_id = ap.id
+					inner join bb_resource re on re.id = ar.resource_id
+					inner join bb_building bu on bu.id = re.building_id
+					inner join bb_permission pe on pe.object_id = bu.id and pe.object_type = 'building'
+					where pe.subject_id = ".$user_id;
+			$this->db->query($sql);
+			$result = $this->db->resultSet;
+
+			foreach($result as $r)
+			{
+				$applications[] = $r['id'];
+			}
+
+			return $applications;
 		}
 		
 		public function read_dashboard_data($for_case_officer_id = null) {

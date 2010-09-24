@@ -1,4 +1,15 @@
 <script type="text/javascript">
+	//Add listener resetting form: redirects browser to call index  again
+	YAHOO.util.Event.addListener(
+		'ctrl_reset_button',
+		'click',
+		function(e)
+		{
+			YAHOO.util.Event.stopEvent(e);
+	 		window.location = 'index.php?menuaction=rental.uicomposite.index';
+		}
+		);
+
 	// Defining columns for datatable
 	var columnDefs = [{
 			key: "id",
@@ -17,7 +28,7 @@
 		    sortable: true
 		},
 		{
-			key: "address_1",
+			key: "address",
 			label: "<?php echo lang('address') ?>",
 		    sortable: true
 		},
@@ -41,10 +52,10 @@
 
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
+		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -61,7 +72,7 @@
 					}
 				}
 		?>),
-		'<?php echo $editor_action ?>'
+		'<?php echo isset($editor_action) ? $editor_action : '' ?>'
 	);
 
     function composite_export(compType) {
@@ -79,7 +90,7 @@
             '&amp;type='+compType+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
-            '&amp;results=100';
+        	'&amp;export=true';
     }
 </script>
 
@@ -88,17 +99,32 @@
 	{
 ?>
 <form id="<?php echo $list_id ?>_form" method="GET">
+<?php
+	$populate = phpgw::get_var('populate_form');
+	//Avoid Notices
+	$q = false;
+	$s_type = false;
+	$status = false;
+	$status_contract = false;
+	if(isset($populate))
+	{
+		$q = phpgwapi_cache::session_get('rental', 'composite_query');
+		$s_type = phpgwapi_cache::session_get('rental', 'composite_search_type');
+		$status = phpgwapi_cache::session_get('rental', 'composite_status');
+		$status_contract = phpgwapi_cache::session_get('rental', 'composite_status_contract');
+	} 
+?>
 	<fieldset>
 		<!-- Search -->
 		<h3><?php echo lang('search_options') ?></h3>
 		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
-		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
+		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" value="<?php echo isset($q) ? $q : ''?>"/>
 		<label for="ctrl_search_option"><?php echo lang('search_where') ?></label>
 		<select name="search_option" id="<?php echo $list_id ?>_ctrl_search_option">
-			<option value="all"><?php echo lang('all') ?></option>
-			<option value="name"><?php echo lang('name') ?></option>
-			<option value="address"><?php echo lang('address') ?></option>
-			<option value="property_id"><?php echo lang('object_number') ?></option>
+			<option value="all" <?php echo ($s_type == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="name" <?php echo ($s_type == 'name') ? 'selected' : ''?>><?php echo lang('name') ?></option>
+			<option value="address" <?php echo ($s_type == 'address') ? 'selected' : ''?>><?php echo lang('address') ?></option>
+			<option value="property_id" <?php echo ($s_type == 'property_id') ? 'selected' : ''?>><?php echo lang('object_number') ?></option>
 		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
@@ -109,20 +135,15 @@
 		<h3><?php echo lang('filters') ?></h3>
 		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('availability') ?></label>
 		<select name="is_active" id="<?php echo $list_id ?>_ctrl_toggle_active_rental_composites">
-			<option value="active"><?php echo lang('in_operation') ?></option>
-			<option value="non_active"><?php echo lang('out_of_operation') ?></option>
-			<option value="both"><?php echo lang('all') ?></option>
+			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('in_operation') ?></option>
+			<option value="non_active" <?php echo ($status == 'non_active') ? 'selected' : ''?>><?php echo lang('out_of_operation') ?></option>
+			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
 		</select>
-		<?
-		/* XXX: Why is this included? Have we ever checked for available composites?
-		<label for="ctrl_toggle_occupancy_of_rental_composites"><?php echo lang('and') ?></label>
-		<select name="occupancy" id="<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites">
-			<option value="vacant"><?php echo lang('vacant') ?></option>
-			<option value="occupied"><?php echo lang('occupied') ?></option>
-			<option value="both"><?php echo lang('all') ?></option>
+		<select name="has_contract" id="<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites">
+			<option value="both" <?php echo ($status_contract == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="has_contract" <?php echo ($status_contract == 'has_contract') ? 'selected' : ''?>><?php echo lang('composite_has_contract') ?></option>
+			<option value="has_no_contract" <?php echo ($status_contract == 'has_no_contract') ? 'selected' : ''?>><?php echo lang('composite_has_no_contract') ?></option>
 		</select>
-		*/
-		?>
 	</fieldset>
 </form>
 <?php
@@ -138,5 +159,5 @@
 	</div>
 </fieldset>
 
-<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

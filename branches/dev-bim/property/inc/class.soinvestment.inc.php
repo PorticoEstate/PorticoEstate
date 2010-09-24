@@ -34,9 +34,8 @@
 
 	class property_soinvestment
 	{
-		function property_soinvestment()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;

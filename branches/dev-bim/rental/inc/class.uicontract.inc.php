@@ -8,6 +8,7 @@
 	phpgw::import_class('rental.sonotification');
 	phpgw::import_class('rental.soprice_item');
 	phpgw::import_class('rental.socontract_price_item');
+	phpgw::import_class('rental.soadjustment');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
@@ -46,9 +47,16 @@
 
 		public function query()
 		{
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else {
+				$user_rows_per_page = 10;
+			}
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field		= phpgw::get_var('sort');
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			// Form variables
@@ -58,9 +66,23 @@
 			$result_objects = array();
 			$result_count = 0;
 
+			$exp_param 	= phpgw::get_var('export');
+			$export = false;
+			if(isset($exp_param)){
+				$export=true;
+				$num_of_objects = null;
+			}
+			
 			$type = phpgw::get_var('type');
 			switch($type)
 			{
+				case 'contracts_for_adjustment':
+					$adjustment_id = (int)phpgw::get_var('id');
+					$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+					$adjustment_date = $adjustment->get_adjustment_date();
+					$adjustment_year = date('Y',$adjustment_date);
+					$filters = array('contract_type' => $adjustment->get_responsibility_id(), 'adjustment_interval' => $adjustment->get_interval(), 'adjustment_year' => $adjustment_year);
+					break;
 				case 'contracts_part': 						// Contracts for this party
 					$filters = array('party_id' => phpgw::get_var('party_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
 					break;
@@ -75,6 +97,7 @@
 					// Queries that depend on areas of responsibility
 					$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$ids = array();
+					$read_access = array();
 					foreach($types as $id => $label)
 					{
 						$names = $this->locations->get_name($id);
@@ -84,9 +107,23 @@
 							{
 								$ids[] = $id;
 							}
+							else
+							{
+								$read_access[] = $id;
+							}
 						}
 					}
+					
+					
+					if(count($ids) > 0)
+					{
 					$comma_seperated_ids = implode(',',$ids);
+					}
+					else
+					{
+						$comma_seperated_ids = implode(',',$read_access);
+					}
+					
 					switch($type)
 					{
 						case 'ending_contracts':			// Contracts that are about to end in areas of responsibility
@@ -110,16 +147,29 @@
 					
 					break;
 				case 'contracts_for_composite': // ... all contracts this composite is involved in, filters (status and date)
-					$filters = array('composite_id' => phpgw::get_var('composite_id'),phpgw::get_var('contract_status'),phpgw::get_var('contract_date'));
+					$filters = array('composite_id' => phpgw::get_var('composite_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
+					break;
+				case 'get_contract_warnings':	//get the contract warnings
+					$contract = rental_socontract::get_instance()->get_single(phpgw::get_var('contract_id'));
+					$contract->check_consistency();
+					$rows = $contract->get_consistency_warnings();
+					$result_count = count($rows);
+					$export=true;
 					break;
 				case 'all_contracts':
 				default:
+					phpgwapi_cache::session_set('rental', 'contract_query', $search_for);
+					phpgwapi_cache::session_set('rental', 'contract_search_type', $search_type);
+					phpgwapi_cache::session_set('rental', 'contract_status', phpgw::get_var('contract_status'));
+					phpgwapi_cache::session_set('rental', 'contract_status_date', phpgw::get_var('date_status'));
+					phpgwapi_cache::session_set('rental', 'contract_type', phpgw::get_var('contract_type'));
 					$filters = array('contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('date_status_hidden'));
 			}
-			
+			if($type != 'get_contract_warnings'){
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
 			
+				
 			//Serialize the contracts found
 			$rows = array();
 			foreach ($result_objects as $result) {
@@ -128,9 +178,15 @@
 					$rows[] = $result->serialize();
 				}
 			}
+				//var_dump("Usage " .memory_get_usage() . " bytes after serializing");
+			}
 
+			if(!$export){
 			//Add context menu columns (actions and labels)
-			array_walk($rows, array($this, 'add_actions'), array($type));
+				array_walk($rows, array($this, 'add_actions'), array($type,$ids));
+			}
+			//var_dump("Usage " .memory_get_usage() . " bytes after menu");
+			
 
 			//Build a YUI result from the data
 			$result_data = array('results' => $rows, 'total_records' => $result_count);
@@ -151,35 +207,43 @@
 			$value['labels'] = array();
 
 			$type = $params[0];
+			$ids = $params[1];
 			
 			switch($type)
 			{
 				case 'last_edited_by':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
-					break;
 				case 'contracts_for_executive_officer':
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
-					$value['labels'][] = lang('edit_contract');
-					break;
 				case 'ending_contracts':
 				case 'ended_contracts':
+				case 'closing_due_date':
+				case 'terminated_contracts':
+					if(count($ids) > 0)
+					{
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('edit_contract');
+					}
+					else
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
+						$value['labels'][] = lang('show');
+					}
 					break;
 				default:
+					if(!isset($ids) || count($ids) > 0)
+					{
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'])));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('edit');
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('show');
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
 					$value['labels'][] = lang('copy');		
+				}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
+					$value['labels'][] = lang('show');
+					
 				}
 		}
 
@@ -188,6 +252,15 @@
 		 */
 		public function index()
 		{
+			$search_for = phpgw::get_var('search_for');
+			if($search_for)
+			{
+				phpgwapi_cache::session_set('rental', 'contract_query', $search_for);
+				phpgwapi_cache::session_set('rental', 'contract_search_type', phpgw::get_var('search_type'));
+				phpgwapi_cache::session_set('rental', 'contract_status', phpgw::get_var('contract_status'));
+				phpgwapi_cache::session_set('rental', 'contract_status_date', phpgw::get_var('date_status'));
+				phpgwapi_cache::session_set('rental', 'contract_type', phpgw::get_var('contract_type'));
+			}
 			$this->render('contract_list.php');
 		}
 
@@ -197,11 +270,13 @@
 		 * @param $editable whether or not the contract should be editable in the view
 		 * @param $contract_id the id of the contract to show
 		 */
-		public function viewedit($editable, $contract_id, $location_id = null, $notification = null, string $message = null, string $error = null)
+		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
 		{
 			
 			if (isset($contract_id) && $contract_id > 0) {
+				if($contract == null){
 				$contract = rental_socontract::get_instance()->get_single($contract_id);
+				}
 				if ($contract) {
 					
 					if($editable && !$contract->has_permission(PHPGW_ACL_EDIT))
@@ -223,19 +298,21 @@
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes')),
 					);
-					
+					$contract->check_consistency();
 					$this->render('contract.php', $data);
 				}
 			}
 			else
 			{
 				if($this->isAdministrator() || $this->isExecutiveOfficer()){
+					if(!isset($contract)){
 					$contract = new rental_contract();
 					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 					$contract->set_location_id($location_id);
 					$contract->set_contract_type_title($fields[$location_id]);
+					}
 					if ($contract) {
 						$data = array
 						(
@@ -276,6 +353,7 @@
 			
 			$message = null;
 			$error = null;
+			$add_default_price_items = false;
 
 			if(isset($_POST['save_contract']))
 			{
@@ -295,6 +373,7 @@
 						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
 						$contract->set_location_id($location_id);
 						$contract->set_contract_type_title($fields[$location_id]);
+						$add_default_price_items = true;
 					}
 				}
 				
@@ -319,32 +398,97 @@
 					$contract->set_reference(phpgw::get_var('reference'));
 					$contract->set_invoice_header(phpgw::get_var('invoice_header'));
 					$contract->set_account_in(phpgw::get_var('account_in'));
+					
+					/*
+					if($contract->get_contract_type_id() != phpgw::get_var('contract_type'))
+					{
+						// New contract type id set, retrieve correct account out
+						$type_id = phpgw::get_var('contract_type');
+						if(isset($type_id) && $type_is != ''){
+							$account = rental_socontract::get_instance()->get_contract_type_account($type_id);
+							$contract->set_account_out($account);
+						}
+						else
+						{
+							$contract->set_account_out(phpgw::get_var('account_out'));
+						}
+					}
+					else
+					{*/
 					$contract->set_account_out(phpgw::get_var('account_out'));
+					//}
+					
 					$contract->set_project_id(phpgw::get_var('project_id'));
-					$contract->set_due_date(strtotime(phpgw::get_var('due_date')));
+					$contract->set_due_date(strtotime(phpgw::get_var('due_date_hidden')));
 					$contract->set_contract_type_id(phpgw::get_var('contract_type'));
 					$old_rented_area = $contract->get_rented_area();
 					$new_rented_area = phpgw::get_var('rented_area');
+					$new_rented_area = str_replace(',','.',$new_rented_area);
+					$validated_numeric=false;
+					if(!isset($new_rented_area) || $new_rented_area == ''){
+						$new_rented_area = 0;
+					}
 					if($old_rented_area != $new_rented_area){
 						$update_price_items = true;
 					}
 					$contract->set_rented_area($new_rented_area);
+					$contract->set_adjustment_interval(phpgw::get_var('adjustment_interval'));
+					$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
+					$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
+					$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
+					$validated_numeric = $contract->validate_numeric();
 					
+					if($validated_numeric){
 					$so_contract = rental_socontract::get_instance();
+						$db_contract = $so_contract->get_db();
+						$db_contract->transaction_begin();
 					if($so_contract->store($contract))
 					{
 						if($update_price_items){
-							$so_contract->update_price_items($contract->get_id(), $new_rented_area);
+								$success = $so_contract->update_price_items($contract->get_id(), $new_rented_area);
+								if($success){
+									$db_contract->transaction_commit();
+									$message = lang('messages_saved_form');
+									$contract_id = $contract->get_id();
 						}
+								else{
+									$db_contract->transaction_abort();
+									$error = lang('messages_form_error');
+								}
+							}
+							else if($add_default_price_items)
+							{
+								$so_price_item = rental_soprice_item::get_instance();
+								//get default price items for location_id
+								$default_price_items = $so_contract->get_default_price_items($contract->get_location_id());
+								
+								//add price_items to contract
+								foreach($default_price_items as $price_item_id)
+								{
+									$so_price_item->add_price_item($contract->get_id(), $price_item_id);
+								}
+								$db_contract->transaction_commit();
 						$message = lang('messages_saved_form');
 						$contract_id = $contract->get_id();
 					}
+							else{
+								$db_contract->transaction_commit();
+								$message = lang('messages_saved_form');
+								$contract_id = $contract->get_id();
+							}
+						}
 					else
 					{
+							$db_contract->transaction_abort();
 						$error = lang('messages_form_error');
 					}
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+					else{
+						$error = $contract->get_validation_errors();
+						return $this->viewedit(true, $contract_id, $contract, $location_id,$notification, $message, $error);
+					}
+				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));
 			}
 			else if(isset($_POST['add_notification']))
 			{
@@ -375,7 +519,7 @@
 					$error = lang('permission_denied_edit_contract');
 				}
 			}
-			return $this->viewedit(true, $contract_id, $location_id,$notification, $message, $error);
+			return $this->viewedit(true, $contract_id, null, $location_id,$notification, $message, $error);
 		}
 
 		/**
@@ -400,17 +544,27 @@
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
 				$so_contract = rental_socontract::get_instance();
+				$db_contract = $so_contract->get_db();
+				$db_contract->transaction_begin();
 				if($so_contract->store($contract))
 				{
 					// Add that composite to the new contract
-					$so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
+					$success = $so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
+					if($success){
+						$db_contract->transaction_commit();
 					$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
 					$message = lang('messages_new_contract_from_composite').' '.$comp_name;
 					
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
 				}
+					else{
+						$db_contract->transaction_abort();
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					}
+				}
 				else
 				{
+					$db_contract->transaction_abort();
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
 				}
 			}
@@ -427,8 +581,10 @@
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single(phpgw::get_var('id'));
 			$old_contract_old_id = $contract->get_old_contract_id();
+			$db_contract = $so_contract->get_db();
 			if($contract->has_permission(PHPGW_ACL_EDIT))
 			{
+				$db_contract->transaction_begin();
 				//reset id's and contract dates
 				$contract->set_id(null);
 				$contract->set_old_contract_id(null);
@@ -438,12 +594,20 @@
 				if($so_contract->store($contract))
 				{
 					// copy the contract
-					$so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
+					$success = $so_contract->copy_contract($contract->get_id(), phpgw::get_var('id'));
+					if($success){
+						$db_contract->transaction_commit();
 					$message = lang(messages_new_contract_copied).' '.$old_contract_old_id;
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
 				}
+					else{
+						$db_contract->transaction_abort();
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					}
+				}
 				else
 				{
+					$db_contract->transaction_abort();
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
 				}
 			}
@@ -608,7 +772,10 @@
 			$contract = $so_contract->get_single($contract_id);
 			$area = $contract->get_rented_area();
 			
+			if(isset($area) && $area > 0)
+			{
 			$price_per_unit = $total_price / $area;	
+			}
 			
 			$result_array = array('total_price' => $total_price, 'area' => $area, 'price_per_unit' => $price_per_unit);
 			$result_data = array('results' => $result_array, 'total_records' => 1);

@@ -9,7 +9,14 @@
 			self.name="first_Window";
 			function event_lookup_<xsl:value-of select="name"/>()
 			{
-				Window1=window.open('<xsl:value-of select="event_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+				var oArgs = <xsl:value-of select="event_link"/>;
+				if(document.form.<xsl:value-of select="name"/>.value)
+				{
+					oArgs['id'] = document.form.<xsl:value-of select="name"/>.value;
+				}
+
+				var strURL = phpGWLink('index.php', oArgs);
+				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}		
 		</script>
 		<tr>

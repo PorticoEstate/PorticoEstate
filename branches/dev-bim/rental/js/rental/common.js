@@ -22,11 +22,11 @@ YAHOO.rental.serializeForm = function(formID) {
 		
 		if(e.type=='checkbox' || e.type=='radio') {
 			if(e.checked) {
-				values.push(e.name + '=' + e.value);
+				values.push(e.name + '=' + encodeURIComponent(e.value));
 			}
 		} 
 		else if(e.name) {
-			values.push(e.name + '=' + e.value);
+			values.push(e.name + '=' + encodeURIComponent(e.value));
 		}
 	}
 	return values.join('&');

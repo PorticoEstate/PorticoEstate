@@ -81,10 +81,10 @@
 			switch( $role )
 			{
 				case 'target':
-					$sql = "SELECT location2_id as linkend_location, location2_item_id as linkend_id FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id} ORDER by location1_id DESC";
+					$sql = "SELECT location2_id as linkend_location, location2_item_id as linkend_id FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id} ORDER by location2_id DESC";
 					break;
 				default:
-					$sql = "SELECT location1_id as linkend_location, location1_item_id as linkend_id FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id} ORDER by location2_id DESC";
+					$sql = "SELECT location1_id as linkend_location, location1_item_id as linkend_id FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id} ORDER by location1_id DESC";
 			}
 
 			$this->_db->query($sql,__LINE__,__FILE__);
@@ -210,6 +210,18 @@
 			if($type == '.ticket')
 			{
 				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
+			}
+			if($type == '.s_agreement')
+			{
+				$link = array('menuaction' => 'property.uis_agreement.edit', 'id' => $id);
+			}
+			if($type == '.agreement')
+			{
+				$link = array('menuaction' => 'property.uiagreement.edit', 'id' => $id);
+			}
+			if($type == '.document')
+			{
+				$link = array('menuaction' => 'property.uidocument.edit', 'document_id' => $id);
 			}
 			else if($type == '.project.workorder')
 			{
@@ -429,9 +441,9 @@
 
 			$location1_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location1);
 			$location2_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location2);
-			$id				= (int) $id;
+//			$id				= (int) $id;
 
-			$sql = "DELETE FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = {$id}";
+			$sql = "DELETE FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = '{$id}'";
 
 			$db->query($sql,__LINE__,__FILE__);
 		}
@@ -455,9 +467,9 @@
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$id 		 = (int) $id;
+//			$id 		 = (int) $id;
 
-			$sql		 = "DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}";
+			$sql		 = "DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = '{$id}'";
 
 			$db->query($sql,__LINE__,__FILE__);
 		}

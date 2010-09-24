@@ -25,6 +25,14 @@
                 </a>
             </li>
             <li><a href="">#<xsl:value-of select="application/id"/></a></li>
+			<li>
+				<xsl:if test="frontend and application/status='CONFIRMED'">
+						<form method="POST">
+						<input type="hidden" name="print" value="CONFIRMED"/>
+						<input type="submit" value="{php:function('lang', 'Print as PDF')}" />
+					</form>
+				</xsl:if>
+			</li>
         </ul>
 
         <xsl:call-template name="msgbox"/>
@@ -66,25 +74,42 @@
         </dl>
 
         <dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Why?')" /></dt>
+            <dt class="heading">1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
+			<xsl:for-each select="application/comments[author]">
+				<dt>
+					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+				</dt>
+				<xsl:choose>
+					<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>				
+						<dd><xsl:value-of select="comment" disable-output-escaping="yes"/></dd>
+					</xsl:when>
+					<xsl:otherwise>				
+						<dd><xsl:value-of select="comment"/></dd>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</dl>
+
+        <dl class="proplist">
+            <dt class="heading">2. <xsl:value-of select="php:function('lang', 'Why?')" /></dt>
             <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
             <dd><xsl:value-of select="application/activity_name"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
 			<dd><pre><xsl:value-of select="application/description"/></pre></dd>
 		</dl>
         <dl class="proplist-col">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Where?')" /></dt>
+            <dt class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></dt>
 			<dt><xsl:value-of select="php:function('lang', 'Building')" /></dt>
             <dd><xsl:value-of select="application/building_name"/>
 			(<a href="javascript: void(0)" 
 				onclick="window.open('{application/schedule_link}', 
 					     '', 
-						   'width=1000, height=600'); 
+						   'width=1048, height=600, scrollbars=yes');
 						      return false;"><xsl:value-of select="php:function('lang', 'Building schedule')" /></a>)</dd>
             <dd><div id="resources_container"/></dd>
         </dl>
         <dl class="proplist-col">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'When?')" /></dt>
+            <dt class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></dt>
 			<script type="text/javascript">
 				var allocationParams = {};
 				var bookingParams = {};
@@ -113,10 +138,10 @@
 			</xsl:for-each>
         </dl>
         <dl class="proplist-col">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Who?')" /></dt>
+            <dt class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></dt>
             <dt><xsl:value-of select="php:function('lang', 'Target audience')" /></dt>
 			<dd>
-				<ul>1
+				<ul>
 					<xsl:for-each select="audience">
 						<xsl:if test="../application/audience=id">
 							<li><xsl:value-of select="name"/></li>
@@ -141,6 +166,42 @@
 			</dd>
         </dl>
         <div class="clr"/>
+		<dl class="form-col">
+			<div class="heading"><br />6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+			<dt><label for="field_contact_name"><xsl:value-of select="php:function('lang', 'Name')" /></label></dt>
+			<dd>
+					<xsl:value-of select="application/contact_name"/>
+			</dd>
+			<dt><label for="field_contact_email"><xsl:value-of select="php:function('lang', 'Email')" /></label></dt>
+			<dd>
+					<xsl:value-of select="application/contact_email"/>
+			</dd>
+			<dt><label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>
+			<dd>
+					<xsl:value-of select="application/contact_phone"/>
+			</dd>
+		</dl>
+		<dl class="form-col">
+			<div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+			<xsl:if test="application/customer_identifier_type = 'organization_number'">
+				<dt><label for="field_organization_number"><xsl:value-of select="php:function('lang', 'organization number')" /></label></dt>
+				<dd><xsl:value-of select="application/customer_organization_number"/></dd>
+			</xsl:if>
+			<xsl:if test="application/customer_identifier_type = 'ssn'">
+				<dt><label for="field_ssn_number"><xsl:value-of select="php:function('lang', 'Date of birth or SSN')" /></label></dt>
+				<dd><xsl:value-of select="application/customer_ssn"/></dd>
+			</xsl:if>
+		</dl>
+		<dl class="form-col">
+			<div class="heading"><br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+			<p>Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
+			<br />
+			<div id='regulation_documents'>&nbsp;</div>
+			<br />
+			<p><xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" /></p>
+		</dl>
+
+        <div class="clr"/>
 		<xsl:if test="application/edit_link">
 	        <button>
 					<xsl:if test="application/case_officer/is_current_user">
@@ -158,15 +219,6 @@
 				<dd><div id="associated_container"/></dd>
 			</dl>
 		</xsl:if>
-		<dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
-			<xsl:for-each select="application/comments[author]">
-				<dt>
-					<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
-				</dt>
-				<dd><pre><xsl:value-of select="comment"/></pre></dd>
-			</xsl:for-each>
-		</dl>
 
         <dl class="proplist">
             <dt class="heading"><xsl:value-of select="php:function('lang', 'Add a comment')" /></dt>
@@ -177,6 +229,7 @@
 				</form>
 			</dd>
         </dl>
+
 
 		<xsl:if test="application/edit_link">
 			<dl class="proplist">
@@ -198,6 +251,7 @@
 								<a name="assign"/>
 								<form method="POST">
 									<input type="hidden" name="assign_to_user"/>
+									<input type="hidden" name="status" value="PENDING"/>
 									<input type="submit" value="{php:function('lang', phpgw:conditional(application/case_officer, 'Re-assign to me', 'Assign to me'))}"/>
 							
 									<xsl:if test="application/case_officer">
@@ -221,7 +275,7 @@
 						</form>
 					</dt>
 				</xsl:if>
-				<xsl:if test="application/status='NEW'">
+				<xsl:if test="application/status='PENDING'">
 					<xsl:if test="num_associations='0'">
 						<input type="submit" disabled="" value="{php:function('lang', 'Accept application')}"/>
 						<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
@@ -261,10 +315,19 @@
 	 if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 	 }
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document')"/>;
 	var app_id = <xsl:value-of select="application/id"/>;
+	var building_id = <xsl:value-of select="application/building_id"/>;	
+	var resources = <xsl:value-of select="application/resources"/>;
 	
 YAHOO.util.Event.addListener(window, "load", function() {
+	<![CDATA[
+	var url3 = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;		
+		url3 += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources; 
+
+	]]>
+	var colDefs = [{key: 'name', label: lang['Document'], formatter: YAHOO.booking.formatLink}];
+    YAHOO.booking.inlineTableHelper('regulation_documents', url3, colDefs);
 	 if (resourceIds) {
 	    <![CDATA[
 	    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
@@ -279,7 +342,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		{key: 'to_', label: lang['To']}];
 	    YAHOO.booking.inlineTableHelper('associated_container', url2, colDefs);
     }
+
 });
 </script>
-
 </xsl:template>

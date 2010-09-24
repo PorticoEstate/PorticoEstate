@@ -56,7 +56,8 @@
 			'add'   => true,
 			'edit'   => true,
 			'delete' => true,
-			'view_file'	=> true
+			'view_file'		=> true,
+			'columns'		=> true
 		);
 
 		function property_uiworkorder()
@@ -136,6 +137,50 @@
 			$bofiles->view_file('workorder');
 		}
 
+		function columns()
+		{
+			$receipt = array();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values 		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
+			if (isset($values['save']) && $values['save'])
+					{
+				$GLOBALS['phpgw']->preferences->add('property','workorder_columns', $values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+				}
+
+			$function_msg	= lang('Select Column');
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uiworkorder.columns',
+			);
+
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+				'function_msg'		=> $function_msg,
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_columns'		=> lang('columns'),
+				'lang_none'			=> lang('None'),
+				'lang_save'			=> lang('save'),
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
+			}
+
 		function index()
 		{
 
@@ -144,35 +189,10 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			/*
-			* FIXME:
-			* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
-			* Should be fixed in the js if possible.
-			*/
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
-				if($json_get == 1)
-				{
-					$json = phpgwapi_cache::session_get('property', 'workorder_index_json');
-					if($json && is_array($json))
-					{
-						phpgwapi_cache::session_clear('property', 'workorder_index_json');
-						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 2);
-						return $json;
-					}
-				}
-			}
-			else
-			{
-				phpgwapi_cache::session_clear('property', 'workorder_index_json_get');
-			}
-
 			$allrows  = phpgw::get_var('allrows', 'bool');
+			$dry_run = false;
 
 			$lookup = ''; //Fix this
-			$dry_run = false;
 
 			$datatable = array();
 			$values_combo_box = array();
@@ -250,6 +270,7 @@
 				array_unshift ($values_combo_box[3],$default_value);
 
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',2,$this->filter,$this->acl_location);
+				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine orders')));
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
@@ -266,7 +287,8 @@
 									'cat_id'			=> $this->cat_id,
 									'status_id'			=> $this->status_id,
 									'filter'			=> $this->filter,
-									'query'				=> $this->query,									'start_date'		=> $start_date,
+									'query'				=> $this->query,
+									'start_date'		=> $start_date,
 									'end_date'			=> $end_date,
 									'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
 									'paid'				=> $this->paid,
@@ -323,6 +345,18 @@
 			                                            'style' => 'filter',
 			                                            'tab_index' => 6
 			                                        ),
+						                            //for link "columns", next to Export button
+										           array(
+						                                'type' => 'link',
+						                                'id' => 'btn_columns',
+						                                'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+																				           array
+																				              (
+																				               'menuaction' => 'property.uiworkorder.columns'
+																				              ))."','','width=300,height=600,scrollbars=1')",
+														'value' => lang('columns'),
+														'tab_index' => 12
+													),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
@@ -405,8 +439,7 @@
 										  )
 				);
 
-				$dry_run = true;
-
+				$dry_run=true;
 			}
 
 			$workorder_list = array();
@@ -498,7 +531,7 @@
 						),
 					)
 				);
-				if($this->acl_read && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_READ))
+				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'			=> 'view',
@@ -519,8 +552,26 @@
 										)),
 						'parameters'	=> $parameters
 					);
+				
+					$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+					foreach ($jasper as $report)
+					{
+						$datatable['rowactions']['action'][] = array(
+								'my_name'		=> 'edit',
+								'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+																(
+																		'menuaction'	=> 'property.uijasper.view',
+																		'jasper_id'			=> $report['id'],
+																		'target'		=> '_blank'
+																)),
+								'parameters'			=> $parameters
+						);
 				}
-				if($this->acl_edit && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_EDIT))
+				}
+
+				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'		=> 'edit',
@@ -552,7 +603,7 @@
 						'parameters'	=> $parameters2
 					);
 				}
-				if($this->acl_delete && $this->bocommon->check_perms($workorder['grants'],PHPGW_ACL_DELETE))
+				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
 						'my_name'			=> 'delete',
@@ -621,7 +672,17 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned'] = count($workorder_list);
+
+			if($dry_run)
+			{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($workorder_list);
+			}
+
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 
@@ -639,19 +700,9 @@
 			    $datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
 		    }
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-		  	phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('tabview');
-
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -692,22 +743,14 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
-				/*
-				* FIXME:
-				* Temporary fix to avoid doubled get of first page in table all the way from the database - saves about 0.15 second
-				* Should be fixed in the js if possible.
-				*/
-				$json_get = phpgwapi_cache::session_get('property', 'workorder_index_json_get');
-				if(!$json_get)
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
 				{
-						phpgwapi_cache::session_set('property', 'workorder_index_json',$json);
-						phpgwapi_cache::session_set('property', 'workorder_index_json_get', 1);
-				}
-
 	    		return $json;
 			}
-//-------------------- JSON CODE ----------------------
 
+			$datatable['json_data'] = json_encode($json);
+
+//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -719,6 +762,15 @@
 	      	{
 	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
 	      	}
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+		  	phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('tabview');
+
 			// Prepare CSS Style
 		  	$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');
@@ -837,12 +889,12 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a budget account !'));
 				}
 
-				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				if(isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
 
-				if(isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit($values['addition_rs']))
+				if(isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit(ltrim($values['addition_rs'],'-')))
 				{
 					$receipt['error'][]=array('msg'=>lang('Rig addition') . ': ' . lang('Please enter an integer !'));
 				}
@@ -868,6 +920,7 @@
 					if (! $receipt['error'])
 					{
 						$id = $receipt['id'];
+						$historylog	= CreateObject('property.historylog','workorder');
 					}
 					$function_msg = lang('Edit Workorder');
 //----------files
@@ -910,11 +963,6 @@
 					{
 						$coordinator_name=$GLOBALS['phpgw_info']['user']['fullname'];
 						$coordinator_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$headers = "Return-Path: <". $coordinator_email .">\r\n";
-						$headers .= "From: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
-						$headers .= "Bcc: " . $coordinator_name . "<" . $coordinator_email .">\r\n";
-						$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-						$headers .= "MIME-Version: 1.0\r\n";
 
 						$subject = lang(Approval).": ". $id;
 						$message = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $values['project_id'])).'">' . lang('Workorder %1 needs approval',$id) .'</a>';
@@ -947,6 +995,7 @@
 									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 									if($rcpt)
 									{
+										$historylog->add('AP', $id, lang('%1 is notified',$_address));
 										$receipt['message'][]=array('msg'=>lang('%1 is notified',$_address));
 									}
 
@@ -997,8 +1046,8 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
 				}
 				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
-				 && $config->config_data['mailnotification'] 
-				 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
+				 && $config->config_data['mailnotification'])
+//				 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
 				{
 					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
 					{
@@ -1029,6 +1078,7 @@
 						}
 						else
 						{
+							$historylog->add('ON', $id, lang('%1 is notified',$to));
 							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
 						}
 					}
@@ -1115,7 +1165,7 @@
 			{
 				$admin_location = & $bolocation->soadmin_location;
 				$location_types	= $admin_location->select_location_type();
-				$max_level = 4;//count($location_types);
+				$max_level = count($location_types);
 
 				$location_level = isset($project['location_data']['location_code']) ? count(explode('-',$project['location_data']['location_code'])) : 0 ;
 				$location_template_type = 'form';
@@ -1169,16 +1219,24 @@
 			}
 
 
-			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
+			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 						'vendor_id'		=> $values['vendor_id'],
 						'vendor_name'		=> $values['vendor_name']));
 
-			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array(
-						'b_account_id'		=> $project['b_account_id'] ? $project['b_account_id'] : $values['b_account_id'],
-						'b_account_name'	=> $values['b_account_name'],
-						'disabled'			=> !!$project['b_account_id']));
 
-			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
+			$b_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $project['b_account_id'],
+						'role'				=> 'group'
+						));
+
+			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
+						'b_account_id'		=> $values['b_account_id'],
+						'b_account_name'	=> $values['b_account_name'],
+						'disabled'			=> '',
+						'parent'			=> $project['b_account_id']
+						));
+
+			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 					(
 						'ecodimb'			=> $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'],
 						'ecodimb_descr'		=> $values['ecodimb_descr'],
@@ -1287,6 +1345,9 @@
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
+
+
+
 			);
 
        		$myColumnDefs[0] = array
@@ -1305,13 +1366,15 @@
 
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				if ($link_to_files != '') {
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
+				if ($link_to_files)
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
 				}
-				else {
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
+				else
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
 				}
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}									
 
 			$datavalues[1] = array
@@ -1351,8 +1414,11 @@
 			$cat_sub = array_merge($catetory,$cat_sub);
 
 			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+			
+			$value_user = isset($values['user_id']) ? $GLOBALS['phpgw']->accounts->get($values['user_id'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 			$data = array
 			(
+				'value_user'							=> $value_user,
 				'event_data'							=> $event_data,
 				'link_claim'							=> $link_claim,
 				'lang_claim'							=> lang('claim'),
@@ -1376,6 +1442,7 @@
 				'lang_send_statustext'					=> lang('send this workorder to vendor'),
 
 				'project_link'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
+				'b_group_data'							=> $b_group_data,
 				'b_account_data'						=> $b_account_data,
 				'table_header_workorder_budget'			=> $table_header_workorder_budget,
 				'lang_no_workorders'					=> lang('No workorder budget'),
@@ -1523,7 +1590,8 @@
 				'lang_view_file_statustext'				=> lang('click to view file'),
 				'lang_file_action_statustext'			=> lang('Check to delete file'),
 				'lang_upload_file'						=> lang('Upload file'),
-				'lang_file_statustext'					=> lang('Select file to upload')
+				'lang_file_statustext'					=> lang('Select file to upload'),
+				'value_billable_hours'					=> $values['billable_hours'],
 			);
 
 			$appname						= lang('Workorder');

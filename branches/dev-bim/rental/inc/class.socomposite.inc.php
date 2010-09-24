@@ -66,9 +66,27 @@ class rental_socomposite extends rental_socommon
 			case "both":
 				break;
 		}
+		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
+		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		switch($filters['has_contract']){
+			case "has_contract":
+				$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $ts_query AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $ts_query))))";
+				$special_query=true;
+				break;
+			case "has_no_contract":
+				$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $ts_query AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $ts_query))))))"; 
+				$special_query=true;
+				break;
+			case "both":
+				break;
+		}
 
 		if(isset($filters['not_in_contract'])){
 			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
+		}
+		
+		if(isset($filters['location_code'])){
+			$filter_clauses[] = "rental_unit.location_code = '". $filters['location_code'] . "'";
 		}
 		
 		if(isset($filters['contract_id']))
@@ -91,13 +109,21 @@ class rental_socomposite extends rental_socommon
 		$tables = "rental_composite";
 		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
 		$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
+		$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';
 		}
 		else
 		{
+			if($special_query)
+			{
+				$cols = 'DISTINCT(rental_composite.id) AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+			}
+			else
+			{
 			$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+		}
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -130,11 +156,10 @@ class rental_socomposite extends rental_socommon
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
 		if(!$composite->contains_unit($location_code))
 		{
+			//composite inneholder ikke unit -> legg den til
 			$location = null;
 			try
 			{
-				if(strpos($location_code, '.') === false)
-				{
 					// We get the data from the property module
 					$data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code, 'extra' => array('view' => true)));
 					if($data != null)
@@ -142,16 +167,13 @@ class rental_socomposite extends rental_socommon
 						$level = -1;
 						$names = array();
 						$levelFound = false;
-						for($i = 1; !$levelFound; $i++)
+					for($i = 1; $i < 6; $i++)
 						{
 							$loc_name = 'loc'.$i.'_name';
 							if(array_key_exists($loc_name, $data))
 							{
 								$level = $i;
 								$names[$level] = $data[$loc_name];
-							}
-							else{
-								$levelFound = true;
 							}
 						}
 						$gab_id = '';
@@ -162,7 +184,11 @@ class rental_socomposite extends rental_socommon
 							$gab_id = $gabinfo['gab_id'];
 						}
 						$location = new rental_property_location($location_code, rental_uicommon::get_nicely_formatted_gab_id($gab_id), $level, $names);
+					if(isset($data['street_name']) && $data['street_name'])
+					{
 						$location->set_address_1($data['street_name'].' '.$data['street_number']);
+					}
+					//$location->set_address_1($data['address']);
 						foreach($data['attributes'] as $attributes)
 						{
 							switch($attributes['column_name'])
@@ -176,7 +202,6 @@ class rental_socomposite extends rental_socommon
 							}
 						}
 					}
-				}
 				else
 				{
 					$location = new rental_property_location($location_code, null, 1, array());
@@ -192,8 +217,22 @@ class rental_socomposite extends rental_socommon
 		return $composite;
 	}
 	
-	public function get_id_field_name(){
-		return 'composite_id';
+	public function get_id_field_name($extended_info = false)
+	{
+		if(!$extended_info)
+		{
+			$ret = 'composite_id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'rental_composite', // alias
+				'field'			=> 'id',
+				'translated'	=> 'composite_id'
+			);
+		}
+		return $ret;
 	}
 
 	/**

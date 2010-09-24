@@ -356,9 +356,10 @@
 				$appname = isset($setup_info[$key]['name']) ? $setup_info[$key]['name'] : '';
 				$appdir  = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
 
-				if( isset($setup_info[$key]['tables'])
-					&& $setup_info[$key]['tables']
-					&& file_exists($appdir.'default_records.inc.php'))
+//				if( isset($setup_info[$key]['tables'])
+//					&& $setup_info[$key]['tables']
+//					&& file_exists($appdir.'default_records.inc.php'))
+				if( file_exists($appdir.'default_records.inc.php'))
 				{
 					if($DEBUG)
 					{
@@ -572,7 +573,7 @@
 						|| $setup_info[$key]['status'] == '' ) ) // TODO this is not getting set for api upgrade, sometimes ???
 				{
 					$appname    = $setup_info[$key]['name'];
-					$apptitle   = isset($setup_info[$key]['title']) ? $setup_info[$key]['title'] : '';
+					//$apptitle   = isset($setup_info[$key]['title']) ? $setup_info[$key]['title'] : '';
 					$currentver = $setup_info[$key]['currentver'];
 					$targetver  = $setup_info[$key]['version'];	// The version we need to match when done
 					$appdir     = PHPGW_SERVER_ROOT . "/{$appname}/setup/";
@@ -618,7 +619,7 @@
 						if ( isset($test) && is_array($test) && count($test) )
 						{
 							/* $test array comes from update file.  It is a list of available upgrade functions */
-							foreach ( $test as $x => $value )
+							foreach ( $test as $value )
 							{
 								$currentver = isset($setup_info[$key]['currentver']) ? $setup_info[$key]['currentver'] : '';
 
@@ -826,6 +827,7 @@
 			}
 
 			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->sCol = array();
+			$sColumns = '';
 			$GLOBALS['phpgw_setup']->oProc->m_oTranslator->_GetColumns($GLOBALS['phpgw_setup']->oProc, $tablename, $sColumns);
 
 			$arr = '';

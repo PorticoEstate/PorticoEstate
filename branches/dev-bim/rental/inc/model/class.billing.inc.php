@@ -15,6 +15,7 @@ class rental_billing extends rental_model
 	protected $billing_term;
 	protected $year;
 	protected $month;
+	protected $title;
 	protected $success;
 	protected $total_sum;
 	protected $timestamp_start;
@@ -23,20 +24,22 @@ class rental_billing extends rental_model
 	protected $deleted;
 	protected $created_by;
 	protected $has_generated_export;
+	protected $contract_type_title;
+	protected $billing_info;
+	protected $responsibility_title;
 	
 	public static $so;
 	
-	public function __construct(int $id, int $location_id, int $billing_term, int $year, int $month, int $created_by)
+	public function __construct(int $id, int $location_id, $title, int $created_by)
 	{
 		$this->id = (int)$id;
 		$this->location_id = (int)$location_id;
-		$this->billing_term = (int)$billing_term;
-		$this->year = (int)$year;
-		$this->month = (int)$month;
+		$this->title = $title;
 		$this->success = false;
 		$this->created_by = (int)$created_by;
 		$this->has_generated_export = false;
 		$this->deleted = false;
+		$this->billing_info = array();
 	}
 	
 	public function get_id(){ return $this->id; }
@@ -44,6 +47,13 @@ class rental_billing extends rental_model
 	public function set_id(int $id)
 	{
 		$this->id = (int)$id;
+	}
+	
+	public function get_contract_type_title(){ return $this->contract_type_title; }
+	
+	public function set_contract_type_title($contract_type_title)
+	{
+		$this->contract_type_title = $contract_type_title;
 	}
 	
 	public function get_billing_term(){ return $this->billing_term; }
@@ -56,9 +66,19 @@ class rental_billing extends rental_model
 	
 	public function get_year(){ return $this->year; }
 	
+	public function set_year($year)
+	{
+		$this->year = $year;
+	}
+	
 
 	public function get_month(){ return $this->month; }
 
+	public function set_month($month)
+	{
+		$this->month = $month;
+	}
+	
 	public function get_total_sum(){ return $this->total_sum; }
 	
 	public function set_timestamp_start(int $timestamp_start)
@@ -128,36 +148,81 @@ class rental_billing extends rental_model
 
 	public function get_export_format(){ return $this->export_format; }
 	
+	public function get_responsibility_title(){ return $this->responsibility_title; }
+			
+	public function set_responsibility_title($responsibility_title)
+	{
+		$this->responsibility_title = $responsibility_title;
+	}
+	
 	public function serialize()
 	{
 		$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		$description = '';
 		$location_id = $this->get_location_id();
-		$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
-		foreach($fields as $id => $label)
-		{
-			if($id == $location_id)
-			{
-				$description = lang($label) . ' ';
-			}
-		}
-		$description .= lang('month ' . $this->get_month()) . ' ';
-		$description .= $this->get_year();
 		$account = $GLOBALS['phpgw']->accounts->get($this->get_created_by());
 		$timestamp_commit = '';
 		if($this->get_timestamp_commit() != null && $this->get_timestamp_commit())
 		{
-			$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
+			$timestamp_commit=$GLOBALS['phpgw']->common->show_date($this->get_timestamp_commit(),$date_format . ' H:i:s');
+			//$timestamp_commit = date($date_format . ' H:i:s', $this->get_timestamp_commit());
 		}
+		$billing_info_content = array();
+		foreach($this->get_billing_info() as $bi){
+			$term = $bi->get_term_id();
+			$term_label = "";
+			$month = $bi->get_month();
+			$year = $bi->get_year();
+			if($term == 1){
+				$term_label = lang('month ' . $bi->get_month() . ' capitalized');
+		}
+			else{
+				$term_label = $bi->get_term_label();
+			}
+			$billing_info_content[] = $term_label . " " . $year;
+		}
+		$billing_info_labels = join('<br/>', $billing_info_content);
 		return array(
 			'id'				=> $this->get_id(),
-			'description'		=> $description,
+			'description'		=> $this->get_title(),
+			'responsibility_title' => $this->get_responsibility_title(),
+			'billing_info'		=> $billing_info_labels,
 			'total_sum'			=> $this->get_total_sum(),
-			'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
+			//'timestamp_stop'	=> date($date_format . ' H:i:s', $this->get_timestamp_stop()),
+			'timestamp_stop'	=> $GLOBALS['phpgw']->common->show_date($this->get_timestamp_stop(),$date_format . ' H:i:s'),
 			'timestamp_commit'	=> $timestamp_commit,
-			'created_by'		=> "{$account->__get('firstname')} {$account->__get('lastname')}"
+			'created_by'		=> "{$account->firstname} {$account->lastname}",
+			'contract_type_title' => $this->get_contract_type_title()
 		);
 	}
 	
+	public function get_title()
+	{
+		return $this->title;
+	}
+	
+	public function set_title($title)
+	{
+		$this->title = $title;
+	}
+	
+	public function get_billing_info()
+	{
+		return $this->billing_info;
+	}
+	
+	public function add_billing_info(rental_billing_info $new_billing_info)
+	{
+		$new_billing_info_id = $new_billing_info->get_id();
+		
+		if(!in_array($new_billing_info_id, $this->billing_info))
+		{
+			$this->billing_info[$new_billing_info_id] = $new_billing_info;
+		}
+	}
+	
+	public function set_billing_info($billing_info)
+	{
+		$this->billing_info = $billing_info;
+	}
 }
 ?>

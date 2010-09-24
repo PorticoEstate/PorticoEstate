@@ -144,6 +144,16 @@
 			}
 
 			$apps = $GLOBALS['phpgw']->acl->get_user_applications($this->account_id);
+			$apps_admin = $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $this->account_id);
+			if($apps_admin)
+			{
+				$apps['admin'] = true;
+			}
+			foreach($apps_admin as $app_admin)
+			{
+				$apps[$app_admin] = true;
+			}
+
 			foreach ( $GLOBALS['phpgw_info']['apps'] as $app )
 			{
 				if ( isset($apps[$app['name']]) )
@@ -327,7 +337,6 @@
 			$sql = 'SELECT * FROM phpgw_applications WHERE app_enabled != 0 ORDER BY app_order ASC';
 			$this->db->query($sql,__LINE__,__FILE__);
 			$apps = $this->db->resultSet;
-			$this->db->fetchmode = 'BOTH';
 			foreach($apps as $key => $value)
 			{
 				$GLOBALS['phpgw_info']['apps'][$value['app_name']] = array

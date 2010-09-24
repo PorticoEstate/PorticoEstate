@@ -143,7 +143,7 @@
 
 <!-- BEGIN account_edit -->
 
-	<xsl:template match="account_edit">
+	<xsl:template match="account_edit" xmlns:php="http://php.net/xsl">
 		<div id="admin_account_edit">
 			<h1><xsl:value-of select="page_title" /></h1>
 			<xsl:if test="msgbox_data != ''">
@@ -242,9 +242,24 @@
 						</div>
 						<div id="apps">
 							<h2><xsl:value-of select="lang_applications" /></h2>
-							<ul class="app_list">
+							<table class="app_list">
+								<thead>
+									<tr>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Application')" />
+										</th>
+										<th>
+										 	<xsl:value-of select="php:function('lang', 'User access')" />
+										</th>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Admin')" />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
 								<xsl:apply-templates select="app_list" />
-							</ul>
+								</tbody>
+							</table>
 						</div>
 					</div>
 					<div class="button_group">
@@ -269,6 +284,8 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="i_am_admin = 1">
 			<input type="checkbox" id="account_groups{account_id}" name="account_groups[]" value="{account_id}">
 				<xsl:choose>
 					<xsl:when test="selected != ''">
@@ -276,6 +293,25 @@
 					</xsl:when>
 				</xsl:choose>
 			</input>
+				</xsl:when>
+				<xsl:otherwise>
+					<input type="checkbox" readonly='true'>
+						<xsl:choose>
+							<xsl:when test="selected != ''">
+								<xsl:attribute name="checked" value="checked" />
+							</xsl:when>
+						</xsl:choose>
+					</input>
+					<input type="hidden" id="account_groups{account_id}" name="account_groups[]">
+						<xsl:if test="selected != ''">
+							<xsl:attribute name="value">
+								<xsl:value-of select="account_id"/>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</xsl:otherwise>
+			</xsl:choose>
+
 			<xsl:value-of select="account_lid"/>
 		</li>
 	</xsl:template>
@@ -283,7 +319,7 @@
 <!-- BEGIN app_list -->
 
 	<xsl:template match="app_list">
-		<li>
+		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="position() mod 2 = 0">
@@ -294,6 +330,13 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<td>
+				<xsl:value-of select="app_title"/>
+
+			</td>
+			<xsl:choose>
+				<xsl:when test="i_am_admin = 1">
+					<td>
 			<input type="checkbox" id="{checkbox_name}" name="{checkbox_name}" value="1">
 				<xsl:choose>
 					<xsl:when test="checked = '1'">
@@ -301,10 +344,53 @@
 					</xsl:when>
 				</xsl:choose>
 			</input>
-			<label for="{checkbox_name}">
-				<xsl:value-of select="app_title" />
-			</label>
-		</li>
+					</td>
+					<td>
+						<input type="checkbox" id="{checkbox_name_admin}" name="{checkbox_name_admin}" value="2">
+							<xsl:choose>
+								<xsl:when test="checked_admin = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+					</td>
+				</xsl:when>
+				<xsl:otherwise>
+					<td>
+						<input type="checkbox" readonly='true'>
+							<xsl:choose>
+								<xsl:when test="checked = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+						<input type="hidden" id="{checkbox_name}" name="{checkbox_name}">
+							<xsl:if test="checked = '1'">
+								<xsl:attribute name="value">
+									<xsl:text>1</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+					<td>
+						<input type="checkbox" readonly='true'>
+							<xsl:choose>
+								<xsl:when test="checked_admin = '1'">
+									<xsl:attribute name="checked" value="checked" />
+								</xsl:when>
+							</xsl:choose>
+						</input>
+						<input type="hidden" id="{checkbox_name_admin}" name="{checkbox_name_admin}">
+							<xsl:if test="checked_admin = '1'">
+								<xsl:attribute name="value">
+									<xsl:text>2</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+				</xsl:otherwise>
+			</xsl:choose>
+		</tr>
 	</xsl:template>
 
 <!-- permissions - applist for view -->

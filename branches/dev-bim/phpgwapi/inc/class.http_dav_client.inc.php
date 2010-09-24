@@ -675,7 +675,7 @@ if ( DEBUG_CACHEPROP) echo '<b>cp propfind unseted</b><br />';
 
 			if (strlen($token)) 
 			{
-				$this->http_client->addHeader('If', '<'.$uri.'>'.' (<'.$token.'>)');
+				$this->http_client->addHeader('If', '<'.$srcUri.'>'.' (<'.$token.'>)');
 			}
 			$result = $this->http_client->Copy( $srcUri, $destUri, $overwrite, $scope);
 			$this->http_client->removeHeader('If');
@@ -708,7 +708,7 @@ if (DEBUG_CACHEPROP) _debug_array('cache prop cleared');
 			$this->delete_uri_in_cache($destUri);
 			if (strlen($token)) 
 			{
-				$this->http_client->addHeader('If', '<'.$uri.'>'.' (<'.$token.'>)');
+				$this->http_client->addHeader('If', '<'.$srcUri.'>'.' (<'.$token.'>)');
 			}
 			$result = $this->http_client->Move( $srcUri, $destUri, $overwrite, $scope);
 			$this->http_client->removeHeader('If');

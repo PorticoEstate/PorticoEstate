@@ -34,14 +34,12 @@
 
 		function sms_uipoll()
 		{
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.bopoll',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 			= '.poll';
 			$this->menu->sub			= $this->acl_location;
 			$this->start				= $this->bo->start;
@@ -50,8 +48,8 @@
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
-			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$this->db 					= & $GLOBALS['phpgw']->db;
+			$this->db2 					= clone($this->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::poll';
 		}
 
@@ -87,7 +85,7 @@
 
 			$poll_info = $this->bo->read();
 
-			while (is_array($poll_info) && list(,$entry) = each($poll_info))
+			foreach ($poll_info as $entry)
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
@@ -179,7 +177,7 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -408,8 +406,6 @@
 
 			$GLOBALS['phpgw']->redirect_link('/index.php',$add_data);
 		}
-
-
 
 		function edit()
 		{
@@ -641,8 +637,8 @@
 				$choice_title = $this->db->f('choice_title');
 				$choice_code = $this->db->f('choice_code');
 				$sql2 = "SELECT result_id FROM phpgw_sms_featpoll_result WHERE poll_id='$poll_id' AND choice_id='$choice_id'";
-				$this->db2->query($sql2,__LINE__,__FILE__);
-				$choice_voted = $this->db2->num_rows();
+					$this->db->query($sql2,__LINE__,__FILE__);
+					$choice_voted = $this->db->num_rows();
 				if ($total_voters)
 				{
 				    $percentage = round(($choice_voted/$total_voters)*100);
@@ -675,8 +671,10 @@
 				</table>
 			    ";
 
-				$done_data = array(
-				'menuaction'	=> 'sms.uipoll.index');
+				$done_data = array
+				(
+					'menuaction'	=> 'sms.uipoll.index'
+				);
 
 				$done_url = $GLOBALS['phpgw']->link('/index.php',$done_data);
 
@@ -832,4 +830,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-

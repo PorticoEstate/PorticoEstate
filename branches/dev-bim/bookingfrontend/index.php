@@ -2,8 +2,9 @@
 	/**
 	* phpGroupWare - property: a Facilities Management System.
 	*
+	* @author Jonas Borgström jonas.borgstrom@redpill.se
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2009 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -40,15 +41,29 @@
 		'currentapp'	=> 'login', // To stop functions.inc.php from validating the session
 	);
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
+	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
 	include_once('../header.inc.php');
 
 	// Make sure we're always logged in
-	if (! $GLOBALS['phpgw']->session->verify())
+	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
 		$login = "bookingguest";
 		$passwd = "bkbooking";
 		$_POST['submitit'] = "";
+
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+		if(!$GLOBALS['sessionid'])
+		{
+			$lang_denied = lang('Anonymous access not correctly configured');
+			if($GLOBALS['phpgw']->session->reason)
+			{
+				$lang_denied = $GLOBALS['phpgw']->session->reason;
+			}
+			echo <<<HTML
+				<div class="error">$lang_denied</div>
+HTML;
+			$GLOBALS['phpgw']->common->phpgw_exit(True);
+		}
 	}
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'bookingfrontend';
 
@@ -174,6 +189,7 @@ HTML;
 
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
+	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
 	if ( !$invalid_data 
 		&& is_object($GLOBALS[$class])
 		&& isset($GLOBALS[$class]->public_functions) 

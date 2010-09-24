@@ -126,7 +126,18 @@
 			this.source,
 			{
 				paginator: this.paginator,
-				dynamicData: true
+				dynamicData: true,
+				<?php
+					$populate = phpgw::get_var('populate_form'); 
+					echo isset($populate)? 'initialLoad: false,':''
+				?>
+				<?php
+					$initLoad = phpgw::get_var('initial_load'); 
+					echo ($initLoad == 'no')? 'initialLoad: false,':''
+				?>
+				MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
+				MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
+				MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
 			}
 		);
 
@@ -351,17 +362,27 @@
 			eval(variableName + " = YAHOO.rental.setupDatasource.shift()");
 			var source_properties = eval("new " + variableName + "()");
 
+<?php
+	if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+	{
+		$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+	}
+	else {
+		$user_rows_per_page = 10;
+	}
+?>
+
 			// ... create a paginator for this datasource
 			var pag = new YAHOO.widget.Paginator({
-				rowsPerPage: 10,
+				rowsPerPage: <?php echo $user_rows_per_page ?>,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: '<< <?php echo lang(first) ?>',
-				previousPageLinkLabel: '< <?php echo lang(previous) ?>',
-				nextPageLinkLabel: '<?php echo lang(next) ?> >',
-				lastPageLinkLabel: '<?php echo lang(last) ?> >>',
-				template			: "{RowsPerPageDropdown}<?php echo lang(elements_pr_page) ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
-				pageReportTemplate	: "<?php echo lang(shows_from) ?> {startRecord} <?php echo lang(to) ?> {endRecord} <?php echo lang(of_total) ?> {totalRecords}.",
+				firstPageLinkLabel: "<< <?php echo lang('first') ?>",
+				previousPageLinkLabel: "< <?php echo lang('previous') ?>",
+				nextPageLinkLabel: "<?php echo lang('next') ?> >",
+				lastPageLinkLabel: "<?php echo lang('last') ?> >>",
+				template			: "{RowsPerPageDropdown}<?php echo lang('elements_pr_page') ?>.{CurrentPageReport}<br/>  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}",
+				pageReportTemplate	: "<?php echo lang('shows_from') ?> {startRecord} <?php echo lang('to') ?> {endRecord} <?php echo lang('of_total') ?> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
 
@@ -371,6 +392,16 @@
 			this.wrapper = new dataSourceWrapper(source_properties, pag);
 			i+=1;
 
+			<?php
+				$populate = phpgw::get_var('populate_form');
+				if(isset($populate)){?>
+					var qs = YAHOO.rental.serializeForm(source_properties.form);
+				    this.wrapper.source.liveData = this.wrapper.url + qs + '&';
+				    this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+				    	this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
+				    }, scope: this});
+			<?php }
+			?>
 
 			// XXX: Create generic column picker for all datasources
 
@@ -511,6 +542,7 @@ function closeCalender(event)
 
 function clearCalendar(event)
 {
+	YAHOO.util.Event.stopEvent(event);
 	this.clear();
 	document.getElementById(this.inputFieldID).value = '';
 	document.getElementById(this.hiddenField).value = '';
@@ -525,17 +557,27 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 		}
 	);
 
+	var navConfig = {
+			strings: {
+				month:"<?php echo lang('month') ?>",
+				year:"<?php echo lang('year') ?>",
+				submit: "<?php echo lang('ok') ?>",
+				cancel: "<?php echo lang('cancel') ?>",
+				invalidYear: "<?php echo lang('select_date_valid_year') ?>"
+				},
+				initialFocus: "month"
+			}
+	
 	var cal = new YAHOO.widget.Calendar(
-		"calendar",
 		calendarBodyId,
-		{ 	navigator:true,
-			title: '<?php echo lang(select_date) ?>',
+		{ 	navigator:navConfig,
+			title: '<?php echo lang('select_date') ?>',
 			start_weekday:1,
 			LOCALE_WEEKDAYS:"short"}
 	);
 
-	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang(calendar_months) ?>);
-	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang(calendar_weekdays) ?>);
+	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang('calendar_months') ?>);
+	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang('calendar_weekdays') ?>);
 	cal.render();
 
 	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);
@@ -570,7 +612,7 @@ function onCalendarSelect(type,args,array){
 	}
 	document.getElementById(array[0]).value = formatDate('<?php echo $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'] ?>',Math.round(Date.parse(date)/1000));
 	array[1].hide();
-	if (array[3] != undefined && !array[3]) {
+	if (cal_postOnChange || (array[3] != undefined && !array[3])) {
 		document.getElementById('ctrl_search_button').click();
 	}
 

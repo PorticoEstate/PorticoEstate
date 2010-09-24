@@ -31,7 +31,7 @@ class rental_socontract_price_item extends rental_socommon
 		$columns = array();
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
-		$order = $sort_field ? "ORDER BY $sort_field $dir": '';
+		$order = $sort_field ? "ORDER BY $sort_field $dir": 'ORDER BY agresso_id ASC, title ASC';
 		
 		$filter_clauses = array();
 		
@@ -42,6 +42,40 @@ class rental_socontract_price_item extends rental_socommon
 		if(isset($filters['contract_id'])){
 			$id = $this->marshal($filters['contract_id'],'int');
 			$filter_clauses[] = "contract_id = {$id}";
+		}
+		if(isset($filters['contract_ids_one_time'])){
+			$billing_term_id = (int)$filters['billing_term_id'];
+			$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
+			$result = $this->db->query($sql);
+			if(!$result)
+			{
+				return;
+			}
+			if(!$this->db->next_record())
+			{
+				return;
+			}
+			$month = (int)$filters['month'];
+			$year = (int)$filters['year'];
+			$months = $this->unmarshal($this->db->f('months', true), 'int');
+			$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
+			if($months == 1){
+				$timestamp_start = $timestamp_end; // The first day of the period to bill for
+			}else{
+				$months = $months-1;
+				$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+			}
+			$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+			
+			$filter_clauses[] = "is_one_time";
+			$filter_clauses[] = "date_start < {$timestamp_end}";
+			$filter_clauses[] = "date_start >= {$timestamp_start}";
+		}
+		if(isset($filters['one_time'])){
+			$filter_clauses[] = "is_one_time";
+		}
+		else{
+			$filter_clauses[] = "NOT is_billed";
 		}
 		
 		if(count($filter_clauses))
@@ -54,6 +88,7 @@ class rental_socontract_price_item extends rental_socommon
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(id)) AS count';
+			$order = "";
 		}
 		else
 		{
@@ -61,7 +96,7 @@ class rental_socontract_price_item extends rental_socommon
 		}
 		
 		$tables = "rental_contract_price_item";
-		$joins = '';
+		$joins = "";
 		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -76,6 +111,8 @@ class rental_socontract_price_item extends rental_socommon
 			$price_item->set_title($this->unmarshal($this->db->f('title'),'string'));
 			$price_item->set_agresso_id($this->unmarshal($this->db->f('agresso_id'),'string'));
 			$price_item->set_is_area($this->unmarshal($this->db->f('is_area'),'bool'));
+			$price_item->set_is_one_time($this->unmarshal($this->db->f('is_one_time'),'bool'));
+			$price_item->set_is_billed($this->unmarshal($this->db->f('is_billed'),'bool'));
 			$price_item->set_price($this->unmarshal($this->db->f('price'),'float'));
 			$price_item->set_area($this->unmarshal($this->db->f('area'),'float'));
 			$price_item->set_count($this->unmarshal($this->db->f('count'),'int'));
@@ -105,13 +142,14 @@ class rental_socontract_price_item extends rental_socommon
 			'\'' . $price_item->get_title() . '\'',
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
-			$price,
-			$rented_area,
-			$price_item->get_count(),
-			$total_price
+			str_replace(',','.',$price),
+			str_replace(',','.',$rented_area),
+			str_replace(',','.',$price_item->get_count()),
+			str_replace(',','.',$total_price),
+			($price_item->is_billed() ? "true" : "false")
 		);
 		
-		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'is_billed');
 		
 		if ($price_item->get_date_start()) {
 			$values[] = $this->marshal($price_item->get_date_start(), 'int');
@@ -160,13 +198,15 @@ class rental_socontract_price_item extends rental_socommon
 			'\'' . $price_item->get_title() . '\'',
 			'\'' . $price_item->get_agresso_id() . '\'',
 			($price_item->is_area() ? "true" : "false"),
-			$price,
-			$rented_area,
-			$price_item->get_count(),
-			$total_price
+			str_replace(',','.',$price),
+			str_replace(',','.',$rented_area),
+			str_replace(',','.',$price_item->get_count()),
+			str_replace(',','.',$total_price),
+			($price_item->is_one_time() ? "true" : "false"),
+			($price_item->is_billed() ? "true" : "false")
 		);
 		
-		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price');
+		$cols = array('price_item_id', 'contract_id', 'title', 'agresso_id', 'is_area', 'price', 'area', 'count', 'total_price', 'is_one_time', 'is_billed');
 		
 		if ($price_item->get_date_start()) {
 			$values[] = $this->marshal($price_item->get_date_start(), 'int');
@@ -199,23 +239,34 @@ class rental_socontract_price_item extends rental_socommon
 		$id = intval($price_item->get_id());
 		
 		$price = $price_item->get_price() ? $price_item->get_price() : 0;
-		$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		//$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
+		//if($total_price == 0){
+			
+		//}
+		
+		if($price_item->is_area()){
+			$total_price = $price_item->get_area() * $price_item->get_price();
+		}
+		else{
+			$total_price = $price_item->get_count() * $price_item->get_price();
+		}
 		
 		// Build a db-friendly array of the composite object
 		$values = array(
-			$price_item->get_price_item_id(),
-			$price_item->get_contract_id(),
-			'\'' . $price_item->get_title() . '\'',
-			$price_item->get_area(),
-			$price_item->get_count(),
-			'\'' . $price_item->get_agresso_id() . '\'',
-			($price_item->is_area() ? "true" : "false"),
-			$price,
-			$total_price,
-			$this->marshal($price_item->get_date_start(), 'int'),
-			$this->marshal($price_item->get_date_end(), 'int')
+			"price_item_id=" . $price_item->get_price_item_id(),
+			"contract_id=" . $price_item->get_contract_id(),
+			"title=" . '\'' . $price_item->get_title() . '\'',
+			"area=" . str_replace(',','.',$price_item->get_area()),
+			"count=" . str_replace(',','.',$price_item->get_count()),
+			"agresso_id=" . '\'' . $price_item->get_agresso_id() . '\'',
+			"is_area=" . ($price_item->is_area() ? "true" : "false"),
+			"price=" . str_replace(',','.',$price),
+			"total_price=" . str_replace(',','.',$total_price),
+			"date_start=" . $this->marshal($price_item->get_date_start(), 'int'),
+			"date_end=" . $this->marshal($price_item->get_date_end(), 'int'),
+			"is_one_time=" . ($price_item->get_is_one_time() == "true" ? "true" : "false"),
+			"is_billed=" . ($price_item->is_billed() ? "true" : "false")
 		);
-
 		$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		$receipt['id'] = $id;
@@ -231,7 +282,50 @@ class rental_socontract_price_item extends rental_socommon
 	 */
 	public function get_total_price($contract_id){
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE contract_id={$contract_id} AND ((date_start <= {$ts_query} AND date_end >= {$ts_query}) OR (date_start <= {$ts_query} AND (date_end is null OR date_end = 0)) OR (date_start is null AND (date_end >= {$ts_query} OR date_end is null)))");
+		//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
+		$this->db->query("SELECT sum(total_price::numeric) AS sum_total FROM rental_contract_price_item WHERE NOT is_one_time AND contract_id={$contract_id}");
+		if($this->db->next_record()){
+			$total_price = $this->db->f('sum_total');
+			return $total_price;
+		}
+	}
+	
+	/**
+	 * Select total sum of all "active" price-items on a contract for invoice-generation.
+	 * 
+	 * @param $contract_id	the id of the contract to generate total price on 
+	 * @return total_price	the total price
+	 */
+	public function get_total_price_invoice($contract_id, $billing_term, $month, $year){
+		$billing_term_id = (int)$billing_term;
+		$sql = "SELECT months FROM rental_billing_term WHERE id = {$billing_term_id}";
+		$result = $this->db->query($sql);
+		if(!$result)
+		{
+			return;
+		}
+		if(!$this->db->next_record())
+		{
+			return;
+		}
+		$months = $this->unmarshal($this->db->f('months', true), 'int');
+		$timestamp_end = strtotime("{$year}-{$month}-01"); // The first day in the month to bill for
+		if($months == 1){
+			$timestamp_start = $timestamp_end; // The first day of the period to bill for
+		}else{
+			$months = $months-1;
+			$timestamp_start = strtotime("-{$months} months", $timestamp_end); // The first day of the period to bill for
+		}
+		$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
+		
+		//$this->db->query("SELECT sum(rcpi.total_price::numeric) AS sum_total FROM rental_contract_price_item rcpi, rental_price_item rpi WHERE rpi.id = rcpi.price_item_id AND NOT rpi.is_one_time AND rcpi.contract_id={$contract_id} AND ((rcpi.date_start <= {$ts_query} AND rcpi.date_end >= {$ts_query}) OR (rcpi.date_start <= {$ts_query} AND (rcpi.date_end is null OR rcpi.date_end = 0)) OR (rcpi.date_start is null AND (rcpi.date_end >= {$ts_query} OR rcpi.date_end is null)))");
+		$q_total_price = "SELECT sum(total_price::numeric) AS sum_total ";
+		$q_total_price .= "FROM rental_contract_price_item ";
+		$q_total_price .= "WHERE contract_id={$contract_id} ";
+		$q_total_price .= "AND NOT is_billed ";
+		$q_total_price .= "AND ((NOT date_start IS NULL AND date_start < {$timestamp_end}) OR date_start IS NULL) ";
+		$q_total_price .= "AND ((NOT date_end IS NULL AND date_end >= {$timestamp_start}) OR date_end IS NULL)";
+		$this->db->query($q_total_price);
 		if($this->db->next_record()){
 			$total_price = $this->db->f('sum_total');
 			return $total_price;

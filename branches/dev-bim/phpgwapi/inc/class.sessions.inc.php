@@ -232,7 +232,7 @@
 
 			$now = time();
 
-			$lid_parts	= $this->_set_login($login);
+			$this->_set_login($login);
 			$user_ip	= $this->_get_user_ip();
 
 			if ( $this->_login_blocked($login, $this->_get_user_ip()) )
@@ -271,6 +271,7 @@
 			}
 			$GLOBALS['phpgw_info']['user']['account_id'] = $this->_account_id;
 			$accounts->set_account($this->_account_id);
+
 			session_start();
 			$this->_sessionid = session_id();
 
@@ -317,7 +318,7 @@
 			}
 
 			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
+	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			phpgwapi_cache::session_set('phpgwapi', 'password', base64_encode($this->_passwd));
 			if ( $GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') )
@@ -391,7 +392,7 @@
 			//$this->read_repositories(false);
 
 			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
+	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			$this->appsession('password', 'phpgwapi', base64_encode($this->_passwd));
 			$session_flags = 'S';
@@ -868,7 +869,7 @@
 			{
 				$this->_setup_cache($write_cache);
 			}
-			$this->hooks = $GLOBALS['phpgw']->hooks->read();
+	//		$this->hooks = $GLOBALS['phpgw']->hooks->read();
 		}
 
 		/**
@@ -936,7 +937,8 @@
 
 			if ( !strlen(session_id()) )
 			{
-				session_start();
+				throw new Exception("sessions::register_session() - No value for session_id()");
+//				session_start();
 			}
 
 			$_SESSION['phpgw_session'] = array
@@ -1100,6 +1102,11 @@
 				$sessionid = phpgw::get_var(session_name());
 			}
 
+			if(!$sessionid)
+			{
+				return false;
+			}
+
 			$this->_sessionid = $sessionid;
 
 			$session = $this->read_session($sessionid);
@@ -1176,7 +1183,7 @@
 			}
 
 			$GLOBALS['phpgw_info']['user']  = $this->_data;
-			$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
+	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			$GLOBALS['phpgw_info']['user']['session_ip'] = $session['session_ip'];
 			$GLOBALS['phpgw_info']['user']['passwd']     = phpgwapi_cache::session_get('phpgwapi', 'password');
@@ -1187,7 +1194,7 @@
 				{
 					$GLOBALS['phpgw']->log->message(array(
 						'text' => 'W-VerifySession, the domains %1 and %2 don\'t match',
-						'p1'   => $userid_array[1],
+						'p1'   => $this->_account_domain,
 						'p2'   => $GLOBALS['phpgw_info']['user']['domain'],
 						'line' => __LINE__,
 						'file' => __FILE__

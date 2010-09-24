@@ -123,9 +123,6 @@
 
 		function read($data)
 		{
-
-			if(is_array($data))
-			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter			= $data['filter'] ? (int)$data['filter'] : 0;
 				$query			= isset($data['query']) ? $data['query'] : '';
@@ -143,7 +140,6 @@
 				$district_id	= isset($data['district_id']) ? $data['district_id'] : '';
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 				$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();
-			}
 
 			$GLOBALS['phpgw']->config->read();
 			$sql = $this->bocommon->fm_cache('sql_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
@@ -179,7 +175,7 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 
-				$cols .= ",fm_workorder.status as status";
+				$cols .= ",fm_workorder_status.descr as status";
 				$cols_return[] 				= 'status';
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'status';
@@ -228,6 +224,9 @@
 				$cols .= ",fm_project.user_id as project_owner";
 
 				$joinmethod .= " $this->join  fm_workorder ON ($entity_table.id = fm_workorder.project_id) $this->join  phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";
+				$paranthesis .='(';
+
+				$joinmethod .= " $this->join fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
 				$paranthesis .='(';
 
 				$cols .= ',fm_vendor.org_name';
@@ -286,6 +285,8 @@
 
 
 			$cols_return[] = 'location_code';
+			$cols_return[] = 'billable_hours';
+			$cols .= ',fm_workorder.billable_hours';
 			$no_address = false;
 			if(isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
 			{
@@ -459,6 +460,10 @@
 							{
 								$_query = (int) $query;
 							}
+							else if($field_info['type'] == 'bigint'  && !ctype_digit($query))
+							{
+								$_query = 0;
+							}
 							else
 							{
 								$_query = $query;
@@ -466,15 +471,19 @@
 
 							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
 						}
-
-						$querymethod = $where . ' ' . implode(' OR ', $_querymethod);
+						$querymethod = $where . ' (' . implode(' OR ', $_querymethod) . ')';
 						unset($_querymethod);
+//_debug_array($querymethod);
 					}
 					else
 					{
-						if($criteria[0]['type'] == int)
+						if($criteria[0]['type'] == 'int')
 						{
 							$_query = (int) $query;
+						}
+						else if($criteria[0]['type'] == 'bigint'  && !ctype_digit($query))
+						{
+							$_query = 0;
 						}
 						else
 						{
@@ -494,10 +503,10 @@
 //_debug_array($sql);
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
-				$sql2 = 'SELECT count(*) FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
+				$sql2 = 'SELECT count(*) as cnt FROM (SELECT fm_workorder.id ' . substr($sql,strripos($sql,'from'))  . ') as cnt';
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f('count');//$this->db->f('0');
+				$this->total_records = $this->db->f('cnt');
 			}
 			else
 			{
@@ -506,9 +515,9 @@
 				$this->total_records = $this->db->num_rows();
 			}
 
-			$sql .= " $group_method";
+			$workorder_list = array();
 
-			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			$sql .= " $group_method";
 
 			if(!$allrows)
 			{
@@ -516,12 +525,21 @@
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				if($this->total_records > 200)
+				{
+					$_fetch_single = true;
+				}
+				else
+				{
+					$_fetch_single = false;
+				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				unset($_fetch_single);
 			}
 
 			$count_cols_return=count($cols_return);
 			$j=0;
-			$workorder_list = array();
+
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$count_cols_return;$i++)
@@ -550,7 +568,9 @@
 		//	$this->update_actual_cost_global();
 		//	$this->update_planned_cost_global();
 
-			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_project.user_id from fm_workorder $this->join fm_project on fm_workorder.project_id=fm_project.id  $this->left_join fm_chapter on "
+			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_workorder.user_id as user_id FROM fm_workorder"
+	//			. " $this->join fm_project on fm_workorder.project_id=fm_project.id"
+				. " $this->left_join fm_chapter on "
 				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -580,7 +600,7 @@
 					'act_vendor_cost'		=> $this->db->f('act_vendor_cost'),
 					'user_id'				=> $this->db->f('user_id'),
 					'vendor_id'				=> $this->db->f('vendor_id'),
-					'coordinator'			=> $this->db->f('coordinator'),
+		//			'coordinator'			=> $this->db->f('coordinator'),
 					'access'				=> $this->db->f('access'),
 					'start_date'			=> $this->db->f('start_date'),
 					'end_date'				=> $this->db->f('end_date'),
@@ -596,7 +616,8 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'tenant_id'				=> $this->db->f('tenant_id'),
 					'cat_id'				=> $this->db->f('category'),
-					'grants'				=> (int)$this->grants[$this->db->f('user_id')]
+					'grants'				=> (int)$this->grants[$this->db->f('user_id')],
+					'billable_hours'		=> $this->db->f('billable_hours'),
 				);
 			}
 
@@ -766,6 +787,7 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
+			$workorder['billable_hours'] = str_replace(',','.', $workorder['billable_hours']);
 
 			$cols = array();
 			$vals = array();
@@ -843,13 +865,14 @@
 				$workorder['charge_tenant'],
 				$this->account,
 				$workorder['ecodimb'],
-				$workorder['cat_id']
+				$workorder['cat_id'],
+				$workorder['billable_hours']
 			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -903,12 +926,14 @@
 			$historylog	= CreateObject('property.historylog','workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
+			$workorder['billable_hours'] = str_replace(',','.', $workorder['billable_hours']);
 
-			$this->db->query("SELECT status,budget,calculation FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT status,budget,calculation,billable_hours FROM fm_workorder WHERE id = {$workorder['id']}",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			$old_status = $this->db->f('status');
 			$old_budget = $this->db->f('budget');
+			$old_billable_hours	= $this->db->f('billable_hours');
 
 			if ($this->db->f('calculation') > 0)
 			{
@@ -923,7 +948,7 @@
 				$combined_cost = $workorder['budget'];
 			}
 
-			$this->db->query("SELECT bilagsnr FROM fm_ecobilag WHERE pmwrkord_code ={$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT bilagsnr FROM fm_ecobilag WHERE pmwrkord_code ='{$workorder['id']}'",__LINE__,__FILE__);
 			$this->db->next_record();
 
 			if($this->db->f('bilagsnr'))
@@ -931,7 +956,7 @@
 				$paid = 1;
 			}
 
-			$this->db->query("SELECT bilagsnr FROM fm_ecobilagoverf where pmwrkord_code = {$workorder['id']}",__LINE__,__FILE__);
+			$this->db->query("SELECT bilagsnr FROM fm_ecobilagoverf where pmwrkord_code = '{$workorder['id']}'",__LINE__,__FILE__);
 			$this->db->next_record();
 			if($this->db->f('bilagsnr'))
 			{
@@ -939,7 +964,7 @@
 			}
 
 
-			$value_set=array
+			$value_set = array
 			(
 				'title'			=> $workorder['title'],
 				'status'		=> $workorder['status'],
@@ -956,7 +981,8 @@
 				'charge_tenant'	=> $workorder['charge_tenant'],
 				'vendor_id'		=> $workorder['vendor_id'],
 				'ecodimb'		=> $workorder['ecodimb'],
-				'category'		=> $workorder['cat_id']
+				'category'		=> $workorder['cat_id'],
+				'billable_hours'=> $workorder['billable_hours']
 			);
 
 			if($workorder['status'] == 'closed')
@@ -1006,6 +1032,13 @@
 			$this->update_planned_cost($workorder['project_id']); // at project
 
 			$check_pending_action = false;
+			if ((float)$old_billable_hours != (float)$workorder['billable_hours'])
+			{
+				$historylog->add('H',$workorder['id'],$workorder['billable_hours'],$old_billable_hours);
+				$receipt['message'][]= array('msg' => lang('billable hours has been updated'));
+			}
+
+
 				if ($old_status != $workorder['status'])
 				{
 					$historylog->add('S',$workorder['id'],$workorder['status'], $old_status);
@@ -1022,9 +1055,7 @@
 				if( $check_pending_action )
 				{
 					$this->db->query("SELECT * FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
-
 					$this->db->next_record();
-
  					if ($this->db->f('approved') )
  					{
  						$action_params = array

@@ -3,7 +3,7 @@
 	* phpGroupWare - Manual
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package manual
@@ -106,16 +106,33 @@
 				parse_navbar();
 			}
 				
+			$pdffile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.pdf";
+			
+			if(is_file($pdffile))
+			{
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header("{$section}.pdf", '', filesize($pdffile));
+			    ob_clean();
+			    flush();
+				readfile($pdffile);
+				exit;
+			}
+
 			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";
+
+			// test the manual on odt2xhtml
+			//$odtfile = PHPGW_SERVER_ROOT . '/phpgwapi/inc/odt2xhtml/odt2xhtml.odt';
 
 			if(is_file($odtfile))
 			{
-				$odt2xhtml	= CreateObject('manual.odt2xhtml',$odtfile);
+				$frontend = '/'; # directory where file odt to converse
+				$root = $GLOBALS['phpgw_info']['server']['temp_dir'];
+
+				$odt2xhtml	= CreateObject('phpgwapi.odt2xhtml', $root, $frontend, $odtfile);
 				$odt2xhtml->convert2xhtml();
 				$odt2xhtml->get_elements_html();
-				//$odt2xhtml->display_elements_html('css',0); 
-				//$odt2xhtml->display_elements_html('title',0); 
-				$odt2xhtml->display_elements_html('body',0); 
+				$odt2xhtml->display_elements_html('css',0); 
+				$odt2xhtml->display_elements_html('body',1);
 				$odt2xhtml->delete_tmp();
 			}
 			else
@@ -128,7 +145,6 @@ HTML;
 			}
 			
 			$GLOBALS['phpgw']->common->phpgw_footer();
-
 		}
 
 		function attrib_help()
@@ -146,11 +162,21 @@ HTML;
 
 			$attrib_data 	= $GLOBALS['phpgw']->custom_fields->get($appname, $location, $id);
 
+			$helpmsg = nl2br(str_replace(array
+						(
+							'[',
+							']'
+						),array
+						(
+							'<',
+							'>'
+						),$attrib_data['helpmsg']));
+
 			$function_msg	= lang('Help');
 
 			$t->set_file('help', 'help.tpl');
 			$t->set_var('title', lang('Help') . " - \"{$attrib_data['input_text']}\"");
-			$t->set_var('help_msg', $attrib_data['helpmsg'] );
+			$t->set_var('help_msg', $helpmsg );
 			$t->set_var('lang_close', lang('close'));
 											
 			$GLOBALS['phpgw']->common->phpgw_header();

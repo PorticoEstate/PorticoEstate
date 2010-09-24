@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: ecmaunit.js 16502 2006-03-12 13:29:24Z skwashd $
+// $Id$
 
 /*
    Object-oriented prototype-based unit test suite
@@ -17,66 +17,82 @@
 function TestCase() {
     /* a single test case */
     this.name = 'TestCase';
+};
 
-    this.initialize = function(reporter) {
+TestCase.prototype.initialize = function(reporter) {
         // this array's contents will be displayed when done (if it
         // contains anything)
         this._exceptions = new Array();
         this._reporter = reporter;
-    };
+};
 
-    this.setUp = function() {
+TestCase.prototype.setUp = function() {
         /* this will be called on before each test method that is ran */
-    };
+};
 
-    this.tearDown = function() {
+TestCase.prototype.tearDown = function() {
         /* this will be called after each test method that has been ran */
-    };
+};
 
-    this.assertEquals = function(var1, var2, message) {
+TestCase.prototype.assertEquals = function(var1, var2, message) {
         /* assert whether 2 vars have the same value */
         if (!message)  {
             message = '';
         } else {
             message = "'" + message + "' ";
         }
-        if (var1 && var1.toSource && var2 && var2.toSource) {
-            if (var1.toSource() != var2.toSource()) {
+    if (var1 != var2 &&
+            (!(var1 instanceof Array && var2 instanceof Array) ||
+                !this._arrayDeepCompare(var1, var2))) {
                 this._throwException('Assertion ' + message + 'failed: ' + 
                                         var1 + ' != ' + var2);
             };
+};
+
+TestCase.prototype.assertNotEquals = function(var1, var2, message) {
+    /* assert whether 2 vars have different values */
+    if (!message)  {
+        message = '';
         } else {
-            if (var1 != var2) {
+        message = "'" + message + "' ";
+    }
+    if (var1 && var1.toSource && var2 && var2.toSource) {
+        if (var1.toSource() == var2.toSource()) {
                 this._throwException('Assertion ' + message + 'failed: ' + 
-                                        var1 + ' != ' + var2);
+                                    var1 + ' == ' + var2);
             };
+    } else {
+        if (var1 == var2) {
+            this._throwException('Assertion ' + message + 'failed: ' + 
+                                    var1 + ' == ' + var2);
         };
     };
+};
 
-    this.debug = function(msg) {
+TestCase.prototype.debug = function(msg) {
         this._reporter.debug(msg);
-    }
-    this.assert = function(statement, message) {
+}
+TestCase.prototype.assert = function(statement, message) {
         /* assert whether a variable resolves to true */
         if (!statement) {
             if (!message) message = (statement && statement.toString) ? 
                                         statement.toString() : statement;
             this._throwException('Assertion \'' + message + '\' failed');
         };
-    };
+};
 
-    this.assertTrue = this.assert;
+TestCase.prototype.assertTrue = TestCase.prototype.assert;
 
-    this.assertFalse = function(statement, message) {
+TestCase.prototype.assertFalse = function(statement, message) {
         /* assert whether a variable resolves to false */
         if (statement) {
             if (!message) message = statement.toString ? 
                     statement.toString() : statement;
             this._throwException('AssertFalse \'' + message + '\' failed');
         };
-    };
+};
 
-    this.assertThrows = function(func, exception, context) {
+TestCase.prototype.assertThrows = function(func, exception, context) {
         /* assert whether a certain exception is raised */
         if (!context) {
             context = null;
@@ -93,6 +109,14 @@ function TestCase() {
             // allow catching undefined exceptions too
             if (exception === undefined) {
             } else if (exception) {
+            var isinstance = false;
+            try {
+                if (e instanceof exception) {
+                    isinstance = true;
+                };
+            } catch(f) {
+            };
+            if (!isinstance) {
                 if (exception.toSource && e.toSource) {
                     exception = exception.toSource();
                     e = e.toSource();
@@ -107,6 +131,7 @@ function TestCase() {
                             ', while expecting ' + exception.toString());
                 };
             };
+        };
             exception_thrown = true;
         };
         if (!exception_thrown) {
@@ -117,16 +142,16 @@ function TestCase() {
                 this._throwException('function didn\'t raise exception');
             };
         };
-    };
+};
 
-    this.runTests = function() {
+TestCase.prototype.runTests = function() {
         /* find all methods of which the name starts with 'test'
             and call them */
         var ret = this._runHelper();
     this._reporter.summarize(ret[0], ret[1], this._exceptions);
-    };
+};
 
-    this._runHelper = function() {
+TestCase.prototype._runHelper = function() {
         /* this actually runs the tests
             return value is an array [total tests ran, total time spent (ms)]
         */
@@ -141,7 +166,7 @@ function TestCase() {
                     this._reporter.reportSuccess(this.name, attr);
                 } catch(e) {
                     var raw = e;
-                    if (e.name && e.message) { // Microsoft
+                if (e && e.name && e.message) { // Microsoft
                         e = e.name + ': ' + e.message;
                     }
                     this._reporter.reportError(this.name, attr, e, raw);
@@ -154,17 +179,17 @@ function TestCase() {
         var now = new Date();
         var totaltime = now.getTime() - starttime;
         return new Array(numtests, totaltime);
-    };
+};
 
-    this._throwException = function(message) {
+TestCase.prototype._throwException = function(message) {
         var lineno = this._getLineNo();
         if (lineno) {
             message = 'line ' + lineno + ' - ' + message;
         };
         throw(message);
-    };
+};
 
-    this._getLineNo = function() {
+TestCase.prototype._getLineNo = function() {
         /* tries to get the line no in Moz */
         var stack = undefined;
         try {notdefined()} catch(e) {stack = e.stack};
@@ -184,24 +209,45 @@ function TestCase() {
         } else {
             return false;
         };
+};
+
+TestCase.prototype._arrayDeepCompare = function(a1, a2) {
+    if (!(a1 instanceof Array && a2 instanceof Array)) {
+        return false;
     };
+    if (a1.length != a2.length) {
+        return false;
+    };
+    for (var i=0; i < a1.length; i++) {
+        if (a1[i] instanceof Array) {
+            if (!this._arrayDeepCompare(a1[i], a2[i])) {
+                return false;
+            };
+        } else if (a1[i] != a2[i]) {
+            return false;
+        };
+    };
+    return true;
 };
 
 function TestSuite(reporter) {
     /* run a suite of tests */
+    if (reporter) {
     this._reporter = reporter;
     this._tests = new Array();
     this._exceptions = new Array();
+    };
+};
     
-    this.registerTest = function(test) {
+TestSuite.prototype.registerTest = function(test) {
         /* register a test */
         if (!test) {
             throw('TestSuite.registerTest() requires a testcase as argument');
         };
         this._tests.push(test);
-    };
+};
 
-    this.runSuite = function() {
+TestSuite.prototype.runSuite = function() {
         /* run the suite */
         var now = new Date();
         var starttime = now.getTime();
@@ -224,34 +270,38 @@ function TestSuite(reporter) {
         var now = new Date();
         var totaltime = now.getTime() - starttime;
         this._reporter.summarize(testsran, totaltime, this._exceptions);
-    };
 };
 
 function StdoutReporter(verbose) {
+    if (verbose) {
     this.verbose = verbose;
-    this.debug = function(text) {
-        print(text+"\n");
-    }
+    };
+};
 
-    this.reportSuccess = function(testcase, attr) {
+StdoutReporter.prototype.debug = function(text) {
+        print(text+"\n");
+}
+
+StdoutReporter.prototype.reportSuccess = function(testcase, attr) {
         /* report a test success */
         if (this.verbose) {
             print(testcase + '.' + attr + '(): OK');
         } else {
             print('.');
         };
-    };
+};
 
-    this.reportError = function(testcase, attr, exception, raw) {
+StdoutReporter.prototype.reportError = function(testcase, attr, 
+                                                exception, raw) {
         /* report a test failure */
         if (this.verbose) {
             print(testcase + '.' + attr + '(): FAILED!');
         } else {
             print('F');
         };
-    };
+};
 
-    this.summarize = function(numtests, time, exceptions) {
+StdoutReporter.prototype.summarize = function(numtests, time, exceptions) {
         print('\n' + numtests + ' tests ran in ' + time / 1000.0 + 
                 ' seconds\n');
         if (exceptions.length) {
@@ -261,7 +311,7 @@ function StdoutReporter(verbose) {
                 var exception = exceptions[i][2];
                 var raw = exceptions[i][3];
                 print(testcase + '.' + attr + ', exception: ' + exception);
-                if (verbose) {
+            if (this.verbose) {
                     this._printStackTrace(raw);
                 };
             };
@@ -269,9 +319,9 @@ function StdoutReporter(verbose) {
         } else {
             print('OK!');
         };
-    };
+};
 
-    this._printStackTrace = function(exc) {
+StdoutReporter.prototype._printStackTrace = function(exc) {
         if (!exc.stack) {
             print('no stacktrace available');
             return;
@@ -296,36 +346,37 @@ function StdoutReporter(verbose) {
             print('    ' + toprint[i][0]);
         };
         print();
-    };
 };
 
 function HTMLReporter(outputelement, verbose) {
+    if (outputelement) {
     this.outputelement = outputelement;
     this.document = outputelement.ownerDocument;
-    this.verbose = verbose; //XXX verbose not yet supported
+        this.verbose = verbose;
+    };
+};
 
-    this.debug = function(text) {
+HTMLReporter.prototype.debug = function(text) {
         var msg = this.document.createTextNode(text);
         var div = this.document.createElement('div');
         div.appendChild(msg);
         this.outputelement.appendChild(div);
-    }
-    this.reportSuccess = function(testcase, attr) {
+};
+
+HTMLReporter.prototype.reportSuccess = function(testcase, attr) {
         /* report a test success */
         // a single dot looks rather small
         var dot = this.document.createTextNode('+');
         this.outputelement.appendChild(dot);
-    };
+};
 
-    this.reportError = function(testcase, attr, exception, raw) {
+HTMLReporter.prototype.reportError = function(testcase, attr, exception, raw) {
         /* report a test failure */
         var f = this.document.createTextNode('F');
         this.outputelement.appendChild(f);
-        if (this.verbose) {
-        };
-    };
+};
 
-    this.summarize = function(numtests, time, exceptions) {
+HTMLReporter.prototype.summarize = function(numtests, time, exceptions) {
         /* write the result output to the html node */
         var p = this.document.createElement('p');
         var text = this.document.createTextNode(numtests + ' tests ran in ' + 
@@ -336,7 +387,7 @@ function HTMLReporter(outputelement, verbose) {
             for (var i=0; i < exceptions.length; i++) {
                 var testcase = exceptions[i][0];
                 var attr = exceptions[i][1];
-                var exception = exceptions[i][2];
+            var exception = exceptions[i][2].toString();
                 var raw = exceptions[i][3];
                 var div = this.document.createElement('div');
                 var lines = exception.toString().split('\n');
@@ -380,9 +431,9 @@ function HTMLReporter(outputelement, verbose) {
             div.style.marginTop = '1em';
             this.outputelement.appendChild(div);
         };
-    };
+};
 
-    this._displayStackTrace = function(exc) {
+HTMLReporter.prototype._displayStackTrace = function(exc) {
         /*
         if (arguments.caller) {
             // IE
@@ -437,5 +488,4 @@ function HTMLReporter(outputelement, verbose) {
             pre.appendChild(document.createTextNode('\n'));
             this.outputelement.appendChild(pre);
         };
-    };
 };

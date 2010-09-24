@@ -295,21 +295,8 @@ class property_uiitem {
         }
 
 
-        phpgwapi_yui::load_widget('dragdrop');
-        phpgwapi_yui::load_widget('datatable');
-        phpgwapi_yui::load_widget('menu');
-        phpgwapi_yui::load_widget('connection');
-        //// cramirez: necesary for include a partucular js
-        phpgwapi_yui::load_widget('loader');
-        //cramirez: necesary for use opener . Avoid error JS
-        phpgwapi_yui::load_widget('tabview');
-        phpgwapi_yui::load_widget('paginator');
-        //FIXME this one is only needed when $lookup==true - so there is probably an error
-        phpgwapi_yui::load_widget('animation');
-
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-        if( phpgw::get_var('phpgw_return_as') == 'json' ) {
             //values for Pagination
             $json = array
             (
@@ -344,10 +331,24 @@ class property_uiitem {
                 $json ['rights'] = $datatable['rowactions']['action'];
             }
 
+        if( phpgw::get_var('phpgw_return_as') == 'json' )
+ 		{
             return $json;
         }
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
+        phpgwapi_yui::load_widget('dragdrop');
+        phpgwapi_yui::load_widget('datatable');
+        phpgwapi_yui::load_widget('menu');
+        phpgwapi_yui::load_widget('connection');
+        //// cramirez: necesary for include a partucular js
+        phpgwapi_yui::load_widget('loader');
+        //cramirez: necesary for use opener . Avoid error JS
+        phpgwapi_yui::load_widget('tabview');
+        phpgwapi_yui::load_widget('paginator');
+        //FIXME this one is only needed when $lookup==true - so there is probably an error
+        phpgwapi_yui::load_widget('animation');
 
         // Prepare template variables and process XSLT
         $template_vars = array();
@@ -378,6 +379,8 @@ class property_uiitem {
 
     public function testdata() {
         // BIM testdata
+		$GLOBALS['phpgw']->db->transaction_begin();
+        
         $GLOBALS['phpgw']->db->query("INSERT INTO fm_item_catalog (name, description) VALUES ('NOBB', 'Norsk Byggevarebase')");
 
         $GLOBALS['phpgw']->db->query("INSERT INTO fm_item_group (name, nat_group_no, bpn, parent_group, catalog_id) VALUES ('Doors', 'X', 123, NULL, (SELECT id FROM fm_item_catalog WHERE name = 'NOBB' LIMIT 1))");
@@ -438,8 +441,8 @@ class property_uiitem {
                 VALUES (
                     (SELECT id FROM fm_item_group WHERE name = 'Doors'),
                     1,
-                    104533,
-                    ".phpgwapi_datetime::user_localtime()."
+                    1,
+                    ".time()."
                 )"
         );
         $GLOBALS['phpgw']->db->query("INSERT INTO fm_item
@@ -447,10 +450,11 @@ class property_uiitem {
                 VALUES (
                     (SELECT id FROM fm_item_group WHERE name = 'Doors'),
                     1,
-                    104533,
-                    ".phpgwapi_datetime::user_localtime()."
+                    1,
+                    ".time()."
                 )"
         );
+		$GLOBALS['phpgw']->db->transaction_commit();
     }
 
     public function emptydb() {

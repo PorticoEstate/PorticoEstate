@@ -24,7 +24,7 @@
 								  'building_id', 'building_name', 
 								  'season_id', 'season_name', 
 			                      'organization_id', 'organization_name', 
-			                      'from_', 'to_', 'active');
+			                      'shortname', 'from_', 'to_', 'active');
 		}
 		
 		public function index()
@@ -64,6 +64,10 @@
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
+							'key' => 'shortname',
+							'label' => lang('Organization shortname')
+						),
+						array(
 							'key' => 'season_name',
 							'label' => lang('Season')
 						),
@@ -99,6 +103,12 @@
 		{
 			$allocations = $this->bo->read();
 			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
+
+			foreach($allocations['results'] as &$allocation)
+			{
+				$allocation['from_'] = pretty_timestamp($allocation['from_']);
+				$allocation['to_'] = pretty_timestamp($allocation['to_']);
+			}
 			return $this->yui_results($allocations);
 		}
 
@@ -135,6 +145,10 @@
 		{
 			$send = CreateObject('phpgwapi.send');
 
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
 			if (strlen(trim($body)) == 0) 
 			{
 				return false;
@@ -144,7 +158,13 @@
 			{
 				if (strlen($contact['email']) > 0) 
 				{
-					$send->msg('email', $contact['email'], $subject, $body);
+					try
+					{
+						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
+					}
+					catch (phpmailerException $e)
+					{
+					}
 				}
 			}
 		}

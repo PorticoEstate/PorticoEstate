@@ -899,13 +899,19 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="choice">
+	<xsl:template name="choice" xmlns:php="http://php.net/xsl">
 			<table cellpadding="2" cellspacing="2" width="80%" align="left">
 			<xsl:choose>
 				<xsl:when test="value_choice!=''">
 					<tr class="th">
+						<td class="th_text" width="5%" align="left">
+							<xsl:value-of select="php:function('lang', 'id')" />
+						</td>
 						<td class="th_text" width="85%" align="left">
-							<xsl:value-of select="lang_value"/>
+							<xsl:value-of select="php:function('lang', 'value')" />
+						</td>
+						<td class="th_text" width="85%" align="left">
+							<xsl:value-of select="php:function('lang', 'order')" />
 						</td>
 						<td class="th_text" width="15%" align="center">
 							<xsl:value-of select="lang_delete_value"/>
@@ -927,8 +933,21 @@
 							</xsl:choose>
 						</xsl:attribute>
 					<td align="left">
-						<xsl:value-of select="value"/>
-						<xsl:text> </xsl:text>
+						<xsl:value-of select="id"/>
+					</td>
+					<td align="left">
+						<input type="textbox" name="values[edit_choice][{id}]" value="{value}" size='15'>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'value')" />
+							</xsl:attribute>
+						</input>
+					</td>
+					<td align="center">
+						<input type="textbox" name="values[order_choice][{id}]" value="{order}" size='4'>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'order')" />
+							</xsl:attribute>
+						</input>
 					</td>
 					<td align="center">
 						<input type="checkbox" name="values[delete_choice][]" value="{id}"  onMouseout="window.status='';return true;">
@@ -944,10 +963,10 @@
 				</xsl:when>
 			</xsl:choose>
 			<tr>
-				<td valign="top">
+				<td valign="top" colspan='2'>
 					<xsl:value-of select="lang_new_value"/>
 				</td>
-				<td>
+				<td valign="top" colspan='2'>
 					<input type="text" name="values[new_choice]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>

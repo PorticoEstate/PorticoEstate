@@ -51,6 +51,7 @@
 			$this->sort			= $this->bo->sort;
 			$this->order		= $this->bo->order;
 			$this->cat_id		= $this->bo->cat_id;
+			$this->allrows		= $this->bo->allrows;
 			if($this->debug) { $this->_debug_sqsof(); }
 		}
 
@@ -87,6 +88,7 @@
 		function index()
 		{
 			$appname = phpgw::get_var('appname');
+			$location = phpgw::get_var('location');
 			$global_cats  = phpgw::get_var('global_cats');
 
 			$GLOBALS['phpgw']->xslttpl->add_file('cats');
@@ -95,6 +97,7 @@
 			(
 				'menuaction'  => 'admin.uicategories.index',
 				'appname'     => $appname,
+				'location'     => $location,
 				'global_cats' => $global_cats,
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
@@ -247,14 +250,14 @@
 				'lang_done_statustext'	=> lang('return to admin mainscreen')
 			);
 
-			$link_data['menuaction'] = 'admin.uicategories.index';
-
 			$nm = array
 			(
-				'start_record'	=> $this->start,
+				'start'			=> $this->start,
  				'num_records'	=> count($categories),
  				'all_records'	=> $this->bo->cats->total_records,
-				'link_data'		=> $link_data
+				'link_data'		=> $link_data,
+				'allow_all_rows'=> true,
+				'allrows'		=> $this->allrows
 			);
 
 			$data = array
@@ -273,6 +276,7 @@
 		function edit()
 		{
 			$appname		= phpgw::get_var('appname');
+			$location		= phpgw::get_var('location');
 			$global_cats	= phpgw::get_var('global_cats');
 			$parent			= phpgw::get_var('parent', 'int', 'GET', 0);
 			$values			= phpgw::get_var('values', 'string', 'POST');
@@ -282,6 +286,7 @@
 			(
 				'menuaction'  => 'admin.uicategories.index',
 				'appname'     => $appname,
+				'location'     => $location,
 				'global_cats' => $global_cats,
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
@@ -334,7 +339,7 @@
 
 			if ( $appname )
 			{
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . ' ' . lang('global categories') . ': ' . ($this->cat_id?lang('edit category'):lang('add category'));
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . ' ' . $location?"::{$location}":'' . lang('global categories') . ': ' . ($this->cat_id?lang('edit category'):lang('add category'));
 			}
 			else
 			{
@@ -345,7 +350,7 @@
 
 			if ( $appname )
 			{
-				$GLOBALS['phpgw']->template->set_var('title_categories',lang('Edit global category for %1',lang($appname)));
+				$GLOBALS['phpgw']->template->set_var('title_categories',lang('Edit global category for %1',lang($appname) . $location?"::{$location}":''));
 			}
 			else
 			{
@@ -387,12 +392,14 @@
 		function delete()
 		{
 			$appname = phpgw::get_var('appname');
+			$location= phpgw::get_var('location');
 			$global_cats  = phpgw::get_var('global_cats');
 
 			$link_data = array
 			(
 				'menuaction'  => 'admin.uicategories.index',
 				'appname'     => $appname,
+				'location'     => $location,
 				'global_cats' => $global_cats,
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
@@ -432,7 +439,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_delete'));
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = ( $appname ? lang($appname) . ' ' : '' ) . lang('global categories') . ': ' . lang('delete category');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = ( $appname ? lang($appname) . ' ' : '' ) .($location?"::{$location}":'') . lang('global categories') . ': ' . lang('delete category');
 
 			$type = $appname ? 'noglobalapp' : 'noglobal';
 
@@ -482,6 +489,7 @@
 				'menuaction'	=> 'admin.uicategories.delete',
 				'cat_id'		=> $this->cat_id,
 				'appname'     => $appname,
+				'location'     => $location,
 				'global_cats' => $global_cats,
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);

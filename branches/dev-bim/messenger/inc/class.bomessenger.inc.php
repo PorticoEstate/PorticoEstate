@@ -39,24 +39,37 @@
 
 			$config = createObject('phpgwapi.config', 'messenger');
 			$config->read();
-
-			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) 
-				&& isset($config->data['restrict_to_group'] )
-				&& $config->data['restrict_to_group'] )
+			if ( isset($config->config_data['restrict_to_group'] )
+				&& $config->config_data['restrict_to_group'] 
+				&& !isset($GLOBALS['phpgw_info']['user']['apps']['admin'])
+			)
 			{
-				$tmp_users = $GLOBALS['phpgw']->accounts->member($config->data['restrict_to_group']);
+
+				foreach ($config->config_data['restrict_to_group'] as $restrict_to_group)
+			{
+					$tmp_users = $GLOBALS['phpgw']->accounts->member($restrict_to_group, true);
+
 				foreach ( $tmp_users as $user )
 				{
-					$users[$user->id] = $user['account_name'];
+						$users[$user['account_id']] = $user['account_name'];
+					}
+				}
+
+				if($users)
+				{
+					array_multisort($users, SORT_ASC, $users);
 				}
 			}
 			else
 			{
-				$tmp_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lid', '', -1);
+				$tmp_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1);
 				foreach ( $tmp_users as $user )
 				{
+					if($user->enabled)
+					{
 					$users[$user->id] = $GLOBALS['phpgw']->common->display_fullname($user->lid, $user->firstname, $user->lastname);
 				}
+			}
 			}
 			return $users;
 		}
@@ -152,6 +165,34 @@
 		function is_connected()
 		{
 			return $this->so->connected;
+		}
+
+		public function send_to_groups($values)
+		{
+			foreach ($values['account_groups'] as $group)
+			{
+				$members = $GLOBALS['phpgw']->accounts->member($group);
+
+				if (isset($members) AND is_array($members))
+				{
+					foreach($members as $user)
+					{
+						$accounts[$user['account_id']] = array
+						(
+							'account_id' => $user['account_id'],
+							'account_name' => $user['account_name']
+						);
+					}
+					unset($members);
+				}
+			}
+			$receipt = array();
+			foreach ($accounts as $account)
+			{
+				$this->so->send_message(array('to' => $account['account_id'], 'subject' => $values['subject'], 'content' => $values['content']));
+				$receipt['message'][]=array('msg'=>lang('message sent to' . " {$account['account_name']}" ));
+			}
+			return $receipt;
 		}
 
 		function send_message($data='')
@@ -347,19 +388,19 @@
 			if(!$message_id)
 			{
 				$message_id = phpgw::get_var('message_id');
-				$n_message  = phpgw::get_var('n_message');
+				$message  = phpgw::get_var('message');
 			}
 
-			$errors = $this->check_for_missing_fields($n_message);
+			$errors = $this->check_for_missing_fields($message);
 
-			if (is_array($errors))
+			if ($errors)
 			{
-				ExecMethod('messenger.uimessenger.forward',array($errors,$n_message));
+				ExecMethod('messenger.uimessenger.forward',array($errors,$message));
 				//$this->ui->forward($errors, $n_message);
 			}
 			else
 			{
-				$this->so->send_message($n_message);
+				$this->so->send_message($message);
 				$this->so->update_message_status('F',$message_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
 			}

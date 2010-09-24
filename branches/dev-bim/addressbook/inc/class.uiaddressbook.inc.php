@@ -1077,7 +1077,8 @@ class uiaddressbook
 		$fields['owner'] = isset($fields['owner']) ? $fields['owner'] : $this->owner;
 		if ($this->bo->check_delete($this->contact_id))
 		{
-			$delete = '<input type="submit" name="delete" value="' . lang('Delete') . '">';
+	//		$delete = '<input type="submit" name="delete" value="' . lang('Delete') . '">';
+			$delete = '<input type="button" name="button3" onclick="submit_form(\'delete\')" value="' . lang('Delete') . '">';
 		}
 
 		$this->template->set_file(array('form' => 'form.tpl'));
@@ -1117,22 +1118,20 @@ class uiaddressbook
 		switch ($form_tab)
 		{
 			case $this->tab_orgs:
-				$this->template->set_var('onsubjs', 
-						'onsubmit="process_list(\'entry[all_orgs][]\', 
-					\'entry[my_orgs][]\')"');
+				$this->template->set_var('onsubjs1', 'entry[all_orgs][]');
+				$this->template->set_var('onsubjs2', 'entry[my_orgs][]');
 				break;
 			case $this->tab_cats:
-				$this->template->set_var('onsubjs', 
-						'onsubmit="process_list(\'entry[all_cats][]\', 
-					\'entry[my_cats][]\')"');
+				$this->template->set_var('onsubjs1', 'entry[all_cats][]');
+				$this->template->set_var('onsubjs2', 'entry[my_cats][]');
 				break;
 			case $this->tab_persons:
-				$this->template->set_var('onsubjs', 
-						'onsubmit="process_list(\'entry[all_person][]\', 
-					\'entry[my_person][]\')"');
+				$this->template->set_var('onsubjs1', 'entry[all_person][]');
+				$this->template->set_var('onsubjs2', 'entry[my_person][]');
 				break;
 			default:
-				$this->template->set_var('onsubjs', '');
+				$this->template->set_var('onsubjs1', '');
+				$this->template->set_var('onsubjs2', '');
 		}
 
 		switch ($section) 
@@ -1897,6 +1896,22 @@ class uiaddressbook
 			$this->submit = 'delete';
 			$this->firsttime = false;
 		}
+		elseif(phpgw::get_var('_submit') == 'submit')
+		{
+			$this->submit = 'save';
+			$this->firsttime = false;
+		}
+		elseif(phpgw::get_var('_submit') == 'cancel')
+		{
+			$this->submit = 'cancel';
+			$this->firsttime = false;
+		}
+		elseif(phpgw::get_var('_submit') == 'delete')
+		{
+			$this->submit = 'delete';
+			$this->firsttime = false;
+		}
+
 
 		//set add/edit/delete action
 		if(phpgw::get_var('address_add_row'))
@@ -2782,13 +2797,13 @@ class uiaddressbook
 
 			return;
 		}
-
+		$this->template->set_root(PHPGW_APP_TPL);
 		$this->template->set_file(array('delete' => 'delete.tpl'));
 
 		if ($confirm != 'true')
 		{
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+		//	echo parse_navbar();
 			$this->template->set_var('lang_sure',lang('Are you sure you want to delete this entry ?'));
 			$this->template->set_var('no_link',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$contact_type)));
 			$this->template->set_var('lang_no',lang('NO'));
@@ -3301,9 +3316,10 @@ class uiaddressbook
 	*/
 	function java_script()
 	{
-		return '
+		$code = <<<JS
 			<script type="text/javascript">
-			function move(fboxname, tboxname, sboxname, cboxname) {
+			function move(fboxname, tboxname, sboxname, cboxname)
+			{
 				var arrFbox = new Array();
 				var arrTbox = new Array();
 				var arrLookup = new Array();
@@ -3354,10 +3370,14 @@ class uiaddressbook
 					tbox[c] = no;
 				}
 
+				if(sboxname && cboxname)
+				{
 				move_cbo(sboxname, cboxname);
 			}
+			}
 
-		function move_cbo(sboxname, cboxname) {
+		function move_cbo(sboxname, cboxname)
+		{
 			sbox = document.body_form.elements[sboxname];
 			cbox = document.body_form.elements[cboxname];
 			if(sbox.length > 0)
@@ -3386,12 +3406,16 @@ class uiaddressbook
 			}
 		}
 
-		function process_list(allboxname, myboxname) {
+		function process_list(allboxname, myboxname)
+		{
+			if(myboxname)
+			{
 			mybox = document.body_form.elements[myboxname];
 			for(c = 0; c < mybox.options.length; c++) 
 			{
 				mybox.options[c].selected = true;
 			}
+		}
 		}
 
 		function showHide(sDiv)
@@ -3400,7 +3424,9 @@ class uiaddressbook
 			if (oDiv)
 				oDiv.style.display = oDiv.style.display == "none" ? "" : "none";
 		}
-		</script>';
+		</script>'
+JS;
+		return $code;
 	}
 
 	function get_comm_descr($comm_selected, $type='')

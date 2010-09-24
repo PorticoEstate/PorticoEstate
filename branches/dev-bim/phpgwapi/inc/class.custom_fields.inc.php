@@ -109,7 +109,8 @@
 				'R'		=> lang('Muliple radio'),
 				'CH'	=> lang('Muliple checkbox'),
 				'LB'	=> lang('Listbox'),
-				'AB'	=> lang('Contact'),
+				'AB'	=> lang('Contact'),// Addressbook person
+				'ABO'	=> lang('Organisation'),// Addressbook organisation
 				'VENDOR'=> lang('Vendor'),
 				'email'	=> lang('Email'),
 				'link'	=> lang('Link'),
@@ -301,6 +302,7 @@
 				case 'CH':
 				case 'LB':
 				case 'AB':
+				case 'ABO':
 				case 'VENDOR':
 				case 'event':
 					if ( $attrib['history'] )
@@ -616,6 +618,7 @@
 				case 'CH':
 				case 'LB':
 				case 'AB':
+				case 'ABO':
 				case 'VENDOR':
 				case 'event':
 					if ( $attrib['history'] )
@@ -774,18 +777,49 @@
 			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
 			{
 				$choice_id = $this->_next_id('phpgw_cust_choice' ,array('location_id'=> $location_id, 'attrib_id'=>$attrib_id));
+				$choice_sort = $choice_id;
 
 				$values= array(
 					$location_id,
 					$attrib_id,
 					$choice_id,
+					$choice_sort,
 					$attrib['new_choice']
 					);
 
 				$values	= $this->_db->validate_insert($values);
 
-				$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) "
+				$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value) "
 				. "VALUES ($values)",__LINE__,__FILE__);
+			}
+
+
+			if ( count($attrib['edit_choice'])  && !$doubled )
+			{
+				foreach ($attrib['edit_choice'] as $choice_id => $value)
+				{
+					$choice_id = (int) $choice_id;
+					$value = $this->_db->db_addslashes($value);
+					$sql = "UPDATE phpgw_cust_choice SET value = '{$value}'"
+						. " WHERE location_id = {$location_id}"
+							. " AND attrib_id = {$attrib_id}"
+							. " AND id = {$choice_id}";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
+			}
+
+			if ( count($attrib['order_choice'])  && !$doubled )
+			{
+				foreach ($attrib['order_choice'] as $choice_id => $order)
+				{
+					$choice_id = (int) $choice_id;
+					$order = (int) $order;
+					$sql = "UPDATE phpgw_cust_choice SET choice_sort = {$order}"
+						. " WHERE location_id = {$location_id}"
+							. " AND attrib_id = {$attrib_id}"
+							. " AND id = {$choice_id}";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
 			}
 
 			if ( count($attrib['delete_choice'])  && !$doubled )
@@ -1183,11 +1217,13 @@
 		 */
 		public function get_table_def($table = '', $table_def = array())
 		{
-			if( !$GLOBALS['phpgw_setup']->_oProc 
-				|| !is_object($GLOBALS['phpgw_setup']->_oProc) )
+			if( !$GLOBALS['phpgw_setup']->oProc 
+				|| !is_object($GLOBALS['phpgw_setup']->oProc) )
 			{
 				$GLOBALS['phpgw_setup']->oProc =& $this->_oProc;
 			}
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->fetchmode = 'BOTH';
 
 			$setup = createobject('phpgwapi.setup_process');
 			$tableinfo = $setup->sql_to_array($table);
@@ -1445,12 +1481,12 @@
 		protected function _get_choices($location_id, $attrib_id)
 		{
 			$location_id	= (int) $location_id;
-			$ttrib_id		= (int) $attrib_id;
+			$attrib_id		= (int) $attrib_id;
 			
 			$sql = "SELECT * FROM phpgw_cust_choice " 
 				. " WHERE location_id = {$location_id}"
 					. " AND attrib_id = {$attrib_id}"
-				. " ORDER BY value";
+				. " ORDER BY choice_sort ASC, value";
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$choices = array();
@@ -1461,7 +1497,8 @@
 				$choices[] = array
 				(
 					'id'	=> $this->_db->f('id'),
-					'value'	=> $this->_db->f('value', true)
+					'value'	=> $this->_db->f('value', true),
+					'order'	=> $this->_db->f('choice_sort')
 				);
 			}
 			return $choices;
@@ -1530,7 +1567,8 @@
 				'R'			=> 'int',
 				'CH'		=> 'text',
 				'LB'		=> 'int',
-				'AB'		=> 'int',
+				'AB'		=> 'int',// Addressbook person
+				'ABO'		=> 'int',// Addressbook organisation
 				'VENDOR'	=> 'int',
 				'email'		=> 'varchar',
 				'link'		=> 'varchar',
@@ -1562,6 +1600,7 @@
 				'R'			=> 4,
 				'LB'		=> 4,
 				'AB'		=> 4,
+				'ABO'		=> 4,
 				'VENDOR'	=> 4,
 				'email'		=> 64,
 				'link'		=> 255,

@@ -10,13 +10,14 @@
 	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
 	/**
 	* Log
 	*
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class log
+	class phpgwapi_log
 	{
 
 		/***************************\
@@ -47,7 +48,8 @@
 			'N'	=> 4,
 			'I' => 5,
 			'D' => 6,
-			'S'	=> 7
+			'S'	=> 7,
+			'DP'=>8
 		);
 
 		// these are used by the admin appliation when showing the log file.
@@ -60,7 +62,8 @@
 			'N'	=> 'notice',
 			'I' => 'info',
 			'D' => 'debug',
-			'S'	=> 'strict'
+			'S'	=> 'strict',
+			'DP'=> 'deprecated'
 		);
 
 		/**
@@ -69,8 +72,6 @@
 		
 		public function __construct()
 		{
-//			date_default_timezone_set(date_default_timezone_get());
-			date_default_timezone_set('UTC');
 		}
 
 
@@ -186,6 +187,12 @@
 			return $this->log_if_level('S',  $this->make_parms($arg_array));
 		}
 
+		function deprecated()
+		{
+			$arg_array = func_get_args();
+			return $this->log_if_level('DP',  $this->make_parms($arg_array));
+		}
+
 		function warn()
 		{
 			$arg_array = func_get_args();
@@ -226,18 +233,23 @@
 				//trigger_error("Failed to log error to database: no database object available");
 				return;
 			}
-			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity, log_file, log_line, log_msg) values "
-				. "('" . date($db->datetime_format()) . "'"
-				. ",'" . $db->db_addslashes($GLOBALS['phpgw_info']['flags']['currentapp']) . "'"
-				. ","  . ( isset($GLOBALS['phpgw_info']['user']['id']) ? $GLOBALS['phpgw_info']['user']['id'] : -1)
-				. ",'" . $db->db_addslashes(isset($GLOBALS['phpgw_info']['user']['lid']) ? $GLOBALS['phpgw_info']['user']['lid'] : 'not authenticated') . "'"
-				. ",'" . $err->severity . "'"
-				. ",'" . $db->db_addslashes($err->fname) . "'"
-				. ","  . intval($err->line)
-				. ",'" . $db->db_addslashes($err->msg) . "'"
-				. ")"
-				,__LINE__,__FILE__
+
+			$values = array
+			(
+				date($db->datetime_format()),
+				$db->db_addslashes($GLOBALS['phpgw_info']['flags']['currentapp']),
+				isset($GLOBALS['phpgw_info']['user']['id']) && $GLOBALS['phpgw_info']['user']['id'] ? $GLOBALS['phpgw_info']['user']['id'] : -1,
+				$db->db_addslashes(isset($GLOBALS['phpgw_info']['user']['lid']) && $GLOBALS['phpgw_info']['user']['lid'] ? $GLOBALS['phpgw_info']['user']['lid'] : 'not authenticated'),
+				$err->severity,
+				$err->fname ? $db->db_addslashes($err->fname) : 'dummy',
+				(int)$err->line,
+				$db->db_addslashes($err->msg),
 			);
+
+			$values	= $db->validate_insert($values);
+
+			$db->query("insert into phpgw_log (log_date, log_app, log_account_id, log_account_lid, log_severity,"
+					 . "log_file, log_line, log_msg) values ({$values})",__LINE__,__FILE__);
 			if ( isset($db->Errno) )
 			{
 				//trigger_error("Failed to log error to database. DB errno " . $db->Errno . ": message " . $db->Error,  E_USER_NOTICE);

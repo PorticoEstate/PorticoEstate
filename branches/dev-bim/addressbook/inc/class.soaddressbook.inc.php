@@ -500,6 +500,8 @@
                         }
 
 			/* Update the first and last name in accounts */
+			if($fields['tab_person_data'])
+			{
 			$account_id = $this->contacts->get_account_id($person_id);
 			if($account_id)
 			{
@@ -509,6 +511,7 @@
 				$account_data->lastname = $fields['tab_person_data']['per_last_name'];
 				$account->update_data($account_data);
 				$account->save_repository();
+			}
 			}
 			
 			$this->contacts->finalize_edit($person_id);
@@ -886,8 +889,8 @@
 			{
 				$data = array();
 			}
-			
 			$this->edit_comms_by_contact($contact_id, array('comm_preferred'=>'N'), PHPGW_SQL_RUN_SQL);
+
 			foreach($data as $key => $value)
 			{
 				if(array_key_exists($value['comm_description'], $del_comms))

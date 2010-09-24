@@ -1,9 +1,10 @@
 current activities	bookingfrontend	no	Aktiviteter
 -- select an activity --	bookingfrontend	no	Velg en aktivitet
-1. why?	bookingfrontend	no	1. Hvorfor?
-2. where?	bookingfrontend	no	2. Hvor?
-3. when?	bookingfrontend	no	3. Når?
-4. who?	bookingfrontend	no	4. Hvem?
+why?	bookingfrontend	no	Hvorfor?
+where?	bookingfrontend	no	Hvor?
+when?	bookingfrontend	no	Når?
+who?	bookingfrontend	no	Hvem?
+how many?	bookingfrontend	no	Hvor mange?
 accept application	bookingfrontend	no	Godta søknaden
 accepted	bookingfrontend	no	Akseptert
 account	bookingfrontend	no	Bruker
@@ -101,6 +102,7 @@ id	bookingfrontend	no	ID
 inactivate	bookingfrontend	no	Inaktivert
 inactive	bookingfrontend	no	Inaktiv
 invoice information	bookingfrontend	no	Fakturainformasjon 
+responsible applicant	bookingfrontend	no	Ansvarlig søker
 jan	bookingfrontend	no	januar
 jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
@@ -144,6 +146,7 @@ no records found.	bookingfrontend	no	Ingen treff.
 no records found.	bookingfrontend	no	Ingen funnet!
 nov	bookingfrontend	no	november
 number of participants	bookingfrontend	no	Antall deltakere
+estimated number of participants	bookingfrontend	no	Estimert antall deltakere
 oct	bookingfrontend	no	oktober
 of	bookingfrontend	no	av
 officer	bookingfrontend	no	Saksbehandler
@@ -232,8 +235,8 @@ Service	bookingfrontend	no	Tjeneste
 Project No.	bookingfrontend	no	Prosjektnr.
 Account Codes	bookingfrontend	no	Konteringsstrenger
 Account Codes	bookingfrontend	no	Konteringsstreng
-Field %1 is required	bookingfrontend	no	Feltet %1 kreves
-Field %1: Invalid format	bookingfrontend	no	Feltet %1: ugyldig format
+Field %1 is required	bookingfrontend	no	Feltet '%1' må fylles ut
+Field %1: Invalid format	bookingfrontend	no	Feltet '%1': ugyldig format
 Building users	bookingfrontend	no	Brukere av bygg/anlegg
 Ssn	bookingfrontend	no	Fødselsnummer (11 siffer)
 Date of birth or SSN	bookingfrontend	no	Fødselsdato eller fødselsnummer
@@ -262,3 +265,46 @@ A Case officer will review your application as soon as possible.	bookingfrontend
 Loading...	bookingfrontend	no	Laster...
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer er ugyldig
+Used buildings	bookingfrontend	no	Bygg/anlegg som brukes
+Add group	bookingfrontend	no	Ny gruppe
+Internal Customer	bookingfrontend	no	Intern kunde
+Customer number	bookingfrontend	no	Ressursnummer
+activity_id	bookingfrontend	no	Aktivitet
+contact_email	bookingfrontend	no	E-post
+contact_name	bookingfrontend	no	Navn
+customer_identifier_type	bookingfrontend	no	Fakturainformasjon
+group_id	bookingfrontend	no	Gruppe/Lag
+dates	bookingfrontend	no	Fra/Til
+Information about the event	bookingfrontend	no	Informasjon om arrangementet
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	no	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
+To borrow premises you must verify that you have read terms and conditions	bookingfrontend	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
+In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
+Private event	bookingfrontend	no	Privat arrangement
+Mass update	bookingfrontend	no	Masseoppdatering
+You are now about to update all bookings from this date and to the end of the season.	bookingfrontend	no	Du er nå i ferd med å oppdatere alle bookinger fra dagens dato og ut sesongen.
+Please update the data and click the Next-button.	bookingfrontend	no	Vennligst oppdater dataene og klikk på Neste-knappen.
+When clicking the Next-button you will be presented to a list of bookings that will be updated.	bookingfrontend	no	Etter at du har klikket på Neste-knappen vil du få oversikt over hvilke bookinger som kommer til å bli oppdatert.
+Update	bookingfrontend	no	Oppdater
+%1 bookings will be updated.	bookingfrontend	no	%1 bookinger vil bli oppdatert.
+%1 bookings were updated.	bookingfrontend	no	%1 bookinger ble oppdatert.
+Access denied	bookingfrontend	no	Ingen tilgang
+Print as PDF	bookingfrontend	no	Skriv ut som PDF
+Out season	bookingfrontend	no	Ut sesong
+Can not repeat from a date in the past	bookingfrontend	no	Du kan ikke repetere fra en dato i fortiden.
+Can not create a booking in the past	bookingfrontend	no	Du kan ikke opprette en booking i fortiden.
+Overlaps with existing event	bookingfrontend	no	Overlapper med eksisterende arrangement
+Overlaps with existing allocation	bookingfrontend	no	Overlapper med eksisterende tildeling
+Overlaps with existing booking	bookingfrontend	no	Overlapper med eksisterende booking
+Overlaps other organizations allocation	bookingfrontend	no	Overlapper med en annen organisasjons tildeling
+The booking uses resources not in the containing allocation	bookingfrontend	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
+CONFIRMED	bookingfrontend	no	BEKREFTET
+Pending	bookingfrontend	no	Under behandling
+This booking is not connected to a season	bookingfrontend	no	Denne bookingen er ikke koblet mote en sesong
+The user has accepted the document under point 8.	bookingfrontend	no	Brukeren har akseptert dokumentene under punkt 8.
+Organization shortname	bookingfrontend	no	Kortnavn
+Group shortname	bookingfrontend	no	Kortnavn
+Edit Group	bookingfrontend	no	Rediger gruppe
+contacts[0][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 1
+contacts[1][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 2
+This booking is outside the organization's allocated time	bookingfrontend	no	Denne bookingen ligger utenfor organisasjonens tildelte tid
+Time is set wrong	bookingfrontend	no	Et av klokkeslettene er feil

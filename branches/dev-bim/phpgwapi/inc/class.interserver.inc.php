@@ -354,7 +354,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			if($this->db->next_record())
 			{
-				$server_info['server_id'] = $this->db->f(0);
+				$server_info['server_id'] = $this->db->f('server_id');
 				$this->serverid = $server_info['server_id'];
 				$this->server   = $server_info;
 				return $this->serverid;
@@ -470,7 +470,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
-					$serverid = $this->db->f(0);
+					$serverid = $this->db->f('server_id');
 					return $serverid;
 				}
 			}
@@ -489,7 +489,7 @@
 				$this->db->query($sql,__LINE__,__FILE__);
 				if($this->db->next_record())
 				{
-					$server_name = $this->db->f(0);
+					$server_name = $this->db->f('server_name');
 					return $server_name;
 				}
 			}

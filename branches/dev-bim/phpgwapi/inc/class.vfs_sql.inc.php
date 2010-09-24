@@ -1989,7 +1989,9 @@
 			$edited_comment = False;
 
 			reset ($this->attributes);
-			while (list ($num, $attribute) = each ($this->attributes))
+			$value_set = array();
+//			while (list ($num, $attribute) = each ($this->attributes))
+			foreach ($this->attributes as $num => $attribute)
 			{
 				if (isset ($data['attributes'][$attribute]))
 				{
@@ -2011,12 +2013,15 @@
 
 					$$attribute = $this->clean_string (array ('string' => $$attribute));
 
+/*
 					if ($change_attributes > 0)
 					{
 						$sql .= ', ';
 					}
 
 					$sql .= "$attribute='" . $$attribute . "'";
+*/
+					$value_set[$attribute] = $$attribute;
 
 					$change_attributes++;
 				}
@@ -2024,7 +2029,8 @@
 
 			if ( $change_attributes )
 			{
-				$sql .= ' WHERE file_id=' . intval($record['file_id']);
+				$value_set	= $GLOBALS['phpgw']->db->validate_update($value_set);
+				$sql .= " {$value_set} WHERE file_id=" . (int)$record['file_id'];
 				$sql .= $this->extra_sql (array ('query_type' => VFS_SQL_UPDATE));
 
 				//echo 'sql: ' . $sql;

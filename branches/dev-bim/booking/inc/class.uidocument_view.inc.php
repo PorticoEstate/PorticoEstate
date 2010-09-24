@@ -46,7 +46,7 @@
 		
 		public function download() {
 			if ($id = phpgw::get_var('id', 'string', 'GET')) {
-				$document = $this->bo->read_single($id);
+				$document = $this->bo->read_single(urldecode($id));
 				self::send_file($document['filename'], array('filename' => $document['name']));
 			}
 		}

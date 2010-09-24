@@ -43,12 +43,28 @@
 			$var['help_icon'] = 'icon icon-help';
 		}
 
+
+		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
+		{
+			$var['support_url'] = "javascript:openwindow('"
+			 . $GLOBALS['phpgw']->link('/index.php', array
+			 (
+			 	'menuaction'=> 'manual.uisupport.send',
+			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+			 )) . "','700','600')";
+
+			$var['support_text'] = lang('support');
+			$var['support_icon'] = 'icon icon-help';
+		
+		}
+
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 		{
 			$var['debug_url'] = "javascript:openwindow('"
 			 . $GLOBALS['phpgw']->link('/index.php', array
 			 (
-			 	'menuaction'=> 'property.uidebug_json.index'
+			 	'menuaction'=> 'property.uidebug_json.index',
+			 	'app'		=> $GLOBALS['phpgw_info']['flags']['currentapp']
 			 )) . "','','')";
 
 			$var['debug_text'] = lang('debug');
@@ -95,6 +111,13 @@ HTML;
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
 
+		if( phpgw::get_var('phpgw_return_as') != 'json' && $global_message = phpgwapi_cache::system_get('phpgwapi', 'phpgw_global_message'))
+		{
+			echo "<div class='msg_good'>";
+			echo nl2br($global_message);
+			echo '</div>';
+		}
+
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');
 	}
@@ -113,13 +136,23 @@ HTML;
 	{
 		$icon_style = $expand_class = $current_class = $link_class = $parent_class = '';
 		static $blank_image;
+		static $images = array(); // cache
+
 		if ( !isset($blank_image) )
 		{
 			$blank_image = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'blank.png');
 		}
 		if ( isset($item['image']) )
 		{
+			if(!isset($images[$item['image'][0]][$item['image'][1]]))
+			{
 			$icon_style = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ')"';
+				$images[$item['image'][0]][$item['image'][1]] = $icon_style;
+			}
+			else
+			{
+				$icon_style = $images[$item['image'][0]][$item['image'][1]];
+			}
 		}
 		if ( $children )
 		{
@@ -186,9 +219,20 @@ HTML;
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
+		$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
+		
+		if(isset($GLOBALS['phpgw_info']['server']['system_name']))
+		{
+			 $powered_by = $GLOBALS['phpgw_info']['server']['system_name'] . ' ' . lang('version') . ' ' . $version;
+		}
+		else
+		{
+			$powered_by = lang('Powered by phpGroupWare version %1', $version);
+		}
+		
 		$var = array
 		(
-			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
+			'powered_by'	=> $powered_by
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

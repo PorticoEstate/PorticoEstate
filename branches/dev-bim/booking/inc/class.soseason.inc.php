@@ -291,6 +291,14 @@ EOT;
 							'key' => 'id',
 							'column' => 'name'
 					)),
+					'shortname' => array('type' => 'string',
+						  'query' => true,
+						  'join' => array(
+							'table' => 'bb_organization',
+							'fkey' => 'organization_id',
+							'key' => 'id',
+							'column' => 'shortname'
+					)),
 					'resources' => array('type' => 'int', 'required' => true,
 						  'manytomany' => array(
 							'table' => 'bb_wtemplate_alloc_resource',

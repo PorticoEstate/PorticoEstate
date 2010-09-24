@@ -31,7 +31,7 @@
 					<dl class="contactinfo">
 						<xsl:if test="homepage and normalize-space(homepage)">
 							<dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>
-							<dd><a href="http://{homepage}"><xsl:value-of select="homepage"/></a></dd>
+							<dd><a href="{homepage}"><xsl:value-of select="homepage"/></a></dd>
 						</xsl:if>
 					
 						<xsl:if test="email and normalize-space(email)">

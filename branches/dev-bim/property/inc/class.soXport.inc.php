@@ -38,6 +38,7 @@
 		var $account_id = 0;
 		var $total_records = 0;
 		var $bilagsnr;
+		var $voucher_id;
 
 		function __construct()
 		{
@@ -179,7 +180,7 @@
 
 		function check_order($id)
 		{
-			$this->db->query("select id,type from fm_orders where id='$id'");
+			$this->db->query("SELECT id,type FROM fm_orders where id='{$id}'");
 			$this->db->next_record();
 			return $this->db->f('type');
 		}
@@ -197,9 +198,9 @@
 		function check_spbudact_code($id)
 		{
 
-			$this->db->query("select count(*) from fm_b_account where id='$id'");
+			$this->db->query("select count(*) as cnt from fm_b_account where id='$id'");
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 		function add($buffer)
@@ -214,7 +215,8 @@
 					if(!$fields['bilagsnr'])
 					{
 						$fields['bilagsnr']  = $this->soinvoice->next_bilagsnr();
-						$this->bilagsnr = $fields['bilagsnr'];
+						$this->bilagsnr = $fields['bilagsnr'];//FIXME
+						$this->voucher_id = $fields['bilagsnr'];
 					}
 
 					$values= array(
@@ -338,7 +340,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-		// Velg ut alle hoved bilag som skal overføres
+		// Velg ut alle hoved bilag som skal overfÃ¸res
     	function hoved_bilag ($periode,$pre_transfer='')
     	{
 			if($pre_transfer)

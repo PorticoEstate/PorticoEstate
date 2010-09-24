@@ -85,7 +85,7 @@
 			{
 				$attributes['datatype_text']	= $this->translate_datatype($attributes['datatype']);
 				$attributes['help_url']			= $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'manual.uimanual.attrib_help', 'appname'=> $appname, 'location'=> $location, 'id' => $attributes['id'])): '';
-				if($attributes['datatype'] == 'D')
+				if($attributes['datatype'] == 'D' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
 				{
 					if(!$view_only)
 					{
@@ -117,6 +117,48 @@
 
 					$insert_record_values[]			= $attributes['name'];
 					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $attributes['name']));
+
+					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+
+					$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
+					$confirm_msg = lang('delete') . '?';
+					$clear_functions[$m]['action']	= <<<JS
+					if(confirm("{$confirm_msg}"))
+					{
+						document.getElementsByName('{$attributes['name']}')[0].value = '';
+						document.getElementsByName('{$attributes['name']}_name')[0].value = '';
+					}
+JS;
+					$m++;
+				}
+				else if($attributes['datatype'] == 'ABO')
+				{
+					if($attributes['value'])
+					{
+						$contact_data				= $contacts->get_principal_organizations_data($attributes['value']);
+						$attributes['org_name']		= $contact_data[0]['org_name'];
+
+						$comms = $contacts->get_comm_contact_data($attributes['value'], $fields_comms='', $simple=false);
+						
+						$comm_data = array();
+						if(is_array($comms))
+						{
+							foreach($comms as $key => $value)
+							{
+								$comm_data[$value['comm_contact_id']][$value['comm_description']] = $value['comm_data'];
+							}
+						}
+
+						if ( count($comm_data) )
+						{
+							$attributes['org_email'] = isset($comm_data[$attributes['value']]['work email']) ? $comm_data[$attributes['value']]['work email'] : '';
+							$attributes['org_tel'] = isset($comm_data[$attributes['value']]['work phone']) ?  $comm_data[$attributes['value']]['work phone'] : '';
+						}
+					}
+
+					$insert_record_values[]			= $attributes['name'];
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.organisation', 'column'=> $attributes['name']));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
 					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
@@ -229,16 +271,23 @@
 						unset($id);
 						unset($job);
 					}
+
 					$insert_record_values[]			= $attributes['name'];
-					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
-						'menuaction'	=> $this->_appname.'.uievent.edit',
-						'location'		=> $location,
-						'attrib_id'		=> $attributes['id'],
-						'item_id'		=> isset($attributes['item_id']) ? $attributes['item_id'] : '',
-						'id'			=> isset($attributes['value']) && $attributes['value'] ? $attributes['value'] : ''));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
+
+					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',"
+									."location:'{$location}',"
+									."attrib_id:'{$attributes['id']}'";
+					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';		
+					$lookup_functions[$m]['action'] .=	isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';		
+					$lookup_functions[$m]['action'] .= "};\n";
+					$lookup_functions[$m]['action'] .= "if(document.form.{$attributes['name']}.value)\n";
+					$lookup_functions[$m]['action'] .= "{\n";
+					$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
+					$lookup_functions[$m]['action'] .= "}\n";
+					$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
+					$lookup_functions[$m]['action']	.= 'Window1=window.open(strURL,"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])
@@ -253,11 +302,22 @@
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
 			{ 
-				for ($j=0;$j<count($lookup_functions);$j++)
+				foreach ( $lookup_functions as $lookup_function)
 				{
-					$values['lookup_functions'] .= 'function ' . $lookup_functions[$j]['name'] ."\r\n";
+					$values['lookup_functions'] .= 'function ' . $lookup_function['name'] ."\r\n";
 					$values['lookup_functions'] .= '{'."\r\n";
-					$values['lookup_functions'] .= $lookup_functions[$j]['action'] ."\r\n";
+					$values['lookup_functions'] .= $lookup_function['action'] ."\r\n";
+					$values['lookup_functions'] .= '}'."\r\n";
+				}
+			}
+
+			if(isset($clear_functions) && $clear_functions)
+			{ 
+				foreach ($clear_functions as $clear_function)
+				{
+					$values['lookup_functions'] .= 'function ' . $clear_function['name'] ."\r\n";
+					$values['lookup_functions'] .= '{'."\r\n";
+					$values['lookup_functions'] .= $clear_function['action'] ."\r\n";
 					$values['lookup_functions'] .= '}'."\r\n";
 				}
 			}
@@ -278,7 +338,7 @@
 			{
 				foreach($values_attribute as $entry)
 				{
-					if($entry['datatype']!='AB' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
+					if($entry['datatype']!='AB' && $entry['datatype']!='ABO' && $entry['datatype']!='VENDOR' && $entry['datatype']!='event')
 					{
 						if($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
 						{
@@ -361,6 +421,11 @@
 					{
 						$contact_data	= $contacts->read_single_entry($data['value'],array('fn'));
 						$ret[$j][$field] =  $contact_data[0]['fn'];
+					}
+					else if($data['datatype']=='ABO' && $data['value'])
+					{
+						$contact_data	= $contacts->get_principal_organizations_data($data['value']);
+						$ret[$j][$field] = $contact_data[0]['org_name'];
 					}
 					else if($data['datatype']=='VENDOR' && $data['value'])
 					{

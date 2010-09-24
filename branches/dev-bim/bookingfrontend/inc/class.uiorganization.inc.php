@@ -23,12 +23,30 @@
 			return parent::index_json();
 		}
 		
+		public function edit()
+		{
+			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+
+			if (isset($organization['permission']['write']))
+			{
+				parent::edit();
+			}
+			else
+			{
+				self::render_template('access_denied');
+			}
+		}
+		
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "organization"));
+			if ( trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])) )
+			{
+				$organization['homepage'] = 'http://'.$organization['homepage'];
+			}
 			$auth_forward = "?redirect_menuaction={$this->module}.uiorganization.show&redirect_id={$organization['id']}";
 
 			// BEGIN EVIL HACK

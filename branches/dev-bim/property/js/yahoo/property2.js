@@ -4,6 +4,10 @@
 
 	this.getSumPerPage = function(name_column,round,paginator,datatable)
 	{
+		if(!paginator.getPageRecords())
+		{
+			return;
+		}
 		begin = end = 0;
 		if( (paginator.getPageRecords()[1] - paginator.getPageRecords()[0] + 1 ) == datatable.getRecordSet().getLength() )
 		{

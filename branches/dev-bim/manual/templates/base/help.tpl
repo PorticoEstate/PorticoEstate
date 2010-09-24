@@ -8,7 +8,7 @@
 <h2>{title}</h2>
 <table>
 	<tr>
-		<td>
+		<td align = 'left'>
 			{help_msg}
 		</td>
 	</tr>

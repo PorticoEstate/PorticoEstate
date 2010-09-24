@@ -55,10 +55,11 @@
 			'view'   	=> true,
 			'edit'   	=> true,
 			'delete' 	=> true,
-			'columns'	=> true
+			'columns'	=> true,
+			'download'	=> true
 		);
 
-		function property_uiactor()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -70,8 +71,7 @@
 
 			$this->role				= $this->bo->role;
 
-			$this->cats				= CreateObject('phpgwapi.categories');
-			$this->cats->app_name	= 'fm_' . $this->role;
+			$this->cats				= CreateObject('phpgwapi.categories', -1,  'property', ".{$this->role}");
 
 			$this->acl				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.' . $this->role;
@@ -91,12 +91,7 @@
 			$this->allrows			= $this->bo->allrows;
 			$this->member_id		= $this->bo->member_id;
 
-			$valid_role = array(
-				'tenant'=>true,
-				'owner'	=>true,
-				'vendor'=>true
-				);
-			if(!$valid_role[$this->role])
+			if( !$this->bo->check_valid_role($this->role) )
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.index'));
 			}
@@ -175,6 +170,12 @@
 		}
 
 
+		function download()
+		{
+			$list = $this->bo->read();
+			$uicols	= $this->bo->uicols;
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
 
 		function index()
 		{
@@ -189,7 +190,6 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
-			$dry_run=false;
 			$lookup = ''; //Fix this
 
 			$datatable = array();
@@ -215,6 +215,7 @@
                         'query'		=>$this->query,
                         'role'		=> $this->role,
                         'member_id'	=> $this->member_id
+
                     ));
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -274,6 +275,13 @@
 										                           'role'		=> $this->role
 										                           ))."','','width=350,height=370')",
 										                 'value' => lang('columns'),
+										                 'tab_index' => 7
+										            ),
+													array
+													(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
 										                 'tab_index' => 6
 										            ),
 													array(
@@ -322,13 +330,10 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][3]);
 				}
-				$dry_run=true;
 			}
 
 			$actor_list = array();
-			$actor_list = $this->bo->read($dry_run);
-
-			//echo $dry_run; count($actor_list); die(_debug_array($actor_list));
+			$actor_list = $this->bo->read();
 
 			$uicols	= $this->bo->uicols;
 
@@ -418,7 +423,24 @@
 										)),
 						'parameters'	=> $parameters
 					);
+					$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+					foreach ($jasper as $report)
+					{
+						$datatable['rowactions']['action'][] = array(
+								'my_name'		=> 'edit',
+								'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+								'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+																(
+																		'menuaction'	=> 'property.uijasper.view',
+																		'jasper_id'			=> $report['id'],
+																		'target'		=> '_blank'
+																)),
+								'parameters'			=> $parameters
+						);
+					}
 				}
+
 				if($this->acl_edit)
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -543,8 +565,6 @@
 				}
 			}
 
-            //_debug_array($datatable);
-
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
@@ -559,8 +579,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -601,8 +619,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 

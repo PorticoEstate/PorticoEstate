@@ -235,7 +235,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.507 to 0.9.17.508
+	* Update sms version from 0.9.17.507 to 0.9.17.508
 	*/
 
 	$test[] = '0.9.17.507';
@@ -243,26 +243,185 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 1, 'text', 'wsdl', 'Carrot wsdl')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 2, 'text', 'send_url', 'send url using GET')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 3, 'text', 'service_url', 'service_url using SOAP')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 4, 'text', 'login', 'Carrot login')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 5, 'password', 'password', 'Carrot password')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 6, 'text', 'proxy_host', 'proxy_host')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 7, 'text', 'proxy_port', 'proxy_port')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 8, 'text', 'originator', 'originator')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 9, 'text', 'originatortype', 'originatortype')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 10, 'text', 'serviceid', 'serviceid')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 11, 'text', 'differentiator', 'differentiator')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES (6, 12, 'listbox', 'type', 'Send type')");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT name FROM phpgw_sms_config_attrib WHERE type_id = 6 AND id = 1");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$test = $GLOBALS['phpgw_setup']->oProc->f('name');
 
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES (6, 12, 1, 'GET')");
-		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES (6, 12, 2, 'SOAP')");
+		if($test != 'wsdl')
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (section_id,attrib_id,id,value) VALUES (1, 1, 5, 'carrot')");
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT max(type_id) as type_id FROM phpgw_sms_config_attrib");
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			$type_id = $GLOBALS['phpgw_setup']->oProc->f('type_id') +1;
+
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 1, 'text', 'wsdl', 'Carrot wsdl')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 2, 'text', 'send_url', 'send url using GET')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 3, 'text', 'service_url', 'service_url using SOAP')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 4, 'text', 'login', 'Carrot login')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 5, 'password', 'password', 'Carrot password')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 6, 'text', 'proxy_host', 'proxy_host')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 7, 'text', 'proxy_port', 'proxy_port')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 8, 'text', 'originator', 'originator')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 9, 'text', 'originatortype', 'originatortype')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 10, 'text', 'serviceid', 'serviceid')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 11, 'text', 'differentiator', 'differentiator')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_attrib (type_id,id,input_type,name, descr) VALUES ({$type_id}, 12, 'listbox', 'type', 'Send type')");
+
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES ({$type_id}, 12, 1, 'GET')");
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_choice (type_id,attrib_id,id,value) VALUES ({$type_id}, 12, 2, 'SOAP')");
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT name FROM phpgw_sms_config_type WHERE id = 6");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$test = $GLOBALS['phpgw_setup']->oProc->f('name');
+		if(!$test)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_sms_config_type (id,name,descr) VALUES (6, 'carrot', 'TDC gateway')");
+		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.507';
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.508';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
 
+	/**
+	* Update sms version from 0.9.17.508 to 0.9.17.509
+	* Convert to new config scheme
+	*/
+
+	$test[] = '0.9.17.508';
+	function sms_upgrade0_9_17_508()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$db->query("SELECT count(*) as num_sections FROM phpgw_config2_section");
+		$db->next_record();
+		$num_sections = $db->f('num_sections');
+
+		$db->query("SELECT * FROM phpgw_sms_config_type");
+		$sections = array();
+		while ($db->next_record())
+		{
+			$sections[] = array
+			(
+				'location_id'	=> $location_id,
+				'id'			=> $db->f('id') + $num_sections,
+				'name'			=> $db->f('name'),
+				'descr'			=> $db->f('descr')
+			);
+		}
+
+		foreach ($sections as $section)
+		{	
+			$sql = 'INSERT INTO phpgw_config2_section(' . implode(',',array_keys($section)) . ') '
+				 . ' VALUES (' . $db->validate_insert(array_values($section)) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		$db->query("SELECT * FROM phpgw_sms_config_attrib");
+		$attribs = array();
+		while ($db->next_record())
+		{
+			$attribs[] = array
+			(
+				'section_id'	=> $db->f('type_id') + $num_sections,
+				'id'			=> $db->f('id'),
+				'input_type'	=> $db->f('input_type'),
+				'name'			=> $db->f('name'),
+				'descr'			=> $db->f('descr')
+			);
+		}
+
+		foreach ($attribs as $attrib)
+		{	
+			$sql = 'INSERT INTO phpgw_config2_attrib(' . implode(',',array_keys($attrib)) . ') '
+				 . ' VALUES (' . $db->validate_insert(array_values($attrib)) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		$db->query("SELECT * FROM phpgw_sms_config_choice");
+		$choices = array();
+		while ($db->next_record())
+		{
+			$choices[] = array
+			(
+				'section_id'	=> $db->f('type_id') + $num_sections,
+				'attrib_id'		=> $db->f('attrib_id'),
+				'id'			=> $db->f('id'),
+				'value'			=> $db->f('value')
+			);
+		}
+
+		foreach ($choices as $choice)
+		{	
+			$sql = 'INSERT INTO phpgw_config2_choice(' . implode(',',array_keys($choice)) . ') '
+				 . ' VALUES (' . $db->validate_insert(array_values($choice)) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		$db->query("SELECT * FROM phpgw_sms_config_value");
+		$values = array();
+		while ($db->next_record())
+		{
+			$values[] = array
+			(
+				'section_id'	=> $db->f('type_id') + $num_sections,
+				'attrib_id'		=> $db->f('attrib_id'),
+				'id'			=> $db->f('id'),
+				'value'			=> $db->f('value')
+			);
+		}
+
+		foreach ($values as $value)
+		{	
+			$sql = 'INSERT INTO phpgw_config2_value(' . implode(',',array_keys($value)) . ') '
+				 . ' VALUES (' . $db->validate_insert(array_values($value)) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_config_type');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_config_attrib');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_config_choice');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_sms_config_value');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.509';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+
+	/**
+	* Update sms version from 0.9.17.509 to 0.9.17.510
+	* Convert to new config scheme
+	*/
+
+	$test[] = '0.9.17.509';
+	function sms_upgrade0_9_17_509()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+		$db->query("UPDATE phpgw_config2_attrib SET name = 'gateway_module_get', descr = 'Active gateway module GET' WHERE name = 'gateway_module'");
+
+		$db->query("SELECT * FROM phpgw_config2_attrib WHERE name = 'gateway_number'");
+		$db->next_record();
+		$section_id = $db->f('section_id');
+		$id = $db->f('id') + 1;
+		$db->query("INSERT INTO phpgw_config2_attrib (section_id,id,input_type,name, descr) VALUES ({$section_id}, {$id},'listbox', 'gateway_module_send', 'Active gateway module SEND')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 1, 'gnokii')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 2, 'clickatell')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 3, 'uplink')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 4, 'kannel')");
+		$db->query("INSERT INTO phpgw_config2_choice (section_id,attrib_id,id,value) VALUES ({$section_id}, {$id}, 5, 'carrot')");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.510';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}

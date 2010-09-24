@@ -199,6 +199,10 @@
 			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
 			$building['location_link'] = self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $building['location_code']));
+			if ( trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])) )
+			{
+				$building['homepage'] = 'http://'.$building['homepage'];
+			}
 			self::render_template('building', array('building' => $building));
 		}
 

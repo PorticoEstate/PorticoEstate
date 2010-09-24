@@ -53,11 +53,14 @@
 		*/
 		public function get($mtype = null)
 		{
-		//	static $menu = null;
+			static $menu = null;
 
-			//$menu = null; 
 			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if ( !$menu )
+			{
 			$menu = phpgwapi_cache::user_get('phpgwapi', 'menu', $account_id,true,true);
+			}
 
 			if ( !$menu )
 			{

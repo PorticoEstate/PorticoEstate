@@ -72,7 +72,9 @@
 			$soadmin_location	= CreateObject('property.soadmin_location');
 			$locations	= $soadmin_location->select_location_type();
 
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+//			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
 				if ( is_array($entity_list) && count($entity_list) )
 				{
@@ -85,6 +87,8 @@
 							'image'		=> array( 'property', 'entity_' . $entry['id'] )
 						);
 
+						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute');
+					/*	
 						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
 
 						foreach($cat_list as $category)
@@ -95,6 +99,7 @@
 								'text'	=> $category['name']
 							);
 						}
+					*/
 					}
 				}
 
@@ -108,7 +113,7 @@
 					'tenant_global_cats'	=> array
 					(
 						'text'	=> lang('Tenant Global Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_tenant', 'global_cats' => 'true', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.tenant', 'global_cats' => 'true', 'menu_selection' => 'admin::property::tenant::tenant_global_cats') )
 					),
 					'tenant_attribs'	=> array
 					(
@@ -132,7 +137,7 @@
 					'vendor_global_cats'	=> array
 					(
 						'text'	=> lang('Vendor Global Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'fm_vendor', 'global_cats' => 'true', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.vendor', 'global_cats' => 'true', 'menu_selection' => 'admin::property::vendor::vendor_global_cats') )
 					),
 					'vendor_attribs'	=> array
 					(
@@ -169,7 +174,7 @@
 					'dimb_roles'	=> array
 					(
 						'text'	=> lang('dimb roles'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 					),
 					'accounting_dimd'	=> array
 					(
@@ -316,7 +321,7 @@
 					'project_cats'	=> array
 					(
 						'text'	=> lang('project categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
 					),
 					'workorder_detail'	=> array
 					(
@@ -326,7 +331,7 @@
 					'ticket_cats'	=> array
 					(
 						'text'	=> lang('Ticket Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket_cats') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::property::ticket_cats') )
 					),
 					'ticket_status'	=> array
 					(
@@ -355,7 +360,7 @@
 					'doc_cats'	=> array
 					(
 						'text'	=> lang('document categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property.document', 'global_cats' => 'true') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.document', 'global_cats' => 'true') )
 					),
 					'building_part'	=> array
 					(
@@ -391,6 +396,11 @@
 					(
 						'text'	=> lang('Request condition_type'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_condition_type') )
+					),
+					'order_dim1'	=> array
+					(
+						'text'	=> lang('order_dim1'),//translation have to refeflect the (local) meaning
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'order_dim1') )
 					),
 					'workorder_status'	=> array
 					(
@@ -509,16 +519,17 @@
 			{
 				$children = array();
 
-		//		$soadmin_location	= CreateObject('property.soadmin_location');
-		//		$locations	= $soadmin_location->select_location_type();
 				foreach ( $locations as $location )
 				{
+					if ( $acl->check(".location.{$location['id']}", PHPGW_ACL_READ, 'property') )
+					{
 					$children["loc_{$location['id']}"] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'type_id' => $location['id'])),
 						'text'	=> $location['name'],
 						'image'	=> array('property', 'location_' . $location['id'])
 					);
+				}
 				}
 
 				$children['tenant'] = array
@@ -592,6 +603,19 @@
 				);
 			}
 
+			if ( $acl->check('.ticket.order',PHPGW_ACL_ADD, 'property') )
+			{
+				$menus['navigation']['helpdesk']['children'] = array
+				(
+					'order_template' => array
+					(	
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'order_template') ),
+						'text'	=> lang('order template'),
+						'image'		=> array('property', 'helpdesk')
+					)
+				);
+			}
+
 			if ( $acl->check('.project', PHPGW_ACL_READ, 'property') )
 			{
 				$menus['navigation']['project'] = array
@@ -626,6 +650,16 @@
 							'image'		=> array('property', 'project_template')
 						)
 					)
+				);
+			}
+
+			if ( $acl->check('.scheduled_events', PHPGW_ACL_READ, 'property') )
+			{
+				$menus['navigation']['scheduled_events'] = array
+				(
+					'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uievent.index')),
+					'text'		=> lang('scheduled events'),
+					'image'		=> array('scheduled_events', 'project')
 				);
 			}
 
@@ -821,7 +855,7 @@
 				{
 					foreach ( $entity_list as $entry )
 					{
-						if($entry['documentation'])
+						if($entry['documentation'] &&  $acl->check(".entity.{$entry['id']}", PHPGW_ACL_READ, 'property') )
 						{
 							$menus['navigation']['documentation']['children']["entity_{$entry['id']}"] = array
 							(
@@ -831,6 +865,13 @@
 						}
 					}
 				}
+
+				$menus['navigation']['documentation']['children']['gallery'] = array
+				(
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigallery.index')),
+					'text'	=> lang('gallery')
+				);
+
 			}
 
 			if ( $acl->check('.custom', PHPGW_ACL_READ, 'property') )
@@ -855,26 +896,26 @@
 							'text'	=> $entry['name'],
 							'image'		=> array( 'property', 'entity_' . $entry['id'] )
 						);
-					}
 
 					if ($type != 'horisontal')
 					{
-						$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
-						foreach($cat_list as $category)
-						{
-							if ( $acl->check(".entity.{$entry['id']}.{$category['id']}", PHPGW_ACL_READ, 'property') )
-							{
-								$menus['navigation']["entity_{$entry['id']}"]['children']["entity_{$entry['id']}_{$category['id']}"]	= array
-								(
-									'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=> $entry['id'] , 'cat_id'=> $category['id'])),
-									'text'	=> $category['name']
-								);
-							}
+							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'],'property.uientity.index', PHPGW_ACL_READ);
 						}
 					}
 				}
 			}
+			unset($entity_list);
+			unset($entity);
 
+			if ( $acl->check('.jasper', PHPGW_ACL_READ, 'property') )
+			{
+				$menus['navigation']['jasper'] = array
+				(
+					'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uijasper.index')),
+					'text'	=> JasperReports,
+					'image'		=> array('property', 'report')
+				);
+			}
 
             $menus['navigation']['item'] = array
             (
@@ -902,9 +943,6 @@
                 ))
             );
 
-
-			unset($entity_list);
-			unset($entity);
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

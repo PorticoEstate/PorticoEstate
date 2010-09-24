@@ -11,6 +11,7 @@
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('party') ?></h1>
 	<div>
+		<button onclick="javascript: window.location.href='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php echo lang('party_back');?></button><br/>
 		<label><?php echo lang('name'); ?></label>
 		 <?php if($party->get_name()){ echo $party->get_name(); } else { echo lang('no_value'); }?>
 	</div>
@@ -33,7 +34,9 @@
 				<input type="hidden" name="id" value="<?php if($party->get_id()){ echo $party->get_id(); } else { echo '0'; }  ?>"/>
 				<dl class="proplist-col">
 					<dt>
-						<label for="identifier"><?php echo lang('ssn') ?> / <?php echo lang('organisation_number') ?> / <?php echo lang('agresso_id') ?></label>
+						<?php if($party->get_identifier() || $editable) { ?>
+						<label for="identifier"><?php echo lang('identifier') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -49,8 +52,11 @@
 						}
 						?>
 					</dd>
+					
 					<dt>
+						<?php if($party->get_first_name() || $editable) { ?>
 						<label for="firstname"><?php echo lang('firstname') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -67,7 +73,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_last_name() || $editable) { ?>
 						<label for="lastname"><?php echo lang('lastname') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -84,7 +92,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_title() || $editable) { ?>
 						<label for="title"><?php echo lang('job_title') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -101,7 +111,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_company_name() || $editable) { ?>
 						<label for="company_name"><?php echo lang('company') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -118,7 +130,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_department() || $editable) { ?>
 						<label for="department"><?php echo lang('department') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -135,7 +149,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_address_1() || $party->get_address_2() || $editable) { ?>
 						<label for="address1"><?php echo lang('address') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -150,13 +166,18 @@
 						else
 						{
 							echo $party->get_address_1();
+							if($party->get_address_2())
+							{
 							echo "<br/>";
 							echo $party->get_address_2();
+						}
 						}
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_postal_code() || $party->get_place() || $editable) { ?>
 						<label for="postal_code"><?php echo lang('postal_code_place') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -169,7 +190,7 @@
 						}
 						else
 						{
-							echo $party->get_postal_code();
+							echo $party->get_postal_code() . " ";
 							echo $party->get_place();
 						}
 						?>
@@ -177,7 +198,9 @@
 				</dl>
 				<dl class="proplist-col">
 					<dt>
+						<?php if($party->get_phone() || $editable) { ?>
 						<label for="phone"><?php echo lang('phone') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -194,7 +217,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_mobile_phone() || $editable) { ?>
 						<label for="mobile_phone"><?php echo lang('mobile_phone') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -211,7 +236,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_fax() || $editable) { ?>
 						<label for="fax"><?php echo lang('fax') ?></label>
+						<?php  } ?>
 					</dt>
 					<dd>
 						<?php
@@ -228,7 +255,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_email() || $editable) { ?>
 						<label for="email"><?php echo lang('email') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -245,7 +274,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_url() || $editable) { ?>
 						<label for="url"><?php echo lang('url') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -262,7 +293,9 @@
 						?>
 					</dd>
 					<dt>
+						<?php if($party->get_account_number	() || $editable) { ?>
 						<label for="account_number"><?php echo lang('account_number') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -291,8 +324,10 @@
 						<dt><label><?php if($party->is_inactive()){?><font style="color: red;"><?php echo lang('inactive_party');?></font><?php }else{ ?><font style="color: green;"><?php echo lang('active_party');?></font><?php } ?></label></dt>
 						<dd>&nbsp;</dd>
 					<?php }?>
-					<dt>
+					<!--<dt>
+						<?php if($party->get_location_id() || $editable) {?>
 						<label for="location_id"><?php echo lang('party_location') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -340,6 +375,49 @@
 							{
 								echo location_hierarchy::get_name_of_location($loc_id);
 							}
+							/*else
+							{
+								echo lang('no_party_location');
+							}*/
+						}
+						?>
+					</dd> -->
+					<dt>
+						Organisasjonstilknytning
+					</dt>
+					<dd>
+					<?php
+						if ($editable)
+						{
+						?>
+						<select name="org_enhet_id">
+							<option value=""><?php echo lang('no_party_location') ?></option>
+						<?php 
+							$result_units = rental_bofellesdata::get_instance()->get_result_units();
+							$party_org_enhet_id = $party->get_org_enhet_id();
+							foreach($result_units as $result_unit)
+							{
+								if($result_unit['ORG_UNIT_ID'] == $party_org_enhet_id)
+								{
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}' selected=selected >{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}</option>";
+								}
+								else
+								{
+									echo "<option value='{$result_unit['ORG_UNIT_ID']}'>{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}</option>";
+								}
+							}
+						?>
+						</select>
+						<?php 
+						}
+						else
+						{
+							$party_org_enhet_id = $party->get_org_enhet_id();
+							if(isset($party_org_enhet_id) && is_numeric($party_org_enhet_id))
+							{
+								$result_unit = rental_bofellesdata::get_instance()->get_result_unit($party_org_enhet_id);
+								echo $result_unit['ORG_NAME'];
+							}
 							else
 							{
 								echo lang('no_party_location');
@@ -350,7 +428,9 @@
 				</dl>
 		        <dl class="proplist-col">
 					<dt>
+						<?php if($party->get_comment() || $editable) { ?>
 						<label for="comment"><?php echo lang('comment') ?></label>
+						<?php } ?>
 					</dt>
 					<dd>
 						<?php
@@ -371,9 +451,6 @@
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_party" value="' . lang('save') . '"/>';
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('cancel') . '</a>';
-						} else {
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('back') . '</a>';
 						}
 					?>
 				</div>
@@ -392,7 +469,7 @@
 			$extra_cols = array(
 				array("key" => "type", "label" => lang('title'), "index" => 3),
 				array("key" => "composite", "label" => lang('composite'), "index" => 4),
-				array("key" => "old_contract_id", "label" => lang('old_contract_id'), "index" => 5)
+				array("key" => "contract_notification_status", "label" => lang('notification_status'))
 			);
 			include('contract_list_partial.php');
 			?>

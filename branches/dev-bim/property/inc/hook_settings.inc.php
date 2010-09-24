@@ -75,15 +75,15 @@
 	create_select_box('Default ticket status','tts_status',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title');
 
-	create_select_box('show new/updated tickets on main screen 2','mainscreen_show_new_updated_tts_2',$yes_and_no,'Link to tickets you are assigned to');
+	create_select_box('show updated tickets on main screen 2','mainscreen_show_new_updated_tts_2',$yes_and_no,'Link to tickets you are assigned to');
 	create_select_box('Default ticket status 2','tts_status_2',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_2');
 
-	create_select_box('show new/updated tickets on main screen 3','mainscreen_show_new_updated_tts_3',$yes_and_no,'Link to tickets you are assigned to');
+	create_select_box('show updated tickets on main screen 3','mainscreen_show_new_updated_tts_3',$yes_and_no,'Link to tickets you are assigned to');
 	create_select_box('Default ticket status 3','tts_status_3',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_3');
 
-	create_select_box('show tickets on main screen initiated by user','mainscreen_show_new_updated_tts_4',$yes_and_no,'Link to tickets you have started');
+	create_select_box('show updated tickets on main screen 4','mainscreen_show_new_updated_tts_4',$yes_and_no,'Link to tickets you are assigned to');
 	create_select_box('Default ticket status 4','tts_status_4',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_input_box('Custom title on main screen tickets','mainscreen_tts_title_4');
 
@@ -99,6 +99,10 @@
 	create_select_box('Default updated ticket status when creating project','tts_status_create_project',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_select_box('Autocreate project from ticket','auto_create_project_from_ticket',$yes_and_no);
 	
+	create_select_box('your projects on main screen - list 1','mainscreen_project_1',$yes_and_no,'Link to your projects');
+	create_select_box('Default project status 1','project_status_mainscreen_1',$_status_project,'The default status for list 1 when entering the mainscreen');
+	create_input_box('Custom title on projects on main screen - list 1','mainscreen_projects_1_title');
+
 	create_select_box('your workorders on main screen - list 1','mainscreen_workorder_1',$yes_and_no,'Link to your workorders');
 	create_select_box('Default workorder status 1','workorder_status_mainscreen_1',$_status_workorder,'The default status for list 1 when entering the mainscreen');
 	create_input_box('Custom title on workorders on main screen - list 1','mainscreen_workorders_1_title');
@@ -129,15 +133,19 @@
 	create_select_box('Default assign to TTS','assigntodefault',$_accounts,'The default user to assign a ticket in Helpdesk-submodule');
 
 	// Choose the correct priority to display
-	$priority_comment[1]  = ' - ' . lang('Lowest');
-	$priority_comment[5]  = ' - ' . lang('Medium');
-	$priority_comment[10] = ' - ' . lang('Highest');
-	for ($i=1; $i<=10; $i++)
+	$config	= CreateObject('phpgwapi.config','property');
+	$config->read();
+	$priority = array();
+	$prioritylevels = isset($config->config_data['prioritylevels']) && $config->config_data['prioritylevels'] ? $config->config_data['prioritylevels'] : 3;
+	$priority_comment[1]  = ' - ' . lang('Highest');
+	$priority_comment[$prioritylevels] = ' - ' . lang('Lowest');
+	for ($i=1; $i<=$prioritylevels; $i++)
 	{
-		$priority[$i] = $i . $priority_comment[$i];
+		$priority[$i] = $i . isset($priority_comment[$i]) ? $priority_comment[$i] : '';
 	}
 
 
+	$degree = array();
 	// Choose the correct degree to display
 		$degree_comment[0]=' - '.lang('None');
 		$degree_comment[1]=' - '.lang('Minor');
@@ -149,8 +157,7 @@
 	}
 	create_select_box('Default Priority TTS','prioritydefault',$priority,'The default priority for tickets in the Helpdesk-submodule');
 
-	$cats		= CreateObject('phpgwapi.categories');
-	$cats->app_name = 'property.ticket';
+	$cats		= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
@@ -171,6 +178,7 @@
 		'2' => 'No'
 	);
 
+	create_select_box('Notify me by mail when assigned a ticket','tts_notify_me',$yes_and_no,'');
 	create_select_box('Send e-mail from TTS','tts_user_mailnotification',$yes_and_no,'Send e-mail from TTS as default');
 	create_input_box('Refresh TTS every (seconds)','refreshinterval','The intervall for Helpdesk refresh - cheking for new tickets');
 
@@ -197,7 +205,7 @@
 
 	$district_list= $socommon->select_district_list();	
 
-	$cats->app_name = 'property.project';
+	$cats->set_appname('property', '.project');
 
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
@@ -220,6 +228,7 @@
 
 	unset($soworkorder);
 	unset($socommon);
+
 	create_select_box('Default project status','project_status',$_status_project,'The default status for your projects');
 	create_select_box('Default workorder status','workorder_status',$_status_workorder,'The default status for your workorders');
 	create_select_box('Default project categories','project_category',$_categories_project,'The default category for your projects and workorders');
@@ -227,10 +236,24 @@
 
 	create_input_box('Your Cellphone','cellphone');
 	create_input_box('RessursNr','ressursnr');
+	$ecodimb	= CreateObject('property.socategory');
+	$ecodimb->get_location_info('dimb',false);
+	$values_dimb = $ecodimb->read(array('sort' => 'ASC','order' => 'id', 'allrows'=>true));
+
+	foreach ( $values_dimb as $entry )
+	{
+		$_dimb[$entry['id']] = "{$entry['id']} - {$entry['descr']}";
+	}
+
+
+	create_select_box('dimb','dimb',$_dimb,'default dimb');
+	unset($_dimb);
+	unset($ecodimb);
+	unset($values_dimb);
 
 	create_select_box('Workorder Approval From','approval_from',$_accounts,'If you need approval from your supervisor for projects/workorders');
 
-	if(!$email_org)
+//	if(!$email_org)
 	{
 		create_input_box('Your Email','email','Insert your email address');
 	}
@@ -239,7 +262,7 @@
 	$GLOBALS['phpgw']->preferences->add("email","address",$email_property);
 	$GLOBALS['phpgw']->preferences->save_repository();
 
-	$cats->app_name = 'fm_vendor';
+	$cats->set_appname('property', '.vendor');
 	$cat_data	= $cats->formatted_xslt_list(array('globals' => true, 'link_data' =>array()));
 	$cat_list = $cat_data['cat_list'];
 

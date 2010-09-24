@@ -16,6 +16,9 @@
 							<a href="{about_url}" class="icon icon-about">
 								{about_text}
 							</a>
+							<a href="{support_url}" class="{support_icon}">
+								{support_text}
+							</a>
 							<a href="{help_url}" class="{help_icon}">
 								{help_text}
 							</a>

@@ -29,16 +29,13 @@
 			);
 
 
-		function sms_uicustom()
+		function __construct()
 		{
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-		//	$this->bo				= CreateObject('sms.boconfig',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 			= '.custom';
 			$this->menu->sub			=$this->acl_location;
 			$this->start				= $this->bo->start;
@@ -48,13 +45,11 @@
 			$this->allrows				= $this->bo->allrows;
 
 			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::custom';
 		}
 
 		function index()
 		{
-
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -273,7 +268,7 @@
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
 			//FIXME
-			$custom_url = stripslashes($this->db->f('custom_url'));
+			$custom_url = $this->db->f('custom_url',true);
 
 			$content .= "
 			    <p>
@@ -369,8 +364,6 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($autoreply_id);
-
 				$sql = "SELECT custom_code FROM phpgw_sms_featcustom WHERE custom_id='$custom_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
@@ -419,4 +412,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-

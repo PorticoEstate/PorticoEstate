@@ -27,8 +27,8 @@ FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.82"
 
 # Download: http://xmlsoft.org/downloads.html
-LIBXMLTAR="libxml2-2.7.6.tar.gz"
-LIBXML="libxml2-2.7.6"
+LIBXMLTAR="libxml2-2.7.7.tar.gz"
+LIBXML="libxml2-2.7.7"
 
 LIBXSLTAR="libxslt-1.1.26.tar.gz"
 LIBXSL="libxslt-1.1.26"
@@ -45,8 +45,8 @@ PHP_PREFIX="/usr/local"
 #  * @var               string APACHE, APACHETAR
 #  * Download: http://php.net/
 #  */
-APACHETAR="httpd-2.2.14.tar.gz"
-APACHE="httpd-2.2.14"
+APACHETAR="httpd-2.2.16.tar.gz"
+APACHE="httpd-2.2.16"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
@@ -54,8 +54,8 @@ APACHE="httpd-2.2.14"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.1.tar.bz2"
-PHP="php-5.3.1"
+PHPTAR="php-5.3.3.tar.bz2"
+PHP="php-5.3.3"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -63,14 +63,49 @@ PHP="php-5.3.1"
 #  * @var               string EACCELERATOR, EACCELERATORTAR
 #  * Download: http://eaccelerator.net/
 #  */
-EACCELERATORTAR="eaccelerator-0.9.6-rc1.tar.bz2"
-EACCELERATOR="eaccelerator-0.9.6-rc1"
-$PHP_PREFIX = "/usr/local"
+EACCELERATORTAR="eaccelerator-0.9.6.1.tar.bz2"
+EACCELERATOR="eaccelerator-0.9.6.1"
+PHP_PREFIX="/usr/local"
 
 # APC as Alternative:
 # Download: http://pecl.php.net/package/APC
 # APCTAR="APC-3.1.2.tgz"
 # APC="APC-3.1.2"
+
+#/**
+#  * Oracle PDO-Support
+#  * Download: http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
+#  */
+
+ORACLETAR="instantclient-basic-linux32-11.2.0.1.zip"
+ORACLE="instantclient_11_2"
+ORACLEDEVELTAR="instantclient-sdk-linux32-11.2.0.1.zip"
+
+ORACLE_PDO=""
+
+# include the oracle pdo-driver in the install
+function include_oracle()
+{
+    echo -n "Delete /opt/$2 ? answere yes or no: "
+
+    read svar
+
+    if [ $svar = "yes" ];then
+      echo "Ok - lets try"
+      rm /opt/$2 -rf
+      else
+      echo "Skipp delete old"
+    fi
+
+    unzip $1
+    mv $2 /opt/
+    unzip $ORACLEDEVELTAR 
+    mv $2/sdk /opt/$2/
+    export ORACLE_HOME=/opt/$2/
+    ln -s /opt/$2/libclntsh.so.11.1 /opt/$2/libclntsh.so
+    ln -s /opt/$2/libocci.so.11.1 /opt/$2/libocci.so
+    ln -s /opt/$2/ /opt/$2/lib
+}
 
 
 # clean up from previous
@@ -82,30 +117,88 @@ rm $IMAP -rf &&\
 rm $PHP -rf &&\
 rm $EACCELERATOR -rf &&\
 rm $APACHE -rf &&\
+rm $ORACLE -rf &&\
 
 # perform the install
 
-tar -xzf $FREETDSTAR &&\
+echo -n "Include Oracle-pdo? answere yes or no: "
+
+read svar
+
+
+if [ $svar = "yes" ];then
+    echo "Ok - lets try the Oracle"
+    include_oracle $ORACLETAR $ORACLE $ORACLEDEVELTAR
+    ORACLE_PDO=" --with-oci8=instantclient,/opt/$ORACLE/ --with-pdo-oci"
+    echo $ORACLE_PDO
+    else
+    echo "Skipping Oracle"
+fi
+
+# include the IMAP-support in the install
+function include_imap()
+{
+    cd $1 &&\
+    make lmd SSLTYPE=unix.nopwd IP6=4 &&\
+    ln -s c-client include &&\
+    mkdir lib &&\
+    cd lib &&\
+    ln -s ../c-client/c-client.a libc-client.a &&\
+    cd ../../
+}
+
+echo -n "Include IMAP support? answere yes or no: "
+
+read svar
+
+IMAP_CONFIG=''
+
+if [ $svar = "yes" ];then
+    echo "Ok - lets try the IMAP"
+    gunzip -c $IMAPTAR | tar xf -
+    include_imap $IMAP
+    IMAP_CONFIG="--with-imap=/opt/web/$IMAP --with-imap-ssl"
+    echo $IMAP_CONFIG
+    else
+    echo "Skipping Oracle"
+fi
+
+# include the MSSQL/SYBASE-support in the install
+function include_mssql()
+{
+    cd $1 &&\
+    ./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
+    --enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
+    make &&\
+    make install &&\
+    touch /usr/local/freetds/include/tds.h &&\
+    touch /usr/local/freetds/lib/libtds.a &&\
+    cd ..
+}
+
+echo -n "Include MSSQL support? answere yes or no: "
+
+read svar
+
+MSSQL_CONFIG=''
+
+if [ $svar = "yes" ];then
+    echo "Ok - lets try the MSSQL"
+    tar -xzf $FREETDSTAR
+    include_mssql $FREETDS
+    MSSQL_CONFIG="--with-sybase-ct=/usr/local/freetds"
+    echo $MSSQL_CONFIG
+    else
+    echo "Skipping MSSQL"
+fi
+
+
 tar -xzf $LIBXMLTAR &&\
 tar -xzf $LIBXSLTAR &&\
-gunzip -c $IMAPTAR | tar xf - &&\
 tar -xzf $APACHETAR &&\
 bunzip2 -c $PHPTAR | tar xvf -&&\
 bunzip2 -c $EACCELERATORTAR | tar xvf -&&\
-cd $FREETDS &&\
-./configure --prefix=/usr/local/freetds --with-tdsver=8.0 --enable-msdblib\
---enable-dbmfix --with-gnu-ld --enable-shared --enable-static &&\
-make &&\
-make install &&\
-touch /usr/local/freetds/include/tds.h &&\
-touch /usr/local/freetds/lib/libtds.a &&\
-cd ../$IMAP &&\
-make lmd SSLTYPE=unix.nopwd IP6=4 &&\
-ln -s c-client include &&\
-mkdir lib &&\
-cd lib &&\
-ln -s ../c-client/c-client.a libc-client.a &&\
-cd ../../$LIBXML &&\
+cd $LIBXML &&\
 ./configure &&\
 make &&\
 make install &&\
@@ -130,14 +223,19 @@ cd ../../ &&\
  --with-mpm=prefork\
  --enable-so\
  --enable-deflate\
- --enable-headers &&\
+ --enable-headers\
+ --enable-rewrite=shared\
+ --enable-dav\
+ --enable-dav-fs\
+ --enable-dav-lock\
+ --enable-auth-digest &&\
 make &&\
 make install &&\
 cd ../$PHP &&\
 export LDFLAGS=-lstdc++ &&\
-./configure --with-imap=/opt/web/$IMAP\
- --with-imap-ssl\
- --with-sybase-ct=/usr/local/freetds\
+./configure \
+ $IMAP_CONFIG\
+ $MSSQL_CONFIG\
  --with-apxs2=/usr/local/apache2/bin/apxs\
  --with-xsl\
  --with-zlib\
@@ -149,6 +247,7 @@ export LDFLAGS=-lstdc++ &&\
  --enable-ftp\
  --with-pgsql\
  --with-mysql\
+ --with-mysqli\
  --enable-shmop\
  --enable-sysvsem\
  --enable-sysvshm\
@@ -162,7 +261,8 @@ export LDFLAGS=-lstdc++ &&\
  --enable-mbstring\
  --with-mcrypt\
  --enable-soap\
- --with-xmlrpc &&\
+ --with-xmlrpc \
+ $ORACLE_PDO &&\
 make &&\
 make install &&\
 cd ../$EACCELERATOR &&\

@@ -6,7 +6,7 @@
 
     <form action="" method="POST">
 		<input type="hidden" name="step" value="{step}"/>
-		<input type="hidden" name="season_id" value="{season}"/>
+		<input type="hidden" name="seasons" value="{season}"/>
 		<input type="hidden" name="building_id" value="{building}"/>
 		<input type="hidden" name="mailbody" value="{mailbody}"/>
 		<input type="hidden" name="mailsubject" value="{mailsubject}"/>
@@ -29,10 +29,6 @@
 			<input type="submit" name="sendmail">
 				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Send e-mails')"/></xsl:attribute>
 			</input>
-            <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="cancel_link"/></xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
-            </a>
 		</div>
     </form>
     </div>

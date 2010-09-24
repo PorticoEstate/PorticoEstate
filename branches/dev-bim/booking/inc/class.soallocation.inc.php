@@ -34,6 +34,14 @@
 							'key' => 'id',
 							'column' => 'name'
 					)),
+					'organization_shortname'	=> array('type' => 'string',
+						  'query' => true,
+						  'join' => array(
+							'table' => 'bb_organization',
+							'fkey' => 'organization_id',
+							'key' => 'id',
+							'column' => 'shortname'
+					)),
 					'building_id'	=> array('type' => 'string',
 						  'join' => array(
 							'table' => 'bb_season',
@@ -73,6 +81,7 @@
 
 		protected function doValidate($entity, booking_errorstack $errors)
 		{
+			set_time_limit(300);
 			$allocation_id = $entity['id'] ? $entity['id'] : -1;
 
 			// FIXME: Validate: Season contains all resources
@@ -134,6 +143,7 @@
 			if (!CreateObject('booking.soseason')->timespan_within_season($entity['season_id'], $from_, $to_)) {
 				$errors['season_boundary'] = lang("This booking is not within the selected season");
 			}
+			flush();
 		}
 		
 		public function find_expired() {

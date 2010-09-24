@@ -27,7 +27,7 @@
 					'place' =>				array('type' => 'varchar','precision' => '255'),
 					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
                     'object_type_id' =>     array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => null),
-                    'area' =>               array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true)
+                    'area' =>               array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -59,7 +59,9 @@
 				'notify_before_due_date' => array('type' => 'int','precision' => '4','nullable' => false),
 				'notify_after_termination_date' => array('type' => 'int','precision' => '4','nullable' => false),
 				'account_in'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'account_out'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'account_out'	=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'project_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'agresso_export_format' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -105,7 +107,12 @@
 				'project_id' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'due_date' =>			array('type' => 'int', 'precision' => '8', 'nullable' => true), // opsjonsfrist
 				'contract_type_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'rented_area' =>		array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true) //Utleid areal
+				'rented_area' =>		array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true), //Utleid areal
+				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Reguleringsintervall
+				'adjustment_share' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true, 'default' => 100),	//Reguleringsandel
+				'adjustment_year' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),	//Sist regulert
+				'adjustable' =>			array('type' => 'bool','nullable' => true, 'default' => 'false'), //Regulerbar
+				'publish_comment' =>	array('type' => 'bool','nullable' => true,'default' => 'false')	//skal kommentar vises i frontend
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -172,7 +179,8 @@
 					'account_number' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'reskontro' =>      array('type' => 'varchar','precision' => '255','nullable' => true),
 					'location_id' =>    array('type' => 'int', 'precision' => '4', 'nullable' => true),
-					'result_unit_number' => array('type' => 'varchar','precision' => '255','nullable' => true)
+					'result_unit_number' => array('type' => 'varchar','precision' => '255','nullable' => true),
+					'org_enhet_id' =>	array ('type' => 'int','precision' => 8, 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -201,12 +209,16 @@
 					'title' =>      array('type' => 'varchar','precision' => '255','nullable' => false),
 					'agresso_id' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
 					'is_area' =>	array('type' => 'bool','nullable' => false,'default' => 'true'),
-					'price' =>      array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true)
+					'is_inactive' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
+					'is_adjustable' =>	array('type' => 'bool','nullable' => true,'default' => 'true'),
+					'standard' =>	array('type' => 'bool','nullable' => true,'default' => 'false'),
+					'price' =>      array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+					'responsibility_id' => array('type' => 'int','precision' => '4', 'nullable' => false)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('agresso_id')
 		),
 		// Price item related to contract
 		'rental_contract_price_item' => array(
@@ -215,14 +227,16 @@
 				'price_item_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'contract_id' =>	array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'title' =>          array('type' => 'varchar','precision' => '255','nullable' => false),
-				'area' =>           array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true),
+				'area' =>           array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'count' =>          array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'agresso_id' => 	array('type' => 'varchar','precision' => '255','nullable' => true),
 				'is_area' =>        array('type' => 'bool','nullable' => false,'default' => 'true'),
-				'price' =>          array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true),
-				'total_price' => 	array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true),
+				'price' =>          array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'total_price' => 	array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'date_start' => 	array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'date_end' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true)
+				'date_end' => 		array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'is_billed' =>        array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'is_one_time' =>	array('type' => 'bool','nullable' => true,'default' => 'false')
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -258,7 +272,8 @@
 				'id'                => array('type' => 'auto', 'nullable' => false),
 				'account_id'        => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'date'              => array('type' => 'int', 'precision' => '8', 'nullable' => false), 	// timestamp, deadline
-				'notification_id'   => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'notification_id'   => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'workbench_message' => array('type' => 'text'),
 				'dismissed'         => array('type' => 'bool', 'default' => false)
 			),
 			'pk' => array('id'),
@@ -272,25 +287,41 @@
 		'rental_billing' => array(
 			'fd' => array(
 				'id'				=> array('type' => 'auto', 'nullable' => false),
-				'total_sum'			=> array('type' => 'decimal', 'precision' => '11','scale' => '2'),
+				'total_sum'			=> array('type' => 'decimal', 'precision' => '20','scale' => '2'),
 				'success'			=> array('type' => 'bool','nullable' => false,'default' => 'false'),
 				'created_by'		=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp_start'	=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'timestamp_stop'	=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'timestamp_commit'	=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
-				'term_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'year'				=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'month'				=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'title'				=> array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'deleted'			=> array('type' => 'bool', 'default' => 'false'),
 				'export_format'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'export_data'		=> array('type' => 'blob', 'nullable' => true)
+				'export_data'		=> array('type' => 'blob', 'nullable' => true),
+				'serial_start'		=> array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'serial_end'		=> array('type' => 'int', 'precision' => '8', 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'phpgw_locations'		=> array('location_id' => 'location_id'),
-				'rental_billing_term'	=> array('term_id' => 'id'),
 				'phpgw_accounts'		=> array('created_by' => 'account_id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_billing_info' => array(
+			'fd' => array(
+				'id'				=> array('type' => 'auto', 'nullable' => false),
+				'billing_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'location_id'		=> array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
+				'term_id'			=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'year'				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'month'				=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'deleted'			=> array('type' => 'bool', 'default' => 'false')
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_billing'	=> array('billing_id' => 'id')
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -304,14 +335,15 @@
 				'timestamp_created'	=> array('type' => 'int', 'precision' => '8', 'nullable' => false),
 				'timestamp_start'	=> array('type' => 'int', 'precision' => '8', 'nullable' => false),
 				'timestamp_end'		=> array('type' => 'int', 'precision' => '8', 'nullable' => false),
-				'total_sum'			=> array('type' => 'decimal', 'precision' => '11','scale' => '2'),
-				'total_area'		=> array('type' => 'decimal', 'precision' => '11','scale' => '2'),
+				'total_sum'			=> array('type' => 'decimal', 'precision' => '20','scale' => '2'),
+				'total_area'		=> array('type' => 'decimal', 'precision' => '20','scale' => '2'),
 				'header'			=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
 				'account_in'		=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
 				'account_out'		=> array('type' => 'varchar', 'precision' => '255','nullable' => true),
 				'service_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true), // Tjeneste
 				'responsibility_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true), // Ansvar
-				'project_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'project_id'		=> array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'serial_number'		=> array('type' => 'int', 'precision' => '8', 'nullable' => true)		//Sekvensnummer (Agresso)
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -328,12 +360,12 @@
 				'id'			=> array('type' => 'auto', 'nullable' => false),
 				'invoice_id'	=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'title'			=> array('type' => 'varchar','precision' => '255','nullable' => false),
-				'area'			=> array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true),
+				'area'			=> array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'count'			=> array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'agresso_id'	=> array('type' => 'varchar','precision' => '255','nullable' => true),
 				'is_area'		=> array('type' => 'bool','nullable' => false,'default' => 'true'),
-				'price'			=> array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true),
-				'total_price'	=> array('type' => 'decimal', 'precision' => '11','scale' => '2', 'nullable' => true),
+				'price'			=> array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'total_price'	=> array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
 				'date_start'	=> array('type' => 'date'),
 				'date_end'		=> array('type' => 'date')
 			),
@@ -378,12 +410,32 @@
 				'fd' => array(
 					'id' =>                 array('type' => 'auto', 'nullable' => false),
 					'label'	=>              array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-					'responsibility_id' =>  array('type' => 'int', 'precision' => 4, 'nullable' => false)
+					'responsibility_id' =>  array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'account' =>			array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(
 					'rental_contract_responsibility' => array( 'responsibility_id' => 'id'),
 				),
+				'ix' => array(),
+				'uc' => array()
+		),
+		
+		'rental_adjustment' => array(
+			'fd' => array(
+				'id' =>                 array('type' => 'auto', 'nullable' => false),
+				'price_item_id'	=>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'responsibility_id' =>  array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'adjustment_date' =>  	array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'adjustment_type' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
+				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'percent' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'interval' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'is_executed' =>		array('type' => 'bool','nullable' => false,'default' => 'false')	
+			),
+			'pk' => array('id'),
+				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 		)

@@ -172,7 +172,10 @@
 			<td class="th_text" width="10%" align="left">
 				<a href="{$sort_place}"><xsl:value-of select="lang_place"/></a>
 			</td>
-			<td class="th_text" width="10%" align="left">
+			<td class="th_text" width="10%" align="right">
+				<a href="{$sort_place}"><xsl:value-of select="lang_credits"/></a>
+			</td>
+			<td class="th_text" width="10%" align="center">
 				<a href="{$sort_start_date}"><xsl:value-of select="lang_start_date"/></a>
 			</td>
 			<td class="th_text" width="5%" align="center">
@@ -217,6 +220,9 @@
 				</td>
 				<td align="left">
 					<xsl:value-of select="place"/>
+				</td>
+				<td align="right">
+					<xsl:value-of select="credits"/>
 				</td>
 				<td align="center">
 					<xsl:value-of select="start_date"/>
@@ -278,7 +284,7 @@
 
 
 <!-- add / edit  -->
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<div align="left">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" action="{$form_action}">
@@ -368,6 +374,19 @@
 					<img id="values_end_date-trigger" src="{img_cal}" alt="lang_date_selector" title="lang_select_date" style="cursor:pointer; cursor:hand;" />
 				</td>
 			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="php:function('lang', 'credits')" />
+				</td>
+				<td>
+					<input type="text" size="60" name="values[credits]" value="{value_credits}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'credits')" />
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+
 			<tr>
 				<td valign="top">
 					<xsl:value-of select="lang_reference"/>
@@ -534,7 +553,7 @@
 
 
 <!-- view  -->
-	<xsl:template match="view">
+	<xsl:template match="view" xmlns:php="http://php.net/xsl">
 		<div align="left">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" action="{$form_action}">
@@ -604,6 +623,18 @@
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_end_date_status_text"/>
 							<xsl:text>'; return true;</xsl:text>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="php:function('lang', 'credits')" />
+				</td>
+				<td>
+					<input type="text" size="4" value="{value_credits}" readonly="readonly">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'credits')" />
 						</xsl:attribute>
 					</input>
 				</td>

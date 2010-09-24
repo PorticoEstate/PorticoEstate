@@ -39,6 +39,7 @@ filter	common	no	Filter
 first name	common	no	Fornavn
 first name of the user, eg. %1	common	no	Fornavnet til brukeren, %1
 friday	common	no	Fredag
+frontend	common	no	Frontend
 ftp	common	no	FTP
 global public	common	no	Global Public
 group access	common	no	Gruppe Access
@@ -123,4 +124,5 @@ sorry, your login has expired	login	no	Beklager, din login er utgått
 todays date, eg. %1	common	no	Dagens dato, %1
 use cookies	login	no	use cookies
 username	login	no	Brukernavn
+version	common	no	versjon
 you have been successfully logged out	login	no	Du har nå logget ut

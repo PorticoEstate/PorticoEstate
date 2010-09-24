@@ -52,9 +52,19 @@
 			$date = $date[0]->nodeValue;
 		}
 		preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
-		$text = "{$match[3]}.{$match[2]}.{$match[1]}";
+
+		$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		if($match[4])
-			$text .= " {$match[5]}:{$match[6]}";
+		{
+			$dateformat .= ' H:i';
+			$timestamp = mktime($match[5], $match[6], 0, $match[2], $match[3], $match[1]);
+		}
+		else
+		{
+			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
+		}
+		$text = date($dateformat,$timestamp);
+			
 		return $text;
 	}
 
@@ -380,6 +390,7 @@
 			$this->reset_flash_msgs();
 			
 			$this->add_yui_translation($data);
+			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
@@ -416,6 +427,7 @@
 			header("Content-Type: $file_type");
 			# IE6 needs this one
         	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			header("Pragma: cache");
 			readfile($file_path, false);
 			exit;
 		}

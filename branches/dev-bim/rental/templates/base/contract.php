@@ -7,11 +7,31 @@
 ?>
 
 <?php echo rental_uicommon::get_page_error($error) ?>
+<?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?>
 <?php echo rental_uicommon::get_page_message($message) ?>
+<?php 
+if($contract->get_id() > 0) {
+	if($contract->get_consistency_warnings()){?>
+<div class="warning" style="width: 50%;">
+<?php 
+		$list_form = false;
+		$list_id = 'get_contract_warnings';
+		unset($related);
+		$url_add_on = '&amp;contract_id='.$contract->get_id();
+		unset($extra_cols);
+	
+		include('contract_warnings_partial.php');
+?>
+</div>
+<?php 
+	}
+}
+?>
 
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
 	<div style="float: left; width: 50%;">
+		<button onclick="javascript:window.location.href ='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php echo lang('contract_back');?></button><br/>
 		<label><?php echo lang('contract_number') ?> </label>
 		<?php if($contract->get_old_contract_id()){ 
 			echo $contract->get_old_contract_id(); 
@@ -51,22 +71,82 @@
 	?>
 		</div>
 </div>
-
+<script type="text/javascript" language="JavaScript">
+function loadDatatables(currTab){
+	if(currTab == 'composites'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'included_composites'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+<?php if($editable){?>
+			if(YAHOO.rental.datatables[i].tid == 'not_included_composites'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+<?php }?>
+		}
+	}
+	else if(currTab == 'parties'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'included_parties'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+<?php if($editable){?>
+			if(YAHOO.rental.datatables[i].tid == 'available_parties'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+<?php }?>
+		}
+	}
+	else if(currTab == 'price'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'included_price_items'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+<?php if($editable){?>
+			if(YAHOO.rental.datatables[i].tid == 'available_price_items'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+<?php }?>
+		}
+	}
+	else if(currTab == 'invoice'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'invoice_price_items'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+		}
+	}
+	else if(currTab == 'documents'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'documents_for_contract'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+		}
+	}
+	else if(currTab == 'notifications'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'rental_notifications'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+		}
+	}
+}
+</script>
 <div id="contract_tabview" class="yui-navset">
 	<ul class="yui-nav">
 		<?php if($contract->get_id() > 0) {?>
 
-		<li><a href="#composites"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('composite') ?></em></a></li>
-		<li><a href="#parties" ><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('parties') ?></em></a></li>
-		<li><a href="#price"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('price') ?></em></a></li>
+		<li><a href="#composites" onclick="javascript: loadDatatables('composites');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/go-home.png" alt="icon" /> <?php echo lang('composite') ?></em></a></li>
+		<li><a href="#parties" onclick="javascript: loadDatatables('parties');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('parties') ?></em></a></li>
+		<li><a href="#price" onclick="javascript: loadDatatables('price');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('price') ?></em></a></li>
 		<?php }?>
 		
 		<li <?php echo (!isset($_POST['add_notification'])) ? 'class="selected"' : "" ?>><a href="#details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
 		
 		<?php if($contract->get_id() > 0) {?>
-		<li><a href="#invoice"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('invoice') ?></em></a></li>
-		<li <?php echo (phpgw::get_var('tab') == 'documents') ?  'class="selected"' : ""?>><a href="#documents"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
-		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#notfications"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('notifications') ?></em></a></li>
+		<li><a href="#invoice" onclick="javascript: loadDatatables('invoice');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('invoice') ?></em></a></li>
+		<li <?php echo (phpgw::get_var('tab') == 'documents') ?  'class="selected"' : ""?>><a href="#documents" onclick="javascript: loadDatatables('documents');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
+		<li <?php echo isset($_POST['add_notification']) ? 'class="selected"' : "" ?>><a href="#notfications" onclick="javascript: loadDatatables('notifications');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/actions/appointment-new.png" alt="icon" /> <?php echo lang('notifications') ?></em></a></li>
 		
 		<?php } ?>
 	</ul>
@@ -119,14 +199,15 @@
 		 	<?php
 				$list_form = false;
 				$list_id = 'included_price_items';
-				$related = array('not_included_price_items','total_price');
+				$related = array('not_included_price_items','total_price','get_contract_warnings');
 				$url_add_on = '&amp;type=included_price_items&amp;contract_id='.$contract->get_id();
 				$extra_cols = array(
 					array("key" => "area", "label" => lang('area'), "index" => 4, "formatter" => "formatArea"),
 					array("key" => "count", "label" => lang('count'), "index" => 5, "formatter" => "formatCount"),
 					array("key" => "total_price", "label" => lang('total_price'), "formatter" => "formatPrice", "index" => 6),
 					array("key" => "date_start", "label" => lang('date_start'), "index" => 7, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
-					array("key" => "date_end", "label" => lang('date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"')
+					array("key" => "date_end", "label" => lang('date_end'), "index" => 8, "formatter" => "YAHOO.rental.formatDate", "parser" => '"date"'),
+					array("key" => "is_one_time", "label" => lang('is_one_time'), "index" => 9, "formatter" => "formatBoolean")
 				);
 
 				$editor_action = 'rental.uiprice_item.set_value';
@@ -136,8 +217,9 @@
 						'title' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'count' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
 						'price' => 'new YAHOO.widget.TextboxCellEditor({disableBtns:true})',
-						'date_start' => 'new YAHOO.widget.DateCellEditor()',
-						'date_end' => 'new YAHOO.widget.DateCellEditor()'
+						'date_start' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'",calendarOptions:{navigator:{strings:{month:"'.lang('month').'",year:"'.lang('year').'",submit:"'.lang('ok').'",cancel:"'.lang('cancel').'"},initialFocus:"month"},start_weekday:1,LOCALE_WEEKDAYS:"short",MONTHS_LONG:'.lang('calendar_months').',WEEKDAYS_SHORT:'.lang('calendar_weekdays').'}})',
+						'date_end' => 'new YAHOO.widget.DateCellEditor({LABEL_SAVE:"' .lang('save').'", LABEL_CANCEL:"' .lang('cancel').'",calendarOptions:{navigator:{strings:{month:"'.lang('month').'",year:"'.lang('year').'",submit:"'.lang('ok').'",cancel:"'.lang('cancel').'"},initialFocus:"month"},start_weekday:1,LOCALE_WEEKDAYS:"short",MONTHS_LONG:'.lang('calendar_months').',WEEKDAYS_SHORT:'.lang('calendar_weekdays').'}})',
+						'is_one_time' => 'new YAHOO.widget.CheckboxCellEditor({checkboxOptions:[{label:"ja", value:true},{label:"nei", value:false}],disableBtns:true})'
 					);
 				}
 
@@ -148,7 +230,7 @@
 				$list_form = true;
 				$list_id = 'not_included_price_items';
 				$related = array('included_price_items','total_price');
-				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id();
+				$url_add_on = '&amp;type=not_included_price_items&amp;contract_id='.$contract->get_id(). '&amp;responsibility_id='.$contract->get_location_id();
 				unset($extra_cols);
 				unset($editors);
 				include('price_item_partial.php'); ?>
@@ -188,7 +270,7 @@
 								<?php
 								foreach(rental_socontract::get_instance()->get_contract_types($contract->get_location_id()) as $contract_type_id => $contract_type_label)
 								{
-									echo "<option ".($current_contract_type_id == $contract_type_id ? 'selected="selected"' : "")." value=\"{$contract_type_id}\">".$contract_type_label."</option>";
+									echo "<option ".($current_contract_type_id == $contract_type_id ? 'selected="selected"' : "")." value=\"{$contract_type_id}\">".lang($contract_type_label)."</option>";
 								}
 								?>
 							</select>
@@ -198,7 +280,7 @@
 						}
 						else // Non-editable
 						{
-							echo rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id);
+							echo lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
 						}
 						?>
 					</dd>
@@ -206,34 +288,37 @@
 						<label for="executive_officer"><?php echo lang('executive_officer') ?></label>
 					</dt>
 					<dd>
-						<?php if($editable) { ?>
+					<?php 
+						$executive_officer = $contract->get_executive_officer_id();
+						if($editable)
+						{
+							$location_name = $contract->get_field_of_responsibility_name();
+							$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_name, 'rental');
+					?>
 								<select name="executive_officer" id="executive_officer">
 									<option value=""><?php echo lang('nobody') ?></option>
 									<?php
-										$executive_officer = $contract->get_executive_officer_id();
-										$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
 										foreach($accounts as $account)
 										{
-											$account_id = $account->__get('id');
-											$GLOBALS['phpgw']->acl->set_account_id($account_id);											
-											if($contract->has_permission(PHPGW_ACL_ADD))
-											{
 												$selected = '';
-												if($account_id == $executive_officer){
+											if($account['account_id'] == $executive_officer)
+											{
 													$selected = 'selected=\'selected\'';
 												}
-												echo '<option value="'.$account_id.'" '.$selected.'>'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+											echo "<option value='{$account['account_id']}' {$selected}>" . $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString() . "</option>";
 											}
-										}
-										$GLOBALS['phpgw']->acl->set_account_id(0); // Reset acl to current user
 									?>
 								</select>
-						<?php } else { 
-							$executive_officer = $contract->get_executive_officer_id();
-							if(isset($executive_officer)){
+					<?php
+						}
+						else
+						{ 
+							if(isset($executive_officer))
+							{
 								 $account = $GLOBALS['phpgw']->accounts->get($executive_officer);
-								 if(isset($account)){
-								 	echo $account->__get('firstname')." ".$account->__get('lastname');
+								 if(isset($account))
+								 {
+								 	echo $account->__toString();
 								 } 
 								 else
 								 {
@@ -245,8 +330,8 @@
 								echo lang('nobody');
 							}
 							
-						}?>
-						
+						}
+					?>
 						
 					</dd>
 					<dt>
@@ -256,8 +341,9 @@
 						<?php
 							$start_date = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_start_date()) : '-';
 							$start_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_start_date() ? date('Y-m-d', $contract->get_contract_date()->get_start_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);
+							$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);?>
+						<?php if ($editable) {
+								echo $start_date_cal;
 							} else {
 								echo $start_date;
 							}
@@ -271,12 +357,13 @@
 						<?php
 							$end_date = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_contract_date()->get_end_date()) : '-';
 							$end_date_yui = $contract->get_contract_date() && $contract->get_contract_date()->has_end_date() ? date('Y-m-d', $contract->get_contract_date()->get_end_date()) : '';
-							if ($editable) {
-								echo $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
+							$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('date_end', $end_date);
+						?>
+						<?php if ($editable) {
+								echo $end_date_cal;
 							} else {
 								echo $end_date;
-							}
-						?>
+						 }?>
 						<br/>
 					</dd>
 					<dt>
@@ -342,29 +429,11 @@
 					</dt>
 					<dd>
 						<?php
-						$billing_start_date = $contract->get_billing_start_date();
-						
-						if($billing_start_date == null || $billing_start_date == '') // No date set
-						{
-							// ..so we try to use the start date of the contract if any
-							$contract_date = $contract->get_contract_date();
-							if($contract_date != null && $contract_date->has_start_date())
-							{
-								$billing_start_date = $contract_date->get_start_date();
-							}
-							else // No start date of contract
-							{
-								// ..so we use the today's date
-								$billing_start_date = time();
-							}
-						}
-						
-						$billing_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $billing_start_date);
-						if($editable)
-						{
+							$billing_start_date = $contract->get_billing_start_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $contract->get_billing_start_date()) : '-';
+							$billing_start_date_yui = $contract->get_billing_start_date() ? date('Y-m-d', $contract->get_billing_start_date()) : '';
+							if ($editable) {
 							echo $GLOBALS['phpgw']->yuical->add_listener('billing_start_date', $billing_start_date);
-						}
-						else{ // Non-ediable
+							} else {
 							echo $billing_start_date;
 						}
 						?>
@@ -388,22 +457,6 @@
 				</dl>
 				<dl class="proplist-col">
 					<dt>
-						<label for="service_id"><?php echo lang('service') ?></label>
-					</dt>
-					<dd>
-						<?php
-						if ($editable) {
-						?>
-							<input type="text" name="service_id" id="service_id" value="<?php echo $contract->get_service_id(); ?>"/>
-						<?php
-						}
-						else
-						{
-							echo $contract->get_service_id();
-						}
-						?>
-					</dd>
-					<dt>
 						<label for="responsibility_id"><?php echo lang('responsibility') ?></label>
 					</dt>
 					<dd>
@@ -416,6 +469,22 @@
 						else
 						{
 							echo $contract->get_responsibility_id();
+						}
+						?>
+					</dd>
+					<dt>
+						<label for="service_id"><?php echo lang('service') ?></label>
+					</dt>
+					<dd>
+						<?php
+						if ($editable) {
+						?>
+							<input type="text" name="service_id" id="service_id" value="<?php echo $contract->get_service_id(); ?>"/>
+						<?php
+						}
+						else
+						{
+							echo $contract->get_service_id();
 						}
 						?>
 					</dd>
@@ -457,7 +526,7 @@
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								echo rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false);
+								echo '';
 							}
 							else
 							{
@@ -483,7 +552,7 @@
 							$cid = $contract->get_id();
 							if(!isset($cid) || $cid <= 0)
 							{
-								echo '9'; // Default project number
+								echo rental_socontract::get_instance()->get_default_project_number($contract->get_location_id(), false);
 							}
 							else
 							{
@@ -594,6 +663,76 @@
 							<?php }
 						?>
 					</dd>
+					<?php if($contract->is_adjustable() || $editable){?>
+						<dt>
+							<label for="adjustable"><?php echo lang('adjustable') ?></label>
+						</dt>
+						<dd>
+							<input type="checkbox" name="adjustable" id="adjustable"<?php echo $contract->is_adjustable() ? ' checked="checked"' : '' ?> <?php echo !$editable ? ' disabled="disabled"' : '' ?>/>
+						</dd>
+					
+						<dt>
+							<label for="adjustment_interval"><?php echo lang('adjustment_interval') ?></label>
+						</dt>
+						<dd>
+							<?php
+							$current_interval = $contract->get_adjustment_interval();
+							if ($editable)
+							{
+								?>
+								<select name="adjustment_interval">
+									<?php
+										echo "<option ".($current_interval == '1' ? 'selected="selected"' : "")." value=\"1\">1 ".lang('year')."</option>";
+										echo "<option ".($current_interval == '2' ? 'selected="selected"' : "")." value=\"2\">2 ".lang('year')."</option>";
+										echo "<option ".($current_interval == '10' ? 'selected="selected"' : "")." value=\"10\">10 ".lang('year')."</option>";
+									?>
+								</select>
+								<?php
+							?>
+							<?php
+							}
+							else // Non-editable
+							{
+								echo $current_interval." ".lang('year');
+							}
+							?>
+						</dd>
+						<dt>
+							<label for="adjustment_share"><?php echo lang('adjustment_share') ?></label>
+						</dt>
+						<dd>
+							<?php
+							$current_share = $contract->get_adjustment_share();
+							if ($editable)
+							{
+								?>
+								<select name="adjustment_share">
+									<?php
+										echo "<option ".($current_share == '100' ? 'selected="selected"' : "")." value=\"100\">100%</option>";
+										echo "<option ".($current_share == '90' ? 'selected="selected"' : "")." value=\"90\">90%</option>";
+										echo "<option ".($current_share == '80' ? 'selected="selected"' : "")." value=\"80\">80%</option>";
+										echo "<option ".($current_share == '67' ? 'selected="selected"' : "")." value=\"67\">67%</option>";
+									?>
+								</select>
+								<?php
+							?>
+							<?php
+							}
+							else // Non-editable
+							{
+								echo $current_share."%";
+							}
+							?>
+						</dd>
+						<dt>
+							<label for="adjustment_year"><?php echo lang('adjustment_year') ?></label>
+						</dt>
+						<dd>
+							<?php echo $contract->get_adjustment_year(); ?>
+						</dd>
+					<?php }else{
+						echo "<dt>".lang('contract_not_adjustable')."</dt>";
+					}?>
 				</dl>
                 <dl class="proplist-col">
                     <dt>
@@ -613,14 +752,17 @@
                         }
                         ?>
                     </dd>
+                    <dt>
+						<label for="publish_comment"><?php echo lang('publish_comment') ?></label>
+					</dt>
+					<dd>
+						<input type="checkbox" name="publish_comment" id="publish_comment"<?php echo $contract->get_publish_comment() ? ' checked="checked"' : '' ?> <?php echo !$editable ? ' disabled="disabled"' : '' ?>/>
+					</dd>
                 </dl>
 				<div class="form-buttons">
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_contract" value="' . lang('save') . '"/>';
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('cancel') . '</a>';
-						} else {
-							echo '<a class="cancel" href="' . $cancel_link . '">' . lang('back') . '</a>';
 						}
 					?>
 				</div>
@@ -649,6 +791,16 @@
 			?>
 		</div>
 		<div id="notifications">
+			<h3><?php echo lang('contract_notifications') ?></h3>
+			<?php
+			$list_form = false;
+			$list_id = 'rental_notifications';
+			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;editable=true&amp;contract_id='.$contract->get_id();
+			$disable_left_click = true;
+			unset($extra_cols);
+			unset($editors);
+			include('notification_list.php');
+			?>
 			<h3><?php echo lang('new_notification') ?></h3>
 			<?php
 			if ($editable) {
@@ -691,26 +843,24 @@
 							<option value=""><?php echo lang('target_none') ?></option>
 							
 							<?php
-								$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
+								$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'rental');
 								$label = lang('notification_optgroup_users');
 								echo '<optgroup label="'.$label.'">';
 								echo '<option value="'.$GLOBALS['phpgw_info']['user']['account_id'].'">'.lang('target_me').'</option>';
 								foreach($accounts as $account)
 								{
-									$id = $account->__get('id');
-									if($id != $GLOBALS['phpgw_info']['user']['account_id'])
+									if( $account['account_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
 									{
-										echo '<option value="'.$id.'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+										echo "<option value='{$account['account_id']}'>" . $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString() . '</option>';
 									}
 								}
 								echo '</optgroup>';
 								$accounts = $GLOBALS['phpgw']->accounts->get_list('groups');
 								$label = lang('notification_optgroup_groups');
-								echo '<optgroup label="'.$label.'">';
+								echo "<optgroup label='{$label}'>";
 								foreach($accounts as $account)
 								{
-										$id = $account->__get('id');
-										echo '<option value="'.$id.'">'.$account->__get('firstname')." ".$account->__get('lastname')."</option>";
+									echo "<option value='{$account->id}'>{$account->firstname}</option>";
 								}
 								echo '</optgroup>';
 							?>
@@ -744,16 +894,6 @@
 			{
 				echo lang('log_in_to_add_notfications');
 			}
-			?>
-			<h3><?php echo lang('contract_notifications') ?></h3>
-			<?php
-			$list_form = false;
-			$list_id = 'rental_notifications';
-			$url_add_on = '&amp;type=notifications&amp;sort=date&amp;dir=DESC&amp;editable=true&amp;contract_id='.$contract->get_id();
-			$disable_left_click = true;
-			unset($extra_cols);
-			unset($editors);
-			include('notification_list.php');
 			?>
 		</div>
 		

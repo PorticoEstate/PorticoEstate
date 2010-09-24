@@ -2,10 +2,11 @@ current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
 -- select a season --	booking	no	Velg en sesong
-1. why?	booking	no	1. Hvorfor?
-2. where?	booking	no	2. Hvor?
-3. when?	booking	no	3. Når?
-4. who?	booking	no	4. Hvem?
+why?	booking	no	Hvorfor?
+where?	booking	no	Hvor?
+when?	booking	no	Når?
+who?	booking	no	Hvem?
+how many?	booking	no	Hvor mange?
 accept application	booking	no	Godta søknaden
 accepted	booking	no	Akseptert
 account	booking	no	Bruker
@@ -87,11 +88,11 @@ events	booking	no	Arrangementer
 feb	booking	no	februar
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
-found %1 results	booking	no	%1 treffer
+found %1 results	booking	no	%1 treff
 fr	booking	no	fr.
 from	booking	no	Fra
-generate allocations	booking	no	Kopièr til kalender
-generate allocations from week template	booking	no	Lag tildelningar fra ukeplan
+generate allocations	booking	no	Kopier til kalender
+generate allocations from week template	booking	no	Lag tildelinger fra ukeplan
 go back to the template week	booking	no	Gå tilbake til ukeplan
 group	booking	no	Gruppe/Lag
 history and comments (%1)	booking	no	Historikk (%1)
@@ -101,6 +102,7 @@ id	booking	no	ID
 inactivate	booking	no	Inaktivert
 inactive	booking	no	Inaktiv
 invoice information	booking	no	Fakturainformasjon 
+responsible applicant	booking	no	Ansvarlig søker
 jan	booking	no	januar
 jul	booking	no	juli
 jun	booking	no	juni
@@ -130,7 +132,7 @@ new document	booking	no	Nye dokumenter
 new equipment	booking	no	Nytt utstyr
 new event	booking	no	Nytt arrangement
 new group	booking	no	Ny gruppe
-new organization	booking	no	Ny organisajon
+new organization	booking	no	Ny organisasjon
 new resource	booking	no	Ny ressurs
 new root permission	booking	no	Nye systemrettigheter
 new season	booking	no	Ny sesong
@@ -144,6 +146,7 @@ no records found.	booking	no	Ingen treff.
 no records found.	booking	no	Ingen funnet!
 nov	booking	no	november
 number of participants	booking	no	Antall deltakere
+estimated number of participants	booking	no	Estimert antall deltakere
 oct	booking	no	oktober
 of	booking	no	av
 officer	booking	no	Saksbehandler
@@ -194,7 +197,7 @@ status	booking	no	Status
 street	booking	no	Gate
 su	booking	no	sø
 submit	booking	no	Lagre
-successfully created (%1) allocations:	booking	no	(%1) tildelinger lagret
+successfully created %1 allocations:	booking	no	%1 tildelinger lagret
 surname	booking	no	Etternavn
 target audience	booking	no	Målgruppe
 telephone	booking	no	Telefon
@@ -237,9 +240,10 @@ New Account Codes	booking	no	Ny konteringsstreng
 Create allocation	booking	no	Lag tildeling
 Create booking	booking	no	Lag booking
 Create event	booking	no	Lag arrangement
+Event was created	booking	no	Arrangementet ble opprettet
 Loading...	booking	no	Laster...
 Back to season	booking	no	Gå tilbake til sesong
-Field %1 is required	booking	no	Feltet %1 kreves
+Field %1 is required	booking	no	Feltet '%1' må fylles ut
 Download	booking	no	Last ned
 Invoice Data Exports	booking	no	Fakturaeksporter
 Internal	booking	no	Intern
@@ -263,6 +267,7 @@ send reminder for participants statistics	booking	no	Purring brukerstatistikk
 Send reminder	booking	no	Send purring
 Do not send reminder	booking	no	Ikke send purring
 User has responded to the reminder	booking	no	Brukeren har svart på påminnelsen
+Reminder sent. Not responded to	booking	no	Purring sendt. Ikke besvart
 In order to work with this application, you must first	booking	no	For å jobbe med denne søknaden, må du først
 assign yourself	booking	no	bli saksbehander
 as the case officer responsible for this application.	booking	no	for denne søknaden
@@ -272,6 +277,7 @@ User '%s' was assigned	booking	no	Brukeren '%s' ble saksbehandler
 User '%s' was unassigned	booking	no	Brukeren '%s' ble tatt av saken
 Show only applications assigned to me	booking	no	Vis bare mine søknader
 Confirm	application	booking no	Bekreft søknad
+confirmed	booking	no	Bekreftet
 One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	no	En eller flere bookinger, tildelinger eller arrangementer må lages før en søknad kan aksepteres
 Hide from my Dashboard until new activity occurs	booking	no	Ikke vis på mitt skrivebord før ny hendelse inntreffer
 Display in my Dashboard	booking	no	Vis på mitt skrivebord
@@ -304,6 +310,7 @@ Nothing to export	booking	no	Fant ingenting å eksportere
 Unable to export: Missing a valid Customer ID on some rows	booking	no	Kunne ikke eksportere: Mangler gyldig kundenummer på noen rader
 The invoice data in this list already has generated files	booking	no	Filene til fakturaene i listen har allerede blitt generert
 The user has accepted the following documents	booking	no	Brukeren har akseptert følgende dokument
+The user has accepted the document under point 8	booking	no	Brukeren har akseptert dokumentene under punkt 8
 Send e-mail	booking	no	Send e-post
 All fields are required	booking	no	Alle feltene må fylles ut
 Send e-mails	booking	no	Send e-post
@@ -323,6 +330,7 @@ Export	booking	no	Eksporter
 Not Generated	booking	no	Ikke generert
 Generated Files	booking	no	Genererte filer
 Generate files	booking	no	Generer filer
+Exported Files	booking	no	Klar for generering
 All	booking	no	Alle
 Choose	booking	no	Velg
 Internal Account Codes	booking	no	interne kontokoder
@@ -332,7 +340,7 @@ Total Cost	booking	no	Totalsum
 Int. invoice file	booking	no	Intern fakturafil
 Ext. invoice file	booking	no	Ekstern fakturafil
 Asynchronous Tasks	booking	no	Systemjobber
-booking_async_task_update_reservation_state_enabled	booking	no	Oppdater reservasjonsstatus
+booking_async_task_update_reservation_state_enabled	booking	no	Generer fakturagrunnlag
 booking_async_task_send_reminder_enabled	booking	no	Send purremail til kontaktpersoner på bookinger og arrangementer
 Update	booking	no	Oppdater
 Cannot generate files from empty list	booking	no	Kan ikke generere filer fra en tom liste
@@ -340,6 +348,7 @@ Associated items	booking	no	Tilknyttede elementer
 Unassign me	booking	no	Gi fra meg søknaden
 Order	booking	no	Sortering
 Completed reservations	booking	no	Fullførte reservasjoner
+Edit completed reservation	booking	no	Rediger fullført reservasjon
 Article Description	booking	no	Artikkelbeskrivelse
 Customer Type	booking	no	Kundetype
 Internal Customer	booking	no	Intern kunde
@@ -347,8 +356,8 @@ SMS total	booking	no	SMS total
 Type	booking	no	Type
 Participants	booking	no	Deltagere
 Format	booking	no	Format
-Create report	booking	no	Opprett rapport
-No buildings selected	booking	no	Du må velge minst en bygning
+Create report	booking	no	Lag rapport
+No buildings selected	booking	no	Du må velge minst et bygg/anlegg
 Reports	booking	no	Rapporter
 Unable to set classpath	booking	no	Kunne ikke sette classpath
 Unable to perform chdir	booking	no	Kunne ikke utføre chdir
@@ -365,6 +374,9 @@ Unable to load the PostgreSQL driver	booking	no	Kunne ikke laste inn PostgreSQL-
 Unable to connect to database	booking	no	Kunne ikke koble seg mot DB
 Missing report-name	booking	no	Mangler raport-navn
 Invalid report-name	booking	no	Feil rapport-navn
+Missing connection-string	booking	no	Connection string mangler
+Missing DB-username	booking	no	Databasenavn mangler
+Missing DB-password	booking	no	Databasepassord mangler
 Missing configuration file	booking	no	Mangler konfigurasjonsfil
 Participants Per Age Group Per Month	booking	no	Deltagere per aldersgruppe per måned
 Location Code	booking	no	Lokasjonskode
@@ -377,10 +389,61 @@ Edit document	booking	no	Rediger dokument
 Edit resource	booking	no	Rediger ressurs
 Edit Group	booking	no	Rediger gruppe
 Select Type	booking	no	Velg type
-Customer number	booking	no	Kundenummer
+Customer number	booking	no	Ressursnummer
 Send	booking	no	Send
 Your application has now been registered and a confirmation email has been sent to you.	booking	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	booking	no	En saksbehandler vil behandle søknaden så fort som mulig.
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	booking	no	Organisasjonsnummer er ugyldig
 Select an organization first	booking	no	Velg organisasjon først
+Add Resource	booking	no	Ny ressurs
+%1 e-mails were sent successfully	booking	no	%1 e-poster ble sendt
+%1 e-mails were not sent successfully	booking	no	%1 e-poster kunne ikke sendes (ugyldig adresse)
+activity_id	booking	no	Aktivitet
+contact_email	booking	no	E-post
+contact_name	booking	no	Navn
+customer_identifier_type	booking	no	Fakturainformasjon
+group_id	booking	no	Gruppe/Lag
+organization_id	booking	no	Organisasjon
+season_id	booking	no	Sesong
+from_	booking	no	Fra
+to_	booking	no	Til
+owner_id	booking	no	Eier
+object_id	booking	no	Objekt
+building_id	booking	no	Bygg/anlegg
+subject_id	booking	no	Bruker
+export_configurations[external][account_code_set_id]	booking	no	Velg eksterne kontokoder
+export_configurations[internal][account_code_set_id]	booking	no	Velg interne kontokoder
+new target audience	booking	no	Ny målgruppe
+Information about the event	booking	no	Informasjon om arrangementet
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	booking	no	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
+To borrow premises you must verify that you have read terms and conditions	booking	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
+In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
+Event type	booking	no	Arrangementstype
+Private event	booking	no	Privat arrangement
+Public event	booking	no	Offentlig arrangement
+customer_ssn contains an invalid Norwegian social security number (11 digits)	booking	no	Fødselsnummer er ugyldig (11 siffer)
+show only unexported	booking	no	Vis bare ikke-eksporterte
+Free time	booking	no	Ledig tid
+Weekdays	booking	no	Ukedager
+Account Code Dimension	booking	no	Konteringsdimensjoner
+Labels	booking	no	Ledetekster
+account_code_dimension_helptext	booking	no	Feltene under lar deg redigere ledetekstene som dukker opp i oversikten over konteringsstrengen samt overskrift i CSV-eksporten. Tomme felter under fører til at tilhørende felter i CSV- og Agressoeksport ikke kommer ut i filene.
+Access denied	booking	no	Ingen tilgang
+Send to contact	booking	no	Send medling til registrerte kontaktpersoner av arrangementet
+Send to contact for overlaping allocations/bookings	booking	no	Send melding til registrerte kontaktpersoner hvor det er konflikt
+Message sent about the changes in the reservations	booking	no	Melding sendt om endringer på reserverasjoner
+There are changes to your reservations	booking	no	Det er blitt endring på din reserverasjon
+Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet
+Event created, Overlaps with existing allocation, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende tildeling. Husk å sende varsel
+Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel
+Print as PDF	booking	no	Skriv ut som PDF
+Pending	booking	no	Under behandling
+This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mote en sesong
+Message from Bergen county - AktivBy	booking	no	Melding fra Bergen kommune - AktivBy
+Organization shortname	booking	no	Kortnavn
+Group shortname	booking	no	Kortnavn
+contacts[0][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 1
+contacts[1][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 2
+Time is set wrong	booking	no	Et av klokkeslettene er feil
+

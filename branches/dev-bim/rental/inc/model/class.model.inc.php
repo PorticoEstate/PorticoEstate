@@ -5,6 +5,10 @@ include_class('rental', 'validator', 'inc/model/');
 abstract class rental_model
 {
 	protected $validation_errors = array();
+	protected $validation_warnings = array();
+	
+	protected $consistency_warnings = array();
+	
 	protected $field_of_responsibility_id;
 	protected $field_of_responsibility_name;
 	protected $permission_array;
@@ -61,7 +65,7 @@ abstract class rental_model
 	 */
 	public function has_permission($permission = PHPGW_ACL_PRIVATE)
 	{
-		return $GLOBALS['phpgw']->acl->check_rights($this->get_field_of_responsibility_name(),$permission);
+		return $GLOBALS['phpgw']->acl->check($this->get_field_of_responsibility_name(),$permission,'rental');
 	}
 	
 	/**
@@ -82,11 +86,11 @@ abstract class rental_model
 	public function get_permission_array(){
 		$location_name = $this->get_field_of_responsibility_name();
 		return array (
-			PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_READ),
-			PHPGW_ACL_ADD => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_ADD),
-			PHPGW_ACL_EDIT => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_EDIT),
-			PHPGW_ACL_DELETE => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_DELETE),
-			PHPGW_ACL_PRIVATE => $GLOBALS['phpgw']->acl->check_rights($location_name, PHPGW_ACL_PRIVATE)
+			PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_READ,'rental'),
+			PHPGW_ACL_ADD => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_ADD,'rental'),
+			PHPGW_ACL_EDIT => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_EDIT,'rental'),
+			PHPGW_ACL_DELETE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_DELETE,'rental'),
+			PHPGW_ACL_PRIVATE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_PRIVATE,'rental')
 		);	
 	}
 	
@@ -105,6 +109,15 @@ abstract class rental_model
 		return true;
 	}
 
+	public function check_consistency()
+	{
+		return true;
+	}	
+	
+	public function validate_numeric(){
+		return true;
+	}
+
 	public function set_validation_error(string $rule_name, string $error_language_key)
 	{
 		$this->validation_errors[$rule_name] = $error_language_key;
@@ -113,6 +126,26 @@ abstract class rental_model
 	public function get_validation_errors()
 	{
 		return $this->validation_errors;
+	}
+
+	public function set_validation_warning(string $warning_language_key)
+	{
+		$this->validation_warnings[] = $warning_language_key;
+	}
+	
+	public function set_consistency_warning(string $warning_language_key)
+	{
+		$this->consistency_warnings[] = array('warning' => $warning_language_key);
+	}
+	
+	public function get_consistency_warnings()
+	{
+		return $this->consistency_warnings;
+	}
+
+	public function get_validation_warnings()
+	{
+		return $this->validation_warnings;
 	}
 
 	/**

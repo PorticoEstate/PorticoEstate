@@ -124,6 +124,18 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
+		if(isset($filters['active']))
+		{
+			if($filters['active'] == 'active')
+			{
+				$filter_clauses[] = "NOT party.is_inactive";
+			} 
+			else if($filters['active'] == 'inactive')
+			{
+				$filter_clauses[] = "party.is_inactive = TRUE";
+			} 
+		}
+
 		if(isset($filters['contract_id'])){
 			$contract_id = $this->marshal($filters['contract_id'],'int');
 			if(isset($contract_id) && $contract_id > 0)
@@ -140,6 +152,50 @@ class rental_soparty extends rental_socommon
 			}
 		}
 
+		if(isset($filters['org_unit_id'])){
+			$org_unit_id = $this->marshal($filters['org_unit_id'],'string');
+			if(isset($org_unit_id))
+			{
+				$filter_clauses[] = "party.org_enhet_id = {$org_unit_id}";
+			}
+		}
+
+		if(isset($filters['sync']))
+		{
+			$filter_clauses[] = "NOT party.is_inactive";
+			
+			if($filters['sync'] == 'sync_parties')
+			{
+				// involved in contract with service- and responsibility identifiers
+				$filter_clauses[] = "NOT contract.responsibility_id IS NULL";
+				$filter_clauses[] = "party.org_enhet_id IS NULL";
+				// involved in active contracts
+				$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+				$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
+			}
+			else if($filters['sync'] == 'sync_parties_res_unit')
+			{
+				$filter_clauses[] = "NOT party.result_unit_number IS NULL";
+				$filter_clauses[] = "party.result_unit_number LIKE '____'";
+				$filter_clauses[] = "NOT party.result_unit_number LIKE 'KF__'";
+				$filter_clauses[] = "contract.service_id IS NULL";
+				$filter_clauses[] = "contract.responsibility_id IS NULL";
+			}
+			else if($filters['sync'] == 'sync_parties_org_unit')
+			{
+				$filter_clauses[] = "NOT party.org_enhet_id IS NULL";
+			}
+			else if($filters['sync'] == 'sync_parties_identifier')
+			{
+				$filter_clauses[] = "NOT party.identifier IS NULL";
+				$filter_clauses[] = "party.identifier LIKE '____'";
+				$filter_clauses[] = "NOT party.identifier LIKE 'KF__'";
+				$filter_clauses[] = "contract.service_id IS NULL";
+				$filter_clauses[] = "contract.responsibility_id IS NULL";
+				$filter_clauses[] = "party.result_unit_number IS NULL";
+			}
+		}
+		
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -157,6 +213,7 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.identifier';
 			$columns[] = 'party.first_name';
 			$columns[] = 'party.last_name';
+			$columns[] = 'party.comment';
 			$columns[] = 'party.is_inactive';
 			$columns[] = 'party.title';
 			$columns[] = 'party.company_name';
@@ -174,7 +231,10 @@ class rental_soparty extends rental_socommon
 			$columns[] = 'party.reskontro';
 			$columns[] = 'party.location_id as org_location_id';
 			$columns[] = 'party.result_unit_number';
+			$columns[] = 'party.org_enhet_id';
 			$columns[] = 'contract.location_id as resp_location_id';
+			$columns[] = 'contract.service_id';
+			$columns[] = 'contract.responsibility_id';
 			$cols = implode(',',$columns);
 		}
 
@@ -255,6 +315,7 @@ class rental_soparty extends rental_socommon
 			'reskontro = '      . $this->marshal($party->get_reskontro(), 'string'),
 			'is_inactive = '    . $this->marshal(($party->is_inactive() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string'),
+			'org_enhet_id = '	. $this->marshal($party->get_org_enhet_id(), 'int'),
 			'location_id = '	. $location_id,
 			'result_unit_number = ' . $result_unit_number
 		);
@@ -264,9 +325,22 @@ class rental_soparty extends rental_socommon
 		return isset($result);
 	}
 
-	protected function get_id_field_name()
+	public function get_id_field_name($extended_info = false)
 	{
-		return 'party_id';
+		if(!$extended_info)
+	{
+			$ret = 'party_id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'party', // alias
+				'field'			=> 'id',
+				'translated'	=> 'party_id'
+			);
+		}
+		return $ret;
 	}
 
 	protected function populate(int $party_id, &$party)
@@ -294,8 +368,19 @@ class rental_soparty extends rental_socommon
 			$party->set_reskontro(      $this->unmarshal($this->db->f('reskontro'), 'string'));
 			$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
 			$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
+			$party->set_org_enhet_id(   $this->unmarshal($this->db->f('org_enhet_id'), 'string'));
+			$sync_message = $party->set_sync_data(
+				array(
+					'responsibility_id' => $this->unmarshal($this->db->f('responsibility_id'), 'string'),
+					'org_enhet_id' => $this->unmarshal($this->db->f('org_enhet_id'), 'string'),
+					'result_unit_number' => $this->unmarshal($this->db->f('result_unit_number'), 'string'),
+				)
+			);
+			if(isset($sync_message) && $sync_message != '')
+			{
+				$party->add_sync_problem($sync_message);
+			}
 		}
-
 		return $party;
 	}
 	
@@ -304,6 +389,15 @@ class rental_soparty extends rental_socommon
 		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, null);
 		$exportable = new rental_agresso_cs15($parties);
 		return $exportable->get_contents();
+	}
+	
+	public function get_number_of_parties()
+	{
+		$q ="SELECT COUNT(id) FROM rental_party";
+		$result = $this->db->query($q);
+		$this->db->query($q, __LINE__, __FILE__);
+		$this->db->next_record();
+		return (int) $this->db->f('count',true);
 	}
 	
 }

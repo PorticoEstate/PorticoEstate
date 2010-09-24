@@ -10,7 +10,7 @@
 	*/
 
 	$setup_info['sms']['name']      = 'sms';
-	$setup_info['sms']['version']   = '0.9.17.508';
+	$setup_info['sms']['version']   = '0.9.17.510';
 	$setup_info['sms']['app_order'] = 8;
 	$setup_info['sms']['enable']    = 1;
 	$setup_info['sms']['app_group']	= 'office';
@@ -29,10 +29,6 @@
 	);
 
 	$setup_info['sms']['tables'] = array(
-		'phpgw_sms_config_type',
-		'phpgw_sms_config_attrib',
-		'phpgw_sms_config_choice',
-		'phpgw_sms_config_value',
 		'phpgw_sms_featautoreply',
 		'phpgw_sms_featautoreply_log',
 		'phpgw_sms_featautoreply_scenario',
@@ -45,23 +41,15 @@
 		'phpgw_sms_featpoll_choice',
 		'phpgw_sms_featpoll_result',
 		'phpgw_sms_gwmodclickatell_apidata',
-//		'phpgw_sms_gwmodclickatell_config',
-//		'phpgw_sms_gwmodgnokii_config',
-//		'phpgw_sms_gwmodkannel_config',
 		'phpgw_sms_gwmodkannel_dlr',
-//		'phpgw_sms_gwmodtemplate_config',
 		'phpgw_sms_gwmoduplink',
-//		'phpgw_sms_gwmoduplink_config',
-//		'phpgw_sms_tblconfig_main',
 		'phpgw_sms_tblsmsincoming',
 		'phpgw_sms_tblsmsoutgoing',
 		'phpgw_sms_tblsmstemplate',
-//		'phpgw_sms_tbluser',
 		'phpgw_sms_tblusergroupphonebook',
 		'phpgw_sms_tblusergroupphonebook_public',
 		'phpgw_sms_tbluserinbox',
 		'phpgw_sms_tbluserphonebook',
-//		'phpgw_sms_tbluser_country'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
@@ -90,4 +78,3 @@
 		'appname'  => 'preferences',
 		'versions' => Array('0.9.16','0.9.17', '0.9.18')
 	);
-?>

@@ -60,7 +60,7 @@
 			'update_location' => true
 		);
 
-		function property_uilocation()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -153,6 +153,7 @@
 				$GLOBALS['phpgw']->preferences->save_repository();
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
 			}
+
 			$function_msg	= lang('Select Column');
 
 			$link_data = array
@@ -218,8 +219,46 @@
 				return;
 			}
 
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+
+			if ($default_district && !$second_display && !$this->district_id)
+			{
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
+			}
+
 			$datatable = array();
 			$values_combo_box = array();
+
+    		$integrationurl = '';
+    		$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$custom_config	= CreateObject('admin.soconfig',$location_id);
+
+			if(isset($custom_config->config_data['integration']['url']))
+			{
+				$custom_config->config_data['integration']['url']		= htmlspecialchars_decode($custom_config->config_data['integration']['url']);
+				$custom_config->config_data['integration']['parametres']= htmlspecialchars_decode($custom_config->config_data['integration']['parametres']);
+				$integration_name = isset($custom_config->config_data['integration']['name']) && $custom_config->config_data['integration']['name'] ? $custom_config->config_data['integration']['name'] : lang('integration');
+
+				parse_str($custom_config->config_data['integration']['parametres'], $output);
+	
+				foreach ($output as $_dummy => $_substitute)
+				{
+					$_keys[] = $_substitute;
+					$__substitute = trim($_substitute, '_');
+					$_values[] = $this->$__substitute;
+				}
+
+				$_sep = '?';
+				if (stripos($custom_config->config_data['integration']['url'],'?'))
+				{
+					$_sep = '&';
+				}
+				$_param = str_replace($_keys, $_values, $custom_config->config_data['integration']['parametres']);
+
+				$integrationurl = "{$custom_config->config_data['integration']['url']}{$_sep}{$_param}";
+			}
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			 {
@@ -250,6 +289,7 @@
  	                        						."district_id: '{$this->district_id}',"
  	                        						."part_of_town_id:'{$this->part_of_town_id}',"
 						 	                        ."lookup:'{$lookup}',"
+						 	                        ."second_display:1,"
  	                        						."lookup_tenant:'{$lookup_tenant}',"
 						 	                        ."lookup_name:'{$lookup_name}',"
 						 	                        ."cat_id:'{$this->cat_id}',"
@@ -381,6 +421,18 @@
 										  )
 				);
 
+				if($integrationurl)
+				{	
+			        $datatable['actions']['form'][0]['fields']['field'][] =  array
+			        								(
+						                                'type'	=> 'button',
+						                            	'id'	=> 'btn_integration',
+						                                'value'	=> $integration_name,
+						                                'tab_index' => 10
+						                            );
+				}
+
+
 				if(!$block_query)
 				{	
 			        $datatable['actions']['form'][0]['fields']['field'][] =  array
@@ -502,6 +554,34 @@
 					)
 				);
 
+				$parameters3 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'search_for',
+							'source'	=> 'location_code'
+						),
+					)
+				);
+
+				if($this->acl->check('run', PHPGW_ACL_READ, 'rental'))
+				{
+					$datatable['rowactions']['action'][] = array(
+							'my_name'			=> 'view',
+							'text' 			=> lang('contracts'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+											(
+												'menuaction'	  => 'rental.uicontract.index',
+												'search_type'	  => 'location_id',
+												'contract_status' => 'all',
+												'populate_form'   => 'yes'
+											)),
+						'parameters'	=> $parameters3
+					);
+				}
+
 				if($this->acl_read)
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -564,6 +644,23 @@
 					);
 
 				}
+				$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+				foreach ($jasper as $report)
+				{
+					$datatable['rowactions']['action'][] = array(
+							'my_name'		=> 'edit',
+							'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+															(
+																	'menuaction'	=> 'property.uijasper.view',
+																	'jasper_id'			=> $report['id'],
+																	'target'		=> '_blank'
+															)),
+							'parameters'			=> $parameters
+					);
+				}
+
 				if($this->acl_delete)
 				{
 					$datatable['rowactions']['action'][] = array(
@@ -591,7 +688,6 @@
 											))
 					);
 				}
-
 
 				unset($parameters);
 			}
@@ -694,10 +790,17 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$datatable['pagination']['records_returned']= count($location_list);
+
+			if($dry_run)
+			{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($location_list);
+			}
+
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
-
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
@@ -715,19 +818,6 @@
 
 
 			$appname = lang('location');
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
-
 
 			if($lookup)
 			{
@@ -749,8 +839,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -761,6 +849,8 @@
 	    			'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
 	    		);
+
+				$json['integrationurl']	= $integrationurl;
 
 				// values for datatable
 	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
@@ -802,8 +892,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -811,6 +906,18 @@
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{
@@ -988,6 +1095,7 @@
 				if($values['location_code'] && !$location_code)
 				{
 					if($this->bo->check_location($values['location_code'],$type_id))
+
 					{
 						$receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');
 						$error_location_id=true;
@@ -1090,7 +1198,7 @@
 				$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
 			}
 
-			if ($values['cat_id'] > 0)
+			if ($values['cat_id'])
 			{
 				$this->cat_id = $values['cat_id'];
 			}
@@ -1305,6 +1413,7 @@
 			}
 
 			$documents = array();
+			$file_tree = array();
 			if($location_code)
 			{
 				$related = $this->bo->read_entity_to_link($location_code);
@@ -1318,6 +1427,36 @@
 					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
 					$documents = json_encode($documents);				
 				}
+
+				$_config		= CreateObject('phpgwapi.config','property');
+				$_config->read();
+				$_dirname = '';
+
+				$_files_maxlevel = 0;
+				if (isset($_config->config_data['external_files_maxlevel']) &&  $_config->config_data['external_files_maxlevel'])
+				{
+					$_files_maxlevel = $_config->config_data['external_files_maxlevel'];
+				}
+				$_files_filterlevel = 0;
+				if (isset($_config->config_data['external_files_filterlevel']) &&  $_config->config_data['external_files_filterlevel'])
+				{
+					$_files_filterlevel = $_config->config_data['external_files_filterlevel'];
+				}
+				$_filter_info = explode('-',$location_code);
+
+				if (isset($_config->config_data['external_files']) &&  $_config->config_data['external_files'])
+				{
+					$_dirname = $_config->config_data['external_files'];
+					$file_tree = $document->read_file_tree($_dirname,$_files_maxlevel,$_files_filterlevel, $_filter_info[0]);
+				}
+
+				unset($_config);
+				if($file_tree)
+				{
+					$tabs['file_tree']	= array('label' => lang('Files'), 'link' => '#file_tree');
+					$file_tree = json_encode($file_tree);				
+				}
+
 				if(isset($related['related']))
 				{
 						$tabs['related']	= array('label' => lang('related'), 'link' => '#related');
@@ -1423,6 +1562,7 @@
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
 				'documents'						=> $documents,
+				'file_tree'						=> $file_tree,
 				'lang_expand_all'				=> lang('expand all'),
 				'lang_collapse_all'				=> lang('collapse all')
 			);
@@ -1780,7 +1920,7 @@
 					 )
 				);
 
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$summary_list= $this->bo->read_summary();
@@ -1831,18 +1971,7 @@
 			$appname		= lang('Summary');
 			$function_msg		= lang('List') . ' ' . lang($this->role);
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1894,14 +2023,29 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
-			//-------------------- JSON CODE ----------------------
 
+			$datatable['json_data'] = json_encode($json);
+
+//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{
@@ -1921,4 +2065,5 @@
 
 
 		}
+
  }

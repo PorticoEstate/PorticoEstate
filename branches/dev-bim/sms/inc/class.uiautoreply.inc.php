@@ -31,15 +31,14 @@
 			'delete_scenario'	=> true
 			);
 
-		function sms_uiautoreply()
+		function __construct()
 		{
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.boautoreply',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 			= '.autoreply';
 			$this->menu->sub			= '.autoreply';
 			$this->start				= $this->bo->start;
@@ -64,7 +63,6 @@
 			$this->bo->save_sessiondata($data);
 		}
 
-
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -84,9 +82,8 @@
 
 			$autoreply_info = $this->bo->read();
 
-			while (is_array($autoreply_info) && list(,$entry) = each($autoreply_info))
+			foreach ($autoreply_info as $entry)
 			{
-
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiautoreply.delete', 'autoreply_id'=> $entry['id']));
@@ -164,7 +161,7 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -197,7 +194,6 @@
 
 		function add()
 		{
-
 			if(!$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'sms'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -721,7 +717,6 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($autoreply_id);
 
 				$sql = "SELECT autoreply_code FROM phpgw_sms_featautoreply WHERE autoreply_id='$autoreply_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
@@ -842,6 +837,4 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('sms') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
-
 	}
-

@@ -2165,3 +2165,131 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+  $test[] = '0.1.90';
+	function booking_upgrade0_1_90()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN is_public INT NOT NULL DEFAULT 1");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.91';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+  $test[] = '0.1.91';
+	function booking_upgrade0_1_91()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_account_code_set ADD COLUMN dim_4 varchar(8)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_account_code_set ADD COLUMN dim_value_4 varchar(12)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_account_code_set ADD COLUMN dim_value_5 varchar(12)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.92';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+  $test[] = '0.1.92';
+	function booking_upgrade0_1_92()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event_comment', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'time' => array('type' => 'timestamp', 'nullable' => False),
+					'author' => array('type' => 'text', 'nullable' => False),
+					'comment' => array('type' => 'text', 'nullable' => False),
+					'type' => array('type' => 'text', 'nullable' => False, 'default'=>'comment'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'bb_event' => array('event_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.93';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+  $test[] = '0.1.93';
+	function booking_upgrade0_1_93()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_event_date', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'from_' => array('type' => 'timestamp', 'nullable' => False),
+					'to_' => array('type' => 'timestamp', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+				'bb_event' => array('event_id' => 'id')),
+				'ix' => array(),
+				'uc' => array('event_id', 'from_', 'to_')
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.94';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+  $test[] = '0.1.94';
+	function booking_upgrade0_1_94()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$table = "bb_resource";
+		
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN sort integer");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET sort = 0");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.95';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+  $test[] = '0.1.95';
+	function booking_upgrade0_1_95()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$table = "bb_organization";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN shortname varchar(11)");
+
+		$table = "bb_group";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN shortname varchar(11)");
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.96';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

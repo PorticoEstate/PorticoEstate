@@ -140,7 +140,7 @@
 
 		function execute($cron='')
 		{
-			set_time_limit(120);
+			set_time_limit(500);
 			$receipt = $this->legg_til_eier_phpgw();
 			$this->cron_log($receipt,$cron);
 			$receipt = $this->legg_til_gateadresse_phpgw();
@@ -697,7 +697,7 @@
 		function oppdater_leieobjekt()
 		{
 			$sql = " SELECT TOP 100 PERCENT v_Leieobjekt.objekt_id,v_Leieobjekt.leie_id,v_Leieobjekt.leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, v_Leieobjekt.flyttenr, innflyttetdato"
-				. " FROM  v_Leieobjekt JOIN v_reskontro ON v_Leieobjekt.objekt_id=v_reskontro.objekt_id AND v_Leieobjekt.leie_id=v_reskontro.leie_id"
+				. " FROM  v_Leieobjekt LEFT JOIN v_reskontro ON v_Leieobjekt.objekt_id=v_reskontro.objekt_id AND v_Leieobjekt.leie_id=v_reskontro.leie_id"
 				. " AND v_Leieobjekt.flyttenr=v_reskontro.flyttenr AND v_Leieobjekt.leietaker_id=v_reskontro.leietaker_id";
 
 			$this->db_boei->query($sql,__LINE__,__FILE__);
@@ -729,7 +729,7 @@
 				. " driftsstatus_id = '" . $this->db_boei->f('driftsstatus_id') . "',"
 				. " boareal = '" . $this->db_boei->f('boareal') . "',"
 				. " flyttenr = '" . $this->db_boei->f('flyttenr') . "',"
-				. " innflyttetdato = '" . date($this->bocommon->dateformat,strtotime($this->db_boei->f('innflyttetdato'))) . "'"
+				. " innflyttetdato = '" . date("M d Y",strtotime($this->db_boei->f('innflyttetdato'))) . "'"
 				. " WHERE  loc1 = '" . $this->db_boei->f('objekt_id') . "'  AND  loc4= '" . $this->db_boei->f('leie_id') . "'";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);

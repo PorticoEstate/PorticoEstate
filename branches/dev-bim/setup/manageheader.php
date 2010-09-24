@@ -249,11 +249,12 @@ HTML;
 
 			$detected .= '<table id="manageheader">' . "\n";
 
-			if ( !isset($ConfigLang) || !$ConfigLang )
+			if ( !isset($_POST['ConfigLang']) || !$_POST['ConfigLang'] )
 			{
 				$_POST['ConfigLang'] = 'en';
-				$detected .= '<tr><td colspan="2"><form action="manageheader.php" method="post">Please Select your language ' . lang_select(True) . "</form></td></tr>\n";
 			}
+
+			$detected .= '<tr><td colspan="2"><form action="manageheader.php" method="post">Please Select your language ' . lang_select(True) . "</form></td></tr>\n";
 
 			$manual = '<a href="../doc/en_US/html/admin/" target="manual">'.lang('phpGroupWare Administration Manual').'</a>';
 			$detected .= '<tr><td colspan="2"><p><strong>' . lang('Please consult the %1.', $manual) . "</strong></td></tr>\n";
@@ -317,6 +318,19 @@ HTML;
 				$detected .= lang('No ODBC/SAPDB support found. Disabling') . '<br>' . "\n";
 			}
 			*/
+
+			$supported_db_abstraction = array('adodb');
+			if (extension_loaded('pdo_pgsql'))
+			{
+				$detected .= '<li>' . lang('You appear to have PDO support enabled') . "</li>\n";
+				array_unshift($supported_db_abstraction, 'pdo');
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No PDO support found. Disabling') . "</li>\n";
+			}
+
+
 			if ( !count($supported_db) )
 			{
 				$lang_nodb = lang('Did not find any valid DB support!');
@@ -467,6 +481,28 @@ HTML;
 						}
 
 						$setup_tpl->set_var('dbtype_options', $dbtype_options);
+//---------
+						$selected = '';
+						$db_abstraction_options = '';
+						$found_dbtype = False;
+						foreach ( $supported_db_abstraction as $db_abstraction )
+						{
+							if ( $db_abstraction == $GLOBALS['phpgw_domain'][$key]['db_abstraction'] )
+							{
+								$selected = ' selected';
+								$found_db_abstraction = true;
+							}
+							else
+							{
+								$selected = '';
+							}
+							$db_abstraction_options .= <<<HTML
+								<option{$selected} value="{$db_abstraction}">$db_abstraction</option>
+
+HTML;
+						}
+						$setup_tpl->set_var('db_abstraction_options', $db_abstraction_options);
+//----------
 
 						$setup_tpl->parse('domains','domain', true);
 					}
@@ -500,6 +536,7 @@ HTML;
 				$setup_tpl->set_var('db_user','phpgroupware');
 				$setup_tpl->set_var('db_pass','your_password');
 				$setup_tpl->set_var('db_type', $supported_db[0]);
+				$setup_tpl->set_var('db_abstraction', $supported_db_abstraction[0]);
 				$setup_tpl->set_var('config_pass','changeme');
 
 				$dbtype_options = '';
@@ -511,6 +548,17 @@ HTML;
 HTML;
 				}
 				$setup_tpl->set_var('dbtype_options', $dbtype_options);
+
+				$db_abstraction_options = '';
+				foreach ( $supported_db_abstraction as $db_abstraction )
+				{
+					$db_abstraction_options .= <<<HTML
+						<option value="{$db_abstraction}">{$db_abstraction}</option>
+
+HTML;
+				}
+				$setup_tpl->set_var('db_abstraction_options', $db_abstraction_options);
+
 
 				$setup_tpl->parse('domains','domain',True);
 				$setup_tpl->set_var('domain','');
@@ -545,6 +593,8 @@ HTML;
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
 			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
 //			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
+			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'phpGroupWare');
+			$setup_tpl->set_var('default_lang', isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : phpgw::get_var('ConfigLang', 'string', 'POST'));
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
@@ -642,6 +692,7 @@ HTML;
 			$setup_tpl->set_var('lang_serverroot',lang('Server Root'));
 			$setup_tpl->set_var('lang_includeroot',lang('Include Root (this should be the same as Server Root unless you know what you are doing)'));
 			$setup_tpl->set_var('lang_adminpass',lang('Admin password to header manager'));
+			$setup_tpl->set_var('lang_system_name',lang('System name'));
 			$setup_tpl->set_var('lang_dbhost',lang('DB Host'));
 			$setup_tpl->set_var('lang_dbhostdescr',lang('Hostname/IP of database server'));
 			$setup_tpl->set_var('lang_dbname',lang('DB Name'));
@@ -652,6 +703,8 @@ HTML;
 			$setup_tpl->set_var('lang_dbpassdescr',lang('Password of db user'));
 			$setup_tpl->set_var('lang_dbtype',lang('DB Type'));
 			$setup_tpl->set_var('lang_whichdb',lang('Which database type do you want to use with phpGroupWare?'));
+			$setup_tpl->set_var('lang_db_abstraction',lang('Database abstraction'));
+			$setup_tpl->set_var('lang_whichdb_abstraction',lang('Which abstraction type do you want to use with phpGroupWare?'));
 			$setup_tpl->set_var('lang_configpass',lang('Configuration Password'));
 			$setup_tpl->set_var('lang_passforconfig',lang('Password needed for configuration'));
 			$setup_tpl->set_var('lang_persist',lang('Persistent connections'));

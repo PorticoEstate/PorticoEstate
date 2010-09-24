@@ -154,9 +154,9 @@
 	{
 		if(!$poll_id)
 		{
-			$GLOBALS['phpgw']->db->query("select max(poll_id) from phpgw_polls_desc",__LINE__,__FILE__);
+			$GLOBALS['phpgw']->db->query("select max(poll_id) as poll_id from phpgw_polls_desc",__LINE__,__FILE__);
 			$GLOBALS['phpgw']->db->next_record();
-			$poll_id = $GLOBALS['phpgw']->db->f(0);
+			$poll_id = (int)$GLOBALS['phpgw']->db->f('poll_id');
 		}
 
 		if(!verify_uservote($poll_id))

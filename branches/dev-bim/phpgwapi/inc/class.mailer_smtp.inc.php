@@ -28,6 +28,7 @@
 		*/
 		public function __construct()
 		{
+			parent::__construct(true); // enable exceptions
 			$this->IsSMTP(true);
 			$this->PluginDir = PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/';
 			$this->Host = $GLOBALS['phpgw_info']['server']['smtp_server'];

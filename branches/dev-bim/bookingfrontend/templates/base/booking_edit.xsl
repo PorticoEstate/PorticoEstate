@@ -130,6 +130,11 @@
 						</tr>
 					</xsl:for-each>
 				</table>
+							(<a href="javascript: void(0)"
+				onclick="window.open('{booking/update_link}',
+					     '',
+						   'width=1000, height=600, scrollbars=yes');
+						      return false;"><xsl:value-of select="php:function('lang', 'Mass update')" /></a>)
 			</dd>
 		</dl>
         <div class="form-buttons">

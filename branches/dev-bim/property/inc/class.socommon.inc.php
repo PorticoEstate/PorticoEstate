@@ -53,12 +53,11 @@
 			if(is_object($GLOBALS['phpgw']->db))
 			{
 				$this->db = & $GLOBALS['phpgw']->db;
-				//$this->db = CreateObject('phpgwapi.db');
 			}
 			else // for setup
 			{
 				$this->db = CreateObject('phpgwapi.db');
-
+				$this->db->fetchmode= 'ASSOC';
 				if(isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
@@ -199,10 +198,10 @@
 
 		function check_location($location_code='',$type_id='')
 		{
-			$this->db->query("SELECT count(*) FROM fm_location$type_id where location_code='$location_code'");
+			$this->db->query("SELECT count(*) as cnt FROM fm_location$type_id where location_code='$location_code'");
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				return true;
 			}
@@ -370,20 +369,6 @@
 			return $this->db->f('level');
 		}
 
-		function active_group_members($group_id = '')
-		{
-			$this->db->query("SELECT phpgw_accounts.account_id, phpgw_accounts.account_lid FROM phpgw_acl $this->join phpgw_accounts on phpgw_acl.acl_account = phpgw_accounts.account_id"
-				. " WHERE phpgw_acl.acl_location = $group_id AND phpgw_acl.acl_appname = 'phpgw_group' AND account_status = 'A'");
-
-			while ($this->db->next_record())
-			{
-				$members[] = array (
-				'account_id' => $this->db->f('account_id'),
-				'account_name' => $this->db->f('account_lid')
-				);
-			}
-			return $members;
-		}
 
 		/**
 		* Get list of accessible physical locations for current user

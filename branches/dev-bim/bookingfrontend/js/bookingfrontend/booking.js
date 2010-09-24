@@ -19,3 +19,14 @@ YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.booking.autocompleteHelper('index.php?menuaction=bookingfrontend.uigroup.index&phpgw_return_as=json&', 
                                      'field_group_name', 'field_group_id', 'group_container');
 });
+
+YAHOO.booking.newApplicationForm = function(date, _from, _to) {
+    date = date ? date : YAHOO.booking.date;
+    _from = _from ? '%20' + _from: '';
+    _to = _to ? '%20' + _to: '';
+    var url = YAHOO.booking.newApplicationUrl;
+    var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+    url += '&from_[]=' + state + _from + '&to_[]=' + state + _to;
+    window.location.href = url;
+}
+

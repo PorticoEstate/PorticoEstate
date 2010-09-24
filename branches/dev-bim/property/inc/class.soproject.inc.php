@@ -55,50 +55,51 @@
 		function select_status_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_project_status ORDER BY id ");
-
-			$i = 0;
+			$status = array();
 			while ($this->db->next_record())
 			{
-				$status_entries[$i]['id']				= $this->db->f('id');
-				$status_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$status[] = array
+				(
+					'id' 	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $status_entries;
+			return $status;
 		}
 
 		function select_branch_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_branch ORDER BY id ");
 
-			$i = 0;
+			$branch = array();
 			while ($this->db->next_record())
 			{
-				$branch_entries[$i]['id']				= $this->db->f('id');
-				$branch_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$branch[] = array
+				( 
+					'id' => $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $branch_entries;
+			return $branch;
 		}
 
 		function select_key_location_list()
 		{
 			$this->db->query("SELECT id, descr FROM fm_key_loc ORDER BY descr ");
-
-			$key_location_entries = '';
-			$i = 0;
+			$location = array();
 			while ($this->db->next_record())
 			{
-				$key_location_entries[$i]['id']				= $this->db->f('id');
-				$key_location_entries[$i]['name']			= stripslashes($this->db->f('descr'));
-				$i++;
+				$location[] = array
+				( 
+					'id' => $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $key_location_entries;
+			return $location;
 		}
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
 				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$filter	= $data['filter']?(int)$data['filter']:0;
 				$query = (isset($data['query'])?$data['query']:'');
@@ -113,7 +114,6 @@
 				$district_id	= (isset($data['district_id'])?$data['district_id']:'');
 				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 				$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
-			}
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -258,6 +258,9 @@
 
 				$cols.= ",$entity_table.user_id";
 
+				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
+				$cols_return[] = 'billable_hours';
+
 				$joinmethod = " $this->join phpgw_accounts ON ($entity_table.coordinator = phpgw_accounts.account_id))";
 				$paranthesis ='(';
 
@@ -308,6 +311,7 @@
 			{
 				return array();
 			}
+
 
 			if ($order)
 			{
@@ -374,7 +378,7 @@
 
 			if ($filter)
 			{
-				$filtermethod .= " $where fm_project.user_id={$filter}";
+				$filtermethod .= " $where fm_project.coordinator={$filter}";
 				$where= 'AND';
 			}
 
@@ -383,16 +387,21 @@
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where= 'AND';
 			}
-
+//_debug_array($criteria);
 			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
-				if(stristr($query, '.'))
+				if(stristr($query, '.') && !isset($criteria[0]['field']))
 				{
 					$query=explode(".",$query);
 					$querymethod = " $where (fm_project.loc1='" . $query[0] . "' AND fm_project.loc".$type_id."='" . $query[1] . "')";
+				}
+				else if(isset($criteria[0]['field']) && $criteria[0]['field'] == 'fm_project.p_num')
+				{
+					$query=explode(".",$query);
+					$querymethod = " $where (fm_project.p_entity_id='" . (int)$query[1] . "' AND fm_project.p_cat_id='" . (int)$query[2] . "' AND fm_project.p_num='" . (int)$query[3] . "')";
 				}
 				else
 				{
@@ -420,7 +429,7 @@
 							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
 						}
 
-						$querymethod = $where . ' ' . implode(' OR ', $_querymethod);
+						$querymethod = $where . ' (' . implode(' OR ', $_querymethod) . ')';
 						unset($_querymethod);
 					}
 					else
@@ -446,10 +455,10 @@
 //echo substr($sql,strripos($sql,'from'));
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
-				$sql2 = 'SELECT count(*) FROM (SELECT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ' GROUP BY fm_project.id) as cnt';
+				$sql2 = 'SELECT count(*) as cnt FROM (SELECT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ' GROUP BY fm_project.id) as cnt';
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->total_records = $this->db->f(0);
+				$this->total_records = $this->db->f('cnt');
 			}
 			else
 			{
@@ -457,7 +466,8 @@
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
-
+//_debug_array($sql2);
+			$project_list = array();
 			$sql .= " $group_method";
 			if(!$allrows)
 			{
@@ -465,7 +475,16 @@
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+				if($this->total_records > 200)
+				{
+					$_fetch_single = true;
+				}
+				else
+				{
+					$_fetch_single = false;
+				}
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+				unset($_fetch_single);
 			}
 
 			$project_list = array();
@@ -478,7 +497,6 @@
 					$project_list[$j][$cols_return[$i]] = stripslashes($this->db->f($cols_return[$i]));
 					$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
 				}
-
 				$location_code=	$this->db->f('location_code');
 				$location = split('-',$location_code);
 				$n=count($location);
@@ -490,8 +508,6 @@
 
 				$j++;
 			}
-
-//_debug_array($project_list);
 			return $project_list;
 		}
 
@@ -541,7 +557,7 @@
 					'contact_phone'			=> $this->db->f('contact_phone'),
 					'project_group'			=> $this->db->f('project_group'),
 					'ecodimb'				=> $this->db->f('ecodimb'),
-					'b_account_id'			=> $this->db->f('account_id'),
+					'b_account_id'			=> $this->db->f('account_group'),
 					'contact_id'			=> $this->db->f('contact_id'),
 				);
 
@@ -580,7 +596,8 @@
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
-			$this->db->query("SELECT act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id, vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status"
+			$this->db->query("SELECT act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,"
+			." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
 			." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
@@ -593,7 +610,8 @@
 					'act_mtrl_cost'		=> $this->db->f('act_mtrl_cost'),
 					'act_vendor_cost'	=> $this->db->f('act_vendor_cost'),
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
-					'status'			=> $this->db->f('status')
+					'status'			=> $this->db->f('status'),
+					'b_account_id'		=> $this->db->f('b_account_id'),
 					);
 			}
 			return $budget;
@@ -712,7 +730,7 @@
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_group,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_id,contact_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			if($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -802,11 +820,11 @@
 			}
 
 
-			$this->db->query("SELECT count(*) FROM $meter_table where location_code='$location_code' and category=1",__LINE__,__FILE__);
+			$this->db->query("SELECT count(*) as cnt FROM $meter_table where location_code='$location_code' and category=1",__LINE__,__FILE__);
 
 			$this->db->next_record();
 
-			if ( $this->db->f(0))
+			if ( $this->db->f('cnt'))
 			{
 				$this->db->query("update $meter_table set ext_meter_id='$power_meter',address='$address' where location_code='$location_code' and category='1'",__LINE__,__FILE__);
 			}
@@ -830,10 +848,10 @@
 		{
 			$prefix = 'meter';
 			$pos	= strlen($prefix);
-			$this->db->query("select max(num) from $meter_table where num $this->like ('$prefix%')");
+			$this->db->query("select max(num) as current from $meter_table where num $this->like ('$prefix%')");
 			$this->db->next_record();
 
-			$max = $this->bocommon->add_leading_zero(substr($this->db->f(0),$pos));
+			$max = $this->bocommon->add_leading_zero(substr($this->db->f('current'),$pos));
 
 			$meter_id= $prefix . $max;
 			return $meter_id;
@@ -877,7 +895,7 @@
 				'location_code'		=> $project['location_code'],
 				'address'			=> $address,
 				'ecodimb'			=> $project['ecodimb'],
-				'account_id'		=> $project['b_account_id'],
+				'account_group'		=> $project['b_account_id'],
 				'contact_id'		=> $project['contact_id']
 				);
 
@@ -939,6 +957,12 @@
 			}
 
 			$this->update_request_status($project['id'],$project['status'],$project['cat_id'],$project['coordinator']);
+			$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
+			$workorders = array();
+			while ($this->db->next_record())
+			{
+				$workorders[] = $this->db->f('id');
+			}
 
 			if (($old_status != $project['status']) || $project['confirm_status'])
 			{
@@ -972,40 +996,36 @@
 					unset($action_params);
 				}
  
-				$this->db->query("SELECT id from fm_workorder WHERE project_id=" .  (int)$project['id'] ,__LINE__,__FILE__);
-				$workorder = array();
-				while ($this->db->next_record())
-				{
-					$workorder[] = $this->db->f('id');
-				}
-
-				if ($workorder)
+				if ($workorders)
 				{
 					$historylog_workorder	= CreateObject('property.historylog','workorder');
 				}
 
-				if($old_status != $project['status'] && $close_workorders)
+				if($old_status != $project['status'])
+				{
+					$historylog->add('S',$project['id'],$project['status'], $old_status);
+					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $project['status'];
+				}
+				else if($old_status != $project['status'] && $close_workorders)
 				{
 					$historylog->add('S',$project['id'],$project['status'], $old_status);
 
 					$this->db->query("UPDATE fm_workorder SET status='closed' WHERE project_id = {$project['id']}",__LINE__,__FILE__);
 
-					if (isset($workorder) AND is_array($workorder))
-					{
-						foreach($workorder as $workorder_id)
+					foreach($workorders as $workorder_id)
 						{
 							$historylog_workorder->add('S',$workorder_id,'closed');
 						}
-					}
+
 					$receipt['notice_owner'][]=lang('Status changed') . ': ' . $project['status'];
 				}
 				elseif($project['confirm_status'])
 				{
 					$historylog->add('SC',$project['id'],$project['status']);
 
-					if (isset($workorder) && is_array($workorder)  && $close_workorders)
+					if ($close_workorders)
 					{
-						foreach($workorder as $workorder_id)
+						foreach($workorders as $workorder_id)
 						{
 							$historylog_workorder->add('SC',$workorder_id,'closed');
 						}
@@ -1028,12 +1048,21 @@
 					);
 
 
-					foreach($workorder as $workorder_id)
+					foreach($workorders as $workorder_id)
 					{
 						$action_params['id'] =  $workorder_id;
 						execMethod('property.sopending_action.close_pending_action', $action_params);
 					}
 					unset($action_params);
+				}
+			}
+
+			if(isset($project['project_group']) && $project['project_group'])
+			{
+				reset($workorders);
+				foreach($workorders as $workorder_id)
+				{
+					$this->db->query("UPDATE fm_ecobilag SET project_id = '{$project['project_group']}' WHERE pmwrkord_code = '{$workorder_id}' ",__LINE__,__FILE__);
 				}
 			}
 

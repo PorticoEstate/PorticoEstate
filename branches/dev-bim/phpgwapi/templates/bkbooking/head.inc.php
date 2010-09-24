@@ -9,6 +9,33 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
+	$config		= CreateObject('phpgwapi.config','bookingfrontend');
+	$config->read();
+
+	$tracker_id = isset($config->config_data['tracker_id']) && $config->config_data['tracker_id'] ? $config->config_data['tracker_id'] : '';
+	unset($config);
+	$tracker_code1 = <<<JS
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+JS;
+	$tracker_code2 = <<<JS
+		try 
+		{
+			var pageTracker = _gat._getTracker("{$tracker_id}");
+			pageTracker._trackPageview();
+		}
+		catch(err)
+		{
+			alert(err);
+		}
+JS;
+
+	if($tracker_id)
+	{
+		$GLOBALS['phpgw']->js->add_code('', $tracker_code1);
+		$GLOBALS['phpgw']->js->add_code('', $tracker_code2);
+	}
+
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
@@ -82,7 +109,10 @@
 	}
 
 	$_navbar_config			= json_encode($navbar_config);
-
+	//TODO Sigurd 8.july 2010: This one should be moved to frontend config
+	$config	= CreateObject('phpgwapi.config','booking');
+	$config->read();
+	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
 
 	$app = lang($app);
 	$tpl_vars = array
@@ -96,7 +126,8 @@
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'navbar_config' => $_navbar_config,
 		'lbl_search'   	=> lang('Search'),
-		'header_search_class'	=> ($_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'logofile'		=> $logofile_frontend,
+		'header_search_class'	=> (isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())
@@ -108,6 +139,19 @@
 	{
 		$tpl_vars['login_text'] = lang('Login');
 		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
+		$config		= CreateObject('phpgwapi.config','bookingfrontend');
+		$config->read();
+		$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
+		$custom_login_url = isset($config->config_data['custom_login_url']) && $config->config_data['custom_login_url'] ? $config->config_data['custom_login_url'] : '';
+		if($login_parameter)
+		{
+			$login_parameter = ltrim($login_parameter, '&');
+			$tpl_vars['login_url'] .= "&{$login_parameter}";
+		}
+		if($custom_login_url)
+		{
+			$tpl_vars['login_url'] = $custom_login_url;
+		}
 	}
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

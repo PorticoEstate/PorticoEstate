@@ -63,8 +63,7 @@
 			$this->so			= CreateObject('property.sos_agreement');
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->custom 		= createObject('property.custom_fields');
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name 		= 'fm_vendor';
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.vendor');
 			$this->cats->supress_info	= true;
 
 			if ($session)
@@ -477,13 +476,16 @@
 		{
 			$values = $this->so->get_budget($agreement_id);
 
-			$this->cats->app_name		= 'property.project';
+			$this->cats->set_appname('property', '.project');
+
 			foreach($values as & $entry)
 			{
 				$category = $this->cats->return_single($entry['cat_id']);
 				$entry['category']		= $category[0]['name'];
 			}
-			$this->cats->app_name 		= 'fm_vendor';	
+
+			$this->cats->set_appname('property', '.vendor');
+
 			return $values;		
 		}
 

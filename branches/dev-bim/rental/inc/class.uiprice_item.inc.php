@@ -4,10 +4,12 @@ phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.soprice_item');
 phpgw::import_class('rental.socontract_price_item');
 phpgw::import_class('rental.socontract');
+phpgw::import_class('rental.soadjustment');
 
 include_class('rental', 'price_item', 'inc/model/');
 include_class('rental', 'contract_price_item', 'inc/model/');
 include_class('rental', 'contract', 'inc/model/');
+include_class('rental', 'adjustment', 'inc/model/');
 
 class rental_uiprice_item extends rental_uicommon
 {
@@ -18,18 +20,21 @@ class rental_uiprice_item extends rental_uicommon
 			'query' => true,
 			'view'		=> true,
 			'edit'		=> true,
-			'set_value' => true
+			'set_value' => true,
+			'manual_adjustment' => true,
+			'adjust_price' => true
 	);
 
 	public function __construct()
 	{
 		parent::__construct();
-		self::set_active_menu('admin::rental::contract_type_list');
+		//self::set_active_menu('admin::rental::contract_type_list');
+		self::set_active_menu('rental::contracts::price_item_list');
 	}
 
 	public function index()
 	{
-		if(!$this->isAdministrator())
+		if(!$this->isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
@@ -42,7 +47,7 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function view()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
@@ -57,7 +62,7 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function edit()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
@@ -72,8 +77,11 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item->set_title(phpgw::get_var('title'));
 			$price_item->set_agresso_id(phpgw::get_var('agresso_id'));
 			$price_item->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
+			$price_item->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
+			$price_item->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
+			$price_item->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
-			if ($price_item->store()) {
+			if (rental_soprice_item::get_instance()->store($price_item)) {
 				return $this->viewedit(true, $price_item, lang('messages_saved_form'));
 			} else {
 				return $this->viewedit(true, $price_item, '', lang('messages_form_error'));
@@ -89,17 +97,19 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function add()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
 		}
 			
 		$title = phpgw::get_var('price_item_title');
+		$responsibility_id = phpgw::get_var('responsibility_id');
 		if ($title) {
 			$price_item = new rental_price_item();
 			$price_item->set_title($title);
-			if ($price_item->store()) {
+			$price_item->set_responsibility_id($responsibility_id);
+			if (rental_soprice_item::get_instance()->store($price_item)) {
 				// The object was stored, forward to edit it further
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiprice_item.edit', 'id' => $price_item->get_id()));
 			}
@@ -110,9 +120,8 @@ class rental_uiprice_item extends rental_uicommon
 
 	public function set_value()
 	{
-		if(!self::isAdministrator())
+		if(!self::isExecutiveOfficer())
 		{
-			$this->render('permission_denied.php');
 			return;
 		}
 
@@ -122,9 +131,7 @@ class rental_uiprice_item extends rental_uicommon
 
 		$price_item = rental_socontract_price_item::get_instance()->get_single($id);
 		$price_item->set_field($field, $value);
-
-		$price_item->store();
-		print_r($price_item);
+		rental_socontract_price_item::get_instance()->store($price_item);
 
 	}
 
@@ -152,9 +159,16 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function query()
 	{
+		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+		{
+			$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+		}
+		else {
+			$user_rows_per_page = 10;
+		}
 		// YUI variables for paging and sorting
 		$start_index	= phpgw::get_var('startIndex', 'int');
-		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
+		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 		$sort_field		= phpgw::get_var('sort');
 		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 		//Create an empty result set
@@ -180,8 +194,17 @@ class rental_uiprice_item extends rental_uicommon
 				}
 				break;
 			case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
+				$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
+				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
+			case 'manual_adjustment':
+				$filters = array('price_item_status' => 'active','is_adjustable' => 'false');
+				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
 			default:
-				$filters = array();
+				//$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
 				$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
@@ -262,6 +285,77 @@ class rental_uiprice_item extends rental_uicommon
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiprice_item.edit', 'id' => $value['id'])));
 				$value['labels'][] = lang('edit');
+		}
+	}
+	
+	public function manual_adjustment()
+	{
+		if(!$this->isExecutiveOfficer())
+		{
+			$this->render('permission_denied.php');
+			return;
+		}
+		self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');		
+		$this->render('admin_price_item_manual_adjustment.php');
+	}
+	
+	public function adjust_price()
+	{
+		if(!self::isExecutiveOfficer())
+		{
+			$this->render('permission_denied.php');
+			return;
+		}
+		$id = (int)phpgw::get_var('price_item_id');
+		$new_price = phpgw::get_var('new_price');
+		$new_price = str_replace(',','.',$new_price);
+		
+		if($new_price != null && is_numeric($new_price)){
+			$price_item = rental_price_item::get($id);
+			$price_item->set_price($new_price);
+			if (rental_soprice_item::get_instance()->store($price_item)) {
+				$adjustment = new rental_adjustment();
+				$adjustment->set_price_item_id($price_item->get_id());
+				$adjustment->set_new_price($new_price);
+				$adjustment->set_percent(0);
+				$adjustment->set_responsibility_id($price_item->get_responsibility_id());
+				$adjustment->set_is_manual(true);
+				$adjustment->set_adjustment_date(time());
+				rental_soadjustment::get_instance()->store($adjustment);
+				$message[] = "Priselement med Agresso id {$price_item->get_agresso_id()} er oppdatert med ny pris {$new_price}";
+				//update affected contract_price_items
+				$no_of_contracts_updated = rental_soprice_item::get_instance()->adjust_contract_price_items($id, $new_price);
+				if($no_of_contracts_updated > 0){
+					$message[] = $no_of_contracts_updated .' priselementer p&aring; kontrakter er oppdatert';
+				}
+				else{
+					$message[] = "Ingen kontrakter er oppdatert";
+				}
+				$data = array
+				(
+					'price_item_id' => $id,
+					'message' => $message
+				);
+				self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
+				$this->render('admin_price_item_manual_adjustment.php', $data);
+			} else {
+				$data = array
+				(
+					'price_item_id' => $id,
+					'error' => $error
+				);
+				self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
+				$this->render('admin_price_item_manual_adjustment.php', $data);
+			}
+		}
+		else{
+			$data = array
+			(
+				'price_item_id' => $id,
+				'error' => lang('price_not_numeric')
+			);
+			self::set_active_menu('rental::contracts::price_item_list::manual_adjustment');	
+			$this->render('admin_price_item_manual_adjustment.php', $data);
 		}
 	}
 }

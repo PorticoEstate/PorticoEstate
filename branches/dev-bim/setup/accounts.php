@@ -224,7 +224,7 @@
 
 		$errors = validate_admin($username, $passwd, $passwd2, $fname, $lname);
 		
-		if(in_array($username, array('admin', 'default')))
+		if(in_array($username, array('admins', 'default')))
 		{
 			$errors[] = lang('That loginid has already been taken');
 		}
@@ -305,7 +305,7 @@
 			$group = array('username' => 'default');
 			$defaultgroupid = add_account($group, 'g', array(), $modules);
 
-			$group = array('username' => 'admin');
+			$group = array('username' => 'admins');
 			$admingroupid   = add_account($group, 'g', array(), array('admin'));
 
 			insert_default_prefs($defaultgroupid);	// set some default prefs

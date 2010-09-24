@@ -31,6 +31,8 @@
 	create_select_box('Theme (colors/fonts) Selection','theme',$_themes,
 		'A theme defines the colors and fonts used by the template.');
 
+
+/*
 	$format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	$format = ($format ? $format : 'Y/m/d') . ', ';
 	if ($GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'] == '12')
@@ -48,6 +50,17 @@
 	}
 	create_select_box('Time zone offset','tz_offset',$tz_offset,
 		'How many hours are you in front or after the timezone of the server.<br>If you are in the same time zone as the server select 0 hours, else select your locale date and time.');
+
+*/
+	$timezone_identifiers = DateTimeZone::listIdentifiers();
+
+	$timezone = array();
+	foreach($timezone_identifiers as $identifier)
+	{
+		$timezone[$identifier] = $identifier;
+	}
+	create_select_box('Time zone','timezone',$timezone,
+		'A time zone is a region of the earth that has uniform standard time, usually referred to as the local time. By convention, time zones compute their local time as an offset from UTC');
 
 	$date_formats = array
 	(

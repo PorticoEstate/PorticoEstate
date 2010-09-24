@@ -35,9 +35,8 @@
 		);
 
 
-		function sms_boautoreply($session=false)
+		function __construct($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('sms.soautoreply');
 			$this->bocommon 	= CreateObject('sms.bocommon');
 
@@ -55,14 +54,7 @@
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 			$allrows= phpgw::get_var('allrows', 'bool');
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->start = $start ? $start : 0;
 
 			if(array_key_exists('query',$_POST) || array_key_exists('query',$_GET))
 			{

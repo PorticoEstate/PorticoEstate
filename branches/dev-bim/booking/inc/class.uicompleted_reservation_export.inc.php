@@ -19,7 +19,7 @@ phpgw::import_class('booking.uicommon');
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation_export');
 			$this->generated_files_bo = CreateObject('booking.bocompleted_reservation_export_file');
-			self::set_active_menu('booking::invoice_exports');
+			self::set_active_menu('booking::invoice_center::exported_files');
 			$this->url_prefix = 'booking.uicompleted_reservation_export';
 		}
 		
@@ -50,6 +50,13 @@ phpgw::import_class('booking.uicommon');
 			$filter_to = phpgw::get_var('filter_to', 'string', 'REQUEST', null);
 			$filter_params = is_null($filter_to) ? array() : array('filter_to' => $filter_to);
 			
+            if (!($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')
+				|| $this->bo->has_role(booking_sopermission::ROLE_MANAGER)))			
+            {
+    			$this->flash_form_errors(array('access_denied' => lang("Access denied")));
+    			$this->redirect_to('index', $filter_params);
+            }
 			//This will read all of the list data using the values of the standard search filters in the ui index view
 			$exports = $this->bo->read_all();
 			
@@ -94,15 +101,15 @@ phpgw::import_class('booking.uicommon');
 							),
 						),
 					),
-					'list_actions' => array(
-						'item' => array(
-							array(
-								'type' => 'submit',
-								'name' => 'generate_files',
-								'value' => lang('Generate files').'...',
-							),
-						)
-					),
+#					'list_actions' => array(
+#						'item' => array(
+#							array(
+#								'type' => 'submit',
+#								'name' => 'generate_files',
+#								'value' => lang('Generate files').'...',
+#							),
+#						)
+#					),
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
@@ -165,7 +172,20 @@ phpgw::import_class('booking.uicommon');
 					)
 				)
 			);
-			
+            if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+			|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking')
+            || $this->bo->has_role(booking_sopermission::ROLE_MANAGER))			
+            {
+            $data['form']['list_actions']= array(
+				'item' => array(
+					array(
+						'type' => 'submit',
+						'name' => 'generate_files',
+						'value' => lang('Generate files').'...',
+					),
+				)
+            );
+            }
 			$data['filters'] = extract_values($_GET, array("filter_to"));
 			
 			$this->render_template('datatable', $data);
@@ -213,11 +233,18 @@ phpgw::import_class('booking.uicommon');
 
 		public function index_json()
 		{
+			$this->db = $GLOBALS['phpgw']->db;
 			$exports = $this->bo->read();
 			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
 			foreach($exports["results"] as &$export) {
 				$export = $this->bo->initialize_entity($export);
 				$this->add_default_display_data($export);
+
+				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export['created_by_name']."'";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					$export['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
+				}
 			}
 			
 			$results = $this->yui_results($exports);

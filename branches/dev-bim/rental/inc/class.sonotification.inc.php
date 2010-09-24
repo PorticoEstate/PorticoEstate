@@ -64,8 +64,11 @@ class rental_sonotification extends rental_socommon
 	
 	protected function populate(int $notification_id, &$notification)
 	{
+		if(!isset($notification_id) || $notification_id < 1){
+			$notification_id = $this->unmarshal($this->db->f('notification_id', true), 'int');
+		}
 		$notification =  new rental_notification(
-			$this->unmarshal($this->db->f('notification_id', true), 'int'), 
+			$notification_id, 
 			$this->unmarshal($this->db->f('account_id', true), 'int'),
 			$this->unmarshal($this->db->f('location_id', true), 'int'),
 			$this->unmarshal($this->db->f('contract_id', true), 'int'), 
@@ -152,7 +155,7 @@ class rental_sonotification extends rental_socommon
 		{
 			$result_id = $this->unmarshal($this->db->f('id', true), 'int'); // The id of object
 			// Create notification object
-			$notification = $this->populate($result_id, $notification);;
+			$notification = $this->populate($result_id, $notification);
 
 			// Calculate timestamps the notification date, target date (default: today) and last notified
 			$notification_date = date("Y-m-d",$notification->get_date());

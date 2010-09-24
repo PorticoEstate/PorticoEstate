@@ -31,9 +31,16 @@
 		
 		public function query()
 		{
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else {
+				$user_rows_per_page = 10;
+			}
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('startIndex', 'int');
-			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', 10);
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 			$sort_field		= phpgw::get_var('sort');
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			// Form variables
@@ -45,6 +52,13 @@
 			
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
+			
+			$exp_param 	= phpgw::get_var('export');
+			$export = false;
+			if(isset($exp_param)){
+				$export=true;
+				$num_of_objects = null;
+			}
 			
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
@@ -66,7 +80,11 @@
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'all_composites': // ... all composites, filters (active and vacant)
-					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'));
+					phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
+					phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
+					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
+					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
+					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'has_contract' => phpgw::get_var('has_contract'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
@@ -106,11 +124,13 @@
 				{
 					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
 					{
+						// adding allowed contract_types for context menu creation
 						$create_types[] = array($id, $label);
 					}
 				}
 			}
 
+			if(!$export){
 			//Add action column to each row in result table
 			array_walk(
 				$result_data['results'],
@@ -122,6 +142,7 @@
 					$create_types										// [4] Types of contract to create
 				)
 			);
+			}
 
 			return $this->yui_results($result_data, 'total_records', 'results');
 		}
@@ -160,13 +181,13 @@
 						$value['labels'][] = lang('remove');
 					}
 					break;
-				case 'not_included_composites':
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
-					$value['labels'][] = lang('add');
+				case 'not_included_composites':	//does not show unless editable
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.view', 'id' => $value['id'])));
 					$value['labels'][] = lang('show');
+					$value['ajax'][] = true;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_composite', 'composite_id' => $value['id'], 'contract_id' => $contract_id)));
+					$value['labels'][] = lang('add');
 					break;
 				case 'included_areas':
 					$value['ajax'][] = false;
@@ -256,7 +277,7 @@
 					array (
 						'composite' 	=> $composite,
 						'editable' => false,
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index'))
+						'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes'))
 					)
 				);	
 			}
@@ -298,7 +319,7 @@
 				{
 					$composite->set_name(phpgw::get_var('name'));
 					$composite->set_custom_address_1(phpgw::get_var('address_1'));
-					$composite->set_has_custom_address($composite->get_custom_address_1() != null && $composite->get_custom_address_1() != '' ? true : false);
+					$composite->set_has_custom_address(phpgw::get_var('has_custom_address') == 'on' ? true : false);
 					$composite->set_custom_house_number(phpgw::get_var('house_number'));
 					$composite->set_custom_address_2(phpgw::get_var('address_2'));
 					$composite->set_custom_postcode(phpgw::get_var('postcode'));
@@ -322,7 +343,7 @@
 					'editable' => true,
 					'message' => isset($message) ? $message : phpgw::get_var('message'),
 					'error' => isset($error) ? $error : phpgw::get_var('error'),
-					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index')),
+					'cancel_link' => self::link(array('menuaction' => 'rental.uicomposite.index', 'populate_form' => 'yes')),
 				)	
 			);
 			

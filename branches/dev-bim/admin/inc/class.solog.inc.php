@@ -53,10 +53,10 @@
 		{
 			$where = $this->test_account_id($account_id);
 
-			$this->db->query("SELECT COUNT(*) FROM phpgw_log $where", __LINE__, __FILE__);
+			$this->db->query("SELECT COUNT(*) as cnt FROM phpgw_log $where", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 		
 		function purge_log($account_id)

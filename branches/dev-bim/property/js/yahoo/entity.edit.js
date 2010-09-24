@@ -22,3 +22,20 @@ YAHOO.util.Event.addListener(window, "load", function()
 			loader.require("anyone");
 		    loader.insert();
 		});
+
+YAHOO.util.Event.addListener(window, "load", function()
+{
+		lightbox = new YAHOO.widget.Dialog("test",
+		{
+			width : "600px",
+			fixedcenter : true,
+			visible : false,
+			modal : false
+			//draggable: true,
+			//constraintoviewport : true
+		});
+
+		lightbox.render();
+
+		YAHOO.util.Dom.setStyle('test', 'display', 'block');
+});

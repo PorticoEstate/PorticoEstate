@@ -3,18 +3,20 @@
 //--------------------------------------------------------
 
 		//define SelectButton
-	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
+	 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
 	 	var selectsButtons = [
 		{order:0, var_URL:'year',		name:'btn_year',		style:'',dependiente:[]},
 		{order:1, var_URL:'district_id',name:'btn_district_id',	style:'',dependiente:[]},
 		{order:2, var_URL:'cat_id',		name:'btn_cat_id',		style:'',dependiente:[]},
-		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]}
+		{order:3, var_URL:'grouping',	name:'btn_grouping',	style:'',dependiente:[]},
+		{order:4, var_URL:'dimb_id',	name:'btn_dimb_id',		style:'',dependiente:[]}
 		]
 
 		// define buttons
-		var oNormalButton_0;
+		var oNormalButton_0, oNormalButton_1;
 		var normalButtons = [
-			{order:0, name:'btn_search',funct:"onSearchClick"}
+			{order:0, name:'btn_search',funct:"onSearchClick"},
+			{order:2, name:'btn_export', funct:"onDownloadClick"}
 		]
 
 		// define Link Buttons
@@ -94,6 +96,21 @@
 		{
 			if(flag_particular_setting=='init')
 			{
+				//year
+				index = locate_in_array_options(0,"value",path_values.year);
+				if(index)
+				{
+					oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+				}
+				//dimb
+				index = locate_in_array_options(4,"value",path_values.dimb_id);
+				if(index)
+				{
+					oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+				}
+
+
+
 				//locate (asign ID) to datatable
 				tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 				tableYUI.setAttribute("id","tableYUI");
@@ -120,7 +137,7 @@
 			//Create ROW
 			newTR = document.createElement('tr');
 			
-			td_empty(4);
+			td_empty(5);
 			td_sum(getSumPerPage("hits_ex",0));
 			td_empty(1);
 			td_sum(getSumPerPage("budget_cost_ex",0));

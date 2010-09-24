@@ -38,8 +38,8 @@
 	{
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 		
-		var $old_files_deleted;
 		var $debug;
+		var $client_code = 14;
 		
 		function  __construct()
 		{
@@ -55,7 +55,14 @@
 
 		protected function select_vouchers_to_transfer()
 		{
-			$sql= "SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL";
+			if(isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval']== 1)
+			{
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL';
+			}
+			else
+			{
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL';
+			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			$vouchers = array();
 			while ($this->db->next_record())
@@ -223,6 +230,7 @@
 					'external_ref'			=> $this->db->f('external_ref'),
 				);
 			}
+
 			return $invoice_rollback;
 		}
 
@@ -264,8 +272,8 @@
 				$BilagOverf['item_type'],
 				$BilagOverf['item_id'],
 				$BilagOverf['external_ref'],
-				$this->db->money_format($BilagOverf['belop']),
-				$this->db->money_format($BilagOverf['godkjentbelop'])
+				$BilagOverf['belop'],
+				$BilagOverf['godkjentbelop']
 			);
 			
 			$values	= $this->db->validate_insert($values);
@@ -279,13 +287,14 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-   	   	//Oppdater beløp på arbeidsordre operator="-" ved tilbakerulling
+   	   	//Oppdater belÃ¸p pÃ¥ arbeidsordre operator="-" ved tilbakerulling
 		protected function correct_actual_cost($order_id, $Belop, $actual_cost_field, $operator)
 		{
 			$sql = "SELECT type FROM fm_orders WHERE id='$order_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 
+			$table = '';
 			$update_paid = '';
 			switch($this->db->f('type'))
 			{
@@ -307,6 +316,10 @@
 			}
 
 			$Belop = $Belop/100;
+			if(!$table)
+			{
+				throw new Exception('ERROR: the order id seems to not correspond with any order type');
+			}
 
 			$sql="UPDATE $table SET $actual_cost_field=$actual_cost_field $operator $Belop $update_paid WHERE id='$order_id'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -316,7 +329,7 @@
 		{
 //			$download = 'on';
 //			$download = False;
-			$this->debug=True;
+//			$this->debug=True;
 
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
@@ -327,7 +340,7 @@
 				$this->log_start($batchid);
 			}
 
-			//Velg ut alle perioder som har bilag som skal overføres
+			//Velg ut alle perioder som har bilag som skal overfÃ¸res
 			$vouchers = $this->select_vouchers_to_transfer();
 
 			foreach ($vouchers as $voucher_id)
@@ -346,7 +359,10 @@
 		
 		protected function errorhandler($batchid,$error_desr)
 		{
+			if($this->db->Transaction)
+			{
 			$this->db->transaction_abort();
+			}
 
 			$meld = $error_desr;
 		
@@ -415,14 +431,11 @@
 			return $receipt;
 		}
 				
-		protected function LagFilnavn ($batchid)
+		protected function LagFilnavn ($external_ref)
 		{	
 			$fil_katalog = $this->config->config_data['export_path'];
 			$continue = True;
-			$i = 1;
-			do
-			{
-				$Filnavn = $fil_katalog . '/x114_' . date("dmy") . '_' . sprintf("%02s",$i) . '.TXT';
+			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
 
 				//Sjekk om filen eksisterer
 				If (!file_exists($Filnavn))
@@ -430,21 +443,24 @@
 					return $Filnavn;
 				}
 
-				$i++;
-			}
-			while  ($continue);
-			
-			//Ingen løpenr er ledige, gi feilmelding
 			return False;
 		}
 		
 		protected function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
 		{
+			
+			//Velg ut alle hoved bilag som skal overfÃ¸res
+
+			$oRsBilag = $this->get_voucher($voucher_id);
+
+			if(isset($oRsBilag[0]['external_ref']) && $oRsBilag[0]['external_ref'])
+			{
 			//Bestem filnavn
-			$Filnavn = $this->LagFilnavn($batchid);
+				$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_ref']);
+
 			if (!$Filnavn)
 			{
-				$message='LagFilnavn: Alle loepenr for filnavn er i bruk';
+					$message='LagFilnavn: Filnavn er i bruk';
 				$this->errorhandler($batchid,$message);
 				return $message;
 			}
@@ -466,13 +482,11 @@
 					return $message;
 				}
 			}
+			}
 			
-			//Velg ut alle hoved bilag som skal overføres
+			$antall = count($oRsBilag);
 
 			$this->db->transaction_begin();
-
-			$oRsBilag = $this->get_voucher($voucher_id);
-			$antall = count($oRsBilag);
 
 			$tranfser_bilag = array($oRsBilag[0]['bilagsnr']);
 			$localtime = phpgwapi_datetime::user_localtime();
@@ -498,15 +512,17 @@
 				0 => array
 				(
 					'TRANSACTIONTYPE'			=> 'X114',
+					'KEY'						=> '', //dummy
 					'VOUCHERID'					=> $oRsBilag[0]['bilagsnr'], // 70903541
 					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
 					'PROFILE'					=> 'TRAINVPOMA',
-					'CLIENT.CODE'				=> $client_code, //14,
+					'CLIENT.CODE'				=> $this->client_code, //14,
 					'POATTRIB1'					=> '', //dummy
 					'POATTRIB2'					=> '', //dummy
 					'POPURCHASER'				=> '', //dummy
+					'PREVOUCHERID'				=> '', //dummy
 					'PURCHASEORDERNO'			=> $oRsBilag[0]['order_id'], // 1409220008
-					'PURCHASEORDEROWNER.CODE'	=> $purchaseorderower, // 100644
+					'PURCHASEORDEROWNER.CODE'	=> $oRsBilag[0]['spvend_code'], // 100644
 					'PURCHASEORDERSTATUS.CODE'	=> 'OK',
 					'GENERALCOMMENT'			=> $comment, // Denne er fakturert i 3 deler OBS OBS!
 				)
@@ -514,14 +530,7 @@
 
 			$accountline = array();
 
-			if($force_period_year)
-			{
-				$periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$oRsBilag[0]['periode']));
-			}
-			else
-			{
-				$periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[0]['fakturadato'])) . sprintf("%02d",$oRsBilag[0]['periode']));
-			}
+			$periode	= $oRsBilag[0]['periode'];
 
 			foreach ($oRsBilag as $line)
 			{
@@ -561,7 +570,7 @@
 
 				if($line['order_id'])
 				{
-					//Oppdater beløp på arbeidsordre
+					//Oppdater belÃ¸p pÃ¥ arbeidsordre
 					if ($download=='on')
 					{
 						if ($line['dimd'] % 2 == 0)
@@ -581,10 +590,10 @@
 					}
 				}
 
-
 				$oRsOverfBilag				= $line;
-				$oRsOverfBilag['filnavn']	= basename($Filnavn);
+				$oRsOverfBilag['filnavn']	= $Filnavn? basename($Filnavn) : date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
 				$oRsOverfBilag['ordrebelop']= $line[$BelopFelt];
+				$oRsOverfBilag['pmwrkord_code'] = $line['order_id'];
 
 				//Kopier verdier  til fm_ecobilagoverf
 				if ($download=='on' && !$this->debug)
@@ -612,7 +621,7 @@
 					return $message;
 				}
 
-				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: Fødselsnr, type: c50, plass: 430 - 479
+				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: FÃ¸dselsnr, type: c50, plass: 430 - 479
 				$Bank_Postgiro_kontonr = sprintf("%-35s",str_replace(" ","",$vendor_info['konto_nr']));// verdi: konto_nr, type: c35, plass: 740 - 774
 
 */
@@ -630,9 +639,9 @@
 				$accountline[] = array
 				(
 					'TRANSACTIONTYPE'		=> 'R114',
-					'ACCOUNTLINK.CODE'		=> $account_link, // 4180
+					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
 					'AMOUNT'				=> $amount, // 312500
-					'APPROVER.FULLNAME'		=> $approver, //Batch 04 - 14
+					'APPROVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], //Batch 04 - 14
 					'DIMENSION.D1.CODE'		=> $line['dima'], // 1111
 					'DIMENSION.D2.CODE'		=> $line['dimb'], // 62000
 					'DIMENSION.D3.CODE'		=> $dim3, // dummy
@@ -641,14 +650,14 @@
 					'DIMENSION.D6.CODE'		=> $dim6, // dummy
 					'DIMENSION.D7.CODE'		=> $dim7, // dummy
 					'DIMENSION.D8.CODE'		=> $dim8, // dummy
-					'POITEMDESCRIPTION'		=> $descr, // Sugerør,plast,fleksibelt,20cm
+					'POITEMDESCRIPTION'		=> $descr, // SugerÃ¸r,plast,fleksibelt,20cm
 					'POITEMNUMBER'			=> $itemnumber, //200200
-					'POITEMTYPE'			=> $itemtype, // A = Item, B = Special Product (SP), C = Text based  (Misc.)
+					'POITEMTYPE'			=> 'C', // A = Item, B = Special Product (SP), C = Text based  (Misc.)
 					'POLINENUMBER'			=> $linenumber, // 10
-					'RECEIVER.FULLNAME'		=> $receiver, // Batch 04 - 14
+					'RECEIVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], // Batch 04 - 14
 					'STATUS'				=> 5,
 					'SUBACCOUNT'			=> $periode, //200905 Accounting period YYYYMM
-					'ALLOCATION.KEY'		=> $distribution_code, //0
+					'ALLOCATION.KEY'		=> 0,//$distribution_code, //0
 					'ALLOCATION.PERIOD'		=> '' //dummy
 				);		
 
@@ -696,8 +705,7 @@
 			$buffer = $xmltool->import_var('INVOICEIMPORT', $export_data,true, true);
 			$buffer = str_replace('<INVOICEIMPORT>', '<INVOICEIMPORT TYPE="INVOICE">', $buffer);
 			
-_debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
-			echo $buffer; die();
+//			echo $buffer; 
 //-- fortsett her....									
 
 			//Slett bilaget i fm_ecobilag
@@ -708,26 +716,32 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 				$this->soXport->log_transaction($batchid,$voucher_id,lang('Invoice tranferred'));
 			}
 				
-			//Fullfør transaksjon
-			if ($download=='on' && !$this->debug):
+			//FullfÃ¸r transaksjon
+			if ($download=='on' && !$this->debug)
 			{
+				$file_written = true;
+
+			// aktiver neste blokk for a skrive filer for basware
+			// -- Start
+			/* 
+				$file_written = false;
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp,$buffer);
 				
 				if(fclose($fp))
 				{
-					$file_written=True;
+					$file_written=true;
 				}
-
-				if($file_written && $this->config->config_data['invoice_export_method']!='ftp'):
+			*/
+			// -- END
+				if( $file_written && $this->config->config_data['invoice_export_method'] != 'ftp' )
 				{
-					$transfer_ok = True;
+					$transfer_ok = true;
 				}
-				elseif($file_written):
+				else if($file_written)
 				{
 					$transfer_ok = $this->transfer($buffer,$Filnavn,$batchid,$tranfser_bilag);
 				}
-				endif;
 
 				if($transfer_ok)
 				{
@@ -740,20 +754,19 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';				
 				}
 			}
-			else:
+			else
 			{
 				$message = $buffer;
 				$this->db->transaction_abort();
 
 			}
-			endif;
 
 			return $message;
 		}
 		
     	protected function get_voucher($bilagsnr)
     	{
-  	  		$bilagsnr = (int)$bilagsnr;
+  	  		$bilagsnr = $bilagsnr;
   	  		$sql= "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser ON fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr = {$bilagsnr}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -792,7 +805,9 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 					'splitt'				=> $this->db->f('splitt'),
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
-					'saksbehandler'			=> $this->db->f('saksbehandler')
+					'saksbehandler'			=> $this->db->f('saksbehandler'),
+					'external_ref'			=> $this->db->f('external_ref'),
+					'kostra_id'				=> $this->db->f('kostra_id')
 				);
 			}
 
@@ -853,7 +868,7 @@ _debug_array(date('H:i:s', phpgwapi_datetime::user_localtime()));
 		{
 			$host = $this->config->config_data['invoice_ftp_host'];
 			$user = $this->config->config_data['invoice_ftp_user'];
-			$pass = $this->config->config_data['invoice_ftp_pw'];
+			$pass = $this->config->config_data['invoice_ftp_password'];
 			
 //			echo "connecting to $host with $user and $pass\n <br>";
 			$ftp = ftp_connect($host);

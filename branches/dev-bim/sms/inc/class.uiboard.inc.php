@@ -30,16 +30,13 @@
 			);
 
 
-		function sms_uiboard()
+		function __construct()
 		{
-
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
 		//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-		//	$this->bo				= CreateObject('sms.boconfig',true);
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 			= '.board';
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -47,8 +44,8 @@
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 
-			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
+			$this->db 					= clone $GLOBALS['phpgw']->db;
+
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::board';
 		}
 
@@ -97,7 +94,7 @@
 				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.view', 'board_id'=> $this->db->f('board_id'))) . ">v</a>] ";
 				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.edit', 'board_id'=> $this->db->f('board_id'))) . ">e</a>] ";
 				$content .= "[<a href=" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uiboard.delete', 'board_id'=> $this->db->f('board_id'))) . ">x</a>] ";
-			    $content .= "<b>Code:</b> " . $this->db->f('board_code') . "&nbsp;&nbsp;<b>Forward:</b> " . stripslashes($this->db->f('board_forward_email')) . "&nbsp;&nbsp;<b>User:</b> $owner<br>";
+			    $content .= "<b>Code:</b> " . $this->db->f('board_code') . "&nbsp;&nbsp;<b>Forward:</b> " . $this->db->f('board_forward_email',true) . "&nbsp;&nbsp;<b>User:</b> $owner<br>";
 			}
 
 			$content .= "
@@ -275,7 +272,7 @@
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featboard,'board_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featboard','board_id');
 
 					$this->db->transaction_commit();
 
@@ -335,8 +332,8 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$board_code = $this->db->f('board_code');
-			$email = $this->db->f('board_forward_email');
-			$template = $this->db->f('board_pref_template');
+			$email = $this->db->f('board_forward_email',true);
+			$template = $this->db->f('board_pref_template',true);
 
 			$add_data = array(
 				'menuaction'	=> 'sms.uiboard.edit_yes',
@@ -346,7 +343,7 @@
 
 			$add_url = $GLOBALS['phpgw']->link('/index.php',$add_data);
 
-			$board_url = stripslashes($this->db->f('board_url'));
+			$board_url = $this->db->f('board_url',true);
 
 			$content .= "
 				<p>
@@ -507,4 +504,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-

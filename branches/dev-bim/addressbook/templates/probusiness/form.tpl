@@ -5,7 +5,25 @@
 		<tr>
 		 {principal_tabs_inc}
 		</tr>
-			<form action="{action}" method="post" name="body_form" cellspacing="0" cellpadding="0" {onsubjs}>
+			<form action="{action}" method="post" name="body_form" cellspacing="0" cellpadding="0">
+			<input type="hidden" name="bname" />
+			<input type="hidden" name="_submit" />
+			<script language="JavaScript" type="text/javascript">
+			<!--
+				function changetab(selectedtype)
+				{
+					document.body_form.bname.value = selectedtype ;
+					document.body_form.submit();
+				}
+				function submit_form(selectedtype)
+				{
+					process_list('{onsubjs1}', '{onsubjs2}');
+					document.body_form._submit.value = selectedtype ;
+					document.body_form.submit();
+				}
+			-->
+			</script>
+
 				<tr>
 				 {tab}
 				</tr>

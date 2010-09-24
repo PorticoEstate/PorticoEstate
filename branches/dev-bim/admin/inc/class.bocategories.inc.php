@@ -12,7 +12,7 @@
 	/* $Id$ */
 	/* $Source$ */
 
-	class bocategories
+	class admin_bocategories
 	{
 		var $cats;
 
@@ -23,15 +23,17 @@
 		var $filter;
 		var $cat_id;
 		var $total;
+		var $allrows;
 
 		var $debug = False;
 
-		function bocategories()
+		function __construct()
 		{
 			$appname = phpgw::get_var('appname');
+			$location = phpgw::get_var('location');
 			if ( $appname )
 			{
-				$this->cats = CreateObject('phpgwapi.categories', -1, $appname);
+				$this->cats = CreateObject('phpgwapi.categories', -1, $appname, $location);
 			}
 			else
 			{
@@ -40,22 +42,16 @@
 
 			$this->read_sessiondata();
 
-			$start  = phpgw::get_var('start', 'int');
+			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query  = phpgw::get_var('query');
 			$sort   = phpgw::get_var('sort');
 			$order  = phpgw::get_var('order');
 			$cat_id = phpgw::get_var('cat_id', 'int');
+			$allrows  = phpgw::get_var('allrows', 'bool');
 
-			if(!empty($start) || $start == 0)
-			{
-				if($this->debug) { echo '<br>overriding start: "' . $this->start . '" now "' . $start . '"'; }
-				$this->start = $start;
-			}
-			else
-			{
-				$this->start = 0;
-			}
+			$this->allrows	= $allrows ? $allrows : false;
 
+			$this->start = $start ? $start : 0;
 			if((empty($query) && !empty($this->query)) || !empty($query))
 			{
 				if($this->debug) { echo '<br>setting query to: "' . $query . '"'; }
@@ -108,14 +104,15 @@
 		function get_list($global_cats=False)
 		{
 			if($this->debug) { echo '<br>querying: "' . $this->query . '"'; }
+			$limit = $this->allrows ? false : true;
 
 			if ($global_cats)
 			{
-				return $this->cats->return_sorted_array($this->start,True,$this->query,$this->sort,$this->order,True);
+				return $this->cats->return_sorted_array($this->start, $limit, $this->query, $this->sort, $this->order, True);
 			}
 			else
 			{
-				return $this->cats->return_sorted_array($this->start,True,$this->query,$this->sort,$this->order);
+				return $this->cats->return_sorted_array($this->start, $limit, $this->query, $this->sort, $this->order);
 			}
 		}
 

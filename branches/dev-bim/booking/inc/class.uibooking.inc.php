@@ -31,7 +31,7 @@
 			$this->fields = array('allocation_id', 'activity_id', 'resources',
 								  'building_id', 'building_name', 'application_id',
 								  'season_id', 'season_name', 
-			                      'group_id', 'group_name', 'organization_id', 'organization_name',
+			                      'group_id', 'group_name','group_shortname', 'organization_id', 'organization_name',
 			                      'from_', 'to_', 'audience', 'active', 'cost', 'reminder', 'sms_total');
 		}
 		
@@ -117,6 +117,14 @@
 		public function index_json()
 		{
 			$bookings = $this->bo->read();
+			foreach($bookings['results'] as &$booking) {
+				$building = $this->building_bo->read_single($booking['building_id']);
+				//print_r($building);
+				$booking['building_name'] = $building['name'];
+				$booking['from_'] = pretty_timestamp($booking['from_']);
+				$booking['to_'] = pretty_timestamp($booking['to_']);
+			}
+
 			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");
 			return $this->yui_results($bookings);
 		}
@@ -201,6 +209,10 @@
 		{
 			$send = CreateObject('phpgwapi.send');
 
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
 			if (strlen(trim($body)) == 0) 
 			{
 				return false;
@@ -210,7 +222,13 @@
 			{
 				if (strlen($contact['email']) > 0) 
 				{
-					$send->msg('email', $contact['email'], $subject, $body);
+					try
+					{
+						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
+					}
+					catch (phpmailerException $e)
+					{
+					}
 				}
 			}
 		}

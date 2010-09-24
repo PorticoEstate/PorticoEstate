@@ -7,24 +7,40 @@
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/x-office-spreadsheet.png" /> <?php echo lang('price_list') ?></h1>
 
 <form action="#" method="GET">
-	<?php
-	if($this->type_of_user[ADMINISTRATOR])
-	{
-	?>
 	<fieldset>
 		<!-- Create new price item -->
 		<h3><?php echo lang('t_new_price_item') ?></h3>
 		<label for="ctrl_add_price_item_name"><?php echo lang('name') ?></label>
 		<input type="text" id="ctrl_add_price_item_name" name="ctrl_add_price_item_name"/>
-		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?php echo lang('f_new_price_item') ?>" />
-	</fieldset>
+		<select name="responsibility_id" id="responsibility_id">
 	<?php
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach($types as $id => $label)
+			{
+	
+				$names = $this->locations->get_name($id);
+				if($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if($this->hasPermissionOn($names['location'],PHPGW_ACL_ADD))
+					{
+					?>
+						<option 
+							value="<?php echo $id ?>"
+						>
+							<?php echo lang($label) ?>
+						</option>
+					<?php
+					}
+				}
 	}
 	?>
+		</select>
+		<input type="submit" name="ctrl_add_price_item" id="ctrl_add_price_item" value="<?php echo lang('f_new_price_item') ?>" />
+	</fieldset>
 </form>
 
-<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 
 <script type="text/javascript">
 	YAHOO.util.Event.addListener(
@@ -34,7 +50,8 @@
 		{
 	  	YAHOO.util.Event.stopEvent(e);
 	  	newName = document.getElementById('ctrl_add_price_item_name').value;
-			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName;
+	  	resp_id = document.getElementById('responsibility_id').value;
+			window.location = 'index.php?menuaction=rental.uiprice_item.add&amp;price_item_title=' + newName + '&amp;responsibility_id=' + resp_id;
 		}
 	);
 
@@ -54,14 +71,14 @@
 	// Defining columns for datatable
 	var columnDefs = [
 		{
-			key: "title",
-			label: "<?php echo lang('name') ?>",
-		  sortable: true
-		},
-		{
 			key: "agresso_id",
 			label: "<?php echo lang('agresso_id') ?>",
 		  sortable: false
+		},
+		{
+			key: "title",
+			label: "<?php echo lang('name') ?>",
+		  sortable: true
 		},
 		{
 			key: "is_area",
@@ -73,6 +90,24 @@
 			label: "<?php echo lang('price') ?>",
 			sortable: true,
 			formatter: formatPrice
+		},
+		{
+			key: "is_inactive",
+			label: "<?php echo lang('status') ?>",
+		  	sortable: true
+		},
+		{
+			key: "is_adjustable",
+			label: "<?php echo lang('is_adjustable') ?>"
+		},
+		{
+			key: "responsibility_title",
+			label: "<?php echo lang('responsibility') ?>",
+		  	sortable: true
+		},
+		{
+			key: "standard",
+			label: "<?php echo lang('is_standard') ?>"
 		},
 		{
 			key: "actions",

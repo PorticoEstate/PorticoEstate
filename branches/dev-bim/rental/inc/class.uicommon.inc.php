@@ -49,6 +49,8 @@
 		
 		public $type_of_user;
 		
+		public $flash_msgs;
+		
 		public function __construct()
 		{
 			self::set_active_menu('rental');
@@ -84,14 +86,14 @@
 		}
 		
 		/**
-		 * Permission check. Proxy method for method check_rights in phpgwapi->acl
+		 * Permission check. Proxy method for method check in phpgwapi->acl
 		 * 
 		 * @param $location
 		 * @param $permission
 		 * @return true if check is ok, false othewise
 		 */
 		protected function hasPermissionOn($location = rental_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
-			return $this->acl->check_rights($location,$permission);
+			return $this->acl->check($location,$permission,'rental');
 		}
 		
 		
@@ -101,7 +103,7 @@
 		 * @return true if private permission on root, false otherwise
 		 */
 		protected function isAdministrator(){
-			return $this->acl->check_rights(rental_uicommon::LOCATION_ROOT,PHPGW_ACL_PRIVATE);
+			return $this->acl->check(rental_uicommon::LOCATION_ROOT,PHPGW_ACL_PRIVATE,'rental');
 		}
 		
 		/**
@@ -111,9 +113,9 @@
 		 */
 		protected function isExecutiveOfficer(){
 			return (
-				$this->acl->check_rights(rental_uicommon::LOCATION_IN,PHPGW_ACL_ADD)	||
-				$this->acl->check_rights(rental_uicommon::LOCATION_OUT,PHPGW_ACL_ADD)	||
-				$this->acl->check_rights(rental_uicommon::LOCATION_INTERNAL,PHPGW_ACL_ADD)
+				$this->acl->check(rental_uicommon::LOCATION_IN,PHPGW_ACL_ADD,'rental')	||
+				$this->acl->check(rental_uicommon::LOCATION_OUT,PHPGW_ACL_ADD,'rental')	||
+				$this->acl->check(rental_uicommon::LOCATION_INTERNAL,PHPGW_ACL_ADD,'rental')
 			);
 		}
 		
@@ -437,7 +439,7 @@
         public function download()
         {
             $list = $this->query();
-            $list = $list[ResultSet][Result];
+            $list = $list['ResultSet']['Result'];
 
             $keys = array();
 
@@ -451,12 +453,21 @@
             
             // Remove newlines from output
             $count = count($list);
-            for($i = 0; $i < $count; $i++) {
-            	$list[$i] = preg_replace("/[\n\r]/","",$list[$i]);
+            for($i = 0; $i < $count; $i++)
+            {
+ 				foreach ($list[$i] as $key => &$data)
+ 				{
+	 				$data = str_replace(array("\n","\r\n", "<br>"),'',$data);
+ 				}
             }
 
             // Use keys as headings
-            $headings = $keys;
+            $headings = array();
+            $count_keys = count($keys);
+            for($j=0;$j<$count_keys;$j++)
+            {
+            	array_push($headings, lang($keys[$j]));
+            }
 
             $property_common = CreateObject('property.bocommon');
             $property_common->download($list, $keys, $headings);

@@ -45,17 +45,27 @@
 		}
 	}
 
+	var formatBoolean = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined && oData != 0) {
+			if(oData == true){
+				elCell.innerHTML = "<?php echo lang('yes')?>";
+			}
+		}else{
+			elCell.innerHTML = "<?php echo lang('no')?>";
+		}
+	}
+
 	// Defining columns for datatable
 	var columnDefs = [
-		{
-			key: "title",
-			label: "<?php echo lang('name') ?>",
-		  sortable: true
-		},
 		{
 			key: "agresso_id",
 			label: "<?php echo lang('agresso_id') ?>",
 		  sortable: false
+		},
+		{
+			key: "title",
+			label: "<?php echo lang('name') ?>",
+		  sortable: true
 		},
 		{
 			key: "is_area",
@@ -118,9 +128,10 @@
 					}
 				}
 		?>),
-		'<?php echo $editor_action ?>'
+		'<?php echo $editor_action ?>',
+		true
 	);
 </script>
 
-<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

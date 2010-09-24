@@ -297,8 +297,8 @@
 				{
 					ExecMethod('phpgwapi.asyncservice.check_run', 'fallback');
 				}
-				$GLOBALS['phpgw']->db->disconnect();
 				$GLOBALS['phpgw']->session->commit_session();
+				$GLOBALS['phpgw']->db->disconnect();
 				$final_called = true;
 			}
 		}
@@ -1569,7 +1569,10 @@ HTML;
 				return;
 			}
 
+			if(!isset($GLOBALS['phpgw']->xslttpl->xslfiles['msgbox']))
+			{
 			$GLOBALS['phpgw']->xslttpl->add_file($this->get_tpl_dir('phpgwapi','base') . '/msgbox');
+			}
 
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;
 		//	$GLOBALS['phpgw']->translation->translator_helper = '';

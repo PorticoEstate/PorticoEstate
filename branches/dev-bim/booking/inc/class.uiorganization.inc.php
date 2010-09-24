@@ -29,7 +29,7 @@
 			
 			self::set_active_menu('booking::organizations');
 			$this->module = "booking";
-			$this->fields = array('name', 'homepage', 'phone', 'email', 
+			$this->fields = array('name', 'shortname', 'homepage', 'phone', 'email', 
 								  'street', 'zip_code', 'city', 'district', 
 								  'description', 'contacts', 'active', 
 								  'organization_number', 'activity_id',
@@ -93,7 +93,11 @@
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'org_number',
+							'key' => 'shortname',
+							'label' => lang('Organization shortname'),
+						),
+						array(
+							'key' => 'organization_number',
 							'label' => lang('Organization number')
 						),
 						array(
@@ -105,7 +109,7 @@
 							'label' => lang('Phone')
 						),
 						array(
-							'key' => 'mail',
+							'key' => 'email',
 							'label' => lang('Email')
 						),
 						array(
@@ -122,6 +126,20 @@
 		{
 			$organizations = $this->bo->read();
 			array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+
+			foreach($organizations["results"] as &$organization) {
+
+				$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
+
+				if ($contact) {
+					$organization += array(
+								"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
+								"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
+								"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+					);
+				}
+			}
+
 			return $this->yui_results($organizations);
 		}
 		
@@ -182,7 +200,7 @@
 			$this->use_yui_editor();
 			
 			$this->add_template_helpers();
-			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities));
+			self::render_template('organization_edit', array('organization' => $organization, "new_form"=> "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 
 		public function edit()
@@ -198,6 +216,7 @@
 				list($organization, $errors) = $this->extract_and_validate($organization);
 				if(!$errors)
 				{
+					$organization['shortname'] = $_POST['shortname'];
 					$receipt = $this->bo->update($organization);
 					if ($this->module == "bookingfrontend") {
 						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $receipt["id"]));
@@ -219,12 +238,17 @@
 			$this->use_yui_editor();
 			
 			$this->add_template_helpers();
-			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities));
+			self::render_template('organization_edit', array('organization' => $organization, "save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
 		}
 		
 		public function show()
 		{
 			$organization = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+
+			if ( trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])) )
+			{
+				$organization['homepage'] = 'http://'.$organization['homepage'];
+			}
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module.'.uiorganization.edit', 'id' => $organization['id']));
 			$this->install_customer_identifier_ui($organization);

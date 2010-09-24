@@ -54,8 +54,7 @@
 		{
 			$this->so 					= CreateObject('property.soproject');
 			$this->bocommon 			= & $this->so->bocommon;
-			$this->cats					= CreateObject('phpgwapi.categories');
-			$this->cats->app_name		= 'property.project';
+			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 			= & $this->so->interlink;
 			$this->custom 				= & $this->so->custom;
@@ -114,6 +113,23 @@
 			$this->wo_hour_cat_id	= isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 			$this->criteria_id		= isset($data['criteria_id'])?$data['criteria_id']:'';
+		}
+
+		function column_list($selected = array(),$type_id='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : '';
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = array();
+			$columns[] = array
+			(
+				'id' => 'billable_hours',
+				'name'=> lang('billable hours')
+			);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+			return $column_list;
 		}
 
 		function select_status_list($format='',$selected='')
@@ -202,6 +218,11 @@
 					'id'	=> '5',
 					'name'	=> lang('title')
 				),
+				array
+				(
+					'id'	=> '6',
+					'name'	=> lang('module')
+				),
 			);
 			return $this->bocommon->select_list($selected,$criteria);
 		}
@@ -250,6 +271,14 @@
 				'front' => "'%",
 				'back' => "%'"
 			);
+			$criteria[6] = array
+			(
+				'field'	=> 'fm_project.p_num',
+				'type'	=> 'varchar',
+				'matchtype' => 'exact',
+				'front' => "'",
+				'back' => "'"
+			);
 
 			if($id)
 			{
@@ -294,7 +323,20 @@
 				$this->uicols['datatype'][]		= 'link';
 			}
 
-//			$cols_extra		= $this->so->cols_extra;
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
+
+			foreach ($custom_cols as $col)
+			{
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= $col;
+				$this->uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$this->uicols['statustext'][]	= $col;
+				$this->uicols['exchange'][]		= false;
+				$this->uicols['align'][] 		= '';
+				$this->uicols['datatype'][]		= false;
+			}
+
+			$cols_extra		= $this->so->cols_extra;
 
 			foreach ($project as & $entry)
 			{
@@ -366,6 +408,7 @@
 				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
 				$values['workorder_budget'][$i]['status'] = $workorder_data[$i]['status'];
 				$values['workorder_budget'][$i]['actual_cost'] = $workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
+				$values['workorder_budget'][$i]['b_account_id'] = $workorder_data[$i]['b_account_id'];
 
 				if(isset($workorder_data[$i]['vendor_id']) && $workorder_data[$i]['vendor_id'])
 				{
@@ -490,6 +533,8 @@
 					case 'SO': $type = lang('Initial Status'); break;
 					case 'S': $type = lang('Status changed'); break;
 					case 'SC': $type = lang('Status confirmed'); break;
+					case 'AP': $type = lang('Ask for approval'); break;
+					case 'ON': $type = lang('Owner notified'); break;
 					default: break;
 				}
 

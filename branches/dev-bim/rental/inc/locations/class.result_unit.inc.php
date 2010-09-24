@@ -1,4 +1,5 @@
 <?php
+include_class('rental', 'organisational_location', 'inc/locations/');
 
 class result_unit extends organisational_location
 {

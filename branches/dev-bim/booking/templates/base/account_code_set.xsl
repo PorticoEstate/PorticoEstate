@@ -19,28 +19,53 @@
 		</dl>
 
 		<dl class="proplist-col">
-			<dt><xsl:value-of select="php:function('lang', 'Object No.')" /></dt>
+			<xsl:if test="config_data/dim_3">
+				<dt><xsl:value-of select="config_data/dim_3" /></dt>
 			<dd><xsl:value-of select="account_code_set/object_number"/></dd>
+			</xsl:if>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Article')" /></dt>
 			<dd><xsl:value-of select="account_code_set/article"/></dd>
 			
-			<dt><xsl:value-of select="php:function('lang', 'Unit No.')" /></dt>
+			<xsl:if test="config_data/dim_value_1">
+				<dt><xsl:value-of select="config_data/dim_value_1" /></dt>
 			<dd><xsl:value-of select="account_code_set/unit_number"/></dd>
+			</xsl:if>
+			
+			<xsl:if test="config_data/dim_value_4">
+				<dt><xsl:value-of select="config_data/dim_value_4" /></dt>
+				<dd><xsl:value-of select="account_code_set/dim_value_4"/></dd>
+			</xsl:if>
+			
+			<xsl:if test="config_data/dim_value_5">
+				<dt><xsl:value-of select="config_data/dim_value_5" /></dt>
+				<dd><xsl:value-of select="account_code_set/dim_value_5"/></dd>
+			</xsl:if>
 			
 			<dt><xsl:value-of select="php:function('lang', 'Unit Prefix')" /></dt>
 			<dd><xsl:value-of select="account_code_set/unit_prefix"/></dd>
 		</dl>
 		
 		<dl class="proplist-col">
-			<dt><xsl:value-of select="php:function('lang', 'Responsible Code')" /></dt>
+			<xsl:if test="config_data/dim_1">
+				<dt><xsl:value-of select="config_data/dim_1" /></dt>
 			<dd><xsl:value-of select="account_code_set/responsible_code"/></dd>
+			</xsl:if>
 			
-			<dt><xsl:value-of select="php:function('lang', 'Service')" /></dt>
+			<xsl:if test="config_data/dim_2">
+				<dt><xsl:value-of select="config_data/dim_2" /></dt>
 			<dd><xsl:value-of select="account_code_set/service"/></dd>
+			</xsl:if>
 			
-			<dt><xsl:value-of select="php:function('lang', 'Project No.')" /></dt>
+			<xsl:if test="config_data/dim_4">
+				<dt><xsl:value-of select="config_data/dim_4" /></dt>
+				<dd><xsl:value-of select="account_code_set/dim_4"/></dd>
+			</xsl:if>
+
+			<xsl:if test="config_data/dim_5">
+				<dt><xsl:value-of select="config_data/dim_5" /></dt>
 			<dd><xsl:value-of select="account_code_set/project_number"/></dd>
+			</xsl:if>
 		</dl>
 		
 		<dl class="proplist">

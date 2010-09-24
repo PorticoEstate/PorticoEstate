@@ -68,8 +68,7 @@
 
 			$this->role		= $this->bo->role;
 
-			$this->cats		= CreateObject('phpgwapi.categories');
-			$this->cats->app_name = 'fm_vendor';
+			$this->cats		= CreateObject('phpgwapi.categories', -1, 'property', '.vendor');
 
 			$this->acl		= & $GLOBALS['phpgw']->acl;
 			$this->acl_location	= '.agreement';
@@ -390,6 +389,22 @@
 									)),
 						'parameters'	=> $parameters
 						);
+				$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+
+				foreach ($jasper as $report)
+				{
+					$datatable['rowactions']['action'][] = array(
+							'my_name'		=> 'edit',
+							'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+															(
+																	'menuaction'	=> 'property.uijasper.view',
+																	'jasper_id'			=> $report['id'],
+																	'target'		=> '_blank'
+															)),
+							'parameters'			=> $parameters
+					);
+				}
 			}
 
 			if($this->acl_edit)
@@ -496,8 +511,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -538,8 +551,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

@@ -22,7 +22,12 @@
 				}
 			?>
 		</dd>
-
+		<dt>
+			<label for="name"><?php echo lang('field_of_responsibility') ?></label>
+		</dt>
+		<dd>
+			<?php echo lang($price_item->get_responsibility_title()); ?>
+		</dd>
 		<dt>
 			<label for="agresso_id"><?php echo lang('agresso_id') ?></label>
 			<?php echo rental_uicommon::get_field_error($price_item, 'agresso_id') ?>
@@ -60,6 +65,40 @@
 					echo $price_item->get_price();
 				}
 			?>
+		</dd>
+		<dt>
+			<label for="is_inactive"><?php echo lang('is_inactive') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+				<?php if(rental_soprice_item::get_instance()->has_active_contract($price_item->get_id())){?>
+					<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?> disabled="disabled"/><?php echo lang('price_element_in_use') ?>
+				<?php }else{?>
+					<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?>/>
+			<?php }
+				}else{?>
+				<input type="checkbox" name="is_inactive" id="is_inactive"<?php echo $price_item->is_inactive() ? ' checked="checked"' : '' ?> disabled="disabled"/>
+			<?php }?>
+		</dd>
+		<dt>
+			<label for="is_adjustable"><?php echo lang('is_adjustable') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+					<input type="checkbox" name="is_adjustable" id="is_adjustable"<?php echo $price_item->is_adjustable() ? ' checked="checked"' : '' ?>/>
+			<?php }else{?>
+				<?php echo $price_item->get_adjustable_text()?>
+			<?php }?>
+		</dd>
+		<dt>
+			<label for="standard"><?php echo lang('is_standard') ?></label>
+		</dt>
+		<dd>
+			<?php if($editable){?>
+					<input type="checkbox" name="standard" id="standard"<?php echo $price_item->is_standard() ? ' checked="checked"' : '' ?>/>
+			<?php }else{?>
+				<?php echo $price_item->get_standard_text()?>
+			<?php }?>
 		</dd>
 	</dl>
 

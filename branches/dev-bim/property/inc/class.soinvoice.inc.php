@@ -36,8 +36,9 @@
 	{
 		var $total_records = 0;
 		var $role = array();
+		protected $invoice_approval = 2;
 
-		function property_soinvoice()
+		function __construct()
 		{
 			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
@@ -45,6 +46,9 @@
 			$this->join			= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
+			$this->config		= CreateObject('phpgwapi.config','property');
+			$this->config->read();
+			$this->invoice_approval = isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval'] ? $this->config->config_data['invoice_approval'] : 2;
 		}
 
 		function read_invoice($data)
@@ -54,11 +58,13 @@
 			(
 				'bilagsnr'		=> true,
 				'spvend_code'	=> true,
-				'fakturadato'	=> true
+				'fakturadato'		=> true,
+				'oppsynsigndato'	=> true,
+				'saksigndato'		=> true,
+				'budsjettsigndato'	=> true,
+				'periode'			=> true
 			);
 
-			if(is_array($data))
-			{
 				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 				$query 			= isset($data['query'])?$data['query']:'';
 				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
@@ -66,8 +72,8 @@
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$user_lid 		= isset($data['user_lid']) && $data['user_lid']?$data['user_lid']:'none';
 				$paid 			= isset($data['paid'])?$data['paid']:'';
-				$start_date 	= isset($data['start_date']) && $data['start_date'] ? date($this->db->datetime_format(), $data['start_date']) : '';
-				$end_date 		= isset($data['end_date']) && $data['end_date'] ? date($this->db->datetime_format(), $data['end_date']) : '';
+			$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
 				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
 				$workorder_id 	= isset($data['workorder_id'])?$data['workorder_id']:'';
@@ -75,7 +81,7 @@
 				$voucher_id 	= isset($data['voucher_id'])?$data['voucher_id']:'';
 				$b_account_class= isset($data['b_account_class'])?$data['b_account_class']:'';
 				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
-			}
+
 			$join_tables	= '';
 			$filtermethod	= '';
 			$querymethod	= '';
@@ -90,7 +96,7 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
@@ -161,7 +167,10 @@
 
 				if (!$workorder_id && !$voucher_id  && $start_date)
 				{
-					$filtermethod .= " $where (fakturadato >'$start_date' AND fakturadato < '$end_date')";
+					$start_periode = date('Ym',$start_date);
+					$end_periode = date('Ym',$end_date);
+
+					$filtermethod .= " $where (periode >='$start_periode' AND periode <= '$end_periode')";
 				}
 			}
 			else
@@ -175,7 +184,7 @@
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
 			}
 
-			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY bilagsnr,spvend_code,fakturadato ";
+			$sql = "SELECT bilagsnr, count(bilagsnr) as invoice_count, sum(belop) as belop,spvend_code,fakturadato FROM  $table $join_tables $filtermethod $querymethod GROUP BY periode, bilagsnr,spvend_code,fakturadato,oppsynsigndato,saksigndato,budsjettsigndato";
 			$sql2 = "SELECT DISTINCT bilagsnr FROM  $table $join_tables $filtermethod $querymethod";
 
 			$this->db->query($sql2,__LINE__,__FILE__);
@@ -357,6 +366,7 @@
 
 			$i = 0;
 
+			$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
 			$invoice = array();
 			while ($this->db->next_record())
 			{
@@ -367,7 +377,7 @@
 					'project_id'			=> $this->db->f('project_id'),
 					'workorder_id'			=> $this->db->f('pmwrkord_code'),
 					'status'				=> $this->db->f('status'),
-					'closed'				=> $this->db->f('status') == 'closed',
+					'closed'				=> $this->db->f('status') == $closed,
 					'voucher_id'			=> $voucher_id,
 					'id'					=> $this->db->f('id'),
 					'invoice_id'			=> $this->db->f('fakturanr'),
@@ -402,8 +412,8 @@
 				$sort 			= isset($data['sort'])?$data['sort']:'DESC';
 				$order 			= isset($data['order'])?$data['order']:'';
 				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-				$start_date 	= isset($data['start_date']) && $data['start_date'] ? date($this->db->datetime_format(), $data['start_date']) : '';
-				$end_date 		= isset($data['end_date']) && $data['end_date'] ? date($this->db->datetime_format(), $data['end_date']) : '';
+				$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+				$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
 				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
 				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
 				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
@@ -411,7 +421,6 @@
 				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
 			}
-//_debug_array($data);
 
 			$where = 'AND';
 
@@ -468,11 +477,14 @@
 				$where= 'AND';
 			}
 
+			$start_periode = date('Ym',$start_date);
+			$end_periode = date('Ym',$end_date);
+
 			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume $select_account_class "
 				. " FROM  fm_ecobilagoverf $this->join fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
 				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
 				. " $this->join fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
-		        	. " WHERE (fakturadato >'$start_date' AND fakturadato < '$end_date' $filtermethod )"
+		        	. " WHERE (periode >='$start_periode' AND periode <= '$end_periode' $filtermethod )"
 		        	. " GROUP BY district_id,periode $group_account_class"
 		        	. " ORDER BY periode";
 //echo $sql;
@@ -551,9 +563,9 @@
 				{
 					$budget_account=$values['budget_account'][$n];
 
-					$GLOBALS['phpgw']->db->query("select count(*) from fm_b_account  where id ='{$budget_account}'");
+					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_b_account  where id ='{$budget_account}'");
 					$GLOBALS['phpgw']->db->next_record();
-					if ($GLOBALS['phpgw']->db->f(0) == 0)
+					if ($GLOBALS['phpgw']->db->f('cnt') == 0)
 					{
 						$receipt['error'][] = array('msg'=> lang('This account is not valid:'). " ".$budget_account);
 						$local_error= true;
@@ -572,9 +584,9 @@
 				else
 				{
 					$dimd=$values['dimd'][$n];
-					$GLOBALS['phpgw']->db->query("select count(*) from fm_ecodimd where id ='$dimd'");
+					$GLOBALS['phpgw']->db->query("select count(*) as cnt from fm_ecodimd where id ='$dimd'");
 					$GLOBALS['phpgw']->db->next_record();
-					if ($GLOBALS['phpgw']->db->f(0) == 0)
+					if ($GLOBALS['phpgw']->db->f('cnt') == 0)
 					{
 						$receipt['error'][] = array('msg'=>lang('This Dim D is not valid:'). " ".$dimd);
 						$local_error= true;
@@ -602,7 +614,7 @@
 
 					if (!$GLOBALS['phpgw']->db->f('kostra_id') || $GLOBALS['phpgw']->db->f('kostra_id') == 0)
 					{
-						$receipt['error'][] = array('msg'=>'objektet mangler tjeneste - utgått? '. " ".$values['dima'][$n]);
+						$receipt['error'][] = array('msg'=>'objektet mangler tjeneste - utgÃ¥tt? '. " ".$values['dima'][$n]);
 						$local_error= true;
 					}
 
@@ -643,11 +655,14 @@
 
 			if (isset($update_status) AND is_array($update_status))
 			{
-				$status_code=array('X'=>'closed','R'=>'re_opened');
+				$closed = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
+				$reopen = isset($this->config->config_data['workorder_reopen_status']) && $this->config->config_data['workorder_reopen_status'] ? $this->config->config_data['workorder_reopen_status'] : 're_opened';
+
+				$status_code=array('X' => $closed,'R' => $reopen);
 
 				$historylog_workorder	= CreateObject('property.historylog','workorder');
 
-				while (list($id,$entry) = each($update_status))
+				foreach ($update_status as $id => $entry)
 				{
 					$this->db->query("SELECT type FROM fm_orders WHERE id={$id}",__LINE__,__FILE__);
 					$this->db->next_record();
@@ -754,18 +769,15 @@
 
 		function increment_bilagsnr()
 		{
-
 			$this->db->query("UPDATE fm_idgenerator set value = value + 1 where name = 'Bilagsnummer'");
 			$this->db->query("select value from fm_idgenerator where name = 'Bilagsnummer'");
 			$this->db->next_record();
 			$bilagsnr = $this->db->f('value');
 			return $bilagsnr;
-
 		}
 
 		function next_bilagsnr()
 		{
-
 			$this->db->query("select value from fm_idgenerator where name = 'Bilagsnummer'");
 			$this->db->next_record();
 			$bilagsnr = $this->db->f('value')+1;
@@ -775,10 +787,9 @@
 
 		function check_vendor($vendor_id)
 		{
-
-			$this->db->query("select count(*) from fm_vendor where id='$vendor_id'");
+			$this->db->query("select count(*) as cnt from fm_vendor where id='$vendor_id'");
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 
 
@@ -1109,7 +1120,6 @@
 								$receipt['error'][] = array('msg'=>'Dette bilaget er ikkje godkjent: ' . " ".$voucher_id);
 								$local_error= true;
 							}
-
 						}
 
 						if ($values['kreditnota'][$n])
@@ -1124,19 +1134,23 @@
 
 						if (! $local_error)
 						{
-							$sql= "UPDATE fm_ecobilag set $blank_date $kommma_blank $sign_field $sign_id $kommma $sign_date_field $sign_date $kommma $transfer_sign_field $transfer_id $transfer_date_field $transfer_date ,kreditnota=$wait_for_kreditnota  where bilagsnr='$voucher_id'";
+							$sql= "UPDATE fm_ecobilag SET $blank_date $kommma_blank $sign_field $sign_id $kommma $sign_date_field $sign_date $kommma $transfer_sign_field $transfer_id $transfer_date_field $transfer_date ,kreditnota=$wait_for_kreditnota  where bilagsnr='$voucher_id'";
 							$GLOBALS['phpgw']->db->transaction_begin();
 							$GLOBALS['phpgw']->db->query($sql);
-							$GLOBALS['phpgw']->db->transaction_commit();
-
+							if($GLOBALS['phpgw']->db->transaction_commit())
+							{
 							$receipt['message'][] = array('msg'=> lang('voucher is updated: ') . $voucher_id);
 						}
 					}
 				}
 			}
+			}
 
 			$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set utbetalingid = NULL, utbetalingsigndato = NULL WHERE budsjettsigndato IS NULL");
+			if($this->invoice_approval == 2)
+			{
 			$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set utbetalingid = NULL, utbetalingsigndato = NULL WHERE oppsynsigndato IS NULL AND saksigndato IS NULL");
+			}
 
 			return $receipt;
 		}
@@ -1150,9 +1164,19 @@
 
 			$this->db->next_record();
 
+			if($this->invoice_approval == 1)
+			{
+				if ($this->db->f('budsjettsigndato'))
+				{
+					$allow_transfer=true;
+				}			
+			}
+			else
+			{
 			if ($this->db->f('budsjettsigndato') && ($this->db->f('oppsynsigndato') || $this->db->f('saksigndato')))
 			{
 				$allow_transfer=true;
+			}
 			}
 
 			return $allow_transfer;
@@ -1160,11 +1184,11 @@
 
 		function check_claim($voucher_id='')
 		{
-			$sql = "SELECT count(*) FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
+			$sql = "SELECT count(*) as cnt FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
 			. " WHERE bilagsnr='$voucher_id' AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('cnt');
 		}
 	}
 

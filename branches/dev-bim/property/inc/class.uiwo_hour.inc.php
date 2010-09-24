@@ -56,7 +56,8 @@
 			'edit'			=> true,
 			'delete'		=> true,
 			'deviation'		=> true,
-			'edit_deviation'=> true
+			'edit_deviation'=> true,
+			'pdf_order'		=> true
 		);
 
 		function property_uiwo_hour()
@@ -365,7 +366,8 @@
 */
 			$hour_list = $this->bo->read($workorder_id);
 //_debug_array($hour_list);
-			$grouping_descr_old='';
+			$grouping_descr_old	= '';
+			$content			= array();
 
 			if (isset($hour_list) AND is_array($hour_list))
 			{
@@ -490,7 +492,7 @@
 				'lang_vendor_name'			=> lang('Vendor'),
 				'vendor_name'				=> $workorder['vendor_name'],
 				'vendor_email'				=> $workorder['vendor_email'],
-				'descr'					=> $workorder['descr'],
+				'descr'						=> htmlentities($workorder['descr']),
 
 				'lang_workorder_id'			=> lang('Workorder ID'),
 				'workorder_id'				=> $workorder['workorder_id'],
@@ -1038,8 +1040,6 @@
 			
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1096,8 +1096,13 @@
 					$json ['message'][] = $receipt;
 				}
 				
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -1137,7 +1142,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour', 'files'));
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
-			$show_details	= phpgw::get_var('show_details', 'bool');
+			$show_details	= true;//phpgw::get_var('show_details', 'bool');
 			$workorder_id	= phpgw::get_var('workorder_id'); // in case of bigint
 			$to_email 		= phpgw::get_var('to_email', 'email');
 			$update_email	= phpgw::get_var('update_email', 'bool');
@@ -1146,6 +1151,7 @@
 			$values			= phpgw::get_var('values');
 			$print			= phpgw::get_var('print', 'bool');
 			$sent_ok		= phpgw::get_var('print', 'bool');
+			$send_as_pdf	= phpgw::get_var('send_as_pdf', 'bool');
 
 			if($update_email)
 			{
@@ -1235,14 +1241,13 @@
 			$date					= $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
 
 			$from_name =	$GLOBALS['phpgw_info']['user']['fullname'];
-			$from_email =	$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+			$from_email =	"{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 
 			if($this->config->config_data['wo_status_sms'])
 			{
-				$config_sms	= CreateObject('sms.soconfig');
-				if(is_object($config_sms))
-				{
-					$config_sms->read_repository();
+				$sms_location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+				$config_sms	= CreateObject('admin.soconfig',$sms_location_id);
+		
 					$sms_data['heading'] = lang('Send the following SMS-message to %1 to update status for this order:',$config_sms->config_data['common']['gateway_number']);
 					$sms_data['message'] = 'status ' . $workorder_id . ' [' . lang('status code') .']';
 					$sms_data['status_code'][0]['name'] = '1 => ' . lang('closed');
@@ -1251,10 +1256,6 @@
 					$sms_data['status_code_text'] = lang('status code');
 					$sms_data['example'] = 'status ' . $workorder_id . ' 1';
 					$sms_data['lang_example'] = lang('Example');
-
-			//		_debug_array($sms_data);
-
-				}
 			}
 			
 			$action_params = array
@@ -1319,6 +1320,7 @@
 				'from_phone'					=> $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'],
 				'lang_district'					=> lang('District'),
 				'district'					=> $project['location_data']['district_id'],
+				'ressursnr'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'] : '',
 
 				'lang_to'					=> lang('To'),
 				'to_name'					=> $workorder['vendor_name'],
@@ -1427,17 +1429,14 @@ HTML;
 					exit;
 				}
 
-				$headers  = "Return-Path: <". $from_email .">\r\n";
-				$headers .= "From: " . $from_name . "<" . $from_email .">\r\n";
 				if($GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_rcpt']==1)
 				{
-					$headers .= "Bcc: " . $from_name . "<" . $from_email .">\r\n";
 					$bcc = $from_email;
 				}
-				$headers .= "Content-type: text/html; charset=utf-8\r\n";
-				$headers .= "MIME-Version: 1.0\r\n";
+
 				$subject  = lang('Workorder').": ".$workorder_id;
 
+				$attachments = array();
 				$attachment_log = '';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
@@ -1448,11 +1447,42 @@ HTML;
 						$attachment_log = lang('attachments') . ': ' . implode(', ',$values['file_action']);
 					}
 
+					if($send_as_pdf)
+					{
+						$pdfcode = $this->pdf_order($workorder_id, $show_cost);
+						if($pdfcode)
+						{							
+							$dir =  "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+
+							//save the file
+							if (!file_exists($dir))
+							{
+								mkdir ($dir,0777);
+							}
+							$fname = tempnam($dir.'/','PDF_').'.pdf';
+							$fp = fopen($fname,'w');
+							fwrite($fp,$pdfcode);
+							fclose($fp);
+
+							$attachments[] = array
+							(
+								'file' => $fname,
+								'name' => "order_{$workorder_id}.pdf",
+								'type' => 'application/pdf'
+							);						
+						}
+						$body = lang('order') . '.</br></br>' . lang('see attachment');
+					}
+					else
+					{
+						$body = $header . $html . $footer;
+					}
+
 					if (!is_object($GLOBALS['phpgw']->send))
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $header . $html . $footer, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
 				}
 				else
 				{
@@ -1494,7 +1524,6 @@ HTML;
 				}
 			}
 
-
 			if( $this->boworkorder->order_sent_adress )
 			{
 				$to_email= $this->boworkorder->order_sent_adress;
@@ -1510,7 +1539,6 @@ HTML;
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-
 
 			$link_file_data = array
 			(
@@ -1616,6 +1644,7 @@ HTML;
 				'lang_view_file_statustext'		=> lang('click to view file'),
 				'lang_file_action_statustext'	=> lang('Check to attach file'),
 				'lang_print'					=> lang('print'),
+				'value_show_cost'						=> $show_cost,
 				'lang_print_statustext'			=> lang('open this page as printerfrendly'),
 				'print_action'					=> "javascript:openwindow('"
 												 . $GLOBALS['phpgw']->link('/index.php', array
@@ -1625,7 +1654,16 @@ HTML;
 												 	'show_cost'		=> $show_cost,
 												 	'show_details'	=> $show_details,
 												 	'print'			=> true
-												 )) . "','1000','1200')"
+												 )) . "','1000','1200')",
+				'pdf_action'					=> "javascript:openwindow('"
+												 . $GLOBALS['phpgw']->link('/index.php', array
+												 (
+												 	'menuaction'	=> 'property.uiwo_hour.pdf_order',
+												 	'workorder_id'	=> $workorder_id,
+												 	'show_cost'		=> $show_cost,
+												 	'show_details'	=> $show_details,
+												 	'preview'		=> true,
+												 )) . "','100','100')"
 			);
 
 
@@ -1658,29 +1696,21 @@ HTML;
 		}
 
 
-		function tender()
-		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-
-			$pdf					= CreateObject('phpgwapi.pdf');
-			if(!$this->acl_read)
+		protected function _get_order_details($values_hour,	$show_cost = false)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
-			}
-			$show_cost = phpgw::get_var('show_cost', 'bool');
-			$mark_draft = phpgw::get_var('mark_draft', 'bool');
-			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
-
-			$common_data		= $this->common_data($workorder_id);
-			$values_hour		= $common_data['content'];
-			$project			= $this->boproject->read_single($common_data['workorder']['project_id']);
+			$translations = array
+			(
+				'post'			=> lang('post'),
+				'code'			=> lang('code'),
+				'descr'			=> lang('descr'),
+				'unit'			=> lang('unit'),
+				'quantity'		=> lang('quantity'),
+				'billperae'		=> lang('bill per unit'),
+				'cost'			=> lang('cost')
+			);
 
 			$grouping_descr_old	= '';
-
-			if (isSet($values_hour) AND is_array($values_hour))
-			{
+			$content = array();
 				foreach($values_hour as $hour)
 				{
 					$descr= $hour['hours_descr'];
@@ -1700,13 +1730,13 @@ HTML;
 					{
 						$content[] = array
 						(
-							lang('post')		=> $hour['grouping_descr'],
-							lang('code')		=> '',
-							lang('descr')		=> '',
-							lang('unit')		=> '',
-							lang('quantity')	=> '',
-							lang('bill per unit')	=> '',
-							lang('cost')		=> ''
+						$translations['post']		=> $hour['grouping_descr'],
+						$translations['code']		=> '',
+						$translations['descr']		=> '',
+						$translations['unit']		=> '',
+						$translations['quantity']	=> '',
+						$translations['billperae']	=> '',
+						$translations['cost']		=> ''
 						);
 					}
 
@@ -1714,16 +1744,205 @@ HTML;
 
 					$content[] = array
 					(
-						lang('post')			=> $hour['post'],
-						lang('code')			=> $hour['code'],
-						lang('descr')			=> $descr,
-						lang('unit')			=> $hour['unit'],
-						lang('quantity')		=> $hour['quantity'],
-						lang('bill per unit')		=> $hour['billperae'],
-						lang('cost')			=> $hour['cost']
+					$translations['post']			=> $hour['post'],
+					$translations['code']			=> $hour['code'],
+					$translations['descr']			=> $descr,
+					$translations['unit']			=> $hour['unit'],
+					$translations['quantity']		=> $hour['quantity'],
+					$translations['billperae']		=> $hour['billperae'],
+					$translations['cost']			=> $hour['cost']
 					);
 				}
+
+			return $content;
+		}
+
+
+		function pdf_order($workorder_id = '', $show_cost = false)
+		{
+			$pdf					= CreateObject('phpgwapi.pdf');
+
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
+			if(!$workorder_id)
+			{
+				$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			}
+			if(!$show_cost)
+			{
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+			}
+
+			$preview = phpgw::get_var('preview', 'bool');
+			
+			$common_data		= $this->common_data($workorder_id);
+			$project			= $this->boproject->read_single($common_data['workorder']['project_id']);
+
+			$content = $this->_get_order_details($common_data['content'],	$show_cost);
+
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date = $GLOBALS['phpgw']->common->show_date(time(),$dateformat);
+
+			set_time_limit(1800);
+			$pdf -> ezSetMargins(50,70,50,50);
+			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+
+			// put a line top and bottom on all the pages
+			$all = $pdf->openObject();
+			$pdf->saveState();
+
+			if(isset($this->config->config_data['order_logo']) && $this->config->config_data['order_logo'])
+			{
+				$pdf->addJpegFromFile($this->config->config_data['order_logo'],
+					40,
+					800,
+					isset($this->config->config_data['order_logo_width']) && $this->config->config_data['order_logo_width'] ? $this->config->config_data['order_logo_width'] : 80
+				);
+			}
+			$pdf->setStrokeColor(0,0,0,1);
+			$pdf->line(20,40,578,40);
+		//	$pdf->line(20,820,578,820);
+		//	$pdf->addText(50,823,6,lang('order'));
+			$pdf->addText(50,28,6,$this->config->config_data['org_name']);
+			$pdf->addText(300,28,6,$date);
+
+
+			$pdf->restoreState();
+			$pdf->closeObject();
+			// note that object can be told to appear on just odd or even pages by changing 'all' to 'odd'
+			// or 'even'.
+			$pdf->addObject($all,'all');
+
+//			$pdf->ezSetDy(-100);
+
+			$pdf->ezStartPageNumbers(500,28,6,'right','{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}',1);
+
+			$data = array
+			(
+					array('col1'=>"{$this->config->config_data['org_name']}\n\nOrg.nr: {$this->config->config_data['org_unit_id']}",'col2'=>lang('Order'),'col3'=>lang('order id') . "\n\n{$workorder_id}")
+			);		
+
+			$pdf->ezTable($data,array('col1'=>'','col2'=>'','col3'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>200, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>100, 'justification'=>'center'),
+					'col3'=>array('justification'=>'right','width'=>200),
+				)
+				
+				));
+
+			$delivery_address = lang('delivery address'). ':';
+			if(isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			{
+				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
+			}
+			else
+			{
+				$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				foreach($address_element as $entry)
+				{
+					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
+				}
+			}
+
+			$invoice_address = lang('invoice address') . ":\n{$this->config->config_data['invoice_address']}";
+
+			$from = lang('date') . ": {$date}\n";
+			$from .= lang('dimb') .": {$common_data['workorder']['ecodimb']}\n";
+			$from .= lang('from') . ":\n   {$GLOBALS['phpgw_info']['user']['fullname']}";
+			$from .= "\n   {$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+			$from .= "\n   {$GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone']}";
+
+			$data = array
+			(
+					array('col1'=>lang('vendor') . ":\n{$common_data['workorder']['vendor_name']}",'col2' => $delivery_address),
+					array('col1'=>$from,'col2'=>$invoice_address)
+			);		
+
+			$pdf->ezTable($data,array('col1'=>'','col2'=>''),''
+				,array('showHeadings'=>0,'shaded'=>0,'xPos'=>0
+				,'xOrientation'=>'right','width'=>500,'showLines'=> 2
+				,'cols'=>array
+				(
+					'col1'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+					'col2'=>array('justification'=>'right','width'=>250, 'justification'=>'left'),
+				)
+				
+				));
+
+			$pdf->ezText(lang('title').':',20);
+			$pdf->ezText($common_data['workorder']['title'],14);
+			$pdf->ezSetDy(-20);
+
+			$pdf->ezText(lang('descr').':',20);
+			$pdf->ezText($common_data['workorder']['descr'],14);
+
+			if($content)
+			{
+				$pdf->ezSetDy(-20);
+				$pdf->ezTable($content,'',lang('details'),
+							array('xPos'=>0,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 8,'showLines'=> 2,'titleFontSize' => 12,'outerLineThickness'=>2
+							,'cols'=>array(
+							lang('bill per unit')=>array('justification'=>'right','width'=>50)
+							,lang('quantity')=>array('justification'=>'right','width'=>50)
+							,lang('cost')=>array('justification'=>'right','width'=>50)
+							,lang('unit')=>array('width'=>40)
+							,lang('descr')=>array('width'=>120))
+							));
+			}
+
+			if(isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
+			{
+				if(!$content)
+				{
+					$pdf->ezSetDy(-100);
+				}
+				$pdf->ezText($this->config->config_data['order_footer_header'],12);
+				$pdf->ezText($this->config->config_data['order_footer'],10);
+			}
+
+			$document= $pdf->ezOutput();
+			if($preview)
+			{
+				$pdf->print_pdf($document,'order');
+			}
+			else
+			{
+				return $document;
+			}
+		}
+
+		function tender()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$pdf					= CreateObject('phpgwapi.pdf');
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+			$show_cost = phpgw::get_var('show_cost', 'bool');
+			$mark_draft = phpgw::get_var('mark_draft', 'bool');
+			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
+
+			$common_data		= $this->common_data($workorder_id);
+			$project			= $this->boproject->read_single($common_data['workorder']['project_id']);
+
+			$content = $this->_get_order_details($common_data['content'],	$show_cost);
+
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date = $GLOBALS['phpgw']->common->show_date('',$dateformat);
@@ -1742,7 +1961,7 @@ HTML;
 			$pdf->line(20,40,578,40);
 			$pdf->line(20,822,578,822);
 			$pdf->addText(50,823,6,lang('Chapter') . ' ' .$common_data['workorder']['chapter_id'] . ' ' . $common_data['workorder']['chapter'] );
-			$pdf->addText(50,34,6,'BBB');
+			$pdf->addText(50,34,6,$this->config->config_data['org_name']);
 			$pdf->addText(300,34,6,$date);
 			if($mark_draft)
 			{
@@ -1768,7 +1987,7 @@ HTML;
 			$pdf->ezText(lang('Order') . ': ' . $workorder_id . ' ' .$common_data['workorder']['title'],14);
 			$pdf->ezText(lang('Chapter') . ' ' .$common_data['workorder']['chapter_id'] . ' ' . $common_data['workorder']['chapter'] ,14);
 
-			if(is_array($values_hour))
+			if($content)
 			{
 				$pdf->ezNewPage();
 				$pdf->ezTable($content,'',$project['name'],
@@ -2150,8 +2369,6 @@ HTML;
 			
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -2205,8 +2422,13 @@ HTML;
 					$json ['message'][] = $receipt;
 				}
 				
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -2353,7 +2575,7 @@ HTML;
 			}
 																				
 			$uicols = array (
-				'input_type'	=>	array(text,'text','text','text','text','varchar','select','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
+				'input_type'	=>	array('text','text','text','text','text','varchar','select','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
 				'type'			=>	array('','','','','','text','','','','text','','','',''),				
 				'name'			=>	array('building_part','code,hours_descr','unit','billperae','quantity','select','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
 				'formatter'		=>	array('','','','','','','','','','','','','','','','','','',''),
@@ -2635,22 +2857,9 @@ HTML;
 			$appname		= lang('Template');
 			$function_msg		= lang('list template');
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');	
 			
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -2705,8 +2914,12 @@ HTML;
 					$json ['message'][] = $receipt;
 				}
 				
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -2714,6 +2927,18 @@ HTML;
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');	
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{

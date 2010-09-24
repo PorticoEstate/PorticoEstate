@@ -104,25 +104,25 @@
 
 		function read_addressbook()
 		{
-
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
-				$this->limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			else
 			{
-				$this->limit = 15;
+				$limit = 15;
 			}
 
-		    $fields[0] = 'per_first_name';
-		    $fields[1] = 'per_last_name';
-		    $fields[2] = 'per_department';
-		    $fields[3] = 'per_title';
-		    $fields[4] = 'addr_add1';
-		    $fields[5] = 'addr_city';
-		    $fields['owner'] = 'owner';
-		    $fields['contact_id'] = 'contact_id';
+			$limit		= $this->allrows ? 0 : $limit;
+
+		    $fields = array
+		    (
+		    	'per_first_name',
+		    	'per_last_name',
+		    	'owner',
+		    	'contact_id',
+		    );
 
 			if($this->cat_id && $this->cat_id != 0)
 			{
@@ -138,11 +138,94 @@
 			$criteria = $addressbook->criteria_contacts(1, $category_filter, 'person', $this->query, $fields_search);
 			$this->total_records = $addressbook->get_count_persons($criteria);
 
-			$entries = $addressbook->get_persons($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
+			$contacts = $addressbook->get_persons($fields, $this->start, $limit, $this->order, $this->sort, '', $criteria);
 
-			return $entries;
+			$accounts = $GLOBALS['phpgw']->accounts->get_list();
+			$user_contacts = array();
+
+			foreach($accounts as $account)
+			{
+				if(isset($account->person_id) && $account->person_id)
+				{
+					$user_contacts[] = $account->person_id;
+				}
+			}
+			foreach($contacts as &$contact)
+			{
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+
+				if ( is_array($comms) && count($comms) )
+				{
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
+					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
+				}
+				if (in_array($contact['contact_id'], $user_contacts) )
+				{
+					$contact['is_user'] = 'X';
+				}
 		}
 
+			return $contacts;
+		}
+
+		/**
+		* Read list of organisation from the addressbook
+		*
+		* @return array of contacts
+		*/
+
+		function read_organisation()
+		{
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] &&
+				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else
+			{
+				$limit = 15;
+			}
+
+			$limit		= $this->allrows ? 0 : $limit;
+
+			$fields = array
+			(
+				'contact_id',
+				'org_name'
+			);
+
+			if($this->cat_id && $this->cat_id != 0)
+			{
+				$category_filter = $this->cat_id;
+			}
+			else
+			{
+				$category_filter = -3;
+			}
+
+			$addressbook	= CreateObject('addressbook.boaddressbook');
+			
+			$qfield = 'org';
+
+			$criteria		= $addressbook->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields);
+			$token_criteria	= $addressbook->criteria_contacts($access = 1, $category_filter, $qfield, $this->query, $fields);
+
+			$orgs = $addressbook->get_orgs($fields, $this->start, $limit, $orderby='org_name', $sort='ASC', $criteria='', $token_criteria);
+
+			$this->total = $addressbook->total;
+
+			foreach($orgs as &$contact)
+			{
+				$comms = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms='', $simple=false);
+				if ( is_array($comms) && count($comms) )
+				{
+					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
+					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
+				}
+			}
+
+			return $orgs;
+		}
 
 		/**
 		* Get the the person data what you want
@@ -183,10 +266,11 @@
 			return $vendor;
 		}
 
-		function read_b_account()
+		function read_b_account($data)
 		{
 			$b_account = $this->so->read_b_account(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
+											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
+											'role' => $data['role'], 'parent' => $data['parent']));
 			$this->total_records = $this->so->total_records;
 
 			return $b_account;

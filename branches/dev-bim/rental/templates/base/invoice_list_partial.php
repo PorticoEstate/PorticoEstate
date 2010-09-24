@@ -11,13 +11,13 @@
 		}
 	}
 	var columnDefs = [{
-		key: "contract_id",
+		key: "old_contract_id",
 		label: "<?php echo lang('contract_id') ?>",
 	    sortable: true
 	},
 	{
-		key: "timestamp_created",
-		label: "<?php echo lang('Billing date') ?>",
+		key: "term_label",
+		label: "<?php echo lang('billing_term') ?>",
 	    sortable: true
 	},
 	{
@@ -34,6 +34,11 @@
 		key: "total_sum",
 		label: "<?php echo lang('Total sum') ?>",
 		formatter: formatPrice,
+	    sortable: true
+	},
+	{
+		key: "serial_number",
+		label: "<?php echo lang('serial_number') ?>",
 	    sortable: true
 	},
 	{
@@ -87,18 +92,22 @@
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
-		null,
-		null,
+		'',
+		'',
 		<?php echo $disable_left_click ? 'true' : 'false'; ?>
 	);
 
     function doExport() {
-        window.location = 'index.php?menuaction=rental.uibilling.download<?php echo $url_add_on; ?>';
+        window.location = 'index.php?menuaction=rental.uibilling.download&amp;export=true<?php echo $url_add_on; ?>';
+    }
+
+    function doExportCS15(billing_id, ts_stop) {
+        window.location = 'index.php?menuaction=rental.uibilling.download_export&amp;generate_cs15=true&amp;id=' + billing_id + '&amp;date=' + ts_stop;
     }
 </script>
 <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
 	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
 </fieldset>
-<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

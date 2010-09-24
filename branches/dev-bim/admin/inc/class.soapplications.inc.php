@@ -59,10 +59,10 @@
 			/* Yes, the sequence should work, but after a mass import in setup (new install)
 			  it does not work on pg
 			*/
-			$sql = 'SELECT MAX(app_id) from phpgw_applications';
+			$sql = 'SELECT MAX(app_id) as max_app_id from phpgw_applications';
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			$app_id = $this->db->f(0) + 1;
+			$app_id = $this->db->f('max_app_id') + 1;
 			$sql = 'INSERT INTO phpgw_applications (app_id,app_name,app_enabled,app_order) VALUES('
 				. $app_id . ",'" . addslashes($data['n_app_name']) . "','"
 				. $data['n_app_status'] . "','" . $data['app_order'] . "')";
@@ -83,10 +83,10 @@
 
 		function exists($app_name)
 		{
-			$this->db->query("SELECT COUNT(app_name) FROM phpgw_applications WHERE app_name='" . addslashes($app_name) . "'",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(app_name) as cnt FROM phpgw_applications WHERE app_name='" . addslashes($app_name) . "'",__LINE__,__FILE__);
 			$this->db->next_record();
 
-			if ($this->db->f(0) != 0)
+			if ($this->db->f('cnt') != 0)
 			{
 				return True;
 			}
@@ -95,9 +95,9 @@
 
 		function app_order()
 		{
-			$this->db->query('SELECT (MAX(app_order)+1) FROM phpgw_applications',__LINE__,__FILE__);
+			$this->db->query('SELECT (MAX(app_order)+1) as next_order FROM phpgw_applications',__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f(0);
+			return $this->db->f('next_order');
 		}
 
 		function delete($app_name)

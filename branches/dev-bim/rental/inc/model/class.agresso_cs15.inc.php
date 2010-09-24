@@ -17,7 +17,7 @@ class rental_agresso_cs15 implements rental_exportable
 	 */
 	public function get_id()
 	{
-		return 'Agresso GL07';
+		return 'Agresso CS15';
 	}
 	
 	/**
@@ -48,6 +48,7 @@ class rental_agresso_cs15 implements rental_exportable
 	protected function run()
 	{
 		$this->lines = array();
+		$counter = 1;	// set to 1 initially to satisfy agresso requirements 
 		foreach($this->parties as $party) // Runs through all parties
 		{
 			$country_code = strtoupper($party->get_postal_country_code());
@@ -62,7 +63,8 @@ class rental_agresso_cs15 implements rental_exportable
 			{
 				$phone = $party->get_mobile_phone(); // ..so we try mobile phone
 			}
-			$this->lines[] = $this->get_line($party->get_name(), $party->get_identifier(), $party->get_address_1(), $country_code, $place, $phone, $party->get_postal_code());
+			$this->lines[] = $this->get_line($party->get_name(), $party->get_identifier(), $party->get_address_1(), $party->get_address_2(), $country_code, $place, $phone, $party->get_postal_code(), $counter);
+			$counter++;
 		}
 	}
 	
@@ -71,22 +73,22 @@ class rental_agresso_cs15 implements rental_exportable
 
 	 * @return string
 	 */
-	protected function get_line($name, $identifier, $address, $country_code, $postal_place, $phone, $postal_code)
+	protected function get_line($name, $identifier, $address1, $address2, $country_code, $postal_place, $phone, $postal_code, $counter)
 	{
 		// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 		$line = 
 			 '1'														//  1	full_record
 			.'I'														//  2	change_status
 			.'10'														//  3	apar_gr_id
-			.sprintf("%-9s", '')										//  4	apar_id
+			.sprintf("%9s", $counter)									//  4	apar_id, sequence number, right justified
 			.sprintf("%9s", '')											//  5	apar_id_ref
-			.sprintf("%-50.50s", $name)									//  6	apar_name
+			.sprintf("%-50.50s", iconv("UTF-8", "ISO-8859-1", $name))	//  6	apar_name
 			.'R'														//  7	apar_type
 			.sprintf("%-35s", '')										//  8	bank_account
 			.sprintf("%-4s", '')										//  9	bonus_gr
 			.sprintf("%3s", '')											// 10	cash_delay
 			.sprintf("%-13s", '')										// 11	clearing_code
-			.sprintf("%-2s", '')										// 12	client
+			.'BY'														// 12	client
 			.sprintf("%1s", '')											// 13	collect_flag
 			.sprintf("%-25.25s", $identifier)							// 14	comp_reg_no
 			.'P'														// 15	control
@@ -106,7 +108,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.'IP'														// 29	pay_method
 			.sprintf("%-13s", '')										// 30	postal_acc
 			.sprintf("%-1s", '')										// 31	priority_no
-			.sprintf("%-10s", '')										// 32	short_name
+			.sprintf("%-10s", '.')										// 32	short_name
 			.'N'														// 33	status
 			.sprintf("%-11s", '')										// 34	swift
 			.sprintf("%-1s", '')										// 35	tax_set
@@ -114,13 +116,16 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-2s", '')										// 37	terms_id
 			.sprintf("%-1s", '')										// 38	terms_set
 			.sprintf("%-25s", '')										// 39	vat_reg_no
-			.sprintf("%-160.160s", $address)							// 40	address
+			.sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $address1))							// 40	address1
+			.sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $address2))							// 40	address2
+			.sprintf("%-40.40s", '')									// 40	address3
+			.sprintf("%-40.40s", '')									// 40	address4
 			.'1'														// 41	address_type
 			.sprintf("%-6s", '')										// 42	agr_user_id
 			.sprintf("%-255s", '')										// 43	cc_name
 			.sprintf("%-3.3s", $country_code)							// 44	country_code
 			.sprintf("%-50s", '')										// 45	description
-			.sprintf("%-40.40s", $postal_place)							// 46	place
+			.sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $postal_place))							// 46	place
 			.sprintf("%-40s", '')										// 47	province
 			.sprintf("%-35.35s", $phone)								// 48	telephone_1
 			.sprintf("%-35s", '')										// 49	telephone_2
@@ -136,6 +141,7 @@ class rental_agresso_cs15 implements rental_exportable
 			.sprintf("%-4s", '')										// 59	pay_temp_id
 			.sprintf("%-25s", '')										// 60	reference_1
 		;
+		
 		return str_replace(array("\n", "\r"), '', $line);
 	}
 	

@@ -9,8 +9,6 @@
 	
 	class booking_async_task_send_reminder extends booking_async_task
 	{
-		// this value should be the same as the crontab interval for this script
-		// to be sure that the reminders are only sent once per event/booking
 		const interval_length = '60'; // in minutes
 
 		public function __construct()
@@ -41,19 +39,35 @@
 			$this->db->query($sql);
 			$bookings = $this->db->resultSet;
 
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 			foreach($bookings as $booking)
 			{
 				$booking = $this->booking_bo->read_single($booking['id']);
 				$building = $this->building_bo->read_single($booking['building_id']);
 
-				$body = $this->create_body_text($booking['from_'], $booking['to_'], $building['name'], $booking['group_name'], $booking['id'], $booking['secret'], 'booking');
+				$body = $this->create_body_text($booking['from_'], $booking['to_'], $building['name'], $booking['group_name'], $booking['id'], $booking['secret'], 'booking', $external_site_address);
 				$subject = 'Rapporter deltakertall';
 
 				$this->db->query("select distinct name, email from bb_group_contact where trim(email) <> '' and group_id = ".$booking['group_id']);
 				$contacts = $this->db->resultSet;
 				foreach($contacts as $contact) 
 				{
-					$this->send->msg('email', $contact['email'], $subject, $body);
+					try
+					{
+						$this->send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
+						
+						// status set to 'sent, not responded to'
+						$sql = "update bb_booking set reminder = 3 where id = ".$booking['id'];
+						$this->db->query($sql);
+					} 
+					catch (phpmailerException $e)
+					{
+						// do nothing. nowhere to log or display error messages
+					}
 				}
 			}
 		}
@@ -67,6 +81,10 @@
 			$this->db->query($sql);
 			$events = $this->db->resultSet;
 
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			foreach($events as $event)
 			{
@@ -74,13 +92,24 @@
 				$building_info = $this->event_bo->so->get_building_info($event['id']);
 				$building = $this->building_bo->read_single($building_info['id']);
 
-				$body = $this->create_body_text($event['from_'], $event['to_'], $building['name'], '', $event['id'], $event['secret'], 'event');
+				$body = $this->create_body_text($event['from_'], $event['to_'], $building['name'], '', $event['id'], $event['secret'], 'event', $external_site_address);
 				$subject = 'Rapporter deltakertall';
-				$this->send->msg('email', $event['contact_email'], $subject, $body);
+				try
+				{
+					$this->send->msg('email', $event['contact_email'], $subject, $body, '', '', '', $from, '', 'plain');
+					
+					// status set to 'sent, not responded to'
+					$sql = "update bb_event set reminder = 3 where id = ".$event['id'];
+					$this->db->query($sql);
+				}
+				catch (phpmailerException $e)
+				{
+					// do nothing. nowhere to log or display error messages
+				}
 			}
 		}
 
-		private function create_body_text($from, $to, $where, $who, $id, $secret, $type)
+		private function create_body_text($from, $to, $where, $who, $id, $secret, $type, $external_site_address)
 		{
 			$body = "Informasjon om kommende arrangement:\n";
 			$body .= "Hvor: %WHERE%\n";
@@ -92,8 +121,7 @@
 			$body .= "\nVennlist oppgi korrekt deltakertall\n";
 			$body .= "Du kan gjøre dette ved å klikke på linken nedenfor\n\n%URL%";
 
-			// FIXME: Change url
-			$body = str_replace('%URL%', 'http://bk.localhost/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
+			$body = str_replace('%URL%', $external_site_address.'/bookingfrontend/?menuaction=bookingfrontend.ui'.$type.'.report_numbers&id='.$id.'&secret='.$secret, $body);
 			$body = str_replace('%WHO%', $who, $body);
 			$body = str_replace('%WHERE%', $where, $body);
 			$body = str_replace('%WHEN%', pretty_timestamp($from).' - '.pretty_timestamp($to), $body);

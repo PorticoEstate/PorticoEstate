@@ -49,7 +49,8 @@
 			'index'  => true,
 			'view'   => true,
 			'edit'   => true,
-			'delete' => true
+			'delete' => true,
+			'download'	=> true
 		);
 
 		function __construct()
@@ -88,6 +89,13 @@
 				'allrows'	=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
+		}
+
+		function download()
+		{
+			$list = $this->bo->read();
+			$uicols	= $this->bo->uicols;
+			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
 
 		function index()
@@ -147,6 +155,13 @@
 								array
 								(
 									'type'	=> 'button',
+									'id'	=> 'btn_export',
+									'value'	=> lang('download'),
+									'tab_index' => 10
+								),
+								array
+								(
+									'type'	=> 'button',
 									'id'	=> 'btn_done',
 									'value'	=> lang('done'),
 									'tab_index' => 9
@@ -180,17 +195,12 @@
 						)
 					)
 				);
-				$dry_run = true;
+//				$dry_run = true;
 			}
 
 			$values = $this->bo->read();
 			$uicols = $this->bo->uicols;
 
-/*			$uicols['name'][0]	= 'id';
-			$uicols['descr'][0]	= lang('category ID');
-			$uicols['name'][1]	= 'descr';
-			$uicols['descr'][1]	= lang('Descr');
-*/
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -297,14 +307,10 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
-					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='id')
-					{
-						$datatable['headers']['header'][$i]['sortable']			= true;
+					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
 						$datatable['headers']['header'][$i]['sort_field']   	= $uicols['name'][$i];
 					}
 				}
-			}
 
 			//path for property.js
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
@@ -339,8 +345,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -381,8 +385,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

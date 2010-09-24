@@ -118,7 +118,7 @@
 			$this->query			= isset($query) ? $query : $this->query;
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
-			$this->type				= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
+			$this->type				= isset($type)  && $type && isset($this->type_app[$type]) ? $type : 'entity';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
@@ -257,8 +257,77 @@
 			{
 				$receipt = $this->so->add_category($values);
 				execMethod('phpgwapi.menu.clear');
+				if(isset($values['category_template']) && $values['category_template'] && isset($receipt['id']) && $receipt['id'])
+				{
+					$values2 = array
+					(
+						'entity_id'			=> $values['entity_id'],
+						'cat_id'			=> $receipt['id'],
+						'category_template'	=> $values['category_template'],
+						'selected'			=> $values['template_attrib']
+					);
+
+					$this->_add_attrib_from_template($values2);
+				}
 			}
 			return $receipt;
+		}
+
+		protected function _add_attrib_from_template($values)
+		{
+			$template_info = explode('_', $values['category_template']);
+			$template_entity_id = $template_info[0];
+			$template_cat_id = $template_info[1];
+
+			$attrib_group_list =  $this->read_attrib_group($template_entity_id, $template_cat_id, true);
+
+			foreach ($attrib_group_list as $attrib_group)
+			{
+				$group = array
+				(
+					'appname'		=> $this->type_app[$this->type],
+ 					'location'		=> ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
+ 					'group_name'	=> $attrib_group['name'],
+ 					'descr'			=> $attrib_group['descr'],
+ 					'remark'		=> $attrib_group['remark']
+ 				);
+ 				$this->custom->add_group($group);
+			}
+
+			$attrib_list = $this->read_attrib($template_entity_id,$template_cat_id, true);
+
+			$template_attribs = array();
+			foreach ($attrib_list as $attrib)
+			{
+				if(in_array($attrib['id'],$values['selected']))
+				{
+					$template_attribs[] = $this->read_single_attrib($template_entity_id,$template_cat_id,$attrib['id']);
+				}
+			}
+
+			foreach ($template_attribs as $attrib)
+			{
+				$attrib['appname'] = $this->type_app[$this->type];
+				$attrib['location'] = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
+
+				$choices = array();
+				if(isset($attrib['choice']) && $attrib['choice'])
+				{
+					$choices = $attrib['choice'];
+					unset($attrib['choice']);
+				}
+
+				$id = $this->custom->add($attrib);
+				if($choices)
+				{
+					foreach($choices as $choice)
+					{
+						$attrib['new_choice'] = $choice['value'];
+						$attrib['id'] = $id;
+						$this->custom->edit($attrib);
+					}
+				}
+			}
 		}
 
 		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='', $group_id ='')
@@ -489,5 +558,17 @@
 			}
 			return $GLOBALS['phpgw']->custom_functions->get($this->type_app[$this->type],$location,$id);
 		}
-	}
 
+		function get_path($entity_id, $node)
+		{
+			return $this->so->get_path($entity_id, $node);
+		}
+		function read_category_tree2($entity_id)
+		{
+			return $this->so->read_category_tree2($entity_id);
+		}
+		function get_children2($entity_id, $parent, $level,$reset = false)
+		{
+			return $this->so->get_children2($entity_id, $parent, $level,$reset);
+		}
+	}

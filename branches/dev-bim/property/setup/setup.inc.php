@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.579';
+	$setup_info['property']['version']		= '0.9.17.595';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -142,6 +142,7 @@
 		'fm_event',
 		'fm_event_action',
 		'fm_event_exception',
+		'fm_event_schedule',
 		'fm_investment',
 		'fm_investment_value',
 		'fm_event_receipt',
@@ -165,6 +166,8 @@
 		'fm_custom',
 		'fm_custom_cols',
 		'fm_orders',
+		'fm_order_dim1',
+		'fm_order_template',
 		'fm_s_agreement',
 		'fm_s_agreement_budget',
 		'fm_s_agreement_category',
@@ -189,28 +192,40 @@
 		'fm_responsibility_contact',
 		'fm_action_pending',
 		'fm_action_pending_category',
+		'fm_jasper',
+		'fm_jasper_input_type',
+		'fm_jasper_format_type',
+		'fm_jasper_input',
         'fm_item_catalog',
         'fm_item_group',
         'fm_item',
         'fm_attr_data_type',
+        'fm_attr_group',
         'fm_attr_def',
         'fm_attr_value',
         'fm_item_group_attr',
         'fm_item_attr',
-        'fm_attr_choice',
-        'fm_attr_group'
+        'fm_attr_choice'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['property']['hooks'] = array
 	(
-		'deleteaccount',
 		'manual',
 		'settings',
 		'help',
 		'menu'	=> 'property.menu.get_menu',
+		'cat_add'		=> 'property.cat_hooks.cat_add',
+		'cat_delete'	=> 'property.cat_hooks.cat_delete',
+		'cat_edit'		=> 'property.cat_hooks.cat_edit',
 		'config',
-		'home'
+		'home',
+		'addaccount'	=> 'property.hook_helper.clear_userlist',
+		'editaccount'	=> 'property.hook_helper.clear_userlist',
+		'deleteaccount'	=> 'property.hook_helper.clear_userlist',
+		'addgroup'		=> 'property.hook_helper.clear_userlist',
+		'deletegroup'	=> 'property.hook_helper.clear_userlist',
+		'editgroup'		=> 'property.hook_helper.clear_userlist'
 	);
 
 	/* Dependencies for this app to work */

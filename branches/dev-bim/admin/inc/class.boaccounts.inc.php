@@ -176,6 +176,7 @@
 				$new_group = $GLOBALS['phpgw']->accounts->get($values['account_id']);
 			}
 			$new_group->lid			= $values['account_name'];
+			$new_group->old_loginid = $old_group->lid;
 			$new_group->firstname	= $values['account_name'];
 			$new_group->lastname	= lang('group');
 			$new_group->expires		= -1;
@@ -311,7 +312,7 @@
 
 			$groups = $values['account_groups'];
 			$acls = array();
-			if ( $values['changepassword'] )
+			if ( isset($values['changepassword']) && $values['changepassword'] )
 			{
 				$acls[] = array
 				(
@@ -320,7 +321,7 @@
 					'rights'	=> 1
 				);
 			}
-			if ( $values['anonymous'] )
+			if ( isset($values['anonymous']) && $values['anonymous'] )
 			{
 				$acls[] = array
 				(
@@ -330,9 +331,20 @@
 				);
 			}
 
+			$apps_admin = $values['account_permissions_admin'] ? array_keys($values['account_permissions_admin']) : array();
+			foreach ($apps_admin as $app_admin)
+			{
+				$acls[] = array
+				(
+					'appname' 	=> $app_admin,
+					'location'	=> 'admin',
+					'rights'	=> phpgwapi_acl::ADD
+				);			
+			}
+
 			$apps = $values['account_permissions'] ? array_keys($values['account_permissions']) : array();
 
-			unset($values['account_groups'], $values['account_permissions']);
+			unset($values['account_groups'], $values['account_permissions'], $values['account_permissions_admin']);
 
 			try
 			{

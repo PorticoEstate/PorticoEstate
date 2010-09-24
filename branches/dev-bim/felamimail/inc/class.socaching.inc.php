@@ -181,9 +181,9 @@
 				}
 			}
 			
-			$this->db->select($this->cache_table,'count(*)',$where,__LINE__,__FILE__);
+			$this->db->select($this->cache_table,'count(*) as cnt ',$where,__LINE__,__FILE__);
 			
-			return $this->db->next_record() ? $this->db->f(0) : 0;
+			return $this->db->next_record() ? $this->db->f('cnt') : 0;
 		}
 		
 		/**

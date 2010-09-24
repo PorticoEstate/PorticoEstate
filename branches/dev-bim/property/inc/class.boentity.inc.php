@@ -77,11 +77,8 @@
 			)
 		);
 
-		var $type_app = array
-		(
-			'entity'	=> 'property',
-			'catch'		=> 'catch'
-		);
+		var $type_app = array();
+		var $type;
 
 		function property_boentity($session=false)
 		{
@@ -107,17 +104,23 @@
 			$end_date	= phpgw::get_var('end_date');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$type		= phpgw::get_var('type');
+			$criteria_id	= phpgw::get_var('criteria_id');
+
+			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
+
 			$location_code		= phpgw::get_var('location_code');
+			$this->so 			= CreateObject('property.soentity',$entity_id,$cat_id);
+			$this->type_app		= $this->so->get_type_app();
+
 			$this->type	= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
 			$this->location_code	= isset($location_code)  && $location_code ? $location_code : '';
 			
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
-			$this->so 						= CreateObject('property.soentity',$entity_id,$cat_id);
 			$this->custom 					= & $this->so->custom;
 			$this->soadmin_entity->type		= $this->type;
 			$this->soadmin_entity->type_app	= $this->type_app;
 			$this->so->type					= $this->type;
-			$this->so->type_app				= $this->type_app;
+
 
 			$this->category_dir = "{$this->type}_{$entity_id}_{$cat_id}";
 
@@ -205,7 +208,7 @@
 			return $column_list;
 		}
 
-		function select_category_list($format='',$selected='')
+		function select_category_list($format='',$selected='', $required = '')
 		{
 			switch($format)
 			{
@@ -217,7 +220,7 @@
 					break;
 			}
 
-			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id));
+			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id, 'required' => $required));
 
 			return $this->bocommon->select_list($selected,$categories);
 		}
@@ -240,6 +243,29 @@
 			return $this->bocommon->select_list($selected,$status_entries);
 		}
 
+		function get_criteria_list($selected='')
+		{
+			$criteria = array
+			(
+				array
+				(
+					'id'	=> 'vendor',
+					'name'	=> lang('vendor')
+				),
+				array
+				(
+					'id'	=> 'ab',
+					'name'	=> lang('contact')
+				),
+				array
+				(
+					'id'	=> 'abo',
+					'name'	=> lang('organisation')
+				)
+			);
+			return $this->bocommon->select_list($selected,$criteria);
+		}
+
 		function read($data= array())
 		{
 			if(isset($this->allrows))
@@ -253,7 +279,8 @@
 											'entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'status'=>$this->status,
 											'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
 											'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
-											'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code));
+											'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
+											'criteria_id' => $this->criteria_id));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
@@ -504,5 +531,10 @@
 		{
 			return $this->so->read_attrib_help($data);
 		}
+
+		function read_entity_to_link($data)
+		{
+				return $this->so->read_entity_to_link($data);
 	}
 
+	}

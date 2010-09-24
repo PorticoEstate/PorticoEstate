@@ -145,7 +145,14 @@
 			$file = 'unknown';
 			if ( isset($entry['file']) )
 			{
+				if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+				{
 				$file = '/path/to/phpgroupware' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
+			}
+				else
+				{
+					$file = $entry['file'];
+				}
 			}
 
 			if ( isset($entry['line']) )
@@ -183,9 +190,46 @@
 	*/
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
+
 		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
 		{
 			return true;
+		}
+/*
+_debug_array($error_level);
+_debug_array($error_msg);
+_debug_array($error_file);
+_debug_array($error_line);
+//_debug_array($bt = debug_backtrace());die();
+*/
+		if(isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']))
+		{
+			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
+			{
+				case 'F': // Fatal
+				case 'E': // Error
+					$error_reporting = E_ERROR | E_USER_ERROR |E_PARSE;
+					break;
+
+				case 'W': // Warn
+				case 'I': // Info
+					$error_reporting = E_ERROR | E_USER_ERROR| E_WARNING | E_USER_WARNING | E_PARSE;
+					break;
+
+				case 'N': // Notice
+				case 'D': // Debug
+					$error_reporting = E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE | E_PARSE;
+					break;
+
+				case 'S': // Strict
+					$error_reporting = E_STRICT | E_PARSE;
+					break;
+			}
+
+			if( !(!!($error_reporting & $error_level)))
+			{
+				return true;
+			}
 		}
 
 		if ( !isset($GLOBALS['phpgw']->log)
@@ -195,7 +239,10 @@
 		}
 		$log =& $GLOBALS['phpgw']->log;
 
+		if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+		{
 		$error_file = str_replace(PHPGW_SERVER_ROOT, '/path/to/phpgroupware', $error_file);
+		}
 
 		$bt = debug_backtrace();
 
@@ -242,6 +289,7 @@
 					echo '<p>' . lang('Notice: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 					echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+				break;
 			case E_STRICT:
 				$log_args['severity'] = 'S';
 				$log->strict($log_args);
@@ -252,8 +300,15 @@
 		//			echo '<p>' . lang('Strict: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 		//			echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				}
+				break;
 
-			//No default, we just ignore it, for now
+			case E_DEPRECATED:
+			case E_USER_DEPRECATED:
+				$log_args['severity'] = 'DP';
+				$log->deprecated_($log_args);
+				echo '<p class="msg">' . lang('deprecated: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
+				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
+				break;
 		}
 	}
 	set_error_handler('phpgw_handle_error');
@@ -266,7 +321,7 @@
 	function phpgw_handle_exception(Exception $e)
 	{
 		$msg = $e->getMessage();
-		$help = lang('Please contact your administrator for assistance');
+		$help = 'Please contact your administrator for assistance';
 		$trace = $e->getTraceAsString();
 		echo <<<HTML
 			<h1>Uncaught Exception: {$msg}</h1>
@@ -316,7 +371,12 @@ HTML;
 	 /* Load main class */
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
 
-	magic_quotes_runtime(false);
+	if(get_magic_quotes_runtime())
+	{
+		echo '<center><b>The magic_quotes_runtime has to set to Off in php.ini</b></center>';
+		exit;
+	}
+
 
 // Can't use this yet - errorlog hasn't been created.
 //	print_debug('sane environment','messageonly','api');
@@ -360,6 +420,7 @@ HTML;
 		$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]['db_user'];
 		$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]['db_pass'];
 		$GLOBALS['phpgw_info']['server']['db_type'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]['db_type'];
+		$GLOBALS['phpgw_info']['server']['db_abstraction']	= $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]['db_abstraction'];
 	}
 	else
 	{
@@ -368,6 +429,7 @@ HTML;
 		$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['server']['default_domain']]['db_user'];
 		$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['server']['default_domain']]['db_pass'];
 		$GLOBALS['phpgw_info']['server']['db_type'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['server']['default_domain']]['db_type'];
+		$GLOBALS['phpgw_info']['server']['db_abstraction']	= $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['server']['default_domain']]['db_abstraction'];
 	}
 
 	if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'login' && ! $GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
@@ -440,6 +502,35 @@ HTML;
 			$GLOBALS['phpgw_info']['server'][$k] = $v;
 		}
 
+		if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) )
+		{
+			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
+			{
+				case 'F': // Fatal
+				case 'E': // Error
+					error_reporting(E_ERROR | E_USER_ERROR | E_PARSE);
+					break;
+
+				case 'W': // Warn
+				case 'I': // Info
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_PARSE);
+					break;
+
+				case 'N': // Notice
+				case 'D': // Debug
+					error_reporting(E_ERROR | E_USER_ERROR | E_WARNING | E_USER_WARNING | E_NOTICE | E_USER_NOTICE | E_PARSE);
+					break;
+
+				case 'S': // Strict
+					error_reporting(E_STRICT | E_PARSE);
+					break;
+
+				case 'DP': // Deprecated
+					error_reporting(E_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED | E_PARSE);
+					break;
+			}
+		}
+
 /*
 
 
@@ -454,6 +545,13 @@ HTML;
 	unset($cache_query);
 	unset($server_info_cache);
 */
+
+
+	// In case we use virtual hosts - some of them but not all with ntlm auth. 
+	if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && !isset($_SERVER['REMOTE_USER']))
+	{
+		$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	}
 
 	// In the case we use a fall back (mode Half remote_user)
 	if(isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))
@@ -578,7 +676,7 @@ HTML;
 			}
 		}
 
-		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] !='en')
+		if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] != $GLOBALS['phpgw_info']['server']['default_lang'])
 		{
 			$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
 		}
@@ -634,7 +732,7 @@ HTML;
 		/********* Optional classes, which can be disabled for performance increases *********/
 		while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
 		{
-			if (ereg('enable_', $phpgw_class_name[0]))
+			if (preg_match('/enable_/', $phpgw_class_name[0]))
 			{
 				$enable_class = str_replace('enable_', '', $phpgw_class_name[0]);
 				$enable_class = str_replace('_class', '', $enable_class);
@@ -661,6 +759,19 @@ HTML;
 		{
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
+				$_access = false;
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'admin' && $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['userid']))
+				{
+					$_access = true;
+				}
+
+				if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['flags']['currentapp']))
+				{
+					$_access = true;
+				}
+
+				if (!$_access)
+				{
 				$GLOBALS['phpgw']->common->phpgw_header(true);
 				$GLOBALS['phpgw']->log->write(array('text'=>'W-Permissions, Attempted to access %1','p1'=>$GLOBALS['phpgw_info']['flags']['currentapp']));
 
@@ -670,6 +781,8 @@ HTML;
 
 HTML;
 				$GLOBALS['phpgw']->common->phpgw_exit(True);
+			}
+				unset($_access);
 			}
 		}
 

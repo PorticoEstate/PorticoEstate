@@ -6,7 +6,7 @@
 	* @author Joseph Engo <jengo@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Bettina Gille <ceb@phpgroupware.org>
-	* @copyright Copyright (C) 2000-2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
 	* @package phpgroupware
 	* @subpackage phpgwapi
@@ -229,6 +229,8 @@
 				{
 					$sql = 'DELETE FROM phpgw_group_map'
 						. " WHERE group_id = {$account_id}";
+
+					$GLOBALS['phpgw']->hooks->process('deletegroup');
 				}
 				else
 				{
@@ -287,7 +289,7 @@
 			static $by_id;
 			static $by_lid;
 
-			$sql = 'SELECT count(account_id) FROM phpgw_accounts WHERE ';
+			$sql = 'SELECT count(account_id) as cnt FROM phpgw_accounts WHERE ';
 			if ( is_int($account_lid) )
 			{
 				if(@isset($by_id[$account_lid]) && $by_id[$account_lid] != '')
@@ -307,7 +309,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$ret_val = $this->db->f(0) > 0;
+			$ret_val = $this->db->f('cnt') > 0;
 			if(is_int($account_lid))
 			{
 				$by_id[$account_lid] = $ret_val;
@@ -532,9 +534,9 @@
 				$accounts[$id]->init($record);
 			}
 
-			$this->db->query("SELECT count(account_id) FROM phpgw_accounts $whereclause");
+			$this->db->query("SELECT count(account_id) as cnt FROM phpgw_accounts $whereclause");
 			$this->db->next_record();
-			$this->total = $this->db->f(0);
+			$this->total = $this->db->f('cnt');
 
 			return $accounts;
 		}
@@ -595,7 +597,7 @@
 
 			if ( is_object($acct) )
 			{
-				$id_list[$id] = (string) $acct;
+				$id_list[$id] = $acct->__toString();
 			}
 			else
 			{
@@ -609,10 +611,11 @@
 		* Get a list of members of the group
 		*
 		* @param integer $group_id the group to check
+		* @param bool $active only return active members
 		*
 		* @return array list of members
 		*/
-		public function member($group_id = 0)
+		public function member($group_id = 0, $active = false)
 		{
 			$group_id = get_account_id($group_id);
 
@@ -623,9 +626,18 @@
 
 			$this->members[$group_id] = array();
 
-			$sql = 'SELECT account_id'
-				. ' FROM phpgw_group_map'
-				. " WHERE group_id = {$group_id}";
+			$Where = 'WHERE';
+			$sql = 'SELECT phpgw_group_map.account_id'
+				. ' FROM phpgw_group_map';
+
+			if($active)
+			{
+				$sql .= " {$this->join} phpgw_accounts ON phpgw_group_map.account_id = phpgw_accounts.account_id"
+				. " WHERE account_status = 'A'";
+				$Where = 'AND';
+			}
+
+			$sql .= " {$Where} group_id = {$group_id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -640,7 +652,7 @@
 
 			foreach ( $this->members[$group_id] as $id => &$acct )
 			{
-				$acct['account_name'] = (string) $this->get($id);
+				$acct['account_name'] = $this->get($id)->__toString();
 			}
 			return $this->members[$group_id];
 		}
@@ -758,12 +770,14 @@
 			);
 
 			$where_lid = '';
+			//Sigurd 28 june 2010: condition on id should be enough
+/*
 			if ( $this->account->lid != $this->account->old_loginid )
 			{
 				$lid = $this->db->db_addslashes($this->account->old_loginid);
 				$where_lid = " AND account_lid = '{$lid}'";
 			}
-
+*/
 			$sql = 'UPDATE phpgw_accounts'
 					. " SET account_lid = '{$data['lid']}', "
 						. " account_firstname = '{$data['firstname']}', "

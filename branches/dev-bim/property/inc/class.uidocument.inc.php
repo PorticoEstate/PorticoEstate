@@ -268,7 +268,6 @@
 					 )
 				);
 
-				$dry_run = true;
 			}
 
 			$document_list = $this->bo->read();
@@ -396,19 +395,7 @@
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			phpgwapi_yui::load_widget('animation');
-
-
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -449,14 +436,28 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
 	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
 	      	{
@@ -685,8 +686,6 @@
 										)
 					 )
 				);
-
-				$dry_run = true;
 			}
 
 			$document_list = $this->bo->read_at_location($location_code);
@@ -713,11 +712,14 @@
 			$uicols['descr'][2]		= lang('Doc type');
 			$uicols['datatype'][2]	= 'text';
 			$uicols['name'][3]		= 'user';
-			$uicols['descr'][3]		= lang('User');
+			$uicols['descr'][3]		= lang('coordinator');
 			$uicols['datatype'][3]	= 'text';
 			$uicols['name'][4]		= 'document_id';
 			$uicols['descr'][4]		= lang('document id');
 			$uicols['datatype'][4]	= 'text';
+			$uicols['name'][5]		= 'document_date';
+			$uicols['descr'][5]		= lang('document date');
+			$uicols['datatype'][5]	= 'text';
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -914,8 +916,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -962,9 +962,13 @@
 					$json ['toolbar_height'] = $json ['toolbar_height'] + (count($datatable['locdata']) * 10);
 					$json ['current_consult'] = $datatable['locdata'];
 				}
-_debug_array($datatable['locdata']);				
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

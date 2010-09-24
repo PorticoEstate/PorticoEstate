@@ -14,6 +14,12 @@
 		protected $agresso_id;
 		protected $is_area;
 		protected $price;
+		protected $is_inactive;
+		protected $is_adjustable;
+		protected $standard;
+		protected $responsibility_id;
+		protected $responsibility_title;
+		//protected $is_one_time;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -76,6 +82,25 @@
 			$this->is_area = (boolean)$is_area;
 		}
 
+		public function is_inactive()
+		{
+			return $this->is_inactive;
+		}
+		
+		public function get_status_text()
+		{
+			if ($this->is_inactive()) {
+				return lang('price_item_inactive');
+			} else {
+				return lang('price_item_active');
+			}
+		}
+
+		public function set_is_inactive($is_inactive)
+		{
+			$this->is_inactive = (boolean)$is_inactive;
+		}
+
 		public function get_price()
 		{
 			if (!$this->price)
@@ -101,7 +126,13 @@
 				'title' => $this->get_title(),
 				'agresso_id' => $this->get_agresso_id(),
 				'is_area' => $this->get_type_text(),
-				'price' => $this->get_price()
+				'is_inactive' => $this->get_status_text(),
+				'is_adjustable' => $this->get_adjustable_text(),
+				'standard' => $this->get_standard_text(),
+				'price' => $this->get_price(),
+				'responsibility_id' => $this->get_responsibility_id(),
+				'responsibility_title' => lang($this->get_responsibility_title())
+				//'is_one_time' => $this->is_one_time()
 			);
 		}
 
@@ -167,4 +198,64 @@
 
 			return $valid;
 		}
+
+		public function get_responsibility_id()
+		{
+			return $this->responsibility_id;
+		}
+
+		public function set_responsibility_id($responsibility_id)
+		{
+			$this->responsibility_id = $responsibility_id;
+		}
+		
+		public function get_responsibility_title(){
+			return $this->responsibility_title;
+		}
+		
+		public function set_responsibility_title($responsibility_title){
+			$this->responsibility_title = $responsibility_title;
+		}
+		public function is_adjustable(){
+			return $this->is_adjustable;
+		}
+		
+		public function get_adjustable_text()
+		{
+			if ($this->is_adjustable()) {
+				return lang('price_item_adjustable');
+			} else {
+				return lang('price_item_not_adjustable');
+			}
+		}
+		
+		public function set_is_adjustable($is_adjustable){
+			$this->is_adjustable = (boolean)$is_adjustable;
+		}
+		
+		public function is_standard(){
+			return $this->standard;
+		}
+		
+		public function get_standard_text()
+		{
+			if ($this->is_standard()) {
+				return lang('yes');
+			} else {
+				return lang('no');
+			}
+		}
+		
+		public function set_standard($standard){
+			$this->standard = (boolean)$standard;
+		}
+		
+/*		public function is_one_time(){
+			return $this->is_one_time;
+		}
+		
+		public function set_is_one_time($is_one_time){
+			$this->is_one_time = (boolean)$is_one_time;
+		}
+*/
 	}

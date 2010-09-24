@@ -13,7 +13,7 @@
 	// Defining columns for datatable
 	var columnDefs = [{
 		key: "identifier",
-		label: "<?php echo lang('organisation_or_ssn_number') ?>",
+		label: "<?php echo lang('identifier') ?>",
 	    sortable: true
 	},
 	{
@@ -24,11 +24,6 @@
 	{
 		key: "address",
 		label: "<?php echo lang('address') ?>",
-	    sortable: true
-	},
-	{
-		key: "phone",
-		label: "<?php echo lang('phone') ?>",
 	    sortable: true
 	},
 	{
@@ -64,7 +59,7 @@
 		'index.php?menuaction=rental.uiparty.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_party_type','<?php echo $list_id ?>_ctrl_toggle_party_fields','<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_active','<?php echo $list_id ?>_ctrl_toggle_party_type','<?php echo $list_id ?>_ctrl_toggle_party_fields','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -79,10 +74,13 @@
 
     function party_export(ptype) {
         var select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_type');
-        var option = select.options[select.selectedIndex].value;
+        var pType = select.options[select.selectedIndex].value;
 
-        var sSelect = document.getElementById('<?php echo $list_id ?>_ctr_toggle_party_fields');
+        var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_party_fields');
         var sOption = sSelect.options[sSelect.selectedIndex].value;
+
+        var statusSelect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active');
+        var pStatus = statusSelect.options[statusSelect.selectedIndex].value;
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
         <?php
@@ -93,12 +91,12 @@
         ?>
         
         window.location = 'index.php?menuaction=rental.uiparty.download'+
-            '&amp;party_type='+option+
+        	'&amp;party_type='+pType+
             '<?php echo $url_add_on; ?>'+
-            '&amp;type='+ptype+
+            '&amp;active='+pStatus+
             '&amp;query='+query+
             '&amp;search_option='+sOption+
-            '&amp;results=100';
+        	'&amp;export=true';
     }
 
 </script>
@@ -108,18 +106,27 @@
 ?>
 
 <form id="<?php echo $list_id ?>_form" method="GET">
+<?php
+	$populate = phpgw::get_var('populate_form');
+	if(isset($populate)){
+		$q = phpgwapi_cache::session_get('rental', 'party_query');
+		$s_type = phpgwapi_cache::session_get('rental', 'party_search_type');
+		$p_type = phpgwapi_cache::session_get('rental', 'party_type');
+		$status = phpgwapi_cache::session_get('rental', 'party_status');
+	} 
+?>
 	<fieldset>
 		<!-- Search -->
 		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
-		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" />
-		<label class="toolbar_element_label" for="ctr_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
-			<select name="search_option" id="<?php echo $list_id ?>_ctr_toggle_party_fields">
-				<option value="all"><?php echo lang('all') ?></option>
-				<option value="name"><?php echo lang('name') ?></option>
-				<option value="address"><?php echo lang('address') ?></option>
-				<option value="identifier"><?php echo lang('Identifier') ?></option>
-				<option value="reskontro"><?php echo lang('reskontro') ?></option>
-				<option value="result_unit_number"><?php echo lang('result_unit_number') ?></option>
+		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" value="<?php echo isset($q) ? $q : ''?>"/>
+		<label class="toolbar_element_label" for="ctrl_toggle_party_fields"><?php echo lang('search_where') ?>&amp;nbsp;
+			<select name="search_option" id="<?php echo $list_id ?>_ctrl_toggle_party_fields">
+				<option value="all" <?php echo ($s_type == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+				<option value="name" <?php echo ($s_type == 'name') ? 'selected' : ''?>><?php echo lang('name') ?></option>
+				<option value="address" <?php echo ($s_type == 'address') ? 'selected' : ''?>><?php echo lang('address') ?></option>
+				<option value="identifier" <?php echo ($s_type == 'identifier') ? 'selected' : ''?>><?php echo lang('Identifier') ?></option>
+				<option value="reskontro" <?php echo ($s_type == 'reskontro') ? 'selected' : ''?>><?php echo lang('reskontro') ?></option>
+				<option value="result_unit_number" <?php echo ($s_type == 'result_unit_number') ? 'selected' : ''?>><?php echo lang('result_unit_number') ?></option>
 			</select>
 		</label>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
@@ -128,18 +135,22 @@
 
 	<fieldset>
 		<!-- Filters -->
-		<h3><?php echo lang('filters') ?></h3>
-		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('type') ?></label>
-
+		<label class="toolbar_element_label" for="ctrl_toggle_party_type"><?php echo lang('part_of_contract') ?></label>
 		<select name="party_type" id="<?php echo $list_id ?>_ctrl_toggle_party_type">
+			<option value="all"><?php echo lang('all') ?></option>
 			<?php
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 			foreach($types as $id => $label)
 			{
-				?><option value="<?php echo $id ?>"><?php echo lang($label) ?></option><?php
+				?><option value="<?php echo $id ?>" <?php echo ($p_type == $id) ? 'selected' : ''?>><?php echo lang($label) ?></option><?php
 			}
 			?>
-			<option value="all" selected="selected"><?php echo lang('all') ?></option>
+		</select>
+		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('marked_as') ?></label>
+		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
+			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('not_available_nor_hidden') ?></option>
+			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('available_for_pick') ?></option>
+			<option value="inactive" <?php echo ($status == 'inactive') ? 'selected' : ''?>><?php echo lang('hidden_for_pick') ?></option>
 		</select>
 	</fieldset>
 	
@@ -160,5 +171,5 @@
 	</div>
 </fieldset>
 
-<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
+<div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

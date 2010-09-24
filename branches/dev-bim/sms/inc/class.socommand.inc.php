@@ -20,17 +20,13 @@
 	{
 		var $grants;
 		var $db;
-		var $db2;
 		var $account;
 		var $command_data;
 
-		function sms_socommand()
+		function __construct()
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bocommon		= CreateObject('sms.bocommon');
 			$this->db 		= clone($GLOBALS['phpgw']->db);
-			$this->db2 		= clone($this->db);
 
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('sms','.config');
 			$this->join		= $this->db->join;
@@ -38,24 +34,13 @@
 		}
 
 
-
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
-			}
+			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 
 			if ($order)
 			{
@@ -85,18 +70,18 @@
 			}
 */
 
+			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " $where command_code $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -107,6 +92,7 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$command_info = array();
 			while ($this->db->next_record())
 			{
 				$command_info[] = array
@@ -125,27 +111,16 @@
 
 		function read_log($data)
 		{
-			if(is_array($data))
-			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
-				$cat_id	= (isset($data['cat_id'])?$data['cat_id']:'');
-			}
+			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : '';
 
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
-
 			}
 			else
 			{
@@ -162,18 +137,18 @@
 				$where= 'AND';
 			}
 
+			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " $where command_log_code $this->like '%$query%' OR command_log_param $this->like '%$query%' OR sms_sender $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 
-			$this->db2->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->db2->num_rows();
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if(!$allrows)
 			{
@@ -184,6 +159,8 @@
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
+			$command_info = array();
+
 			while ($this->db->next_record())
 			{
 				$command_info[] = array
@@ -192,8 +169,8 @@
 					'sender'=> $this->db->f('sms_sender'),
 					'success'=> $this->db->f('command_log_success'),
 					'datetime'=> $this->db->f('command_log_datetime'),
-					'code'	=> stripslashes($this->db->f('command_log_code')),
-					'param'	=> stripslashes($this->db->f('command_log_param'))
+					'code'	=> $this->db->f('command_log_code',true),
+					'param'	=> $this->db->f('command_log_param',true)
 				);
 			}
 
@@ -204,10 +181,11 @@
 		{
 			$sql = "SELECT command_code FROM phpgw_sms_featcommand GROUP BY command_code";
 			$this->db->query($sql,__LINE__,__FILE__);
-
+			$values = array();
 			while ($this->db->next_record())
 			{
-				$values[] = array(
+				$values[] = array
+				(
 					'id'=> $this->db->f('command_code'),
 					'name'	=> $this->db->f('command_code')
 					);
@@ -220,13 +198,14 @@
 			$sql = 'SELECT * FROM phpgw_sms_featcommand WHERE command_id=' . intval($id);
 			$this->db->query($sql,__LINE__,__FILE__);
 			$bin_path = PHPGW_SERVER_ROOT . "sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}";
+			$values = array();
 			if ($this->db->next_record())
 			{
 				$values['id']		= $id;
-				$values['code']		= stripslashes($this->db->f('command_code'));
-				$values['exec']		= stripslashes(str_replace($bin_path,'',$this->db->f('command_exec')));
+				$values['code']		= $this->db->f('command_code',true);
+				$values['exec']		= str_replace($bin_path,'',$this->db->f('command_exec',true));
 				$values['type']		= $this->db->f('command_type');
-				$values['descr']	= stripslashes($this->db->f('command_descr'));
+				$values['descr']	= $this->db->f('command_descr',true);
 			}
 			return $values;
 		}
@@ -234,6 +213,7 @@
 
 		function add_command($values)
 		{
+			$receipt = array();
 			$this->db->transaction_begin();
 
 			$values['exec'] = PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/{$values['exec']}";
@@ -243,7 +223,8 @@
 			$values['code'] = $this->db->db_addslashes($values['code']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
-			$insert_values=array(
+			$insert_values = array
+			(
 				$this->account,
 				$values['code'],
 				$values['exec'],
@@ -251,7 +232,7 @@
 				$values['descr'],
 				);
 
-			$insert_values	= $this->bocommon->validate_db_insert($insert_values);
+			$insert_values	= $this->db->validate_insert($insert_values);
 
 			$this->db->query("INSERT INTO phpgw_sms_featcommand (uid,command_code,command_exec,command_type,command_descr) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
@@ -266,6 +247,7 @@
 
 		function edit_command($values)
 		{
+			$receipt = array();
 			$this->db->transaction_begin();
 
 			$values['exec'] = PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}/{$values['exec']}";
@@ -276,7 +258,7 @@
 			$value_set['command_code'] 	= $this->db->db_addslashes($values['code']);
 			$value_set['command_descr']	= $this->db->db_addslashes($values['descr']);
 
-			$value_set	= $this->bocommon->validate_db_update($value_set);
+			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE phpgw_sms_featcommand set $value_set WHERE command_id=" . $values['command_id'],__LINE__,__FILE__);
 
@@ -286,15 +268,5 @@
 
 			$receipt['command_id']= $values['command_id'];
 			return $receipt;
-		}
-
-		function delete_command($id)
-		{
-			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM phpgw_sms_command_value WHERE command_id =' . intval($command_id),__LINE__,__FILE__);
-			$this->db->query('DELETE FROM phpgw_sms_command_choice WHERE command_id =' . intval($command_id),__LINE__,__FILE__);
-			$this->db->query('DELETE FROM phpgw_sms_command_attrib WHERE command_id =' . intval($command_id),__LINE__,__FILE__);
-			$this->db->query('DELETE FROM phpgw_sms_command_command WHERE id='  . intval($id),__LINE__,__FILE__);
-			$this->db->transaction_commit();
 		}
 	}

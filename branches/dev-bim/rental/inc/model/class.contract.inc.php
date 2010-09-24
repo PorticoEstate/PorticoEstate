@@ -3,6 +3,7 @@
 	include_class('rental', 'model', 'inc/model/');
 	include_class('rental', 'contract_date', 'inc/model/');
 	include_class('rental', 'invoice', 'inc/model/');
+	phpgw::import_class('rental.socontract_price_item');
 
 	class rental_contract extends rental_model
 	{
@@ -47,6 +48,13 @@
 		protected $notify_before_due_date;
 		protected $notify_after_termination_date;
 		protected $rented_area;
+		protected $adjustment_interval;
+		protected $adjustment_share;
+		protected $adjustment_year;
+		protected $adjustable;
+		protected $bill_only_one_time;
+		protected $publish_comment;
+		protected $total_price_current_year;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -60,6 +68,7 @@
 			$this->parties = array();
 			$this->composites = array();
 			$this->bill_timestamps = array(); // Consider to have all invoices here if other data than billing timetamps are needed 
+			$bill_only_one_time = false;
 		}
 		
 		public function set_id($id)
@@ -108,6 +117,16 @@
 			$this->billing_start_date = $date;
 		}
 		
+		public function set_next_bill_timestamp($next_bill_timestamp)
+		{
+			$this->next_bill_timestamp = $next_bill_timestamp;
+		}
+		
+		public function get_next_bill_timestamp()
+		{
+			return $this->next_bill_timestamp;
+		}
+		
 		public function get_executive_officer_id() {
 			return $this->executive_officer_id;
 		}
@@ -122,7 +141,9 @@
 		 * contract.
 		 * @return string with UNIX time.
 		 */
-		public function get_billing_start_date() { return $this->billing_start_date; }
+		public function get_billing_start_date() { 
+			return isset($this->billing_start_date) ? $this->billing_start_date : isset($this->contract_date) ? $this->contract_date->get_start_date() : ''; 
+		}
 		
 		public function set_location_id($location_id)
 		{
@@ -195,7 +216,16 @@
 			$this->term_id_title = $term_id_title;
 		}
 
-		public function get_term_id_title(){ return $this->term_id_title; }
+		public function get_term_id_title(){ 
+			if(isset($this->term_id_title) && $this->term_id_title != '')
+			{	
+				return lang($this->term_id_title); 
+			}
+			else
+			{
+				return null;
+			}
+		}
 		
 		public function set_security_type(int $security_type = null)
 		{
@@ -241,6 +271,16 @@
 		public function set_contract_type_title($title)
 		{
 			$this->contract_type_title = $title;
+		}
+		
+		public function get_bill_only_one_time()
+		{
+			return $this->bill_only_one_time;
+		}
+		
+		public function set_bill_only_one_time()
+		{
+			$this->bill_only_one_time = true;
 		}
 		
 		public function get_party_name(){
@@ -465,9 +505,8 @@
 				$this->bill_timestamps = array_reverse($this->bill_timestamps); // ..then we reverse them to make the last biling come first
 				if($timestamp == null) // No timestamp specified
 				{
-					// We can just use the first invoice
-					$keys = array_keys($this->bill_timestamps);
-					return $this->bill_timestamps[$keys[0]]->get_timestamp_end();
+					// We can just use the first invoice;		
+					return $this->bill_timestamps[0];
 				}
 				foreach ($this->bill_timestamps as $bill_timestamp) // Runs through all invoices
 				{
@@ -533,14 +572,192 @@
 		}
 		
 		
+		public function get_total_price_current_year()
+		{
+			/* 1. Get current year
+			 * 2. Check contract dates to see if the contract is/has:
+			 * 2.1 ...ended - return 0
+			 * 2.2 ...active alle year - return total price
+			 * 2.3 ...ends or starts current year - calculate price
+			 * 2.3.1 
+			 */
+			$current_year = date("Y");
+			$next_year = $current_year + 1;
+			
+			$timestamp_invoice_start = strtotime("{$current_year}-1-1");
+			$timestamp_invoice_end = strtotime("{$current_year}-12-31");
+			
+			
+			$contract_dates = $this->get_contract_date();
+			if(isset($contract_dates))
+			{
+				$contract_start = $contract_dates->get_start_date();
+				$contract_end = $contract_dates->get_end_date();
+				
+				if(isset($contract_end) && $contract_end < $timestamp_invoice_start)
+				{
+					return 0; // The contract ends before start of current year
+				}
+				else if($contract_start > $timestamp_invoice_end)
+				{
+					return 0; // The contract starts after the end of current year
+				}
+				else if($contract_start < $timestamp_invoice_start && (!isset($contract_end) || $contract_end > $timestamp_invoice_end))
+				{
+					// The contract is active the whole current year
+					return rental_socontract_price_item::get_instance()->get_total_price($this->get_id());
+				}
+			}
+			else
+			{
+				return 0; // The contract has no dates
+			}
+			
+			// The contract is active only parts of the current year, we must calculate the total sum using the billing logic
+			
+			$total_sum = 0; // Holding the total price of the contract current year
+			$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $this->get_id()));
+			
+			
+			// Run through the contract price items
+			foreach($contract_price_items as $contract_price_item)
+			{
+				// ---- Period calculation ---
+				// Determine start date for price item
+				$contract_price_item_start = $contract_price_item->get_date_start();
+				if($contract_price_item_start == null || $contract_price_item_start == '') // Date not set
+				{
+					// We just use the invoice date for our calculations
+					$contract_price_item_start = $timestamp_invoice_start;
+				}
+				
+				// Determine end date for price item
+				$contract_price_item_end = $contract_price_item->get_date_end();
+				if($contract_price_item_end == null || $contract_price_item_end == '') // Date not set
+				{
+					// We just use the invoice date for our calculations
+					$contract_price_item_end = $timestamp_invoice_end;
+				}
+				
+				// Sanity check - end date should never be before start date
+				if($contract_price_item_end < $contract_price_item_start) 
+				{
+					continue; // We don't add this price item - continue to next
+				}
+				
+				// Checking the start date against the invoice dates
+				if($contract_price_item_start < $timestamp_invoice_start) // Start of price item before invoice start
+				{
+					$invoice_price_item_start = $timestamp_invoice_start; // We use the invoice start
+				}
+				else if($contract_price_item_start > $timestamp_invoice_end) // Start of price item after this invoice ends
+				{
+					continue; // We don't add this price item - continue to next
+				}
+				else // Price item start date is somewhere between start and end
+				{
+					$invoice_price_item_start = $contract_price_item_start; // We use the price item start
+				}
+				
+				// Checking the end date against invoice dates
+				if($contract_price_item_end < $timestamp_invoice_start) // End of price item before this invoice starts
+				{
+					continue; // We don't add this price item - continue to next
+				}
+				else if($contract_price_item_end < $timestamp_invoice_end) // End of price item before invoice end
+				{
+					$invoice_price_item_end = $contract_price_item_end; // We use the price item end
+				} 
+				else // Price item end date is somewhere after invoice end
+				{
+					$invoice_price_item_end = $timestamp_invoice_end;	// We use the invoice end
+				}
+				
+				// Checking the contract dates against the temporary price item dates
+				if(isset($contract_start) && !$contract_price_item->is_one_time())
+				{
+					if($contract_start > $timestamp_invoice_end) // The start of the contract is after the billing period (should never happen)
+					{
+						continue; //No price items for this contract will be billed
+					}
+					
+					if($contract_start > $invoice_price_item_start) // The contract start is after the start of the price item
+					{
+						$invoice_price_item_start = $contract_start;
+					}
+				}
+				
+				if(isset($contract_end) && !$contract_price_item->is_one_time())
+				{
+					if($contract_end < $timestamp_invoice_start) // The end of the contract is before the billing period (should never happen)
+					{
+						continue; //No price items for this contract will be billed
+					}
+					
+					if($contract_end < $invoice_price_item_end) // The contract start is after the start of the price item
+					{
+						$invoice_price_item_end = $contract_end;
+					}
+				}
+				
+				// --- End of period calculation ---
+				
+				// Create a new invoice price item
+				$invoice_price_item = new rental_invoice_price_item(
+					2,									// the number of decimals to use for the total price of the price item
+					-1, 										// no price item identifier
+					0, 											// the invoice identifier
+					$contract_price_item->get_title(),			// the contract price item title
+					$contract_price_item->get_agresso_id(), 	// the contract price item agresso identifier
+					$contract_price_item->is_area(), 			// flag for specifying if the contract is of area/piece
+					$contract_price_item->get_price(),			// the price of the contract price item
+					$contract_price_item->get_area(), 			// the rented area on this contract (derived from contract)
+					$contract_price_item->get_count(), 			// the number of items on this price item
+					$invoice_price_item_start, 					// the start date from which this price item should be calculated
+					$invoice_price_item_end						// the end date to which this price item should be calculated
+				);
+				
+				// If the contract price item is of type one-time and it's dates are within the invoice period ...
+				if($contract_price_item->is_one_time()){
+					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end){
+						// ... set the total price of the invoice price item to the total price of the contract price item
+						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
+					}
+				}
+				
+				// Add this price item's total sum to the tota sum of the invoice
+				$total_price_price_item = $invoice_price_item->get_total_price();
+				$total_sum += round($total_price_price_item,2);
+			} // end of looping through the contract price items
+			
+			$total_sum = round($total_sum, 2);
+			return $total_sum;
+			
+		}
+		
+		
 		public function serialize()
 		{
+//			require_once PHPGW_API_INC.'/adodb/adodb-time.inc.php';
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(!isset($this->total_price))
+			{
+				$this->total_price =  rental_socontract_price_item::get_instance()->get_total_price($this->get_id());
+			}
+			
+		if(!isset($this->total_price_current_year))
+			{
+				$this->total_price_current_year = $this->get_total_price_current_year();
+				
+				//$this->total_price_current_year =  rental_socontract_price_item::get_instance()->get_total_price_invoice($this->get_id());
+			}
+			
 			return array(
 				'id' => $this->get_id(),
 				'date_start' => $this->get_contract_date() && $this->get_contract_date()->has_start_date() ? date($date_format, $this->get_contract_date()->get_start_date()): '',
+//				'date_end' => $this->get_contract_date() && $this->get_contract_date()->has_end_date() ? adodb_date($date_format, $this->get_contract_date()->get_end_date()): '',
 				'date_end' => $this->get_contract_date() && $this->get_contract_date()->has_end_date() ? date($date_format, $this->get_contract_date()->get_end_date()): '',
-				'type'	=> lang($this->get_contract_type_title()),
+				'type'	=> lang($this->get_contract_type_title()).' / '.lang(rental_socontract::get_instance()->get_contract_type_label($this->get_contract_type_id())),
 				'composite' => $this->get_composite_name(),
 				'party' => $this->get_party_name(),
 				'old_contract_id' => $this->get_old_contract_id(),
@@ -553,10 +770,19 @@
 				'responsibility_id' => $this->get_responsibility_id(),
 				'due_date' => $this->get_due_date() ? date($date_format, $this->get_due_date()): '',
 				'contract_type_id' => $this->get_contract_type_id(),
-				'total_price' => rental_socontract_price_item::get_instance()->get_total_price($this->get_id()),
-				'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
+				'total_price' => $this->total_price,
+				//'max_area' => rental_socontract_price_item::get_instance()->get_max_area($this->get_id()),
+				'max_area' =>	$this->rented_area,
 				'contract_status' => $this->get_contract_status(),
-				'rented_area' => $this->get_rented_area()
+				'contract_notification_status' => $this->get_contract_notification_status(),
+				'rented_area' => $this->get_rented_area(),
+				'adjustment_interval' => $this->get_adjustment_interval(),
+				'adjustment_share' => $this->get_adjustment_share(),
+				'adjustment_year' => $this->get_adjustment_year(),
+				'comment' => $this->get_comment(),
+				'publish_comment' => $this->get_publish_comment(),
+				'term_label' => $this->get_term_id_title(),
+				'total_price_current_year' => $this->total_price_current_year
 			);
 		}
 		
@@ -586,6 +812,11 @@
 			return $this->total_price;
 		}
 		
+		public function set_total_price_current_year($total_price_current_year)
+		{
+			$this->total_price_current_year = $total_price_current_year;
+		}
+		
 		public function set_max_area($max_area)
 		{
 			$this->max_area = $max_area;
@@ -594,6 +825,51 @@
 		public function get_max_area()
 		{
 			return $this->max_area;
+		}
+		
+		public function set_adjustment_interval($adjustment_interval)
+		{
+			$this->adjustment_interval = $adjustment_interval;
+		}
+	
+		public function get_adjustment_interval()
+		{
+			return $this->adjustment_interval;
+		}
+		
+		public function set_adjustment_share($adjustment_share)
+		{
+			$this->adjustment_share = $adjustment_share;
+		}
+	
+		public function get_adjustment_share()
+		{
+			return $this->adjustment_share;
+		}
+		
+		public function set_adjustment_year($adjustment_year)
+		{
+			$this->adjustment_year = $adjustment_year;
+		}
+	
+		public function get_adjustment_year()
+		{
+			return $this->adjustment_year;
+		}
+		
+		public function set_adjustable($adjustable)
+		{
+			$this->adjustable = (boolean)$adjustable;
+		}
+		
+		public function is_adjustable()
+		{
+			return $this->adjustable;
+		}
+		
+		public function get_adjustable()
+		{
+			return $this->adjustable;
 		}
 		
 		public function set_contract_type_id($contract_type_id)
@@ -636,7 +912,7 @@
 			return $this->notify_after_termination_date;
 		}
 	
-		public function get_contract_status()
+		public function get_contract_notification_status()
 		{
 			$ts = strtotime(date('Y-m-d')); // timestamp for today
 			$ts_notify_before = $this->notify_before * 60 * 60 * 24;
@@ -645,34 +921,79 @@
 			$date_start = $this->get_contract_date()->get_start_date();
 			$date_end = $this->get_contract_date()->get_end_date();
 			
-			if(isset($date_start) && ($ts < $date_start || $date_start == ''))
+			$status = array();
+			
+			if(isset($date_end) && ($date_end >= $ts) && ($ts >= ($date_end - $ts_notify_before)))	
 			{
-				return lang("under_planning");
+				// If contract has end date which is in the future and notification date is today or in the past
+				$status[] = lang("under_dismissal");	// CONTRACT UNDER DISMISSAL
 			}
-			else if(isset($date_start) && $ts >= $date_start && ((isset($date_end) && $ts <= $date_end && $ts > ($date_end - $ts_notify_before)) || !isset($date_end)))
+			
+			if(isset($date_end) && ($date_end < $ts) && ($ts < ($date_end + $ts_notify_after_termination_date))) 
 			{
-				return lang("active_single");
+				// If the contract has end date shich is in the past and the end date is within a given time ago 
+				$status[] =  lang("terminated_contract");	// CONTRACT UNDER TERMINATION
 			}
-			else if(isset($date_start) && $ts >= $date_start && ((isset($date_end) && $ts <= $date_end && $ts <= ($date_end - $ts_notify_before)) || !isset($date_end)))
+			
+			if(isset($this->due_date) && ($this->due_date >= $ts) && ($ts >= ($this->due_date - $ts_notify_before_due_date)))
 			{
-				return lang("under_dismissal");
+				// If the contract has a due date which is in the future and the due date is today or within a given time in the future
+				$status[] = lang("closing_due_date");	// CLOSING DUE DATE
 			}
-			else if(isset($due_date) && $this->due_date >= $ts && ($this->due_date - $notify_before_due_date) <= $ts)
+			
+			if(count($status) > 0)
 			{
-				return lang("closing_due_date");
-			}
-			else if(isset($date_end) && $date_end >= ($ts - $notify_after_termination_date) && $date_end < $ts)
-			{
-				return lang("terminated_contract");
-			}
-			else if(isset($date_end) && $date_end < $ts)
-			{
-				return lang("ended");
+				return implode("<br/>",$status);
 			}
 			else
 			{
-				return lang("status_unknown");
+				return '';
 			}
+			}
+	
+		public function get_contract_status()
+			{
+			$ts = strtotime(date('Y-m-d')); // timestamp for today
+			
+			$date_start = $this->get_contract_date()->get_start_date();
+			$date_end = $this->get_contract_date()->get_end_date();
+			
+			if(isset($date_start) && ($ts < $date_start || $date_start == ''))								
+			{
+				// If contract has start date AND (today is before start date OR empty start date)
+				return lang("under_planning");		// CONTRACT UNDER PLANNING
+			}
+			
+			else if(isset($date_start) && $ts >= $date_start && (!isset($date_end) || $ts <= $date_end))								
+			{	
+				// else ... if contract has start date AND start date is today or in the past AND 
+				// (contract has end date OR end date is in the future)	
+				return lang("active_single");		// ACTIVE CONTRACT											
+			}
+			else if(isset($date_end) && $ts > $date_end)
+			{
+				//else ... if contract has end date AND end date is in the past
+				return  lang("ended"); 				// ENDED CONTRACT
+			}
+			else
+			{
+				//else we do not know the contract status
+				return lang("status_unknown");		// UNKNOWN STATUS
+			}
+		}
+		
+		public function is_active()
+		{
+			$ts = strtotime(date('Y-m-d')); // timestamp for today
+			
+			$date_start = $this->get_contract_date()->get_start_date();
+			$date_end = $this->get_contract_date()->get_end_date();
+			
+			if(isset($date_start) && $ts >= $date_start && (!isset($date_end) || $ts <= $date_end))								
+			{	
+				return true;	// ACTIVE CONTRACT											
+			}
+			return false;
 		}
 		
 		public function set_rented_area($rented_area)
@@ -681,6 +1002,134 @@
 		}
 		
 		public function get_rented_area() { return $this->rented_area; } 
+		
+		public function get_publish_comment()
+		{
+			return $this->publish_comment;
+		}
+		
+		public function set_publish_comment($publish_comment)
+		{
+			$this->publish_comment = (boolean)$publish_comment;
+		}
+
+		/**
+		 * (non-PHPdoc)
+		 * @see rental/inc/model/rental_model#validates()
+		 */
+		public function validates(){
+			
+			// If the contract has number as identifier, it must be greater than 1
+			/*$id = $this->get_id();
+			if(is_numeric($id) && $id < 1){
+				return false;
+			}*/
+			
+			// The contract must be designated a responsibility area
+			if($this->get_location_id() == null || $this->get_location_id() < 1){
+				return false;
+			}
+			return true;
+		}
+		
+		/**
+		 * (non-PHPdoc)
+		 * @see rental/inc/model/rental_model#validate_numeric()
+		 */
+		public function validate_numeric(){
+			$valid_numeric = true;
+			if($this->get_service_id() != null && !(strlen($this->get_service_id()) == 5)){
+				$this->set_validation_error('service_id', lang('Service id must be 5 characters.'));
+				$valid_numeric = false;
+			}
+			else if($this->get_service_id() != null && !is_numeric($this->get_service_id())){
+				$this->set_validation_error('service_id', lang('service_id_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_responsibility_id() != null && !(strlen($this->get_responsibility_id()) == 6)){
+				$this->set_validation_error('responsibility_id', lang('Responsibility id must be 6 characters.'));
+				$valid_numeric = false;
+			}
+			else if($this->get_responsibility_id() != null && !is_numeric($this->get_responsibility_id())){
+				$this->set_validation_error('responsibility_id', lang('responsibility_id_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_account_in() != null && !is_numeric($this->get_account_in())){
+				$this->set_validation_error('account_in', lang('account_in_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_account_out() != null && !is_numeric($this->get_account_out())){
+				$this->set_validation_error('account_out', lang('account_out_not_numeric'));
+				$valid_numeric = false;
+			}
+			if($this->get_security_amount() != null && !is_numeric($this->get_security_amount())){
+				$this->set_validation_error('security_amount', lang('security_amount_not_numeric'));
+				$valid_numeric = false;
+			}
+			if(!is_numeric($this->get_rented_area())){
+				$this->set_validation_error('rented_area', lang('rented_area_not_numeric'));
+				$valid_numeric = false;
+			}
+			return $valid_numeric;
+		}
+		
+		/**
+		 * (non-PHPdoc)
+		 * @see rental/inc/model/rental_model#check_consistency()
+		 */
+		public function check_consistency(){
+			// Retrieve the start and end date
+			$dates = $this->get_contract_date();
+			if(isset($dates))
+			{
+				$start_date = $this->get_contract_date()->get_start_date();
+				$end_date = $this->get_contract_date()->get_end_date();
+			}
+			
+			// Give warning if the contract lacks a start date
+			if(!isset($start_date))
+			{
+				$this->set_consistency_warning(lang('warning_lacking_start_date'));
+			}
+			else
+			{
+				
+				// If set, the billing date must be between the contract's start date and end date
+				$billing_start = $this->get_billing_start_date();
+				if(isset($billing_start) && is_numeric($billing_start) && $billing_start > 0)
+				{
+					if($billing_start < $start_date || (isset($end_date) && $billing_start > $end_date)){
+						$this->set_consistency_warning(lang('warning_billing_date_between'));
+					} 
+				}
+				
+				// If set, the due date must be between the contract's start date and end date
+				$due_date = $this->get_due_date();
+				if(isset($due_date) && is_numeric($due_date) && $due_date > 0)
+				{
+					if($due_date < $start_date || (isset($end_date) && $due_date > $end_date)){
+						$this->set_consistency_warning(lang('warning_due_date_between'));
+					} 
+				}
+				$so_price_item = rental_socontract_price_item::get_instance();
+				$price_items = $so_price_item->get(null, null, null, null, null, null, array('contract_id' => $this->get_id()));
+				foreach($price_items as $price_item){
+					//get price item dates
+					$pi_date_start = $price_item->get_date_start();
+					$pi_date_end = $price_item->get_date_end();
+					if(isset($pi_date_start) && is_numeric($pi_date_start) && $pi_date_start > 0){
+						if($pi_date_start < $start_date || (isset($pi_date_end) && $pi_date_end > $end_date)){
+							$this->set_consistency_warning($price_item->get_agresso_id() . ' - ' . lang('warning_price_item_date_between'));
+						}
+					}
+					else if(isset($pi_date_end) && is_numeric($pi_date_end) && $pi_date_end > 0){
+						if($pi_date_end > $end_date){
+							$this->set_consistency_warning($price_item->get_agresso_id() . ' - ' . lang('warning_price_item_date_between'));
+						}
+					}
+				}
+			}
+		}
 		
 	}
 

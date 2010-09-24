@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_booking_i18n"/>
-	<iframe id="yui-history-iframe" src="../phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
+	<iframe id="yui-history-iframe" src="{webserver_url}/phpgwapi/js/yahoo/history/assets/blank.html" style="position:absolute;top:0; left:0;width:1px; height:1px;visibility:hidden;"></iframe>
 	<input id="yui-history-field" type="hidden"/>
 	
 	<div id="content">
@@ -50,5 +50,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
     });
    	YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");	
 });
+<xsl:if test="backend = 'true'">
+	YAHOO.util.Dom.setStyle(('header'), 'display', 'none');
+</xsl:if>
 </script>
 </xsl:template>

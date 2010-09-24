@@ -298,7 +298,7 @@
 		}
 
 
-   	   	//Oppdater beløp på arbeidsordre operator="-" ved tilbakerulling
+   	   	//Oppdater belÃ¸p pÃ¥ arbeidsordre operator="-" ved tilbakerulling
 		function correct_actual_cost($pmwrkord_code,$Belop,$actual_cost_field,$operator)
 		{
 			$Belop=$Belop/100;
@@ -334,7 +334,7 @@
 				$this->log_start($batchid);
 			}
 
-			//Velg ut alle perioder som har bilag som skal overføres
+			//Velg ut alle perioder som har bilag som skal overfÃ¸res
 
 
 			if ($pre_transfer)
@@ -521,7 +521,7 @@
 			}
 			
 			
-			//Ingen løpenr er ledige, gi feilmelding
+			//Ingen lÃ¸penr er ledige, gi feilmelding
 			return False;
 		}
 		
@@ -551,7 +551,7 @@
 				return $message;
 			}
 			
-			//Velg ut alle hoved bilag som skal overføres
+			//Velg ut alle hoved bilag som skal overfÃ¸res
 
 			$this->db->transaction_begin();
 
@@ -635,7 +635,7 @@
 				}
 				else
 				{
-
+/*				
 					if($force_period_year)
 					{
 						$Periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
@@ -644,6 +644,8 @@
 					{
 						$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 					}
+*/
+					$Periode	= $periode;
 					
 					$Bilagsart	= sprintf("%2s",'FD');// verdi: , type: c2, plass: 15 - 16
 					$Forfall	= date(Ymd,strtotime($oRsBilag[$k]['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305				
@@ -681,7 +683,7 @@
 					return $message;
 				}
 
-				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: Fødselsnr, type: c50, plass: 430 - 479
+				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: FÃ¸dselsnr, type: c50, plass: 430 - 479
 				$Postadresse	= sprintf("%-160s",'');// verdi: Blank, type: c160, plass: 480 - 639
 				$Stat_Provins	= sprintf("%-50s",'');// verdi: Blank, type: c50, plass: 640 - 689
 				$Sted		= sprintf("%-50s",'');// verdi: Blank, type: c50, plass: 690 - 739
@@ -722,7 +724,7 @@
 					if($oRsUnderbilag[$i]['pmwrkord_code'])
 					{
 		
-						//Oppdater beløp på arbeidsordre
+						//Oppdater belÃ¸p pÃ¥ arbeidsordre
 						if ($download=='on' && !$pre_transfer)
 						{
 							if ($oRsUnderbilag[$i]['dimd'] % 2 == 0)
@@ -742,7 +744,7 @@
 						}
 					}
 		
-					//Overfør til fm_ecobilagoverf
+					//OverfÃ¸r til fm_ecobilagoverf
 		
 					$oRsOverfBilag=$oRsUnderbilag[$i];
 					$oRsOverfBilag['filnavn']= basename($Filnavn);
@@ -790,14 +792,14 @@
 					$Avgiftssystem	= sprintf("%2s",'');// verdi: Blank, type: c2, plass: 83 - 84
 					$Valutakode	='NOK';// verdi: NOK, type: c3, plass: 85 - 87
 					$Debet_Kredit	= sprintf("%2s",'');// verdi: Blank, type: i2, plass: 88 - 89
-					$Valutabelop	= $Belop;// verdi: Beløp, type: money, plass: 90 - 109
-					$Belop_i_firmavaluta=$Belop;// verdi: Beløp, type: money, plass: 110 - 129
+					$Valutabelop	= $Belop;// verdi: BelÃ¸p, type: money, plass: 90 - 109
+					$Belop_i_firmavaluta=$Belop;// verdi: BelÃ¸p, type: money, plass: 110 - 129
 					$Antall		= sprintf("%11s",'');// verdi: Blank, type: i4, plass: 130 - 140
 					$Belop2		= sprintf("%20s",'');// verdi: Blank, type: f8, plass: 141 - 160
 					$Belop3		= sprintf("%20s",'');// verdi: Blank, type: money, plass: 161 - 180
 
-				//	$Belop4 (også kalt "money3" )blir brukt for identifisere overføring på tvers av filer.
-					$Belop4		= sprintf("%20s",$batchid);// verdi: Blank, type: money, plass: 181 - 200 - batch_id høyre justert
+				//	$Belop4 (ogsÃ¥ kalt "money3" )blir brukt for identifisere overfÃ¸ring pÃ¥ tvers av filer.
+					$Belop4		= sprintf("%20s",$batchid);// verdi: Blank, type: money, plass: 181 - 200 - batch_id hÃ¸yre justert
 
 
 					if($oRsOverfBilag['pmwrkord_code'])
@@ -857,8 +859,8 @@
 						}
 						
 						$Transtype	= 'AP';// verdi: GL, type: c2, plass: 17 - 18
-						$Valutabelop	= $Belop_motpost;// verdi: Beløp, type: money, plass: 90 - 109
-						$Belop_i_firmavaluta=$Belop_motpost;// verdi: Beløp, type: money, plass: 110 - 129
+						$Valutabelop	= $Belop_motpost;// verdi: BelÃ¸p, type: money, plass: 90 - 109
+						$Belop_i_firmavaluta=$Belop_motpost;// verdi: BelÃ¸p, type: money, plass: 110 - 129
 
 						$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 . 
 						$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop . 
@@ -883,7 +885,7 @@
 				}
 			}
 				
-			//Fullfør transaksjon
+			//FullfÃ¸r transaksjon
 			
 		
 			if ($download=='on' && !$pre_transfer && !$this->debug):
@@ -1007,7 +1009,7 @@
 		{
 			$host = $this->config->config_data['invoice_ftp_host'];
 			$user = $this->config->config_data['invoice_ftp_user'];
-			$pass = $this->config->config_data['invoice_ftp_pw'];
+			$pass = $this->config->config_data['invoice_ftp_password'];
 			
 //			echo "connecting to $host with $user and $pass\n <br>";
 			$ftp = ftp_connect($host);

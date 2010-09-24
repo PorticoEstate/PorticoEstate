@@ -225,7 +225,19 @@
 				$document['actions'] = $document_actions;
 			}
 			if (phpgw::get_var('no_images'))
+			{
 				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));
+
+				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
+				// reindexing the results array solves the problem
+				$doc_backup = $documents;
+				unset($documents['results']);
+				foreach($doc_backup['results'] as $doc)
+				{
+					$documents['results'][] = $doc;
+				}
+				$documents['total_records'] = count($documents['results']);
+			}
 			return $this->yui_results($documents);
 		}
 

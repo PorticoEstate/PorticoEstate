@@ -34,7 +34,7 @@
 
 	class property_sotenant_claim
 	{
-		function property_sotenant_claim()
+		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
@@ -45,10 +45,8 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
 				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
+			$user_id		= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : '0';
 				$status		= isset($data['status']) && $data['status'] ? $data['status'] : 'open';
 				$query		= isset($data['query']) ? $data['query'] : '';
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -56,8 +54,7 @@
 				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 				$project_id	= isset($data['project_id']) ? $data['project_id'] : '';
-
-			}
+			$district_id	= isset($data['district_id']) ? (int)$data['district_id'] : 0;
 
 			if ($order)
 			{
@@ -97,16 +94,33 @@
 				$where = 'AND';
 			}
 
+			if ($user_id > 0)
+			{
+				$filtermethod .= " $where fm_tenant_claim.user_id={$user_id} ";
+				$where = 'AND';
+			}
+
+			if ($district_id > 0)
+			{
+				$filtermethod .= " $where  district_id=" .(int)$district_id;
+				$where = 'AND';
+			}
+
+			$querymethod = '';
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%')";
+				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%' OR project_id=" . (int)$query .')';
 			}
 
-			$sql = "SELECT fm_tenant_claim.*, descr as category, fm_tenant.last_name, fm_tenant.first_name FROM fm_tenant_claim "
+			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as category, fm_tenant.last_name, fm_tenant.first_name,district_id"
+			 . " FROM fm_tenant_claim "
 			 . " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
-			 . " $this->join fm_tenant ON fm_tenant_claim.tenant_id = fm_tenant.id"
+			 . " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
+			 . " $this->join fm_project ON fm_project.id = fm_tenant_claim.project_id"
+			 . " $this->join fm_location1 ON fm_project.loc1=fm_location1.loc1"
+			 . " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 			 . " $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -133,7 +147,9 @@
 					'remark'		=> $this->db->f('remark',true),
 					'entry_date'	=> $this->db->f('entry_date'),
 					'category'		=> $this->db->f('category'),
-					'status'		=> $this->db->f('status')
+					'status'		=> $this->db->f('status'),
+					'user_id'		=> $this->db->f('user_id'),
+					'district_id'	=> $this->db->f('district_id'),
 				);
 			}
 			return $claims;
@@ -164,6 +180,7 @@
 			return $claims;
 		}
 
+		//FIXME: to be removed
 		function check_claim_workorder($workorder_id)
 		{
 			$claim = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $workorder_id, 'origin');
@@ -262,7 +279,6 @@
 			$claim['amount'] =  str_replace(",",".",$claim['amount']);
 
 			$value_set=array(
-				'amount'			=> $claim['amount'],
 				'tenant_id'			=> $claim['tenant_id'],
 				'b_account_id'		=> $claim['b_account_id'],
 				'amount'			=> $claim['amount'],

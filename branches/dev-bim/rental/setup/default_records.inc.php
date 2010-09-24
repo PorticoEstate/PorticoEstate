@@ -254,38 +254,40 @@ else
 	$rental_manager		= $GLOBALS['phpgw']->accounts->name2id('rental_manager');
 }
 
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out, project_number, agresso_export_format) VALUES ({$loc_id_internal},'contract_type_internleie',183,183,366,'119001','119001','9', 'agresso_gl07')");
 $oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date) VALUES ({$loc_id_in},'contract_type_innleie',183,183,366)");
-$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '15')");
+$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out, agresso_export_format) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '1510', 'agresso_lg04')");
 
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'Egne', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'Innleie', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'Investeringskontrakt', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'KF', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'Andre', 1)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (6, 'Feste', 3)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (7, 'Leilighet', 3)");
-$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (8, 'Annen', 3)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'contract_type_internleie_egne', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'contract_type_internleie_innleie', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'contract_type_internleie_investeringskontrakt', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'contract_type_internleie_KF', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'contract_type_internleie_andre', 1)");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (6, 'contract_type_eksternleie_feste', 3, '1520')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (7, 'contract_type_eksternleie_leilighet', 3, '1530')");
+$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (8, 'contract_type_eksternleie_annen', 3, '1510')");
 
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
 $oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('half-year','6')");
-$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','4')");
+$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('quarterly','3')");
 
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', 'Y900', true, 23.00)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Parkeringsplass', '124246242', false, 50.00)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Forsikring', 'Y901', true, 10.00)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Kapitalkostnad', 'Y904', true, 700.00)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Kom.avg. uten renovasjon', 'Y902', true, 32.29)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Renovasjon', 'Y903', true, 10.94)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Vedlikehold', 'Y905', true, 98.23)");
-	// External
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BENA00', false, 500)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Felleskostnader', 'BEAA02', false, 70000)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BEAA02', false, 1000000)");
-$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BETGEI', false, 20000)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Fellesareal', '123456789', true, 34.59)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Administrasjon', 'Y900', true, 23.00)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Parkeringsplass', '124246242', false, 50.00)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Forsikring', 'Y901', true, 10.00)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Kapitalkostnad', 'Y904', true, 700.00)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Kom.avg. uten renovasjon', 'Y902', true, 32.29)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Renovasjon', 'Y903', true, 10.94)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Vedlikehold', 'Y905', true, 98.23)");
+//	// External
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BENA00', false, 500)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Felleskostnader', 'BEAA02', false, 70000)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BEAA02', false, 1000000)");
+//$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BETGEI', false, 20000)");
 
+$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Unknown', 'UNKNOWN', false,false,false, 0, 0)");
+$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Leie', 'INNLEIE', false,false,false, 0, {$loc_id_in})");
 
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('contracts')");
 $oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");
@@ -297,6 +299,13 @@ $asyncservice->set_timer(
 	array('day' => "*/1"),
 	'rental_populate_workbench_notifications',
 	'rental.sonotification.populate_workbench_notifications',
+	null
+	);
+
+$asyncservice->set_timer(
+	array('day' => "*/1"),
+	'rental_run_adjustments',
+	'rental.soadjustment.run_adjustments',
 	null
 	);
 

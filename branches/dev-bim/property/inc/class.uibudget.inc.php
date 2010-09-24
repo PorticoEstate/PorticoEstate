@@ -149,7 +149,8 @@
  	                        						."district_id:'{$this->district_id}',"
 						 	                        ."year:'{$this->year}',"
 						 	                        ."grouping:'{$this->grouping}',"
- 	                        						."revision:'{$this->revision}'";
+ 	                        						."revision:'{$this->revision}',"
+ 	                        						."download:'budget'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year);
 				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -250,6 +251,13 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 6
 			                                        ),
+													array
+													(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 9
+													),
 			                                        array( //boton     add
 			                                            'id' 		=> 'btn_new',
 			                                            'name' 		=> 'new',
@@ -303,7 +311,6 @@
 												)
 										  )
 				);
-				$dry_run=true;
 
 			}
 
@@ -423,8 +430,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -486,9 +491,13 @@
 				}
 				
 				$json ['revision'] = $this->revision;
-				//_debug_array($json);
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -550,7 +559,8 @@
 							'district_id'	=>$this->district_id,
 							'year'			=>$this->year,
 							'grouping'		=>$this->grouping,
-							'revision'		=>$this->revision
+							'revision'		=>$this->revision,
+							'dimb_id'		=>$this->dimb_id
 	    				));
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -563,14 +573,13 @@
  	                        						."district_id:'{$this->district_id}',"
 						 	                        ."year:'{$this->year}',"
 						 	                        ."grouping:'{$this->grouping}',"
- 	                        						."revision:'{$this->revision}'";
+ 	                        						."dimb_id: '{$this->dimb_id}',"
+ 	                        						."revision:'{$this->revision}',"
+ 	                        						."download:'basis'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=true);
-  				if(count($values_combo_box[0]))
-				{
 					$default_value = array ('id'=>'','name'=>lang('no year'));
 					array_unshift ($values_combo_box[0],$default_value);
-				}
 				
 				$values_combo_box[1]  = $this->bo->get_revision_filter_list($this->revision,$basis=true);
 				$default_value = array ('id'=>'','name'=>lang('no revision')); 
@@ -601,6 +610,10 @@
 				{
 					$values_combo_box[3][] = $default_value;
 				}
+
+				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				$default_value = array ('id'=>'','name'=>lang('no dimb'));
+				array_unshift ($values_combo_box[4],$default_value);
 
 				$datatable['actions']['form'] = array(
 					array(
@@ -643,19 +656,33 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 4
 			                                        ),
+			                                        array( //boton 	GROUPING
+			                                            'id' 		=> 'btn_dimb_id',
+			                                            'name' 		=> 'dimb_id',
+			                                            'value'		=> lang('dimb'),
+			                                            'type' 		=> 'button',
+			                                            'style' 	=> 'filter',
+			                                            'tab_index' => 5
+			                                        ),
+													array(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 9
+													),
 			                                        array( //boton     add
 			                                            'id' 		=> 'btn_new',
 			                                            'name' 		=> 'new',
 			                                            'value'    	=> lang('add'),
 			                                            'type' 		=> 'button',
-			                                            'tab_index' => 7
+			                                            'tab_index' => 8
 			                                        ),
 			                                        array( //boton     SEARCH
 			                                            'id' 		=> 'btn_search',
 			                                            'name' 		=> 'search',
 			                                            'value'    	=> lang('search'),
 			                                            'type' 		=> 'button',
-			                                            'tab_index' => 6
+			                                            'tab_index' => 7
 			                                        ),
 			   										 array( // TEXT IMPUT
 			                                            'name'     	=> 'query',
@@ -664,7 +691,7 @@
 			                                            'type' 		=> 'text',
 			                                            'size'    	=> 28,
 			                                            'onkeypress'=> 'return pulsar(event)',
-	                                    				'tab_index' => 5
+	                                    				'tab_index' => 6
 			                                        )
 		                           				),
 		                       		'hidden_value' => array(
@@ -683,12 +710,15 @@
 							                                array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
+							                                      ),
+							                                array( //div values  combo_box_4
+							                                            'id' => 'values_combo_box_4',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[4])
 							                                      )
 		                       								)
 												)
 										  )
 				);
-				$dry_run=true;
 
 			}
 
@@ -806,8 +836,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -869,9 +897,13 @@
 				}
 				
 				$json ['revision'] = $this->revision;
-				//_debug_array($json);
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -931,7 +963,8 @@
 							'grouping'		=>$this->grouping,
 	    					'year'			=>$this->year,
 							'details'		=> $this->details,
-							'allrows'		=> $this->allrows
+							'allrows'		=> $this->allrows,
+							'dimb_id'		=>$this->dimb_id
 	    				));
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -943,7 +976,9 @@
 	 	                        						."grouping:'{$this->grouping}',"
 							 	                        ."year:'{$this->year}',"
 	 	                        						."details:'{$this->details}',"
-	 	                        						."allrows:'{$this->allrows}'";
+	 	                        						."dimb_id:'{$this->dimb_id}',"
+	 	                        						."allrows:'{$this->allrows}',"
+ 	                        							."download:'obligations'";
 
 				$values_combo_box[0]  = $this->bo->get_year_filter_list($this->year,$basis=false);
   				$default_value = array ('id'=>'','name'=>lang('no year'));
@@ -962,6 +997,14 @@
 			 	$default_value = array ('id'=>'','name'=>lang('no grouping'));
 			 	array_unshift ($values_combo_box[3],$default_value);
 							
+				$values_combo_box[4]  = $this->bocommon->select_category_list(array('type'=>'dimb'));
+				foreach($values_combo_box[4] as & $_dimb)
+				{
+					$_dimb['name'] = "{$_dimb['id']}-{$_dimb['name']}";
+				}
+				$default_value = array ('id'=>'','name'=>lang('no dimb'));
+				array_unshift ($values_combo_box[4],$default_value);
+
 				$datatable['actions']['form'] = array(
 					array(
 						'action'	=> $GLOBALS['phpgw']->link('/index.php',
@@ -1003,12 +1046,27 @@
 			                                            'style' 	=> 'filter',
 			                                            'tab_index' => 4
 			                                        ),
+			                                        array( //boton 	GROUPING
+			                                            'id' 		=> 'btn_dimb_id',
+			                                            'name' 		=> 'dimb_id',
+			                                            'value'		=> lang('dimb'),
+			                                            'type' 		=> 'button',
+			                                            'style' 	=> 'filter',
+			                                            'tab_index' => 5
+			                                        ),
+													array
+													(
+														'type'	=> 'button',
+														'id'	=> 'btn_export',
+														'value'	=> lang('download'),
+														'tab_index' => 8
+													),
 			                                        array( //boton     SEARCH
 			                                            'id' 		=> 'btn_search',
 			                                            'name' 		=> 'search',
 			                                            'value'    	=> lang('search'),
 			                                            'type' 		=> 'button',
-			                                            'tab_index' => 6
+			                                            'tab_index' => 7
 			                                        ),
 			   										 array( // TEXT IMPUT
 			                                            'name'     	=> 'query',
@@ -1017,7 +1075,7 @@
 			                                            'type' 		=> 'text',
 			                                            'size'    	=> 28,
 			                                            'onkeypress'=> 'return pulsar(event)',
-	                                    				'tab_index' => 5
+	                                    				'tab_index' => 6
 			                                        )
 		                           				),
 		                       		'hidden_value' => array(
@@ -1036,7 +1094,12 @@
 							                                array( //div values  combo_box_3
 							                                            'id' => 'values_combo_box_3',
 							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3])
+							                                      ),
+							                                array( //div values  combo_box_4
+							                                            'id' => 'values_combo_box_4',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[4])
 							                                      )
+
 		                       								)
 												)
 										  )
@@ -1046,35 +1109,37 @@
 			$uicols = array (
 				
 				array(
-					'col_name'=>grouping,		'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'grouping',		'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>b_account,		'visible'=>true,	'label'=>lang('grouping'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'b_account',	'formatter'=>myformatLinkPGW),
+					'col_name'=>'b_account',		'visible'=>true,	'label'=>lang('grouping'),	'className'=>'centerClasss',	'sortable'=>true,	'sort_field'=>'b_account',	'formatter'=>'myformatLinkPGW'),
 				array(
-					'col_name'=>district_id,	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'district_id',	'visible'=>true,	'label'=>lang('district_id'),'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>hits_ex,		'visible'=>false,	'label'=>'',				'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'ecodimb',		'visible'=>true,	'label'=>lang('dimb'),	'className'=>'centerClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>hits,			'visible'=>true,	'label'=>lang('hits'),		'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'hits_ex',		'visible'=>false,	'label'=>'',				'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>budget_cost_ex,	'visible'=>false,	'label'=>'',				'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'hits',			'visible'=>true,	'label'=>lang('hits'),		'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>budget_cost,	'visible'=>true,	'label'=>lang('budget'),	'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'budget_cost_ex',	'visible'=>false,	'label'=>'',				'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>obligation_ex,	'visible'=>false,	'label'=>''					,'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'budget_cost',	'visible'=>true,	'label'=>lang('budget'),	'className'=>'rightClasss',		'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>obligation,		'visible'=>true,	'label'=>lang('sum orders'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
+					'col_name'=>'obligation_ex',	'visible'=>false,	'label'=>''					,'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>link_obligation,'visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'obligation',		'visible'=>true,	'label'=>lang('sum orders'),'className'=>'rightClasss',	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'myFormatLink_Count'),
 				array(
-					'col_name'=>actual_cost_ex,	'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'link_obligation','visible'=>false,	'label'=>'',				'className'=>'',				'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>actual_cost,	'visible'=>true,	'label'=>lang('paid'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>myFormatLink_Count),
+					'col_name'=>'actual_cost_ex',	'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>link_actual_cost,'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'actual_cost',	'visible'=>true,	'label'=>lang('paid'),		'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'myFormatLink_Count'),
 				array(
-					'col_name'=>diff_ex,		'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+					'col_name'=>'link_actual_cost','visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
 				array(
-					'col_name'=>diff,			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
+					'col_name'=>'diff_ex',		'visible'=>false,	'label'=>'',				'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>''),
+				array(
+					'col_name'=>'diff',			'visible'=>true,	'label'=>lang('difference'),'className'=>'rightClasss', 	'sortable'=>false,	'sort_field'=>'',			'formatter'=>'')
 				);	
 				
 			$location_list = array();
@@ -1106,6 +1171,7 @@
 						'grouping'			=> $entry['grouping'],
 						'b_account'			=> $entry['b_account'],	
 						'district_id'		=> $entry['district_id'],
+						'ecodimb'			=> $entry['ecodimb'],
 						'hits_ex'			=> $entry['hits'],
 						'hits'				=> number_format($entry['hits'], 0, ',', ' '),
 						'budget_cost_ex'	=> $entry['budget_cost'],
@@ -1187,8 +1253,6 @@
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
 
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -1224,8 +1288,13 @@
 				
 //_debug_array($json);
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
@@ -1734,15 +1803,110 @@
 
 		function download()
 		{
-			$budget_id = phpgw::get_var('budget_id', 'int');
-			$list= $this->bo->read_budget($budget_id,$allrows=true);
-			$uicols	= $this->bo->uicols;
-			foreach($uicols as $col)
+			switch (phpgw::get_var('download'))
 			{
-				$names[] = $col['name'];
-				$descr[] = $col['descr'];
+				case 'basis':
+					$list= $this->bo->read_basis();
+					$names = array
+					(
+						'year',
+						'revision',
+						'grouping',
+						'district_id',
+						'ecodimb',
+						'category',
+						'budget_cost'
+					);
+					$descr = array
+					(
+						lang('year'),
+						lang('revision'),
+						lang('grouping'),
+						lang('district_id'),
+						lang('dimb'),
+						lang('category'), 
+						lang('budget')
+					);
+					break;
+				case 'budget':
+					$list= $this->bo->read();
+					$names = array
+					(
+						'year',
+						'revision',
+						'b_account_id',
+						'b_account_name',
+						'grouping',
+						'district_id',
+						'ecodimb',
+						'category', 
+						'budget'
+					);
+					$descr = array
+					(
+						lang('year'),
+						lang('revision'),
+						lang('budget account'),
+						lang('name'),
+						lang('grouping'),
+						lang('district_id'),
+						lang('dimb'),
+						lang('category'), 
+						lang('budget')
+					);
+
+					break;
+				case 'obligations':
+					$gross_list= $this->bo->read_obligations();
+					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+					$list = array();
+					foreach($gross_list as $entry)
+			{
+						$list[] = array
+						(
+							'grouping'			=> $entry['grouping'],
+							'b_account'			=> $entry['b_account'],	
+							'district_id'		=> $entry['district_id'],
+							'ecodimb'			=> $entry['ecodimb'],
+							'hits'				=> $entry['hits'],
+							'budget_cost'		=> $entry['budget_cost'],
+							'obligation'		=> $entry['obligation'],
+							'actual_cost'		=> $entry['actual_cost'],
+							'diff'				=> ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
+						);	
 			}
+					$names = array
+					(
+						'grouping',
+						'b_account',
+						'district_id',
+						'ecodimb',
+						'hits',
+						'budget_cost',
+						'obligation',
+						'actual_cost',
+						'diff'
+					);
+					$descr = array
+					(
+						lang('grouping'),
+						lang('budget account'),
+						lang('district_id'),
+						lang('dimb'),
+						lang('hits'),
+						lang('budget'),
+						lang('sum orders'),
+						lang('paid'),
+						lang('difference')
+					);
+					break;
+				default:
+				return;
+			}
+			if($list)
+			{
 			$this->bocommon->download($list,$names,$descr);
 		}
+	}
 	}
 

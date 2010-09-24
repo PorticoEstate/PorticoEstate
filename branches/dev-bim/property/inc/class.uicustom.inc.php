@@ -175,7 +175,6 @@
 					 )
 				);
 
-				$dry_run = true;
 			}
 
 			$list = $this->bo->read();
@@ -336,8 +335,6 @@
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -378,8 +375,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();
@@ -415,7 +417,7 @@
 			$cols_id	= phpgw::get_var('cols_id', 'int');
 			$resort		= phpgw::get_var('resort');
 			$values		= phpgw::get_var('values');
-
+			$values['sql_text'] = $_POST['values']['sql_text'];
 			if($cols_id)
 			{
 				$this->bo->resort(array('custom_id'=>$custom_id,'id'=>$cols_id,'resort'=>$resort));
@@ -709,8 +711,6 @@
 
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
     		//values for Pagination
 	    		$json = array
 	    		(
@@ -751,8 +751,13 @@
 					$json ['rights'] = $datatable['rowactions']['action'];
 				}
 
+				if( phpgw::get_var('phpgw_return_as') == 'json' )
+				{
 	    		return $json;
 			}
+
+
+			$datatable['json_data'] = json_encode($json);
 			//-------------------- JSON CODE ----------------------
 
 			$template_vars = array();

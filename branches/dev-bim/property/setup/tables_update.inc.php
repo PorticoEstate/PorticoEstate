@@ -186,9 +186,9 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_attrib SET custom = 1");
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		$locations = $GLOBALS['phpgw_setup']->oProc->f(0);
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
 
 		for ($location_type=1; $location_type<($locations+1); $location_type++)
 		{
@@ -393,9 +393,9 @@
 
 		$datatype_text[$datatype];
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		$locations = $GLOBALS['phpgw_setup']->oProc->f(0);
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
 
 		for ($location_type=1; $location_type<($locations+1); $location_type++)
 		{
@@ -3856,7 +3856,7 @@
 
 	/**
 	* Update property version from 0.9.17.575 to 0.9.17.576
-	* Add variants of closed and approved-status for tickets
+	* Add contact_email to tickets
 	* 
 	*/
 
@@ -3875,158 +3875,827 @@
 		}
 	}
 
-
     /**
 	* Update property version from 0.9.17.576 to 0.9.17.577
-	* Add BIM tables
+	* Add sorting to ticket status
 	*
 	*/
 
 	$test[] = '0.9.17.576';
 	function property_upgrade0_9_17_576()
 	{
-        $GLOBALS['phpgw']->locations->add('.admin.item', 'Items administration', 'property');
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$tables = array
-		(
-            'fm_attr_data_type' => array
-            (
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_status','sorting',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.577';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update property version from 0.9.17.577 to 0.9.17.578
+	* Add order categories to ticket ad hoc orders
+	* 
+	*/
+
+	$test[] = '0.9.17.577';
+	function property_upgrade0_9_17_577()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','order_cat_id',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.578';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.578 to 0.9.17.579
+	* Add custom dimension for orders
+	* 
+	*/
+
+	$test[] = '0.9.17.578';
+	function property_upgrade0_9_17_578()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','building_part',array('type' => 'varchar','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','order_dim1',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_order_dim1', array(
                 'fd' => array(
-                    'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-                    'display_name'  => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-                    'function_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+					'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+					'num' => array('type' => 'varchar','precision' => 20,'nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => False)
+                ),
+                'pk' => array('id'),
+                'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.579';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.579 to 0.9.17.580
+	* Add optional publishing flag on ticket notes
+	* 
+	*/
+
+	$test[] = '0.9.17.579';
+	function property_upgrade0_9_17_579()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets','publish_note',array('type' => 'varchar','precision' => 2,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_history','publish',array('type' => 'int','precision' => 2,'nullable' => True));
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.580';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.580 to 0.9.17.581
+	* Add optional hierarchy on entities
+	* 
+	*/
+
+	$test[] = '0.9.17.580';
+	function property_upgrade0_9_17_580()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','parent_id', array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','level', array('type' => 'int','precision' => '4','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.581';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.581 to 0.9.17.582
+	* Add templates to Ad Hoc Orders
+	* 
+	*/
+
+	$test[] = '0.9.17.581';
+	function property_upgrade0_9_17_581()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_order_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'content' => array('type' => 'text','nullable' => True),
+					'public' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.582';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
+	* Update property version from 0.9.17.582 to 0.9.17.583
+	* Grant rights on actors
+	* 
+	*/
+
+	$test[] = '0.9.17.582';
+	function property_upgrade0_9_17_582()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.owner');
+		$sql = "UPDATE phpgw_locations SET allow_grant = 1 WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.tenant');
+		$sql = "UPDATE phpgw_locations SET allow_grant = 1 WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
+		$sql = "UPDATE phpgw_locations SET allow_grant = 1 WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.583';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.583 to 0.9.17.584
+	* Add schedule to event
+	* 
+	*/
+
+	$test[] = '0.9.17.583';
+	function property_upgrade0_9_17_583()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event_schedule', array(
+				'fd' => array(
+					'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'schedule_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('event_id', 'schedule_time'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_event_receipt');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_event_receipt', array(
+				'fd' => array(
+					'event_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'receipt_time' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'descr' => array('type' => 'text','nullable' => True),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => True)
+				),
+				'pk' => array('event_id', 'receipt_time'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.584';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.583 to 0.9.17.584
+	* Use locations for categories
+	* 
+	*/
+
+	$test[] = '0.9.17.584';
+	function property_upgrade0_9_17_584()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$locations = array
+			(
+			'property.ticket'	=> '.ticket',
+			'property.project'	=> '.project',
+			'property.document' => '.document',
+			'fm_vendor'			=> '.vendor',
+			'fm_tenant'			=> '.tenant',
+			'fm_owner'			=> '.owner'
+		);
+
+
+		foreach($locations as $dummy => $location)
+		{
+			$GLOBALS['phpgw']->locations->add("{$location}.category", 'Categories', 'property');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_categories");
+		$categories = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			if(in_array($GLOBALS['phpgw_setup']->oProc->f('cat_appname',true),array_keys($locations)))
+			{
+				$categories[] = array
+				(
+					'id'		=> $GLOBALS['phpgw_setup']->oProc->f('cat_id'),
+					'appname'	=> $GLOBALS['phpgw_setup']->oProc->f('cat_appname',true),
+					'name'		=> $GLOBALS['phpgw_setup']->oProc->f('cat_name',true)
+				);
+			}
+		}
+
+		foreach($categories as $category)
+		{
+			$location = $locations[$category['appname']];
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $location);	
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_categories SET cat_appname = 'property', location_id = {$location_id} WHERE cat_id = {$category['id']}",__LINE__,__FILE__);
+
+			$GLOBALS['phpgw']->locations->add("{$location}.category.{$category['id']}", $category['name'], 'property');
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT file_id, mime_type, name FROM  phpgw_vfs WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'",__LINE__,__FILE__);
+
+		$mime = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$mime[] = array
+			(
+				'file_id'		=> $GLOBALS['phpgw_setup']->oProc->f('file_id'),
+				'mime_type'		=> $GLOBALS['phpgw_setup']->oProc->f('mime_type'),
+				'name'			=> $GLOBALS['phpgw_setup']->oProc->f('name'),
+			);
+		}
+
+		$mime_magic = createObject('phpgwapi.mime_magic');
+
+		foreach($mime as $entry)
+		{
+			if(!$entry['mime_type'])
+			{
+				$mime_type = $mime_magic->filename2mime($entry['name']);
+				$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_vfs SET mime_type = '{$mime_type}' WHERE file_id = {$entry['file_id']}",__LINE__,__FILE__);
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.585';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.585 to 0.9.17.586
+	* Use budget account groups on project level
+	* 
+	*/
+
+	$test[] = '0.9.17.585';
+	function property_upgrade0_9_17_585()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','account_group', array('type' => 'int','precision' => '4','nullable' => true));
+		$sql = "SELECT DISTINCT fm_project.account_id, fm_b_account.category as account_group FROM fm_project JOIN fm_b_account ON fm_project.account_id = fm_b_account.id";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		$accounts = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$accounts[] = array
+				(
+				'account_id'		=> $GLOBALS['phpgw_setup']->oProc->f('account_id'),
+				'account_group'		=> $GLOBALS['phpgw_setup']->oProc->f('account_group'),
+		);
+		}
+		foreach ($accounts as $entry)
+		{
+			$sql = "UPDATE fm_project SET account_group = {$entry['account_group']} WHERE account_id = '{$entry['account_id']}'";
+
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+//		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_project',array(),'account_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.586';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.586 to 0.9.17.587
+	* restore field
+	* 
+	*/
+
+	$test[] = '0.9.17.586';
+	function property_upgrade0_9_17_586()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('fm_project');
+
+		if(!isset($metadata['account_id']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project','account_id',array('type' => 'varchar','precision' => '20','nullable' => True));
+		}
+        
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.587';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+    }
+
+	/**
+	* Update property version from 0.9.17.587 to 0.9.17.588
+	* add billable_hours to workorders
+	* 
+	*/
+
+	$test[] = '0.9.17.587';
+	function property_upgrade0_9_17_587()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','billable_hours',array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.588';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+    /**
+	* Update property version from 0.9.17.588 to 0.9.17.589
+	* Better precision to period (month) for payment-info
+    *
+    */
+
+	$test[] = '0.9.17.588';
+	function property_upgrade0_9_17_588()
+    {
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag','periode',array('type' => 'int','precision' => '4','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilagoverf','periode',array('type' => 'int','precision' => '4','nullable' => True));
+//		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periode_old',array('type' => 'int','precision' => 4,'nullable' => True));
+//		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','periode_old',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		$db =& $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+		$tables = array('fm_ecobilag', 'fm_ecobilagoverf');
+	
+		foreach($tables as $table)
+		{
+			//Backup
+//			$sql = "UPDATE {$table} SET periode_old = periode";
+//			$db->query($sql,__LINE__,__FILE__);
+
+			$sql = 'SELECT count (*), bilagsnr, EXTRACT(YEAR from fakturadato ) as aar ,' 
+			. ' EXTRACT(MONTH from fakturadato ) as month, periode'
+			. " FROM {$table} "
+			. ' GROUP BY bilagsnr, EXTRACT(YEAR from fakturadato ), EXTRACT(MONTH from fakturadato ), periode'
+			. ' ORDER BY aar, month, periode';
+
+			$db->query($sql,__LINE__,__FILE__);
+
+			$result = array();
+			while ($db->next_record())
+			{
+				$aar = $db->f('aar');
+				$month = $db->f('month');
+				$periode = $db->f('periode');
+				$periode_ny = $aar . sprintf("%02d",$periode);
+				$periode_old = $aar . sprintf("%02d",$month);
+
+				if($periode_old != $periode_ny && $month == 1)
+				{
+					$periode_korrigert = ($aar-1) . sprintf("%02d",$periode);
+				}
+				else
+				{
+					$periode_korrigert = $periode_ny;
+				}
+
+				$result[] = array
+            (
+    		   	    'bilagsnr'			=> $db->f('bilagsnr'),
+    	//	   	    'aar'				=> $aar,
+    	//	   		'month'				=> $month,
+    	//	   	    'periode'			=> $periode,
+    	//	   	    'periode_ny'		=> $periode_ny,
+    		   	    'periode_korrigert'	=> $periode_korrigert
+				);
+			}
+
+			foreach ($result as $entry)
+			{
+				$sql = "UPDATE {$table} SET periode = {$entry['periode_korrigert']} WHERE bilagsnr = {$entry['bilagsnr']}";
+				$db->query($sql,__LINE__,__FILE__);
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.589';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.589 to 0.9.17.590
+	* add generic support for JasperReport
+	* 
+	*/
+
+	$test[] = '0.9.17.589';
+	function property_upgrade0_9_17_589()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper', array(
+                'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
+					'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'title' => array('type' => 'varchar','precision' => 100,'nullable' => true),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+					'formats' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+					'version' => array('type' => 'varchar','precision' => 10,'nullable' => true),
+					'access' => array('type' => 'varchar','precision' => 7,'nullable' => true),
+					'user_id' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'entry_date' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'modified_by' => array('type' => 'int','precision' => 4,'nullable' => true),
+					'modified_date' => array('type' => 'int','precision' => 4,'nullable' => true)
                 ),
                 'pk' => array('id'),
                 'fk' => array(),
                 'ix' => array(),
-				'uc' => array('display_name', 'function_name')
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper_input_type', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: date/ integer
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
             ),
-
-
-            'fm_item_catalog' => array
-			(
-				'fd' => array
-				(
-					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name'          => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
-					'description'   => array('type' => 'text', 'nullable' => true),
-					'manufacturer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
-				),
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('name')
-			),
+				'uc' => array()
+			)
+		);
 
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('integer', 'Integer')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('float', 'Float')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('text', 'Text')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('date', 'Date')");
 
-            'fm_attr_def' => array
-			(
-				'fd' => array
-				(
-					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name'          => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
-					'display_name'  => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-					'description'   => array('type' => 'text', 'nullable' => true),
-					'data_type_id'  => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'unit_id'       => array('type' => 'varchar', 'precision' => 20, 'nullable' => false)
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper_format_type', array(
+                'fd' => array(
+					'id' => array('type' => 'varchar','precision' => 20,'nullable' => false), // i.e: pdf/xls
+                ),
+                'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('PDF')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('CSV')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XLS')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XHTML')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('DOCX')");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_jasper_input', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','precision' => 4, 'nullable' => false),
+					'jasper_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+					'input_type_id' => array('type' => 'int','precision' => 4, 'nullable' => false),
+					'is_id' => array('type' => 'int','precision' => 2, 'nullable' => true),
+					'name' => array('type' => 'varchar','precision' => 50,'nullable' => false),
+					'descr' => array('type' => 'varchar','precision' => 255,'nullable' => true),
 				),
 				'pk' => array('id'),
 				'fk' => array(
-                    'fm_attr_data_type' => array('data_type_id' => 'id'),
-                    'fm_standard_unit' => array('unit_id' => 'id')),
-				'ix' => array(),
+					'fm_jasper_input_type' => array('input_type_id' => 'id'),
+					'fm_jasper' => array('jasper_id' => 'id')),
+                'ix' => array(),
+                'uc' => array()
+            )
+        );
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.590';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.590 to 0.9.17.591
+	* Add datatypes for user input at JasperReport
+	* 
+	*/
+
+	$test[] = '0.9.17.590';
+	function property_upgrade0_9_17_590()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('timestamp', 'timestamp')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('AB', 'Address book')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('VENDOR', 'Vendor')");
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_input_type (name, descr) VALUES ('user', 'system user')");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.591';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.591 to 0.9.17.592
+	* Add integration settings on entities
+	* 
+	*/
+
+	$test[] = '0.9.17.591';
+	function property_upgrade0_9_17_591()
+	{
+        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','integration_tab', array('type' => 'varchar','precision' => 50,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','integration_url', array('type' => 'varchar','precision' => 255,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','integration_paramtres', array('type' => 'text','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+        {
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.592';
+			return $GLOBALS['setup_info']['property']['currentver'];
+        }
+	}
+
+	/**
+	* Update property version from 0.9.17.592 to 0.9.17.593
+	* More on integration settings on entities
+	* 
+	*/
+
+	$test[] = '0.9.17.592';
+	function property_upgrade0_9_17_592()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_entity_category','integration_paramtres','integration_parametres');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','integration_action', array('type' => 'varchar','precision' => 50,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','integration_action_view', array('type' => 'varchar','precision' => 50,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','integration_action_edit', array('type' => 'varchar','precision' => 50,'nullable' => True));
+
+        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+        {
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.593';
+            return $GLOBALS['setup_info']['property']['currentver'];
+        }
+    }
+
+    /**
+	* Update property version from 0.9.17.593 to 0.9.17.594
+	* Convert integration settings to generic config on locations
+    *
+    */
+
+	$test[] = '0.9.17.593';
+	function property_upgrade0_9_17_593()
+    {
+        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+        
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_tab');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_url');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_parametres');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_action');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_action_view');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_entity_category',array(),'integration_action_edit');
+
+        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+        {
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.594';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.593 to 0.9.17.594
+	* prepare for improved items
+	* 
+	*/
+
+	$test[] = '0.9.17.594';
+	function property_upgrade0_9_17_594()
+	{
+        $tables = array
+        (
+			'fm_item_catalog' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+					'description' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array('name'),
 				'uc' => array('name')
 			),
-
-            'fm_attr_value' => array
-			(
-				'fd' => array
-				(
-					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'val_num' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-					'val_str' => array('type' => 'text', 'nullable' => true),
-					'created_at' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-					'expired_at' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-					'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			'fm_item_group' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+					'nat_group_no' => array('type' => 'varchar', 'precision' => 5,'nullable' => False),
+					'bpn' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'parent_group' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'catalog_id' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'fm_item_catalog' => array('catalog_id' => 'id'),
+					'fm_item_group' => array('parent_group' => 'id')),
+				'ix' => array('name'),
+				'uc' => array('name')
+			),
+			'fm_item' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'location_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'vendor_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'installed' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'fm_item_group' => array('group_id' => 'id'),
+					'fm_locations' => array('location_id' => 'id'),
+					'fm_vendor' => array('vendor_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+			'fm_attr_data_type' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'display_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+					'function_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('display_name','function_name')
+			),
+			'fm_attr_group' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+					'sort' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array('name'),
+				'uc' => array('name')
+			),
+			'fm_attr_def' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+					'display_name' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+					'description' => array('type' => 'text','nullable' => True),
+					'data_type_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'unit_id' => array('type' => 'varchar', 'precision' => 20,'nullable' => False),
+					'attr_group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'fm_attr_group' => array('attr_group_id' => 'id'),
+					'fm_attr_data_type' => array('data_type_id' => 'id'),
+					'fm_standard_unit' => array('unit_id' => 'id')),
+				'ix' => array('name'),
+				'uc' => array('name')
+			),
+			'fm_attr_value' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'val_num' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'val_str' => array('type' => 'text','nullable' => True),
+					'created_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'expired_at' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'expired_by' => array('type' => 'int', 'precision' => 4,'nullable' => True)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 			),
-
-
-            'fm_item_group' => array
-			(
-				'fd' => array
-				(
-					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'name'          => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
-					'nat_group_no'  => array('type' => 'varchar', 'precision' => 5, 'nullable' => false),
-					'bpn'           => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'parent_group'  => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-                    'catalog_id'    => array('type' => 'int', 'precision' => 4, 'nullable' => false)
+			'fm_item_group_attr' => array(
+				'fd' => array(
+					'group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'attr_def_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'value_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1')
+				),
+				'pk' => array('attr_def_id','group_id'),
+				'fk' => array(
+					'fm_attr_def' => array('attr_def_id' => 'id'),
+					'fm_item_group' => array('group_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+			'fm_item_attr' => array(
+				'fd' => array(
+					'item_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'attr_def_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'value_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1')
+				),
+				'pk' => array('attr_def_id','item_id'),
+				'fk' => array(
+					'fm_attr_def' => array('attr_def_id' => 'id'),
+					'fm_item' => array('item_id' => 'id'),
+					'fm_attr_value' => array('value_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			),
+			'fm_attr_choice' => array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'value_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+					'attr_def_id' => array('type' => 'int', 'precision' => 4,'nullable' => False)
 				),
 				'pk' => array('id'),
-				'fk' => array('fm_item_group' => array('parent_group' => 'id'), 'fm_item_catalog' => array('catalog_id' => 'id')),
-				'ix' => array(),
-				'uc' => array('name')
-			),
-
-
-			'fm_item' => array
-			(
-				'fd' => array
-				(
-					'id'            => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-					'group_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'location_id'   => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'vendor_id'     => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'installed'     => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				),
-				'pk' => array('id'),
-				'fk' => array('fm_item_group' => array('group_id' => 'id'),
-                              'fm_locations' => array('location_id' => 'id'),
-                              'fm_vendor' => array('vendor_id' => 'id')),
+				'fk' => array('fm_attr_def' => array('attr_def_id' => 'id')),
 				'ix' => array(),
 				'uc' => array()
-			),
-
-
-            'fm_item_attr' => array
-			(
-				'fd' => array
-				(
-					'item_id'       => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'attr_def_id'   => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'value_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'active'        => array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 1)
-				),
-				'pk' => array('item_id', 'attr_def_id'),
-				'fk' => array('fm_item' => array('item_id' => 'id'),
-                              'fm_attr_def' => array('attr_def_id' => 'id'),
-                              'fm_attr_value' => array('value_id' => 'id')),
-				'ix' => array(),
-				'uc' => array()
-			),
-
-
-			'fm_item_group_attr' => array
-			(
-				'fd' => array
-				(
-					'group_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'attr_def_id'   => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'value_id'      => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-					'active'        => array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 1)
-				),
-				'pk' => array('group_id', 'attr_def_id'),
-				'fk' => array('fm_item_group' => array('group_id' => 'id'),
-                              'fm_attr_def' => array('attr_def_id' => 'id')),
-				'ix' => array(),
-				'uc' => array()
-			),
+			)
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -4035,86 +4704,10 @@
 		{
 			$GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
 		}
-        
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.577';
-			return $GLOBALS['setup_info']['property']['currentver'];
-		}
-    }
-
-
-    /**
-    * Update property version from 0.9.17.577 to 0.9.17.578
-    * Add BIM tables for choices and attribute groups
-    *
-    */
-
-    $test[] = '0.9.17.577';
-    function property_upgrade0_9_17_577()
-    {
-        $tables = array
-        (
-            'fm_attr_group' => array
-            (
-                'fd' => array(
-                    'id' =>     array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-                    'name' =>   array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-                    'sort' =>   array('type' => 'int', 'precision' => 4, 'nullable' => false, 'default' => 5)
-                ),
-                'pk' => array('id'),
-                'fk' => array(),
-                'ix' => array(),
-                'uc' => array('name')
-            ),
-            'fm_attr_choice' => array
-            (
-                'fd' => array(
-                    'id' =>         array('type' => 'auto', 'precision' => 4, 'nullable' => false),
-                    'value_id' =>   array('type' => 'int', 'precision' => 4, 'nullable' => false),
-                    'attr_def_id' =>array('type' => 'int', 'precision' => 4, 'nullable' => false)
-                ),
-                'pk' => array('id'),
-                'fk' => array('fm_attr_def' => array('attr_def_id' => 'id')),
-                'ix' => array(),
-                'uc' => array()
-            )
-        );
-
-        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-
-        foreach ($tables as $table => $def)
-        {
-            $GLOBALS['phpgw_setup']->oProc->CreateTable($table, $def);
-        }
-
-        // Add FK column
-        $GLOBALS['phpgw_setup']->oProc->AddColumn('fm_attr_def','attr_group_id',array('type' => 'int', 'precision' => 4, 'nullable' => false));
-        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE fm_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES fm_attr_group');
-
-        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
-        {
-            $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.578';
-            return $GLOBALS['setup_info']['property']['currentver'];
-        }
-    }
-
-    /**
-    * Update property version from 0.9.17.578 to 0.9.17.579
-    * Add sort column to BIM attributes
-    *
-    */
-    $test[] = '0.9.17.578';
-    function property_upgrade0_9_17_578()
-    {
-        $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-        
-        $GLOBALS['phpgw_setup']->oProc->DropColumn('fm_item_catalog', null, 'manufacturer_id');
-        $GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE fm_attr_def ADD FOREIGN KEY (attr_group_id) REFERENCES fm_attr_group');
-
-        if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
-        {
-            $GLOBALS['setup_info']['property']['currentver'] = '0.9.17.579';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.595';
             return $GLOBALS['setup_info']['property']['currentver'];
         }
     }

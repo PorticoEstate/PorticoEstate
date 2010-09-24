@@ -178,34 +178,56 @@
 
 		function read_b_account($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter'])?$data['filter']:'none';
+			$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 				$query		= isset($data['query'])?$data['query']:'';
 				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 				$order		= isset($data['order'])?$data['order']:'';
-				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 				$allrows	= isset($data['allrows'])?$data['allrows']:'';
+			$role		= isset($data['role'])?$data['role']:'';
+			$parent		= isset($data['parent']) && $data['parent'] ? (int)$data['parent'] : 0;
+
+			if($role == 'group')
+			{
+				$table = 'fm_b_account_category';
+			}
+			else
+			{
+				$table = 'fm_b_account';
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by id DESC';
+				$ordermethod = ' ORDER BY id DESC';
+			}
+
+			$where = 'WHERE';
+
+			$filtermethod = '';
+			if($role != 'group' && $parent)
+			{
+				$filtermethod = " WHERE category = {$parent}";
+				$where = 'AND';
 			}
 
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " WHERE (id $this->like '%$query%' OR descr $this->like '%$query%')";
+				if($role == 'group')
+				{
+					$querymethod = " $where (id = " . (int)$query . " OR descr $this->like '%$query%')";
+				}
+				else
+				{
+					$querymethod = " $where (id $this->like '%$query%' OR descr $this->like '%$query%')";
+				}
 			}
 
-			$sql = "SELECT * FROM fm_b_account $querymethod  ";
+			$sql = "SELECT * FROM {$table}{$filtermethod}{$querymethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();

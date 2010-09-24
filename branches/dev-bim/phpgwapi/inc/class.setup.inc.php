@@ -39,10 +39,11 @@
 		{
 			$this->detection = createObject('phpgwapi.setup_detection');
 			$this->process   = createObject('phpgwapi.setup_process');
+			$_translation    = &$this->process->translation;
 
 			/* The setup application needs these */
 			$this->html	= $html ? CreateObject('phpgwapi.setup_html') : null;
-			$this->translation = $translation ? CreateObject('phpgwapi.setup_translation') : null;
+			$this->translation = $translation ? $_translation : null ; //CreateObject('phpgwapi.setup_translation') : null;
 			
 			//$this->tbl_apps    = $this->get_apps_table_name();
 			//$this->tbl_config  = $this->get_config_table_name();
@@ -64,7 +65,10 @@
 			$GLOBALS['phpgw_info']['server']['db_name'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_name'];
 			$GLOBALS['phpgw_info']['server']['db_user'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_user'];
 			$GLOBALS['phpgw_info']['server']['db_pass'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_pass'];
+
+			$GLOBALS['phpgw_info']['server']['db_abstraction'] = $GLOBALS['phpgw_domain'][$ConfigDomain]['db_abstraction'];
 			$this->db	  = createObject('phpgwapi.db');
+			$this->db->fetchmode= 'BOTH';
 			$GLOBALS['phpgw']->db =& $this->db;
 
 			$GLOBALS['ConfigDomain'] = $ConfigDomain;
@@ -382,6 +386,7 @@
 			// hack to make phpgwapi_applications::name2id to work properly
 			unset($GLOBALS['phpgw_info']['apps']);
 			$GLOBALS['phpgw']->locations->add('run', "Automatically added on install - run {$appname}", $appname, false);
+			$GLOBALS['phpgw']->locations->add('admin', "Allow app admins - {$appname}", $appname, false);
 		}
 
 		/**
@@ -405,9 +410,9 @@
 				// _debug_array($setup_info[$appname]);
 			}
 
-			$this->db->query("SELECT COUNT(app_name) FROM phpgw_applications WHERE app_name='".$appname."'",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(app_name) as cnt FROM phpgw_applications WHERE app_name='".$appname."'",__LINE__,__FILE__);
 			$this->db->next_record();
-			if($this->db->f(0))
+			if($this->db->f('cnt'))
 			{
 				if(@$GLOBALS['DEBUG'])
 				{
@@ -452,9 +457,9 @@
 				// _debug_array($setup_info[$appname]);
 			}
 
-			$this->db->query("SELECT COUNT(app_name) FROM $appstbl WHERE app_name='".$appname."'",__LINE__,__FILE__);
+			$this->db->query("SELECT COUNT(app_name) as cnt FROM $appstbl WHERE app_name='".$appname."'",__LINE__,__FILE__);
 			$this->db->next_record();
-			if(!$this->db->f(0))
+			if(!$this->db->f('cnt'))
 			{
 				return False;
 			}

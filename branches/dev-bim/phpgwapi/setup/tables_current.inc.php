@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Setup
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2010 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage setup
@@ -71,6 +71,23 @@
 			'ix' => array(),
 			'uc' => array('account_lid')
 		),
+		'phpgw_account_delegates' => array(
+			'fd' => array(
+				'delegate_id' => array('type' => 'auto','precision' => 4,'nullable' => false),
+				'account_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'owner_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
+				'data' => array('type' => 'text','nullable' => true),
+				'active_from' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				'active_to' => array('type' => 'int', 'precision' => 4,'nullable' => true),
+				'created_on' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+				'created_by' => array('type' => 'int', 'precision' => 4,'nullable' => false),
+			),
+			'pk' => array('delegate_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('account_id','owner_id','location_id','data')
+		),
 		'phpgw_preferences' => array(
 			'fd' => array(
 				'preference_owner' => array('type' => 'int','precision' => 4,'nullable' => False),
@@ -110,7 +127,7 @@
 			'fd' => array(
 				'sessionid' => array('type' => 'char','precision' => '32','nullable' => False),
 				'loginid' => array('type' => 'varchar','precision' => 30,'nullable' => False),
-				'ip' => array('type' => 'varchar','precision' => 50,'nullable' => False,'default' => '::1'),
+				'ip' => array('type' => 'varchar','precision' => 100,'nullable' => False,'default' => '::1'),
 				'li' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'lo' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => '0'),
 				'account_id' => array('type' => 'int','precision' => 4,'nullable' => False,'default' => '0')
@@ -206,7 +223,8 @@
 				'cat_name' => array('type' => 'varchar','precision' => '150','nullable' => False),
 				'cat_description' => array('type' => 'varchar','precision' => 255,'nullable' => False),
 				'cat_data' => array('type' => 'text'),
-				'last_mod' => array('type' => 'int','precision' => 4,'nullable' => False,'default' => '0')
+				'last_mod' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => True),
 			),
 			'pk' => array('cat_id'),
 			'fk' => array(),
@@ -572,7 +590,8 @@
 				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'attrib_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
-				'value' => array('type' => 'text','nullable' => false)
+				'value' => array('type' => 'text','nullable' => false),
+				'choice_sort' => array('type' => 'int','precision' => 4,'nullable' => false, 'default' => 0)
 			),
 			'pk' => array('location_id', 'attrib_id', 'id'),
 			'fk' => array(),
@@ -623,5 +642,55 @@
 			'fk' => array(),
 			'ix' => array('target_email','is_active'),
 			'uc' => array()
+		),
+		'phpgw_config2_section' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true),
+				'data' => array('type' => 'text','nullable' => true)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_config2_attrib' => array(
+			'fd' => array(
+				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true)
+			),
+			'pk' => array('section_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'phpgw_config2_choice' => array(
+			'fd' => array(
+				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value' => array('type' => 'varchar', 'precision' => 50,'nullable' => False)
+			),
+			'pk' => array('section_id','attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('section_id','attrib_id','value')
+		),
+		'phpgw_config2_value' => array(
+			'fd' => array(
+				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'value' => array('type' => 'text','nullable' => False)
+			),
+			'pk' => array('section_id','attrib_id','id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array('section_id','attrib_id','value')
 		)
 	);

@@ -12,7 +12,17 @@
 	}
 	var columnDefs = [{
 		key: "description",
-		label: "<?php echo lang('description') ?>",
+		label: "<?php echo lang('title') ?>",
+	    sortable: false
+	},
+	{
+		key: "responsibility_title",
+		label: "<?php echo lang('contract_type') ?>",
+		sortable: true
+	},
+	{
+		key: "billing_info",
+		label: "<?php echo lang('billing_terms') ?>",
 	    sortable: false
 	},
 	{
@@ -23,7 +33,7 @@
 	},
 	{
 		key: "timestamp_stop",
-		label: "<?php echo lang('Run') ?>",
+		label: "<?php echo lang('last_updated') ?>",
 	    sortable: true
 	},
 	{
@@ -89,12 +99,12 @@
 	);
 
     function doExport() {
-        window.location = 'index.php?menuaction=rental.uibilling.download<?php echo $url_add_on; ?>';
+        var dl = window.open('index.php?menuaction=rental.uibilling.download<?php echo $url_add_on."&amp;export=true"; ?>');
     }
 </script>
-<fieldset>
+<!-- <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
 	<div id="export"><a href="javascript:doExport();"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
-</fieldset>
+</fieldset> -->
+<div id="<?php echo $list_id ?>_paginator" class="paginator" ></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>
-<div id="<?php echo $list_id ?>_paginator" class="paginator"></div>

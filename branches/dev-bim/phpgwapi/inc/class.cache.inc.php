@@ -267,7 +267,7 @@
 
 			if(function_exists('gzcompress') && $compress)
 			{
-				$value =  self::_value_return(gzuncompress(base64_decode($value)));
+				$value =  self::_value_return(gzuncompress(base64_decode($value)), $bypass);
 				return $value;
 			}
 			else
@@ -519,7 +519,7 @@
 
 			if(function_exists('gzcompress') && $compress)
 			{
-				$value =  self::_value_return(gzuncompress(base64_decode($value)));
+				$value =  self::_value_return(gzuncompress(base64_decode($value)), $bypass);
 				return $value;
 			}
 			else

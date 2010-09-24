@@ -27,14 +27,14 @@
 			'delete'		=> true,
 			);
 
-		function sms_uicommand()
+		function __construct()
 		{
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo				= CreateObject('sms.bocommand');
 			$this->bocommon				= CreateObject('sms.bocommon');
 			$this->sms				= CreateObject('sms.sms');
-			$this->acl				= CreateObject('phpgwapi.acl');
+			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 			= '.command';
 			$this->cat_id				= $this->bo->cat_id;
 			$this->start				= $this->bo->start;
@@ -44,7 +44,6 @@
 			$this->allrows				= $this->bo->allrows;
 
 			$this->db 				= clone($GLOBALS['phpgw']->db);
-			$this->db2 				= clone($GLOBALS['phpgw']->db);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'sms::command';
 		}
 
@@ -80,9 +79,8 @@
 
 			$command_info = $this->bo->read();
 
-			while (is_array($command_info) && list(,$entry) = each($command_info))
+			foreach ($command_info as $entry)
 			{
-
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.delete', 'command_id'=> $entry['id']));
@@ -162,7 +160,7 @@
 				);
 			}
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -297,7 +295,7 @@
 				'command_id'	=> $command_id
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -313,16 +311,12 @@
 				'lang_help5'			=> lang('##COMMANDPARAM## replaced by command parameter passed to server from SMS'),
 				'lang_binary_path'		=> lang('SMS command binary path'),
 				'value_binary_path'		=> PHPGW_SERVER_ROOT . "/sms/bin/{$GLOBALS['phpgw_info']['user']['domain']}",
-
 				'lang_type'			=> lang('command type'),
 				'type_list'			=> $this->bo->select_type_list($values['type']),
 				'lang_no_type'			=> lang('no exec type'),
 				'lang_lang_type_status_text'	=> lang('input type'),
-
-
 				'value_exec'			=> $values['exec'],
 				'lang_exec'			=> lang('SMS command exec'),
-
 				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'			=> lang('ID'),
@@ -376,9 +370,8 @@
 
 			$command_info = $this->bo->read_log();
 
-			while (is_array($command_info) && list(,$entry) = each($command_info))
+			foreach ($command_info as $entry)
 			{
-
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
 					$link_delete		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'sms.uicommand.delete', 'command_id'=> $entry['id']));
@@ -467,7 +460,7 @@
 				'query'		=> $this->query
 			);
 
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
 			(
@@ -522,8 +515,6 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
-			//	$this->bo->delete_type($command_id);
-
 				$sql = "SELECT command_code FROM phpgw_sms_featcommand WHERE command_id='$command_id'";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
@@ -572,4 +563,3 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}
-
