@@ -77,6 +77,33 @@
 		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+		// crumbles
+		$current_url = array
+		(
+			'id'	=> $flags['menu_selection'],
+			'url'	=> phpgw::get_var('REQUEST_URI', 'string', 'SERVER'),
+			'name'	=> $var['current_app_title']
+		);
+		$crumbles = phpgwapi_cache::session_get('phpgwapi','crumbles');
+		$crumbles = $crumbles ? $crumbles : array(); // first one
+		if($crumbles[0]['id'] != $flags['menu_selection'])
+		{
+			array_unshift($crumbles, $current_url);
+		}
+		if(count($crumbles) >= 5)
+		{
+			array_pop($crumbles);
+		}
+		phpgwapi_cache::session_set('phpgwapi','crumbles', $crumbles);
+		$crumbles = array_reverse($crumbles);
+		
+		$history_url = array();
+		foreach($crumbles as $crumble)
+		{
+			$history_url[] ="<a href='{$crumble['url']}'>{$crumble['name']}</a>";
+		}
+
+		$var['crumbles'] = implode('>>', $history_url);
 
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
