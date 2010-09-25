@@ -48,8 +48,4 @@
 					<div class="header">
 						<h2>{current_app_title}</h2>
 					</div>
-					<div class="crumbles">
-						<h4>{crumbles}</h4>
-					</div>
-
 					<div class="body">
