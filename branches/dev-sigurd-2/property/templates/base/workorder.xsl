@@ -305,7 +305,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			function calculate_workorder()
 			{
 				document.calculate_workorder_form.submit();
@@ -541,7 +541,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="6" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>
@@ -614,7 +614,7 @@
 					<xsl:value-of select="lang_remark"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_remark_statustext"/>
@@ -933,7 +933,7 @@
 		<div id="paging_0"> </div>
 		<div id="datatable-container_0"></div>	
 
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
@@ -1238,7 +1238,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="readonly">
 							<xsl:text>readonly</xsl:text>
 						</xsl:attribute>
@@ -1252,7 +1252,7 @@
 					<xsl:value-of select="lang_remark"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="readonly">
 							<xsl:text>readonly</xsl:text>
 						</xsl:attribute>

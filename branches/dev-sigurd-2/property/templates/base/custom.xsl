@@ -164,7 +164,7 @@
 				</td>
 				<td align="left">
 
-					<textarea cols="60" rows="6" name="values[sql_text]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[sql_text]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_sql_statustext"/>

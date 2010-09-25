@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="b_account_data">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function b_account_lookup()
 			{

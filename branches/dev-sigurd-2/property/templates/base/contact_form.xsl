@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="contact_data">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function <xsl:value-of select="field"/>_contact_lookup()
 			{

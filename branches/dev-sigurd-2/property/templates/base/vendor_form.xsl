@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="vendor_data">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function vendor_lookup()
 			{

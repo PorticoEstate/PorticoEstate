@@ -120,7 +120,7 @@
 						<xsl:value-of select="php:function('lang', 'descr')" />
 					</td>
 					<td>
-						<textarea cols="60" rows="10" name="values[descr]" wrap="virtual">
+						<textarea cols="60" rows="10" name="values[descr]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'descr')" />
 							</xsl:attribute>
@@ -243,7 +243,7 @@
 		</table>
 
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();

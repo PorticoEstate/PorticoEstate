@@ -414,7 +414,7 @@
 					<xsl:value-of select="php:function('lang', 'descr')" />
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_standardtext"/>
@@ -757,7 +757,7 @@
 		</div>
 
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -1110,7 +1110,7 @@
 					<xsl:value-of select="lang_remark"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_remark_statustext"/>
@@ -1232,7 +1232,7 @@
 					<xsl:value-of select="lang_statustext"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[statustext]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[statustext]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_statustext_attribtext"/>
@@ -1434,7 +1434,7 @@
 					<xsl:value-of select="lang_helpmsg"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[helpmsg]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[helpmsg]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_helpmsg_statustext"/>
@@ -1667,7 +1667,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_custom_functiontext"/>

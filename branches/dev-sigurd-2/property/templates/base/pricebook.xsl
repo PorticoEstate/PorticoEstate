@@ -876,7 +876,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit_activity">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function ns3420_lookup()
 			{
@@ -936,7 +936,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="4" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="4" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>
@@ -951,7 +951,7 @@
 					<xsl:value-of select="lang_base_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="4" name="values[base_descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="4" name="values[base_descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_base_descr_statustext"/>
@@ -1036,7 +1036,7 @@
 <!-- add / edit agreement_group -->
 
 	<xsl:template match="edit_agreement_group">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function ns3420_lookup()
 			{
@@ -1096,7 +1096,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="4" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="4" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>

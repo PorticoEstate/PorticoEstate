@@ -239,7 +239,7 @@
 												<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 											</xsl:when>	
 											<xsl:when test="datatype='T'">
-												<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" wrap="virtual">
+												<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" >
 													<xsl:choose>
 														<xsl:when test="disabled!=''">
 															<xsl:attribute name="disabled">

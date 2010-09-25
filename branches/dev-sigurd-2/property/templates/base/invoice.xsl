@@ -97,7 +97,7 @@
 			</tr>
 			<tr>
 				<td align="center">
-					<textarea cols="60" rows="15" name="remark" readonly="readonly" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="15" name="remark" readonly="readonly" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_content_statustext"/>
@@ -562,7 +562,7 @@
 <!-- list_voucher_paid -->
 
 	<xsl:template match="list_voucher_paid">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function abook()
 			{
@@ -851,7 +851,7 @@
 <!-- consume -->
 
 	<xsl:template match="consume">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function abook()
 			{
@@ -1257,7 +1257,7 @@
 <!-- add / edit -->
 	<xsl:template match="add">
 
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function abook()
 			{
@@ -1535,7 +1535,7 @@
 					<xsl:value-of select="lang_merknad"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="merknad" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="merknad" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_merknad_statustext"/>
@@ -1583,7 +1583,7 @@
 
 	<xsl:template match="import">
 
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function abook()
 			{

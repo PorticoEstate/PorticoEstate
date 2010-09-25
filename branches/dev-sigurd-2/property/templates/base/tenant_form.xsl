@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="tenant_data">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function tenant_lookup()
 			{

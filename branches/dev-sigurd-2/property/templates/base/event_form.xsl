@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="event_data" xmlns:php="http://php.net/xsl">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function event_lookup_<xsl:value-of select="name"/>()
 			{

@@ -205,14 +205,14 @@
 	<xsl:template match="edit">
 		<xsl:choose>
 			<xsl:when test="mode = 'edit'">
-				<script language="JavaScript">
+				<script type="text/javascript">
 					self.name="first_Window";
 					<xsl:value-of select="lookup_functions"/>
 				</script>
 			</xsl:when>
 		</xsl:choose>
 		
-		<script language="JavaScript">
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var datatable = new Array();
 			var myColumnDefs = new Array();

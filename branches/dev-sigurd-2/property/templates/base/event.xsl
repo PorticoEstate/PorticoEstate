@@ -43,7 +43,7 @@
 								<xsl:value-of select="lang_descr"/>
 							</td>
 							<td>
-								<textarea cols="{textareacols}" rows="{textarearows}" name="values[descr]" wrap="virtual">
+								<textarea cols="{textareacols}" rows="{textarearows}" name="values[descr]" >
 									<xsl:value-of select="value_descr"/>		
 								</textarea>
 							</td>
@@ -242,7 +242,7 @@
 			</div>
 		</form>
 		</div>
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -305,7 +305,7 @@
 				</div>
 			</div>
 		</div>
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();

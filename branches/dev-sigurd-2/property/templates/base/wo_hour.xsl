@@ -75,7 +75,7 @@
 		</table>
 
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -201,7 +201,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="4" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="4" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>
@@ -270,7 +270,7 @@
 		</table>
 		</div>
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -529,7 +529,7 @@
 		</xsl:choose>
 		</table>
 
-		<script>
+		<script type="text/javascript">
 		var property_js = <xsl:value-of select="property_js" />;
 		var datatable = new Array();
 		var myColumnDefs = new Array();
@@ -1909,7 +1909,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit_hour">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function ns3420_lookup()
 			{
@@ -2055,7 +2055,7 @@
 							<xsl:value-of select="lang_descr"/>
 						</td>
 						<td>
-							<textarea cols="60" rows="4" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+							<textarea cols="60" rows="4" name="values[descr]" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_descr_statustext"/>
@@ -2085,7 +2085,7 @@
 						<td>
 						</td>
 						<td>
-							<textarea cols="40" rows="4" name="ns3420_descr" wrap="virtual" onMouseout="window.status='';return true;">
+							<textarea cols="40" rows="4" name="ns3420_descr" onMouseout="window.status='';return true;">
 								<xsl:attribute name="onMouseover">
 									<xsl:text>window.status='</xsl:text>
 										<xsl:value-of select="lang_descr_statustext"/>
@@ -2187,7 +2187,7 @@
 					<xsl:value-of select="lang_remark"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="4" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="4" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_remark_statustext"/>
@@ -2303,7 +2303,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_standardtext"/>

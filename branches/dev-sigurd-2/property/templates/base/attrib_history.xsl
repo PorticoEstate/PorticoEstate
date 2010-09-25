@@ -7,7 +7,7 @@
 	<div id="contextmenu_0"></div>
 	<div><br/></div>
 	<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
