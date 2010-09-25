@@ -158,4 +158,7 @@
 	);
 	create_select_box('SideContent','sidecontent',$menu_formats,
 		'Do you want your menues as sidecontent');
+	create_check_box('Show breadcrumbs','show_breadcrumbs',
+			'Should history navigation urls as breadcrumbs');
+
 
