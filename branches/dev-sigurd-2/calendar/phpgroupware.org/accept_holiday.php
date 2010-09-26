@@ -46,8 +46,8 @@
 	<h1>There is already a holiday-file for '<?php echo $locale; ?>' !!!</h1>
 
 	<p>If you think your version of the holidays for '<?php echo $locale; ?>' should replace
-	the existing one, please <a href="<?php echo $HTTP_REFERER; ?>&download=1">download</a> the file
-	and <a href="mailto:phpgroupware-developers@gnu.org">mail it</a> to us.</p>
+	the existing one, please <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>&download=1">download</a> the file
+	and <a href="mailto:fmsystem-developers@nongnu.org">mail it</a> to us.</p>
 
 	<p>To get back to your own phpGroupWare-install <a href="<?php echo $send_back_to; ?>">click here</a>.</p>
 </body>
