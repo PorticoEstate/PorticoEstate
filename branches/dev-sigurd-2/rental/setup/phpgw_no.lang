@@ -291,6 +291,7 @@ Missing responsibility id.	rental	no	Ansvar mangler.
 Missing service id.	rental	no	Tjeneste mangler.
 Missing system setting for project id.	rental	no	Systeminnstilling for prosjektnummer mangler.
 Missing system setting for responsibility id for the current user.	rental	no	Systeminnstilling for ansvar mangler.
+missing_agresso_id	rental	no	Agresso Id må fylles ut
 mobile_phone	rental	no	Mobiltelefon
 month 1	rental	no	januar
 month 2	rental	no	februar
