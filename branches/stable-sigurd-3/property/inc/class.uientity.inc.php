@@ -1537,14 +1537,15 @@
 					$_keys[] = $_substitute;
 					$_values[] = $values[trim($_substitute, '_')];
 				}
-
+				unset($output);
 				$_sep = '?';
 				if (stripos($_integration_config['url'],'?'))
 				{
 					$_sep = '&';
 				}
 				$_param = str_replace($_keys, $_values, $_integration_config['parametres']);
-
+				unset($_keys);
+				unset($_values);
 //				$integration_src = phpgw::safe_redirect("{$_integration_config['url']}{$_sep}{$_param}");
 				$integration_src = "{$_integration_config['url']}{$_sep}{$_param}";
 				if($_integration_config['action'])
@@ -1558,38 +1559,23 @@
 				}
 
 				$arguments = array($_integration_config['auth_key_name'] => $response);
+				
+				if(isset($_integration_config['location_data']) && $_integration_config['location_data'])
+				{
+					$_integration_config['location_data']	= htmlspecialchars_decode($_integration_config['location_data']);
+					parse_str($_integration_config['location_data'], $output);
+					foreach ($output as $_dummy => $_substitute)
+					{
+						$_keys[] = $_substitute;
+						$_values[] = $values['location_data'][trim($_substitute, '_')];
+					}
+					$integration_src .= '&' . str_replace($_keys, $_values, $_integration_config['location_data']);
+				}
 
 				$integration_src .= "&{$_integration_config['auth_key_name']}={$response}";
 
 				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration', 'function' => "document.getElementById('integration_content').src = '{$integration_src}';");
-//_debug_array($integration_src);die();
 
-//$integration_src ="http://81.0.146.6/oink-web/index.html?operation=create&komm=1933&cat=1&property=kv2001&objId=50";
-/*
-				$code = <<<JS
-					integration = function()
-					{
-						var onDialogShow = function(e, args, o)
-						{
-							var frame = document.createElement('iframe');
-							frame.src = "{$integration_src}";
-							frame.width = "100%";
-							frame.height = "400%";
-							o.setBody(frame);
-						};
-						lightbox.showEvent.subscribe(onDialogShow, lightbox);
-						lightbox.show();
-					}
-JS;
-*/
-				$code = <<<JS
-					integration = function()
-					{
-					}
-JS;
-
-				$GLOBALS['phpgw']->js->add_code($namespace, $code);
- 
 			}
 
 			$link_file_data = array
