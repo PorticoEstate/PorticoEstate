@@ -81,12 +81,18 @@ class rental_uiprice_item extends rental_uicommon
 			$price_item->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
 			$price_item->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
-			if (rental_soprice_item::get_instance()->store($price_item)) {
-				return $this->viewedit(true, $price_item, lang('messages_saved_form'));
-			} else {
-				return $this->viewedit(true, $price_item, '', lang('messages_form_error'));
+			if($price_item->get_agresso_id() == null)
+			{
+				return $this->viewedit(true, $price_item, '', lang('missing_agresso_id'));
 			}
-
+			else
+			{
+				if (rental_soprice_item::get_instance()->store($price_item)) {
+					return $this->viewedit(true, $price_item, lang('messages_saved_form'));
+				} else {
+					return $this->viewedit(true, $price_item, '', lang('messages_form_error'));
+				}
+			}
 		}
 
 		return $this->viewedit(true, $price_item);
@@ -170,6 +176,10 @@ class rental_uiprice_item extends rental_uicommon
 		$start_index	= phpgw::get_var('startIndex', 'int');
 		$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
 		$sort_field		= phpgw::get_var('sort');
+		if($sort_field == null)
+		{
+			$sort_field = 'agresso_id';
+		}
 		$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 		//Create an empty result set
 		$records = array();
