@@ -30,7 +30,7 @@
 
 	<xsl:template match="list">
 
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function tenant_lookup()
 			{
@@ -350,7 +350,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
@@ -405,7 +405,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="6" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>
@@ -774,7 +774,7 @@
 		<xsl:variable name="main_form_name"><xsl:value-of select="main_form_name"/></xsl:variable>
 		<xsl:variable name="update_form_name"><xsl:value-of select="update_form_name"/></xsl:variable>
 
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
@@ -1119,7 +1119,7 @@
 						<xsl:value-of select="lang_descr"/>
 					</td>
 					<td>
-						<textarea disabled="disabled" cols="60" rows="6" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+						<textarea disabled="disabled" cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_descr_statustext"/>
@@ -1578,7 +1578,7 @@
 					<xsl:value-of select="lang_statustext"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[statustext]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[statustext]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_statustext_attribtext"/>
@@ -1759,7 +1759,7 @@
 <!-- add common / edit common -->
 
 	<xsl:template match="edit_common">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
@@ -1878,7 +1878,7 @@
 						<xsl:value-of select="lang_remark"/>
 					</td>
 					<td>
-						<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+						<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_remark_statustext"/>

@@ -30,7 +30,7 @@
 	</xsl:template>
 
 	<xsl:template match="list_contact">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function ExchangeContact(thisform)
 			{
 				opener.document.form.<xsl:value-of select="contact_id"/>.value = thisform.elements[0].value;
@@ -135,7 +135,7 @@
 
 <!-- list list_vendor-->
 	<xsl:template match="list_vendor">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function ExchangeVendor(thisform)
 			{
 				/* opener.document.form.<xsl:value-of select="contact_id"/>.value = thisform.elements[0].value;
@@ -246,7 +246,7 @@
 <!-- list b_account-->
 
 	<xsl:template match="list_b_account">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function Exchangeb_account(thisform)
 			{
 				opener.document.form.b_account_id.value = thisform.elements[0].value;
@@ -346,7 +346,7 @@
 <!-- list street-->
 
 	<xsl:template match="list_street">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function ExchangeStreet(thisform)
 			{
 				opener.document.form.street_id.value = thisform.elements[0].value;
@@ -446,7 +446,7 @@
 <!-- list tenant-->
 
 	<xsl:template match="list_tenant">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function Exchangetenant(thisform)
 			{
 				opener.document.form.tenant_id.value = thisform.elements[0].value;
@@ -555,7 +555,7 @@
 <!-- list ns3420-->
 
 	<xsl:template match="list_ns3420">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function Exchangens3420(thisform)
 			{
 				opener.document.form.ns3420_id.value = thisform.elements[0].value;
@@ -655,7 +655,7 @@
 	<xsl:template match="list_entity">
 		<xsl:choose>
 			<xsl:when test="//lookup=1">
-				<script LANGUAGE="JavaScript">
+				<script type="text/javascript">
 					function Exchange_values(thisform)
 					{
 						<xsl:value-of select="function_exchange_values"/>
@@ -796,7 +796,7 @@
 <!-- list phpgw_user-->
 
 	<xsl:template match="list_phpgw_user">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 			function Exchangephpgw_user(thisform)
 			{
 				opener.document.form.<xsl:value-of select="user_id"/>.value = thisform.elements[0].value;

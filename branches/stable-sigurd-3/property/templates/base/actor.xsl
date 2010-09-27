@@ -148,7 +148,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
@@ -544,7 +544,7 @@
 					<xsl:value-of select="lang_statustext"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[statustext]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[statustext]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_statustext_attribtext"/>

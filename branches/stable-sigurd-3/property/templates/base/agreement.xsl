@@ -122,7 +122,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" disabled="disabled" rows="6" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" disabled="disabled" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>
@@ -466,7 +466,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
@@ -529,7 +529,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="6" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_descr_statustext"/>
@@ -792,7 +792,7 @@
 				height:100px;
 			}
 		</style> 
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -824,12 +824,12 @@
 <!-- add item / edit item -->
 
 	<xsl:template match="edit_item">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -1144,7 +1144,7 @@
 						<xsl:value-of select="lang_descr"/>
 					</td>
 					<td>
-						<textarea disabled="disabled" cols="60" rows="6" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+						<textarea disabled="disabled" cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
 							<xsl:attribute name="onMouseover">
 								<xsl:text>window.status='</xsl:text>
 									<xsl:value-of select="lang_descr_statustext"/>
@@ -1333,7 +1333,7 @@
 		</div>
 		
 		<!--  DATATABLE DEFINITIONS--> 
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -1487,7 +1487,7 @@
 		</div>
 		
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -1731,7 +1731,7 @@
 					<xsl:value-of select="lang_statustext"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[statustext]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[statustext]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_statustext_attribtext"/>

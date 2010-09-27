@@ -51,7 +51,7 @@
 					<xsl:value-of select="lang_details"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[details]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[details]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_details_statustext"/>

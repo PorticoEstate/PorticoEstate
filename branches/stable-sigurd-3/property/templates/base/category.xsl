@@ -10,7 +10,7 @@
 
 <!-- add / edit  -->
 	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
 		</script>
@@ -77,7 +77,7 @@
 				<td align="left">
 					<xsl:choose>
 						<xsl:when test="type='text'">
-							<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" wrap="virtual">
+							<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]">
 								<xsl:value-of select="value"/>		
 							</textarea>
 						</xsl:when>

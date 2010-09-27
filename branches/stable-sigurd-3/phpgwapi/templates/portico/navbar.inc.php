@@ -77,6 +77,27 @@
 		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+		// breadcrumbs
+		$current_url = array
+		(
+			'id'	=> $flags['menu_selection'],
+			'url'	=> phpgw::get_var('REQUEST_URI', 'string', 'SERVER'),
+			'name'	=> $var['current_app_title']
+		);
+		$breadcrumbs = phpgwapi_cache::session_get('phpgwapi','breadcrumbs');
+		$breadcrumbs = $breadcrumbs ? $breadcrumbs : array(); // first one
+		if($breadcrumbs[0]['id'] != $flags['menu_selection'])
+		{
+			array_unshift($breadcrumbs, $current_url);
+		}
+		if(count($breadcrumbs) >= 5)
+		{
+			array_pop($breadcrumbs);
+		}
+		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
+		$breadcrumbs = array_reverse($breadcrumbs);
+		
+//		$var['breadcrumbs'] = implode(' >> ', $history_url);
 
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
@@ -117,6 +138,17 @@ HTML;
 			echo nl2br($global_message);
 			echo '</div>';
 		}
+		if(phpgw::get_var('phpgw_return_as') != 'json' && $breadcrumbs && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
+		{
+			$history_url = array();
+			foreach($breadcrumbs as $breadcrumb)
+			{
+				$history_url[] ="<a href='{$breadcrumb['url']}'>{$breadcrumb['name']}</a>";
+			}
+			$breadcrumbs = '<div class="breadcrumbs"><h4>' . implode(' >> ', $history_url) . '</h4></div>';
+			echo $breadcrumbs;
+		}
+
 
 		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');

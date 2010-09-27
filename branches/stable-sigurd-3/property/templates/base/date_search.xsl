@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="date_search">
-		<script LANGUAGE="JavaScript">
+		<script type="text/javascript">
 		function ExchangeDate(thisform)
 		   {
 		    //opener.document.search.start_date.value = thisform.elements[0].value;

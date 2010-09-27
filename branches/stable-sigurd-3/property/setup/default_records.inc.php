@@ -260,6 +260,7 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_document_status (id, descr
 # fm_standard_unit
 #
 
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('mm', 'Millimeter')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m', 'Meter')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m2', 'Square meters')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_standard_unit (id, descr) VALUES ('m3', 'Cubic meters')");

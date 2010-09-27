@@ -323,7 +323,7 @@
 					<td align="left">
 						<xsl:choose>
 							<xsl:when test="datatype ='text'">
-								<textarea cols="60" rows="4" name="{input_name}" wrap="virtual" onMouseout="window.status='';return true;">
+								<textarea cols="60" rows="4" name="{input_name}" onMouseout="window.status='';return true;">
 									<xsl:attribute name="onMouseover">
 										<xsl:text>window.status='</xsl:text>
 											<xsl:value-of select="statustext"/>
@@ -474,7 +474,7 @@
 							#expandcontractdiv {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
 							#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
 						</style>
-						<script>
+						<script type="text/javascript">
 							var documents = <xsl:value-of select="documents" />;
 						</script>
 
@@ -497,7 +497,7 @@
 							#expandcontractdiv2 {border:1px dotted #dedede; margin:0 0 .5em 0; padding:0.4em;}
 							#treeDiv2 { background: #fff; padding:1em; margin-top:1em; }
 						</style>
-						<script>
+						<script type="text/javascript">
 							var documents2 = <xsl:value-of select="file_tree" />;
 						</script>
 
@@ -640,7 +640,7 @@
 					<td align="left">
 						<xsl:choose>
 							<xsl:when test="datatype ='text'">
-								<textarea cols="60" rows="4" name="{input_name}" readonly="readonly" wrap="virtual" onMouseout="window.status='';return true;">
+								<textarea cols="60" rows="4" name="{input_name}" readonly="readonly" onMouseout="window.status='';return true;">
 									<xsl:value-of select="value"/>
 								</textarea>
 
@@ -1028,7 +1028,7 @@
 </func:function>
 
 	<xsl:template name="datatable-yui-definition">
-	<script>
+	<script type="text/javascript">
 		var myColumnDefs = [
 			<xsl:for-each select="//table_header">
 				{

@@ -472,7 +472,7 @@
 <!-- add -->
 
 	<xsl:template match="add">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function location_lookup()
 			{

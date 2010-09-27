@@ -160,7 +160,7 @@
 <!-- add / edit -->
 
 	<xsl:template match="edit">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function tenant_lookup()
 			{
@@ -441,7 +441,7 @@
 				</td>
 				<td align="left">
 
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_remark_statustext"/>
@@ -486,7 +486,7 @@
 		</table>
 		</form>
 
-				<script>
+				<script type="text/javascript">
 					var property_js = <xsl:value-of select="property_js" />;
 					var base_java_url = <xsl:value-of select="base_java_url" />;
 					var datatable = new Array();
@@ -780,7 +780,7 @@
 				</td>
 				<td align="left">
 
-					<textarea cols="60" rows="6" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_remark_statustext"/>

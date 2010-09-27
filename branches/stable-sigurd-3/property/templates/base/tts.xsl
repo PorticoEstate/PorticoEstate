@@ -537,7 +537,7 @@
 					<xsl:value-of select="php:function('lang', 'Details')" />
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[details]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[details]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')" />
 						</xsl:attribute>
@@ -673,7 +673,7 @@
 					<xsl:value-of select="lang_details"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[details]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[details]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_details_statustext"/>
@@ -731,7 +731,7 @@
 
 <!-- view -->
 	<xsl:template match="view" xmlns:php="http://php.net/xsl">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function generate_order()
 			{
@@ -1039,7 +1039,7 @@
     		        <xsl:value-of select="php:function('lang', 'new note')" />
 				</td>
 				<td>
-					<textarea cols="{textareacols}" rows="{textarearows}" name="values[note]" wrap="virtual">
+					<textarea cols="{textareacols}" rows="{textarearows}" name="values[note]">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'add new comments')" />
 						</xsl:attribute>
@@ -1368,7 +1368,7 @@
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 		
 		<!--  DATATABLE DEFINITIONS-->
-		<script>
+		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
@@ -1399,7 +1399,7 @@
 
 <!-- view2 -->
 	<xsl:template match="view2">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function generate_order()
 			{
@@ -1612,7 +1612,7 @@
 					<xsl:value-of select="lang_new_note"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[note]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[note]" onMouseout="window.status='';return true;">
 						<xsl:attribute name="onMouseover">
 							<xsl:text>window.status='</xsl:text>
 								<xsl:value-of select="lang_details_statustext"/>

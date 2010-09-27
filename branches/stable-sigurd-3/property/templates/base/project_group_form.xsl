@@ -5,7 +5,7 @@
 	</xsl:template>
 
 	<xsl:template match="project_group_data">
-		<script language="JavaScript">
+		<script type="text/javascript">
 			self.name="first_Window";
 			function project_group_lookup()
 			{

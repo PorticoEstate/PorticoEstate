@@ -398,7 +398,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[descr]" onMouseout="window.status='';return true;">
 						<xsl:value-of select="value_descr"/>		
 					</textarea>
 				</td>
@@ -578,7 +578,7 @@
 					<xsl:value-of select="lang_remark"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[remark]" wrap="virtual" onMouseout="window.status='';return true;">
+					<textarea cols="60" rows="10" name="values[remark]" onMouseout="window.status='';return true;">
 						<xsl:value-of select="value_remark"/>		
 					</textarea>
 				</td>
