@@ -30,6 +30,7 @@ class rental_uiprice_item extends rental_uicommon
 		parent::__construct();
 		//self::set_active_menu('admin::rental::contract_type_list');
 		self::set_active_menu('rental::contracts::price_item_list');
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('price_list');
 	}
 
 	public function index()
@@ -47,6 +48,8 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function view()
 	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+
 		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
@@ -62,6 +65,7 @@ class rental_uiprice_item extends rental_uicommon
 	 */
 	public function edit()
 	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		if(!self::isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
@@ -300,6 +304,7 @@ class rental_uiprice_item extends rental_uicommon
 	
 	public function manual_adjustment()
 	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('manual_adjustment');
 		if(!$this->isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');

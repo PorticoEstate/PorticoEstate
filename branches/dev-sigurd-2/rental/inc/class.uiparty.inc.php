@@ -27,6 +27,7 @@ class rental_uiparty extends rental_uicommon
 	{
 		parent::__construct();
 		self::set_active_menu('rental::parties');
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('parties');
 	}
 
 	/**
@@ -262,7 +263,9 @@ class rental_uiparty extends rental_uicommon
 	 * Public method. Called when a user wants to view information about a party.
 	 * @param HTTP::id	the party ID
 	 */
-	public function view() {
+	public function view()
+	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 		// Get the contract part id
 		$party_id = (int)phpgw::get_var('id');
 		if(isset($party_id) && $party_id > 0)
@@ -296,7 +299,9 @@ class rental_uiparty extends rental_uicommon
 	 * Public method. Called when user wants to edit a contract party.
 	 * @param HTTP::id	the party ID
 	 */
-	public function edit(){
+	public function edit()
+	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		// Get the contract part id
 		$party_id = (int)phpgw::get_var('id');
 		

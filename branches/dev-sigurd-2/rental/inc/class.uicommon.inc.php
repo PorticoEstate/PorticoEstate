@@ -83,6 +83,7 @@
 				EXECUTIVE_OFFICER => $this->isExecutiveOfficer(),
 				ADMINISTRATOR => $this->isAdministrator()
 			);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 		
 		/**

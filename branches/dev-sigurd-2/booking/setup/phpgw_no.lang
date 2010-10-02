@@ -8,7 +8,7 @@ when?	booking	no	Når?
 who?	booking	no	Hvem?
 how many?	booking	no	Hvor mange?
 accept application	booking	no	Godta søknaden
-accepted	booking	no	Akseptert
+accepted	booking	no	AKSEPTERT
 account	booking	no	Bruker
 actions	booking	no	Handling
 active	booking	no	Aktiv
@@ -116,7 +116,7 @@ mo	booking	no	ma.
 modified	booking	no	Endret
 more info	booking	no	Mer informasjon
 name	booking	no	Navn
-new	booking	no	Ny
+new	booking	no	NY
 new activity	booking	no	Ny aktivitet
 new age group	booking	no	Ny aldersgruppe
 new allocation	booking	no	Ny tildeling
@@ -168,7 +168,7 @@ primary admin	booking	no	Kontaktperson 1
 primary contact	booking	no	Kontaktperson 1
 published	booking	no	Publisert
 reject application	booking	no	Avslå søknad
-rejected	booking	no	Avvist
+rejected	booking	no	AVVIST
 resource	booking	no	Ressurs
 resource name	booking	no	Ressurs
 resource schedule	booking	no	Ressurskalender
@@ -438,7 +438,7 @@ Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet
 Event created, Overlaps with existing allocation, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende tildeling. Husk å sende varsel
 Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel
 Print as PDF	booking	no	Skriv ut som PDF
-Pending	booking	no	Under behandling
+Pending	booking	no	UNDER BEHANDLING
 This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mote en sesong
 Message from Bergen county - AktivBy	booking	no	Melding fra Bergen kommune - AktivBy
 Organization shortname	booking	no	Kortnavn
@@ -446,4 +446,13 @@ Group shortname	booking	no	Kortnavn
 contacts[0][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 1
 contacts[1][email] contains an invalid email	booking	no	Ugyldig epost under ansvarlig gruppeleder 2
 Time is set wrong	booking	no	Et av klokkeslettene er feil
-
+title	booking	no	Tittel
+Message	booking	no	Beskjed
+New system message	booking	no	Ny system beskjed
+New message	booking	no	Ny beskjed
+System message	booking	no	System beskjed
+System messages	booking	no	System beskjeder
+Edit System Message	booking	no	Rediger system beskjed
+The user currently assigned as the responsible case officer for this application is	booking	no	Brukeren som er saksbehandler for denne søknaden er
+Back 	booking	no	Tilbake
+read	booking	no	Lest

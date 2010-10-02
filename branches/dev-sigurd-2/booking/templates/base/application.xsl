@@ -26,9 +26,9 @@
             </li>
             <li><a href="">#<xsl:value-of select="application/id"/></a></li> 
 			<li>
-				<xsl:if test="frontend and application/status='CONFIRMED'">
+				<xsl:if test="frontend and application/status='ACCEPTED'">
 						<form method="POST">
-						<input type="hidden" name="print" value="CONFIRMED"/>
+						<input type="hidden" name="print" value="ACCEPTED"/>
 						<input type="submit" value="{php:function('lang', 'Print as PDF')}" />
 					</form>
 				</xsl:if>
@@ -292,18 +292,6 @@
 							</form>
 						</dt>
 					</xsl:if>
-				</xsl:if>
-				<xsl:if test="application/status='ACCEPTED'">
-					<dt>
-						<form method="POST">
-							<input type="hidden" name="status" value="CONFIRMED"/>
-							<input type="submit" value="{php:function('lang', 'Confirm application')}">
-								<xsl:if test="not(application/case_officer)">
-									<xsl:attribute name="disabled">disabled</xsl:attribute>
-								</xsl:if>
-							</input>
-						</form>
-					</dt>
 				</xsl:if>
 				<dd><br/><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd>
 			</dl>

@@ -10,6 +10,7 @@
 					'id'		=> array('type' => 'int'),
 					'active'	=> array('type' => 'int'),
 					'display_in_dashboard' => array('type' => 'int'),
+					'type'		=> array('type' => 'string'),
 					'status'	=> array('type' => 'string', 'required' => true),
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),

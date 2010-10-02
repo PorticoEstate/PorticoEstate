@@ -43,6 +43,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('rental::contracts');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('contracts');
 		}
 
 		public function query()
@@ -337,7 +338,9 @@
 		/**
 		 * View a contract
 		 */
-		public function view() {
+		public function view()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 			$contract_id = (int)phpgw::get_var('id');
 			return $this->viewedit(false, $contract_id);
 		}
@@ -347,6 +350,7 @@
 		 */
 		public function edit()
 		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 			$contract_id = (int)phpgw::get_var('id');
 			$location_id = (int)phpgw::get_var('location_id');
 			$update_price_items = false;

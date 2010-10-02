@@ -27,6 +27,7 @@
 			parent::__construct();
 
 			self::set_active_menu('rental::composites');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('rc');
 		}
 		
 		public function query()
@@ -257,7 +258,9 @@
 		 * Public method. Called when a user wants to view information about a composite.
 		 * @param HTTP::id	the composite ID
 		 */
-		public function view() {
+		public function view()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 			//Retrieve the composite object
 			$composite_id = (int)phpgw::get_var('id');
 			if(isset($composite_id) && $composite_id > 0)
@@ -292,7 +295,9 @@
 		 * Public method. Called when user wants to edit a composite.
 		 * @param HTTP::id	the composite ID
 		 */
-		public function edit(){
+		public function edit()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 			// Get the composite ID
 			$composite_id = (int)phpgw::get_var('id');
 			

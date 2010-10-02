@@ -27,6 +27,7 @@ class rental_uibilling extends rental_uicommon
 		$config->read();
 		$billing_time_limit = $config->config_data['billing_time_limit'];
 		set_time_limit($billing_time_limit); // Set time limit
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_menu');
 	}
 	
 	public function index()
@@ -349,6 +350,9 @@ class rental_uibilling extends rental_uicommon
 			$this->render('permission_denied.php');
 			return;
 		}
+
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_run');
+
 		$errorMsgs = array();
 		$infoMsgs = array();
 		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));

@@ -1463,7 +1463,6 @@
 					}
 				}
 				unset($attributes_groups);
-				unset($values['attributes']);
 
 				if($category['fileupload'] || (isset($values['files']) &&  $values['files']))
 				{
@@ -1480,7 +1479,7 @@
 			$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
 			$_integration_config = isset($custom_config->config_data['integration']) ? $custom_config->config_data['integration'] : array();
 			
-			//needed settings:
+		// required settings:
 /*
 			integration_tab
 			integration_url
@@ -1492,6 +1491,7 @@
 			integration_auth_url
 			integration_auth_hash_name
 			integration_auth_hash_value
+			integration_location_data
 */
 
 
@@ -1522,11 +1522,8 @@
 
 				$cxContext = stream_context_create($aContext);
 				$response = trim(file_get_contents($request, False, $cxContext));
-				//FIXME - Figure what to do with the response - i.e remote session key
 
-//				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration');
-
-				$integration			= true;
+				$integration	= true;
 				$_integration_config['url']		= htmlspecialchars_decode($_integration_config['url']);
 				$_integration_config['parametres']	= htmlspecialchars_decode($_integration_config['parametres']);
 
@@ -1535,9 +1532,30 @@
 				foreach ($output as $_dummy => $_substitute)
 				{
 					$_keys[] = $_substitute;
-					$_values[] = $values[trim($_substitute, '_')];
+
+					$__value = false;
+					if(!$__value = urlencode($values[trim($_substitute, '_')]))
+					{
+						foreach ($values['attributes'] as $_attribute)
+						{
+							if(trim($_substitute, '_') == $_attribute['name'])
+							{
+								$__value = urlencode($_attribute['value']);
+								break;
+							}
+						}
+					}
+					
+					if($__value)
+					{
+						$_values[] = $__value;
+					}
 				}
+
+//_debug_array($_integration_config['parametres']);
+//_debug_array($_values);
 				unset($output);
+				unset($__value);
 				$_sep = '?';
 				if (stripos($_integration_config['url'],'?'))
 				{
@@ -1567,17 +1585,18 @@
 					foreach ($output as $_dummy => $_substitute)
 					{
 						$_keys[] = $_substitute;
-						$_values[] = $values['location_data'][trim($_substitute, '_')];
+						$_values[] = urlencode($values['location_data'][trim($_substitute, '_')]);
 					}
 					$integration_src .= '&' . str_replace($_keys, $_values, $_integration_config['location_data']);
 				}
 
 				$integration_src .= "&{$_integration_config['auth_key_name']}={$response}";
-
+//_debug_array($values);
+//_debug_array($integration_src);die();
 				$tabs['integration']	= array('label' => $_integration_config['tab'], 'link' => '#integration', 'function' => "document.getElementById('integration_content').src = '{$integration_src}';");
 
 			}
-
+			unset($values['attributes']);
 			$link_file_data = array
 			(
 				'menuaction'	=> 'property.uientity.view_file',

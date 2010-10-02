@@ -308,3 +308,11 @@ contacts[0][email] contains an invalid email	bookingfrontend	no	Ugyldig epost un
 contacts[1][email] contains an invalid email	bookingfrontend	no	Ugyldig epost under ansvarlig gruppeleder 2
 This booking is outside the organization's allocated time	bookingfrontend	no	Denne bookingen ligger utenfor organisasjonens tildelte tid
 Time is set wrong	bookingfrontend	no	Et av klokkeslettene er feil
+title	bookingfrontend	no	Tittel
+Message	bookingfrontend	no	Beskjed
+New system message	bookingfrontend	no	Ny system beskjed
+New message	bookingfrontend	no	Ny beskjed
+System message	bookingfrontend	no	System beskjed
+System messages	bookingfrontend	no	System beskjeder
+Edit System Message	bookingfrontend	no	Rediger system beskjed
+Send message	bookingfrontend	no	Send beskjed

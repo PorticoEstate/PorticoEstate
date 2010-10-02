@@ -59,6 +59,7 @@
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::config';
+			$GLOBALS['phpgw_info']['flags']['app_header'] = "{$this->currentapp}::{$this->acl_location}::";
 		}
 
 		function save_sessiondata()
@@ -192,7 +193,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('list section');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_section' => $data));
 			$this->save_sessiondata();
 		}
@@ -293,7 +294,7 @@
 
 			$appname					= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_section' => $data));
 		}
 
@@ -335,7 +336,7 @@
 
 			$appname					= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view_section' => $data));
 		}
 
@@ -454,7 +455,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('list attribute');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_attrib' => $data));
 			$this->save_sessiondata();
 		}
@@ -582,7 +583,7 @@
 
 			$appname	= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_attrib' => $data));
 		}
 
@@ -715,7 +716,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('list values');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_value' => $data));
 			$this->save_sessiondata();
 		}
@@ -845,7 +846,7 @@
 
 			$appname	= lang('config');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_value' => $data));
 		}
 
@@ -889,7 +890,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('delete section');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -934,7 +935,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('delete attribute');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -983,7 +984,7 @@
 			$appname	= lang('config');
 			$function_msg	= lang('delete value');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 
@@ -1007,7 +1008,7 @@
 
 			$msg	= lang('No access');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('admin') . ' - ' . $msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
 		}
 

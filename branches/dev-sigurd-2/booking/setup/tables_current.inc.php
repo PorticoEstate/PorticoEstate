@@ -83,7 +83,8 @@
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
 				'customer_internal' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
-			),
+				'shortname' => array('type' => 'varchar','precision' => '11', 'nullable' => True),			
+		),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_activity' => array('activity_id' => 'id')),
@@ -99,6 +100,7 @@
 				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'sort' => array('type' => 'int','precision' => '4','nullable' => False,'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -115,7 +117,8 @@
 				'description' => array('type' => 'text', 'nullable' => False, 'default'=>''),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
-			),
+				'shortname' => array('type' => 'varchar','precision' => '11', 'nullable' => True),			
+		),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_organization' => array('organization_id' => 'id'),
@@ -177,6 +180,7 @@
 				'customer_identifier_type' => array('type' => 'varchar',  'precision' => '255', 'nullable' => True),
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9', 'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
+				'type' => array('type' => 'varchar',  'precision' => '11', 'nullable' => false, 'default' => 'application'),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -569,6 +573,34 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_event_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'time' => array('type' => 'timestamp', 'nullable' => False),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'comment'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+					'bb_event' => array('event_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_event_date' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'event_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => False),
+				'to_' => array('type' => 'timestamp', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+			'bb_event' => array('event_id' => 'id')),
+			'ix' => array(),
+			'uc' => array('event_id', 'from_', 'to_')
+		),
 		'bb_completed_reservation_export' => array(
 			'fd' => array(
 				'id' 						=> array('type' => 'auto', 'nullable' => False),
@@ -702,5 +734,25 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array('name')
+		),
+		'bb_system_message', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'title' => array('type' => 'text', 'nullable' => False),
+				'created' => array('type' => 'timestamp', 'nullable' => False),
+				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'building_id' => array('type' => 'int', 'precision' => '4'),
+				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'message' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'message'),
+				'status' => array('type' => 'text', 'nullable' => False, 'default'=>'new'),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
 		)
+
 	);

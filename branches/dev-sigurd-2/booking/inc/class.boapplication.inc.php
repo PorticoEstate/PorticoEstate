@@ -30,12 +30,22 @@
 				$body .= '<p>Klikk på linken under for å se på, redigere eller ha dialog med saksbehandler om din søknad.</p>';
 				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
 
-			} else {
-//				$body = '<p>Din søknad i AktivBy om leie/lån er endret/oppdatert, og har nå status <strong>'.lang($application['status']).'</strong>.</p>';
-
-				$body = '<p>Din søknad i AktivBy? om leie/lån er blitt endret/oppdatert. Ber om at du går inn og sjekker om vi trenger ytterligere informasjon, og evt. gir nødvendig tilbakmeldinger slik at saken kan ferdigbehandles.</p>';
+			} elseif ($application['status'] == 'PENDING') {
+				$body = '<p>Din søknad i AktivBy? om leie/lån er '.lang($application['status']).'.<br />Saksbehandler trenger ytterligere informasjon, ber om at du klikker på linken under og gir nødvendig tilbakemeldinger slik at saken kan ferdigbehandles.</p>';
 				$body .= '<p><a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
-				$body .= '<p>'.$application['comment'].'</p>';
+				if ($application['comment'] != '') {
+					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
+				}
+			} elseif ($application['status'] == 'ACCEPTED') {
+				$body = '<p>Din søknad i AktivBy om leie/lån er '.lang($application['status']).'.<br /> For å skrive ut en bekreftelse eller ha dialog med saksbehandler bruk <a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				if ($application['comment'] != '') {
+					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
+				}
+			} elseif ($application['status'] == 'REJECTED') {
+				$body = '<p>Din søknad i AktivBy om leie/lån er '.lang($application['status']).'.<br />For ytterligere informasjon se <a href="'.$link.'">Link til AktivBy: søknad #'.$application['id'].'</a></p>';
+				if ($application['comment'] != '') {
+					$body .= '<p>Kommentar fra saksbehandler:<br />'.$application['comment'].'</p>';
+				}
 			}
 			$body .= '<p>Med vennlig hilsen AktivBy - Bergen Kommune</p>';
 

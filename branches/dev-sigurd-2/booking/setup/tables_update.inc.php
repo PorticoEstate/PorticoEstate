@@ -2292,4 +2292,44 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+  $test[] = '0.1.96';
+	function booking_upgrade0_1_96()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_system_message', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'title' => array('type' => 'text', 'nullable' => False),
+					'created' => array('type' => 'timestamp', 'nullable' => False),
+					'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+					'building_id' => array('type' => 'int', 'precision' => '4'),
+					'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
+					'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+					'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+					'message' => array('type' => 'text', 'nullable' => False),
+					'type' => array('type' => 'text', 'nullable' => False, 'default'=>'message'),
+					'status' => array('type' => 'text', 'nullable' => False, 'default'=>'NEW'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+		));
+
+		$table = "bb_application";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN type varchar(11) NOT NULL DEFAULT 'application'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET type = 'application'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET status = 'ACCEPTED' WHERE status = 'CONFIRMED'");
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.97';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 

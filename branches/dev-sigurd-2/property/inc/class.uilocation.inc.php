@@ -234,14 +234,43 @@
     		$integrationurl = '';
     		$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$custom_config	= CreateObject('admin.soconfig',$location_id);
+			$_integration_config = isset($custom_config->config_data['integration']) ? $custom_config->config_data['integration'] : array();
 
-			if(isset($custom_config->config_data['integration']['url']))
+			if(isset($_integration_config['url']))
 			{
-				$custom_config->config_data['integration']['url']		= htmlspecialchars_decode($custom_config->config_data['integration']['url']);
-				$custom_config->config_data['integration']['parametres']= htmlspecialchars_decode($custom_config->config_data['integration']['parametres']);
-				$integration_name = isset($custom_config->config_data['integration']['name']) && $custom_config->config_data['integration']['name'] ? $custom_config->config_data['integration']['name'] : lang('integration');
+				if(isset($_integration_config['auth_hash_name']) && $_integration_config['auth_hash_name'] && isset($_integration_config['auth_url']) && $_integration_config['auth_url'])
+				{
+					//get session key from remote system
+				
+					$arguments = array($_integration_config['auth_hash_name'] => $_integration_config['auth_hash_value']);
+					$query = http_build_query($arguments);
+					$auth_url = $_integration_config['auth_url'];
+					$request = "{$auth_url}?{$query}";
 
-				parse_str($custom_config->config_data['integration']['parametres'], $output);
+					$aContext = array
+					(
+					   	'http' => array
+						(
+							'request_fulluri' => true,
+						),
+					);
+
+					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					{
+						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+					}
+
+
+					$cxContext = stream_context_create($aContext);
+					$response = trim(file_get_contents($request, False, $cxContext));
+				}
+
+
+				$_integration_config['url']		= htmlspecialchars_decode($_integration_config['url']);
+				$_integration_config['parametres']= htmlspecialchars_decode($_integration_config['parametres']);
+				$integration_name = isset($_integration_config['name']) && $_integration_config['name'] ? $_integration_config['name'] : lang('integration');
+
+				parse_str($_integration_config['parametres'], $output);
 	
 				foreach ($output as $_dummy => $_substitute)
 				{
@@ -249,15 +278,40 @@
 					$__substitute = trim($_substitute, '_');
 					$_values[] = $this->$__substitute;
 				}
+				unset($output);
 
 				$_sep = '?';
-				if (stripos($custom_config->config_data['integration']['url'],'?'))
+				if (stripos($_integration_config['url'],'?'))
 				{
 					$_sep = '&';
 				}
-				$_param = str_replace($_keys, $_values, $custom_config->config_data['integration']['parametres']);
+				$_param = str_replace($_keys, $_values, $_integration_config['parametres']);
 
-				$integrationurl = "{$custom_config->config_data['integration']['url']}{$_sep}{$_param}";
+				$integrationurl = "{$_integration_config['url']}{$_sep}{$_param}";
+				$integrationurl .= "&{$_integration_config['auth_key_name']}={$response}";
+				
+				$_integration_config['location_data']= htmlspecialchars_decode($_integration_config['location_data']);
+				
+				$parameters_integration = array();
+				if($_integration_config['location_data'])
+				{
+					parse_str($_integration_config['location_data'], $output);
+	
+					foreach ($output as $_name => $_substitute)
+					{
+						if($_substitute == '__loc1__') // This one is a link...
+						{
+							$_substitute = '__location_code__';
+						}
+						
+						$parameters_integration['parameter'][] = array
+						(
+							'name'		=> $_name,
+							'source'	=> trim($_substitute, '_'),
+						);
+					}
+				}
+	
 			}
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -658,6 +712,17 @@
 																	'target'		=> '_blank'
 															)),
 							'parameters'			=> $parameters
+					);
+				}
+
+
+				if($integrationurl)
+				{	
+					$datatable['rowactions']['action'][] = array(
+							'my_name'		=> 'integration',
+							'text'	 		=> $integration_name,
+							'action'		=> $integrationurl.'&target=_blank',
+							'parameters'	=> $parameters_integration
 					);
 				}
 
@@ -1095,6 +1160,7 @@
 				if($values['location_code'] && !$location_code)
 				{
 					if($this->bo->check_location($values['location_code'],$type_id))
+
 
 					{
 						$receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');

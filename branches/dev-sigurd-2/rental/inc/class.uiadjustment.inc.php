@@ -21,6 +21,7 @@ class rental_uiadjustment extends rental_uicommon {
 	{
 		parent::__construct();
 		self::set_active_menu('rental::contracts::adjustment');
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('adjustment');
 	}
 	
 	public function index()
