@@ -1,0 +1,540 @@
+about %1	common	ja	About %1
+access	common	ja	アクセス
+access not permitted	common	ja	アクセス権がありません
+account has been created	common	ja	アカウントを作成しました
+account has been deleted	common	ja	アカウントを削除しました
+account has been updated	common	ja	アカウントを更新しました
+acl	common	ja	アクセスコントロールリスト
+action	common	ja	アクション
+active	common	ja	アクティブ
+add	common	ja	追加
+add %1 category for	common	ja	%1 カテゴリ追加
+add category	common	ja	カテゴリ追加
+add sub	common	ja	サブ追加
+addressbook	common	ja	アドレス帳
+admin	common	ja	環境設定
+administration	common	ja	環境設定
+afghanistan	common	ja	AFGHANISTAN
+albania	common	ja	ALBANIA
+algeria	common	ja	ALGERIA
+all	common	ja	全て
+american samoa	common	ja	AMERICAN SAMOA
+andorra	common	ja	ANDORRA
+angola	common	ja	ANGOLA
+anguilla	common	ja	ANGUILLA
+antarctica	common	ja	ANTARCTICA
+antigua and barbuda	common	ja	ANTIGUA AND BARBUDA
+apply	common	ja	適用
+april	common	ja	４月
+are you sure you want to delete this entry ?	common	ja	この項目を削除してよろしいですか
+argentina	common	ja	ARGENTINA
+armenia	common	ja	ARMENIA
+aruba	common	ja	ARUBA
+august	common	ja	８月
+australia	common	ja	AUSTRALIA
+austria	common	ja	AUSTRIA
+author	common	ja	著者
+autosave default category	common	ja	デフォルトカテゴリを自動保存
+azerbaijan	common	ja	AZERBAIJAN
+back	common	ja	戻る
+bad login or password	common	ja	ログインIDまたはパスワードに誤りがあります
+bahamas	common	ja	BAHAMAS
+bahrain	common	ja	BAHRAIN
+bangladesh	common	ja	BANGLADESH
+barbados	common	ja	BARBADOS
+belarus	common	ja	BELARUS
+belgium	common	ja	BELGIUM
+belize	common	ja	BELIZE
+benin	common	ja	BENIN
+bermuda	common	ja	BERMUDA
+bhutan	common	ja	BHUTAN
+blocked, too many attempts	common	ja	試行回数を超えました。
+bolivia	common	ja	BOLIVIA
+bosnia and herzegovina	common	ja	BOSNIA AND HERZEGOVINA
+botswana	common	ja	BOTSWANA
+bouvet island	common	ja	BOUVET ISLAND
+brazil	common	ja	BRAZIL
+british indian ocean territory	common	ja	BRITISH INDIAN OCEAN TERRITORY
+brunei darussalam	common	ja	BRUNEI DARUSSALAM
+bulgaria	common	ja	BULGARIA
+burkina faso	common	ja	BURKINA FASO
+burundi	common	ja	BURUNDI
+cambodia	common	ja	CAMBODIA
+cameroon	common	ja	CAMEROON
+canada	common	ja	CANADA
+cancel	common	ja	取消
+cape verde	common	ja	CAPE VERDE
+categories	common	ja	カテゴリ
+categories for	common	ja	カテゴリ
+category	common	ja	カテゴリ
+category %1 has been added !	common	ja	カテゴリ %1 を追加しました。
+category %1 has been updated !	common	ja	カテゴリ %1 を訂正しました。
+cayman islands	common	ja	CAYMAN ISLANDS
+central african republic	common	ja	CENTRAL AFRICAN REPUBLIC
+chad	common	ja	CHAD
+change	common	ja	変更
+charset	common	ja	EUC-JP
+chile	common	ja	CHILE
+china	common	ja	CHINA
+choose the category	common	ja	カテゴリ選択
+choose the parent category	common	ja	親カテゴリ選択
+christmas island	common	ja	CHRISTMAS ISLAND
+clear	common	ja	クリア
+clear form	common	ja	クリア
+close	common	ja	閉じる
+cocos (keeling) islands	common	ja	COCOS (KEELING) ISLANDS
+colombia	common	ja	COLOMBIA
+comoros	common	ja	COMOROS
+congo	common	ja	CONGO
+congo, the democratic republic of the	common	ja	CONGO, THE DEMOCRATIC REPUBLIC OF THE
+cook islands	common	ja	COOK ISLANDS
+copy	common	ja	コピー
+costa rica	common	ja	COSTA RICA
+cote d ivoire	common	ja	COTE D IVOIRE
+create	common	ja	作成
+created by	common	ja	作成者
+croatia	common	ja	CROATIA
+cuba	common	ja	CUBA
+currency	common	ja	通貨
+current	common	ja	現在
+current users	common	ja	現在のユーザ
+cyprus	common	ja	CYPRUS
+czech republic	common	ja	CZECH REPUBLIC
+date	common	ja	日
+date due	common	ja	予定日
+december	common	ja	１２月
+default category	common	ja	既定のカテゴリ
+delete	common	ja	削除
+denmark	common	ja	DENMARK
+description	common	ja	詳細
+detail	common	ja	詳細
+details	common	ja	詳細
+disabled	common	ja	不可
+display monday first	common	ja	月曜日を最初に表示する
+display sunday first	common	ja	日曜日を最初に表示する
+djibouti	common	ja	DJIBOUTI
+do you also want to delete all subcategories ?	common	ja	サブカテゴリも同時に削除しますか。
+domain	common	ja	ドメイン
+domain name for mail-address, eg. "%1"	common	ja	メールアドレスのドメイン名。 記述は "%1"
+domestic	common	ja	国内
+dominica	common	ja	DOMINICA
+dominican republic	common	ja	DOMINICAN REPUBLIC
+done	common	ja	終了
+drag to move	common	ja	ドラッグで移動
+e-mail	common	ja	電子メール
+east timor	common	ja	EAST TIMOR
+ecuador	common	ja	ECUADOR
+edit	common	ja	訂正
+edit %1 category for	common	ja	%1 カテゴリ訂正
+edit categories	common	ja	カテゴリ訂正
+edit category	common	ja	カテゴリ訂正
+egypt	common	ja	EGYPT
+el salvador	common	ja	EL SALVADOR
+email	common	ja	電子メール
+email-address of the user, eg. "%1"	common	ja	ユーザのメールアドレス。 記述は "%1"
+enabled	common	ja	可能
+end date	common	ja	終了日
+end time	common	ja	終了時間
+entry has been deleted sucessfully	common	ja	削除しました。
+entry updated sucessfully	common	ja	訂正しました。
+equatorial guinea	common	ja	EQUATORIAL GUINEA
+eritrea	common	ja	ERITREA
+error	common	ja	エラー
+error creating %1 %2 directory	common	ja	%1 の %2 ディレクトリ作成時にエラーが発生しました
+error deleting %1 %2 directory	common	ja	%1 の %2 ディレクトリ削除時にエラーが発生しました
+error renaming %1 %2 directory	common	ja	%1 の %2 ディレクトリ名変更時にエラーが発生しました
+estonia	common	ja	ESTONIA
+ethiopia	common	ja	ETHIOPIA
+falkland islands (malvinas)	common	ja	FALKLAND ISLANDS (MALVINAS)
+faroe islands	common	ja	FAROE ISLANDS
+fax number	common	ja	fax number
+february	common	ja	２月
+fields	common	ja	項目
+fiji	common	ja	FIJI
+files	common	ja	ファイル
+filter	common	ja	選択
+finland	common	ja	FINLAND
+first name	common	ja	姓
+first name of the user, eg. "%1"	common	ja	ユーザの姓。 記述は "%1"
+first page	common	ja	先頭ページ
+firstname	common	ja	姓
+fixme!	common	ja	FIXME!
+force selectbox	common	ja	Force SelectBox
+france	common	ja	FRANCE
+french guiana	common	ja	FRENCH GUIANA
+french polynesia	common	ja	FRENCH POLYNESIA
+french southern territories	common	ja	FRENCH SOUTHERN TERRITORIES
+friday	common	ja	金曜日
+ftp	common	ja	FTP
+fullname	common	ja	フルネーム
+gabon	common	ja	GABON
+gambia	common	ja	GAMBIA
+general menu	common	ja	共通メニュー
+georgia	common	ja	GEORGIA
+germany	common	ja	GERMANY
+ghana	common	ja	GHANA
+gibraltar	common	ja	GIBRALTAR
+global	common	ja	グローバル
+global public	common	ja	パブリック
+go today	common	ja	今日へ移動
+grant access	common	ja	利用許可設定
+greece	common	ja	GREECE
+greenland	common	ja	GREENLAND
+grenada	common	ja	GRENADA
+group	common	ja	グループ
+group access	common	ja	グループ
+group has been added	common	ja	グループを追加しました。
+group has been deleted	common	ja	グループを削除しました。
+group has been updated	common	ja	グループを訂正しました。
+group name	common	ja	グループ名
+group public	common	ja	所属グループ
+groups	common	ja	グループ
+groups with permission for %1	common	ja	Groups with permission for %1
+groups without permission for %1	common	ja	Groups without permission for %1
+guadeloupe	common	ja	GUADELOUPE
+guam	common	ja	GUAM
+guatemala	common	ja	GUATEMALA
+guinea	common	ja	GUINEA
+guinea-bissau	common	ja	GUINEA-BISSAU
+guyana	common	ja	GUYANA
+haiti	common	ja	HAITI
+heard island and mcdonald islands	common	ja	HEARD ISLAND AND MCDONALD ISLANDS
+help	common	ja	ヘルプ
+high	common	ja	高
+highest	common	ja	最高
+holy see (vatican city state)	common	ja	HOLY SEE (VATICAN CITY STATE)
+home	common	ja	ホーム
+honduras	common	ja	HONDURAS
+hong kong	common	ja	HONG KONG
+hungary	common	ja	HUNGARY
+iceland	common	ja	ICELAND
+india	common	ja	INDIA
+indonesia	common	ja	INDONESIA
+international	common	ja	国際
+invalid ip address	common	ja	IPアドレスが不正です
+invalid password	common	ja	パスワードが不正です
+iran, islamic republic of	common	ja	IRAN, ISLAMIC REPUBLIC OF
+iraq	common	ja	IRAQ
+ireland	common	ja	IRELAND
+israel	common	ja	ISRAEL
+it has been more then %1 days since you changed your password	common	ja	パスワード変更から %1 日経過しています
+it is recommended that you run setup to upgrade your tables to the current version	common	ja	現バージョンのテーブルをアップグレードするためにセットアップを実行して下さい
+italy	common	ja	ITALY
+jamaica	common	ja	JAMAICA
+january	common	ja	１月
+japan	common	ja	JAPAN
+jordan	common	ja	JORDAN
+july	common	ja	７月
+june	common	ja	６月
+kazakstan	common	ja	KAZAKSTAN
+kenya	common	ja	KENYA
+keywords	common	ja	キーワード
+kiribati	common	ja	KIRIBATI
+korea, democratic peoples republic of	common	ja	KOREA, DEMOCRATIC PEOPLES REPUBLIC OF
+korea, republic of	common	ja	KOREA, REPUBLIC OF
+kuwait	common	ja	KUWAIT
+kyrgyzstan	common	ja	KYRGYZSTAN
+language	common	ja	言語
+lao peoples democratic republic	common	ja	LAO PEOPLES DEMOCRATIC REPUBLIC
+last name	common	ja	名
+last name of the user, eg. "%1"	common	ja	ユーザの名。 記述は "%1"
+last page	common	ja	最終ページ
+lastname	common	ja	名
+latvia	common	ja	LATVIA
+lebanon	common	ja	LEBANON
+lesotho	common	ja	LESOTHO
+liberia	common	ja	LIBERIA
+libyan arab jamahiriya	common	ja	LIBYAN ARAB JAMAHIRIYA
+license	about	ja	ライセンス
+liechtenstein	common	ja	LIECHTENSTEIN
+list	common	ja	一覧
+lithuania	common	ja	LITHUANIA
+local	common	ja	ローカル
+login	common	ja	ログイン
+loginid	common	ja	ログインID
+logout	common	ja	ログアウト
+low	common	ja	低
+lowest	common	ja	最低
+luxembourg	common	ja	LUXEMBOURG
+macau	common	ja	MACAU
+macedonia, the former yugoslav republic of	common	ja	MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
+madagascar	common	ja	MADAGASCAR
+mail domain, eg. "%1"	common	ja	メールドメイン。 記述は "%1"
+main category	common	ja	メインカテゴリ
+main screen	common	ja	メイン画面
+maintainer	about	ja	メンテナンス
+malawi	common	ja	MALAWI
+malaysia	common	ja	MALAYSIA
+maldives	common	ja	MALDIVES
+mali	common	ja	MALI
+malta	common	ja	MALTA
+manual	common	ja	マニュアル
+march	common	ja	３月
+marshall islands	common	ja	MARSHALL ISLANDS
+martinique	common	ja	MARTINIQUE
+mauritania	common	ja	MAURITANIA
+mauritius	common	ja	MAURITIUS
+may	common	ja	５月
+mayotte	common	ja	MAYOTTE
+medium	common	ja	中
+menu	common	ja	メニュー
+message	common	ja	メッセージ
+mexico	common	ja	MEXICO
+micronesia, federated states of	common	ja	MICRONESIA, FEDERATED STATES OF
+moldova, republic of	common	ja	MOLDOVA, REPUBLIC OF
+monaco	common	ja	MONACO
+monday	common	ja	月曜日
+mongolia	common	ja	MONGOLIA
+montserrat	common	ja	MONTSERRAT
+morocco	common	ja	MOROCCO
+mozambique	common	ja	MOZAMBIQUE
+myanmar	common	ja	MYANMAR
+name	common	ja	名前
+name of the user, eg. "%1"	common	ja	ユーザ名。 記述は "%1"
+namibia	common	ja	NAMIBIA
+nauru	common	ja	NAURU
+nepal	common	ja	NEPAL
+netherlands	common	ja	NETHERLANDS
+netherlands antilles	common	ja	NETHERLANDS ANTILLES
+never	common	ja	なし
+new caledonia	common	ja	NEW CALEDONIA
+new entry added sucessfully	common	ja	新しい項目を追加しました。
+new main category	common	ja	新規メインカテゴリ
+new value	common	ja	New Value
+new zealand	common	ja	NEW ZEALAND
+next	common	ja	次
+next month (hold for menu)	common	ja	翌月
+next page	common	ja	次ページ
+next year (hold for menu)	common	ja	翌年
+nicaragua	common	ja	NICARAGUA
+niger	common	ja	NIGER
+nigeria	common	ja	NIGERIA
+niue	common	ja	NIUE
+no	common	ja	いいえ
+no entries found, try again ...	common	ja	該当なし
+no history for this record	common	ja	履歴なし
+no subject	common	ja	No Subject
+none	common	ja	なし
+norfolk island	common	ja	NORFOLK ISLAND
+normal	common	ja	標準
+northern mariana islands	common	ja	NORTHERN MARIANA ISLANDS
+norway	common	ja	NORWAY
+not assigned	common	ja	未割当
+note	common	ja	ノート
+notes	common	ja	ノート
+notify window	common	ja	通知画面
+november	common	ja	１１月
+october	common	ja	１０月
+ok	common	ja	OK
+old value	common	ja	Old Value
+oman	common	ja	OMAN
+on *nix systems please type: %1	common	ja	On *nix systems please type: %1
+only private	common	ja	プライベートのみ
+only yours	common	ja	所有者
+open notify window	common	ja	通知画面を開く
+open popup window	common	ja	ポップアップ画面を開く
+original	common	ja	オリジナル
+other	common	ja	その他
+outcharset	common	ja	ISO-2022-JP
+overview	common	ja	摘要
+owner	common	ja	所有者
+pakistan	common	ja	PAKISTAN
+palau	common	ja	PALAU
+palestinian territory, occupied	common	ja	PALESTINIAN TERRITORY, OCCUPIED
+panama	common	ja	PANAMA
+papua new guinea	common	ja	PAPUA NEW GUINEA
+paraguay	common	ja	PARAGUAY
+parcel	common	ja	区画
+parent category	common	ja	親カテゴリ
+password	common	ja	パスワード
+password could not be changed	common	ja	パスワードは変更できません。
+password has been updated	common	ja	パスワードを変更しました。
+pattern for search in addressbook	common	ja	アドレス帳の検索パターン
+pattern for search in calendar	common	ja	カレンダーの検索パターン
+pattern for search in projects	common	ja	プロジェクト管理の検索パターン
+permissions to the files/users directory	common	ja	files/users ディレクトリに許可を与えてください。
+personal	common	ja	個人
+peru	common	ja	PERU
+philippines	common	ja	PHILIPPINES
+phone number	common	ja	電話番号
+pitcairn	common	ja	PITCAIRN
+please %1 by hand	common	ja	手動で %1 して下さい。
+please enter a name	common	ja	名前を入力して下さい。
+please run setup to become current	common	ja	セットアップを実行して下さい。
+please select	common	ja	選択して下さい。
+please set your global preferences	common	ja	ユーザ設定を行って下さい。
+please set your preferences for this application	common	ja	このアプリケーションのユーザ設定を行って下さい。
+please wait...	common	ja	しばらくお待ち下さい。
+poland	common	ja	POLAND
+portugal	common	ja	PORTUGAL
+postal	common	ja	Postal
+powered by phpgroupware version %1	common	ja	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
+preferences	common	ja	ユーザ設定
+prev. month (hold for menu)	common	ja	先月
+prev. year (hold for menu)	common	ja	昨年
+previous page	common	ja	前ページ
+print	common	ja	印刷
+priority	common	ja	優先順位
+private	common	ja	プライベート
+project	common	ja	プロジェクト管理
+public	common	ja	パブリック
+puerto rico	common	ja	PUERTO RICO
+qatar	common	ja	QATAR
+read	common	ja	表示
+read this list of methods.	common	ja	説明をご覧下さい
+register_globals = %1	common ja	register_globals = %1
+register_globals_off	common	ja	This application has been tested to work with register_globals = off in your php.ini.  This application should work with most PHP 4.1.0+ servers.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
+register_globals_on	common	ja	This application has not been tested to work with register_globals = off in your php.ini.  This application requires register_globals = on to be set in your php.ini.  For more information regarding the potential problem of using register_globals = on, see <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
+reject	common	ja	拒否
+rename	common	ja	名前の変更
+returns a full list of accounts on the system.  warning: this is return can be quite large	common	ja	Returns a full list of accounts on the system.  Warning: This is return can be quite large
+returns an array of todo items	common	ja	Returns an array of todo items
+returns struct of users application access	common	ja	Returns struct of users application access
+reunion	common	ja	REUNION
+romania	common	ja	ROMANIA
+russian federation	common	ja	RUSSIAN FEDERATION
+rwanda	common	ja	RWANDA
+saint helena	common	ja	SAINT HELENA
+saint kitts and nevis	common	ja	SAINT KITTS AND NEVIS
+saint lucia	common	ja	SAINT LUCIA
+saint pierre and miquelon	common	ja	SAINT PIERRE AND MIQUELON
+saint vincent and the grenadines	common	ja	SAINT VINCENT AND THE GRENADINES
+samoa	common	ja	SAMOA
+san marino	common	ja	SAN MARINO
+sao tome and principe	common	ja	SAO TOME AND PRINCIPE
+saturday	common	ja	土曜日
+saudi arabia	common	ja	SAUDI ARABIA
+save	common	ja	保存
+search	common	ja	検索
+section	common	ja	セクション
+select	common	ja	選択
+select category	common	ja	カテゴリ選択
+select date	common	ja	日付選択
+select group	common	ja	グループ選択
+select one	common	ja	一つを選択
+select user	common	ja	ユーザ選択
+send	common	ja	送信
+senegal	common	ja	SENEGAL
+september	common	ja	９月
+server %1 has been added	common	ja	サーバ %1 を追加しました。
+server name	common	ja	サーバ名
+session has been killed	common	ja	セッションを削除しました。
+setup	common	ja	セットアップ
+seychelles	common	ja	SEYCHELLES
+show all	common	ja	全て表示
+showing %1	common	ja	表示数 %1
+showing %1 - %2 of %3	common	ja	表示数 %1 - %2 of %3
+sierra leone	common	ja	SIERRA LEONE
+singapore	common	ja	SINGAPORE
+slovakia	common	ja	SLOVAKIA
+slovenia	common	ja	SLOVENIA
+solomon islands	common	ja	SOLOMON ISLANDS
+somalia	common	ja	SOMALIA
+sorry, your login has expired	login	ja	ログインIDの有効期限が終了しています。
+south africa	common	ja	SOUTH AFRICA
+south georgia and the south sandwich islands	common	ja	SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+spain	common	ja	SPAIN
+sri lanka	common	ja	SRI LANKA
+start date	common	ja	開始日
+start time	common	ja	開始時間
+status	common	ja	状態
+subject	common	ja	件名
+submit	common	ja	実行
+substitutions and their meanings:	common	ja	Substitutions and their meanings:
+sudan	common	ja	SUDAN
+sunday	common	ja	日曜日
+suriname	common	ja	SURINAME
+svalbard and jan mayen	common	ja	SVALBARD AND JAN MAYEN
+swaziland	common	ja	SWAZILAND
+sweden	common	ja	SWEDEN
+switzerland	common	ja	SWITZERLAND
+syrian arab republic	common	ja	SYRIAN ARAB REPUBLIC
+taiwan, province of china	common	ja	TAIWAN, PROVINCE OF CHINA
+tajikistan	common	ja	TAJIKISTAN
+tanzania, united republic of	common	ja	TANZANIA, UNITED REPUBLIC OF
+thailand	common	ja	THAILAND
+the api is current	common	ja	現在のAPI
+the api requires an upgrade	common	ja	APIは最新です。
+the following applications require upgrades	common	ja	以下のアプリケーションはアップグレードが必要です。
+the mail server returned	common	ja	メールサーバからの返答
+this application is current	common	ja	アプリケーションは最新です。
+this application requires an upgrade	common	ja	アプリケーションはアップグレードが必要です。
+this name has been used already	common	ja	この名前は使用中です。
+thursday	common	ja	木曜日
+time	common	ja	時間
+time zone	common	ja	時間帯
+time zone offset	common	ja	時差
+title	common	ja	タイトル
+to correct this error for the future you will need to properly set the	common	ja	To correct this error for the future you will need to properly set the
+to go back to the msg list, click <a href= %1 >here</a>	common	ja	To go back to the msg list, click <a href="%1">here</a>
+today	common	ja	本日
+todays date, eg. "%1"	common	ja	今日の日付。 記述は "%1"
+toggle first day of week	common	ja	週の最初の曜日を切替
+togo	common	ja	TOGO
+tokelau	common	ja	TOKELAU
+tonga	common	ja	TONGA
+total	common	ja	合計
+trinidad and tobago	common	ja	TRINIDAD AND TOBAGO
+tuesday	common	ja	火曜日
+tunisia	common	ja	TUNISIA
+turkey	common	ja	TURKEY
+turkmenistan	common	ja	TURKMENISTAN
+turks and caicos islands	common	ja	TURKS AND CAICOS ISLANDS
+tuvalu	common	ja	TUVALU
+uganda	common	ja	UGANDA
+ukraine	common	ja	UKRAINE
+united arab emirates	common	ja	UNITED ARAB EMIRATES
+united kingdom	common	ja	UNITED KINGDOM
+united states	common	ja	UNITED STATES
+united states minor outlying islands	common	ja	UNITED STATES MINOR OUTLYING ISLANDS
+unknown	common	ja	不明
+update	common	ja	更新
+url	common	ja	URL
+uruguay	common	ja	URUGUAY
+use button to search for	common	ja	で検索ボタンを使用する。
+use button to search for address	common	ja	アドレス帳で検索ボタンを使用する。
+use button to search for calendarevent	common	ja	カレンダーで検索ボタンを使用する。
+use button to search for project	common	ja	use プロジェクト管理で検索ボタンを使用する。
+user	common	ja	ユーザ
+user accounts	common	ja	ユーザアカウント
+user groups	common	ja	ユーザグループ
+username	common	ja	ユーザ名
+users	common	ja	ユーザ
+users choice	common	ja	ユーザ選択
+uzbekistan	common	ja	UZBEKISTAN
+vanuatu	common	ja	VANUATU
+venezuela	common	ja	VENEZUELA
+version	common	ja	バージョン
+viet nam	common	ja	VIET NAM
+view	common	ja	表示
+virgin islands, british	common	ja	VIRGIN ISLANDS, BRITISH
+virgin islands, u.s.	common	ja	VIRGIN ISLANDS, U.S.
+wallis and futuna	common	ja	WALLIS AND FUTUNA
+wednesday	common	ja	水曜日
+welcome	common	ja	ようこそ
+western sahara	common	ja	WESTERN SAHARA
+which groups	common	ja	グループ選択
+wk	common	ja	wk
+written by:	common	ja	作成者
+year	common	ja	年
+yemen	common	ja	YEMEN
+yes	common	ja	はい
+you are required to change your password during your first login	common	ja	初回ログイン時にパスワード変更
+you are running a newer version of phpgroupware than your database is setup for	common	ja	You are running a newer version of phpGroupWare than your database is setup for.
+you have been successfully logged out	login	ja	ログアウトしました。
+you have not entered a title	common	ja	タイトルが未入力です。
+you have not entered a valid date	common	ja	無効な日付です。
+you have not entered a valid time of day	common	ja	無効な時刻です。
+you have not entered participants	common	ja	参加者が未入力です。
+you have selected an invalid date	common	ja	日付の選択が無効です。
+you have selected an invalid main category	common	ja	メインカテゴリの選択が無効です。
+you have successfully logged out	common	ja	ログアウトしました。
+your message could <b>not</b> be sent!<br>	common	ja	メッセージが送信できませんでした。<br>
+your message has been sent	common	ja	メッセージを送信しました。
+your search returned %1 matchs	common	ja	%1 件見つかりました。
+your search returned 1 match	common	ja	１件見つかりました。
+your session could not be verified.	login	ja	セッションが確認できません。
+your settings have been updated	common	ja	設定を更新しました。
+yugoslavia	common	ja	YUGOSLAVIA
+zambia	common	ja	ZAMBIA
+zimbabwe	common	ja	ZIMBABWE

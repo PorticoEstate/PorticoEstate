@@ -1,0 +1,43 @@
+Absolute path of the backup directory	backup	es	Camino absoluto del directorio de resguardos
+Absolute path of the directory to store the backup script	backup	es	Camino absoluto del directorio para almacenar el programa de resguardo
+Archive type	backup	es	Tipo de Archivo
+Backup administration	common	es	Administracion del Sistema de Resguardo
+Backup	common	es	Resguardo
+Configuration backup	backup	es	Configuracion del Sistema de Resguardo
+Configuration localhost	backup	es	Configuracion del Servidor local
+Configuration remote host	backup	es	Configuracio de sistema remoto
+Create backups of your data ?	backup	es	Crear copias de resguardo de sus datos ?
+daily	backup	es	diario
+Data	backup	es	Datos
+E-MAIL	backup	es	Correo
+interval	backup	es	Intervalo
+ip or hostname	backup	es	IP o nombre de host
+LDAP	backup	es	LDAP
+monthly	backup	es	mensual
+nfs	backup	es	NFS
+No backup archives available !	backup	es	No hay archivos de resguardo disponibles !
+Number of stored backup versions	backup	es	Numero de versiones de resguardo almacenadas
+Operating system	backup	es	Sistema Operativo
+Password	backup	es	Clave
+Plase enter username and password for remote connection !	backup	es	Ingrese usuario y clave para la coneccion remota !
+Please enter the path of the backup dir and/or enable showing archives in phpGroupWare !	backup	es	Ingrese el camino absoluto del directorio de resguardos !
+Please select an application for transport to the remote host !	backup	es	Seleccione una aplicacion para el transporte remoto !
+Please set the path to a local dir to store the backup script !	backup	es	Seleccione el camino al directorio local para almacenar el programa de resguardos !
+Please specify the ip of the remote host !	backup	es	Especifique la direccion IP del sistema remoto !
+Save backup locally ?	backup	es	Grabar copia de resguardo localmente ?
+Save backup to a remote host ?	backup	es	Grabar copia de resguardo en un servidor remoto?
+Select archive type	backup	es	Seleccione tipo de archivo
+Select interval	backup	es	Seleccione intervalo
+Select transport application	backup	es	Seleccione aplicacion de transporte
+Show backup archives in phpGroupWare ?	backup	es	Mostrar archivos de resguardo en el sistema ?
+smbmount	backup	es	SMBMOUNT
+SQL	backup	es	SQL
+tar.bz2	backup	es	tar.bz2
+tar.gz	backup	es	tar.gz
+The backup application is not configured for showing the archives in phpGroupWare yet !	backup	es	La aplicacion de resguardos no esta configurada para mostrar los archivos !
+The directory to store the backup script must be outside of the webservers *DocumentRoot* !	backup	es	El directorio que almacena el programa de resguardo debe estar fuera de los directorios del servidor web !
+The ftp connection failed ! Please check your configuration !	backup	es	La coneccion por ftp fallo! Revise su configuracion
+Transport application	backup	es	Aplicacion de Transporte
+User	backup	es	Usuario
+weekly	backup	es	semanal
+zip	backup	es	zip

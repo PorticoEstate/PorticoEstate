@@ -1,0 +1,7 @@
+/* $Id: TODO 8014 2001-09-29 04:18:28Z jengo $ */
+
+- better look for visual notification of updated tickets
+- options for notification : 
+	- To : group / owner / assigned / nobody / fixed user
+	- Trigger on : Create / Update / Close
+- full text search

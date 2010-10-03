@@ -1,0 +1,433 @@
+/*
+	Base CSS definitions for TTS
+	Written by Dave Hall skwashd at phpgroupware.org
+	Copyright (c) 2006 Free Software Foundation
+*/
+form
+{
+	display: block;
+	margin: 10px auto;
+	width: 890px;
+}
+
+label, input, select, textarea, span.mock_label, span.mock_field
+{
+	display: block;
+	margin-bottom: 10px;
+	width: 250px;
+}
+
+label, input, select, textarea, span.mock_label, span.mock_field
+{
+	float: left;
+}
+
+label, span.mock_label
+{
+	clear: left;
+	width: 150px;
+}
+
+div.button_group
+{
+	text-align: right;
+}
+
+div.button_group input.button
+{
+	clear: none;
+	float: none;
+	margin: 5px;
+	width: auto;
+}
+
+#controls
+{
+	background-color: transparent;
+	float: right;
+	margin: 0px 0px 0px 10px;
+	width: 180px;
+}
+
+#controls #move_top
+{
+	margin-top: 100px;
+}
+
+#controls button
+{
+	display: block;
+	margin-bottom: 10px;
+	overflow: hidden;
+	width: 160px;
+}
+	
+#fields
+{
+	background-color: #fff;
+	border: 1px solid #c0b5a9;
+	height: 400px;
+	margin: 5px;
+	width: 488px;
+}
+
+#fields_list
+{
+	height: 398px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	overflow: auto;
+}
+
+#fields_list li
+{
+	display: block;
+	padding: 3px;
+	clear: both;
+}
+
+.header
+{
+	border-bottom: 1px solid #aa9c8f;
+	background-color: #efebe7;
+}
+
+.header span
+{
+	border-right: 1px solid #c0b5a9;
+	margin-right: 3px;
+	overflow: hidden;
+	padding: 0px 5px;
+	width: 30px;
+}
+
+.sortList
+{
+	list-style: none;
+}
+
+.sortList input.cb
+{
+	margin: 3px 15px;
+}
+
+label.inline
+{
+	display: inline;
+	float: none;
+	padding: 0px;
+}
+
+.footer
+{
+	visibility:hidden;
+}
+
+/* Mandatory "Checkboxes" */
+.mandatory
+{
+	background-image: url('../images/stock_form-checkbox-mandatory.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	display: block;
+	float: left;
+	height: 16px;
+	vertical-align: middle;
+	width: 40px;
+}
+
+.mandatory input.hidden, .hidden
+{
+	display: none;
+}
+
+#tickets_overdue, #tickets_open
+{
+	height: 400px;
+}
+
+/** Overdue Table Rows **/
+tr.tts_overdue_0, .tts_overdue_1, .tts_overdue_2, .tts_overdue_3, .tts_overdue_4, .tts_overdue_5, .tts_overdue_6, .tts_overdue_7, .tts_overdue_8, .tts_overdue_9, .tts_overdue_10
+{
+	color: #000;
+}
+
+tr.tts_overdue_0
+{
+	background-color: #efefef;
+}
+
+tr.tts_overdue_1
+{
+	background-color: #dadada;
+}
+
+tr.tts_overdue_2
+{
+	background-color: #dad0d0;
+}
+
+tr.tts_overdue_3
+{
+	background-color: #dacaca;
+}
+
+tr.tts_overdue_4
+{
+	background-color: #dac0c0;
+}
+
+tr.tts_overdue_5
+{
+	background-color: #dababa;
+}
+
+tr.tts_overdue_6
+{
+	background-color: #dab0b0;
+}
+
+tr.tts_overdue_7
+{
+	background-color: #daaaaa;
+}
+
+tr.tts_overdue_8
+{
+	background-color: #da9090;
+}
+
+tr.tts_overdue_9
+{
+	background-color: #da8a8a;
+}
+
+tr.tts_overdue_10
+{
+	background-color: #da7a7a;
+}
+
+/** "normal" rows **/
+tr.tts_status_0, tr.tts_status_1, tr.tts_status_2, tr.tts_status_3, tr.tts_status_4, tr.tts_status_5, tr.tts_status_6, tr.tts_status_7, tr.tts_status_8, tr.tts_status_9, tr.tts_status_10
+{
+	color: #fff;
+}
+
+tr.tts_status_0
+{
+	background-color: #efefef;
+}
+
+tr.tts_status_1
+{
+	background-color: #dadada;
+}
+
+tr.tts_status_2
+{
+	background-color: #dad0d0;
+}
+
+tr.tts_status_3
+{
+	background-color: #dacaca;
+}
+
+tr.tts_status_4
+{
+	background-color: #dac0c0;
+}
+
+tr.tts_status_5
+{
+	background-color: #dababa;
+}
+
+tr.tts_status_6
+{
+	background-color: #dab0b0;
+}
+
+tr.tts_status_7
+{
+	background-color: #daaaaa;
+}
+
+tr.tts_status_8
+{
+	background-color: #da9090;
+}
+
+tr.tts_status_9
+{
+	background-color: #da8a8a;
+}
+
+tr.tts_status_10
+{
+	background-color: #da7a7a;
+}
+
+/** Overdue Table Columns **/
+col.overdue_1
+{
+	width: 30px;
+}
+
+col.overdue_2
+{
+	width: 30px;
+}
+
+col.overdue_3
+{
+	width: 200px;
+}
+
+col.overdue_4
+{
+	width: 100px;
+}
+
+col.overdue_5
+{
+	width: 170px;
+}
+
+col.overdue_6
+{
+	width: 120px;
+}
+
+col.overdue_7
+{
+	width: 120px;
+}
+
+col.overdue_8
+{
+	width: 45px;
+}
+
+col.overdue_9
+{
+	width: 100px;
+}
+
+tbody td
+{
+	overflow: hidden; 
+	white-space: nowrap;
+}
+
+div.activetab
+{
+	display: block;
+}
+
+div.inactivetab
+{
+	display: none;
+}
+
+.app_buttons
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	height: 75px;
+	width: 390px;
+}
+
+.app_buttons li
+{
+	border: 1px solid #999;
+	float: left;
+	height: 40px;
+	margin: 5px;
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+	width: 75px;
+}
+
+thead
+{
+	height: 20px;
+}
+
+tbody
+{
+	padding-top: 20px;
+}
+
+tr.last
+{
+	height: auto;
+}
+
+.panel label
+{
+	width: 50px;
+}
+
+div.button_group
+{
+	clear: both;
+}
+
+
+.date_select img
+{
+	float: left;
+	margin: 0px 0px 0px 5px;
+}
+
+.date_select input[type=text]
+{
+	width: 220px;
+}
+
+#tts_search_adv_criteria
+{
+	border: 1px solid #999;
+	height: 200px;
+	margin: 10px;
+	max-height: 200px;
+	overflow: auto;
+	padding: 10px 0px;
+ 	width: 95%;
+}
+
+#tts_search_adv_criteria div
+{
+	white-space: nowrap;
+}
+
+#tts_search_adv_criteria button
+{
+	margin: 0px 0px 10px 0px;
+	padding: 0px;
+}
+
+#tts_search_adv_criteria select.stype
+{
+	width: 50px;
+}
+
+#tts_search_adv_criteria select.stype option
+{
+	width: 125px;
+}
+
+#tts_search_adv_criteria select.criteria
+{
+	width: 150px;
+}
+
+#tts_saved_searches input
+{
+	width: 100px;
+}
+
