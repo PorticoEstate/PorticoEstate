@@ -70,82 +70,67 @@
 	}
 
 
-
 	$test[] = '0.9.16.002';
 	function tts_upgrade0_9_16_002()
 	{
-		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(
-			'fd' => array(
-				'ticket_id' => array('type' => 'auto','nullable' => False),
-				'ticket_group' => array('type' => 'varchar','precision' => '40','nullable' => True),
-				'ticket_priority' => array('type' => 'int','precision' => '2','nullable' => False),
-				'ticket_owner' => array('type' => 'varchar','precision' => '10','nullable' => True),
-				'ticket_assignedto' => array('type' => 'varchar','precision' => '10','nullable' => True),
-				'ticket_subject' => array('type' => 'varchar','precision' => '255','nullable' => True),
-				'ticket_category' => array('type' => 'varchar','precision' => '25','nullable' => True),
-				'ticket_billable_hours' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => False),
-				'ticket_billable_rate' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => False),
-				'ticket_status' => array('type' => 'char','precision' => '1','nullable' => False),
-				'ticket_details' => array('type' => 'text','nullable' => False),
-				'ticket_type' => array('type' => 'int','precision' => '2','nullable' => False),
-				'ticket_deadline' => array('type' => 'varchar','precision' => '10','nullable' => False),
-				'ticket_effort' => array('type' => 'varchar','precision' => '4','nullable' => False),
-				'ticket_attachment' => array('type' => 'int','precision' => '2','nullable' => False),
-				'ticket_lastmod' => array('type' => 'int','precision' => '4','nullable' => False)
-			),
-			'pk' => array('ticket_id'),
-			'ix' => array(),
-			'fk' => array(),
-			'uc' => array()
-		),'ticket_platform');
-		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(
-			'fd' => array(
-				'ticket_id' => array('type' => 'auto','nullable' => False),
-				'ticket_group' => array('type' => 'varchar','precision' => '40','nullable' => True),
-				'ticket_priority' => array('type' => 'int','precision' => '2','nullable' => False),
-				'ticket_owner' => array('type' => 'varchar','precision' => '10','nullable' => True),
-				'ticket_assignedto' => array('type' => 'varchar','precision' => '10','nullable' => True),
-				'ticket_subject' => array('type' => 'varchar','precision' => '255','nullable' => True),
-				'ticket_category' => array('type' => 'varchar','precision' => '25','nullable' => True),
-				'ticket_billable_hours' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => False),
-				'ticket_billable_rate' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => False),
-				'ticket_status' => array('type' => 'char','precision' => '1','nullable' => False),
-				'ticket_details' => array('type' => 'text','nullable' => False),
-				'ticket_type' => array('type' => 'int','precision' => '2','nullable' => False),
-				'ticket_deadline' => array('type' => 'varchar','precision' => '10','nullable' => False),
-				'ticket_effort' => array('type' => 'varchar','precision' => '4','nullable' => False),
-				'ticket_lastmod' => array('type' => 'int','precision' => '4','nullable' => False)
-			),
-			'pk' => array('ticket_id'),
-			'ix' => array(),
-			'fk' => array(),
-			'uc' => array()
-		),'ticket_attachment');
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_tts_tickets','ticket_group',array(
+/*
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_platform');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_attachment');
+*/
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_tts_tickets");
+		$tickets = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$tickets[] = array
+			(
+				'id'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('ticket_id'),
+				'group'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('ticket_group'),
+				'owner'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('ticket_owner'),
+				'assignedto'	=> (int)$GLOBALS['phpgw_setup']->oProc->f('ticket_assignedto'),
+				'category'		=> (int)$GLOBALS['phpgw_setup']->oProc->f('ticket_category'),
+				'deadline'		=> (int)$GLOBALS['phpgw_setup']->oProc->f('ticket_deadline'),
+			);
+		}
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_group');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_tts_tickets','ticket_group',array(
 			'type' => 'int',
-			'precision' => '8',
+			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_tts_tickets','ticket_owner',array(
+
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_owner');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_tts_tickets','ticket_owner',array(
 			'type' => 'int',
-			'precision' => '8',
+			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_tts_tickets','ticket_assignedto',array(
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_assignedto');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_tts_tickets','ticket_assignedto',array(
 			'type' => 'int',
-			'precision' => '8',
+			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_tts_tickets','ticket_category',array(
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_category');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_tts_tickets','ticket_category',array(
 			'type' => 'int',
-			'precision' => '8',
+			'precision' => '4',
 			'nullable' => True
 		));
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_tts_tickets','ticket_deadline',array(
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_tts_tickets',array(),'ticket_deadline');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_tts_tickets','ticket_deadline',array(
 			'type' => 'int',
-			'precision' => '8',
+			'precision' => '4',
 			'nullable' => False
 		));
+
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_tts_tickets','ticket_lastmod_user',array(
 			'type' => 'int',
 			'precision' => '4',
@@ -156,9 +141,24 @@
 			'precision' => '255',
 			'nullable' => True
 		));
-		
-		$GLOBALS['setup_info']['tts']['currentver'] = '0.9.17.500';
-		return $GLOBALS['setup_info']['tts']['currentver'];
+
+		foreach($tickets as $ticket)
+		{
+			$sql = "UPDATE phpgw_tts_tickets SET ticket_group = {$ticket['group']},"
+			. "ticket_owner = {$ticket['owner']},"
+			. "ticket_assignedto = {$ticket['assignedto']},"
+			. "ticket_category = {$ticket['category']},"
+			. "ticket_deadline = {$ticket['deadline']} "
+			. "WHERE ticket_id = {$ticket['id']}";
+
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);		
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['tts']['currentver'] = '0.9.17.500';
+			return $GLOBALS['setup_info']['tts']['currentver'];
+		}
 	}
 
 
