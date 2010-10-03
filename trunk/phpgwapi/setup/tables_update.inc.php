@@ -1196,17 +1196,44 @@
 
 	$test[] = '0.9.16.012';
 	/**
-	* Update phpgwapi from stable
-	*/
-
+	 * Bump the version
+	 *
+	 * @return string the new phpGW version
+	 */
 	function phpgwapi_upgrade0_9_16_012()
 	{
-		return $GLOBALS['setup_info']['phpgwapi']['currentver']= '0.9.17.500';
+		return $GLOBALS['phpgw_info']['phpgwapi']['currentver'] = '0.9.16.014';
 	}
 
+	$test[] = '0.9.16.014';
+	function phpgwapi_upgrade0_9_16_014()
+	{
+		return $GLOBALS['phpgw_info']['phpgwapi']['currentver'] = '0.9.16.015';
+	}
+
+	$test[] = '0.9.16.015';
+	function phpgwapi_upgrade0_9_16_015()
+	{
+		// Fix the ipv6 issue - allready taken care of
+		// $GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_access_log','ip',array('type' => 'char', 'precision' => 100));
+
+		return $GLOBALS['phpgw_info']['phpgwapi']['currentver'] = '0.9.16.016';
+	}
+
+	$test[] = '0.9.16.016';
+	function phpgwapi_upgrade0_9_16_016()
+	{
+		return $GLOBALS['phpgw_info']['phpgwapi']['currentver'] = '0.9.16.017';
+	}
+
+	$test[] = '0.9.16.017';
+	function phpgwapi_upgrade0_9_16_017()
+	{
+		return $GLOBALS['phpgw_info']['phpgwapi']['currentver'] = '0.9.17.000';
+	}
 
 	/**
-	* Update phpgwapi from intermediate
+	* Update phpgwapi from intermadiate
 	*/
 	$test[] = '0.9.17.000';
 	function phpgwapi_upgrade0_9_17_000()
@@ -1235,32 +1262,8 @@
 	$test[] = '0.9.17.004';
 	function phpgwapi_upgrade0_9_17_004()
 	{
-		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.512';
+		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.500';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
-
-/*
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','lookup_form',array(
-			'type' => 'int',
-			'precision' => '2',
-			'nullable' => True
-		));
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','custom',array(
-			'type' => 'int',
-			'precision' => '2',
-			'default' => 1,
-			'nullable' => True
-		));
-
-		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_cust_attribute SET custom = 1");
-
-		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
-		{
-			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.513';
-			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
-		}
-*/
 	}
 
 	$test[] = '0.9.17.500';
@@ -1657,8 +1660,6 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_fields');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_field_types');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_field_values');
-
-		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
