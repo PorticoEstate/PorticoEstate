@@ -1011,6 +1011,12 @@
 		return $GLOBALS['setup_info']['calendar']['currentver'];
 	}
 
+	$test[] = '0.9.18.000';
+	function calendar_upgrade0_9_18_000()
+	{
+		$GLOBALS['setup_info']['calendar']['currentver'] = '0.9.18.001';
+		return $GLOBALS['setup_info']['calendar']['currentver'];
+	}
 
 	$test[] = '0.9.18.001';
 	function calendar_upgrade0_9_18_001()
