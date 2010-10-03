@@ -735,16 +735,16 @@
 			'ix' => array(),
 			'uc' => array('name')
 		),
-		'bb_system_message', array(
+		'bb_system_message' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'title' => array('type' => 'text', 'nullable' => False),
-				'created' => array('type' => 'timestamp', 'nullable' => False),
+				'created' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
 				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'building_id' => array('type' => 'int', 'precision' => '4'),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
-				'email' => array('type' => 'varchar','precision' => '50','nullable' => False, 'default'=>''),
+				'phone' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'email' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'message' => array('type' => 'text', 'nullable' => False),
 				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'message'),
 				'status' => array('type' => 'text', 'nullable' => False, 'default'=>'new'),
