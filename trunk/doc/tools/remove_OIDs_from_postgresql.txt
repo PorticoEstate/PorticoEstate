@@ -1,0 +1,9 @@
+/*For removing OID from postgresql > 8.1
+*/
+
+$tables = $this->db->table_names();
+_debug_array($tables);
+foreach($tables as $table)
+{
+	$this->db->query("ALTER TABLE $table SET WITHOUT OIDS");
+}

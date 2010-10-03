@@ -1,0 +1,34 @@
+compose	messenger	fr	Composer
+compose global message	admin	fr	Composer un message global
+compose message	messenger	fr	Composer un message
+delete a message.	messenger	fr	Effacer un message.
+delete selected	messenger	fr	Effacer sélection
+forward	messenger	fr	Faire suivre
+forward a message	messenger	fr	Faire suivre un message
+forward a message to another user.	messenger	fr	Faire suivre un message à un autre utilisateur.
+forwarded	messenger	fr	suivi
+from	messenger	fr	De
+global message	messenger	fr	Message global
+i can't find the username %1 on the system	messenger	fr	Je ne trouve pas l'utilisateur %1 sur le système
+inbox	messenger	fr	inbox
+message from	messenger	fr	Message de
+messenger	common	fr	Messager
+new	messenger	fr	Nouveau
+read a list of messages.	messenger	fr	Lire une liste de messages.
+read a single message.	messenger	fr	Lire un unique message.
+read message	messenger	fr	Lire le message
+replied	messenger	fr	Répondu
+reply	messenger	fr	Répondre
+reply to a message	messenger	fr	Répondre à un message
+reply to a received message.	messenger	fr	Répondre à un message reçu.
+send	messenger	fr	Envoyer
+send a global message.	messenger	fr	Envoyer un message global.
+send a message to a single recipient.	messenger	fr	Envoyer un message à un unique destinataire.
+send message to	messenger	fr	Envoyer un message à
+sorry, %1's account is not currently active	messenger	fr	Désolé, le compte de %1 n'est actuellement pas actif
+you didn't enter anything for the message	messenger	fr	Vous n'avez rien entré pour le message
+you have %1 new message	messenger	fr	Vous avez %1 nouveau message
+you have %1 new messages	messenger	fr	Vous avez %1 nouveau messages
+you have no messages	messenger	fr	Vous n'avez aucun message
+you must enter a subject	messenger	fr	Vous devez entrer un sujet
+you must enter the username this message is for	messenger	fr	Vous devez entrer l'utilisateur destinataire de ce message

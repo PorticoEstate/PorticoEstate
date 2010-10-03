@@ -1,0 +1,150 @@
+DESCRIPTION
+-----------
+This document explain about howto install or setup sms capabilitites for phpgroupware.
+It is based on PlaySMS version 0.8.1
+
+
+REQUIREMENT
+-----------
+Minimum Required Hardware
+    - Web server's hardware (Equal to at least Pentium III 733 MHz, 128 MB RAM)
+    - Disk freespace for software and data disk at least 10 MB
+Minimum Required Software
+    - Operating System *NIX based (Linux preferred)
+    - Web Server (Apache preferred http://httpd.apache.org)
+    - Database Server MySQL 4.x.x or latest stable release (http://www.mysql.com)
+    - PHP 4.3.10 or latest stable release with mysql module enabled and CGI/CLI version 
+      (http://www.php.net)
+    - Access to SMTP server (ability to send email via SMTP server)
+Minimum Required Server Operator (or Developer)
+    - Understand howto make sure installed PHP has MySQL module enabled (phpinfo)
+    - Understand howto install php application package without 'root' access (if needed)
+    - Always find reading README, INSTALL, FAQ and other docs as a fun activity :)
+
+
+
+   
+INSTALLATION on Linux
+---------------------
+
+
+PHPGWSMS Web Interface:
+1.  It is important to meet all minimum requiments above (Its a must!)
+2.  Install the application as normal in setup.
+3.  Edit config.php on phpgwsms web directory (phpgroupware/sms/config.php)
+    Please read and fill all required fields with coutious
+4.  Enter bin directory and copy phpgwsmsd and phpgwsmsd_start to /usr/local/bin
+    # cd phpgroupware/sms/setup
+    # cd bin
+    # cp phpgwsmsd phpgwsmsd_start /usr/local/bin/
+5.  Edit the $PHPGWSMS_PATH in  /usr/local/bin/phpgwsmsd 
+6. Enter /etc/init.d or /etc/rc.d/init.d and look for file named 'rc.local', im sure you'll 
+    found it, otherwise ask for it on mailing lists. Edit rc.local and put: 
+    "/usr/local/bin/phpgwsmsd_start" (without quotes)
+    on the bottom of the file (before exit if theres exit command). This way phpgwsmsd_start 
+    will be running everytime the system starting-up. You need 'root' access to do that.
+
+
+Note:
+If you decide to use default gateway module (gnokii), then you must install gnokii on the 
+same server where phpgwsms installed. Download gnokii version 0.6.12 from http://gnokii.org
+and copy it to /usr/local/src. 
+But remember, phpgwsms can be use to connect to other gateway such as Kannel and Clickatell,
+or your own gateway, without having to install gnokii.
+
+For gnokii installation please see below.
+
+Gnokii Installation:
+1.  Extract gnokii source package somewhere (eg: /usr/local/src)
+2.  Configure it to make sure installation path is in /usr/local
+    # ./configure --prefix=/usr/local
+    Note: if you want to change to another directory, you better understand how to 
+    read source of /path_to_source_of_phpgwsms/setup/bin/* files written in bash script
+3.  Make and make install, these actions will install gnokii to /usr/local
+    # gmake
+    # gmake install
+4.  Enter directory named 'smsd' in gnokii source directory, compile and install smsd
+    Note: if you use gnokii version < 0.6.0 you'll have to make libfile.so not libfile.la
+    # cd smsd
+    # gmake
+    # gmake libfile.la
+    # gmake install
+    Note: for those whose having trouble compiling smsd will have to edit the
+    Makefile file manually, insert comments mark on libmysql.so and libpq.so part
+5.  And now from gnokii's source directory, enter to Docs/sample, there you
+    can found file named gnokiirc, copy it to ~/.gnokiirc (home of root) and edit it
+    # cd Docs/sample
+    # cp gnokiirc ~/.gnokiirc
+    Note: usually you just have to edit the port and model part only, change it 
+    to suit your system
+6.  Test your gnokii, plug in your cellphone/gsm modem cable to the computer, or
+    connect via IrDA, and then type:
+    # gnokii --identify
+    Note: you should see gnokii identified your cellphone/gsm modem, if you dont
+    see it, update your ~/.gnokiirc to suit your need
+7.  Back to phpgwsms source directory. Create smsd cache and logs directory and 
+    make it writable to the web servers user
+    # mkdir -p /usr/local/cache/logs
+    # touch /usr/local/cache/logs/smsd_logs
+    # mkdir /usr/local/cache/smsd
+    # chmod -R 777 /usr/local/cache
+    Note: 
+    - the make-it-writable-to-the-world part (chmod -R 777) is just to simplify installation
+    - it is better if you know what is the web server's user (eg: 'nobody')
+      and instead of chmod -R 777, you can do this:
+      # chown -R nobody /usr/local/cache
+8.  Enter bin directory and copy smsd_checker, smsd_incoming and smsd_start to /usr/local/bin
+    # cd setup/bin
+    # cp smsd* /usr/local/bin/
+    Note: assumed that you have installed gnokii on /usr/local, if you change it
+    to another path (/opt/gnokii maybe) copy them to /opt/gnokii/bin and dont forget to
+    edit SMSD_PATH to /opt/gnokii too in smsd_checker and smsd_incoming
+9 . Enter /etc/init.d or /etc/rc.d/init.d and look for file rc.local, im sure you'll 
+    found it, otherwise ask for it on mailing lists. Edit that file and put:
+    "/usr/local/bin/smsd_start" (without quotes) 
+    on the bottom of the file (before exit if theres exit command). This way smsd_start will be 
+    running everytime the system starting-up
+
+
+Note:
+If you decide to use kannel gateway module, then you must install kannel on the same
+server where phpgwsms installed. There are discussion on howto install Kannel on separate machine
+with PlaySMS.
+Due to complexity of installation process for kannel, we decide to leave this module for experts. 
+Well experts, there's something you should see on this package contrib/kannel/kannel.conf, 
+sms service 'Default' part.
+
+Dont forget to:
+1.  Create kannel cache directory and make it writable to the web servers user
+    # mkdir -p /usr/local/cache/logs
+    # mkdir /usr/local/cache/smsd
+    # chmod -R 777 /usr/local/cache
+    Note: 
+    - the make-it-writable-to-the-world part (chmod -R 777) is just to simplify installation
+    - it is better if you know what is the web server's user (eg: 'nobody')
+      and instead of chmod -R 777, you can do this:
+      # chown -R nobody /usr/local/cache
+2.  Create log directory
+    # mkdir /var/log/kannel
+    Note: this can be any directory according to the kannel configurations file
+3.  Enter setup/bin directory in this package, and copy kannel_incoming to /usr/local/bin
+    # cd /path_to/phpgroupware/sms/setup/bin
+    # cp kannel_incoming /usr/local/bin
+
+If you decide to use kannel gateway module, but you dont want to use 'exec' method in sms service,
+just replace your kannel.conf near to sms service 'Default' part, with sms service 'Default' part in
+this package contrib/kannel/kannel-geturl.conf
+After copying sample configuration, dont forget to change 'CHANGE_THIS_TO_YOUR_PHPGWSMS_URL' 
+in your kannel.conf near to sms service 'Default' part, to your working PHPGWSMS URL
+
+If you decide to use clickatell gateway module, please register your self at Clickatell's website 
+And then read the README file in $apps_path[base]/plugin/gateway/clickatell
+
+
+
+NOTES
+-----
+1. It is VERY important to set these settings below on your php.ini (you need 'root' access, or from .htaccess)
+   safe_mode = Off
+   register_globals = Off
+   magic_quotes_gpc = On
