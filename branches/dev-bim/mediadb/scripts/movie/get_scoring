@@ -1,3 +1,0 @@
-#!/bin/tcsh -f
-
-grep "User Rating:" details | sed -f sed_scoring

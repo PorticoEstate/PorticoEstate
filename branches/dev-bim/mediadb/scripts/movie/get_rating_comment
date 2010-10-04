@@ -1,5 +1,0 @@
-#!/bin/tcsh -f
-
-#sed -n 's#.*MPAA.*B>\([^<]*\)<.*#\1#p;s#[ ]\+# #g' details
-
-grep "MPAA" details | sed -f sed_rating_comment

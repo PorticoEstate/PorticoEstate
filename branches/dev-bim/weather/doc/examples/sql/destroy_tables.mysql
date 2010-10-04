@@ -1,6 +1,0 @@
-DROP TABLE IF EXISTS phpgw_weather_admin;
-DROP TABLE IF EXISTS phpgw_weather;
-DROP TABLE IF EXISTS phpgw_weather_links;
-DROP TABLE IF EXISTS phpgw_weather_metar;
-DROP TABLE IF EXISTS phpgw_weather_region;
-DROP TABLE IF EXISTS phpgw_us_states;

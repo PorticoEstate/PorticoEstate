@@ -1,5 +1,0 @@
-#!/bin/tcsh -f
-
-# in actuality is http://images.amazon.com/images/P/${ASIN}.01.MZZZZZZZ.gif
-
-grep ASIN details | sed -n 's#.*src="\([^"]*\)".*#\1#p'

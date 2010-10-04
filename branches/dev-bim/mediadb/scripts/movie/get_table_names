@@ -1,3 +1,0 @@
-#!/bin/tcsh -f
-
-grep "Glossary" details | grep "TABLE" | sed 's/.*\(#[a-z_ \-]*\).*/\1/'

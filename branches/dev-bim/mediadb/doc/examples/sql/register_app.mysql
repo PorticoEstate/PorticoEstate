@@ -1,1 +1,0 @@
-insert into applications (app_name, app_title, app_enabled) values ('mediadb', 'Multimedia Database', 1);

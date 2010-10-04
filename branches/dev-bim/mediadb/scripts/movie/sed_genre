@@ -1,6 +1,0 @@
-s#<[^>]*>##g
-s#Genre:##
-s#(.*)##
-s#-##
-y#ABCDEFGHIJKLMNOPQRSTUVWXYZ/#abcdefghijklmnopqrstuvwxyz,#
-s#[ ]\+##g

@@ -1,8 +1,0 @@
-date called	phonelog	pl	Data
-call for	phonelog	pl	Dzwoniono do
-call came in at	phonelog	pl	Data i godzina
-summary	phonelog	pl	Temat rozmowy
-call from	phonelog	pl	Dzwonił
-by person	phonelog	pl	Osoba
-by company	phonelog	pl	Firma
-as free text	phonelog	pl	Opis

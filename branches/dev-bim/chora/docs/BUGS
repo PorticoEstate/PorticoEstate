@@ -1,7 +1,0 @@
-Known bugs:
-
-- Branch viewing does not handle vendor branches at all at the
-  moment.  This will be until I figure out exactly what the RCS
-  numbering syntax is for the CVS vendoring system - avsm
-
-$Horde: chora/docs/BUGS,v 1.1 2001/01/16 18:57:20 avsm Exp $
