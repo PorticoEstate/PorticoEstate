@@ -236,12 +236,40 @@ HTML;
 			$detected = '';
 
 			$detected .= $GLOBALS['phpgw_info']['setup']['PageMSG'];
+/*
 			if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
 			{
 				$detected .= '<b><p align="center" class="msg">'
 					. lang('You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later', PHP_VERSION). "\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
+			}
+*/
+
+			if (version_compare(PHP_VERSION, '5.2.0') < 0)
+			{
+				$detected .= '<b><p align="center" class="msg">'
+					. lang('You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later', PHP_VERSION). "\n"
+					. '</p></b><td></tr></table></body></html>';
+				die($detected);
+			}
+
+			$detected = '';
+			$request_order = '';
+			if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+			{
+				if (!preg_match("/C/i", ini_get('request_order')) || !preg_match("/S/i", ini_get('request_order')))
+				{
+					$detected .= '<b><p align="center" class="msg">'
+						. lang('You need to set request_order = "GPCS" in php.ini'). "\n"
+						. '</p></b><td></tr></table></body></html>';
+					die($detected);
+				}
+				else
+				{
+					$request_order = '<li>' . lang('You appear to have set request_order = "GPCS"') . "</li>\n";
+				}
+				
 			}
 
 			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.2) . "</li>\n";
@@ -260,6 +288,7 @@ HTML;
 			$detected .= '<tr><td colspan="2"><p><strong>' . lang('Please consult the %1.', $manual) . "</strong></td></tr>\n";
 
 			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . "</td></tr><tr><td colspan=\"2\">\n<ul id=\"analysis\">\n$phpver";
+			$detected .= $request_order;
 
 			$supported_db = array();
 			if (extension_loaded('mysql') || function_exists('mysql_connect'))
