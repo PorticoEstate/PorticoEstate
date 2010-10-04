@@ -1,0 +1,25 @@
+add main project	todo	fi	Lisää pääprojekti
+add sub project	todo	fi	Lisää aliprojekti
+are you sure you want to delete this entry	todo	fi	Haluatko poistaa kohteen ?
+assigned to	todo	fi	Kohdistettu henkilölle
+completed	todo	fi	Valmiusaste
+Description can not exceed 8000 characters in length	todo	fi	Kuvaus saa olla enintään 8000 merkkiä !
+do you also want to delete all sub projects ?	todo	fi	Poistetaanko myös aliprojektit ?
+edit main project	todo	fi	Muokkaa pääprojektia
+edit sub project	todo	fi	Muokkaa aliprojektia
+Ending date can not be before start date	todo	fi	Päättymispäivän on oltava alkamispäivän jälkeen !
+high	todo	fi	Korkea
+low	todo	fi	Matala
+normal	todo	fi	Normaali
+or: days from startdate:	todo	fi	tai: kesto päivinä:
+or: select for today:	todo	fi	tai: tänään:
+parent project	todo	fi	Pääprojekti
+Please enter a title	todo	fi	Anna otsikko !
+todo list	common	fi	Tehtävät
+to do list	common	fi	Tehtävät -muistio
+todo	common	fi	Tehtävät
+urgency	todo	fi	Tärkeys
+view matrix of actual month	todo	fi	Näytä kuukauden matriisi
+You can only enter numbers for days from now	todo	fi	Kesto (päiviä) on oltava numero !
+You have entered an starting invalid date	todo	fi	Alkamispäivä ei kelpaa !
+You have entered an ending invalid date	todo	fi	Päättymispäivä ei kelpaa !

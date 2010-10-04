@@ -1,0 +1,17 @@
+account password retrieval	registration	it	Account password retrieval
+account registration	registration	it	Richiesta Account
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	it	Dopo aver inserito il tuo username, ti verranno inviate, all'indirizzo mail che hai specificato quando ti sei registrato, istruzioni su come cambiare la password.
+enter your new password	registration	it	Inserisci la tua nuova password
+i have read the terms and conditions and agree by them.	registration	it	Ho letto i termini e le condizioni e li accetto.
+phpgroupware - account registration	registration	it	phpGroupWare - Richiesta Account
+re-enter password	registration	it	Re-inserisci password
+re-enter your password	registration	it	Re-inserisci la tua password
+registration	common	it	Registrazione
+sorry, that username does not exist.	registration	it	Spiecente, questo username non esiste.
+sorry, that username is already taken.	registration	it	Spiacente, questo username è già stato preso.
+the two passwords are not the same	registration	it	Le due password non sono uguali
+wrong session	registration	it	Sessione non corretta
+you have entered an invalid email address	registration	it	Hai inserito un indirizzo email non corretto
+you must enter a password	registration	it	Devi inserire una password
+you must enter a username	registration	it	Devi inserire uno username
+you must fill in all of the required fields	registration	it	Devi compilare tutti i campi obbligatori
