@@ -41,6 +41,7 @@
 			$this->check_active('booking.uibuilding.show');
 			$building                  = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
+			$building['message_link']  = self::link(array('menuaction' => 'bookingfrontend.uisystem_message.edit', 'building_id' => $building['id'],'building_name' => $building['name']));
 			$building['start']         = self::link(array('menuaction' => 'bookingfrontend.uisearch.index', 'type' => "building"));
 			if ( trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])) )
 			{

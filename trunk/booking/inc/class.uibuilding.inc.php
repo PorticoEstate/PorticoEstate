@@ -196,6 +196,7 @@
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));
 			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));
+			$building['message_link'] = self::link(array('menuaction' => 'booking.uisystem_message.edit', 'building_id' => $building['id']));
 			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
 			$building['location_link'] = self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $building['location_code']));
