@@ -51,4 +51,3 @@
 	}
 
 	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => "property.ui{$start_page}.index"));
-
