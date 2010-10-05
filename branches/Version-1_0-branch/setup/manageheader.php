@@ -494,6 +494,7 @@ HTML;
 						$found_dbtype = False;
 						foreach ( $supported_db as $db )
 						{
+							$GLOBALS['phpgw_domain'][$key]['db_type'] = $GLOBALS['phpgw_domain'][$key]['db_type'] == 'pgsql' ? 'postgres' : $GLOBALS['phpgw_domain'][$key]['db_type']; // upgrade from 0.9.16
 							if ( $db == $GLOBALS['phpgw_domain'][$key]['db_type'] )
 							{
 								$selected = ' selected';
