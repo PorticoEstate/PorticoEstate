@@ -247,7 +247,7 @@
 
 <!-- add / edit -->
 
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<div align="left">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
@@ -479,6 +479,22 @@
 									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</td>
 							</tr>
+						<tr>
+							<td>
+								<xsl:value-of select="php:function('lang', 'building part')" />
+							</td>
+							<td>
+									<select name="values[building_part]" >
+										<xsl:attribute name="title">
+						            		<xsl:value-of select="php:function('lang', 'select building part')" />
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select building part')" />
+										</option>
+											<xsl:apply-templates select="building_part_list/status_list"/>
+									</select>
+							</td>
+						</tr>
 							<tr>
 								<td>
 									<xsl:value-of select="lang_coordinator"/>
