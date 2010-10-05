@@ -17,6 +17,10 @@
 	        	<button onclick="window.location.href='{schedule_link}'"><xsl:value-of select="php:function('lang', 'Building schedule')" /></button>
 - 				Søk ledig tid/informasjon om hva som skjer
 			</div>
+			<div>
+	        	<button onclick="window.location.href='{message_link}'"><xsl:value-of select="php:function('lang', 'Send message')" /></button>
+- 				Meldig til saksbehandler for bygg
+			</div>
 
 			<dl class="proplist-col main">
 				<xsl:if test="normalize-space(description)">
