@@ -351,6 +351,9 @@
 		$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];	
 	}
 
-	$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
+	if($_key) // not during upgrade from 0.9.16
+	{
+		$GLOBALS['phpgw']->crypto->init(array($_key, $_iv));
+	}
 
 	$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', True, True);

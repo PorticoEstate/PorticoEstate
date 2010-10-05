@@ -7,15 +7,18 @@
 		(
 			'index'	=> true,
 			'toggle_show_all_dashboard_applications' => true,
+			'toggle_show_all_dashboard_messages' => true,
 		);
 		
 		const SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY = "show_all_dashboard_applications";
+		const SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY = "show_all_dashboard_messages";
 
 		public function __construct()
 		{
          parent::__construct();
 			$this->bo = CreateObject('booking.boapplication');
 			$this->resource_bo = CreateObject('booking.boresource');
+			$this->system_message_bo = CreateObject('booking.bosystem_message');
 			self::set_active_menu('booking::dashboard');
 		}
 		
@@ -24,14 +27,32 @@
 			if($this->show_all_dashboard_applications())
 			{
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY]);
+
 			} else {
 				$_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY] = true;
+				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
 			}
 			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
 		}
 		
 		public function show_all_dashboard_applications() {
 			return array_key_exists(self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY, $_SESSION);
+		}
+
+		public function toggle_show_all_dashboard_messages()
+		{
+			if($this->show_all_dashboard_messages())
+			{
+				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
+			} else {
+				$_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY] = true;
+				unset($_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY]);
+			}
+			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
+		}
+		
+		public function show_all_dashboard_messages() {
+			return array_key_exists(self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY, $_SESSION);
 		}
 
 		public function index()
@@ -59,8 +80,13 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all'),
+								'value' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_all_dashboard_applications'))
+							),
+							array(
+								'type' => 'link',
+								'value' => $this->show_all_dashboard_messages() ? lang('Show only messages assigned to me') : lang('Show all messages'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_all_dashboard_messages'))
 							),
 						)
 					),
@@ -76,6 +102,10 @@
 						array(
 							'key' => 'status',
 							'label' => lang('Status')
+						),
+						array(
+							'key' => 'type',
+							'label' => lang('Type')
 						),
 						array(
 							'key' => 'created',
@@ -114,11 +144,11 @@
 		public function index_json()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
-
 			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? null : $this->current_account_id());
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
+				$application['type'] = lang($application['type']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
@@ -141,6 +171,21 @@
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
+
+			$messages = $this->system_message_bo->read_message_data($this->show_all_dashboard_messages() ? null : $this->current_account_id());
+
+			if ($this->show_all_dashboard_messages() || $this->show_all_dashboard_applications())
+			{
+				if ($this->show_all_dashboard_messages()) {
+					$applications['results'] = $messages;
+				}
+			} else {
+				foreach($messages as $message)
+				{
+					$applications['results'][] = $message;		
+				} 
+			}
 			return $this->yui_results($applications);
 		}
+
 	}

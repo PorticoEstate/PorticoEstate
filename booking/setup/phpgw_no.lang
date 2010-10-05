@@ -454,5 +454,9 @@ System message	booking	no	System beskjed
 System messages	booking	no	System beskjeder
 Edit System Message	booking	no	Rediger system beskjed
 The user currently assigned as the responsible case officer for this application is	booking	no	Brukeren som er saksbehandler for denne søknaden er
-Back 	booking	no	Tilbake
-read	booking	no	Lest
+Back	booking	no	Tilbake
+Close	booking	no	Lukk
+CLOSED	booking	no	LUKKET
+Show all applications	booking	no	Vis alle søknader
+Show all messages	booking	no	Vis all beskjeder
+Show only messages assigned to me	booking	no	Vis bare mine beskjeder 
