@@ -1235,7 +1235,7 @@
 				'authorities_demands'			=> $values['authorities_demands'],
 
 				'condition_list'			=> $this->bo->select_conditions($id),
-
+				'building_part_list'			=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 			);
 
 			phpgwapi_yui::load_widget('dragdrop');

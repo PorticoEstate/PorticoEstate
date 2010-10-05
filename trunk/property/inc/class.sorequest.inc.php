@@ -386,7 +386,8 @@
 					'p_num'					=> $this->db->f('p_num'),
 					'p_entity_id'			=> $this->db->f('p_entity_id'),
 					'p_cat_id'				=> $this->db->f('p_cat_id'),
-					'contact_phone'			=> $this->db->f('contact_phone', true)
+					'contact_phone'			=> $this->db->f('contact_phone', true),
+					'building_part'			=> $this->db->f('building_part'),
 				);
 				$location_code = $this->db->f('location_code');
 				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
@@ -399,13 +400,15 @@
 		{
 			$request_id = (int)$request_id;
 			$this->db->query("select budget, id as workorder_id, vendor_id from fm_workorder where request_id='$request_id'");
+			$budget = array();
 			while ($this->db->next_record())
 			{
-				$budget[] = array(
+				$budget[] = array
+				(
 					'workorder_id'	=> $this->db->f('workorder_id'),
 					'budget'	=> sprintf("%01.2f",$this->db->f('budget')),
 					'vendor_id'	=> $this->db->f('vendor_id')
-					);
+				);
 			}
 			return $budget;
 		}
@@ -470,7 +473,8 @@
 
 			$this->db->transaction_begin();
 			$id = $this->next_id();
-			$values= array(
+			$values= array
+			(
 				$id,
 				$request['title'],
 				$this->account,
@@ -483,13 +487,15 @@
 				$request['status'],
 				$request['branch_id'],
 				$request['coordinator'],
-				$request['authorities_demands']);
+				$request['authorities_demands'],
+				$request['building_part']
+			);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("insert into fm_request (id,title,owner,category,descr,location_code,"
 				. "address,entry_date,budget,status,branch_id,coordinator,"
-				. "authorities_demands  $cols) "
+				. "authorities_demands,building_part  $cols) "
 				. "VALUES ($values $vals )",__LINE__,__FILE__);
 
 			while (is_array($request['condition']) && list($condition_type,$value_type) = each($request['condition']))
@@ -568,18 +574,20 @@
 			$request['name'] = $this->db->db_addslashes($request['name']);
 			$request['title'] = $this->db->db_addslashes($request['title']);
 
-			$value_set=array(
-				'status'		=> $request['status'],
-				'category'		=> $request['cat_id'],
-				'start_date'		=> $request['start_date'],
-				'end_date'		=> $request['end_date'],
-				'coordinator'		=> $request['coordinator'],
-				'descr'			=> $request['descr'],
-				'budget'		=> (int)$request['budget'],
-				'location_code'		=> $request['location_code'],
-				'address'		=> $address,
-				'authorities_demands' => $request['authorities_demands']
-				);
+			$value_set = array
+			(
+				'status'				=> $request['status'],
+				'category'				=> $request['cat_id'],
+				'start_date'			=> $request['start_date'],
+				'end_date'				=> $request['end_date'],
+				'coordinator'			=> $request['coordinator'],
+				'descr'					=> $request['descr'],
+				'budget'				=> (int)$request['budget'],
+				'location_code'			=> $request['location_code'],
+				'address'				=> $address,
+				'authorities_demands'	=> $request['authorities_demands'],
+				'building_part'			=> $request['building_part'],
+			);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
 			{
@@ -668,4 +676,3 @@
 			$this->db->transaction_commit();
 		}
 	}
-

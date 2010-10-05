@@ -4547,3 +4547,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.578 to 0.9.17.579
+	* Add custom dimension for orders
+	* 
+	*/
+
+	$test[] = '0.9.17.594';
+	function property_upgrade0_9_17_594()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','building_part',array('type' => 'varchar','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.595';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
