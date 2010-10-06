@@ -316,3 +316,6 @@ System message	bookingfrontend	no	System beskjed
 System messages	bookingfrontend	no	System beskjeder
 Edit System Message	bookingfrontend	no	Rediger system beskjed
 Send message	bookingfrontend	no	Send beskjed
+E-mail address	bookingfrontend	no	E-postadresse
+Confirm e-mail address	bookingfrontend	no	Bekreft e-postadressen
+The e-mail addresses you entered do not match	bookingfrontend	no	E-postadressene er ikke like
