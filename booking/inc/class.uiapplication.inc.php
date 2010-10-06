@@ -351,6 +351,10 @@
 				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 
 				$errors = $this->validate($application);
+				if ($_POST['contact_email'] != $_POST['contact_email2']) {
+					$errors['email'] = lang('The e-mail addresses you entered do not match');
+					$application['contact_email2'] = $_POST['contact_email2'];
+				}
 				if(!$errors)
 				{
 					$comment_text = $this->create_accepted_documents_comment_text($application);
