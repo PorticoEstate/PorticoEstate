@@ -1335,13 +1335,15 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','acl_grantor',array(
 			'type' => 'int',
 			'precision' => '4',
-			'nullable' => True
+			'nullable' => True,
+			'default' 	=> -1,
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','acl_type',array(
 			'type' => 'int',
 			'precision' => '2',
-			'nullable' => True
+			'nullable' => True,
+			'default' 	=> '0',
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
