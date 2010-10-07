@@ -134,10 +134,16 @@
 					<xsl:attribute name="value"><xsl:value-of select="application/contact_name"/></xsl:attribute>
 				</input>
 			</dd>
-			<dt><label for="field_contact_email"><xsl:value-of select="php:function('lang', 'Email')" /></label></dt>
+			<dt><label for="field_contact_email"><xsl:value-of select="php:function('lang', 'E-mail address')" /></label></dt>
 			<dd>
 				<input id="field_contact_email" name="contact_email" type="text">
 					<xsl:attribute name="value"><xsl:value-of select="application/contact_email"/></xsl:attribute>
+				</input>
+			</dd>
+			<dt><label for="field_contact_email2"><xsl:value-of select="php:function('lang', 'Confirm e-mail address')" /></label></dt>
+			<dd>
+				<input id="field_contact_email2" name="contact_email2" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="application/contact_email2"/></xsl:attribute>
 				</input>
 			</dd>
 			<dt><label for="field_contact_phone"><xsl:value-of select="php:function('lang', 'Phone')" /></label></dt>
