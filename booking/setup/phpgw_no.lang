@@ -459,4 +459,7 @@ Close	booking	no	Lukk
 CLOSED	booking	no	LUKKET
 Show all applications	booking	no	Vis alle søknader
 Show all messages	booking	no	Vis all beskjeder
-Show only messages assigned to me	booking	no	Vis bare mine beskjeder 
+Show only messages assigned to me	booking	no	Vis bare mine beskjeder
+E-mail address	booking	no	E-postadresse
+Confirm e-mail address	booking	no	Bekreft e-postadressen
+The e-mail addresses you entered do not match	booking	no	E-postadressene er ikke like
