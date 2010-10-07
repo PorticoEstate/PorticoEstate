@@ -360,6 +360,10 @@ class rental_uiparty extends rental_uicommon
 				}
 			}
 		}
+
+		$config = CreateObject('phpgwapi.config','rental');
+		$config->read();
+
 		return $this->render('party.php', array
 			(
 				'party' 	=> $party,
@@ -367,6 +371,7 @@ class rental_uiparty extends rental_uicommon
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error'),
 				'cancel_link' => self::link(array('menuaction' => 'rental.uiparty.index', 'populate_form' => 'yes')),
+				'use_fellesdata' => $config->config_data['use_fellesdata']
 			)	
 		);
 	}
