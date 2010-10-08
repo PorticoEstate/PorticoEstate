@@ -149,26 +149,17 @@
 											'order'	=> $this->order,
 											'extra'	=> $link_data
 										)),
-				'lang_content'		=> lang('content'),
-				'lang_time_created'	=> lang('time created'),
-				'lang_view'			=> lang('view'),
-				'lang_edit'			=> lang('edit'),
-				'lang_delete'		=> lang('delete'),
-				'lang_note_id'		=> lang('note id'),
 				'sort_note_id'		=> $this->nextmatchs->show_sort_order(array
 										(
 											'sort'	=> $this->sort,
 											'var'	=> 'note_id',
 											'order'	=> $this->order,
 											'extra'	=> $link_data
-										)),
-				'lang_owner'		=> lang('owner')
+										))
 			);
 
 			$table_add = array
 			(
-				'lang_add'				=> lang('add'),
-				'lang_add_statustext'	=> lang('add a note'),
 				'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'notes.uinotes.edit'))
 			);
 
