@@ -40,30 +40,30 @@
 		<xsl:apply-templates select="table_add" />
 	</xsl:template>
 
-	<xsl:template match="table_header">
+	<xsl:template match="table_header" xmlns:php="http://php.net/xsl">
 		<xsl:variable name="sort_time_created" select="sort_time_created" />
 		<xsl:variable name="sort_note_id" select="sort_note_id" />
 			<tr class="th">
 				<td width="10%" align="right">
-					<a href="{$sort_note_id}" class="th_text"><xsl:value-of select="lang_note_id" /></a>
+					<a href="{$sort_note_id}" class="th_text"><xsl:value-of select="php:function('lang', 'note id')" /></a>
 				</td>
 				<td width="40%">
-					<xsl:value-of select="lang_content" />
+					<xsl:value-of select="php:function('lang', 'content')" />
 				</td>
 				<td width="20%" align="center">
-					<a href="{$sort_time_created}" class="th_text"><xsl:value-of select="lang_time_created" /></a>
+					<a href="{$sort_time_created}" class="th_text"><xsl:value-of select="php:function('lang', 'time created')" /></a>
 				</td>
 				<td width="10%" align="center">
-					<xsl:value-of select="lang_owner" />
+					<xsl:value-of select="php:function('lang', 'owner')" />
 				</td>
 				<td width="5%" align="center">
-					<xsl:value-of select="lang_view" />
+					<xsl:value-of select="php:function('lang', 'view')" />
 				</td>
 				<td width="5%" align="center">
-					<xsl:value-of select="lang_edit" />
+					<xsl:value-of select="php:function('lang', 'edit')" />
 				</td>
 				<td width="5%" align="center">
-					<xsl:value-of select="lang_delete" />
+					<xsl:value-of select="php:function('lang', 'delete')" />
 				</td>
 			</tr>
 	</xsl:template>
@@ -108,9 +108,10 @@
 			</tr>
 	</xsl:template>
 
-	<xsl:template match="table_add">
+	<xsl:template match="table_add" xmlns:php="http://php.net/xsl">
 		<div>
-			<a href="{add_action}"><xsl:value-of select="lang_add" /></a>
+			<xsl:variable name="lang_add_statustext"><xsl:value-of select="php:function('lang', 'add a note')" /></xsl:variable>
+			<a href="{add_action}" title="{$lang_add_statustext}"><xsl:value-of select="php:function('lang', 'add')" /></a>
 		</div>
 	</xsl:template>
 
