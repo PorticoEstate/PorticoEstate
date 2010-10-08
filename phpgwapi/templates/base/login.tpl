@@ -4,14 +4,13 @@
 <!-- BEGIN login_form -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="author" content="phpGroupWare http://www.phpgroupware.org">
+	<meta name="author" content="phpGroupWare http://www.phpgroupware.no">
 	<meta name="description" content="{website_title} login screen, working environment powered by phpGroupWare">
 	<meta name="keywords" content="{website_title} login screen, phpgroupware, groupware, groupware suite">
 	<meta name="robots" content="noindex,nofollow">
 	
 	<title>{website_title} - {lang_login}</title>
 
-	<script language="javascript" type="text/javascript" src="phpgwapi/js/core/mootools.js"></script>
 	<link rel="stylesheet" href="phpgwapi/templates/base/css/system.css" type="text/css">
 	<link rel="stylesheet" href="{login_css}" type="text/css">
 
@@ -53,11 +52,20 @@
                         <div class="t"></div>
                     </div>
                 </div>
-		<div id="loginmsg">{lang_message}</div> 
-			<p class="msg">{cd}</p>
 
                 <div class="m">
                     <h1>{system} {lang_login}</h1>
+
+					<!-- BEGIN message_block -->
+					<dl id="system-message">
+						<dt class="{message_class}">{lang_message}</dt>
+						<dd class="{message_class_item}">
+							<ul>
+								<li>{cd}</li>
+							</ul>
+						</dd>
+					</dl>
+					<!-- END message_block -->
 
                     <div id="section-box">
                         <div class="t">
@@ -68,17 +76,12 @@
 
 		                   <div class="m">
 
-							<form name="login" method="post" action="{login_url}" {autocomplete} style="clear: both;">
+							<form name="login" method="post" action="{login_url}" {autocomplete} id="form-login" style="clear: both;">
 							<input type="hidden" name="passwd_type" value="text">
 							<!-- BEGIN loging_block -->
-						<!--
-							<p id="form-login-username"><label for="modlgn_username">Username</label>
-							<input name="username" id="modlgn_username" type="text" class="inputbox" size="15" /></p>
-						-->
-
 							<p id="form-login-username">
-							<label for="username">{lang_username}</label>
-							<input type="text" value="{last_loginid}" name="login" id="login"{login_read_only} class="inputbox" size="15" >
+							<label for="modlgn_username">{lang_username}</label>
+							<input type="text" value="{last_loginid}" name="login" id="modlgn_username" {login_read_only} class="inputbox" size="15" >
 							<input type="hidden" name="skip_remote" value="{skip_remote}">
 							</p>
 							<!-- END loging_block -->
@@ -127,16 +130,16 @@
                                 </div>
 
                                 <div class="clr"></div>
-                                <input type="submit" style="border: 0; padding: 0; margin: 0; width: 0px; height: 0px;" value="{lang_login}"  name="submitit"/>
+       							<input type="hidden" name="submitit" value="1">
+                                <input type="submit" style="border: 0; padding: 0; margin: 0; width: 0px; height: 0px;" value="{lang_login}"  name="submitit_"/>
 
-							<!-- <p class="button_group"><input type="submit" value="{lang_login}" name="submitit"></p> -->
 							<p class="link_group"><a href="{return_sso_login_url}">{lang_return_sso_login}</a></p>
 
 							<!-- END button_block -->
 							
 						</form>
 
-                            <div class="clr"></div>
+                        <div class="clr"></div>
                         </div>
 
                         <div class="b">
