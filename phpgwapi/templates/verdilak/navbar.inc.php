@@ -45,6 +45,10 @@
 HTML;
 		}
 
+		$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+		$menu_array = execMethod('phpgwapi.menu.get_local_menu', $app);
+		$var['app_menu'] = phpgwapi_menu::render_horisontal_menu($menu_array);
+
 		$var['applications'] = $applications;
 		$var['logo'] = 'logo.png';
 

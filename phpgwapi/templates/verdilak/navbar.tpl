@@ -26,6 +26,7 @@
 			<table border="0" cellpadding="5" width="100%">
 				<tr>
 					<td id="phpgw_body">
+					{app_menu}
 <!-- END navbar -->
 
 <!-- BEGIN preferences --><a href="{preferences_url}"><img src="{preferences_img}" border="0" alt="{preferences_text}"></a><!-- END preferences -->
