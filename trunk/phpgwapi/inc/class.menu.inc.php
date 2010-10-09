@@ -238,4 +238,150 @@ HTML;
 HTML;
 			return $out;
 		}
+
+
+		/**
+		 * Render a horisontal menu for an application
+		 *
+		 * @param array  $menu the menu item
+		 */
+		public static function render_horisontal_menu($menu)
+		{
+			$html = <<<HTML
+			<table id="menu">
+				<tr>
+					<td>
+						<table>
+							<tr>
+HTML;
+			foreach ($menu as &$item)
+			{
+				$current_class = '';
+				if ( $item['this'] )
+				{
+					$current_class = 'current';
+					$item['text'] = "[<b>{$item['text']}</b>]";
+				}
+				$link_class =" class=\"{$current_class}\"";
+				$html .= <<<HTML
+					<td>
+						<a href="{$item['url']}"{$link_class} id="{$id}">
+							<span>{$item['text']}</span>
+						</a>
+					</td>
+HTML;
+
+				if ( $item['children'] )
+				{
+					$children  = $item['children'];
+				}
+			}
+			$html .= <<<HTML
+							</tr>
+						</table>
+HTML;
+
+			$html .= isset($children) ? self::_render_horisontal_submenu($children) : '';
+
+			$html .= <<<HTML
+				</tr>
+			</table>
+HTML;
+			return $html;
+		}
+
+		/**
+		 * Get sub items from a menu 
+		 *
+		 * @param array  $menu the menu items to add to structure
+		 */
+		protected static function _render_horisontal_submenu($menu)
+		{
+			$html = <<<HTML
+				<tr>
+					<td>
+						<table>
+							<tr>				
+HTML;
+
+			foreach ($menu as &$item)
+			{
+				$current_class = '';
+				if ( $item['this'] )
+				{
+					$current_class = 'current';
+					$item['text'] = "[<b>{$item['text']}</b>]";
+				}
+				$link_class =" class=\"{$current_class}\"";
+				$html .= <<<HTML
+					<td>
+						<a href="{$item['url']}"{$link_class} id="{$id}">
+							<span>{$item['text']}</span>
+						</a>
+					</td>
+HTML;
+
+				if ( $item['children'] )
+				{
+					$children  = $item['children'];
+				}
+			}
+			$html .= <<<HTML
+							</tr>
+						</table>
+HTML;
+
+			$html .= isset($children) ? self::_render_horisontal_submenu($children) : '';
+			$html .= <<<HTML
+				</td>
+			</tr>
+HTML;
+			return $html;
+		}
+
+
+		public function get_local_menu($app = '')
+		{
+			$app = $app ? $app : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
+			{
+				$menu_gross = execMethod("{$app}.menu.get_menu");
+				$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level=0;
+				$menu = self::_get_sub_menu($menu_gross['navigation'],$selection,$level);
+				$GLOBALS['phpgw']->session->appsession(isset($GLOBALS['phpgw_info']['flags']['menu_selection']) && $GLOBALS['phpgw_info']['flags']['menu_selection'] ? $GLOBALS['phpgw_info']['flags']['menu_selection'] : 'menu_missing_selection', "menu_{$app}", $menu);
+				unset($menu_gross);
+			}
+			return $menu;
+		}
+
+		protected static function _get_sub_menu($children = array(), $selection=array(),$level=0)
+		{
+			$level++;
+			$i=0;
+			$menu = array();
+			foreach($children as $key => $vals)
+			{
+				$menu[] = $vals;
+				$menu[$i]['this'] = false;
+				if($key == $selection[$level])
+				{
+					$menu[$i]['this'] = true;
+					if(isset($menu[$i]['children']))
+					{
+						$menu[$i]['children'] = self::_get_sub_menu($menu[$i]['children'],$selection,$level);
+					}
+				}
+				else
+				{
+					if(isset($menu[$i]['children']))
+					{
+						unset($menu[$i]['children']);
+					}
+				}
+				$i++;
+			}
+
+			return $menu;
+		}
 	}
