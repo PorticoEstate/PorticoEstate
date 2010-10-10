@@ -845,18 +845,18 @@
 			switch ( $this->Type )
 			{
 				case 'mysql': // Not testet
-				$this->query("SHOW FULL TABLES",__LINE__, __FILE__);
+					$this->query("SHOW FULL TABLES",__LINE__, __FILE__);
 					foreach($this->resultSet as $entry)
 					{
 						if($include_views)
 						{
-							$return[] =  $entry[0];
+							$return[] =  $entry["Tables_in_{$this->Database}"];
 						}
 						else
 						{
-							if ($entry[1] =='BASE TABLE')
+							if ($entry['Table_type'] =='BASE TABLE')
 							{
-								$return[] =  $entry[0];							
+								$return[] =  $entry["Tables_in_{$this->Database}"];
 							}
 						}
 					} 

@@ -181,10 +181,10 @@
 					$field[$key] = strtoupper($val);
 				}
 
-				$field[0] = ereg_replace("A\.",'',$field[0]);
-				$field[0] = ereg_replace("B\.",'',$field[0]);
-				$field[0] = ereg_replace("C\.",'',$field[0]);
-				$field[0] = ereg_replace("D\.",'',$field[0]);
+				$field[0] = str_replace("A\.",'',$field[0]);
+				$field[0] = str_replace("B\.",'',$field[0]);
+				$field[0] = str_replace("C\.",'',$field[0]);
+				$field[0] = str_replace("D\.",'',$field[0]);
 				$values = split(';',$value);
 				switch ($field[0])
 				{
@@ -247,15 +247,15 @@
 					$entry['comm_media']['website'] = $values[0];
 					break;
 				case 'NOTE':
-					//$entry['note'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					//$entry['note'] = str_replace('=0D=0A',"\n",$values[0]);
 					$entry['notes']['type'] = 'vcard';
-					$entry['notes']['note'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					$entry['notes']['note'] = str_replace('=0D=0A',"\n",$values[0]);
 					break;
 				case 'KEY':
-					$entry['key'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					$entry['key'] = str_replace('=0D=0A',"\n",$values[0]);
 					break;
 				case 'LABEL':
-					$entry['label'] = ereg_replace('=0D=0A',"\n",$values[0]);
+					$entry['label'] = str_replace('=0D=0A',"\n",$values[0]);
 					break;
 				case 'BDAY': #1969-12-31
 					// use ISO 8601
@@ -276,7 +276,7 @@
 					$entry['department'] = $values[1];
 					break;
 				case 'ADR':
-					$field[1] = ereg_replace("TYPE=",'',$field[1]);
+					$field[1] = str_replace("TYPE=",'',$field[1]);
 					switch ($field[1])
 					{
 					case 'INTL':
@@ -689,7 +689,7 @@
 				$entries .= 'ORG;ENCODING=QUOTED-PRINTABLE:' . $org . "\r\n";
 			}
 
-			$workattr = ereg_replace('ADR;','',$workattr);
+			$workattr = str_replace('ADR;','',$workattr);
 			// remember the correct order of address fields!
 			$workaddr['POSTOFFICEBOX'] = $this->vCard_encode($workaddr['POSTOFFICEBOX'], 'QUOTED-PRINTABLE', false);
 			$workaddr['EXT']           = $this->vCard_encode($workaddr['EXT'], 'QUOTED-PRINTABLE', false);
@@ -702,7 +702,7 @@
 			$work = 'A.ADR;' . $workattr . ';ENCODING=QUOTED-PRINTABLE:' . $workaddr . "\r\n";
 			$wlabel = 'LABEL;TYPE=WORK;;ENCODING=QUOTED-PRINTABLE:' . $wlabel . "\r\n";
 
-			$homeattr = ereg_replace('ADR;','',$homeattr);
+			$homeattr = str_replace('ADR;','',$homeattr);
 			// remember the correct order of address fields!
 			$homeaddr['POSTOFFICEBOX'] = $this->vCard_encode($homeaddr['POSTOFFICEBOX'], 'QUOTED-PRINTABLE', false);
 			$homeaddr['EXT']           = $this->vCard_encode($homeaddr['EXT'], 'QUOTED-PRINTABLE', false);
@@ -715,7 +715,7 @@
 			$home = 'B.ADR;' . $homeattr . ';ENCODING=QUOTED-PRINTABLE:' . $homeaddr . "\r\n";
 			$hlabel = 'LABEL;TYPE=HOME;;ENCODING=QUOTED-PRINTABLE:' . $hlabel . "\r\n";
 
-			$entries = ereg_replace('PUBKEY','KEY',$entries);
+			$entries = str_replace('PUBKEY','KEY',$entries);
 			$entries .= $work . $home . $wlabel . $hlabel . 'END:VCARD' . "\r\n";
 			$entries .= "\r\n";
 
@@ -822,7 +822,7 @@
 					if ( strstr(strtolower($name), $this->import[$fname]) )
 					{
 						$value = trim($value);
-						//$value = ereg_replace('=0D=0A','\n',$value); // use quoted_printable_decode above
+						//$value = str_replace('=0D=0A','\n',$value); // use quoted_printable_decode above
 						$parsed_line += array($name => $value);
 					}
 				}

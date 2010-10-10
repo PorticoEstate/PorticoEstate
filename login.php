@@ -110,7 +110,7 @@
 		}
 		if ( !isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'] )
 		{
-			$uilogin->check_langs();
+//			$uilogin->check_langs();
 		}
 		$extra_vars['cd'] = 'yes';
 		
@@ -209,7 +209,7 @@
 		}
 		if ( !isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'] )
 		{
-			$uilogin->check_langs();
+//			$uilogin->check_langs();
 		}
 		$extra_vars['cd'] = 'yes';
 		

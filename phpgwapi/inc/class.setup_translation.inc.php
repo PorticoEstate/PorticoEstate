@@ -64,7 +64,7 @@
 		 * @param $key  phrase to translate
 		 * @param $vars vars sent to lang function, passed to us
 		 */
-		public function translate($key, $vars = array(), $only_common = false ) 
+		public function translate($key, $vars = array(), $only_common = false , $force_app = '') 
 		{
 			if ( !is_array($vars) )
 			{
