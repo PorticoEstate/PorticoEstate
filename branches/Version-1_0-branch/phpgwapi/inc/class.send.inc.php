@@ -382,8 +382,8 @@
 		{
 			// convert HTML chars for  '  and  "  in the email sig to normal text
 			$sig_clean = $sig;
-			$sig_clean = ereg_replace('&quot;', '"', $sig_clean);
-			$sig_clean = ereg_replace('&#039;', '\'', $sig_clean);
+			$sig_clean = str_replace('&quot;', '"', $sig_clean);
+			$sig_clean = str_replace('&#039;', '\'', $sig_clean);
 			return $sig_clean;
 		}
 

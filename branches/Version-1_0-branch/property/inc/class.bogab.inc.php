@@ -141,6 +141,25 @@
 											'cat_id' => $this->cat_id,'location_code' => $location_code,
 											'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
 											'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));
+/*
+			foreach ($gab as &$_gab)
+			{
+				$location_data	= $this->solocation->read_single($_gab['location_code']);
+
+				if(isset($location_data['street_name']) && $location_data['street_name'])
+				{
+					$_gab['address'] = "{$location_data['street_name']} {$location_data['street_number']}";
+				}
+				elseif($location_data['loc2_name'])
+				{
+					$_gab['address'] = $location_data['loc2_name'];
+				}
+				elseif($location_data['loc1_name'])
+				{
+					$_gab['address'] = $location_data['loc1_name'];
+				}
+			}
+*/
 			$this->total_records = $this->so->total_records;
 			$this->payment_date = $this->so->payment_date;
 			return $gab;

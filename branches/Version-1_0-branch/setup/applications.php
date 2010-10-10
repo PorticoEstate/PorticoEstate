@@ -113,6 +113,17 @@
 	}
 
 	$GLOBALS['phpgw_setup']->loaddb();
+
+
+	$GLOBALS['phpgw']->db = &$GLOBALS['phpgw_setup']->db;
+
+	$c = createObject('phpgwapi.config','phpgwapi');
+	$c->read();
+	foreach ($c->config_data as $k => $v)
+	{
+		$GLOBALS['phpgw_info']['server'][$k] = $v;
+	}
+
 	$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();
 
 	$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();
@@ -142,6 +153,7 @@
 			$GLOBALS['phpgw_setup']->process->init_process();
 		}
 
+//$GLOBALS['phpgw_setup']->process->add_credential('property');
 		if(!empty($remove) && is_array($remove))
 		{
 			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -219,6 +231,8 @@
 				}
 				$terror = $GLOBALS['phpgw_setup']->process->add_langs($terror,$DEBUG,$force_en);
 				echo '<li>' . lang('%1 translations added', lang($appname)) . ".</li>\n</ul>\n";
+				// Add credentials to admins
+				$GLOBALS['phpgw_setup']->process->add_credential($appname);
 			}
 			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		}

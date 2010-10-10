@@ -222,6 +222,8 @@
 		
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 			$this->tmpl->set_var('charset', lang('charset'));
+
+			$this->tmpl->set_block('login_form', 'message_block', 'message_blocks');
 			$this->tmpl->set_block('login_form', 'domain_option', 'domain_options');
 			$this->tmpl->set_block('login_form', 'domain_select', 'domain_selects');
 			$this->tmpl->set_block('login_form', 'login_additional_info', 'login_additional_infos');
@@ -465,6 +467,22 @@
 			}
 			$this->tmpl->set_var('autocomplete', $autocomplete);
 			unset($autocomplete);
+	
+			if($cd)
+			{
+				if($cd == 1)
+				{
+					$this->tmpl->set_var('message_class', 'message');
+					$this->tmpl->set_var('message_class_item', 'message message fade');
+				}
+				else
+				{
+					$this->tmpl->set_var('message_class', 'error');
+					$this->tmpl->set_var('message_class_item', 'error message fade');
+				}
+				$this->tmpl->parse('message_blocks', 'message_block');
+			}
+					
 			if(!$this->msg_only)
 			{
 				$this->tmpl->parse('loging_blocks', 'loging_block');

@@ -294,7 +294,7 @@
 			echo 'definition</a> , therefore it has been removed. <br><br>';
 			echo 'If you are a application maintainer, please update your app. ';
 			echo 'If you are a user, please file a bug report on ';
-			echo '<a href="https://savannah.gnu.org/bugs/?group=phpgroupware">';
+			echo '<a href="https://savannah.nongnu.org/bugs/?group=fmsystem">';
 			echo 'our project page at savannah.gnu.org</a>. Please copy and paste ';
 			echo 'the following information into the bug report:<br>';
 			echo '<b>Summary<b>: ' . $GLOBALS['phpgw_info']['flags']['currentapp'];

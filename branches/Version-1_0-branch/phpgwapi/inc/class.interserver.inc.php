@@ -131,8 +131,8 @@
 		{
 			preg_match('/^(.*?\/\/.*?)(\/.*)/',$url,$matches);
 			$hostpart = $matches[1];
-			$hostpart = ereg_replace('https://','',$hostpart);
-			$hostpart = ereg_replace('http://','',$hostpart);
+			$hostpart = str_replace('https://','',$hostpart);
+			$hostpart = str_replace('http://','',$hostpart);
 			switch($this->mode)
 			{
 				case 'soap':

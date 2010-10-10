@@ -454,7 +454,7 @@ HTML;
 	{
 		if(!$GLOBALS['phpgw']->db->query('select count(config_name) from phpgw_config',__LINE__,__FILE__))
 		{
-			$setup_dir = ereg_replace($_SERVER['PHP_SELF'],'index.php','setup/');
+			$setup_dir = str_replace($_SERVER['PHP_SELF'],'index.php','setup/');
 			echo '<center><b>Fatal Error:</b> It appears that you have not created the database tables for '
 			.'phpGroupWare.  Click <a href="' . $setup_dir . '">here</a> to run setup.</center>';
 			exit;
@@ -462,7 +462,7 @@ HTML;
 	}
 	else
 	{
-		$setup_dir = ereg_replace($_SERVER['PHP_SELF'],'index.php','setup/');
+		$setup_dir = str_replace($_SERVER['PHP_SELF'],'index.php','setup/');
 		echo '<center><b>Fatal Error:</b> Unable to connect to database server '
 		.'Click <a href="' . $setup_dir . '">here</a> to run setup.</center>';
 		exit;

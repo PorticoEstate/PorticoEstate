@@ -538,7 +538,7 @@
 			// Clean up locations, custom fields and ACL
 			$this->db->query("SELECT app_id FROM phpgw_applications WHERE app_name = '{$appname}'");
 			$this->db->next_record();
-			$app_id = $this->db->f('app_id');
+			$app_id = (int)$this->db->f('app_id');
 
 			$this->db->query("SELECT location_id FROM phpgw_locations WHERE app_id = {$app_id}");
 
@@ -651,8 +651,8 @@
 				echo'<br>Input values: '
 					. 'A="'.$a.'", B="'.$b.'"';
 			}
-			$newa = ereg_replace('pre','.',$a);
-			$newb = ereg_replace('pre','.',$b);
+			$newa = str_replace('pre','.',$a);
+			$newb = str_replace('pre','.',$b);
 			$testa = explode('.',$newa);
 			if(@$testa[1] == '')
 			{
@@ -740,8 +740,8 @@
 				echo'<br>Input values: '
 					. 'A="'.$a.'", B="'.$b.'"';
 			}
-			$newa = ereg_replace('pre','.',$a);
-			$newb = ereg_replace('pre','.',$b);
+			$newa = str_replace('pre','.',$a);
+			$newb = str_replace('pre','.',$b);
 			$testa = explode('.',$newa);
 			if( !isset($testa[3]) || $testa[3] == '')
 			{

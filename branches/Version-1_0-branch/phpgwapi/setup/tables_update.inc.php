@@ -1335,13 +1335,15 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','acl_grantor',array(
 			'type' => 'int',
 			'precision' => '4',
-			'nullable' => True
+			'nullable' => True,
+			'default' 	=> -1,
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','acl_type',array(
 			'type' => 'int',
 			'precision' => '2',
-			'nullable' => True
+			'nullable' => True,
+			'default' 	=> '0',
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -2743,7 +2745,7 @@
 				'pk' => array('delegate_id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('account_id','owner_id','location_id','data')
+				'uc' => array()//array('account_id','owner_id','location_id','data') //FIXME - MySQL needs a length on the data-field
 			)
 		);
 
@@ -2830,7 +2832,7 @@
 				'pk' => array('section_id','attrib_id','id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('section_id','attrib_id','value')
+				'uc' => array()
 			)
 		);
 
