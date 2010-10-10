@@ -142,6 +142,7 @@
 			$GLOBALS['phpgw_setup']->process->init_process();
 		}
 
+//$GLOBALS['phpgw_setup']->process->add_credential('property');
 		if(!empty($remove) && is_array($remove))
 		{
 			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -219,6 +220,8 @@
 				}
 				$terror = $GLOBALS['phpgw_setup']->process->add_langs($terror,$DEBUG,$force_en);
 				echo '<li>' . lang('%1 translations added', lang($appname)) . ".</li>\n</ul>\n";
+				// Add credentials to admins
+				$GLOBALS['phpgw_setup']->process->add_credential($appname);
 			}
 			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 		}
