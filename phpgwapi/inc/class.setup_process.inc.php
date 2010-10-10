@@ -453,7 +453,6 @@
 		{
 			$GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
 			$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
-			$GLOBALS['phpgw']->acl->enable_inheritance = true;
 
 			$admins = array();
 			$accounts	= $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'admin');
@@ -471,10 +470,17 @@
 			{
 				if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, $appname))
 				{
+					$locations = $GLOBALS['phpgw']->locations->get_locations(false, $appname);
+
 					$aclobj =& $GLOBALS['phpgw']->acl;
 					$aclobj->set_account_id($admin, true);
 					// application permissions
 					$aclobj->add($appname, 'run', phpgwapi_acl::READ);
+					foreach ($locations as $location => $info)
+					{
+						$aclobj->add($appname, $location, 31);
+					}
+
 					$aclobj->save_repository();
 					$members = array_merge($members, $GLOBALS['phpgw']->accounts->get_members($admin));
 				}
