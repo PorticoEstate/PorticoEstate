@@ -345,7 +345,7 @@ HTML;
 			$app = $app ? $app : $GLOBALS['phpgw_info']['flags']['currentapp'];
 			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
 			{
-				$menu_gross = execMethod("{$app}.menu.get_menu");
+				$menu_gross = execMethod("{$app}.menu.get_menu",'horisontal');
 				$selection = explode('::',$GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$level=0;
 				$menu = self::_get_sub_menu($menu_gross['navigation'],$selection,$level);
