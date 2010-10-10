@@ -62,13 +62,13 @@
 			$dl     = $this->raw_array_of_data[count($this->raw_array_of_data) - 3];
 			$values = explode(',',$dl);
 
-			$packet_tx   = ereg_replace(' packets transmitted','',$values[0]);
-			$packet_rx   = ereg_replace(' packets received','',$values[1]);
-			$packet_loss = ereg_replace('% packet loss','',$values[2]);
+			$packet_tx   = str_replace(' packets transmitted','',$values[0]);
+			$packet_rx   = str_replace(' packets received','',$values[1]);
+			$packet_loss = str_replace('% packet loss','',$values[2]);
 
-			$this->packet_tx   = (int)ereg_replace(' ','',$packet_tx);
-			$this->packet_rx   = (int)ereg_replace(' ','',$packet_rx);
-			$this->packet_loss = (int)ereg_replace(' ','',$packet_loss);
+			$this->packet_tx   = (int)str_replace(' ','',$packet_tx);
+			$this->packet_rx   = (int)str_replace(' ','',$packet_rx);
+			$this->packet_loss = (int)str_replace(' ','',$packet_loss);
 		}
 
 		function parse_times()
@@ -76,7 +76,7 @@
 			$tl          = $this->raw_array_of_data[count($this->raw_array_of_data) - 2];
 			$times_split = explode(' = ',$tl);
 			$raw_times   = $times_split[1];
-			$raw_times   = ereg_replace(' ms','',$raw_times);
+			$raw_times   = str_replace(' ms','',$raw_times);
 			$values      = explode('/',$raw_times);
 		
 			$this->response_min  = $values[0];

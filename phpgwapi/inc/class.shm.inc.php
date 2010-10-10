@@ -76,7 +76,7 @@
 		}
 		else
 		{
-			$GLOBALS['phpgw_info']['server']['temp_dir'] = '/tmp/';
+			$GLOBALS['phpgw_info']['server']['temp_dir'] = '/tmp';
 		}
 	}
 

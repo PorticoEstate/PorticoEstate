@@ -716,10 +716,9 @@
 	$test[] = '0.9.13.004';
 	function todo_upgrade0_9_13_004()
 	{
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_todo','todo_assigned',array('type' => 'varchar','precision' => 255,'nullable' => False));
-
 		$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.001';
 		return $GLOBALS['setup_info']['todo']['currentver'];
+
 	}
 
 	$test[] = '0.9.14';
@@ -732,25 +731,34 @@
 	$test[] = '0.9.14.500';
 	function todo_upgrade0_9_14_500()
 	{
-		$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.003';
+		$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.001';
 		return $GLOBALS['setup_info']['todo']['currentver'];
 	}
 
 	$test[] = '0.9.15.001';
 	function todo_upgrade0_9_15_001()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_todo','todo_assigned',array('type' => 'varchar','precision' => 255,'nullable' => False));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_todo','assigned_group',array('type' => 'varchar','precision' => 255,'nullable' => False));
 
-		$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.002';
-		return $GLOBALS['setup_info']['todo']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.002';
+			return $GLOBALS['setup_info']['todo']['currentver'];
+		}
 	}
 
 	$test[] = '0.9.15.002';
 	function todo_upgrade0_9_15_002()
 	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_todo','entry_date',array('type' => 'int','precision' => 4,'default' => 0,'nullable' => False));
 
-		$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.003';
-		return $GLOBALS['setup_info']['todo']['currentver'];
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['todo']['currentver'] = '0.9.15.003';
+			return $GLOBALS['setup_info']['todo']['currentver'];
+		}
 	}
-?>

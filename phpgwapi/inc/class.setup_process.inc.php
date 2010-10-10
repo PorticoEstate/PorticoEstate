@@ -445,6 +445,57 @@
 		}
 
 		/**
+		 * process application add credential to admins at install
+		 *
+		 * @param $setup_info	array of application info from setup.inc.php files, etc.
+		 */
+		function add_credential($appname)
+		{
+			$GLOBALS['phpgw']->accounts	= createObject('phpgwapi.accounts');
+			$GLOBALS['phpgw']->acl		= CreateObject('phpgwapi.acl');
+
+			$admins = array();
+			$accounts	= $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'admin');
+			foreach($accounts as $account_id)
+			{
+				$account = $GLOBALS['phpgw']->accounts->get($account_id);
+				if($account->type == phpgwapi_account::TYPE_GROUP)
+				{
+					$admins[] = $account_id;
+				}
+			}
+
+			$members = array();
+			foreach ($admins as $admin)
+			{
+				if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, $appname))
+				{
+					$locations = $GLOBALS['phpgw']->locations->get_locations(false, $appname);
+
+					$aclobj =& $GLOBALS['phpgw']->acl;
+					$aclobj->set_account_id($admin, true);
+					// application permissions
+					$aclobj->add($appname, 'run', phpgwapi_acl::READ);
+					foreach ($locations as $location => $info)
+					{
+						$aclobj->add($appname, $location, 31);
+					}
+
+					$aclobj->save_repository();
+					$members = array_merge($members, $GLOBALS['phpgw']->accounts->get_members($admin));
+				}
+			}
+
+			$members = array_unique($members);
+			//Clear the user's menu so it can be regenerated cleanly
+			//FIXME - the cache is not cleared
+			foreach ($members as $account_id)
+			{
+				phpgwapi_cache::user_clear('phpgwapi', 'menu', $account_id);
+			}
+		}
+
+		/**
 		 * process test_data.inc.php in each application/setup dir for developer tests
 		*
 		 * This data should work with the baseline tables
@@ -624,7 +675,7 @@
 								$currentver = isset($setup_info[$key]['currentver']) ? $setup_info[$key]['currentver'] : '';
 
 								/* build upgrade function name */
-								$function = $appname . '_upgrade' . ereg_replace("\.", '_', $value);
+								$function = $appname . '_upgrade' . str_replace('.', '_', $value);
 
 								if($DEBUG)
 								{

@@ -705,3 +705,6 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VA
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XLS')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XHTML')");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('DOCX')");
+
+$solocation = createObject('property.solocation');
+$solocation->update_location();

@@ -37,6 +37,7 @@
 
 		var $bocommon;
 		var $total_records;
+		protected $global_lock = false;
 
 		function __construct($bocommon = '')
 		{
@@ -1340,7 +1341,14 @@
 
 		function update_location()
 		{
-			$this->db->transaction_begin();
+			if ( $this->db->Transaction )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$this->db->query('SELECT max(id) as levels FROM fm_location_type');
 			$this->db->next_record();
@@ -1428,16 +1436,18 @@
 				}
 			}
 
-			if( $this->db->transaction_commit() )
+			if ( !$this->global_lock )
 			{
-				return $receipt;
-			}
-			else
-			{
-				return $receipt['error'][]=array('msg'=>lang('update failed'));
+				if( $this->db->transaction_commit() )
+				{
+					return $receipt;
+				}
+				else
+				{
+					return $receipt['error'][]=array('msg'=>lang('update failed'));
+				}
 			}
 		}
-
 
 		function read_summary($data='')
 		{
