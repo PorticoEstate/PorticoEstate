@@ -113,6 +113,17 @@
 	}
 
 	$GLOBALS['phpgw_setup']->loaddb();
+
+
+	$GLOBALS['phpgw']->db = &$GLOBALS['phpgw_setup']->db;
+
+	$c = createObject('phpgwapi.config','phpgwapi');
+	$c->read();
+	foreach ($c->config_data as $k => $v)
+	{
+		$GLOBALS['phpgw_info']['server'][$k] = $v;
+	}
+
 	$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();
 
 	$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();

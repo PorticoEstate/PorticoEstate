@@ -358,7 +358,7 @@
 					$default = '';
 					$nullcomma = '';
 				}
-				$default = ereg_replace("''","'",$default);
+				$default = str_replace("''","'",$default);
 
 				$this->sCol[] = "\t\t\t\t'" . $colname . "' => array(" . $type . ',' . $null . $nullcomma . $default . '),' . "\n";
 			}

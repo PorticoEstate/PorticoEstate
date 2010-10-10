@@ -233,12 +233,14 @@
 			'text'	=> "$error_msg\n" . phpgw_parse_backtrace($bt)
 		);
 
+	//	echo "\n<br>" . lang('ERROR : %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n";
 		switch ( $error_level )
 		{
 			case E_USER_ERROR:
 			case E_ERROR:
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
+				echo "\n<br>" . lang('ERROR Fatal: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n";
 				break;
 			case E_WARNING:
 			case E_USER_WARNING:
@@ -275,7 +277,7 @@
 		$f = fopen('./lang/languages','rb');
 		while($line = fgets($f,200))
 		{
-			list($x,$y) = split("\t",$line);
+			list($x,$y) = explode("\t",$line);
 			$languages[$x]['lang']  = trim($x);
 			$languages[$x]['descr'] = trim($y);
 			$languages[$x]['available'] = False;
@@ -293,7 +295,7 @@
 		}
 		$d->close();
 
-		//print_r($languages);
+//		print_r($languages);
 		return $languages;
 	}
 
@@ -339,7 +341,7 @@
 
 	$GLOBALS['phpgw_info']['server']['app_images'] = 'templates/base/images';
 
-	if($_POST['setting']['enable_mcrypt'] == 'True')
+	if(isset($_POST['setting']['enable_mcrypt']) && $_POST['setting']['enable_mcrypt'] == 'True')
 	{
 		$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
 		$_iv  = $_POST['setting']['mcrypt_iv'];
