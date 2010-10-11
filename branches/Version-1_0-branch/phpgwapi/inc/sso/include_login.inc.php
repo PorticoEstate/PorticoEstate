@@ -398,10 +398,12 @@
 				$cd = (int) $_GET['cd'];
 			}
 
+			$system_name = isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate';
 			$this->tmpl->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url'] . '/'.$variables['partial_url'].'?' . http_build_query($extra_vars) );
 			$this->tmpl->set_var('registration_url',$GLOBALS['phpgw_info']['server']['webserver_url'] . '/registration/');
-			$this->tmpl->set_var('system', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'phpGroupWare');
+			$this->tmpl->set_var('system', $system_name);
 			$this->tmpl->set_var('version', isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
+			$this->tmpl->set_var('instruction', lang('use a valid username and password to gain access to %1', $system_name));
 
 			$this->tmpl->set_var('cd', $this->check_logoutcode($cd) );
 			$this->tmpl->set_var('last_loginid', $last_loginid);
