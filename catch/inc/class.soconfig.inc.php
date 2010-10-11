@@ -107,7 +107,7 @@
 					'id'	=> $this->db->f('id'),
 					'name'	=> $this->db->f('name', true),
 					'descr'	=> $this->db->f('descr', true),
-					'schema'	=> $this->db->f('schema')
+					'schema'	=> $this->db->f('schema_')
 				);
 			}
 
@@ -129,7 +129,7 @@
 					'id'		=> $id,
 					'name'		=> $this->db->f('name', true),
 					'descr'		=> $this->db->f('descr', true),
-					'schema'	=> $this->db->f('schema')
+					'schema'	=> $this->db->f('schema_')
 				);
 			}
 			return $values;
@@ -172,7 +172,7 @@
 				);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
-			$this->db->query("INSERT INTO fm_catch_config_type (id,name,descr,schema) "
+			$this->db->query("INSERT INTO fm_catch_config_type (id,name,descr,schema_) "
 				. "VALUES ($insert_values)",__LINE__,__FILE__);
 
 			$receipt['message'][]=array('msg'=>lang('config type has been saved'));
