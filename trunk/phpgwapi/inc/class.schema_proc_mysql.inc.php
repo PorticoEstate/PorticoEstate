@@ -144,7 +144,14 @@
 				case 'current_date':
 				case 'current_timestamp':
 					return 'now()';
-
+					break;
+				case 'true':
+				case 'True':
+					return 1;
+					break;
+				case 'false':
+				case 'False':
+					return 0;
 			}
 			return "'" . $sDefault . "'";
 		}
