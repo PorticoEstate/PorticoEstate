@@ -403,14 +403,17 @@ HTML;
 		}
 		list(,$GLOBALS['phpgw_info']['user']['domain']) = explode('@',$GLOBALS['login']);
 	}
-	else	// on "normal" pageview
+	else if (phpgw::get_var('domain', 'string', 'REQUEST', false))
 	{
-//		$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false);
-
+		// on "normal" pageview
 		if(!$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false))
 		{
 			$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'COOKIE', false);
 		}
+	}
+	else
+	{
+		$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('last_domain', 'string', 'COOKIE', false);
 	}
 
 	if (isset($GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['user']['domain']]))
