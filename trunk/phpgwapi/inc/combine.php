@@ -26,7 +26,7 @@
 
 
 	$cache = true;
-	$cachedir = dirname(__FILE__) . '/../cache';
+	$cachedir = urldecode($_GET['cachedir']);//dirname(__FILE__) . '/../cache';
 	$cssdir = dirname(__FILE__) . '/../../';
 	$jsdir = dirname(__FILE__) . '/../../';
 

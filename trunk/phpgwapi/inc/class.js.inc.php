@@ -140,9 +140,10 @@
 					}
 				}
 			}
+			$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 			$jsfiles = implode(',', $jsfiles);
 			$links .= '<script type="text/javascript" '
-					. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?type=javascript&files={$jsfiles}\">"
+					. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
 					. "</script>\n";
 			unset($jsfiles);
 
