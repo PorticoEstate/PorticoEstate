@@ -198,7 +198,23 @@
 
 		function phpgw_display_login($variables)
 		{
-			
+			// If the lastloginid cookies isn't set, we will default to default_lang - then to english.
+			// Change this if you need.
+
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
+			if (isset($_COOKIE['last_loginid']))
+			{
+				$accounts = CreateObject('phpgwapi.accounts');
+				$prefs = CreateObject('phpgwapi.preferences', $accounts->name2id($_COOKIE['last_loginid']));
+
+				if ($prefs->account_id)
+				{
+					$GLOBALS['phpgw_info']['user']['preferences'] = $prefs->read();
+				}
+				#print 'LANG:' . $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] . '<br>';
+				$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], $reset = true);
+			}
+
 			$lang = array
 			(
 				'domain'	=> lang('domain'),
@@ -221,7 +237,6 @@
 			}
 		
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
-			$this->tmpl->set_var('charset', lang('charset'));
 
 			$this->tmpl->set_block('login_form', 'message_block', 'message_blocks');
 			$this->tmpl->set_block('login_form', 'domain_option', 'domain_options');
@@ -280,27 +295,6 @@
 				
 			}
 
-			if (isset($_COOKIE['last_loginid']))
-			{
-				$accounts = CreateObject('phpgwapi.accounts');
-				$prefs = CreateObject('phpgwapi.preferences', $accounts->name2id($_COOKIE['last_loginid']));
-
-				if (! $prefs->account_id)
-				{
-					$GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] = 'en';
-				}
-				else
-				{
-					$GLOBALS['phpgw_info']['user']['preferences'] = $prefs->read();
-				}
-				#print 'LANG:' . $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] . '<br>';
-			}
-			else
-			{
-				// If the lastloginid cookies isn't set, we will default to english.
-				// Change this if you need.
-				$GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] = 'en';
-			}
 			$GLOBALS['phpgw']->translation->add_app('login');
 			$GLOBALS['phpgw']->translation->add_app('loginscreen');
 			if ( ($login_msg = lang('loginscreen_message') ) != '!loginscreen_message')
@@ -423,7 +417,7 @@
 				$this->tmpl->set_var('lang_login', $variables['lang_login']);
 			}
 
-			$this->tmpl->set_var('lang_testjs', lang('Your browser does not support javascript and/or css, please use a modern standards compliant browser.  If you have disabled either of these features please enable them for this site.') );
+	//		$this->tmpl->set_var('lang_testjs', lang('Your browser does not support javascript and/or css, please use a modern standards compliant browser.  If you have disabled either of these features please enable them for this site.') );
 
 			if(isset($variables['lang_additional_url']) && isset($variables['additional_url']))
 			{

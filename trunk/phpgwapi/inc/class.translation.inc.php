@@ -58,13 +58,13 @@
 		*/
 		public function __construct($reset = false)
 		{
-			$lang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
+			$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang']? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
 			{
-				$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 
-			$this->set_userlang($lang);
+			$this->set_userlang($userlang);
 
 			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations']) 
 				&& $GLOBALS['phpgw_info']['server']['collect_missing_translations'])
@@ -272,7 +272,11 @@
 				$this->lang = array();
 			}
 
-			$userlang = 'en';
+			if ( !$userlang = $this->userlang )
+			{
+				$userlang = 'en';
+			}
+
 			if ( $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] )
 			{
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
