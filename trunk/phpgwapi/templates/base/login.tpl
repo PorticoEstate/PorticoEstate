@@ -124,7 +124,7 @@
 									<div class="button_holder">
 										<div class="button1">
 											<div class="next">
-												<a onclick="login.submit();">Login</a>
+												<a onclick="login.submit();">{lang_login}</a>
 											</div>
 										</div>
 									</div>
@@ -149,7 +149,7 @@
 						</div>
 					</div>
 
-					<p>Use a valid username and password to gain access to {system}.</p>
+					<p>{instruction}</p>
 
 					<div id="lock"></div>
 
