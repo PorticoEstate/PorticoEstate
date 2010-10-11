@@ -118,30 +118,35 @@
 		*/
 		public function get_script_links()
 		{
-			$links = '';
-			if( is_array($this->files) && count($this->files) )
+			$links = "<!--JS Imports from phpGW javascript class -->\n";
+			$jsfiles = array();
+			if (is_array($this->files) && count($this->files))
 			{
-				$links = "<!--JS Imports from phpGW javascript class -->\n";
-				foreach($this->files as $app => $packages)
+				foreach ($this->files as $app => $packages)
 				{
-					if( is_array($packages) && count($packages) )
+					if (is_array($packages) && count($packages))
 					{
-						foreach($packages as $pkg => $files)
+						foreach ($packages as $pkg => $files)
 						{
-							if( is_array($files) && count($files) )
+							if (is_array($files) && count($files))
 							{
-								foreach($files as $file => $ignored)
+								foreach ($files as $file => $ignored)
 								{
-									//echo "file: {$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/js/{$pkg}/{$file}.js <br>";
-									$links .= '<script type="text/javascript" '
-									. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/js/{$pkg}/{$file}.js\">"
-								 	. "</script>\n";
+									// Add file path to array and replace path separator with "--" for URL-friendlyness
+									$jsfiles[] = str_replace('/', '--', "{$app}/js/{$pkg}/{$file}.js");
 								}
 							}
 						}
 					}
 				}
 			}
+			$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+			$jsfiles = implode(',', $jsfiles);
+			$links .= '<script type="text/javascript" '
+					. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
+					. "</script>\n";
+			unset($jsfiles);
+
 			return $links;
 		}
 

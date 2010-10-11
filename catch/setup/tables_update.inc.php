@@ -285,3 +285,22 @@
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.508 to 0.9.17.509
+	* Rename reserved fieldname to allow MySQL
+	* 
+	*/
+
+	$test[] = '0.9.17.508';
+	function catch_upgrade0_9_17_508()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_catch_config_type','schema','schema_');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.509';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
