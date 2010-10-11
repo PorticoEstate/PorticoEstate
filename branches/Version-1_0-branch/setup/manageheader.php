@@ -291,15 +291,6 @@ HTML;
 			$detected .= $request_order;
 
 			$supported_db = array();
-			if (extension_loaded('mysql') || function_exists('mysql_connect'))
-			{
-				$detected .= '<li>' . lang('You appear to have MySQL support enabled') . "</li>\n";
-				$supported_db[] = 'mysql';
-			}
-			else
-			{
-				$detected .= '<li class="warn">' . lang('No MySQL support found. Disabling') . "</li>\n";
-			}
 			if (extension_loaded('pgsql') || function_exists('pg_connect'))
 			{
 				$detected .= '<li>' . lang('You appear to have Postgres-DB support enabled') . "</li>\n";
@@ -308,6 +299,15 @@ HTML;
 			else
 			{
 				$detected .= '<li class="warn">' . lang('No Postgres-DB support found. Disabling') . "</li>\n";
+			}
+			if (extension_loaded('mysql') || function_exists('mysql_connect'))
+			{
+				$detected .= '<li>' . lang('You appear to have MySQL support enabled') . "</li>\n";
+				$supported_db[] = 'mysql';
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No MySQL support found. Disabling') . "</li>\n";
 			}
 			if (extension_loaded('mssql') || function_exists('mssql_connect'))
 			{
@@ -623,7 +623,7 @@ HTML;
 			$setup_tpl->set_var('include_root', $GLOBALS['phpgw_info']['server']['include_root']);
 			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
 //			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
-			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'phpGroupWare');
+			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate');
 			$setup_tpl->set_var('default_lang', isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : phpgw::get_var('ConfigLang', 'string', 'POST'));
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )

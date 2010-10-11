@@ -1156,7 +1156,10 @@
 
 						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) )
 						{
-							if($this->account!=$values['coordinator'] && $config->config_data['mailnotification'])
+							if($this->account!=$values['coordinator']
+							 && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
+//							 && $config->config_data['mailnotification']
+							  )
 							{
 								$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
 								$to = $prefs_coordinator['email'];
