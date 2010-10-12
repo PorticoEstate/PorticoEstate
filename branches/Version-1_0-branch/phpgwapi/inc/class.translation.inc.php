@@ -277,11 +277,12 @@
 				$userlang = 'en';
 			}
 
+/*
 			if ( $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] )
 			{
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
-
+*/
 			$sql = "SELECT message_id,content FROM phpgw_lang WHERE lang = '{$userlang}' AND app_name = '{$app}'";
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ( $GLOBALS['phpgw']->db->next_record() )

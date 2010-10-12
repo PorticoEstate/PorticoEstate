@@ -4,12 +4,12 @@
 <!-- BEGIN login_form -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="author" content="phpGroupWare http://www.phpgroupware.no">
-	<meta name="description" content="{website_title} login screen, working environment powered by phpGroupWare">
-	<meta name="keywords" content="{website_title} login screen, phpgroupware, groupware, groupware suite">
+	<meta name="author" content="{system} http://www.phpgroupware.no">
+	<meta name="description" content="{system} login screen, working environment powered by phpGroupWare">
+	<meta name="keywords" content="{{system} login screen, phpgroupware, groupware, groupware suite">
 	<meta name="robots" content="noindex,nofollow">
 	
-	<title>{website_title} - {lang_login}</title>
+	<title>{system} - {lang_login}</title>
 
 	<link rel="stylesheet" href="phpgwapi/templates/base/css/system.css" type="text/css">
 	<link rel="stylesheet" href="{login_css}" type="text/css">
@@ -45,6 +45,11 @@
 	</div>
 	
 	<div id="content-box">
+		<div class="rawimages">
+			<span><a href="login.php?lang=no"><img src="phpgwapi/templates/base/images/flag_no.gif" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span>
+			<span><a href="login.php?lang=en"><img src="phpgwapi/templates/base/images/flag_en.gif" alt="English (United Kingdom)" title="English (United Kingdom)" ></a></span>
+		</div>
+
 		<div class="padding">
 			<div id="element-box" class="login">
 				<div class="t">
