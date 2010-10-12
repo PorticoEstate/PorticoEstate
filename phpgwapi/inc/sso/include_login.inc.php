@@ -215,6 +215,11 @@
 				$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], $reset = true);
 			}
 
+			if ($selected_lang = phpgw::get_var('lang', 'string', 'GET', ''))
+			{
+				$GLOBALS['phpgw']->translation->set_userlang($selected_lang, $reset = true);
+			}
+
 			$lang = array
 			(
 				'domain'	=> lang('domain'),
