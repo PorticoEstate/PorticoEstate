@@ -15,11 +15,11 @@
 	<link rel="stylesheet" href="{login_css}" type="text/css">
 
 	<!--[if IE 7]>
-	<link href="templates/khepri/css/ie7.css" rel="stylesheet" type="text/css" />
+	<link href="phpgwapi/templates/base/css/ie7.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
 	<!--[if lte IE 6]>
-	<link href="templates/khepri/css/ie6.css" rel="stylesheet" type="text/css" />
+	<link href="phpgwapi/templates/base/css/ie6.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
 	<link rel="stylesheet" type="text/css" href="phpgwapi/templates/base/css/rounded.css">
