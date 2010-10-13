@@ -93,3 +93,96 @@ p {
 	float: left;
 }
 
+#jflanguageselection
+{
+    float: right;
+	margin: 15px 0px 10px 5px;    
+}
+
+/* language lists with UL (names & images) */
+#jflanguageselection ul.jflanguageselection
+{
+	list-style: none;
+	padding: 0;
+	margin-top: 3px;
+	font-weight: normal;
+}
+
+#jflanguageselection ul.jflanguageselection li
+{
+	background-image: none;
+	padding-left: 0px;
+	padding-right: 0px;
+	float: left;
+	margin: 1px 1px 1px 1px;
+	white-space: nowrap;
+	border: none;
+	font-size: 0.9em;
+}
+
+#jflanguageselection ul.jflanguageselection li#active_language
+{
+ 	font-weight: bold;
+	font-size: 1.0em;
+}
+
+#jflanguageselection ul.jflanguageselection li a
+{
+	display: block;
+}
+
+#jflanguageselection ul.jflanguageselection img
+{
+	border: none;
+}
+
+div#jflanguageselection img.langImg {
+	float: left;
+	border: none;
+	margin-top: 3px;
+}
+div#jflanguageselection li img.langImg {
+	float: left;
+	border: none;
+	margin: 0px 1px 0px 1px;
+}
+
+/** Styles for the drop down list */
+
+#jflanguageselection select.jflanguageselection
+{
+	border: 1px solid #cccccc;
+}
+
+#jflanguageselection label.jflanguageselection
+{
+	position:absolute;
+	left:-1000px;
+}
+
+/** Controls Raw Display of Images **/
+
+.rawimages {
+	text-align: right;
+	margin-top: 3px;
+}
+.rawimages img {
+	border: none;
+	margin:2px;
+}
+.rawimages span#active_language img
+{
+	margin:2px;
+	border: none;
+}
+
+div#jflanguageselection img.langImg{ float: left; border: none; margin-top: 3px; }
+div#jflanguageselection li img.langImg{ float: left; border: none; margin: 1px 3px 0px 0px; }
+
+#jflanguageselection .opaque{
+	filter:alpha(opacity=30);
+}
+#jflanguageselection option.opaque{
+	color:graytext;
+}
+
