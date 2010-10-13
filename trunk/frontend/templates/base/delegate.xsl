@@ -7,7 +7,7 @@
 			<xsl:when test="//selected_org_unit = 'all' or $unit_leader = '1'">
 				<div class="add_delegate" style="width=30%; height=100%; float: left; padding-left: 2em; padding-top: 2em; padding-bottom: 2em; margin-right: 2em;">
 					<xsl:choose>
-						<xsl:when test="number_of_delegates &lt; 5">
+						<xsl:when test="number_of_delegates &lt; delegate_limit">
 							<img src="frontend/templates/base/images/16x16/group_add.png" class="list_image"/><xsl:value-of select="php:function('lang', 'find_user')"/>
 						    <xsl:variable name="btn_add"><xsl:value-of select="php:function('lang', 'btn_add')"/></xsl:variable>
 						    <xsl:variable name="btn_search"><xsl:value-of select="php:function('lang', 'btn_search')"/></xsl:variable>
@@ -32,7 +32,7 @@
 							</form>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="php:function('lang', 'max_5_delegates')"/>
+							<xsl:value-of select="error_message"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
