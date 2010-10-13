@@ -55,8 +55,12 @@ second so set it to 3600 if you want it to one hour ... the default is
 24mins, which is generally too short.
 
 REGISTER GLOBALS
-register_globals = On
-We are currently testing phpGroupWare 0.9.16 so it will work with this set to Off.  If
-you find this caused problems, please log them at http://savannah.gnu.org/bugs/?group=phpgroupware
+register_globals = Off
+The system should work with this set to Off.  If you find this caused problems,
+please log them at http://savannah.nongnu.org/bugs/?group=fmsystem
 All future releases will support the Off setting.
-$Id: php-configuration.txt 15578 2004-12-30 11:15:08Z skwashd $
+
+THE SUPER GLOBAL ARRAY REQUEST
+variables_order = "GPCS"
+request_order = "GPCS"
+Php versions later than 5.3.0 need this ones to be set.
