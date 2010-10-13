@@ -129,7 +129,7 @@
 									<div class="button_holder">
 										<div class="button1">
 											<div class="next">
-												<a onclick="login.submit();">{lang_login}</a>
+												<a onclick="document.login.submit();">{lang_login}</a>
 											</div>
 										</div>
 									</div>
