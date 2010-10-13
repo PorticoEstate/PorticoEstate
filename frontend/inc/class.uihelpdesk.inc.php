@@ -141,6 +141,10 @@
 			if(isset($this->location_code) && $this->location_code != '')
 			{
 				$bo->location_code = $this->location_code;
+				//to make sure the list select "All" not only the open ones
+				if(phpgw::get_var("status_id")== ""){
+					$bo->status_id = 'all';
+				}
 				$ticket_list = $bo->read('','','',$dry_run);
 			}
 			else
