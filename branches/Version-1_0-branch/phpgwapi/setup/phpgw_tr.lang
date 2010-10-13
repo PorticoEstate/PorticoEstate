@@ -382,8 +382,8 @@ qatar	common	tr	KATAR
 read	common	tr	Oku
 read this list of methods.	common	tr	Bu yöntem listesini okuyun.
 register_globals = %1	common	tr	register_globals = %1
-register_globals_off	common	tr	Bu uygulama  register_globals = off ile test edildi php.ini dosyasında.  Bu uygulama çoğunlukla PHP 4.1.0+ serverlarda çalışır.  Eğer bir sorun yaşarsanız, lütfen bu adrese gönderin <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
-register_globals_on	common	tr	Bu uygulama register_globals = off ile test edilmemiştir php.ini dosyasında.  Bu uygulama register_globals = on  olmasını gerektirir php.ini dosyasında.  Daha fazla bilgi için register_globals = on, bakınız <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
+register_globals_off	common	tr	Bu uygulama  register_globals = off ile test edildi php.ini dosyasında.  Bu uygulama çoğunlukla PHP 4.1.0+ serverlarda çalışır.  Eğer bir sorun yaşarsanız, lütfen bu adrese gönderin <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+register_globals_on	common	tr	Bu uygulama register_globals = off ile test edilmemiştir php.ini dosyasında.  Bu uygulama register_globals = on  olmasını gerektirir php.ini dosyasında.  Daha fazla bilgi için register_globals = on, bakınız <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
 reject	common	tr	Reddet
 rename	common	tr	Yeniden adlandır
 returns a full list of accounts on the system.  warning: this is return can be quite large	common	tr	Sistemdeki hesapların listesini döndürür.  Dikkat: Bu dönüş çok geniş olabilir
