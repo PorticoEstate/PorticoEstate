@@ -120,6 +120,12 @@
 			
 			$number_of_delegates = count($delegates_per_org_unit);
 			$number_of_user_delegates = count($delegates_per_user);
+			
+			$config	= CreateObject('phpgwapi.config','frontend');
+			$config->read();
+			$delegateLimit = $config->config_data['delegate_limit'];
+			if(!is_numeric($delegateLimit)) $delegateLimit = 3;
+			$error_message = lang('max_x_delegates',$delegateLimit);
 						
 			$data = array (
 				'header' 		=>	$this->header_state,
@@ -132,6 +138,8 @@
 					'number_of_user_delegates' => isset($number_of_user_delegates) ? $number_of_user_delegates : 0 ,
 					'search'	=> isset($search) ? $search : array(),
 					'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+					'delegate_limit' => $delegateLimit,
+					'error_message' => $error_message,
 				),
 				
 			);

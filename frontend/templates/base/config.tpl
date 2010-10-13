@@ -37,9 +37,13 @@
 			</td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_delegate_limit}:</td>
+			<td><input name="newsettings[delegate_limit]" value="{value_delegate_limit}"></td>
+		</tr>		
+		<tr class="row_on">
 			<td colspan="2">&nbsp;<b>{lang_external_db}</b></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Debug}:</td>
 			<td>
 				<select name="newsettings[external_db_debug]">
@@ -48,11 +52,11 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_login_external_db_host}:</td>
 			<td><input name="newsettings[external_db_host]" value="{value_external_db_host}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_type}:</td>
 			<td>
 				<select name="newsettings[external_db_type]">
@@ -64,24 +68,24 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_login_external_db_name}:</td>
 			<td><input name="newsettings[external_db_name]" value="{value_external_db_name}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_login_external_db_user}:</td>
 			<td><input name="newsettings[external_db_user]" value="{value_external_db_user}"></td>
 		</tr>
 
 
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_login_external_db_password}:</td>
 			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td colspan="2">&nbsp;<b>{lang_email_settings}</b></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_email_contract_messages}:</td>
 			<td><input name="newsettings[email_contract_messages]" value="{value_email_contract_messages}"></td>
 		</tr>
