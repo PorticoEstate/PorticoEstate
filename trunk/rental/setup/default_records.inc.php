@@ -40,7 +40,7 @@ $GLOBALS['phpgw']->locations->add('.ORG.BK',		'Organisational units in Bergen Ko
 
 
 // Open the text file from the setup folder in the rental module of portico estate
-$lines = file(PHPGW_SERVER_ROOT."/rental/setup/internal_structure.txt");
+/*$lines = file(PHPGW_SERVER_ROOT."/rental/setup/internal_structure.txt");
 // Read the first line to get the headers out of the way
 $result = array();
 $dep_nr = '';
@@ -64,7 +64,7 @@ foreach ($lines as $row) {
 	}
 	$GLOBALS['phpgw']->locations->add(".ORG.BK.{$dep_nr}.{$unit_nr}",$unit_name,'rental',false);
 }
-
+*/
 $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY',			'Fields of responsibilities',				'rental',false);
 
 $loc_id_internal	= $GLOBALS['phpgw']->locations->add('.RESPONSIBILITY.INTERNAL',		'Field of responsibility: internleie',				'rental',false);
