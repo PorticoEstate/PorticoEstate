@@ -74,8 +74,8 @@
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
 			$allrows		= isset($data['allrows'])?$data['allrows']:'';
-			$start_date		= isset($data['start_date'])?$data['start_date']:'';
-			$end_date		= isset($data['end_date'])?$data['end_date']:'';
+			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
+			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
 			$external		= isset($data['external'])?$data['external']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new			= isset($data['new']) ? $data['new'] : '';
@@ -278,6 +278,8 @@
 
 			if ($start_date)
 			{
+				$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
 				$filtermethod .= " $where fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date ";
 				$where= 'AND';
 			}
@@ -491,7 +493,7 @@
 			if (! $this->db->f('cnt'))
 			{
 				$this->db->query("INSERT INTO fm_tts_views (id,account_id,time) values ({$id},'"
-					. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . phpgwapi_datetime::user_localtime() . "')",__LINE__,__FILE__);
+					. $GLOBALS['phpgw_info']['user']['account_id'] . "','" . time() . "')",__LINE__,__FILE__);
 			}
 		}
 
@@ -552,7 +554,7 @@
 				$this->db->db_addslashes($ticket['details']),
 				$ticket['location_code'],
 				$address,
-				phpgwapi_datetime::user_localtime(),
+				time(),
 				$ticket['finnish_date'],
 				$ticket['contact_id'],
 				1
@@ -592,7 +594,7 @@
 
 			if($this->db->transaction_commit())
 			{
-				$this->historylog->add('O',$id, phpgwapi_datetime::user_localtime(),'');
+				$this->historylog->add('O',$id, time(),'');
 				if($ticket['finnish_date'])
 				{
 					$this->historylog->add('IF',$id,$ticket['finnish_date'],'');
