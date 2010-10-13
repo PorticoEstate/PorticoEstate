@@ -15,11 +15,11 @@
 	<link rel="stylesheet" href="{login_css}" type="text/css">
 
 	<!--[if IE 7]>
-	<link href="templates/khepri/css/ie7.css" rel="stylesheet" type="text/css" />
+	<link href="phpgwapi/templates/base/css/ie7.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
 	<!--[if lte IE 6]>
-	<link href="templates/khepri/css/ie6.css" rel="stylesheet" type="text/css" />
+	<link href="phpgwapi/templates/base/css/ie6.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 
 	<link rel="stylesheet" type="text/css" href="phpgwapi/templates/base/css/rounded.css">
@@ -95,29 +95,31 @@
 								<!-- END domain_from_host -->
 								<br>
 								<!-- BEGIN login_additional_info -->
-								<label for="firstname">{lang_firstname}:</label>
-								<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname">
-								<br>
-
-								<label for="lastname">{lang_lastname}:</label>
-								<input type="text" value="{lastname}" name="lastname" id="lastname" maxlength="100">
-								<br>
+								<p id="form-login-firstname">
+									<label for="firstname">{lang_firstname}</label>
+									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" class="inputbox" size="15">
+								</p>
+								<p id="form-login-lastname">
+									<label for="lastname">{lang_lastname}</label>
+									<input type="text" value="{lastname}" name="lastname" id="lastname" class="inputbox" size="15" maxlength="100">
+								</p>
 
 								<!-- END login_additional_info -->
 								<!-- BEGIN password_block -->
 								<p id="form-login-password">
-								<label for="passwd">{lang_password}</label>
-								<input type="password" name="passwd" id="passwd" class="inputbox" size="15">
+									<label for="passwd">{lang_password}</label>
+									<input type="password" name="passwd" id="passwd" class="inputbox" size="15">
 								</p>
 								<!-- END password_block -->
 								<!-- BEGIN login_check_passwd -->
-								<label for="passwd_confirm">{lang_confirm_password}:</label>
-								<input type="password" name="passwd_confirm" id="passwd_confirm" class="inputbox" size="15"><br>
-
+								<p id="form-login-password_confirm">
+									<label for="passwd_confirm">{lang_confirm_password}</label>
+									<input type="password" name="passwd_confirm" id="passwd_confirm" class="inputbox" size="15"><br>
+								</p>
 								<!-- END login_check_passwd -->
 								<!-- BEGIN domain_select -->
 								<p id="form-login-domain" style="clear: both;">
-								<label for="logindomain">{lang_domain}:</label>
+								<label for="logindomain">{lang_domain}</label>
 								<select name="logindomain" id="logindomain" class="inputbox">
 									<!-- BEGIN domain_option -->
 									<option value="{domain_name}" {domain_selected}>{domain_name}</option>

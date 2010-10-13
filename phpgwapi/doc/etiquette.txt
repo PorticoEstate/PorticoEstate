@@ -23,10 +23,10 @@ important that some basic rules be followed when developing in CVS:
 	If the primary developer of an application did not grant general rights to
 	you for committing to his applications | files, you have to ask him for
 	every single commit or submit your changes to the patch manager
-	[http://savannah.gnu.org/patch/?group=phpgroupware].
+	[http://savannah.nongnu.org/patch/?group=fmsystem].
 
-4.  If you are unable to contact the author, please contact one of the
-	project leads [http://phpgroupware.org/coordinators].
+4.  If you are unable to contact the author, please write to the developer list
+	[fmsystem-developers@nongnu.org].
 
 5.  If you have just joined the project, or have always kept to your own
 	application, etc., then please exercise caution when committing changes
@@ -50,8 +50,7 @@ important that some basic rules be followed when developing in CVS:
 	API or of another application's tables.
 
 8.  Before importing a new application, or adding many files | directories to
-	existing modules, please contact one of the project leads
-	[http://phpgroupware.org/coordinators].
+	existing modules, write to the developer list [fmsystem-developers@nongnu.org].
 
 9.  Please do not import a new application that does not have some basic
 	functionality in place or at least a description and basic documentation.
