@@ -107,7 +107,7 @@
 			$query = (isset($data['query'])?$data['query']:'');
 			$sort = (isset($data['sort'])?$data['sort']:'DESC');
 			$order = (isset($data['order'])?$data['order']:'');
-			$cat_id = (isset($data['cat_id'])?$data['cat_id']:0);
+			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$status_id = (isset($data['status_id'])?$data['status_id']:'');
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
@@ -338,7 +338,16 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_project.category=$cat_id ";
+				$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+				$cats->supress_info	= true;
+				$cat_list_project	= $cats->return_sorted_array(0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $cat_id, $use_acl = false);
+				$cat_filter = array($cat_id);
+				foreach ($cat_list_project as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+				$filtermethod .= " {$where} fm_project.category IN (" .  implode(',', $cat_filter) .')';
+
 				$where= 'AND';
 			}
 
@@ -601,13 +610,14 @@
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
-			$this->db->query("SELECT act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,"
+			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,"
 			." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
 			." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
 				$budget[] = array(
 					'workorder_id'		=> $this->db->f('workorder_id'),
+					'title'				=> $this->db->f('title',true),
 					'budget'			=> (int)$this->db->f('budget'),
 					'deviation'			=> $this->db->f('deviation'),
 					'calculation'		=> $this->db->f('calculation'),
