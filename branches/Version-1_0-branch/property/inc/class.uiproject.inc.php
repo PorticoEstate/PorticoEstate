@@ -1260,6 +1260,7 @@
 			$table_header_workorder_budget[] = array
 			(
 				'lang_workorder_id'	=> lang('Workorder'),
+				'lang_title'		=> lang('title'),
 				'lang_budget'		=> lang('Budget'),
 				'lang_calculation'	=> lang('Calculation'),
 				'lang_vendor'		=> lang('Vendor'),
@@ -1489,6 +1490,7 @@
        		(
        			'name'		=> "0",
        			'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+									       			array('key' => 'title','label'=>lang('title'),'sortable'=>true,'resizeable'=>true),
 									       			array('key' => 'b_account_id','label'=>lang('Budget account'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 									       			array('key' => 'budget','label'=>lang('Budget'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
 									       			array('key' => 'calculation','label'=>lang('Calculation'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterRight'),
