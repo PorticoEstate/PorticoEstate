@@ -402,6 +402,7 @@
 				$sum_workorder_calculation= $sum_workorder_calculation+$workorder_data[$i]['calculation'];
 				$sum_workorder_actual_cost= $sum_workorder_actual_cost+$workorder_data[$i]['act_mtrl_cost']+$workorder_data[$i]['act_vendor_cost'];
 
+				$values['workorder_budget'][$i]['title']=$workorder_data[$i]['title'];
 				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
 				$values['workorder_budget'][$i]['budget']=number_format($workorder_data[$i]['budget'], 2, ',', '');
 				$values['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
