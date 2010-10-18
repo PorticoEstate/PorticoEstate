@@ -1440,18 +1440,18 @@
 			}
 
 			$attrib_list = $this->bo->read_attrib_group($entity_id,$cat_id);
-			$uicols['name'][0]	= 'name';
-			$uicols['descr'][0]	= lang('Name');
-			$uicols['name'][1]	= 'descr';
-			$uicols['descr'][1]	= lang('Descr');
-			$uicols['name'][2]	= 'group_sort';
-			$uicols['descr'][2]	= lang('sorting');
-			$uicols['name'][3]	= 'up';
-			$uicols['descr'][3]	= lang('up');
-			$uicols['name'][4]	= 'down';
-			$uicols['descr'][4]	= lang('down');
-			$uicols['name'][5]	= 'id';
-			$uicols['descr'][5]	= lang('id');
+			$uicols['name'][0]	= 'id';
+			$uicols['descr'][0]	= lang('id');
+			$uicols['name'][1]	= 'name';
+			$uicols['descr'][1]	= lang('Name');
+			$uicols['name'][2]	= 'descr';
+			$uicols['descr'][2]	= lang('Descr');
+			$uicols['name'][3]	= 'group_sort';
+			$uicols['descr'][3]	= lang('sorting');
+			$uicols['name'][4]	= 'up';
+			$uicols['descr'][4]	= lang('up');
+			$uicols['name'][5]	= 'down';
+			$uicols['descr'][5]	= lang('down');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1577,10 +1577,6 @@
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='id')
-					{
-						$datatable['headers']['header'][$i]['visible'] 			= false;
-					}
 
 					if($uicols['name'][$i]=='name')
 					{
