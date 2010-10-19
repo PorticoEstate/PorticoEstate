@@ -574,93 +574,89 @@
 			$record_history = array();
 			$i=0;
 
-			if (is_array($history_array))
+			foreach ($history_array as $value)
 			{
-				foreach ($history_array as $value)
-				{
-					$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
-					$record_history[$i]['value_user']	= $value['owner'];
+				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user']	= $value['owner'];
 
+				switch ($value['status'])
+				{
+					case 'R': $type = lang('Re-opened'); break;
+					case 'X': $type = lang('Closed');    break;
+					case 'O': $type = lang('Opened');    break;
+					case 'A': $type = lang('Re-assigned'); break;
+					case 'G': $type = lang('Re-assigned group'); break;
+					case 'P': $type = lang('Priority changed'); break;
+					case 'T': $type = lang('Category changed'); break;
+					case 'S': $type = lang('Subject changed'); break;
+					case 'H': $type = lang('Billable hours changed'); break;
+					case 'B': $type = lang('Budget changed'); break;
+	//					case 'B': $type = lang('Billable rate changed'); break;
+					case 'F': $type = lang('finnish date changed'); break;
+					case 'IF': $type = lang('Initial finnish date'); break;
+					case 'L': $type = lang('Location changed'); break;
+					case 'AC': $type = lang('actual cost changed'); break;
+					case 'M':
+						$type = lang('Sendt by email to');
+						$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+						break;
+					default:
+						// nothing
+				}
+
+		//		if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
+				if ( $value['status'] == 'X' || $value['status'] == 'R' || preg_match('/^C/i', $value['status']) || ( $value['status'] == 'R' && preg_match('/^C/i', $value['new_value']))) // if custom status
+				{
 					switch ($value['status'])
 					{
-						case 'R': $type = lang('Re-opened'); break;
-						case 'X': $type = lang('Closed');    break;
-						case 'O': $type = lang('Opened');    break;
-						case 'A': $type = lang('Re-assigned'); break;
-						case 'G': $type = lang('Re-assigned group'); break;
-						case 'P': $type = lang('Priority changed'); break;
-						case 'T': $type = lang('Category changed'); break;
-						case 'S': $type = lang('Subject changed'); break;
-						case 'H': $type = lang('Billable hours changed'); break;
-						case 'B': $type = lang('Budget changed'); break;
-	//					case 'B': $type = lang('Billable rate changed'); break;
-						case 'F': $type = lang('finnish date changed'); break;
-						case 'IF': $type = lang('Initial finnish date'); break;
-						case 'L': $type = lang('Location changed'); break;
-						case 'AC': $type = lang('actual cost changed'); break;
-						case 'M':
-							$type = lang('Sendt by email to');
-							$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+						case 'R': 
+							$type = lang('Re-opened');
 							break;
-						default: break;
+						case 'X':
+							$type = lang('Closed');
+							break;
+						default:
+							$type = lang('Status changed');
 					}
+					$value['new_value'] = $status_text[$value['new_value']];
+					$value['old_value'] = $status_text[$value['old_value']];
+				}
 
-					if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
+				$record_history[$i]['value_action']	= $type?$type:'';
+				unset($type);
+				if ($value['status'] == 'A' || $value['status'] == 'G')
+				{
+					if ((int)$value['new_value']>0)
 					{
-						switch ($value['status'])
-						{
-							case 'R': 
-								$type = lang('Re-opened');
-								break;
-							case 'X':
-								$type = lang('Closed');
-								break;
-							default:
-								$type = lang('Status changed')
-								;break;
-						}
-						
-						$value['new_value'] = $status_text[$value['new_value']];
-						$value['old_value'] = $status_text[$value['old_value']];
-					}
-
-					$record_history[$i]['value_action']	= $type?$type:'';
-					unset($type);
-					if ($value['status'] == 'A' || $value['status'] == 'G')
-					{
-						if ((int)$value['new_value']>0)
-						{
-							$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
-							$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
-						}
-						else
-						{
-							$record_history[$i]['value_new_value']	= lang('None');
-							$record_history[$i]['value_old_value']	= lang('None');
-						}
-					}
-					else if ($value['status'] == 'T')
-					{
-						$record_history[$i]['value_new_value']	= $this->get_category_name($value['new_value']);
-						$record_history[$i]['value_old_value']	= $this->get_category_name($value['old_value']);
-					}
-					else if (($value['status'] == 'F') || ($value['status'] =='IF'))
-					{
-						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->common->show_date($value['new_value'],$this->dateformat);
-					}
-					else if ($value['status'] != 'O' && $value['new_value'])
-					{
-						$record_history[$i]['value_new_value']	= $value['new_value'];
-						$record_history[$i]['value_old_value']	= $value['old_value'];
+						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
+						$record_history[$i]['value_old_value'] = $value['old_value'] ? $GLOBALS['phpgw']->accounts->id2name($value['old_value']) : '';
 					}
 					else
 					{
-						$record_history[$i]['value_new_value']	= '';
-
+						$record_history[$i]['value_new_value']	= lang('None');
+						$record_history[$i]['value_old_value']	= lang('None');
 					}
-
-					$i++;
 				}
+				else if ($value['status'] == 'T')
+				{
+					$record_history[$i]['value_new_value']	= $this->get_category_name($value['new_value']);
+					$record_history[$i]['value_old_value']	= $this->get_category_name($value['old_value']);
+				}
+				else if (($value['status'] == 'F') || ($value['status'] =='IF'))
+				{
+					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->common->show_date($value['new_value'],$this->dateformat);
+				}
+				else if ($value['status'] != 'O' && $value['new_value'])
+				{
+					$record_history[$i]['value_new_value']	= $value['new_value'];
+					$record_history[$i]['value_old_value']	= $value['old_value'];
+				}
+				else
+				{
+					$record_history[$i]['value_new_value']	= '';
+				}
+
+				$i++;
 			}
 
 			return $record_history;

@@ -119,7 +119,6 @@
 			$bookings = $this->bo->read();
 			foreach($bookings['results'] as &$booking) {
 				$building = $this->building_bo->read_single($booking['building_id']);
-				//print_r($building);
 				$booking['building_name'] = $building['name'];
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);

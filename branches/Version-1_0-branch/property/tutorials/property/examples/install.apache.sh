@@ -217,9 +217,11 @@ cd ../apr-util &&\
 make &&\
 make install &&\
 # Configure httpd
+#cd ../../ &&\
+#./configure --with-apr=/usr/local/apr-httpd/\
+# --with-apr-util=/usr/local/apr-util-httpd/\
 cd ../../ &&\
-./configure --with-apr=/usr/local/apr-httpd/\
- --with-apr-util=/usr/local/apr-util-httpd/\
+./configure --with-included-apr\
  --with-mpm=prefork\
  --enable-so\
  --enable-deflate\

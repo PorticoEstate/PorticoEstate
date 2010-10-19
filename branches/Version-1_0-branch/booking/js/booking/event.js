@@ -51,8 +51,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		a.onclick = removeDateRow;
 		YAHOO.booking.setupDatePickers();
 		YAHOO.util.Event.stopEvent(e);
-	}); 
-
+	});
+    YAHOO.booking.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&', 
+                                     'field_org_name', 'field_org_id', 'org_container');
 });
 
 

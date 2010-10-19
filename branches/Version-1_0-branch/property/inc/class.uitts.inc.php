@@ -2559,6 +2559,7 @@
 			$note_def[] = array('key' => 'publish_note','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
 			foreach($additional_notes as &$note)
 			{
+				$note['value_note'] = nl2br($note['value_note']);
 				$_checked = $note['value_publish'] ? 'checked' : '';
 				$note['publish_note'] = "<input type='checkbox' {$_checked}  name='values[publish_note][]' value='{$id}_{$note['value_id']}' title='".lang('Check to publish text at frontend')."'>";
 			}
