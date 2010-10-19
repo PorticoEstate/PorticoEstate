@@ -243,7 +243,11 @@
 				{
 					$group['active'] = '1';
 				}
+	
 				$errors = $this->bo->validate($group);
+				if(strlen($_POST['shortname']) > 11){
+					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
+				}
 				if(!$errors)
 				{
 					if ($id)
