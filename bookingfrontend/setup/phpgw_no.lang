@@ -319,3 +319,4 @@ Send message	bookingfrontend	no	Send beskjed
 E-mail address	bookingfrontend	no	E-postadresse
 Confirm e-mail address	bookingfrontend	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	bookingfrontend	no	E-postadressene er ikke like
+Lengt of shortname is to long, max 11 characters long	bookingfrontend	no	Kortnavn er for langt, maks 11 tegn

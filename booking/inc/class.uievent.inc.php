@@ -22,6 +22,7 @@
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
+			$this->organization_bo = CreateObject('booking.boorganization');
 			self::set_active_menu('booking::applications::events');
 			$this->fields = array('activity_id', 'description',
 										'resources', 'cost', 'application_id',
@@ -108,8 +109,6 @@
 
 			foreach($events['results'] as &$event)
 			{
-				$building_info = $this->bo->so->get_building_info($event['id']);
-				$event['building_name'] = $building_info['name'];
 				$event['from_'] = pretty_timestamp($event['from_']);
 				$event['to_'] = pretty_timestamp($event['to_']);
 			}
@@ -270,6 +269,30 @@
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
 				$event['is_public'] = 1;
+				$event['building_name'] = $_POST['building_name'];
+				
+				if ($_POST['organization_name']) {
+					$event['customer_organization_name'] = $_POST['organization_name'];
+					$event['customer_organization_id'] = $_POST['organization_id'];
+					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
+					if ($organization['customer_internal'] == 0) {					
+						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$event['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_organization_number']) == 9) {
+							$event['customer_organization_number'] = $organization['customer_organization_number'];
+						} else {
+							$errors['organization_number'] = lang('The organization number is wrong or not present');
+						}
+					} else {
+						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$event['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_number']) == 5) {
+ 							$event['customer_organization_number'] = $organization['customer_number'];
+						} else {
+							$errors['resource_number'] = lang('The resource number is wrong or not present');
+						}
+					}
+				} 
 
 				if (!$_POST['application_id'])
 				{
@@ -402,18 +425,54 @@
 			$event['building_name'] = $building_info['name'];
 			$errors = array();
 			$customer = array();
-			if ($event['customer_organization_number'])
+			if ($event['customer_identifier_type'])
 			{
 				$customer['customer_identifier_type'] = $event['customer_identifier_type'];
 				$customer['customer_ssn'] = $event['customer_ssn'];
 				$customer['customer_organization_number'] = $event['customer_organization_number'];
+				$customer['customer_internal'] = $event['customer_internal'];
 			}	
 			list($event, $errors) = $this->extract_and_validate($event);
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				if (!$_POST['organization_name']) {
+					$event['customer_organization_name'] = Null;
+					$event['customer_organization_id'] = Null;
+				}
 				array_set_default($_POST, 'resources', array());
+			
+				if ($_POST['organization_name']) {
+					$event['customer_organization_name'] = $_POST['organization_name'];
+					$event['customer_organization_id'] = $_POST['organization_id'];
+					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
 
-				if(!$errors['event'])
+					if ($organization['customer_internal'] == 0) {					
+						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$event['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_organization_number']) == 9) {
+							$event['customer_organization_number'] = $organization['customer_organization_number'];
+						} else {
+							$errors['organization_number'] = lang('The organization number is wrong or not present');
+						}
+					} else {
+						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$event['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_number']) == 5) {
+ 							$event['customer_organization_number'] = $organization['customer_number'];
+						} else {
+							$errors['resource_number'] = lang('The resource number is wrong or not present');
+						}
+					}
+				} elseif ($_POST['customer_identifier_type'] == 'ssn') {
+					$event['customer_identifier_type'] = 'ssn';
+					$event['customer_ssn'] = $organization['customer_ssn'];
+					
+				} elseif ($_POST['customer_identifier_type'] == 'organization_number') {
+					$event['customer_identifier_type'] = 'organization_number';
+					$event['customer_organization_number'] = $organization['customer_organization_number'];
+				}
+				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'])
 				{
 					if (phpgw::get_var('mail', 'POST'))
 					{
@@ -472,12 +531,14 @@
 				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
 			}
 			$this->flash_form_errors($errors);
-			if ($customer['customer_organization_number'])
+			if ($customer['customer_identifier_type'])
 			{
 				$event['customer_identifier_type'] = $customer['customer_identifier_type'];
 				$event['customer_ssn'] = $customer['customer_ssn'];
 				$event['customer_organization_number'] = $customer['customer_organization_number'];
+				$event['customer_internal'] = $customer['customer_internal'];
 			}			
+
 			self::add_javascript('booking', 'booking', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id'=> $event['application_id']));

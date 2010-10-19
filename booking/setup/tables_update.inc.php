@@ -2332,4 +2332,21 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+  $test[] = '0.1.97';
+	function booking_upgrade0_1_97()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_organization_id integer");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN customer_organization_name varchar(50)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN building_name varchar(50) NOT NULL DEFAULT 'changeme'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_event SET building_name = b2.name FROM bb_building b2 WHERE EXISTS (select 1 from bb_event e,bb_event_resource er,bb_resource r,bb_building b WHERE e.id=er.event_id AND er.resource_id=r.id AND r.building_id=b.id AND b2.id=b.id	AND bb_event.id=e.id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.98';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 
