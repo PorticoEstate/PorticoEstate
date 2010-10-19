@@ -184,6 +184,9 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate(array('active' => 1));
+				if(strlen($_POST['shortname']) > 11){
+					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
+				}
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($organization);
@@ -214,6 +217,9 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate($organization);
+				if(strlen($_POST['shortname']) > 11){
+					$errors['shortname'] = lang('Lengt of shortname is to long, max 11 characters long');
+				}
 				if(!$errors)
 				{
 					$organization['shortname'] = $_POST['shortname'];

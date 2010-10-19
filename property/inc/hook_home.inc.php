@@ -659,7 +659,8 @@
 	if ( isset($prefs['property']['mainscreen_showapprovals'])
 		&& $prefs['property']['mainscreen_showapprovals'] == 'yes' )
 	{
-		$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title']? "{$prefs['property']['mainscreen_showapprovals_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";	
+		$total_records = 0;
+		$title = 'dummy';	
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
@@ -715,6 +716,7 @@
 				'text' => 'Prosjekt venter på godkjenning: ' . $entry['item_id'],
 				'link' => $entry['url']
 			);
+			$total_records++;
 		}
 		
 //		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
@@ -741,6 +743,7 @@
 				'text' => 'Ordre venter på godkjenning: ' . $entry['item_id'],
 				'link' => $entry['url']
 			);
+			$total_records++;
 		}
 
 		$action_params = array
@@ -765,7 +768,12 @@
 				'text' => 'Melding venter på godkjenning: ' . $entry['item_id'],
 				'link' => $entry['url']
 			);
+			$total_records++;
 		}
+		//Hack
+		$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title']? "{$prefs['property']['mainscreen_showapprovals_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";	
+		$portalbox->setvar('title', $title);
+		$portalbox->start_template();
 		
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
@@ -775,7 +783,8 @@
 	if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
 		&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
 	{
-		$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title']? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('vendor reminder') . " ({$total_records})";	
+		$total_records = 0;
+		$title = 'dummy';
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
@@ -836,8 +845,13 @@
 				'text' => "påminning nr {$entry['reminder']} til leverandør {$vendor_name}- ordre nr: {$entry['item_id']}",
 				'link' => $entry['url']
 			);
+			$total_records++;
 		}
 		
+		$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title']? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('vendor reminder') . " ({$total_records})";	
+		$portalbox->setvar('title', $title);
+		$portalbox->start_template();
+
 		echo "\n".'<!-- BEGIN reminder info -->'."\n".$portalbox->draw()."\n".'<!-- END reminder info -->'."\n";
 		unset($pending_reminder);
 		unset($portalbox);
