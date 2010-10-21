@@ -697,7 +697,7 @@
 				$values['input'] = $values_attribute;
 				$first_run = false;
 			}
-			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_DELETE))
+			if(!$this->bocommon->check_perms($this->grants[$values['user_id']], PHPGW_ACL_READ))
 			{
 				echo lang('not allowed');
 				$GLOBALS['phpgw']->common->phpgw_exit();
