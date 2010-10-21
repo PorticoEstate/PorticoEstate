@@ -2349,4 +2349,21 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+  $test[] = '0.1.98';
+	function booking_upgrade0_1_98()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_booking ADD COLUMN building_name varchar(50) NOT NULL DEFAULT 'changeme'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_booking SET building_name = b2.name FROM bb_building b2 WHERE EXISTS (SELECT 1 FROM bb_booking bo,bb_season s,bb_building b WHERE bo.season_id = s.id AND s.building_id = b.id AND b2.id=b.id AND bb_booking.id=bo.id)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD COLUMN building_name varchar(50) NOT NULL DEFAULT 'changeme'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_allocation SET building_name = b2.name FROM bb_building b2 WHERE EXISTS (SELECT 1 FROM bb_allocation a,bb_season s,bb_building b WHERE s.id = a.season_id AND s.building_id = b.id AND b2.id=b.id AND bb_allocation.id=a.id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.1.99';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 
