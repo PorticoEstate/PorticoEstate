@@ -4548,7 +4548,7 @@
 		}
 	}
 	/**
-	* Update property version from 0.9.17.578 to 0.9.17.579
+	* Update property version from 0.9.17.594 to 0.9.17.595
 	* Add custom dimension for orders
 	* 
 	*/
@@ -4563,6 +4563,46 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.595';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.595 to 0.9.17.596
+	* Alter datatype
+	* 
+	*/
+
+	$test[] = '0.9.17.595';
+	function property_upgrade0_9_17_595()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id, b_account_id FROM fm_tenant_claim");
+		$claims = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$claims[] = array
+			(
+				'id'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('id'),
+				'b_account_id'	=> $GLOBALS['phpgw_setup']->oProc->f('b_account_id')
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tenant_claim',array(),'b_account_id');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tenant_claim','b_account_id',array('type' => 'varchar','precision' => 20,'nullable' => True));
+
+		foreach($claims as $claim)
+		{
+			$sql = "UPDATE fm_tenant_claim SET b_account_id = {$claim['b_account_id']} WHERE id = {$claim['id']}";
+
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);		
+		}
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.596';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

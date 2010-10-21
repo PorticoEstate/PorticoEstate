@@ -12,6 +12,7 @@
 					'allocation_id'	=> array('type' => 'int', 'required' => false),
 					'application_id'	=> array('type' => 'int', 'required' => false),
 					'activity_id'	=> array('type' => 'int', 'required' => true),
+					'building_name' => array('type' => 'string', 'required'=> true, 'query' => true),
 					'group_id'		=> array('type' => 'int', 'required' => true),
 					'from_'		=> array('type' => 'timestamp', 'required'=> true),
 					'to_'		=> array('type' => 'timestamp', 'required'=> true),
