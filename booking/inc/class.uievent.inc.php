@@ -466,12 +466,13 @@
 					}
 				} elseif ($_POST['customer_identifier_type'] == 'ssn') {
 					$event['customer_identifier_type'] = 'ssn';
-					$event['customer_ssn'] = $organization['customer_ssn'];
+					$event['customer_ssn'] = $_POST['customer_ssn'];
 					
 				} elseif ($_POST['customer_identifier_type'] == 'organization_number') {
 					$event['customer_identifier_type'] = 'organization_number';
-					$event['customer_organization_number'] = $organization['customer_organization_number'];
+					$event['customer_organization_number'] = $_POST['customer_organization_number'];
 				}
+
 				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'])
 				{
 					if (phpgw::get_var('mail', 'POST'))
