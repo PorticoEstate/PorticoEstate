@@ -20,6 +20,7 @@ class rental_uiparty extends rental_uicommon
 			'download'			=> true,
 			'download_agresso'	=> true,
 			'sync'				=> true,
+			'update_all_org_enhet_id'	=> true,
 			'syncronize_party'	=> true
 	);
 
@@ -159,6 +160,95 @@ class rental_uiparty extends rental_uicommon
 		
 		
 		return $this->yui_results($party_data, 'total_records', 'results');
+	}
+	
+	/*
+	 * One time job for updating the parties with no org_enhet_id.  
+	 * The org_enhet_id will be set according to the suggestions given in 
+	 * the synchronize function in the rental model UI. 
+	 * 
+	 */
+	public function update_all_org_enhet_id()
+	{
+		$bofelles = rental_bofellesdata::get_instance();
+		
+		$result_objects = rental_soparty::get_instance()->get();
+		$result_count = rental_soparty::get_instance()->get_count();
+		
+		echo "Total number of parties: {$result_count}";
+		
+		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			$count = 0;
+			$count_result_unit_number = 0;
+			$count_identifier = 0;
+			$count_responsibility = 0;
+			$unit_found = false;
+			
+			//for all parties
+			foreach ($result_objects as $party) {
+				$unit_found = false;
+				//if the party is an has not set "org_enhet_id"
+				if(isset($party) && !$party->get_org_enhet_id())
+				{
+					$serialized = $party->serialize($contract);
+					$sync_data = $party->get_sync_data();
+
+					//find a relevant org_enehet_id
+					$unit_name_and_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
+					if(!$unit_name_and_id)
+					{
+						$unit_name_and_id = $bofelles->result_unit_exist($party->get_identifier());
+					}
+					else{
+						$count_result_unit_number++;
+						
+						$unit_id_echo = $unit_name_and_id['UNIT_ID'];
+						$unit_name_echo = $unit_name_and_id['UNIT_NAME'];
+						echo "Unit id found {$unit_id_echo} by result unit number check. The unit name is {$unit_name_echo}";
+						
+						$unit_found = true;
+					}
+					
+					if(!$unit_name_and_id)
+					{
+						$unit_name_and_id = $bofelles->responsibility_id_exist($sync_data['responsibility_id']);
+					}
+					else if(!$unit_found){
+						$count_identifier++;
+						$unit_id_echo = $unit_name_and_id['UNIT_ID'];
+						$unit_name_echo = $unit_name_and_id['UNIT_NAME'];
+						echo "Unit id found {$unit_id_echo} by identifier check. The unit name is {$unit_name_echo}";
+						$unit_found = true;
+					}
+					
+					if(isset($unit_name_and_id))
+					{
+						if(!$unit_found){
+							$unit_id_echo = $unit_name_and_id['UNIT_ID'];
+							$unit_name_echo = $unit_name_and_id['UNIT_NAME'];
+							echo "Unit id found {$unit_id_echo} by responsibility id check. The unit name is {$unit_name_echo}";
+							$count_responsibility++;
+						}
+						
+						$unit_id = $unit_name_and_id['UNIT_ID'];
+						$unit_name = $unit_name_and_id['UNIT_NAME'];
+						
+						//if unit_id is found set it to the party
+						if(isset($unit_id) && is_numeric($unit_id))
+						{
+							$party->set_org_enhet_id($unit_id);
+							rental_soparty::get_instance()->store($party);
+							$count++;
+						}
+					}
+				}
+			}
+			echo "Number of parties found through result unit number {$count_result_unit_number}";
+			echo "Number of parties found through identifier {$count_identifier}";
+			echo "Number of parties found through responsibility id {$count_responsibility}";
+			echo "Number of parties that have been updated {$count}";
+		}
 	}
 
 	/**
