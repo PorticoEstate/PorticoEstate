@@ -2472,7 +2472,7 @@ HTML;
 			$workorder_id = phpgw::get_var('workorder_id'); // in case of bigint
 			$template_id = phpgw::get_var('template_id', 'int');
 
-			$values = phpgw::get_var('values');
+			$values = $_POST['values'] ? phpgw::get_var('values') : array();
 
 			if($delete && $hour_id)
 			{
@@ -2486,7 +2486,7 @@ HTML;
 
 			if($values['add'])
 			{
-				$receipt=$this->bo->add_hour_from_template($values,$workorder_id);
+				$receipt = $this->bo->add_hour_from_template($values,$workorder_id);
 			}
 
 			$common_data=$this->common_data($workorder_id);
@@ -2575,12 +2575,12 @@ HTML;
 			}
 																				
 			$uicols = array (
-				'input_type'	=>	array('text','text','text','text','text','varchar','select','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
-				'type'			=>	array('','','','','','text','','','','text','','','',''),				
-				'name'			=>	array('building_part','code,hours_descr','unit','billperae','quantity','select','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
+				'input_type'	=>	array('text','text','text','text','text','varchar','combo','varchar','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden','hidden'),
+				'type'			=>	array('','','','','','text','','','text','','','',''),				
+				'name'			=>	array('building_part','code','hours_descr','unit','billperae','quantity','wo_hour_cat','cat_per_cent','chapter_id','grouping_descr','new_grouping','activity_id','activity_num','remark','ns3420_id','tolerance','cost','dim_d'),
 				'formatter'		=>	array('','','','','','','','','','','','','','','','','','',''),
-				'descr'			=>	array(lang('Building part'),lang('Code'),lang('Description'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),lang('Select'),'','','','','','','','','','','',''),
-				'className'		=> 	array('','','','','rightClasss','','centerClasss','','','','','','','','','','','','')
+				'descr'			=>	array(lang('Building part'),lang('Code'),lang('Description'),lang('Unit'),lang('Bill per unit'),lang('Quantity'),'','','','','','','','','','','',''),
+				'className'		=> 	array('','','','','rightClasss','','','','','','','','','','','','','')
 			);
 			
 			$values_combo_box	= $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
@@ -2658,7 +2658,7 @@ HTML;
 						
 						if ($uicols['input_type'][$i]=='varchar') 
 						{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] = "<input name='values[".$uicols['name'][$i]."][".$j."]' id='values[".$uicols['name'][$i]."][".$j."]' size='4' class='myValuesForPHP'/>";
+							$datatable['rows']['row'][$j]['column'][$i]['value'] = "<input name='values[{$uicols['name'][$i]}][{$j}]' id='values[{$uicols['name'][$i]}][{$j}]' size='4' class='myValuesForPHP'/>";
 						}
 											
 						if ($uicols['input_type'][$i]=='select') 
