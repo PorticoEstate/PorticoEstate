@@ -686,11 +686,11 @@
 
 		function view()
 		{
-			$jasper_id	= phpgw::get_var('jasper_id');
-			$values = $this->bo->read_single($jasper_id);
-			$values_attribute = phpgw::get_var('values_attribute');
-			$sel_format = phpgw::get_var('sel_format');
-			$first_run = true;
+			$jasper_id			= phpgw::get_var('jasper_id');
+			$values				= $this->bo->read_single($jasper_id);
+			$values_attribute	= phpgw::get_var('values_attribute');
+			$sel_format			= phpgw::get_var('sel_format');
+			$first_run			= true;
 
 			if($values_attribute)
 			{
@@ -709,6 +709,7 @@
 			{
 				foreach ($values['input'] as &$input)
 				{
+					$input['name'] = $input['input_name'];
 					if(!($input['value'] = phpgw::get_var(strtolower($input['input_name']))) || !$input['is_id'])
 					{
 						$user_input = true;
@@ -723,9 +724,15 @@
 			{
 				foreach ($values['input'] as &$input)
 				{
+					$input['name'] = $input['input_name'];
 					if(!$input['value'])
 					{
 						$user_input = true;
+						$input['name'] = $input['input_name'];
+						if ( ($input['value'] = phpgw::get_var(strtolower($input['input_name']))))
+						{
+							$user_input = false;					
+						}						
 					}
 					else
 					{
@@ -740,7 +747,6 @@
 					}
 				}
 			}
-
 			if(!$user_input)
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -778,11 +784,11 @@
 
 				$report_source		= "{$GLOBALS['phpgw_info']['server']['files_dir']}/property/jasper/{$jasper_id}/{$values['file_name']}";
 				$jasper_wrapper		= CreateObject('phpgwapi.jasper_wrapper');
-/*
-_debug_array($jasper_parameters);
-_debug_array($output_type);
-_debug_array($report_source);die();
-*/
+
+//_debug_array($jasper_parameters);
+//_debug_array($output_type);
+//_debug_array($report_source);die();
+
 				try
 				{
 					$jasper_wrapper->execute($jasper_parameters, $output_type, $report_source);
@@ -805,6 +811,7 @@ _debug_array($report_source);die();
 				$custom_fields			= CreateObject('property.custom_fields');
 				$values['attributes']	= $values['input'];
 				unset($values['input']);
+
 				$values = $custom_fields->prepare($values);
 
 				$receipt['error'][] = array('msg' => lang('enter input'));
@@ -835,6 +842,7 @@ _debug_array($report_source);die();
 					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'attributes'		=> $values['attributes'],
+					'lookup_functions'	=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'formats'			=> $formats
 				);
 

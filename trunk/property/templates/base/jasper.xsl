@@ -318,6 +318,15 @@
 
 <!-- user_input  -->
 	<xsl:template match="user_input" xmlns:php="http://php.net/xsl">
+		<xsl:choose>
+			<xsl:when test="lookup_functions != ''">
+				<script type="text/javascript">
+					self.name="first_Window";
+					<xsl:value-of select="lookup_functions"/>
+				</script>
+			</xsl:when>
+		</xsl:choose>
+
 		<div class="yui-content">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form  name="form" method="post" action="{$form_action}">
