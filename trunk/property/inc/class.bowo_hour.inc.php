@@ -289,7 +289,7 @@
 				}
 				$quantity		= str_replace(",",".",$quantity);
 
-				$cost=($values['total_cost'][$n]*$values['quantity'][$n]);
+				$cost=($values['total_cost'][$n]*$quantity);
 
 				$hour[]=array(
 					'activity_id'		=> $values['activity_id'][$n],
@@ -325,45 +325,42 @@
 
 //_debug_array($values);
 
-			if ($values['select']) 
+			foreach($values['quantity'] as $n => $quantity)
 			{
-				foreach($values['select'] as $n)
+				if(!$quantity)
 				{
-													
-					if(!$values['quantity'][$n])
-					{
-						$values['quantity'][$n]=1;
-					}
-	
-					if ($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
-					{
-						$values['cat_per_cent'][$n] = 100;
-					}
-	
-					$values['quantity'][$n]		= str_replace(",",".",$values['quantity'][$n]);
-					$cost=($values['billperae'][$n]*$values['quantity'][$n]);
-	
-					$hour[]=array(
-						'chapter_id'		=> $values['chapter_id'][$n],
-						'activity_id'		=> $values['activity_id'][$n],
-						'activity_num'		=> $values['activity_num'][$n],
-						'hours_descr'		=> $values['hours_descr'][$n],
-						'remark'		=> $values['remark'][$n],
-						'unit'			=> $values['unit'][$n],
-						'cost' 			=> $cost,
-						'quantity'		=> $values['quantity'][$n],
-						'new_grouping'		=> $values['grouping_descr'][$n],
-						'billperae'		=> $values['billperae'][$n],
-						'ns3420_id'		=> $values['ns3420_id'][$n],
-						'tolerance'		=> $values['tolerance'][$n],
-						'building_part'		=> $values['building_part'][$n],
-						'dim_d'			=> $values['dim_d'][$n],
-						'workorder_id'		=> $workorder_id,
-						'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
-						'cat_per_cent'		=> $values['cat_per_cent'][$n]
-					);
-	
+					continue;
 				}
+
+				if ($values['wo_hour_cat'][$n] && !$values['cat_per_cent'][$n])
+				{
+					$values['cat_per_cent'][$n] = 100;
+				}
+	
+				$quantity		= str_replace(",",".",$quantity);
+				$cost=($values['billperae'][$n]*$quantity);
+	
+				$hour[]= array
+				(
+					'chapter_id'		=> $values['chapter_id'][$n],
+					'activity_id'		=> $values['activity_id'][$n],
+					'activity_num'		=> $values['activity_num'][$n],
+					'hours_descr'		=> $values['hours_descr'][$n],
+					'remark'			=> $values['remark'][$n],
+					'unit'				=> $values['unit'][$n],
+					'cost' 				=> $cost,
+					'quantity'			=> $quantity,
+					'new_grouping'		=> $values['grouping_descr'][$n],
+					'billperae'			=> $values['billperae'][$n],
+					'ns3420_id'			=> $values['ns3420_id'][$n],
+					'tolerance'			=> $values['tolerance'][$n],
+					'building_part'		=> $values['building_part'][$n],
+					'dim_d'				=> $values['dim_d'][$n],
+					'workorder_id'		=> $workorder_id,
+					'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
+					'cat_per_cent'		=> $values['cat_per_cent'][$n]
+				);
+	
 			}
 //_debug_array($hour);
 
