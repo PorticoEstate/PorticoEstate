@@ -147,6 +147,9 @@
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
 
+		var startDate = document.getElementById('start_date_report').value;
+		var endDate = document.getElementById('end_date_report').value;
+        
         var dl = window.open('index.php?menuaction=rental.uicontract.download'+
             '&amp;type='+ctype+
             '&amp;contract_type='+typeoption+
@@ -155,6 +158,8 @@
             '&amp;query='+query+
             '&amp;search_option='+sOption+
             //'&amp;results=100'+
+            '&amp;date_start='+startDate+
+            '&amp;date_end='+endDate+
             '&amp;export=true');
     }
 </script>
@@ -219,16 +224,31 @@
 				?>
 			</select>
 	</fieldset>
+	<fieldset>
+		<!-- export with date limitation -->
+		<h3><?php echo lang('export_to') ?></h3>
+		<div id="export">
+			<a href="javascript:contract_export('<?php echo $list_id ?>');"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>
+			<label class="toolbar_element_label" for="start_date_report" id="label_start_date_report"><?php echo lang('date_start') ?></label>
+			<?php echo $GLOBALS['phpgw']->yuical->add_listener('start_date_report', $notification_date); ?>
+			<label class="toolbar_element_label" for="end_date_report" id="label_end_date_report"><?php echo lang('date_end') ?></label>
+			<?php echo $GLOBALS['phpgw']->yuical->add_listener('end_date_report', $notification_date); ?>
+		</div>
+	</fieldset>
 </form>
+
+<?php
+	}else{
+?>
+
+	<fieldset>
+		<h3><?php echo lang('export_to') ?></h3>
+		<div id="export"><a href="javascript:contract_export('<?php echo $list_id ?>');"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
+	</fieldset>
 
 <?php
 	}
 ?>
-
-<fieldset>
-	<h3><?php echo lang('export_to') ?></h3>
-	<div id="export"><a href="javascript:contract_export('<?php echo $list_id ?>');"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a></div>
-</fieldset>
 
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

@@ -581,13 +581,29 @@
 			 * 2.3 ...ends or starts current year - calculate price
 			 * 2.3.1 
 			 */
-			$current_year = date("Y");
-			$next_year = $current_year + 1;
 			
-			$timestamp_invoice_start = strtotime("{$current_year}-1-1");
-			$timestamp_invoice_end = strtotime("{$current_year}-12-31");
+			$date_start = phpgw::get_var('date_start');
+			$date_end = phpgw::get_var('date_end');
+
+			if(isset($date_start)){
+				$aDate = split ("/", $date_start);
+				$date_start = $aDate[1]."/".$aDate[0]."/".$aDate[2];
+				$timestamp_invoice_start = strtotime($date_start);
+			}
+			
+			if(isset($date_end)){
+				$aDate = split ("/", $date_end);
+				$date_end = $aDate[1]."/".$aDate[0]."/".$aDate[2];
+				$timestamp_invoice_end = strtotime($date_end);
+			}
 			
 			
+			if(!isset($timestamp_invoice_start) || $timestamp_invoice_start == "" || !isset($timestamp_invoice_end) || $timestamp_invoice_end == ""){
+				$current_year = date("Y");
+				$timestamp_invoice_start = strtotime("{$current_year}-1-1");
+				$timestamp_invoice_end = strtotime("{$current_year}-12-31");
+			}
+
 			$contract_dates = $this->get_contract_date();
 			if(isset($contract_dates))
 			{
@@ -601,11 +617,6 @@
 				else if($contract_start > $timestamp_invoice_end)
 				{
 					return 0; // The contract starts after the end of current year
-				}
-				else if($contract_start < $timestamp_invoice_start && (!isset($contract_end) || $contract_end > $timestamp_invoice_end))
-				{
-					// The contract is active the whole current year
-					return rental_socontract_price_item::get_instance()->get_total_price($this->get_id());
 				}
 			}
 			else
@@ -717,16 +728,18 @@
 					$invoice_price_item_end						// the end date to which this price item should be calculated
 				);
 				
+				
+				$total_price_price_item = 0;
+				
 				// If the contract price item is of type one-time and it's dates are within the invoice period ...
-				if($contract_price_item->is_one_time()){
+				if($contract_price_item->is_one_time()){ 
 					if($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end){
 						// ... set the total price of the invoice price item to the total price of the contract price item
-						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
+						$total_price_price_item = $contract_price_item->get_total_price();
 					}
+				}else{
+					$total_price_price_item = $invoice_price_item->get_total_price();
 				}
-				
-				// Add this price item's total sum to the tota sum of the invoice
-				$total_price_price_item = $invoice_price_item->get_total_price();
 				$total_sum += round($total_price_price_item,2);
 			} // end of looping through the contract price items
 			
