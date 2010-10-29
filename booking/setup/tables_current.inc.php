@@ -169,6 +169,7 @@
 				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
 				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
 				'frontend_modified' => array('type' => 'timestamp', 'nullable'=> True),
+				'building_name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
@@ -195,6 +196,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
+				'building_name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'application_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'organization_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
@@ -217,6 +219,7 @@
 				'group_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'from_' => array('type' => 'timestamp','nullable' => False),
 				'to_' => array('type' => 'timestamp','nullable' => False),
+				'building_name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'allocation_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'season_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1'),
