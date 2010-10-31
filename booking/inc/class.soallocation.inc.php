@@ -144,7 +144,6 @@
 			if (!CreateObject('booking.soseason')->timespan_within_season($entity['season_id'], $from_, $to_)) {
 				$errors['season_boundary'] = lang("This booking is not within the selected season");
 			}
-			flush();
 		}
 		
 		public function find_expired() {

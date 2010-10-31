@@ -466,3 +466,8 @@ The e-mail addresses you entered do not match	booking	no	E-postadressene er ikke
 Lengt of shortname is to long, max 11 characters long	booking	no	Kortnavn er for langt, maks 11 tegn
 The organization number is wrong or not present	booking	no	Det er ikke registrert et organisjonsnummer på denne organisasjonen
 The resource number is wrong or not present	booking	no	Det er ikke registert et ressursnummer på denne organisasjonen
+Recurring allocation	booking	no	Gjenta tildelingen
+weekday	booking	no	Ukedag
+Out season	booking	no	Ut sesong
+Allocations colliding with existing allocations or bookings (%1)	booking	no	Tildelinger ikke kan lages
+Allocations that can be created	booking	no	Tildelinger som kan lages

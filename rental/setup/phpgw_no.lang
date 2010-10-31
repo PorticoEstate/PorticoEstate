@@ -161,6 +161,7 @@ date_end	rental	no	Gjelder til
 date	rental	no	Dato
 date_start	rental	no	Gjelder fra
 decimal separator	rental	no	Skilletegn for desimaler
+delegates	rental	no	Delegering
 delete	rental	no	Slett
 department	rental	no	Avdeling
 deposit	rental	no	Depositum
@@ -413,6 +414,7 @@ rc	rental	no	Leieobjekter
 recurrence	rental	no	Gjentakelse
 reference	rental	no	Deres ref
 regulation	rental	no	Regulering
+related_delegates	rental	no	Delegater
 remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
 remove_from_all_workbenches	rental	no	Fjern fra alle skrivebord
@@ -429,6 +431,8 @@ responsibility	rental	no	Ansvar
 responsibility_id	rental	no	Ansvar
 Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
 responsibility_id_not_numeric	rental	no	Ansvar må være et tall
+result_unit_back	rental	no	Resultatsliste
+result_unit	rental	no	Resultatsenhet
 result_unit_number	rental	no	Resultatsenhet
 Run	rental	no	Kjørt
 run by	rental	no	Utført av
@@ -512,6 +516,10 @@ type	rental	no	Type
 under_dismissal	rental	no	Under oppsigelse
 under_planning	rental	no	Under planlegging
 units	rental	no	Enheter
+unit_id	rental	no	Enhetsid
+unit_name	rental	no	Enhetsnavn
+unit_leader_name	rental	no	Navn enhetsleder
+unit_no_of_delegates	rental	no	Antall delegater
 update	rental	no	Oppdatér
 upload	rental	no	Last opp
 url	rental	no	Nettsted

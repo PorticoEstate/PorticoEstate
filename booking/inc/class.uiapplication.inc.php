@@ -177,6 +177,10 @@
 							'label' => lang('Status')
 						),
 						array(
+							'key' => 'building_name',
+							'label' => lang('Building')
+						),
+						array(
 							'key' => 'what',
 							'label' => lang('What')
 						),
