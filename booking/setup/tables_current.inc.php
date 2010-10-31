@@ -166,8 +166,8 @@
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
 				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'status' => array('type' => 'text', 'nullable'=> False),
-				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
-				'modified' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'now'),
+				'created' => array('type' => 'timestamp', 'nullable'=> False, 'default' => 'current_timestamp'),
+				'modified' => array('type' => 'timestamp', 'nullable'=> False),
 				'frontend_modified' => array('type' => 'timestamp', 'nullable'=> True),
 				'building_name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
@@ -331,7 +331,7 @@
 				'time' => array('type' => 'timestamp', 'nullable' => False),
 				'author' => array('type' => 'text', 'nullable' => False),
 				'comment' => array('type' => 'text', 'nullable' => False),
-				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'comment'),
+				'type' => array('type' => 'varchar',  'precision' => '20', 'nullable' => false, 'default' => 'comment'),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -586,7 +586,7 @@
 				'time' => array('type' => 'timestamp', 'nullable' => False),
 				'author' => array('type' => 'text', 'nullable' => False),
 				'comment' => array('type' => 'text', 'nullable' => False),
-				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'comment'),
+				'type' => array('type' => 'varchar',  'precision' => '20', 'nullable' => false, 'default' => 'comment'),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -733,7 +733,7 @@
 		'bb_billing_sequential_number_generator' => array(
 			'fd' => array(
 				'id' 		=> array('type' => 'auto', 'nullable' => False),
-				'name'   => array('type' => 'text', 'nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '100','nullable' => False),// FIXME
 				'value'	=> array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 			),
 			'pk' => array('id'),
@@ -752,8 +752,8 @@
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => true),
 				'email' => array('type' => 'varchar','precision' => '50','nullable' => true),
 				'message' => array('type' => 'text', 'nullable' => False),
-				'type' => array('type' => 'text', 'nullable' => False, 'default'=>'message'),
-				'status' => array('type' => 'text', 'nullable' => False, 'default'=>'NEW'),
+				'type' => array('type' => 'varchar',  'precision' => '20', 'nullable' => false, 'default' => 'comment'),
+				'status' => array('type' => 'varchar',  'precision' => '20', 'nullable' => false, 'default' => 'NEW'),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
