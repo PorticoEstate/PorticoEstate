@@ -92,14 +92,15 @@
 						'url'	=> '',
 						'image'	=> array('rental', 'x-office-document'),
 						'children' => $sync_choices
+					),
+					'resultunit' => array
+					(
+						'text' => lang('delegates'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiresultunit.index','appname' => 'rental') ),
+						'image' => array('rental', 'system-users')
 					)
 				);
 			}
-			
-			
-			
-			
-			
 			
 			$menus['navigation'] =  array
 			(

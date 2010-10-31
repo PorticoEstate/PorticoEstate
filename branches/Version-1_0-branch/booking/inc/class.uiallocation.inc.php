@@ -19,6 +19,7 @@
 			$this->bo = CreateObject('booking.boallocation');
 			$this->organization_bo    = CreateObject('booking.boorganization');
 			$this->building_bo    = CreateObject('booking.bobuilding');
+			$this->season_bo    = CreateObject('booking.boseason');
 			self::set_active_menu('booking::applications::allocations');
 			$this->fields = array('resources', 'cost', 'application_id',
 								  'building_id', 'building_name', 
@@ -119,14 +120,42 @@
 		public function add()
 		{
 			$errors = array();
+			$step = phpgw::get_var('step', 'str', 'POST');
+			if (! isset($step)) $step = 1;
+			$invalid_dates = array();
+			$valid_dates = array();
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$season = $this->season_bo->read_single($_POST['season_id']);
 				array_set_default($_POST, 'resources', array());
 				$allocation = extract_values($_POST, $this->fields);
 				$allocation['active'] = '1';
 				$allocation['completed'] = '0';
+
+				$from_date = $_POST['from_'];
+				$to_date = $_POST['to_'];
+				$weekday = $_POST['weekday'];
+
+				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_']));
+				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_']));
+
+				if (($_POST['weekday'] != 'sunday' &&  date('w')  > date('w',strtotime($_POST['weekday']))) || (date('w') == 'sunday' &&  date('w') < date('w',strtotime($_POST['weekday'])))){
+					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_'])-60*60*24*7);
+					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_'])-60*60*24*7);
+				} 
+
+				$_POST['from_'] = $allocation['from_'];
+				$_POST['to_'] = $allocation['to_'];
+
 				$errors = $this->bo->validate($allocation);
-				if(!$errors)
+
+				if (!$errors)
+				{
+					$step++;
+				}
+
+				if (!$errors && $_POST['outseason'] != 'on' )
 				{
 					try {
 						$receipt = $this->bo->add($allocation);
@@ -135,14 +164,86 @@
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
+				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
+				{
+
+					$repeat_until = strtotime($season['to_'])+60*60*24; 
+					$_POST['repeat_until'] = $season['to_'];
+
+					$max_dato = strtotime($_POST['to_']); // highest date from input
+					$interval = $_POST['field_interval']*60*60*24*7; // weeks in seconds
+					$i = 0;
+					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
+					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
+					while (($max_dato+($interval*$i)) <= $repeat_until)
+					{
+						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval*$i));
+						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
+						$allocation['from_'] = $fromdate;
+						$allocation['to_'] = $todate;
+						$err = $this->bo->validate($allocation);
+						if ($err) 
+						{
+							$invalid_dates[$i]['from_'] = $fromdate;
+							$invalid_dates[$i]['to_'] = $todate;
+						} 
+						else 
+						{
+							$valid_dates[$i]['from_'] = $fromdate;
+							$valid_dates[$i]['to_'] = $todate;
+							if ($step == 3)
+							{
+								try {
+									$receipt = $this->bo->add($allocation);
+								} catch (booking_unauthorized_exception $e) {
+									$errors['global'] = lang('Could not add object due to insufficient permissions');
+								}
+							}
+						}
+						$i++;
+					}
+					if ($step == 3) 
+					{
+						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
+					}
+				}
 			}
+
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
 			array_set_default($allocation, 'resources', array());
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
-			self::render_template('allocation_new', array('allocation' => $allocation));
+
+			if ($step < 2) 
+			{
+				if($_SERVER['REQUEST_METHOD'] == 'POST' && $errors) {				
+					$allocation['from_'] = strftime("%H:%M", strtotime($_POST['weekday']." ".$_POST['from_']));
+					$allocation['to_'] = strftime("%H:%M", strtotime($_POST['weekday']." ".$_POST['to_']));
+				}
+				self::render_template('allocation_new', array('allocation' => $allocation,
+					'step' => $step, 
+					'interval' => $_POST['field_interval'],
+					'repeat_until' => $_POST['repeat_until'],
+					'outseason' => $_POST['outseason'],
+				));
+			} 
+			else if ($step == 2) 
+			{
+				self::render_template('allocation_new_preview', array('allocation' => $allocation,
+					'step' => $step,
+					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
+					'interval' => $_POST['field_interval'],
+					'repeat_until' => $_POST['repeat_until'],
+					'weekday' => $weekday,
+					'from_date' => $from_date,
+					'to_date' => $to_date,
+					'valid_dates' => $valid_dates,
+					'invalid_dates' => $invalid_dates
+				));
+			}
 		}
 
 		private function send_mailnotification_to_organization($organization, $subject, $body)

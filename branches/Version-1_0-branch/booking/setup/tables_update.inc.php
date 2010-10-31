@@ -2366,4 +2366,19 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+  $test[] = '0.1.99';
+	function booking_upgrade0_1_99()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_application SET building_name = b2.name FROM bb_building b2 WHERE EXISTS (SELECT 1 FROM bb_building b, bb_application a, bb_application_resource ar,bb_resource r WHERE a.activity_id = ar.application_id AND ar.resource_id = r.id AND r.building_id = b.id AND b2.id=b.id AND bb_booking.id=bo.id)");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.00';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 

@@ -15,6 +15,7 @@
 					'secret'	=> array('type' => 'string', 'required' => true),
 					'created'	=> array('type' => 'timestamp'),
 					'modified'	=> array('type' => 'timestamp'),
+					'building_name' => array('type' => 'string', 'required'=> true, 'query' => true),
 					'frontend_modified'	=> array('type' => 'timestamp'),
 					'owner_id'	=> array('type' => 'int', 'required' => true),
 					'case_officer_id'	=> array('type' => 'int', 'required' => false),

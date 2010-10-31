@@ -106,6 +106,7 @@
 
 		function generate_allocation($season_id, $date, $to, $interval, $write=false)
 		{
+			$season = $this->so->read_single($season_id);
 			$this->authorize_write($season_id);
 			$valid = array();
 			$invalid = array();
@@ -120,8 +121,10 @@
 					$allocation['active'] = '1';
 					$allocation['from_'] = $date->format("Y-m-d").' '.$talloc['from_'];
 					$allocation['to_'] = $date->format("Y-m-d").' '.$talloc['to_'];
+					$allocation['building_name'] = $season['building_name'];
 					$allocation['completed'] = 1;
 					$errors = $this->bo_allocation->validate($allocation);
+
 					if(!$errors)
 						$valid[] = $allocation;
 					elseif (count($this->bo_allocation->filter_conflict_errors($errors)) === 0)
