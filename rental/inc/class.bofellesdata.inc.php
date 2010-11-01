@@ -70,7 +70,7 @@
 		
 		
 		
-  		public function result_unit_exist($result_unit)
+  		public function result_unit_exist($result_unit, $level)
 		{
 			if(isset($result_unit) && is_numeric($result_unit))
 			{
@@ -78,6 +78,7 @@
 				$table = "V_ORG_ENHET";
 				$db = $this->get_db();
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.RESULTATENHET = $result_unit";
+				if($level) $sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
@@ -90,7 +91,7 @@
 			return false;
 		}
 		
-		public function org_unit_exist($org_unit_id)
+		public function org_unit_exist($org_unit_id, $level)
 		{
 			if(isset($org_unit_id) && is_numeric($org_unit_id))
 			{
@@ -98,6 +99,7 @@
 				$table = "V_ORG_ENHET";
 				$db = $this->get_db();
 				$sql = "SELECT $column FROM $table WHERE V_ORG_ENHET.ORG_ENHET_ID = $org_unit_id";
+				if($level) $sql = "$sql AND V_ORG_ENHET.ORG_NIVAA = $level";
 				$db->query($sql,__LINE__,__FILE__);
 				if($db->next_record())
 				{
