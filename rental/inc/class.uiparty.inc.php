@@ -172,7 +172,7 @@ class rental_uiparty extends rental_uicommon
 	{
 		$bofelles = rental_bofellesdata::get_instance();
 		
-		$result_objects = rental_soparty::get_instance()->get();
+		$parties = rental_soparty::get_instance()->get();
 		$result_count = rental_soparty::get_instance()->get_count();
 		
 		echo "Total number of parties: {$result_count}";
@@ -183,73 +183,46 @@ class rental_uiparty extends rental_uicommon
 			$count_result_unit_number = 0;
 			$count_identifier = 0;
 			$count_responsibility = 0;
-			$unit_found = false;
-			
-			//for all parties
-			foreach ($result_objects as $party) {
+
+			foreach ($parties as $party) {
 				$unit_found = false;
-				//if the party is an has not set "org_enhet_id"
-				if(isset($party) && !$party->get_org_enhet_id())
-				{
-					$serialized = $party->serialize($contract);
+				$fellesdata = NULL;
+
+				if(isset($party)) {
 					$sync_data = $party->get_sync_data();
 
-					//find a relevant org_enehet_id
-					$unit_name_and_id = $bofelles->result_unit_exist($sync_data['result_unit_number']);
-					if(!$unit_name_and_id)
-					{
-						$unit_name_and_id = $bofelles->result_unit_exist($party->get_identifier());
-					}
-					else{
+					$fellesdata = $bofelles->result_unit_exist($sync_data['result_unit_number'],4);
+					if ($fellesdata) {
+						echo "Unit id found {$fellesdata['UNIT_ID']} by result unit number check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
 						$count_result_unit_number++;
-						
-						$unit_id_echo = $unit_name_and_id['UNIT_ID'];
-						$unit_name_echo = $unit_name_and_id['UNIT_NAME'];
-						echo "Unit id found {$unit_id_echo} by result unit number check. The unit name is {$unit_name_echo}";
-						
-						$unit_found = true;
-					}
-					
-					if(!$unit_name_and_id)
-					{
-						$unit_name_and_id = $bofelles->responsibility_id_exist($sync_data['responsibility_id']);
-					}
-					else if(!$unit_found){
-						$count_identifier++;
-						$unit_id_echo = $unit_name_and_id['UNIT_ID'];
-						$unit_name_echo = $unit_name_and_id['UNIT_NAME'];
-						echo "Unit id found {$unit_id_echo} by identifier check. The unit name is {$unit_name_echo}";
-						$unit_found = true;
-					}
-					
-					if(isset($unit_name_and_id))
-					{
-						if(!$unit_found){
-							$unit_id_echo = $unit_name_and_id['UNIT_ID'];
-							$unit_name_echo = $unit_name_and_id['UNIT_NAME'];
-							echo "Unit id found {$unit_id_echo} by responsibility id check. The unit name is {$unit_name_echo}";
-							$count_responsibility++;
+					} else {
+						$fellesdata = $bofelles->result_unit_exist($party->get_identifier(),4);
+						if ($fellesdata) {
+							echo "Unit id found {$fellesdata['UNIT_ID']} by identifier check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
+							$count_identifier++;
+						} else {
+							$fellesdata = $bofelles->responsibility_id_exist($sync_data['responsibility_id']);
+							if ($fellesdata) {
+								echo "Unit id found {$fellesdata['UNIT_ID']} by responsibility id check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
+								$count_responsibility++;
+							}
 						}
-						
-						$unit_id = $unit_name_and_id['UNIT_ID'];
-						$unit_name = $unit_name_and_id['UNIT_NAME'];
-						
-						//if unit_id is found set it to the party
-						if(isset($unit_id) && is_numeric($unit_id))
-						{
-							$party->set_org_enhet_id($unit_id);
-							rental_soparty::get_instance()->store($party);
-							$count++;
-						}
+					}
+
+					if ($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID'])) {
+						$party->set_org_enhet_id($unit_id);
+						rental_soparty::get_instance()->store($party);
 					}
 				}
 			}
-			echo "Number of parties found through result unit number {$count_result_unit_number}";
-			echo "Number of parties found through identifier {$count_identifier}";
-			echo "Number of parties found through responsibility id {$count_responsibility}";
-			echo "Number of parties that have been updated {$count}";
+
+			echo "Number of parties found through result unit number {$count_result_unit_number}<br />";
+			echo "Number of parties found through identifier {$count_identifier}<br />";
+			echo "Number of parties found through responsibility id {$count_responsibility}<br />";
+			echo "Number of parties that have been updated {$count}<br />";
 		}
-	}
+ 	}
+	
 
 	/**
 	 * Add action links for the context menu of the list item

@@ -343,6 +343,15 @@ HTML;
 		public function get_local_menu($app = '')
 		{
 			$app = $app ? $app : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			switch ( $app )
+			{
+				case 'home':
+				case 'login':
+					return array();
+				default:
+					// nothing
+			}
+
 			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
 			{
 				$menu_gross = execMethod("{$app}.menu.get_menu",'horisontal');
