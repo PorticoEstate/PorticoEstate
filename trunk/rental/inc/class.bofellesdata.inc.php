@@ -157,6 +157,52 @@
 			return $result_units;
 		}
 		
+		public function get_result_units_with_leader($search_for, $search_type)
+		{
+			
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_PERSON.FORNAVN, V_ORG_PERSON.ETTERNAVN, V_ORG_PERSON.BRUKERNAVN";
+			$tables = "V_ORG_ENHET, V_ORG_PERSON";
+			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_PERSON_ENHET.ORG_ENHET_ID = V_ORG_ENHET.ORG_ENHET_ID) ".
+        				"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
+			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4";
+			if($search_for){
+				$selector = "";
+				switch($search_type){
+					case 'unit_leader':
+							$selector = "";
+						break;
+					default:
+							$selector = "ORG_NAVN LIKE '%".$search_for."%'";
+						break; 
+				}
+				$sql = "$sql AND $selector";
+			}
+			$order_by = "ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
+			$sql = "$sql $order_by";
+			
+			
+			$db = $this->get_db();
+			$db->query($sql,__LINE__,__FILE__);			
+	        
+			$result_units = array();
+			while($db->next_record())
+			{
+				
+				$full_name = $db->f('FORNAVN'). $db->f('ETTERNAVN');
+				
+				$result_units[] = array(
+						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
+						"ORG_UNIT_NAME" => $db->f('ORG_NAVN'),
+						"LEADER_FIRSTNAME" => $db->f('FORNAVN'),
+						"LEADER_LASTNAME" => $db->f('ETTERNAVN'),
+						"LEADER_FULLNAME" => $full_name,
+						"LEADER_USERNAME" => $db->f('BRUKERNAVN')
+					);
+			}
+			return $result_units;
+		}
+		
+		
 		public function is_connected()
 		{
 			return $this->connected;

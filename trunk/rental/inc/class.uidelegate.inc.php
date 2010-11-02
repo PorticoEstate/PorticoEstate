@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('rental.uicommon');
+	phpgw::import_class('frontend.bofrontend');
 	
 	class uidelegate extends rental_uicommon
 	{
@@ -22,15 +23,18 @@
 		public function query(){
 			$unit_id = (int)phpgw::get_var('unit_id');
 			
+			$delegates_data = array();
+			
 			if (isset($unit_id) && $unit_id > 0) {
 				$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit_id);
+			
+			
+				$delegates_data = array('results' => $delegates_per_org_unit, 'total_records' => count($delegates_per_org_unit));
+				
+				$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			}
 			
-			$delegates_data = array('results' => $delegates_per_org_unit, 'total_records' => count($delegates_per_org_unit));
-			
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-			
-			return $this->yui_results($resultunit_data, 'total_records', 'results');
+			return $this->yui_results($delegates_data, 'total_records', 'results');
 		}
 		
 		public function index(){
