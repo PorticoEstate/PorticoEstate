@@ -92,6 +92,7 @@
 			
 			if (isset($unit_id) && $unit_id > 0) {
 				
+				
 				$bofelles = rental_bofellesdata::get_instance();
 				$unit = $bofelles->get_result_unit($unit_id);
 				

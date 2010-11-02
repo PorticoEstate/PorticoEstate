@@ -133,7 +133,7 @@
 							"UNIT_ID" => $db->f('RESULTATENHET')
 						);
 				}
-			}   
+			}
 		}
 		
 		public function get_result_units()

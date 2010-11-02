@@ -54,7 +54,6 @@
 ?>
 <form id="<?php echo $list_id ?>_form" method="GET">
 	<fieldset>
-	
 		<input type="hidden" name="account_id" value="{search/account_id}"/>
 		<label><?php echo lang('username') ?> </label>
 		<input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="<?php echo lang('btn_search') ?>"/>
@@ -70,7 +69,6 @@
 		<br/>
 		<input type="submit" name="add" value="<?php echo lang('btn_add') ?>"/>
 	</fieldset>
-
 </form>
 <?php
 	} // end if($list_form)

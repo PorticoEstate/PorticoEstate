@@ -87,7 +87,6 @@
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
-
 </form>
 <?php
 	} // end if($list_form)
