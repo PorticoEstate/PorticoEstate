@@ -1,6 +1,7 @@
 <?php
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.bofellesdata');
+	phpgw::import_class('frontend.bofrontend');
 	
 	class rental_uiresultunit extends rental_uicommon
 	{
@@ -36,18 +37,22 @@
 			// Form variables
 			$search_for 	= phpgw::get_var('query');
 			$search_type	= phpgw::get_var('search_option');
+			
+			phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
+			phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
+			
 			// Create an empty result set
 			$result_count = 0;
 			
 			
 			// get all result unit from fellesdata
 			$bofelles = rental_bofellesdata::get_instance();
-			$result_units = $bofelles->get_result_units();
-			
+
+			$result_units = $bofelles->get_result_units_with_leader($search_for, $search_type);
+
 			foreach($result_units as &$unit) {
 				$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit['ORG_UNIT_ID']);
-				$number_of_delegates = count($delegates_per_org_unit);
-				$unit['UNIT_NO_OF_DELEGATES'] = $number_of_delegates;
+				$unit['UNIT_NO_OF_DELEGATES'] = count($delegates_per_org_unit);
 			}
 			
 			$resultunit_data = array('results' => $result_units, 'total_records' => count($result_units));
@@ -76,7 +81,7 @@
 		public function add_actions(&$value)
 		{
 			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiresultunit.edit', 'id' => $value['unit_id'], 'initial_load' => 'no')));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiresultunit.edit', 'id' => $value['ORG_UNIT_ID'], 'initial_load' => 'no')));
 			$value['labels'][] = lang('edit_delegate');
 		}
 		
@@ -88,9 +93,12 @@
 			if (isset($unit_id) && $unit_id > 0) {
 				
 				$bofelles = rental_bofellesdata::get_instance();
-				$unit ;//= $bofelles->get_result_unit($unit_id);
+				$unit = $bofelles->get_result_unit($unit_id);
 				
-				$this->render('resultunit.php', $unit);
+				$delegates_per_org_unit = frontend_bofrontend::get_delegates($unit_id);
+				$unit['UNIT_NO_OF_DELEGATES'] = count($delegates_per_org_unit);
+				
+				$this->render('resultunit.php', array ('unit' => $unit));
 			}
 		}
 	}

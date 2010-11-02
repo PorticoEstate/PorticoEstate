@@ -69,13 +69,6 @@
 		<input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/>
 		<br/>
 		<input type="submit" name="add" value="<?php echo lang('btn_add') ?>"/>
-	
-		<!-- Search -->
-		<h3><?php echo lang('search_options') ?></h3>
-		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
-		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" value="<?php echo isset($q) ? $q : ''?>"/>
-		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
-		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
 
 </form>
