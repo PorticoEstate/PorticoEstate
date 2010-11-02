@@ -10,6 +10,7 @@
 			'query'				=> true,
 			'add_delegate'		=> true,
 			'remove_delegate'	=> true
+		
 		);
 		
 		public function __construct()

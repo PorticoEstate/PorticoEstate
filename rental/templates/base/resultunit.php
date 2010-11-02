@@ -10,7 +10,6 @@
 <!--  ?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?-->
 <!--  ?php echo rental_uicommon::get_page_message($message) ?-->
 
-
 <!-- HOPPET OVER WARNINGS FORELØPIG -->
 
 <div class="identifier-header">
