@@ -10,7 +10,6 @@
 <!--  ?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?-->
 <!--  ?php echo rental_uicommon::get_page_message($message) ?-->
 
-
 <!-- HOPPET OVER WARNINGS FORELØPIG -->
 
 <div class="identifier-header">
@@ -26,7 +25,7 @@
 		<?php echo $unit["ORG_NAME"]; ?>
 		 <br/>
 		<label><?php echo lang('unit_leader_name'); ?></label>
-		<?php echo $unit["UNIT_ID"]; ?>
+		<?php echo $unit["LEADER_FULLNAME"]; ?>
 		<br/>
 		<label><?php echo lang('unit_no_of_delegates') ?></label>
 		<?php echo $unit["UNIT_NO_OF_DELEGATES"]; ?>
@@ -35,11 +34,9 @@
 
 <script type="text/javascript" language="JavaScript">
 function loadDatatables(delegates){
-	if(currTab == 'composites'){
-		for(i=0;i<YAHOO.rental.datatables.length;i++){
-			if(YAHOO.rental.datatables[i].tid == 'included_delegates'){
-				reloadDataSources(YAHOO.rental.datatables[i]);
-			}
+	for(i=0;i<YAHOO.rental.datatables.length;i++){
+		if(YAHOO.rental.datatables[i].tid == 'included_delegates'){
+			reloadDataSources(YAHOO.rental.datatables[i]);
 		}
 	}
 }
@@ -47,17 +44,17 @@ function loadDatatables(delegates){
 
 <div id="result_unit_tabview" class="yui-navset">
 	<ul class="yui-nav">
-		<li><a href="#delegates" onclick="javascript: loadDatatables('delegates');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-users.png" alt="icon" /> <?php echo lang('delegates') ?></em></a></li>
+		<li class="selected"><a href="#delegates" onclick="javascript: loadDatatables('delegates');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-users.png" alt="icon" /> <?php echo lang('delegates') ?></em></a></li>
 	</ul>
 	<div class="yui-content">
 		<?php if($unit["ORG_UNIT_ID"] > 0) {?>
 			<div id="delegates">
 				<h3><?php echo lang('related_delegates') ?></h3>
 				<?php
-					$list_form = false;
+					$list_form = true;
 					$list_id = 'included_delegates';
 					$url_add_on = '&amp;type=included_delegates&amp;unit_id='.$unit["ORG_UNIT_ID"];
-					include('delegates_list_partial.php'); ?>
+					include('delegate_list.php'); ?>
 			</div>
 		<?php }?>
 	</div>
