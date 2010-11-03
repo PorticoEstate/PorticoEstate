@@ -12,22 +12,22 @@
 
 	// Defining columns for datatable
 	var columnDefs = [{
-			key: "unit_id",
+			key: "ORG_UNIT_ID",
 			label: "<?php echo lang('unit_id') ?>",
 			sortable: true
 		},
 		{
-			key: "unit_name",
+			key: "ORG_UNIT_NAME",
 			label: "<?php echo lang('unit_name') ?>",
 			sortable: true
 		},
 		{
-			key: "unit_leader_name",
+			key: "LEADER_FULLNAME",
 			label: "<?php echo lang('unit_leader_name') ?>",
 		    sortable: true
 		},
 		{
-			key: "unit_no_of_delegates",
+			key: "UNIT_NO_OF_DELEGATES",
 			label: "<?php echo lang('unit_no_of_delegates') ?>",
 		    sortable: true
 		},
@@ -49,7 +49,7 @@
 		'index.php?menuaction=rental.uiresultunit.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		'<?php echo $list_id ?>_ctrl_search_query',
+		['<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -68,8 +68,6 @@
 	//Avoid Notices
 	$q = false;
 	$s_type = false;
-	$status = false;
-	$status_contract = false;
 	if(isset($populate))
 	{
 		$q = phpgwapi_cache::session_get('rental', 'resultunit_query');
@@ -81,10 +79,14 @@
 		<h3><?php echo lang('search_options') ?></h3>
 		<label for="ctrl_search_query"><?php echo lang('search_for') ?></label>
 		<input id="<?php echo $list_id ?>_ctrl_search_query" type="text" name="query" autocomplete="off" value="<?php echo isset($q) ? $q : ''?>"/>
+		<label for="ctrl_search_option"><?php echo lang('search_where') ?></label>
+		<select name="search_option" id="<?php echo $list_id ?>_ctrl_search_option">
+			<option value="unit_name" <?php echo ($s_type == 'unit_name') ? 'selected' : ''?>><?php echo lang('unit_name') ?></option>
+			<option value="unit_leader" <?php echo ($s_type == 'unit_leader') ? 'selected' : ''?>><?php echo lang('unit_leader') ?></option>
+		</select>
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
-
 </form>
 <?php
 	} // end if($list_form)
