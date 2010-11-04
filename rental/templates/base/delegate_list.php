@@ -38,8 +38,8 @@
 	setDataSource(
 		'index.php?menuaction=rental.uidelegate.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
-		'<?php echo $list_id ?>_form',
-		'<?php echo $list_id ?>_ctrl_search_query',
+		'',
+		'',
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -52,20 +52,20 @@
 	if($list_form)
 	{
 ?>
-<form id="<?php echo $list_id ?>_form" method="GET">
+<form id="<?php echo $list_id ?>_form" method="POST" action="<?php echo $form_action?>">
 	<fieldset>
-		<input type="hidden" name="account_id" value="{search/account_id}"/>
+		<input type="hidden" name="account_id" value="<?php echo $search_result['account_id'];?>"/>
 		<label><?php echo lang('username') ?> </label>
-		<input type="text" name="username" value="{search/username}"/><input type="submit" name="search" value="<?php echo lang('btn_search') ?>"/>
+		<input type="text" name="username" value="<?php echo $search_result['username'];?>"/><input type="submit" name="search" value="<?php echo lang('btn_search') ?>"/>
 		<br/>
 		<label><?php echo lang('firstname') ?> </label>
-		<input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/>
+		<input type="text" name="firstname" readonly="" value="<?php echo $search_result['firstname'];?>" style="background-color: #CCCCCC;"/>
 		<br/>
 		<label><?php echo lang('lastname') ?> </label>
-		<input type="text" name="lastname" readonly="" value="{search/lastname}" style="background-color: #CCCCCC;"/>
+		<input type="text" name="lastname" readonly="" value="<?php echo $search_result['lastname'];?>" style="background-color: #CCCCCC;"/>
 		<br/>
 		<label><?php echo lang('email') ?> </label>
-		<input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/>
+		<input type="text" name="email" readonly="" value="<?php echo $search_result['email'];?>" style="background-color: #CCCCCC;"/>
 		<br/>
 		<input type="submit" name="add" value="<?php echo lang('btn_add') ?>"/>
 	</fieldset>

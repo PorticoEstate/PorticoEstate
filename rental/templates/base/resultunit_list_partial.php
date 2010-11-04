@@ -24,12 +24,12 @@
 		{
 			key: "LEADER_FULLNAME",
 			label: "<?php echo lang('unit_leader_name') ?>",
-		    sortable: true
+			sortable: true
 		},
 		{
 			key: "UNIT_NO_OF_DELEGATES",
 			label: "<?php echo lang('unit_no_of_delegates') ?>",
-		    sortable: true
+		    sortable: false
 		},
 		{
 			key: "actions",
