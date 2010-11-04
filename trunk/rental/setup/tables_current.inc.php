@@ -423,16 +423,16 @@
 		
 		'rental_adjustment' => array(
 			'fd' => array(
-				'id' =>                 array('type' => 'auto', 'nullable' => false),
-				'price_item_id'	=>		array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'responsibility_id' =>  array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'adjustment_date' =>  	array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'adjustment_type' =>	array('type' => 'varchar','precision' => '255','nullable' => true),
-				'new_price' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
-				'percent' =>			array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
-				'interval' =>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'is_manual' =>			array('type' => 'bool','nullable' => false,'default' => 'false'),
-				'is_executed' =>		array('type' => 'bool','nullable' => false,'default' => 'false')	
+				'id' =>                 	array('type' => 'auto', 'nullable' => false),
+				'price_item_id'	=>			array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'responsibility_id' =>  	array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'adjustment_date' =>  		array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'adjustment_type' =>		array('type' => 'varchar','precision' => '255','nullable' => true),
+				'new_price' =>				array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'percent' =>				array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+				'adjustment_interval' =>	array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'is_manual' =>				array('type' => 'bool','nullable' => false,'default' => 'false'),
+				'is_executed' =>			array('type' => 'bool','nullable' => false,'default' => 'false')	
 			),
 			'pk' => array('id'),
 				'fk' => array(),
