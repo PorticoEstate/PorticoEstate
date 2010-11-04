@@ -50,10 +50,13 @@
 		
 		public function add_actions(&$value, $key, $params)
 		{
-			$unit_id = $params[0];
-			
-			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(link(array('menuaction' => 'rental.uiresultunit.remove_delegate', 'id' => $unit_id, 'account_id' => $value['account_id'], 'owner_id' => $value['owner_id'])));
-			$value['labels'][] = lang('remove_delegate');
+			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				$unit_id = $params[0];
+				
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiresultunit.remove_delegate', 'id' => $unit_id, 'account_id' => $value['account_id'], 'owner_id' => $value['owner_id'])));
+				$value['labels'][] = lang('remove');
+			}
 		}
 	}
