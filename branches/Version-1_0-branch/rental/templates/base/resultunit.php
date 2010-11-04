@@ -6,9 +6,8 @@
 	$config->read();
 ?>
 
-<!--  ?php echo rental_uicommon::get_page_error($error) ?-->
-<!--  ?php echo rental_uicommon::get_page_warning($contract->get_validation_warnings()) ?-->
-<!--  ?php echo rental_uicommon::get_page_message($message) ?-->
+<?php echo rental_uicommon::get_page_error($error)?>
+<?php echo rental_uicommon::get_page_message($message)?>
 
 <!-- HOPPET OVER WARNINGS FORELØPIG -->
 
@@ -22,7 +21,7 @@
 		} ?>
 		<br/>
 		<label><?php echo lang('unit_name'); ?></label>
-		<?php echo $unit["ORG_NAME"]; ?>
+		<?php echo $unit["ORG_UNIT_NAME"]; ?>
 		 <br/>
 		<label><?php echo lang('unit_leader_name'); ?></label>
 		<?php echo $unit["LEADER_FULLNAME"]; ?>
@@ -50,7 +49,16 @@ function loadDatatables(delegates){
 		<?php if($unit["ORG_UNIT_ID"] > 0) {?>
 			<div id="delegates">
 				<h3><?php echo lang('related_delegates') ?></h3>
+				<?php if($msglog['error']['msg']){?>
+					<div class="error"><?php echo $msglog['error']['msg']?></div>
+				<?php 
+					}
+					if($msglog['message']['msg']){
+				?>
+					<div class="msg_good"><?php echo $msglog['message']['msg']?></div>
 				<?php
+					}
+				
 					$list_form = true;
 					$list_id = 'included_delegates';
 					$url_add_on = '&amp;type=included_delegates&amp;unit_id='.$unit["ORG_UNIT_ID"];

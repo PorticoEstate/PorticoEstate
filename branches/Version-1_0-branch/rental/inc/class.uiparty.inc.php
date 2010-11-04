@@ -210,9 +210,13 @@ class rental_uiparty extends rental_uicommon
 					}
 
 					if ($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID'])) {
-						$party->set_org_enhet_id($unit_id);
-						rental_soparty::get_instance()->store($party);
+						// We found a match, so store the new connection
+						$party->set_org_enhet_id($fellesdata['UNIT_ID']);
+					} else {
+						// No match was found. Set the connection to NULL
+						$party->set_org_enhet_id(NULL);
 					}
+					rental_soparty::get_instance()->store($party);
 				}
 			}
 
