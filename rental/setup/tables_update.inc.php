@@ -195,5 +195,13 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 
+	$test[] = '0.1.0.10';
+	function rental_upgrade0_1_0_10()
+	{
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_adjustment', 'interval', 'adjustment_interval');
+
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.11';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
 	
 ?>
