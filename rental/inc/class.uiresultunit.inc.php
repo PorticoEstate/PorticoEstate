@@ -82,14 +82,18 @@
 		
 		public function add_actions(&$value)
 		{
-			$value['ajax'][] = false;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiresultunit.edit', 'id' => $value['ORG_UNIT_ID'])));
-			$value['labels'][] = lang('edit_delegate');
+			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiresultunit.edit', 'id' => $value['ORG_UNIT_ID'])));
+				$value['labels'][] = lang('edit');
+			}
 		}
 		
 		public function edit(){
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
+			
 			$unit_id = (int)phpgw::get_var('id');
 			
 			if (isset($unit_id) && $unit_id > 0) {

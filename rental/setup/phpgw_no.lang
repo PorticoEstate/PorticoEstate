@@ -71,6 +71,8 @@ billing_removed_contract_part_1	rental	no	Fjernet kontrakt
 billing_removed_contract_part_2	rental	no	med total pris lik 0 kroner
 bill	rental	no	Faktura
 bill2	rental	no	Fakturér
+btn_add	rental	no	Deleger tilgang til bruker
+btn_search	rental	no	Finn bruker
 building	rental	no	Bygg
 calculations_internal_investment	rental	no	Beregningsgrunnlag internleie/investeringer
 calculate_price_apiece	rental	no	Pris regnes per stk.
@@ -162,6 +164,9 @@ date	rental	no	Dato
 date_start	rental	no	Gjelder fra
 decimal separator	rental	no	Skilletegn for desimaler
 delegates	rental	no	Delegering
+delegate_removed	rental	no	Delegaten ble fjernet.
+delegation_error	rental	no	Feil under delegering
+delegation_successful	rental	no	Velykket delegering
 delete	rental	no	Slett
 department	rental	no	Avdeling
 deposit	rental	no	Depositum
@@ -195,6 +200,7 @@ Export generated.	rental	no	Eksporten ble generert.
 export_to	rental	no	Eksporter
 external	rental	no	Eksterne kontraktsparter
 facilit_import	rental	no	Import fra Facilit
+failed_removing_delegate	rental	no	Det oppstod en feil under sletting av delegaten.
 fax	rental	no	Faks
 field_of_responsibility	rental	no	Ansvarsområde
 filters 	rental	no	Filtre
@@ -249,6 +255,7 @@ is_one_time	rental	no	Engangsbeløp
 is_standard	rental	no	Standard priselement
 job_title	rental	no	Stillingstittel
 land_title	rental	no	Gnr/Bnr
+lacking_username	rental	no	Brukernavn må fylles ut
 last_edited_by_current_user	rental	no	Din siste endring
 lastname	rental	no	Etternavn
 last	rental	no	Siste
@@ -334,6 +341,7 @@ nobody	rental	no	Ingen
 No billing jobs found	rental	no	Ingen faktureringer funnet
 no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
 No contracts were selected.	rental	no	Du må velge minst én kontrakt for å faktuere.
+no_hits	rental	no	Ingen treff
 No invoices were found	rental	no	Ingen fakturaer funnet
 no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
 no_party_location	rental	no	Ingen intern organisasjonstilhørighet
@@ -524,10 +532,14 @@ update	rental	no	Oppdatér
 upload	rental	no	Last opp
 url	rental	no	Nettsted
 Unable to get a location code for the building.	rental	no	Klarte ikke å hente objektnummer for bygget.
+username	rental	no	Brukernavn
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
 view_contract	rental	no	Vis kontrakt
 unable_to_connect_to_database	rental	no	Problemer med å koble til databasen.
+unknown_user	rental	no	Personen finnes ikke.
+user_found_in_Fellesdata	rental	no	Personen finnes i Fellesdata.
+user_found_in_PE	rental	no	Personen er bruker av dette systemet.
 warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
 warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
 warning_lacking_start_date	rental	no	Kontrakten mangler start-dato!

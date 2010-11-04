@@ -13,12 +13,12 @@
 	// Defining columns for datatable
 	var columnDefs = [{
 			key: "account_lastname",
-			label: "<?php echo lang('account_lastname') ?>",
+			label: "<?php echo lang('lastname') ?>",
 			sortable: true
 		},
 		{
 			key: "account_firstname",
-			label: "<?php echo lang('account_firstname') ?>",
+			label: "<?php echo lang('firstname') ?>",
 			sortable: true
 		},
 		{
@@ -43,7 +43,9 @@
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
-		'<?php echo isset($editor_action) ? $editor_action : '' ?>'
+		'<?php echo isset($editor_action) ? $editor_action : '' ?>',
+		'',
+		'true'
 	);
 
 </script>
