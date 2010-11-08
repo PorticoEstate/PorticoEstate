@@ -475,6 +475,11 @@
 						'text'	=> lang('Migrate to alternative db'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index') )
 					),
+					'responsibility_role'	=> array
+					(
+						'text'	=> lang('responsibility role'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'responsibility_role') )
+					),
 					'responsible_matrix'	=> array
 					(
 						'text'		=> lang('responsible matrix'),

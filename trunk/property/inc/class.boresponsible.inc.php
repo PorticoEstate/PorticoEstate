@@ -190,6 +190,32 @@
 		}
 
 		/**
+		* Read list of responsibility types
+		*
+		* @return array of types
+		*/
+
+		public function get_responsibilities($data = array())
+		{
+			$selected	= isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
+			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
+												'order' => $this->order, 'location' => '', 'allrows'=>true,
+												'filter' => $filter));
+			$responsibilities = array();
+			foreach($values as  $value)
+			{
+				$responsibilities = array
+				(
+					'id'		=> $value['id'],
+					'name'		=> $value['name'],
+					'selected'	=> $value['id'] == $selected ? 1 : 0
+				);
+			}
+
+			return $responsibilities;
+		}
+
+		/**
 		* Read list of contacts given responsibilities within locations
 		*
 		* @param integer $type_id filter by responsibility type
