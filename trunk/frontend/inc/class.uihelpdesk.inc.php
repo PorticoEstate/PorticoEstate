@@ -52,6 +52,8 @@
 
 		public function index()
 		{
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'helpdesk.index';
+			$this->insert_links_on_header_state();
 			$bo	= CreateObject('property.botts',true);
 
 			$dry_run = false;
