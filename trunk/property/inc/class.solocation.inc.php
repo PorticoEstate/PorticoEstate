@@ -293,6 +293,7 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
 
 				for ($i=0; $i<($type_id); $i++)
 				{
@@ -303,6 +304,7 @@
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'center';
 					$uicols['datatype'][]		= 'link';
+					$uicols['formatter'][]		= '';
 					$cols 						.= ",fm_location" . ($type_id) .".loc" . $location_types[$i]['id'];
 					$cols_return[] 				= 'loc' . $location_types[$i]['id'];
 				}
@@ -324,6 +326,7 @@
 						$uicols['exchange'][]		= true;
 						$uicols['align'][] 			= 'left';
 						$uicols['datatype'][]		= 'V';
+						$uicols['formatter'][]		= '';
 					}
 				}
 
@@ -362,6 +365,7 @@
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
+					$uicols['formatter'][]		= '';
 
 					$cols.= ',fm_tenant.last_name';
 					$cols_return[] 				= 'last_name';
@@ -373,6 +377,7 @@
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
 					$uicols['datatype'][]		= 'V';
+					$uicols['formatter'][]		= '';
 
 					$cols.= ',fm_tenant.first_name';
 					$cols_return[] 				= 'first_name';
@@ -384,6 +389,7 @@
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
 					$uicols['datatype'][]		= 'V';
+					$uicols['formatter'][]		= '';
 
 					$cols.= ',fm_tenant.contact_phone';
 					$cols_return[] 				= 'contact_phone';
@@ -395,6 +401,7 @@
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'left';
 					$uicols['datatype'][]		= 'V';
+					$uicols['formatter'][]		= '';
 
 					$sub_query_tenant=1;
 					$this->socommon->fm_cache('sub_query_tenant_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$sub_query_tenant);
@@ -436,6 +443,7 @@
 								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= 'left';
 								$uicols['datatype'][]		= 'V';
+								$uicols['formatter'][]		= '';
 
 								$cols.= ',street_number';
 								$cols_return[] 				= 'street_number';
@@ -446,6 +454,7 @@
 								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= 'left';
 								$uicols['datatype'][]		= 'V';
+								$uicols['formatter'][]		= '';
 
 								$cols.= ',fm_location' . $config[$i]['location_type'] . '.' . $config[$i]['column_name'];
 								$cols_return[] 				= $config[$i]['column_name'];
@@ -456,6 +465,7 @@
 								$uicols['exchange'][]		= true;
 								$uicols['align'][] 			= '';
 								$uicols['datatype'][]		= '';
+								$uicols['formatter'][]		= '';
 							}
 						}
 						else
@@ -468,6 +478,8 @@
 							$uicols['statustext'][]		= $config[$i]['input_text'];
 							$uicols['exchange'][]		= true;
 							$uicols['align'][] 			= '';
+							$uicols['datatype'][]		= '';
+							$uicols['formatter'][]		= '';
 						}
 					}
 				}
@@ -535,6 +547,7 @@
 					$uicols['descr'][]			= $this->db->f('input_text');
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$uicols['formatter'][]		= '';
 					$uicols['exchange'][]		= $exchange;
 					$uicols['cols_return_extra'][$i] = array
 					(
@@ -568,6 +581,7 @@
 						$uicols['descr'][]			= $this->db->f('input_text') . ' ' . lang('name');
 						$uicols['statustext'][]		= '';
 						$uicols['datatype'][$i]		= 'V';
+						$uicols['formatter'][]		= '';
 						$uicols['exchange'][]		= false;
 						$uicols['align'][]			= 'right';
 						$uicols['cols_return_extra'][$i] = array();
