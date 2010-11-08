@@ -1080,6 +1080,67 @@
 
 					break;
 
+				case 'responsibility_role':
+
+					$info = array
+					(
+						'table' 			=> 'fm_responsibility_role',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name'			=> 'location',
+								'descr'			=> lang('location'),
+								'type'			=> 'select',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'preferences.boadmin_acl.get_locations',
+									'method_input'	=> array('acl_app' => 'property',	'selected' => '##location##')
+								)
+							),
+							array
+							(
+								'name'			=> 'responsibility',
+								'descr'			=> lang('responsibility'),
+								'type'			=> 'select',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.boresponsible.get_responsibilities',
+									'method_input'	=> array('acl_app' => 'property',	'selected' => '##responsibility##')
+								)
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('responsibility role'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::responsibility_role',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+					break;
+
 				default:
 					$receipt = array();
 					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));

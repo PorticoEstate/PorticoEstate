@@ -582,6 +582,29 @@
 			foreach ($this->location_info['fields'] as & $field)
 			{
 				$field['value'] = 	isset($values[$field['name']]) ? $values[$field['name']] : '';
+				if(isset($field['values_def']))
+				{
+					if($field['values_def']['valueset'])
+					{
+						$field['valueset'] = $field['values_def']['valueset'];
+						// TODO find selected value
+					}
+					else if(isset($field['values_def']['method']))
+					{
+					
+						foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
+						{
+							if(preg_match('/^##/', $_argument_value))
+							{
+								$_argument_value_name = trim($_argument_value,'#');
+								$_argument_value = $values[$_argument_value_name];
+							}
+							$method_input[$_argument] = $_argument_value;
+						}
+
+						$field['valueset'] = execMethod($field['values_def']['method'],$method_input);
+					}
+				}
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
