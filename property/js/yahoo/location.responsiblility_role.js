@@ -2,13 +2,14 @@
 // Declaration of event.index vars
 //--------------------------------------------------------
 	//define SelectButton
-    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
+    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
  	var selectsButtons = [
-    {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'categorybutton',		dependiente:[]},
+    {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[3,5]},
     {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
-    {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3]},
+    {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3,5]},
     {order:3, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
-    {order:4, var_URL:'contact_id',		name:'btn_contact_id',	style:'userIdbutton',		dependiente:[]}
+    {order:4, var_URL:'contact_id',		name:'btn_contact_id',	style:'userIdbutton',		dependiente:[]},
+    {order:5, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
 	];
 
 	// define buttons
@@ -16,7 +17,6 @@
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
 	{order:1, name:'btn_save',	funct:"onSave"}
-//	{order:2, name:'btn_export', funct:"onDownloadClick"}
 	];
 
 	// define Text buttons
@@ -37,7 +37,7 @@
 
 	var config_values =
 	{
-		date_search : 1 //if search has link "Data search"
+		date_search : 0 //if search has link "Data search"
 	}
 
 	var tableYUI;
@@ -141,12 +141,29 @@
 		}
 		else if(flag_particular_setting=='update')
 		{
-//		   	path_values.currentPage = '';
-//		   	path_values.start = '';
-//		   	path_values.allrows = 0;
+			myColumnDefs = [];
+			for(var k=0 ; k<values_ds.headers.name.length; k++)
+		    {
+		        if (values_ds.headers.input_type[k] == 'hidden')
+		        {
+		        	var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: false, resizeable:true,	sortable: false, source: ""};
+		        }
+		        else
+		        {
+		        	if (values_ds.headers.name[k] == 'num')
+		        	{
+		        		var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: true, resizeable:true, sortable: true, source: "num"};
+		        	}
+		        	else
+		        	{
+		        		var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: true, resizeable:true, sortable: false, source: ""};	
+		        	}
+		        }
+		        myColumnDefs.push(obj_temp);
+		    }
+			init_datatable();
 		}
 	}
-
 
 
 /****************************************************************************************/

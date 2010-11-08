@@ -144,6 +144,7 @@
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
+
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -1211,7 +1212,20 @@
 				return $values;
 			}
 
-			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
+			$filtermthod = '';
+			if (isset($data['filter']) && is_array($data['filter']))
+			{
+				$_filter = array();
+				foreach ($data['filter'] as $_field => $_value)
+				{
+					$_filter[] = "{$_field} = '{$_value}'";
+				}
+				if($_filter)
+				{
+					$filtermthod = 'WHERE ' . implode(' AND ', $_filter);
+				}
+			}
+			$order		= isset($data['order']) && $data['order'] ? $data['order'] :'descr';
 
 			foreach ($this->location_info['fields'] as $field)
 			{
@@ -1230,13 +1244,16 @@
 
 			$fields = implode(',', $fields);
 
-			$this->_db->query("SELECT id, {$fields} FROM {$table} ORDER BY {$order}");
+			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} ORDER BY {$order}");
 
 			while ($this->_db->next_record())
 			{
 				$_extra = $this->_db->f($id_in_name);
 				$id		= $this->_db->f('id');
-				$name	= $this->_db->f('descr', true);
+				if(!$name = $this->_db->f('name', true))
+				{
+					$name	= $this->_db->f('descr', true);
+				}
 				
 				if($_extra)
 				{
