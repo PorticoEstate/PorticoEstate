@@ -109,10 +109,10 @@
 			$location_code			= phpgw::get_var('location_code');
 
 			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
+			$this->query			= isset($query) && $query ? $query : '';
 			$this->filter			= isset($filter) && $filter ? $filter : '';
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
+			$this->sort				= isset($sort) && $sort ? $sort : $this->sort;
+			$this->order			= isset($order) && $order ? $order : $this->order;
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
@@ -140,7 +140,7 @@
 			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER') );
 			parse_str($self['path'],$self_out);
 
-			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
+//			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
 			{
 				$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
 			}

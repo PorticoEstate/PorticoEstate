@@ -289,6 +289,7 @@
 
 		public function update_role_assignment($values)
 		{
+			$receipt =array();
 			if(!isset($values['assign']))
 			{
 				$values['assign'] = array();
@@ -335,6 +336,15 @@
 				if(!$values['contact_id'])
 				{
 					$receipt['error'][] = array('msg'=> lang('missing contact'));
+				}
+
+				if(!$values['responsibility_id'])
+				{
+					$receipt['error'][] = array('msg'=> lang('Role is not related to responsibility'));
+				}
+
+				if( isset($receipt['error']) )
+				{
 					return $receipt;
 				}
 
@@ -347,7 +357,6 @@
 					'remark'			=> 'from role assignment'
 				);
 
-//_debug_array($data);
 				$this->so->add_contact($data);
 			}
 

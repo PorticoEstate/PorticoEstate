@@ -555,11 +555,11 @@
 					'text'	=>	lang('Summary'),
 					'image'	=> array('property', 'location_summary')
 				);
-				$children['responsiblility_role'] = array
+				$children['responsibility_role'] = array
 				(
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.responsiblility_role')),
-					'text'	=>	lang('responsiblility role'),
-					'image'	=> array('property', 'responsiblility_role')
+					'text'	=>	lang('responsibility role'),
+					'image'	=> array('property', 'responsibility_role')
 				);
 
 /*				if ( $acl->check('.location', 16, 'property') )
