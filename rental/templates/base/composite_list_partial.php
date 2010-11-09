@@ -144,6 +144,8 @@
 			<option value="has_contract" <?php echo ($status_contract == 'has_contract') ? 'selected' : ''?>><?php echo lang('composite_has_contract') ?></option>
 			<option value="has_no_contract" <?php echo ($status_contract == 'has_no_contract') ? 'selected' : ''?>><?php echo lang('composite_has_no_contract') ?></option>
 		</select>
+		<label for="availability_period"><?php echo lang('availability_date')?></label>
+		<?php echo $GLOBALS['phpgw']->yuical->add_listener('availability_date', $availability_date); ?>
 	</fieldset>
 </form>
 <?php
