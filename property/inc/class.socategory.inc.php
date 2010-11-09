@@ -1115,14 +1115,14 @@
 							),
 							array
 							(
-								'name'			=> 'responsibility',
+								'name'			=> 'responsibility_id',
 								'descr'			=> lang('responsibility'),
 								'type'			=> 'select',
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
 									'method'		=> 'property.boresponsible.get_responsibilities',
-									'method_input'	=> array('acl_app' => 'property',	'selected' => '##responsibility##')
+									'method_input'	=> array('acl_app' => 'property',	'selected' => '##responsibility_id##')
 								)
 							)
 						),

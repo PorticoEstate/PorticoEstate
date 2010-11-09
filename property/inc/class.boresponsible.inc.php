@@ -204,7 +204,7 @@
 			$responsibilities = array();
 			foreach($values as  $value)
 			{
-				$responsibilities = array
+				$responsibilities[] = array
 				(
 					'id'		=> $value['id'],
 					'name'		=> $value['name'],
@@ -289,20 +289,79 @@
 
 		public function update_role_assignment($values)
 		{
+			if(!isset($values['assign']))
+			{
+				$values['assign'] = array();
+			}
+			$to_expire = array();
+			$to_edit = array();
+			$dont_add = array();
+			if( isset($values['assign_orig']) && is_array($values['assign_orig']) )
+			{
+				foreach( $values['assign_orig'] as $assign_orig => $location_code )
+				{
+					$assign_arr			= explode('_', $assign_orig);
+					$contact_id			= $assign_arr[0];
+					$responsible_item	= $assign_arr[1];
+					$dont_add[] 		= $location_code;				
+	
+					if( !in_array($location_code, $values['assign']) )
+					{
+						$to_expire[] = $responsible_item;
+					}
+
+					if( in_array($location_code, $values['assign']) &&  $values['contact_id'] && !$values['contact_id'] == $contact_id )
+					{
+						$to_edit[] = array
+						(
+							'id'				=> $responsible_item,
+							'active_from'		=> time(),
+							'contact_id' 		=> $values['contact_id'],
+							'location_code' 	=> $location_code,
+							'responsibility_id'	=> $values['responsibility_id'],
+							'remark'			=> 'from role assignment'
+						);
+					}
+				}
+			}
+
 			foreach ($values['assign'] as $location_code)
 			{
+				if(in_array($location_code, $dont_add))
+				{
+					continue;
+				}
+
+				if(!$values['contact_id'])
+				{
+					$receipt['error'][] = array('msg'=> lang('missing contact'));
+					return $receipt;
+				}
+
 				$data = array
 				(
 					'location' 			=> explode('-', $location_code),
 					'active_from'		=> time(),
 					'responsibility_id'	=> $values['responsibility_id'],
 					'contact_id'		=> $values['contact_id'],
-					'ecodimb'			=> '',
 					'remark'			=> 'from role assignment'
 				);
 
+//_debug_array($data);
 				$this->so->add_contact($data);
 			}
+
+			foreach ( $to_edit as $edit_data)
+			{
+				$receipt = $this->so->edit_contact($edit_data);			
+			}
+
+			foreach ( $to_expire as $expire_id)
+			{
+				$this->so->expire_contact($expire_id);
+			}
+
+			return $receipt;
 		}
 		/**
 		* Save responsibility contact

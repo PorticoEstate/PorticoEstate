@@ -662,11 +662,52 @@
 
 		function get_responsible($data = array())
 		{
+			$soresponsible		= CreateObject('property.soresponsible');
+			$contacts = createObject('phpgwapi.contacts');
+
 			$locations = $this->read($data);
 			foreach ($locations as & $location)
 			{
-				
+				$responsible_item = $soresponsible->get_active_responsible_at_location($location['location_code'], $data['role_id']);
+				$location['responsible_item'] = $responsible_item['id'];
+				$location['responsible_contact'] = $contacts->get_name_of_person_id($responsible_item['contact_id']);
+				$location['responsible_contact_id'] = $responsible_item['contact_id'];
 			}
+
+			$this->uicols['name'][]			= 'responsible_contact';
+			$this->uicols['descr'][]		= lang('responsible');
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= '';
+			$this->uicols['input_type'][]	= '';
+
+			$this->uicols['name'][]			= 'responsible_contact_id';
+			$this->uicols['descr'][]		= 'dummy';
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= '';
+			$this->uicols['input_type'][]	= 'hidden';
+
+			$this->uicols['name'][]			= 'responsible_item';
+			$this->uicols['descr'][]		= 'dummy';
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= '';
+			$this->uicols['input_type'][]	= 'hidden';
+
+			$this->uicols['name'][]			= 'select';
+			$this->uicols['descr'][]		= lang('select');
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= 'myFormatterCheck';
+			$this->uicols['input_type'][]	= '';
+
+//_debug_array($locations);
+
 			return $locations;
 		}
 
