@@ -867,6 +867,7 @@
 
 
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1023,7 +1024,7 @@
 				$type_id = 1;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsiblility_role';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsibility_role';
 
 			if (!$this->acl_read)
 			{
@@ -1037,14 +1038,16 @@
 	        $_role = CreateObject('property.socategory');
 			$_role->get_location_info('responsibility_role','');
 
+			$this->save_sessiondata();
+
 			if($values && $this->acl_edit)
 			{
-				$user_id = phpgw::get_var('user_id', 'int');
+				$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
 				$contact_id = $account->person_id;
 				if(!$role_id)
 				{
-					$receipt['error'][] = array('msg'=> lang('missing role'));				
+					$receipt['error'][] = array('msg'=> lang('missing role'));
 				}
 				else
 				{
@@ -1084,10 +1087,7 @@
  	                        'lookup_name'        	=> $lookup_name,
  	                        'cat_id'        		=> $this->cat_id,
  	                        'status'        		=> $this->status,
- 	                        'location_code'			=> $this->location_code,
-					//		'sort'					=> $this->sort,
-					//		'order'					=> $this->order
-
+ 	                        'location_code'			=> $this->location_code
 	    				));
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -1103,13 +1103,11 @@
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}',"
  	                        						."location_code:'{$this->location_code}',"
-					//								."sort:'{$this->sort}',"
-					//								."order:'{$this->order}',"
- 	                        						."block_query:'{$block_query}'";
+	                        						."block_query:'{$block_query}'";
 
 
-				//$values_combo_box[0]  = execMethod('property.soadmin_location.read',array());
-				$values_combo_box[0]  = array(array('id'=>'1','name'=> 'Eiendom'));
+				$values_combo_box[0]  = execMethod('property.soadmin_location.read',array());
+				//$values_combo_box[0]  = array(array('id'=>'1','name'=> 'Eiendom'));
 
 				$values_combo_box[1]  = $this->bocommon->select_category_list(array('format'=>'filter',
 	                                                                        'selected' => $this->cat_id,
@@ -1130,7 +1128,7 @@
 				array_unshift ($values_combo_box[3],$default_value);
 
 				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,'.location');
-				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine roles')));
+//				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine roles')));
 				$default_value = array('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
@@ -1256,6 +1254,12 @@
 														'size'    => 28,
 														'onkeypress' => 'return pulsar(event)',
 	                                    				'tab_index' => 7
+													),
+													array
+													( //place holder for selected events
+														'type'	=> 'hidden',
+														'id'	=> 'event',
+														'value'	=> ''
 													)
 		                           				),
 		                       		'hidden_value' => array(
@@ -1350,180 +1354,6 @@
 			}
 			// NO pop-up
 			$datatable['rowactions']['action'] = array();
-			if(!$lookup)
-			{
-				$parameters = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'location_code',
-							'source'	=> 'location_code'
-						),
-					)
-				);
-
-				$parameters2 = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'sibling',
-							'source'	=> 'location_code'
-						),
-					)
-				);
-
-				$parameters3 = array
-				(
-					'parameter' => array
-					(
-						array
-						(
-							'name'		=> 'search_for',
-							'source'	=> 'location_code'
-						),
-					)
-				);
-
-				if($this->acl->check('run', PHPGW_ACL_READ, 'rental'))
-				{
-					$datatable['rowactions']['action'][] = array(
-							'my_name'			=> 'view',
-							'text' 			=> lang('contracts'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-											(
-												'menuaction'	  => 'rental.uicontract.index',
-												'search_type'	  => 'location_id',
-												'contract_status' => 'all',
-												'populate_form'   => 'yes'
-											)),
-						'parameters'	=> $parameters3
-					);
-				}
-
-				if($this->acl_read)
-				{
-					$datatable['rowactions']['action'][] = array(
-						'my_name'		=> 'view',
-						'text' 			=> lang('view'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.view',
-											'lookup_tenant'	=> $lookup_tenant
-										)),
-						'parameters'	=> $parameters
-					);
-					$datatable['rowactions']['action'][] = array(
-						'my_name'		=> 'view',
-						'text' 			=> lang('open view in new window'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.view',
-											'lookup_tenant'	=> $lookup_tenant,
-											'target'		=> '_blank'
-										)),
-						'parameters'	=> $parameters
-					);
-				}
-				if($this->acl_add)
-				{
-					$datatable['rowactions']['action'][] = array(
-						'my_name'			=> 'edit',
-						'text' 			=> lang('add'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.edit',
-											'lookup_tenant'	=> $lookup_tenant
-										)),
-						'parameters'	=> $parameters2
-					);
-				}
-				if($this->acl_edit)
-				{
-					$datatable['rowactions']['action'][] = array(
-						'my_name'			=> 'edit',
-						'text' 			=> lang('edit'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.edit',
-											'lookup_tenant'	=> $lookup_tenant
-										)),
-						'parameters'	=> $parameters
-					);
-					$datatable['rowactions']['action'][] = array(
-						'my_name'			=> 'edit',
-						'text' 			=> lang('open edit in new window'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.edit',
-											'lookup_tenant'	=> $lookup_tenant,
-											'target'		=> '_blank'
-										)),
-						'parameters'	=> $parameters
-					);
-
-				}
-				$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
-
-				foreach ($jasper as $report)
-				{
-					$datatable['rowactions']['action'][] = array(
-							'my_name'		=> 'edit',
-							'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-															(
-																	'menuaction'	=> 'property.uijasper.view',
-																	'jasper_id'			=> $report['id'],
-																	'target'		=> '_blank'
-															)),
-							'parameters'			=> $parameters
-					);
-				}
-
-
-				if($integrationurl)
-				{	
-					$datatable['rowactions']['action'][] = array(
-							'my_name'		=> 'integration',
-							'text'	 		=> $integration_name,
-							'action'		=> $integrationurl.'&target=_blank',
-							'parameters'	=> $parameters_integration
-					);
-				}
-
-				if($this->acl_delete)
-				{
-					$datatable['rowactions']['action'][] = array(
-						'my_name'		=> 'delete',
-						'text' 			=> lang('delete'),
-						'confirm_msg'	=> lang('do you really want to delete this entry'),
-						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uilocation.delete',
-											'lookup_tenant'	=> $lookup_tenant
-										)),
-						'parameters'	=> $parameters
-					);
-				}
-				if($this->acl_add)
-				{
-					$datatable['rowactions']['action'][] = array(
-							'my_name'			=> 'add',
-							'text' 			=> lang('add'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-											(
-												'menuaction'	=> 'property.uilocation.edit',
-												'type_id'		=>	$type_id,
-												'parent'		=>  $this->location_code
-											))
-					);
-				}
-
-				unset($parameters);
-			}
 			//$uicols_count indicates the number of columns to display in actuall option-menu. this variable was set in $this->bo->read()
 			$uicols_count	= count($uicols['descr']);
 
@@ -1543,7 +1373,7 @@
 					if($uicols['name'][$i]=='loc1'):
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= 'fm_location1.loc1';
+						$datatable['headers']['header'][$i]['sort_field']	= 'loc1';
 					}
 					elseif($uicols['name'][$i]=='street_name'):
 					{
@@ -1649,22 +1479,6 @@
 				$json['hidden']['dependent'][] = array ( 'id' => $this->part_of_town_id,
 	                                                      'value' => $this->bocommon->select2String($opt_cb_depend)
 														);
-
-		        $_role_criteria = array
-		        (
-		        	'type'		=> 'responsibility_role',
-		        	'filter'	=> array('location' => ".location.{$type_id}"),
-		        	'order'		=> 'name'
-		        );
-
-		        $_roles =   execMethod('property.socategory.get_list',$_role_criteria);
-		 		$default_value = array ('id'=>'','name'=>lang('no role'));
-				array_unshift ($_roles,$default_value);
-
-				$json['hidden']['dependent'][] = array ( 'id' => $type_id,
-	                                                      'value' => $this->bocommon->select2String($_roles)
-														);
-
 				// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
@@ -1720,8 +1534,6 @@
 
 	  		// Prepare YUI Library
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.responsiblility_role', 'property' );
-
-			//$this->save_sessiondata();
 
 		}
 

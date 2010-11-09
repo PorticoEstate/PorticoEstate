@@ -265,14 +265,27 @@
 				$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
 			}
 
-			if($order == 'undefined')
-			{
-				$order = '';
-			}
 			if (!$type_id)
 			{
 				return;
 			}
+
+			if($order == 'undefined')
+			{
+				$order = '';
+			}
+
+			switch ($order)
+			{
+				case 'undefined':
+					$order = '';
+					break;
+				case 'loc1':
+					$order = 'fm_location1.loc1';
+					break;
+				default:
+			}
+
 
 			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");

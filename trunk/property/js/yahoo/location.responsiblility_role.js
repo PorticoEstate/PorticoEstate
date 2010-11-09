@@ -4,9 +4,9 @@
 	//define SelectButton
     var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
  	var selectsButtons = [
-    {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[3,5]},
+    {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[], reload:1},
     {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
-    {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3,5]},
+    {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3]},
     {order:3, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
     {order:4, var_URL:'user_id',		name:'btn_user_id',	style:'userIdbutton',			dependiente:[]},
     {order:5, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
@@ -103,28 +103,21 @@
 			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
 			tableYUI.setAttribute("id","tableYUI");
 
-			//category
-			index = locate_in_array_options(0,"value",path_values.location_id);
+			//type
+			index = locate_in_array_options(0,"value",path_values.type_id);
 			if(index)
 			{
 				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
 			}
+			//category
+			index = locate_in_array_options(1,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
 
-			//user
-			index = locate_in_array_options(1,"value",path_values.user_id);
-			if(index)
-			{
-				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
-			}
-/*
 			//district
-			index = locate_in_array_options(1,"value",path_values.district_id);
-			if(index)
-			{
-				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
-			}
-			//status
-			index = locate_in_array_options(2,"value",path_values.status_id);
+			index = locate_in_array_options(2,"value",path_values.district_id);
 			if(index)
 			{
 				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
@@ -135,35 +128,12 @@
 			{
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
 			}
-*/
+
 //			oMenuButton_0.focus();
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}
 		else if(flag_particular_setting=='update')
 		{
-/*
-			myColumnDefs = [];
-			for(var k=0 ; k<values_ds.headers.name.length; k++)
-		    {
-		        if (values_ds.headers.input_type[k] == 'hidden')
-		        {
-		        	var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: false, resizeable:true,	sortable: false, source: ""};
-		        }
-		        else
-		        {
-		        	if (values_ds.headers.name[k] == 'num')
-		        	{
-		        		var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: true, resizeable:true, sortable: true, source: "num"};
-		        	}
-		        	else
-		        	{
-		        		var obj_temp = {key: values_ds.headers.name[k], label: values_ds.headers.descr[k], visible: true, resizeable:true, sortable: false, source: ""};	
-		        	}
-		        }
-		        myColumnDefs.push(obj_temp);
-		    }
-			init_datatable();
-*/
 		}
 	}
 
