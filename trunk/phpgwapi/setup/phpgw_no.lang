@@ -23,6 +23,7 @@ current users	common	no	Current brukere
 date	common	no	Dato
 december	common	no	Desember
 delete	common	no	Slett
+domain	common	no	Database
 domain name for mail-address, eg. %1	common	no	Domene-navnet for E-Postadressen, %1
 done	common	no	Avslutt
 e-mail	common	no	E-Post
