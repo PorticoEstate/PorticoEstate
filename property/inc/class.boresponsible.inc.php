@@ -287,6 +287,31 @@
 		* @return array $receip with result on the action(failed/success)
 		*/
 
+		public function update_role_assignment($values)
+		{
+			foreach ($values['assign'] as $location_code)
+			{
+				$data = array
+				(
+					'location' 			=> explode('-', $location_code),
+					'active_from'		=> time(),
+					'responsibility_id'	=> $values['responsibility_id'],
+					'contact_id'		=> $values['contact_id'],
+					'ecodimb'			=> '',
+					'remark'			=> 'from role assignment'
+				);
+
+				$this->so->add_contact($data);
+			}
+		}
+		/**
+		* Save responsibility contact
+		*
+		* @param array $values values to be stored/edited and referencing ID if editing
+		*
+		* @return array $receip with result on the action(failed/success)
+		*/
+
 		public function save_contact($values)
 		{
 			phpgw::import_class('phpgwapi.datetime');

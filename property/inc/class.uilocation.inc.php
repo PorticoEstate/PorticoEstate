@@ -864,6 +864,7 @@
 			{
 				$datatable['pagination']['records_returned']= count($location_list);
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1038,12 +1039,38 @@
 			$values = phpgw::get_var('values');
 
 			$receipt = array();
+	        $_role = CreateObject('property.socategory');
+			$_role->get_location_info('responsibility_role','');
+
 			if($values && $this->acl_edit)
 			{
-_debug_array($values);
-				$receipt = $this->bo->update_roles($values);
-			}
+				$user_id = phpgw::get_var('user_id', 'int');
+				$role_id = phpgw::get_var('role_id', 'int');
+				$account = $GLOBALS['phpgw']->accounts->get($user_id);
+				$contact_id = $account->person_id;
 
+				if(!$contact_id)
+				{
+					$receipt['message'][] = array('msg'=> lang('missing contact'));				
+				}
+				else if(!$role_id)
+				{
+					$receipt['message'][] = array('msg'=> lang('missing role'));				
+				}
+				else
+				{
+					$role = $_role->read_single($data=array('id' => $role_id));
+					$values['contact_id']			= $contact_id;
+					$values['responsibility_id']	= $role['responsibility'];
+
+					$boresponsible = CreateObject('property.boresponsible');
+					$receipt = $boresponsible->update_role_assignment($values);
+					foreach($values['assign'] as $_assign => $_location_code)
+					{
+						$receipt['message'][] = array('msg'=>"{$_assign} => {$_location_code}");
+					}
+				}
+			}
 
 			$second_display = phpgw::get_var('second_display', 'bool');
 			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
@@ -1072,7 +1099,10 @@ _debug_array($values);
  	                        'lookup_name'        	=> $lookup_name,
  	                        'cat_id'        		=> $this->cat_id,
  	                        'status'        		=> $this->status,
- 	                        'location_code'			=> $this->location_code
+ 	                        'location_code'			=> $this->location_code,
+					//		'sort'					=> $this->sort,
+					//		'order'					=> $this->order
+
 	    				));
 	    		$datatable['config']['allow_allrows'] = true;
 
@@ -1088,6 +1118,8 @@ _debug_array($values);
 						 	                        ."cat_id:'{$this->cat_id}',"
  	                        						."status:'{$this->status}',"
  	                        						."location_code:'{$this->location_code}',"
+					//								."sort:'{$this->sort}',"
+					//								."order:'{$this->order}',"
  	                        						."block_query:'{$block_query}'";
 
 
@@ -1124,10 +1156,7 @@ _debug_array($values);
 		        	'order'		=> 'name'
 		        );
 
-		        $_role = CreateObject('property.socategory');
-
-				$_role->get_location_info('responsibility_role','');
-		        
+	        
 				$roles = $_role->read($_role_criteria);
 				foreach ($roles as $role)
 				{
@@ -1154,7 +1183,9 @@ _debug_array($values);
 									'cat_id'			=> $this->cat_id,
 									'district_id'		=> $this->district_id,
 									'query'				=> $this->query,
-									'filter'			=> $this->filter
+									'filter'			=> $this->filter,
+									'sort'				=> $this->sort,
+									'order'				=> $this->order
 									)
 						),
 						'fields'	=> array(
@@ -1192,8 +1223,8 @@ _debug_array($values);
 														'tab_index' => 4
 			                                        ),
 			                                        array( //boton contact
-														'id' => 'btn_contact_id',
-														'name' => 'contact_id',
+														'id' => 'btn_user_id',
+														'name' => 'user_id',
 														'value'	=> lang('user'),
 														'type' => 'button',
 														'style' => 'filter',
@@ -1267,7 +1298,7 @@ _debug_array($values);
 
 			$location_list = array();
 
-			$location_list = $this->bo->read(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			$location_list = $this->bo->get_responsible(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 
 			$uicols = $this->bo->uicols;
 

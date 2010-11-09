@@ -265,6 +265,10 @@
 				$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
 			}
 
+			if($order == 'undefined')
+			{
+				$order = '';
+			}
 			if (!$type_id)
 			{
 				return;

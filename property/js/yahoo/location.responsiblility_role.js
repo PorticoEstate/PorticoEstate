@@ -8,7 +8,7 @@
     {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
     {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3,5]},
     {order:3, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
-    {order:4, var_URL:'contact_id',		name:'btn_contact_id',	style:'userIdbutton',		dependiente:[]},
+    {order:4, var_URL:'user_id',		name:'btn_user_id',	style:'userIdbutton',			dependiente:[]},
     {order:5, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
 	];
 
@@ -141,6 +141,7 @@
 		}
 		else if(flag_particular_setting=='update')
 		{
+/*
 			myColumnDefs = [];
 			for(var k=0 ; k<values_ds.headers.name.length; k++)
 		    {
@@ -162,6 +163,7 @@
 		        myColumnDefs.push(obj_temp);
 		    }
 			init_datatable();
+*/
 		}
 	}
 
@@ -180,13 +182,13 @@
 		var hidden = '';
 		if(!oRecord.getData('exception'))
 		{
-			if(oRecord.getData('receipt_date'))
+			if(oRecord.getData('responsibility_id'))
 			{
 				checked = "checked = 'checked'";
-				hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[events_orig]["+oRecord.getData('id')+"_"+oRecord.getData('schedule_time')+"]\" value=\""+oRecord.getData('id')+"\"/>";
+				hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig]["+oRecord.getData('responsibility_id')+"_"+oRecord.getData('location_code')+"]\" value=\""+oRecord.getData('location_code')+"\"/>";
 			}
 			
-			elCell.innerHTML = hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[events]["+oRecord.getData('id')+"_"+oRecord.getData('schedule_time')+"]\" value=\""+oRecord.getData('id')+"\"/></center>";
+			elCell.innerHTML = hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oRecord.getData('location_code')+"\"/></center>";
 		}
 	}
 
@@ -246,7 +248,7 @@
   	{
 		//Create ROW
 		newTR = document.createElement('tr');
-		td_empty(11);
+		td_empty(myColumnDefs.length -1);
 		//RowChecked
 		CreateRowChecked("mychecks");
 
