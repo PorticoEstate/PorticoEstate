@@ -645,9 +645,9 @@
 			}
 		}
 
-		function read($data='')
+		function read($data = array())
 		{
-			$location = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$locations = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
 											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
@@ -657,7 +657,17 @@
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
-			return $location;
+			return $locations;
+		}
+
+		function get_responsible($data = array())
+		{
+			$locations = $this->read($data);
+			foreach ($locations as & $location)
+			{
+				
+			}
+			return $locations;
 		}
 
 		function read_single($data='',$extra=array())
