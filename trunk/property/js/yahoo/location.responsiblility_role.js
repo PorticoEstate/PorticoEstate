@@ -180,16 +180,13 @@
 	{
 		var checked = '';
 		var hidden = '';
-		if(!oRecord.getData('exception'))
+		if(oRecord.getData('responsible_item'))
 		{
-			if(oRecord.getData('responsibility_id'))
-			{
-				checked = "checked = 'checked'";
-				hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig]["+oRecord.getData('responsibility_id')+"_"+oRecord.getData('location_code')+"]\" value=\""+oRecord.getData('location_code')+"\"/>";
-			}
-			
-			elCell.innerHTML = hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oRecord.getData('location_code')+"\"/></center>";
+			checked = "checked = 'checked'";
+			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig]["+oRecord.getData('responsible_contact_id')+"_"+oRecord.getData('responsible_item')+"]\" value=\""+oRecord.getData('location_code')+"\"/>";
 		}
+			
+		elCell.innerHTML = hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oRecord.getData('location_code')+"\"/></center>";
 	}
 
 	var FormatterCenter = function(elCell, oRecord, oColumn, oData)

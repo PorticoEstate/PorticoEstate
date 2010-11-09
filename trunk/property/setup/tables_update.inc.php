@@ -4645,3 +4645,22 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.597 to 0.9.17.598
+	* Rename column
+	* 
+	*/
+
+	$test[] = '0.9.17.597';
+	function property_upgrade0_9_17_597()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_responsibility_role','responsibility','responsibility_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.598';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

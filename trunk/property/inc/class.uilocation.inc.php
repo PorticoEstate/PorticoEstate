@@ -865,6 +865,7 @@
 				$datatable['pagination']['records_returned']= count($location_list);
 
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1037,7 +1038,7 @@
 			}
 
 			$values = phpgw::get_var('values');
-
+			$role_id = phpgw::get_var('role_id', 'int');
 			$receipt = array();
 	        $_role = CreateObject('property.socategory');
 			$_role->get_location_info('responsibility_role','');
@@ -1045,30 +1046,20 @@
 			if($values && $this->acl_edit)
 			{
 				$user_id = phpgw::get_var('user_id', 'int');
-				$role_id = phpgw::get_var('role_id', 'int');
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
 				$contact_id = $account->person_id;
-
-				if(!$contact_id)
+				if(!$role_id)
 				{
-					$receipt['message'][] = array('msg'=> lang('missing contact'));				
-				}
-				else if(!$role_id)
-				{
-					$receipt['message'][] = array('msg'=> lang('missing role'));				
+					$receipt['error'][] = array('msg'=> lang('missing role'));				
 				}
 				else
 				{
 					$role = $_role->read_single($data=array('id' => $role_id));
 					$values['contact_id']			= $contact_id;
-					$values['responsibility_id']	= $role['responsibility'];
+					$values['responsibility_id']	= $role['responsibility_id'];
 
 					$boresponsible = CreateObject('property.boresponsible');
 					$receipt = $boresponsible->update_role_assignment($values);
-					foreach($values['assign'] as $_assign => $_location_code)
-					{
-						$receipt['message'][] = array('msg'=>"{$_assign} => {$_location_code}");
-					}
 				}
 			}
 
@@ -1123,7 +1114,8 @@
  	                        						."block_query:'{$block_query}'";
 
 
-				$values_combo_box[0]  = execMethod('property.soadmin_location.read',array());
+				//$values_combo_box[0]  = execMethod('property.soadmin_location.read',array());
+				$values_combo_box[0]  = array(array('id'=>'1','name'=> 'Eiendom'));
 
 				$values_combo_box[1]  = $this->bocommon->select_category_list(array('format'=>'filter',
 	                                                                        'selected' => $this->cat_id,
@@ -1148,8 +1140,7 @@
 				$default_value = array('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
-
-
+/*
 		        $_role_criteria = array
 		        (
 		        	'allrows'	=> true,
@@ -1170,7 +1161,18 @@
 						 );
 					}
 				}
-		        
+
+		 		$default_value = array ('id'=>'','name'=>lang('no role'));
+				array_unshift ($values_combo_box[5],$default_value);
+*/
+		        $_role_criteria = array
+		        (
+		        	'type'		=> 'responsibility_role',
+		        	'filter'	=> array('location' => ".location.{$type_id}"),
+		        	'order'		=> 'name'
+		        );
+
+		        $values_combo_box[5] =   execMethod('property.socategory.get_list',$_role_criteria);
 		 		$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($values_combo_box[5],$default_value);
 
@@ -1298,17 +1300,9 @@
 
 			$location_list = array();
 
-			$location_list = $this->bo->get_responsible(array('type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			$location_list = $this->bo->get_responsible(array('role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 
 			$uicols = $this->bo->uicols;
-
-			$uicols['name'][]		= 'select';
-			$uicols['descr'][]		= lang('select');
-			$uicols['sortable'][]	= false;
-			$uicols['sort_field'][]	= '';
-			$uicols['format'][]		= '';
-			$uicols['formatter'][]	= 'myFormatterCheck';
-			$uicols['input_type'][]	= '';
 
 			$content = array();
 			$j=0;
