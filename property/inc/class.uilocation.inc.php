@@ -866,6 +866,7 @@
 
 
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1022,14 +1023,7 @@
 				$type_id = 1;
 			}
 
-			if ( $type_id && !$lookup_tenant )
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::loc_$type_id";
-			}
-			else
-			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::tenant';
-			}
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsiblility_role';
 
 			if (!$this->acl_read)
 			{
@@ -2003,6 +1997,7 @@
 				'type_id'	=> $type_id,
 				'lookup_tenant'	=> $lookup_tenant
 			);
+
 
 			$lookup_type = $view ? 'view' : 'form';
 
