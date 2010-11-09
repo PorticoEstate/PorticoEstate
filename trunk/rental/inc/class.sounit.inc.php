@@ -90,6 +90,12 @@ class rental_sounit extends rental_socommon
 				case 'area_net':
 					$location->set_area_net($attributes['value']);
 					break;
+				case 'bruttoareal':
+					$location->set_area_gros($attributes['value']);
+					break;
+				case 'nettoareal':
+					$location->set_area_net($attributes['value']);
+					break;
 			}
 		}
 		return new rental_unit($this->unmarshal($this->db->f('id', true), 'int'), $this->unmarshal($this->db->f('composite_id', true), 'int'), $location);
