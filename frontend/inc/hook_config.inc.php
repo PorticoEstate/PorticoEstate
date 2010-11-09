@@ -121,3 +121,19 @@ HTML;
 		return $cat_select;
 	}
 
+	/**
+	* Get HTML listbox with categories that are candidates for default ticket cat
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function tts_default_cat($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+		$cats->supress_info = true;
+		$selected = isset($config['tts_default_cat']) ? $config['tts_default_cat'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
+

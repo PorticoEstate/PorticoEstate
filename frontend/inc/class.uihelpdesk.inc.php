@@ -539,23 +539,33 @@
 					$config = CreateObject('phpgwapi.config', 'frontend');
 					$config->read();
 					$default_group = $config->config_data['tts_default_group'];
+					$default_cat = $config->config_data['tts_default_cat'] ? $config->config_data['tts_default_cat'] : 0;
+					
+					if(!$default_cat)
+					{
+						throw new Exception('Default category is not set in config');
+						$GLOBALS['phpgw']->common->phpgw_exit();
+					}
+
+					$location  = array
+					(
+						'loc1'  => $location_details['loc1'],
+						'loc2'  => $location_details['loc2']
+					);
 
 					$ticket = array(
 						'origin'    => null,
 						'origin_id' => null,
-						'cat_id'    => 11,
+						'cat_id'    => $default_cat,
 						'group_id'  => ($default_group ? $default_group : null),
-						'assignedto'=> null,
+						'assignedto'=> execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $default_cat)),
 						'priority'  => 3,
 						'status'    => 'O', // O = Open
 						'subject'   => $values['title'],
 						'details'   => $values['locationdesc'].":\n\n".$values['description'],
 						'apply'     => lang('Apply'),
 						'contact_id'=> 0,
-						'location'  => array(
-							'loc1'  => $location_details['loc1'],
-							'loc2'  => $location_details['loc2']
-						),
+						'location'  => $location,
 						'street_name'   => $location_details['street_name'],
 						'street_number' => $location_details['street_number'],
 						'location_name' => $location_details['loc1_name'],
