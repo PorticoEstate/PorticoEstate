@@ -1059,6 +1059,7 @@ no method	property	no	Ingen metode
 none consequences	property	no	Ingen konsekvenser
 no part of town	property	no	Bydel ikke valgt
 no revision	property	no	Ingen revisjon
+no role	property	no	Rolle ikke valgt
 no status	property	no	Status ikke valgt
 no supervisor	property	no	Attestant ikke valgt
 note	property	no	Notat
@@ -1278,6 +1279,7 @@ reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
 responsible	property	no	Ansvarlig
 responsible matrix	property	no	Ansvarsmatrise
+responsibility role	property	no	Rolle for Ansvarsmatrise
 result	property	no	Resultat
 return back to the list	property	no	Returner til oversikt
 revision	property	no	Revisjon

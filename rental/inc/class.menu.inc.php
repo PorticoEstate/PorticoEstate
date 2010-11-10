@@ -7,6 +7,10 @@
 		{
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'rental';
+			
+			$config = CreateObject('phpgwapi.config','rental');
+			$config->read();
+			$use_fellesdata = $config->config_data['use_fellesdata'];
 
 			$menus = array();
 
@@ -84,7 +88,7 @@
 						'image'	=> array('rental', 'x-office-document')
 					)
 				);
-				
+
 				$sub_parties = array(
 					'sync' => array 
 					(
@@ -121,10 +125,13 @@
 				(
 					'text'	=> lang('parties'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'rental.uiparty.index') ),
-					'image'	=> array('rental', 'x-office-address-book'),
-					'children' => $sub_parties
+					'image'	=> array('rental', 'x-office-address-book')
 				)
 			);
+			
+			if($use_fellesdata){
+				$menus['navigation']['parties']['children'] = $sub_parties;
+			}
 
 			$menus['admin'] = array
 			(

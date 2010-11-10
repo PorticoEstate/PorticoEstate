@@ -4607,3 +4607,60 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.596 to 0.9.17.597
+	* Add responsibility roles
+	* 
+	*/
+
+	$test[] = '0.9.17.596';
+	function property_upgrade0_9_17_596()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_responsibility_role', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'remark' => array('type' => 'text','nullable' => True),
+					'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'responsibility' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_responsibility' => array('responsibility' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.597';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.597 to 0.9.17.598
+	* Rename column
+	* 
+	*/
+
+	$test[] = '0.9.17.597';
+	function property_upgrade0_9_17_597()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_responsibility_role','responsibility','responsibility_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.598';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

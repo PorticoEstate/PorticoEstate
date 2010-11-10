@@ -170,6 +170,30 @@
 			return $location_list;
 		}
 
+		function get_locations($data = array())
+		{
+			$location_list = array();
+	
+			$grant		= isset($data['grant']) && $data['grant'] ? $data['grant'] : false;
+			$grant		= isset($data['allow_c_attrib']) && $data['allow_c_attrib'] ? $data['allow_c_attrib'] : false;
+			$acl_app	= isset($data['acl_app']) && $data['acl_app'] ? $data['acl_app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$selected	= isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
+
+			$locations = $GLOBALS['phpgw']->locations->get_locations($grant, $acl_app, $allow_c_attrib);
+
+			foreach ( $locations as $loc_id => $loc_descr )
+			{
+				$location_list[] = array
+				(
+					'id'		=> $loc_id,
+					'name'		=> "{$loc_id} [{$loc_descr}]",
+					'selected'	=> $loc_id == $selected ? 1 : 0
+				);
+
+			}
+			return $location_list;
+		}
+
 		function select_category_list($format='',$selected='')
 		{
 			switch($format)

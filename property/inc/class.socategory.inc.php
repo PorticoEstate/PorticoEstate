@@ -144,6 +144,7 @@
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
+
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -1080,6 +1081,67 @@
 
 					break;
 
+				case 'responsibility_role':
+
+					$info = array
+					(
+						'table' 			=> 'fm_responsibility_role',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name'			=> 'location',
+								'descr'			=> lang('location'),
+								'type'			=> 'select',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'preferences.boadmin_acl.get_locations',
+									'method_input'	=> array('acl_app' => 'property',	'selected' => '##location##')
+								)
+							),
+							array
+							(
+								'name'			=> 'responsibility_id',
+								'descr'			=> lang('responsibility'),
+								'type'			=> 'select',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.boresponsible.get_responsibilities',
+									'method_input'	=> array('acl_app' => 'property',	'selected' => '##responsibility_id##')
+								)
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('responsibility role'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::responsibility_role',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+					break;
+
 				default:
 					$receipt = array();
 					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
@@ -1150,7 +1212,20 @@
 				return $values;
 			}
 
-			$order		= isset($data['order']) && $data['order'] == 'id' ? 'id' :'descr';
+			$filtermthod = '';
+			if (isset($data['filter']) && is_array($data['filter']))
+			{
+				$_filter = array();
+				foreach ($data['filter'] as $_field => $_value)
+				{
+					$_filter[] = "{$_field} = '{$_value}'";
+				}
+				if($_filter)
+				{
+					$filtermthod = 'WHERE ' . implode(' AND ', $_filter);
+				}
+			}
+			$order		= isset($data['order']) && $data['order'] ? $data['order'] :'descr';
 
 			foreach ($this->location_info['fields'] as $field)
 			{
@@ -1169,13 +1244,16 @@
 
 			$fields = implode(',', $fields);
 
-			$this->_db->query("SELECT id, {$fields} FROM {$table} ORDER BY {$order}");
+			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} ORDER BY {$order}");
 
 			while ($this->_db->next_record())
 			{
 				$_extra = $this->_db->f($id_in_name);
 				$id		= $this->_db->f('id');
-				$name	= $this->_db->f('descr', true);
+				if(!$name = $this->_db->f('name', true))
+				{
+					$name	= $this->_db->f('descr', true);
+				}
 				
 				if($_extra)
 				{

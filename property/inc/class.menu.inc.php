@@ -475,6 +475,11 @@
 						'text'	=> lang('Migrate to alternative db'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index') )
 					),
+					'responsibility_role'	=> array
+					(
+						'text'	=> lang('responsibility role'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'responsibility_role') )
+					),
 					'responsible_matrix'	=> array
 					(
 						'text'		=> lang('responsible matrix'),
@@ -549,6 +554,12 @@
 					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.summary')),
 					'text'	=>	lang('Summary'),
 					'image'	=> array('property', 'location_summary')
+				);
+				$children['responsibility_role'] = array
+				(
+					'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.responsiblility_role')),
+					'text'	=>	lang('responsibility role'),
+					'image'	=> array('property', 'responsibility_role')
 				);
 
 /*				if ( $acl->check('.location', 16, 'property') )

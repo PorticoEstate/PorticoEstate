@@ -68,13 +68,19 @@ class rental_socomposite extends rental_socommon
 		}
 		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		if(isset($filters['availability_date']) && $filters['availability_date'] != ''){
+			$availability_date = strtotime($filters['availability_date']); 
+		}
+		else{
+			$availability_date = $ts_query;
+		}
 		switch($filters['has_contract']){
 			case "has_contract":
-				$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $ts_query AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $ts_query))))";
+				$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date))))";
 				$special_query=true;
 				break;
 			case "has_no_contract":
-				$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $ts_query AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $ts_query))))))"; 
+				$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date))))))"; 
 				$special_query=true;
 				break;
 			case "both":

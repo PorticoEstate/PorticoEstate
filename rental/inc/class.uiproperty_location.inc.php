@@ -47,6 +47,7 @@
 					$row = $property_bolocation->read_single($gabelement['location_code']);
 					$row['gab'] = rental_uicommon::get_nicely_formatted_gab_id($gabelement['gab_id']);  
 					$rows[] = $row;
+					$rows_total[] = $row; 
 					//TODO: Add gabno for element 
 				}
 			}
@@ -55,14 +56,22 @@
 				{
 					$type_id = 2;
 				}
-				$rows = $property_bolocation->read(array('type_id' => $type_id, 'sallrows' => true));
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				$property_bolocation->start = $start_index;
+				$tmp_count = phpgw::get_var('results', 'int', 'GET', 0);
+				if(isset($tmp_count) && $tmp_count > 0){
+					$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $num_of_objects;
+				}
+				$rows_total = $property_bolocation->read(array('type_id' => $type_id, 'allrows' => true));
+				$rows = $property_bolocation->read(array('type_id' => $type_id));
+				$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $user_rows_per_page;
 			}
 			
 			//Add context menu columns (actions and labels)
 			array_walk($rows, array($this, 'add_actions'), array($composite_id, $type_id));
 			//Build a YUI result from the data
 			//
-			$result_data = array('results' => $rows, 'total_records' => count($rows));	
+			$result_data = array('results' => $rows, 'total_records' => count($rows_total));	
 			return $this->yui_results($result_data, 'total_records', 'results');
 		}
 		

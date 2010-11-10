@@ -109,10 +109,10 @@
 			$location_code			= phpgw::get_var('location_code');
 
 			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
+			$this->query			= isset($query) && $query ? $query : '';
 			$this->filter			= isset($filter) && $filter ? $filter : '';
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
+			$this->sort				= isset($sort) && $sort ? $sort : $this->sort;
+			$this->order			= isset($order) && $order ? $order : $this->order;
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->part_of_town_id	= isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
 			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
@@ -140,7 +140,7 @@
 			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER') );
 			parse_str($self['path'],$self_out);
 
-			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
+//			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
 			{
 				$data = $GLOBALS['phpgw']->session->appsession('session_data','location');
 			}
@@ -645,9 +645,9 @@
 			}
 		}
 
-		function read($data='')
+		function read($data = array())
 		{
-			$location = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$locations = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
 											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
@@ -657,7 +657,58 @@
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
 
-			return $location;
+			return $locations;
+		}
+
+		function get_responsible($data = array())
+		{
+			$soresponsible		= CreateObject('property.soresponsible');
+			$contacts = createObject('phpgwapi.contacts');
+
+			$locations = $this->read($data);
+			foreach ($locations as & $location)
+			{
+				$responsible_item = $soresponsible->get_active_responsible_at_location($location['location_code'], $data['role_id']);
+				$location['responsible_item'] = $responsible_item['id'];
+				$location['responsible_contact'] = $contacts->get_name_of_person_id($responsible_item['contact_id']);
+				$location['responsible_contact_id'] = $responsible_item['contact_id'];
+			}
+
+			$this->uicols['name'][]			= 'responsible_contact';
+			$this->uicols['descr'][]		= lang('responsible');
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= '';
+			$this->uicols['input_type'][]	= '';
+
+			$this->uicols['name'][]			= 'responsible_contact_id';
+			$this->uicols['descr'][]		= 'dummy';
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= '';
+			$this->uicols['input_type'][]	= 'hidden';
+
+			$this->uicols['name'][]			= 'responsible_item';
+			$this->uicols['descr'][]		= 'dummy';
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= '';
+			$this->uicols['input_type'][]	= 'hidden';
+
+			$this->uicols['name'][]			= 'select';
+			$this->uicols['descr'][]		= lang('select');
+			$this->uicols['sortable'][]		= false;
+			$this->uicols['sort_field'][]	= '';
+			$this->uicols['format'][]		= '';
+			$this->uicols['formatter'][]	= 'myFormatterCheck';
+			$this->uicols['input_type'][]	= '';
+
+//_debug_array($locations);
+
+			return $locations;
 		}
 
 		function read_single($data='',$extra=array())
