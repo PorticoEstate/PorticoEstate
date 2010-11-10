@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.596';
+	$setup_info['property']['version']		= '0.9.17.598';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -189,6 +189,7 @@
 		'fm_budget_period',
 		'fm_budget_cost',
 		'fm_responsibility',
+		'fm_responsibility_role',
 		'fm_responsibility_contact',
 		'fm_action_pending',
 		'fm_action_pending_category',

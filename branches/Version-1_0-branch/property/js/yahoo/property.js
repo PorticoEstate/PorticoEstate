@@ -405,7 +405,11 @@
 		control.set("label", ("<em>" + p_oItem[1] + "</em>"));
 		control.set("value", p_oItem[0]);
 		eval("path_values."+selectsButtons[p_oItem[2]].var_URL+"='"+p_oItem[0]+"'")
-
+		if(selectsButtons[p_oItem[2]].reload)
+		{
+	 		ds = phpGWLink('index.php',path_values);
+			window.open(ds,'_self');
+		}
 		// tiene dependiente asociado?
 		if(selectsButtons[p_oItem[2]].dependiente.length)
 		{

@@ -379,8 +379,8 @@
 				(int) $values['responsibility_id'],
 				(int) $values['contact_id'],
 				@implode('-', $values['location']),
-				$values['active_from'],
-				$values['active_to'],
+				(int) $values['active_from'],
+				(int) $values['active_to'],
 				isset($values['extra']['p_num']) ? $values['extra']['p_num'] : '',
 				isset($values['extra']['p_entity_id']) ? $values['extra']['p_entity_id'] : '',
 				isset($values['extra']['p_cat_id']) ? $values['extra']['p_cat_id'] : '',
@@ -426,6 +426,7 @@
 			$orig = $this->read_single_contact($values['id']);
 
 			if(isset($values['location']) &&(@implode('-', $values['location']) != $orig['location_code'])
+				|| $values['contact_id'] != $orig['contact_id']
 				|| $values['active_from'] != $orig['active_from']
 				|| $values['active_to'] != $orig['active_to']
 				|| $values['extra']['p_num'] != $orig['p_num']
@@ -527,6 +528,60 @@
 			$this->db->query('DELETE FROM fm_responsibility_contact WHERE id='  . (int) $id, __LINE__, __FILE__);
 		}
 
+
+		/**
+		* Deactivate a responsibility type contact - leaving the information as history
+		*
+		* @param integer $id ID of responsibility type
+		*
+		* @return void
+		*/
+
+		function expire_contact($id)
+		{
+			$value_set['expired_by']	= $this->account;
+			$value_set['expired_on']	= time();
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->transaction_begin();
+			$this->db->query("UPDATE fm_responsibility_contact set $value_set WHERE id = " . (int) $id, __LINE__, __FILE__);
+			$this->db->transaction_commit();
+		}
+
+		/**
+		* Get the contact and relation id for a particular role at a given location
+		*
+		* @param array $location_code location_code
+		* @param array $role_id  role_id
+		*
+		* @return array
+		*/
+
+		public function get_active_responsible_at_location($location_code, $role_id)
+		{
+			$role_id = (int)$role_id;
+			$time = time() +1;
+			
+			$sql = "SELECT fm_responsibility_contact.id, contact_id FROM fm_responsibility_contact"
+			 . " $this->join fm_responsibility ON fm_responsibility_contact.responsibility_id = fm_responsibility.id"
+			 . " $this->join fm_responsibility_role ON fm_responsibility.id = fm_responsibility_role.responsibility_id"
+			 . " WHERE fm_responsibility_role.id ={$role_id}"
+			 . " AND fm_responsibility_contact.location_code ='{$location_code}'"
+			 . " AND active_from < {$time} AND (active_to > {$time} OR active_to = 0) AND expired_on IS NULL";
+		
+			$values = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if($this->db->next_record())
+			{
+				$values = array
+				(
+					'id'			=>  $this->db->f('id'),
+					'contact_id'	=> $this->db->f('contact_id')
+				);
+			}
+			return $values;
+
+		}
 		/**
 		* Get the responsibility for a particular category conserning a given location or item
 		* Locations are checked bottom up at the deepest level - before checkin on it's parent if it is a miss.

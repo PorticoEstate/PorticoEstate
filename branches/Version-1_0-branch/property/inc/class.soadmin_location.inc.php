@@ -68,8 +68,8 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
@@ -80,6 +80,7 @@
 			$this->total_records = $this->db->num_rows();
 			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
+			$standard = array();
 			while ($this->db->next_record())
 			{
 				$standard[] = array
@@ -123,8 +124,8 @@
 			$querymethod = '';
 			if(isset($query))
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " where name $this->like '%$query%' or column_name $this->like '%$query%'";
 			}

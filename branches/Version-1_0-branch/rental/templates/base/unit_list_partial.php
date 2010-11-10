@@ -9,6 +9,18 @@
      	window.location = 'index.php?menuaction=rental.uicomposite.edit';
  		}
  	);
+
+	var formatArea = function(elCell, oRecord, oColumn, oData) {
+		if (oData != undefined && oData != 0) {
+			elCell.innerHTML = YAHOO.util.Number.format( oData,
+			{
+				suffix: " <?php echo isset($config->config_data['area_suffix']) && $config->config_data['area_suffix'] ? $config->config_data['area_suffix'] : 'kvm'; ?>",
+				thousandsSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.'; ?>",
+				decimalSeparator: "<?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';?>",
+				decimalPlaces: <?php echo isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places']) && $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['area_decimal_places'] : 2; ?>
+		    });
+		}
+	}
 	
 	//Columns for added areas datatable
 	var columnDefs = [{
@@ -49,11 +61,13 @@
 	{
 		key: "area_gros",
 		label: "<?php echo lang('area_gros') ?>",
+		formatter: formatArea,
 	  sortable: false
 	},
 	{
 		key: "area_net",
 		label: "<?php echo lang('area_net') ?>",
+		formatter: formatArea,
 	  sortable: false
 	},
 	{
