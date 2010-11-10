@@ -25,6 +25,9 @@
 		<label for="interval"><?php echo lang('interval') ?></label>
 		<?php echo $adjustment->get_interval().' '.lang('year'); ?>
 		<br/>
+		<label for="adjustment_year"><?php echo lang('year') ?></label>
+		<?php echo $adjustment->get_year(); ?>
+		<br/>
 		<label for="adjustment_date"><?php echo lang('adjustment_date') ?></label>
 		<?php
 			$adjustment_date = $adjustment->get_adjustment_date() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $adjustment->get_adjustment_date()) : '-';

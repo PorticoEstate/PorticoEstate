@@ -61,18 +61,7 @@
 			<label for="adjustment_year"><?php echo lang('year') ?></label>
 		</dt>
 		<dd>
-			<select name="adjustment_year" id="adjustment_year">
-				<?php
-				$this_year = date('Y');
-				$years = rental_contract::get_year_range();
-				foreach($years as $year)
-				{
-					?>
-					<option value="<?php echo $year ?>"<?php echo $this_year == $year ? ' selected="selected"' : '' ?>><?php echo $year ?></option>
-					<?php
-				}
-				?>
-			</select>
+			<?php echo $adjustment->get_year(); ?>
 		</dd>
 		<dt>
 			<label for="adjustment_date"><?php echo lang('adjustment_date') ?></label>
