@@ -80,7 +80,7 @@
 				case 'contracts_for_adjustment':
 					$adjustment_id = (int)phpgw::get_var('id');
 					$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
-					$filters = array('contract_type' => $adjustment->get_responsibility_id(), 'adjustment_interval' => $adjustment->get_interval(), 'adjustment_year' => $adjustment->get_year());
+					$filters = array('contract_type' => $adjustment->get_responsibility_id(), 'adjustment_interval' => $adjustment->get_interval(), 'adjustment_year' => $adjustment->get_year(), 'adjustment_is_executed' => $adjustment->is_executed());
 					break;
 				case 'contracts_part': 						// Contracts for this party
 					$filters = array('party_id' => phpgw::get_var('party_id'),'contract_status' => phpgw::get_var('contract_status'), 'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date_hidden'));
