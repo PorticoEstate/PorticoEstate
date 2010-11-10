@@ -9,6 +9,7 @@ class rental_adjustment extends rental_model
 	protected $new_price;
 	protected $percent;
 	protected $adjustment_date;
+	protected $year;
 	protected $is_manual;
 	protected $interval;
 	protected $adjustment_type;
@@ -73,6 +74,16 @@ class rental_adjustment extends rental_model
 	public function get_adjustment_date()
 	{
 		return $this->adjustment_date;
+	}
+	
+	public function set_year($year)
+	{
+		$this->year = $year;
+	}
+	
+	public function get_year()
+	{
+		return $this->year;
 	}
 	
 	public function set_adjustment_date($adjustment_date)
@@ -142,7 +153,8 @@ class rental_adjustment extends rental_model
 			'interval' => $this->get_interval(),
 			'adjustment_type' => lang(($this->get_adjustment_type())?$this->get_adjustment_type():'none'),
 			'adjustment_date' => date($date_format, $this->get_adjustment_date()),
-			'is_executed' => lang(($this->is_executed())?'yes':'no')
+			'is_executed' => lang(($this->is_executed())?'yes':'no'),
+			'year' => $this->get_year()
 		);
 	}
 }

@@ -156,6 +156,7 @@ class rental_uiadjustment extends rental_uicommon {
 			$adjustment_date =  strtotime(phpgw::get_var('adjustment_date_hidden'));
 			
 			if(isset($adjustment)){
+				$adjustment->set_year(phpgw::get_var('adjustment_year'));
 				$adjustment->set_adjustment_date($adjustment_date);
 				$adjustment->set_price_item_id(0);
 				if(isset($responsibility_id) && $responsibility_id > 0)
@@ -269,7 +270,10 @@ class rental_uiadjustment extends rental_uicommon {
 	public function show_affected_contracts()
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
-		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id));
+		$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id, 
+																	'adjustment' => $adjustment,
+																	'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index'))));
 	}
 	
 	public function run_adjustments()

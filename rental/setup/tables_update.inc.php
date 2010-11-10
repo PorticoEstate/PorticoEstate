@@ -204,4 +204,26 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
+	$test[] = '0.1.0.11';
+	function rental_upgrade0_1_0_11()
+	{
+		// Add adjustment year column
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_adjustment', 'year', array(
+			'type' => 'int', 
+			'nullable' => true,
+			'precision' => '4'
+		));
+		
+		// Update year column to match the adjustment_date of all existing adjustments
+		$so = CreateObject('rental.soadjustment');
+		foreach ($so->get(0, NULL, NULL, true, NULL, NULL, NULL) as $adjustment) {
+			$year = strftime('%Y', $adjustment->get_adjustment_date());
+			$adjustment->set_year($year);
+			$so->store($adjustment);
+		}
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.12';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
 ?>
