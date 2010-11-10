@@ -538,7 +538,6 @@
 					// Read default assign-to-group from config
 					$config = CreateObject('phpgwapi.config', 'frontend');
 					$config->read();
-					$default_group = $config->config_data['tts_default_group'];
 					$default_cat = $config->config_data['tts_default_cat'] ? $config->config_data['tts_default_cat'] : 0;
 					
 					if(!$default_cat)
@@ -553,12 +552,23 @@
 						'loc2'  => $location_details['loc2']
 					);
 
+					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $default_cat));
+
+					if(!$assignedto)
+					{
+						$default_group = $config->config_data['tts_default_group'];
+					}
+					else
+					{
+						$default_group = 0;
+					}
+
 					$ticket = array(
 						'origin'    => null,
 						'origin_id' => null,
 						'cat_id'    => $default_cat,
 						'group_id'  => ($default_group ? $default_group : null),
-						'assignedto'=> execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $default_cat)),
+						'assignedto'=> $assignedto,
 						'priority'  => 3,
 						'status'    => 'O', // O = Open
 						'subject'   => $values['title'],
