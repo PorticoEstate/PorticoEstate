@@ -156,7 +156,7 @@ class rental_uiadjustment extends rental_uicommon {
 			$adjustment_date =  strtotime(phpgw::get_var('adjustment_date_hidden'));
 			
 			if(isset($adjustment)){
-				$adjustment->set_year(phpgw::get_var('year'));
+				$adjustment->set_year(phpgw::get_var('adjustment_year'));
 				$adjustment->set_adjustment_date($adjustment_date);
 				$adjustment->set_price_item_id(0);
 				if(isset($responsibility_id) && $responsibility_id > 0)
