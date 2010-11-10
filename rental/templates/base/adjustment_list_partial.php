@@ -36,6 +36,11 @@
 	// Defining columns for datatable
 	var columnDefs = [
 		{
+			key: "year",
+			label: "<?php echo lang('year') ?>",
+		  	sortable: true
+		},
+		{
 			key: "adjustment_date",
 			label: "<?php echo lang('adjustment_date') ?>",
 		  	sortable: true
