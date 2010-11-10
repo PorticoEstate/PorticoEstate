@@ -31,7 +31,11 @@ if($contract->get_id() > 0) {
 <div class="identifier-header">
 	<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/mimetypes/text-x-generic.png" /> <?php echo lang('showing_contract') ?></h1>
 	<div style="float: left; width: 50%;">
-		<button onclick="javascript:window.location.href ='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php echo lang('contract_back');?></button><br/>
+		<?php 
+			$back_button = lang('contract_back');
+			if($cancel_text) $back_button = lang($cancel_text);
+		?>
+		<button onclick="javascript:window.location.href ='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php echo $back_button;?></button><br/>
 		<label><?php echo lang('contract_number') ?> </label>
 		<?php if($contract->get_old_contract_id()){ 
 			echo $contract->get_old_contract_id(); 

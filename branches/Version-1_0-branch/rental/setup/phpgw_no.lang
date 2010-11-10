@@ -109,6 +109,8 @@ contracts_under_dismissal	rental	no	Kontrakter under avslutning
 contract_under_dismissal	rental	no	Under avslutning
 contract_notifications	rental	no	Kontraktens varsler
 contract_notification_status	rental	no	Status
+contracts_for_regulation	rental	no	Regulering med tilhørende kontrakter
+contract_regulation_back	rental	no	Regulering
 contracts_removed	rental	no	Kontrakter som er fjernet fra fakturakjøringen
 contracts_with_one_time	rental	no	Kontrakter med engangsbeløp
 contracts_in_cycle	rental	no	Kontrakter som følger vanlig fakturasyklus
@@ -423,6 +425,7 @@ rc	rental	no	Leieobjekter
 recurrence	rental	no	Gjentakelse
 reference	rental	no	Deres ref
 regulation	rental	no	Regulering
+regulation_back	rental	no	Reguleringsliste
 related_delegates	rental	no	Delegater
 remove	rental	no	Fjern
 remove_from_workbench	rental	no	Fjern fra mitt skrivebord
@@ -475,6 +478,7 @@ service_id_not_numeric	rental	no	Tjeneste må være et tall
 service_exist	rental	no	Eksisterer
 set_payer	rental	no	Sett som fakturamottaker
 shortcuts	rental	no	Snarveier
+show_affected_contracts	rental	no	Vis kontrakter relatert til reguleringen
 showing_composite	rental	no	Leieobjekt
 showing_contract	rental	no	Kontrakt
 showing	rental	no	Viser priselement
