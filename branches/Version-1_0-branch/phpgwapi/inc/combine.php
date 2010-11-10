@@ -86,8 +86,8 @@
 		if ($cache)
 		{
 			// Determine supported compression method
-			$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
-			$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');
+			$gzip = isset($_SERVER['HTTP_ACCEPT_ENCODING']) && $_SERVER['HTTP_ACCEPT_ENCODING'] ? strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') : '';
+			$deflate = isset($_SERVER['HTTP_ACCEPT_ENCODING']) && $_SERVER['HTTP_ACCEPT_ENCODING'] ? strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate') : '';
 
 			// Determine used compression method
 			$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
