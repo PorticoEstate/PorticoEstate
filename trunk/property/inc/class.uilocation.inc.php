@@ -868,6 +868,7 @@
 
 
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1127,11 +1128,6 @@
 		 		$default_value = array ('id'=>'','name'=>lang('no part of town'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,'.location');
-//				array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine roles')));
-				$default_value = array('id'=>'','name'=>lang('no user'));
-				array_unshift ($values_combo_box[4],$default_value);
-
 /*
 		        $_role_criteria = array
 		        (
@@ -1164,8 +1160,12 @@
 		        	'order'		=> 'name'
 		        );
 
-		        $values_combo_box[5] =   execMethod('property.socategory.get_list',$_role_criteria);
+		        $values_combo_box[4] =   execMethod('property.socategory.get_list',$_role_criteria);
 		 		$default_value = array ('id'=>'','name'=>lang('no role'));
+				array_unshift ($values_combo_box[4],$default_value);
+
+				$values_combo_box[5]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_READ,$this->user_id,".location.{$type_id}");
+				$default_value = array('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
 
 				$datatable['actions']['form'] = array(
@@ -1216,20 +1216,22 @@
 														'style' => 'filter',
 														'tab_index' => 4
 			                                        ),
-			                                        array( //boton contact
-														'id' => 'btn_user_id',
-														'name' => 'user_id',
-														'value'	=> lang('user'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 5
-			                                        ),
 			                                        array( //boton 	role
 														'id' => 'btn_role_id',
 														'name' => 'role_id',
 														'value'	=> lang('role'),
 														'type' => 'button',
 														'style' => 'filter',
+														'tab_index' => 5
+			                                        ),
+			                                        array( //boton contact
+														'id' => 'sel_user_id', // testing traditional listbox for long list
+														'name' => 'user_id',
+														'value'	=> lang('User'),
+														'type' => 'select',
+														'style' => 'filter',
+														'values' => $values_combo_box[5],
+														'onchange'=> 'onChangeSelect();',
 														'tab_index' => 6
 			                                        ),
 													array( // boton SAVE
@@ -1282,10 +1284,6 @@
 															array( //div values  combo_box_4
 																		'id' => 'values_combo_box_4',
 																		'value'	=> $this->bocommon->select2String($values_combo_box[4]) //i.e.  id,value/id,vale/
-							                                      ),
-															array( //div values  combo_box_5
-																		'id' => 'values_combo_box_5',
-																		'value'	=> $this->bocommon->select2String($values_combo_box[5]) //i.e.  id,value/id,vale/
 							                                      )
 		                       								)
 												)

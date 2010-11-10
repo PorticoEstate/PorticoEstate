@@ -8,8 +8,8 @@
     {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
     {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3]},
     {order:3, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
-    {order:4, var_URL:'user_id',		name:'btn_user_id',	style:'userIdbutton',			dependiente:[]},
-    {order:5, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
+    {order:4, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
+//    {order:5, var_URL:'user_id',		name:'btn_user_id',	style:'userIdbutton',			dependiente:[]}, // dummy - changed to select
 	];
 
 	// define buttons
