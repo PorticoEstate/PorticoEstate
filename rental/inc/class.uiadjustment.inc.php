@@ -269,7 +269,10 @@ class rental_uiadjustment extends rental_uicommon {
 	public function show_affected_contracts()
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
-		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id));
+		$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id, 
+																	'adjustment' => $adjustment,
+																	'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index'))));
 	}
 	
 	public function run_adjustments()

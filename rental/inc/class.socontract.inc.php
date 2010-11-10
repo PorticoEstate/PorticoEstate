@@ -180,8 +180,8 @@ class rental_socontract extends rental_socommon
 			$adjustment_year = $this->marshal($filters['adjustment_year'],'int');
 			
 			$filter_clauses[] = "contract.adjustable IS true";
-			//$filter_clauses[] = "contract.adjustment_interval = {$adjustment_interval}";
-			//$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} = {$adjustment_year}";
+			$filter_clauses[] = "contract.adjustment_interval = {$adjustment_interval}";
+			$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} = {$adjustment_year}";
 		}
 		
 		/* 

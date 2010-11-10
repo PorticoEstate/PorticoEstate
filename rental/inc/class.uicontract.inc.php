@@ -184,7 +184,7 @@
 			
 			if(!$export){
 				//Add context menu columns (actions and labels)
-				array_walk($rows, array($this, 'add_actions'), array($type,$ids));
+				array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id));
 			}
 			//var_dump("Usage " .memory_get_usage() . " bytes after menu");
 			
@@ -209,6 +209,7 @@
 
 			$type = $params[0];
 			$ids = $params[1];
+			$adjustment_id = $params[2];
 			
 			switch($type)
 			{
@@ -231,6 +232,28 @@
 						$value['labels'][] = lang('show');
 					}
 					break;
+				case 'contracts_for_adjustment':
+					if(!isset($ids) || count($ids) > 0)
+					{
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 
+																					'id' => $value['id'], 
+																					'initial_load' => 'no',
+																					'adjustment_id' => $adjustment_id)));
+						$value['labels'][] = lang('edit');
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 
+																									'id' => $value['id'],
+																									'adjustment_id' => $adjustment_id)));
+						$value['labels'][] = lang('copy');
+					}
+					$value['ajax'][] = false;
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 
+																									'id' => $value['id'], 
+																									'initial_load' => 'no',
+																									'adjustment_id' => $adjustment_id)));
+					$value['labels'][] = lang('show');
+					break;
 				default:
 					if(!isset($ids) || count($ids) > 0)
 					{
@@ -244,7 +267,6 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('show');
-					
 				}
 		}
 
@@ -274,6 +296,14 @@
 		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
 		{
 			
+			$cancel_link = self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes'));
+			$adjustment_id = (int)phpgw::get_var('adjustment_id');
+			if($adjustment_id){
+				$cancel_link = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id));
+				$cancel_text = 'contract_regulation_back';
+			}
+			
+			
 			if (isset($contract_id) && $contract_id > 0) {
 				if($contract == null){
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
@@ -299,7 +329,8 @@
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
-						'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes')),
+						'cancel_link' => $cancel_link,
+						'cancel_text' => $cancel_text
 					);
 					$contract->check_consistency();
 					$this->render('contract.php', $data);
@@ -322,7 +353,8 @@
 							'editable' => true,
 							'message' => isset($message) ? $message : phpgw::get_var('message'),
 							'error' => isset($error) ? $error : phpgw::get_var('error'),
-							'cancel_link' => self::link(array('menuaction' => 'rental.uicontract.index')),
+							'cancel_link' => $cancel_link,
+							'cancel_text' => $cancel_text
 						);
 						$this->render('contract.php', $data);
 					}
@@ -582,6 +614,8 @@
 		 */
 		public function copy_contract()
 		{
+			$adjustment_id = (int)phpgw::get_var('adjustment_id');
+			
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single(phpgw::get_var('id'));
 			$old_contract_old_id = $contract->get_old_contract_id();
@@ -602,17 +636,17 @@
 					if($success){
 						$db_contract->transaction_commit();
 						$message = lang(messages_new_contract_copied).' '.$old_contract_old_id;
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'adjustment_id' => $adjustment_id));
 					}
 					else{
 						$db_contract->transaction_abort();
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error'),'adjustment_id' => $adjustment_id));
 					}
 				}
 				else
 				{
 					$db_contract->transaction_abort();
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error')));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => lang('messages_form_error'),'adjustment_id' => $adjustment_id));
 				}
 			}
 		
