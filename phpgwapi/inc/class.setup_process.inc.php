@@ -359,7 +359,22 @@
 //				if( isset($setup_info[$key]['tables'])
 //					&& $setup_info[$key]['tables']
 //					&& file_exists($appdir.'default_records.inc.php'))
-				if( file_exists($appdir.'default_records.inc.php'))
+				$default_found = false;
+
+				$ConfigDomain = phpgw::get_var('ConfigDomain','string', 'COOKIE');
+
+				if( file_exists($appdir.$ConfigDomain.'/default_records.inc.php'))
+				{
+					$default_records = $appdir.$ConfigDomain.'/default_records.inc.php';
+					$default_found = true;
+				}
+				else if( file_exists($appdir.'default_records.inc.php'))
+				{
+					$default_records = $appdir.'default_records.inc.php';
+					$default_found = true;
+				}
+
+				if( $default_found )
 				{
 					if($DEBUG)
 					{
@@ -367,8 +382,10 @@
 					}
 
 					$oProc = &$GLOBALS['phpgw_setup']->oProc;	// to be compatible with old apps
-					require_once $appdir.'default_records.inc.php';
+
+					require_once $default_records;
 				}
+
 				/* $setup_info[$key]['status'] = 'C'; */
 			}
 
