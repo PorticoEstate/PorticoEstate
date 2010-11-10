@@ -215,7 +215,18 @@
   	{
 		//Create ROW
 		newTR = document.createElement('tr');
-		td_empty(myColumnDefs.length -1);
+		var i = 0;
+
+		for(var k=0 ; k<values_ds.headers.name.length; k++)
+		{
+			if (values_ds.headers.input_type[k] != 'hidden')
+			{
+				i++;
+			}
+		}
+
+		td_empty(i+2);
+
 		//RowChecked
 		CreateRowChecked("mychecks");
 
