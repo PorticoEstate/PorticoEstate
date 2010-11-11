@@ -652,7 +652,7 @@
 											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
 											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
-											'location_code' => $this->location_code));
+											'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
@@ -664,6 +664,14 @@
 		{
 			$soresponsible		= CreateObject('property.soresponsible');
 			$contacts = createObject('phpgwapi.contacts');
+			
+			if($data['user_id'] < 0 && $data['role_id'])
+			{
+				$account = $GLOBALS['phpgw']->accounts->get(abs($data['user_id']));
+				$contact_id = $account->person_id;
+
+				$data['filter_role_on_contact'] = $contact_id;
+			}
 
 			$locations = $this->read($data);
 			foreach ($locations as & $location)
