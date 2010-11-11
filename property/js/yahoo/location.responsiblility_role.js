@@ -2,7 +2,7 @@
 // Declaration of event.index vars
 //--------------------------------------------------------
 	//define SelectButton
-    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
+    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;//, oMenuButton_5;
  	var selectsButtons = [
     {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[], reload:1},
     {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
@@ -22,28 +22,44 @@
 	// define Text buttons
 	var textImput = [
 	{order:0, name:'query',	id:'txt_query'}
-	]
+	];
 
 	var toolTips =
 	[
 		{name:'status', title:'Status', description:'',ColumnDescription:'status'},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
-	]
+	];
 
 	var linktoolTips =
 	[
 		{name:'btn_data_search', title:'Data search', description:'Narrow the search dates'}
-	]
+	];
 
 	var config_values =
-	{
-		date_search : 0 //if search has link "Data search"
-	}
+	[
+		{date_search : 0} //if search has link "Data search"
+	];
 
 	var tableYUI;
 	/********************************************************************************
 	*
 	*/
+
+	this.onChangeSelect = function()
+	{
+		var myselect=document.getElementById("sel_user_id");
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values.user_id='"+myselect.options[i].value+"'");
+		execute_ds();
+	}
+
+
 	this.myParticularRenderEvent = function()
 	{
 		delete_content_div("message",2); //find it in property.js
@@ -189,6 +205,9 @@
 		//add all control to form
 		for(i=0;i<valuesForPHP.length;i++)
 		{
+//alert(valuesForPHP[i].name);
+//alert(valuesForPHP[i].checked);
+
 			myclone = valuesForPHP[i].cloneNode(true);
 			mydiv.appendChild(myclone);
 		}

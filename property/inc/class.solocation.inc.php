@@ -246,24 +246,23 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start				= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter				= isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
-				$query				= isset($data['query']) ? $data['query'] : '';
-				$sort				= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order				= isset($data['order']) ? $data['order'] : '';
-				$cat_id				= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
-				$type_id			= isset($data['type_id']) ? $data['type_id'] : '';
-				$lookup_tenant		= isset($data['lookup_tenant']) ? $data['lookup_tenant'] : '';
-				$district_id		= isset($data['district_id']) ? $data['district_id'] : '';
-				$allrows			= isset($data['allrows']) ? $data['allrows'] : '';
-				$lookup				= isset($data['lookup']) ? $data['lookup'] : '';
-				$status				= isset($data['status']) ? $data['status'] : '';
-				$part_of_town_id	= isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
-				$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
-				$location_code		= isset($data['location_code']) ? $data['location_code'] : '';
-			}
+			$start					= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter					= isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
+			$query					= isset($data['query']) ? $data['query'] : '';
+			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order					= isset($data['order']) ? $data['order'] : '';
+			$cat_id					= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
+			$type_id				= isset($data['type_id']) ? $data['type_id'] : '';
+			$lookup_tenant			= isset($data['lookup_tenant']) ? $data['lookup_tenant'] : '';
+			$district_id			= isset($data['district_id']) ? $data['district_id'] : '';
+			$allrows				= isset($data['allrows']) ? $data['allrows'] : '';
+			$lookup					= isset($data['lookup']) ? $data['lookup'] : '';
+			$status					= isset($data['status']) ? $data['status'] : '';
+			$part_of_town_id		= isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '';
+			$dry_run				= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$location_code			= isset($data['location_code']) ? $data['location_code'] : '';
+			$filter_role_on_contact = $data['filter_role_on_contact'] ? (int)$data['filter_role_on_contact'] : 0;
+			$role_id				= $data['role_id'] ? (int)$data['role_id'] : 0;
 
 			if (!$type_id)
 			{
@@ -287,7 +286,7 @@
 			}
 
 
-			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup);
+			$sql = $this->socommon->fm_cache('sql_'. $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact);
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 
 //			$choice_table = 'phpgw_cust_choice';
@@ -512,11 +511,21 @@
 				$joinmethod .= " {$this->left_join} fm_location{$type_id}_category ON ( fm_location{$type_id}.category = fm_location{$type_id}_category.id))";
 				$paranthesis .='(';
 
+				if($filter_role_on_contact)
+				{
+					$joinmethod .= " {$this->join} fm_responsibility_contact ON ( fm_location{$type_id}.location_code = fm_responsibility_contact.location_code))";
+					$paranthesis .='(';
+					$joinmethod .= " {$this->join} fm_responsibility ON ( fm_responsibility_contact.responsibility_id = fm_responsibility.id))";
+					$paranthesis .='(';
+					$joinmethod .= " {$this->join} fm_responsibility_role ON ( fm_responsibility.id = fm_responsibility_role.responsibility_id))";
+					$paranthesis .='(';
+				}
+
 				$from = " FROM {$paranthesis} fm_location{$type_id} ";
 
 				$sql = "SELECT $cols $from $joinmethod";
 
-				$this->socommon->fm_cache('sql_'. $type_id . '_' . $lookup_tenant . '_' . $lookup ,$sql);
+				$this->socommon->fm_cache('sql_'. $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact ,$sql);
 				$this->socommon->fm_cache('uicols_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$uicols);
 				$this->socommon->fm_cache('cols_return_'. $type_id  . '_' . $lookup_tenant . '_' . $lookup,$cols_return);
 
@@ -693,7 +702,15 @@
 
 			if ($location_code)
 			{
-				$filtermethod .= "  {$where} fm_location{$type_id}.location_code $this->like '{$location_code}%'";
+				$filtermethod .= " {$where} fm_location{$type_id}.location_code $this->like '{$location_code}%'";
+				$where= 'AND';			
+			}
+
+			if($filter_role_on_contact && $role_id)
+			{
+				$time = time() +1;
+			 	$filtermethod .= " {$where} active_from < {$time} AND (active_to > {$time} OR active_to = 0)"
+			 	." AND expired_on IS NULL AND fm_responsibility_role.id ={$role_id} AND contact_id = {$filter_role_on_contact}";
 				$where= 'AND';			
 			}
 
@@ -824,9 +841,9 @@
 			}
 
 			$sql .= "$filtermethod $querymethod";
-//_debug_array($sql);
+
 			$values = array();
-			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 
