@@ -93,10 +93,16 @@ dl.form-2col dd .autocomplete {
     padding-bottom: 2em;
 }
 
-/* ie fix. autocomplete dropdown is displayed behind some elements if the z-index is not set */
 div.autocomplete {
-	z-index: 500;
 	position: relative;
+}
+/* ie fix. autocomplete dropdown is displayed behind some elements if the z-index is not set */
+div.autocomplete input {
+	z-index: 500;
+}
+/* ie fix. autocomplete dropdown is displayed behind some elements if the z-index is not set */
+#building_container ul {
+	z-index: 1000;
 }
 
 dl.form dt.heading, dl.form-col dt.heading, dl.form-2col dt.heading, div.heading,
@@ -274,3 +280,10 @@ div.allocation-list
 .yui-skin-sam .yui-dt TABLE TD{
 	border: none !important;
 }
+
+div.info:hover { 
+    background-image: url(../images/info.png);
+    background-repeat: no-repeat;
+    background-position: 100% 0%;
+}
+

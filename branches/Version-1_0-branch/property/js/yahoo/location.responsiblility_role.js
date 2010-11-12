@@ -2,7 +2,7 @@
 // Declaration of event.index vars
 //--------------------------------------------------------
 	//define SelectButton
-    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4, oMenuButton_5;
+    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;//, oMenuButton_5;
  	var selectsButtons = [
     {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[], reload:1},
     {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
@@ -22,28 +22,44 @@
 	// define Text buttons
 	var textImput = [
 	{order:0, name:'query',	id:'txt_query'}
-	]
+	];
 
 	var toolTips =
 	[
 		{name:'status', title:'Status', description:'',ColumnDescription:'status'},
 		{name:'btn_export', title:'download', description:'Download table to your browser',ColumnDescription:''}
-	]
+	];
 
 	var linktoolTips =
 	[
 		{name:'btn_data_search', title:'Data search', description:'Narrow the search dates'}
-	]
+	];
 
 	var config_values =
-	{
-		date_search : 0 //if search has link "Data search"
-	}
+	[
+		{date_search : 0} //if search has link "Data search"
+	];
 
 	var tableYUI;
 	/********************************************************************************
 	*
 	*/
+
+	this.onChangeSelect = function()
+	{
+		var myselect=document.getElementById("sel_user_id");
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values.user_id='"+myselect.options[i].value+"'");
+		execute_ds();
+	}
+
+
 	this.myParticularRenderEvent = function()
 	{
 		delete_content_div("message",2); //find it in property.js
@@ -153,7 +169,7 @@
 		if(oRecord.getData('responsible_item'))
 		{
 			checked = "checked = 'checked'";
-			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig]["+oRecord.getData('responsible_contact_id')+"_"+oRecord.getData('responsible_item')+"]\" value=\""+oRecord.getData('location_code')+"\"/>";
+			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig][]\" value=\""+oRecord.getData('responsible_contact_id')+"_"+oRecord.getData('responsible_item')+"_"+oRecord.getData('location_code')+"\"/>";
 		}
 			
 		elCell.innerHTML = hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oRecord.getData('location_code')+"\"/></center>";
@@ -185,18 +201,34 @@
 		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('mychecks');
 		valuesForPHP_orig = YAHOO.util.Dom.getElementsByClassName('orig_check');
 
-		var myclone = null;
+		var values_return =
+		{
+			assign:[],
+			assign_orig:[]
+		};
+
 		//add all control to form
 		for(i=0;i<valuesForPHP.length;i++)
 		{
-			myclone = valuesForPHP[i].cloneNode(true);
-			mydiv.appendChild(myclone);
+			//values_return.assign[i] = valuesForPHP[i].value;
+			if(valuesForPHP[i].checked)
+			{
+				values_return.assign.push(valuesForPHP[i].value);
+			}
 		}
+
 		for(i=0;i<valuesForPHP_orig.length;i++)
 		{
-			myclone = valuesForPHP_orig[i].cloneNode(true);
-			mydiv.appendChild(myclone);
+			//console.log(valuesForPHP_orig[i].name); // firebug
+			values_return.assign_orig[i] = valuesForPHP_orig[i].value;
 		}
+
+		var returnfield = document.createElement('input');
+		returnfield.setAttribute('name', 'values_assign');
+		returnfield.setAttribute('type', 'text');
+		returnfield.setAttribute('value', JSON.stringify(values_return));
+		mydiv.appendChild(returnfield);
+
 		// find out the unique form
 		formObject = document.body.getElementsByTagName('form');
 		// modify the 'form' for send it as POST using asyncronize call

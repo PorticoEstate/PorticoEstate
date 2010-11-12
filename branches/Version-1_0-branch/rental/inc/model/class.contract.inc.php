@@ -995,9 +995,11 @@
 			}
 		}
 		
-		public function is_active()
+		public function is_active($date)
 		{
-			$ts = strtotime(date('Y-m-d')); // timestamp for today
+			$ts = $date;
+			if(!$ts)
+				$ts = strtotime(date('Y-m-d')); // timestamp for today
 			
 			$date_start = $this->get_contract_date()->get_start_date();
 			$date_end = $this->get_contract_date()->get_end_date();

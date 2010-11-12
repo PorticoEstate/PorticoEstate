@@ -140,11 +140,11 @@ class rental_soadjustment extends rental_socommon
 			$adjustment->get_new_price(),
 			$adjustment->get_percent(),
 			$adjustment->get_interval(),
-            $adjustment->get_adjustment_date(),
-            '\''.$adjustment->get_adjustment_type().'\'',
-            ($adjustment->is_manual() ? "true" : "false"),
-            ($adjustment->is_executed() ? "true" : "false"),
-            $adjustment->get_year()
+			$adjustment->get_adjustment_date(),
+			'\''.$adjustment->get_adjustment_type().'\'',
+			($adjustment->is_manual() ? "true" : "false"),
+			($adjustment->is_executed() ? "true" : "false"),
+			$adjustment->get_year()
 		);
 
 		$query ="INSERT INTO rental_adjustment (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
@@ -188,7 +188,6 @@ class rental_soadjustment extends rental_socommon
 	
 	public function run_adjustments()
 	{
-		//TODO: 
 		/* check if there are incomplete adjustments (for today)
 		 * gather all adjustable contracts with 
 		 * 		interval = adjustment interval and this year = last adjusted + interval
@@ -199,12 +198,12 @@ class rental_soadjustment extends rental_socommon
 		 * update adjustment -> set is_executed to true
 		 * update price book elements according to type if interval=1
 		 */
-		$current_date = strtotime('now'); //TODO: fix this
-		$prev_day = mktime(0,0,0,date('m'),date('d')-1,date('Y'));
+		
+		$prev_day = mktime(0,0,0,date('m'),date('d'),date('Y'));
 		$next_day = mktime(0,0,0,date('m'),date('d')+1,date('Y'));
 
 		//get incomplete adjustments for today
-		$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date > {$prev_day})";
+		$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date >= {$prev_day})";
 		//var_dump($adjustments_query);
 		$result = $this->db->query($adjustments_query);
 		//var_dump("etter spr");
@@ -264,8 +263,8 @@ class rental_soadjustment extends rental_socommon
 			//gather all adjustable contracts
 			$adjustable_contracts = "SELECT id, adjustment_share, date_start, adjustment_year FROM rental_contract ";
 			$adjustable_contracts .= "WHERE location_id = '{$adjustment->get_responsibility_id()}' AND adjustable ";
-			$adjustable_contracts .= "AND (";
-			$adjustable_contracts .= "(adjustment_interval = {$adjustment->get_interval()} AND (adjustment_year + {$adjustment->get_interval()}) = {$adjustment->get_year()})";
+			$adjustable_contracts .= "AND adjustment_interval = {$adjustment->get_interval()} ";
+			$adjustable_contracts .= "AND (((adjustment_year + {$adjustment->get_interval()}) <= {$adjustment->get_year()})";
 			$adjustable_contracts .= " OR ";
 			$adjustable_contracts .= "(adjustment_year IS NULL OR adjustment_year = 0)";
 			$adjustable_contracts .= ")";
@@ -279,7 +278,10 @@ class rental_soadjustment extends rental_socommon
 				$adj_year = $this->unmarshal($this->db->f('adjustment_year', true), 'int');
 				$start_year = date('Y', $date_start);
 
-				if(($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() == $adjustment->get_year())))
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
+
+				$firstJanAdjYear = mktime(0,0,0,1,1,$adjustment->get_year());
+				if($contract->is_active($firstJanAdjYear) && (($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() <= $adjustment->get_year()))))
 				{
 					//update adjustment_year on contract
 					rental_socontract::get_instance()->update_adjustment_year($contract_id, $adjustment->get_year());
@@ -373,6 +375,23 @@ class rental_soadjustment extends rental_socommon
 			}
 		}
 		return true;
+	}
+	
+	public function newer_executed_regulation_exists($adjustment){
+		$columns = "id";
+		$table = "rental_adjustment";
+		$conditions = "is_executed='true'".
+					"AND adjustment_date > {$adjustment->get_adjustment_date()}".
+					"AND adjustment_interval={$adjustment->get_interval()}".
+					"AND responsibility_id={$adjustment->get_responsibility_id()}";
+		$sql = "Select $columns from $table where $conditions"; 
+		
+		$result = $this->db->query($sql);
+		
+		if($this->db->num_rows() > 0){
+			return true;
+		}
+		return false;
 	}
 }
 ?>
