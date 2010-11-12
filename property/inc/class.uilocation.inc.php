@@ -870,6 +870,7 @@
 
 
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1035,6 +1036,7 @@
 			}
 
 			$values = phpgw::get_var('values');
+			$values_assign = $_POST['values_assign'];
 			$role_id = phpgw::get_var('role_id', 'int');
 			$receipt = array();
 	        $_role = CreateObject('property.socategory');
@@ -1044,8 +1046,9 @@
 
 			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
 
-			if($values && $this->acl_edit)
+			if($values_assign && $this->acl_edit)
 			{
+				$values_assign = phpgw::clean_value(json_decode($values_assign,true));
 				$user_id = abs($user_id);
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
 				$contact_id = $account->person_id;
@@ -1058,7 +1061,8 @@
 					$role = $_role->read_single($data=array('id' => $role_id));
 					$values['contact_id']			= $contact_id;
 					$values['responsibility_id']	= $role['responsibility_id'];
-
+					$values['assign']				= $values_assign['assign'];
+					$values['assign_orig']			= $values_assign['assign_orig'];
 					$boresponsible = CreateObject('property.boresponsible');
 					$receipt = $boresponsible->update_role_assignment($values);
 				}

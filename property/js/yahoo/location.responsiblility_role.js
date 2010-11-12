@@ -169,7 +169,7 @@
 		if(oRecord.getData('responsible_item'))
 		{
 			checked = "checked = 'checked'";
-			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig]["+oRecord.getData('responsible_contact_id')+"_"+oRecord.getData('responsible_item')+"]\" value=\""+oRecord.getData('location_code')+"\"/>";
+			hidden = "<input type=\"hidden\" class=\"orig_check\"  name=\"values[assign_orig][]\" value=\""+oRecord.getData('responsible_contact_id')+"_"+oRecord.getData('responsible_item')+"_"+oRecord.getData('location_code')+"\"/>";
 		}
 			
 		elCell.innerHTML = hidden + "<center><input type=\"checkbox\" "+checked+" class=\"mychecks\"  name=\"values[assign][]\" value=\""+oRecord.getData('location_code')+"\"/></center>";
@@ -201,21 +201,34 @@
 		valuesForPHP = YAHOO.util.Dom.getElementsByClassName('mychecks');
 		valuesForPHP_orig = YAHOO.util.Dom.getElementsByClassName('orig_check');
 
-		var myclone = null;
+		var values_return =
+		{
+			assign:[],
+			assign_orig:[]
+		};
+
 		//add all control to form
 		for(i=0;i<valuesForPHP.length;i++)
 		{
-//alert(valuesForPHP[i].name);
-//alert(valuesForPHP[i].checked);
-
-			myclone = valuesForPHP[i].cloneNode(true);
-			mydiv.appendChild(myclone);
+			//values_return.assign[i] = valuesForPHP[i].value;
+			if(valuesForPHP[i].checked)
+			{
+				values_return.assign.push(valuesForPHP[i].value);
+			}
 		}
+
 		for(i=0;i<valuesForPHP_orig.length;i++)
 		{
-			myclone = valuesForPHP_orig[i].cloneNode(true);
-			mydiv.appendChild(myclone);
+			//console.log(valuesForPHP_orig[i].name); // firebug
+			values_return.assign_orig[i] = valuesForPHP_orig[i].value;
 		}
+
+		var returnfield = document.createElement('input');
+		returnfield.setAttribute('name', 'values_assign');
+		returnfield.setAttribute('type', 'text');
+		returnfield.setAttribute('value', JSON.stringify(values_return));
+		mydiv.appendChild(returnfield);
+
 		// find out the unique form
 		formObject = document.body.getElementsByTagName('form');
 		// modify the 'form' for send it as POST using asyncronize call

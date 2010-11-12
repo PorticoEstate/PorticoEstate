@@ -299,11 +299,13 @@
 			$dont_add = array();
 			if( isset($values['assign_orig']) && is_array($values['assign_orig']) )
 			{
-				foreach( $values['assign_orig'] as $assign_orig => $location_code )
+				foreach( $values['assign_orig'] as $assign_orig )
 				{
 					$assign_arr			= explode('_', $assign_orig);
 					$contact_id			= $assign_arr[0];
 					$responsible_item	= $assign_arr[1];
+					$location_code		= $assign_arr[2];
+
 					$dont_add[] 		= $location_code;				
 	
 					if( !in_array($location_code, $values['assign']) )
