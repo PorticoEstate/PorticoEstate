@@ -181,18 +181,21 @@
 		{
 			$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
 
-			$claim = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$claims = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
 											'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
 			$this->total_records = $this->so->total_records;
 
-			foreach ($claim as &$entry)
+			foreach ($claims as &$entry)
 			{
 				$entry['entry_date']  = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['status'] = lang($entry['status']);
 				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+				$location_info = execMethod('property.solocation.read_single',$entry['location_code']);
+				$entry['loc1_name'] = $location_info['loc1_name'];
+				$entry['loc_category'] = $location_info['category_name'];
 			}
-			return $claim;
+			return $claims;
 		}
 
 		function check_claim_project($project_id)

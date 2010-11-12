@@ -1096,7 +1096,9 @@
 			}
 
 			$cols = "fm_location{$type_id}.category as cat_id";
+			$cols .= ",fm_location{$type_id}_category.descr as category_name";
 			$cols_return[] 	= 'cat_id';
+			$cols_return[] 	= 'category_name';
 
 			for ($i=1;$i<($type_id);$i++)
 			{
@@ -1131,6 +1133,8 @@
 				$this->uicols	= 	$this->socommon->fm_cache('uicols_single_'. $type_id);
 				$this->cols_return	= 	$this->socommon->fm_cache('cols_return_single_'. $type_id);
 			}
+
+			$sql .= " {$this->join} fm_location{$type_id}_category ON (fm_location{$type_id}.category = fm_location{$type_id}_category.id)";
 
 			$sql .= " WHERE fm_location$type_id.location_code='$location_code' ";
 

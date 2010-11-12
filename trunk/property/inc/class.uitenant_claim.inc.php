@@ -279,26 +279,38 @@
 			$uicols['name'][1]['name'] = 'district_id';
 			$uicols['name'][1]['value'] = 'district_id';
 
-			$uicols['name'][2]['name'] = 'Project';
-			$uicols['name'][2]['value'] = 'project_id';
+			$uicols['name'][2]['name'] = 'location';
+			$uicols['name'][2]['value'] = 'location_code';
 
-			$uicols['name'][3]['name'] = 'name';
-			$uicols['name'][3]['value'] = 'name';
+			$uicols['name'][3]['name'] = 'loc1_name';
+			$uicols['name'][3]['value'] = 'loc1_name';
 
-			$uicols['name'][4]['name'] = 'time created';
-			$uicols['name'][4]['value'] = 'entry_date';
+			$uicols['name'][4]['name'] = 'address';
+			$uicols['name'][4]['value'] = 'address';
 
-			$uicols['name'][5]['name'] = 'user';
-			$uicols['name'][5]['value'] = 'user';
+			$uicols['name'][5]['name'] = 'category';
+			$uicols['name'][5]['value'] = 'loc_category';
 
-			$uicols['name'][6]['name'] = 'category';
-			$uicols['name'][6]['value'] = 'category';
+			$uicols['name'][6]['name'] = 'Project';
+			$uicols['name'][6]['value'] = 'project_id';
 
-			$uicols['name'][7]['name'] = 'Status';
-			$uicols['name'][7]['value'] = 'status';
+			$uicols['name'][7]['name'] = 'name';
+			$uicols['name'][7]['value'] = 'name';
 
-			$uicols['name'][8]['name'] = 'tenant_id';
-			$uicols['name'][8]['value'] = 'tenant_id';
+			$uicols['name'][8]['name'] = 'time created';
+			$uicols['name'][8]['value'] = 'entry_date';
+
+			$uicols['name'][9]['name'] = 'user';
+			$uicols['name'][9]['value'] = 'user';
+
+			$uicols['name'][10]['name'] = 'category';
+			$uicols['name'][10]['value'] = 'claim_category';
+
+			$uicols['name'][11]['name'] = 'Status';
+			$uicols['name'][11]['value'] = 'status';
+
+			$uicols['name'][12]['name'] = 'tenant_id';
+			$uicols['name'][12]['value'] = 'tenant_id';
 
 			$count_uicols_name = count($uicols['name']);
 
