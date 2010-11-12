@@ -253,7 +253,7 @@
 		public function add()
 		{
 			$errors = array();
-			$event = array('customer_internal' => 1); 
+			$event = array('customer_internal' => 0); 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 
@@ -326,8 +326,11 @@
 						}
 					}  
 				}
+				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
+					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
+				} 
 
-				if(!$errors['event'] && !$errors['time'])
+				if(!$errors['event'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'])
 				{
 					if (!$_POST['application_id'])
 					{
@@ -473,7 +476,11 @@
 					$event['customer_organization_number'] = $_POST['customer_organization_number'];
 				}
 
-				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'])
+				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
+					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
+				} 
+
+				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data'])
 				{
 					if (phpgw::get_var('mail', 'POST'))
 					{
