@@ -96,7 +96,7 @@ class rental_uiadjustment extends rental_uicommon {
 		{
 			default:
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.view', 'id' => $value['id'])));
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.edit', 'id' => $value['id'])));
@@ -107,9 +107,9 @@ class rental_uiadjustment extends rental_uicommon {
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.delete', 'id' => $value['id'])));
 				$value['labels'][] = lang('delete');
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts', 'id' => $value['id'])));
-				$value['labels'][] = lang('show_affected_contracts');
+				//$value['ajax'][] = false;
+				//$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts', 'id' => $value['id'])));
+				//$value['labels'][] = lang('show_affected_contracts');
 				
 			}
 	}
@@ -271,9 +271,17 @@ class rental_uiadjustment extends rental_uicommon {
 	{
 		$adjustment_id = (int)phpgw::get_var('id');
 		$adjustment = rental_soadjustment::get_instance()->get_single($adjustment_id);
+
+		//if there exist another regulation that has been exectued after current regulation with the same filters, the affected list will be out of date.
+		$show_affected_list = true;
+		if($adjustment->is_executed()){
+			if(rental_soadjustment::get_instance()->newer_executed_regulation_exists($adjustment))$show_affected_list = false;
+		}
+
 		$this->render('contracts_for_regulation_list.php', array('adjustment_id' => $adjustment_id, 
 																	'adjustment' => $adjustment,
-																	'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index'))));
+																	'cancel_link' => self::link(array('menuaction' => 'rental.uiadjustment.index')),
+																	'show_affected_list' => $show_affected_list));
 	}
 	
 	public function run_adjustments()

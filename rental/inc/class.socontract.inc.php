@@ -179,12 +179,19 @@ class rental_socontract extends rental_socommon
 			$adjustment_interval = $this->marshal($filters['adjustment_interval'],'int');
 			$adjustment_year = $this->marshal($filters['adjustment_year'],'int');
 			
-			if($this->marshal($filters['adjustment_is_executed'])){
+			if($filters['adjustment_is_executed']){
 				$filter_clauses[] = "contract.adjustment_year = {$adjustment_year}";
 			}
 			else{
-				$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} = {$adjustment_year}";
+				$filter_clauses[] = "contract.adjustment_year + {$adjustment_interval} <= {$adjustment_year}";
 			}
+			
+			$firstJanAdjYear = mktime(0,0,0,1,1,$adjustment_year);
+			
+			//make sure the contracts are active
+			$filter_clauses[] = "(contract.date_end is null OR contract.date_end >= {$firstJanAdjYear})";
+			$filter_clauses[] = "contract.date_start is not null AND contract.date_start <= {$firstJanAdjYear}";
+			
 			$filter_clauses[] = "contract.adjustable IS true";
 			$filter_clauses[] = "contract.adjustment_interval = {$adjustment_interval}";
 			

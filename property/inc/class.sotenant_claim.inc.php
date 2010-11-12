@@ -114,8 +114,8 @@
 				$querymethod = " $where ( first_name $this->like '%$query%' OR last_name $this->like '%$query%' OR project_id=" . (int)$query .')';
 			}
 
-			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as category, fm_tenant.last_name, fm_tenant.first_name,district_id"
-			 . " FROM fm_tenant_claim "
+			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
+			 . " fm_project.address, fm_project.category, fm_project.location_code FROM fm_tenant_claim "
 			 . " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 			 . " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
 			 . " $this->join fm_project ON fm_project.id = fm_tenant_claim.project_id"
@@ -150,6 +150,10 @@
 					'status'		=> $this->db->f('status'),
 					'user_id'		=> $this->db->f('user_id'),
 					'district_id'	=> $this->db->f('district_id'),
+					'address'		=> $this->db->f('address',true),
+					'category'		=> $this->db->f('category'),
+					'location_code'	=> $this->db->f('location_code'),
+					'claim_category'=> $this->db->f('claim_category',true),
 				);
 			}
 			return $claims;

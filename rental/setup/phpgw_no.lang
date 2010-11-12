@@ -20,6 +20,7 @@ adjustment_interval	rental	no	Reguleringsintervall
 adjustment_is_executed	rental	no	Reguleringen er utført
 adjustment_is_not_executed	rental	no	Reguleringen er ikke utført
 adjustment_list	rental	no	Reguleringer
+adjustment_list_out_of_date	rental	no	Det er kjørt en nyere regulering for samme utvalg av kontrakter
 adjustment_share	rental	no	Reguleringsandel
 adjustment_type	rental	no	Reguleringstype
 adjustment_year	rental	no	Sist regulert

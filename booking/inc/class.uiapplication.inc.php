@@ -384,7 +384,14 @@
 			array_set_default($application, 'resources', array(get_var('resource', int, 'GET')));
 			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'GET'));
-			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'GET'));
+
+			array_set_default($application, 'building_name', mb_detect_encoding(phpgw::get_var('building_name', 'GET')));
+			
+			if (strstr($application['building_name'],"%")){
+				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
+				$replace = array ('Å','å','Ø','ø','Æ','æ');
+				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
+			}
 			
 			if(phpgw::get_var('from_', 'GET'))
 			{

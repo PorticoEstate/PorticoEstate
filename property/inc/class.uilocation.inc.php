@@ -869,6 +869,8 @@
 
 
 
+
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1034,6 +1036,7 @@
 			}
 
 			$values = phpgw::get_var('values');
+			$values_assign = $_POST['values_assign'];
 			$role_id = phpgw::get_var('role_id', 'int');
 			$receipt = array();
 	        $_role = CreateObject('property.socategory');
@@ -1041,9 +1044,12 @@
 
 			$this->save_sessiondata();
 
-			if($values && $this->acl_edit)
+			$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
+
+			if($values_assign && $this->acl_edit)
 			{
-				$user_id = phpgw::get_var('user_id', 'int', 'request', $this->account);
+				$values_assign = phpgw::clean_value(json_decode($values_assign,true));
+				$user_id = abs($user_id);
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
 				$contact_id = $account->person_id;
 				if(!$role_id)
@@ -1055,7 +1061,8 @@
 					$role = $_role->read_single($data=array('id' => $role_id));
 					$values['contact_id']			= $contact_id;
 					$values['responsibility_id']	= $role['responsibility_id'];
-
+					$values['assign']				= $values_assign['assign'];
+					$values['assign_orig']			= $values_assign['assign_orig'];
 					$boresponsible = CreateObject('property.boresponsible');
 					$receipt = $boresponsible->update_role_assignment($values);
 				}
@@ -1165,6 +1172,7 @@
 				array_unshift ($values_combo_box[4],$default_value);
 
 				$values_combo_box[5]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_READ,$this->user_id,".location.{$type_id}");
+				array_unshift ($values_combo_box[5],array('id'=> (-1*$GLOBALS['phpgw_info']['user']['account_id']),'name'=>lang('mine roles')));
 				$default_value = array('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[5],$default_value);
 
@@ -1296,7 +1304,7 @@
 
 			$location_list = array();
 
-			$location_list = $this->bo->get_responsible(array('role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+			$location_list = $this->bo->get_responsible(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 
 			$uicols = $this->bo->uicols;
 
