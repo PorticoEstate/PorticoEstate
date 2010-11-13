@@ -365,6 +365,7 @@ cost (incl tax):	property	no	Kostnader (inkl mva)
 cost per unit	property	no	Enhetspris
 could not find any location to save to!	property	no	Kunne ikke finne lokalisering å lagre til
 count	property	no	Antall
+currency	property	no	Valuta
 custom	property	no	Tilpasset
 customer	property	no	Kunde
 custom function	property	no	Egendefinert funksjon
@@ -1005,6 +1006,7 @@ minor	property	no	Liten
 minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
+missing value for %1	property	no	Mangler verdi for %1
 month	property	no	Måned
 Monthly (by day)	property	no	Månedlig (dag)
 Monthly (by date)	property	no	Månedlig (dato)

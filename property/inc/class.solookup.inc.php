@@ -207,9 +207,16 @@
 			$where = 'WHERE';
 
 			$filtermethod = '';
-			if($role != 'group' && $parent)
+
+			if($role != 'group')
 			{
-				$filtermethod = " WHERE category = {$parent}";
+				$filtermethod .= " {$where} active = 1";
+				$where = 'AND';
+			}
+
+			if($parent)
+			{
+				$filtermethod .= " {$where} category = {$parent}";
 				$where = 'AND';
 			}
 

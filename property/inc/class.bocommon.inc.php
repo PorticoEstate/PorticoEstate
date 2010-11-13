@@ -495,6 +495,17 @@
 
 		function get_user_list_right2($format='',$right='',$selected='',$acl_location='',$extra='',$default='')
 		{
+			if(is_array($format)) // i.e: called by ExecMethod()
+			{
+				$data			= $format;
+				$format			= isset($data['format']) ? $data['format'] : '';
+				$right			= isset($data['right']) ? $data['right'] : '';
+				$selected		= isset($data['selected']) ? $data['selected'] : '';
+				$acl_location	= isset($data['acl_location']) ? $data['acl_location'] : '';
+				$extra			= isset($data['extra']) ? $data['extra'] : '';
+				$default		= isset($data['default']) ? $data['default'] : '';
+			}
+
 			switch($format)
 			{
 				case 'select':
@@ -737,17 +748,16 @@
 			$b_account['lang_b_account']			= isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
 			{
+				$b_account_object	= CreateObject('property.socategory');
 				if(isset($data['role']) && $data['role'] == 'group')
 				{
-					$b_account_object	= CreateObject('property.socategory');
 					$b_account_object->get_location_info('b_account',false);
-					$b_account_data		= $b_account_object->read_single(array('id'=> $data['b_account_id']));
 				}
 				else
 				{
-					$b_account_object	= CreateObject('property.sob_account');
-					$b_account_data		= $b_account_object->read_single($data['b_account_id']);
+					$b_account_object->get_location_info('budget_account',false);
 				}
+				$b_account_data		= $b_account_object->read_single(array('id'=> $data['b_account_id']));
 				$b_account['value_b_account_name']	= $b_account_data['descr'];
 			}
 

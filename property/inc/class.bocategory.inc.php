@@ -178,9 +178,26 @@
 			return $receipt;
 		}
 
+		/**
+		* Get a list from and tag the selected item
+		*
+		* @param array $data
+		*
+		* @return array with information to include in forms
+		*/
+
+		public function get_list($data)
+		{
+			$values = $this->so->get_list($data);
+			foreach ($values as &$entry)
+			{
+				$entry['selected'] = isset($data['selected']) && $data['selected'] == $entry['id'] ? 1 : 0;
+			}
+			return $values;
+		}
+
 		public function delete($id)
 		{
 			$this->so->delete($id);
 		}
 	}
-

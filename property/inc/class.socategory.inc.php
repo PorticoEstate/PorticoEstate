@@ -556,27 +556,6 @@
 						'menu_selection' => 'admin::property::request_condition'
 					);
 					break;
-				case 'r_agreement':
-					$info = array
-					(
-						'table' => 'fm_r_agreement_category',
-						'id'				=> array('name' => 'id', 'type' => 'int'),
-						'fields'			=> array
-						(
-							array
-							(
-								'name' => 'descr',
-								'descr' => lang('descr'),
-								'type' => 'varchar'
-							)
-						),
-						'edit_msg'	=> lang('edit'),
-						'add_msg'	=> lang('add'),
-						'name'		=> '',
-						'acl_location' => '.admin',
-						'menu_selection' => 'admin::property::agreement::rental_agree_cats'
-					);
-					break;
 				case 'b_account':
 					$info = array
 					(
@@ -782,6 +761,78 @@
 						'menu_selection'	=> 'admin::property::unit'
 					);
 					break;
+				case 'budget_account':
+					$info = array
+					(
+						'table' 			=> 'fm_b_account',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 60
+							),
+							array
+							(
+								'name'			=> 'category',
+								'descr'			=> lang('category'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocategory.get_list',
+									'method_input'	=> array('type' => 'b_account',	'selected' => '##category##')//b_account_category
+								)
+							),
+							array
+							(
+								'name'		=> 'mva',
+								'descr'		=> lang('tax code'),
+								'type'		=> 'int',
+								'nullable'	=> true,
+								'size'		=> 4
+							),
+							array
+							(
+								'name'			=> 'responsible',
+								'descr'			=> lang('responsible'),
+								'type'			=> 'select',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocommon.get_user_list_right2',
+									'method_input'	=> array('selected' => '##responsible##', 'right' => 128, 'acl_location' => '.invoice')
+								)
+							),
+							array
+							(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
+							),
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('budget account'),
+						'acl_location' 		=> '.b_account',
+						'menu_selection'	=> 'admin::property::responsibility_role',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+					break;
+
 //-------- ID type auto
 				case 'order_dim1':
 					$info = array

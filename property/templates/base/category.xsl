@@ -81,8 +81,8 @@
 								<xsl:value-of select="value"/>		
 							</textarea>
 						</xsl:when>
-						<xsl:when test="type='varchar' or type='integer'">
-							<input type="text" name="values[{name}]" value="{value}" onMouseout="window.status='';return true;">
+						<xsl:when test="type='varchar' or type='integer' or type='int'">
+							<input type="text" name="values[{name}]" value="{value}" size="{size}" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="descr"/>
 								</xsl:attribute>

@@ -456,7 +456,18 @@
 
 					if(!$id && !$values[$this->location_info['id']['name']] && $this->location_info['id']['type'] !='auto')
 					{
-						$receipt['error'][]=array('msg'=>lang('Please enter an id!'));									
+						$receipt['error'][]=array('msg'=>lang('missing value for %1', lang('id')));									
+					}
+
+					foreach ( $this->location_info['fields'] as $field_info )
+					{
+						if (isset($field_info['nullable']) && $field_info['nullable'] != true)
+						{
+							if( !$values[$field_info['name']] )
+							{
+								$receipt['error'][]=array('msg'=>lang('missing value for %1', $field_info['descr']));									
+							}
+						}
 					}
 
 					if($values['id'] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values['id']))
