@@ -4596,7 +4596,7 @@
 		{
 			$sql = "UPDATE fm_tenant_claim SET b_account_id = {$claim['b_account_id']} WHERE id = {$claim['id']}";
 
-			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);		
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 		}
 
 
@@ -4661,6 +4661,45 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.598';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.598 to 0.9.17.599
+	* Add columns to fm_b_account
+	* 
+	*/
+
+	$test[] = '0.9.17.598';
+	function property_upgrade0_9_17_598()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_b_account','active', array('type' => 'int','precision' => '2','nullable' => True,'default' => '0'));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_b_account','user_id', array('type' => 'int', 'precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_b_account','entry_date', array('type' => 'int', 'precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_b_account','modified_date', array('type' => 'int', 'precision' => 4,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_b_account SET active = 1',__LINE__,__FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_item');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_item_history');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_common');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_r_agreement_c_history');
+
+		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM fm_cache',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','currency', array('type' => 'varchar','precision' => '3','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','currency', array('type' => 'varchar','precision' => '3','nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecobilag SET currency = 'NOK'",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecobilagoverf SET currency = 'NOK'",__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.599';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
