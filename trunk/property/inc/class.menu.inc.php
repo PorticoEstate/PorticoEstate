@@ -268,11 +268,6 @@
 						'text'	=> lang('Part of town'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'part_of_town') )
 					),
-					'town2'	=> array
-					(
-						'text'	=> lang('Part of town'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uip_of_town.index') )
-					),
 					'location' => array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index') ),

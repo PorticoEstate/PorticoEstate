@@ -45,7 +45,7 @@
 			$this->_join	= & $this->_db->join;
 		}
 
-		function read($data)
+		function read($data, $filter)
 		{
 			$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
 			$query		= isset($data['query'])?$data['query']:'';
@@ -60,11 +60,13 @@
 			}
 
 			$valid_order = false;
+
 			if($order)
 			{
-				if($this->location_info['id']['type'] != $order)
+				if($this->location_info['id']['name'] != $order)
 				{
-					foreach ($$this->location_info['fields'] as $field)
+
+					foreach ($this->location_info['fields'] as $field)
 					{
 						if($field['name'] == $order)
 						{
@@ -77,10 +79,28 @@
 				{
 					$valid_order = true;
 				}
+
 				if(!$valid_order)
 				{
 					$order = '';
 				}			
+			}
+
+			$_filter_array = array();
+			$get_single = array();
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					if(isset($filter[$field['name']]) && $filter[$field['name']])
+					{
+						$_filter_array[] = "{$field['name']} = '{$filter[$field['name']]}'";
+					}
+				}
+				if (isset($field['get_single']) && $field['get_single'])
+				{
+					$get_single[$field['name']] = $field['get_single'];
+				}
 			}
 
 			$uicols = array();
@@ -134,15 +154,22 @@
 				$filtermethod = "{$where} user_id = {$this->account} OR public = 1";
 				$where = 'AND';
 			}
+
+			if($_filter_array)
+			{
+				$filtermethod .= " $where " . implode(' AND ', $_filter_array);
+				$where = 'AND';
+			}
+
 			$this->uicols = $uicols;
 
 			if ($order)
 			{
-				$ordermethod = " ORDER BY $order $sort";
+				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = " ORDER BY {$this->location_info['id']['name']} ASC";
+				$ordermethod = " ORDER BY {$table}.{$this->location_info['id']['name']} ASC";
 			}
 
 			if($query)
@@ -157,7 +184,7 @@
 				}
 
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " {$where } {$table}.{$this->location_info['id']['name']} = {$id_query}";
+				$querymethod = " {$where } ({$table}.{$this->location_info['id']['name']} = {$id_query}";
 				foreach($this->location_info['fields'] as $field)
 				{
 					if($field['type'] == 'varchar')
@@ -165,6 +192,7 @@
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
 				}
+				$querymethod .= ')';
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
@@ -183,7 +211,6 @@
 
 			$cols_return = $uicols['name'];
 			$j=0;
-//			$n=count($cols_return);
 
 			$dataset = array();
 			while ($this->_db->next_record())
@@ -202,6 +229,32 @@
 
 			$values = $this->custom->translate_value($dataset, $location_id);
 
+			if($get_single)
+			{
+				foreach($values as $set => &$entry)
+				{
+					foreach ($entry as $field => &$value)
+					{
+						foreach ($get_single as $key => $method)
+						{
+							if($field == $key)
+							{
+								switch ($method)
+								{
+									case 'get_user':
+										if($value)
+										{
+											$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
+										}
+										break;
+									default:
+									// nothing
+								}
+							}
+						}
+					}
+				}
+			}
 			return $values;
 		}
 
@@ -846,7 +899,8 @@
 								'descr' => lang('descr'),
 								'type' => 'varchar',
 								'nullable'	=> false,
-								'size'		=> 60
+								'size'		=> 60,
+								'sortable'	=> true
 							),
 							array
 							(
@@ -854,6 +908,8 @@
 								'descr'			=> lang('category'),
 								'type'			=> 'select',
 								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
@@ -867,13 +923,16 @@
 								'descr'		=> lang('tax code'),
 								'type'		=> 'int',
 								'nullable'	=> true,
-								'size'		=> 4
+								'size'		=> 4,
+								'sortable'	=> true
 							),
 							array
 							(
 								'name'			=> 'responsible',
 								'descr'			=> lang('responsible'),
 								'type'			=> 'select',
+								'filter'		=> true,
+								'get_single'	=> 'get_user',
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
@@ -893,7 +952,7 @@
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('budget account'),
 						'acl_location' 		=> '.b_account',
-						'menu_selection'	=> 'admin::property::responsibility_role',
+						'menu_selection'	=> 'property::invoice::budget_account',
 						'default'			=> array
 						(
 							'user_id' 		=> array('add'	=> '$this->account'),
