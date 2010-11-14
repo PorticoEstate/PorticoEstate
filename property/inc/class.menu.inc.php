@@ -258,7 +258,17 @@
 						'text'	=> lang('District'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'district') )
 					),
+					'district'	=> array
+					(
+						'text'	=> lang('District'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'district') )
+					),
 					'town'	=> array
+					(
+						'text'	=> lang('Part of town'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'part_of_town') )
+					),
+					'town2'	=> array
 					(
 						'text'	=> lang('Part of town'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uip_of_town.index') )

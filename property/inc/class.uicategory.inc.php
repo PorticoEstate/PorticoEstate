@@ -57,7 +57,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bocategory',true);
+			$this->bo					= CreateObject('property.bocategory');
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->custom				= & $this->bo->custom;
 
@@ -107,6 +107,7 @@
 
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
+
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$type}_{$type_id}");
 			$this->save_sessiondata();
 
@@ -133,6 +134,7 @@
 					'type'		=> $type,
 					'type_id'		=> $type_id
 				);
+
 
 				$datatable['config']['allow_allrows'] = true;
 
@@ -195,6 +197,75 @@
 						)
 					)
 				);
+
+				$values_combo_box = array();
+				$i = 0;
+				$button_def = array();
+				$code_inner = array();
+				foreach ( $this->location_info['fields'] as $field )
+				{
+					if (isset($field['filter']) && $field['filter'])
+					{
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+						(
+							'id' => "btn_{$field['name']}",
+							'name' => $field['name'],
+							'value'	=> $field['descr'],
+							'type' => 'button',
+							'style' => 'filter',
+							'tab_index' => $i
+						);
+
+						$button_def[] = "oMenuButton_{$i}"; 
+						$code_inner[] = "{order:{$i}, var_URL:'{$field['name']}',name:'btn_{$field['name']}',style:'categorybutton',dependiente:[]}";
+
+						if($field['values_def']['valueset'])
+						{
+							$values_combo_box[] = $field['values_def']['valueset'];
+							// TODO find selected value
+						}
+						else if(isset($field['values_def']['method']))
+						{
+							foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
+							{
+								if(preg_match('/^##/', $_argument_value))
+								{
+									$_argument_value_name = trim($_argument_value,'#');
+									$_argument_value = $values[$_argument_value_name];
+								}
+								$method_input[$_argument] = $_argument_value;
+							}
+	
+							$values_combo_box[] = execMethod($field['values_def']['method'],$method_input);
+						}
+						$default_value = array ('id'=>'','name'=>lang('select value'));
+						array_unshift ($values_combo_box[$i],$default_value);
+						$i++;
+					}
+				}
+				$code = '';
+				if($button_def)
+				{
+					$code = 'var ' . implode(',', $button_def)  . ";\n";
+					$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+					$GLOBALS['phpgw']->js->add_code('', $code);
+				}
+
+
+				if($values_combo_box)
+				{
+					$i = 0;
+					foreach ( $values_combo_box as $combo )
+					{
+						$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
+						(
+							'id' 	=> "values_combo_box_{$i}",
+							'value'	=> $this->bocommon->select2String($combo)						
+						);
+						$i++;
+					}
+				}
+
 //				$dry_run = true;
 			}
 
@@ -212,8 +283,8 @@
 					{
 						if($uicols['input_type'][$k]!='hidden')
 						{
-							$datatable['rows']['row'][$j]['column'][$k]['name'] 			= $uicols['name'][$k];
-							$datatable['rows']['row'][$j]['column'][$k]['value']				= $category_entry[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['name'] 		= $uicols['name'][$k];
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= $category_entry[$uicols['name'][$k]];
 						}
 					}
 					$j++;
@@ -425,7 +496,7 @@
 
 			$type		= phpgw::get_var('type');
 			$type_id	= phpgw::get_var('type_id', 'int');
-			$id			= phpgw::get_var('id');
+			$id			= phpgw::get_var($this->location_info['id']['name']);
 			$values		= phpgw::get_var('values');
 
 			$values_attribute  = phpgw::get_var('values_attribute');
