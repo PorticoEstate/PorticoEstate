@@ -59,6 +59,30 @@
 				return $values;
 			}
 
+			$valid_order = false;
+			if($order)
+			{
+				if($this->location_info['id']['type'] != $order)
+				{
+					foreach ($$this->location_info['fields'] as $field)
+					{
+						if($field['name'] == $order)
+						{
+							$valid_order = true;
+							break;
+						}
+					}	
+				}
+				else
+				{
+					$valid_order = true;
+				}
+				if(!$valid_order)
+				{
+					$order = '';
+				}			
+			}
+
 			$uicols = array();
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= $this->location_info['id']['name'];
@@ -118,7 +142,7 @@
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY id ASC';
+				$ordermethod = " ORDER BY {$this->location_info['id']['name']} ASC";
 			}
 
 			if($query)
@@ -189,6 +213,54 @@
 			switch($type)
 			{
 //-------- ID type integer
+				case 'part_of_town':
+					$info = array
+					(
+						'table' 			=> 'fm_part_of_town',
+						'id'				=> array('name' => 'part_of_town_id', 'type' => 'int', 'descr' => lang('id')),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 20
+							),
+							array
+							(
+								'name'			=> 'district_id',
+								'descr'			=> lang('district'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocategory.get_list',
+									'method_input'	=> array('type' => 'district',	'selected' => '##district_id##')
+								)
+							),
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('part of town'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::location::town',
+/*
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+*/
+						'check_grant'		=> false
+					);
+
+					break;
+
 				case 'project_group':
 					$info = array
 					(
