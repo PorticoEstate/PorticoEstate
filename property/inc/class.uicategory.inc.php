@@ -57,7 +57,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo					= CreateObject('property.bocategory');
+			$this->bo					= CreateObject('property.bocategory',true);
 			$this->bocommon				= CreateObject('property.bocommon');
 			$this->custom				= & $this->bo->custom;
 
@@ -78,7 +78,7 @@
 			$this->allrows				= $this->bo->allrows;
 		}
 
-		function save_sessiondata()
+		function save_sessiondata($type)
 		{
 			$data = array
 			(
@@ -86,7 +86,8 @@
 				'query'		=> $this->query,
 				'sort'		=> $this->sort,
 				'order'		=> $this->order,
-				'allrows'	=> $this->allrows
+				'allrows'	=> $this->allrows,
+				'type'		=> $type
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -109,7 +110,7 @@
 			$type_id	= phpgw::get_var('type_id', 'int');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$type}_{$type_id}");
-			$this->save_sessiondata();
+			$this->save_sessiondata($type);
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = "general.index.{$type}";
 
@@ -238,7 +239,7 @@
 	
 							$values_combo_box[] = execMethod($field['values_def']['method'],$method_input);
 						}
-						$default_value = array ('id'=>'','name'=>lang('select value'));
+						$default_value = array ('id'=>'','name'=> lang('select') . ' ' . $field['descr']);
 						array_unshift ($values_combo_box[$i],$default_value);
 						$i++;
 					}
