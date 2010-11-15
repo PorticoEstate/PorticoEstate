@@ -2,7 +2,7 @@
 // Declaration of location.index vars
 //--------------------------------------------------------
 	// define buttons
-	var selectsButtons = [];
+//	var selectsButtons = [];
 
 	var oNormalButton_0,oNormalButton_1,oNormalButton_2,oNormalButton_3;
 	var normalButtons = [

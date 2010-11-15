@@ -455,6 +455,10 @@
 				'descr' => array('type' => 'varchar','precision' => '100','nullable' => False),
 				'mva' => array('type' => 'int','precision' => '4','nullable' => True),
 				'responsible' => array('type' => 'int','precision' => '4','nullable' => True),
+				'active' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '0'),
+				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -971,7 +975,8 @@
 				'pre_transfer' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True)
+				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True),
+				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1019,7 +1024,8 @@
 				'kreditnota' => array('type' => 'int','precision' => '2','nullable' => True),
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
-				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True)
+				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True),
+				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1914,119 +1920,6 @@
 				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
 			),
 			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_r_agreement' => array(
-			'fd' => array(
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'customer_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'customer_name' => array('type' => 'varchar', 'precision' => 255,'nullable' => True),
-				'name' => array('type' => 'varchar', 'precision' => 100,'nullable' => False),
-				'descr' => array('type' => 'text','nullable' => True),
-				'status' => array('type' => 'varchar', 'precision' => 10,'nullable' => True),
-				'category' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'member_of' => array('type' => 'text','nullable' => True),
-				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'start_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'end_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'termination_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'actual_cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'account_id' => array('type' => 'varchar', 'precision' => 20,'nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_r_agreement_category' => array(
-			'fd' => array(
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'descr' => array('type' => 'varchar', 'precision' => 50,'nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_r_agreement_item' => array(
-			'fd' => array(
-				'agreement_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'location_code' => array('type' => 'varchar', 'precision' => 30,'nullable' => True),
-				'address' => array('type' => 'varchar', 'precision' => 150,'nullable' => True),
-				'p_num' => array('type' => 'varchar', 'precision' => 15,'nullable' => True),
-				'p_entity_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
-				'p_cat_id' => array('type' => 'int', 'precision' => 4,'nullable' => True,'default' => '0'),
-				'descr' => array('type' => 'text','nullable' => True),
-				'unit' => array('type' => 'varchar', 'precision' => 10,'nullable' => True),
-				'quantity' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'frequency' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'test' => array('type' => 'text','nullable' => True),
-				'cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'rental_type_id' => array('type' => 'int', 'precision' => 4,'nullable' => True)
-			),
-			'pk' => array('agreement_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
-		'fm_r_agreement_item_history' => array(
-			'fd' => array(
-				'agreement_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'item_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'current_index' => array('type' => 'int', 'precision' => 2,'nullable' => True),
-				'this_index' => array('type' => 'decimal', 'precision' => 20, 'scale' => 4,'nullable' => True),
-				'cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'index_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'from_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'to_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'tenant_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-			),
-			'pk' => array('agreement_id','item_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_r_agreement_common' => array(
-			'fd' => array(
-				'agreement_id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '0'),
-				'b_account' => array('type' => 'varchar', 'precision' => 30,'nullable' => True),
-				'remark' => array('type' => 'text','nullable' => True),
-				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True)
-			),
-			'pk' => array('agreement_id','id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
-		'fm_r_agreement_c_history' => array(
-			'fd' => array(
-				'agreement_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'c_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'from_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'to_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'current_record' => array('type' => 'int', 'precision' => 2,'nullable' => True),
-				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
-				'budget_cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'actual_cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'fraction' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-				'override_fraction' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2,'nullable' => True),
-			),
-			'pk' => array('agreement_id','c_id','id'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

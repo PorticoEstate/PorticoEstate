@@ -107,7 +107,7 @@
 
 			if ($user_lid=='none' || !$user_lid):
 			{
-				return;
+				return array();
 			}
 			elseif ($user_lid!='all'):
 			{
@@ -210,7 +210,8 @@
 					);
 			}
 
-			$invoice = array();
+			$invoice	= array();
+
 			if ($temp)
 			{
 				$role= $this->check_role();
@@ -219,13 +220,13 @@
 				{
 					$voucher_id = $invoice_temp['voucher_id'];
 
-					$sql = "SELECT spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
+					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 					. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-					. " forfallsdato,periode,artid,kidnr,kreditnota "
-					. " from $table $this->join fm_vendor ON fm_vendor.id = $table.spvend_code WHERE bilagsnr = $voucher_id "
-					. " group by bilagsnr,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
+					. " forfallsdato,periode,artid,kidnr,kreditnota,currency "
+					. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
+					. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 					. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-					. " forfallsdato,periode,artid,kidnr,kreditnota ";
+					. " forfallsdato,periode,artid,kidnr,kreditnota,currency";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
@@ -290,6 +291,8 @@
 					$invoice[$i]['type']					= $art_list[$this->db->f('artid')];
 					$invoice[$i]['kidnr']					= $this->db->f('kidnr');
 					$invoice[$i]['kreditnota']				= $this->db->f('kreditnota');
+					$invoice[$i]['currency']				= $this->db->f('currency');
+					$invoice[$i]['order_id']				= $this->db->f('pmwrkord_code');
 					$invoice[$i]['amount']					= $invoice_temp['amount'];
 					$invoice[$i]['num_days']				= intval(($timestamp_payment_date-$timestamp_voucher_date)/(24*3600));
 					$invoice[$i]['timestamp_voucher_date']	= $timestamp_voucher_date;
@@ -324,11 +327,11 @@
 		{
 			if(is_array($data))
 			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 				$filter		= isset($data['filter']) ? $data['filter'] : 'none';
 				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
 				$order		= isset($data['order']) ? $data['order'] : '';
-				$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? $data['voucher_id'] : 0;
+				$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
 				$paid		= isset($data['paid']) ? $data['paid'] : '';
 			}
 
@@ -356,7 +359,8 @@
 				$filtermethod = " WHERE ( bilagsnr= '$voucher_id')";
 			}
 
-			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,fm_workorder.claim_issued, fm_workorder.paid_percent, project_group FROM $table"
+			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
+			. "fm_workorder.claim_issued, fm_workorder.paid_percent, project_group FROM $table"
 			. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
 			. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
 			. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
@@ -392,7 +396,8 @@
 					'vendor'				=> $this->db->f('org_name'),
 					'paid_percent'			=> $this->db->f('paid_percent'),
 					'project_group'			=> $this->db->f('project_group'),
-					'external_ref'			=> $this->db->f('external_ref')
+					'external_ref'			=> $this->db->f('external_ref'),
+					'currency'				=> $this->db->f('currency')
 				);
 
 				$i++;
@@ -913,29 +918,30 @@
 			$values = array();
 			while ($this->db->next_record())
 			{
-				$values[] = Array(
-
-				'location_code'		=> $this->db->f('id'),
-				'art'			=> $this->db->f('artid'),
-				'type'			=> $this->db->f('typeid'),
-				'dim_a'			=> $this->db->f('dima'),
-				'dim_b'			=> $this->db->f('dimb'),
-				'dim_d'			=> $this->db->f('dimd'),
-				'tax'			=> $this->db->f('mvakode'),
-				'invoice_id'		=> $this->db->f('fakturanr'),
-				'kid_nr'		=> $this->db->f('kidnr'),
-				'vendor_id'		=> $this->db->f('spvend_code'),
-				'janitor'		=> $this->db->f('oppsynsmannid'),
-				'supervisor'		=> $this->db->f('saksbehandlerid'),
-				'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
-				'invoice_date' 		=> $this->db->f('fakturadato'),
-				'project_id'		=> $this->db->f('project_id'),
-				'payment_date' 		=> $this->db->f('forfallsdato'),
-				'merknad'		=> $this->db->f('merknad'),
-				'b_account_id'		=> $this->db->f('spbudact_code'),
-				'amount'		=> $this->db->f('belop'),
-				'order'			=> $this->db->f('pmwrkord_code'),
-				'kostra_id'		=> $this->db->f('kostra_id'),
+				$values[] = array
+				(
+					'location_code'		=> $this->db->f('id'),
+					'art'				=> $this->db->f('artid'),
+					'type'				=> $this->db->f('typeid'),
+					'dim_a'				=> $this->db->f('dima'),
+					'dim_b'				=> $this->db->f('dimb'),
+					'dim_d'				=> $this->db->f('dimd'),
+					'tax'				=> $this->db->f('mvakode'),
+					'invoice_id'		=> $this->db->f('fakturanr'),
+					'kid_nr'			=> $this->db->f('kidnr'),
+					'vendor_id'			=> $this->db->f('spvend_code'),
+					'janitor'			=> $this->db->f('oppsynsmannid'),
+					'supervisor'		=> $this->db->f('saksbehandlerid'),
+					'budget_responsible'=> $this->db->f('budsjettansvarligid'),
+					'invoice_date' 		=> $this->db->f('fakturadato'),
+					'project_id'		=> $this->db->f('project_id'),
+					'payment_date' 		=> $this->db->f('forfallsdato'),
+					'merknad'			=> $this->db->f('merknad'),
+					'b_account_id'		=> $this->db->f('spbudact_code'),
+					'amount'			=> $this->db->f('belop'),
+					'order'				=> $this->db->f('pmwrkord_code'),
+					'kostra_id'			=> $this->db->f('kostra_id'),
+					'currency'			=> $this->db->f('currency')
 				);
 			}
 //_debug_array($values);
@@ -1191,4 +1197,3 @@
 			return $this->db->f('cnt');
 		}
 	}
-

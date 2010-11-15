@@ -232,7 +232,7 @@
 				$default_value = array ('cat_id'=>'','name'=>lang('no member'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$values_combo_box[1] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' => $this->role,'order'=>'descr'));
+				$values_combo_box[1] = $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->cat_id,'type' => "{$this->role}_cats",'order'=>'descr'));
 				$default_value = array ('id'=>'','name'=> lang('no category'));
 				array_unshift ($values_combo_box[1],$default_value);
 
@@ -830,7 +830,7 @@
 				'lang_no_cat'					=> lang('no category'),
 				'lang_cat_statustext'			=> lang('Select the category the actor belongs to. To do not use a category select NO CATEGORY'),
 				'select_name'					=> 'values[cat_id]',
-				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' => $this->role,'order'=>'descr')),
+				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' => "{$this->role}_cats",'order'=>'descr')),
 
 				'lang_member_of'				=> lang('member of'),
 				'member_of_name'				=> 'member_id',
@@ -941,7 +941,7 @@
 				'lang_category'				=> lang('category'),
 				'lang_time_created'			=> lang('time created'),
 				'lang_done'				=> lang('done'),
-				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $actor['cat_id'],'type' => $this->role,'order'=>'descr')),
+				'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $actor['cat_id'],'type' => "{$this->role}_cats",'order'=>'descr')),
 
 				'lang_member_of'			=> lang('member of'),
 				'member_of_list'			=> $member_of_data['cat_list'],
