@@ -492,7 +492,7 @@
 						throw new Exception(lang('ERROR: illegal type %1', $type_id));
 					}
 					break;
-				case 'owner':
+				case 'owner_cats':
 					$info = array
 					(
 						'table' => 'fm_owner_category',
@@ -513,7 +513,7 @@
 						'menu_selection' => 'admin::property::owner::owner_cats'
 					);
 					break;
-				case 'tenant':
+				case 'tenant_cats':
 					$info = array
 					(
 						'table' => 'fm_tenant_category',
@@ -534,7 +534,7 @@
 						'menu_selection' => 'admin::property::tenant::tenant_cats'
 					);
 					break;
-				case 'vendor':
+				case 'vendor_cats':
 					$info = array
 					(
 						'table' => 'fm_vendor_category',
@@ -553,6 +553,69 @@
 						'name'		=> lang('vendor category'),
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::vendor::vendor_cats'
+					);
+					break;
+				case 'vendor':
+					$info = array
+					(
+						'table' => 'fm_vendor',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'contact_phone',
+								'descr' => lang('contact phone'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name'			=> 'category',
+								'descr'			=> lang('category'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocategory.get_list',
+									'method_input'	=> array('type' => 'vendor_cats',	'selected' => '##category##')
+								)
+							),
+							array
+							(
+								//FIXME
+								'name'			=> 'member_of',
+								'descr'			=> lang('member'),
+								'type'			=> 'select', // multiple_select
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'phpgwapi.categories.formatted_xslt_list',
+									'method_input'	=> array('type' => 'vendor_cats',	'selected' => '##member_of##')
+								)
+							),
+						),
+
+//				$values_combo_box[0]  = $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true));
+
+
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('vendor'),
+						'acl_location' => '.vendor',
+						'menu_selection' => 'property::invoice::vendor',
+						'default'			=> array
+						(
+							'owner_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+				//			'modified_date'	=> array('edit'	=> 'time()'),
+						)
+
 					);
 					break;
 				case 'district':

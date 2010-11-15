@@ -108,7 +108,7 @@
 					'tenant_cats'	=> array
 					(
 						'text'	=> lang('Tenant Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant_cats') )
 					),
 					'tenant_global_cats'	=> array
 					(
@@ -132,7 +132,7 @@
 					'vendor_cats'	=> array
 					(
 						'text'	=> lang('Vendor Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor_cats') )
 					),
 					'vendor_global_cats'	=> array
 					(
@@ -150,7 +150,7 @@
 					'owner_cats'	=> array
 					(
 						'text'	=> lang('Owner Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner_cats') )
 					),
 					'owner_attribs'	=> array
 					(
