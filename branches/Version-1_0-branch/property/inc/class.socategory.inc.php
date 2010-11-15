@@ -45,7 +45,7 @@
 			$this->_join	= & $this->_db->join;
 		}
 
-		function read($data)
+		function read($data, $filter)
 		{
 			$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
 			$query		= isset($data['query'])?$data['query']:'';
@@ -57,6 +57,50 @@
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return $values;
+			}
+
+			$valid_order = false;
+
+			if($order)
+			{
+				if($this->location_info['id']['name'] != $order)
+				{
+
+					foreach ($this->location_info['fields'] as $field)
+					{
+						if($field['name'] == $order)
+						{
+							$valid_order = true;
+							break;
+						}
+					}	
+				}
+				else
+				{
+					$valid_order = true;
+				}
+
+				if(!$valid_order)
+				{
+					$order = '';
+				}			
+			}
+
+			$_filter_array = array();
+			$get_single = array();
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					if(isset($filter[$field['name']]) && $filter[$field['name']])
+					{
+						$_filter_array[] = "{$field['name']} = '{$filter[$field['name']]}'";
+					}
+				}
+				if (isset($field['get_single']) && $field['get_single'])
+				{
+					$get_single[$field['name']] = $field['get_single'];
+				}
 			}
 
 			$uicols = array();
@@ -110,15 +154,22 @@
 				$filtermethod = "{$where} user_id = {$this->account} OR public = 1";
 				$where = 'AND';
 			}
+
+			if($_filter_array)
+			{
+				$filtermethod .= " $where " . implode(' AND ', $_filter_array);
+				$where = 'AND';
+			}
+
 			$this->uicols = $uicols;
 
 			if ($order)
 			{
-				$ordermethod = " ORDER BY $order $sort";
+				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY id ASC';
+				$ordermethod = " ORDER BY {$table}.{$this->location_info['id']['name']} ASC";
 			}
 
 			if($query)
@@ -133,7 +184,7 @@
 				}
 
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " {$where } {$table}.{$this->location_info['id']['name']} = {$id_query}";
+				$querymethod = " {$where } ({$table}.{$this->location_info['id']['name']} = {$id_query}";
 				foreach($this->location_info['fields'] as $field)
 				{
 					if($field['type'] == 'varchar')
@@ -141,6 +192,7 @@
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
 				}
+				$querymethod .= ')';
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
@@ -159,7 +211,6 @@
 
 			$cols_return = $uicols['name'];
 			$j=0;
-//			$n=count($cols_return);
 
 			$dataset = array();
 			while ($this->_db->next_record())
@@ -178,6 +229,32 @@
 
 			$values = $this->custom->translate_value($dataset, $location_id);
 
+			if($get_single)
+			{
+				foreach($values as $set => &$entry)
+				{
+					foreach ($entry as $field => &$value)
+					{
+						foreach ($get_single as $key => $method)
+						{
+							if($field == $key)
+							{
+								switch ($method)
+								{
+									case 'get_user':
+										if($value)
+										{
+											$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
+										}
+										break;
+									default:
+									// nothing
+								}
+							}
+						}
+					}
+				}
+			}
 			return $values;
 		}
 
@@ -189,6 +266,54 @@
 			switch($type)
 			{
 //-------- ID type integer
+				case 'part_of_town':
+					$info = array
+					(
+						'table' 			=> 'fm_part_of_town',
+						'id'				=> array('name' => 'part_of_town_id', 'type' => 'int', 'descr' => lang('id')),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 20
+							),
+							array
+							(
+								'name'			=> 'district_id',
+								'descr'			=> lang('district'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocategory.get_list',
+									'method_input'	=> array('type' => 'district',	'selected' => '##district_id##')
+								)
+							),
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('part of town'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::location::town',
+/*
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+*/
+						'check_grant'		=> false
+					);
+
+					break;
+
 				case 'project_group':
 					$info = array
 					(
@@ -367,7 +492,7 @@
 						throw new Exception(lang('ERROR: illegal type %1', $type_id));
 					}
 					break;
-				case 'owner':
+				case 'owner_cats':
 					$info = array
 					(
 						'table' => 'fm_owner_category',
@@ -388,7 +513,7 @@
 						'menu_selection' => 'admin::property::owner::owner_cats'
 					);
 					break;
-				case 'tenant':
+				case 'tenant_cats':
 					$info = array
 					(
 						'table' => 'fm_tenant_category',
@@ -409,7 +534,7 @@
 						'menu_selection' => 'admin::property::tenant::tenant_cats'
 					);
 					break;
-				case 'vendor':
+				case 'vendor_cats':
 					$info = array
 					(
 						'table' => 'fm_vendor_category',
@@ -428,6 +553,69 @@
 						'name'		=> lang('vendor category'),
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::vendor::vendor_cats'
+					);
+					break;
+				case 'vendor':
+					$info = array
+					(
+						'table' => 'fm_vendor',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'contact_phone',
+								'descr' => lang('contact phone'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name'			=> 'category',
+								'descr'			=> lang('category'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocategory.get_list',
+									'method_input'	=> array('type' => 'vendor_cats',	'selected' => '##category##')
+								)
+							),
+							array
+							(
+								//FIXME
+								'name'			=> 'member_of',
+								'descr'			=> lang('member'),
+								'type'			=> 'select', // multiple_select
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'phpgwapi.categories.formatted_xslt_list',
+									'method_input'	=> array('type' => 'vendor_cats',	'selected' => '##member_of##')
+								)
+							),
+						),
+
+//				$values_combo_box[0]  = $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true));
+
+
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('vendor'),
+						'acl_location' => '.vendor',
+						'menu_selection' => 'property::invoice::vendor',
+						'default'			=> array
+						(
+							'owner_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+				//			'modified_date'	=> array('edit'	=> 'time()'),
+						)
+
 					);
 					break;
 				case 'district':
@@ -554,27 +742,6 @@
 						'name'		=> '',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_condition'
-					);
-					break;
-				case 'r_agreement':
-					$info = array
-					(
-						'table' => 'fm_r_agreement_category',
-						'id'				=> array('name' => 'id', 'type' => 'int'),
-						'fields'			=> array
-						(
-							array
-							(
-								'name' => 'descr',
-								'descr' => lang('descr'),
-								'type' => 'varchar'
-							)
-						),
-						'edit_msg'	=> lang('edit'),
-						'add_msg'	=> lang('add'),
-						'name'		=> '',
-						'acl_location' => '.admin',
-						'menu_selection' => 'admin::property::agreement::rental_agree_cats'
 					);
 					break;
 				case 'b_account':
@@ -782,6 +949,84 @@
 						'menu_selection'	=> 'admin::property::unit'
 					);
 					break;
+				case 'budget_account':
+					$info = array
+					(
+						'table' 			=> 'fm_b_account',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar',
+								'nullable'	=> false,
+								'size'		=> 60,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name'			=> 'category',
+								'descr'			=> lang('category'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocategory.get_list',
+									'method_input'	=> array('type' => 'b_account',	'selected' => '##category##')//b_account_category
+								)
+							),
+							array
+							(
+								'name'		=> 'mva',
+								'descr'		=> lang('tax code'),
+								'type'		=> 'int',
+								'nullable'	=> true,
+								'size'		=> 4,
+								'sortable'	=> true
+							),
+							array
+							(
+								'name'			=> 'responsible',
+								'descr'			=> lang('responsible'),
+								'type'			=> 'select',
+								'filter'		=> true,
+								'get_single'	=> 'get_user',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bocommon.get_user_list_right2',
+									'method_input'	=> array('selected' => '##responsible##', 'right' => 128, 'acl_location' => '.invoice')
+								)
+							),
+							array
+							(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
+							),
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('budget account'),
+						'acl_location' 		=> '.b_account',
+						'menu_selection'	=> 'property::invoice::budget_account',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+					break;
+
 //-------- ID type auto
 				case 'order_dim1':
 					$info = array

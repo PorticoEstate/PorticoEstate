@@ -64,14 +64,7 @@
 		function __construct($session=false)
 		{
 			$this->so 			= CreateObject('property.socategory');
-			$this->socommon 	= CreateObject('property.socommon');
 			$this->custom 		= & $this->so->custom;
-
-			if ($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
 
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
@@ -83,10 +76,16 @@
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int');
 
+			if ($session)
+			{
+				$this->read_sessiondata($type);
+				$this->use_session = true;
+			}
+
 			$this->start		= $start ? $start : 0;
 			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
 			$this->sort			= isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->order		= isset($_REQUEST['order']) ? $order : $this->order;
+			$this->order		= isset($_REQUEST['order']) && $_REQUEST['order'] ? $order : $this->order;
 			$this->filter		= isset($_REQUEST['filter']) ? $filter : $this->filter;
 			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
@@ -99,13 +98,13 @@
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data','category',$data);
+				$GLOBALS['phpgw']->session->appsession('session_data',"generic_{$data['type']}",$data);
 			}
 		}
 
-		function read_sessiondata()
+		function read_sessiondata($type)
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','category');
+			$data = $GLOBALS['phpgw']->session->appsession('session_data',"generic_{$type}");
 
 	//		_debug_array($data);
 
@@ -123,10 +122,22 @@
 			return $this->so->get_location_info($type,$type_id);
 		}
 
-		public function read()
+		public function read($filter = array())
 		{
+
+			if (! $filter )
+			{
+				foreach ( $this->location_info['fields'] as $field )
+				{
+					if (isset($field['filter']) && $field['filter'])
+					{
+						$filter[$field['name']] = phpgw::get_var($field['name']);
+					}
+				}
+			}
+			
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+											'allrows'=>$this->allrows),$filter);
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
@@ -178,9 +189,26 @@
 			return $receipt;
 		}
 
+		/**
+		* Get a list from and tag the selected item
+		*
+		* @param array $data
+		*
+		* @return array with information to include in forms
+		*/
+
+		public function get_list($data)
+		{
+			$values = $this->so->get_list($data);
+			foreach ($values as &$entry)
+			{
+				$entry['selected'] = isset($data['selected']) && $data['selected'] == $entry['id'] ? 1 : 0;
+			}
+			return $values;
+		}
+
 		public function delete($id)
 		{
 			$this->so->delete($id);
 		}
 	}
-

@@ -108,7 +108,7 @@
 					'tenant_cats'	=> array
 					(
 						'text'	=> lang('Tenant Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'tenant_cats') )
 					),
 					'tenant_global_cats'	=> array
 					(
@@ -132,7 +132,7 @@
 					'vendor_cats'	=> array
 					(
 						'text'	=> lang('Vendor Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'vendor_cats') )
 					),
 					'vendor_global_cats'	=> array
 					(
@@ -150,7 +150,7 @@
 					'owner_cats'	=> array
 					(
 						'text'	=> lang('Owner Categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'owner_cats') )
 					),
 					'owner_attribs'	=> array
 					(
@@ -165,6 +165,11 @@
 					(
 						'text'	=> lang('Accounting Categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'b_account') )
+					),
+					'budget_account'	=> array
+					(
+						'text'	=> lang('budget account'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'budget_account') )
 					),
 					'accounting_dimb'	=> array
 					(
@@ -224,23 +229,7 @@
 					(
 						'text'	=> lang('service agreement item Attributes'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.s_agreement.detail', 'menu_selection' => 'admin::property::agreement::service_agree_item_attribs') )
-					),
-					'rental_agree_cats'	=> array
-					(
-						'text'	=> lang('rental agreement categories'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'r_agreement') )
-					),
-					'rental_agree_attribs'	=> array
-					(
-						'text'	=> lang('rental agreement Attributes'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.r_agreement', 'menu_selection' => 'admin::property::agreement::rental_agree_attribs') )
-					),
-					'rental_agree_item_attribs'	=> array
-					(
-						'text'	=> lang('rental agreement item Attributes'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.r_agreement.detail', 'menu_selection' => 'admin::property::agreement::rental_agree_item_attribs') )
-					),
-
+					)
 				);
 
 				foreach ( $locations as $location )
@@ -269,10 +258,15 @@
 						'text'	=> lang('District'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'district') )
 					),
+					'district'	=> array
+					(
+						'text'	=> lang('District'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'district') )
+					),
 					'town'	=> array
 					(
 						'text'	=> lang('Part of town'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uip_of_town.index') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'part_of_town') )
 					),
 					'location' => array
 					(
@@ -447,7 +441,7 @@
 					'accounting'	=> array
 					(
 						'text'	=> lang('Accounting'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uib_account.index') ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'budget_account') ),
 						'children'	=> $admin_children_accounting
 					),
 					'admin_async'	=> array
@@ -725,10 +719,10 @@
 							'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume')),
 							'text'	=> lang('consume')
 						),
-						'budget'	=> array
+						'budget_account'	=> array
 						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uib_account.index')),
-							'text'	=> lang('Budget account')
+							'text'	=> lang('budget account'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicategory.index', 'type' => 'budget_account') )
 						),
 						'vendor'	=> array
 						(
@@ -824,11 +818,6 @@
 						(
 							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uis_agreement.index')),
 							'text'	=> lang('Service')
-						),
-						'rental'	=> array
-						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uir_agreement.index')),
-							'text'	=> lang('Rental')
 						),
 						'alarm'		=> array
 						(

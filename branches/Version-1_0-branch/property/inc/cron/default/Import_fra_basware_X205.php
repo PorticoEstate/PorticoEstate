@@ -256,7 +256,7 @@
 //					$_data['AMOUNT']; // => 312500
 					$_data['ARRIVAL']; // => 2009.05.28
 					$_data['CLIENT.CODE']; // => 14
-					$_data['CURRENCY.CURRENCYID']; // => NOK
+//					$_data['CURRENCY.CURRENCYID']; // => NOK
 					$_data['EXCHANGERATE']; // => 1
 //					$_data['INVOICEDATE']; // => 2009.05.28
 					$_data['LOCALAMOUNT']; // => 312500
@@ -297,6 +297,7 @@
 					$buffer[$i]['forfallsdato']		= $forfallsdato;
 					$buffer[$i]['fakturadato']		= $fakturadato;
 					$buffer[$i]['belop']			= $belop;
+					$buffer[$i]['currency']			= $_data['CURRENCY.CURRENCYID'];
 					$buffer[$i]['godkjentbelop']	= $belop;
 					
 					$buffer[$i]['kidnr']			= $kidnr;
@@ -323,12 +324,11 @@
 
 					if ($order_info['vendor_id'] != $_data['SUPPLIER.CODE'])
 					{
-						$this->receipt['error'][] = array('msg' => 'Manglende eller ikke treff på ordreNr');
+						$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 					}
 
-					$vendor_id = $order_info['vendor_id'];
-					
-					
+					$vendor_id = $_data['SUPPLIER.CODE'];
+
 					if($this->auto_tax)
 					{
 						$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);

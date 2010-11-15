@@ -111,6 +111,38 @@
 											'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
 											'district_id' => $this->district_id));
 
+			$soXport    = CreateObject('property.soXport');
+			$soworkorder = CreateObject('property.soworkorder');
+			$sos_agreement = CreateObject('property.sos_agreement');
+			foreach ( $invoice as & $entry )
+			{
+				if( $entry['order_id'] )
+				{
+					if($order_type = $soXport->check_order($entry['order_id']))
+					{
+						if($order_type == 'workorder')
+						{
+							$workorder	= $soworkorder->read_single($entry['order_id']);
+
+							if($workorder['vendor_id'] && ($workorder['vendor_id'] != $entry['vendor_id']))
+							{
+								$entry['vendor']		=  $this->get_vendor_name($workorder['vendor_id']) . ' => ' . $entry['vendor'];
+							}
+						}
+
+						if($order_type == 's_agreement')
+						{
+							$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$entry['order_id']));
+
+							if($s_agreement['vendor_id'] && ($s_agreement['vendor_id'] != $entry['vendor_id']))
+							{
+								$entry['vendor']		= $this->get_vendor_name($s_agreement['vendor_id']) . ' => ' . $entry['vendor'];
+							}
+						}
+					}
+				}
+			}
+
 			$this->total_records = $this->so->total_records;
 
 			return $invoice;

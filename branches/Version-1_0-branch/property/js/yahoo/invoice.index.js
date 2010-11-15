@@ -284,7 +284,7 @@
 		newTR = document.createElement('tr');
 		td_empty(15);
 		td_sum(tmp_sum);
-		td_empty(6);
+		td_empty(7);
 		//RowChecked
 		CreateRowChecked("signClass");
 		CreateRowChecked("janitorClass");
