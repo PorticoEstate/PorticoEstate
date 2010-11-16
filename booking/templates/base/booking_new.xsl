@@ -81,6 +81,64 @@
             </dd>
 				<dt><label for="field_cost"><xsl:value-of select="php:function('lang', 'Cost')" /></label></dt>
             <dd><input id="field_cost" name="cost" type="text" value="{booking/cost}"/></dd>
+
+			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring booking')" /></label></dt>
+			<dd>
+				<label>
+					<input type="checkbox" name="outseason" id="outseason">
+						<xsl:if test="outseason='on'">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+					</input>
+					<xsl:value-of select="php:function('lang', 'Out season')" />
+				</label>
+			</dd>
+			<dd>
+				<label>
+					<input type="checkbox" name="recurring" id="recurring">
+						<xsl:if test="recurring='on'">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+					</input>
+					<xsl:value-of select="php:function('lang', 'Repeat until')" />
+				</label>
+			</dd>
+			<dd class="date-picker">
+				<input id="field_repeat_until" name="repeat_until" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="repeat_until"/></xsl:attribute>
+				</input>
+			</dd>
+			<dt><xsl:value-of select="php:function('lang', 'Interval')" /></dt>
+			<dd>
+				<xsl:value-of select="../field_interval" />
+				<select id="field_interval" name="field_interval">
+					<option value="1">
+						<xsl:if test="interval=1">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="php:function('lang', '1 week')" />
+					</option>
+					<option value="2">
+						<xsl:if test="interval=2">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="php:function('lang', '2 weeks')" />
+					</option>
+					<option value="3">
+						<xsl:if test="interval=3">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="php:function('lang', '3 weeks')" />
+					</option>
+					<option value="4">
+						<xsl:if test="interval=4">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="php:function('lang', '4 weeks')" />
+					</option>
+				</select>
+			</dd>
+
         </dl>
 		<dl class="form-col">
 			<dt><label for="field_from"><xsl:value-of select="php:function('lang', 'Target audience')" /></label></dt>
