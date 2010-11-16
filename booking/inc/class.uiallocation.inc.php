@@ -10,6 +10,7 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'info'			=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
 
@@ -20,6 +21,7 @@
 			$this->organization_bo    = CreateObject('booking.boorganization');
 			$this->building_bo    = CreateObject('booking.bobuilding');
 			$this->season_bo    = CreateObject('booking.boseason');
+			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::applications::allocations');
 			$this->fields = array('resources', 'cost', 'application_id',
 								  'building_id', 'building_name', 
@@ -208,14 +210,27 @@
 					}
 				}
 			}
+			if(phpgw::get_var('resource', 'GET') == '')
+			{			
+				array_set_default($allocation, 'resources', array());
+				$weekday =  'monday';
+			}
+			else 
+			{
+				array_set_default($allocation, 'resources', array(get_var('resource', int, 'GET')));
+				array_set_default($allocation, 'building_id', phpgw::get_var('building_id', 'GET'));
+				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'GET'));
+				array_set_default($allocation, 'from_', phpgw::get_var('from_', 'GET'));
+				array_set_default($allocation, 'to_', phpgw::get_var('to_', 'GET'));
+				$weekday =  strtolower(strftime("%A",strtotime($allocation['from_'][0])));
+			}
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'allocation.js');
-			array_set_default($allocation, 'resources', array());
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
-
+		
 			if ($step < 2) 
 			{
 				if($_SERVER['REQUEST_METHOD'] == 'POST' && $errors) {				
@@ -227,6 +242,7 @@
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],
 					'outseason' => $_POST['outseason'],
+					'weekday' => $weekday,
 				));
 			} 
 			else if ($step == 2) 
@@ -319,4 +335,24 @@
 			$allocation['resource_ids'] = $resource_ids;
 			self::render_template('allocation', array('allocation' => $allocation));
 		}
+		public function info()
+		{
+			$allocation = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$allocation['resources']), 'sort'=>'name'));
+			$allocation['resources'] = $resources['results'];
+			$res_names = array();
+			foreach($allocation['resources'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+			$allocation['resource'] = phpgw::get_var('resource', 'GET');
+			$allocation['resource_info'] = join(', ', $res_names);
+			$allocation['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $allocation['resources'][0]['building_id']));
+			$allocation['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $allocation['organization_id']));
+			$allocation['add_link'] = self::link(array('menuaction' => 'booking.uibooking.add', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
+			$allocation['when'] = pretty_timestamp($allocation['from_']).' - '.pretty_timestamp($allocation['to_']);
+			self::render_template('allocation_info', array('allocation'=>$allocation));
+			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
 	}
