@@ -257,7 +257,7 @@
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
 				{
 					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uimassbooking.schedule', 'id'=>$booking['building_id']));
+					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
 				}
 				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors && $step > 1)
 				{
@@ -468,7 +468,6 @@
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit', 'id' => $booking['id']));
 				
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
-			echo "<pre>";print_r($booking);exit;
 			self::render_template('booking_info', array('booking'=>$booking));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
