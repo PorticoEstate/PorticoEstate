@@ -11,11 +11,13 @@
 
 	    <form action="" method="POST">
 			<input type="hidden" name="season_id" value="{booking/season_id}"/>
-			<input type="hidden" name="field_building_id" value="{booking/building_id}"/>
+			<input type="hidden" name="building_id" value="{booking/building_id}"/>
+			<input type="hidden" name="building_name" value="{booking/building_name}"/>
 			<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
 			<input type="hidden" name="step" value="{step}" />
 			<input type="hidden" name="from_" value="{from_date}" />
 			<input type="hidden" name="to_" value="{to_date}" />
+			<input type="hidden" name="cost" value="{booking/cost}" />
 			<input type="hidden" name="repeat_until" value="{repeat_until}" />
 			<input type="hidden" name="field_interval" value="{interval}" />
 			<input type="hidden" name="recurring" value="{recurring}" />
