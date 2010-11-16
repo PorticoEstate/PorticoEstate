@@ -287,3 +287,11 @@ div.info:hover {
     background-position: 100% 0%;
 }
 
+#overlay-info { text-align: left; padding: 1em; }
+#overlay-info h3 { margin: 0 0 .9em 0; }
+#overlay-info dt { font-style: italic; font-weight: bolder; font-size: 90%;}
+#overlay-info dd { padding-left: 2em; }
+#overlay-info .close { float: right; }
+#overlay-info .actions { margin-top: 1em;}
+
+

@@ -60,17 +60,35 @@
 				</div>
 			</xsl:if>
 					
-        <dl class="proplist-col">
-            <dt><xsl:value-of select="php:function('lang', 'Status')" /></dt>
-            <dd><xsl:value-of select="php:function('lang', string(application/status))"/></dd>
-        </dl>
-        <dl class="proplist-col">
-            <dt><xsl:value-of select="php:function('lang', 'Created')" /></dt>
-            <dd><xsl:value-of select="php:function('pretty_timestamp', application/created)"/></dd>
-        </dl>
-        <dl class="proplist-col">
-            <dt><xsl:value-of select="php:function('lang', 'Modified')" /></dt>
-            <dd><xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></dd>
+		<xsl:if test="not(frontend)">
+	        <dl class="proplist-col">
+	            <dt><xsl:value-of select="php:function('lang', 'Status')" /></dt>
+	            <dd><xsl:value-of select="php:function('lang', string(application/status))"/></dd>
+	        </dl>
+	        <dl class="proplist-col">
+	            <dt><xsl:value-of select="php:function('lang', 'Created')" /></dt>
+	            <dd><xsl:value-of select="php:function('pretty_timestamp', application/created)"/></dd>
+	        </dl>
+	        <dl class="proplist-col">
+	            <dt><xsl:value-of select="php:function('lang', 'Modified')" /></dt>
+	            <dd><xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></dd>
+	        </dl>
+		</xsl:if>
+		<xsl:if test="frontend">
+			<dl class="proplist">
+			<span style="font-size: 110%; font-weight: bold;">Din søknad har status <xsl:value-of select="php:function('lang', string(application/status))"/></span><span class="text">, opprettet <xsl:value-of select="php:function('pretty_timestamp', application/created)"/>, sist endret <xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></span>
+			<span class="text"><br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span> 
+			</dl>
+		</xsl:if>
+
+        <dl class="proplist">
+            <dt class="heading"><xsl:value-of select="php:function('lang', 'Add a comment')" /></dt>
+			<dd>
+				<form method="POST">
+					<textarea name="comment" style="width: 60%; height: 7em"></textarea><br/>
+				    <input type="submit" value="{php:function('lang', 'Add comment')}" />
+				</form>
+			</dd>
         </dl>
 
 		<dl class="proplist">
@@ -219,17 +237,6 @@
 				<dd><div id="associated_container"/></dd>
 			</dl>
 		</xsl:if>
-
-        <dl class="proplist">
-            <dt class="heading"><xsl:value-of select="php:function('lang', 'Add a comment')" /></dt>
-			<dd>
-				<form method="POST">
-					<textarea name="comment" style="width: 60%; height: 7em"></textarea><br/>
-				    <input type="submit" value="{php:function('lang', 'Add comment')}" />
-				</form>
-			</dd>
-        </dl>
-
 
 		<xsl:if test="application/edit_link">
 			<dl class="proplist">

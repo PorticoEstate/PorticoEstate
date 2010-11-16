@@ -471,4 +471,9 @@ weekday	booking	no	Ukedag
 Out season	booking	no	Ut sesong
 Allocations colliding with existing allocations or bookings (%1)	booking	no	Tildelinger ikke kan lages
 Allocations that can be created	booking	no	Tildelinger som kan lages
-There is set a cost, but no invoice data is filled inn	booking	no	Det er satt en pris, men ingen fakturainformasjon er gitt 
+There is set a cost, but no invoice data is filled inn	booking	no	Det er satt en pris, men ingen fakturainformasjon er gitt
+Create new booking	booking	no	Lag ny booking
+Recurring booking	booking	no	Gjenta booking
+Repeat until	booking	no	Gjenta til
+Bookings that can be created	booking	no	Bookinger som kan lages
+Bookings and allocations	booking	no	Bookinger og tildelinger

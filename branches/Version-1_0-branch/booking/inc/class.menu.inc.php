@@ -57,6 +57,12 @@
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uievent.index') ),
 							'image'	=> array('property', 'project_request'),
 						),
+						'massbookings' => array
+						(
+							'text'	=> lang('Bookings and allocations'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uimassbooking.index') ),
+							'image'	=> array('property', 'project_request'),
+						),
 					)
 				),
 				'buildings' => array

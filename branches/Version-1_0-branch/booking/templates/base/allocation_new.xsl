@@ -48,37 +48,37 @@
 						<xsl:value-of select="php:function('lang', 'Monday')" />	
 					</option>
 					<option value="tuesday">
-						<xsl:if test="../allocation/weekday = 'tuesday'">
+						<xsl:if test="weekday = 'tuesday'">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:value-of select="php:function('lang', 'Tuesday')" />
 					</option>
 					<option value="wednesday">
-						<xsl:if test="../allocation/weekday = 'wednesday'">
+						<xsl:if test="weekday = 'wednesday'">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:value-of select="php:function('lang', 'Wednesday')" />
 					</option>
 					<option value="thursday">
-						<xsl:if test="../allocation/weekday = 'thursday'">
+						<xsl:if test="weekday = 'thursday'">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:value-of select="php:function('lang', 'Thursday')" />
 					</option>
 					<option value="friday">
-						<xsl:if test="../allocation/weekday = 'friday'">
+						<xsl:if test="weekday = 'friday'">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:value-of select="php:function('lang', 'Friday')" />
 					</option>
 					<option value="saturday">
-						<xsl:if test="../allocation/weekday = 'saturday'">
+						<xsl:if test="weekday = 'saturday'">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:value-of select="php:function('lang', 'Saturday')" />
 					</option>
 					<option value="sunday">
-						<xsl:if test="../allocation/weekday = 'sunday'">
+						<xsl:if test="weekday = 'sunday'">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:value-of select="php:function('lang', 'Sunday')" />
