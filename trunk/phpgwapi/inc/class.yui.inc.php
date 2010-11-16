@@ -173,10 +173,16 @@
 			}
 
 			$ok = true;
-			$GLOBALS['phpgw']->js->validate_file('yahoo', 'yahoo-dom-event');
+			$GLOBALS['phpgw']->js->validate_file('yahoo', 'yahoo-dom-event/yahoo-dom-event');
 			foreach ( $load as $script )
 			{
-				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script}");
+				$script_part = explode('-',$script);
+				$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script_part[0]}/{$script}");
+				if ( !$test )
+				{
+					$script_part = explode('_',$script);
+					$test = $GLOBALS['phpgw']->js->validate_file('yahoo', "{$script_part[0]}/{$script}");
+				}
 				if ( !$test || !$ok )
 				{
 					$err = "Unable to load YUI script '%1' when attempting to load widget: '%2'";
