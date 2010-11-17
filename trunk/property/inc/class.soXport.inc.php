@@ -129,7 +129,7 @@
 
 			$this->db->next_record();
 
-//			$location	= split("-", $this->db->f('location_code'));
+//			$location	= explode("-", $this->db->f('location_code'));
 
 			$loc1 = $this->db->f('loc1');
 			$loc2 = $this->db->f('loc2');

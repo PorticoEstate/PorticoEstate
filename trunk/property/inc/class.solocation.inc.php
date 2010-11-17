@@ -1087,7 +1087,7 @@
 
 		function read_single($location_code='',$values = array())
 		{
-			$location_array = split('-',$location_code);
+			$location_array = explode('-',$location_code);
 			$type_id= count($location_array);
 
 			if (!$type_id)
@@ -1306,7 +1306,7 @@
 
 		function delete($location_code )
 		{
-			$location_array = split('-',$location_code);
+			$location_array = explode('-',$location_code);
 			$type_id= count($location_array);
 			$this->db->transaction_begin();
 			$this->db->query("DELETE FROM fm_location$type_id WHERE location_code='{$location_code}'",__LINE__,__FILE__);
@@ -1595,7 +1595,7 @@
 
 		function check_history($location_code='')
 		{
-			$location_array = split('-',$location_code);
+			$location_array = explode('-',$location_code);
 			$type_id= count($location_array);
 
 			if (!$type_id)
@@ -1624,7 +1624,7 @@
 		function get_history($location_code='')
 		{
 			$this->uicols = array();
-			$location_array = split('-',$location_code);
+			$location_array = explode('-',$location_code);
 			$type_id= count($location_array);
 			$contacts			= CreateObject('phpgwapi.contacts');
 

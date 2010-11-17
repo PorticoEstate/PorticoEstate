@@ -82,38 +82,32 @@
 
 		function property_boentity($session=false)
 		{
-			$this->solocation 	= CreateObject('property.solocation');
-			$this->bocommon 	= CreateObject('property.bocommon');
+			$this->solocation 				= CreateObject('property.solocation');
+			$this->bocommon 				= CreateObject('property.bocommon');
 
-			if ($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
+			$start							= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query							= phpgw::get_var('query');
+			$sort							= phpgw::get_var('sort');
+			$order							= phpgw::get_var('order');
+			$filter							= phpgw::get_var('filter', 'int');
+			$cat_id							= phpgw::get_var('cat_id', 'int');
+			$district_id					= phpgw::get_var('district_id', 'int');
+			$entity_id						= phpgw::get_var('entity_id', 'int');
+			$status							= phpgw::get_var('status');
+			$start_date						= phpgw::get_var('start_date');
+			$end_date						= phpgw::get_var('end_date');
+			$allrows						= phpgw::get_var('allrows', 'bool');
+			$type							= phpgw::get_var('type');
+			$criteria_id					= phpgw::get_var('criteria_id');
 
-			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query		= phpgw::get_var('query');
-			$sort		= phpgw::get_var('sort');
-			$order		= phpgw::get_var('order');
-			$filter		= phpgw::get_var('filter', 'int');
-			$cat_id		= phpgw::get_var('cat_id', 'int');
-			$district_id	= phpgw::get_var('district_id', 'int');
-			$entity_id	= phpgw::get_var('entity_id', 'int');
-			$status		= phpgw::get_var('status');
-			$start_date	= phpgw::get_var('start_date');
-			$end_date	= phpgw::get_var('end_date');
-			$allrows	= phpgw::get_var('allrows', 'bool');
-			$type		= phpgw::get_var('type');
-			$criteria_id	= phpgw::get_var('criteria_id');
+			$this->criteria_id				= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
-			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
+			$location_code					= phpgw::get_var('location_code');
+			$this->so 						= CreateObject('property.soentity',$entity_id,$cat_id);
+			$this->type_app					= $this->so->get_type_app();
 
-			$location_code		= phpgw::get_var('location_code');
-			$this->so 			= CreateObject('property.soentity',$entity_id,$cat_id);
-			$this->type_app		= $this->so->get_type_app();
-
-			$this->type	= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
-			$this->location_code	= isset($location_code)  && $location_code ? $location_code : '';
+			$this->type						= isset($type)  && $type && $this->type_app[$type] ? $type : 'entity';
+			$this->location_code			= isset($location_code)  && $location_code ? $location_code : '';
 			
 			$this->soadmin_entity 			= CreateObject('property.soadmin_entity',$entity_id,$cat_id);
 			$this->custom 					= & $this->so->custom;
@@ -123,6 +117,11 @@
 
 
 			$this->category_dir = "{$this->type}_{$entity_id}_{$cat_id}";
+			if ($session)
+			{
+				$this->read_sessiondata();
+				$this->use_session = true;
+			}
 
 			$this->start			= $start ? $start : 0;
 
@@ -150,6 +149,10 @@
 			{
 				$this->district_id = $district_id;
 			}
+			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
+			{
+				$this->criteria_id = $criteria_id;
+			}
 			if($entity_id)
 			{
 				$this->entity_id = $entity_id;
@@ -176,14 +179,14 @@
 		{
 			if ($this->use_session)
 			{
-				$GLOBALS['phpgw']->session->appsession('session_data',$this->type,$data);
+				$GLOBALS['phpgw']->session->appsession('session_data',$this->category_dir,$data);
 			}
 		}
 
 		function read_sessiondata()
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data',$this->type);
-			//_debug_array($data);
+			$data = $GLOBALS['phpgw']->session->appsession('session_data',$this->category_dir);
+//_debug_array($data);
 			$this->start		= isset($data['start'])?$data['start']:'';
 			$this->query		= isset($data['query'])?$data['query']:'';
 			$this->filter		= isset($data['filter'])?$data['filter']:'';
@@ -193,6 +196,8 @@
 			$this->status		= isset($data['status'])?$data['status']:'';
 			$this->start_date	= isset($data['start_date'])?$data['start_date']:'';
 			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
+			$this->criteria_id	= isset($data['criteria_id'])?$data['criteria_id']:'';
+			
 			//$this->allrows		= $data['allrows'];
 		}
 

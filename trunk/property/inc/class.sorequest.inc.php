@@ -341,7 +341,7 @@
 				}
 
 				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
+				$location = explode('-',$location_code);
 				for ($m=0;$m<count($location);$m++)
 				{
 					$request_list[$j]['loc' . ($m+1)] = $location[$m];

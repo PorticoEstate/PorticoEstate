@@ -31,6 +31,7 @@
 	 * Description
 	 * @package property
 	 */
+	phpgw::import_class('phpgwapi.datetime');
 
 	class property_bodocument
 	{
@@ -394,7 +395,7 @@
 		function save($values)
 		{
 
-			$document_date	= $this->bocommon->date_array($values['document_date']);
+			$document_date	= phpgwapi_datetime::date_array($values['document_date']);
 			$values['document_date']	= mktime (2,0,0,$document_date['month'],$document_date['day'],$document_date['year']);
 
 //_debug_array($values);
