@@ -352,7 +352,8 @@
 				 'loc1_name' 		=> utf8_encode($this->db_boei->f('navn')),
 				 'part_of_town_id' 	=> $this->db_boei->f('bydel_id'),
 				 'owner_id' 		=> $this->db_boei->f('eier_id'),
-				 'kostra_id' 		=> $this->db_boei->f('tjenestested')
+				 'kostra_id' 		=> $this->db_boei->f('tjenestested'),
+				 'category' 		=> 1
 				 );
 				$objekt_latin[]= array (
 				 'location_code' 	=> $this->db_boei->f('objekt_id'),
@@ -360,7 +361,8 @@
 				 'loc1_name' 		=> $this->db_boei->f('navn'),
 				 'part_of_town_id' 	=> $this->db_boei->f('bydel_id'),
 				 'owner_id' 		=> $this->db_boei->f('eier_id'),
-				 'kostra_id' 		=> $this->db_boei->f('tjenestested')
+				 'kostra_id' 		=> $this->db_boei->f('tjenestested'),
+				 'category' 		=> 1
 				 );
 
 			}
@@ -371,9 +373,9 @@
 			for ($i=0; $i<count($objekt_latin); $i++)
 			{
 
-				$sql2_utf = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id) "
+				$sql2_utf = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id) "
+				$sql2_latin = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($objekt_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
@@ -410,12 +412,14 @@
 				 'loc1' 			=> $this->db_boei->f('objekt_id'),
 				 'loc2' 			=> $this->db_boei->f('bygg_id'),
 				 'loc2_name' 		=> utf8_encode($this->db_boei->f('byggnavn')),
+				 'category' 		=> 98
 				 );
 				$bygg_latin[]= array (
 				 'location_code' 	=> $this->db_boei->f('location_code'),
 				 'loc1' 			=> $this->db_boei->f('objekt_id'),
 				 'loc2' 			=> $this->db_boei->f('bygg_id'),
 				 'loc2_name' 		=> $this->db_boei->f('byggnavn'),
+				 'category' 		=> 98
 				 );
 			}
 
@@ -425,9 +429,9 @@
 			for ($i=0; $i<count($bygg_latin); $i++)
 			{
 
-				$sql2_utf = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name) "
+				$sql2_utf = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name) "
+				$sql2_latin = "INSERT INTO fm_location2 (location_code, loc1, loc2, loc2_name,category) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($bygg_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
@@ -469,7 +473,8 @@
 				 'loc2' 			=> $this->db_boei->f('bygg_id'),
 				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
 				 'loc3_name' 		=> utf8_encode($this->db_boei->f('beskrivelse')),
-				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal')
+				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal'),
+				 'category' 		=> 98
 				 );
 				$seksjon_latin[]= array (
 				 'location_code' 	=> $this->db_boei->f('location_code'),
@@ -477,7 +482,8 @@
 				 'loc2' 			=> $this->db_boei->f('bygg_id'),
 				 'loc3' 			=> $this->db_boei->f('seksjons_id'),
 				 'loc3_name' 		=> $this->db_boei->f('beskrivelse'),
-				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal')
+				 'fellesareal' 	=> $this->db_boei->f('totalt_fellesareal'),
+				 'category' 		=> 98
 				 );
 			}
 
@@ -487,9 +493,9 @@
 			for ($i=0; $i<count($seksjon_latin); $i++)
 			{
 
-				$sql2_utf = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal) "
+				$sql2_utf = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_utf[$i]) . ")";
-				$sql2_latin = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal) "
+				$sql2_latin = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, fellesareal,category) "
 					. "VALUES (" . $this->bocommon->validate_db_insert($seksjon_latin[$i]) . ")";
 
 				$this->db->query($sql2_utf,__LINE__,__FILE__);
