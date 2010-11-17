@@ -871,6 +871,7 @@
 
 
 
+
 			}
 
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
@@ -1039,7 +1040,7 @@
 			$values_assign = $_POST['values_assign'];
 			$role_id = phpgw::get_var('role_id', 'int');
 			$receipt = array();
-	        $_role = CreateObject('property.socategory');
+	        $_role = CreateObject('property.sogeneric');
 			$_role->get_location_info('responsibility_role','');
 
 			$this->save_sessiondata();
@@ -1097,6 +1098,7 @@
  	                        'status'        		=> $this->status,
  	                        'location_code'			=> $this->location_code
 	    				));
+
 	    		$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilocation.responsiblility_role',"
@@ -1167,7 +1169,7 @@
 		        	'order'		=> 'name'
 		        );
 
-		        $values_combo_box[4] =   execMethod('property.socategory.get_list',$_role_criteria);
+		        $values_combo_box[4] =   execMethod('property.sogeneric.get_list',$_role_criteria);
 		 		$default_value = array ('id'=>'','name'=>lang('no role'));
 				array_unshift ($values_combo_box[4],$default_value);
 

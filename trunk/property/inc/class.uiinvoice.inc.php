@@ -1990,8 +1990,9 @@
 
 			if($vendor_id)
 			{
-				$contacts		= CreateObject('property.soactor');
-				$contacts->role		= 'vendor';
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
 				$lookup = array
 				(
 					'attributes' => array
@@ -2003,7 +2004,7 @@
 					)
 				);
 
-				$vendor			= $contacts->read_single($vendor_id, $lookup);
+				$vendor			= $contacts->read_single(array('id' => $vendor_id), $lookup);
 
 				if(is_array($vendor))
 				{
@@ -2677,13 +2678,14 @@
 			if (isSet($values) AND is_array($values))
 			{
 
-				$contacts	= CreateObject('property.soactor');
-				$contacts->role='vendor';
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
 				if($values[0]['vendor_id'])
 				{
 					$custom 					= createObject('property.custom_fields');
 					$vendor_data['attributes']	= $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-					$vendor_data				= $contacts->read_single($values[0]['vendor_id'],$vendor_data);
+					$vendor_data				= $contacts->read_single(array('id' => $values[0]['vendor_id']),$vendor_data);
 					if(is_array($vendor_data))
 					{
 						foreach($vendor_data['attributes'] as $attribute)
