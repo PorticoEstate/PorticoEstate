@@ -65,6 +65,7 @@
 		{
 			$this->so 			= CreateObject('property.socategory');
 			$this->custom 		= & $this->so->custom;
+			$this->bocommon		= CreateObject('property.bocommon');
 
 			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query				= phpgw::get_var('query');
@@ -75,6 +76,9 @@
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int');
+
+			$this->type_id 		= $type;
+			$this->type_id 		= $type_id;
 
 			if ($session)
 			{
@@ -122,9 +126,21 @@
 			return $this->so->get_location_info($type,$type_id);
 		}
 
+		function column_list($selected='',$allrows='')
+		{
+			if(!$selected)
+			{
+				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"];
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = $this->custom->find('property',$this->location_info['acl_location'], 0, '','','',true, false, $filter);
+			$column_list=$this->bocommon->select_multi_list($selected,$columns);
+
+			return $column_list;
+		}
+
 		public function read($filter = array())
 		{
-
 			if (! $filter )
 			{
 				foreach ( $this->location_info['fields'] as $field )
@@ -202,7 +218,7 @@
 			$values = $this->so->get_list($data);
 			foreach ($values as &$entry)
 			{
-				$entry['selected'] = isset($data['selected']) && $data['selected'] == $entry['id'] ? 1 : 0;
+				$entry['selected'] = isset($data['selected']) && trim($data['selected']) == trim($entry['id']) ? 1 : 0;
 			}
 			return $values;
 		}

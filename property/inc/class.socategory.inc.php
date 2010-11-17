@@ -34,6 +34,8 @@
 
 	class property_socategory
 	{
+		var $type;
+		var $type_id;
 		var $location_info = array();
 
 		function __construct()
@@ -59,6 +61,7 @@
 				return $values;
 			}
 
+/*
 			$valid_order = false;
 
 			if($order)
@@ -82,19 +85,23 @@
 
 				if(!$valid_order)
 				{
-					$order = '';
+//					$order = '';
 				}			
 			}
-
+*/
 			$_filter_array = array();
 			$get_single = array();
 			foreach ( $this->location_info['fields'] as $field )
 			{
 				if (isset($field['filter']) && $field['filter'])
 				{
-					if(isset($filter[$field['name']]) && $filter[$field['name']])
+					if(isset($filter[$field['name']]) && $filter[$field['name']] && $field['type'] == 'multiple_select')
 					{
-						$_filter_array[] = "{$field['name']} = '{$filter[$field['name']]}'";
+						$_filter_array[] = "{$field['name']} {$this->_like} '%,{$filter[$field['name']]},%'";
+					}
+					else if(isset($filter[$field['name']]) && $filter[$field['name']])
+					{
+						$_filter_array[] = "{$field['name']} = '{$filter[$field['name']]}'";					
 					}
 				}
 				if (isset($field['get_single']) && $field['get_single'])
@@ -112,7 +119,7 @@
 
 			foreach($this->location_info['fields'] as $field)
 			{
-				$uicols['input_type'][]		= 'text';
+				$uicols['input_type'][]		= isset($field['hidden']) && $field['hidden'] ? 'hidden' : 'text';
 				$uicols['name'][]			= $field['name'];
 				$uicols['descr'][]			= $field['descr'];
 				$uicols['datatype'][]		= 'V';
@@ -121,13 +128,20 @@
 
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
 			{
-
 				$choice_table = 'phpgw_cust_choice';
 				$attribute_table = 'phpgw_cust_attribute';
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->location_info['acl_location']);
 				$attribute_filter = " location_id = {$location_id}";
 
-				$this->_db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter ORDER BY attrib_sort ASC");
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"])?$GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"]:'';
+
+				$user_column_filter = '';
+				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+				{
+					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
+				}
+
+				$this->_db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 
 				$i	= count($uicols['name']);
 				while ($this->_db->next_record())
@@ -147,6 +161,7 @@
 					$i++;
 				}
 			}
+
 			$where = 'WHERE';
 			$filtermethod = '';
 			if(isset($this->location_info['check_grant']) && $this->location_info['check_grant'])
@@ -182,23 +197,57 @@
 				{
 					$id_query = "'{$query}'";
 				}
-
 				$query = $this->_db->db_addslashes($query);
 				$querymethod = " {$where } ({$table}.{$this->location_info['id']['name']} = {$id_query}";
+//_debug_array($filtermethod);
+//_debug_array($where);die();
+
 				foreach($this->location_info['fields'] as $field)
 				{
 					if($field['type'] == 'varchar')
 					{
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
+					$where = 'OR';
 				}
 				$querymethod .= ')';
+
+				$_querymethod = array();
+
+				$this->_db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'",__LINE__,__FILE__);
+
+				while ($this->_db->next_record())
+				{
+					if($this->_db->f('datatype')=='V' || $this->_db->f('datatype')=='email' || $this->_db->f('datatype')=='CH'):
+					{
+						$_querymethod[]= "$table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
+					}
+					elseif($this->_db->f('datatype')=='I'):
+					{
+						if(ctype_digit($query))
+						{
+							$_querymethod[]= "$table." . $this->_db->f('column_name') . '=' . (int)$query;
+						}
+					}
+					else:
+					{
+						$_querymethod[]= "$table." . $this->_db->f('column_name') . " = '$query'";
+					}
+					endif;
+				}
+
+				if (isset($_querymethod) AND is_array($_querymethod))
+				{
+					$querymethod .= " $where (" . implode (' OR ',$_querymethod) . ')';
+				}
+
 			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod";
 
-			$this->_db->query($sql,__LINE__,__FILE__);
-			$this->total_records = $this->_db->num_rows();
+			$this->_db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->_db->next_record();
+			$this->total_records = $this->_db->f('cnt');
 
 			if(!$allrows)
 			{
@@ -261,7 +310,10 @@
 
 		function get_location_info($type,$type_id)
 		{
-			$type_id = (int)$type_id;
+			$type_id		= (int)$type_id;
+			$this->type		= $type;
+			$this->type_id	= $type_id;
+
 			$info = array();
 			switch($type)
 			{
@@ -558,7 +610,7 @@
 				case 'vendor':
 					$info = array
 					(
-						'table' => 'fm_vendor',
+						'table' 			=> 'fm_vendor',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
 						'fields'			=> array
 						(
@@ -588,22 +640,19 @@
 								//FIXME
 								'name'			=> 'member_of',
 								'descr'			=> lang('member'),
-								'type'			=> 'select', // multiple_select
+								'type'			=> 'multiple_select',
 								'nullable'		=> false,
 								'filter'		=> true,
-								'sortable'	=> true,
+								'sortable'		=> false,
+								'hidden'		=> true,
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
-									'method'		=> 'phpgwapi.categories.formatted_xslt_list',
-									'method_input'	=> array('type' => 'vendor_cats',	'selected' => '##member_of##')
+									'method'		=> 'property.bocommon.get_categories',
+									'method_input'	=> array('app' => 'property', 'acl_location' => '.vendor',	'selected' => '##member_of##')
 								)
 							),
 						),
-
-//				$values_combo_box[0]  = $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true));
-
-
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('vendor'),
@@ -1532,6 +1581,18 @@
 			{
 				unset($data['apply']);
 			}
+
+			foreach ( $this->location_info['fields'] as $field )
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					if(isset($data[$field['name']]) && $data[$field['name']] && $field['type'] == 'multiple_select')
+					{
+						$data[$field['name']] = ',' . implode(',',$data[$field['name']]) . ',';
+					}
+				}
+			}
+
 			$cols = array();
 			$vals = array();
 
@@ -1654,6 +1715,14 @@
 			}
 			foreach($this->location_info['fields'] as $field)
 			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					if(isset($data[$field['name']]) && $data[$field['name']] && $field['type'] == 'multiple_select')
+					{
+						$data[$field['name']] = ',' . implode(',',$data[$field['name']]) . ',';
+					}
+				}
+
 				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
 			}
 
