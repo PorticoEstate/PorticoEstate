@@ -335,20 +335,20 @@
 					'tenant'	=> array
 					(
 						'text'	=> lang('Tenant'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'tenant', 'admin' => true) ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'tenant', 'admin' => true) ),
 						'image'		=> array( 'property', 'location_tenant' ),
 						'children'	=> $admin_children_tenant
 					),
 					'owner'	=> array
 					(
 						'text'	=> lang('Owner'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'owner', 'admin' => true) ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'owner', 'admin' => true) ),
 						'children'	=> $admin_children_owner
 					),
 					'vendor'	=> array
 					(
 						'text'	=> lang('Vendor'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiactor.index', 'role' => 'vendor', 'admin' => true) ),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'vendor', 'admin' => true) ),
 						'children'	=> $admin_children_vendor
 					),
 					'doc_cats'	=> array
@@ -726,12 +726,12 @@
 						),
 						'vendor'	=> array
 						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> 'vendor')),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> 'vendor')),
 							'text'	=> lang('Vendor')
 						),
 						'tenant'	=> array
 						(
-							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiactor.index', 'role'=> 'tenant')),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> 'tenant')),
 							'text'	=> lang('Tenant')
 						),
 						'claim'		=> array
