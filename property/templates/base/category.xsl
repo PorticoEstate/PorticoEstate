@@ -121,6 +121,18 @@
 								</xsl:for-each>
 							</select>
 						</xsl:when>
+						<xsl:when test="type='multiple_select'">
+							<select name="values[{name}][]" multiple="multiple">
+								<xsl:for-each select="valueset" >
+									<option value="{id}">
+										<xsl:if test="selected != 0">
+											<xsl:attribute name="selected" value="selected" />
+										</xsl:if>
+										<xsl:value-of select="name"/>
+									</option>						
+								</xsl:for-each>
+							</select>
+						</xsl:when>
 					</xsl:choose>
 				</td>
 			</tr>
