@@ -181,8 +181,9 @@
 		{
 			$errors = array();
 			$booking = array();
-			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
+			$booking['cost'] = 0;
 			$allocation_id = phpgw::get_var('allocation_id', 'int', 'GET');
+			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
 			$booking['from_'] = phpgw::get_var('from_', 'str', 'GET');
 			$booking['to_'] = phpgw::get_var('to_', 'str', 'GET');
@@ -204,7 +205,8 @@
 				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
 				$booking['organization_id'] = $allocation['organization_id'];
 				$booking['organization_name'] = $allocation['organization_name'];
-		}
+			}
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$today = getdate();
@@ -218,10 +220,7 @@
 					$booking['to_'] = join(" ",$date_to); 
 					$_POST['to_'] = join(" ",$date_to);
 				}				
-				$booking['building_name'] = $building['name'];
-				$booking['building_id'] = $building['id'];
 				$booking['active'] = '1';
-				$booking['cost'] = 0;
 				$booking['completed'] = '0';
 				$booking['reminder'] = '1';
 				$booking['secret'] = $this->generate_secret();
