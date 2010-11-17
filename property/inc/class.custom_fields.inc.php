@@ -407,7 +407,7 @@ JS;
 				{
 					if($field == 'location_code')
 					{
-						$location = split('-',$data['value']);
+						$location = explode('-',$data['value']);
 					}
 
 					if(($data['datatype']=='R' || $data['datatype']=='LB') && $data['value'])
@@ -479,15 +479,17 @@ JS;
 
 					if($location)
 					{
-						if(!$location_count)
+						$_location_count = $location_count;
+						if(!$_location_count)
 						{
-							$location_count = count($location);
+							$_location_count = count($location);
 						}
-						for ($m=0;$m < $location_count ; $m++)
+						for ($m=0;$m < $_location_count ; $m++)
 						{
 							$ret[$j]['loc' . ($m+1)] = $location[$m];
 							$ret[$j]['query_location']['loc' . ($m+1)]=implode('-', array_slice($location, 0, ($m + 1)));
 						}
+						$_location_count = 0;
 					}
 				}
 				$j++;
