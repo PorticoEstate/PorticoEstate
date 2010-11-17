@@ -129,7 +129,7 @@
 
 			$this->db->next_record();
 
-//			$location	= split("-", $this->db->f('location_code'));
+//			$location	= explode("-", $this->db->f('location_code'));
 
 			$loc1 = $this->db->f('loc1');
 			$loc2 = $this->db->f('loc2');
@@ -252,9 +252,7 @@
 						$fields['item_type'],
 						$fields['item_id'],
 						$fields['external_ref'],
-						isset($fields['currency']) && $fields['currency'] ? $fields['currency'] : 'NOK',
-						$this->db->money_format($fields['belop']),
-						$this->db->money_format($fields['godkjentbelop'])
+						isset($fields['currency']) && $fields['currency'] ? $fields['currency'] : 'NOK'
 						);
 
 					$bilagsnr	= (int)$fields['bilagsnr'];
@@ -265,7 +263,7 @@
 					. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 					. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,oppsynsigndato,saksigndato,"
 					. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
-					. " VALUES ({$values})";
+					. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
 
 					$this->db->query($sql,__LINE__,__FILE__);
 

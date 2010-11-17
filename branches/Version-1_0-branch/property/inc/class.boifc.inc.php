@@ -31,6 +31,7 @@
 	 * Description
 	 * @package hrm
 	 */
+	phpgw::import_class('phpgwapi.datetime');
 
 	class boifc
 	{
@@ -347,38 +348,12 @@ _debug_array('hei');
 			return $this->bocommon->preserve_attribute_values($values,$values_attribute);
 		}
 
-		function date_array($date)
-		{
-			if(!$date)
-			{
-	 			$date_array['day']	= date("d");
-	 			$date_array['month']	= date("m");
-	 			$date_array['year']	= date("Y");
-			}
-			else
-			{
-				$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$dateformat = str_replace(".","",$dateformat);
-				$dateformat = str_replace("-","",$dateformat);
-				$dateformat = str_replace("/","",$dateformat);
-				$y=strpos($dateformat,'y');
-				$d=strpos($dateformat,'d');
-				$m=strpos($dateformat,'m');
-
-		 		$dateparts = explode('/', $date);
-		 		$date_array['day']	= $dateparts[$d];
-		 		$date_array['month']	= $dateparts[$m];
-		 		$date_array['year']	= $dateparts[$y];
-	 		}
-
-			return $date_array;
-		}
 
 		function date_to_timestamp($date)
 		{
 			if($date)
 			{
-				$date_array	= $this->date_array($date);
+				$date_array	= phpgwapi_datetime::date_array($date);
 				$date	= mktime (8,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
 			}
 			return $date;

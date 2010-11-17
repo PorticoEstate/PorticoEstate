@@ -116,19 +116,19 @@
 		{
 			$data = array
 			(
-				'start'			=> $this->start,
-				'query'			=> $this->query,
-				'sort'			=> $this->sort,
-				'order'			=> $this->order,
-				'filter'		=> $this->filter,
-				'cat_id'		=> $this->cat_id,
+				'start'				=> $this->start,
+				'query'				=> $this->query,
+				'sort'				=> $this->sort,
+				'order'				=> $this->order,
+				'filter'			=> $this->filter,
+				'cat_id'			=> $this->cat_id,
 				'part_of_town_id'	=> $this->part_of_town_id,
 				'district_id'		=> $this->district_id,
-				'entity_id'		=> $this->entity_id,
-				'status'		=> $this->status,
+				'entity_id'			=> $this->entity_id,
+				'status'			=> $this->status,
 				'start_date'		=> $this->start_date,
-				'end_date'		=> $this->end_date,
-				'allrows'		=> $this->allrows,
+				'end_date'			=> $this->end_date,
+				'criteria_id'		=> $this->criteria_id
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -330,6 +330,8 @@
 			$end_date 	= urldecode($this->end_date);
 			$dry_run = false;
 
+			$this->save_sessiondata();
+
 			//Preferencias sets
 			if(isset($GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['group_filters'] == 'yes')
 			{
@@ -355,12 +357,11 @@
 																'menuaction'			=> 'property.uientity.index',
 																'entity_id'        		=> $this->entity_id,
 																'cat_id'            	=> $this->cat_id,
+																'type'					=> $this->type,
 																'district_id'        	=> $this->district_id,
 																'status'    			=> $this->status,
 																'filter'        		=> $this->filter,
-																'query'        			=> $this->query,
-																'type'					=> $this->type,
-																'location_code'			=> $this->location_code,
+//																'location_code'			=> $this->location_code,
 																'criteria_id'			=> $this->criteria_id
 									 	                    ));
 				$datatable['config']['allow_allrows'] = true;
@@ -368,11 +369,10 @@
 				$datatable['config']['base_java_url']	=	"menuaction:'property.uientity.index',".
 															"entity_id:'{$this->entity_id}',".
 															"cat_id:'{$this->cat_id}',".
+															"type:'{$this->type}',".
 															"district_id:'{$this->district_id}',".
 															"status:'{$this->status}',".
 															"filter:'{$this->filter}',".
-															"query:'{$this->query}',".
-															"type:'{$this->type}',".
 						 	                        		"criteria_id:'{$this->criteria_id}',".
 															"location_code:'{$this->location_code}'";
 
@@ -457,10 +457,10 @@
 												'menuaction'	=> 'property.uientity.index',
 												'entity_id'		=> $this->entity_id,
 												'cat_id'		=> $this->cat_id,
-												'district_id'   => $this->district_id,
-												'status'		=> $this->status,
-												'filter'		=> $this->filter,
-												'query'		 	=> $this->query,
+//												'district_id'   => $this->district_id,
+//												'status'		=> $this->status,
+//												'filter'		=> $this->filter,
+//												'query'		 	=> $this->query,
 												'type'			=> $this->type
 											  )),
 						'fields'  => array(
@@ -540,7 +540,7 @@
 												array( // TEXT IMPUT
 													'name' => 'query',
 													'id'   => 'txt_query',
-													'value'=> '',//$query,
+													'value'=> $this->query,
 													'type' => 'text',
 													'size' => 28,
 													'onkeypress' => 'return pulsar(event)',
@@ -967,7 +967,6 @@
 			// Prepare YUI Library
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.index', 'property' );
 
-			//$this->save_sessiondata();
 			//die(_debug_array($datatable));
 		}
 
