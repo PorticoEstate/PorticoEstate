@@ -731,7 +731,7 @@
 				$location_code = $data;
 			}
 
-			$location_array = split('-',$location_code);
+			$location_array = explode('-',$location_code);
 			$type_id= count($location_array);
 
 			if (!$type_id)

@@ -512,7 +512,7 @@
 					$project_list[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
 				}
 				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
+				$location = explode('-',$location_code);
 				$n=count($location);
 				for ($m=0;$m<$n;$m++)
 				{

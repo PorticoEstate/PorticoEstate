@@ -32,6 +32,8 @@
 	 * @package property
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	class property_bocommon
 	{
 		var $start;
@@ -167,50 +169,9 @@
 		}
 
 
-		function date_array($datestr = '')
+		function date_to_timestamp($date=array())
 		{
-			if(!$datestr)
-			{
-				return false;
-			}
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
-			$fields = split('[./-]',$datestr);
-			foreach(split('[./-]',$dateformat) as $n => $field)
-			{
-				$date[$field] = intval($fields[$n]);
-
-				if($field == 'M')
-				{
-					for($i=1; $i <=12; $i++)
-					{
-						if(date('M',mktime(0,0,0,$i,1,2000)) == $fields[$n])
-						{
-							$date['m'] = $i;
-						}
-					}
-				}
-			}
-
-			$ret = array(
-				'year'  => $date['Y'],
-				'month' => $date['m'],
-				'day'   => $date['d']
-			);
-			return $ret;
-		}
-
-		function date_to_timestamp($date='')
-		{
-			if (!$date)
-			{
-				return false;
-			}
-
-			$date_array	= $this->date_array($date);
-			$date	= mktime (8,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
-
-			return $date;
+			return  phpgwapi_datetime::date_to_timestamp($date);
 		}
 
 		function select_multi_list($selected='',$input_list)

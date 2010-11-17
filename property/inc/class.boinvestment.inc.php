@@ -31,6 +31,7 @@
 	 * Description
 	 * @package property
 	 */
+	phpgw::import_class('phpgwapi.datetime');
 
 	class property_boinvestment
 	{
@@ -278,7 +279,7 @@
 		function update_investment($values)
 		{
 
-			$date_array=$this->bocommon->date_array($values['date']);
+			$date_array = phpgwapi_datetime::date_array($values['date']);
 
 	 		$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
 			$date= date($this->bocommon->dateformat,$date);
