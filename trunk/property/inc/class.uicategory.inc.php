@@ -50,7 +50,8 @@
 			'view'   => true,
 			'edit'   => true,
 			'delete' => true,
-			'download'	=> true
+			'download'	=> true,
+			'columns'	=> true,
 		);
 
 		function __construct()
@@ -58,7 +59,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bocategory',true);
-			$this->bocommon				= CreateObject('property.bocommon');
+			$this->bocommon				= & $this->bo->bocommon;
 			$this->custom				= & $this->bo->custom;
 
 			$this->location_info		= $this->bo->location_info;
@@ -98,6 +99,59 @@
 			$uicols	= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
+
+		function columns()
+		{
+
+			//cramirez: necesary for windows.open . Avoid error JS
+   			phpgwapi_yui::load_widget('tabview');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$values	= phpgw::get_var('values');
+
+			$type		= phpgw::get_var('type');
+			$type_id	= phpgw::get_var('type_id', 'int');
+
+			if ($values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->account_id = $this->account;
+				$GLOBALS['phpgw']->preferences->read();
+				$GLOBALS['phpgw']->preferences->add('property',"generic_columns_{$type}_{$type_id}",$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+			}
+
+			$function_msg   = lang('Select Column');
+
+			$link_data = array
+			(
+    			'menuaction'	=> 'property.uicategory.columns',
+				'type'			=> $type,
+				'type_id'		=> $type_id
+
+			);
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
+			$data = array
+			(
+				'msgbox_data' 	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list'	=> $this->bo->column_list($values['columns'],$allrows=true),
+				'function_msg'	=> $function_msg,
+				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'lang_columns'	=> lang('columns'),
+				'lang_none'		=> lang('None'),
+				'lang_save'		=> lang('save'),
+				'select_name'	=> 'period'
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
+		}
+
+
 
 		function index()
 		{
@@ -199,6 +253,23 @@
 					)
 				);
 
+
+				if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+				{
+					$datatable['actions']['form'][0]['fields']['field'][] =  array(
+														'type'=> 'link',
+														'id'  => 'btn_columns',
+														'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+														array(
+															'menuaction' => 'property.uicategory.columns',
+															'type'			=> $type,
+															'type_id'		=> $type_id
+															))."','','width=350,height=370')",
+														'value' => lang('columns'),
+														'tab_index' => 7
+										            );
+				}
+
 				$values_combo_box = array();
 				$i = 0;
 				$button_def = array();
@@ -251,7 +322,6 @@
 					$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
 					$GLOBALS['phpgw']->js->add_code('', $code);
 				}
-
 
 				if($values_combo_box)
 				{
@@ -607,11 +677,18 @@
 			}
 
 			/* Preserve attribute values from post */
-			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
+			if(isset($receipt['error']))
 			{
-				$values = $this->custom->preserve_attribute_values($values,$values_attribute);
-			}
+				foreach ( $this->location_info['fields'] as $field )
+				{
+					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']]);
+				}
 
+				if(isset( $values_attribute) && is_array( $values_attribute))
+				{
+					$values = $this->custom->preserve_attribute_values($values,$values_attribute);
+				}
+			}
 
 			$link_data = array
 			(
@@ -620,7 +697,6 @@
 				'type'			=> $type,
 				'type_id'		=> $type_id
 			);
-//_debug_array($link_data);
 
 			$tabs = array();
 

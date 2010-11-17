@@ -2221,4 +2221,22 @@
 		{
 			return $this->socommon->set_pending_action($action_params);
 		}
+
+		public function get_categories($data)
+		{
+			$cats	= CreateObject('phpgwapi.categories', -1,  'property', $data['acl_location']);
+			$cats->supress_info = true;
+			$values = $cats->formatted_xslt_list(array('selected' => $data['selected'], 'globals' => true, 'link_data' =>array()));
+			$ret = array();
+			foreach ($values['cat_list'] as $category)
+			{
+				$ret[] = array
+				(
+					'id'		=> $category['cat_id'],
+					'name'		=> $category['name'],
+					'selected'	=> $category['selected'] ? 1 : 0
+				);
+			}
+			return $ret;
+		}
 	}
