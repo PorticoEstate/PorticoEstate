@@ -563,7 +563,7 @@
 				}
 
 				$location_code=	$this->db->f('location_code');
-				$location = split('-',$location_code);
+				$location = explode('-',$location_code);
 				$count_location =count($location);
 				for ($m=0;$m<$count_location;$m++)
 				{
