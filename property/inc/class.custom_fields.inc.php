@@ -66,8 +66,9 @@
 		public function prepare($values, $appname, $location, $view_only='')
 		{
 			$contacts		= CreateObject('phpgwapi.contacts');
-			$vendor 		= CreateObject('property.soactor');
-			$vendor->role	= 'vendor';
+			$vendor	= CreateObject('property.sogeneric');
+			$vendor->get_location_info('vendor',false);
+
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -168,7 +169,7 @@ JS;
 				{
 					if($attributes['value'])
 					{
-						$vendor_data	= $vendor->read_single($attributes['value'],array('attributes' => array(0 => array('column_name' => 'org_name'))));
+						$vendor_data	= $vendor->read_single(array('id' => $attributes['value']),array('attributes' => array(0 => array('column_name' => 'org_name'))));
 
 						for ($n=0;$n<count($vendor_data['attributes']);$n++)
 						{

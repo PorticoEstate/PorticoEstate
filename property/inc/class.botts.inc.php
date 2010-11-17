@@ -324,8 +324,9 @@
 			if(!$external)
 			{
 				$entity	= $this->get_origin_entity_type();
-				$contacts	= CreateObject('property.soactor');
-				$contacts->role='vendor';
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
 				$custom 		= createObject('property.custom_fields');
 				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 			}
@@ -422,7 +423,7 @@
 					}
 					else
 					{
-						$vendor_data	= $contacts->read_single($ticket['vendor_id'],$vendor_data);
+						$vendor_data	= $contacts->read_single(array('id' => $ticket['vendor_id']),$vendor_data);
 						if($vendor_data)
 						{
 							foreach($vendor_data['attributes'] as $attribute)

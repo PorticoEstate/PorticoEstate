@@ -60,8 +60,8 @@
 			$this->bocommon 		= CreateObject('property.bocommon');
 			$this->solocation 		= CreateObject('property.solocation');
 			$this->historylog		= CreateObject('property.historylog','document');
-			$this->contacts			= CreateObject('property.soactor');
-			$this->contacts->role	='vendor';
+			$this->contacts	= CreateObject('property.sogeneric');
+			$this->contacts->get_location_info('vendor',false);
 			$this->cats				= & $this->so->cats;
 			$this->bofiles			= CreateObject('property.bofiles');
 
@@ -230,7 +230,7 @@
 			{
 				$custom 				= createObject('property.custom_fields');
 				$vendor['attributes']	= $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-				$vendor					= $this->contacts->read_single($document['vendor_id'],$vendor);
+				$vendor					= $this->contacts->read_single(array('id' => $document['vendor_id']),$vendor);
 				foreach($vendor['attributes'] as $attribute)
 				{
 					if($attribute['name']=='org_name')

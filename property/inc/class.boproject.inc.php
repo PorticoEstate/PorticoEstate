@@ -366,8 +366,8 @@
 
 		function read_single($project_id = 0, $values = array(), $view = false)
 		{
-			$contacts		= CreateObject('property.soactor');
-			$contacts->role='vendor';
+			$contacts	= CreateObject('property.sogeneric');
+			$contacts->get_location_info('vendor',false);
 
 			$config				= CreateObject('phpgwapi.config','property');
 			$config->read();
@@ -416,7 +416,7 @@
 				{
 					$vendor['attributes'] = $this->custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-					$vendor	= $contacts->read_single($workorder_data[$i]['vendor_id'], $vendor);
+					$vendor	= $contacts->read_single(array('id' => $workorder_data[$i]['vendor_id']), $vendor);
 					foreach($vendor['attributes'] as $attribute)
 					{
 						if($attribute['name']=='org_name')

@@ -493,8 +493,8 @@
 
 		function get_vendor_name($vendor_id='')
 		{
-			$contacts	= CreateObject('property.soactor');
-			$contacts->role='vendor';
+			$contacts	= CreateObject('property.sogeneric');
+			$contacts->get_location_info('vendor',false);
 
 			$criteria = array
 			(
@@ -507,7 +507,7 @@
 				)
 			);
 
-			$vendor_data	= $contacts->read_single($vendor_id, $criteria);
+			$vendor_data	= $contacts->read_single(array('id' => $vendor_id), $criteria);
 
 			if(is_array($vendor_data))
 			{
