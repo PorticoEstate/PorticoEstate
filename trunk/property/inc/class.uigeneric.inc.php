@@ -47,7 +47,6 @@
 		var $public_functions = array
 		(
 			'index'  => true,
-			'view'   => true,
 			'edit'   => true,
 			'delete' => true,
 			'download'	=> true,
