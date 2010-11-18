@@ -274,12 +274,17 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	        <tbody>
 					<?php
 					ksort($contracts);
+					//var_dump($contracts);
 					
 					// Run through all contracts selected for billing 
+					//$temp_index = 1;
+					//$temp_index2 = 1;
 					foreach ($contracts as $id => $contract)
 					{
+						//echo '<br/>'.$temp_index2 . '-'.$id.'=>';
 						if(isset($contract))
 						{
+							//echo $id . '-' . $temp_index.' , ';
 						?>
 						<tr>
 							<td><?php echo $contract->get_old_contract_id() ?>
@@ -305,7 +310,9 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 							</td>
 						</tr>
 						<?php
+						//$temp_index++;
 						}
+						//$temp_index2++;
 					}
 				?>
 	        </tbody>

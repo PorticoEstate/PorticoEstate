@@ -48,6 +48,7 @@ class rental_uibilling extends rental_uicommon
 			}
 			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
 			$contract_ids_override = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
+			var_dump($contract_ids_override);
 			$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
 			if(($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 			{
@@ -232,13 +233,13 @@ class rental_uibilling extends rental_uicommon
 						if($type_id == 4) // Remove contract of a specific type (KF)
 						{
 							$warningMsgs[] = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
-							$contracts[$id] = null;
+							unset($contracts[$id]);
 							$removed_contracts[$contract->get_id()] = $contract;
 						} 
 						else if(isset($total_price) && $total_price == 0) // Remove contract if total price is equal to zero
 						{
 							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_contract_part_2');
-							$contracts[$id] = null;
+							unset($contracts[$id]);
 							$removed_contracts[$id] = $contract;
 						}
 						else // Prepare contract for billing
@@ -254,7 +255,7 @@ class rental_uibilling extends rental_uicommon
 								$next_bill_timestamp = $contract->get_billing_start_date();
 								$not_billed_contracts[$id] = $contract;
 								$irregular_contracts[$id] = $contract;
-								$contracts[$id] = null;
+								unset($contracts[$id]);
 							}
 							else
 							{ 
@@ -269,7 +270,7 @@ class rental_uibilling extends rental_uicommon
 								} 
 								else
 								{
-									$contracts[$id] = null;
+									unset($contracts[$id]);
 									$irregular_contracts[$id] = $contract;
 								}
 							}
