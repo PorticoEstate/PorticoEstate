@@ -573,5 +573,42 @@
 			}
 			return $values;
 		}
-	}
 
+		public function get_single_line($id)
+		{
+			$line = $this->so->get_single_line($id);
+
+			$soXport    = CreateObject('property.soXport');
+			$soworkorder = CreateObject('property.soworkorder');
+			$sos_agreement = CreateObject('property.sos_agreement');
+			if( $line['order_id'] )
+			{
+				if($order_type = $soXport->check_order($line['order_id']))
+				{
+					if($order_type == 'workorder')
+					{
+						$workorder	= $soworkorder->read_single($line['order_id']);
+						if($workorder['vendor_id'] && ($workorder['vendor_id'] != $line['vendor_id']))
+						{
+							$line['vendor']		=  $this->get_vendor_name($workorder['vendor_id']) . ' => ' . $this->get_vendor_name($line['vendor_id']);
+						}
+					}
+					if($order_type == 's_agreement')
+					{
+						$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$line['order_id']));
+						if($s_agreement['vendor_id'] && ($s_agreement['vendor_id'] != $line['vendor_id']))
+						{
+							$line['vendor']		= $this->get_vendor_name($s_agreement['vendor_id']) . ' => ' . $this->get_vendor_name($line['vendor_id']);
+						}
+					}
+					$line['order_type'] = $order_type;
+				}
+			}
+
+			if(!isset($line['vendor']))
+			{
+				$line['vendor']	= $this->get_vendor_name($line['vendor_id']);
+			}
+			return $line;
+		}
+	}

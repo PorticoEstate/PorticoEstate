@@ -319,7 +319,6 @@
 	}
 
 
-
  /********************************************************************************
  *
  */
@@ -633,6 +632,12 @@
 						if(substr_count(sUrl,'target=_blank')>0)
 						{
 							window.open(sUrl,'_blank');
+						}
+						else if(substr_count(sUrl,'target=_lightbox')>0)
+						{
+							//have to be defined as a local function. Example in invoice.list_sub.js
+							//console.log(sUrl); // firebug
+							showlightbox(sUrl);
 						}
 						else
 						{
