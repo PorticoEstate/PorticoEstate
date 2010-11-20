@@ -32,6 +32,35 @@
 
 		var tableYUI;
 
+
+	this.showlightbox = function(sUrl)//(parameters, oRecord)
+	{
+
+//alert(sUrl);
+/*
+		var oArgs = {menuaction:'property.uiinvoice.edit'};
+		var sUrl = phpGWLink('index.php', oArgs);
+
+		for(f=0; f<parameters.parameter.length; f++)
+		{
+			param_name = parameters.parameter[f].name;
+			param_source = parameters.parameter[f].source;
+			sUrl = sUrl + "&"+param_name+"=" + oRecord.getData(param_source);
+		}
+*/
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "350";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
+
 	/********************************************************************************/
 		this.onSave = function()
   		{
