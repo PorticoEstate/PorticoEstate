@@ -49,7 +49,6 @@
 		var $public_functions = array
 		(
 			'index'  		=> true,
-			'edit_period'	=> true,
 			'list_sub'		=> true,
 			'consume'		=> true,
 			'remark'		=> true,
@@ -59,7 +58,8 @@
 			'view_order'	=> true,
 			'download'		=> true,
 			'download_sub'	=> true,
-			'receipt'		=> true
+			'receipt'		=> true,
+			'edit'			=> true
 		);
 
 		function property_uiinvoice()
@@ -1070,13 +1070,13 @@
 				// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json['rights'] = $datatable['rowactions']['action'];
 				}
 
 				// message when editting & deleting records
 				if(isset($receipt) && is_array($receipt) && count($receipt))
 				{
-					$json ['message'][] = $receipt;
+					$json['message'][] = $receipt;
 				}
 
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -1290,7 +1290,9 @@
 				array(
 					'col_name'=>'external_ref'		,'label'=>lang('external_ref'),	'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
 				array(
-					'col_name'=>'counter',		'visible'=>false)
+					'col_name'=>'counter',		'visible'=>false),
+				array(
+					'col_name'=>'id',		'visible'=>false)
 				);
 
 
@@ -1519,6 +1521,10 @@
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
 						}					
+						elseif($i == 16)
+						{
+							$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
+						}					
 					}
 
 					if($invoices['workorder_id'])
@@ -1578,6 +1584,85 @@
 				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
 			}
 
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+    		//values for Pagination
+	   		$json = array
+	   		(
+	   			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+    			'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+	    		'startIndex' 		=> $datatable['pagination']['records_start'],
+				'sort'				=> $datatable['sorting']['order'],
+	    		'dir'				=> $datatable['sorting']['sort'],
+				'records'			=> array()
+	    	);
+
+			// values for datatable
+	    	$json['records']	= $datatable['rows']['row'];
+
+			// right in datatable
+			$json['rights']	= $datatable['rowactions']['action'];
+
+			$json['sum']		= number_format($sum, 2, ',', '');
+
+			// message when editting & deleting records
+			if(isset($receipt) && is_array($receipt) && count($receipt))
+			{
+				$json['message']= $GLOBALS['phpgw']->common->msgbox($this->bocommon->msgbox_data($receipt));
+			}
+
+			// query parameters
+			if(isset($current_Consult) && is_array($current_Consult))
+			{
+				$json['current_consult'] = $current_Consult;
+			}
+
+
+//-------------- menu
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
+
+			if($this->acl_edit)
+			{
+				$datatable['rowactions']['action'][] = array
+				(
+					'my_name'		=> 'edit',
+					'text'			=> lang('edit'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+										(
+											'menuaction'		=> 'property.uiinvoice.edit',
+											'voucher_id'		=> $voucher_id,
+											'user_lid'			=> $this->user_lid,
+											'target'			=> '_lightbox'
+										)),
+					'parameters'	=> $parameters
+				);
+			}
+
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json['rights'] = $datatable['rowactions']['action'];
+			}
+
+//--------------
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+	    		return $json;
+			}
+
 			phpgwapi_yui::load_widget('dragdrop');
 		  	phpgwapi_yui::load_widget('datatable');
 		  	phpgwapi_yui::load_widget('menu');
@@ -1587,45 +1672,6 @@
 			phpgwapi_yui::load_widget('paginator');
 			//FIXME this one is only needed when $lookup==true - so there is probably an error
 			phpgwapi_yui::load_widget('animation');
-
-//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
-					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
-	    		);
-
-				// values for datatable
-	    		$json['records']	= $datatable['rows']['row'];
-
-				// right in datatable
-				$json ['rights']	= $datatable['rowactions']['action'];
-
-				$json['sum']		= number_format($sum, 2, ',', '');
-
-				// message when editting & deleting records
-				if(isset($receipt) && is_array($receipt) && count($receipt))
-				{
-					$json ['message']= $GLOBALS['phpgw']->common->msgbox($this->bocommon->msgbox_data($receipt));
-				}
-
-				// query parameters
-				if(isset($current_Consult) && is_array($current_Consult))
-				{
-					$json ['current_consult'] = $current_Consult;
-				}
-
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
-
 
 			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
@@ -1662,50 +1708,60 @@
 
 	  		// Prepare YUI Library
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.list_sub', 'property' );
-
 		}
 
-		function edit_period()
+		public function edit()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
+			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
 
-			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$id			= phpgw::get_var('id', 'int', 'GET' , 0);
+			$user_lid	= phpgw::get_var('user_lid', 'string', 'GET');
+			$voucher_id	= phpgw::get_var('voucher_id', 'int', 'GET');
+			$redirect	= false;
 
-			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
-			$period 	= phpgw::get_var('period', 'int');
-			$submit 	= phpgw::get_var('submit', 'bool');
+_debug_array($id);
+			$values	= phpgw::get_var('values');
+			
 
 			$receipt = array();
-			if($submit)
+			if (isset($values['save']))
 			{
-				$receipt	= $this->bo->update_period($voucher_id,$period);
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					$receipt['error'][]=array('msg'=>lang('repost'));
+				}
+
+				if(!isset($values['address']) || !$values['address'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Missing address'));
+				}
+
+				if(!isset($values['details']) || !$values['details'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please give som details'));
+				}
+
+				if (!$receipt['error'])
+				{
+					$redirect = true;
+				}
 			}
 
-			$function_msg	= lang('Edit period');
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uiinvoice.edit_period',
-				'voucher_id'	=> $voucher_id);
-
-
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			$line = $this->bo->get_single_line($id);
+			_debug_array($line);
 
 			$data = array
 			(
-				'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'period_list'		=> $this->bo->period_list($period),
-				'function_msg'		=> $function_msg,
-				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_save'		=> lang('save'),
-				'select_name'		=> 'period'
+				'redirect'		=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)) : null,
+				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+				'from_name'		=> $GLOBALS['phpgw_info']['user']['fullname'],
+				'from_address'	=> $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
+				'support_address'	=> $support_address,
 			);
 
-//_debug_array($data);
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_period' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+            $GLOBALS['phpgw']->xslttpl->add_file('invoice');
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 		}
 
 		function remark()
@@ -1990,8 +2046,9 @@
 
 			if($vendor_id)
 			{
-				$contacts		= CreateObject('property.soactor');
-				$contacts->role		= 'vendor';
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
 				$lookup = array
 				(
 					'attributes' => array
@@ -2003,7 +2060,7 @@
 					)
 				);
 
-				$vendor			= $contacts->read_single($vendor_id, $lookup);
+				$vendor			= $contacts->read_single(array('id' => $vendor_id), $lookup);
 
 				if(is_array($vendor))
 				{
@@ -2197,12 +2254,12 @@
 				// right in datatable
 				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json['rights'] = $datatable['rowactions']['action'];
 				}
 				// query parameters
 				if(isset($current_Consult) && is_array($current_Consult))
 				{
-					$json ['current_consult'] = $current_Consult;
+					$json['current_consult'] = $current_Consult;
 				}
 
 				if( phpgw::get_var('phpgw_return_as') == 'json' )
@@ -2677,13 +2734,14 @@
 			if (isSet($values) AND is_array($values))
 			{
 
-				$contacts	= CreateObject('property.soactor');
-				$contacts->role='vendor';
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
 				if($values[0]['vendor_id'])
 				{
 					$custom 					= createObject('property.custom_fields');
 					$vendor_data['attributes']	= $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-					$vendor_data				= $contacts->read_single($values[0]['vendor_id'],$vendor_data);
+					$vendor_data				= $contacts->read_single(array('id' => $values[0]['vendor_id']),$vendor_data);
 					if(is_array($vendor_data))
 					{
 						foreach($vendor_data['attributes'] as $attribute)

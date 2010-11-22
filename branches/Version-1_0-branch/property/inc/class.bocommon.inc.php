@@ -556,12 +556,13 @@
 
 			if(isset($data['vendor_id']) && $data['vendor_id'] && !$data['vendor_name'])
 			{
-				$contacts	= CreateObject('property.soactor');
-				$contacts->role='vendor';
+				$contacts	= CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor',false);
+
 				$custom 		= createObject('property.custom_fields');
 				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-				$vendor_data	= $contacts->read_single($data['vendor_id'],$vendor_data);
+				$vendor_data	= $contacts->read_single(array('id' => $data['vendor_id']),$vendor_data);
 				if(is_array($vendor_data))
 				{
 					foreach($vendor_data['attributes'] as $attribute)
@@ -651,11 +652,12 @@
 
 			if($data['tenant_id'] && !$data['tenant_name'])
 			{
-				$tenant_object	= CreateObject('property.soactor');
-				$tenant_object->role = 'tenant';
+				$tenant_object	= CreateObject('property.sogeneric');
+				$tenant_object->get_location_info('tenant',false);
+
 				$custom 		= createObject('property.custom_fields');
 				$tenant_data['attributes'] = $custom->find('property','.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
-				$tenant_data	= $tenant_object->read_single($data['tenant_id'],$tenant_data);
+				$tenant_data	= $tenant_object->read_single(array('id' => $data['tenant_id']),$tenant_data);
 				if(is_array($tenant_data['attributes']))
 				{
 //_debug_array($tenant_data);
@@ -709,7 +711,7 @@
 			$b_account['lang_b_account']			= isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
 			{
-				$b_account_object	= CreateObject('property.socategory');
+				$b_account_object	= CreateObject('property.sogeneric');
 				if(isset($data['role']) && $data['role'] == 'group')
 				{
 					$b_account_object->get_location_info('b_account',false);
@@ -751,7 +753,7 @@
 			$project_group['lang_project_group']				= lang('project group');
 			if($data['project_group'] && (!isset($data['project_group_descr']) || !$data['project_group_descr']))
 			{
-				$project_group_object				= CreateObject('property.socategory');
+				$project_group_object				= CreateObject('property.sogeneric');
 				$project_group_object->get_location_info('project_group',false);
 				$project_group_data					= $project_group_object->read_single(array('id'=> $data['project_group']));
 				$project_group['value_project_group_descr']	= $project_group_data['descr'];
@@ -785,7 +787,7 @@
 			$ecodimb['lang_ecodimb']				= lang('dimb');
 			if($data['ecodimb'] && (!isset($data['ecodimb_descr']) || !$data['ecodimb_descr']))
 			{
-				$ecodimb_object					= CreateObject('property.socategory');
+				$ecodimb_object					= CreateObject('property.sogeneric');
 				$ecodimb_object->get_location_info('dimb',false);
 				$ecodimb_data					= $ecodimb_object->read_single(array('id'=> $data['ecodimb']));
 				$ecodimb['value_ecodimb_descr']	= $ecodimb_data['descr'];
@@ -1512,9 +1514,9 @@
 					break;
 			}
 
-			$socategory = CreateObject('property.socategory');
+			$sogeneric = CreateObject('property.sogeneric');
 
-			$categories= $socategory->get_list($data);
+			$categories= $sogeneric->get_list($data);
 
 			return $this->select_list($data['selected'],$categories);
 		}

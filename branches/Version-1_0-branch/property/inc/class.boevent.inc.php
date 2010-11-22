@@ -248,7 +248,7 @@ if ( !extension_loaded('mcal') )
 				$receipt = $this->so->add($data);
 			}
 
-			$action_object		= CreateObject('property.socategory');
+			$action_object		= CreateObject('property.sogeneric');
 			$action_object->get_location_info('event_action',false);
 			$action	= $action_object->read_single(array('id'=> $data['action']),$values = array());
 
@@ -506,7 +506,7 @@ if ( !extension_loaded('mcal') )
 
 		public function get_action($selected = '')
 		{
-/*			$action_object					= CreateObject('property.socategory');
+/*			$action_object					= CreateObject('property.sogeneric');
 			$action_object->get_location_info('event_action',false);
 			$values					= $action_object->read(array('allrows'=> true));
 */

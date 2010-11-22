@@ -49,12 +49,26 @@
 			<label for="interval"><?php echo lang('interval') ?></label>
 		</dt>
 		<dd>
+		<?php
+			$current_interval = $adjustment->get_interval();
+			if ($editable)
+			{
+				?>
+				<select name="interval">
+					<?php
+						echo "<option ".($current_interval == '1' ? 'selected="selected"' : "")." value=\"1\">1 ".lang('year')."</option>";
+						echo "<option ".($current_interval == '2' ? 'selected="selected"' : "")." value=\"2\">2 ".lang('year')."</option>";
+						echo "<option ".($current_interval == '10' ? 'selected="selected"' : "")." value=\"10\">10 ".lang('year')."</option>";
+					?>
+				</select>
+				<?php
+			?>
 			<?php
-				if ($editable) {
-					echo '<input type="text" name="interval" id="interval" value="' . $adjustment->get_interval() . '"/> '.' '.lang('year');
-				} else {
-					echo $adjustment->get_interval().' '.lang('year');
-				}
+			}
+			else // Non-editable
+			{
+				echo $current_interval." ".lang('year');
+			}
 			?>
 		</dd>
 		<dt>
@@ -68,11 +82,12 @@
 				<select name="adjustment_year" id="adjustment_year">
 				<?php
 					$this_year = date('Y');
+					$adjustment_year = $adjustment->get_year();
 					$years = rental_contract::get_year_range();
 					foreach($years as $year)
 					{
 						?>
-						<option value="<?php echo $year ?>"<?php echo $this_year == $year ? ' selected="selected"' : '' ?>><?php echo $year ?></option>
+						<option value="<?php echo $year ?>"<?php echo $adjustment_year == $year ? ' selected="selected"' : '' ?>><?php echo $year ?></option>
 						<?php
 					}
 					?>

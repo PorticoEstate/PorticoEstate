@@ -59,8 +59,8 @@
 			$this->bo       		= CreateObject('property.boXport',true);
 			$this->invoice  		= CreateObject('property.boinvoice');
 			$this->bocommon  		= CreateObject('property.bocommon');
-			$this->contacts			= CreateObject('property.soactor');
-			$this->contacts->role		= 'vendor';
+			$this->contacts	= CreateObject('property.sogeneric');
+			$this->contacts->get_location_info('vendor',false);
 
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location		= '.invoice';
@@ -453,7 +453,7 @@
 
 			);
 
-			$vendor	= $this->contacts->read_single($invoice_common['vendor_id'], array('attributes'=>array(array('column_name' => 'org_name'))));
+			$vendor	= $this->contacts->read_single(array('id' => $invoice_common['vendor_id']), array('attributes'=>array(array('column_name' => 'org_name'))));
 
 			foreach($vendor['attributes'] as $attribute)
 			{

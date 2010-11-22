@@ -32,7 +32,7 @@
 	 * @package property
 	 */
 
-	class property_socategory
+	class property_sogeneric
 	{
 		var $type;
 		var $type_id;
@@ -343,7 +343,7 @@
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
-									'method'		=> 'property.bocategory.get_list',
+									'method'		=> 'property.bogeneric.get_list',
 									'method_input'	=> array('type' => 'district',	'selected' => '##district_id##')
 								)
 							),
@@ -528,8 +528,8 @@
 								array
 								(
 									'name' => 'descr',
-										'descr' => lang('descr'),
-								'type' => 'varchar'
+									'descr' => lang('descr'),
+									'type' => 'varchar'
 								)
 							),
 							'edit_msg'	=> lang('edit'),
@@ -631,7 +631,7 @@
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
-									'method'		=> 'property.bocategory.get_list',
+									'method'		=> 'property.bogeneric.get_list',
 									'method_input'	=> array('type' => 'vendor_cats',	'selected' => '##category##')
 								)
 							),
@@ -658,6 +658,93 @@
 						'name'		=> lang('vendor'),
 						'acl_location' => '.vendor',
 						'menu_selection' => 'property::invoice::vendor',
+						'default'			=> array
+						(
+							'owner_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+				//			'modified_date'	=> array('edit'	=> 'time()'),
+						)
+
+					);
+					break;
+				case 'owner':
+					$info = array
+					(
+						'table' 			=> 'fm_owner',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name'			=> 'category',
+								'descr'			=> lang('category'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'owner_cats',	'selected' => '##category##')
+								)
+							),
+						),
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('owner'),
+						'acl_location' => '.owner',
+						'menu_selection' => 'admin::property::owner',
+						'default'			=> array
+						(
+							'owner_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+				//			'modified_date'	=> array('edit'	=> 'time()'),
+						)
+
+					);
+					break;
+				case 'tenant':
+					$info = array
+					(
+						'table' 			=> 'fm_tenant',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'contact_email',
+								'descr' => lang('contact_email'),
+								'type' => 'varchar',
+								'sortable'	=> true,
+							),
+							array
+							(
+								'name'			=> 'category',
+								'descr'			=> lang('category'),
+								'type'			=> 'select',
+								'nullable'		=> false,
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'tenant_cats',	'selected' => '##category##')
+								)
+							)
+						),
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('tenant'),
+						'acl_location' => '.tenant',
+						'menu_selection' => 'admin::property::tenant',
 						'default'			=> array
 						(
 							'owner_id' 		=> array('add'	=> '$this->account'),
@@ -1025,7 +1112,7 @@
 								'values_def'	=> array
 								(
 									'valueset'		=> false,
-									'method'		=> 'property.bocategory.get_list',
+									'method'		=> 'property.bogeneric.get_list',
 									'method_input'	=> array('type' => 'b_account',	'selected' => '##category##')//b_account_category
 								)
 							),
@@ -1490,7 +1577,7 @@
 
 
 		//deprecated
-		function select_category_list($data)
+		function select_generic_list($data)
 		{
 			return $this->get_entity_list($data);
 		}

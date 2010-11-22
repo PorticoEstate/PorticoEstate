@@ -2748,7 +2748,7 @@
 			);
 
 			$template_list = array();
-			$bo	= CreateObject('property.bocategory',true);
+			$bo	= CreateObject('property.bogeneric',true);
 			$template_list = $bo->read();
 
 			$content = array();
