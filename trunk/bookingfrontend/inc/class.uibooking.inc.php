@@ -368,7 +368,7 @@
 						$params['filters']['season_id'] = $booking['season_id'];
 						$params['filters']['group_id'] = $booking['group_id'];
 
-						$booking = $this->bo->so->read($params);
+						$bookings = $this->bo->so->read($params);
 
 						if ($step == 2)
 						{
@@ -381,7 +381,7 @@
 
 						if ($step == 3)
 						{
-							foreach($booking['results'] as $b)
+							foreach($bookings['results'] as $b)
 							{
 								//reformatting the post variable to fit the booking object
 								$temp_agegroup = array();
@@ -404,13 +404,16 @@
 								$errors = $this->bo->validate($b);
 								if(!$errors)
 								{
+
 									$receipt = $this->bo->update($b);
 									$update_count++;
+									
 								}
 							}
 							unset($_SESSION['female']);
 							unset($_SESSION['male']);
 							unset($_SESSION['audience']);
+
 						}
 					}
 				}
@@ -419,9 +422,9 @@
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
 			if ($step < 2) {
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+				$booking['organization_name'] = $group['organization_name'];
 			}
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $booking['building_id']));
-			$booking['update_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.massupdate', 'id' => $booking['id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
@@ -431,8 +434,6 @@
 			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$group['organization_id'], 'active'=>1)));
 			$groups =  $groups['results'];
-			$booking['organization_name'] = $group['organization_name'];
-
 			if ($step < 2) 
 			{
 				self::render_template('booking_edit', array('booking' => $booking, 
