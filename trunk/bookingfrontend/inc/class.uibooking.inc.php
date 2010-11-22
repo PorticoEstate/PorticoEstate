@@ -300,27 +300,126 @@
 
 		public function edit()
 		{
+
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$booking = $this->bo->read_single($id);
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
 			$booking['building_name'] = $booking['building']['name'];
 			$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
 			$errors = array();
+			$update_count = 0;
+			$today = getdate();
+			$step = intval(phpgw::get_var('step', 'POST'));
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				array_set_default($_POST, 'resources', array());
-				$booking = array_merge($booking, extract_values($_POST, $this->fields));
-				$this->agegroup_bo->extract_form_data($booking);
-				$errors = $this->bo->validate($booking);
-				if(!$errors)
+
+				if (!($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')){
+
+					array_set_default($_POST, 'resources', array());
+					$booking = array_merge($booking, extract_values($_POST, $this->fields));
+					$this->agegroup_bo->extract_form_data($booking);
+					$errors = $this->bo->validate($booking);
+				
+					if (strtotime($_POST['from_']) < ($today[0]-60*60*24*7*2))
+					{
+						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
+					}										
+					if (!$errors) {
+						$receipt = $this->bo->update($booking);
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
+					}
+				} 
+				else 
 				{
-					$receipt = $this->bo->update($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id'=>$booking['building_id']));
+					$step++;
+
+					if (strtotime($_POST['from_']) < ($today[0]-60*60*24*7*2) && $step != 3)
+					{					
+						$errors['booking'] = lang('You cant update bookings that is older than 2 weeks');
+					}
+
+					if (!$booking['allocation_id'] &&  $_POST['outseason'] == 'on')
+					{
+						$errors['booking'] = lang('This booking is not connected to a season');
+					}	
+
+					if (!$errors)
+					{
+
+						if ($_POST['recurring'] == 'on') {
+							$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
+						} 
+						else
+						{
+							$repeat_until = strtotime($season['to_'])+60*60*24; 
+							$_POST['repeat_until'] = $season['to_'];
+						} 
+
+						$max_dato = strtotime($_POST['to_']); // highest date from input
+	
+						$season = $this->season_bo->read_single($booking['season_id']);
+				
+						$where_clauses[] = sprintf("bb_booking.from_ >= '%s 00:00:00'", date('Y-m-d', strtotime($_POST['from_'])));
+						if ($_POST['recurring'] == 'on') {
+							$where_clauses[] = sprintf("bb_booking.to_ < '%s 00:00:00'", date('Y-m-d', $repeat_until));
+						}
+						$params['filters']['where'] = $where_clauses;
+						$params['filters']['season_id'] = $booking['season_id'];
+						$params['filters']['group_id'] = $booking['group_id'];
+
+						$booking = $this->bo->so->read($params);
+
+						if ($step == 2)
+						{
+							
+							$_SESSION['audience'] = $_POST['audience'];
+							$_SESSION['male'] = $_POST['male'];
+							$_SESSION['female'] = $_POST['female'];
+						
+						}
+
+						if ($step == 3)
+						{
+							foreach($booking['results'] as $b)
+							{
+								//reformatting the post variable to fit the booking object
+								$temp_agegroup = array();
+								$sexes = array('male', 'female');
+								foreach($sexes as $sex)
+								{
+									$i = 0;
+									foreach($_SESSION[$sex] as $agegroup_id => $value)
+									{
+										$temp_agegroup[$i]['agegroup_id'] = $agegroup_id;
+										$temp_agegroup[$i][$sex] = $value;
+										$i++;
+									}
+								}
+
+								$b['agegroups'] = $temp_agegroup;
+								$b['audience'] = $_SESSION['audience'];
+								$b['group_id'] =$_POST['group_id'];
+								$b['activity_id'] = $_POST['activity_id'];
+								$errors = $this->bo->validate($b);
+								if(!$errors)
+								{
+									$receipt = $this->bo->update($b);
+									$update_count++;
+								}
+							}
+							unset($_SESSION['female']);
+							unset($_SESSION['male']);
+							unset($_SESSION['audience']);
+						}
+					}
 				}
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
-			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			if ($step < 2) {
+				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			}
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $booking['building_id']));
 			$booking['update_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.massupdate', 'id' => $booking['id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
@@ -333,7 +432,38 @@
 			$groups = $this->group_bo->so->read(array('filters'=>array('organization_id'=>$group['organization_id'], 'active'=>1)));
 			$groups =  $groups['results'];
 			$booking['organization_name'] = $group['organization_name'];
-			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'groups' => $groups));
+
+			if ($step < 2) 
+			{
+				self::render_template('booking_edit', array('booking' => $booking, 
+					'activities' => $activities, 
+					'agegroups' => $agegroups, 
+					'audience' => $audience, 
+					'groups' => $groups, 
+					'step' => $step, 
+					'repeat_until' => $_POST['repeat_until'],
+					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
+					)
+				);
+			} 
+			else if ($step >= 2) 
+			{
+				self::render_template('booking_edit_preview', array('booking' => $booking, 
+					'bookings' => $bookings,
+					'agegroups' => $agegroups,
+					'audience' => $audience,
+					'groups' => $groups,
+					'activities' => $activities,
+					'step' => $step,
+					'repeat_until' => $_POST['repeat_until'],
+					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
+					'group_id' => $_POST['group_id'],
+					'activity_id' => $_POST['activity_id'],
+					'update_count' => $update_count)
+				);
+			}
 		}
 
 		public function massupdate()
