@@ -232,13 +232,13 @@ class rental_uibilling extends rental_uicommon
 						if($type_id == 4) // Remove contract of a specific type (KF)
 						{
 							$warningMsgs[] = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
-							$contracts[$id] = null;
+							unset($contracts[$id]);
 							$removed_contracts[$contract->get_id()] = $contract;
 						} 
 						else if(isset($total_price) && $total_price == 0) // Remove contract if total price is equal to zero
 						{
 							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_contract_part_2');
-							$contracts[$id] = null;
+							unset($contracts[$id]);
 							$removed_contracts[$id] = $contract;
 						}
 						else // Prepare contract for billing
@@ -254,7 +254,7 @@ class rental_uibilling extends rental_uicommon
 								$next_bill_timestamp = $contract->get_billing_start_date();
 								$not_billed_contracts[$id] = $contract;
 								$irregular_contracts[$id] = $contract;
-								$contracts[$id] = null;
+								unset($contracts[$id]);
 							}
 							else
 							{ 
@@ -269,7 +269,7 @@ class rental_uibilling extends rental_uicommon
 								} 
 								else
 								{
-									$contracts[$id] = null;
+									unset($contracts[$id]);
 									$irregular_contracts[$id] = $contract;
 								}
 							}

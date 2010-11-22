@@ -910,9 +910,23 @@
 			$this->db->query("DELETE FROM fm_ecobilag WHERE bilagsnr ='" . $bilagsnr  ."'",__LINE__,__FILE__);
 		}
 
-		function read_single_voucher($bilagsnr)
+		function read_single_voucher($bilagsnr = 0, $id = 0)
 		{
-			$sql = "SELECT * from fm_ecobilag WHERE bilagsnr ='$bilagsnr'";
+			$bilagsnr =(int)$bilagsnr;
+			$id = (int)$id;
+			if($bilagsnr)
+			{
+				$sql = "SELECT * from fm_ecobilag WHERE bilagsnr ='$bilagsnr'";
+			}
+			else if ($id)
+			{
+				$sql = "SELECT * from fm_ecobilag WHERE id ='$id'";
+			}
+			else
+			{
+				return array();
+			}			
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$values = array();
@@ -920,7 +934,7 @@
 			{
 				$values[] = array
 				(
-					'location_code'		=> $this->db->f('id'),
+					'id'				=> $this->db->f('id'),
 					'art'				=> $this->db->f('artid'),
 					'type'				=> $this->db->f('typeid'),
 					'dim_a'				=> $this->db->f('dima'),
@@ -940,6 +954,7 @@
 					'b_account_id'		=> $this->db->f('spbudact_code'),
 					'amount'			=> $this->db->f('belop'),
 					'order'				=> $this->db->f('pmwrkord_code'),
+					'order_id'			=> $this->db->f('pmwrkord_code'),
 					'kostra_id'			=> $this->db->f('kostra_id'),
 					'currency'			=> $this->db->f('currency')
 				);
@@ -1195,5 +1210,12 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			return $this->db->f('cnt');
+		}
+
+
+		public function get_single_line($id)
+		{
+			$line = $this->read_single_voucher(0, $id);
+			return $line[0];
 		}
 	}

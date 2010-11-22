@@ -236,7 +236,7 @@
 
 	create_input_box('Your Cellphone','cellphone');
 	create_input_box('RessursNr','ressursnr');
-	$ecodimb	= CreateObject('property.socategory');
+	$ecodimb	= CreateObject('property.sogeneric');
 	$ecodimb->get_location_info('dimb',false);
 	$values_dimb = $ecodimb->read(array('sort' => 'ASC','order' => 'id', 'allrows'=>true));
 

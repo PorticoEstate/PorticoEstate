@@ -32,7 +32,7 @@
 	 * @package property
 	 */
 
-	class property_bocategory
+	class property_bogeneric
 	{
 		var $start;
 		var $query;
@@ -63,7 +63,7 @@
 
 		function __construct($session=false)
 		{
-			$this->so 			= CreateObject('property.socategory');
+			$this->so 			= CreateObject('property.sogeneric');
 			$this->custom 		= & $this->so->custom;
 			$this->bocommon		= CreateObject('property.bocommon');
 
@@ -75,9 +75,9 @@
 			$cat_id				= phpgw::get_var('cat_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$type				= phpgw::get_var('type');
-			$type_id			= phpgw::get_var('type_id', 'int');
+			$type_id			= phpgw::get_var('type_id', 'int', 'REQUEST', 0);
 
-			$this->type_id 		= $type;
+			$this->type 		= $type;
 			$this->type_id 		= $type_id;
 
 			if ($session)
@@ -132,6 +132,7 @@
 			{
 				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"];
 			}
+
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = $this->custom->find('property',$this->location_info['acl_location'], 0, '','','',true, false, $filter);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);

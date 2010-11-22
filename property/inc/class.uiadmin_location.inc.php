@@ -249,7 +249,7 @@
 						'text'			=> lang('Categories'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> 'property.uicategory.index',
+									'menuaction'	=> 'property.uigeneric.index',
 									'type'			=> 'location'
 
 								)),

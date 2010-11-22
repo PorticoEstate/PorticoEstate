@@ -69,8 +69,8 @@
 
 			$this->bo				= CreateObject('property.bopricebook',true);
 			$this->bocommon				= CreateObject('property.bocommon');
-			$this->contacts				= CreateObject('property.soactor');
-			$this->contacts->role			= 'vendor';
+			$this->contacts	= CreateObject('property.sogeneric');
+			$this->contacts->get_location_info('vendor',false);
 
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.agreement';
@@ -920,7 +920,7 @@
 			$num_records	= count($pricebook_list);
 
 
-			$vendor_data = $this->contacts->read_single(array('actor_id'=>$vendor_id));
+			$vendor_data = $this->contacts->read_single(array('id'=>$vendor_id), array('attributes'=>array(array('column_name' => 'org_name'))));
 
 			if(is_array($vendor_data))
 			{

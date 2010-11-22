@@ -410,8 +410,8 @@
 
 		function read_single($workorder_id)
 		{
-			$contacts		= CreateObject('property.soactor');
-			$contacts->role='vendor';
+			$contacts	= CreateObject('property.sogeneric');
+			$contacts->get_location_info('vendor',false);
 			$workorder						= $this->so->read_single($workorder_id);
 			$dateformat						= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$workorder['start_date']		= $GLOBALS['phpgw']->common->show_date($workorder['start_date'],$dateformat);
@@ -421,7 +421,7 @@
 			{
 				$custom 		= createObject('property.custom_fields');
 				$vendor['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-				$vendor			= $contacts->read_single($workorder['vendor_id'],$vendor);
+				$vendor			= $contacts->read_single(array('id' => $workorder['vendor_id']),$vendor);
 				foreach($vendor['attributes'] as $attribute)
 				{
 					if($attribute['name']=='org_name')
