@@ -48,7 +48,6 @@ class rental_uibilling extends rental_uicommon
 			}
 			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
 			$contract_ids_override = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
-			var_dump($contract_ids_override);
 			$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
 			if(($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 			{
