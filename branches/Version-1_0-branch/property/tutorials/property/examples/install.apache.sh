@@ -27,8 +27,8 @@ FREETDSTAR="freetds-stable.tgz"
 FREETDS="freetds-0.82"
 
 # Download: http://xmlsoft.org/downloads.html
-LIBXMLTAR="libxml2-2.7.7.tar.gz"
-LIBXML="libxml2-2.7.7"
+LIBXMLTAR="libxml2-2.7.8.tar.gz"
+LIBXML="libxml2-2.7.8"
 
 LIBXSLTAR="libxslt-1.1.26.tar.gz"
 LIBXSL="libxslt-1.1.26"

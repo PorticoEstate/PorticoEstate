@@ -76,7 +76,49 @@
 					</dd>
 				</xsl:if>
 			</dl>
-
+			<div class="clr"/>
+			<dl class="form-col">
+				<xsl:if test="not(new_form)">
+					<dt><label for="field_deactivate_calendar"><xsl:value-of select="php:function('lang', 'Deactivate calendar')"/></label></dt>
+					<dd>
+						<select id="deactivate_calendar" name="deactivate_calendar">
+							<option value="1">
+								<xsl:if test="building/deactivate_calendar=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="building/deactivate_calendar=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</dd>
+				</xsl:if>
+			</dl>
+			<dl class="form-col">
+				<xsl:if test="not(new_form)">
+					<dt><label for="field_deactivate_application"><xsl:value-of select="php:function('lang', 'Deactivate application')"/></label></dt>
+					<dd>
+						<select id="field_deactivate_application" name="deactivate_application">
+							<option value="1">
+								<xsl:if test="building/deactivate_application=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="building/deactivate_application=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</dd>
+				</xsl:if>
+			</dl>
 			<div class="clr"/>
 
 			<dl class="form-col">

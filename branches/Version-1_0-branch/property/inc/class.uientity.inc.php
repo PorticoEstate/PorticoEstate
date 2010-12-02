@@ -58,7 +58,8 @@
 			'attrib_help'	=> true,
 			'print_pdf'		=> true,
 			'index'		=> true,
-			'addfiles'	=> true
+			'addfiles'		=> true,
+			'get_files'		=> true
 		);
 
 		function property_uientity()
@@ -152,8 +153,14 @@
 		function addfiles()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
 			$id				= phpgw::get_var('id', 'int');
 			$jasperfile		= phpgw::get_var('jasperfile', 'bool');
+
+			$fileuploader	= CreateObject('property.fileuploader');
+
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{
@@ -171,7 +178,6 @@
 				foreach ($_FILES as $fieldName => $file)
 				{
 				    move_uploaded_file($file['tmp_name'], "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . strip_tags(basename($file['name'])));
-				    echo (" ");
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -186,53 +192,65 @@
 
 			$bofiles	= CreateObject('property.bofiles');
 
-			$files = array();
-			foreach ($_FILES as $fieldName => $file)
-			{
-				$file_name = str_replace(' ','_',strip_tags(basename($file['name'])));
-				if($jasperfile)
-				{
-					$file_name = 'jasper::' . $file_name;
-				}
-				$to_file	= "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}/{$file_name}";
+			$fileuploader->upload($bofiles, "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}");
+		}
 
-				if ($bofiles->vfs->file_exists(array(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
-					)))
+		function get_files()
+			{
+			$id 	= phpgw::get_var('id', 'int');
+
+			if( !$this->acl_read)
 				{
-					$receipt['error'][]=array('msg'=>lang('This file already exists !'));
+				return;
 				}
-				else
+
+			$values	= $this->bo->read_single(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uientity.view_file',
+				'loc1'			=> $values['location_data']['loc1'],
+				'id'			=> $id,
+				'cat_id'		=> $this->cat_id,
+				'entity_id'		=> $this->entity_id,
+				'type'			=> $this->type
+			);
+
+			if(isset($values['files']) && is_array($values['files']))
 				{
-					$files[] = array
+				$j	= count($values['files']);
+				for ($i=0;$i<$j;$i++)
+				{
+					$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
+				}
+			}
+
+
+			$content_files = array();
+			foreach($values['files'] as $_entry )
+				{
+				$content_files[] = array
 					(
-						'from_file'	=> $file['tmp_name'],
-						'to_file'	=> $to_file
+					'file_name' => '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">'
 					);
 				}
 
-				unset($to_file);
-				unset($file_name);
-			}
-			$bofiles->create_document_dir("{$this->category_dir}/{$loc1}/{$id}");
-			$bofiles->vfs->override_acl = 1;
-			foreach ($files as $file)
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-				if(!$bofiles->vfs->cp (array (
-					'from'	=> $file['from_file'],
-					'to'	=> $file['to_file'],
-					'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+
+				if(count($content_files))
 				{
-					$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
+					return json_encode($content_files);
 				}
-			    echo (" ");
+				else
+				{
+					return "";
 			}
-			$bofiles->vfs->override_acl = 0;
-			unset($loc1);
-			unset($files);
-			unset($file);
+			}
+			return $content_files;
 		}
+
 
 		function columns()
 		{
@@ -1708,17 +1726,12 @@
 				'lang_upload_file'				=> lang('Upload file'),
 				'lang_file_statustext'			=> lang('Select file to upload'),
 				'multiple_uploader'				=> $id ? true : '',
-				'fileuploader_action'			=> "javascript:openwindow('"
-												 . $GLOBALS['phpgw']->link('/index.php', array
-												 (
-												 	'menuaction'	=> 'property.fileuploader.add',
-												 	'upload_target'	=> 'property.uientity.addfiles',
-												 	'id'			=> $id,
-												 	'_entity_id'	=> $this->entity_id,
-												 	'_cat_id'		=> $this->cat_id,
-												 	'_type'			=> $this->type
-												 )) . "','400','400')",
-
+				'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
+												 ."upload_target:'property.uientity.addfiles',"
+												 ."id:'{$id}',"
+												 ."_entity_id:'{$this->entity_id}',"
+												 ."_cat_id:'{$this->cat_id}',"
+												 ."_type:'{$this->type}'}",
 				'value_origin'					=> isset($values['origin'])?$values['origin']:'',
 				'value_origin_type'				=> isset($origin)?$origin:'',
 				'value_origin_id'				=> isset($origin_id)?$origin_id:'',
@@ -1761,7 +1774,12 @@
 				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
 				'integration'					=> $integration,
-				'value_integration_src'			=> $integration_src
+				'value_integration_src'			=> $integration_src,
+				'base_java_url'					=>	"{menuaction:'property.uientity.get_files',".
+															"id:'{$id}',".
+															"entity_id:'{$this->entity_id}',".
+															"cat_id:'{$this->cat_id}',".
+															"type:'{$this->type}'}"
 			);
 
 			phpgwapi_yui::load_widget('dragdrop');

@@ -20,7 +20,24 @@
 			 </table>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_activate_autocreate_user}:</td>
+			<td>
+				<select name="newsettings[autocreate_user]">
+					<option value="" {selected_autocreate_user_}>NO</option>
+					<option value="1" {selected_autocreate_user_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
+			<td>{lang_frontend_default_group}:</td>
+			<td>
+			 <select name="newsettings[frontend_default_group]">
+{hook_frontend_default_group}
+			 </select>
+			</td>
+		</tr>
+		<tr class="row_on">
 			<td>{lang_ticket_default_group}:</td>
 			<td>
 			 <select name="newsettings[tts_default_group]">
@@ -28,7 +45,7 @@
 			 </select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_ticket_default_category}:</td>
 			<td>
 				<select name="newsettings[tts_default_cat]">

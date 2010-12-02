@@ -554,6 +554,7 @@
  */
 	this.onContextMenuBeforeShow = function(p_sType, p_aArgs)
 	{
+		var prefixSelected = '';
 		var oTarget = this.contextEventTarget;
 		if (this.getRoot() == this)
 		{
@@ -572,6 +573,7 @@
  */
 	this.onContextMenuHide = function(p_sType, p_aArgs)
 	{
+		var prefixSelected = '';
 		if (this.getRoot() == this && oSelectedTR)
 		{
 			oSelectedTR.style.backgroundColor  = "" ;
@@ -750,7 +752,8 @@
 				{
 					myLoading.hide();
 				}
-				eval('values_ds ='+o.responseText);
+				values_ds = JSON.parse(o.responseText);
+			//	eval('values_ds ='+o.responseText);
 				flag_particular_setting='update';
 				particular_setting();
 				myPaginator.setRowsPerPage(values_ds.recordsReturned,true);

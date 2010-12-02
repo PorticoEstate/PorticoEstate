@@ -244,3 +244,39 @@ YAHOO.PORTICO.BorderLayout = function()
 
 YAHOO.util.Event.onDOMReady( YAHOO.PORTICO.NavBar );
 YAHOO.util.Event.onDOMReady( YAHOO.PORTICO.BorderLayout );
+
+	this.lightboxlogin = function()
+	{
+		var oArgs = {lightbox:1};
+		var strURL = phpGWLink('login.php', oArgs);
+
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = strURL;
+			frame.width = "100%";
+			frame.height = "400";
+			o.setBody(frame);
+		};
+		lightbox_login.showEvent.subscribe(onDialogShow, lightbox_login);
+		lightbox_login.show();
+	}
+
+
+YAHOO.util.Event.addListener(window, "load", function()
+{
+		lightbox_login = new YAHOO.widget.Dialog("lightbox-login",
+		{
+			width : "600px",
+			fixedcenter : true,
+			visible : false,
+			modal : false
+			//draggable: true,
+			//constraintoviewport : true
+		});
+
+		lightbox_login.render();
+
+		YAHOO.util.Dom.setStyle('lightbox-login', 'display', 'block');
+});
+

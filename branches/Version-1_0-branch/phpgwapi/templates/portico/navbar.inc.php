@@ -209,9 +209,14 @@ HTML;
 
 HTML;
 		}
+		$target = '';
+		if(isset($item['target']))
+		{
+			$target = "target = '{$item['target']}'";
+		}
 		return <<<HTML
 $out
-					<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}">
+					<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}" {$target}>
 						<span>{$item['text']}</span>
 					</a>
 {$children}
@@ -264,7 +269,8 @@ HTML;
 		
 		$var = array
 		(
-			'powered_by'	=> $powered_by
+			'powered_by'	=> $powered_by,
+			'lang_login'	=> lang('login')
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

@@ -157,7 +157,8 @@
 				$username = phpgw::get_var('username'); 
 				$firstname = phpgw::get_var('firstname'); 
 				$lastname = phpgw::get_var('lastname'); 
-				$password = 'TEst1234';
+//				$password = 'TEst1234';
+				$password = 'PEre' . mt_rand(100,mt_getrandmax ()) . '&';
 				
 				$account_id = frontend_bofrontend::create_delegate_account($username, $firstname, $lastname, $password);
 				

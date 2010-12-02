@@ -477,3 +477,8 @@ Recurring booking	booking	no	Gjenta booking
 Repeat until	booking	no	Gjenta til
 Bookings that can be created	booking	no	Bookinger som kan lages
 Bookings and allocations	booking	no	Bookinger og tildelinger
+Send warning to building responsible	booking	no	Send e-post til ansvarlig på bygget
+Optional e-mail adress	booking	no	Valgfri e-post adresse 
+Message about new event	booking	no	Melding om nytt arrangement
+Deactivate application	booking	no	Inaktiver kalender (frontend)
+Deactivate calendar	booking	no	Inaktiver søknad (frontend)

@@ -106,6 +106,34 @@ HTML;
 	}
 
 	/**
+	* Get HTML selectbox with user groups - which group to add autocreated users
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function frontend_default_group($config)
+	{
+		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$group_assigned = isset($config['frontend_default_group']) ? $config['frontend_default_group'] : '';
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+
+		foreach ( $groups as $group => $label)
+		{
+			$selected = '';
+			if ( $group_assigned == $group )
+			{
+				$selected = ' selected';
+			}
+
+			$out .=  <<<HTML
+				<option value="{$group}"{$selected}>{$label}</option>
+HTML;
+		}
+		return $out;
+	}
+
+	/**
 	* Get HTML listbox with categories that are candidates for the picture_building_cat
 	*
 	* @param $config

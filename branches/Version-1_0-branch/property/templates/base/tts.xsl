@@ -567,6 +567,30 @@
 		<table cellpadding="2" cellspacing="2" width="50%" align="center">
 			<tr height="50">
 				<td>
+					<input type="hidden" id="save" name="values[save]" value=""></input>
+					<input type="hidden" id="apply" name="values[apply]" value=""></input>
+					<input type="hidden" id="cancel" name="values[cancel]" value=""></input>
+					<input type="button" name="save" value="{lang_send}"  onClick="confirm_session('save');">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_send_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td>
+					<input type="button" name="apply" value="{lang_save}"  onClick="confirm_session('apply');">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_send_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td>
+					<input type="button" name="cancel" value="{lang_cancel}"  onClick="confirm_session('cancel');">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_send_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+<!--
 					<input type="submit" name="values[save]" value="{lang_send}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_send_statustext"/>
@@ -587,6 +611,7 @@
 						</xsl:attribute>
 					</input>
 				</td>
+-->
 			</tr>
 		</table>
 </div>
@@ -1271,6 +1296,18 @@
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<tr height="50">
 				<td>
+					<input type="hidden" id="save" name="values[save]" value=""></input>
+					<input type="button" name="save" onClick="confirm_session('save');">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'save the ticket')" />
+						</xsl:attribute>
+					</input>
+				</td>
+<!--
+				<td>
 					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
 						<xsl:attribute name="title">
@@ -1278,6 +1315,7 @@
 						</xsl:attribute>
 					</input>
 				</td>
+-->
 			</tr>
 		</table>
 </div>
