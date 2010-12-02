@@ -1134,7 +1134,8 @@
 				$this->cols_return	= 	$this->socommon->fm_cache('cols_return_single_'. $type_id);
 			}
 
-			$sql .= " {$this->join} fm_location{$type_id}_category ON (fm_location{$type_id}.category = fm_location{$type_id}_category.id)";
+			//FIXME: Make sure all locations are linked to a valid category
+			$sql .= " {$this->left_join} fm_location{$type_id}_category ON (fm_location{$type_id}.category = fm_location{$type_id}_category.id)";
 
 			$sql .= " WHERE fm_location$type_id.location_code='$location_code' ";
 

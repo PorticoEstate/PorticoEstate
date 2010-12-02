@@ -416,6 +416,20 @@
 			{
 				$this->tmpl->set_var('skip_remote', true);				
 			}
+			if(isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'])
+			{
+				$this->tmpl->set_var('lightbox', true);				
+			}
+			if(isset($_REQUEST['hide_lightbox']) && $_REQUEST['hide_lightbox'])
+			{
+				$hide_lightbox = <<<JS
+					<script language="javascript" type="text/javascript">
+						parent.lightbox_login.hide();
+					</script>
+JS;
+				$this->tmpl->set_var('hide_lightbox', $hide_lightbox);				
+			}
+
 
 			$this->tmpl->set_var('lang_username', $lang['username']);
 			$this->tmpl->set_var('lang_password', $lang['password']);

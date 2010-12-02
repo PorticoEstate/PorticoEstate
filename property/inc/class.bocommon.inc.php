@@ -47,7 +47,7 @@
 
 		var $public_functions = array
 		(
-			'select_part_of_town'	=> true,
+			'confirm_session'	=> true,
 		);
 
 		var $soap_functions = array(
@@ -168,6 +168,15 @@
 			return $moneyformat;
 		}
 
+		function confirm_session()
+		{
+			if($GLOBALS['phpgw']->session->verify())
+			{
+				header('Content-Type: application/json');
+				echo json_encode(array('sessionExpired'=>false));
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+		}
 
 		function date_to_timestamp($date=array())
 		{

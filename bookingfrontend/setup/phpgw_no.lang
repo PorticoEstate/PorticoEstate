@@ -321,3 +321,4 @@ Confirm e-mail address	bookingfrontend	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	bookingfrontend	no	E-postadressene er ikke like
 Lengt of shortname is to long, max 11 characters long	bookingfrontend	no	Kortnavn er for langt, maks 11 tegn
 Go back to calendar	bookingfrontend	no	Tilbake til kalender
+Agegroups kan not be larger than 9999 peoples	bookingfrontend	no	Estimert antall deltakere kan ikke være større en 9999 personer

@@ -18,6 +18,45 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
  /********************************************************************************/
 
+	this.confirm_session = function(action)
+	{
+		var callback =	{
+							success: function(o)
+							{
+								var values = [];
+								try
+								{
+									values = JSON.parse(o.responseText);
+			//						console.log(values);
+								}
+								catch (e)
+								{
+									return;
+								}
+
+								if(values['sessionExpired'] == true)
+								{
+									window.alert('sessionExpired - please log in');
+								}
+								else
+								{
+									document.getElementById(action).value = 1;
+									document.form.submit();
+								}
+							},
+							failure: function(o)
+							{
+								window.alert('failure - try again - once')
+							},
+							timeout: 1000
+						};
+
+		var oArgs = {menuaction:'property.bocommon.confirm_session'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+		var request = YAHOO.util.Connect.asyncRequest('POST', strURL, callback);
+	}
+
+
 	this.fetch_vendor_email=function()
 	{
 //			formObject = document.body.getElementsByTagName('form');
@@ -63,6 +102,8 @@ YAHOO.util.Event.addListener(window, "load", function()
 YAHOO.util.Event.addListener(window, "load", function()
 {
 	d = document.getElementById('vendor_id');
+	if(d)
+	{
 	if (d.attachEvent)
 	{
 		d.attachEvent('onpropertychange', onDOMAttrModified, false);
@@ -70,6 +111,7 @@ YAHOO.util.Event.addListener(window, "load", function()
 	else
 	{
 		d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+	}
 	}
 });
 

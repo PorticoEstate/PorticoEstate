@@ -359,6 +359,13 @@
 					$errors['email'] = lang('The e-mail addresses you entered do not match');
 					$application['contact_email2'] = $_POST['contact_email2'];
 				}
+				foreach($application['agegroups'] as $ag)
+				{
+					if($ag['male'] > 9999 || $ag['female'] > 9999) {
+						$errors['agegroups'] = lang('Agegroups kan not be larger than 9999 peoples');
+					}
+				}
+
 				if(!$errors)
 				{
 					$comment_text = $this->create_accepted_documents_comment_text($application);

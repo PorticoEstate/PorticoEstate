@@ -262,7 +262,9 @@
 			<textarea id="field_mail" name="mail" class="full-width"></textarea><br />
 			<label><input type="checkbox" value="1" name="sendtocontact" /> <xsl:value-of select="php:function('lang', 'Send to contact')" /></label><br />
 			<label><input type="checkbox" value="1" name="sendtocollision" /> <xsl:value-of select="php:function('lang', 'Send to contact for overlaping allocations/bookings')" /></label><br />
-			</dd>
+			<label><input type="checkbox" value="1" name="sendtorbuilding" /> <xsl:value-of select="php:function('lang', 'Send warning to building responsible')" /></label><br />
+			<label><input type="text" name="sendtorbuilding_email1" /> <xsl:value-of select="php:function('lang', 'Optional e-mail adress')" /></label><br />
+			<label><input type="text" name="sendtorbuilding_email2" /> <xsl:value-of select="php:function('lang', 'Optional e-mail adress')" /></label><br />			</dd>
 		</dl>
         <div class="form-buttons">
             <input type="submit">

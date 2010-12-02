@@ -2141,5 +2141,21 @@
 				'fm_jasper' => array('jasper_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'fm_custom_menu_items' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'url' => array('type' => 'text','nullable' => True),
+				'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'local_files' => array('type' => 'int', 'precision' => 2,'nullable' => true),
+				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
