@@ -2371,7 +2371,6 @@
 	{
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN building_name varchar(50) NOT NULL DEFAULT 'changeme'");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_application SET building_name = b2.name FROM bb_building b2 WHERE EXISTS (SELECT 1 FROM bb_building b, bb_application a, bb_application_resource ar,bb_resource r WHERE a.id = ar.application_id AND ar.resource_id = r.id AND r.building_id = b.id AND b2.id=b.id AND bb_application.id=a.id)");
 
@@ -2395,4 +2394,23 @@
 		}
 	}
 
+  $test[] = '0.2.01';
+	function booking_upgrade0_2_01()
+	{
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$table = "bb_building";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_calendar int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_calendar = 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_application int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_application = 0");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.02';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 

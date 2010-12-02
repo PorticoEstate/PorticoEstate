@@ -108,6 +108,7 @@ class rental_socontract extends rental_socommon
 					$like_clauses[] = "party.last_name $this->like $like_pattern";
 					$like_clauses[] = "party.company_name $this->like $like_pattern";
 					$like_clauses[] = "composite.name $this->like $like_pattern";
+					$like_clauses[] = "r_u.location_code $this->like $like_pattern";
 					break;
 			}
 			

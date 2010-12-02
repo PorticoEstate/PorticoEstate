@@ -13,10 +13,13 @@
 
 		<xsl:for-each select="building">	
 
+			<xsl:if test="deactivate_calendar=0">
 			<div>
 	        	<button onclick="window.location.href='{schedule_link}'"><xsl:value-of select="php:function('lang', 'Building schedule')" /></button>
 - 				Søk ledig tid/informasjon om hva som skjer
 			</div>
+			</xsl:if>
+
 			<div>
 	        	<button onclick="window.location.href='{message_link}'"><xsl:value-of select="php:function('lang', 'Send message')" /></button>
 - 				Meldig til saksbehandler for bygg

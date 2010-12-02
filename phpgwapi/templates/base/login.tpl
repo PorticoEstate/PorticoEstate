@@ -33,6 +33,7 @@
 		}
 	-->
 	</script>
+	{hide_lightbox}
 </head>
 
 <body>
@@ -88,6 +89,7 @@
 									<label for="modlgn_username">{lang_username}</label>
 									<input type="text" value="{last_loginid}" name="login" id="modlgn_username" {login_read_only} class="inputbox" size="15" >
 									<input type="hidden" name="skip_remote" value="{skip_remote}">
+									<input type="hidden" name="lightbox" value="{lightbox}">
 								</p>
 								<!-- END loging_block -->
 								<!-- BEGIN domain_from_host -->

@@ -957,6 +957,7 @@ list voucher	property	no	list underbilag
 list workorder	property	no	List arbeidsordre
 location	property	no	Lokalisering
 loc1_name	property	no	Navn
+local files	property	no	Lokale filer
 location changed	property	no	Lokalisering er endret
 location code	property	no	Lokaliserings kode
 location_code	property	no	Lokaliserings kode

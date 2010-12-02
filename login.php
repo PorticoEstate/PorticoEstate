@@ -21,7 +21,7 @@
 	 	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';	
 	 	$_REQUEST['skip_remote'] = true;
 	}	 
-
+	$lightbox = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
 	require_once 'phpgwapi/inc/sso/include_login.inc.php';
 
 	$partial_url = 'login.php';
@@ -78,6 +78,14 @@
 	{
 		$login  = $_SERVER['REMOTE_USER'];
 		$passwd = '';
+
+		$GLOBALS['hook_values'] = array
+		(
+			'account_lid'	=> $login
+		);
+
+		$GLOBALS['phpgw']->hooks->process('auto_addaccount',array('frontend'));
+
 //------------------Start login ntlm
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
@@ -214,8 +222,15 @@
 		$extra_vars['cd'] = 'yes';
 		
 		$GLOBALS['phpgw']->hooks->process('login');
-//		$GLOBALS['phpgw']->translation->populate_cache(); // moved to sesssion::verify()
+
+		if($lightbox)
+		{
+			$GLOBALS['phpgw']->redirect_link('/login.php', array('hide_lightbox' => true));
+		}
+		else
+		{
 		$GLOBALS['phpgw']->redirect_link('/home.php', $extra_vars);
+	}
 	}
 
 	//Build vars :

@@ -1523,6 +1523,63 @@
 
 					break;
 
+				case 'custom_menu_items':
+
+					$info = array
+					(
+						'table' 			=> 'fm_custom_menu_items',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'url',
+								'descr' => lang('url'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name'			=> 'location',
+								'descr'			=> lang('location'),
+								'type'			=> 'select',
+								'filter'		=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'preferences.boadmin_acl.get_locations',
+									'method_input'	=> array('acl_app' => 'property',	'selected' => '##location##')
+								)
+							),
+							array
+							(
+								'name' => 'local_files',
+								'descr' => lang('local files'),
+								'type' => 'checkbox',
+								'default' => ''
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('responsibility role'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::custom_menu_items',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+					break;
+
 				default:
 					$receipt = array();
 					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
@@ -1809,7 +1866,6 @@
 						$data[$field['name']] = ',' . implode(',',$data[$field['name']]) . ',';
 					}
 				}
-
 				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
 			}
 

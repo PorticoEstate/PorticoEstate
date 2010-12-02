@@ -1770,6 +1770,7 @@
 			$appname					= lang('helpdesk');
 			$function_msg					= lang('add ticket');
 
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tts.add', 'property' );
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts','files'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('add' => $data));

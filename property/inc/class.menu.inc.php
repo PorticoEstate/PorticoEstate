@@ -469,6 +469,11 @@
 						'text'	=> lang('Migrate to alternative db'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index') )
 					),
+					'custom_menu_items'	=> array
+					(
+						'text'	=> lang('custom menu items'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'custom_menu_items') )
+					),
 					'responsibility_role'	=> array
 					(
 						'text'	=> lang('responsibility role'),
@@ -872,6 +877,22 @@
 					'text'	=> lang('gallery')
 				);
 
+				$custom_menus = CreateObject('property.sogeneric');
+				$custom_menus->get_location_info('custom_menu_items',false);
+				$custom_menu_items= $custom_menus->read(array('type' => 'custom_menu_items' , 'filter' => array('location' => '.document')));
+				foreach($custom_menu_items as $item)
+				{
+					if($item['local_files'])
+					{
+						$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
+					}
+					$menus['navigation']['documentation']['children'][] = array
+					(
+						'url'	=> $item['url'],
+						'text'	=> $item['name'],
+						'target'=> '_blank'
+					);
+				}
 			}
 
 			if ( $acl->check('.custom', PHPGW_ACL_READ, 'property') )

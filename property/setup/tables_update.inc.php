@@ -4703,3 +4703,41 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.599 to 0.9.17.600
+	* Add responsibility roles
+	* 
+	*/
+
+	$test[] = '0.9.17.599';
+	function property_upgrade0_9_17_599()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_custom_menu_items', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'url' => array('type' => 'text','nullable' => True),
+					'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'local_files' => array('type' => 'int', 'precision' => 2,'nullable' => true),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.600';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

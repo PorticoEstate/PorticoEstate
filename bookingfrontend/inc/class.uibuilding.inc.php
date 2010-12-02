@@ -14,11 +14,15 @@
 		{
 			$backend = phpgw::get_var('backend', 'GET');
 			$building = $this->bo->get_schedule(phpgw::get_var('id', 'GET'), 'bookingfrontend.uibuilding');
+			if ($building['deactivate_application'] == 0) { 
 			$building['application_link'] = self::link(array(
 				'menuaction' => 'bookingfrontend.uiapplication.add', 
 				'building_id' => $building['id'], 
 				'building_name' => $building['name'],
 			));
+			} else {
+				$building['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
+			}
 			$building['datasource_url'] = self::link(array(
 				'menuaction' => 'bookingfrontend.uibooking.building_schedule', 
 				'building_id' => $building['id'], 
@@ -47,6 +51,7 @@
 			{
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
+//			echo "<pre>";print_r($building);exit;
 			self::render_template('building', array("building" => $building));
 		}
 		

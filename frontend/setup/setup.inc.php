@@ -34,5 +34,6 @@
 	$setup_info['frontend']['hooks'] = array
 	(
 		'menu'	=> 'frontend.menu.get_menu',
+		'auto_addaccount'	=> 'frontend.hook_helper.auto_addaccount',
 		'config'
 	);
