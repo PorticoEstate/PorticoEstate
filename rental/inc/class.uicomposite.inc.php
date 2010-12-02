@@ -85,7 +85,7 @@
 					phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
 					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
 					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
-					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'has_contract' => phpgw::get_var('has_contract'), 'availability_date' => phpgw::get_var('availability_date_hidden'));
+					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from_hidden'), 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
