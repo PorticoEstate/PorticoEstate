@@ -2,7 +2,7 @@
 // Declaration of location.index vars
 //--------------------------------------------------------
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2;
  	var selectsButtons = [
 	{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
 	{order:1, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
@@ -77,12 +77,14 @@
 			{
 				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
 			}
+/*
 			//user
 			index = locate_in_array_options(3,"value",path_values.user_id);
 			if(index)
 			{
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
 			}
+*/
 //			oMenuButton_0.focus();
 			YAHOO.util.Dom.get(textImput[0].id).focus();
 		}

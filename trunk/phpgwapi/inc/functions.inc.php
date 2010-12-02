@@ -666,6 +666,11 @@ HTML;
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
 
+			if(phpgw::get_var('lightbox', 'bool'))
+			{
+				$cd_array['lightbox'] = true;
+			}
+
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
 			{
 				header('Content-Type: application/json'); 

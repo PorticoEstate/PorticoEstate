@@ -10,6 +10,31 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 /********************************************************************************/
 
+	this.myParticularRenderEvent = function()
+	{
+	}
+
+	this.fileuploader = function()
+	{
+		var sUrl = phpGWLink('index.php', fileuploader_action);
+		var onDialogShow = function(e, args, o)
+		{
+			var frame = document.createElement('iframe');
+			frame.src = sUrl;
+			frame.width = "100%";
+			frame.height = "400";
+			o.setBody(frame);
+		};
+		lightbox.showEvent.subscribe(onDialogShow, lightbox);
+		lightbox.show();
+	}
+
+	this.refresh_files = function()
+	{
+		execute_async(myDataTable_0);
+	}
+
+
 YAHOO.util.Event.addListener(window, "load", function()
 		{
 			var loader = new YAHOO.util.YUILoader();
@@ -25,7 +50,7 @@ YAHOO.util.Event.addListener(window, "load", function()
 
 YAHOO.util.Event.addListener(window, "load", function()
 {
-		lightbox = new YAHOO.widget.Dialog("test",
+		lightbox = new YAHOO.widget.Dialog("lightbox-placeholder",
 		{
 			width : "600px",
 			fixedcenter : true,
@@ -37,5 +62,6 @@ YAHOO.util.Event.addListener(window, "load", function()
 
 		lightbox.render();
 
-		YAHOO.util.Dom.setStyle('test', 'display', 'block');
+		YAHOO.util.Dom.setStyle('lightbox-placeholder', 'display', 'block');
 });
+

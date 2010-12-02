@@ -119,7 +119,7 @@
 			<xsl:when test="multiple_uploader!=''">
 				<tr>
 					<td>
-						<a href="{fileuploader_action}">
+						<a href="javascript:fileuploader()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'upload multiple files')" />
 							</xsl:attribute>

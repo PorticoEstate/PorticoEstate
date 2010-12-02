@@ -408,7 +408,8 @@
 	    		);
 
 				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+	    		{
 	    			foreach( $datatable['rows']['row'] as $row )
 	    			{
 		    			$json_row = array();
@@ -416,12 +417,13 @@
 		    			{
 		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    					$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				else if(isset($column['format']) && $column['format']== "link")
 		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    				}else
+		    				  $json_row[$column['name']] = "<a href='{$column['link']}'>{$column['value']}</a>";
+		    				}
+		    				else
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
@@ -928,7 +930,8 @@
 	    		);
 
 				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+	    		{
 	    			foreach( $datatable['rows']['row'] as $row )
 	    			{
 		    			$json_row = array();
@@ -936,12 +939,13 @@
 		    			{
 		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+		    					$json_row[$column['name']] = "<a href='#' id='{$column['link']} onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				else if(isset($column['format']) && $column['format']== "link")
 		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    				}else
+		    				  $json_row[$column['name']] = "<a href='{$column['link']}' target = '_blank'>{$column['value']}</a>";
+		    				}
+		    				else
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
@@ -1133,6 +1137,8 @@
 
 				if(!$receipt['error'])
 				{
+					if(isset($_FILES['document_file']['tmp_name']) && $_FILES['document_file']['tmp_name'])
+					{
 					$receipt = $this->bofiles->create_document_dir($document_dir);
 					if(isset($values['document_name_orig']) && $values['document_name_orig'] && (!isset($values['document_name']) || !$values['document_name']))
 					{
@@ -1172,6 +1178,8 @@
 						}
 						$this->bofiles->vfs->override_acl = 0;
 					}
+					}
+				}
 
 					if(!$receipt['error'])
 					{
@@ -1180,7 +1188,6 @@
 						$GLOBALS['phpgw']->session->appsession('session_data','document_receipt',$receipt);
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uidocument.list_doc', 'location_code'=> implode("-", $values['location']), 'entity_id'=> $this->entity_id, 'cat_id'=> $this->cat_id, 'p_num'=> $values['extra']['p_num']));
 					}
-				}
 				else
 				{
 					$values['document_name']='';

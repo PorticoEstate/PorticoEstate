@@ -126,14 +126,14 @@
 		 * @param string $lastname the user's last name
 		 * @param string $password	the user's password
 		 */
-		public static function create_delegate_account(string $username, string $firstname, string $lastname, string $password)
+		public static function create_delegate_account(string $username, string $firstname, string $lastname, string $password, $group_lid = 'frontend_delegates')
 		{
 			
 			// Create group account if needed
-			if (!$GLOBALS['phpgw']->accounts->exists('frontend_delegates') ) // No group account exist
+			if (!$GLOBALS['phpgw']->accounts->exists($group_lid) ) // No group account exist
 			{
 				$account			= new phpgwapi_group();
-				$account->lid		= 'frontend_delegates';
+				$account->lid		= $group_lid;
 				$account->firstname = 'Frontend';
 				$account->lastname	= 'Delegates';
 				$frontend_delegates	= $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
@@ -154,7 +154,7 @@
 			}
 			else
 			{
-				$frontend_delegates		= $GLOBALS['phpgw']->accounts->name2id('frontend_delegates');
+				$frontend_delegates		= $GLOBALS['phpgw']->accounts->name2id($group_lid);
 			}
 			
 			if(isset($username) && isset($firstname) && isset($lastname) && isset($password))

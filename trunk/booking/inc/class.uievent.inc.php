@@ -482,9 +482,9 @@
 
 				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data'])
 				{
-					if (phpgw::get_var('mail', 'POST'))
+					if (phpgw::get_var('mail', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 					{
-						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST'))
+						if(phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event,$errors);
 							if ($maildata)
@@ -517,6 +517,34 @@
 							{
 								$comment_text_log = phpgw::get_var('mail', 'POST');
 								$this->send_mailnotification($event['contact_email'], lang('Event changed'), $comment_text_log);
+							}
+							if(phpgw::get_var('sendtorbuilding', 'POST'))
+							{
+								
+								if ($event['customer_organization_name']) {
+									$comment_text_log = $event['customer_organization_name'];
+								} else {
+									$comment_text_log = $event['contact_name'];
+								}
+								$comment_text_log = $comment_text_log.' har fått innvilget et arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_'])).".\nFor mer opplysinger slå opp i AktivBy.";
+//								$comment_text_log = phpgw::get_var('mail', 'POST');
+								$sendt = 0;
+								if($building_info['email']) {
+									$sendt++;
+									$this->send_mailnotification($building_info['email'], lang('Message about new event'), $comment_text_log);
+								} 
+								if ($_POST['sendtorbuilding_email1']) {
+									$sendt++;
+									$this->send_mailnotification($_POST['sendtorbuilding_email1'], lang('Message about new event'), $comment_text_log);
+		
+								} 
+								if ($_POST['sendtorbuilding_email2']) {
+									$sendt++;
+									$this->send_mailnotification($_POST['sendtorbuilding_email2'], lang('Message about new event'), $comment_text_log);
+								}
+								if ($sendt > 0) {
+									$errors['mailtobuilding'] = lang('Unable to send warning, No mailadresses found');
+								}
 							}
 						}				
 						else 
