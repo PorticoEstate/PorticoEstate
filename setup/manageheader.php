@@ -272,6 +272,22 @@ HTML;
 				
 			}
 
+			$get_max_value_length = '';
+			if(ini_get('suhosin.get.max_value_length'))
+			{
+				if (ini_get('suhosin.get.max_value_length') < 2000)
+				{
+					$detected .= '<b><p align="center" class="msg">'
+						. lang('You need to set suhosin.get.max_value_length = 2000'). "\n"
+						. '</p></b><td></tr></table></body></html>';
+					die($detected);
+				}
+				else
+				{
+					$get_max_value_length = '<li>' . lang('You appear to have suhosin.get.max_value_length > 2000') . "</li>\n";
+				}
+			}
+
 			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.2) . "</li>\n";
 			$supported_sessions_type = array('php', 'db');
 
@@ -289,6 +305,7 @@ HTML;
 
 			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . "</td></tr><tr><td colspan=\"2\">\n<ul id=\"analysis\">\n$phpver";
 			$detected .= $request_order;
+			$detected .= $get_max_value_length;
 
 			$supported_db = array();
 			if (extension_loaded('pgsql') || function_exists('pg_connect'))
