@@ -281,8 +281,28 @@
 		
 		function insert_links_on_header_state()
 		{
+			$help_url = "";
+			//check if help-document exists in VFS. If not, use manual.
+			$help_in_vfs = true;
+			$fileName = '/frontend/help/NO/helpdesk.index.pdf';
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+	
+			$file = array('string' => $fileName, RELATIVE_NONE);
+			if($vfs->file_exists($file)){
+				$help_in_vfs = true;
+			}
 			
-			$help_url = "javascript:openwindow('"
+			if($help_in_vfs)
+			{
+				$help_url = "javascript:openwindow('"
+						 . $GLOBALS['phpgw']->link('/index.php', array
+						 (
+						 	'menuaction'=> 'frontend.uidocumentupload.read_helpfile_from_vfs',
+						 	'app' => 'frontend'
+						 )) . "','700','600')";
+			}else{			
+				$help_url = "javascript:openwindow('"
 						 . $GLOBALS['phpgw']->link('/index.php', array
 						 (
 						 	'menuaction'=> 'manual.uimanual.help',
@@ -290,6 +310,7 @@
 						 	'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '',
 						 	'referer' => phpgw::get_var('menuaction')
 						 )) . "','700','600')";
+			}
 			
 			$contact_url = "javascript:openwindow('"
 				 . $GLOBALS['phpgw']->link('/index.php', array

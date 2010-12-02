@@ -276,7 +276,7 @@
 				
 				if($result && $db->affected_rows() > 0)
 				{
-					//Retrieve the usernames
+/*					//Retrieve the usernames
 					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
 					$owner_account = $GLOBALS['phpgw']->accounts->get($owner_id);
 					$user_name = $user_account->__get('lid');
@@ -301,7 +301,12 @@
 							}
 						}
 					}
+*/
 					return true;
+				}
+				else
+				{
+					return false;
 				}
 			}
 			return false;

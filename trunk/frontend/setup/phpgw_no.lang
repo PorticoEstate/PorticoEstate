@@ -127,3 +127,4 @@ searching_for_self	frontend	no	Vennligst søk etter et annet brukernavn enn ditt
 remove_delegate_successful	frontend	no	Delegaten ble fjernet
 remove_delegate_error	frontend	no	Fjerning av delegaten var mislykket
 message_empty	frontend	no	Meldingen kan ikke være tom
+upload_userdoc	frontend	no	Last opp brukerveiledning
