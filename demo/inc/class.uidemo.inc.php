@@ -558,6 +558,10 @@
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a zip code !'));
 					}
+					else if(!ctype_digit($values['zip']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Please enter a integer as zip code !'));
+					}
 					if(!$values['town'])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a town !'));
