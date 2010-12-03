@@ -277,10 +277,7 @@ HTML;
 			{
 				if (ini_get('suhosin.get.max_value_length') < 2000)
 				{
-					$detected .= '<b><p align="center" class="msg">'
-						. lang('You need to set suhosin.get.max_value_length = 2000'). "\n"
-						. '</p></b><td></tr></table></body></html>';
-					die($detected);
+					$get_max_value_length = '<li class="warn">Speed could be gained from setting suhosin.get.max_value_length = 2000 in php.ini'. "</li>\n";
 				}
 				else
 				{
@@ -614,7 +611,7 @@ HTML;
 				$setup_tpl->set_var('comment_r',' -->');
 
 				$GLOBALS['phpgw_info']['server']['header_admin_password'] = '';
-				$GLOBALS['phpgw_info']['server']['db_persistent'] = false;
+				$GLOBALS['phpgw_info']['server']['db_persistent'] = true;
 				$GLOBALS['phpgw_info']['server']['sessions_type'] = 'php';
 //				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = extension_loaded('mcrypt');
 				$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] = false;
