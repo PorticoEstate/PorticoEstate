@@ -1,7 +1,7 @@
-var  myPaginator_0, myDataTable_0
-var  myPaginator_1, myDataTable_1;
-var  myPaginator_2, myDataTable_2;
-var  myPaginator_3, myDataTable_3;
+var	myPaginator_0, myDataTable_0
+var	myPaginator_1, myDataTable_1;
+var	myPaginator_2, myDataTable_2;
+var	myPaginator_3, myDataTable_3;
 var d;
 var vendor_id = 0;
 
@@ -37,6 +37,7 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 								if(values['sessionExpired'] == true)
 								{
 									window.alert('sessionExpired - please log in');
+									lightboxlogin();//defined i phpgwapi/templates/portico/js/base.js
 								}
 								else
 								{

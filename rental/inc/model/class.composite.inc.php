@@ -21,6 +21,7 @@
 		protected $custom_place;
         protected $object_type_id;
         protected $area;
+        protected $status;
 		
 		protected $units;
 	
@@ -201,6 +202,14 @@
         public function get_area() {
             return $this->area;
         }
+        
+		public function set_status($status) {
+            $this->status = $status;
+        }
+
+        public function get_status() {
+            return $this->status;
+        }
 		
 		/**
 		 * Return a string representation of the composite.
@@ -244,7 +253,8 @@
 				'address' => $addresses,
 				'gab_id' => $gab_ids,
 				'area_gros' => $this->get_area_gros(),
-				'area_net' => $this->get_area_net()
+				'area_net' => $this->get_area_net(),
+				'status' => $this->get_status()
 			);
 		}
 		

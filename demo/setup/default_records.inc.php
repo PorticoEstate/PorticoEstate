@@ -17,24 +17,4 @@
 	 * @package demo
 	 */
 
-	$app_id = $GLOBALS['phpgw']->applications->name2id('hrm');
-
-	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations where app_id = {$app_id}");
-
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr) VALUES ({$app_id}, '.', 'Top')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant,allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.demo_location', 'Demo location',1,1,'phpgw_demo_table')");
-/*	$GLOBALS['phpgw_setup']->oProc->query("SELECT max(account_id) as account_id from phpgw_accounts WHERE account_type = 'u'");
-	$GLOBALS['phpgw_setup']->oProc->next_record();
-	$account_id = $GLOBALS['phpgw_setup']->oProc->f('account_id');
-
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_demo_table (name,address,zip,town, remark,entry_date,user_id) VALUES ('demo name', 'demo address', '12345','Demo Town', 'Remark', " . time() . ", '$account_id')");
-	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl WHERE acl_appname = 'demo'");
-
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT account_id from phpgw_accounts WHERE account_lid = 'Default' AND account_type = 'g'");
-	$GLOBALS['phpgw_setup']->oProc->next_record();
-	$account_id = $GLOBALS['phpgw_setup']->oProc->f('account_id');
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl (acl_appname,acl_location, acl_account,acl_rights, acl_grantor) VALUES ('demo','run', '$account_id', '1', NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl (acl_appname,acl_location, acl_account,acl_rights, acl_grantor) VALUES ('demo','.demo_location', '$account_id', '15', NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl (acl_appname,acl_location, acl_account,acl_rights, acl_grantor) VALUES ('demo','.demo_location', '$account_id', '15', '$account_id')");
-	unset($account_id);
-*/
+	$GLOBALS['phpgw']->locations->add('.demo_location', 'Demo location', 'demo', $allow_grant = true, $custom_tbl = 'phpgw_demo_table', $c_function = true);

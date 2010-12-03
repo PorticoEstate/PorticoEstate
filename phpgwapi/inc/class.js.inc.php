@@ -118,6 +118,17 @@
 		*/
 		public function get_script_links()
 		{
+			$combine = true;
+			if(ini_get('suhosin.get.max_value_length') && ini_get('suhosin.get.max_value_length') < 2000)
+			{
+				$combine = false;
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+				{
+					$receipt = array();
+					$receipt['error'][]=array('msg'=> 'Speed could be gained from setting suhosin.get.max_value_length = 2000 in php.ini');
+					phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+				}
+			}
 			$links = "<!--JS Imports from phpGW javascript class -->\n";
 			$jsfiles = array();
 			if (is_array($this->files) && count($this->files))
@@ -132,20 +143,34 @@
 							{
 								foreach ($files as $file => $ignored)
 								{
-									// Add file path to array and replace path separator with "--" for URL-friendlyness
-									$jsfiles[] = str_replace('/', '--', "{$app}/js/{$pkg}/{$file}.js");
+									if($combine)
+									{
+										// Add file path to array and replace path separator with "--" for URL-friendlyness
+										$jsfiles[] = str_replace('/', '--', "{$app}/js/{$pkg}/{$file}.js");
+									}
+									else
+									{
+										//echo "file: {$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/js/{$pkg}/{$file}.js <br>";
+										$links .= '<script type="text/javascript" '
+										. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/js/{$pkg}/{$file}.js\">"
+									 	. "</script>\n";
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-			$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-			$jsfiles = implode(',', $jsfiles);
-			$links .= '<script type="text/javascript" '
+
+			if($combine)
+			{
+				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$jsfiles = implode(',', $jsfiles);
+				$links .= '<script type="text/javascript" '
 					. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
 					. "</script>\n";
-			unset($jsfiles);
+				unset($jsfiles);
+			}
 
 			return $links;
 		}

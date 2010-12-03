@@ -68,19 +68,28 @@ class rental_socomposite extends rental_socommon
 		}
 		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
 		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-		if(isset($filters['availability_date']) && $filters['availability_date'] != ''){
-			$availability_date = strtotime($filters['availability_date']); 
+		if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
+			$availability_date_from = strtotime($filters['availability_date_from']); 
 		}
 		else{
-			$availability_date = $ts_query;
+			$availability_date_from = $ts_query;
+		}
+		if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != ''){
+			$availability_date_to = strtotime($filters['availability_date_to']); 
+		}
+		else{
+			$availability_date_to = $ts_query;
 		}
 		switch($filters['has_contract']){
 			case "has_contract":
-				$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date))))";
+				$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start > $availability_date_from OR rental_contract.date_start < $availability_date_to AND (rental_contract.date_end IS NULL OR (rental_contract.date_end > $availability_date_from OR rental_contract.date_end < $availability_date_to))))";
+				//$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date_from AND ((rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date_from)) OR (rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end < $availability_date_to))))))";
+				//$filter_clauses[] = "(NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date_from AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date_from))))";
 				$special_query=true;
 				break;
 			case "has_no_contract":
-				$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date))))))"; 
+				//$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start < $availability_date_from AND (rental_contract.date_end IS NULL OR (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date_from))))))";
+				$filter_clauses[] = "(rental_contract_composite.contract_id IS NULL OR NOT rental_composite.id IN (SELECT rental_composite.id FROM rental_composite LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) WHERE 1=1 AND rental_composite.is_active = TRUE AND (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND ((rental_contract.date_start > $availability_date_from OR rental_contract.date_start < $availability_date_to AND (NOT rental_contract.date_end IS NULL AND rental_contract.date_end > $availability_date_from OR rental_contract.date_end < $availability_date_to)))))))";
 				$special_query=true;
 				break;
 			case "both":
@@ -116,6 +125,28 @@ class rental_socomposite extends rental_socommon
 		$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
 		$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 		$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
+		
+		if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
+			$availability_date_from = strtotime($filters['availability_date_from']); 
+		}
+		else
+		{
+			$availability_date_from = strtotime(date('Y-m-d'));
+		}
+		if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != ''){
+			$availability_date_to = strtotime($filters['availability_date_to']); 
+		}
+		else
+		{
+			if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
+				$availability_date_to = strtotime($filters['availability_date_from']);
+			}
+			else{
+				$availability_date_to = strtotime(date('Y-m-d'));
+			}
+		}
+		
+		
 		if($return_count) // We should only return a count
 		{
 			$cols = 'COUNT(DISTINCT(rental_composite.id)) AS count';
@@ -124,16 +155,17 @@ class rental_socomposite extends rental_socommon
 		{
 			if($special_query)
 			{
-				$cols = 'DISTINCT(rental_composite.id) AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+				$cols = "DISTINCT(rental_composite.id) AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, CASE WHEN (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start > $availability_date_from OR rental_contract.date_start < $availability_date_to AND (rental_contract.date_end IS NULL OR (rental_contract.date_end > $availability_date_from OR rental_contract.date_end < $availability_date_to)))) THEN 'Ikke ledig' ELSE 'Ledig' END as status";
 			}
 			else
 			{
-				$cols = 'rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area';
+				$cols = "rental_composite.id AS composite_id, rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, CASE WHEN (NOT rental_contract_composite.contract_id IS NULL AND (NOT rental_contract.date_start IS NULL AND rental_contract.date_start > $availability_date_from OR rental_contract.date_start < $availability_date_to AND (rental_contract.date_end IS NULL OR (rental_contract.date_end > $availability_date_from OR rental_contract.date_end < $availability_date_to)))) THEN 'Ikke ledig' ELSE 'Ledig' END as status";
 			}
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -157,6 +189,7 @@ class rental_socomposite extends rental_socommon
 			$composite->set_custom_postcode($this->unmarshal($this->db->f('postcode', true), 'string'));
 			$composite->set_custom_place($this->unmarshal($this->db->f('place', true), 'string'));
 			$composite->set_area($this->unmarshal($this->db->f('area', true), 'float'));
+			$composite->set_status($this->unmarshal($this->db->f('status', true), 'string'));
 		}
 		// Location code
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
