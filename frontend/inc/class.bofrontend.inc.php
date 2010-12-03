@@ -188,6 +188,7 @@
 						$preferences->add('common','default_app','frontend');
 						$preferences->save_repository();
 						
+						$GLOBALS['phpgw']->log->write(array('text'=>'I-Notification, user created %1','p1'=> $username));
 					}
 					
 					return $result;
