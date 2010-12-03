@@ -376,23 +376,23 @@
 																'entity_id'        		=> $this->entity_id,
 																'cat_id'            	=> $this->cat_id,
 																'type'					=> $this->type,
-																'district_id'        	=> $this->district_id,
-																'status'    			=> $this->status,
-																'filter'        		=> $this->filter,
+												//				'district_id'        	=> $this->district_id,
+												//				'status'    			=> $this->status,
+												//				'filter'        		=> $this->filter,
 //																'location_code'			=> $this->location_code,
-																'criteria_id'			=> $this->criteria_id
+												//				'criteria_id'			=> $this->criteria_id
 									 	                    ));
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url']	=	"menuaction:'property.uientity.index',".
 															"entity_id:'{$this->entity_id}',".
 															"cat_id:'{$this->cat_id}',".
-															"type:'{$this->type}',".
-															"district_id:'{$this->district_id}',".
-															"status:'{$this->status}',".
-															"filter:'{$this->filter}',".
-						 	                        		"criteria_id:'{$this->criteria_id}',".
-															"location_code:'{$this->location_code}'";
+															"type:'{$this->type}'";
+													//		"district_id:'{$this->district_id}',".
+													//		"status:'{$this->status}',".
+													//		"filter:'{$this->filter}',".
+						 	                       // 		"criteria_id:'{$this->criteria_id}',".
+													//		"location_code:'{$this->location_code}'";
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
