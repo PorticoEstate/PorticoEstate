@@ -315,8 +315,10 @@
 				{
 					$code = 'var ' . implode(',', $button_def)  . ";\n";
 					$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
-					$GLOBALS['phpgw']->js->add_code('', $code);
 				}
+
+				$code = 'var selectsButtons = [];';
+				$GLOBALS['phpgw']->js->add_code('', $code);
 
 				if($values_combo_box)
 				{
