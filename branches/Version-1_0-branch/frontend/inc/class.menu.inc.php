@@ -25,6 +25,11 @@
 					(
 						'text'	=> lang('Configure Access Permissions'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'frontend') )
+					),
+					'documents' => array
+					(
+						'text'	=> lang('upload_userdoc'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uidocumentupload.index','appname' => 'frontend'))
 					)
 				);
 			}

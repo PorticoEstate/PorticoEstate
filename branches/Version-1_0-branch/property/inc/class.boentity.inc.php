@@ -123,8 +123,10 @@
 				$this->use_session = true;
 			}
 
-			$this->start			= $start ? $start : 0;
-
+			if(isset($_POST['start']) || isset($_GET['start']))
+			{
+				$this->start = $start;
+			}
 			if(isset($_POST['query']) || isset($_GET['query']))
 			{
 				$this->query = $query;

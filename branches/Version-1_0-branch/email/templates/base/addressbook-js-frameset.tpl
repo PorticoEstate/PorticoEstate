@@ -116,5 +116,4 @@
 		<FRAME NAME="mainframe" SRC="{mainframe_link}">
 		<FRAME NAME="secondaryframe" SRC="{set_destboxes_link}">
 	</frameset>
-</html
-
+</html>

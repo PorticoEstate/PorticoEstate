@@ -839,9 +839,12 @@
 		}
 		flag++;
 
+		myinitialPage = 1 + values_ds.startIndex/myrowsPerPage;
+
 		myPaginatorConfig = {
 								containers			: ['paging'],
 								totalRecords		: mytotalRows,
+							    initialPage			: myinitialPage,
 								pageLinks			: 10,
 								rowsPerPage			: values_ds.recordsReturned, //MAXIMO el PHPGW me devuelve 15 valor configurado por preferencias
 								rowsPerPageOptions	: [myrowsPerPage, mytotalRows],

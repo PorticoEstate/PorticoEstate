@@ -67,18 +67,66 @@
 				{
 					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 					{
+						//$curr_success = true;
 						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
-						if(!$res)
+						if($res)
+						{
+							//$mail_contents[] = $res;
+							$org_unit_names[] = $org_unit['ORG_NAME'];
+						}
+						else
 						{
 							$msglog['error'][] = array('msg' => lang('error_delegating_unit',$org_unit['ORG_NAME']));
 						}
-						$success = $success  && $res;
+						
+						$success = $success && $res;
 					}
 				}
 				
 				if($success)
 				{
-					$msglog['message'][] = array('msg' => lang('delegation_successful'));	
+					//Retrieve the usernames
+					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+					$owner_account = $GLOBALS['phpgw']->accounts->get($GLOBALS['phpgw_info']['user']['account_id']);
+					$user_name = $user_account->__get('lid');
+					$owner_name = $owner_account->__get('lid');
+					$org_name_string = implode(',', $org_unit_names);
+
+					//If the usernames are set retrieve account data from Fellesdata
+					if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+						$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);
+						
+						if($fellesdata_user && $fellesdata_owner)
+						{	
+							//Send email notification to delegate
+							$email = $fellesdata_user['email'];
+							if(isset($email) && $email != '')
+							{
+								
+								$title = lang('email_add_delegate_title');
+								$message = lang('email_add_delegate_message',$fellesdata_user['firstname'],$fellesdata_user['lastname'],$fellesdata_owner['firstname'],$fellesdata_owner['lastname'],$org_name_string);
+								frontend_bofrontend::send_system_message($email,$title,$message);							
+							}
+						}
+					}
+					$msglog['message'][] = array('msg' => lang('delegation_successful'));
+/*					
+					//send e-mail to user
+					$user_account = $GLOBALS['phpgw']->accounts->get($account_id);
+					$user_name = $user_account->__get('lid');
+					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
+					if($fellesdata_user)
+					{
+						$email = $fellesdata_user['email'];
+						if(isset($email) && $email != '')
+						{
+							$title = lang('email_add_delegate_title');
+							$mail_content = implode(',',$mail_contents);
+							frontend_bofrontend::send_system_message($email,$title,$mail_content);
+						}
+					}*/	
 				}
 				else
 				{
