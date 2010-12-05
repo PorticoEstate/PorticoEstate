@@ -197,6 +197,7 @@
 				$cd_array['cd'] = $GLOBALS['phpgw']->session->cd_reason;
 			}
 			$cd_array['skip_remote'] = true;
+			$cd_array['lightbox'] = $lightbox;
 			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 			exit;
 		}

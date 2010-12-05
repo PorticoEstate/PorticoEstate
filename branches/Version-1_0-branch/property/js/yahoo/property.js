@@ -324,20 +324,53 @@
  */
 	this.onSearchClick = function()
 	{
-		//no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
-		for(i=0;i<textImput.length;i++)
+		var callback4 =
 		{
-			var busq = encodeURIComponent(YAHOO.util.Dom.get(textImput[i].id).value);
-			eval("path_values."+textImput[i].name+"='"+busq+"'")
-		}
+			success: function(o)
+			{
+				var values = [];
+				try
+				{
+					values = JSON.parse(o.responseText);
+				}
+				catch (e)
+				{
+					return;
+				}
 
-		//si esta configurado que la busqueda sea por fechas
-		if(config_values.date_search != undefined && config_values.date_search != 0)
-		{
-			path_values.start_date = YAHOO.util.Dom.get('start_date').value;
-			path_values.end_date = YAHOO.util.Dom.get('end_date').value;
-		}
-		execute_ds();
+				if(values['sessionExpired'] == true)
+				{
+					window.alert('sessionExpired - please log in');
+					lightboxlogin('onSearchClick');//defined i phpgwapi/templates/portico/js/base.js
+				}
+				else
+				{
+					//no es necesario actualizar los valores actuales de path_value. Este es global y siempre esta actualizado
+					for(i=0;i<textImput.length;i++)
+					{
+						var busq = encodeURIComponent(YAHOO.util.Dom.get(textImput[i].id).value);
+						eval("path_values."+textImput[i].name+"='"+busq+"'")
+					}
+
+					//si esta configurado que la busqueda sea por fechas
+					if(config_values.date_search != undefined && config_values.date_search != 0)
+					{
+						path_values.start_date = YAHOO.util.Dom.get('start_date').value;
+						path_values.end_date = YAHOO.util.Dom.get('end_date').value;
+					}
+					execute_ds();
+				}
+			},
+			failure: function(o)
+			{
+				window.alert('failure - try again - once')
+			},
+			timeout: 1000
+		};
+
+		var oArgs = {menuaction:'property.bocommon.confirm_session'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+		var request = YAHOO.util.Connect.asyncRequest('POST', strURL, callback4);
 	}
  /********************************************************************************
  *
@@ -753,12 +786,19 @@
 					myLoading.hide();
 				}
 				values_ds = JSON.parse(o.responseText);
-			//	eval('values_ds ='+o.responseText);
-				flag_particular_setting='update';
-				particular_setting();
-				myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
-				update_datatable();
-				update_filter();
+				if(values_ds['sessionExpired'] == true)
+				{
+					window.alert('sessionExpired - please log in');
+					lightboxlogin();//defined i phpgwapi/templates/portico/js/base.js
+				}
+				else
+				{
+					flag_particular_setting='update';
+					particular_setting();
+					myPaginator.setRowsPerPage(values_ds.recordsReturned,true);
+					update_datatable();
+					update_filter();
+				}
 			},
 			failure: function(o) {window.alert('Server or your connection is dead.')},
 			timeout: 10000,
