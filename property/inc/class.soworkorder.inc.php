@@ -370,7 +370,7 @@
 			{
 				$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 				$cats->supress_info	= true;
-				$cat_list_project	= $cats->return_sorted_array(0,$limit = false,$query = '',$sort = '',$order = '',$globals = False, $parent_id = $cat_id, $use_acl = false);
+				$cat_list_project	= $cats->return_sorted_array(0, false, '', '', '', false, $cat_id, false);
 				$cat_filter = array($cat_id);
 				foreach ($cat_list_project as $_category)
 				{

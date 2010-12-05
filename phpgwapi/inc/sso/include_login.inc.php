@@ -10,12 +10,12 @@
 	* @package phpgroupware
 	* @version $Id$
 	*/
-	
+
 	/* 
 	 * Generic include for login.php like pages
 	 */
 	$GLOBALS['phpgw_info'] = array();
-	
+
 	$GLOBALS['phpgw_info']['flags'] = array
 	(
 		'disable_template_class' => true,
@@ -140,8 +140,8 @@
 					return '&nbsp;';
 			}
 		}
-		
-		
+
+
 		/**
 		* Check languages
 		*/
@@ -158,14 +158,14 @@
 				$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
 			}
 			// _debug_array($GLOBALS['phpgw_info']['server']['lang_ctimes']);
-			
+
 			$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			$apps = (array)$GLOBALS['phpgw_info']['user']['apps'];
 			$apps['phpgwapi'] = true;	// check the api too
 			foreach ( array_keys($apps) as $app )
 			{
 				$fname = PHPGW_SERVER_ROOT . "/$app/setup/phpgw_$lang.lang";
-				
+
 				if (file_exists($fname))
 				{
 					$ctime = filectime($fname);
@@ -173,7 +173,7 @@
 						isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ? 
 						(int) $GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app] : 0;
 					//echo "checking lang='$lang', app='$app', ctime='$ctime', ltime='$ltime'<br>\n";
-					
+
 					if ($ctime != $ltime)
 					{
 						$this->update_langs();		// update all langs
@@ -240,7 +240,7 @@
 			{
 				$text = str_repeat('&nbsp;', ($text_len-strlen($text))) . $text;
 			}
-		
+
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 
 			$this->tmpl->set_block('login_form', 'message_block', 'message_blocks');
@@ -267,7 +267,7 @@
 			elseif( $GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 			{
 				foreach($GLOBALS['phpgw_domain'] as $domain_name => $domain_vars)
-				{	
+				{
 					$this->tmpl->set_var('domain_name', $domain_name);
 
 					if (isset($_COOKIE['last_domain']) && $_COOKIE['last_domain'] == $domain_name)
@@ -297,7 +297,7 @@
 							'domain_from_hosts'	=> ''
 						)
 					);
-				
+
 			}
 
 			$GLOBALS['phpgw']->translation->add_app('login');
@@ -331,7 +331,7 @@
 					unset($_COOKIE['last_domain']);
 				}
 			}
-			
+
 			$last_loginid = isset($_COOKIE['last_loginid']) ? $_COOKIE['last_loginid'] : '';
 			if($GLOBALS['phpgw_info']['server']['show_domain_selectbox'] && $last_loginid !== '')
 			{
@@ -414,22 +414,33 @@
 			$this->tmpl->set_var('last_loginid', $last_loginid);
 			if(isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
 			{
-				$this->tmpl->set_var('skip_remote', true);				
+				$this->tmpl->set_var('skip_remote', true);
 			}
 			if(isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'])
 			{
-				$this->tmpl->set_var('lightbox', true);				
+				$this->tmpl->set_var('lightbox', true);
 			}
 			if(isset($_REQUEST['hide_lightbox']) && $_REQUEST['hide_lightbox'])
 			{
-				$hide_lightbox = <<<JS
+				$onload = <<<JS
 					<script language="javascript" type="text/javascript">
 						parent.lightbox_login.hide();
 					</script>
 JS;
-				$this->tmpl->set_var('hide_lightbox', $hide_lightbox);				
 			}
-
+			else
+			{
+			$onload = <<<JS
+				<script language="javascript" type="text/javascript">
+					window.onload = function()
+					{
+						document.login.login.select();
+						document.login.login.focus();
+					}
+				</script>
+JS;
+			}
+			$this->tmpl->set_var('onload', $onload);
 
 			$this->tmpl->set_var('lang_username', $lang['username']);
 			$this->tmpl->set_var('lang_password', $lang['password']);
@@ -452,7 +463,7 @@ JS;
 								);
 
 			$this->tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
-			
+
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/base.css") )
 			{
 				$base_css = "phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/base.css";
@@ -482,7 +493,7 @@ JS;
 			}
 			$this->tmpl->set_var('autocomplete', $autocomplete);
 			unset($autocomplete);
-	
+
 			if($cd)
 			{
 				if($cd == 1)
@@ -497,7 +508,7 @@ JS;
 				}
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}
-					
+
 			if(!$this->msg_only)
 			{
 				$this->tmpl->parse('loging_blocks', 'loging_block');
