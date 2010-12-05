@@ -24,16 +24,7 @@
 
 	<link rel="stylesheet" type="text/css" href="phpgwapi/templates/base/css/rounded.css">
 
-	<script language="javascript" type="text/javascript">
-	<!--
-		window.onload = function()
-		{
-			document.login.login.select();
-			document.login.login.focus();
-		}
-	-->
-	</script>
-	{hide_lightbox}
+	{onload}
 </head>
 
 <body>

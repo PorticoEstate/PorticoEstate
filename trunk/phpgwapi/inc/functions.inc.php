@@ -668,7 +668,7 @@ HTML;
 
 			if(phpgw::get_var('lightbox', 'bool'))
 			{
-				$cd_array['lightbox'] = true;
+//				$cd_array['lightbox'] = true;
 			}
 
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
