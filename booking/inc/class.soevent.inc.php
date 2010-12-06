@@ -80,7 +80,8 @@
 				return False;
 			}
 			return array('id' => $this->db->f('id', false),
-						 'name' => $this->db->f('name', false));
+						 'name' => $this->db->f('name', false),
+						 'email' => $this->db->f('email', false));
 		}
 
 		function get_resource_info($id)

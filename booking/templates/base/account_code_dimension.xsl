@@ -12,6 +12,12 @@
 
     <form action="" method="POST">
         <dl class="form-col">
+            <dt><label for="field_article">Article (pos 283 - 297)</label></dt>
+            <dd>
+				<input id="field_article" name="article" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/article"/></xsl:attribute>
+				</input>
+            </dd>
             <dt><label for="field_dim_1">Dim1 (pos 862 - 869)</label></dt>
             <dd>
 				<input id="field_dim_1" name="dim_1" type="text">

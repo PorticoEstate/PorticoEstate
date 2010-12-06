@@ -53,7 +53,7 @@
 				catch(Exception $e)
 				{
 					$errors[] = $e->getMessage();
-					echo '<pre>';print_r($errors);exit;
+					echo "<pre>\nErrors:";print_r($errors);echo "\nID:";print_r($id);echo "\nJasperParam:";print_r($jasper_parameters);exit;
 				}
 			}
 
