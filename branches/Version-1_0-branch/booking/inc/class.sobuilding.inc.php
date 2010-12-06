@@ -15,6 +15,7 @@
 					'email' => array('type' => 'string'),
 					'deactivate_calendar' => array('type' => 'int'),
 					'deactivate_application' => array('type' => 'int'),
+					'deactivate_sendmessage' => array('type' => 'int'),
 					'location_code' =>array('type' => 'string', 'required' => false),
 					'street' 		=> array('type' => 'string', 'query' => true),
 					'zip_code' 		=> array('type' => 'string'),

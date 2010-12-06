@@ -20,11 +20,6 @@
 			</div>
 			</xsl:if>
 
-			<div>
-	        	<button onclick="window.location.href='{message_link}'"><xsl:value-of select="php:function('lang', 'Send message')" /></button>
-- 				Meldig til saksbehandler for bygg
-			</div>
-
 			<dl class="proplist-col main">
 				<xsl:if test="normalize-space(description)">
 					<dl class="proplist description">
@@ -35,6 +30,15 @@
 				
 				<xsl:if test="normalize-space(homepage) or normalize-space(email) or normalize-space(phone) or normalize-space(street)">
 					<h3><xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
+			<xsl:if test="deactivate_sendmessage=0">
+
+			<div>
+	        	<button onclick="window.location.href='{message_link}'"><xsl:value-of select="php:function('lang', 'Send message')" /></button>
+- 				Meldig til saksbehandler for bygg
+			</div>
+			</xsl:if>
+
+
 					<dl class="contactinfo">
 						<xsl:if test="homepage and normalize-space(homepage)">
 							<dt><xsl:value-of select="php:function('lang', 'Homepage')" /></dt>

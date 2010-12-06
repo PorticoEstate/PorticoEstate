@@ -177,13 +177,18 @@
 			$login .= "@{$logindomain}";
 		}
 
+		$receipt = array();
 		if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 			&& $GLOBALS['phpgw_info']['server']['usecookies'] )
 		{
 			if(isset($_COOKIE['domain']) && $_COOKIE['domain'] != $logindomain)
 			{
-				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", array('cd' =>22)); // already within a session
-				exit;
+				$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
+				$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
+//				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", array('cd' =>22)); // already within a session
+//				exit;
+
+				$receipt['message'][]=array('msg'=> lang('Info: you have changed domain from "%1" to "%2"' ,$_COOKIE['domain'],$logindomain));
 			}
 		}
 
@@ -200,6 +205,11 @@
 			$cd_array['lightbox'] = $lightbox;
 			$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 			exit;
+		}
+
+		if($receipt)
+		{
+			phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
 		}
 
 		$forward = phpgw::get_var('phpgw_forward');

@@ -21,6 +21,7 @@
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
 				'deactive_calendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactive_application' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
+				'deactive_sendmessage' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'homepage' => array('type' => 'text', 'nullable' => False),
 				'location_code' => array('type' => 'varchar','precision' => '50','nullable' => True),
