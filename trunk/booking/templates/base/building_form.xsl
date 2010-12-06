@@ -79,9 +79,30 @@
 			<div class="clr"/>
 			<dl class="form-col">
 				<xsl:if test="not(new_form)">
+					<dt><label for="field_deactivate_application"><xsl:value-of select="php:function('lang', 'Deactivate application')"/></label></dt>
+					<dd>
+						<select id="for_field_deactivate_application" name="deactivate_application">
+							<option value="1">
+								<xsl:if test="building/deactivate_application=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="building/deactivate_application=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</dd>
+				</xsl:if>
+			</dl>
+			<dl class="form-col">
+				<xsl:if test="not(new_form)">
 					<dt><label for="field_deactivate_calendar"><xsl:value-of select="php:function('lang', 'Deactivate calendar')"/></label></dt>
 					<dd>
-						<select id="deactivate_calendar" name="deactivate_calendar">
+						<select id="for_deactivate_calendar" name="deactivate_calendar">
 							<option value="1">
 								<xsl:if test="building/deactivate_calendar=1">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -100,17 +121,17 @@
 			</dl>
 			<dl class="form-col">
 				<xsl:if test="not(new_form)">
-					<dt><label for="field_deactivate_application"><xsl:value-of select="php:function('lang', 'Deactivate application')"/></label></dt>
+					<dt><label for="field_deactivate_sendmessage"><xsl:value-of select="php:function('lang', 'Deactivate send message')"/></label></dt>
 					<dd>
-						<select id="field_deactivate_application" name="deactivate_application">
+						<select id="for_deactivate_sendmessage" name="deactivate_sendmessage">
 							<option value="1">
-								<xsl:if test="building/deactivate_application=1">
+								<xsl:if test="building/deactivate_sendmessage=1">
 									<xsl:attribute name="selected">checked</xsl:attribute>
 								</xsl:if>
 								<xsl:value-of select="php:function('lang', 'Yes')"/>
 							</option>
 							<option value="0">
-								<xsl:if test="building/deactivate_application=0">
+								<xsl:if test="building/deactivate_sendmessage=0">
 									<xsl:attribute name="selected">checked</xsl:attribute>
 								</xsl:if>
 								<xsl:value-of select="php:function('lang', 'No')"/>
