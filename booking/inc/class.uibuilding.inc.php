@@ -26,7 +26,7 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage');
 		}
 		
 		public function properties()
@@ -177,7 +177,7 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$building = array_merge($building, extract_values($_POST, $this->fields));
-				
+			
 				$errors = $this->bo->validate($building);
 				if(!$errors)
 				{

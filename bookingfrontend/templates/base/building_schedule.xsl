@@ -19,9 +19,9 @@
 			<xsl:call-template name="msgbox"/>
 
 			<xsl:if test="building/deactivate_application=0">
-			<button onclick="YAHOO.booking.newApplicationForm();"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
-			- Søk ledig tid
-		</xsl:if>
+				<button onclick="YAHOO.booking.newApplicationForm();"><xsl:value-of select="php:function('lang', 'New booking application')" /></button>
+				- Søk ledig tid
+			</xsl:if>
 		</xsl:if>
 
 		<ul id="week-selector">

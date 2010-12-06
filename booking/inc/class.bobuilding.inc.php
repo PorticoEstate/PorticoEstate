@@ -20,7 +20,7 @@
 					),
 					booking_sopermission::ROLE_CASE_OFFICER => array
 					(
-						'write' => array_fill_keys(array('name', 'homepage', 'description', 'email', 'phone', 'street', 'zip_code', 'city', 'district','deactivate_application','deactivate_calendar'), true),
+						'write' => array_fill_keys(array('name', 'homepage', 'description', 'email', 'phone', 'street', 'zip_code', 'city', 'district','deactivate_application','deactivate_calendar','deactivate_sendmessage'), true),
 					),
 					'global' => array
 					(
