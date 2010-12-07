@@ -3,9 +3,11 @@
 	{
 		const ORGNR_SESSION_KEY = 'orgnr';
 		
+		public
+			$orgnr = null;
+
 		protected
 			$default_module = 'bookingfrontend',
-			$orgnr = null,
 			$module;
 		
 		/**
