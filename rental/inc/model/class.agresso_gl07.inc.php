@@ -266,19 +266,11 @@ class rental_agresso_gl07 implements rental_exportable
 	protected function get_formatted_amount($amount)
 	{
 		$amount = round($amount, 2) * 100;
-		if($amount <= 0)// && !abs($amount)===0) // Negative number , extra check for '-0' which proved to be a problem
+		if($amount <= 0) // Negative number , extra check for '-0' which proved to be a problem
 		{
-			$ret = '-' . sprintf("%019.19s", abs($amount)); // We have to have the sign at the start of the string
+			return '-' . sprintf("%019.19s", abs($amount)); // We have to have the sign at the start of the string
 		}
-		else
-		{
-			$ret = sprintf("%020.20s", $amount);
-		}
-		if($ret == '000000000000000000-0')
-		{
-			throw new Exception("get_formatted_amount returned '000000000000000000-0'");	
-		}
-		return $ret;
+		return sprintf("%020.20s", $amount);
 	} 
 	
 } 
