@@ -165,3 +165,29 @@ HTML;
 		return $cat_select;
 	}
 
+	/**
+	* Get HTML checkbox with categories that are candidates for frontend ticket cat
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function tts_frontend_cat($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+		$cats->supress_info = true;
+		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+		$tts_frontend_cat_selected = isset($config['tts_frontend_cat']) ? $config['tts_frontend_cat'] : array();
+		$out = '';
+		foreach ( $values as $entry)
+		{
+			$checked = '';
+			if ( in_array($entry['id'], $tts_frontend_cat_selected))
+			{
+				$checked = ' checked';
+			}
+			$out .=  <<<HTML
+				<tr><td><input type="checkbox" name="newsettings[tts_frontend_cat][]" value="{$entry['id']}" {$checked}><label>{$entry['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
