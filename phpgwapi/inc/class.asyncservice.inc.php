@@ -604,9 +604,22 @@
 
 			if (!is_executable($this->crontab))
 			{
-				//echo "<p>Error: $this->crontab not found !!!</p>";
+				if($this->debug)
+				{
+					echo "<p>Error: $this->crontab not found !!!</p>";
+				}
 				return 0;
 			}
+
+			if (!is_executable($this->php))
+			{
+				if($this->debug)
+				{
+					echo "<p>Error: $this->php not found !!!</p>";
+				}
+				return 0;
+			}
+
 			$times = False;
 			$this->other_cronlines = array();
 			if (($crontab = popen('/bin/sh -c "'.$this->crontab.' -l" 2>&1','r')) !== False)
