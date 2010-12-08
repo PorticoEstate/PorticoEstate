@@ -46,6 +46,16 @@
 			</td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_ticket_frontend_category}:</td>
+			<td>
+	    	<!--to be able to blank the setting - need an empty value-->
+	    	<input type = 'hidden' name="newsettings[tts_frontend_cat][]" value="">
+		     <table>
+{hook_tts_frontend_cat}
+			 </table>
+			</td>
+		</tr>
+		<tr class="row_off">
 			<td>{lang_ticket_default_category}:</td>
 			<td>
 				<select name="newsettings[tts_default_cat]">
