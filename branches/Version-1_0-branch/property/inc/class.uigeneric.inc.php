@@ -310,14 +310,17 @@
 						$i++;
 					}
 				}
-				$code = '';
+
 				if($button_def)
 				{
 					$code = 'var ' . implode(',', $button_def)  . ";\n";
 					$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
 				}
+				else
+				{
+					$code = 'var selectsButtons = [];';
+				}
 
-				$code = 'var selectsButtons = [];';
 				$GLOBALS['phpgw']->js->add_code('', $code);
 
 				if($values_combo_box)
