@@ -832,6 +832,7 @@
 		public function set_account_id($account_id = 0)
 		{
 			$this->_account_id = get_account_id($account_id);
+			$this->_account_lid = $GLOBALS['phpgw']->accounts->id2lid($this->_account_id);
 		}
 
 		/**
@@ -1309,6 +1310,16 @@
 		{
 			// this is currently broken and unused
 			return false;
+		}
+
+		/**
+		* Get userinfo to pass into $GLOBALS['phpgw_info']['user'] for asyncservice
+		*
+		* @return array user
+		*/
+		public function get_user()
+		{
+			return $this->_data;
 		}
 
 		/**
