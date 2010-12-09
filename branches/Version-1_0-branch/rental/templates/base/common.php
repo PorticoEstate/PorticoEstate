@@ -31,7 +31,6 @@
 				} else {
 					this.disable_left_click = false;
 				}
-				
 			}
 		);
 	}
@@ -120,26 +119,45 @@
 		};
 
 		//... set up a new data table
-		this.table = new YAHOO.widget.DataTable(
-			this.properties.container,
-			this.properties.columns,
-			this.source,
-			{
-				paginator: this.paginator,
-				dynamicData: true,
-				<?php
-					$populate = phpgw::get_var('populate_form'); 
-					echo isset($populate)? 'initialLoad: false,':''
-				?>
-				<?php
-					$initLoad = phpgw::get_var('initial_load'); 
-					echo ($initLoad == 'no')? 'initialLoad: false,':''
-				?>
-				MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
-				MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
-				MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
-			}
-		);
+		if(this.properties.tid == 'total_price')
+		{
+			//if the datatable is display of total price on contract, always initialize
+			this.table = new YAHOO.widget.DataTable(
+				this.properties.container,
+				this.properties.columns,
+				this.source,
+				{
+					paginator: this.paginator,
+					dynamicData: true,
+					MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
+					MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
+					MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
+				}
+			);
+		}
+		else
+		{
+			this.table = new YAHOO.widget.DataTable(
+				this.properties.container,
+				this.properties.columns,
+				this.source,
+				{
+					paginator: this.paginator,
+					dynamicData: true,
+					<?php
+						$populate = phpgw::get_var('populate_form'); 
+						echo isset($populate)? 'initialLoad: false,':''
+					?>
+					<?php 
+						$initLoad = phpgw::get_var('initial_load');
+						echo ($initLoad == 'no')? 'initialLoad: false,':''
+					?>
+					MSG_EMPTY: '<?php echo lang("DATATABLE_MSG_EMPTY")?>',
+					MSG_ERROR: '<?php echo lang("DATATABLE_MSG_ERROR")?>',
+					MSG_LOADING: '<?php echo lang("DATATABLE_MSG_LOADING")?>'
+				}
+			);
+		}
 
 		//... set table properties
 		this.table.related = this.properties.related_datatable;
