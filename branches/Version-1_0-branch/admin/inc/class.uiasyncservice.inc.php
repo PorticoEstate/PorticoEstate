@@ -47,6 +47,8 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('Asynchronous timed services');
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 
+			$manual_run = phpgw::get_var('manual_run', 'bool', 'POST');
+
 			$async = clone($GLOBALS['phpgw']->asyncservice);	// use an own instance, as we might set debug=True
 
 			$async->debug = phpgw::get_var('debug', 'bool', 'POST');
@@ -70,8 +72,20 @@
 			$update		= phpgw::get_var('update', 'bool', 'POST');
 			$asyncservice = phpgw::get_var('asyncservice', 'string', 'POST');
 
-			if ( $send || $test || $cancel || $install || $update || $asyncservice )
+			if ( $send || $test || $cancel || $install || $update || $asyncservice || $manual_run)
 			{
+
+				if($manual_run)
+				{
+					$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+					$num = $async->check_run('crontab');
+					echo "<p><b>{$num} jobs found</b></p>\n";
+					//reset your environment
+					$GLOBALS['phpgw']->session->set_account_id($account_id);
+					$GLOBALS['phpgw']->session->read_repositories(False,False);
+					$GLOBALS['phpgw_info']['user']  = $GLOBALS['phpgw']->session->get_user();
+				}
+
 				$times = array();
 				foreach ( array_keys($units) as $u )
 				{
@@ -93,7 +107,7 @@
 					$validator = CreateObject('phpgwapi.EmailAddressValidator');
 					if(!$validator->check_email_address($email))
 					{
-						echo '<p><b>'.lang("Not a not valid email address")."</b></p>\n";					
+						echo '<p><b>'.lang("Not a not valid email address")."</b></p>\n";	
 					}
 					else if (!$async->set_timer($times,'test','admin.uiasyncservice.test',array('to' => $email)))
 					{
@@ -221,11 +235,11 @@
 				echo "<table border=1>\n<tr>\n<th>Id</th><th>".lang('Next run').'</th><th>'.lang('Times').'</th><th>'.lang('Method').'</th><th>'.lang('Data')."</th><th>".lang('LoginID')."</th></tr>\n";
 				foreach($jobs as $job)
 				{
-					echo "<tr>\n<td>$job[id]</td><td>".$GLOBALS['phpgw']->common->show_date($job['next'])."</td><td>";
+					echo "<tr>\n<td>{$job['id']}</td><td>".$GLOBALS['phpgw']->common->show_date($job['next'])."</td><td>";
 					print_r($job['times']); 
-					echo "</td><td>$job[method]</td><td>"; 
+					echo "</td><td>{$job['method']}</td><td>"; 
 					print_r($job['data']); 
-					echo "</td><td align=\"center\">".$GLOBALS['phpgw']->accounts->id2name($job[account_id])."</td></tr>\n"; 
+					echo "</td><td align=\"center\">".$GLOBALS['phpgw']->accounts->id2name($job['account_id'])."</td></tr>\n"; 
 				}
 				echo "</table>\n";
 			}
@@ -233,11 +247,12 @@
 			{
 				echo lang('No jobs in the database !!!')."</p>\n";
 			}
-			echo '<p><input type="submit" name="update" value="'.lang('Update').'"></p>'."\n";
+			echo '<p><input type="submit" name="update" value="'.lang('Update').'">'."\n";
+			echo '<input type="submit" name="manual_run" value="'.lang('manual run').'"></p>'."\n";
 			echo "</form>\n";
-			
+
 		}
-		
+
 		public function test($data)
 		{
 			$to = $data['to'];
