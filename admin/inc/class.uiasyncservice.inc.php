@@ -84,8 +84,18 @@
 
 				if ( $test )
 				{
-					$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences();
-					if (!$async->set_timer($times,'test','admin.uiasyncservice.test',array('to' => $prefs['email']['address'])))
+					$email = phpgw::get_var('email', 'string', 'POST');
+					if(!$email)
+					{
+						$prefs = $GLOBALS['phpgw']->preferences->create_email_preferences();
+						$email = $prefs['email']['address'];
+					}
+					$validator = CreateObject('phpgwapi.EmailAddressValidator');
+					if(!$validator->check_email_address($email))
+					{
+						echo '<p><b>'.lang("Not a not valid email address")."</b></p>\n";					
+					}
+					else if (!$async->set_timer($times,'test','admin.uiasyncservice.test',array('to' => $email)))
 					{
 						echo '<p><b>'.lang("Error setting timer, wrong syntax or maybe there's one already running !!!")."</b></p>\n";
 					}
@@ -200,6 +210,7 @@
 				echo "<p>asyncservice::next_run(";print_r($times);echo")=".($next === False ? 'False':"'$next'=".$GLOBALS['phpgw']->common->show_date($next))."</p>\n";
 			}
 			echo '<hr><p><input type="submit" name="cancel" value="'.lang('Cancel TestJob!')."\"> &nbsp;\n";
+			echo lang('email') . '<input type="text" name="email" value="">'."\n";
 			echo '<input type="submit" name="test" value="'.lang('Start TestJob!')."\">\n";
 			echo lang('for the times above')."</p>\n";
 			echo '<p>'.lang('The TestJob sends you a mail everytime it is called.')."</p>\n";
