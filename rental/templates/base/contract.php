@@ -134,6 +134,13 @@ function loadDatatables(currTab){
 			}
 		}
 	}
+	else if(currTab == 'details'){
+		for(i=0;i<YAHOO.rental.datatables.length;i++){
+			if(YAHOO.rental.datatables[i].tid == 'total_price'){
+				reloadDataSources(YAHOO.rental.datatables[i]);
+			}
+		}
+	}
 }
 </script>
 <div id="contract_tabview" class="yui-navset">
@@ -144,9 +151,11 @@ function loadDatatables(currTab){
 		<li><a href="#parties" onclick="javascript: loadDatatables('parties');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-address-book.png" alt="icon" /> <?php echo lang('parties') ?></em></a></li>
 		<li><a href="#price" onclick="javascript: loadDatatables('price');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png" alt="icon" />   <?php echo lang('price') ?></em></a></li>
 		<?php }?>
-		
+		<?php if($contract->get_id()>0){?>		
+		<li <?php echo (!isset($_POST['add_notification'])) ? 'class="selected"' : "" ?>><a href="#details" onclick="javascript: loadDatatables('details');" ><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
+		<?php }else{?>
 		<li <?php echo (!isset($_POST['add_notification'])) ? 'class="selected"' : "" ?>><a href="#details"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" /> <?php echo lang('details') ?></em></a></li>
-		
+		<?php }?>
 		<?php if($contract->get_id() > 0) {?>
 		<li><a href="#invoice" onclick="javascript: loadDatatables('invoice');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/text-x-generic.png" alt="icon" />   <?php echo lang('invoice') ?></em></a></li>
 		<li <?php echo (phpgw::get_var('tab') == 'documents') ?  'class="selected"' : ""?>><a href="#documents" onclick="javascript: loadDatatables('documents');"><em><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/apps/system-file-manager.png" alt="icon" /> <?php echo lang('documents') ?></em></a></li>
@@ -254,7 +263,7 @@ function loadDatatables(currTab){
 							if($editable && (!isset($contract_id) || $contract_id <= 0)) {
 								
 							 ?>
-							 	<input type="hidden" name="location_id" id="location_id" value="<?php echo $contract->get_location_id() ?>"/>
+							 	<input type="hidden" name="location_id" id="location_id" value="<?php echo $contract->get_location_id() ?>" />
 							 <?php 
 							}
 							echo lang($contract->get_contract_type_title());
@@ -392,7 +401,7 @@ function loadDatatables(currTab){
 						<?php
 						if ($editable) {
 						?>
-							<input type="text" name="invoice_header" id="invoice_header" value="<?php echo $contract->get_invoice_header(); ?>"/>
+							<input type="text" name="invoice_header" id="invoice_header" value="<?php echo $contract->get_invoice_header(); ?>" />
 						<?php
 						}
 						else
