@@ -168,10 +168,10 @@
 			$entity['article_description'] = $building['name'] . ': ' . implode(', ', $this->get_resource_names($reservation['resources']));
 			
 			if (mb_strlen($entity['article_description']) > 35) {
-				$entity['article_description'] = mb_substr($entity['article_description'], 0, 32).'...'; 
+				$entity['article_description'] = mb_substr($entity['article_description'], 0, 32, 'UTF-8').'...'; 
 			}
 			
-			$entity['description'] = mb_substr($entity['from_'], 0, -3) .' - '. mb_substr($entity['to_'], 0, -3);
+			$entity['description'] = mb_substr($entity['from_'], 0, -3, 'UTF-8') .' - '. mb_substr($entity['to_'], 0, -3, 'UTF-8');
 			$entity['building_name'] = $building['name'];
 			$entity['building_id'] = $building['id'];
 		}
