@@ -524,6 +524,17 @@
 			$missingfields  = false;
 			$msglog         = array();
 
+			// Read default assign-to-group from config
+			$config = CreateObject('phpgwapi.config', 'frontend');
+			$config->read();
+			$default_cat = $config->config_data['tts_default_cat'] ? $config->config_data['tts_default_cat'] : 0;
+					
+			if(!$default_cat)
+			{
+				throw new Exception('Default category is not set in config');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			if(isset($values['save']))
 			{
 				foreach($values as $key => $value)
@@ -536,17 +547,6 @@
 
 				if(!$missingfields && !phpgw::get_var('added'))
 				{
-					// Read default assign-to-group from config
-					$config = CreateObject('phpgwapi.config', 'frontend');
-					$config->read();
-					$default_cat = $config->config_data['tts_default_cat'] ? $config->config_data['tts_default_cat'] : 0;
-					
-					if(!$default_cat)
-					{
-						throw new Exception('Default category is not set in config');
-						$GLOBALS['phpgw']->common->phpgw_exit();
-					}
-
 					$location  = array
 					(
 						'loc1'  => $location_details['loc1'],
@@ -567,7 +567,7 @@
 					$ticket = array(
 						'origin'    => null,
 						'origin_id' => null,
-						'cat_id'    => $default_cat,
+						'cat_id'    => $values['cat_id'],
 						'group_id'  => ($default_group ? $default_group : null),
 						'assignedto'=> $assignedto,
 						'priority'  => 3,
@@ -631,14 +631,36 @@
 				}
 			}
 
+
+			$tts_frontend_cat_selected = $config->config_data['tts_frontend_cat'] ? $config->config_data['tts_frontend_cat'] : array();
+
+			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+			$cats->supress_info = true;
+			$categories = $cats->return_sorted_array(0, false, '', '', '', true, '', false);
+
+			$category_list = array();
+			foreach ( $categories as $category)
+			{
+				if ( in_array($category['id'], $tts_frontend_cat_selected))
+				{
+					$category_list[] = array
+					(
+						'id'		=> $category['id'],
+						'name'		=> $category['name'],
+						'selected'	=> $category['id'] == $default_cat ? 1 : 0
+					); 
+				}
+			}
+
 			$data = array(
-				'redirect'		=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
-				'msgbox_data'   => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket', 'noframework' => '1')),
-				'title'         => $values['title'],
-				'locationdesc'  => $values['locationdesc'],
-				'description'   => $values['description'],
-				'noform'        => $noform
+				'redirect'			=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index')) : null,
+				'msgbox_data'   	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
+				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uihelpdesk.add_ticket', 'noframework' => '1')),
+				'title'         	=> $values['title'],
+				'locationdesc'  	=> $values['locationdesc'],
+				'description'   	=> $values['description'],
+				'noform'        	=> $noform,
+				'category_list'		=> $category_list
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk'));
