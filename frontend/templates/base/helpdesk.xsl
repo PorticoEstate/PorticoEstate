@@ -67,6 +67,19 @@
             <xsl:if test="noform != 1">
                 <tr>
                     <td class="th_text" valign="top">
+                        <xsl:value-of select="php:function('lang', 'category')" />
+                    </td>
+                    <td class="th_text" valign="top">
+						<select name="values[cat_id]" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'category')" />
+							</xsl:attribute>
+							<xsl:apply-templates select="category_list"/>
+						</select>			
+                    </td>
+                </tr>
+                <tr>
+                    <td class="th_text" valign="top">
                         <xsl:value-of select="php:function('lang', 'subject')" />
                     </td>
                     <td class="th_text" valign="top">
@@ -116,6 +129,15 @@
             </xsl:if>
         </table>
     </form>
+</xsl:template>
+
+<xsl:template match="category_list">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>
 
 
