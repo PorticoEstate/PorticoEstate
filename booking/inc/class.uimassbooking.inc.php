@@ -22,11 +22,9 @@
 		{
 			parent::__construct();
 			
-			self::process_booking_unauthorized_exceptions();
 			
 			$this->bo = CreateObject('booking.bomassbooking');
 			self::set_active_menu('booking::applications::massboooking');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code');
 		}
 				
 		public function index()
