@@ -44,7 +44,7 @@
 			rmdir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
 			$dh->close();
 		}
-		execMethod('phpgwapi.menu.clear');
+//		execMethod('phpgwapi.menu.clear'); // moved to hook for login
 		$GLOBALS['phpgw']->hooks->process('logout');
 		$GLOBALS['phpgw']->session->destroy($sessionid);
 	}

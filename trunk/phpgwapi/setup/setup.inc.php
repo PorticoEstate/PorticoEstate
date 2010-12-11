@@ -71,9 +71,9 @@
 
 	$setup_info['phpgwapi']['hooks'] = array
 	(
-		'menu'  => 'phpgwapi.menu_apps.get_menu'
+		'menu'	=> 'phpgwapi.menu_apps.get_menu',
+		'login'	=> 'phpgwapi.menu.clear'
 	);
-
 
 	// Basic information about this app
 	$setup_info['notifywindow']['name']			= 'notifywindow';
