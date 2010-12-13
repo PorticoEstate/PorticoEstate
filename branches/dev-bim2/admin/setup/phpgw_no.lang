@@ -1,0 +1,38 @@
+account active	admin	no	Account aktiv
+active	admin	no	Aktiv
+all records and account information will be lost!	admin	no	All historie og brukerinformasjon vil gå tapt!
+anonymous user	admin	no	Anonym bruker
+are you sure you want to delete this account ?	admin	no	Er du sikker på at du vil slette denne account?
+are you sure you want to delete this group ?	admin	no	Er du sikker på du vil slette denne gruppen?
+are you sure you want to kill this session ?	admin	no	Er du sikker på at du vil avslutte denne session?
+create group	admin	no	Lag Gruppe
+delete message	admin	no	Slett Melding
+disabled	admin	no	Deaktivert
+display	admin	no	Vis
+global message	admin	no	Global Melding
+group name	admin	no	Gruppe Navn
+idle	admin	no	idle
+ip	admin	no	IP
+kill	admin	no	Avslutt
+last time read	admin	no	Lest siste gang
+last %1 logins	admin	no	Siste %1 logins
+list of current users	admin	no	liste over brukere
+login time	admin	no	Login Tid
+loginid	admin	no	LoginID
+manager	admin	no	Manager
+message	admin	no	Melding
+new group name	admin	no	Nytt gruppe navn
+new password [ leave blank for no change ]	admin	no	Nytt passord [ Ingenting hvis ingen forandring ]
+percent of users that logged out	admin	no	Prosent av brukere som logget ut
+re-enter password	admin	no	Skriv inn passord igjen
+site	admin	no	Site
+that loginid has already been taken	admin	no	Den loginID er opptatt
+the login and password can not be the same	admin	no	Loging og passord kan ikke være det samme
+the two passwords are not the same	admin	no	Passordene er ikke de sammme
+total records	admin	no	Total historie
+user accounts	admin	no	Bruker accounts
+user groups	admin	no	Bruker Grupper
+view access log	admin	no	Vis Access Log
+view sessions	admin	no	Vis sessions
+you must enter a password	admin	no	Du må skrive inn et passord
+you must select a file type	admin	no	Du må velge en filtype
