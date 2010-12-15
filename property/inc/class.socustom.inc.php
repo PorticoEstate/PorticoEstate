@@ -284,16 +284,13 @@
 
 		function read_custom($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter		= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
-				$query		= isset($data['query']) ? $data['query'] : '';
-				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order		= isset($data['order']) ? $data['order'] : '';
-				$allrows 	= isset($data['allrows']) ? $data['allrows'] : '';
-				$custom_id 	= isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
-			}
+			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter		= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows 	= isset($data['allrows']) ? $data['allrows'] : '';
+			$custom_id 	= isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
 
 			$this->db->query("SELECT sql_text FROM fm_custom where id={$custom_id}",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -326,7 +323,7 @@
 					$custom[$j][$uicols[$i]['name']] = $this->db->f($uicols[$i]['name']);
 					$custom[$j]['grants'] = (int)$grants[$this->db->f('user_id')];
 				}
-			$j++;
+				$j++;
 			}
 
 //_debug_array($custom);
