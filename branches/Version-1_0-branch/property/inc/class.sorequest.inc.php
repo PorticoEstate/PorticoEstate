@@ -193,12 +193,12 @@
 			$uicols['descr'][]		= lang('Request');
 			$uicols['statustext'][]		= lang('Request ID');
 
-			$cols.= ",$entity_table.entry_date";
-			$cols_return[] 			= 'entry_date';
+			$cols.= ",$entity_table.start_date";
+			$cols_return[] 			= 'start_date';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'entry_date';
-			$uicols['descr'][]		= lang('entry date');
-			$uicols['statustext'][]		= lang('Request entry date');
+			$uicols['name'][]		= 'start_date';
+			$uicols['descr'][]		= lang('start date');
+			$uicols['statustext'][]		= lang('Request start date');
 
 			$cols.= ",$entity_table.title as title";
 			$cols_return[] 			= 'title';
@@ -249,7 +249,7 @@
 			}
 			else
 			{
-				$ordermethod = ' order by fm_request.id ASC';
+				$ordermethod = ' order by fm_request.id DESC';
 			}
 
 			$where = 'WHERE';
@@ -570,18 +570,17 @@
 				$address = $this->db->db_addslashes($request['location_name']);
 			}
 
-			$request['descr'] = $this->db->db_addslashes($request['descr']);
-			$request['name'] = $this->db->db_addslashes($request['name']);
-			$request['title'] = $this->db->db_addslashes($request['title']);
+//			$request['name'] = $this->db->db_addslashes($request['name']);
 
 			$value_set = array
 			(
+				'title' 				=> $this->db->db_addslashes($request['title']),
 				'status'				=> $request['status'],
 				'category'				=> $request['cat_id'],
 				'start_date'			=> $request['start_date'],
 				'end_date'				=> $request['end_date'],
 				'coordinator'			=> $request['coordinator'],
-				'descr'					=> $request['descr'],
+				'descr'					=> $this->db->db_addslashes($request['descr']),
 				'budget'				=> (int)$request['budget'],
 				'location_code'			=> $request['location_code'],
 				'address'				=> $address,

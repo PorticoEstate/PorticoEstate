@@ -75,40 +75,41 @@
 			$status_id	= phpgw::get_var('status_id');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$this->p_num			= phpgw::get_var('p_num');
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
 
-			if(isset($query))
+
+			if(isset($_POST['start']) || isset($_GET['start']))
+			{
+				$this->start = $start;
+			}
+			if(isset($_POST['query']) || isset($_GET['query']))
 			{
 				$this->query = $query;
 			}
-			if(isset($filter))
+			if(isset($_POST['filter']) || isset($_GET['filter']))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
+			if(isset($_POST['sort']) || isset($_GET['sort']))
 			{
 				$this->sort = $sort;
 			}
-			if(isset($order))
+			if(isset($_POST['order']) || isset($_GET['order']))
 			{
 				$this->order = $order;
 			}
-			if(isset($cat_id))
+			if(isset($_POST['cat_id']) || isset($_GET['cat_id']))
 			{
 				$this->cat_id = $cat_id;
 			}
-			if(isset($status_id))
+			if(isset($_POST['status_id']) || isset($_GET['status_id']))
 			{
-				$this->status_id = $status_id;
+				$this->status_id = $district_id;
 			}
-			if(isset($allrows))
+			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
+			{
+				$this->criteria_id = $criteria_id;
+			}
+			if($allrows)
 			{
 				$this->allrows = $allrows;
 			}
@@ -133,7 +134,6 @@
 			$this->order	= $data['order'];
 			$this->cat_id	= $data['cat_id'];
 			$this->status_id	= $data['status_id'];
-			$this->allrows		= $data['allrows'];
 		}
 
 		function select_degree_list($degree_value='',$degreedefault_type='')
@@ -278,7 +278,7 @@
 			for ($i=0; $i<count($request); $i++)
 			{
 				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
-				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
+				$request[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['start_date'],$dateformat);
 				if($cols_extra)
 				{
 					$location_data=$this->solocation->read_single($request[$i]['location_code']);
