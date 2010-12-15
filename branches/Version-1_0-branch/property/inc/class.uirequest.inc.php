@@ -174,10 +174,10 @@
  	                        						."p_num: '{$this->p_num}',"
 	    											."query:'{$this->query}',"
 						 	                        ."lookup:'{$lookup}',"
-													."project_id:'{$project_id}'";
-						 	//                        ."filter:'{$this->filter}',"
-						 	//                        ."status_id:'{$this->status_id}',"
-						 	//                        ."cat_id:'{$this->cat_id}'";
+													."project_id:'{$project_id}',"
+						 	                        ."filter:'{$this->filter}',"
+						 	                        ."status_id:'{$this->status_id}',"
+						 	                        ."cat_id:'{$this->cat_id}'";
 
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
@@ -188,6 +188,7 @@
 				array_unshift ($values_combo_box[1],$default_value);
 
 				$values_combo_box[2]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+				array_unshift ($values_combo_box[2],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
 				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[2],$default_value);
 
