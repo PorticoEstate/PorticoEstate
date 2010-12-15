@@ -145,8 +145,12 @@
 				$lookup	= true;
 			}
 
+			$this->save_sessiondata();
+
+			$dry_run = false;
+
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
 				if(!$lookup)
 				{
@@ -157,11 +161,11 @@
 	    				(
 	    					'menuaction'			=> 'property.uirequest.index',
 									'lookup'    => $lookup,
-									'cat_id'	=> $this->cat_id,
-									'filter'	=> $this->filter,
-									'status_id'	=> $this->status_id,
+					//				'cat_id'	=> $this->cat_id,
+					//				'filter'	=> $this->filter,
+					//				'status_id'	=> $this->status_id,
 									'project_id'	=> $project_id,
-									'query'		=> $this->query,
+					//				'query'		=> $this->query,
 									'p_num'		=> $this->p_num,
 	    				));
 				$datatable['config']['allow_allrows'] = true;
@@ -170,10 +174,10 @@
  	                        						."p_num: '{$this->p_num}',"
 	    											."query:'{$this->query}',"
 						 	                        ."lookup:'{$lookup}',"
-													."project_id:'{$project_id}',"
-						 	                        ."filter:'{$this->filter}',"
-						 	                        ."status_id:'{$this->status_id}',"
-						 	                        ."cat_id:'{$this->cat_id}'";
+													."project_id:'{$project_id}'";
+						 	//                        ."filter:'{$this->filter}',"
+						 	//                        ."status_id:'{$this->status_id}',"
+						 	//                        ."cat_id:'{$this->cat_id}'";
 
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
@@ -192,12 +196,12 @@
 						'action'	=> $GLOBALS['phpgw']->link('/index.php',
 								array(
 									'menuaction' 		=> 'property.uirequest.index',
-									'lookup'        		=> $lookup,
-									'cat_id'	=> $this->cat_id,
-									'filter'	=> $this->filter,
-									'status_id'	=> $this->status_id,
-									'project_id'	=> $project_id,
-									'query'		=> $this->query
+									'lookup'        	=> $lookup,
+									'cat_id'			=> $this->cat_id,
+									'filter'			=> $this->filter,
+									'status_id'			=> $this->status_id,
+									'project_id'		=> $project_id,
+									'query'				=> $this->query
 								)
 							),
 						'fields'	=> array(
@@ -310,10 +314,11 @@
 				{
 					unset($datatable['actions']['form'][0]['fields']['field'][4]);
 				}
+				$dry_run = true;
 			}
 
 			$request_list = array();
-			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows));
+			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows, 'dry_run' => $dry_run));
 			$uicols	= $this->bo->uicols;
 
 			$j=0;
@@ -499,7 +504,7 @@
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
 
-					if($uicols['name'][$i]=='request_id' || $uicols['name'][$i]=='budget' ||  $uicols['name'][$i]=='score')
+					if($uicols['name'][$i]=='request_id' || $uicols['name'][$i]=='budget' ||  $uicols['name'][$i]=='score' ||  $uicols['name'][$i]=='start_date')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
@@ -544,21 +549,22 @@
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
 
 
+			if($dry_run)
+			{
+					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+			}
+			else
+			{
+				$datatable['pagination']['records_returned']= count($entity_list);
+			}
+
+
+
 			$appname					= lang('request');
 			$function_msg				= lang('list request');
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-			    //avoid ,in the last page, reformate paginator when records are lower than records_returned
-				if(count($request_list) <= $datatable['pagination']['records_limit'])
-				{
-					$datatable['pagination']['records_returned']= count($request_list);
-				}
-				else
-				{
-					$datatable['pagination']['records_returned']= $datatable['pagination']['records_limit'];
-				}
-
 			    $datatable['sorting']['currentPage']	= 1;
 			    $datatable['sorting']['order']	= 'request_id'; // name key Column in myColumnDef
 			    $datatable['sorting']['sort']	= 'asc'; // ASC / DESC
@@ -566,22 +572,9 @@
 		    else
 		    {
 				$datatable['sorting']['currentPage']	= phpgw::get_var('currentPage');
-			    $datatable['pagination']['records_returned']= phpgw::get_var('recordsReturned', 'int');
 			    $datatable['sorting']['order']  = phpgw::get_var('order', 'string'); // name of column of Database
 			    $datatable['sorting']['sort']	= phpgw::get_var('sort', 'string'); // ASC / DESC
 		    }
-
-			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	//// cramirez: necesary for include a partucular js
-		  	phpgwapi_yui::load_widget('loader');
-		  	//cramirez: necesary for use opener . Avoid error JS
-			phpgwapi_yui::load_widget('tabview');
-			phpgwapi_yui::load_widget('paginator');
-			//FIXME this one is only needed when $lookup==true - so there is probably an error
-			phpgwapi_yui::load_widget('animation');
 
 
 //-- BEGIN----------------------------- JSON CODE ------------------------------
@@ -599,20 +592,23 @@
 	    		);
 
 				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+	    		{
 	    			foreach( $datatable['rows']['row'] as $row )
 	    			{
 		    			$json_row = array();
 		    			foreach( $row['column'] as $column)
 		    			{
+
 		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 		    				{
 		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
+		    				else if(isset($column['format']) && $column['format']== "link")
 		    				{
 		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    				}else
+		    				}
+		    				else
 		    				{
 		    				  $json_row[$column['name']] = $column['value'];
 		    				}
@@ -636,6 +632,17 @@
 			$datatable['json_data'] = json_encode($json);
 //-------------------- JSON CODE ----------------------
 
+			phpgwapi_yui::load_widget('dragdrop');
+		  	phpgwapi_yui::load_widget('datatable');
+		  	phpgwapi_yui::load_widget('menu');
+		  	phpgwapi_yui::load_widget('connection');
+		  	//// cramirez: necesary for include a partucular js
+		  	phpgwapi_yui::load_widget('loader');
+		  	//cramirez: necesary for use opener . Avoid error JS
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			//FIXME this one is only needed when $lookup==true - so there is probably an error
+			phpgwapi_yui::load_widget('animation');
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
@@ -660,9 +667,6 @@
 
 	  		// Prepare YUI Library
   			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'request.index', 'property' );
-
-			//$this->save_sessiondata();
-
 		}
 
 
