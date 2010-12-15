@@ -43,6 +43,26 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+//	console.log(path_values);
+			//category
+			index = locate_in_array_options(0,"value",path_values.cat_id);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+			//status
+			index = locate_in_array_options(1,"value",path_values.status_id);
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
+			//user
+			index = locate_in_array_options(2,"value",path_values.filter);
+			if(index)
+			{
+				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+			}
+
 			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
