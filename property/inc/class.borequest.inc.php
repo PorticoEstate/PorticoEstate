@@ -103,7 +103,7 @@
 			}
 			if(isset($_POST['status_id']) || isset($_GET['status_id']))
 			{
-				$this->status_id = $district_id;
+				$this->status_id = $status_id;
 			}
 			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
 			{
