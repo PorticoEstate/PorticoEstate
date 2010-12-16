@@ -85,6 +85,7 @@
 			$this->filter				= $this->bo->filter;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
+			$this->district_id			= $this->bo->district_id;
 
 			$this->allrows				= $this->bo->allrows;
 			$this->p_num				= $this->bo->p_num;
@@ -94,14 +95,15 @@
 		{
 			$data = array
 			(
-				'start'		=> $this->start,
-				'query'		=> $this->query,
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'filter'	=> $this->filter,
-				'cat_id'	=> $this->cat_id,
-				'status_id'	=> $this->status_id,
-				'allrows'	=> $this->allrows
+				'start'			=> $this->start,
+				'query'			=> $this->query,
+				'sort'			=> $this->sort,
+				'order'			=> $this->order,
+				'filter'		=> $this->filter,
+				'cat_id'		=> $this->cat_id,
+				'status_id'		=> $this->status_id,
+				'district_id'	=> $this->district_id,
+				'allrows'		=> $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -177,20 +179,25 @@
 													."project_id:'{$project_id}',"
 						 	                        ."filter:'{$this->filter}',"
 						 	                        ."status_id:'{$this->status_id}',"
+  	                        						."district_id: '{$this->district_id}',"
 						 	                        ."cat_id:'{$this->cat_id}'";
 
-				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
+				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no district'));
+				array_unshift ($values_combo_box[0],$default_value);
+
+				$values_combo_box[1] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
 
-				$values_combo_box[1]  = $this->bo->select_status_list('filter',$this->status_id);
+				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
 				$default_value = array ('id'=>'','name'=> lang('no status'));
-				array_unshift ($values_combo_box[1],$default_value);
-
-				$values_combo_box[2]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
-				array_unshift ($values_combo_box[2],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
-				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[2],$default_value);
+
+				$values_combo_box[3]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+				array_unshift ($values_combo_box[3],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
+				$default_value = array ('user_id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[3],$default_value);
 
 				$datatable['actions']['form'] = array(
 					array(
@@ -202,18 +209,27 @@
 									'filter'			=> $this->filter,
 									'status_id'			=> $this->status_id,
 									'project_id'		=> $project_id,
+				 	                'district_id'       => $this->district_id,
 									'query'				=> $this->query
 								)
 							),
 						'fields'	=> array(
                                     	'field' => array(
+				                                        array( //boton 	DISTRICT
+				                                            'id' => 'btn_district_id',
+				                                            'name' => 'district_id',
+				                                            'value'	=> lang('district'),
+				                                            'type' => 'button',
+				                                            'style' => 'filter',
+				                                            'tab_index' => 1
+				                                        ),
 		                                           array( //boton 	CATEGORY
 			                                            'id' => 'btn_cat_id',
 			                                            'name' => 'cat_id',
 			                                            'value'	=> lang('Category'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 1
+			                                            'tab_index' => 2
 			                                        ),
 			                                        array( //boton 	STATUS
 			                                            'id' => 'btn_status_id',
@@ -221,7 +237,7 @@
 			                                            'value'	=> lang('Status'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 2
+			                                            'tab_index' => 3
 			                                        ),
 			                                        array( //boton 	FILTER
 			                                            'id' => 'btn_user_id',
@@ -229,25 +245,25 @@
 			                                            'value'	=> lang('User'),
 			                                            'type' => 'button',
 			                                            'style' => 'filter',
-			                                            'tab_index' => 3
+			                                            'tab_index' => 4
 			                                        ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_export',
 						                                'value'	=> lang('download'),
-						                                'tab_index' => 8
+						                                'tab_index' => 9
 						                            ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_update',
 						                                'value'	=> lang('Update project'),
-						                                'tab_index' => 7
+						                                'tab_index' => 8
 						                            ),
 													array(
 						                                'type'	=> 'button',
 						                            	'id'	=> 'btn_new',
 						                                'value'	=> lang('add'),
-						                                'tab_index' => 6
+						                                'tab_index' => 7
 						                            ),
 			                                        array( //boton     SEARCH
 			                                            'id' => 'btn_search',
@@ -255,7 +271,7 @@
 			                                            'value'    => lang('search'),
 			                                            'onkeypress' => 'return pulsar(event)',
 			                                            'type' => 'button',
-			                                            'tab_index' => 5
+			                                            'tab_index' => 6
 			                                        ),
 						                            array( //hidden request
 							                                'type'	=> 'hidden',
@@ -271,7 +287,7 @@
 			                                            'type' => 'text',
 			                                            'size'    => 28,
 			                                            'onkeypress' => 'return pulsar(event)',
-			                                            'tab_index' => 4
+			                                            'tab_index' => 5
 			                                        ),
 													array(
 										                'type'=> 'link',
@@ -280,21 +296,25 @@
 										                       array(
 										                           'menuaction' => 'property.uirequest.priority_key'))."','','width=350,height=250')",
 										                 'value' => lang('Priority key'),
-										                 'tab_index' => 3
+										                 'tab_index' => 4
 										            )
 		                           				),
 		                       		'hidden_value' => array(
-					                                        array( //div values  combo_box_0
-							                                            'id' => 'values_combo_box_0',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      ),
-							                                array( //div values  combo_box_1
+							                                array( //div values  combo_box_0
+																	'id' => 'values_combo_box_0',
+																	'value'	=> $this->bocommon->select2String($values_combo_box[0])
+						                                      ),
+					                                        array( //div values  combo_box_1
 							                                            'id' => 'values_combo_box_1',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1])
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 							                                      ),
-															 array( //div values  combo_box_2
+							                                array( //div values  combo_box_2
 							                                            'id' => 'values_combo_box_2',
-							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2], 'user_id')
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[2])
+							                                      ),
+															 array( //div values  combo_box_3
+							                                            'id' => 'values_combo_box_3',
+							                                            'value'	=> $this->bocommon->select2String($values_combo_box[3], 'user_id')
 							                                      )
 		                       								)
 												)
@@ -546,9 +566,7 @@
 			// Pagination and sort values
 			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
 			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			//$datatable['pagination']['records_returned'] = count($request_list);
 			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
-
 
 			if($dry_run)
 			{
@@ -556,10 +574,8 @@
 			}
 			else
 			{
-				$datatable['pagination']['records_returned']= count($entity_list);
+				$datatable['pagination']['records_returned']= count($request_list);
 			}
-
-
 
 			$appname					= lang('request');
 			$function_msg				= lang('list request');

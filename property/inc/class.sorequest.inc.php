@@ -165,21 +165,20 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter			= isset($data['filter'])?$data['filter']:'';
-				$query			= isset($data['query'])?$data['query']:'';
-				$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order			= isset($data['order'])?$data['order']:'';
-				$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
-				$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
-				$project_id		= isset($data['project_id'])?$data['project_id']:'';
-				$allrows		= isset($data['allrows'])?$data['allrows']:'';
-				$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
-				$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-				$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
-			}
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter			= isset($data['filter'])?$data['filter']:'';
+			$query			= isset($data['query'])?$data['query']:'';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order'])?$data['order']:'';
+			$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
+			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
+			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
+			$project_id		= isset($data['project_id'])?$data['project_id']:'';
+			$allrows		= isset($data['allrows'])?$data['allrows']:'';
+			$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+
 
 			$entity_table = 'fm_request';
 
@@ -285,6 +284,12 @@
 			{
 				$filtermethod .= " $where project_id is NULL ";
 				$where = 'AND';
+			}
+
+			if($district_id)
+			{
+				$filtermethod .= " {$where} fm_part_of_town.district_id = {$district_id}";
+				$where= 'AND';
 			}
 
 			if($query)
