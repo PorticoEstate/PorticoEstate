@@ -431,12 +431,11 @@
 			}
 
 			$document['descr'] = $this->db->db_addslashes($document['descr']);
-			$document['name'] = $this->db->db_addslashes($document['name']);
 			$document['title'] = $this->db->db_addslashes($document['title']);
 //_debug_array($document);
 
 			$values= array(
-				$document['document_name'],
+				$this->db->db_addslashes($document['document_name']),
 				$document['link'],
 				$document['title'],
 				'public',
@@ -483,19 +482,21 @@
 		function edit($document)
 		{
 			$receipt = array();
-			while (is_array($document['location']) && list($input_name,$value) = each($document['location']))
+			$value_set=array();
+			if (isset($document['location']) && is_array($document['location']))
 			{
-				$vals[]	= "$input_name = '$value'";
+				foreach($document['location'] as $input_name => $value)
+				{
+					$value_set[$input_name]	= $value;
+				}
 			}
 
-			while (is_array($document['extra']) && list($input_name,$value) = each($document['extra']))
+			if (isset($document['extra']) && is_array($document['extra']))
 			{
-				$vals[]	= "$input_name = '$value'";
-			}
-
-			if($vals)
-			{
-				$vals	= "," . implode(",",$vals);
+				foreach($document['extra'] as $input_name => $value)
+				{
+					$value_set[$input_name]	= $value;
+				}
 			}
 
 			if($document['street_name'])
@@ -588,28 +589,22 @@
 
 			if($document['link'])
 			{
-				unset($document['document_name']);
+				$document['document_name'] = '';
 			}
 
-			$document['descr'] = $this->db->db_addslashes($document['descr']);
-			$document['name'] = $this->db->db_addslashes($document['name']);
-			$document['title'] = $this->db->db_addslashes($document['title']);
-
-			$value_set=array(
-				'document_name'	=>$document['document_name'],
-				'link'			=>$document['link'],
-				'title'			=>$document['title'],
-				'branch_id'		=>$document['branch_id'],
-				'status'		=>$document['status'],
-				'category'		=>$document['doc_type'],
-				'document_date'	=>$document['document_date'],
-				'coordinator'	=>$document['coordinator'],
-				'descr'			=>$document['descr'],
-				'version'		=>$document['version'],
-				'location_code'	=>$document['location_code'],
-				'vendor_id'		=>$document['vendor_id'],
-				'address'		=>$address
-				);
+			$value_set['document_name']	= $this->db->db_addslashes($document['document_name']);
+			$value_set['link']			= $document['link'];
+			$value_set['title']			= $this->db->db_addslashes($document['title']);
+			$value_set['branch_id']		= $document['branch_id'];
+			$value_set['status']		= $document['status'];
+			$value_set['category']		= $document['doc_type'];
+			$value_set['document_date']	= $document['document_date'];
+			$value_set['coordinator']	= $document['coordinator'];
+			$value_set['descr']			= $this->db->db_addslashes($document['descr']);
+			$value_set['version']		= $document['version'];
+			$value_set['location_code']	= $document['location_code'];
+			$value_set['vendor_id']		= $document['vendor_id'];
+			$value_set['address']		= $address;
 
 			$value_set	= $this->db->validate_update($value_set);
 
