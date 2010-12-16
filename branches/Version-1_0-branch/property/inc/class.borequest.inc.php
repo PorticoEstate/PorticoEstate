@@ -66,16 +66,16 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$status_id	= phpgw::get_var('status_id');
-			$allrows	= phpgw::get_var('allrows', 'bool');
-			$this->p_num			= phpgw::get_var('p_num');
-
+			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query			= phpgw::get_var('query');
+			$sort			= phpgw::get_var('sort');
+			$order			= phpgw::get_var('order');
+			$filter			= phpgw::get_var('filter', 'int');
+			$district_id	= phpgw::get_var('district_id', 'int');
+			$cat_id			= phpgw::get_var('cat_id', 'int');
+			$status_id		= phpgw::get_var('status_id');
+			$allrows		= phpgw::get_var('allrows', 'bool');
+			$this->p_num	= phpgw::get_var('p_num');
 
 			if(isset($_POST['start']) || isset($_GET['start']))
 			{
@@ -96,6 +96,10 @@
 			if(isset($_POST['order']) || isset($_GET['order']))
 			{
 				$this->order = $order;
+			}
+			if(isset($_POST['district_id']) || isset($_GET['district_id']))
+			{
+				$this->district_id = $district_id;
 			}
 			if(isset($_POST['cat_id']) || isset($_GET['cat_id']))
 			{
@@ -127,12 +131,13 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','request');
 
-			$this->start	= $data['start'];
-			$this->query	= $data['query'];
-			$this->filter	= $data['filter'];
-			$this->sort		= $data['sort'];
-			$this->order	= $data['order'];
-			$this->cat_id	= $data['cat_id'];
+			$this->start		= $data['start'];
+			$this->query		= $data['query'];
+			$this->filter		= $data['filter'];
+			$this->sort			= $data['sort'];
+			$this->order		= $data['order'];
+			$this->district_id	= $data['district_id'];
+			$this->cat_id		= $data['cat_id'];
 			$this->status_id	= $data['status_id'];
 		}
 
@@ -265,7 +270,7 @@
 		function read($data)
 		{
 			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
+											'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 											'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 											'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num));
 			$this->total_records = $this->so->total_records;
