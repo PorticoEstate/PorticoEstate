@@ -585,7 +585,7 @@
 			$sql = "SELECT fm_workorder.*, fm_chapter.descr as chapter ,fm_workorder.user_id as user_id FROM fm_workorder"
 	//			. " $this->join fm_project on fm_workorder.project_id=fm_project.id"
 				. " $this->left_join fm_chapter on "
-				. " fm_workorder.chapter_id = fm_chapter.id where fm_workorder.id={$workorder_id}";
+				. " fm_workorder.chapter_id = fm_chapter.id WHERE fm_workorder.id='{$workorder_id}'";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
