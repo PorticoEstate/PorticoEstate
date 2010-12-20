@@ -39,10 +39,24 @@
 		var $uicols_related = array();
 		var $acl_location = '.ticket';
 
-		var $soap_enabled = array
+		public $soap_functions = array
 		(
-			'read'	=> true
+			'read' => array(
+				'in'  => array('array'),
+				'out' => array('array')
+			)
 		);
+
+
+		public $xmlrpc_methods = array
+		(
+			array
+			(
+				'name'       => 'read',
+				'decription' => 'Get list of tickets'
+			)
+		);
+
 
 		function __construct()
 		{
@@ -54,6 +68,40 @@
 			$this->left_join 	= & $this->db->left_join;
 			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
+
+
+		function list_methods($_type='xmlrpc')
+		{
+			/*
+			  This handles introspection or discovery by the logged in client,
+			  in which case the input might be an array.  The server always calls
+			  this function to fill the server dispatch map using a string.
+			*/
+			if (is_array($_type))
+			{
+				$_type = $_type['type'] ? $_type['type'] : $_type[0];
+			}
+			switch($_type)
+			{
+				case 'xmlrpc':
+					$xml_functions = array(
+						'read' => array(
+							'function'  => 'read',
+							'signature' => array(array(xmlrpcArray,xmlrpcArray)),
+							'docstring' => 'Get list of tickets'
+						),
+				);
+					return $xml_functions;
+					break;
+				case 'soap':
+					return $this->soap_functions;
+					break;
+				default:
+					return array();
+					break;
+			}
+		}
+
 
 		function get_category_name($cat_id)
 		{
