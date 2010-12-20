@@ -4774,12 +4774,12 @@
 				(
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => false),
-					'description' => array('type' => 'text', 'nullable' => false)
+					'description' => array('type' => 'text', 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('name')
 			),
 
 			'fm_attr_group' => array
@@ -4801,7 +4801,7 @@
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => false),
 					'name' => array('type' => 'varchar', 'precision' => 10, 'nullable' => false),
 					'display_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
-					'description' => array('type' => 'text', 'nullable' => false),
+					'description' => array('type' => 'text', 'nullable' => true),
 					'data_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 					'unit_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => false),
 					'attr_group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false)
