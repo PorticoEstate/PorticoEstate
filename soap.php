@@ -120,7 +120,7 @@
 
 	function hello($someone)
 	{
-		return "Hello " . $someone . "! - SOAP 1.2";
+		return "Hello " . $someone . " ! - SOAP 1.2";
 	} 
 
 	$functions[] = 'hello';
@@ -166,10 +166,10 @@
 
 		if ( !$invalid_data 
 			&& is_object($obj)
-			&& isset($obj->soap_enabled) 
-			&& is_array($obj->soap_enabled) 
-			&& isset($obj->soap_enabled[$data['method']])
-			&& $obj->soap_enabled[$data['method']])
+			&& isset($obj->soap_functions) 
+			&& is_array($obj->soap_functions) 
+			&& isset($obj->soap_functions[$data['method']])
+			&& $obj->soap_functions[$data['method']])
 		{
 			return $obj->$data['method']($data['input']);
 		}
