@@ -15,6 +15,7 @@ class property_uiitem {
     public $public_functions = array
     (
         'index' => true,
+    	'foo' => true,
         'testdata' => true,
         'emptydb' => true
     );
@@ -32,6 +33,7 @@ class property_uiitem {
 
 
     function index() {
+    	
         $menu_sub = array(
                 'tenant'=>'invoice',
                 'owner'	=>'admin',
@@ -49,14 +51,103 @@ class property_uiitem {
                 'menuaction'=> 'property.uiitem.index',
             ));
             $datatable['config']['allow_allrows'] = true;
-            $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',"
-                ."group:'all'";
+            $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',group:'all'";
+			$this->setForm($datatable);
+			$dry_run=true;
+        }
 
-            $values_combo_box_0 = $this->sogroup->read(null);
+        $item_list = $this->so->read($dry_run);
+
+        $uicols	= $this->so->uicols;
+        $uicols_count = count($uicols['name']);
+
+        
+		$this->populateDatatableRows($item_list, $datatable, $uicols, $uicols_count);
+		$this->addRowActionsToDatatable($datatable);
+		$this->populateColumnNames($datatable, $uicols, $uicols_count);
+        
+
+        // path for property.js
+        $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+        // Pagination and sort values
+		$this->setPagination($datatable, $item_list);
+		$this->setSorting($datatable);
+		
+        //$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
+        //$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
+
+
+       
+
+
+//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+            //values for Pagination
+            $json = array
+            (
+                'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+                'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+                'startIndex' 		=> $datatable['pagination']['records_start'],
+                'sort'				=> $datatable['sorting']['order'],
+                'dir'				=> $datatable['sorting']['sort'],
+                'records'			=> array()
+            );
+
+            // values for datatable
+            if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])) {
+                foreach( $datatable['rows']['row'] as $row ) {
+                    $json_row = array();
+                    foreach( $row['column'] as $column) {
+                        if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true) {
+                            $json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+                        }
+                        elseif(isset($column['format']) && $column['format']== "link") {
+                            $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+                        }else {
+                            $json_row[$column['name']] = $column['value'];
+                        }
+                    }
+                    $json['records'][] = $json_row;
+                }
+            }
+
+            // right in datatable
+            if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action'])) {
+                $json ['rights'] = $datatable['rowactions']['action'];
+            }
+
+        if( phpgw::get_var('phpgw_return_as') == 'json' )
+ 		{
+            return $json;
+        }
+			$datatable['json_data'] = json_encode($json);
+//-------------------- JSON CODE ----------------------
+
+        $this->loadYuiWidgets();
+
+        // Prepare template variables and process XSLT
+        $template_vars = array();
+        $template_vars['datatable'] = $datatable;
+        $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+        //print_r($template_vars);
+        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+        $this->setupCss();
+
+        //Title of Page
+        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
+
+        // Prepare YUI Library
+        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'property' );
+
+        //$this->save_sessiondata();
+    }
+    private function setForm(&$datatable) {
+    	 $values_combo_box_0 = $this->sogroup->read(null);
             $default_value = array('id' => -1, 'name' => 'Alle grupper');
             array_unshift($values_combo_box_0, $default_value);
-
-            $datatable['actions']['form'] = array(
+    	$datatable['actions']['form'] = array(
                 array(
                     'action' => $GLOBALS['phpgw']->link('/index.php',
                             array(
@@ -117,17 +208,50 @@ class property_uiitem {
                     )
                 )
             );
-            
-            $dry_run=true;
+    }
+	private function setPagination(&$datatable, &$item_list) {
+    	$datatable['pagination']['records_start'] 	= (int) $this->bo->start;
+        $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+        $datatable['pagination']['records_returned']= count($item_list);
+        $datatable['pagination']['records_total'] 	= $this->so->total_records();
+    }
+    
+    private function setSorting(&$datatable) {
+     if((phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+        {
+            $datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+            $datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
         }
+        else
+        {
+            $datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+            $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+        }
+    }
+    private function populateColumnNames(&$datatable, &$uicols, &$uicols_count) {
+    	for ($i=0; $i < $uicols_count; $i++) {
 
-        $item_list = $this->so->read($dry_run);
+            //all colums should be have formatter
+            $datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
 
-        $uicols	= $this->so->uicols;
-        $uicols_count = count($uicols['name']);
+            if($uicols['input_type'][$i] != 'hidden') {
+                $datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+                $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+                $datatable['headers']['header'][$i]['visible'] 			= true;
+                $datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
+                $datatable['headers']['header'][$i]['sortable']			= false;
 
-        $j=0;
-        if(is_array($item_list)) {
+                // If datatype is not T or CH
+                if(!in_array($uicols['datatype'][$i], array('T', 'CH'))) {
+                    $datatable['headers']['header'][$i]['sortable']		= true;
+                    $datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
+                }
+            }
+        }
+    }
+    private function populateDatatableRows(&$item_list, &$datatable, &$uicols, &$uicols_count) {
+    $j=0;
+     if(is_array($item_list)) {
             // For each item...
             foreach($item_list as $item) {
                 // For each column definition...
@@ -157,21 +281,13 @@ class property_uiitem {
                 $j++;
             }
         }
-
-        // NO pop-up
+    }
+    
+    private function addRowActionsToDatatable(&$datatable) {
+    	// NO pop-up
         $datatable['rowactions']['action'] = array();
-
-        $parameters = array
-        (
-            'parameter' => array
-            (
-                array
-                (
-                    'name'		=> 'item_id',
-                    'source'	=> 'id'
-                )
-            )
-        );
+    	$parameters = array('parameter' => array(array('name' => 'item_id','source' => 'id')));
+        
 
 
         $datatable['rowactions']['action'][] = array(
@@ -241,104 +357,9 @@ class property_uiitem {
         );
 
         unset($parameters);
-
-
-        for ($i=0; $i < $uicols_count; $i++) {
-
-            //all colums should be have formatter
-            $datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-
-            if($uicols['input_type'][$i] != 'hidden') {
-                $datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-                $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-                $datatable['headers']['header'][$i]['visible'] 			= true;
-                $datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
-                $datatable['headers']['header'][$i]['sortable']			= false;
-
-                // If datatype is not T or CH
-                if(!in_array($uicols['datatype'][$i], array('T', 'CH'))) {
-                    $datatable['headers']['header'][$i]['sortable']		= true;
-                    $datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
-                }
-            }
-            /*else {
-                $datatable['headers']['header'][$i]['name'] 			= 'id2';
-                $datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
-                $datatable['headers']['header'][$i]['visible'] 			= false;
-                $datatable['headers']['header'][$i]['sortable']			= false;
-                $datatable['headers']['header'][$i]['format'] 			= 'hidden';
-            }*/
-        }
-
-        // path for property.js
-        $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
-
-        // Pagination and sort values
-        $datatable['pagination']['records_start'] 	= (int) $this->bo->start;
-        $datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-        $datatable['pagination']['records_returned']= count($item_list);
-        $datatable['pagination']['records_total'] 	= $this->so->total_records();
-
-        //$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-        //$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
-
-
-        if((phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
-        {
-            $datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
-            $datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
-        }
-        else
-        {
-            $datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
-            $datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
-        }
-
-
-//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-            //values for Pagination
-            $json = array
-            (
-                'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-                'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-                'startIndex' 		=> $datatable['pagination']['records_start'],
-                'sort'				=> $datatable['sorting']['order'],
-                'dir'				=> $datatable['sorting']['sort'],
-                'records'			=> array()
-            );
-
-            // values for datatable
-            if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])) {
-                foreach( $datatable['rows']['row'] as $row ) {
-                    $json_row = array();
-                    foreach( $row['column'] as $column) {
-                        if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true) {
-                            $json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-                        }
-                        elseif(isset($column['format']) && $column['format']== "link") {
-                            $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-                        }else {
-                            $json_row[$column['name']] = $column['value'];
-                        }
-                    }
-                    $json['records'][] = $json_row;
-                }
-            }
-
-            // right in datatable
-            if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action'])) {
-                $json ['rights'] = $datatable['rowactions']['action'];
-            }
-
-        if( phpgw::get_var('phpgw_return_as') == 'json' )
- 		{
-            return $json;
-        }
-			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
-
-        phpgwapi_yui::load_widget('dragdrop');
+    }
+    private function loadYuiWidgets() {
+    	phpgwapi_yui::load_widget('dragdrop');
         phpgwapi_yui::load_widget('datatable');
         phpgwapi_yui::load_widget('menu');
         phpgwapi_yui::load_widget('connection');
@@ -349,14 +370,9 @@ class property_uiitem {
         phpgwapi_yui::load_widget('paginator');
         //FIXME this one is only needed when $lookup==true - so there is probably an error
         phpgwapi_yui::load_widget('animation');
-
-        // Prepare template variables and process XSLT
-        $template_vars = array();
-        $template_vars['datatable'] = $datatable;
-        $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-        if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
+    }
+    private function setupCss() {
+    	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
             $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
         }
         // Prepare CSS Style
@@ -366,14 +382,10 @@ class property_uiitem {
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
-
-        //Title of Page
-        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
-
-        // Prepare YUI Library
-        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'property' );
-
-        //$this->save_sessiondata();
+    }
+    
+    public function foo() {
+    	echo "foooo";
     }
 
 
@@ -398,7 +410,7 @@ class property_uiitem {
                     'Height',
                     NULL,
                     (SELECT id FROM fm_attr_data_type WHERE function_name = 'dt_int'),
-                    'mm',
+                    (SELECT id FROM fm_standard_unit WHERE id = 'mm'),
                     (SELECT id FROM fm_attr_group WHERE name = 'Dimensions')
                 )"
         );
@@ -409,7 +421,7 @@ class property_uiitem {
                     'Width',
                     NULL,
                     (SELECT id FROM fm_attr_data_type WHERE function_name = 'dt_int'),
-                    'mm',
+                    (SELECT id FROM fm_standard_unit WHERE id = 'mm'),
                     (SELECT id FROM fm_attr_group WHERE name = 'Dimensions')
                 )"
         );
