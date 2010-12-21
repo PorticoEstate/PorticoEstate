@@ -40,6 +40,7 @@
 			$this->soproject	= CreateObject('property.soproject');
 			$this->historylog	= CreateObject('property.historylog','request');
 			$this->bocommon		= CreateObject('property.bocommon');
+			$this->custom 		= createObject('property.custom_fields');
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
@@ -359,7 +360,7 @@
 			return $request_list;
 		}
 
-		function read_single($request_id)
+		function read_single($request_id, $values = array())
 		{
 			$request_id = (int) $request_id;
 			$sql = "SELECT * FROM fm_request WHERE id={$request_id}";
@@ -394,6 +395,16 @@
 					'contact_phone'			=> $this->db->f('contact_phone', true),
 					'building_part'			=> $this->db->f('building_part'),
 				);
+
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
+				{
+					$request['attributes'] = $values['attributes'];
+					foreach ( $request['attributes'] as &$attr )
+					{
+						$attr['value'] 	= $this->db->f($attr['column_name']);
+					}
+				}
+
 				$location_code = $this->db->f('location_code');
 				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
 			}
@@ -432,16 +443,18 @@
 			return $id;
 		}
 
-		function add($request)
+		function add($request, $values_attribute = array())
 		{
 //_debug_array($request);
 			$receipt = array();
+
+			$value_set = array();
+
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
 			{
 				if($value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					$value_set[$input_name] = $value;
 				}
 			}
 
@@ -449,15 +462,20 @@
 			{
 				if($value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					$value_set[$input_name] = $value;
 				}
 			}
 
-			if($cols)
+			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute);
+			if(isset($data_attribute['value_set']))
 			{
-				$cols	= "," . implode(",", $cols);
-				$vals	= ",'" . implode("','", $vals) . "'";
+				foreach($data_attribute['value_set'] as $input_name => $value)
+				{
+					if(isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
 			}
 
 			if($request['street_name'])
@@ -472,36 +490,29 @@
 				$address = $this->db->db_addslashes($request['location_name']);
 			}
 
-			$request['descr'] = $this->db->db_addslashes($request['descr']);
-			$request['name'] = $this->db->db_addslashes($request['name']);
-			$request['title'] = $this->db->db_addslashes($request['title']);
-
 			$this->db->transaction_begin();
+
 			$id = $this->next_id();
-			$values= array
-			(
-				$id,
-				$request['title'],
-				$this->account,
-				$request['cat_id'],
-				$request['descr'],
-				$request['location_code'],
-				$address,
-				time(),
-				$request['budget'],
-				$request['status'],
-				$request['branch_id'],
-				$request['coordinator'],
-				$request['authorities_demands'],
-				$request['building_part']
-			);
 
-			$values	= $this->bocommon->validate_db_insert($values);
+			$value_set['id'] 					= $id;
+			$value_set['title']					= $this->db->db_addslashes($request['title']);
+			$value_set['owner']					= $this->account;
+			$value_set['category']				= $request['cat_id'];
+			$value_set['descr']					= $this->db->db_addslashes($request['descr']);
+			$value_set['location_code']			= $request['location_code'];
+			$value_set['address']				= $address;
+			$value_set['entry_date']			= time();
+			$value_set['budget']				= $request['budget'];
+			$value_set['status']				= $request['status'];
+			$value_set['branch_id']				= $request['branch_id'];
+			$value_set['coordinator']			= $request['coordinator'];
+			$value_set['authorities_demands']	= $request['authorities_demands'];
+			$value_set['building_part']			= 	$request['building_part'];
 
-			$this->db->query("insert into fm_request (id,title,owner,category,descr,location_code,"
-				. "address,entry_date,budget,status,branch_id,coordinator,"
-				. "authorities_demands,building_part  $cols) "
-				. "VALUES ($values $vals )",__LINE__,__FILE__);
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->bocommon->validate_db_insert(array_values($value_set));
+
+			$this->db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
 			while (is_array($request['condition']) && list($condition_type,$value_type) = each($request['condition']))
 			{
@@ -559,7 +570,7 @@
 			return $receipt;
 		}
 
-		function edit($request)
+		function edit($request, $values_attribute = array())
 		{
 			$receipt = array();
 
@@ -575,7 +586,6 @@
 				$address = $this->db->db_addslashes($request['location_name']);
 			}
 
-//			$request['name'] = $this->db->db_addslashes($request['name']);
 
 			$value_set = array
 			(
@@ -601,6 +611,13 @@
 			while (is_array($request['extra']) && list($input_name,$value) = each($request['extra']))
 			{
 				$value_set[$input_name] = $value;
+			}
+
+			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute, $request['id']);
+
+			if(isset($data_attribute['value_set']))
+			{
+				$value_set = array_merge($value_set, $data_attribute['value_set']);
 			}
 
 			$value_set	= $this->db->validate_update($value_set);

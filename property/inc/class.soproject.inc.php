@@ -914,7 +914,7 @@
 				'contact_id'		=> $project['contact_id']
 				);
 
-			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $data['id']);
+			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $project['id']);
 
 			if(isset($data_attribute['value_set']))
 			{
