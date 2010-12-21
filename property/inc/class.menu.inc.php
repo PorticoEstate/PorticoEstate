@@ -317,6 +317,11 @@
 						'text'	=> lang('project categories'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.project', 'global_cats' => 'true', 'menu_selection' => 'admin::property::project_cats') )
 					),
+					'project_attribs'	=> array
+					(
+						'text'	=> lang('project attributes'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.project', 'menu_selection' => 'admin::property::project_attribs') )
+					),
 					'workorder_detail'	=> array
 					(
 						'text'	=> lang('Workorder Detail Categories'),
@@ -390,6 +395,11 @@
 					(
 						'text'	=> lang('Request condition_type'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'r_condition_type') )
+					),
+					'request_attribs'	=> array
+					(
+						'text'	=> lang('request Attributes'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.project.request', 'menu_selection' => 'admin::property::request_attribs') )
 					),
 					'order_dim1'	=> array
 					(

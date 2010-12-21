@@ -373,6 +373,7 @@
 					</textarea>
 				</td>
 			</tr>
+			<xsl:call-template name="attributes"/>
 	</table>
 </div>
 

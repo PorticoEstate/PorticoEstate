@@ -11,9 +11,6 @@
 			<xsl:when test="priority_key">
 				<xsl:apply-templates select="priority_form"/>
 			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="list"/>
-			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
@@ -81,169 +78,6 @@
 				</td>
 			</tr>
 	</xsl:template>
-
-	<xsl:template match="list">
-		<xsl:apply-templates select="menu"/>
-		<table width="100%"  cellpadding="2" cellspacing="2" align="center">
-			<tr>
-				<td>
-					<xsl:call-template name="categories"/>
-				</td>
-				<td align="left">
-					<xsl:call-template name="status_filter"/>
-				</td>
-				<td align="center">
-					<xsl:call-template name="user_id_filter"/>
-				</td>
-				<xsl:choose>
-					<xsl:when test="link_priority_key!=''">
-						<td valign="top" align="right">
-							<xsl:variable name="link_priority_key"><xsl:value-of select="link_priority_key"/></xsl:variable>
-							<xsl:variable name="lang_priority_help"><xsl:value-of select="lang_priority_help"/></xsl:variable>
-							<xsl:variable name="lang_priority_key"><xsl:value-of select="lang_priority_key"/></xsl:variable>
-							<a href="javascript:var w=window.open('{$link_priority_key}','','width=300,height=300')"
-								onMouseOver="overlib('{$lang_priority_help}', CAPTION, '{$lang_priority_key}')"
-								onMouseOut="nd()">
-								<xsl:value-of select="lang_priority_key"/></a>
-						</td>
-					</xsl:when>
-				</xsl:choose>
-
-				<td align="right">
-					<xsl:call-template name="search_field"/>
-				</td>
-				<td class="small_text" valign="top" align="left">
-					<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
-					<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
-					<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
-					<a href="javascript:var w=window.open('{$link_download}','','')"
-						onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
-						onMouseOut="nd()">
-						<xsl:value-of select="lang_download"/></a>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="14" width="100%">
-					<xsl:call-template name="nextmatchs"/>
-				</td>
-			</tr>
-		</table>
-		<table width="100%" cellpadding="2" cellspacing="2" align="center">
-				<xsl:call-template name="table_header"/>
-					<xsl:choose>
-						<xsl:when test="project_id!=''">
-						<xsl:variable name="add_to_project_action"><xsl:value-of select="add_to_project_action"/></xsl:variable>
-						<form method="post" action="{$add_to_project_action}">
-						<xsl:choose>
-							<xsl:when test="values">
-								<xsl:call-template name="values"/>
-							</xsl:when>
-						</xsl:choose>
-							<tr>
-								<td height="50">
-									<input type="submit" name="add" value="{lang_update_project}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="lang_add_to_project_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</td>
-							</tr>
-						</form>
-						</xsl:when>
-						<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="values">
-						<xsl:call-template name="values"/>
-					</xsl:when>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="table_add !=''">
-						<xsl:apply-templates select="table_add"/>
-					</xsl:when>
-				</xsl:choose>
-						</xsl:otherwise>
-					</xsl:choose>
-		</table>
-	</xsl:template>
-
-	<xsl:template name="values">
-		<xsl:for-each select="values" >
-			<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-				<xsl:for-each select="row" >
-					<xsl:choose>
-						<xsl:when test="link">
-							<td align="center">
-								<a href="{link}" target="{target}" onMouseover="window.status='{statustext}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="text"/></a>
-							</td>
-					<xsl:choose>
-						<xsl:when test="//lookup!=''">
-							<xsl:if test="position() = last()">
-								<td valign="center">
-									<input type="checkbox" name="add_request[request_id][]" value="{request_id}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-												<xsl:value-of select="lang_select_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</td>
-							</xsl:if>
-						</xsl:when>
-					</xsl:choose>
-
-
-						</xsl:when>
-						<xsl:otherwise>
-							<td align="left">
-								<xsl:value-of select="value"/>
-							</td>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
-			</tr>
-		</xsl:for-each>
-	</xsl:template>
-
-
-	<xsl:template match="table_add">
-			<tr>
-				<td height="50">
-					<xsl:variable name="add_action"><xsl:value-of select="add_action"/></xsl:variable>
-					<xsl:variable name="lang_add"><xsl:value-of select="lang_add"/></xsl:variable>
-					<form method="post" action="{$add_action}">
-						<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_add_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
-							</xsl:attribute>
-						</input>
-					</form>
-				</td>
-			</tr>
-	</xsl:template>
-
-
-
-
-
-
-
 
 <!-- add / edit -->
 
@@ -597,48 +431,43 @@
 													<td align="left">
 														<xsl:value-of select="lang_authorities_demands"/>
 													</td>
-													<td align="center">
+													<td>
 														<xsl:choose>
 															<xsl:when test="authorities_demands='1'">
-																<input type="checkbox" name="values[authorities_demands]" value="1" checked="checked" onMouseout="window.status='';return true;">
-																	<xsl:attribute name="onMouseover">
-																		<xsl:text>window.status='</xsl:text>
-																			<xsl:value-of select="lang_authorities_demands_statustext"/>
-																		<xsl:text>'; return true;</xsl:text>
+																<input type="checkbox" name="values[authorities_demands]" value="1" checked="checked">
+																	<xsl:attribute name="title">
+																		<xsl:value-of select="lang_authorities_demands_statustext"/>
 																	</xsl:attribute>
 																</input>
 															</xsl:when>
 															<xsl:otherwise>
-																<input type="checkbox" name="values[authorities_demands]" value="1"  onMouseout="window.status='';return true;">
-																	<xsl:attribute name="onMouseover">
-																		<xsl:text>window.status='</xsl:text>
-																			<xsl:value-of select="lang_authorities_demands_statustext"/>
-																		<xsl:text>'; return true;</xsl:text>
+																<input type="checkbox" name="values[authorities_demands]" value="1">
+																	<xsl:attribute name="title">
+																		<xsl:value-of select="lang_authorities_demands_statustext"/>
 																	</xsl:attribute>
 																</input>
 															</xsl:otherwise>
 														</xsl:choose>
 													</td>
 												</tr>
+												<xsl:call-template name="attributes"/>
+												<tr>
+													<td align="left">
+														<xsl:value-of select="lang_score"/>
+													</td>
+													<td>
+														<xsl:value-of select="value_score"/>
+													</td>
+												</tr>
 											</table>
 										</td>
 								</tr>
-								<xsl:call-template name="attributes"/>
 							</table>
 						</div>
 
 
 						<div id="documents">
 							<table>
-								<tr>
-									<td align="left">
-										<xsl:value-of select="lang_score"/>
-									</td>
-									<td>
-										<xsl:value-of select="value_score"/>
-									</td>
-								</tr>
-
 								<xsl:choose>
 									<xsl:when test="files!=''">
 										<!-- <xsl:call-template name="file_list"/> -->
