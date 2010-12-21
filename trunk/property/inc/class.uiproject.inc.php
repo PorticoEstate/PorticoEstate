@@ -1295,21 +1295,6 @@
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 					}
 				}
-
-				$attributes_groups = $this->custom->get_attribute_groups('property', $this->acl_location, $values['attributes']);
-
-				$attributes = array();
-				foreach ($attributes_groups as $group)
-				{
-					if(isset($group['attributes']))
-					{
-						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-						$group['link'] = str_replace(' ', '_', $group['name']);
-						$attributes[] = $group;
-					}
-				}
-				unset($attributes_groups);
-				unset($values['attributes']);
 			}
 
 
@@ -1531,7 +1516,7 @@
 			(
 				'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination'				=> $suppresscoordination,
-				'attributes_group'					=> $attributes,
+				'attributes'						=> $values['attributes'],
 				'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 				'b_account_data'					=> $b_account_data,
 				'ecodimb_data'						=> $ecodimb_data,

@@ -287,6 +287,17 @@
 											</tr>
 										</table>
 									</xsl:when>
+									<xsl:when test="datatype='bolean'">
+										<input type="checkbox" name="values_attribute[{counter}][value]" value="1">
+											<xsl:choose>
+												<xsl:when test="value!=''">
+													<xsl:attribute name="checked">
+														<xsl:text>checked</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+									</xsl:when>	
 									<xsl:when test="datatype='event'">
 										<xsl:choose>
 											<xsl:when test="warning!=''">
