@@ -844,9 +844,9 @@
 		* @param array $date the date array to convert, must contain keys day, month & year
 		* @return int unix timestamp
 		*/
-		public static function date_to_timestamp($date = array())
+		public static function date_to_timestamp($datestr = '')
 		{
-			if ( !$date )
+			if ( !$datestr )
 			{
 				return 0;
 			}
