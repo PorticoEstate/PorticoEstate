@@ -116,7 +116,8 @@
 				'link'	=> lang('Link'),
 				'pwd' 	=> lang('password'),
 				'user' 	=> 'phpgw_user',
-				'event'	=> lang('event')
+				'event'	=> lang('event'),
+				'bolean'	=> 'Bolean'
 			);
 
 			$this->_oProc			= createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
@@ -1574,7 +1575,8 @@
 				'link'		=> 'varchar',
 				'pwd' 		=> 'varchar',
 				'user' 		=> 'int',
-				'event'		=> 'int'
+				'event'		=> 'int',
+				'bolean'	=> 'int'
 			);
 
 			if ( !isset($datatype_text[$datatype]) )
@@ -1606,7 +1608,8 @@
 				'link'		=> 255,
 				'pwd' 		=> 32,
 				'user' 		=> 4,
-				'event'		=> 4
+				'event'		=> 4,
+				'bolean'	=> 2
 			);
 
 			if ( !isset($datatype_precision[$datatype]) )
