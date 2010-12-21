@@ -4741,3 +4741,24 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.600 to 0.9.17.601
+	* Add custom fields to request
+	* 
+	*/
+
+	$test[] = '0.9.17.600';
+	function property_upgrade0_9_17_600()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
+		$sql = "UPDATE phpgw_locations SET allow_c_attrib = 1, c_attrib_table = 'fm_request' WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.601';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

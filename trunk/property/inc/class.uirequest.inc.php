@@ -748,14 +748,15 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uirequest.view', 'id'=> $id));
 			}
 
-			$values	= phpgw::get_var('values');
+			$values				= phpgw::get_var('values');
+			$values_attribute	= phpgw::get_var('values_attribute');
 
 			$bypass 			= phpgw::get_var('bypass', 'bool');
 
 			if($_POST && !$bypass)
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
-				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_entity','property');
+				$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
 
 				for ($j=0;$j<count($insert_record_entity);$j++)
 				{
@@ -863,6 +864,17 @@
 					$error_id=true;
 				}
 
+				if(is_array($values_attribute))
+				{
+					foreach ($values_attribute as $attribute )
+					{
+						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
+					}
+				}
+
 				if($id)
 				{
 					$values['id']=$id;
@@ -875,7 +887,7 @@
 					{
 						$action='add';
 					}
-					$receipt = $this->bo->save($values,$action);
+					$receipt = $this->bo->save($values,$action,$values_attribute);
 					if (! $receipt['error'])
 					{
 						$id = $receipt['id'];
@@ -990,6 +1002,7 @@
 			else
 			{
 				$function_msg = lang('Add request');
+				$values	= $this->bo->read_single(0, $values);
 			}
 
 			if ($values['cat_id'])
@@ -1094,20 +1107,23 @@
 			$myColumnDefs[0] = array
        		(
        			'name'		=> "0",
-       			'values'	=>	json_encode(array(	array(key => value_date,label=>lang('Date'),sortable=>true,resizeable=>true),
-									       			array(key => value_user,label=>lang('User'),sortable=>true,resizeable=>true),
-									       			array(key => value_action,label=>lang('Action'),sortable=>true,resizeable=>true),
-		       				       					array(key => value_new_value,label=>lang('New Value'),sortable=>true,resizeable=>true)))
+       			'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_user','label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
+									       			array('key' => 'value_action','label'=>lang('Action'),'sortable'=>true,'resizeable'=>true),
+		       				       					array('key' => 'value_new_value','label'=>lang('New Value'),'sortable'=>true,'resizeable'=>true)))
 			);
+
 	
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
 			
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				if ($link_to_files != '') {
+				if ($link_to_files != '')
+				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
 				}
-				else {
+				else
+				{
 					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
 				}				
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
@@ -1126,137 +1142,157 @@
 			$myColumnDefs[1] = array
        		(
        			'name'		=> "1",
-       			'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
-									       			array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true,formatter=>FormatterCenter)))
+       			'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+									       			array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 			);
-									
+
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if($attribute['history'] == true)
+					{
+						$link_history_data = array
+						(
+							'menuaction'	=> 'property.uirequest.attrib_history',
+							'attrib_id'	=> $attribute['id'],
+							'id'		=> $id,
+							'edit'		=> true
+						);
+
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
+					}
+				}
+			}
+
 			$data = array
 			(
+				'attributes'						=> $values['attributes'],
 				'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'							=> $datavalues,
 				'myColumnDefs'						=> $myColumnDefs,
-				'tabs'							=> self::_generate_tabs(),
-				'fileupload'				=> true,
-				'link_view_file'			=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-				'link_to_files'				=> $link_to_files,
-				'files'					=> $values['files'],
-				'lang_files'				=> lang('files'),
-				'lang_filename'				=> lang('Filename'),
-				'lang_file_action'			=> lang('Delete file'),
-				'lang_view_file_statustext'		=> lang('click to view file'),
+				'tabs'								=> self::_generate_tabs(),
+				'fileupload'						=> true,
+				'link_view_file'					=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
+				'link_to_files'						=> $link_to_files,
+				'files'								=> $values['files'],
+				'lang_files'						=> lang('files'),
+				'lang_filename'						=> lang('Filename'),
+				'lang_file_action'					=> lang('Delete file'),
+				'lang_view_file_statustext'			=> lang('click to view file'),
 				'lang_file_action_statustext'		=> lang('Check to delete file'),
-				'lang_upload_file'			=> lang('Upload file'),
-				'lang_file_statustext'			=> lang('Select file to upload'),
+				'lang_upload_file'					=> lang('Upload file'),
+				'lang_file_statustext'				=> lang('Select file to upload'),
 
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
-				'value_acl_location'		=> $this->acl_location,
-				'value_target'				=> $values['target'],
-				'value_origin'				=> $values['origin'],
-				'value_origin_type'			=> $origin,
-				'value_origin_id'			=> $origin_id,
-				'lang_origin_statustext'		=> lang('Link to the origin for this request'),
+				'value_acl_location'				=> $this->acl_location,
+				'value_target'						=> $values['target'],
+				'value_origin'						=> $values['origin'],
+				'value_origin_type'					=> $origin,
+				'value_origin_id'					=> $origin_id,
+				'lang_origin_statustext'			=> lang('Link to the origin for this request'),
 
-				'generate_project_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
-				'lang_generate_project'			=> lang('Generate project'),
+				'generate_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
+				'lang_generate_project'				=> lang('Generate project'),
 				'lang_generate_project_statustext'	=> lang('Generate a project from this request'),
-				'location_code'				=> $values['location_code'],
-				'p_num'					=> $values['p_num'],
-				'p_entity_id'				=> $values['p_entity_id'],
-				'p_cat_id'				=> $values['p_cat_id'],
-				'tenant_id'				=> $values['tenant_id'],
+				'location_code'						=> $values['location_code'],
+				'p_num'								=> $values['p_num'],
+				'p_entity_id'						=> $values['p_entity_id'],
+				'p_cat_id'							=> $values['p_cat_id'],
+				'tenant_id'							=> $values['tenant_id'],
 
-				'lang_importance'			=> lang('Importance'),
-				'table_header_importance'		=> $table_header_importance,
-				'importance_weight'			=> $importance_weight,
+				'lang_importance'					=> lang('Importance'),
+				'table_header_importance'			=> $table_header_importance,
+				'importance_weight'					=> $importance_weight,
 
-				'lang_no_workorders'			=> lang('No workorder budget'),
-				'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-				'record_history'			=> $record_history,
-				'table_header_history'			=> $table_header_history,
-				'lang_history'				=> lang('History'),
-				'lang_no_history'			=> lang('No history'),
+				'lang_no_workorders'				=> lang('No workorder budget'),
+				'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
+				'record_history'					=> $record_history,
+				'table_header_history'				=> $table_header_history,
+				'lang_history'						=> lang('History'),
+				'lang_no_history'					=> lang('No history'),
 
-				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'			=> lang('Select date'),
+				'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'					=> lang('Select date'),
 
 				'lang_start_date_statustext'		=> lang('Select the estimated end date for the request'),
-				'lang_start_date'			=> lang('request start date'),
-				'value_start_date'			=> $values['start_date'],
+				'lang_start_date'					=> lang('request start date'),
+				'value_start_date'					=> $values['start_date'],
 
-				'lang_end_date_statustext'		=> lang('Select the estimated end date for the request'),
-				'lang_end_date'				=> lang('request end date'),
-				'value_end_date'			=> $values['end_date'],
+				'lang_end_date_statustext'			=> lang('Select the estimated end date for the request'),
+				'lang_end_date'						=> lang('request end date'),
+				'value_end_date'					=> $values['end_date'],
 
-				'lang_copy_request'			=> lang('Copy request ?'),
+				'lang_copy_request'					=> lang('Copy request ?'),
 				'lang_copy_request_statustext'		=> lang('Choose Copy request to copy this request to a new request'),
 
-				'lang_power_meter'			=> lang('Power meter'),
+				'lang_power_meter'					=> lang('Power meter'),
 				'lang_power_meter_statustext'		=> lang('Enter the power meter'),
-				'value_power_meter'			=> $values['power_meter'],
+				'value_power_meter'					=> $values['power_meter'],
 
-				'lang_budget'				=> lang('Budget'),
-				'value_budget'				=> $values['budget'],
-				'lang_budget_statustext'		=> lang('Enter the budget'),
+				'lang_budget'						=> lang('Budget'),
+				'value_budget'						=> $values['budget'],
+				'lang_budget_statustext'			=> lang('Enter the budget'),
 
-				'location_data'				=> $location_data,
-				'location_type'				=> 'form',
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
-				'lang_category'				=> lang('category'),
-				'lang_save'				=> lang('save'),
-				'lang_done'				=> lang('done'),
+				'location_data'						=> $location_data,
+				'location_type'						=> 'form',
+				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
+				'lang_category'						=> lang('category'),
+				'lang_save'							=> lang('save'),
+				'lang_done'							=> lang('done'),
 
-				'lang_request_id'			=> lang('request ID'),
-				'value_request_id'			=> $id,
+				'lang_request_id'					=> lang('request ID'),
+				'value_request_id'					=> $id,
 
-				'lang_title'				=> lang('Title'),
-				'value_title'				=> $values['title'],
-				'lang_title_statustext'			=> lang('Enter request Title'),
+				'lang_title'						=> lang('Title'),
+				'value_title'						=> $values['title'],
+				'lang_title_statustext'				=> lang('Enter request Title'),
 
-				'lang_descr_statustext'			=> lang('Enter a description of the request'),
-				'lang_descr'				=> lang('Description'),
-				'value_descr'				=> $values['descr'],
-				'lang_score'				=> lang('Score'),
-				'value_score'				=> $values['score'],
-				'lang_done_statustext'			=> lang('Back to the list'),
-				'lang_save_statustext'			=> lang('Save the request'),
-				'lang_no_cat'				=> lang('Select category'),
-				'lang_cat_statustext'			=> lang('Select the category the request belongs to. To do not use a category select NO CATEGORY'),
-				'value_cat_id'				=> $values['cat_id'],
+				'lang_descr_statustext'				=> lang('Enter a description of the request'),
+				'lang_descr'						=> lang('Description'),
+				'value_descr'						=> $values['descr'],
+				'lang_score'						=> lang('Score'),
+				'value_score'						=> $values['score'],
+				'lang_done_statustext'				=> lang('Back to the list'),
+				'lang_save_statustext'				=> lang('Save the request'),
+				'lang_no_cat'						=> lang('Select category'),
+				'lang_cat_statustext'				=> lang('Select the category the request belongs to. To do not use a category select NO CATEGORY'),
+				'value_cat_id'						=> $values['cat_id'],
 
-				'cat_select'				=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
+				'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $values['cat_id'])),
 
-				'lang_coordinator'			=> lang('Coordinator'),
-				'lang_user_statustext'			=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
-				'select_user_name'			=> 'values[coordinator]',
-				'lang_no_user'				=> lang('Select coordinator'),
-				'user_list'				=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
+				'lang_coordinator'					=> lang('Coordinator'),
+				'lang_user_statustext'				=> lang('Select the coordinator the request belongs to. To do not use a category select NO USER'),
+				'select_user_name'					=> 'values[coordinator]',
+				'lang_no_user'						=> lang('Select coordinator'),
+				'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
 
-				'status_list'				=> $this->bo->select_status_list('select',$values['status']),
-				'status_name'				=> 'values[status]',
-				'lang_no_status'			=> lang('Select status'),
-				'lang_status'				=> lang('Status'),
-				'lang_status_statustext'		=> lang('What is the current status of this request ?'),
+				'status_list'						=> $this->bo->select_status_list('select',$values['status']),
+				'status_name'						=> 'values[status]',
+				'lang_no_status'					=> lang('Select status'),
+				'lang_status'						=> lang('Status'),
+				'lang_status_statustext'			=> lang('What is the current status of this request ?'),
 
-				'branch_list'				=> $this->boproject->select_branch_list($values['branch_id']),
-				'lang_branch'				=> lang('branch'),
-				'lang_no_branch'			=> lang('Select branch'),
-				'lang_branch_statustext'		=> lang('Select the branches for this request'),
+				'branch_list'						=> $this->boproject->select_branch_list($values['branch_id']),
+				'lang_branch'						=> lang('branch'),
+				'lang_no_branch'					=> lang('Select branch'),
+				'lang_branch_statustext'			=> lang('Select the branches for this request'),
 
-				'notify'				=> $notify,
-				'lang_notify'				=> lang('Notify'),
-				'lang_notify_statustext'		=> lang('Check this to notify your supervisor by email'),
-				'value_notify_mail_address'		=> $supervisor_email,
+				'notify'							=> $notify,
+				'lang_notify'						=> lang('Notify'),
+				'lang_notify_statustext'			=> lang('Check this to notify your supervisor by email'),
+				'value_notify_mail_address'			=> $supervisor_email,
 
-				'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+				'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
-				'lang_authorities_demands'		=> lang('Authorities Demands'),
+				'lang_authorities_demands'			=> lang('Authorities Demands'),
 				'lang_authorities_demands_statustext'	=> lang('Is there a demand from the authorities to correct this condition?'),
-				'authorities_demands'			=> $values['authorities_demands'],
+				'authorities_demands'				=> $values['authorities_demands'],
 
-				'condition_list'			=> $this->bo->select_conditions($id),
-				'building_part_list'			=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+				'condition_list'					=> $this->bo->select_conditions($id),
+				'building_part_list'				=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 			);
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -1272,7 +1308,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('request', 'files'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('request', 'files','attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 			$GLOBALS['phpgw']->css->validate_file('datatable');
 		  	$GLOBALS['phpgw']->css->validate_file('property');

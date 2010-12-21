@@ -629,11 +629,8 @@
 
 			$project['location_code']=implode("-", $location);
 
-			$start_date	= phpgwapi_datetime::date_array($project['start_date']);
-			$end_date	= phpgwapi_datetime::date_array($project['end_date']);
-
-			$project['start_date']	= mktime (2,0,0,$start_date['month'],$start_date['day'],$start_date['year']);
-			$project['end_date']	= $end_date ? mktime (2,0,0,$end_date['month'],$end_date['day'],$end_date['year']) : '';
+			$project['start_date']	=  phpgwapi_datetime::date_to_timestamp($project['start_date']);
+			$project['end_date']	=  phpgwapi_datetime::date_to_timestamp($project['end_date']);
 
 			if(is_array($values_attribute))
 			{
