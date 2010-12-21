@@ -27,6 +27,7 @@
 				$sql = "SELECT id, type, status, title, name, created, building_id FROM bb_system_message ORDER BY id DESC";
 			}
 
+			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$this->db->query($sql);
 			$data = $this->db->resultSet;
 			while ($messagedata = array_shift($data)) {
@@ -49,7 +50,7 @@
                 	    'contact_name' => $messagedata['name'],                	    
 						'case_officer_name' => $for_case_officer_id,
                 	    'what' => $messagedata['title'],
-                	    'link' => "/index.php?menuaction=booking.uisystem_message.show&amp;id=".$messagedata['id']."&amp;");			
+                	    'link' => $external_site_address."/index.php?menuaction=booking.uisystem_message.show&amp;id=".$messagedata['id']."&amp;");			
 
 						while($case_officer = array_shift($building_case_officers_data)) {
 							if ($message['case_officer_name'] = $case_officer['account_id'])
