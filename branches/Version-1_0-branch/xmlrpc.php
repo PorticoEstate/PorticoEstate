@@ -43,7 +43,7 @@
 	* Include phpgroupware header
 	*/
 
-	include_once('header.inc.php');
+	require_once 'header.inc.php';
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 	$GLOBALS['phpgw_info']['flags']['authed'] = false;
@@ -83,7 +83,7 @@
 	// If XML-RPC isn't enabled in PHP, return an XML-RPC response stating so
 	if (! function_exists('xmlrpc_server_create'))
 	{
-		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
+		echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		echo "<methodResponse>\n";
 		echo "<fault>\n";
 		echo " <value>\n";
@@ -110,7 +110,7 @@
 
 
 	// Return all PHP errors as faults
-	$GLOBALS['xmlrpc_server'] = xmlrpc_server_create();
+
 	error_reporting(E_ERROR | E_WARNING | E_PARSE);
 	set_error_handler('xmlrpc_custom_error');
 
@@ -131,7 +131,6 @@
 		// domain is invalid
 		xmlrpc_error(1001,'not a valid domain');
 	}
-//		xmlrpc_error(1001,$headers['Authorization']);
 
 	if ( isset($headers['Authorization']) 
 		&& ereg('Basic', $headers['Authorization']) )
@@ -184,7 +183,11 @@
 				xmlrpc_error(1001,'Access not permitted');
 			}
 
-			echo xmlrpc_server_call_method($GLOBALS['xmlrpc_server'],$request_xml,'');
+			//$output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "utf-8" );
+			//$output_options = array('output_type' => 'php', 'version' => 'xmlrpc', 'encoding' => 'UTF-8');
+			$output_options = array('encoding' => 'UTF-8');
+
+			echo xmlrpc_server_call_method($GLOBALS['xmlrpc_server'],$request_xml, null,$output_options);
 			xmlrpc_server_destroy($GLOBALS['xmlrpc_server']);
 		}
 		else
@@ -252,7 +255,7 @@
 			'faultCode'   => $error_number
 		);
 
-		echo xmlrpc_encode_request(NULL,$values);
+		echo xmlrpc_encode_request(NULL,$values,array("encoding" => "utf-8"));
 
 		xmlrpc_server_destroy($GLOBALS['xmlrpc_server']);
 		exit;
