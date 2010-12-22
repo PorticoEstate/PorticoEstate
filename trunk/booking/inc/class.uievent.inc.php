@@ -270,32 +270,10 @@
 				$event['secret'] = $this->generate_secret();
 				$event['is_public'] = 1;
 				$event['building_name'] = $_POST['building_name'];
-				
-				if ($_POST['organization_name']) {
-					$event['customer_organization_name'] = $_POST['organization_name'];
-					$event['customer_organization_id'] = $_POST['organization_id'];
-					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
-					if ($organization['customer_internal'] == 0) {					
-						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
-						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_organization_number']) == 9) {
-							$event['customer_organization_number'] = $organization['customer_organization_number'];
-						} else {
-							$errors['organization_number'] = lang('The organization number is wrong or not present');
-						}
-					} else {
-						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
-						$event['customer_internal'] = $organization['customer_internal'];
-						if (strlen($organization['customer_number']) == 5) {
- 							$event['customer_organization_number'] = $organization['customer_number'];
-						} else {
-							$errors['resource_number'] = lang('The resource number is wrong or not present');
-						}
-					}
-				} 
 
 				if (!$_POST['application_id'])
 				{
+                    $temp_errors = array();
 					foreach( $event['dates'] as $checkdate)				
 					{
 						$event['from_'] = $checkdate['from_'];
@@ -312,7 +290,11 @@
 								$errors['time'] = lang('Time is set wrong');
 							}
 						}  
+                        if ($errors != array()) {
+                            $temp_errors = $errors;
+                        }
 					}						
+                    $errors = $temp_errors;
 				}
 				else
 				{
@@ -326,11 +308,33 @@
 						}
 					}  
 				}
+				if ($_POST['organization_name']) {
+					$event['customer_organization_name'] = $_POST['organization_name'];
+					$event['customer_organization_id'] = $_POST['organization_id'];
+					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'POST')));
+					if ($organization['customer_internal'] == 0) {
+						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$event['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_organization_number']) == 9) {
+							$event['customer_organization_number'] = $organization['customer_organization_number'];
+						} else {
+							$errors['organization_number'] = lang('The organization number is wrong or not present');
+						}
+					} else {
+						$event['customer_identifier_type'] = 'organization_number';
+						$event['customer_internal'] = $organization['customer_internal'];
+						if (strlen($organization['customer_number']) == 5) {
+ 							$event['customer_organization_number'] = $organization['customer_number'];
+						} else {
+							$errors['resource_number'] = lang('The resource number is wrong or not present');
+						}
+					}
+				} 
+
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				} 
-
-				if(!$errors['event'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'])
+				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'])
 				{
 					if (!$_POST['application_id'])
 					{
@@ -366,7 +370,6 @@
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret'], 'warnings'=>$errors));
 				}
 			}
-
 			$default_dates = array_map(array(self, '_combine_dates'), '','');
 			array_set_default($event, 'dates', $default_dates);
 
@@ -459,7 +462,7 @@
 							$errors['organization_number'] = lang('The organization number is wrong or not present');
 						}
 					} else {
-						$event['customer_identifier_type'] = $organization['customer_identifier_type'];
+						$event['customer_identifier_type'] = 'organization_number';
 						$event['customer_internal'] = $organization['customer_internal'];
 						if (strlen($organization['customer_number']) == 5) {
  							$event['customer_organization_number'] = $organization['customer_number'];
