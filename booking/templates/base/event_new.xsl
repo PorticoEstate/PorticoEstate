@@ -173,7 +173,7 @@
                         <xsl:attribute name="value"><xsl:value-of select="event/organization_id"/></xsl:attribute>
                     </input>
                     <input id="field_org_name" name="organization_name" type="text">
-                        <xsl:attribute name="value"><xsl:value-of select="event/organization_name"/></xsl:attribute>
+                        <xsl:attribute name="value"><xsl:value-of select="event/customer_organization_name"/></xsl:attribute>
                     </input>
                     <div id="org_container"/>
                 </div>
