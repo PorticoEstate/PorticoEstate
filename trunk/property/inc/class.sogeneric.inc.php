@@ -197,8 +197,17 @@
 				{
 					$id_query = "'{$query}'";
 				}
+
+				$_query_start = '';
+				$_query_end = '';
+
+				if($filtermethod)
+				{
+					$_query_start = '(';
+					$_query_end = ')';
+				}
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " {$where } ({$table}.{$this->location_info['id']['name']} = {$id_query}";
+				$querymethod = " {$where } {$_query_start} ({$table}.{$this->location_info['id']['name']} = {$id_query}";
 //_debug_array($filtermethod);
 //_debug_array($where);die();
 
@@ -241,9 +250,10 @@
 					$querymethod .= " $where (" . implode (' OR ',$_querymethod) . ')';
 				}
 
+				$querymethod .= $_query_end;
 			}
 
-			$sql = "SELECT * FROM $table $filtermethod $querymethod";
+			$sql = "SELECT * FROM $table {$filtermethod} {$querymethod}";
 
 			$this->_db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->_db->next_record();
