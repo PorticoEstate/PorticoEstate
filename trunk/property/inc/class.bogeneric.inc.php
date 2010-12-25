@@ -42,24 +42,6 @@
 		var $cat_id;
 		var $location_info = array();
 
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
 
 		function __construct($session=false)
 		{
@@ -110,7 +92,7 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data',"generic_{$type}");
 
-	//		_debug_array($data);
+			//		_debug_array($data);
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -152,9 +134,9 @@
 					}
 				}
 			}
-			
+
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows),$filter);
+				'allrows'=>$this->allrows),$filter);
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
@@ -207,12 +189,12 @@
 		}
 
 		/**
-		* Get a list from and tag the selected item
-		*
-		* @param array $data
-		*
-		* @return array with information to include in forms
-		*/
+		 * Get a list from and tag the selected item
+		 *
+		 * @param array $data
+		 *
+		 * @return array with information to include in forms
+		 */
 
 		public function get_list($data)
 		{

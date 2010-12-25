@@ -36,7 +36,7 @@
 	{
 		function __construct()
 		{
-			$this->account	= 	$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
@@ -92,7 +92,7 @@
 			{
 				$filtermethod .= " AND location_id = {$location_id}";
 			}
-			
+
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -118,19 +118,19 @@
 			while ($this->db->next_record())
 			{
 				$jasper[] = array
-				(
-					'id'				=> $this->db->f('id'),
-					'descr'				=> $this->db->f('descr',true),
-					'location_id'		=> $this->db->f('location_id'),
-					'title'				=> $this->db->f('title',true),
-					'formats'			=> @unserialize($this->db->f('formats',true)),
-					'version'			=> $this->db->f('version'),
-					'user_id'			=> $this->db->f('user_id'),
-					'access'			=> $this->db->f('access'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'modified_by'		=> $this->db->f('modified_by'),
-					'modified_date'		=> $this->db->f('modified_date')
-				);
+					(
+						'id'				=> $this->db->f('id'),
+						'descr'				=> $this->db->f('descr',true),
+						'location_id'		=> $this->db->f('location_id'),
+						'title'				=> $this->db->f('title',true),
+						'formats'			=> @unserialize($this->db->f('formats',true)),
+						'version'			=> $this->db->f('version'),
+						'user_id'			=> $this->db->f('user_id'),
+						'access'			=> $this->db->f('access'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'modified_by'		=> $this->db->f('modified_by'),
+						'modified_date'		=> $this->db->f('modified_date')
+					);
 			}
 			return $jasper;
 		}
@@ -149,36 +149,36 @@
 			if ($this->db->next_record())
 			{
 				$jasper = array
-				(
-					'id'				=> $this->db->f('id'),
-					'descr'				=> $this->db->f('descr',true),
-					'location_id'		=> $this->db->f('location_id'),
-					'title'				=> $this->db->f('title',true),
-					'formats'			=> @unserialize($this->db->f('formats',true)),
-					'version'			=> $this->db->f('version'),
-					'user_id'			=> $this->db->f('user_id'),
-					'access'			=> $this->db->f('access'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'modified_by'		=> $this->db->f('modified_by'),
-					'modified_date'		=> $this->db->f('modified_date')
-				);
+					(
+						'id'				=> $this->db->f('id'),
+						'descr'				=> $this->db->f('descr',true),
+						'location_id'		=> $this->db->f('location_id'),
+						'title'				=> $this->db->f('title',true),
+						'formats'			=> @unserialize($this->db->f('formats',true)),
+						'version'			=> $this->db->f('version'),
+						'user_id'			=> $this->db->f('user_id'),
+						'access'			=> $this->db->f('access'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'modified_by'		=> $this->db->f('modified_by'),
+						'modified_date'		=> $this->db->f('modified_date')
+					);
 
 				$sql = "SELECT fm_jasper_input.id, fm_jasper_input.input_type_id,fm_jasper_input.name as input_name,fm_jasper_input_type.name as type_name,is_id"
-				." FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
+					." FROM fm_jasper_input {$this->join} fm_jasper_input_type ON fm_jasper_input.input_type_id = fm_jasper_input_type.id WHERE jasper_id = $id ORDER BY id ASC";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$i = 0;
 				while ($this->db->next_record())
 				{
 					$jasper['input'][] = array
-					(
-						'counter'			=> $i,
-						'id'				=> $this->db->f('id'),
-						'input_type_id'		=> $this->db->f('input_type_id'),
-						'input_name'		=> $this->db->f('input_name',true),
-						'datatype'			=> $this->db->f('type_name',true),
-						'type_name'			=> $this->db->f('type_name',true),
-						'is_id'				=> $this->db->f('is_id')
-					);
+						(
+							'counter'			=> $i,
+							'id'				=> $this->db->f('id'),
+							'input_type_id'		=> $this->db->f('input_type_id'),
+							'input_name'		=> $this->db->f('input_name',true),
+							'datatype'			=> $this->db->f('type_name',true),
+							'type_name'			=> $this->db->f('type_name',true),
+							'is_id'				=> $this->db->f('is_id')
+						);
 					$i++;
 				}
 
@@ -192,18 +192,18 @@
 			$table = 'fm_jasper';
 
 			$value_set= array
-			(
-				'location_id'	=> $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
-				'title'			=> $this->db->db_addslashes($jasper['title']),
-				'descr'			=> $this->db->db_addslashes($jasper['descr']),
-				'formats'		=> serialize($jasper['formats']),
-				'version'		=> 1,
-				'access'		=> $jasper['access'],
-				'user_id'		=> $this->account,
-				'entry_date'	=> time(),
-				'modified_by'	=> $this->account,
-				'modified_date'	=> time()
-			);
+				(
+					'location_id'	=> $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
+					'title'			=> $this->db->db_addslashes($jasper['title']),
+					'descr'			=> $this->db->db_addslashes($jasper['descr']),
+					'formats'		=> serialize($jasper['formats']),
+					'version'		=> 1,
+					'access'		=> $jasper['access'],
+					'user_id'		=> $this->account,
+					'entry_date'	=> time(),
+					'modified_by'	=> $this->account,
+					'modified_date'	=> time()
+				);
 
 			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
@@ -220,9 +220,9 @@
 
 				$is_id = (int)$jasper['is_id'];
 				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name,is_id)"
-				." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}',{$is_id})",__LINE__,__FILE__);
+					." VALUES({$id},{$jasper['input_type']},'{$jasper['input_name']}',{$is_id})",__LINE__,__FILE__);
 			}
-			
+
 			if($this->db->transaction_commit())
 			{
 				$receipt['message'][]=array('msg'=>lang('JasperReport %1 has been saved',$id));
@@ -250,15 +250,15 @@
 			}
 
 			$value_set= array
-			(
-				'location_id'	=> $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
-				'title'			=> $this->db->db_addslashes($jasper['title']),
-				'descr'			=> $this->db->db_addslashes($jasper['descr']),
-				'formats'		=> serialize($jasper['formats']),
-				'access'		=> $jasper['access'],
-				'modified_by'	=> $this->account,
-				'modified_date'	=> time()
-			);
+				(
+					'location_id'	=> $GLOBALS['phpgw']->locations->get_id($jasper['app'], $jasper['location']),
+					'title'			=> $this->db->db_addslashes($jasper['title']),
+					'descr'			=> $this->db->db_addslashes($jasper['descr']),
+					'formats'		=> serialize($jasper['formats']),
+					'access'		=> $jasper['access'],
+					'modified_by'	=> $this->account,
+					'modified_date'	=> time()
+				);
 
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
@@ -288,7 +288,7 @@
 				$is_id =  (int)$jasper['is_id'];
 
 				$this->db->query("INSERT INTO fm_jasper_input (jasper_id,input_type_id,name,is_id)"
-				." VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}',$is_id)",__LINE__,__FILE__);
+					." VALUES({$jasper['id']},{$jasper['input_type']},'{$jasper['input_name']}',$is_id)",__LINE__,__FILE__);
 			}
 
 			if($this->db->transaction_commit())
@@ -317,10 +317,10 @@
 			while ($this->db->next_record())
 			{
 				$input_types[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'descr'	=> $this->db->f('descr',true)
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'descr'	=> $this->db->f('descr',true)
+					);
 			}
 			return $input_types;
 		}
@@ -333,10 +333,10 @@
 			while ($this->db->next_record())
 			{
 				$format_types[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('id')
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('id')
+					);
 			}
 			return $format_types;
 		}

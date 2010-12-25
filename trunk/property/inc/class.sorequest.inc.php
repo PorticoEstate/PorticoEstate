@@ -57,7 +57,7 @@
 					'id' 		=> $this->db->f('id'),
 					'descr' 	=> $this->db->f('descr'),
 					'priority_key' 	=> $this->db->f('priority_key')
-					);
+				);
 			}
 
 			return $priority_key;
@@ -100,14 +100,14 @@
 				if($GLOBALS['phpgw_info']['server']['db_type']=='pgsql' || $GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 				{
 					$sql = "UPDATE fm_request SET score = (SELECT sum(priority_key * ( degree * probability * ( consequence +1 )))  FROM fm_request_condition"
-					 . " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id) WHERE fm_request.id = $id";
+						. " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id) WHERE fm_request.id = $id";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 				}
 				else
 				{
 					$sql = "SELECT sum(priority_key * ( degree * probability * ( consequence +1 ))) AS score FROM fm_request_condition"
-					 . " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id";
+						. " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
@@ -187,61 +187,61 @@
 			$cols_return[] = 'location_code';
 
 			$cols .= ",$entity_table.id as request_id";
-			$cols_return[] 			= 'request_id';
+			$cols_return[] 				= 'request_id';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'request_id';
-			$uicols['descr'][]		= lang('Request');
+			$uicols['name'][]			= 'request_id';
+			$uicols['descr'][]			= lang('Request');
 			$uicols['statustext'][]		= lang('Request ID');
 
 			$cols.= ",$entity_table.start_date";
-			$cols_return[] 			= 'start_date';
+			$cols_return[] 				= 'start_date';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'start_date';
-			$uicols['descr'][]		= lang('start date');
+			$uicols['name'][]			= 'start_date';
+			$uicols['descr'][]			= lang('start date');
 			$uicols['statustext'][]		= lang('Request start date');
 
 			$cols.= ",$entity_table.title as title";
-			$cols_return[] 			= 'title';
+			$cols_return[] 				= 'title';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'title';
-			$uicols['descr'][]		= lang('title');
+			$uicols['name'][]			= 'title';
+			$uicols['descr'][]			= lang('title');
 			$uicols['statustext'][]		= lang('Request title');
 
 			if($list_descr)
 			{
 				$cols.= ",$entity_table.descr as descr";
-				$cols_return[] 			= 'descr';
+				$cols_return[] 				= 'descr';
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]		= 'descr';
-				$uicols['descr'][]		= lang('descr');
+				$uicols['name'][]			= 'descr';
+				$uicols['descr'][]			= lang('descr');
 				$uicols['statustext'][]		= lang('Request descr');
 			}
 
 
 			$cols.= ",$entity_table.budget as budget";
-			$cols_return[] 			= 'budget';
+			$cols_return[] 				= 'budget';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'budget';
-			$uicols['descr'][]		= lang('budget');
+			$uicols['name'][]			= 'budget';
+			$uicols['descr'][]			= lang('budget');
 			$uicols['statustext'][]		= lang('Request budget');
 
 			$cols.= ",$entity_table.coordinator";
-			$cols_return[] 			= 'coordinator';
+			$cols_return[] 				= 'coordinator';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'coordinator';
-			$uicols['descr'][]		= lang('Coordinator');
+			$uicols['name'][]			= 'coordinator';
+			$uicols['descr'][]			= lang('Coordinator');
 			$uicols['statustext'][]		= lang('Project coordinator');
 
 			$cols.= ",$entity_table.score";
-			$cols_return[] 			= 'score';
+			$cols_return[] 				= 'score';
 			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]		= 'score';
-			$uicols['descr'][]		= lang('score');
+			$uicols['name'][]			= 'score';
+			$uicols['descr'][]			= lang('score');
 			$uicols['statustext'][]		= lang('score');
 
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-															'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
-															'query'=>$query,'force_location'=>true));
+				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
+				'query'=>$query,'force_location'=>true));
 
 			if ($order)
 			{
@@ -311,7 +311,7 @@
 
 			$this->uicols		= $this->bocommon->uicols;
 			$cols_return		= $this->bocommon->cols_return;
-			$type_id		= $this->bocommon->type_id;
+			$type_id			= $this->bocommon->type_id;
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
 			$this->db->fetchmode = 'ASSOC';
@@ -336,7 +336,7 @@
 					$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 				}
 			}
-			
+
 			$j=0;
 			$request_list = array();
 			while ($this->db->next_record())
@@ -356,7 +356,7 @@
 
 				$j++;
 			}
-//_debug_array($request_list);
+			//_debug_array($request_list);
 			return $request_list;
 		}
 
@@ -371,30 +371,30 @@
 			if ($this->db->next_record())
 			{
 				$request = array
-				(
-					'id'					=> $this->db->f('id'),
-					'request_id'			=> $this->db->f('id'), // FIXME
-					'title'					=> $this->db->f('title', true),
-					'location_code'			=> $this->db->f('location_code'),
-					'descr'					=> $this->db->f('descr', true),
-					'status'				=> $this->db->f('status'),
-					'budget'				=> (int)$this->db->f('budget'),
-					'tenant_id'				=> $this->db->f('tenant_id'),
-					'owner'					=> $this->db->f('owner'),
-					'coordinator'			=> $this->db->f('coordinator'),
-					'access'				=> $this->db->f('access'),
-					'start_date'			=> $this->db->f('start_date'),
-					'end_date'				=> $this->db->f('end_date'),
-					'cat_id'				=> $this->db->f('category'),
-					'branch_id'				=> $this->db->f('branch_id'),
-					'authorities_demands'	=> $this->db->f('authorities_demands'),
-					'score'					=> $this->db->f('score'),
-					'p_num'					=> $this->db->f('p_num'),
-					'p_entity_id'			=> $this->db->f('p_entity_id'),
-					'p_cat_id'				=> $this->db->f('p_cat_id'),
-					'contact_phone'			=> $this->db->f('contact_phone', true),
-					'building_part'			=> $this->db->f('building_part'),
-				);
+					(
+						'id'					=> $this->db->f('id'),
+						'request_id'			=> $this->db->f('id'), // FIXME
+						'title'					=> $this->db->f('title', true),
+						'location_code'			=> $this->db->f('location_code'),
+						'descr'					=> $this->db->f('descr', true),
+						'status'				=> $this->db->f('status'),
+						'budget'				=> (int)$this->db->f('budget'),
+						'tenant_id'				=> $this->db->f('tenant_id'),
+						'owner'					=> $this->db->f('owner'),
+						'coordinator'			=> $this->db->f('coordinator'),
+						'access'				=> $this->db->f('access'),
+						'start_date'			=> $this->db->f('start_date'),
+						'end_date'				=> $this->db->f('end_date'),
+						'cat_id'				=> $this->db->f('category'),
+						'branch_id'				=> $this->db->f('branch_id'),
+						'authorities_demands'	=> $this->db->f('authorities_demands'),
+						'score'					=> $this->db->f('score'),
+						'p_num'					=> $this->db->f('p_num'),
+						'p_entity_id'			=> $this->db->f('p_entity_id'),
+						'p_cat_id'				=> $this->db->f('p_cat_id'),
+						'contact_phone'			=> $this->db->f('contact_phone', true),
+						'building_part'			=> $this->db->f('building_part'),
+					);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
@@ -420,11 +420,11 @@
 			while ($this->db->next_record())
 			{
 				$budget[] = array
-				(
-					'workorder_id'	=> $this->db->f('workorder_id'),
-					'budget'	=> sprintf("%01.2f",$this->db->f('budget')),
-					'vendor_id'	=> $this->db->f('vendor_id')
-				);
+					(
+						'workorder_id'	=> $this->db->f('workorder_id'),
+						'budget'	=> sprintf("%01.2f",$this->db->f('budget')),
+						'vendor_id'	=> $this->db->f('vendor_id')
+					);
 			}
 			return $budget;
 		}
@@ -445,7 +445,7 @@
 
 		function add($request, $values_attribute = array())
 		{
-//_debug_array($request);
+			//_debug_array($request);
 			$receipt = array();
 
 			$value_set = array();
@@ -543,14 +543,14 @@
 			if(is_array($request['origin']) && isset($request['origin'][0]['data'][0]['id']))
 			{
 				$interlink_data = array
-				(
-					'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $request['origin'][0]['location']),
-					'location1_item_id' => $request['origin'][0]['data'][0]['id'],
-					'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),			
-					'location2_item_id' => $id,
-					'account_id'		=> $this->account
-				);
-					
+					(
+						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $request['origin'][0]['location']),
+						'location1_item_id' => $request['origin'][0]['data'][0]['id'],
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),			
+						'location2_item_id' => $id,
+						'account_id'		=> $this->account
+					);
+
 				$this->interlink->add($interlink_data,$this->db);
 			}
 
@@ -588,20 +588,20 @@
 
 
 			$value_set = array
-			(
-				'title' 				=> $this->db->db_addslashes($request['title']),
-				'status'				=> $request['status'],
-				'category'				=> $request['cat_id'],
-				'start_date'			=> $request['start_date'],
-				'end_date'				=> $request['end_date'],
-				'coordinator'			=> $request['coordinator'],
-				'descr'					=> $this->db->db_addslashes($request['descr']),
-				'budget'				=> (int)$request['budget'],
-				'location_code'			=> $request['location_code'],
-				'address'				=> $address,
-				'authorities_demands'	=> $request['authorities_demands'],
-				'building_part'			=> $request['building_part'],
-			);
+				(
+					'title' 				=> $this->db->db_addslashes($request['title']),
+					'status'				=> $request['status'],
+					'category'				=> $request['cat_id'],
+					'start_date'			=> $request['start_date'],
+					'end_date'				=> $request['end_date'],
+					'coordinator'			=> $request['coordinator'],
+					'descr'					=> $this->db->db_addslashes($request['descr']),
+					'budget'				=> (int)$request['budget'],
+					'location_code'			=> $request['location_code'],
+					'address'				=> $address,
+					'authorities_demands'	=> $request['authorities_demands'],
+					'building_part'			=> $request['building_part'],
+				);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
 			{
@@ -680,7 +680,7 @@
 			{
 				$receipt['message'][] = array('msg'=>lang('request %1 has not been edited',$request['id']));
 			}
-			
+
 			$receipt['id'] = $request['id'];
 			return $receipt;
 		}

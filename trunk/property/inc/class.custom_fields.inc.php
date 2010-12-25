@@ -66,7 +66,7 @@
 		public function prepare($values, $appname, $location, $view_only='')
 		{
 			$contacts		= CreateObject('phpgwapi.contacts');
-			$vendor	= CreateObject('property.sogeneric');
+			$vendor			= CreateObject('property.sogeneric');
 			$vendor->get_location_info('vendor',false);
 
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
@@ -74,11 +74,11 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$input_type_array = array
-			(
-				'R'		=> 'radio',
-				'CH'	=> 'checkbox',
-				'LB'	=> 'listbox'
-			);
+				(
+					'R'		=> 'radio',
+					'CH'	=> 'checkbox',
+					'LB'	=> 'listbox'
+				);
 
 			$m = 0;
 			$i = 0;
@@ -141,7 +141,7 @@ JS;
 						$attributes['org_name']		= $contact_data[0]['org_name'];
 
 						$comms = $contacts->get_comm_contact_data($attributes['value'], $fields_comms='', $simple=false);
-						
+
 						$comm_data = array();
 						if(is_array($comms))
 						{
@@ -278,8 +278,8 @@ JS;
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
 
 					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',"
-									."location:'{$location}',"
-									."attrib_id:'{$attributes['id']}'";
+						."location:'{$location}',"
+						."attrib_id:'{$attributes['id']}'";
 					$lookup_functions[$m]['action'] .=	isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';		
 					$lookup_functions[$m]['action'] .=	isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';		
 					$lookup_functions[$m]['action'] .= "};\n";
@@ -376,7 +376,7 @@ JS;
 							if($entry['value'] != $old_value)
 							{
 								$data['history_set'][$entry['attrib_id']] = array
-								('
+									('
 									value'	=> $entry['value'],
 									'date'	=> phpgwapi_datetime::date_to_timestamp($entry['date'])
 								);
@@ -384,7 +384,7 @@ JS;
 						}
 						else
 						{
-								$data['history_set'][$entry['attrib_id']] = $entry['value'];
+							$data['history_set'][$entry['attrib_id']] = $entry['value'];
 						}
 					}
 				}
@@ -398,7 +398,7 @@ JS;
 			$attribute_table = 'phpgw_cust_attribute';
 			$attribute_filter = " location_id = {$location_id}";
 			$contacts = CreateObject('phpgwapi.contacts');
-//_debug_array($values);
+			//_debug_array($values);
 			$location = array();
 			$ret = array();
 			$j=0;

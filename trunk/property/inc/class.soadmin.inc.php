@@ -74,9 +74,9 @@
 			while ($this->db->next_record())
 			{
 				$fm_ids[] = array(
-							'descr'		=> $this->db->f('name'),
-							'value'		=> $this->db->f('value'),
-							'remark'	=> $this->db->f('remark')
+					'descr'		=> $this->db->f('name'),
+					'value'		=> $this->db->f('value'),
+					'remark'	=> $this->db->f('remark')
 				);
 
 			}
@@ -90,12 +90,12 @@
 			$select=$values['select'];
 
 			while($entry=each($select))
-				{
-					$n=$entry[0];
+			{
+				$n=$entry[0];
 
-					$sql = "update  fm_idgenerator set value='$values[$n]' where name='$field[$n]'";
-					$this->db->query($sql,__LINE__,__FILE__);
-				}
+				$sql = "update  fm_idgenerator set value='$values[$n]' where name='$field[$n]'";
+				$this->db->query($sql,__LINE__,__FILE__);
+			}
 
 			$receipt['message'][] = array('msg' => lang('ID is updated'));
 			return $receipt;

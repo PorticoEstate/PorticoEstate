@@ -28,10 +28,13 @@
 	*/
 
 
+
+
 	/**
 	 * Description
 	 * @package property
 	 */
+
 
 	class property_test
 	{
@@ -40,10 +43,12 @@
 			'date' => true
 		);
 
+
 		function __construct()
 		{
 		  	$GLOBALS['phpgw']->css->add_external_file('rental/templates/base/css/base.css');
 		}
+
 
 		function date()
 		{

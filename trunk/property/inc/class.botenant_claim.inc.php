@@ -45,7 +45,6 @@
 
 		function property_botenant_claim($session=false)
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->so = CreateObject('property.sotenant_claim');
 
@@ -125,13 +124,13 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','tenant_claim');
 
-			$this->start	= $data['start'];
-			$this->query	= $data['query'];
-			$this->user_id	= isset($data['user_id'])?$data['user_id']:'';
-			$this->status	= $data['status'];
-			$this->sort		= $data['sort'];
-			$this->order	= $data['order'];
-			$this->cat_id	= $data['cat_id'];
+			$this->start		= $data['start'];
+			$this->query		= $data['query'];
+			$this->user_id		= isset($data['user_id'])?$data['user_id']:'';
+			$this->status		= $data['status'];
+			$this->sort			= $data['sort'];
+			$this->order		= $data['order'];
+			$this->cat_id		= $data['cat_id'];
 			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
 		}
 
@@ -154,19 +153,19 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('status_' . $format));
 
-			$status[0][id]='ready';
-			$status[0][name]=lang('ready for processing claim');
-			$status[1][id]='closed';
-			$status[1][name]=lang('Closed');
+			$status[0]['id']	='ready';
+			$status[0]['name']	=lang('ready for processing claim');
+			$status[1]['id']	='closed';
+			$status[1]['name']	=lang('Closed');
 			if($format == "filter")
 			{
-				$status[2][id]='all';
-				$status[2][name]=lang('All');
+				$status[2]['id']	='all';
+				$status[2]['name']	=lang('All');
 			}
 			else
 			{
-				$status[2][id]='open';
-				$status[2][name]=lang('Open');
+				$status[2]['id']	='open';
+				$status[2]['name']	=lang('Open');
 			}
 
 			return $this->bocommon->select_list($selected,$status);
@@ -182,8 +181,8 @@
 			$project_id	= isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
 
 			$claims = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
-											'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
+				'user_id' => $this->user_id,'status' => $this->status,'cat_id' => $this->cat_id,
+				'allrows'=>$this->allrows,'project_id' => $project_id, 'district_id' => $this->district_id,));
 			$this->total_records = $this->so->total_records;
 
 			foreach ($claims as &$entry)
@@ -275,4 +274,3 @@
 			}
 		}
 	}
-

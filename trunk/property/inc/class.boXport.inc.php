@@ -34,10 +34,11 @@
 
 	class property_boXport
 	{
-		var $public_functions = array(
-			'import' => true,
-			'export' => true
-		);
+		var $public_functions = array
+			(
+				'import' => true,
+				'export' => true
+			);
 
 		var $start;
 		var $query;
@@ -52,7 +53,6 @@
 		{
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 			$this->config		= CreateObject('phpgwapi.config','property');
 
@@ -69,11 +69,26 @@
 			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'int');
 
-			if($start || $start == 0)  { $this->start = $start; }
-			if($query)  { $this->query  = $query;  }
-			if($sort)   { $this->sort   = $sort;   }
-			if($order)  { $this->order  = $order;  }
-			if($filter) { $this->filter = $filter; }
+			if($start || $start == 0)
+			{
+				$this->start = $start;
+			}
+			if($query)
+			{
+				$this->query  = $query;
+			}
+			if($sort)
+			{
+				$this->sort   = $sort;
+			}
+			if($order)
+			{
+				$this->order  = $order;
+			}
+			if($filter)
+			{
+				$this->filter = $filter;
+			}
 			$this->cat_id = $cat_id;
 		}
 
@@ -132,11 +147,11 @@
 				}
 
 				$conv_list[] = array
-				(
-					'id'		=> $myfilearray[$i],
-					'name'		=> $fname,
-					'selected'	=> $sel_file
-				);
+					(
+						'id'		=> $myfilearray[$i],
+						'name'		=> $fname,
+						'selected'	=> $sel_file
+					);
 			}
 
 			for ($i=0;$i<count($conv_list);$i++)
@@ -176,11 +191,11 @@
 				}
 
 				$conv_list[] = array
-				(
-					'id'		=> $myfilearray[$i],
-					'name'		=> $fname,
-					'selected'	=> $sel_file
-				);
+					(
+						'id'		=> $myfilearray[$i],
+						'name'		=> $fname,
+						'selected'	=> $sel_file
+					);
 			}
 
 			for ($i=0;$i<count($conv_list);$i++)
@@ -223,11 +238,11 @@
 				}
 
 				$rollback_list[] = array
-				(
-					'id'		=> $myfilearray[$i],
-					'name'		=> $fname,
-					'selected'	=> $sel_file
-				);
+					(
+						'id'		=> $myfilearray[$i],
+						'name'		=> $fname,
+						'selected'	=> $sel_file
+					);
 			}
 
 			for ($i=0;$i<count($rollback_list);$i++)
@@ -253,10 +268,10 @@
 				$header = $invoice->header;
 				$import = $invoice->import;
 				$buffer= array(
-						'table'		=> $buffer,
-						'header'	=> $header,
-						'import'	=> $import
-					);
+					'table'		=> $buffer,
+					'header'	=> $header,
+					'import'	=> $import
+				);
 			}
 			return $buffer;
 		}
@@ -268,7 +283,7 @@
 			$pre_transfer = $data['pre_transfer'];
 			$force_period_year = $data['force_period_year'];
 
-		 	include(PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
+			include(PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
 			$invoice = new export_conv;
 
 			$buffer = $invoice->overfor($download,$pre_transfer,$force_period_year);
@@ -294,4 +309,3 @@
 		}
 
 	}
-

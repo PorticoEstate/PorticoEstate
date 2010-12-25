@@ -45,24 +45,24 @@
 		var $uicols = array();
 
 		/**
-		* @var object $custom reference to custom fields object
-		*/
+		 * @var object $custom reference to custom fields object
+		 */
 		public $custom;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_bos_agreement($session=false)
 		{
-			$this->so			= CreateObject('property.sos_agreement');
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->custom 		= createObject('property.custom_fields');
+			$this->so					= CreateObject('property.sos_agreement');
+			$this->bocommon				= CreateObject('property.bocommon');
+			$this->custom 				= createObject('property.custom_fields');
 			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.vendor');
 			$this->cats->supress_info	= true;
 
@@ -72,30 +72,30 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$vendor_id	= phpgw::get_var('vendor_id', 'int');
-			$allrows	= phpgw::get_var('allrows', 'bool');
-			$role	= phpgw::get_var('role');
-			$member_id	= phpgw::get_var('member_id', 'int');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$vendor_id			= phpgw::get_var('vendor_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
+			$role				= phpgw::get_var('role');
+			$member_id			= phpgw::get_var('member_id', 'int');
 
 
-			$this->role	= $role;
-			$this->so->role	= $role;
+			$this->role			= $role;
+			$this->so->role		= $role;
 
-			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
-			$this->filter			= isset($filter) && $filter ? $filter : '';
-			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->member_id		= isset($member_id) && $member_id ? $member_id : '';
-			$this->vendor_id		= isset($vendor_id) && $vendor_id ? $vendor_id : '';
-			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
+			$this->start		= $start ? $start : 0;
+			$this->query		= isset($query) ? $query : $this->query;
+			$this->sort			= isset($sort) && $sort ? $sort : '';
+			$this->order		= isset($order) && $order ? $order : '';
+			$this->filter		= isset($filter) && $filter ? $filter : '';
+			$this->cat_id		= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->member_id	= isset($member_id) && $member_id ? $member_id : '';
+			$this->vendor_id	= isset($vendor_id) && $vendor_id ? $vendor_id : '';
+			$this->allrows		= isset($allrows) && $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata($data)
@@ -132,12 +132,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('select_vendor'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_vendor'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('select_vendor'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_vendor'));
+				break;
 			}
 
 			$input_list= $this->so->select_vendor_list();
@@ -149,8 +149,8 @@
 		function read()
 		{
 			$s_agreement = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-											'vendor_id'=>$this->vendor_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
+				'vendor_id'=>$this->vendor_id));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -172,8 +172,8 @@
 		function read_details($id)
 		{
 			$list = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-											's_agreement_id'=>$id,'detail'=>true));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
+				's_agreement_id'=>$id,'detail'=>true));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -233,8 +233,8 @@
 			$vfs->override_acl = 1;
 
 			$values['files'] = $vfs->ls (array(
-			     'string' => "/property/service_agreement/{$data['s_agreement_id']}",
-			     'relatives' => array(RELATIVE_NONE)));
+				'string' => "/property/service_agreement/{$data['s_agreement_id']}",
+				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
@@ -256,7 +256,7 @@
 			}
 			$values = $this->custom->prepare($values, 'property', '.s_agreement.detail');
 
-//_debug_array($item);
+			//_debug_array($item);
 
 			if($values['location_code'])
 			{
@@ -279,13 +279,13 @@
 		}
 
 		/**
-		* Arrange attributes within groups
-		*
-		* @param string  $location    the name of the location of the attribute
-		* @param array   $attributes  the array of the attributes to be grouped
-		*
-		* @return array the grouped attributes
-		*/
+		 * Arrange attributes within groups
+		 *
+		 * @param string  $location    the name of the location of the attribute
+		 * @param array   $attributes  the array of the attributes to be grouped
+		 *
+		 * @return array the grouped attributes
+		 */
 
 		public function get_attribute_groups($location, $attributes = array())
 		{
@@ -305,7 +305,6 @@
 			}
 
 			if ($action=='edit')
-//			if ($values['s_agreement_id'])
 			{
 				if ($values['s_agreement_id'] != 0)
 				{
@@ -368,11 +367,11 @@
 			}
 
 			$values = array(
-			'extra' 			=> $import_data,
-			's_agreement_id' 	=> $id,
-			'location_code'		=> $import_data['location_code'],
-			'location_name'		=> $import_data['address'],
-			'cost'				=> $import_data['cost']
+				'extra' 			=> $import_data,
+				's_agreement_id' 	=> $id,
+				'location_code'		=> $import_data['location_code'],
+				'location_name'		=> $import_data['address'],
+				'cost'				=> $import_data['cost']
 			);
 			unset($values['extra']['location_code']);
 			unset($values['extra']['address']);
@@ -419,16 +418,16 @@
 
 		function request_next_id()
 		{
-				return $this->so->request_next_id();
+			return $this->so->request_next_id();
 		}
 
 		function read_attrib_history($data)
 		{
-		//	_debug_array($data);
+			//	_debug_array($data);
 			$historylog = CreateObject('property.historylog','s_agreement');
 			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id'],$data['item_id']);
 			$this->total_records = count($history_values);
-		//	_debug_array($history_values);
+			//	_debug_array($history_values);
 			return $history_values;
 		}
 
@@ -448,9 +447,9 @@
 			{
 				$list = array();
 			}
-			$year = date('Y');
-			$limit = $year + 4;
-			
+			$year	= date('Y');
+			$limit	= $year + 4;
+
 			while ($year < $limit)
 			{
 				$list[] =  $year;
@@ -459,15 +458,15 @@
 
 			$list = array_unique($list);
 			sort($list);
-			
+
 			$values;
 			foreach($list as $entry)
 			{
 				$values[] = array
-				(
-					'id'	=> $entry,
-					'name'	=> $entry
-				);
+					(
+						'id'	=> $entry,
+						'name'	=> $entry
+					);
 			}
 			return $values;
 		}

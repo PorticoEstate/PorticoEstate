@@ -52,30 +52,11 @@
 		var $total_records;
 
 		var $public_functions = array
-		(
-			'read'			=> true,
-			'read_single'		=> true,
-			'save'			=> true,
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+			(
+				'read'			=> true,
+				'read_single'	=> true,
+				'save'			=> true,
+			);
 
 		function property_botts($session=false)
 		{
@@ -109,7 +90,7 @@
 			$start_date				= phpgw::get_var('start_date', 'string');
 			$end_date				= phpgw::get_var('end_date', 'string');
 			$location_code			= phpgw::get_var('location_code');
-			
+
 
 			$this->start			= $start 							? $start 			: 0;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
@@ -163,15 +144,15 @@
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = array();
 			$columns[] = array
-			(
-				'id' => 'billable_hours',
-				'name'=> lang('billable hours')
-			);
+				(
+					'id' => 'billable_hours',
+					'name'=> lang('billable hours')
+				);
 			$columns[] = array
-			(
-				'id' => 'district',
-				'name'=> lang('district')
-			);
+				(
+					'id' => 'district',
+					'name'=> lang('district')
+				);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -186,12 +167,12 @@
 
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_filter'));
+				break;
 			}
 
 			$_filters[0]['id']='all';
@@ -228,10 +209,10 @@
 			foreach($custom_status as $custom)
 			{
 				$status[$i] = array
-				(
-					'id'			=> "C{$custom['id']}",
-					'name'			=> $custom['name']
-				);
+					(
+						'id'			=> "C{$custom['id']}",
+						'name'			=> $custom['name']
+					);
 				$i++;
 			}
 
@@ -278,7 +259,7 @@
 			}
 
 			$priority_comment[$prioritylevels]=' - '.lang('Lowest');
-//			$priority_comment[2]=' - '.lang('Medium');
+			//			$priority_comment[2]=' - '.lang('Medium');
 			$priority_comment[1]=' - '.lang('Highest');
 
 			$priorities = array();
@@ -310,16 +291,16 @@
 			static $category_name = array();
 			static $account = array();
 			static $vendor_cache = array();
-			
+
 			$interlink 	= CreateObject('property.interlink');
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
 
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,
-											'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
-											'location_code' => $this->location_code, 'p_num' => $this->p_num));
+				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
+				'start_date'=>$start_date,'end_date'=>$end_date,
+				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
+				'location_code' => $this->location_code, 'p_num' => $this->p_num));
 			$this->total_records = $this->so->total_records;
 			if(!$external)
 			{
@@ -381,7 +362,7 @@
 					}
 					else
 					{
-						 $ticket['assignedto'] = $account[$ticket['group_id']];
+						$ticket['assignedto'] = $account[$ticket['group_id']];
 					}
 				}
 
@@ -455,7 +436,7 @@
 			$interlink 	= CreateObject('property.interlink');
 			$ticket['origin'] = $interlink->get_relation('property', '.ticket', $id, 'origin');
 			$ticket['target'] = $interlink->get_relation('property', '.ticket', $id, 'target');
-//_debug_array($ticket);
+			//_debug_array($ticket);
 			if(isset($ticket['finnish_date2']) && $ticket['finnish_date2'])
 			{
 				$ticket['finnish_date']=$ticket['finnish_date2'];
@@ -471,7 +452,7 @@
 				$solocation 	= CreateObject('property.solocation');
 				$ticket['location_data'] = $solocation->read_single($ticket['location_code']);
 			}
-//_debug_array($ticket['location_data']);
+			//_debug_array($ticket['location_data']);
 			if($ticket['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
@@ -526,8 +507,8 @@
 			$vfs->override_acl = 1;
 
 			$ticket['files'] = $vfs->ls (array(
-			     'string' => "/property/fmticket/{$id}",
-			     'relatives' => array(RELATIVE_NONE)));
+				'string' => "/property/fmticket/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
@@ -553,13 +534,13 @@
 			foreach ($history_array as $value)
 			{
 				$additional_notes[] = array
-				(
-					'value_id'		=> $value['id'],
-					'value_count'	=> $i,
-					'value_date'	=> $GLOBALS['phpgw']->common->show_date($value['datetime']),
-					'value_user'	=> $value['owner'],
-					'value_note'	=> stripslashes($value['new_value']),
-					'value_publish'	=> $value['publish'],
+					(
+						'value_id'		=> $value['id'],
+						'value_count'	=> $i,
+						'value_date'	=> $GLOBALS['phpgw']->common->show_date($value['datetime']),
+						'value_user'	=> $value['owner'],
+						'value_note'	=> stripslashes($value['new_value']),
+						'value_publish'	=> $value['publish'],
 					);
 				$i++;
 			}
@@ -582,42 +563,42 @@
 
 				switch ($value['status'])
 				{
-					case 'R': $type = lang('Re-opened'); break;
-					case 'X': $type = lang('Closed');    break;
-					case 'O': $type = lang('Opened');    break;
-					case 'A': $type = lang('Re-assigned'); break;
-					case 'G': $type = lang('Re-assigned group'); break;
-					case 'P': $type = lang('Priority changed'); break;
-					case 'T': $type = lang('Category changed'); break;
-					case 'S': $type = lang('Subject changed'); break;
-					case 'H': $type = lang('Billable hours changed'); break;
-					case 'B': $type = lang('Budget changed'); break;
-	//					case 'B': $type = lang('Billable rate changed'); break;
-					case 'F': $type = lang('finnish date changed'); break;
-					case 'IF': $type = lang('Initial finnish date'); break;
-					case 'L': $type = lang('Location changed'); break;
-					case 'AC': $type = lang('actual cost changed'); break;
-					case 'M':
-						$type = lang('Sendt by email to');
-						$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
-						break;
-					default:
-						// nothing
+				case 'R': $type = lang('Re-opened'); break;
+				case 'X': $type = lang('Closed');    break;
+				case 'O': $type = lang('Opened');    break;
+				case 'A': $type = lang('Re-assigned'); break;
+				case 'G': $type = lang('Re-assigned group'); break;
+				case 'P': $type = lang('Priority changed'); break;
+				case 'T': $type = lang('Category changed'); break;
+				case 'S': $type = lang('Subject changed'); break;
+				case 'H': $type = lang('Billable hours changed'); break;
+				case 'B': $type = lang('Budget changed'); break;
+//				case 'B': $type = lang('Billable rate changed'); break;
+				case 'F': $type = lang('finnish date changed'); break;
+				case 'IF': $type = lang('Initial finnish date'); break;
+				case 'L': $type = lang('Location changed'); break;
+				case 'AC': $type = lang('actual cost changed'); break;
+				case 'M':
+					$type = lang('Sendt by email to');
+					$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+					break;
+				default:
+					// nothing
 				}
 
-		//		if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
+				//		if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
 				if ( $value['status'] == 'X' || $value['status'] == 'R' || preg_match('/^C/i', $value['status']) || ( $value['status'] == 'R' && preg_match('/^C/i', $value['new_value']))) // if custom status
 				{
 					switch ($value['status'])
 					{
-						case 'R': 
-							$type = lang('Re-opened');
-							break;
-						case 'X':
-							$type = lang('Closed');
-							break;
-						default:
-							$type = lang('Status changed');
+					case 'R': 
+						$type = lang('Re-opened');
+						break;
+					case 'X':
+						$type = lang('Closed');
+						break;
+					default:
+						$type = lang('Status changed');
 					}
 					$value['new_value'] = $status_text[$value['new_value']];
 					$value['old_value'] = $status_text[$value['old_value']];
@@ -685,18 +666,18 @@
 
 			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
 				|| (isset($this->config->config_data['mailnotification'])
-					&& $this->config->config_data['mailnotification'])
-				)
+				&& $this->config->config_data['mailnotification'])
+			)
 			{
 				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);
 			}
 
 			$criteria = array
-			(
-				'appname'	=> 'property',
-				'location'	=> $this->acl_location,
-				'allrows'	=> true
-			);
+				(
+					'appname'	=> 'property',
+					'location'	=> $this->acl_location,
+					'allrows'	=> true
+				);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
@@ -738,10 +719,10 @@
 				for ($i=1; $i<$type_id+1; $i++)
 				{
 					$address_element[] = array
-					(
-						'text' => $location_types[($i-1)]['name'],
-						'value'=> $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
-					);
+						(
+							'text' => $location_types[($i-1)]['name'],
+							'value'=> $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
+						);
 				}
 
 				$fm_location_cols = $custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
@@ -751,17 +732,17 @@
 					if($location_entry['lookup_form'])
 					{
 						$address_element[] = array
-						(
-							'text' => $location_entry['input_text'],
-							'value'=> $location_data[$location_entry['column_name']]
-						);
+							(
+								'text' => $location_entry['input_text'],
+								'value'=> $location_data[$location_entry['column_name']]
+							);
 					}
 					$i++;
 				}
 			}
 			return $address_element;
 		}
-		
+
 		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
 		{
 			$this->send			= CreateObject('phpgwapi.send');
@@ -792,13 +773,13 @@
 
 			$from_address=$prefs_user['email'];
 
-	//-----------from--------
+			//-----------from--------
 
 			$current_prefs_user = $this->bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
 			$current_user_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 
-	//-----------from--------
-		// build body
+			//-----------from--------
+			// build body
 			$body  = '';
 			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
 			$body .= lang('Date Opened').': '.$entry_date."\n";
@@ -836,8 +817,8 @@
 			$body .= stripslashes(strip_tags($ticket['details']))."\n\n";
 
 			/**************************************************************\
-			* Display additional notes                                     *
-			\**************************************************************/
+			 * Display additional notes                                     *
+			 \**************************************************************/
 			if($fields_updated)
 			{
 				$i=1;
@@ -854,8 +835,8 @@
 				$subject.= "-" .$i;
 			}
 			/**************************************************************\
-			* Display record history                                       *
-			\**************************************************************/
+			 * Display record history                                       *
+			 \**************************************************************/
 
 			if($timestampclosed)
 			{
@@ -882,9 +863,7 @@
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
 			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
-					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1 
-				//	&& $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] != 2
-					)
+					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
 				)
 				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
 			{
@@ -894,12 +873,10 @@
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
 			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
-					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1
-			//		&& $GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] != 2
-					)
+					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
 				)
-					|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
-				)
+				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
+			)
 			{
 				// add assigned to recipients
 				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
@@ -917,14 +894,14 @@
 				{
 					if ($validator->check_email_address($prefs['email']))
 					{
-			            // Email address is technically valid
+						// Email address is technically valid
 						// avoid problems with the delimiter in the send class
-			            if(strpos($account_name,','))
-			            {
-			            	$_account_name = explode(',', $account_name);
-			            	$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
-			            }
-			            
+						if(strpos($account_name,','))
+						{
+							$_account_name = explode(',', $account_name);
+							$account_name = ltrim($_account_name[1]) . ' ' . $_account_name[0];
+						}
+
 						$toarray[] = "{$account_name}<{$prefs['email']}>";
 					}
 					else
@@ -973,7 +950,7 @@
 				$receipt['error'][] = array('msg'=> 'err_desc: '. $this->send->err['desc']);
 			}
 
-//_debug_array($receipt);
+			//_debug_array($receipt);
 			return $receipt;
 		}
 
@@ -983,10 +960,10 @@
 		}
 
 		/**
-		* Get a list of user(admin)-configured status
-		*
-		* @return array with list of custom status
-		*/
+		 * Get a list of user(admin)-configured status
+		 *
+		 * @return array with list of custom status
+		 */
 
 		public function get_custom_status()
 		{

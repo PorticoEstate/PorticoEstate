@@ -85,15 +85,14 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " $where (fm_template.name $this->like '%$query%' OR fm_template.descr $this->like '%$query%')";
 			}
 
 			$sql = "SELECT fm_template.id,fm_template.descr,fm_template.name,fm_template.owner,fm_template.entry_date,"
-			 . " fm_chapter.descr as chapter FROM fm_template $this->left_join fm_chapter  on fm_template.chapter_id=fm_chapter.id"
-			 . " $filtermethod $querymethod";
+				. " fm_chapter.descr as chapter FROM fm_template $this->left_join fm_chapter  on fm_template.chapter_id=fm_chapter.id"
+				. " $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -110,13 +109,13 @@
 			while ($this->db->next_record())
 			{
 				$template_list[] = array
-				(
-					'template_id'		=> $this->db->f('id'),
-					'name'				=> stripslashes($this->db->f('name')),
-					'descr'				=> stripslashes($this->db->f('descr')),
-					'owner'				=> $this->db->f('owner'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'chapter'			=> $this->db->f('chapter')
+					(
+						'template_id'		=> $this->db->f('id'),
+						'name'				=> stripslashes($this->db->f('name')),
+						'descr'				=> stripslashes($this->db->f('descr')),
+						'owner'				=> $this->db->f('owner'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'chapter'			=> $this->db->f('chapter')
 					);
 			}
 			return $template_list;
@@ -158,8 +157,7 @@
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND (hours_descr $this->like '%$query%' or fm_template_hours.remark $this->like '%$query%' or ns3420_id $this->like '%$query%')";
 			}
@@ -181,23 +179,23 @@
 			while ($this->db->next_record())
 			{
 				$hour_list[] = array
-				(
-					'hour_id'			=> $this->db->f('id'),
-					'chapter_id'		=> $this->db->f('chapter_id'),
-					'activity_num'		=> $this->db->f('activity_num'),
-					'hours_descr'		=> stripslashes($this->db->f('hours_descr')),
-					'remark'			=> stripslashes($this->db->f('remark')),
-					'grouping_id'		=> $this->db->f('grouping_id'),
-					'grouping_descr'	=> $this->db->f('grouping_descr'),
-					'ns3420_id'			=> $this->db->f('ns3420_id'),
-					'tolerance'			=> $this->db->f('tolerance'),
-					'activity_id'		=> $this->db->f('activity_id'),
-					'unit'				=> $this->db->f('unit'),
-					'record'			=> $this->db->f('record'),
-					'cost'				=> $this->db->f('cost'),
-					'billperae'			=> $this->db->f('billperae'),
-					'building_part'		=> $this->db->f('building_part'),
-					'dim_d'				=> $this->db->f('dim_d')
+					(
+						'hour_id'			=> $this->db->f('id'),
+						'chapter_id'		=> $this->db->f('chapter_id'),
+						'activity_num'		=> $this->db->f('activity_num'),
+						'hours_descr'		=> stripslashes($this->db->f('hours_descr')),
+						'remark'			=> stripslashes($this->db->f('remark')),
+						'grouping_id'		=> $this->db->f('grouping_id'),
+						'grouping_descr'	=> $this->db->f('grouping_descr'),
+						'ns3420_id'			=> $this->db->f('ns3420_id'),
+						'tolerance'			=> $this->db->f('tolerance'),
+						'activity_id'		=> $this->db->f('activity_id'),
+						'unit'				=> $this->db->f('unit'),
+						'record'			=> $this->db->f('record'),
+						'cost'				=> $this->db->f('cost'),
+						'billperae'			=> $this->db->f('billperae'),
+						'building_part'		=> $this->db->f('building_part'),
+						'dim_d'				=> $this->db->f('dim_d')
 					);
 			}
 			return $hour_list;
@@ -244,7 +242,7 @@
 				$hour['dim_d']					= $this->db->f('dim_d');
 			}
 
-				return $hour;
+			return $hour;
 		}
 
 		function next_record($template_id)
@@ -400,18 +398,18 @@
 
 			$value_set=array(
 				'hours_descr'		=> $hour['descr'],
-				'remark'		=> $hour['remark'],
-				'billperae'		=> $hour['billperae'],
-				'unit'			=> $hour['unit'],
-				'quantity'		=> $hour['quantity'],
-				'cost'			=> $hour['cost'],
-				'ns3420_id'		=> $hour['ns3420_id'],
-				'tolerance'		=> $hour['tolerance_id'],
+				'remark'			=> $hour['remark'],
+				'billperae'			=> $hour['billperae'],
+				'unit'				=> $hour['unit'],
+				'quantity'			=> $hour['quantity'],
+				'cost'				=> $hour['cost'],
+				'ns3420_id'			=> $hour['ns3420_id'],
+				'tolerance'			=> $hour['tolerance_id'],
 				'building_part'		=> $hour['building_part_id'],
-				'dim_d'			=> $hour['dim_d'],
+				'dim_d'				=> $hour['dim_d'],
 				'grouping_id'		=> $hour['grouping_id'],
 				'grouping_descr'	=> $hour['grouping_descr']
-				);
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -432,10 +430,10 @@
 			while ($this->db->next_record())
 			{
 				$grouping_entries[] = array
-				(
-					'id'	=> $this->db->f('grouping_id'),
-					'name'	=> $this->db->f('grouping_descr',true)
-				);
+					(
+						'id'	=> $this->db->f('grouping_id'),
+						'name'	=> $this->db->f('grouping_descr',true)
+					);
 			}
 			return $grouping_entries;
 		}
@@ -451,7 +449,7 @@
 				$values['descr'],
 				$values['chapter_id'],
 				time()
-				);
+			);
 
 			$values	= $this->db->validate_insert($values);
 
@@ -475,10 +473,10 @@
 			$this->db->transaction_begin();
 
 			$value_set=array(
-				'name' 		=>$values['name'],
-				'descr'		=>$values['descr'],
-				'chapter_id'	=>$values['chapter_id']
-				);
+				'name' 			=> $values['name'],
+				'descr'			=> $values['descr'],
+				'chapter_id'	=> $values['chapter_id']
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -513,7 +511,5 @@
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('hour %1 has been deleted',$hour_id));
 			return $receipt;
-
 		}
 	}
-

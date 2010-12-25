@@ -44,22 +44,21 @@
 		var $allrows;
 
 		/**
-		* @var object $custom reference to custom fields object
-		*/
+		 * @var object $custom reference to custom fields object
+		 */
 		protected $custom;
 
 		var $public_functions = array
-		(
-			'read'			=> true,
-			'read_single'	=> true,
-			'save'			=> true,
-			'delete'		=> true,
-			'check_perms'	=> true
-		);
+			(
+				'read'			=> true,
+				'read_single'	=> true,
+				'save'			=> true,
+				'delete'		=> true,
+				'check_perms'	=> true
+			);
 
 		function boifc($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 	//		$this->so 			= CreateObject('property.soifc');
 			$this->bocommon		= createObject('property.bocommon');
 			$this->custom 		= createObject('property.custom_fields');
@@ -115,22 +114,22 @@
 
 			switch($GLOBALS['phpgw_info']['server']['db_type'])
 			{
-				case 'mssql':
-					$this->dateformat 		= "M d Y";
-					$this->datetimeformat 	= "M d Y g:iA";
-					break;
-				case 'mysql':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
-				case 'pgsql':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
-				case 'postgres':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
+			case 'mssql':
+				$this->dateformat 		= "M d Y";
+				$this->datetimeformat 	= "M d Y g:iA";
+				break;
+			case 'mysql':
+				$this->dateformat 		= "Y-m-d";
+				$this->datetimeformat 	= "Y-m-d G:i:s";
+				break;
+			case 'pgsql':
+				$this->dateformat 		= "Y-m-d";
+				$this->datetimeformat 	= "Y-m-d G:i:s";
+				break;
+			case 'postgres':
+				$this->dateformat 		= "Y-m-d";
+				$this->datetimeformat 	= "Y-m-d G:i:s";
+				break;
 			}
 		}
 
@@ -170,10 +169,10 @@
 			$xml = $xmltool->export_var();
 
 _debug_array('hei');
-*/
+ */
 /*			$xmlparse = CreateObject('phpgwapi.parsexml');
 			$xml = $xmlparse->GetXMLTree($ifcfile);
-*/
+ */
 
 //			_debug_array($this->xml_to_array($ifcfile));
 
@@ -188,23 +187,23 @@ _debug_array('hei');
 		function read()
 		{
 			$ifc_info = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter));
+				'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter));
 			$this->total_records = $this->so->total_records;
 			return $ifc_info;
 		}
 
 		/**
-		* Get list of records with dynamically allocated coulmns
-		*
-		* @return array Array with records.
-		*/
+		 * Get list of records with dynamically allocated coulmns
+		 *
+		 * @return array Array with records.
+		 */
 		function read2()
 		{
 			$custom_attributes = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
 			$ifc_info = $this->so->read2(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter,
-											'custom_attributes'=>$custom_attributes));
+				'cat_id'=>$this->cat_id,'allrows'=>$this->allrows,'filter'=>$this->filter,
+				'custom_attributes'=>$custom_attributes));
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
 			return $ifc_info;
@@ -268,11 +267,11 @@ _debug_array('hei');
 			}
 
 			$criteria = array
-			(
-				'appname'	=> 'property',
-				'location'	=> $this->acl_location,
-				'allrows'	=> true
-			);
+				(
+					'appname'	=> 'property',
+					'location'	=> $this->acl_location,
+					'allrows'	=> true
+				);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
@@ -303,12 +302,12 @@ _debug_array('hei');
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$categories= $this->so->select_category_list();
@@ -318,31 +317,31 @@ _debug_array('hei');
 				if ($category['id']==$selected)
 				{
 					$category_list[] = array
-					(
-						'cat_id'	=> $category['id'],
-						'name'		=> $category['name'],
-						'selected'	=> 'selected'
-					);
+						(
+							'cat_id'	=> $category['id'],
+							'name'		=> $category['name'],
+							'selected'	=> 'selected'
+						);
 				}
 				else
 				{
 					$category_list[] = array
-					(
-						'cat_id'	=> $category['id'],
-						'name'		=> $category['name'],
-					);
+						(
+							'cat_id'	=> $category['id'],
+							'name'		=> $category['name'],
+						);
 				}
 			}
 			return $category_list;
 		}
 
 		/**
-		* Preserve attribute values from post in case of an error
-		*
-		* @param array $values_attribute attribute definition and values from posting
-		* @param array $values value set with
-		* @return array Array with attribute definition and values
-		*/
+		 * Preserve attribute values from post in case of an error
+		 *
+		 * @param array $values_attribute attribute definition and values from posting
+		 * @param array $values value set with
+		 * @return array Array with attribute definition and values
+		 */
 		function preserve_attribute_values($values='',$values_attribute='')
 		{
 			return $this->bocommon->preserve_attribute_values($values,$values_attribute);
@@ -358,6 +357,4 @@ _debug_array('hei');
 			}
 			return $date;
 		}
-
-
 	}

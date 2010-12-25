@@ -50,8 +50,8 @@
 			$this->left_join 	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 
-			$this->acl 		= & $GLOBALS['phpgw']->acl;
-			$this->grants	= $this->acl->get_grants('property','.project');
+			$this->acl 			= & $GLOBALS['phpgw']->acl;
+			$this->grants		= $this->acl->get_grants('property','.project');
 		}
 
 		function select_status_list()
@@ -61,10 +61,10 @@
 			while ($this->db->next_record())
 			{
 				$status[] = array
-				(
-					'id' 	=> $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
-				);
+					(
+						'id' 	=> $this->db->f('id'),
+						'name'	=> $this->db->f('descr',true)
+					);
 			}
 			return $status;
 		}
@@ -77,10 +77,10 @@
 			while ($this->db->next_record())
 			{
 				$branch[] = array
-				( 
-					'id' => $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
-				);
+					( 
+						'id' => $this->db->f('id'),
+						'name'	=> $this->db->f('descr',true)
+					);
 			}
 			return $branch;
 		}
@@ -92,30 +92,30 @@
 			while ($this->db->next_record())
 			{
 				$location[] = array
-				( 
-					'id' => $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
-				);
+					( 
+						'id' => $this->db->f('id'),
+						'name'	=> $this->db->f('descr',true)
+					);
 			}
 			return $location;
 		}
 
 		function read($data)
 		{
-			$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$filter	= $data['filter']?(int)$data['filter']:0;
-			$query = (isset($data['query'])?$data['query']:'');
-			$sort = (isset($data['sort'])?$data['sort']:'DESC');
-			$order = (isset($data['order'])?$data['order']:'');
-			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$status_id = (isset($data['status_id'])?$data['status_id']:'');
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter			= $data['filter']?(int)$data['filter']:0;
+			$query			= isset($data['query'])?$data['query']:'';
+			$sort			= isset($data['sort'])?$data['sort']:'DESC';
+			$order			= isset($data['order'])?$data['order']:'';
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$status_id		= isset($data['status_id'])?$data['status_id']:'';
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
-			$allrows = (isset($data['allrows'])?$data['allrows']:'');
-			$wo_hour_cat_id = (isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'');
-			$district_id	= (isset($data['district_id'])?$data['district_id']:'');
+			$allrows		= isset($data['allrows'])?$data['allrows']:'';
+			$wo_hour_cat_id = isset($data['wo_hour_cat_id'])?$data['wo_hour_cat_id']:'';
+			$district_id	= isset($data['district_id'])?$data['district_id']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
-			$criteria	= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
+			$criteria		= isset($data['criteria']) && $data['criteria'] ? $data['criteria'] : array();				
 
 			$sql = $this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id);
 
@@ -161,7 +161,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
-				
+
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
 				$uicols['input_type'][]		= 'text';
@@ -286,7 +286,7 @@
 				//----- wo_hour_status
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-										'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true));
+					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'force_location'=>true));
 
 				$this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id,$sql);
 
@@ -401,7 +401,7 @@
 				$filtermethod .= " $where fm_project.start_date >= $start_date AND fm_project.start_date <= $end_date ";
 				$where= 'AND';
 			}
-//_debug_array($criteria);
+			//_debug_array($criteria);
 			$querymethod = '';
 			if($query)
 			{
@@ -421,11 +421,11 @@
 				{
 
 					$matchtypes = array
-					(
-						'exact' => '=',
-						'like'	=> $this->like						
-					);
-					
+						(
+							'exact' => '=',
+							'like'	=> $this->like						
+						);
+
 					if(count($criteria) > 1)
 					{
 						$_querymethod = array();
@@ -466,7 +466,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-//echo substr($sql,strripos($sql,'from'));
+			//echo substr($sql,strripos($sql,'from'));
 			if($GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 			{
 				$sql2 = 'SELECT count(*) as cnt FROM (SELECT fm_project.id ' . substr($sql,strripos($sql,'from'))  . ' GROUP BY fm_project.id) as cnt';
@@ -480,7 +480,7 @@
 				$this->db->query($sql2,__LINE__,__FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
-//_debug_array($sql2);
+			//_debug_array($sql2);
 			$project_list = array();
 			$sql .= " $group_method";
 			if(!$allrows)
@@ -539,41 +539,40 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
-
 			if ($this->db->next_record())
 			{
 				$project = array
-				(
-					'project_id'			=> $this->db->f('id'),
-					'title'					=> $this->db->f('title'),
-					'name'					=> $this->db->f('name'),
-					'location_code'			=> $this->db->f('location_code'),
-					'key_fetch'				=> $this->db->f('key_fetch'),
-					'key_deliver'			=> $this->db->f('key_deliver'),
-					'other_branch'			=> $this->db->f('other_branch'),
-					'key_responsible'		=> $this->db->f('key_responsible'),
-					'descr'					=> $this->db->f('descr', true),
-					'status'				=> $this->db->f('status'),
-					'budget'				=> (int)$this->db->f('budget'),
-					'planned_cost'			=> (int)$this->db->f('planned_cost'),
-					'reserve'				=> (int)$this->db->f('reserve'),
-					'tenant_id'				=> $this->db->f('tenant_id'),
-					'user_id'				=> $this->db->f('user_id'),
-					'coordinator'			=> $this->db->f('coordinator'),
-					'access'				=> $this->db->f('access'),
-					'start_date'			=> $this->db->f('start_date'),
-					'end_date'				=> $this->db->f('end_date'),
-					'cat_id'				=> $this->db->f('category'),
-					'grants' 				=> (int)$this->grants[$this->db->f('user_id')],
-					'p_num'					=> $this->db->f('p_num'),
-					'p_entity_id'			=> $this->db->f('p_entity_id'),
-					'p_cat_id'				=> $this->db->f('p_cat_id'),
-					'contact_phone'			=> $this->db->f('contact_phone'),
-					'project_group'			=> $this->db->f('project_group'),
-					'ecodimb'				=> $this->db->f('ecodimb'),
-					'b_account_id'			=> $this->db->f('account_group'),
-					'contact_id'			=> $this->db->f('contact_id'),
-				);
+					(
+						'project_id'			=> $this->db->f('id'),
+						'title'					=> $this->db->f('title'),
+						'name'					=> $this->db->f('name'),
+						'location_code'			=> $this->db->f('location_code'),
+						'key_fetch'				=> $this->db->f('key_fetch'),
+						'key_deliver'			=> $this->db->f('key_deliver'),
+						'other_branch'			=> $this->db->f('other_branch'),
+						'key_responsible'		=> $this->db->f('key_responsible'),
+						'descr'					=> $this->db->f('descr', true),
+						'status'				=> $this->db->f('status'),
+						'budget'				=> (int)$this->db->f('budget'),
+						'planned_cost'			=> (int)$this->db->f('planned_cost'),
+						'reserve'				=> (int)$this->db->f('reserve'),
+						'tenant_id'				=> $this->db->f('tenant_id'),
+						'user_id'				=> $this->db->f('user_id'),
+						'coordinator'			=> $this->db->f('coordinator'),
+						'access'				=> $this->db->f('access'),
+						'start_date'			=> $this->db->f('start_date'),
+						'end_date'				=> $this->db->f('end_date'),
+						'cat_id'				=> $this->db->f('category'),
+						'grants' 				=> (int)$this->grants[$this->db->f('user_id')],
+						'p_num'					=> $this->db->f('p_num'),
+						'p_entity_id'			=> $this->db->f('p_entity_id'),
+						'p_cat_id'				=> $this->db->f('p_cat_id'),
+						'contact_phone'			=> $this->db->f('contact_phone'),
+						'project_group'			=> $this->db->f('project_group'),
+						'ecodimb'				=> $this->db->f('ecodimb'),
+						'b_account_id'			=> $this->db->f('account_group'),
+						'contact_id'			=> $this->db->f('contact_id'),
+					);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
@@ -584,11 +583,10 @@
 					}
 				}
 
-
 				$location_code = $this->db->f('location_code');
 				$project['power_meter']		= $this->get_power_meter($location_code);
 			}
-//_debug_array($project);
+			//_debug_array($project);
 			return $project;
 		}
 
@@ -611,8 +609,8 @@
 			$project_id = (int) $project_id;
 			$budget = array();
 			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,"
-			." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
-			." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
+				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
+				." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
 			{
 				$budget[] = array(
@@ -627,7 +625,7 @@
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
 					'status'			=> $this->db->f('status'),
 					'b_account_id'		=> $this->db->f('b_account_id'),
-					);
+				);
 			}
 			return $budget;
 		}
@@ -716,31 +714,31 @@
 			$this->db->transaction_begin();
 			$id = $this->next_project_id();
 			$values= array
-			(
-				$id,
-				$project['project_group'],
-				$project['name'],
-				'public',
-				$project['cat_id'],
-				time(),
-				$project['start_date'],
-				$project['end_date'],
-				$project['coordinator'],
-				$project['status'],
-				$project['descr'],
-				(int) $project['budget'],
-				(int) $project['reserve'],
-				$project['location_code'],
-				$address,
-				$project['key_deliver'],
-				$project['key_fetch'],
-				$project['other_branch'],
-				$project['key_responsible'],
-				$this->account,
-				$project['ecodimb'],
-				$project['b_account_id'],
-				$project['contact_id']
-			);
+				(
+					$id,
+					$project['project_group'],
+					$project['name'],
+					'public',
+					$project['cat_id'],
+					time(),
+					$project['start_date'],
+					$project['end_date'],
+					$project['coordinator'],
+					$project['status'],
+					$project['descr'],
+					(int) $project['budget'],
+					(int) $project['reserve'],
+					$project['location_code'],
+					$address,
+					$project['key_deliver'],
+					$project['key_fetch'],
+					$project['other_branch'],
+					$project['key_responsible'],
+					$this->account,
+					$project['ecodimb'],
+					$project['b_account_id'],
+					$project['contact_id']
+				);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
@@ -771,14 +769,14 @@
 				if($project['origin'][0]['data'][0]['id'])
 				{					
 					$interlink_data = array
-					(
-						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
-						'location1_item_id' => $project['origin'][0]['data'][0]['id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
-						'location2_item_id' => $id,
-						'account_id'		=> $this->account
-					);
-					
+						(
+							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $project['origin'][0]['location']),
+							'location1_item_id' => $project['origin'][0]['data'][0]['id'],
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
+							'location2_item_id' => $id,
+							'account_id'		=> $this->account
+						);
+
 					$this->interlink->add($interlink_data,$this->db);
 				}
 			}
@@ -800,7 +798,7 @@
 			{
 				$receipt['error'][] = array('msg'=>lang('the project has not been saved'));
 			}
-			
+
 			$receipt['id'] = $id;
 			return $receipt;
 		}
@@ -819,13 +817,11 @@
 			{
 				foreach($location as $location_entry)
 				{
-
 					$cols[] = 'loc' . $i;
 					$vals[] = $location_entry;
 
 					$i++;
 				}
-
 			}
 
 			if($cols)
@@ -833,7 +829,6 @@
 				$cols	= "," . implode(",", $cols);
 				$vals	= ",'" . implode("','", $vals) . "'";
 			}
-
 
 			$this->db->query("SELECT count(*) as cnt FROM $meter_table where location_code='$location_code' and category=1",__LINE__,__FILE__);
 
@@ -912,7 +907,7 @@
 				'ecodimb'			=> $project['ecodimb'],
 				'account_group'		=> $project['b_account_id'],
 				'contact_id'		=> $project['contact_id']
-				);
+			);
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute, $project['id']);
 
@@ -954,7 +949,7 @@
 			{
 				$this->update_power_meter($project['power_meter'],$project['location_code'],$address);
 			}
-	// -----------------which branch is represented
+			// -----------------which branch is represented
 			$this->db->query("DELETE FROM fm_projectbranch WHERE project_id={$project['id']}",__LINE__,__FILE__);
 
 			if (count($project['branch']) != 0)
@@ -996,21 +991,21 @@
 					$close_pending_action = true;
 
 					$action_params = array
-					(
-						'appname'			=> 'property',
-						'location'			=> '.project',
-						'id'				=> (int)$project['id'],
-						'responsible'		=> $this->account,
-						'responsible_type'  => 'user',
-						'action'			=> 'approval',
-						'remark'			=> '',
-						'deadline'			=> ''
-					);
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project',
+							'id'				=> (int)$project['id'],
+							'responsible'		=> $this->account,
+							'responsible_type'  => 'user',
+							'action'			=> 'approval',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
 
 					execMethod('property.sopending_action.close_pending_action', $action_params);
 					unset($action_params);
 				}
- 
+
 				if ($workorders)
 				{
 					$historylog_workorder	= CreateObject('property.historylog','workorder');
@@ -1051,16 +1046,16 @@
 				if($close_pending_action)
 				{
 					$action_params = array
-					(
-						'appname'			=> 'property',
-						'location'			=> '.project.workorder',
-						'id'				=> 0,
-						'responsible'		=> $this->account,
-						'responsible_type'  => 'user',
-						'action'			=> 'approval',
-						'remark'			=> '',
-						'deadline'			=> ''
-					);
+						(
+							'appname'			=> 'property',
+							'location'			=> '.project.workorder',
+							'id'				=> 0,
+							'responsible'		=> $this->account,
+							'responsible_type'  => 'user',
+							'action'			=> 'approval',
+							'remark'			=> '',
+							'deadline'			=> ''
+						);
 
 
 					foreach($workorders as $workorder_id)
@@ -1106,8 +1101,8 @@
 				$historylog->add('RM',$project['id'],$project['remark']);
 			}
 
- 			execMethod('property.soworkorder.update_planned_cost', $project['id']);
- 			
+			execMethod('property.soworkorder.update_planned_cost', $project['id']);
+
 			$receipt['id'] = $project['id'];
 			$receipt['message'][] = array('msg'=>lang('project %1 has been edited', $project['id']));
 
@@ -1182,14 +1177,14 @@
 				if(!$project_id)
 				{
 					$interlink_data = array
-					(
-						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
-						'location1_item_id' => $add_request['request_id'][$i],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
-						'location2_item_id' => $id,
-						'account_id'		=> $this->account
-					);
-					
+						(
+							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
+							'location1_item_id' => $add_request['request_id'][$i],
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project'),			
+							'location2_item_id' => $id,
+							'account_id'		=> $this->account
+						);
+
 					$this->interlink->add($interlink_data);
 
 					$this->db->query("UPDATE fm_request SET project_id='$id' where id='". $add_request['request_id'][$i] . "'",__LINE__,__FILE__);

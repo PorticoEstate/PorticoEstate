@@ -43,36 +43,16 @@
 		var $allrows;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_boasync($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soasync');
 			$this->socommon = CreateObject('property.socommon');
 
@@ -82,19 +62,19 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows	= phpgw::get_var('allrows', 'bool');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
 
-			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
-			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
+			$this->start		= $start ? $start : 0;
+			$this->query		= isset($query) ? $query : $this->query;
+			$this->sort			= isset($sort) && $sort ? $sort : '';
+			$this->order		= isset($order) && $order ? $order : '';
+			$this->cat_id		= isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->allrows		= isset($allrows) && $allrows ? $allrows : '';
 
 		}
 
@@ -122,7 +102,7 @@
 		function read()
 		{
 			$method = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows' => $this->allrows));
+				'allrows' => $this->allrows));
 
 			$this->total_records = $this->so->total_records;
 

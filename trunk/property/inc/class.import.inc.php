@@ -35,8 +35,8 @@
 	class property_import
 	{
 		var $public_functions = array
-		(
-		);
+			(
+			);
 
 		function __construct()
 		{
@@ -116,13 +116,13 @@
 				if($uicols['import'][$i])
 				{
 					$fields[] = array
-								(
-									'name' => $uicols['name'][$i],
-									'descr' =>$uicols['descr'][$i]
-								);
-					$uicols2['input_type'][] = 'text';
-					$uicols2['name'][] = $uicols['name'][$i];
-					$uicols2['descr'][] = $uicols['descr'][$i];
+						(
+							'name' => $uicols['name'][$i],
+							'descr' =>$uicols['descr'][$i]
+						);
+					$uicols2['input_type'][]	= 'text';
+					$uicols2['name'][]			= $uicols['name'][$i];
+					$uicols2['descr'][]			= $uicols['descr'][$i];
 				}
 			}
 
@@ -169,18 +169,17 @@
 			$table_header	= $list['table_header'];
 
 			$data = array
-			(
-				'importfile'					=> $importfile,
-				'values'						=> $content,
-				'table_header'					=> $table_header,
-				'import_action'					=> $import_action,
-				'lang_import_statustext'		=> lang('import to this location from spreadsheet'),
-				'lang_import'					=> lang('import'),
-				'lang_cancel'					=> lang('cancel')
-			);
+				(
+					'importfile'					=> $importfile,
+					'values'						=> $content,
+					'table_header'					=> $table_header,
+					'import_action'					=> $import_action,
+					'lang_import_statustext'		=> lang('import to this location from spreadsheet'),
+					'lang_import'					=> lang('import'),
+					'lang_cancel'					=> lang('cancel')
+				);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] =  $header_info . ': ' . lang('import');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('import' => $data));
 		}
 	}
-

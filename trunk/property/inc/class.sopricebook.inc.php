@@ -61,10 +61,10 @@
 				$next_index_count  = $this->db->f('max_index_count')+1;
 
 				$this->db->query("update fm_activity_price_index set current_index = Null"
-				. " WHERE activity_id='" . $update[$i]['activity_id'] . "' and agreement_id='" . $update[$i]['agreement_id'] . "'",__LINE__,__FILE__);
+					. " WHERE activity_id='" . $update[$i]['activity_id'] . "' and agreement_id='" . $update[$i]['agreement_id'] . "'",__LINE__,__FILE__);
 
 				$this->db->query("insert into fm_activity_price_index (activity_id, agreement_id, index_count, this_index, m_cost, w_cost, total_cost, index_date,current_index) "
-				. " values ('" .
+					. " values ('" .
 					$update[$i]['activity_id'] . "','" .
 					$update[$i]['agreement_id'] . "','" .
 					$next_index_count . "','" .
@@ -88,18 +88,18 @@
 				. " WHERE fm_agreement.status='active'"
 				. " GROUP by fm_vendor.org_name ,vendor_id "
 				. " ORDER BY fm_vendor.org_name ",__LINE__,__FILE__);
-				while ($this->db->next_record())
+			while ($this->db->next_record())
+			{
+				//--------->fix this------->
+				if($this->db->f('vendor_id'))
 				{
-//--------->fix this------->
-					if($this->db->f('vendor_id'))
-					{
-						$vendor_list[]=array
+					$vendor_list[]=array
 						(
 							'id'	=> $this->db->f('vendor_id'),
 							'name'	=> $this->db->f('org_name')
 						);
-					}
 				}
+			}
 			return $vendor_list;
 		}
 
@@ -109,10 +109,10 @@
 			while ($this->db->next_record())
 			{
 				$agreement_group_list[]=array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr')).' [ '. $GLOBALS['phpgw']->strip_html($this->db->f('status')).' ] '
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr')).' [ '. $GLOBALS['phpgw']->strip_html($this->db->f('status')).' ] '
+					);
 			}
 			return $agreement_group_list;
 		}
@@ -123,10 +123,10 @@
 			while ($this->db->next_record())
 			{
 				$dim_d_list[]=array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('id')
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('id')
+					);
 			}
 			return $dim_d_list;
 		}
@@ -137,10 +137,10 @@
 			while ($this->db->next_record())
 			{
 				$unit_list[]=array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
+					);
 			}
 			return $unit_list;
 		}
@@ -151,10 +151,10 @@
 			while ($this->db->next_record())
 			{
 				$branch_list[]=array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
+					);
 			}
 			return $branch_list;
 		}
@@ -203,7 +203,7 @@
 				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
 			}
 
-//_debug_array($data);
+			//_debug_array($data);
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -225,26 +225,24 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
 
-
 			$sql = "SELECT fm_activities.num, fm_activities.unit, fm_activities.dim_d, fm_activities.ns3420, fm_activities.descr AS descr,"
-			. " fm_activities.base_descr, fm_activity_price_index.activity_id, fm_branch.descr AS branch,"
-			. " fm_agreement.vendor_id, fm_activity_price_index.total_cost, fm_activity_price_index.m_cost,"
-			. " fm_activity_price_index.w_cost, fm_activity_price_index.index_count, fm_activity_price_index.this_index, fm_agreement.id"
-			. " FROM  fm_activities "
-			. " $this->join fm_activity_price_index ON fm_activities.id = fm_activity_price_index.activity_id "
-			. " $this->join fm_branch ON fm_activities.branch_id = fm_branch.id "
-			. " $this->join fm_agreement ON fm_activity_price_index.agreement_id = fm_agreement.id "
-			. " WHERE fm_agreement.status='active' AND (fm_agreement.vendor_id $vendor_condition and current_index is not null "
-			. " OR (fm_agreement.vendor_id $vendor_condition) AND (fm_activity_price_index.this_index IS NULL)) $querymethod";
+				. " fm_activities.base_descr, fm_activity_price_index.activity_id, fm_branch.descr AS branch,"
+				. " fm_agreement.vendor_id, fm_activity_price_index.total_cost, fm_activity_price_index.m_cost,"
+				. " fm_activity_price_index.w_cost, fm_activity_price_index.index_count, fm_activity_price_index.this_index, fm_agreement.id"
+				. " FROM  fm_activities "
+				. " $this->join fm_activity_price_index ON fm_activities.id = fm_activity_price_index.activity_id "
+				. " $this->join fm_branch ON fm_activities.branch_id = fm_branch.id "
+				. " $this->join fm_agreement ON fm_activity_price_index.agreement_id = fm_agreement.id "
+				. " WHERE fm_agreement.status='active' AND (fm_agreement.vendor_id $vendor_condition and current_index is not null "
+				. " OR (fm_agreement.vendor_id $vendor_condition) AND (fm_activity_price_index.this_index IS NULL)) $querymethod";
 
 
-//echo $sql;
+			//echo $sql;
 
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -262,25 +260,25 @@
 			while ($this->db->next_record())
 			{
 				$pricebook[] = array
-				(
-					'activity_id'		=> $this->db->f('activity_id'),
-					'num'			=> $this->db->f('num'),
-					'branch'		=> $this->db->f('branch'),
-					'vendor_id'		=> $this->db->f('vendor_id'),
-					'm_cost'		=> $this->db->f('m_cost'),
-					'w_cost'		=> $this->db->f('w_cost'),
-					'total_cost'		=> $this->db->f('total_cost'),
-					'this_index'		=> $this->db->f('this_index'),
-					'unit'			=> $this->db->f('unit'),
-					'dim_d'			=> $this->db->f('dim_d'),
-					'ns3420_id'		=> $this->db->f('ns3420'),
-					'descr'			=> stripslashes($this->db->f('descr')),
-					'base_descr'		=> stripslashes($this->db->f('base_descr')),
-					'index_count'		=> $this->db->f('index_count'),
-					'agreement_id'		=> $this->db->f('fm_agreement.id')
-				);
+					(
+						'activity_id'		=> $this->db->f('activity_id'),
+						'num'			=> $this->db->f('num'),
+						'branch'		=> $this->db->f('branch'),
+						'vendor_id'		=> $this->db->f('vendor_id'),
+						'm_cost'		=> $this->db->f('m_cost'),
+						'w_cost'		=> $this->db->f('w_cost'),
+						'total_cost'		=> $this->db->f('total_cost'),
+						'this_index'		=> $this->db->f('this_index'),
+						'unit'			=> $this->db->f('unit'),
+						'dim_d'			=> $this->db->f('dim_d'),
+						'ns3420_id'		=> $this->db->f('ns3420'),
+						'descr'			=> stripslashes($this->db->f('descr')),
+						'base_descr'		=> stripslashes($this->db->f('base_descr')),
+						'index_count'		=> $this->db->f('index_count'),
+						'agreement_id'		=> $this->db->f('fm_agreement.id')
+					);
 			}
-//		_debug_array($pricebook);
+			//		_debug_array($pricebook);
 			return $pricebook;
 		}
 
@@ -323,8 +321,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " $where (descr $this->like '%$query%' or num $this->like '%$query%')";
 			}
@@ -346,14 +343,14 @@
 			while ($this->db->next_record())
 			{
 				$agreement_group[] = array
-				(
-					'agreement_group_id'		=> $this->db->f('id'),
-					'num'				=> $this->db->f('num'),
-					'status'			=> $this->db->f('status'),
-					'descr'				=> stripslashes($this->db->f('descr'))
-				);
+					(
+						'agreement_group_id'		=> $this->db->f('id'),
+						'num'				=> $this->db->f('num'),
+						'status'			=> $this->db->f('status'),
+						'descr'				=> stripslashes($this->db->f('descr'))
+					);
 			}
-//		_debug_array($agreement_group);
+			//		_debug_array($agreement_group);
 			return $agreement_group;
 		}
 
@@ -403,8 +400,7 @@
 
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
 			}
@@ -428,17 +424,17 @@
 			while ($this->db->next_record())
 			{
 				$pricebook[] = array
-				(
-					'index_count'		=> $this->db->f('index_count'),
-					'this_index'		=> $this->db->f('this_index'),
-					'current_index'			=> $this->db->f('current_index'),
-					'm_cost'			=> $this->db->f('m_cost'),
-					'w_cost'			=> $this->db->f('w_cost'),
-					'total_cost'		=> $this->db->f('total_cost'),
-					'date'				=> $this->db->f('index_date')
-				);
+					(
+						'index_count'		=> $this->db->f('index_count'),
+						'this_index'		=> $this->db->f('this_index'),
+						'current_index'			=> $this->db->f('current_index'),
+						'm_cost'			=> $this->db->f('m_cost'),
+						'w_cost'			=> $this->db->f('w_cost'),
+						'total_cost'		=> $this->db->f('total_cost'),
+						'date'				=> $this->db->f('index_date')
+					);
 			}
-//		_debug_array($pricebook);
+			//		_debug_array($pricebook);
 			return $pricebook;
 		}
 
@@ -481,10 +477,7 @@
 			}
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
-
-//				$querymethod = " AND (fm_activities.descr $this->like '%$query%' or fm_activities.num $this->like '%$query%')";
+				$query = $this->db->db_addslashes($query);
 				$querymethod = " and (fm_activities.descr $this->like '%$query%' or fm_activities.base_descr $this->like '%$query%' or fm_activities.num $this->like '%$query%') ";
 			}
 
@@ -508,18 +501,18 @@
 			while ($this->db->next_record())
 			{
 				$pricebook[] = array
-				(
-					'activity_id'	=> $this->db->f('activity_id'),
-					'num'			=> $this->db->f('num'),
-					'base_descr'	=> stripslashes($this->db->f('base_descr')),
-					'branch'		=> $this->db->f('branch'),
-					'dim_d'			=> $this->db->f('dim_d'),
-					'ns3420'		=> $this->db->f('ns3420'),
-					'unit'			=> $this->db->f('unit'),
-					'descr'			=> stripslashes($this->db->f('descr'))
-				);
+					(
+						'activity_id'	=> $this->db->f('activity_id'),
+						'num'			=> $this->db->f('num'),
+						'base_descr'	=> stripslashes($this->db->f('base_descr')),
+						'branch'		=> $this->db->f('branch'),
+						'dim_d'			=> $this->db->f('dim_d'),
+						'ns3420'		=> $this->db->f('ns3420'),
+						'unit'			=> $this->db->f('unit'),
+						'descr'			=> stripslashes($this->db->f('descr'))
+					);
 			}
-//		_debug_array($pricebook);
+			//		_debug_array($pricebook);
 			return $pricebook;
 		}
 
@@ -556,8 +549,7 @@
 			}
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " AND (fm_vendor.org_name $this->like '%$query%' or vendor_id $this->like '%$query%')";
 			}
@@ -586,14 +578,14 @@
 			while ($this->db->next_record())
 			{
 				$pricebook[] = array
-				(
-					'activity_id'	=> $this->db->f('activity_id'),
-					'num'			=> $this->db->f('num'),
-					'branch'		=> $this->db->f('branch'),
-					'vendor_name'	=> $this->db->f('org_name'),
-				//	'vendor_id'		=> $this->db->f('vendor_id'),
-					'agreement_id'		=> $this->db->f('agreement_id')
-				);
+					(
+						'activity_id'	=> $this->db->f('activity_id'),
+						'num'			=> $this->db->f('num'),
+						'branch'		=> $this->db->f('branch'),
+						'vendor_name'	=> $this->db->f('org_name'),
+						//	'vendor_id'		=> $this->db->f('vendor_id'),
+						'agreement_id'		=> $this->db->f('agreement_id')
+					);
 			}
 			return $pricebook;
 		}
@@ -652,7 +644,7 @@
 				$values['branch_id'],
 				$values['descr'],
 				$values['base_descr']
-				);
+			);
 
 			$vals	= $this->db->validate_insert($vals);
 
@@ -680,7 +672,7 @@
 				'branch_id'				=> $values['branch_id'],
 				'descr'					=> $values['descr'],
 				'base_descr'			=> $values['base_descr']
-				);
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
@@ -701,7 +693,7 @@
 				$values['num'],
 				$values['status'],
 				$values['descr']
-				);
+			);
 
 			$vals	= $this->db->validate_insert($vals);
 
@@ -721,7 +713,7 @@
 				'num'	=> $values['num'],
 				'status'=> $values['status'],
 				'descr'	=> $values['descr']
-				);
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 			$this->db->transaction_begin();
@@ -765,14 +757,14 @@
 		function delete_agreement_group($agreement_group_id)
 		{
 			$this->db->query("DELETE FROM fm_agreement_group WHERE id='$agreement_group_id'",__LINE__,__FILE__);
-//how to handle the activities and vendors ...?
+			//how to handle the activities and vendors ...?
 		}
 
 
 
 		/**
-		* @todo remove or alter this function
-		*/
+		 * @todo remove or alter this function
+		 */
 
 		function add_activity_vendor($values)
 		{
@@ -797,4 +789,3 @@
 			return $receipt;
 		}
 	}
-

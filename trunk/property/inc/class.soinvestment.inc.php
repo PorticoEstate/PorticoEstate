@@ -37,9 +37,9 @@
 		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= & $this->db->join;
-			$this->like			= & $this->db->like;
+			$this->db		= & $GLOBALS['phpgw']->db;
+			$this->join		= & $this->db->join;
+			$this->like		= & $this->db->like;
 		}
 
 		function get_type_list()
@@ -116,27 +116,27 @@
 			if ($cat_id=='property')
 			{
 				$sql = "SELECT fm_investment.entity_id as entity_id, fm_investment.descr as descr, fm_investment_value.invest_id,initial_value, fm_location1.loc1_name as name, fm_part_of_town.district_id, fm_part_of_town.name as part_of_town,"
-				. " fm_investment_value.value, fm_investment_value.index_date, fm_investment_value.this_index, "
-				. " fm_investment_value.index_count"
-				. " FROM (((fm_investment $this->join fm_investment_value ON ( fm_investment.entity_id = fm_investment_value.entity_id) AND "
-				. " (fm_investment.invest_id = fm_investment_value.invest_id )) "
-				. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
-				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
-				. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
+					. " fm_investment_value.value, fm_investment_value.index_date, fm_investment_value.this_index, "
+					. " fm_investment_value.index_count"
+					. " FROM (((fm_investment $this->join fm_investment_value ON ( fm_investment.entity_id = fm_investment_value.entity_id) AND "
+					. " (fm_investment.invest_id = fm_investment_value.invest_id )) "
+					. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
+					. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
 
 			}
 			else
 			{
 				$sql = "SELECT fm_investment.location_code,fm_investment.entity_id, fm_investment.descr as descr, fm_investment_value.invest_id,initial_value, fm_part_of_town.district_id, fm_part_of_town.name as part_of_town,"
-				. " fm_investment_value.value, fm_investment_value.index_date, fm_investment_value.this_index,fm_entity_category.name as entity_name, "
-				. " fm_investment_value.index_count "
-				. " FROM ((((fm_investment $this->join "
-				. " fm_entity_category ON (fm_investment.p_entity_id = fm_entity_category.entity_id AND fm_investment.p_cat_id = fm_entity_category.id)) $this->join "
-				. " fm_investment_value ON (fm_investment_value.entity_id = fm_investment.entity_id) AND "
-				. " (fm_investment_value.invest_id = fm_investment.invest_id)) "
-				. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
-				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
-				. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
+					. " fm_investment_value.value, fm_investment_value.index_date, fm_investment_value.this_index,fm_entity_category.name as entity_name, "
+					. " fm_investment_value.index_count "
+					. " FROM ((((fm_investment $this->join "
+					. " fm_entity_category ON (fm_investment.p_entity_id = fm_entity_category.entity_id AND fm_investment.p_cat_id = fm_entity_category.id)) $this->join "
+					. " fm_investment_value ON (fm_investment_value.entity_id = fm_investment.entity_id) AND "
+					. " (fm_investment_value.invest_id = fm_investment.invest_id)) "
+					. " $this->join fm_location1 ON (fm_investment.loc1 = fm_location1.loc1)) "
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)) "
+					. " WHERE ( current_index = '1'  or (this_index = NULL and index_count= '1'))  AND entity_type ='$cat_id' $filtermethod ";
 			}
 			if($sql)
 			{
@@ -183,13 +183,13 @@
 				$i++;
 			}
 
-//_debug_array($investment);
+			//_debug_array($investment);
 			return $investment;
 		}
 
 		function save_investment($values)
 		{
-//_debug_array($values);
+			//_debug_array($values);
 
 			$receipt = array();
 			while (is_array($values['location']) && list($input_name,$value) = each($values['location']))
@@ -246,10 +246,10 @@
 			$this->db->transaction_begin();
 
 			$this->db->query("insert into fm_investment (entity_id, invest_id,entity_type,location_code,writeoff_year, descr $cols) "
-			. " values ('$entity_id', '$next_invest_id','$entity_type','$location_code','$period','$descr' $vals )");
+				. " values ('$entity_id', '$next_invest_id','$entity_type','$location_code','$period','$descr' $vals )");
 
 			$this->db->query("insert into fm_investment_value (entity_id, invest_id, index_count, this_index, current_index, value,initial_value, index_date) "
-			. " values ('$entity_id', '$next_invest_id','1', '0', '1','$initial_value','$initial_value','$date')");
+				. " values ('$entity_id', '$next_invest_id','1', '0', '1','$initial_value','$initial_value','$date')");
 
 
 			if($this->db->transaction_commit())
@@ -275,7 +275,7 @@
 					$next_index_count  = $this->db->f('max_index_count')+1;
 
 					$this->db->query("update fm_investment_value set current_index = Null"
-					. " WHERE entity_id='" . $entry['entity_id'] . "' and invest_id=" . $entry['invest_id']);
+						. " WHERE entity_id='" . $entry['entity_id'] . "' and invest_id=" . $entry['invest_id']);
 
 					$insert= array(
 						$entry['entity_id'],
@@ -286,13 +286,13 @@
 						$entry['initial_value'],
 						$entry['date'],
 						1
-						);
+					);
 
 					$insert	= $this->db->validate_insert($insert);
 
 
 					$this->db->query("insert into fm_investment_value (entity_id, invest_id, index_count, this_index, value,initial_value, index_date,current_index) "
-					. " values ($insert)");
+						. " values ($insert)");
 
 					$receipt['message'][]=array('msg'=>lang('investment %1 is updated at entity %2', $entry['invest_id'], $entry['entity_id']));
 				}
@@ -310,7 +310,7 @@
 
 
 			$sql = "SELECT index_count, this_index,current_index,value, initial_value, index_date  "
-			. " FROM fm_investment_value Where entity_id= '$entity_id' and invest_id= '$investment_id' order by index_count";
+				. " FROM fm_investment_value Where entity_id= '$entity_id' and invest_id= '$investment_id' order by index_count";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -375,8 +375,7 @@
 				$this->db->query("update fm_investment_value set current_index = '1' where entity_id='$entity_id' and invest_id= '$invest_id' and index_count= '$new_current'");
 			}
 
-	//		$this->db->query("DELETE FROM fm_investment_value WHERE entity_id= '$entity_id'  and invest_id='$invest_id' and index_count='$index_count'",__LINE__,__FILE__);
+			//		$this->db->query("DELETE FROM fm_investment_value WHERE entity_id= '$entity_id'  and invest_id='$invest_id' and index_count='$index_count'",__LINE__,__FILE__);
 			$this->db->transaction_commit();
 		}
 	}
-

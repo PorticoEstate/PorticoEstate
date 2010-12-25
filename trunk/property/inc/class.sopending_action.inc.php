@@ -42,10 +42,10 @@
 		 * @var array valid responsible types
 		 */
 		protected $valid_responsible_types = array(
-								'user',
-								'vendor',
-								'tenant'
-							);
+			'user',
+			'vendor',
+			'tenant'
+		);
 
 		//To avoid conflicting transactions
 		protected $global_transaction  = false;
@@ -60,19 +60,19 @@
 		}
 
 		/**
-		* Set pending action for items across the system.
-		*
-		* @param array   $data array containing string  'appname'			- the name of the module being looked up
-		*										string  'location'			- the location within the module to look up
-		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
-		* 										integer 'responsible'		- the user_id asked for approval
-		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
-		* 										string  'action'			- what type of action is pending
-		* 										string  'remark'			- a general remark - if any
-		* 										integer 'deadline'			- unix timestamp if any deadline is given.
-		*
-		* @return integer $reminder  number of request for this action
-		*/
+		 * Set pending action for items across the system.
+		 *
+		 * @param array   $data array containing string  'appname'			- the name of the module being looked up
+		 *										string  'location'			- the location within the module to look up
+		 * 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		 * 										integer 'responsible'		- the user_id asked for approval
+		 * 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		 * 										string  'action'			- what type of action is pending
+		 * 										string  'remark'			- a general remark - if any
+		 * 										integer 'deadline'			- unix timestamp if any deadline is given.
+		 *
+		 * @return integer $reminder  number of request for this action
+		 */
 
 		public function set_pending_action($data = array())
 		{
@@ -140,10 +140,10 @@
 				$id			= $this->db->f('id');
 
 				$value_set = array
-				(
-					'expired_on' 		=> phpgwapi_datetime::user_localtime(),
-					'expired_by' 		=> $this->account,
-				);
+					(
+						'expired_on' 		=> phpgwapi_datetime::user_localtime(),
+						'expired_by' 		=> $this->account,
+					);
 
 				if ( $deadline > 0 )
 				{
@@ -177,19 +177,19 @@
 
 
 			$values= array
-			(
-				$item_id,								//item_id
-				$location_id,
-				$responsible,							// responsible
-				$responsible_type,						// responsible_type
-				$action_category, 						//action_category
-				phpgwapi_datetime::user_localtime(),	// action_requested
-				$reminder,
-				$deadline,								//action_deadline
-				phpgwapi_datetime::user_localtime(),	//created_on
-				$this->account,							//created_by
-				$remark									//remark
-			);
+				(
+					$item_id,								//item_id
+					$location_id,
+					$responsible,							// responsible
+					$responsible_type,						// responsible_type
+					$action_category, 						//action_category
+					phpgwapi_datetime::user_localtime(),	// action_requested
+					$reminder,
+					$deadline,								//action_deadline
+					phpgwapi_datetime::user_localtime(),	//created_on
+					$this->account,							//created_by
+					$remark									//remark
+				);
 
 			$values	= $this->db->validate_insert($values);
 			$sql = "INSERT INTO fm_action_pending ("
@@ -207,19 +207,19 @@
 		}
 
 		/**
-		* Get pending action for items across the system.
-		*
-		* @param array   $data array containing string  'appname'			- the name of the module being looked up
-		*										string  'location'			- the location within the module to look up
-		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
-		* 										integer 'responsible'		- the user_id asked for approval
-		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
-		* 										string  'action'			- what type of action is pending
-		* 										integer 'created_by'		- The user that owns the record
-		* 										integer 'deadline'			- unix timestamp if any deadline is given.
-		*
-		* @return array $ret  dataset also containing an url to the item in question
-		*/
+		 * Get pending action for items across the system.
+		 *
+		 * @param array   $data array containing string  'appname'			- the name of the module being looked up
+		 *										string  'location'			- the location within the module to look up
+		 * 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		 * 										integer 'responsible'		- the user_id asked for approval
+		 * 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		 * 										string  'action'			- what type of action is pending
+		 * 										integer 'created_by'		- The user that owns the record
+		 * 										integer 'deadline'			- unix timestamp if any deadline is given.
+		 *
+		 * @return array $ret  dataset also containing an url to the item in question
+		 */
 
 		public function get_pending_action($data = array())
 		{
@@ -281,7 +281,7 @@
 			}
 
 			$sql = "SELECT fm_action_pending.* FROM fm_action_pending {$this->join} fm_action_pending_category"
-			. " ON fm_action_pending.action_category = fm_action_pending_category.id {$condition}";
+				. " ON fm_action_pending.action_category = fm_action_pending_category.id {$condition}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -311,19 +311,19 @@
 		}
 
 		/**
-		* Close pending action for items across the system.
-		*
-		* @param array   $data array containing string  'appname'			- the name of the module being looked up
-		*										string  'location'			- the location within the module to look up
-		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
-		* 										integer 'responsible'		- the user_id asked for approval
-		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
-		* 										string  'action'			- what type of action is pending
-		* 										string  'remark'			- a general remark - if any
-		* 										integer 'deadline'			- unix timestamp if any deadline is given.
-		*
-		* @return integer $reminder  number of request for this action
-		*/
+		 * Close pending action for items across the system.
+		 *
+		 * @param array   $data array containing string  'appname'			- the name of the module being looked up
+		 *										string  'location'			- the location within the module to look up
+		 * 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		 * 										integer 'responsible'		- the user_id asked for approval
+		 * 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		 * 										string  'action'			- what type of action is pending
+		 * 										string  'remark'			- a general remark - if any
+		 * 										integer 'deadline'			- unix timestamp if any deadline is given.
+		 *
+		 * @return integer $reminder  number of request for this action
+		 */
 		public function close_pending_action($data = array())
 		{
 			$data['close'] = true;

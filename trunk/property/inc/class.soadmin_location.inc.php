@@ -84,11 +84,11 @@
 			while ($this->db->next_record())
 			{
 				$standard[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name'),
-					'descr'	=> $this->db->f('descr')
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('name'),
+						'descr'	=> $this->db->f('descr')
+					);
 			}
 			return $standard;
 		}
@@ -104,7 +104,7 @@
 				$start=0;
 			}
 
-		//	if(is_array($data))
+			//	if(is_array($data))
 			{
 				$query = (isset($data['query'])?$data['query']:'');
 				$sort = (isset($data['sort'])?$data['sort']:'DESC');
@@ -140,18 +140,18 @@
 			while ($this->db->next_record())
 			{
 				$config[] = array
-				(
-					'column_name'		=> $this->db->f('column_name'),
-					'input_text'		=> $this->db->f('input_text'),
-					'f_key'				=> $this->db->f('f_key'),
-					'lookup_form'		=> $this->db->f('lookup_form'),
-					'ref_to_category'	=> $this->db->f('ref_to_category'),
-					'query_value'		=> $this->db->f('query_value'),
-					'reference_table'	=> $this->db->f('reference_table'),
-					'reference_id'		=> $this->db->f('reference_id'),
-					'location_name'		=> $this->db->f('name'),
-					'location_type'		=> $this->db->f('location_type')
-				);
+					(
+						'column_name'		=> $this->db->f('column_name'),
+						'input_text'		=> $this->db->f('input_text'),
+						'f_key'				=> $this->db->f('f_key'),
+						'lookup_form'		=> $this->db->f('lookup_form'),
+						'ref_to_category'	=> $this->db->f('ref_to_category'),
+						'query_value'		=> $this->db->f('query_value'),
+						'reference_table'	=> $this->db->f('reference_table'),
+						'reference_id'		=> $this->db->f('reference_id'),
+						'location_name'		=> $this->db->f('name'),
+						'location_type'		=> $this->db->f('location_type')
+					);
 			}
 			return $config;
 		}
@@ -178,13 +178,13 @@
 			if ($this->db->next_record())
 			{
 				$standard = array
-				(
-					'id'			=> $this->db->f('id'),
-					'name'			=> $this->db->f('name'),
-					'descr'			=> $this->db->f('descr'),
-					'list_info'		=> $this->db->f('list_info',true),
-					'list_address'	=> $this->db->f('list_address')
-				);
+					(
+						'id'			=> $this->db->f('id'),
+						'name'			=> $this->db->f('name'),
+						'descr'			=> $this->db->f('descr'),
+						'list_info'		=> $this->db->f('list_info',true),
+						'list_address'	=> $this->db->f('list_address')
+					);
 			}
 			return $standard;
 		}
@@ -340,15 +340,15 @@
 
 				$pk[$i-1]= 'loc' . $i;
 
-				$default_attrib['id'][]= $i+$j;
-				$default_attrib['column_name'][]= 'loc' . $i;
-				$default_attrib['type'][]='V';
-				$default_attrib['precision'][] =4;
-				$default_attrib['nullable'][] ='false';
-				$default_attrib['input_text'][] ='dummy';
-				$default_attrib['statustext'][] ='dummy';
-				$default_attrib['attrib_sort'][] ='';
-				$default_attrib['custom'][] ='';
+				$default_attrib['id'][]				= $i+$j;
+				$default_attrib['column_name'][]	= 'loc' . $i;
+				$default_attrib['type'][]			= 'V';
+				$default_attrib['precision'][]		= 4;
+				$default_attrib['nullable'][] 		= 'false';
+				$default_attrib['input_text'][]		= 'dummy';
+				$default_attrib['statustext'][]		= 'dummy';
+				$default_attrib['attrib_sort'][]	= '';
+				$default_attrib['custom'][]			= '';
 			}
 
 			$fk_table='fm_location'. ($standard['id']-1);
@@ -389,14 +389,14 @@
 			{
 
 				$this->oProc->CreateTable('fm_location'. $standard['id'] . '_category', array(
-				'fd' => array(
-					'id' => array('type' => 'int','precision' => '4','nullable' => false),
-					'descr' => array('type' => 'varchar','precision' => '50','nullable' => true)
-				),
-				'pk' => array('id'),
-				'fk' => array(),
-				'ix' => array(),
-				'uc' => array()));
+					'fd' => array(
+						'id' => array('type' => 'int','precision' => '4','nullable' => false),
+						'descr' => array('type' => 'varchar','precision' => '50','nullable' => true)
+					),
+					'pk' => array('id'),
+					'fk' => array(),
+					'ix' => array(),
+					'uc' => array()));
 
 				for ($i=0;$i<count($add_columns_in_tables);$i++)
 				{
@@ -408,10 +408,10 @@
 					$standard['id'],
 					$standard['name'],
 					$standard['descr'],
-				    $this->db->db_addslashes(implode(',',$pk)),
-				    $this->db->db_addslashes(implode(',',$ix)),
-				    $this->db->db_addslashes(implode(',',$uc)),
-					);
+					$this->db->db_addslashes(implode(',',$pk)),
+					$this->db->db_addslashes(implode(',',$ix)),
+					$this->db->db_addslashes(implode(',',$uc)),
+				);
 
 				$values_insert	= $this->db->validate_insert($values_insert);
 
@@ -433,7 +433,7 @@
 						$default_attrib['attrib_sort'][$i],
 						$default_attrib['custom'][$i],
 						$default_attrib['nullable'][$i]
-						);
+					);
 
 					$values_insert	= $this->db->validate_insert($values_insert);
 
@@ -499,7 +499,7 @@
 				'descr'			=> $this->db->db_addslashes($values['descr']),
 				'list_info'		=> (isset($values['list_info'])?serialize($values['list_info']):''),
 				'list_address'	=> (isset($values['list_address'])?$values['list_address']:''),
-				);
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -514,7 +514,7 @@
 		function delete($id)
 		{	
 			$tables_to_drop_from = $this->get_tables_to_alter();
-			
+
 			$receipt = array();
 			$this->init_process();
 			$this->db->transaction_begin();
@@ -581,15 +581,15 @@
 			$custom 	= createObject('property.custom_fields');
 			$table_def = $custom->get_table_def('fm_location'.$location_type);
 			$history_table_def = $custom->get_table_def('fm_location' . $location_type . '_history');
-//_debug_array($table_def);
-//_debug_array($history_table_def);
+			//_debug_array($table_def);
+			//_debug_array($history_table_def);
 			if(!($location_type==$values[$column_name]))
 			{
 				$id = $this->db->next_id('phpgw_cust_attribute',array('location_id' => $location_id));
 
 				$this->init_process();
 
-	//			$this->oProc->m_odb->transaction_begin();
+				//			$this->oProc->m_odb->transaction_begin();
 				$this->db->transaction_begin();
 				if($this->oProc->AddColumn('fm_location'.$values[$column_name],$column_name, $column_info) &&
 					$this->oProc->AddColumn('fm_location'.$values[$column_name] . '_history',$column_name, $column_info))
@@ -636,7 +636,7 @@
 				if(isset($ok) && $ok)
 				{
 					$this->db->transaction_commit();
-//					$this->oProc->m_odb->transaction_commit();
+					//					$this->oProc->m_odb->transaction_commit();
 
 					$receipt['message'][] = array('msg'	=> lang('column %1 has been moved',$column_name));
 				}
@@ -668,11 +668,10 @@
 					'descr'			=> stripslashes($this->db->f('descr')),
 					'list_info'		=> unserialize($this->db->f('list_info')),
 					'list_address'	=> $this->db->f('list_address')
-					);
+				);
 			}
-//_debug_array($location_type);
+			//_debug_array($location_type);
 
 			return $location_type;
 		}
 	}
-

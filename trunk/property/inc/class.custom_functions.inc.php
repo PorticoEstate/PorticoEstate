@@ -36,9 +36,10 @@
 
 	class property_custom_functions
 	{
-		var $public_functions = array(
-			'index' => true
-		);
+		var $public_functions = array
+			(
+				'index' => true
+			);
 
 		function __construct()
 		{

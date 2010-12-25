@@ -41,37 +41,18 @@
 		public $allrows;
 
 		/**
-		* @var object $custom reference to custom fields object
-		*/
+		 * @var object $custom reference to custom fields object
+		 */
 		protected $custom;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_boadmin_location($session=false)
 		{
@@ -171,7 +152,7 @@
 			{
 				$ok = 0;
 				$receipt = array();
-				
+
 				if($this->custom->delete('property',".location.{$type_id}", $id , "fm_location{$type_id}_history", true ))
 				{
 					$ok++;
@@ -209,7 +190,7 @@
 		{
 			$location = ".location.{$type_id}";
 			$group_list = $this->read_attrib_group($location, true);
-			
+
 			foreach($group_list as &$group)
 			{
 				if( $group['id'] ==  $selected )
@@ -252,9 +233,9 @@
 				if ( $this->custom->edit_group($group) )
 				{
 					return array
-					(
-						'msg'	=> array('msg' => lang('group has been updated'))
-					);
+						(
+							'msg'	=> array('msg' => lang('group has been updated'))
+						);
 				}
 
 				return array('error' => lang('Unable to update group'));
@@ -269,21 +250,21 @@
 				else if ( $id == -1 )
 				{
 					return array
-					(
-						'id'	=> 0,
-						'error'	=> array
 						(
-							array('msg' => lang('group already exists, please choose another name')),
-							array('msg' => lang('Attribute group has NOT been saved'))
-						)
-					);
+							'id'	=> 0,
+							'error'	=> array
+							(
+								array('msg' => lang('group already exists, please choose another name')),
+								array('msg' => lang('Attribute group has NOT been saved'))
+							)
+						);
 				}
 
 				return array
-				(
-					'id'	=> $id,
-					'msg'	=> array('msg' => lang('group has been created'))
-				);
+					(
+						'id'	=> $id,
+						'msg'	=> array('msg' => lang('group has been created'))
+					);
 			}
 		}
 
@@ -324,9 +305,9 @@
 		public function save_attrib($attrib,$action='')
 		{
 			$attrib['appname'] = 'property';
- 			$attrib['location'] = '.location.' . $attrib['type_id'];
- 			$primary_table = 'fm_location' . $attrib['type_id'];
- 			$history_table = $primary_table . '_history';
+			$attrib['location'] = '.location.' . $attrib['type_id'];
+			$primary_table = 'fm_location' . $attrib['type_id'];
+			$history_table = $primary_table . '_history';
 
 			if ( $action=='edit' && $attrib['id'] )
 			{
@@ -334,9 +315,9 @@
 				{
 					$this->custom->edit($attrib, $primary_table);
 					return array
-					(
-						'msg'	=> array('msg' => lang('Field has been updated'))
-					);
+						(
+							'msg'	=> array('msg' => lang('Field has been updated'))
+						);
 				}
 
 				return array('error' => lang('Unable to update field'));
@@ -352,27 +333,27 @@
 				else if ( $id == -1 )
 				{
 					return array
-					(
-						'id'	=> 0,
-						'error'	=> array
 						(
-							array('msg' => lang('field already exists, please choose another name')),
-							array('msg' => lang('Attribute has NOT been saved'))
-						)
-					);
+							'id'	=> 0,
+							'error'	=> array
+							(
+								array('msg' => lang('field already exists, please choose another name')),
+								array('msg' => lang('Attribute has NOT been saved'))
+							)
+						);
 				}
 
 				return array
-				(
-					'id'	=> $id,
-					'msg'	=> array('msg' => lang('Custom field has been created'))
-				);
+					(
+						'id'	=> $id,
+						'msg'	=> array('msg' => lang('Custom field has been created'))
+					);
 			}
 		}
 
 		function save_config($values='',$column_name='')
 		{
-				return $this->so->save_config($values,$column_name);
+			return $this->so->save_config($values,$column_name);
 		}
 
 		function select_location_type($selected='')
