@@ -164,20 +164,20 @@
 			while ($this->db->next_record())
 			{
 				$budget[] = array
-				(
-					'budget_id'			=> $this->db->f('id'),
-					'year'				=> $this->db->f('year'),
-					'grouping'			=> $this->db->f('grouping'),
-					'b_account_id'		=> $this->db->f('b_account_id'),
-					'b_account_name'	=> $this->db->f('descr'),
-					'district_id'		=> $this->db->f('district_id'),
-					'revision'			=> $this->db->f('revision'),
-					'budget_cost'		=> $this->db->f('budget_cost'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'ecodimb'			=> $this->db->f('ecodimb'),
-					'cat_id'			=> $this->db->f('cat_id'),
-		//			'user'				=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
-				);
+					(
+						'budget_id'			=> $this->db->f('id'),
+						'year'				=> $this->db->f('year'),
+						'grouping'			=> $this->db->f('grouping'),
+						'b_account_id'		=> $this->db->f('b_account_id'),
+						'b_account_name'	=> $this->db->f('descr'),
+						'district_id'		=> $this->db->f('district_id'),
+						'revision'			=> $this->db->f('revision'),
+						'budget_cost'		=> $this->db->f('budget_cost'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'ecodimb'			=> $this->db->f('ecodimb'),
+						'cat_id'			=> $this->db->f('cat_id'),
+						//			'user'				=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+					);
 			}
 			return $budget;
 		}
@@ -238,7 +238,7 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-			//	$querymethod = " $where ( descr $this->like '%$query%')";
+				//	$querymethod = " $where ( descr $this->like '%$query%')";
 			}
 
 
@@ -260,18 +260,18 @@
 			while ($this->db->next_record())
 			{
 				$budget[] = array
-				(
-					'budget_id'		=> $this->db->f('id'),
-					'year'			=> $this->db->f('year'),
-					'grouping'		=> $this->db->f('b_group'),
-					'district_id'		=> $this->db->f('district_id'),
-					'revision'		=> $this->db->f('revision'),
-					'budget_cost'		=> $this->db->f('budget_cost'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'ecodimb'			=> $this->db->f('ecodimb'),
-					'cat_id'			=> $this->db->f('category'),
-			//		'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
-				);
+					(
+						'budget_id'		=> $this->db->f('id'),
+						'year'			=> $this->db->f('year'),
+						'grouping'		=> $this->db->f('b_group'),
+						'district_id'		=> $this->db->f('district_id'),
+						'revision'		=> $this->db->f('revision'),
+						'budget_cost'		=> $this->db->f('budget_cost'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'ecodimb'			=> $this->db->f('ecodimb'),
+						'cat_id'			=> $this->db->f('category'),
+						//		'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+					);
 			}
 			return $budget;
 		}
@@ -285,19 +285,19 @@
 			if ($this->db->next_record())
 			{
 				$budget = array
-				(
-					'id'				=> $budget_id,
-					'year'				=> $this->db->f('year'),
-					'district_id'		=> $this->db->f('district_id'),
-					'revision'			=> $this->db->f('revision'),
-					'b_group'			=> $this->db->f('b_group'),
-					'remark'			=> $this->db->f('remark',true),
-					'budget_cost'		=> $this->db->f('budget_cost'),
-					'entry_date'		=> $this->db->f('entry_date'),
-					'distribute_year'	=> unserialize($this->db->f('distribute_year')),
-					'ecodimb'			=> $this->db->f('ecodimb'),
-					'cat_id'			=> $this->db->f('category')
-				);
+					(
+						'id'				=> $budget_id,
+						'year'				=> $this->db->f('year'),
+						'district_id'		=> $this->db->f('district_id'),
+						'revision'			=> $this->db->f('revision'),
+						'b_group'			=> $this->db->f('b_group'),
+						'remark'			=> $this->db->f('remark',true),
+						'budget_cost'		=> $this->db->f('budget_cost'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'distribute_year'	=> unserialize($this->db->f('distribute_year')),
+						'ecodimb'			=> $this->db->f('ecodimb'),
+						'cat_id'			=> $this->db->f('category')
+					);
 			}
 
 			return $budget;
@@ -338,7 +338,7 @@
 					serialize($budget['distribute_year']),
 					$budget['ecodimb'],
 					$budget['cat_id']
-					);
+				);
 
 				$values	= $this->db->validate_insert($values);
 
@@ -361,14 +361,14 @@
 			$budget['remark'] = $this->db->db_addslashes($budget['remark']);
 
 			$value_set=array
-			(
-				'remark'			=> $budget['remark'],
-				'entry_date'		=> time(),
-				'budget_cost'		=> $budget['budget_cost'],
-				'distribute_year'	=> serialize($budget['distribute_year']),
-				'ecodimb'			=> $budget['ecodimb'],
-				'category'			=> $budget['cat_id'],
-			);
+				(
+					'remark'			=> $budget['remark'],
+					'entry_date'		=> time(),
+					'budget_cost'		=> $budget['budget_cost'],
+					'distribute_year'	=> serialize($budget['distribute_year']),
+					'ecodimb'			=> $budget['ecodimb'],
+					'category'			=> $budget['cat_id'],
+				);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -395,18 +395,18 @@
 			if ($this->db->next_record())
 			{
 				$budget = array
-				(
-					'id'			=> (int)$this->db->f('id'),
-					'year'			=> $this->db->f('year'),
-					'district_id'	=> $this->db->f('district_id'),
-					'revision'		=> $this->db->f('revision'),
-					'b_account_id'	=> $this->db->f('b_account_id'),
-					'remark'		=> $this->db->f('remark', true),
-					'budget_cost'	=> $this->db->f('budget_cost'),
-					'entry_date'	=> $this->db->f('entry_date'),
-					'ecodimb'			=> $this->db->f('ecodimb'),
-					'cat_id'			=> $this->db->f('category')
-				);
+					(
+						'id'			=> (int)$this->db->f('id'),
+						'year'			=> $this->db->f('year'),
+						'district_id'	=> $this->db->f('district_id'),
+						'revision'		=> $this->db->f('revision'),
+						'b_account_id'	=> $this->db->f('b_account_id'),
+						'remark'		=> $this->db->f('remark', true),
+						'budget_cost'	=> $this->db->f('budget_cost'),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'ecodimb'			=> $this->db->f('ecodimb'),
+						'cat_id'			=> $this->db->f('category')
+					);
 			}
 
 			return $budget;
@@ -448,7 +448,7 @@
 					$budget['budget_cost'],
 					$budget['ecodimb'],
 					$budget['cat_id']
-					);
+				);
 
 				$values	= $this->db->validate_insert($values);
 
@@ -472,16 +472,16 @@
 			$this->db->transaction_begin();
 
 			$value_set = array
-			(
-				'remark'		=> $budget['remark'],
-				'entry_date'	=> time(),
-				'budget_cost'	=> $budget['budget_cost'],
-				'year'			=> $budget['year'],
-				'revision'		=> $budget['revision'],
-				'district_id'	=> $budget['district_id'],
-				'ecodimb'		=> $budget['ecodimb'],
-				'category'		=> $budget['cat_id']
-			);
+				(
+					'remark'		=> $budget['remark'],
+					'entry_date'	=> time(),
+					'budget_cost'	=> $budget['budget_cost'],
+					'year'			=> $budget['year'],
+					'revision'		=> $budget['revision'],
+					'district_id'	=> $budget['district_id'],
+					'ecodimb'		=> $budget['ecodimb'],
+					'category'		=> $budget['cat_id']
+				);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -496,7 +496,7 @@
 
 		function read_obligations($data)
 		{
-//_debug_array($data);			
+			//_debug_array($data);			
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter			= isset($data['filter']) ? $data['filter'] : 'none';
 			$query			= isset($data['query']) ? $data['query'] : '';
@@ -516,7 +516,7 @@
 			{
 				return array();
 			}
-//_debug_array($allrows);
+			//_debug_array($allrows);
 			$ordermethod = '';
 			/* 0 => cancelled, 1 => obligation , 2 => paid */
 			$filtermethod = "WHERE fm_workorder.paid = 1 and fm_workorder.vendor_id > 0";
@@ -556,7 +556,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 			}
-*/
+ */
 			if( $details )
 			{
 				$b_account_field = 'id';
@@ -573,7 +573,7 @@
 				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1 "
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_workorder.ecodimb";
 
-//_debug_array($sql);die();
+			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
 			$obligations = array();
@@ -587,13 +587,13 @@
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 
-//_debug_array($obligations);die();
+			//_debug_array($obligations);die();
 
-//----------- ad hoc order
+			//----------- ad hoc order
 			$filtermethod = "WHERE fm_tts_tickets.vendor_id > 0 AND budget > 0";
 
-//			$start_date = mktime(1, 1, 1, 1, 1, $year);
-//			$end_date = mktime  (23, 59, 59, 12, 31, $year);
+			//			$start_date = mktime(1, 1, 1, 1, 1, $year);
+			//			$end_date = mktime  (23, 59, 59, 12, 31, $year);
 			$filtermethod .= " AND fm_tts_tickets.entry_date >= $start_date AND fm_tts_tickets.entry_date <= $end_date";
 			$filtermethod2 = " AND fm_tts_tickets.actual_cost = '0.00' ";
 
@@ -630,7 +630,7 @@
 				. " $this->join fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $filtermethod2 $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
-//_debug_array($sql);die();
+			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -641,7 +641,7 @@
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
-//_debug_array($obligations);die();
+			//_debug_array($obligations);die();
 
 
 			$sql = "SELECT sum(budget) as budget, count(fm_tts_tickets.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_tts_tickets.ecodimb"
@@ -662,8 +662,8 @@
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
-//_debug_array($actual_cost);die();
-//----------- end ad hoc order
+			//_debug_array($actual_cost);die();
+			//----------- end ad hoc order
 
 			$this->db->query("select max(revision) as revision from fm_budget where year={$year}",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -685,7 +685,7 @@
 				{
 					$filtermethod = " $where fm_b_account.category='$grouping' ";
 				}
-*/
+ */
 			}
 
 			if ($district_id > 0)
@@ -703,14 +703,14 @@
 			if( $details )
 			{
 				$sql = "SELECT budget_cost,b_account_id as b_account_field,district_id,ecodimb FROM fm_budget"
-				 . " {$this->join} fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_account_id,district_id,ecodimb";
+					. " {$this->join} fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY budget_cost,b_account_id,district_id,ecodimb";
 			}
 			else
 			{
 				$sql = "SELECT sum(budget_cost) as budget_cost ,fm_b_account.category as b_account_field,district_id,ecodimb FROM fm_budget"
-				 . " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY fm_b_account.category,district_id,ecodimb";
+					. " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod GROUP BY fm_b_account.category,district_id,ecodimb";
 			}
-//_debug_array($sql);
+			//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$budget_cost = array();
@@ -722,7 +722,7 @@
 				$ecodimb[(int)$this->db->f('ecodimb')] = true;
 			}
 
-//_debug_array($budget_cost);die();
+			//_debug_array($budget_cost);die();
 
 			$filtermethod = '';
 			$where = 'AND';
@@ -761,7 +761,7 @@
 				. " WHERE periode >= $start_periode AND periode <= $end_periode {$filtermethod}"
 				. " GROUP BY fm_b_account.{$b_account_field}, district_id,dimb";
 
-//_debug_array($sql);
+			//_debug_array($sql);
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			while ($this->db->next_record())
@@ -771,7 +771,7 @@
 				$district[$this->db->f('district_id')] = true;
 				$ecodimb[(int)$this->db->f('dimb')] = true;
 			}
-//_debug_array($actual_cost);die();
+			//_debug_array($actual_cost);die();
 			$result = array();
 
 			if (is_array($accout_info))
@@ -780,14 +780,14 @@
 				{
 					switch ($sort)
 					{
-						case 'ASC':
-							ksort($accout_info);
-							break;
-						case 'DESC':
-							krsort($accout_info);
-							break;
-						default:
-							ksort($accout_info);
+					case 'ASC':
+						ksort($accout_info);
+						break;
+					case 'DESC':
+						krsort($accout_info);
+						break;
+					default:
+						ksort($accout_info);
 					}
 				}
 				else
@@ -808,8 +808,8 @@
 						foreach ($ecodimb as $dimb)
 						{
 							if( (isset($actual_cost[$b_account][$district_id][$dimb]) && $actual_cost[$b_account][$district_id][$dimb])
-							 || (isset($budget_cost[$b_account][$district_id][$dimb]) && $budget_cost[$b_account][$district_id][$dimb])
-							 || (isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb]))
+								|| (isset($budget_cost[$b_account][$district_id][$dimb]) && $budget_cost[$b_account][$district_id][$dimb])
+								|| (isset($obligations[$b_account][$district_id][$dimb]) && $obligations[$b_account][$district_id][$dimb]))
 							{
 								$result[] = array(
 									'grouping'		=> $details ? '' : $b_account, 
@@ -828,7 +828,7 @@
 			}
 
 			$this->total_records = count($result);
-			
+
 			//cramirez
 			if($this->total_records == 0)
 			{
@@ -839,7 +839,7 @@
 			{
 				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])?intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']):15;
 
-//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));				
+				//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));				
 				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
 
 				$out = array_chunk($result, $num_rows);
@@ -861,10 +861,10 @@
 			while ($this->db->next_record())
 			{
 				$group_list[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('id')
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('id')
+					);
 
 			}
 			return $group_list;
@@ -887,18 +887,18 @@
 			while ($this->db->next_record())
 			{
 				$revision_list[$i] = array
-				(
-					'id'	=> $this->db->f('revision'),
-					'name'	=> $this->db->f('revision')
-				);
+					(
+						'id'	=> $this->db->f('revision'),
+						'name'	=> $this->db->f('revision')
+					);
 				$i++;
 			}
 
 			$revision_list[] = array
-			(
-				'id'	=> $i,
-				'name'	=> $i
-			);
+				(
+					'id'	=> $i,
+					'name'	=> $i
+				);
 
 			return $revision_list;
 		}
@@ -913,10 +913,10 @@
 			while ($this->db->next_record())
 			{
 				$year_list[] = array
-				(
-					'id'	=> $this->db->f('year'),
-					'name'	=> $this->db->f('year')
-				);
+					(
+						'id'	=> $this->db->f('year'),
+						'name'	=> $this->db->f('year')
+					);
 			}
 			return $year_list;
 		}
@@ -940,10 +940,10 @@
 			while ($this->db->next_record())
 			{
 				$revision_list[] = array
-				(
-					'id'	=> $this->db->f('revision'),
-					'name'	=> $this->db->f('revision')
-				);
+					(
+						'id'	=> $this->db->f('revision'),
+						'name'	=> $this->db->f('revision')
+					);
 			}
 			return $revision_list;
 		}
@@ -966,10 +966,10 @@
 			while ($this->db->next_record())
 			{
 				$grouping_list[] = array
-				(
-					'id'	=> $this->db->f('grouping'),
-					'name'	=> $this->db->f('grouping')
-				);
+					(
+						'id'	=> $this->db->f('grouping'),
+						'name'	=> $this->db->f('grouping')
+					);
 			}
 			return $grouping_list;
 		}
@@ -984,10 +984,10 @@
 			while ($this->db->next_record())
 			{
 				$year_list[] = array
-				(
-					'id'	=> $this->db->f('year'),
-					'name'	=> $this->db->f('year')
-				);
+					(
+						'id'	=> $this->db->f('year'),
+						'name'	=> $this->db->f('year')
+					);
 			}
 			return $year_list;
 		}
@@ -1084,14 +1084,14 @@
 						{
 
 							$this->db->query("INSERT INTO fm_budget (id, year, b_account_id, district_id,revision,user_id,entry_date,budget_cost) VALUES ("
-							. $this->db->next_id('fm_budget') . ","
-							. $basis['year'] . ",'"
-							. $entry['b_account_id']. "',"
-							. $basis['district_id'] . ","
-							. $basis['revision'] . ","
-							. $this->account . ","
-							. time() . ","
-							. $entry['account_sum'] . ")",__LINE__,__FILE__);
+								. $this->db->next_id('fm_budget') . ","
+								. $basis['year'] . ",'"
+								. $entry['b_account_id']. "',"
+								. $basis['district_id'] . ","
+								. $basis['revision'] . ","
+								. $this->account . ","
+								. time() . ","
+								. $entry['account_sum'] . ")",__LINE__,__FILE__);
 						}
 					}
 
@@ -1099,22 +1099,22 @@
 					{
 						$diff_sum = $basis['budget_cost'] - $test_sum;
 						$sql = "SELECT max(budget_cost) as budget_cost FROM fm_budget WHERE year = " . (int)$basis['year']
-						 . " AND district_id = " . (int)$basis['district_id']
-						 . " AND revision = " . (int)$basis['revision'];
+							. " AND district_id = " . (int)$basis['district_id']
+							. " AND revision = " . (int)$basis['revision'];
 
-						 $this->db->query($sql,__LINE__,__FILE__);
-						 $this->db->next_record();
-						 $max_budget_cost = $this->db->f('budget_cost');
+						$this->db->query($sql,__LINE__,__FILE__);
+						$this->db->next_record();
+						$max_budget_cost = $this->db->f('budget_cost');
 
 						$sql = "SELECT id FROM fm_budget WHERE year = " . (int)$basis['year']
-						 . " AND district_id = " . (int)$basis['district_id']
-						 . " AND revision = " . (int)$basis['revision']
-						 . " AND budget_cost = $max_budget_cost";
+							. " AND district_id = " . (int)$basis['district_id']
+							. " AND revision = " . (int)$basis['revision']
+							. " AND budget_cost = $max_budget_cost";
 
-						 $this->db->query($sql,__LINE__,__FILE__);
-						 $this->db->next_record();
+						$this->db->query($sql,__LINE__,__FILE__);
+						$this->db->next_record();
 
-						 $this->db->query("UPDATE fm_budget set budget_cost = budget_cost + $diff_sum WHERE id = " . (int)$this->db->f('id') ,__LINE__,__FILE__);
+						$this->db->query("UPDATE fm_budget set budget_cost = budget_cost + $diff_sum WHERE id = " . (int)$this->db->f('id') ,__LINE__,__FILE__);
 					}
 				}
 			}
@@ -1122,4 +1122,3 @@
 			return $receipt;
 		}
 	}
-

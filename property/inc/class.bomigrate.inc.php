@@ -74,13 +74,13 @@
 		{
 			$domain_info = $GLOBALS['phpgw_domain'];
 			unset($domain_info[$GLOBALS['phpgw_info']['user']['domain']]);
-			
+
 			return $domain_info;
 		}
 
 		public function migrate($values,$download_script=false)
 		{
-//_debug_array($GLOBALS['phpgw_domain']);die();
+			//_debug_array($GLOBALS['phpgw_domain']);die();
 //			_debug_array($values);
 			$oProc							= createObject('phpgwapi.schema_proc',$GLOBALS['phpgw_info']['server']['db_type']);
 			$oProc->m_odb					= $GLOBALS['phpgw']->db;
@@ -88,7 +88,7 @@
 			$GLOBALS['phpgw_setup']->oProc	= $oProc;
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
-			
+
 //			$tables = array('fm_entity_history');
 
 			$setup = createObject('phpgwapi.setup_process');
@@ -97,7 +97,7 @@
 			foreach($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
-//_debug_array($tableinfo);
+				//_debug_array($tableinfo);
 
 				$fd_temp = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
 				@eval($fd_temp);
@@ -106,10 +106,10 @@
 				$table_def[$table]['fk'] = $tableinfo[2];
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
-//_debug_array($table_def);				
-//die();
+				//_debug_array($table_def);				
+				//die();
 				/* Work out the order of how the tables can be created
-				*/
+				 */
 				if($tableinfo[2])
 				{
 					foreach ($tableinfo[2] as $ref_set => $ref_fields)
@@ -152,7 +152,7 @@
 			}
 		}
 
-		
+
 		function copy_data($table_def = array())
 		{
 			$db = $GLOBALS['phpgw']->db;
@@ -165,48 +165,48 @@
 				}
 				switch ($table)
 				{
-					case 'fm_document_history':
-					case 'fm_entity_history':
-					case 'fm_request_history':
-					case 'fm_project_history':
-					case 'fm_tts_history':
-					case 'fm_s_agreement_history':
-					case 'fm_workorder_history':
-					case 'phpgw_history_log':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'fm_project':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__ , __FILE__, true);
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET loc1 = '0000', location_code = '0000' WHERE loc1 = ''", __LINE__ , __FILE__, true);
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET status = 'closed' WHERE status = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'fm_workorder':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'fm_ecodimd':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET descr = 'NIL' WHERE descr = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'phpgw_categories':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET cat_description = 'NIL' WHERE cat_description = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'phpgw_contact_others':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET other_value = 'NIL' WHERE other_value = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'phpgw_contact_person':
-						$GLOBALS['phpgw']->db->query("DELETE FROM {$table} WHERE first_name = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'phpgw_log_msg':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_parms = 'NIL' WHERE log_msg_parms = ''", __LINE__ , __FILE__, true);
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_file = 'NIL' WHERE log_msg_file = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'phpgw_sms_tbluserphonebook':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_email = 'NIL' WHERE p_email = ''", __LINE__ , __FILE__, true);
-						break;
-					case 'phpgw_sms_tblsmsoutgoing':
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_footer = 'NIL' WHERE p_footer = ''", __LINE__ , __FILE__, true);
-						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_src = 'NIL' WHERE p_src = ''", __LINE__ , __FILE__, true);
-						break;
-					default:
+				case 'fm_document_history':
+				case 'fm_entity_history':
+				case 'fm_request_history':
+				case 'fm_project_history':
+				case 'fm_tts_history':
+				case 'fm_s_agreement_history':
+				case 'fm_workorder_history':
+				case 'phpgw_history_log':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET history_new_value = 'NIL' WHERE history_new_value = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'fm_project':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__ , __FILE__, true);
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET loc1 = '0000', location_code = '0000' WHERE loc1 = ''", __LINE__ , __FILE__, true);
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET status = 'closed' WHERE status = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'fm_workorder':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'fm_ecodimd':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET descr = 'NIL' WHERE descr = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'phpgw_categories':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET cat_description = 'NIL' WHERE cat_description = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'phpgw_contact_others':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET other_value = 'NIL' WHERE other_value = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'phpgw_contact_person':
+					$GLOBALS['phpgw']->db->query("DELETE FROM {$table} WHERE first_name = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'phpgw_log_msg':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_parms = 'NIL' WHERE log_msg_parms = ''", __LINE__ , __FILE__, true);
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET log_msg_file = 'NIL' WHERE log_msg_file = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'phpgw_sms_tbluserphonebook':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_email = 'NIL' WHERE p_email = ''", __LINE__ , __FILE__, true);
+					break;
+				case 'phpgw_sms_tblsmsoutgoing':
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_footer = 'NIL' WHERE p_footer = ''", __LINE__ , __FILE__, true);
+					$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_src = 'NIL' WHERE p_src = ''", __LINE__ , __FILE__, true);
+					break;
+				default:
 				}
 
 				$db->query("SELECT * FROM {$table}");
@@ -218,7 +218,7 @@
 				}
 			}
 		}
-		
+
 		private function download_script($script, $filename)
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
@@ -233,14 +233,14 @@
 
 
 		/**
-		* Generate Script for db-schema
-		*
-		* @param array	$aTables 		array holding schema definition for the database
-		* @param bool	$bOutputHTML	print to browser - or not
-		* @param bool	$return_script  return sql-sqript - or not
-		*
-		* @return string sql-script for generate database for chosen db-platform.
-		*/
+		 * Generate Script for db-schema
+		 *
+		 * @param array	$aTables 		array holding schema definition for the database
+		 * @param bool	$bOutputHTML	print to browser - or not
+		 * @param bool	$return_script  return sql-sqript - or not
+		 *
+		 * @return string sql-script for generate database for chosen db-platform.
+		 */
 
 		function GenerateScripts($aTables, $bOutputHTML=false, $return_script=false)
 		{
@@ -306,4 +306,3 @@
 			}
 		}
 	}
-

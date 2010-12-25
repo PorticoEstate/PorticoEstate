@@ -88,7 +88,7 @@
 //					$order = '';
 				}			
 			}
-*/
+ */
 			$_filter_array = array();
 			$get_single = array();
 			foreach ( $this->location_info['fields'] as $field )
@@ -208,8 +208,8 @@
 				}
 				$query = $this->_db->db_addslashes($query);
 				$querymethod = " {$where } {$_query_start} ({$table}.{$this->location_info['id']['name']} = {$id_query}";
-//_debug_array($filtermethod);
-//_debug_array($where);die();
+				//_debug_array($filtermethod);
+				//_debug_array($where);die();
 
 				foreach($this->location_info['fields'] as $field)
 				{
@@ -227,22 +227,21 @@
 
 				while ($this->_db->next_record())
 				{
-					if($this->_db->f('datatype')=='V' || $this->_db->f('datatype')=='email' || $this->_db->f('datatype')=='CH'):
+					if($this->_db->f('datatype')=='V' || $this->_db->f('datatype')=='email' || $this->_db->f('datatype')=='CH')
 					{
 						$_querymethod[]= "$table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
 					}
-					elseif($this->_db->f('datatype')=='I'):
+					else if($this->_db->f('datatype')=='I')
 					{
 						if(ctype_digit($query))
 						{
 							$_querymethod[]= "$table." . $this->_db->f('column_name') . '=' . (int)$query;
 						}
 					}
-					else:
+					else
 					{
 						$_querymethod[]= "$table." . $this->_db->f('column_name') . " = '$query'";
 					}
-					endif;
 				}
 
 				if (isset($_querymethod) AND is_array($_querymethod))
@@ -277,11 +276,11 @@
 				foreach($cols_return as $key => $field)
 				{
 					$dataset[$j][$field] = array
-					(
-						'value'		=> $this->_db->f($field),
-						'datatype'	=> $uicols['datatype'][$key],
-						'attrib_id'	=> $uicols['attib_id'][$key]
-					);
+						(
+							'value'		=> $this->_db->f($field),
+							'datatype'	=> $uicols['datatype'][$key],
+							'attrib_id'	=> $uicols['attib_id'][$key]
+						);
 				}
 				$j++;
 			}
@@ -300,13 +299,13 @@
 							{
 								switch ($method)
 								{
-									case 'get_user':
-										if($value)
-										{
-											$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
-										}
-										break;
-									default:
+								case 'get_user':
+									if($value)
+									{
+										$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
+									}
+									break;
+								default:
 									// nothing
 								}
 							}
@@ -327,9 +326,9 @@
 			$info = array();
 			switch($type)
 			{
-//-------- ID type integer
-				case 'part_of_town':
-					$info = array
+				//-------- ID type integer
+			case 'part_of_town':
+				$info = array
 					(
 						'table' 			=> 'fm_part_of_town',
 						'id'				=> array('name' => 'part_of_town_id', 'type' => 'int', 'descr' => lang('id')),
@@ -370,14 +369,14 @@
 							'entry_date'	=> array('add'	=> 'time()'),
 							'modified_date'	=> array('edit'	=> 'time()'),
 						),
-*/
+ */
 						'check_grant'		=> false
 					);
 
-					break;
+				break;
 
-				case 'project_group':
-					$info = array
+			case 'project_group':
+				$info = array
 					(
 						'table' => 'fm_project_group',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -396,9 +395,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::project_group'
 					);
-					break;
-				case 'dimb':
-					$info = array
+				break;
+			case 'dimb':
+				$info = array
 					(
 						'table' => 'fm_ecodimb',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -417,9 +416,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_dimb'
 					);
-					break;
-				case 'dimd':
-					$info = array
+				break;
+			case 'dimd':
+				$info = array
 					(
 						'table' => 'fm_ecodimd',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -438,9 +437,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_dimd'
 					);
-					break;
-				case 'tax':
-					$info = array
+				break;
+			case 'tax':
+				$info = array
 					(
 						'table' => 'fm_ecomva',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -459,9 +458,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_tax'
 					);
-					break;
-				case 'voucher_cat':
-					$info = array
+				break;
+			case 'voucher_cat':
+				$info = array
 					(
 						'table' => 'fm_ecobilag_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -480,9 +479,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::voucher_cats'
 					);
-					break;
-				case 'voucher_type':
-					$info = array
+				break;
+			case 'voucher_type':
+				$info = array
 					(
 						'table' => 'fm_ecoart',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -501,9 +500,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::voucher_type'
 					);
-					break;
-				case 'tender_chapter':
-					$info = array
+				break;
+			case 'tender_chapter':
+				$info = array
 					(
 						'table' => 'fm_chapter',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -522,14 +521,14 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tender'
 					);
-					break;
-				case 'location':
+				break;
+			case 'location':
 
-					$this->_db->query("SELECT id FROM fm_location_type WHERE id ={$type_id}",__LINE__,__FILE__);
+				$this->_db->query("SELECT id FROM fm_location_type WHERE id ={$type_id}",__LINE__,__FILE__);
 
-					if($this->_db->next_record())
-					{
-						$info = array
+				if($this->_db->next_record())
+				{
+					$info = array
 						(
 							'table' => "fm_location{$type_id}_category",
 							'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -548,14 +547,14 @@
 							'acl_location' => '.admin',
 							'menu_selection' => "admin::property::location::location::category_{$type_id}"
 						);
-					}
-					else
-					{
-						throw new Exception(lang('ERROR: illegal type %1', $type_id));
-					}
-					break;
-				case 'owner_cats':
-					$info = array
+				}
+				else
+				{
+					throw new Exception(lang('ERROR: illegal type %1', $type_id));
+				}
+				break;
+			case 'owner_cats':
+				$info = array
 					(
 						'table' => 'fm_owner_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -574,9 +573,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::owner::owner_cats'
 					);
-					break;
-				case 'tenant_cats':
-					$info = array
+				break;
+			case 'tenant_cats':
+				$info = array
 					(
 						'table' => 'fm_tenant_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -595,9 +594,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tenant::tenant_cats'
 					);
-					break;
-				case 'vendor_cats':
-					$info = array
+				break;
+			case 'vendor_cats':
+				$info = array
 					(
 						'table' => 'fm_vendor_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -616,9 +615,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::vendor::vendor_cats'
 					);
-					break;
-				case 'vendor':
-					$info = array
+				break;
+			case 'vendor':
+				$info = array
 					(
 						'table' 			=> 'fm_vendor',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -672,13 +671,13 @@
 						(
 							'owner_id' 		=> array('add'	=> '$this->account'),
 							'entry_date'	=> array('add'	=> 'time()'),
-				//			'modified_date'	=> array('edit'	=> 'time()'),
+							//			'modified_date'	=> array('edit'	=> 'time()'),
 						)
 
 					);
-					break;
-				case 'owner':
-					$info = array
+				break;
+			case 'owner':
+				$info = array
 					(
 						'table' 			=> 'fm_owner',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -715,13 +714,13 @@
 						(
 							'owner_id' 		=> array('add'	=> '$this->account'),
 							'entry_date'	=> array('add'	=> 'time()'),
-				//			'modified_date'	=> array('edit'	=> 'time()'),
+							//			'modified_date'	=> array('edit'	=> 'time()'),
 						)
 
 					);
-					break;
-				case 'tenant':
-					$info = array
+				break;
+			case 'tenant':
+				$info = array
 					(
 						'table' 			=> 'fm_tenant',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -759,13 +758,13 @@
 						(
 							'owner_id' 		=> array('add'	=> '$this->account'),
 							'entry_date'	=> array('add'	=> 'time()'),
-				//			'modified_date'	=> array('edit'	=> 'time()'),
+							//			'modified_date'	=> array('edit'	=> 'time()'),
 						)
 
 					);
-					break;
-				case 'district':
-					$info = array
+				break;
+			case 'district':
+				$info = array
 					(
 						'table' => 'fm_district',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -784,9 +783,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::district'
 					);
-					break;
-				case 'street':
-					$info = array
+				break;
+			case 'street':
+				$info = array
 					(
 						'table' => 'fm_streetaddress',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -805,9 +804,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::street'
 					);
-					break;
-				case 's_agreement':
-					$info = array
+				break;
+			case 's_agreement':
+				$info = array
 					(
 						'table' => 'fm_s_agreement_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -826,9 +825,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::agreement::service_agree_cats'
 					);
-					break;
-				case 'tenant_claim':
-					$info = array
+				break;
+			case 'tenant_claim':
+				$info = array
 					(
 						'table' => 'fm_tenant_claim_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -847,9 +846,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tenant::claims_cats'
 					);
-					break;
-				case 'wo_hours':
-					$info = array
+				break;
+			case 'wo_hours':
+				$info = array
 					(
 						'table' => 'fm_wo_hours_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -868,9 +867,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::workorder_detail'
 					);
-					break;
-				case 'r_condition_type':
-					$info = array
+				break;
+			case 'r_condition_type':
+				$info = array
 					(
 						'table' => 'fm_request_condition_type',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -889,9 +888,9 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_condition'
 					);
-					break;
-				case 'b_account':
-					$info = array
+				break;
+			case 'b_account':
+				$info = array
 					(
 						'table' => 'fm_b_account_category',
 						'id'				=> array('name' => 'id', 'type' => 'int'),
@@ -910,10 +909,10 @@
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
-					break;
-//-------- ID type varchar
-				case 'project_status':
-					$info = array
+				break;
+				//-------- ID type varchar
+			case 'project_status':
+				$info = array
 					(
 						'table' 			=> 'fm_project_status',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -944,9 +943,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::project_status'
 					);
-					break;
-				case 'workorder_status':
-					$info = array
+				break;
+			case 'workorder_status':
+				$info = array
 					(
 						'table' 			=> 'fm_workorder_status',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -989,9 +988,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::workorder_status'
 					);
-					break;
-				case 'request_status':
-					$info = array
+				break;
+			case 'request_status':
+				$info = array
 					(
 						'table' 			=> 'fm_request_status',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -1010,9 +1009,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::request_status'
 					);
-					break;
-				case 'agreement_status':
-					$info = array
+				break;
+			case 'agreement_status':
+				$info = array
 					(
 						'table' 			=> 'fm_agreement_status',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -1031,9 +1030,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::agreement::agreement_status'
 					);
-					break;
-				case 'building_part':
-					$info = array
+				break;
+			case 'building_part':
+				$info = array
 					(
 						'table' 			=> 'fm_building_part',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -1052,9 +1051,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::building_part'
 					);
-					break;
-				case 'document_status':
-					$info = array
+				break;
+			case 'document_status':
+				$info = array
 					(
 						'table' 			=> 'fm_document_status',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -1073,9 +1072,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::document_status'
 					);
-					break;
-				case 'unit':
-					$info = array
+				break;
+			case 'unit':
+				$info = array
 					(
 						'table' 			=> 'fm_standard_unit',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -1094,9 +1093,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::unit'
 					);
-					break;
-				case 'budget_account':
-					$info = array
+				break;
+			case 'budget_account':
+				$info = array
 					(
 						'table' 			=> 'fm_b_account',
 						'id'				=> array('name' => 'id', 'type' => 'varchar'),
@@ -1171,11 +1170,11 @@
 						'check_grant'		=> false
 					);
 
-					break;
+				break;
 
-//-------- ID type auto
-				case 'order_dim1':
-					$info = array
+				//-------- ID type auto
+			case 'order_dim1':
+				$info = array
 					(
 						'table' 			=> 'fm_order_dim1',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1201,9 +1200,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::order_dim1'
 					);
-					break;
-				case 'branch':
-					$info = array
+				break;
+			case 'branch':
+				$info = array
 					(
 						'table' 			=> 'fm_branch',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1229,9 +1228,9 @@
 						'menu_selection'	=> 'admin::property::branch'
 					);
 
-					break;
-				case 'key_location':
-					$info = array
+				break;
+			case 'key_location':
+				$info = array
 					(
 						'table' 			=> 'fm_key_loc',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1257,10 +1256,10 @@
 						'menu_selection'	=> 'admin::property::key_location'
 					);
 
-					break;
+				break;
 
-				case 'async':
-					$info = array
+			case 'async':
+				$info = array
 					(
 						'table' 			=> 'fm_async_method',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1291,11 +1290,11 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::async'
 					);
-					break;
+				break;
 
-				case 'event_action':
+			case 'event_action':
 
-					$info = array
+				$info = array
 					(
 						'table' 			=> 'fm_event_action',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1339,11 +1338,11 @@
 						)
 					);
 
-					break;
+				break;
 
-				case 'ticket_status':
+			case 'ticket_status':
 
-					$info = array
+				$info = array
 					(
 						'table' 			=> 'fm_tts_status',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1399,9 +1398,9 @@
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
-					break;
-				case 'pending_action_type':
-					$info = array
+				break;
+			case 'pending_action_type':
+				$info = array
 					(
 						'table' 			=> 'fm_action_pending_category',
 						'id'				=> array('name' => 'num', 'type' => 'varchar'),
@@ -1427,11 +1426,11 @@
 						'menu_selection'	=> 'admin::property::action_type'
 					);
 
-					break;
+				break;
 
-				case 'order_template':
+			case 'order_template':
 
-					$info = array
+				$info = array
 					(
 						'table' 			=> 'fm_order_template',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1470,11 +1469,11 @@
 						'check_grant'		=> true
 					);
 
-					break;
+				break;
 
-				case 'responsibility_role':
+			case 'responsibility_role':
 
-					$info = array
+				$info = array
 					(
 						'table' 			=> 'fm_responsibility_role',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1531,11 +1530,11 @@
 						'check_grant'		=> false
 					);
 
-					break;
+				break;
 
-				case 'custom_menu_items':
+			case 'custom_menu_items':
 
-					$info = array
+				$info = array
 					(
 						'table' 			=> 'fm_custom_menu_items',
 						'id'				=> array('name' => 'id', 'type' => 'auto'),
@@ -1588,12 +1587,12 @@
 						'check_grant'		=> false
 					);
 
-					break;
+				break;
 
-				default:
-					$receipt = array();
-					$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
-					phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+			default:
+				$receipt = array();
+				$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
+				phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
 				//	throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 
@@ -1702,17 +1701,17 @@
 				{
 					$name	= $this->_db->f('descr', true);
 				}
-				
+
 				if($_extra)
 				{
 					$name = "{$_extra} - {$name}";
 				}
 
 				$values[] = array
-				(
-					'id'	=> $id,
-					'name'	=> $name
-				);
+					(
+						'id'	=> $id,
+						'name'	=> $name
+					);
 			}
 			return $values;
 		}
@@ -1833,7 +1832,7 @@
 					$receipt['error'][]=array('msg'=>lang('record has not been saved'));
 				}
 			}
-*/
+ */
 			$this->_db->transaction_commit();
 			$receipt['id'] = $id;
 			$receipt['message'][]=array('msg'=>lang('record has been saved'));
@@ -1903,7 +1902,7 @@
 					$historylog->add('SO',$data['id'],$history['value'],false, $attrib_id,$history['date']);
 				}
 			}
-*/
+ */
 			$this->_db->transaction_commit();
 
 			$receipt['id'] = $data['id'];

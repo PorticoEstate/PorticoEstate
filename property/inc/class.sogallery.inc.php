@@ -45,7 +45,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->_db 			= & $GLOBALS['phpgw']->db;
 			$this->_join		= & $this->_db->join;
-			$this->_left_join		= & $this->_db->left_join;
+			$this->_left_join	= & $this->_db->left_join;
 			$this->_like		= & $this->_db->like;
 		}
 
@@ -68,14 +68,14 @@
 			{
 				switch($order)
 				{
-					case 'id':
-						$_order = 'file_id';
-						break;
-					case 'date':
-						$_order = 'created';
-						break;
-					default:
-						$_order = $order;	
+				case 'id':
+					$_order = 'file_id';
+					break;
+				case 'date':
+					$_order = 'created';
+					break;
+				default:
+					$_order = $order;	
 				}
 
 				$ordermethod = " ORDER BY $_order $sort";
@@ -97,7 +97,7 @@
 			}
 
 			$filtermethod .= ')';
-						
+
 			if($user_id)
 			{
 				$filtermethod .= " AND createdby_id = {$user_id}";
@@ -131,9 +131,9 @@
 			}
 
 			$sql = "SELECT * FROM  phpgw_vfs"
-			 ." {$filtermethod} {$querymethod}";
+				." {$filtermethod} {$querymethod}";
 
-//_debug_array($sql . $ordermethod);
+			//_debug_array($sql . $ordermethod);
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->_db->num_rows();
 
@@ -152,25 +152,25 @@
 				while ($this->_db->next_record())
 				{
 					$values[] = array
-					(
-						'id'					=> $this->_db->f('file_id'),
-						'owner_id'				=> $this->_db->f('owner_id'),
-						'createdby_id'			=> $this->_db->f('createdby_id'),
-						'modifiedby_id'			=> $this->_db->f('modifiedby_id'),
-						'created'				=> $this->_db->f('created'),
-						'modified'				=> $this->_db->f('modified'),
-						'size'					=> $this->_db->f('size'),
-						'mime_type'				=> $this->_db->f('mime_type',true),
-						'app'					=> $this->_db->f('app'),
-						'directory'				=> $this->_db->f('directory',true),
-						'name'					=> $this->_db->f('name'),
-						'link_directory'		=> $this->_db->f('link_directory',true),
-						'link_name'				=> $this->_db->f('link_name',true),
-						'version'				=> $this->_db->f('version')
-					);
+						(
+							'id'					=> $this->_db->f('file_id'),
+							'owner_id'				=> $this->_db->f('owner_id'),
+							'createdby_id'			=> $this->_db->f('createdby_id'),
+							'modifiedby_id'			=> $this->_db->f('modifiedby_id'),
+							'created'				=> $this->_db->f('created'),
+							'modified'				=> $this->_db->f('modified'),
+							'size'					=> $this->_db->f('size'),
+							'mime_type'				=> $this->_db->f('mime_type',true),
+							'app'					=> $this->_db->f('app'),
+							'directory'				=> $this->_db->f('directory',true),
+							'name'					=> $this->_db->f('name'),
+							'link_directory'		=> $this->_db->f('link_directory',true),
+							'link_name'				=> $this->_db->f('link_name',true),
+							'version'				=> $this->_db->f('version')
+						);
 				}
 			}
-//_debug_array($gallery);
+			//_debug_array($gallery);
 			return $values;
 		}
 

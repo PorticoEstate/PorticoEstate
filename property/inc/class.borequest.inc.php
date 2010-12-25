@@ -43,21 +43,20 @@
 		var $cat_id;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_borequest($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 			= CreateObject('property.sorequest');
-			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->solocation 	= CreateObject('property.solocation');
-			$this->historylog	= CreateObject('property.historylog','request');
+			$this->so 					= CreateObject('property.sorequest');
+			$this->bocommon 			= CreateObject('property.bocommon');
+			$this->solocation 			= CreateObject('property.solocation');
+			$this->historylog			= CreateObject('property.historylog','request');
 			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->custom 				= & $this->so->custom;
@@ -202,10 +201,10 @@
 
 			for ($i=0;$i<count($condition_type_list);$i++)
 			{
-				$conditions[$i]['degree'] 		= $this->select_degree_list($conditions[$i]['degree']);
-				$conditions[$i]['probability'] 		= $this->select_probability_list($conditions[$i]['probability']);
-				$conditions[$i]['consequence'] 		= $this->select_consequence_list($conditions[$i]['consequence']);
-				$conditions[$i]['condition_type']	= $condition_type_list[$i]['id'];
+				$conditions[$i]['degree'] 				= $this->select_degree_list($conditions[$i]['degree']);
+				$conditions[$i]['probability'] 			= $this->select_probability_list($conditions[$i]['probability']);
+				$conditions[$i]['consequence'] 			= $this->select_consequence_list($conditions[$i]['consequence']);
+				$conditions[$i]['condition_type']		= $condition_type_list[$i]['id'];
 				$conditions[$i]['condition_type_name']	= $condition_type_list[$i]['name'];
 			}
 
@@ -245,12 +244,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				break;
 			}
 
 			$status_entries= $this->so->select_status_list();
@@ -272,9 +271,9 @@
 		function read($data)
 		{
 			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
-											'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
-											'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num));
+				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
+				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
+				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -355,8 +354,8 @@
 			$vfs->override_acl = 1;
 
 			$values['files'] = $vfs->ls (array(
-			     'string' => "/property/request/$request_id",
-			     'relatives' => array(RELATIVE_NONE)));
+				'string' => "/property/request/$request_id",
+				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
@@ -385,25 +384,25 @@
 
 				switch ($value['status'])
 				{
-					case 'R': $type = lang('Re-opened'); break;
-					case 'X': $type = lang('Closed');    break;
-					case 'O': $type = lang('Opened');    break;
-					case 'A': $type = lang('Re-assigned'); break;
-					case 'P': $type = lang('Priority changed'); break;
-					case 'CO': $type = lang('Initial Coordinator'); break;
-					case 'C': $type = lang('Coordinator changed'); break;
-					case 'TO': $type = lang('Initial Category'); break;
-					case 'T': $type = lang('Category changed'); break;
-					case 'SO': $type = lang('Initial Status'); break;
-					case 'S': $type = lang('Status changed'); break;
-					default: break;
+				case 'R': $type = lang('Re-opened'); break;
+				case 'X': $type = lang('Closed');    break;
+				case 'O': $type = lang('Opened');    break;
+				case 'A': $type = lang('Re-assigned'); break;
+				case 'P': $type = lang('Priority changed'); break;
+				case 'CO': $type = lang('Initial Coordinator'); break;
+				case 'C': $type = lang('Coordinator changed'); break;
+				case 'TO': $type = lang('Initial Category'); break;
+				case 'T': $type = lang('Category changed'); break;
+				case 'SO': $type = lang('Initial Status'); break;
+				case 'S': $type = lang('Status changed'); break;
+				default: break;
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+					if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
 
 
-				$record_history[$i]['value_action']	= $type?$type:'';
+						$record_history[$i]['value_action']	= $type?$type:'';
 				unset($type);
 
 				if ($value['status'] == 'A')
@@ -457,9 +456,9 @@
 				}
 			}
 
-			$request['location_code']=implode("-", $location);
-			$request['start_date']	=  phpgwapi_datetime::date_to_timestamp($request['start_date']);
-			$request['end_date']	=  phpgwapi_datetime::date_to_timestamp($request['end_date']);
+			$request['location_code']	= implode("-", $location);
+			$request['start_date']		= phpgwapi_datetime::date_to_timestamp($request['start_date']);
+			$request['end_date']		= phpgwapi_datetime::date_to_timestamp($request['end_date']);
 
 			if(is_array($values_attribute))
 			{
@@ -482,4 +481,3 @@
 			$this->so->delete($request_id);
 		}
 	}
-

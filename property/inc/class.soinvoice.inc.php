@@ -55,15 +55,15 @@
 		{
 
 			$valid_order = array
-			(
-				'bilagsnr'			=> true,
-				'spvend_code'		=> true,
-				'fakturadato'		=> true,
-				'oppsynsigndato'	=> true,
-				'saksigndato'		=> true,
-				'budsjettsigndato'	=> true,
-				'periode'			=> true
-			);
+				(
+					'bilagsnr'			=> true,
+					'spvend_code'		=> true,
+					'fakturadato'		=> true,
+					'oppsynsigndato'	=> true,
+					'saksigndato'		=> true,
+					'budsjettsigndato'	=> true,
+					'periode'			=> true
+				);
 
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query 			= isset($data['query'])?$data['query']:'';
@@ -85,8 +85,8 @@
 			$join_tables	= '';
 			$filtermethod	= '';
 			$querymethod	= '';
-//_debug_array($data);
-			
+			//_debug_array($data);
+
 			$this->db->query("SELECT * FROM fm_ecoart");
 			$art_list = array();
 			while ($this->db->next_record())
@@ -105,16 +105,15 @@
 
 			$where= 'WHERE';
 
-			if ($user_lid=='none' || !$user_lid):
+			if ($user_lid=='none' || !$user_lid)
 			{
 				return array();
 			}
-			elseif ($user_lid!='all'):
+			else if ($user_lid!='all')
 			{
 				$filtermethod = " WHERE ( oppsynsmannid= '$user_lid' or saksbehandlerid= '$user_lid' or budsjettansvarligid= '$user_lid')";
 				$where= 'AND';
 			}
-			endif;
 
 			if ($cat_id > 0)
 			{
@@ -126,7 +125,7 @@
 			{
 				$filtermethod .= " $where  district_id='$district_id' ";
 				$join_tables = " $this->join fm_location1 ON fm_ecobilagoverf.loc1 = fm_location1.loc1"
-						. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+					. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
 				$where= 'AND';
 			}
 
@@ -203,10 +202,10 @@
 			while ($this->db->next_record())
 			{
 				$temp[] = array
-				(
-					'voucher_id'		=> $this->db->f('bilagsnr'),
-					'invoice_count'		=> $this->db->f('invoice_count'),
-					'amount'		=> $this->db->f('belop')
+					(
+						'voucher_id'		=> $this->db->f('bilagsnr'),
+						'invoice_count'		=> $this->db->f('invoice_count'),
+						'amount'		=> $this->db->f('belop')
 					);
 			}
 
@@ -221,12 +220,12 @@
 					$voucher_id = $invoice_temp['voucher_id'];
 
 					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-					. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-					. " forfallsdato,periode,artid,kidnr,kreditnota,currency "
-					. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
-					. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-					. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-					. " forfallsdato,periode,artid,kidnr,kreditnota,currency";
+						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
+						. " forfallsdato,periode,artid,kidnr,kreditnota,currency "
+						. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
+						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
+						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
+						. " forfallsdato,periode,artid,kidnr,kreditnota,currency";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
@@ -254,7 +253,7 @@
 
 					if($this->db->f('budsjettansvarligid') && $this->db->f('budsjettsigndato'))
 					{
-							$invoice[$i]['budget_date']=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($this->db->f('budsjettsigndato')));
+						$invoice[$i]['budget_date']=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($this->db->f('budsjettsigndato')));
 					}
 					else
 					{
@@ -297,26 +296,25 @@
 					$invoice[$i]['num_days']				= intval(($timestamp_payment_date-$timestamp_voucher_date)/(24*3600));
 					$invoice[$i]['timestamp_voucher_date']	= $timestamp_voucher_date;
 
-					if($invoice[$i]['current_user']==$invoice[$i]['janitor'] && $invoice[$i]['jan_date']):
+					if($invoice[$i]['current_user']==$invoice[$i]['janitor'] && $invoice[$i]['jan_date'])
 					{
 						$invoice[$i]['sign_orig']='sign_janitor';
 					}
-					elseif($invoice[$i]['current_user']==$invoice[$i]['supervisor'] && $invoice[$i]['super_date']):
+					else if($invoice[$i]['current_user']==$invoice[$i]['supervisor'] && $invoice[$i]['super_date'])
 					{
 						$invoice[$i]['sign_orig']='sign_supervisor';
 					}
-					elseif($invoice[$i]['current_user']==$invoice[$i]['budget_responsible'] && $invoice[$i]['budget_date']):
+					else if($invoice[$i]['current_user']==$invoice[$i]['budget_responsible'] && $invoice[$i]['budget_date'])
 					{
 						$invoice[$i]['sign_orig']='sign_budget_responsible';
 					}
-					endif;
 
 					$i++;
 
 				}
 			}
-//_debug_array($invoice);
-//_debug_array($invoice_temp);
+			//_debug_array($invoice);
+			//_debug_array($invoice_temp);
 
 			return $invoice;
 
@@ -360,10 +358,10 @@
 			}
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
-			. "fm_workorder.claim_issued, fm_workorder.paid_percent, project_group FROM $table"
-			. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
-			. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
-			. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
+				. "fm_workorder.claim_issued, fm_workorder.paid_percent, project_group FROM $table"
+				. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
+				. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
+				. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -375,30 +373,30 @@
 			while ($this->db->next_record())
 			{
 				$invoice[] = array
-				(
-					'counter'				=> $i,
-					'claim_issued'			=> $this->db->f('claim_issued'),
-					'project_id'			=> $this->db->f('project_id'),
-					'workorder_id'			=> $this->db->f('pmwrkord_code'),
-					'status'				=> $this->db->f('status'),
-					'closed'				=> $this->db->f('status') == $closed,
-					'voucher_id'			=> $voucher_id,
-					'id'					=> $this->db->f('id'),
-					'invoice_id'			=> $this->db->f('fakturanr'),
-					'budget_account'		=> $this->db->f('spbudact_code'),
-					'dima'					=> $this->db->f('dima'),
-					'dimb'					=> $this->db->f('dimb'),
-					'dimd'					=> $this->db->f('dimd'),
-					'remark' 				=> !!$this->db->f('merknad'),
-					'tax_code'				=> $this->db->f('mvakode'),
-					'amount'				=> $this->db->f('belop'),
-					'charge_tenant'			=> $this->db->f('charge_tenant'),
-					'vendor'				=> $this->db->f('org_name'),
-					'paid_percent'			=> $this->db->f('paid_percent'),
-					'project_group'			=> $this->db->f('project_group'),
-					'external_ref'			=> $this->db->f('external_ref'),
-					'currency'				=> $this->db->f('currency')
-				);
+					(
+						'counter'				=> $i,
+						'claim_issued'			=> $this->db->f('claim_issued'),
+						'project_id'			=> $this->db->f('project_id'),
+						'workorder_id'			=> $this->db->f('pmwrkord_code'),
+						'status'				=> $this->db->f('status'),
+						'closed'				=> $this->db->f('status') == $closed,
+						'voucher_id'			=> $voucher_id,
+						'id'					=> $this->db->f('id'),
+						'invoice_id'			=> $this->db->f('fakturanr'),
+						'budget_account'		=> $this->db->f('spbudact_code'),
+						'dima'					=> $this->db->f('dima'),
+						'dimb'					=> $this->db->f('dimb'),
+						'dimd'					=> $this->db->f('dimd'),
+						'remark' 				=> !!$this->db->f('merknad'),
+						'tax_code'				=> $this->db->f('mvakode'),
+						'amount'				=> $this->db->f('belop'),
+						'charge_tenant'			=> $this->db->f('charge_tenant'),
+						'vendor'				=> $this->db->f('org_name'),
+						'paid_percent'			=> $this->db->f('paid_percent'),
+						'project_group'			=> $this->db->f('project_group'),
+						'external_ref'			=> $this->db->f('external_ref'),
+						'currency'				=> $this->db->f('currency')
+					);
 
 				$i++;
 			}
@@ -489,10 +487,10 @@
 				. " FROM  fm_ecobilagoverf $this->join fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
 				. " $this->join fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id) "
 				. " $this->join fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
-		        	. " WHERE (periode >='$start_periode' AND periode <= '$end_periode' $filtermethod )"
-		        	. " GROUP BY district_id,periode $group_account_class"
-		        	. " ORDER BY periode";
-//echo $sql;
+				. " WHERE (periode >='$start_periode' AND periode <= '$end_periode' $filtermethod )"
+				. " GROUP BY district_id,periode $group_account_class"
+				. " ORDER BY periode";
+			//echo $sql;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -502,12 +500,12 @@
 			while ($this->db->next_record())
 			{
 				$consume[] = array
-				(
-					'consume'		=> round($this->db->f('consume')),
-					'period'		=> $this->db->f('periode'),
-					'district_id'	=> $this->db->f('district_id'),
-					'account_class'	=> $b_account_class ? $b_account_class : $this->db->f('b_account_class')
-				);	
+					(
+						'consume'		=> round($this->db->f('consume')),
+						'period'		=> $this->db->f('periode'),
+						'district_id'	=> $this->db->f('district_id'),
+						'account_class'	=> $b_account_class ? $b_account_class : $this->db->f('b_account_class')
+					);	
 			}
 
 			return $consume;
@@ -557,12 +555,12 @@
 
 			while($entry=each($values['counter']))
 			{
-					$local_error='';
+				$local_error='';
 
-					$n=$entry[0];
+				$n=$entry[0];
 
 
-//_debug_array($entry);
+				//_debug_array($entry);
 
 				if ($values['budget_account'][$n])
 				{
@@ -578,8 +576,8 @@
 				}
 				else
 				{
-						$receipt['error'][] = array('msg'=>lang('Budget account is missing:'));
-						$local_error= true;
+					$receipt['error'][] = array('msg'=>lang('Budget account is missing:'));
+					$local_error= true;
 				}
 
 				if(!$values['dimd'][$n])
@@ -623,7 +621,7 @@
 						$local_error= true;
 					}
 
-				//	$dima_field="dima="."'" . $values['dima'][$n] . "'";
+					//	$dima_field="dima="."'" . $values['dima'][$n] . "'";
 					$dima_field="dima="."'" . $values['dima'][$n] . "',loc1=" . "'" . substr($values['dima'][$n],0,4) . "'";
 
 					$kostra_field="kostra_id="."'" . $GLOBALS['phpgw']->db->f('kostra_id') . "'";
@@ -673,7 +671,7 @@
 					$this->db->next_record();
 					switch ( $this->db->f('type') )
 					{
-						case 'workorder':
+					case 'workorder':
 						$historylog_workorder->add($entry,$id,$status_code[$entry]);
 						$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set status=" . "'$status_code[$entry]'" . "where id=$id");
 						$receipt['message'][] = array('msg'=>lang('Workorder %1 is %2',$id, $status_code[$entry]));
@@ -688,21 +686,21 @@
 				{
 					$paid_percent = (int) $paid_percent;
 					$GLOBALS['phpgw']->db->query("UPDATE fm_workorder set paid_percent={$paid_percent} WHERE id= $workorder_id");				
-	
+
 					$this->db->query("SELECT type FROM fm_orders WHERE id={$workorder_id}",__LINE__,__FILE__);
 					$this->db->next_record();
 					switch ( $this->db->f('type') )
 					{
-						case 'workorder':
-							$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}",__LINE__,__FILE__);
-							$this->db->next_record();
-							$project_id = $this->db->f('project_id');
-							$workorder->update_planned_cost($project_id);
-							break;
+					case 'workorder':
+						$this->db->query("SELECT project_id FROM fm_workorder WHERE id={$workorder_id}",__LINE__,__FILE__);
+						$this->db->next_record();
+						$project_id = $this->db->f('project_id');
+						$workorder->update_planned_cost($project_id);
+						break;
 					}
 				}
 			}
-			
+
 			$GLOBALS['phpgw']->db->transaction_commit();
 
 			return $receipt;
@@ -734,7 +732,7 @@
 					'is_supervisor' 			=> $this->acl->check('.invoice', 64, 'property'),
 					'is_budget_responsible' 	=> $this->acl->check('.invoice', 128, 'property'),
 					'is_transfer' 				=> $this->acl->check('.invoice', 16, 'property')
-					);
+				);
 			}
 			return $this->role;
 		}
@@ -748,7 +746,7 @@
 			$check_count=array(
 				'dima_count' 				=> $this->db->f('dima_count'),
 				'spbudact_code_count' 		=> $this->db->f('spbudact_code_count')
-				);
+			);
 
 			$this->db->query("select count(kostra_id) as kostra_count  from fm_ecobilag where bilagsnr ='$voucher_id' and kostra_id > 0");
 			$this->db->next_record();
@@ -828,7 +826,7 @@
 			return $art_list;
 		}
 
-	//----------
+		//----------
 
 		function get_type_list()
 		{
@@ -844,7 +842,7 @@
 			return $category;
 		}
 
-	//----------
+		//----------
 		function select_dimb_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecodimb order by id asc ");
@@ -859,7 +857,7 @@
 			return $dimb_list;
 		}
 
-	//-------------------
+		//-------------------
 		function select_dimd_list()
 		{
 			$this->db->query("SELECT * FROM fm_ecodimd order by id asc ");
@@ -873,7 +871,7 @@
 			}
 			return $dimd_list;
 		}
-	//---------------------
+		//---------------------
 
 		function select_tax_code_list()
 		{
@@ -933,40 +931,40 @@
 			while ($this->db->next_record())
 			{
 				$values[] = array
-				(
-					'id'				=> $this->db->f('id'),
-					'art'				=> $this->db->f('artid'),
-					'type'				=> $this->db->f('typeid'),
-					'dim_a'				=> $this->db->f('dima'),
-					'dim_b'				=> $this->db->f('dimb'),
-					'dim_d'				=> $this->db->f('dimd'),
-					'tax'				=> $this->db->f('mvakode'),
-					'invoice_id'		=> $this->db->f('fakturanr'),
-					'kid_nr'			=> $this->db->f('kidnr'),
-					'vendor_id'			=> $this->db->f('spvend_code'),
-					'janitor'			=> $this->db->f('oppsynsmannid'),
-					'supervisor'		=> $this->db->f('saksbehandlerid'),
-					'budget_responsible'=> $this->db->f('budsjettansvarligid'),
-					'invoice_date' 		=> $this->db->f('fakturadato'),
-					'project_id'		=> $this->db->f('project_id'),
-					'payment_date' 		=> $this->db->f('forfallsdato'),
-					'merknad'			=> $this->db->f('merknad'),
-					'b_account_id'		=> $this->db->f('spbudact_code'),
-					'amount'			=> $this->db->f('belop'),
-					'order'				=> $this->db->f('pmwrkord_code'),
-					'order_id'			=> $this->db->f('pmwrkord_code'),
-					'kostra_id'			=> $this->db->f('kostra_id'),
-					'currency'			=> $this->db->f('currency')
-				);
+					(
+						'id'				=> $this->db->f('id'),
+						'art'				=> $this->db->f('artid'),
+						'type'				=> $this->db->f('typeid'),
+						'dim_a'				=> $this->db->f('dima'),
+						'dim_b'				=> $this->db->f('dimb'),
+						'dim_d'				=> $this->db->f('dimd'),
+						'tax'				=> $this->db->f('mvakode'),
+						'invoice_id'		=> $this->db->f('fakturanr'),
+						'kid_nr'			=> $this->db->f('kidnr'),
+						'vendor_id'			=> $this->db->f('spvend_code'),
+						'janitor'			=> $this->db->f('oppsynsmannid'),
+						'supervisor'		=> $this->db->f('saksbehandlerid'),
+						'budget_responsible'=> $this->db->f('budsjettansvarligid'),
+						'invoice_date' 		=> $this->db->f('fakturadato'),
+						'project_id'		=> $this->db->f('project_id'),
+						'payment_date' 		=> $this->db->f('forfallsdato'),
+						'merknad'			=> $this->db->f('merknad'),
+						'b_account_id'		=> $this->db->f('spbudact_code'),
+						'amount'			=> $this->db->f('belop'),
+						'order'				=> $this->db->f('pmwrkord_code'),
+						'order_id'			=> $this->db->f('pmwrkord_code'),
+						'kostra_id'			=> $this->db->f('kostra_id'),
+						'currency'			=> $this->db->f('currency')
+					);
 			}
-//_debug_array($values);
+			//_debug_array($values);
 			return $values;
 		}
 
 		function update_invoice($values)
 		{
 
-//_debug_array($values);
+			//_debug_array($values);
 			$receipt = array();
 			foreach($values['counter'] as $n)
 			{
@@ -977,11 +975,11 @@
 					$voucher_id=$values['voucher_id'][$n];
 
 					$check_value=array('voucher_id'=>$voucher_id,
-							'sign_orig'		=> $values['sign_orig'][$n],
-							'sign'			=> isset($values['sign'][$n])?$values['sign'][$n]:'',
-							'transfer'		=> isset($values['transfer'][$n])?$values['transfer'][$n]:'',
-							'kreditnota'	=> isset($values['kreditnota'][$n])?$values['kreditnota'][$n]:'',
-							'num_days'		=> $values['num_days'][$n]);
+						'sign_orig'		=> $values['sign_orig'][$n],
+						'sign'			=> isset($values['sign'][$n])?$values['sign'][$n]:'',
+						'transfer'		=> isset($values['transfer'][$n])?$values['transfer'][$n]:'',
+						'kreditnota'	=> isset($values['kreditnota'][$n])?$values['kreditnota'][$n]:'',
+						'num_days'		=> $values['num_days'][$n]);
 
 					if($this->check_for_updates($check_value))
 					{
@@ -1021,91 +1019,114 @@
 						$wait_for_kreditnota='';
 						$user_lid	=$GLOBALS['phpgw_info']['user']['account_lid'];
 
-						if (($values['sign'][$n]=='sign_none') && ($values['sign_orig'][$n]=='sign_janitor')):
+						if (($values['sign'][$n]=='sign_none') && ($values['sign_orig'][$n]=='sign_janitor'))
+						{
 							$blank_date = 'oppsynsigndato= NULL';
 							$sign_field='';
 							$sign_id='';
 							$sign_date_field='';
 							$sign_date='';
 							$kommma='';
-						elseif (($values['sign'][$n]=='sign_none') && ($values['sign_orig'][$n]=='sign_supervisor')):
+						}
+						else if (($values['sign'][$n]=='sign_none') && ($values['sign_orig'][$n]=='sign_supervisor'))
+						{
 							$blank_date = 'saksigndato= NULL';
 							$sign_field='';
 							$sign_id='';
 							$sign_date_field='';
 							$sign_date='';
 							$kommma='';
-						elseif (($values['sign'][$n]=='sign_none') && ($values['sign_orig'][$n]=='sign_budget_responsible')):
+						}
+						else if (($values['sign'][$n]=='sign_none') && ($values['sign_orig'][$n]=='sign_budget_responsible'))
+						{
 							$blank_date = 'budsjettsigndato= NULL';
 							$sign_field='';
 							$sign_id='';
 							$sign_date_field='';
 							$sign_date='';
 							$kommma='';
-						elseif ($values['sign'][$n]=='sign_janitor' && !$values['sign_orig'][$n]):
+						}
+						else if ($values['sign'][$n]=='sign_janitor' && !$values['sign_orig'][$n])
+						{
 							$blank_date = '';
 							$sign_field = 'oppsynsmannid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'oppsynsigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_janitor' && $values['sign_orig'][$n]=='sign_supervisor'):
+						}
+						else if ($values['sign'][$n]=='sign_janitor' && $values['sign_orig'][$n]=='sign_supervisor')
+						{
 							$blank_date = 'saksigndato= NULL';
 							$sign_field = 'oppsynsmannid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'oppsynsigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_janitor' && $values['sign_orig'][$n]=='sign_budget_responsible'):
+						}
+						else if ($values['sign'][$n]=='sign_janitor' && $values['sign_orig'][$n]=='sign_budget_responsible')
+						{
 							$blank_date = 'budsjettsigndato= NULL';
 							$sign_field = 'oppsynsmannid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'oppsynsigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_supervisor' && !$values['sign_orig'][$n]):
+						}
+						else if ($values['sign'][$n]=='sign_supervisor' && !$values['sign_orig'][$n])
+						{
 							$blank_date = '';
 							$sign_field = 'saksbehandlerid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'saksigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_supervisor' && $values['sign_orig'][$n]=='sign_janitor'):
+						}
+						else if ($values['sign'][$n]=='sign_supervisor' && $values['sign_orig'][$n]=='sign_janitor')
+						{
 							$blank_date = 'oppsynsigndato= NULL';
 							$sign_field = 'saksbehandlerid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'saksigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_supervisor' && $values['sign_orig'][$n]=='sign_budget_responsible'):
+						}
+						else if ($values['sign'][$n]=='sign_supervisor' && $values['sign_orig'][$n]=='sign_budget_responsible')
+						{
 							$blank_date = 'budsjettsigndato= NULL';
 							$sign_field = 'saksbehandlerid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'saksigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_budget_responsible' && $values['sign_orig'][$n]=='sign_janitor'):
+						}
+						else if ($values['sign'][$n]=='sign_budget_responsible' && $values['sign_orig'][$n]=='sign_janitor')
+						{
 							$blank_date = 'oppsynsigndato= NULL';
 							$sign_field = 'budsjettansvarligid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'budsjettsigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_budget_responsible' && $values['sign_orig'][$n]=='sign_supervisor'):
+						}
+						else if ($values['sign'][$n]=='sign_budget_responsible' && $values['sign_orig'][$n]=='sign_supervisor')
+						{
 							$blank_date = 'saksigndato= NULL';
 							$sign_field = 'budsjettansvarligid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'budsjettsigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						elseif ($values['sign'][$n]=='sign_budget_responsible' && !$values['sign_orig'][$n]):
+						}
+						else if ($values['sign'][$n]=='sign_budget_responsible' && !$values['sign_orig'][$n])
+						{
 							$blank_date = '';
 							$sign_field = 'budsjettansvarligid=';
 							$sign_id = "'$user_lid'";
 							$sign_date_field = 'budsjettsigndato=';
 							$sign_date="'" . date($this->db->datetime_format()) . "'";
 							$kommma=",";
-						endif;
+						}
 
 
 						if($blank_date )
@@ -1206,7 +1227,7 @@
 		function check_claim($voucher_id='')
 		{
 			$sql = "SELECT count(*) as cnt FROM fm_ecobilag $this->left_join fm_workorder on fm_ecobilag.pmwrkord_code = fm_workorder.id "
-			. " WHERE bilagsnr='$voucher_id' AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
+				. " WHERE bilagsnr='$voucher_id' AND fm_workorder.charge_tenant=1 AND fm_workorder.claim_issued IS NULL";
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			return $this->db->f('cnt');

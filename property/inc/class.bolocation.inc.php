@@ -47,37 +47,18 @@
 		var $total_records;
 
 		/**
-		* @var object $custom reference to custom fields object
-		*/
+		 * @var object $custom reference to custom fields object
+		 */
 		protected $custom;
 
 		var $public_functions = array
-		(
-			'read'		=> true,
-			'read_single'	=> true,
-			'save'		=> true,
-			'delete'	=> true,
-			'check_perms'	=> true
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+			(
+				'read'		=> true,
+				'read_single'	=> true,
+				'save'		=> true,
+				'delete'	=> true,
+				'check_perms'	=> true
+			);
 
 		function property_bolocation($session=false)
 		{
@@ -121,7 +102,7 @@
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
 			$this->acl_location		= '.location.' . $this->type_id;
 			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
-			
+
 			if(isset($_REQUEST['query']) && !$query && !isset($_REQUEST['block_query']))
 			{
 				$this->location_code = '';
@@ -175,7 +156,7 @@
 			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
 			$this->status			= isset($data['status'])?$data['status']:'';
 			$this->type_id			= isset($data['type_id'])?$data['type_id']:'';
-		//	$this->allrows			= $data['allrows'];
+			//	$this->allrows			= $data['allrows'];
 		}
 
 		function save_sessiondata($data)
@@ -202,12 +183,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				break;
 			}
 
 			$list= $this->so->select_status_list($this->type_id);
@@ -216,7 +197,7 @@
 
 		function read_entity_to_link($location_code)
 		{
-				return $this->so->read_entity_to_link($location_code);
+			return $this->so->read_entity_to_link($location_code);
 		}
 
 		function get_owner_list($format='',$selected='')
@@ -224,12 +205,12 @@
 
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('owner_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('owner_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('owner_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('owner_filter'));
+				break;
 			}
 
 			$owners = $this->so->get_owner_list();
@@ -242,12 +223,12 @@
 
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('owner_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('owner_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('owner_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('owner_filter'));
+				break;
 			}
 
 			$owners = $this->so->get_owner_type_list();
@@ -270,12 +251,12 @@
 			{
 				switch($data['lookup_type'])
 				{
-					case 'form':
-						$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'));
-						break;
-					case 'view':
-						$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'));
-						break;
+				case 'form':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('location_form'));
+					break;
+				case 'view':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('location_view'));
+					break;
 				}
 			}
 
@@ -286,7 +267,7 @@
 			$config = $this->soadmin_location->read_config('');
 
 			$this->config	= $config;
-//_debug_array($config);
+			//_debug_array($config);
 			$location_types	= $this->soadmin_location->select_location_type();
 			$this->location_types	= $location_types;
 
@@ -294,8 +275,8 @@
 			{
 				$data['type_id'] = count($location_types);
 			}
-//_debug_array($data);die();
-//_debug_array($location_types);
+			//_debug_array($data);die();
+			//_debug_array($location_types);
 			$fm_location_cols = array();
 			for ($i=1;$i<($data['type_id']+1);$i++)
 			{
@@ -308,7 +289,7 @@
 			}
 			unset($fm_location_cols_temp);
 
-//_debug_array($fm_location_cols);
+			//_debug_array($fm_location_cols);
 
 			for ($i=0;$i<$data['type_id'];$i++)
 			{
@@ -342,17 +323,17 @@
 
 				$location['location'][$i]['lookup_function_call']			= 'lookup_loc' . ($i+1) . '()';
 				$location['location'][$i]['readonly']					= true;
-				
+
 				if(!isset($data['block_parent']) || $data['block_parent'] < ($i+1))
 				{
 					$location['location'][$i]['lookup_link']				= true;
 					$lookup_functions[] = array
-					(
-						'name' 						=> 'lookup_loc' . ($i+1) . '()',
-						'filter_level'				=> $i,
-						'link'						=>  $location_link .',type_id:' . ($i+1) . ',lookup_name:' . $i,
-						'action' 					=> 'Window1=window.open(strURL,"Search","width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-					);
+						(
+							'name' 						=> 'lookup_loc' . ($i+1) . '()',
+							'filter_level'				=> $i,
+							'link'						=>  $location_link .',type_id:' . ($i+1) . ',lookup_name:' . $i,
+							'action' 					=> 'Window1=window.open(strURL,"Search","width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+						);
 				}
 
 				if(isset($data['no_link']) && $data['no_link']>=($i+3))
@@ -365,10 +346,10 @@
 
 				if(isset($data['query_link']) && $i < ($data['type_id']-1))
 				{
-						for ($j=1;$j<$i+2;$j++)
-						{
-							$temp_location[]= $data['values']['loc' . ($j)];
-						}
+					for ($j=1;$j<$i+2;$j++)
+					{
+						$temp_location[]= $data['values']['loc' . ($j)];
+					}
 
 					$data['link_data']['query_location']				= implode('-',$temp_location);
 					$location['location'][$i]['query_link']				= $GLOBALS['phpgw']->link('/index.php',$data['link_data']);
@@ -378,8 +359,8 @@
 				$m=$i;
 			}
 
-//_debug_array($fm_location_cols);
-//_debug_array($data);
+			//_debug_array($fm_location_cols);
+			//_debug_array($data);
 
 			$location_cols_count =count($fm_location_cols);
 			for ($j=0;$j<$location_cols_count;$j++)
@@ -406,7 +387,7 @@
 			{
 				if($config[$j]['location_type'] <= $data['type_id'] && $config[$j]['lookup_form'] )
 				{
-					if($config[$j]['column_name']=='street_id' && $location_types[($data['type_id']-1)]['list_address']==1):
+					if($config[$j]['column_name']=='street_id' && $location_types[($data['type_id']-1)]['list_address']==1)
 					{
 						$location['location'][$i]['input_name']				= $config[$j]['column_name'];
 						$input_name[]										= 'street_id';
@@ -433,16 +414,16 @@
 						$location['location'][$i]['extra'][1]['value']		= (isset($data['values']['street_number'])?$data['values']['street_number']:'');
 						$i++;
 					}
-					elseif($config[$j]['column_name']=='tenant_id' && $data['tenant']):
+					else if($config[$j]['column_name']=='tenant_id' && $data['tenant'])
 					{
 						$m++;
 						$lookup_functions[] = array
-						(
-							'name' 						=> 'lookup_loc' . ($m+1) . '()',
-							'filter_level'				=> $m,
-							'link'						=> $location_link .',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i,
-							'action' 					=> 'Window1=window.open(strURL,"Search","width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-						);
+							(
+								'name' 						=> 'lookup_loc' . ($m+1) . '()',
+								'filter_level'				=> $m,
+								'link'						=> $location_link .',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i,
+								'action' 					=> 'Window1=window.open(strURL,"Search","width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+							);
 
 						$location['location'][$i]['lookup_link']			= true;
 						$location['location'][$i]['name']					= lang('Tenant');
@@ -483,11 +464,11 @@
 						$location['location'][$i]['statustext']				= lang('contact phone');
 						$i++;
 					}
-					elseif($config[$j]['column_name']!='tenant_id' && $config[$j]['column_name']!='street_id'):
+					else if($config[$j]['column_name']!='tenant_id' && $config[$j]['column_name']!='street_id')
 					{
 						$location['location'][$i]['input_name']				= $config[$j]['column_name'];
 						$input_name[]										= $location['location'][$i]['input_name'];
-//						$insert_record[]									= $location['location'][$i]['input_name'];
+						//						$insert_record[]									= $location['location'][$i]['input_name'];
 						$location['location'][$i]['size']					= 5;
 						$location['location'][$i]['value']					= $data['location']['value'][$config[$j]['column_name']];
 						$location['location'][$i]['lookup_function_call']	= 'lookup_loc' . $fm_location_cols[$j]['location_type'] . '()';
@@ -498,7 +479,6 @@
 						$location['location'][$i]['input_type']				= 'text';
 						$i++;
 					}
-					endif;
 				}
 			}
 
@@ -509,11 +489,11 @@
 					$m++;
 
 					$lookup_functions[] = array
-					(
-						'name'		=> 'lookup_entity_' . $entity['id'] .'()',
-						'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$filter_location}',block_query:'{$block_query}'",
-						'action'	=> 'Window1=window.open(strURL,"Search","width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-					);
+						(
+							'name'		=> 'lookup_entity_' . $entity['id'] .'()',
+							'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$filter_location}',block_query:'{$block_query}'",
+							'action'	=> 'Window1=window.open(strURL,"Search","width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
+						);
 
 					$location['location'][$i]['input_type']						= 'text';
 					$location['location'][$i]['input_name']						= 'entity_num_' . $entity['id'];
@@ -565,7 +545,7 @@
 				}
 			}
 
-//_debug_array($location['location']);
+			//_debug_array($location['location']);
 			if(isset($input_name))
 			{
 				$GLOBALS['phpgw']->session->appsession('lookup_fields','property',$input_name);
@@ -574,7 +554,7 @@
 			{
 				$GLOBALS['phpgw']->session->appsession('insert_record','property',$insert_record);
 			}
-//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
+			//			$GLOBALS['phpgw']->session->appsession('input_name','property',$input_name);
 
 
 			if(isset($lookup_functions) && is_array($lookup_functions))
@@ -597,38 +577,46 @@
 					{
 						$lookup_functions[$j]['link'] .= ",location_code:'{$filter_location}',block_query:'{$block_query}'";
 					}
-					
-					$location['lookup_functions'] .= "\t".'function ' . $lookup_functions[$j]['name'] ."\n";
-					$location['lookup_functions'] .= "\t".'{'."\n";
+
+					$location['lookup_functions'] .= <<<JS
+
+						function {$lookup_functions[$j]['name']}
+						{
+JS;
 					if($filter_level)
 					{
-						$location['lookup_functions'] .= "
-						var block = '';
-						var filter = '';
-						var filter_level = {$filter_level};
-						if (filter_level) 
-						{
-							for(i=1;i<=filter_level;i++)
+						$location['lookup_functions'] .= <<<JS
+
+							var block = '';
+							var filter = '';
+							var filter_level = {$filter_level};
+							if (filter_level) 
 							{
-								if(eval('document.form.loc'+i+'.value'))
+								for(i=1;i<=filter_level;i++)
 								{
-									block = true;
-									if(!filter)
+									if(eval('document.form.loc'+i+'.value'))
 									{
-										filter = eval('document.form.loc'+i+'.value');
-									}
-									else
-									{
-										filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
+										block = true;
+										if(!filter)
+										{
+											filter = eval('document.form.loc'+i+'.value');
+										}
+										else
+										{
+											filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
+										}
 									}
 								}
 							}
-						}";
+JS;
 					}
-					$location['lookup_functions'] .= "\t\tvar oArgs = {" . $lookup_functions[$j]['link'] ."};" . "\n";
-					$location['lookup_functions'] .= "\t\tvar strURL = phpGWLink('index.php', oArgs);\n";
-					$location['lookup_functions'] .= "\t\t".$lookup_functions[$j]['action'] ."\n";
-					$location['lookup_functions'] .= "\t".'}'."\n";
+					$location['lookup_functions'] .= <<<JS
+
+							var oArgs = {{$lookup_functions[$j]['link']}};
+							var strURL = phpGWLink('index.php', oArgs);
+							{$lookup_functions[$j]['action']}
+						}
+JS;
 				}
 			}
 
@@ -648,11 +636,11 @@
 		function read($data = array())
 		{
 			$locations = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
-											'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
-											'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
-											'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
-											'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id']));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
+				'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
+				'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
+				'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
+				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
@@ -664,7 +652,7 @@
 		{
 			$soresponsible		= CreateObject('property.soresponsible');
 			$contacts = createObject('phpgwapi.contacts');
-			
+
 			if($data['user_id'] < 0 && $data['role_id'])
 			{
 				$account = $GLOBALS['phpgw']->accounts->get(abs($data['user_id']));
@@ -714,7 +702,7 @@
 			$this->uicols['formatter'][]	= 'myFormatterCheck';
 			$this->uicols['input_type'][]	= '';
 
-//_debug_array($locations);
+			//_debug_array($locations);
 
 			return $locations;
 		}
@@ -749,7 +737,7 @@
 			{
 				$values = $this->so->read_single($location_code);
 			}
-			
+
 
 			if( isset($extra['tenant_id']) && $extra['tenant_id']!='lookup')
 			{
@@ -813,13 +801,13 @@
 		}
 
 		/**
-		* Arrange attributes within groups
-		*
-		* @param string  $location    the name of the location of the attribute
-		* @param array   $attributes  the array of the attributes to be grouped
-		*
-		* @return array the grouped attributes
-		*/
+		 * Arrange attributes within groups
+		 *
+		 * @param string  $location    the name of the location of the attribute
+		 * @param array   $attributes  the array of the attributes to be grouped
+		 *
+		 * @return array the grouped attributes
+		 */
 
 		public function get_attribute_groups($location, $attributes = array())
 		{
@@ -853,11 +841,11 @@
 			}
 
 			$criteria = array
-			(
-				'appname'	=> 'property',
-				'location'	=> ".location.{$type_id}",
-				'allrows'	=> true
-			);
+				(
+					'appname'	=> 'property',
+					'location'	=> ".location.{$type_id}",
+					'allrows'	=> true
+				);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
@@ -903,7 +891,7 @@
 		function read_summary($data=array())
 		{
 			$summary = $this->so->read_summary(array('filter' => $this->filter,'type_id' => isset($data['type_id'])?$data['type_id']:'',
-								'district_id'=>$this->district_id,'part_of_town_id'=>$this->part_of_town_id));
+				'district_id'=>$this->district_id,'part_of_town_id'=>$this->part_of_town_id));
 			$this->uicols = $this->so->uicols;
 			return $summary;
 

@@ -44,8 +44,8 @@
 
 		function property_bolookup($session=false)
 		{
-			$this->so 		= CreateObject('property.solookup');
-			$this->solocation = CreateObject('property.solocation');
+			$this->so 			= CreateObject('property.solookup');
+			$this->solocation	= CreateObject('property.solocation');
 
 			if ($session)
 			{
@@ -53,14 +53,14 @@
 				$this->use_session = true;
 			}
 
-			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			= phpgw::get_var('query');
-			$sort			= phpgw::get_var('sort');
-			$order			= phpgw::get_var('order');
-			$filter			= phpgw::get_var('filter', 'int');
-			$cat_id			= phpgw::get_var('cat_id', 'int');
-			$district_id	= phpgw::get_var('district_id', 'int');
-			$allrows	= phpgw::get_var('allrows', 'bool');
+			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query					= phpgw::get_var('query');
+			$sort					= phpgw::get_var('sort');
+			$order					= phpgw::get_var('order');
+			$filter					= phpgw::get_var('filter', 'int');
+			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$district_id			= phpgw::get_var('district_id', 'int');
+			$allrows				= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : $this->query;
@@ -97,10 +97,10 @@
 
 
 		/**
-		* Read list of contacts from the addressbook
-		*
-		* @return array of contacts
-		*/
+		 * Read list of contacts from the addressbook
+		 *
+		 * @return array of contacts
+		 */
 
 		function read_addressbook()
 		{
@@ -116,13 +116,13 @@
 
 			$limit		= $this->allrows ? 0 : $limit;
 
-		    $fields = array
-		    (
-		    	'per_first_name',
-		    	'per_last_name',
-		    	'owner',
-		    	'contact_id',
-		    );
+			$fields = array
+				(
+					'per_first_name',
+					'per_last_name',
+					'owner',
+					'contact_id',
+				);
 
 			if($this->cat_id && $this->cat_id != 0)
 			{
@@ -169,10 +169,10 @@
 		}
 
 		/**
-		* Read list of organisation from the addressbook
-		*
-		* @return array of contacts
-		*/
+		 * Read list of organisation from the addressbook
+		 *
+		 * @return array of contacts
+		 */
 
 		function read_organisation()
 		{
@@ -189,10 +189,10 @@
 			$limit		= $this->allrows ? 0 : $limit;
 
 			$fields = array
-			(
-				'contact_id',
-				'org_name'
-			);
+				(
+					'contact_id',
+					'org_name'
+				);
 
 			if($this->cat_id && $this->cat_id != 0)
 			{
@@ -204,7 +204,7 @@
 			}
 
 			$addressbook	= CreateObject('addressbook.boaddressbook');
-			
+
 			$qfield = 'org';
 
 			$criteria		= $addressbook->criteria_contacts(PHPGW_CONTACTS_ALL,PHPGW_CONTACTS_CATEGORIES_ALL,array(),'',$fields);
@@ -228,17 +228,17 @@
 		}
 
 		/**
-		* Get the the person data what you want
-		*
-		* @param array $fields The fields that you can see from person
-		* @param integer $limit Limit of records that you want
-		* @param integer $ofset Ofset of record that you want start
-		* @param string $orderby The field which you want order
-		* @param string $sort ASC | DESC depending what you want
-		* @param mixed $criteria All criterias what you want
-		* @param mixed $criteria_token same like $criteria but builded<br>with sql_criteria class, more powerfull
-		* @return array with records
-		*/
+		 * Get the the person data what you want
+		 *
+		 * @param array $fields The fields that you can see from person
+		 * @param integer $limit Limit of records that you want
+		 * @param integer $ofset Ofset of record that you want start
+		 * @param string $orderby The field which you want order
+		 * @param string $sort ASC | DESC depending what you want
+		 * @param mixed $criteria All criterias what you want
+		 * @param mixed $criteria_token same like $criteria but builded<br>with sql_criteria class, more powerfull
+		 * @return array with records
+		 */
 		function get_persons($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
 		{
 			$entries =  $this->so->get_persons($fields, $start, $limit, $orderby, $sort, $criteria, $token_criteria);
@@ -260,7 +260,7 @@
 		function read_vendor()
 		{
 			$vendor = $this->so->read_vendor(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			return $vendor;
@@ -269,8 +269,8 @@
 		function read_b_account($data)
 		{
 			$b_account = $this->so->read_b_account(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
-											'role' => $data['role'], 'parent' => $data['parent']));
+				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
+				'role' => $data['role'], 'parent' => $data['parent']));
 			$this->total_records = $this->so->total_records;
 
 			return $b_account;
@@ -279,7 +279,7 @@
 		function read_street()
 		{
 			$street = $this->so->read_street(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			return $street;
@@ -288,7 +288,7 @@
 		function read_tenant()
 		{
 			$tenant = $this->so->read_tenant(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			return $tenant;
@@ -297,7 +297,7 @@
 		function read_ns3420()
 		{
 			$ns3420 = $this->so->read_ns3420(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id));
 			$this->total_records = $this->so->total_records;
 
 			return $ns3420;
@@ -306,7 +306,7 @@
 		function read_phpgw_user()
 		{
 			$phpgw_user = $this->so->read_phpgw_user(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id));
 			$this->total_records = $this->so->total_records;
 
 			return $phpgw_user;
@@ -317,7 +317,7 @@
 			$project_group	= CreateObject('property.sogeneric');
 			$project_group->get_location_info('project_group',false);
 			$values = $project_group->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'type' => 'project_group','allrows'=>$this->allrows));
+				'type' => 'project_group','allrows'=>$this->allrows));
 
 			$this->total_records = $project_group->total_records;
 
@@ -328,7 +328,7 @@
 			$ecodimb	= CreateObject('property.sogeneric');
 			$ecodimb->get_location_info('dimb',false);
 			$values = $ecodimb->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'allrows'=>$this->allrows));
+				'allrows'=>$this->allrows));
 
 			$this->total_records = $ecodimb->total_records;
 

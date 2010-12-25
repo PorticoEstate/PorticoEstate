@@ -46,32 +46,13 @@
 
 
 		var $public_functions = array
-		(
-			'confirm_session'	=> true,
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+			(
+				'confirm_session'	=> true,
+			);
 
 		function __construct()
 		{
-//_debug_array($bt = debug_backtrace());
+			//_debug_array($bt = debug_backtrace());
 			$this->socommon			= CreateObject('property.socommon');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -87,24 +68,24 @@
 
 			switch($GLOBALS['phpgw_info']['server']['db_type'])
 			{
-				case 'mssql':
-					$this->dateformat 		= "M d Y";
-					$this->datetimeformat 	= "M d Y g:iA";
-					break;
-				case 'mysql':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
-				case 'pgsql':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-//					$this->dateformat 		= "F j, Y";
-//					$this->datetimeformat 	= "F j, Y g:iA";
-					break;
-				case 'postgres':
-					$this->dateformat 		= "Y-m-d";
-					$this->datetimeformat 	= "Y-m-d G:i:s";
-					break;
+			case 'mssql':
+				$this->dateformat 		= "M d Y";
+				$this->datetimeformat 	= "M d Y g:iA";
+				break;
+			case 'mysql':
+				$this->dateformat 		= "Y-m-d";
+				$this->datetimeformat 	= "Y-m-d G:i:s";
+				break;
+			case 'pgsql':
+				$this->dateformat 		= "Y-m-d";
+				$this->datetimeformat 	= "Y-m-d G:i:s";
+				//					$this->dateformat 		= "F j, Y";
+				//					$this->datetimeformat 	= "F j, Y g:iA";
+				break;
+			case 'postgres':
+				$this->dateformat 		= "Y-m-d";
+				$this->datetimeformat 	= "Y-m-d G:i:s";
+				break;
 			}
 
 		}
@@ -219,19 +200,19 @@
 					if ($entry['id']==$selected)
 					{
 						$entry_list[] = array
-						(
-							'id'		=> $entry['id'],
-							'name'		=> $entry['name'],
-							'selected'	=> 'selected'
-						);
+							(
+								'id'		=> $entry['id'],
+								'name'		=> $entry['name'],
+								'selected'	=> 'selected'
+							);
 					}
 					else
 					{
 						$entry_list[] = array
-						(
-							'id'		=> $entry['id'],
-							'name'		=> $entry['name'],
-						);
+							(
+								'id'		=> $entry['id'],
+								'name'		=> $entry['name'],
+							);
 					}
 				}
 				return $entry_list;
@@ -243,12 +224,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'));
+				break;
 			}
 
 			if(!$selected && $default)
@@ -263,10 +244,10 @@
 				foreach($extra as $extra_user)
 				{
 					$all_users[]=array
-					(
-						'account_id' => $extra_user,
-						'account_firstname' => lang($extra_user)
-					);
+						(
+							'account_id' => $extra_user,
+							'account_firstname' => lang($extra_user)
+						);
 				}
 			}
 
@@ -281,10 +262,10 @@
 					if (($enabled && $user->enabled) || !$enabled)
 					{
 						$all_users[] = array
-						(
-							'user_id'	=> $user->id,
-							'name'		=> $user->__toString(),
-						);
+							(
+								'user_id'	=> $user->id,
+								'name'		=> $user->__toString(),
+							);
 					}
 				}
 			}
@@ -297,24 +278,24 @@
 					if ($user['user_id'] == $selected)
 					{
 						$user_list[] = array
-						(
-							'user_id'	=> $user['user_id'],
-							'name'		=> $user['name'],
-							'selected'	=> 'selected'
-						);
+							(
+								'user_id'	=> $user['user_id'],
+								'name'		=> $user['name'],
+								'selected'	=> 'selected'
+							);
 					}
 					else
 					{
 						$user_list[] = array
-						(
-							'user_id'	=> $user['user_id'],
-							'name'		=> $user['name'],
-						);
+							(
+								'user_id'	=> $user['user_id'],
+								'name'		=> $user['name'],
+							);
 
 					}
 				}
 			}
-//_debug_array($user_list);
+			//_debug_array($user_list);
 			return $user_list;
 		}
 
@@ -322,12 +303,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('group_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('group_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('group_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('group_filter'));
+				break;
 			}
 
 			$accounts	= & $GLOBALS['phpgw']->accounts;
@@ -345,11 +326,11 @@
 					}
 
 					$user_list[] = array
-					(
-						'id'	=> $user->id,
-						'name'		=> $user->firstname,
-						'selected'	=> $sel_user
-					);
+						(
+							'id'	=> $user->id,
+							'name'		=> $user->firstname,
+							'selected'	=> $sel_user
+						);
 				}
 			}
 
@@ -362,7 +343,7 @@
 				}
 			}
 
-//_debug_array($user_list);
+			//_debug_array($user_list);
 			return $user_list;
 		}
 
@@ -384,11 +365,11 @@
 				foreach($extra as $extra_user)
 				{
 					$users_extra[]=array
-					(
-						'account_lid' 		=> $extra_user,
-						'account_firstname'	=> lang($extra_user),
-						'account_lastname'	=> ''
-					);
+						(
+							'account_lid' 		=> $extra_user,
+							'account_firstname'	=> lang($extra_user),
+							'account_lastname'	=> ''
+						);
 				}
 			}
 
@@ -399,7 +380,7 @@
 				{
 					$users_gross = array_merge($users_gross, $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location));
 				}
-				
+
 				$accounts	= array();
 				$users			= array();
 
@@ -443,21 +424,21 @@
 				if ($user['account_lid']==$selected)
 				{
 					$user_list[] = array
-					(
-						'lid'			=> $user['account_lid'],
-						'firstname'		=> $user['account_firstname'],
-						'lastname'		=> $user['account_lastname'],
-						'selected'		=> 'selected'
-					);
+						(
+							'lid'			=> $user['account_lid'],
+							'firstname'		=> $user['account_firstname'],
+							'lastname'		=> $user['account_lastname'],
+							'selected'		=> 'selected'
+						);
 				}
 				else
 				{
 					$user_list[] = array
-					(
-						'lid'			=> $user['account_lid'],
-						'firstname'		=> $user['account_firstname'],
-						'lastname'		=> $user['account_lastname'],
-					);
+						(
+							'lid'			=> $user['account_lid'],
+							'firstname'		=> $user['account_firstname'],
+							'lastname'		=> $user['account_lastname'],
+						);
 				}
 			}
 			return $user_list;
@@ -478,12 +459,12 @@
 
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'));
+				break;
 			}
 
 			if(!$selected && $default)
@@ -496,10 +477,10 @@
 				foreach($extra as $extra_user)
 				{
 					$users_extra[]=array
-					(
-						'account_id' => $extra_user,
-						'account_firstname' => lang($extra_user)
-					);
+						(
+							'account_id' => $extra_user,
+							'account_firstname' => lang($extra_user)
+						);
 				}
 			}
 
@@ -526,21 +507,21 @@
 				if ($user['account_id']==$selected)
 				{
 					$user_list[] = array
-					(
-						//'user_id'	=> $user['account_id'],
-						'id'	=> $user['account_id'],
-						'name'		=> $name,
-						'selected'	=> 'selected'
-					);
+						(
+							//'user_id'	=> $user['account_id'],
+							'id'	=> $user['account_id'],
+							'name'		=> $name,
+							'selected'	=> 'selected'
+						);
 				}
 				else
 				{
 					$user_list[] = array
-					(
-						//'user_id'	=> $user['account_id'],
-						'id'	=> $user['account_id'],
-						'name'		=> $name
-					);
+						(
+							//'user_id'	=> $user['account_id'],
+							'id'	=> $user['account_id'],
+							'name'		=> $name
+						);
 				}
 			}
 
@@ -549,7 +530,7 @@
 
 		function initiate_ui_vendorlookup($data)
 		{
-//_debug_array($data);
+			//_debug_array($data);
 
 			if( isset($data['type']) && $data['type']=='view')
 			{
@@ -590,14 +571,14 @@
 			$vendor['lang_vendor']			= lang('Vendor');
 			$vendor['lang_select_vendor_help']	= lang('click this link to select vendor');
 			$vendor['lang_vendor_name']		= lang('Vendor Name');
-//_debug_array($vendor);
+			//_debug_array($vendor);
 			return $vendor;
 		}
 
 
 		function initiate_ui_contact_lookup($data)
 		{
-//_debug_array($data);
+			//_debug_array($data);
 
 			$field = $data['field'];
 			if( isset($data['type']) && $data['type']=='view')
@@ -610,7 +591,7 @@
 			}
 
 			$contact['value_contact_id']		= $data['contact_id'];
-//			$contact['value_contact_name']		= $data['contact_name'];
+			//			$contact['value_contact_name']		= $data['contact_name'];
 
 			if(isset($data['contact_id']) && $data['contact_id'] && !$data['contact_name'])
 			{
@@ -627,7 +608,7 @@
 			$contact['contact_link']				= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column' => $field));
 			$contact['lang_contact']				= lang('contact');
 			$contact['lang_select_contact_help']	= lang('click this link to select');
-//_debug_array($contact);
+			//_debug_array($contact);
 			return $contact;
 		}
 
@@ -669,7 +650,7 @@
 				$tenant_data	= $tenant_object->read_single(array('id' => $data['tenant_id']),$tenant_data);
 				if(is_array($tenant_data['attributes']))
 				{
-//_debug_array($tenant_data);
+					//_debug_array($tenant_data);
 					foreach ($tenant_data['attributes'] as $entry)
 					{
 
@@ -685,17 +666,17 @@
 				}
 			}
 
-//_debug_array($tenant);
+			//_debug_array($tenant);
 			return $tenant;
 		}
 
 		/**
-		* initiate design element for lookup to budget account/group
-		*
-		* @param array $data
-		*
-		* @return array with information to include in forms
-		*/
+		 * initiate design element for lookup to budget account/group
+		 *
+		 * @param array $data
+		 *
+		 * @return array with information to include in forms
+		 */
 
 		function initiate_ui_budget_account_lookup($data)
 		{
@@ -711,11 +692,11 @@
 			$b_account['value_b_account_id']		= $data['b_account_id'];
 			$b_account['value_b_account_name']		= $data['b_account_name'];
 			$b_account['b_account_link']			= $GLOBALS['phpgw']->link('/index.php',array
-														(
-															'menuaction'=> 'property.uilookup.b_account',
-															'role'		=> isset($data['role']) && $data['role'] ? $data['role'] : '',
-															'parent'	=> isset($data['parent']) && $data['parent'] ? $data['parent'] : '',
-															 ));
+				(
+					'menuaction'=> 'property.uilookup.b_account',
+					'role'		=> isset($data['role']) && $data['role'] ? $data['role'] : '',
+					'parent'	=> isset($data['parent']) && $data['parent'] ? $data['parent'] : '',
+				));
 			$b_account['lang_select_b_account_help']	= lang('click this link to select budget account');
 			$b_account['lang_b_account']			= isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
 			if($data['b_account_id'] && !$data['b_account_name'])
@@ -816,7 +797,7 @@
 			{
 				if(!isset($data['event']) || !$data['event'])
 				{
-//					return $event;
+					//					return $event;
 				}
 
 				$GLOBALS['phpgw']->xslttpl->add_file(array('event_view'));
@@ -855,12 +836,12 @@
 				$event['lang_next_run']	= lang('next run');
 
 				$criteria = array
-				(
-					'start_date'		=> $event_info['start_date'],
-					'end_date'			=> $event_info['end_date'],
-					'location_id'		=> $event_info['location_id'],
-					'location_item_id'	=> $event_info['location_item_id']
-				);
+					(
+						'start_date'		=> $event_info['start_date'],
+						'end_date'			=> $event_info['end_date'],
+						'location_id'		=> $event_info['location_id'],
+						'location_item_id'	=> $event_info['location_item_id']
+					);
 
 				$event['count'] = 0;
 				$boevent	= CreateObject('property.boevent');
@@ -883,17 +864,17 @@
 			}
 
 			$event['event_link'] = $GLOBALS['phpgw']->link('/index.php',array
-			(
-				'menuaction'	=> 'property.uievent.edit',
-				'location'		=> $data['location'],
-				'attrib_id'		=> $event['name'],
-				'item_id'		=> isset($event['item_id']) ? $event['item_id'] : '',
-				'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
-			);
+				(
+					'menuaction'	=> 'property.uievent.edit',
+					'location'		=> $data['location'],
+					'attrib_id'		=> $event['name'],
+					'item_id'		=> isset($event['item_id']) ? $event['item_id'] : '',
+					'id'			=> isset($event['value']) && $event['value'] ? $event['value'] : '')
+				);
 
 			$event['event_link'] = "{menuaction:'property.uievent.edit',"
-									."location:'{$data['location']}',"
-									."attrib_id:'{$event['name']}'";
+				."location:'{$data['location']}',"
+				."attrib_id:'{$event['name']}'";
 			$event['event_link'] .=	isset($event['item_id']) ? ",item_id:{$event['item_id']}" : '';		
 			$event['event_link'] .=	isset($event['value']) ? ",id:{$event['value']}" : '';		
 			$event['event_link'] .= '}';
@@ -918,12 +899,12 @@
 			}
 
 			$alarm['header'][] = array
-			(
-				'lang_time'		=> lang('Time'),
-				'lang_text'	=> lang('Text'),
-				'lang_user'			=> lang('User'),
-				'lang_enabled'		=> lang('Enabled'),
-				'lang_select'		=> lang('Select')
+				(
+					'lang_time'		=> lang('Time'),
+					'lang_text'	=> lang('Text'),
+					'lang_user'			=> lang('User'),
+					'lang_enabled'		=> lang('Enabled'),
+					'lang_select'		=> lang('Select')
 				);
 
 			$alarm['values'] = $boalarm->read_alarms($data['alarm_type'],$data['id'],$data['text']);
@@ -935,10 +916,10 @@
 			if($data['type']=='form')
 			{
 				$alarm['alter_alarm'][] = array
-				(
-					'lang_enable'		=> lang('Enable'),
-					'lang_disable'		=> lang('Disable'),
-					'lang_delete'		=> lang('Delete')
+					(
+						'lang_enable'		=> lang('Enable'),
+						'lang_disable'		=> lang('Disable'),
+						'lang_delete'		=> lang('Delete')
 					);
 
 				for ($i=1; $i<=31; $i++)
@@ -973,7 +954,7 @@
 
 			}
 
-//_debug_array($alarm['values']);
+			//_debug_array($alarm['values']);
 			return $alarm;
 		}
 
@@ -1130,67 +1111,15 @@
 					$d=strpos($dateformat,'d');
 					$m=strpos($dateformat,'m');
 
-			 		$dateparts = explode('/', $values_attribute[$i]['value']);
-			 		$day		= $dateparts[$d];
-			 		$month		= $dateparts[$m];
-			 		$year		= $dateparts[$y];
+					$dateparts = explode('/', $values_attribute[$i]['value']);
+					$day		= $dateparts[$d];
+					$month		= $dateparts[$m];
+					$year		= $dateparts[$y];
 					$values_attribute[$i]['value'] = date($this->dateformat,mktime(2,0,0,$month,$day,$year));
 				}
 			}
 
 			$this->socommon->save_attributes($values_attribute,$type);
-		}
-
-		function list_methods($_type='xmlrpc')
-		{
-			/*
-			  This handles introspection or discovery by the logged in client,
-			  in which case the input might be an array.  The server always calls
-			  this function to fill the server dispatch map using a string.
-			*/
-			if (is_array($_type))
-			{
-				$_type = $_type['type'] ? $_type['type'] : $_type[0];
-			}
-			switch($_type)
-			{
-				case 'xmlrpc':
-					$xml_functions = array(
-						'read' => array(
-							'function'  => 'read',
-							'signature' => array(array(xmlrpcInt,xmlrpcStruct)),
-							'docstring' => lang('Read a single entry by passing the id and fieldlist.')
-						),
-						'save' => array(
-							'function'  => 'save',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
-							'docstring' => lang('Update a single entry by passing the fields.')
-						),
-						'delete' => array(
-							'function'  => 'delete',
-							'signature' => array(array(xmlrpcBoolean,xmlrpcInt)),
-							'docstring' => lang('Delete a single entry by passing the id.')
-						),
-						'list' => array(
-							'function'  => '_list',
-							'signature' => array(array(xmlrpcStruct,xmlrpcStruct)),
-							'docstring' => lang('Read a list of entries.')
-						),
-						'list_methods' => array(
-							'function'  => 'list_methods',
-							'signature' => array(array(xmlrpcStruct,xmlrpcString)),
-							'docstring' => lang('Read this list of methods.')
-						)
-					);
-					return $xml_functions;
-					break;
-				case 'soap':
-					return $this->soap_functions;
-					break;
-				default:
-					return array();
-					break;
-			}
 		}
 
 		function add_leading_zero($num,$id_type='')
@@ -1243,7 +1172,7 @@
 
 		function generate_sql($data)
 		{
-//_debug_array($data);
+			//_debug_array($data);
 
 			$cols 				= (isset($data['cols'])?$data['cols']:'');
 			$entity_table 		= (isset($data['entity_table'])?$data['entity_table']:'');
@@ -1317,7 +1246,7 @@
 				}
 			}
 
-*/
+ */
 			unset($soadmin_location);
 
 			for ($i=0; $i< $this->type_id; $i++)
@@ -1329,10 +1258,10 @@
 			{
 				$cols_return[] 				= 'loc1_name';
 				$cols_extra[] 				= 'loc1_name';
-				$uicols['input_type'][]			= 'text';
+				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'loc1_name';
 				$uicols['descr'][]			= lang('Property Name');
-				$uicols['statustext'][]			= lang('Property Name');
+				$uicols['statustext'][]		= lang('Property Name');
 				$uicols['exchange'][]		= true;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
@@ -1341,8 +1270,8 @@
 				{
 					$cols_return_lookup[] 		= 'loc' . $i . '_name';
 					$uicols['input_type'][]		= 'hidden';
-					$uicols['name'][]		= 'loc' . $i . '_name';
-					$uicols['descr'][]		= '';
+					$uicols['name'][]			= 'loc' . $i . '_name';
+					$uicols['descr'][]			= '';
 					$uicols['statustext'][]		= '';
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= '';
@@ -1437,9 +1366,9 @@
 				}
 			}
 
-			$this->uicols 			= $uicols;
-			$this->cols_return		= $cols_return;
-			$this->cols_extra		= $cols_extra;
+			$this->uicols 				= $uicols;
+			$this->cols_return			= $cols_return;
+			$this->cols_extra			= $cols_extra;
 			$this->cols_return_lookup	= $cols_return_lookup;
 
 			$from = " FROM $paranthesis $entity_table ";
@@ -1454,40 +1383,40 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('select_part_of_town'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_part_of_town'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('select_part_of_town'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_part_of_town'));
+				break;
 			}
 
 			$parts= $this->socommon->select_part_of_town($district_id);
 			$part_of_town_list = array();
 			//cr@ccfirst.com 09/09/08 validate for YUI.
 			if(is_array($parts)&& (count($parts))){
-			foreach($parts as $entry)
-			{
-				if ($entry['id']==$selected)
+				foreach($parts as $entry)
 				{
-					$part_of_town_list[] = array
-					(
-						'id'			=> $entry['id'],
-						'name'			=> $entry['name'],
-						'district_id'	=> $entry['district_id'],
-						'selected'		=> 'selected'
-					);
+					if ($entry['id']==$selected)
+					{
+						$part_of_town_list[] = array
+							(
+								'id'			=> $entry['id'],
+								'name'			=> $entry['name'],
+								'district_id'	=> $entry['district_id'],
+								'selected'		=> 'selected'
+							);
+					}
+					else
+					{
+						$part_of_town_list[] = array
+							(
+								'id'			=> $entry['id'],
+								'name'			=> $entry['name'],
+								'district_id'	=> $entry['district_id'],
+							);
+					}
 				}
-				else
-				{
-					$part_of_town_list[] = array
-					(
-						'id'			=> $entry['id'],
-						'name'			=> $entry['name'],
-						'district_id'	=> $entry['district_id'],
-					);
-				}
-			}
 			}
 
 			return $part_of_town_list;
@@ -1497,12 +1426,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('select_district'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_district'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('select_district'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_district'));
+				break;
 			}
 
 			$districts= $this->socommon->select_district_list();
@@ -1515,12 +1444,12 @@
 		{
 			switch($data['format'])
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$sogeneric = CreateObject('property.sogeneric');
@@ -1573,9 +1502,9 @@
 		}
 
 		/**
-		* Clear all content from cache
-		*
-		*/
+		 * Clear all content from cache
+		 *
+		 */
 
 		function reset_fm_cache()
 		{
@@ -1583,10 +1512,10 @@
 		}
 
 		/**
-		* Clear computed userlist for location and rights from cache
-		*
-		* @return integer number of values was found and cleared
-		*/
+		 * Clear computed userlist for location and rights from cache
+		 *
+		 * @return integer number of values was found and cleared
+		 */
 
 		function reset_fm_cache_userlist()
 		{
@@ -1606,10 +1535,10 @@
 			foreach( $custom->datatype_text as $key => $name)
 			{
 				$datatypes[] = array
-				(
-					'id'	=> $key,
-					'name'	=> $name,
-				);
+					(
+						'id'	=> $key,
+						'name'	=> $name,
+					);
 			}
 
 			return $this->select_list($selected,$datatypes);
@@ -1626,13 +1555,13 @@
 		}
 
 		/**
-		* Choose which  download format to use - and call the appropriate function
-		*
-		* @param array $list array with data to export
-		* @param array $name array containing keys in $list
-		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether fields are to be suppressed from the output
-		*/
+		 * Choose which  download format to use - and call the appropriate function
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 */
 		function download($list,$name,$descr,$input_type=array())
 		{
 			set_time_limit(500);
@@ -1644,29 +1573,29 @@
 
 			switch ($export_format)
 			{
-				case 'csv':
-					$this->csv_out($list,$name,$descr,$input_type);
-					break;
-				case 'excel':
-					$this->excel_out($list,$name,$descr,$input_type);
-					break;
-				case 'ods':
-					$this->ods_out($list,$name,$descr,$input_type);
-					break;
+			case 'csv':
+				$this->csv_out($list,$name,$descr,$input_type);
+				break;
+			case 'excel':
+				$this->excel_out($list,$name,$descr,$input_type);
+				break;
+			case 'ods':
+				$this->ods_out($list,$name,$descr,$input_type);
+				break;
 			}
 		}
 
 		/**
-		* downloads data as MsExcel to the browser
-		*
-		* @param array $list array with data to export
-		* @param array $name array containing keys in $list
-		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether fields are to be suppressed from the output
-		*/
+		 * downloads data as MsExcel to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 */
 		function excel_out($list,$name,$descr,$input_type=array())
 		{
- 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
+			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.xls';
 
 			$workbook	= CreateObject('phpgwapi.excel',"-");
 			$browser = CreateObject('phpgwapi.browser');
@@ -1719,23 +1648,23 @@
 		}
 
 		/**
-		* downloads data as CSV to the browser
-		*
-		* @param array $list array with data to export
-		* @param array $name array containing keys in $list
-		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether fields are to be suppressed from the output
-		*/
+		 * downloads data as CSV to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 */
 		function csv_out($list, $name, $descr, $input_type = array() )
 		{
 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.csv';
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/csv');
 
- 			if ( !$fp = fopen('php://output','w') )
- 			{
-  				die('Unable to write to "php://output" - pleace notify the Administrator');
- 			}
+			if ( !$fp = fopen('php://output','w') )
+			{
+				die('Unable to write to "php://output" - pleace notify the Administrator');
+			}
 
 			$count_uicols_name=count($name);
 
@@ -1768,13 +1697,13 @@
 			fclose($fp);
 		}
 		/**
-		* downloads data as ODS to the browser
-		*
-		* @param array $list array with data to export
-		* @param array $name array containing keys in $list
-		* @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		* @param array $input_type array containing information whether fields are to be suppressed from the output
-		*/
+		 * downloads data as ODS to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 */
 		function ods_out($list, $name, $descr, $input_type = array() )
 		{
 			$filename= str_replace(' ','_',$GLOBALS['phpgw_info']['user']['account_lid']).'.ods';
@@ -1838,31 +1767,30 @@
 
 		function get_origin_link($type)
 		{
-			if($type=='tts'):
+			if($type=='tts')
 			{
 				$link = array('menuaction' => 'property.uitts.view');
 			}
-			elseif($type=='request'):
+			else if($type=='request')
 			{
 				$link = array('menuaction' => 'property.uirequest.view');
 			}
-			elseif($type=='project'):
+			else if($type=='project')
 			{
 				$link = array('menuaction' => 'property.uiproject.view');
 			}
-			elseif(substr($type,0,6)=='entity'):
+			else if(substr($type,0,6)=='entity')
 			{
 				$type		= explode("_",$type);
 				$entity_id	= $type[1];
 				$cat_id		= $type[2];
 				$link =	array
-				(
-					'menuaction'	=> 'property.uientity.view',
-					'entity_id'	=> $entity_id,
-					'cat_id'	=> $cat_id
-				);
+					(
+						'menuaction'	=> 'property.uientity.view',
+						'entity_id'	=> $entity_id,
+						'cat_id'	=> $cat_id
+					);
 			}
-			endif;
 
 			return (isset($link)?$link:'');
 		}
@@ -1878,13 +1806,13 @@
 		}
 
 		/**
-		* Preserve attribute values from post in case of an error
-		*
-		* @param array $values value set with
-		* @param array $values_attributes attribute definitions and values from posting
-		*
-		* @return array attribute definitions and values
-		*/
+		 * Preserve attribute values from post in case of an error
+		 *
+		 * @param array $values value set with
+		 * @param array $values_attributes attribute definitions and values from posting
+		 *
+		 * @return array attribute definitions and values
+		 */
 		public function preserve_attribute_values($values, $values_attributes)
 		{
 
@@ -1946,11 +1874,11 @@
 		}
 
 		/**
-		* Converts utf-8 to ascii
-		*
-		* @param string $text string
-		* @return string ascii encoded
-		*/
+		 * Converts utf-8 to ascii
+		 *
+		 * @param string $text string
+		 * @return string ascii encoded
+		 */
 		function utf2ascii($text = '')
 		{
 			if(!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset']=='utf-8')
@@ -1971,11 +1899,11 @@
 		}
 
 		/**
-		* Converts ascii to utf-8
-		*
-		* @param string $text string
-		* @return string utf-8 encoded
-		*/
+		 * Converts ascii to utf-8
+		 *
+		 * @param string $text string
+		 * @return string utf-8 encoded
+		 */
 		function ascii2utf($text = '')
 		{
 			if(!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset']=='utf-8')
@@ -1989,12 +1917,12 @@
 		}
 
 		/**
-		* Collects locationdata from location form and appends to values
-		*
-		* @param array $values array with data fom post
-		* @param array $insert_record array containing fields to collect from post
-		* @return updated values
-		*/
+		 * Collects locationdata from location form and appends to values
+		 *
+		 * @param array $values array with data fom post
+		 * @param array $insert_record array containing fields to collect from post
+		 * @return updated values
+		 */
 		function collect_locationdata($values = '',$insert_record = '')
 		{
 			if($insert_record)
@@ -2087,10 +2015,10 @@
 			$msgbox_data = $this->msgbox_data($receipt);
 
 			$data = array
-			(
-				'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'menu'			=> $this->get_menu(),
-			);
+				(
+					'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'menu'			=> $this->get_menu(),
+				);
 
 			$appname	= lang('No access');
 
@@ -2099,12 +2027,12 @@
 		}
 
 		/**
-		* Get list of accessible physical locations for current user
-		*
-		* @param integer $required Right the user has to be granted at location
-		*
-		* @return array $access_location list of accessible physical locations
-		*/
+		 * Get list of accessible physical locations for current user
+		 *
+		 * @param integer $required Right the user has to be granted at location
+		 *
+		 * @return array $access_location list of accessible physical locations
+		 */
 		public function get_location_list($required)
 		{
 			return $this->socommon->get_location_list($required);
@@ -2150,7 +2078,7 @@
 			}	
 			return 	$split_values;	
 		}
-		
+
 		public function make_menu_user($array,$id_buttons,$name_hidden)  
 		{
 			$split_values = array ();			
@@ -2160,7 +2088,7 @@
 			}	
 			return 	$split_values;	
 		}
-		
+
 		public function choose_select($array, $index_return) 
 		{
 			foreach ($array as $value)
@@ -2175,19 +2103,19 @@
 		}		
 
 		/**
-		* pending action for items across the system.
-		*
-		* @param array   $data array containing string  'appname'			- the name of the module being looked up
-		*										string  'location'			- the location within the module to look up
-		* 										integer 'id'				- id of the referenced item - could possibly be a bigint
-		* 										integer 'responsible'		- the user_id asked for approval
-		* 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
-		* 										string  'action'			- what type of action is pending
-		* 										string  'remark'			- a general remark - if any
-		* 										integer 'deadline'			- unix timestamp if any deadline is given.
-		*
-		* @return integer $reminder  number of request for this action
-		*/
+		 * pending action for items across the system.
+		 *
+		 * @param array   $data array containing string  'appname'			- the name of the module being looked up
+		 *										string  'location'			- the location within the module to look up
+		 * 										integer 'id'				- id of the referenced item - could possibly be a bigint
+		 * 										integer 'responsible'		- the user_id asked for approval
+		 * 										string  'responsible_type'  - what type of responsible is asked for action (user,vendor or tenant)
+		 * 										string  'action'			- what type of action is pending
+		 * 										string  'remark'			- a general remark - if any
+		 * 										integer 'deadline'			- unix timestamp if any deadline is given.
+		 *
+		 * @return integer $reminder  number of request for this action
+		 */
 
 		public function set_pending_action($action_params)
 		{
@@ -2203,11 +2131,11 @@
 			foreach ($values['cat_list'] as $category)
 			{
 				$ret[] = array
-				(
-					'id'		=> $category['cat_id'],
-					'name'		=> $category['name'],
-					'selected'	=> $category['selected'] ? 1 : 0
-				);
+					(
+						'id'		=> $category['cat_id'],
+						'name'		=> $category['name'],
+						'selected'	=> $category['selected'] ? 1 : 0
+					);
 			}
 			return $ret;
 		}

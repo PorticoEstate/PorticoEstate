@@ -39,12 +39,12 @@
 		/**
 		 * @var string $join the sql syntax to use for JOIN
 		 */
-		 var $join = ' INNER JOIN ';
+		var $join = ' INNER JOIN ';
 
 		/**
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
-		 var $like = 'LIKE';
+		var $like = 'LIKE';
 
 
 		function __construct()
@@ -95,7 +95,7 @@
 					$this->like = "ILIKE";
 					break;
 				default:
-					//do nothing for now
+				//do nothing for now
 			}
 
 			$this->left_join = " LEFT JOIN ";
@@ -150,9 +150,9 @@
 		}
 
 		/**
-		* Clear all content from cache
-		*
-		*/
+		 * Clear all content from cache
+		 *
+		 */
 
 		function reset_fm_cache()
 		{
@@ -160,10 +160,10 @@
 		}
 
 		/**
-		* Clear computed userlist for location and rights from cache
-		*
-		* @return integer number of values was found and cleared
-		*/
+		 * Clear computed userlist for location and rights from cache
+		 *
+		 * @return integer number of values was found and cleared
+		 */
 
 		function reset_fm_cache_userlist()
 		{
@@ -173,10 +173,10 @@
 
 		function create_preferences($app='',$user_id='')
 		{
-				$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=".(int)$user_id );
-				$this->db->next_record();
-				$value= unserialize($this->db->f('preference_value'));
-				return $value;
+			$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=".(int)$user_id );
+			$this->db->next_record();
+			$value= unserialize($this->db->f('preference_value'));
+			return $value;
 		}
 
 		function read_single_tenant($id)
@@ -184,14 +184,14 @@
 			$this->db->query("SELECT * FROM fm_tenant WHERE id =$id",__LINE__,__FILE__);
 			$this->db->next_record();
 
-				$tenant_data = array
+			$tenant_data = array
 				(
 					'first_name'		=> $this->db->f('first_name'),
 					'last_name'			=> $this->db->f('last_name'),
 					'contact_phone'		=> $this->db->f('contact_phone')
 				);
 
-//_debug_array($tenant_data);
+			//_debug_array($tenant_data);
 
 			return	$tenant_data;
 		}
@@ -220,11 +220,11 @@
 			while ($this->db->next_record())
 			{
 				$part_of_town[] = array
-				(
-					'id'			=> $this->db->f('part_of_town_id'),
-					'name'			=> $this->db->f('name',true),
-					'district_id'	=> $this->db->f('district_id')
-				);
+					(
+						'id'			=> $this->db->f('part_of_town_id'),
+						'name'			=> $this->db->f('name',true),
+						'district_id'	=> $this->db->f('district_id')
+					);
 			}
 
 			return $part_of_town;
@@ -246,19 +246,19 @@
 		}
 
 		/**
-		* Finds the next ID for a record at a table
-		*
-		* @param string $table tablename in question
-		* @param array $key conditions
-		* @return int the next id
-		*/
+		 * Finds the next ID for a record at a table
+		 *
+		 * @param string $table tablename in question
+		 * @param array $key conditions
+		 * @return int the next id
+		 */
 
 		function next_id($table='',$key='')
 		{
 			$where = '';
 			if(is_array($key))
 			{
-			//	while (is_array($key) && list($column,$value) = each($key))
+				//	while (is_array($key) && list($column,$value) = each($key))
 				foreach ($key as $column => $value)
 				{
 					if($value)
@@ -371,12 +371,12 @@
 
 
 		/**
-		* Get list of accessible physical locations for current user
-		*
-		* @param integer $required Right the user has to be granted at location
-		*
-		* @return array $access_location list of accessible physical locations
-		*/
+		 * Get list of accessible physical locations for current user
+		 *
+		 * @param integer $required Right the user has to be granted at location
+		 *
+		 * @return array $access_location list of accessible physical locations
+		 */
 
 		public function get_location_list($required)
 		{

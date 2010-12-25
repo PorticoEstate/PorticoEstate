@@ -292,7 +292,7 @@
 			 */
 			if(!isset($table) || $table == '' || !isset($field) || $field == '')
 			{
-			return -1;
+				return -1;
 			}
 
 			$result = @mssql_query("select @@identity", $this->Link_ID);

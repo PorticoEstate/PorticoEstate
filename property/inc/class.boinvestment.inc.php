@@ -44,36 +44,17 @@
 //		var $part_of_town_id;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
 
 		function property_boinvestment($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.soinvestment');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->socommon = CreateObject('property.socommon');
@@ -158,14 +139,14 @@
 		{
 
 			$investment = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'part_of_town_id' => $this->part_of_town_id,'allrows'=>$this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'part_of_town_id' => $this->part_of_town_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 
 	/*		for ($i=0; $i<count($investment); $i++)
 			{
 				$investment[$i]['date']  = $GLOBALS['phpgw']->common->show_date($investment[$i]['date']);
 			}
-	*/
+	 */
 			return $investment;
 		}
 
@@ -174,12 +155,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$categories= $this->so->get_type_list();
@@ -204,11 +185,11 @@
 				}
 
 				$category_list[] = array
-				(
-					'id'		=> $category['period'],
-					'name'		=> $category['period'],
-					'selected'	=> $sel_category
-				);
+					(
+						'id'		=> $category['period'],
+						'name'		=> $category['period'],
+						'selected'	=> $sel_category
+					);
 			}
 
 			for ($i=0;$i<count($category_list);$i++)
@@ -237,7 +218,7 @@
 
 			$values['location_code']=implode("-", $location);
 
-//_debug_array($values);
+			//_debug_array($values);
 
 			$values['date']	= $this->bocommon->date_to_timestamp($values['date']);
 			$values['date']= date($this->bocommon->dateformat,$values['date']);
@@ -281,7 +262,7 @@
 
 			$date_array = phpgwapi_datetime::date_array($values['date']);
 
-	 		$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
+			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
 			$date= date($this->bocommon->dateformat,$date);
 
 			$new_index=str_replace(",",".",$values['new_index']);
@@ -311,7 +292,7 @@
 						'new_value'		=>$new_value,
 						'initial_value'	=>$values['initial_value'][$n],
 						'date'			=>$date
-						);
+					);
 				}
 			}
 			return $this->so->update_investment($update);
@@ -322,18 +303,18 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_filter'));
+				break;
 			}
 
-			$filters[0][id]='investment';
-			$filters[0][name]=lang('Investment');
-			$filters[1][id]='funding';
-			$filters[1][name]=lang('Funding');
+			$filters[0]['id']	='investment';
+			$filters[0]['name']	=lang('Investment');
+			$filters[1]['id']	='funding';
+			$filters[1]['name']	=lang('Funding');
 
 			return $this->bocommon->select_list($selected,$filters);
 		}
@@ -359,4 +340,3 @@
 			$this->so->delete($entity_id,$investment_id,$index_count);
 		}
 	}
-

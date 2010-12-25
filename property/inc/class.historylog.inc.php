@@ -70,30 +70,30 @@
 
 			switch($selector)
 			{
-				case 'request':
-					$this->table='fm_request_history';
-					break;
-				case 'workorder':
-					$this->table='fm_workorder_history';
-					break;
-				case 'project':
-					$this->table='fm_project_history';
-					break;
-				case 'tts':
-					$this->table='fm_tts_history';
-					break;
-				case 'document':
-					$this->table='fm_document_history';
-					break;
-				case 'entity':
-					$this->table='fm_entity_history';
-					$this->attrib_id_field = ',history_attrib_id';
-					break;
-				case 's_agreement':
-					$this->table='fm_s_agreement_history';
-					$this->attrib_id_field = ',history_attrib_id';
-					$this->detail_id_field = ',history_detail_id';
-					break;
+			case 'request':
+				$this->table='fm_request_history';
+				break;
+			case 'workorder':
+				$this->table='fm_workorder_history';
+				break;
+			case 'project':
+				$this->table='fm_project_history';
+				break;
+			case 'tts':
+				$this->table='fm_tts_history';
+				break;
+			case 'document':
+				$this->table='fm_document_history';
+				break;
+			case 'entity':
+				$this->table='fm_entity_history';
+				$this->attrib_id_field = ',history_attrib_id';
+				break;
+			case 's_agreement':
+				$this->table='fm_s_agreement_history';
+				$this->attrib_id_field = ',history_attrib_id';
+				$this->detail_id_field = ',history_detail_id';
+				break;
 			}
 
 			$this->appname = $appname;
@@ -196,17 +196,17 @@
 			while ($this->db->next_record())
 			{
 				$return_values[] = array
-				(
-					'id'         => $this->db->f('history_id'),
-					'record_id'  => $this->db->f('history_record_id'),
-					'owner'      => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
-//					'status'     => lang($this->types[$this->db->f('history_status')]),
-					'status'     => preg_replace('/ /','',$this->db->f('history_status')),
-					'new_value'  => htmlspecialchars_decode($this->db->f('history_new_value',true)),
-					'old_value'  => htmlspecialchars_decode($this->db->f('history_old_value',true)),
-					'datetime'   => strtotime($this->db->f('history_timestamp')),
-					'publish'	=> $this->db->f('publish')
-				);
+					(
+						'id'			=> $this->db->f('history_id'),
+						'record_id'		=> $this->db->f('history_record_id'),
+						'owner'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
+	//					'status'		=> lang($this->types[$this->db->f('history_status')]),
+						'status'		=> preg_replace('/ /','',$this->db->f('history_status')),
+						'new_value'		=> htmlspecialchars_decode($this->db->f('history_new_value',true)),
+						'old_value'		=> htmlspecialchars_decode($this->db->f('history_old_value',true)),
+						'datetime'		=> strtotime($this->db->f('history_timestamp')),
+						'publish'		=> $this->db->f('publish')
+					);
 			}
 			return $return_values;
 		}

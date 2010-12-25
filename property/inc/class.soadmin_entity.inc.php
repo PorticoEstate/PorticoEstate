@@ -115,12 +115,12 @@
 			while ($this->db->next_record())
 			{
 				$entity[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name'),
-					'descr'	=> $this->db->f('descr'),
-					'documentation'	=> $this->db->f('documentation')
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('name'),
+						'descr'	=> $this->db->f('descr'),
+						'documentation'	=> $this->db->f('documentation')
+					);
 			}
 			return $entity;
 		}
@@ -176,14 +176,14 @@
 			{
 				$id	= $this->db2->f('id');
 				$category = array
-				(
-					'id'		=> $id,
-					'name'		=> $this->db2->f('name'),
-					'prefix'	=> $this->db2->f('prefix'),
-					'descr'		=> $this->db2->f('descr'),
-					'level'		=> $this->db2->f('level'),
-					'parent_id'	=> $this->db2->f('parent_id')
-				);
+					(
+						'id'		=> $id,
+						'name'		=> $this->db2->f('name'),
+						'prefix'	=> $this->db2->f('prefix'),
+						'descr'		=> $this->db2->f('descr'),
+						'level'		=> $this->db2->f('level'),
+						'parent_id'	=> $this->db2->f('parent_id')
+					);
 
 				if($required)
 				{
@@ -216,12 +216,12 @@
 			{
 				$id	= $db->f('id');
 				$this->category_tree[] = array
-				(
-					'id'		=> $id,
-					'name'		=> str_repeat('..',$level).$db->f('name'),
-					'parent_id'	=> $db->f('parent_id')
-				);
-	   			$this->get_children2($entity_id, $id, $level+1);
+					(
+						'id'		=> $id,
+						'name'		=> str_repeat('..',$level).$db->f('name'),
+						'parent_id'	=> $db->f('parent_id')
+					);
+				$this->get_children2($entity_id, $id, $level+1);
 			}
 			return $this->category_tree;
 		} 
@@ -239,20 +239,20 @@
 			{
 				$id	= $this->db->f('id');
 				$categories[$id] = array
-				(
-					'id'			=> $id,
-					'name'			=> $this->db->f('name',true),
-					'parent_id'		=> 0
-				);
+					(
+						'id'			=> $id,
+						'name'			=> $this->db->f('name',true),
+						'parent_id'		=> 0
+					);
 			}
 
 			foreach($categories as $category)
 			{
 				$this->category_tree[] = array
-				(
-					'id'	=> $category['id'],
-					'name'	=> $category['name']
-				);
+					(
+						'id'	=> $category['id'],
+						'name'	=> $category['name']
+					);
 				$this->get_children2($entity_id, $category['id'], 1);
 			}
 			return $this->category_tree;
@@ -260,13 +260,13 @@
 
 
 		/**
-		* used for retrive a child-node from a hierarchy
-		*
-		* @param integer $entity_id Entity id
-		* @param integer $parent is the parent of the children we want to see
-		* @param integer $level is increased when we go deeper into the tree,
-		* @return array $child Children
-		*/
+		 * used for retrive a child-node from a hierarchy
+		 *
+		 * @param integer $entity_id Entity id
+		 * @param integer $parent is the parent of the children we want to see
+		 * @param integer $level is increased when we go deeper into the tree,
+		 * @return array $child Children
+		 */
 
 		protected function get_children($entity_id, $parent, $level, $menuaction)
 		{	
@@ -282,18 +282,18 @@
 		//		$location_id	= $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $location);
 
 				$children[$id] = array
-				(
-					'id'			=> $id,
-					'name'			=> $this->db2->f('name'),
-					'prefix'		=> $this->db2->f('prefix'),
-					'descr'			=> $this->db2->f('descr'),
-					'level'			=> (int)$this->db2->f('level'),
-					'parent_id'		=> (int)$this->db2->f('parent_id'),
-					'owner'			=> (int)$this->db2->f('owner'),
-					'location_id'	=> $location_id
-				);
+					(
+						'id'			=> $id,
+						'name'			=> $this->db2->f('name'),
+						'prefix'		=> $this->db2->f('prefix'),
+						'descr'			=> $this->db2->f('descr'),
+						'level'			=> (int)$this->db2->f('level'),
+						'parent_id'		=> (int)$this->db2->f('parent_id'),
+						'owner'			=> (int)$this->db2->f('owner'),
+						'location_id'	=> $location_id
+					);
 			}
-				
+
 			foreach($children as &$child)
 			{
 				$child['url']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $menuaction, 'entity_id'=> $entity_id , 'cat_id'=> $child['id'], 'type' => $this->type));
@@ -326,15 +326,15 @@
 				if ( !$required || ($required && $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->type_app[$this->type])) )
 				{
 					$categories[$id] = array
-					(
-						'id'			=> $id,
-						'name'			=> $this->db2->f('name',true),
-						'prefix'		=> $this->db2->f('prefix'),
-						'descr'			=> $this->db2->f('descr',true),
-						'level'			=> 0,
-						'parent_id'		=> 0,
-						'location_id'	=> $location_id
-					);
+						(
+							'id'			=> $id,
+							'name'			=> $this->db2->f('name',true),
+							'prefix'		=> $this->db2->f('prefix'),
+							'descr'			=> $this->db2->f('descr',true),
+							'level'			=> 0,
+							'parent_id'		=> 0,
+							'location_id'	=> $location_id
+						);
 				}
 			}
 
@@ -352,12 +352,12 @@
 		}
 
 		/**
-		* used for retrive the pathe for a particular node from a hierarchy
-		*
-		* @param integer $entity_id Entity id
-		* @param integer $node is the id of the node we want the path of
-		* @return array $path Path
-		*/
+		 * used for retrive the pathe for a particular node from a hierarchy
+		 *
+		 * @param integer $entity_id Entity id
+		 * @param integer $node is the id of the node we want the path of
+		 * @return array $path Path
+		 */
 
 		public function get_path($entity_id, $node)
 		{
@@ -427,22 +427,22 @@
 			if ($this->db->next_record())
 			{
 				$category = array
-				(
-					'id'						=> $this->db->f('id'),
-					'name'						=> $this->db->f('name',true),
-					'descr'						=> $this->db->f('descr',true),
-					'prefix'					=> $this->db->f('prefix',true),
-					'lookup_tenant'				=> $this->db->f('lookup_tenant'),
-					'tracking'					=> $this->db->f('tracking'),
-					'location_level'			=> $this->db->f('location_level'),
-					'fileupload'				=> $this->db->f('fileupload'),
-					'loc_link'					=> $this->db->f('loc_link'),
-					'start_project'				=> $this->db->f('start_project'),
-					'start_ticket'				=> $this->db->f('start_ticket'),
-					'jasperupload'				=> $this->db->f('jasperupload'),
-					'parent_id'					=> $this->db->f('parent_id'),
-					'level'						=> $this->db->f('level')
-				);
+					(
+						'id'						=> $this->db->f('id'),
+						'name'						=> $this->db->f('name',true),
+						'descr'						=> $this->db->f('descr',true),
+						'prefix'					=> $this->db->f('prefix',true),
+						'lookup_tenant'				=> $this->db->f('lookup_tenant'),
+						'tracking'					=> $this->db->f('tracking'),
+						'location_level'			=> $this->db->f('location_level'),
+						'fileupload'				=> $this->db->f('fileupload'),
+						'loc_link'					=> $this->db->f('loc_link'),
+						'start_project'				=> $this->db->f('start_project'),
+						'start_ticket'				=> $this->db->f('start_ticket'),
+						'jasperupload'				=> $this->db->f('jasperupload'),
+						'parent_id'					=> $this->db->f('parent_id'),
+						'level'						=> $this->db->f('level')
+					);
 			}
 			return $category;
 		}
@@ -457,7 +457,7 @@
 
 		function add_entity($entity)
 		{
-			
+
 			$entity['name'] = $this->db->db_addslashes($entity['name']);
 			$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
@@ -469,7 +469,7 @@
 				$entity['descr'],
 				$entity['location_form'],
 				$entity['documentation']
-				);
+			);
 
 			$values	= $this->db->validate_insert($values);
 
@@ -538,23 +538,23 @@
 
 
 			$values_insert= array
-			(
-				$values['entity_id'],
-				$values['id'],
-				$values['name'],
-				$values['descr'],
-				$values['prefix'],
-				$values['lookup_tenant'],
-				$values['tracking'],
-				$values['location_level'],
-				$values['fileupload'],
-				$values['loc_link'],
-				$values['start_project'],
-				$values['start_ticket'],
-				$values['jasperupload'],
-				$values['parent_id'],
-				$level
-			);
+				(
+					$values['entity_id'],
+					$values['id'],
+					$values['name'],
+					$values['descr'],
+					$values['prefix'],
+					$values['lookup_tenant'],
+					$values['tracking'],
+					$values['location_level'],
+					$values['fileupload'],
+					$values['loc_link'],
+					$values['start_project'],
+					$values['start_ticket'],
+					$values['jasperupload'],
+					$values['parent_id'],
+					$level
+				);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
@@ -570,14 +570,14 @@
 			$fd = $this->get_default_column_def();
 
 			$pk[]= 'id';
-			
+
 			$ix = array();
-			
+
 			if( $this->type == 'entity' )
 			{
 				$ix =  array('location_code');
 			}
-			
+
 			$table			= "fm_{$this->type}_{$values['entity_id']}_{$values['id']}";
 
 			if(($this->oProc->CreateTable($table,array('fd' => $fd,'pk' => $pk,'fk' => $fk,'ix' => $ix,'uc' => array()))))
@@ -598,7 +598,7 @@
 
 				$this->db->query("INSERT INTO phpgw_cust_attribute (location_id,id,column_name,input_text,statustext,datatype,attrib_sort,nullable) "
 					. "VALUES ($values_insert)",__LINE__,__FILE__);
-	*/
+	 */
 
 				$receipt['message'][] = array('msg'	=> lang('table %1 has been saved',$table));
 				$this->db->transaction_commit();
@@ -640,11 +640,11 @@
 				}
 
 				$value_set=array(
-				'descr'			=> $entity['descr'],
-				'name'			=> $entity['name'],
-				'location_form'	=> $entity['location_form'],
-				'lookup_entity'	=> serialize($entity['lookup_entity']),
-				'documentation'	=> $entity['documentation']
+					'descr'			=> $entity['descr'],
+					'name'			=> $entity['name'],
+					'location_form'	=> $entity['location_form'],
+					'lookup_entity'	=> serialize($entity['lookup_entity']),
+					'documentation'	=> $entity['documentation']
 				);
 
 				$value_set	= $this->db->validate_update($value_set);
@@ -661,7 +661,7 @@
 					foreach($entity['include_entity_for'] as $location)
 					{
 						$this->db->query("INSERT INTO fm_{$this->type}_lookup (entity_id,location,type)"
-						. "VALUES (" .$entity['id'] . ",'$location','lookup' )",__LINE__,__FILE__);
+							. "VALUES (" .$entity['id'] . ",'$location','lookup' )",__LINE__,__FILE__);
 					}
 				}
 
@@ -672,7 +672,7 @@
 					foreach($entity['start_entity_from'] as $location)
 					{
 						$this->db->query("INSERT INTO fm_{$this->type}_lookup (entity_id,location,type)"
-						. "VALUES (" .$entity['id'] . ",'$location','start' )",__LINE__,__FILE__);
+							. "VALUES (" .$entity['id'] . ",'$location','start' )",__LINE__,__FILE__);
 					}
 				}
 
@@ -738,21 +738,21 @@
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
 				$value_set=array
-				(
-					'descr'						=> $entity['descr'],
-					'name'						=> $entity['name'],
-					'prefix'					=> $entity['prefix'],
-					'lookup_tenant'				=> $entity['lookup_tenant'],
-					'tracking'					=> $entity['tracking'],
-					'location_level'			=> $entity['location_level'],
-					'fileupload'				=> $entity['fileupload'],
-					'loc_link'					=> $entity['loc_link'],
-					'start_project'				=> $entity['start_project'],
-					'start_ticket'				=> $entity['start_ticket'],
-					'jasperupload'				=> $entity['jasperupload'],
-					'parent_id'					=> $entity['parent_id'],
-					'level'						=> $level
-				);
+					(
+						'descr'						=> $entity['descr'],
+						'name'						=> $entity['name'],
+						'prefix'					=> $entity['prefix'],
+						'lookup_tenant'				=> $entity['lookup_tenant'],
+						'tracking'					=> $entity['tracking'],
+						'location_level'			=> $entity['location_level'],
+						'fileupload'				=> $entity['fileupload'],
+						'loc_link'					=> $entity['loc_link'],
+						'start_project'				=> $entity['start_project'],
+						'start_ticket'				=> $entity['start_ticket'],
+						'jasperupload'				=> $entity['jasperupload'],
+						'parent_id'					=> $entity['parent_id'],
+						'level'						=> $level
+					);
 
 				$value_set	= $this->db->validate_update($value_set);
 
@@ -771,11 +771,11 @@
 		}
 
 		/**
-		* ???
-		*
-		* @param bool $recursive is the function being called recursively
-		* @return a list of children to be moved
-		*/
+		 * ???
+		 *
+		 * @param bool $recursive is the function being called recursively
+		 * @return a list of children to be moved
+		 */
 		private function check_move_child($entity_id, $recursive = false)
 		{
 			$entity_id = (int)$entity_id;
@@ -793,11 +793,11 @@
 			while ($this->db->next_record())
 			{
 				$this->move_child[] = array
-				(
-					'id' 			=>(int)$this->db->f('id'),
-					'category_parent' 	=>(int)$this->category_parent,
-					'new_level' 	=> ($this->level + $this->parent_gap)
-				);
+					(
+						'id' 			=>(int)$this->db->f('id'),
+						'category_parent' 	=>(int)$this->category_parent,
+						'new_level' 	=> ($this->level + $this->parent_gap)
+					);
 
 				$move_child[] = (int)$this->db->f('id');
 				$continue = true;
@@ -828,11 +828,11 @@
 			while ($this->db->next_record())
 			{
 				$this->move_child[] = array
-				(
-					'id' 			=> (int)$this->db->f('id'),
-					'parent'	 	=> $this->category_parent,
-					'new_level' 	=> $this->level
-				);
+					(
+						'id' 			=> (int)$this->db->f('id'),
+						'parent'	 	=> $this->category_parent,
+						'new_level' 	=> $this->level
+					);
 
 				$move_child[] = (int)$this->db->f('id');
 				$continue = true;
@@ -967,12 +967,12 @@
 					}
 
 					$fd[$metadata[$i]['name']] = array(
-					 		'type' => $this->bocommon->translate_datatype_insert(stripslashes($this->db->f('datatype'))),
-					 		'precision' => $precision,
-					 		'nullable' => stripslashes($this->db->f('nullable')),
-					 		'default' => stripslashes($this->db->f('default_value')),
-					 		'scale' => $this->db->f('scale')
-					 		);
+						'type' => $this->bocommon->translate_datatype_insert(stripslashes($this->db->f('datatype'))),
+						'precision' => $precision,
+						'nullable' => stripslashes($this->db->f('nullable')),
+						'default' => stripslashes($this->db->f('default_value')),
+						'scale' => $this->db->f('scale')
+					);
 					unset($precision);
 				}
 			}
@@ -980,8 +980,8 @@
 			$table_def = array(
 				$table =>	array(
 					'fd' => $fd
-					)
-				);
+				)
+			);
 
 			$table_def[$table]['pk'] = array('id');
 			$table_def[$table]['fk'] = array();

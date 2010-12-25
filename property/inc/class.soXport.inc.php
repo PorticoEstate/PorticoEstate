@@ -43,13 +43,13 @@
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp']	=	'property';
-			$this->soinvoice	= CreateObject('property.soinvoice',true);
-			$this->db 			= & $GLOBALS['phpgw']->db;
-			$this->like 		= & $this->db->like;
-			$this->join 		= & $this->db->join;
-			$this->left_join	= & $this->db->left_join;
+			$this->soinvoice		= CreateObject('property.soinvoice',true);
+			$this->db 				= & $GLOBALS['phpgw']->db;
+			$this->like 			= & $this->db->like;
+			$this->join 			= & $this->db->join;
+			$this->left_join		= & $this->db->left_join;
 			$this->datetimeformat	= $this->db->datetime_format();
-			$this->account_id 	= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account_id 		= $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 
@@ -124,8 +124,8 @@
 		function anleggsnr_to_objekt($anleggsnr,$meter_table)
 		{
 			$this->db->query("select $meter_table.ext_meter_id,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
-			. " from $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
-            		. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id where $meter_table.ext_system_id='$anleggsnr'");
+				. " from $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
+				. " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id where $meter_table.ext_system_id='$anleggsnr'");
 
 			$this->db->next_record();
 
@@ -146,14 +146,14 @@
 
 		function gabnr_to_objekt($Gnr,$Bnr,$sekjonnr)
 		{
-		//Finn dima fra Boei
+			//Finn dima fra Boei
 			$sql = "select fm_gab_location.loc1, fm_gab_location.loc2, fm_gab_location.loc3 from fm_gab_location, fm_location1, fm_owner "
-			. "where substring(fm_gab_location.gab_id,5,5)='$Gnr' and "
-			. "      substring(fm_gab_location.gab_id,10,4)='$Bnr' and "
-			. "      substring(fm_gab_location.gab_id,18,3)='$sekjonnr' and "
-			. "      fm_gab_location.loc1=fm_location1.loc1 and "
-			. "      fm_location1.owner_id=fm_owner.id ";
-		//	. "      and (fm_owner.category=0 or fm_owner.category=2)";
+				. "where substring(fm_gab_location.gab_id,5,5)='$Gnr' and "
+				. "      substring(fm_gab_location.gab_id,10,4)='$Bnr' and "
+				. "      substring(fm_gab_location.gab_id,18,3)='$sekjonnr' and "
+				. "      fm_gab_location.loc1=fm_location1.loc1 and "
+				. "      fm_location1.owner_id=fm_owner.id ";
+			//	. "      and (fm_owner.category=0 or fm_owner.category=2)";
 
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			$GLOBALS['phpgw']->db->next_record();
@@ -189,7 +189,7 @@
 		{
 			$id = (int) $id;
 			$sql = "SELECT project_group FROM fm_workorder"
-			. " $this->join fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id={$id}";
+				. " $this->join fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id={$id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return $this->db->f('project_group');
@@ -253,17 +253,17 @@
 						$fields['item_id'],
 						$fields['external_ref'],
 						isset($fields['currency']) && $fields['currency'] ? $fields['currency'] : 'NOK'
-						);
+					);
 
 					$bilagsnr	= (int)$fields['bilagsnr'];
 
 					$values	= $this->db->validate_insert($values);
 
 					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,fakturadato,"
-					. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-					. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,oppsynsigndato,saksigndato,"
-					. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
-					. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
+						. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
+						. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,oppsynsigndato,saksigndato,"
+						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
+						. " VALUES ({$values}," . $this->db->money_format($fields['belop']) . ',' . $this->db->money_format($fields['godkjentbelop']) .')';
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
@@ -317,7 +317,7 @@
 				$data['item_type'],
 				$data['item_id'],
 				$data['external_ref']
-				);
+			);
 
 			$values	= $this->db->validate_insert($values);
 
@@ -332,7 +332,7 @@
 				. $this->db->money_format($data['ordrebelop']) . ")";
 
 			$this->db->query($sql,__LINE__,__FILE__);
-//echo 'sql ' . $sql.'<br>';
+			//echo 'sql ' . $sql.'<br>';
 		}
 
 		function delete_from_fm_ecobilag($id)
@@ -342,16 +342,16 @@
 		}
 
 		// Velg ut alle hoved bilag som skal overføres
-    	function hoved_bilag ($periode,$pre_transfer='')
-    	{
+		function hoved_bilag ($periode,$pre_transfer='')
+		{
 			if($pre_transfer)
 			{
 				$sql= "SELECT sum(belop) as belop, bilagsnr from fm_ecobilag WHERE periode='$periode' AND utbetalingsigndato IS NULL GROUP BY bilagsnr ";
 			}
 			else
 			{
-	    		$sql="select sum(belop) as belop, bilagsnr from fm_ecobilag where periode='$periode'  AND budsjettsigndato is not NULL  AND ( saksigndato is not NULL  OR oppsynsigndato is not NULL  ) AND utbetalingsigndato is not NULL group by bilagsnr";
-	    	}
+				$sql="select sum(belop) as belop, bilagsnr from fm_ecobilag where periode='$periode'  AND budsjettsigndato is not NULL  AND ( saksigndato is not NULL  OR oppsynsigndato is not NULL  ) AND utbetalingsigndato is not NULL group by bilagsnr";
+			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$i = 0;
@@ -362,7 +362,7 @@
 				$i++;
 			}
 
-//_debug_array($hoved_bilag_temp);
+			//_debug_array($hoved_bilag_temp);
 
 			if ($hoved_bilag_temp)
 			{
@@ -371,7 +371,7 @@
 				{
 					$bilagsnr = $hoved_bilag_temp[$i]['bilagsnr'];
 
-  			  		$sql= "select fm_ecobilag.*,fm_ecouser.initials as saksbehandler from fm_ecobilag $this->join fm_ecouser on fm_ecobilag.budsjettansvarligid=fm_ecouser.lid where bilagsnr=$bilagsnr ";
+					$sql= "select fm_ecobilag.*,fm_ecouser.initials as saksbehandler from fm_ecobilag $this->join fm_ecouser on fm_ecobilag.budsjettansvarligid=fm_ecouser.lid where bilagsnr=$bilagsnr ";
 					$this->db->query($sql,__LINE__,__FILE__);
 
 					$this->db->next_record();
@@ -425,10 +425,10 @@
 					$i++;
 				}
 			}
-//_debug_array($hoved_bilag);
+			//_debug_array($hoved_bilag);
 
 			return $hoved_bilag;
-    	}
+		}
 
 		//Velg ut alle underbilag
 
@@ -501,9 +501,9 @@
 		{
 		}
 
-*/
-   		function log_to_deviation_table($oRsBilag)
-   		{
+ */
+		function log_to_deviation_table($oRsBilag)
+		{
 			$bilagsnr=$oRsBilag['bilagsnr'];
 			$fakturadato=$oRsBilag['fakturadato'];
 			$forfallsdato=$oRsBilag['forfallsdato'];
@@ -519,11 +519,11 @@
 			$godkjentbelop=$oRsBilag['godkjentbelop'];
 
 			$sql="INSERT INTO fm_ecoavvik (bilagsnr,fakturadato,forfallsdato,oppsynsmannid,oppsynsigndato,saksbehandlerid,saksigndato,budsjettansvarligid,budsjettsigndato,artid,spvend_code,belop,godkjentbelop)  values "
-			. "($bilagsnr','$fakturadato','$forfallsdato','$oppsynsmannid','$oppsynsigndato','$saksbehandlerid','$saksigndato','$budsjettansvarligid','$budsjettsigndato','$artid','$spvend_code','$belop','$godkjentbelop')";
+				. "($bilagsnr','$fakturadato','$forfallsdato','$oppsynsmannid','$oppsynsigndato','$saksbehandlerid','$saksigndato','$budsjettansvarligid','$budsjettsigndato','$artid','$spvend_code','$belop','$godkjentbelop')";
 			$this->db->query($sql,__LINE__,__FILE__);
 		}
 
-   		function delete_avvik($bilagsnr)
+		function delete_avvik($bilagsnr)
 		{
 			$sql="delete from fm_ecoavvik where bilagsnr='$bilagsnr'";
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -570,4 +570,3 @@
 			return $responsible;
 		}
 	}
-
