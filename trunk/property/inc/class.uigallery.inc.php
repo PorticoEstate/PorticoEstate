@@ -45,10 +45,10 @@
 		var $location_info;
 
 		var $public_functions = array
-		(
-			'index'		=> true,
-			'view_file'	=> true
-		);
+			(
+				'index'		=> true,
+				'view_file'	=> true
+			);
 
 		function __construct()
 		{
@@ -78,16 +78,16 @@
 		function save_sessiondata()
 		{
 			$data = array
-			(
-				'start'			=> $this->start,
-				'query'			=> $this->query,
-				'sort'			=> $this->sort,
-				'order'			=> $this->order,
-				'allrows'		=> $this->allrows,
-				'cat_id'		=> $this->cat_id,
-				'user_id'		=> $this->user_id,
-				'mime_type'		=> $this->mime_type
-			);
+				(
+					'start'			=> $this->start,
+					'query'			=> $this->query,
+					'sort'			=> $this->sort,
+					'order'			=> $this->order,
+					'allrows'		=> $this->allrows,
+					'cat_id'		=> $this->cat_id,
+					'user_id'		=> $this->user_id,
+					'mime_type'		=> $this->mime_type
+				);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -109,7 +109,7 @@
 			$directory = explode('/', $file);
 
 			$location_info = $this->bo->get_location($directory);
-			
+
 			if(!$this->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
 			{
 				echo 'sorry - no access';
@@ -190,11 +190,11 @@
 				@$imgInfo = getimagesize($fileName);
 
 				$imgType = array
-				(
-					IMAGETYPE_JPEG,
-					IMAGETYPE_GIF,
-					IMAGETYPE_PNG,
-				);
+					(
+						IMAGETYPE_JPEG,
+						IMAGETYPE_GIF,
+						IMAGETYPE_PNG,
+					);
 
 				if (in_array($imgInfo[2],$imgType))
 				{
@@ -206,7 +206,7 @@
 
 		function index()
 		{
-//_debug_array($_REQUEST);
+			//_debug_array($_REQUEST);
 			$this->acl_location = '.document';
 			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property') )
 			{
@@ -228,21 +228,21 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'	=> 'property.uigallery.index',
-					'mime_type'		=> $this->mime_type,
-					'cat_id'		=> $this->cat_id,
-					'query'			=> $this->query,
-					'allrows'		=> $this->allrows,
-					'user_id'		=> $this->user_id
-   				));
+					(
+						'menuaction'	=> 'property.uigallery.index',
+						'mime_type'		=> $this->mime_type,
+						'cat_id'		=> $this->cat_id,
+						'query'			=> $this->query,
+						'allrows'		=> $this->allrows,
+						'user_id'		=> $this->user_id
+					));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uigallery.index',"
-	    												."mime_type:'{$this->mime_type}',"
-	    												."cat_id:'{$this->cat_id}',"
-	    												."query:'{$this->query}',"
-	    												."allrows:'{$this->allrows}',"
-	    												."user_id:'{$this->user_id}'";
+				$datatable['config']['base_java_url'] = "menuaction:'property.uigallery.index',"
+					."mime_type:'{$this->mime_type}',"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."allrows:'{$this->allrows}',"
+					."user_id:'{$this->user_id}'";
 
 				$values_combo_box = array();
 
@@ -262,21 +262,21 @@
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['actions']['form'] = array
-				(
-					array
 					(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array
-								(
-									'menuaction'	=> 'property.uigallery.index',
-									'type'			=> $type,
-									'type_id'		=> $type_id
-								)
-							),
-					'fields'	=> array
-					(
-	                		'field' => array
-	                		(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction'	=> 'property.uigallery.index',
+								'type'			=> $type,
+								'type_id'		=> $type_id
+							)
+						),
+						'fields'	=> array
+						(
+							'field' => array
+							(
 								array
 								( //boton 	filetype
 									'id' => 'btn_mime_type',
@@ -305,82 +305,87 @@
 									'tab_index' => 3
 								),
 /*
-								array( // boton SAVE
+								array
+								( // boton SAVE
 									'id'	=> 'btn_save',
 									//'name' => 'save',
 									'value'	=> lang('save'),
 									'tab_index' => 7,
 									'type'	=> 'button'
-		                            ),
-*/
-								array( //hidden start_date
+									),
+ */
+								array
+								( //hidden start_date
 									'type' => 'hidden',
 									'id' => 'start_date',
 									'value' => $start_date
-									),
-								array( //hidden end_date
+								),
+								array
+								( //hidden end_date
 									'type' => 'hidden',
 									'id' => 'end_date',
 									'value' => $end_date
 								),
-								array(//for link "None",
-								'type'=> 'label_date'
+								array
+								(//for link "None",
+									'type'=> 'label_date'
 								),
-								array(//for link "Date search",
+								array
+								(//for link "Date search",
 									'type'=> 'link',
 									'id'  => 'btn_data_search',
 									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									       array(
-									           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-									 'value' => lang('Date search'),
-									 'tab_index' => 6
+									array(
+										'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
+										'value' => lang('Date search'),
+										'tab_index' => 6
+									),
+									array
+									( //button     SEARCH
+										'id' => 'btn_search',
+										'name' => 'search',
+										'value'    => lang('search'),
+										'type' => 'button',
+										'tab_index' => 5
+									),
+									array
+									( // TEXT INPUT
+										'name'     => 'query',
+										'id'     => 'txt_query',
+										'value'    => $this->query,
+										'type' => 'text',
+										'onkeypress' => 'return pulsar(event)',
+										'size'    => 28,
+										'tab_index' => 4
+									),
+									array
+									( //place holder for selected events
+										'type'	=> 'hidden',
+										'id'	=> 'event',
+										'value'	=> ''
+									)
 								),
-								array
-								( //button     SEARCH
-									'id' => 'btn_search',
-									'name' => 'search',
-									'value'    => lang('search'),
-									'type' => 'button',
-									'tab_index' => 5
-								),
-								array
-								( // TEXT INPUT
-									'name'     => 'query',
-									'id'     => 'txt_query',
-									'value'    => $this->query,
-									'type' => 'text',
-									'onkeypress' => 'return pulsar(event)',
-									'size'    => 28,
-									'tab_index' => 4
-								),
-								array
-								( //place holder for selected events
-									'type'	=> 'hidden',
-									'id'	=> 'event',
-									'value'	=> ''
-								)
-							),
-							'hidden_value' => array
-							(
-								array
-								( //div values  combo_box_0
-									'id' => 'values_combo_box_0',
-									'value'	=> $this->bocommon->select2String($values_combo_box[0])
-								),
-								array
-								( //div values  combo_box_1
-									'id' => 'values_combo_box_1',
-									'value'	=> $this->bocommon->select2String($values_combo_box[1])
-								),
-								array
-								( //div values  combo_box_2
-									'id' => 'values_combo_box_2',
-									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								'hidden_value' => array
+								(
+									array
+									( //div values  combo_box_0
+										'id' => 'values_combo_box_0',
+										'value'	=> $this->bocommon->select2String($values_combo_box[0])
+									),
+									array
+									( //div values  combo_box_1
+										'id' => 'values_combo_box_1',
+										'value'	=> $this->bocommon->select2String($values_combo_box[1])
+									),
+									array
+									( //div values  combo_box_2
+										'id' => 'values_combo_box_2',
+										'value'	=> $this->bocommon->select2String($values_combo_box[2])
+									)
 								)
 							)
 						)
-					)
-				);				
+					);				
 				$dry_run = true;
 			}
 
@@ -483,7 +488,7 @@
 			$uicols['format'][]		= '';
 			$uicols['formatter'][]	= 'myFormatterCheck';
 			$uicols['input_type'][]	= '';
-*/
+ */
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -568,23 +573,23 @@
 					'parameters'	=> $parameters
 				);
 			}
-*/
+ */
 			unset($parameters);
 
 			if($this->acl_add)
 			{
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 			=> 'add',
-					'statustext' 	=> lang('add'),
-					'text'			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uigallery.edit',
-											'type'			=> $type,
-											'type_id'		=> $type_id
-										))
-				);
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uigallery.edit',
+							'type'			=> $type,
+							'type_id'		=> $type_id
+						))
+					);
 			}
 
 			for ($i=0;$i<$count_uicols_name;$i++)
@@ -607,7 +612,7 @@
 
 			if($dry_run)
 			{
-					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
 			}
 			else
 			{
@@ -631,51 +636,51 @@
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
-//			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			//			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-    		//values for Pagination
-    		$json = array
-    		(
-    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-   				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-    			'startIndex' 		=> $datatable['pagination']['records_start'],
-				'sort'				=> $datatable['sorting']['order'],
-    			'dir'				=> $datatable['sorting']['sort'],
-				'records'			=> array()
-    		);
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+					'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+				);
 
 			// values for datatable
-    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-    		{
-    			foreach( $datatable['rows']['row'] as $row )
-    			{
-	    			$json_row = array();
-	    			foreach( $row['column'] as $column)
-	    			{
-	    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-	    				{
-	    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-	    				}
-	    				else if(isset($column['format']) && $column['format']== "link")
-	    				{
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
 							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-				//			$json_row[$column['name']] = "<a href='{$column['value']}' title='test' id='img-0' rel='colorbox' target='_blank'><img src='{$column['value']}&thumb=1'  alt='name' /></a>";
-	    				}
-	    				else
-	    				{
-	    				  $json_row[$column['name']] = $column['value'];
-	    				}
-	    			}
-	    			$json['records'][] = $json_row;
-    			}
-    		}
+							//			$json_row[$column['name']] = "<a href='{$column['value']}' title='test' id='img-0' rel='colorbox' target='_blank'><img src='{$column['value']}&thumb=1'  alt='name' /></a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -690,7 +695,7 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-	    		return $json;
+				return $json;
 			}
 
 			$datatable['json_data'] = json_encode($json);
@@ -699,16 +704,16 @@
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
 
-	      	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
@@ -718,8 +723,8 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'gallery.index', 'property' );
 
 			//FIXME: have a look at this one: http://thecodecentral.com/2008/01/01/yui-based-lightbox-final
-//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
-//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
-//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
+			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.min', 'property' );
+			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'jquery.colorbox', 'property' );
+			//			$GLOBALS['phpgw']->js->validate_file( 'jquery', 'gallery.index', 'property' );
 		}
 	}
