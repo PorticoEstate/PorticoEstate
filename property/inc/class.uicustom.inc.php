@@ -44,13 +44,13 @@
 		var $filter;
 
 		var $public_functions = array
-		(
-			'index'  => true,
-			'view'   => true,
-			'edit'   => true,
-			'download' => true,
-			'delete' => true
-		);
+			(
+				'index'  	=> true,
+				'view'   	=> true,
+				'edit'   	=> true,
+				'download'	=> true,
+				'delete'	=> true
+			);
 
 		function property_uicustom()
 		{
@@ -59,11 +59,11 @@
 
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.bocustom',true);
+			$this->bo			= CreateObject('property.bocustom',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
-			$this->sort		= $this->bo->sort;
+			$this->sort			= $this->bo->sort;
 			$this->order		= $this->bo->order;
 			$this->filter		= $this->bo->filter;
 			$this->cat_id		= $this->bo->cat_id;
@@ -81,15 +81,15 @@
 		function save_sessiondata()
 		{
 			$data = array
-			(
-				'start'			=> $this->start,
-				'query'			=> $this->query,
-				'sort'			=> $this->sort,
-				'order'			=> $this->order,
-				'filter'		=> $this->filter,
-				'cat_id'		=> $this->cat_id,
-				'this->allrows'		=> $this->allrows
-			);
+				(
+					'start'				=> $this->start,
+					'query'				=> $this->query,
+					'sort'				=> $this->sort,
+					'order'				=> $this->order,
+					'filter'			=> $this->filter,
+					'cat_id'			=> $this->cat_id,
+					'this->allrows'		=> $this->allrows
+				);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -105,38 +105,41 @@
 				$datatable['menu']	= $this->bocommon->get_menu();
 
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'			=> 'property.uicustom.index',
-	    			'sort'            		=> $this->sort,
- 	                'order'     		   	=> $this->order,
- 	                'cat_id'        		=> $this->cat_id,
- 	                'filter'        		=> $this->filter,
- 	                'query'   	     		=> $this->query
-   				));
+					(
+						'menuaction'			=> 'property.uicustom.index',
+						'sort'            		=> $this->sort,
+						'order'     		   	=> $this->order,
+						'cat_id'        		=> $this->cat_id,
+						'filter'        		=> $this->filter,
+						'query'   	     		=> $this->query
+					));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uicustom.index',"
-	    												."sort:'{$this->sort}',"
-	    												."order:'{$this->order}',"
-	    												."cat_id:'{$this->cat_id}',"
-	    												."filter:'{$this->filter}',"
-	    												."query:'{$this->query}'";
+				$datatable['config']['base_java_url'] = "menuaction:'property.uicustom.index',"
+					."sort:'{$this->sort}',"
+					."order:'{$this->order}',"
+					."cat_id:'{$this->cat_id}',"
+					."filter:'{$this->filter}',"
+					."query:'{$this->query}'";
 
 				$link_data = array
-				(
-					'menuaction'	=> 'property.uicustom.index',
-					'sort'		=> $this->sort,
-					'order'		=> $this->order,
-					'cat_id'	=> $this->cat_id,
-					'filter'	=> $this->filter,
-					'query'		=> $this->query
-				);
+					(
+						'menuaction'	=> 'property.uicustom.index',
+						'sort'		=> $this->sort,
+						'order'		=> $this->order,
+						'cat_id'	=> $this->cat_id,
+						'filter'	=> $this->filter,
+						'query'		=> $this->query
+					);
 
 				$datatable['config']['allow_allrows'] = true;
 
-				$datatable['actions']['form'] = array(
-				array(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array(
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
 								'menuaction'	=> 'property.uicustom.index',
 								'sort'		=> $this->sort,
 								'order'		=> $this->order,
@@ -145,34 +148,38 @@
 								'query'		=> $this->query
 							)
 						),
-					'fields'	=> array(
-	                                    'field' => array
-	                                    			(
-														array(
-							                                'type'	=> 'button',
-							                            	'id'	=> 'btn_new',
-							                                'value'	=> lang('add'),
-							                                'tab_index' => 8
-							                            ),
-				                                        array( //boton     SEARCH
-				                                            'id' => 'btn_search',
-				                                            'name' => 'search',
-				                                            'value'    => lang('search'),
-				                                            'type' => 'button',
-				                                            'tab_index' => 7
-				                                        ),
-				   										array( // TEXT INPUT
-				                                            'name'     => 'query',
-				                                            'id'     => 'txt_query',
-				                                            'value'    => '',//$query,
-				                                            'type' => 'text',
-				                                            'onkeypress' => 'return pulsar(event)',
-				                                            'size'    => 28,
-				                                            'tab_index' => 6
-				                                        )
-			                           				)
-										)
-					 )
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 8
+								),
+								array
+								( //boton     SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 7
+								),
+								array
+								( // TEXT INPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//$query,
+									'type' => 'text',
+									'onkeypress' => 'return pulsar(event)',
+									'size'    => 28,
+									'tab_index' => 6
+								)
+							)
+						)
+					)
 				);
 
 			}
@@ -209,61 +216,65 @@
 			$datatable['rowactions']['action'] = array();
 
 			$parameters = array
-			(
-				'parameter' => array
 				(
-					array
+					'parameter' => array
 					(
-						'name'		=> 'custom_id',
-						'source'	=> 'custom_id'
-					),
-				)
-			);
+						array
+						(
+							'name'		=> 'custom_id',
+							'source'	=> 'custom_id'
+						),
+					)
+				);
 
 			if($this->acl_read)
 			{
-				$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'view',
-							'statustext' 	=> lang('view the entity'),
-							'text'			=> lang('view'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uicustom.view'
-									)),
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 		=> 'view',
+						'statustext' 	=> lang('view the entity'),
+						'text'			=> lang('view'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicustom.view'
+						)),
 						'parameters'	=> $parameters
-						);
+					);
 			}
 
 			if($this->acl_edit)
 			{
-				$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'edit',
-							'statustext' 	=> lang('edit the actor'),
-							'text'			=> lang('edit'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uicustom.edit'
-									)),
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 		=> 'edit',
+						'statustext' 	=> lang('edit the actor'),
+						'text'			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicustom.edit'
+						)),
 						'parameters'	=> $parameters
-						);
+					);
 			}
 
 			if($this->acl_delete)
 			{
-				$datatable['rowactions']['action'][] = array(
-							'my_name' 			=> 'delete',
-							'statustext' 	=> lang('delete the actor'),
-							'text'			=> lang('delete'),
-							'confirm_msg'	=> lang('do you really want to delete this entry'),
-							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-									(
-										'menuaction'	=> 'property.uicustom.delete'
-									)),
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 		=> 'delete',
+						'statustext' 	=> lang('delete the actor'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uicustom.delete'
+						)),
 						'parameters'	=> $parameters
-						);
+					);
 			}
 
-			$datatable['rowactions']['action'][] = array(
+			$datatable['rowactions']['action'][] = array
+				(
 					'my_name' 		=> 'add',
 					'text' 			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
@@ -326,59 +337,59 @@
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    				}else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						elseif(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+						}else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
@@ -387,16 +398,16 @@
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
 
-	      	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
@@ -466,10 +477,10 @@
 
 
 			$link_data = array
-			(
-				'menuaction'	=> 'property.uicustom.edit',
-				'custom_id'	=> $custom_id
-			);
+				(
+					'menuaction'	=> 'property.uicustom.edit',
+					'custom_id'	=> $custom_id
+				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -484,47 +495,46 @@
 					'text_down'	=> lang('Down'),
 					'link_up'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'up', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
 					'link_down'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.edit', 'resort'=> 'down', 'cols_id'=> $entry['id'], 'custom_id'=> $custom_id)),
-					);
+				);
 			}
 
 
 			$data = array
-			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_custom_id'				=> lang('ID'),
-				'value_custom_id'				=> $custom_id,
-				'lang_sql_text'					=> lang('sql'),
-				'lang_name'					=> lang('name'),
-				'lang_save'					=> lang('save'),
-				'lang_cancel'					=> lang('cancel'),
-				'lang_apply'					=> lang('apply'),
-				'value_sql_text'				=> $custom['sql_text'],
-				'value_name'					=> $custom['name'],
-				'lang_name_statustext'				=> lang('Enter a name for the query'),
-				'lang_sql_statustext'				=> lang('Enter a sql query'),
-				'lang_apply_statustext'				=> lang('Apply the values'),
-				'lang_cancel_statustext'			=> lang('Leave the custom untouched and return back to the list'),
-				'lang_save_statustext'				=> lang('Save the custom and return back to the list'),
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'				=> lang('Select the category the custom belongs to. To do not use a category select NO CATEGORY'),
-				'lang_descr'					=> lang('descr'),
-				'lang_new_name_statustext'			=> lang('name'),
-				'lang_new_descr_statustext'			=> lang('descr'),
-				'cols'						=> $cols,
-				'lang_col_name'					=> lang('Column name'),
-				'lang_col_descr'				=> lang('Column description'),
-				'lang_delete_column'				=> lang('Delete column'),
-				'lang_delete_cols_statustext'			=> lang('Delete this column from the output'),
-				'lang_up_text'					=> lang('Up'),
-				'lang_down_text'				=> lang('Down'),
-				'lang_sorting'					=> lang('Sorting'),
+				(
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'edit_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_custom_id'				=> lang('ID'),
+					'value_custom_id'				=> $custom_id,
+					'lang_sql_text'					=> lang('sql'),
+					'lang_name'						=> lang('name'),
+					'lang_save'						=> lang('save'),
+					'lang_cancel'					=> lang('cancel'),
+					'lang_apply'					=> lang('apply'),
+					'value_sql_text'				=> $custom['sql_text'],
+					'value_name'					=> $custom['name'],
+					'lang_name_statustext'			=> lang('Enter a name for the query'),
+					'lang_sql_statustext'			=> lang('Enter a sql query'),
+					'lang_apply_statustext'			=> lang('Apply the values'),
+					'lang_cancel_statustext'		=> lang('Leave the custom untouched and return back to the list'),
+					'lang_save_statustext'			=> lang('Save the custom and return back to the list'),
+					'lang_no_cat'					=> lang('no category'),
+					'lang_cat_statustext'			=> lang('Select the category the custom belongs to. To do not use a category select NO CATEGORY'),
+					'lang_descr'					=> lang('descr'),
+					'lang_new_name_statustext'		=> lang('name'),
+					'lang_new_descr_statustext'		=> lang('descr'),
+					'cols'							=> $cols,
+					'lang_col_name'					=> lang('Column name'),
+					'lang_col_descr'				=> lang('Column description'),
+					'lang_delete_column'			=> lang('Delete column'),
+					'lang_delete_cols_statustext'	=> lang('Delete this column from the output'),
+					'lang_up_text'					=> lang('Up'),
+					'lang_down_text'				=> lang('Down'),
+					'lang_sorting'					=> lang('Sorting'),
 
-			);
+				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('custom') . ': ' . ($custom_id?lang('edit custom'):lang('add custom'));
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 
@@ -534,9 +544,9 @@
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 
 			$link_data = array
-			(
-				'menuaction' => 'property.uicustom.index'
-			);
+				(
+					'menuaction' => 'property.uicustom.index'
+				);
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
@@ -547,22 +557,21 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
 
 			$data = array
-			(
-				'done_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.delete', 'custom_id'=> $custom_id)),
-				'lang_confirm_msg'	=> lang('do you really want to delete this entry'),
-				'lang_yes'		=> lang('yes'),
-				'lang_yes_statustext'	=> lang('Delete the entry'),
-				'lang_no_statustext'	=> lang('Back to the list'),
-				'lang_no'		=> lang('no')
-			);
+				(
+					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'delete_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.delete', 'custom_id'=> $custom_id)),
+					'lang_confirm_msg'			=> lang('do you really want to delete this entry'),
+					'lang_yes'					=> lang('yes'),
+					'lang_yes_statustext'		=> lang('Delete the entry'),
+					'lang_no_statustext'		=> lang('Back to the list'),
+					'lang_no'					=> lang('no')
+				);
 
 			$appname	= lang('custom');
 			$function_msg	= lang('delete custom');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 
@@ -576,39 +585,42 @@
 			{
 				$datatable['menu']	= $this->bocommon->get_menu();
 
-	    		$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'	=> 'property.uicustom.view',
-					'sort'		=> $this->sort,
-					'order'		=> $this->order,
-					'custom_id'	=> $custom_id,
-					'filter'	=> $this->filter,
-					'query'		=> $this->query
-   				));
+				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'	=> 'property.uicustom.view',
+						'sort'		=> $this->sort,
+						'order'		=> $this->order,
+						'custom_id'	=> $custom_id,
+						'filter'	=> $this->filter,
+						'query'		=> $this->query
+					));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uicustom.view',"
-	    												."sort:'{$this->sort}',"
-	    												."order:'{$this->order}',"
-	    												."custom_id:'{$custom_id}',"
-	    												."filter:'{$this->filter}',"
-	    												."query:'{$this->query}'";
+				$datatable['config']['base_java_url'] = "menuaction:'property.uicustom.view',"
+					."sort:'{$this->sort}',"
+					."order:'{$this->order}',"
+					."custom_id:'{$custom_id}',"
+					."filter:'{$this->filter}',"
+					."query:'{$this->query}'";
 
-			    $link_data = array
-				(
-					'menuaction'	=> 'property.uicustom.view',
-					'sort'		=> $this->sort,
-					'order'		=> $this->order,
-					'custom_id'	=> $custom_id,
-					'filter'	=> $this->filter,
-					'query'		=> $this->query
-				);
+				$link_data = array
+					(
+						'menuaction'	=> 'property.uicustom.view',
+						'sort'		=> $this->sort,
+						'order'		=> $this->order,
+						'custom_id'	=> $custom_id,
+						'filter'	=> $this->filter,
+						'query'		=> $this->query
+					);
 
-			    $datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = true;
 
-				$datatable['actions']['form'] = array(
-				array(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-							array(
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
 								'menuaction'	=> 'property.uicustom.view',
 								'sort'		=> $this->sort,
 								'order'		=> $this->order,
@@ -617,16 +629,17 @@
 								'query'		=> $this->query
 							)
 						),
-					'fields'	=> array(
-							 'field' => array
-							 (
-							       		'type'	=> 'button',
-							            'id'	=> 'btn_export',
-							            'value'	=> lang('download'),
-							            'tab_index' => 1
-							 )
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								'type'	=> 'button',
+								'id'	=> 'btn_export',
+								'value'	=> lang('download'),
+								'tab_index' => 1
+							)
 						)
-					 )
+					)
 				);
 			}
 			//_debug_array($custom_id);die;
@@ -665,15 +678,15 @@
 			}
 
 			$link_download = array
-			(
-				'menuaction'	=> 'property.uicustom.download',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query,
-				'custom_id'	=> $custom_id,
-				'allrows'	=> $this->allrows
-			);
+				(
+					'menuaction'	=> 'property.uicustom.download',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'filter'	=> $this->filter,
+					'query'		=> $this->query,
+					'custom_id'	=> $custom_id,
+					'allrows'	=> $this->allrows
+				);
 
 			//path for property.js
 			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
@@ -701,60 +714,61 @@
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-		    				}else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
@@ -763,16 +777,16 @@
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
 
-	      	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
@@ -782,103 +796,6 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'custom.view', 'property' );
 			//$this->save_sessiondata();
 
-
-			/*$custom_id	= phpgw::get_var('custom_id', 'int', 'GET');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('custom','nextmatchs'));
-
-			$list= $this->bo->read_custom($custom_id);
-			$uicols	= $this->bo->uicols;
-
-//_debug_array($uicols);
-
-			$j=0;
-			if (isSet($list) AND is_array($list))
-			{
-				foreach($list as $entry)
-				{
-					for ($i=0;$i<count($uicols);$i++)
-					{
-						$content[$j]['row'][$i]['value'] = $entry[$uicols[$i]['name']];
-					}
-					$j++;
-				}
-			}
-
-			for ($i=0;$i<count($uicols);$i++)
-			{
-				$table_header[$i]['header'] 	= $uicols[$i]['descr'];
-				$table_header[$i]['width'] 	= '15%';
-				$table_header[$i]['align'] 	= 'left';
-			}
-
-//_debug_array($content);
-
-			$custom_name = $this->bo->read_custom_name($custom_id);
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('custom') . ': ' . $custom_name;
-
-			$link_data = array
-			(
-				'menuaction'	=> 'property.uicustom.view',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'custom_id'	=> $custom_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query
-			);
-
-
-			if(!$this->allrows)
-			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$record_limit	= $this->bo->total_records;
-			}
-
-			$link_download = array
-			(
-				'menuaction'	=> 'property.uicustom.download',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query,
-				'custom_id'	=> $custom_id,
-				'allrows'	=> $this->allrows
-			);
-
-			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
-
-			$data = array
-			(
-				'lang_download'				=> 'download',
-				'link_download'				=> $GLOBALS['phpgw']->link('/index.php',$link_download),
-				'lang_download_help'			=> lang('Download table to your browser'),
-
- 				'allow_allrows'				=> true,
-				'allrows'				=> $this->allrows,
-				'start_record'				=> $this->start,
-				'record_limit'				=> $record_limit,
-				'num_records'				=> count($list),
- 				'all_records'				=> $this->bo->total_records,
-				'link_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'				=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'select_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_searchfield_statustext'		=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'		=> lang('Submit the search string'),
-				'query'					=> $this->query,
-				'lang_search'				=> lang('search'),
-				'table_header'				=> $table_header,
-				'values'				=> $content,
-
-				'done_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uicustom.index')),
-				'lang_done'				=> lang('done'),
-			);
-
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();*/
 		}
 
 		function download()
@@ -894,4 +811,3 @@
 			$this->bocommon->download($list,$names,$descr);
 		}
 	}
-

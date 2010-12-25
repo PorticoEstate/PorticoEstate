@@ -45,13 +45,13 @@
 		var $location_info;
 
 		var $public_functions = array
-		(
-			'index'  => true,
-			'edit'   => true,
-			'delete' => true,
-			'download'	=> true,
-			'columns'	=> true,
-		);
+			(
+				'index'  => true,
+				'edit'   => true,
+				'delete' => true,
+				'download'	=> true,
+				'columns'	=> true,
+			);
 
 		function __construct()
 		{
@@ -85,14 +85,14 @@
 		function save_sessiondata()
 		{
 			$data = array
-			(
-				'start'		=> $this->start,
-				'query'		=> $this->query,
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'allrows'	=> $this->allrows,
-				'type'		=> $this->type
-			);
+				(
+					'start'		=> $this->start,
+					'query'		=> $this->query,
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'allrows'	=> $this->allrows,
+					'type'		=> $this->type
+				);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -107,7 +107,7 @@
 		{
 
 			//cramirez: necesary for windows.open . Avoid error JS
-   			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('tabview');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -126,26 +126,26 @@
 			$function_msg   = lang('Select Column');
 
 			$link_data = array
-			(
-    			'menuaction'	=> 'property.uigeneric.columns',
-				'type'			=> $this->type,
-				'type_id'		=> $this->type_id
+				(
+					'menuaction'	=> 'property.uigeneric.columns',
+					'type'			=> $this->type,
+					'type_id'		=> $this->type_id
 
-			);
+				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'msgbox_data' 	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'column_list'	=> $this->bo->column_list($values['columns'],$allrows=true),
-				'function_msg'	=> $function_msg,
-				'form_action'	=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_columns'	=> lang('columns'),
-				'lang_none'		=> lang('None'),
-				'lang_save'		=> lang('save'),
-				'select_name'	=> 'period'
-			);
+				(
+					'msgbox_data' 	=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'column_list'	=> $this->bo->column_list($values['columns'],$allrows=true),
+					'function_msg'	=> $function_msg,
+					'form_action'	=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_columns'	=> lang('columns'),
+					'lang_none'		=> lang('None'),
+					'lang_save'		=> lang('save'),
+					'select_name'	=> 'period'
+				);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
@@ -168,42 +168,42 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'	=> 'property.uigeneric.index',
-					'type'		=> $this->type,
-					'type_id'		=> $this->type_id
-   				));
+					(
+						'menuaction'	=> 'property.uigeneric.index',
+						'type'		=> $this->type,
+						'type_id'		=> $this->type_id
+					));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uigeneric.index',"
-	    												."type:'{$this->type}',"
-	    												."type_id:'{$this->type_id}'";
+				$datatable['config']['base_java_url'] = "menuaction:'property.uigeneric.index',"
+					."type:'{$this->type}',"
+					."type_id:'{$this->type_id}'";
 
 				$link_data = array
-				(
-					'menuaction'	=> 'property.uigeneric.index',
-					'type'		=> $this->type,
-					'type_id'		=> $this->type_id
-				);
+					(
+						'menuaction'	=> 'property.uigeneric.index',
+						'type'		=> $this->type,
+						'type_id'		=> $this->type_id
+					);
 
 
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['actions']['form'] = array
-				(
-					array
 					(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array
-								(
-									'menuaction'	=> 'property.uigeneric.index',
-									'type'			=> $this->type,
-									'type_id'		=> $this->type_id
-								)
-							),
-					'fields'	=> array
-					(
-	                		'field' => array
-	                		(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction'	=> 'property.uigeneric.index',
+								'type'			=> $this->type,
+								'type_id'		=> $this->type_id
+							)
+						),
+						'fields'	=> array
+						(
+							'field' => array
+							(
 								array
 								(
 									'type'	=> 'button',
@@ -251,18 +251,21 @@
 
 				if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
 				{
-					$datatable['actions']['form'][0]['fields']['field'][] =  array(
-														'type'=> 'link',
-														'id'  => 'btn_columns',
-														'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-														array(
-															'menuaction' => 'property.uigeneric.columns',
-															'type'			=> $this->type,
-															'type_id'		=> $this->type_id
-															))."','','width=350,height=370')",
-														'value' => lang('columns'),
-														'tab_index' => 7
-										            );
+					$datatable['actions']['form'][0]['fields']['field'][] =  array
+						(
+							'type'=> 'link',
+							'id'  => 'btn_columns',
+							'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' => 'property.uigeneric.columns',
+								'type'			=> $this->type,
+								'type_id'		=> $this->type_id
+							)
+						)."','','width=350,height=370')",
+						'value' => lang('columns'),
+						'tab_index' => 7
+					);
 				}
 
 				$values_combo_box = array();
@@ -274,14 +277,14 @@
 					if (isset($field['filter']) && $field['filter'])
 					{
 						$datatable['actions']['form'][0]['fields']['field'][] = array
-						(
-							'id' => "btn_{$field['name']}",
-							'name' => $field['name'],
-							'value'	=> $field['descr'],
-							'type' => 'button',
-							'style' => 'filter',
-							'tab_index' => $i
-						);
+							(
+								'id' => "btn_{$field['name']}",
+								'name' => $field['name'],
+								'value'	=> $field['descr'],
+								'type' => 'button',
+								'style' => 'filter',
+								'tab_index' => $i
+							);
 
 						$button_def[] = "oMenuButton_{$i}"; 
 						$code_inner[] = "{order:{$i}, var_URL:'{$field['name']}',name:'btn_{$field['name']}',style:'genericbutton',dependiente:[]}";
@@ -302,7 +305,7 @@
 								}
 								$method_input[$_argument] = $_argument_value;
 							}
-	
+
 							$values_combo_box[] = execMethod($field['values_def']['method'],$method_input);
 						}
 						$default_value = array ('id'=>'','name'=> lang('select') . ' ' . $field['descr']);
@@ -329,15 +332,15 @@
 					foreach ( $values_combo_box as $combo )
 					{
 						$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
-						(
-							'id' 	=> "values_combo_box_{$i}",
-							'value'	=> $this->bocommon->select2String($combo)						
-						);
+							(
+								'id' 	=> "values_combo_box_{$i}",
+								'value'	=> $this->bocommon->select2String($combo)						
+							);
 						$i++;
 					}
 				}
 
-//				$dry_run = true;
+				//				$dry_run = true;
 			}
 
 			$values = $this->bo->read();
@@ -365,80 +368,80 @@
 			$datatable['rowactions']['action'] = array();
 
 			$parameters = array
-			(
-				'parameter' => array
 				(
-					array
+					'parameter' => array
 					(
-						'name'		=> $this->location_info['id']['name'],
-						'source'	=>  $this->location_info['id']['name']
-					),
-				)
-			);
+						array
+						(
+							'name'		=> $this->location_info['id']['name'],
+							'source'	=>  $this->location_info['id']['name']
+						),
+					)
+				);
 
 			if($this->acl_edit)
 			{
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'edit',
-					'statustext' 	=> lang('edit the actor'),
-					'text'			=> lang('edit'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'		=> 'property.uigeneric.edit',
-											'type'				=> $this->type,
-											'type_id'			=> $this->type_id
-										)),
-					'parameters'	=> $parameters
-				);
+					(
+						'my_name' 		=> 'edit',
+						'statustext' 	=> lang('edit the actor'),
+						'text'			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uigeneric.edit',
+							'type'				=> $this->type,
+							'type_id'			=> $this->type_id
+						)),
+						'parameters'	=> $parameters
+					);
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name'		=> 'edit',
-					'text' 			=> lang('open edit in new window'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'		=> 'property.uigeneric.edit',
-											'type'				=> $this->type,
-											'type_id'			=> $this->type_id,
-											'target'			=> '_blank'
-										)),
-					'parameters'	=> $parameters
-				);
+					(
+						'my_name'		=> 'edit',
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uigeneric.edit',
+							'type'				=> $this->type,
+							'type_id'			=> $this->type_id,
+							'target'			=> '_blank'
+						)),
+						'parameters'	=> $parameters
+					);
 			}
 
 			if($this->acl_delete)
 			{
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 		=> 'delete',
-					'statustext' 	=> lang('delete the actor'),
-					'text'			=> lang('delete'),
-					'confirm_msg'	=> lang('do you really want to delete this entry'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uigeneric.delete',
-											'type'			=> $this->type,
-											'type_id'		=> $this->type_id
-										)),
-					'parameters'	=> $parameters
-				);
+					(
+						'my_name' 		=> 'delete',
+						'statustext' 	=> lang('delete the actor'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uigeneric.delete',
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						)),
+						'parameters'	=> $parameters
+					);
 			}
 			unset($parameters);
 
 			if($this->acl_add)
 			{
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 			=> 'add',
-					'statustext' 	=> lang('add'),
-					'text'			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uigeneric.edit',
-											'type'			=> $this->type,
-											'type_id'		=> $this->type_id
-										))
-				);
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uigeneric.edit',
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						))
+					);
 			}
 
 			for ($i=0;$i<$count_uicols_name;$i++)
@@ -478,41 +481,41 @@
 			}
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-    		//values for Pagination
-    		$json = array
-    		(
-    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-   				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-    			'startIndex' 		=> $datatable['pagination']['records_start'],
-				'sort'				=> $datatable['sorting']['order'],
-    			'dir'				=> $datatable['sorting']['sort'],
-				'records'			=> array()
-    		);
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+					'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+				);
 
 			// values for datatable
-    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-    		{
-    			foreach( $datatable['rows']['row'] as $row )
-    			{
-	    			$json_row = array();
-	    			foreach( $row['column'] as $column)
-	    			{
-	    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-	    				{
-	    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-	    				}
-	    				else if(isset($column['format']) && $column['format']== "link")
-	    				{
-	    					$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-	    				}
-	    				else
-	    				{
-	    				  $json_row[$column['name']] = $column['value'];
-	    				}
-	    			}
-	    			$json['records'][] = $json_row;
-    			}
-    		}
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -522,14 +525,14 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-	    		return $json;
+				return $json;
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
@@ -540,16 +543,16 @@
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
 
-	      	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
@@ -570,7 +573,7 @@
 			$values		= phpgw::get_var('values');
 
 			$values_attribute  = phpgw::get_var('values_attribute');
-		
+
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('generic','attributes_form'));
@@ -579,7 +582,7 @@
 			if (is_array($values))
 			{
 				$insert_record_values = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
-				
+
 				if(is_array($insert_record_values))
 				{
 					foreach($insert_record_values as $field)
@@ -654,7 +657,7 @@
 						unset($values['id']);
 						$id = '';
 					}
-					
+
 				}
 				else
 				{
@@ -690,12 +693,12 @@
 			}
 
 			$link_data = array
-			(
-				'menuaction'	=> 'property.uigeneric.edit',
-				'id'			=> $id,
-				'type'			=> $this->type,
-				'type_id'		=> $this->type_id
-			);
+				(
+					'menuaction'	=> 'property.uigeneric.edit',
+					'id'			=> $id,
+					'type'			=> $this->type,
+					'type_id'		=> $this->type_id
+				);
 
 			$tabs = array();
 
@@ -706,13 +709,13 @@
 					if($attribute['history'] == true)
 					{
 						$link_history_data = array
-						(
-							'menuaction'	=> 'property.uigeneric.attrib_history',
-							'attrib_id'	=> $attribute['id'],
-							'actor_id'	=> $actor_id,
-							'role'		=> $this->role,
-							'edit'		=> true
-						);
+							(
+								'menuaction'	=> 'property.uigeneric.attrib_history',
+								'attrib_id'	=> $attribute['id'],
+								'actor_id'	=> $actor_id,
+								'role'		=> $this->role,
+								'edit'		=> true
+							);
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php',$link_history_data);
 					}
@@ -749,7 +752,7 @@
 					}
 					else if(isset($field['values_def']['method']))
 					{
-					
+
 						foreach($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
 							if(preg_match('/^##/', $_argument_value))
@@ -768,26 +771,26 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id'=> $this->type_id)),
-				'lang_descr'					=> lang('Descr'),
-				'lang_save'						=> lang('save'),
-				'lang_cancel'					=> lang('cancel'),
-				'lang_apply'					=> lang('apply'),
-				'value_id'						=> isset($values['id']) ? $values['id'] : '',
-				'value_descr'					=> $values['descr'],
+				(
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id'=> $this->type_id)),
+					'lang_descr'					=> lang('Descr'),
+					'lang_save'						=> lang('save'),
+					'lang_cancel'					=> lang('cancel'),
+					'lang_apply'					=> lang('apply'),
+					'value_id'						=> isset($values['id']) ? $values['id'] : '',
+					'value_descr'					=> $values['descr'],
 
-				'attributes_group'				=> $attributes,
-				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
-				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
-				'id_name'						=> $this->location_info['id']['name'],
-				'id_type'						=> $this->location_info['id']['type'],
-				'fields'						=> $this->location_info['fields']
-			);
+					'attributes_group'				=> $attributes,
+					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
+					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
+					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
+					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+					'id_name'						=> $this->location_info['id']['name'],
+					'id_type'						=> $this->location_info['id']['type'],
+					'fields'						=> $this->location_info['fields']
+				);
 
 			$appname	=  $this->location_info['name'];
 

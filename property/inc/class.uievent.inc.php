@@ -46,15 +46,15 @@
 		var $location_info;
 
 		var $public_functions = array
-		(
-			'index'		=> true,
-			'view'		=> true,
-			'edit'		=> true,
-			'delete'	=> true,
-			'schedule'	=> true,
-			'schedule2'	=> true,
-			'schedule_week'	=> true
-		);
+			(
+				'index'		=> true,
+				'view'		=> true,
+				'edit'		=> true,
+				'delete'	=> true,
+				'schedule'	=> true,
+				'schedule2'	=> true,
+				'schedule_week'	=> true
+			);
 
 		function __construct()
 		{
@@ -86,21 +86,21 @@
 		function save_sessiondata()
 		{
 			$data = array
-			(
-				'start'			=> $this->start,
-				'query'			=> $this->query,
-				'sort'			=> $this->sort,
-				'order'			=> $this->order,
-				'allrows'		=> $this->allrows,
-				'location_id'	=> $this->location_id,
-				'user_id'		=> $this->user_id,
-			);
+				(
+					'start'			=> $this->start,
+					'query'			=> $this->query,
+					'sort'			=> $this->sort,
+					'order'			=> $this->order,
+					'allrows'		=> $this->allrows,
+					'location_id'	=> $this->location_id,
+					'user_id'		=> $this->user_id,
+				);
 			$this->bo->save_sessiondata($data);
 		}
 
 		function index()
 		{
-//_debug_array($_REQUEST);
+			//_debug_array($_REQUEST);
 			$this->acl_location = '.scheduled_events';
 			if (!$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property') )
 			{
@@ -132,20 +132,20 @@
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-	    		(
-	    			'menuaction'	=> 'property.uievent.index',
-					'location_id'	=> $this->location_id,
-					'user_id'		=> $this->user_id
-   				));
+					(
+						'menuaction'	=> 'property.uievent.index',
+						'location_id'	=> $this->location_id,
+						'user_id'		=> $this->user_id
+					));
 
-   				$datatable['config']['base_java_url'] = "menuaction:'property.uievent.index',"
-	    												."location_id:'{$this->location_id}',"
-	    												."user_id:'{$this->user_id}'";
+				$datatable['config']['base_java_url'] = "menuaction:'property.uievent.index',"
+					."location_id:'{$this->location_id}',"
+					."user_id:'{$this->user_id}'";
 
 				$values_combo_box = array();
 
 				$values_combo_box[0]  = $this->bo->get_event_location();
-				
+
 				$default_value = array ('id'=> -1, 'name'=>lang('no category'));
 				array_unshift ($values_combo_box[0],$default_value);
 
@@ -157,21 +157,21 @@
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['actions']['form'] = array
-				(
-					array
 					(
-					'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array
-								(
-									'menuaction'	=> 'property.uievent.index',
-									'type'			=> $type,
-									'type_id'		=> $type_id
-								)
-							),
-					'fields'	=> array
-					(
-	                		'field' => array
-	                		(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction'	=> 'property.uievent.index',
+								'type'			=> $type,
+								'type_id'		=> $type_id
+							)
+						),
+						'fields'	=> array
+						(
+							'field' => array
+							(
 								array
 								( //boton 	CATEGORY
 									'id' => 'btn_location_id',
@@ -190,34 +190,41 @@
 									'style' => 'filter',
 									'tab_index' => 2
 								),
-								array( // boton SAVE
+								array
+								( // boton SAVE
 									'id'	=> 'btn_save',
 									//'name' => 'save',
 									'value'	=> lang('save'),
 									'tab_index' => 6,
 									'type'	=> 'button'
-		                            ),
-								array( //hidden start_date
+								),
+								array
+								( //hidden start_date
 									'type' => 'hidden',
 									'id' => 'start_date',
 									'value' => $start_date
-									),
-								array( //hidden end_date
+								),
+								array
+								( //hidden end_date
 									'type' => 'hidden',
 									'id' => 'end_date',
 									'value' => $end_date
 								),
-								array(//for link "None",
-								'type'=> 'label_date'
+								array
+								(//for link "None",
+									'type'=> 'label_date'
 								),
-								array(//for link "Date search",
+								array
+								(//for link "Date search",
 									'type'=> 'link',
 									'id'  => 'btn_data_search',
 									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
-									       array(
-									           'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
-									 'value' => lang('Date search'),
-									 'tab_index' => 5
+									array
+									(
+										'menuaction' => 'property.uiproject.date_search')
+									)."','','width=350,height=250')",
+									'value' => lang('Date search'),
+									'tab_index' => 5
 								),
 								array
 								( //button     SEARCH
@@ -385,47 +392,47 @@
 			$datatable['rowactions']['action'] = array();
 
 			$parameters = array
-			(
-				'parameter' => array
 				(
-					array
+					'parameter' => array
 					(
-						'name'		=> 'location',
-						'source'	=> 'location'
-					),
-					array
-					(
-						'name'		=> 'attrib_id',
-						'source'	=> 'attrib_id'
-					),
-					array
-					(
-						'name'		=> 'item_id',
-						'source'	=> 'location_item_id'
-					),
-					array
-					(
-						'name'		=> 'id',
-						'source'	=> 'id'
+						array
+						(
+							'name'		=> 'location',
+							'source'	=> 'location'
+						),
+						array
+						(
+							'name'		=> 'attrib_id',
+							'source'	=> 'attrib_id'
+						),
+						array
+						(
+							'name'		=> 'item_id',
+							'source'	=> 'location_item_id'
+						),
+						array
+						(
+							'name'		=> 'id',
+							'source'	=> 'id'
+						)
 					)
-				)
-			);
+				);
 
 			if($this->acl_edit)
 			{
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name'		=> 'edit',
-					'text' 			=> lang('edit serie'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'		=> 'property.uievent.edit',
-											'type'				=> $type,
-											'type_id'			=> $type_id,
-											'target'			=> '_blank'
-										)),
-					'parameters'	=> $parameters
-				);
+					(
+						'my_name'		=> 'edit',
+						'text' 			=> lang('edit serie'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uievent.edit',
+							'type'				=> $type,
+							'type_id'			=> $type_id,
+							'target'			=> '_blank'
+						)),
+						'parameters'	=> $parameters
+					);
 			}
 
 /*
@@ -446,23 +453,23 @@
 					'parameters'	=> $parameters
 				);
 			}
-*/
+ */
 			unset($parameters);
 
 			if($this->acl_add)
 			{
 				$datatable['rowactions']['action'][] = array
-				(
-					'my_name' 			=> 'add',
-					'statustext' 	=> lang('add'),
-					'text'			=> lang('add'),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
-										(
-											'menuaction'	=> 'property.uievent.edit',
-											'type'			=> $type,
-											'type_id'		=> $type_id
-										))
-				);
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uievent.edit',
+							'type'			=> $type,
+							'type_id'		=> $type_id
+						))
+					);
 			}
 
 			for ($i=0;$i<$count_uicols_name;$i++)
@@ -485,7 +492,7 @@
 
 			if($dry_run)
 			{
-					$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
+				$datatable['pagination']['records_returned'] = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];			
 			}
 			else
 			{
@@ -509,50 +516,50 @@
 			}
 
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
-    		//values for Pagination
-    		$json = array
-    		(
-    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-   				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-    			'startIndex' 		=> $datatable['pagination']['records_start'],
-				'sort'				=> $datatable['sorting']['order'],
-    			'dir'				=> $datatable['sorting']['sort'],
-				'records'			=> array()
-    		);
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+					'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+				);
 
 			// values for datatable
-    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
-    		{
-    			foreach( $datatable['rows']['row'] as $row )
-    			{
-	    			$json_row = array();
-	    			foreach( $row['column'] as $column)
-	    			{
-	    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-	    				{
-	    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-	    				}
-	    				else if(isset($column['format']) && $column['format']== "link")
-	    				{
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
 							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-	    				}
-	    				else
-	    				{
-	    				  $json_row[$column['name']] = $column['value'];
-	    				}
-	    			}
-	    			$json['records'][] = $json_row;
-    			}
-    		}
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -567,7 +574,7 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-	    		return $json;
+				return $json;
 			}
 
 			$datatable['json_data'] = json_encode($json);
@@ -576,16 +583,16 @@
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
 
-	      	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
@@ -611,8 +618,8 @@
 			$id			= phpgw::get_var('id', 'int');
 			$values		= phpgw::get_var('values');
 
-		
-//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
+
+			//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
 			$receipt = array();
@@ -639,12 +646,12 @@
 					{
 		//				$receipt['error'][]=array('msg'=>lang('Please select an action'));									
 					}
-					
+
 /*					if(isset($values['repeat_day']))
 					{
 						$values['repeat_interval'] = 0;
 					}
-*/
+ */
 					if($id)
 					{
 						$values['id']=$id;
@@ -657,7 +664,7 @@
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->save($values,$action);
-						
+
 						$js = "opener.document.form.{$field_name}.value = '{$receipt['id']}';\n";
 						$js .= "opener.document.form.{$field_name}_descr.value = '{$values['descr']}';\n";
 
@@ -673,19 +680,19 @@
 						unset($values['id']);
 						$id = '';
 					}
-					
+
 				}
 				else if ((isset($values['delete']) && $values['delete']))
 				{
-						$attrib = $this->custom->get('property', $location, $attrib_id);
-						$js = "opener.document.form.{$field_name}.value = '';\n";
-						$js .= "opener.document.form.{$field_name}_descr.value = '';\n";
-						if($this->delete($id))
-						{
-							$GLOBALS['phpgw']->js->add_event('load', $js);
-							unset($values);
-							unset($id);
-						}
+					$attrib = $this->custom->get('property', $location, $attrib_id);
+					$js = "opener.document.form.{$field_name}.value = '';\n";
+					$js .= "opener.document.form.{$field_name}_descr.value = '';\n";
+					if($this->delete($id))
+					{
+						$GLOBALS['phpgw']->js->add_event('load', $js);
+						unset($values);
+						unset($id);
+					}
 				}
 				else
 				{
@@ -707,24 +714,24 @@
 			}
 
 			$link_data = array
-			(
-				'menuaction'	=> 'property.uievent.edit',
-				'location'		=> $location,
-				'attrib_id'		=> $attrib_id,
-				'item_id'		=> $item_id,
-				'id'			=> $id
-			);
+				(
+					'menuaction'	=> 'property.uievent.edit',
+					'location'		=> $location,
+					'attrib_id'		=> $attrib_id,
+					'item_id'		=> $item_id,
+					'id'			=> $id
+				);
 
 			$link_schedule_data = array
-			(
-				'menuaction'	=> 'property.uievent.schedule_week',
-				'location'		=> $location,
-				'attrib_id'		=> $attrib_id,
-				'item_id'		=> $item_id,
-				'id'			=> $id
-			);
+				(
+					'menuaction'	=> 'property.uievent.schedule_week',
+					'location'		=> $location,
+					'attrib_id'		=> $attrib_id,
+					'item_id'		=> $item_id,
+					'id'			=> $id
+				);
 
-//_debug_array($link_data);
+			//_debug_array($link_data);
 
 			$tabs = array();
 
@@ -743,64 +750,64 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'link_schedule'					=> $GLOBALS['phpgw']->link('/index.php',$link_schedule_data),
-				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'			=> lang('Select date'),
+				(
+					'link_schedule'					=> $GLOBALS['phpgw']->link('/index.php',$link_schedule_data),
+					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+					'lang_datetitle'			=> lang('Select date'),
 
-				'lang_start_date_statustext'	=> lang('Select the date for the event'),
-				'lang_start_date'				=> lang('date'),
-				'value_start_date'				=> $values['start_date'],
-	//			'start_date'					=> $start_date,
+					'lang_start_date_statustext'	=> lang('Select the date for the event'),
+					'lang_start_date'				=> lang('date'),
+					'value_start_date'				=> $values['start_date'],
+					//			'start_date'					=> $start_date,
 
-				'value_enabled'					=> isset($values['enabled']) ? $values['enabled'] : '',
-				'lang_enabled'					=> lang('enabled'),
-				'lang_end_date_statustext'		=> lang('Select the estimated end date for the event'),
-				'lang_end_date'					=> lang('end date'),
-				'value_end_date'				=> $values['end_date'],
-				'repeat_type'					=> $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
-				'lang_repeat_type'				=> lang('repeat type'),
-				
-				'repeat_day'					=> $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
-				'lang_repeat_day'				=> lang('repeat day'),
+					'value_enabled'					=> isset($values['enabled']) ? $values['enabled'] : '',
+					'lang_enabled'					=> lang('enabled'),
+					'lang_end_date_statustext'		=> lang('Select the estimated end date for the event'),
+					'lang_end_date'					=> lang('end date'),
+					'value_end_date'				=> $values['end_date'],
+					'repeat_type'					=> $this->bo->get_rpt_type_list(isset($values['repeat_type']) ? $values['repeat_type'] : ''),
+					'lang_repeat_type'				=> lang('repeat type'),
 
-				'lang_repeat_interval'			=> lang('interval'),
-				'value_repeat_interval'			=> isset($values['repeat_interval']) ? $values['repeat_interval'] : 0,
-				'lang_repeat_interval_statustext'=> lang('interval'),
-				
-				'lang_responsible'				=> lang('responsible'),
-				'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),
+					'repeat_day'					=> $this->bo->get_rpt_day_list(isset($values['repeat_day']) ? $values['repeat_day'] : ''),
+					'lang_repeat_day'				=> lang('repeat day'),
 
-				'lang_action'					=> lang('action'),
-				'action'						=> $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
+					'lang_repeat_interval'			=> lang('interval'),
+					'value_repeat_interval'			=> isset($values['repeat_interval']) ? $values['repeat_interval'] : 0,
+					'lang_repeat_interval_statustext'=> lang('interval'),
 
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uievent.index', 'type'=> $type, 'type_id'=> $type_id)),
-				'lang_id'						=> lang('ID'),
-				'lang_descr'					=> lang('Description'),
-				'lang_save'						=> lang('save'),
-				'lang_cancel'					=> lang('cancel'),
-				'lang_apply'					=> lang('apply'),
-				'value_id'						=> isset($values['id']) ? $values['id'] : '',
+					'lang_responsible'				=> lang('responsible'),
+					'responsible'					=> $this->bo->get_responsible(isset($values['responsible']) ? $values['responsible'] : ''),
 
-				'lang_next_run'					=> lang('next run'),
-				'value_next_run'				=> isset($values['next']) ? $values['next'] : '',				
-				'value_descr'					=> $values['descr'],
-				'lang_descr_text'				=> lang('Enter a description of the record'),
-				'lang_save_text'				=> lang('Save the record'),
-				'lang_apply_statustext'			=> lang('Apply the values'),
-				'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
-				'lang_save_statustext'			=> lang('Save the actor and return back to the list'),
+					'lang_action'					=> lang('action'),
+					'action'						=> $this->bo->get_action(isset($values['action']) ? $values['action'] : ''),
 
-				'lang_delete'					=> lang('delete'),
-				'lang_delete_text'				=> lang('delete the record'),
-				'lang_delete_statustext'		=> lang('delete the record'),
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uievent.index', 'type'=> $type, 'type_id'=> $type_id)),
+					'lang_id'						=> lang('ID'),
+					'lang_descr'					=> lang('Description'),
+					'lang_save'						=> lang('save'),
+					'lang_cancel'					=> lang('cancel'),
+					'lang_apply'					=> lang('apply'),
+					'value_id'						=> isset($values['id']) ? $values['id'] : '',
 
-				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
-				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
-				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
-			);
+					'lang_next_run'					=> lang('next run'),
+					'value_next_run'				=> isset($values['next']) ? $values['next'] : '',				
+					'value_descr'					=> $values['descr'],
+					'lang_descr_text'				=> lang('Enter a description of the record'),
+					'lang_save_text'				=> lang('Save the record'),
+					'lang_apply_statustext'			=> lang('Apply the values'),
+					'lang_cancel_statustext'		=> lang('Leave the actor untouched and return back to the list'),
+					'lang_save_statustext'			=> lang('Save the actor and return back to the list'),
+
+					'lang_delete'					=> lang('delete'),
+					'lang_delete_text'				=> lang('delete the record'),
+					'lang_delete_statustext'		=> lang('delete the record'),
+
+					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
+					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 10,
+					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				);
 
 			$schedule = array();
 
@@ -877,8 +884,8 @@
 				}
 			}
 
-//_debug_array($_REQUEST);
-//------------------------------get data
+			//_debug_array($_REQUEST);
+			//------------------------------get data
 			$event = $this->bo->so->read_single2($id);
 
 			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -887,39 +894,39 @@
 			foreach($event as $entry)
 			{
 				$values[] = array
-				(
-					'number'			=> $i,
-					'time'				=> $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],$dateformat),
-					'performed'			=> $GLOBALS['phpgw']->common->show_date($entry['receipt_date'],$dateformat),
-					'alarm_id'			=> $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],'Ymd'),
-					'enabled'			=> isset($entry['exception']) && $entry['exception']==true ? '' : 1,
-					'location_id' 		=> $entry['location_id'],
-					'location_item_id'	=> $entry['location_item_id'],
-					'remark'				=> $entry['descr'],
-					'url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
-				);
+					(
+						'number'			=> $i,
+						'time'				=> $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],$dateformat),
+						'performed'			=> $GLOBALS['phpgw']->common->show_date($entry['receipt_date'],$dateformat),
+						'alarm_id'			=> $GLOBALS['phpgw']->common->show_date($entry['schedule_time'],'Ymd'),
+						'enabled'			=> isset($entry['exception']) && $entry['exception']==true ? '' : 1,
+						'location_id' 		=> $entry['location_id'],
+						'location_item_id'	=> $entry['location_item_id'],
+						'remark'				=> $entry['descr'],
+						'url'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'booking.uievent.show', 'location_id' => $entry['location_id'], 'location_item_id' => $entry['location_item_id']))
+					);
 				$i++;
 			}
 
 
-//------------------------------end get data
+			//------------------------------end get data
 
 			$link_data = array
-			(
-				'menuaction'	=> 'property.uis_agreement.edit',
-				'id'		=> $id,
-				'role'		=> $this->role
-			);
+				(
+					'menuaction'	=> 'property.uis_agreement.edit',
+					'id'		=> $id,
+					'role'		=> $this->role
+				);
 
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 
 			$link_download = array
-			(
-				'menuaction'	=> 'property.uis_agreement.download',
-				'id'		=> $id
-			);
+				(
+					'menuaction'	=> 'property.uis_agreement.download',
+					'id'		=> $id
+				);
 
 			$tabs = array();
 
@@ -932,7 +939,7 @@
 			{
 				if(count($values))
 				{
-_debug_array($values);
+					_debug_array($values);
 					return json_encode($values);
 				}
 				else
@@ -946,75 +953,75 @@ _debug_array($values);
 
 			//------- alarm--------
 			$datavalues[0] = array
-			(
-				'name'   => "0",
-				'values'   => json_encode($values),
-				'total_records' => count($values),
-				'is_paginator' => 0,
-				'permission'=> '""',
-				'footer'  => 1
-			);
+				(
+					'name'   => "0",
+					'values'   => json_encode($values),
+					'total_records' => count($values),
+					'is_paginator' => 0,
+					'permission'=> '""',
+					'footer'  => 1
+				);
 
 			$myColumnDefs[0] = array
-			(
-				'name'   => "0",
-				'values'  => json_encode(array( 
-					array('key' => 'number', 'label'=>'#', 'sortable'=>true,'resizeable'=>true,'width'=>20),
-					array('key' => 'time', 'label'=>lang('plan'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
-					array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true,'resizeable'=>true,'width'=>80),					
-					array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true,'resizeable'=>true,'width'=>140),					
-			  		array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>30),
-			  		array('key' => 'alarm_id','label'=> 'alarm_id','sortable'=>true,'resizeable'=>true,'hidden'=>false),
-			  		array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
-			  );
+				(
+					'name'   => "0",
+					'values'  => json_encode(array( 
+						array('key' => 'number', 'label'=>'#', 'sortable'=>true,'resizeable'=>true,'width'=>20),
+						array('key' => 'time', 'label'=>lang('plan'), 'sortable'=>true,'resizeable'=>true,'width'=>80),
+						array('key' => 'performed', 'label'=>lang('performed'), 'sortable'=>true,'resizeable'=>true,'width'=>80),					
+						array('key' => 'remark', 'label'=>lang('remark'), 'sortable'=>true,'resizeable'=>true,'width'=>140),					
+						array('key' => 'enabled','label'=> lang('enabled'),'sortable'=>true,'resizeable'=>true,'formatter'=>'FormatterCenter','width'=>30),
+						array('key' => 'alarm_id','label'=> 'alarm_id','sortable'=>true,'resizeable'=>true,'hidden'=>false),
+						array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck','width'=>30)))
+					);
 
 			$myButtons[0] = array
-			(
-			  	'name'   => "0",
-				'values'  => json_encode(array( 
-					array('id' =>'values[set_receipt]','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('Receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[delete_receipt]','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-			  		array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-			  		))
-			);
+				(
+					'name'   => "0",
+					'values'  => json_encode(array( 
+						array('id' =>'values[set_receipt]','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('Receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+						array('id' =>'values[delete_receipt]','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+						array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+						array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					))
+				);
 
 			$td_count = 0;
 
-//--------------------------------------------JSON CODE------------
+			//--------------------------------------------JSON CODE------------
 
 			$link_data = array
-			(
-				'menuaction'	=> 'property.uievent.schedule2',
-				'id'		=>		$id
-			);
+				(
+					'menuaction'	=> 'property.uievent.schedule2',
+					'id'		=>		$id
+				);
 
 
 			$data = array
-			(
-				'td_count'					=> 6,
-				'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-				'base_java_url'				=> "{menuaction:'property.uievent.schedule2',id:'{$id}'}",
-				'datatable'					=> $datavalues,
-				'myColumnDefs'				=> $myColumnDefs,
-				'myButtons'					=> $myButtons,
+				(
+					'td_count'					=> 6,
+					'property_js'				=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+					'base_java_url'				=> "{menuaction:'property.uievent.schedule2',id:'{$id}'}",
+					'datatable'					=> $datavalues,
+					'myColumnDefs'				=> $myColumnDefs,
+					'myButtons'					=> $myButtons,
 
-				'value_location_id'			=> $event['location_id'],
-				'value_location_item_id'	=> $event['location_item_id'],
+					'value_location_id'			=> $event['location_id'],
+					'value_location_item_id'	=> $event['location_item_id'],
 
 
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
-			);
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'edit_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $active_tab)
+				);
 
-//_debug_array($data);die;
+			//_debug_array($data);die;
 
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
@@ -1023,7 +1030,7 @@ _debug_array($values);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('schedule');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('event'));
-	//		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
+			//		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('schedule' => $data));
 			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
@@ -1032,7 +1039,6 @@ _debug_array($values);
 			return $data;
 		}
 
- 
 		public function schedule_week()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
@@ -1050,6 +1056,4 @@ _debug_array($values);
 			self::add_javascript('property', 'yahoo', 'schedule.js');
 			self::render_template('event_schedule_week', array('resource' => $resource, 'lang' => $lang));
 		}
-
 	}
-
