@@ -5,19 +5,19 @@
 		<xsl:variable name="select_name_submodule"><xsl:value-of select="select_name_submodule"/></xsl:variable>
 		<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
 		<form method="post" action="{$select_action}">
-					<xsl:for-each select="hidden_vars" >
-						<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-						<xsl:variable name="value"><xsl:value-of select="value"/></xsl:variable>
-						<INPUT type="hidden" name="{$name}" value="{$value}" ></INPUT>
-					</xsl:for-each>
+			<xsl:for-each select="hidden_vars" >
+				<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+				<xsl:variable name="value"><xsl:value-of select="value"/></xsl:variable>
+				<INPUT type="hidden" name="{$name}" value="{$value}" ></INPUT>
+			</xsl:for-each>
 			<select name="{$select_name_submodule}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
 				<xsl:attribute name="onMouseover">
 					<xsl:text>window.status='</xsl:text>
-						<xsl:value-of select="lang_submodule_statustext"/>
+					<xsl:value-of select="lang_submodule_statustext"/>
 					<xsl:text>'; return true;</xsl:text>
 				</xsl:attribute>
 				<option value=""><xsl:value-of select="lang_no_submodule"/></option>
-					<xsl:apply-templates select="submodule_list"/>
+				<xsl:apply-templates select="submodule_list"/>
 			</select>
 			<noscript>
 				<xsl:text> </xsl:text>
@@ -27,7 +27,7 @@
 	</xsl:template>
 
 	<xsl:template match="submodule_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
 				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="descr"/></option>

@@ -59,7 +59,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice::claim';
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo		= CreateObject('property.botenant_claim',true);
+			$this->bo			= CreateObject('property.botenant_claim',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->acl			= & $GLOBALS['phpgw']->acl;
 			$this->acl_location	= '.tenant_claim';
@@ -72,7 +72,7 @@
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
-			$this->sort		= $this->bo->sort;
+			$this->sort			= $this->bo->sort;
 			$this->order		= $this->bo->order;
 			$this->user_id		= $this->bo->user_id;
 			$this->status		= $this->bo->status;
@@ -168,104 +168,114 @@
 				$default_value = array ('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[3],$default_value);
 
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-						array(
-							'menuaction' 		=> 'property.uitenant_claim.index',
-							'query'            		=> $this->query,
-							'cat_id'				=> $this->cat_id
-						)
-					),
-					'fields'	=> array(
-						'field' => array(
-							array( //boton 	CATEGORY
-								'id' => 'btn_cat_id',
-								'name' => 'cat_id',
-								'value'	=> lang('Category'),
-								'type' => 'button',
-								'style' => 'filter',
-								'tab_index' => 1
-
-							),
-							array
-							( //boton 	STATUS
-								'id' => 'btn_district_id',
-								'name' => 'district_id',
-								'value'	=> lang('District'),
-								'type' => 'button',
-								'style' => 'filter',
-								'tab_index' => 2
-							),
-							array( //boton 	STATUS
-								'id' => 'btn_status_id',
-								'name' => 'status_id',
-								'value'	=> lang('Status'),
-								'type' => 'button',
-								'style' => 'filter',
-								'tab_index' => 3
-							),
-							array
-							( //boton 	USER
-								'id' => 'sel_user_id',
-								'name' => 'user_id',
-								'value'	=> lang('User'),
-								'type' => 'select',
-								'style' => 'filter',
-								'values' => $values_combo_box[3],
-								'onchange'=> 'onChangeSelect();',
-								'tab_index' => 4
-							),
-							array(
-								'type'	=> 'button',
-								'id'	=> 'btn_new',
-								'value'	=> lang('add'),
-								'tab_index' => 7
-							),
-							array( //boton     SEARCH
-								'id' => 'btn_search',
-								'name' => 'search',
-								'value'    => lang('search'),
-								'type' => 'button',
-								'tab_index' => 6
-							),
-							array( // TEXT INPUT
-								'name'     => 'query',
-								'id'     => 'txt_query',
-								'value'    => '',//$query,
-								'type' => 'text',
-								'onkeypress' => 'return pulsar(event)',
-								'size'    => 28,
-								'tab_index' => 5
-							),
-						),
-						'hidden_value' => array
+				$datatable['actions']['form'] = array
+					(
+						array
 						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
 							array
-							( //div values  combo_box_0
-								'id' => 'values_combo_box_0',
-								'value'	=> $this->bocommon->select2String($values_combo_box[0])
-							),
-							array
-							( //div values  combo_box_1
-								'id' => 'values_combo_box_1',
-								'value'	=> $this->bocommon->select2String($values_combo_box[1])
-							),
-							array
-							( //div values  combo_box_2
-								'id' => 'values_combo_box_2',
-								'value'	=> $this->bocommon->select2String($values_combo_box[2])
-							),
-							array
-							( //div values  combo_box_3
-								'id' => 'values_combo_box_3',
-								'value'	=> $this->bocommon->select2String($values_combo_box[3])
-							),
+							(
+								'menuaction' 		=> 'property.uitenant_claim.index',
+								'query'            		=> $this->query,
+								'cat_id'				=> $this->cat_id
+							)
+						),
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
 
+								),
+								array
+								( //boton 	STATUS
+									'id' => 'btn_district_id',
+									'name' => 'district_id',
+									'value'	=> lang('District'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 2
+								),
+								array
+								( //boton 	STATUS
+									'id' => 'btn_status_id',
+									'name' => 'status_id',
+									'value'	=> lang('Status'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 3
+								),
+								array
+								( //boton 	USER
+									'id' => 'sel_user_id',
+									'name' => 'user_id',
+									'value'	=> lang('User'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $values_combo_box[3],
+									'onchange'=> 'onChangeSelect();',
+									'tab_index' => 4
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 7
+								),
+								array
+								( //boton     SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 6
+								),
+								array
+								( // TEXT INPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//$query,
+									'type' => 'text',
+									'onkeypress' => 'return pulsar(event)',
+									'size'    => 28,
+									'tab_index' => 5
+								),
+							),
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $this->bocommon->select2String($values_combo_box[0])
+								),
+								array
+								( //div values  combo_box_1
+									'id' => 'values_combo_box_1',
+									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								),
+								array
+								( //div values  combo_box_2
+									'id' => 'values_combo_box_2',
+									'value'	=> $this->bocommon->select2String($values_combo_box[2])
+								),
+								array
+								( //div values  combo_box_3
+									'id' => 'values_combo_box_3',
+									'value'	=> $this->bocommon->select2String($values_combo_box[3])
+								),
+
+							)
 						)
 					)
-				)
-			);
+				);
 
 			}
 
@@ -377,17 +387,18 @@
 
 			foreach ($jasper as $report)
 			{
-				$datatable['rowactions']['action'][] = array(
-					'my_name'		=> 'edit',
-					'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
-					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+				$datatable['rowactions']['action'][] = array
 					(
-						'menuaction'	=> 'property.uijasper.view',
-						'jasper_id'			=> $report['id'],
-						'target'		=> '_blank'
-					)),
-					'parameters'			=> $parameters
-				);
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('open JasperReport %1 in new window', $report['title']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uijasper.view',
+							'jasper_id'			=> $report['id'],
+							'target'		=> '_blank'
+						)),
+						'parameters'			=> $parameters
+					);
 			}
 
 			if ($this->acl_delete)
@@ -406,15 +417,16 @@
 					'parameters'	=> $parameters
 				);
 			}
-			$datatable['rowactions']['action'][] = array(
-				'my_name' 		=> 'add',
-				'text' 			=> lang('add'),
-				'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+			$datatable['rowactions']['action'][] = array
 				(
-					'menuaction'	=> 'property.uiproject.index',
-					'lookup'		=>	1,
-					'from'			=>  'tenant_claim'
-				)));
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'property.uiproject.index',
+						'lookup'		=>	1,
+						'from'			=>  'tenant_claim'
+					)));
 
 			unset($parameters);
 
@@ -509,10 +521,11 @@
 						{
 							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
 						}
-						elseif(isset($column['format']) && $column['format']== "link")
+						else if(isset($column['format']) && $column['format']== "link")
 						{
 							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
-						}else
+						}
+						else
 						{
 							$json_row[$column['name']] = $column['value'];
 						}
@@ -558,8 +571,6 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'tenant_claim.index', 'property' );
 			$this->save_sessiondata();
 		}
-
-
 
 		function check()
 		{
@@ -810,125 +821,125 @@
 				(
 					'name'			=> "0",
 					'values'		=>	json_encode(array(	array('key' => 'workorder_id',	'label'=>'Workorder',	'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-					array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true),
-					array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true),
-					array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
-					array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true),
-					array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
-					array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
-					array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
-					array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
+															array('key' => 'budget',	'label'=>'Budget',	'sortable'=>true,'resizeable'=>true),
+															array('key' => 'calculation',	'label'=>'Calculation',	'sortable'=>true,'resizeable'=>true),
+															array('key' => 'vendor_name','label'=>'Vendor','sortable'=>true,'resizeable'=>true),
+															array('key' => 'charge_tenant','label'=>'Charge tenant','sortable'=>true,'resizeable'=>true),
+															array('key' => 'status','label'=>'Status','sortable'=>true,'resizeable'=>true),
+															array('key' => 'actual_cost','label'=>lang('actual cost'),'sortable'=>true,'resizeable'=>true),
+															array('key' => 'voucher_id','label'=>lang('voucher'),'sortable'=>true,'resizeable'=>true),
+															array('key' => 'selected','label'=>'select',	'sortable'=>false,'resizeable'=>false)))
 				);
 
 			$data = array
 				(
-					'table_header_workorder'		=> $table_header_workorder,
-					'lang_no_workorders'			=> lang('No workorder budget'),
-					'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
-					'lang_start_date'			=> lang('Project start date'),
-					'value_start_date'			=> $project_values['start_date'],
+					'table_header_workorder'			=> $table_header_workorder,
+					'lang_no_workorders'				=> lang('No workorder budget'),
+					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
+					'lang_start_date'					=> lang('Project start date'),
+					'value_start_date'					=> $project_values['start_date'],
 
-					'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
-					'base_java_url'							=> json_encode(array(menuaction => "property.uitenant_claim.edit",claim_id=>$claim_id)),
-					'datatable'								=> $datavalues,
-					'myColumnDefs'							=> $myColumnDefs,
-					//'myButtons'								=> $myButtons,
+					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+					'base_java_url'						=> json_encode(array(menuaction => "property.uitenant_claim.edit",claim_id=>$claim_id)),
+					'datatable'							=> $datavalues,
+					'myColumnDefs'						=> $myColumnDefs,
+					//'myButtons'						=> $myButtons,
 
-					'lang_end_date'				=> lang('Project end date'),
-					'value_end_date'			=> $project_values['end_date'],
+					'lang_end_date'						=> lang('Project end date'),
+					'value_end_date'					=> $project_values['end_date'],
 
-					'lang_charge_tenant'			=> lang('Charge tenant'),
-					'charge_tenant'				=> $project_values['charge_tenant'],
+					'lang_charge_tenant'				=> lang('Charge tenant'),
+					'charge_tenant'						=> $project_values['charge_tenant'],
 
-					'lang_power_meter'			=> lang('Power meter'),
-					'value_power_meter'			=> $project_values['power_meter'],
+					'lang_power_meter'					=> lang('Power meter'),
+					'value_power_meter'					=> $project_values['power_meter'],
 
-					'lang_budget'				=> lang('Budget'),
-					'value_budget'				=> $project_values['budget'],
+					'lang_budget'						=> lang('Budget'),
+					'value_budget'						=> $project_values['budget'],
 
-					'lang_reserve'				=> lang('reserve'),
-					'value_reserve'				=> $project_values['reserve'],
-					'lang_reserve_statustext'		=> lang('Enter the reserve'),
+					'lang_reserve'						=> lang('reserve'),
+					'value_reserve'						=> $project_values['reserve'],
+					'lang_reserve_statustext'			=> lang('Enter the reserve'),
 
-					'lang_reserve_remainder'		=> lang('reserve remainder'),
-					'value_reserve_remainder'		=> $reserve_remainder,
+					'lang_reserve_remainder'			=> lang('reserve remainder'),
+					'value_reserve_remainder'			=> $reserve_remainder,
 					'value_reserve_remainder_percent'	=> $remainder_percent,
 
-					'vendor_data'				=> $vendor_data,
-					'location_data'				=> $location_data,
-					'location_type'				=> 'view',
+					'vendor_data'						=> $vendor_data,
+					'location_data'						=> $location_data,
+					'location_type'						=> 'view',
 
-					'lang_project_id'			=> lang('Project ID'),
-					'value_project_id'			=> $project_values['project_id'],
-					'lang_name'				=> lang('Name'),
-					'value_name'				=> $project_values['name'],
+					'lang_project_id'					=> lang('Project ID'),
+					'value_project_id'					=> $project_values['project_id'],
+					'lang_name'							=> lang('Name'),
+					'value_name'						=> $project_values['name'],
 
-					'lang_descr'				=> lang('Description'),
+					'lang_descr'						=> lang('Description'),
 
-					'sum_workorder_budget'			=> $project_values['sum_workorder_budget'],
-					'sum_workorder_calculation'		=> $project_values['sum_workorder_calculation'],
-					'workorder_budget'			=> $project_values['workorder_budget'],
-					'sum_workorder_actual_cost'		=> $project_values['sum_workorder_actual_cost'],
-					'lang_actual_cost'			=> lang('Actual cost'),
-					'lang_coordinator'			=> lang('Coordinator'),
-					'lang_sum'				=> lang('Sum'),
-					'select_user_name'			=> 'project_values[coordinator]',
-					'lang_no_user'				=> lang('Select coordinator'),
-					'user_list'				=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+					'sum_workorder_budget'				=> $project_values['sum_workorder_budget'],
+					'sum_workorder_calculation'			=> $project_values['sum_workorder_calculation'],
+					'workorder_budget'					=> $project_values['workorder_budget'],
+					'sum_workorder_actual_cost'			=> $project_values['sum_workorder_actual_cost'],
+					'lang_actual_cost'					=> lang('Actual cost'),
+					'lang_coordinator'					=> lang('Coordinator'),
+					'lang_sum'							=> lang('Sum'),
+					'select_user_name'					=> 'project_values[coordinator]',
+					'lang_no_user'						=> lang('Select coordinator'),
+					'user_list'							=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-					'status_list'				=> $this->boproject->select_status_list('select',$project_values['status']),
-					'lang_no_status'			=> lang('Select status'),
-					'lang_status'				=> lang('Status'),
+					'status_list'						=> $this->boproject->select_status_list('select',$project_values['status']),
+					'lang_no_status'					=> lang('Select status'),
+					'lang_status'						=> lang('Status'),
 
-					'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
-					'lang_contact_phone'			=> lang('Contact phone'),
-					'contact_phone'				=> $project_values['contact_phone'],
+					'lang_contact_phone'				=> lang('Contact phone'),
+					'contact_phone'						=> $project_values['contact_phone'],
 
-					'b_account_data'			=> $b_account_data,
+					'b_account_data'					=> $b_account_data,
 
 					'lang_select_workorder_statustext'	=> lang('Include the workorder to this claim'),
 
 					'cat_list_project'					=> $cat_list_project,
 					//------------------
-					'lang_status'				=> lang('Status'),
-					'lang_status_statustext'		=> lang('Select status'),
-					'status_list'				=> $this->bo->get_status_list(array('format' => 'select', 'selected' => $values['status'],'default' => 'open')),
-					'lang_no_status'			=> lang('No status'),
-					'status_name'				=> 'values[status]',
+					'lang_status'						=> lang('Status'),
+					'lang_status_statustext'			=> lang('Select status'),
+					'status_list'						=> $this->bo->get_status_list(array('format' => 'select', 'selected' => $values['status'],'default' => 'open')),
+					'lang_no_status'					=> lang('No status'),
+					'status_name'						=> 'values[status]',
 
-					'lang_amount'				=> lang('amount'),
-					'lang_amount_statustext'		=> lang('The total amount to claim'),
-					'value_amount'				=> $values['amount'],
+					'lang_amount'						=> lang('amount'),
+					'lang_amount_statustext'			=> lang('The total amount to claim'),
+					'value_amount'						=> $values['amount'],
 
-					'tenant_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant')),
-					'lang_tenant'				=> lang('tenant'),
-					'value_tenant_id'			=> $values['tenant_id'],
-					'value_last_name'			=> $values['last_name'],
-					'value_first_name'			=> $values['first_name'],
-					'lang_tenant_statustext'		=> lang('Select a tenant'),
-					'size_last_name'			=> strlen($values['last_name']),
-					'size_first_name'			=> strlen($values['first_name']),
+					'tenant_link'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.tenant')),
+					'lang_tenant'						=> lang('tenant'),
+					'value_tenant_id'					=> $values['tenant_id'],
+					'value_last_name'					=> $values['last_name'],
+					'value_first_name'					=> $values['first_name'],
+					'lang_tenant_statustext'			=> lang('Select a tenant'),
+					'size_last_name'					=> strlen($values['last_name']),
+					'size_first_name'					=> strlen($values['first_name']),
 
-					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'edit_url'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'lang_claim_id'				=> lang('ID'),
-					'value_claim_id'			=> $claim_id,
-					'lang_remark'				=> lang('remark'),
-					'lang_category'				=> lang('category'),
-					'lang_save'				=> lang('save'),
-					'lang_cancel'				=> lang('cancel'),
-					'lang_apply'				=> lang('apply'),
-					'value_remark'				=> $values['remark'],
-					'value_cat'				=> $values['cat'],
-					'lang_remark_statustext'		=> lang('Enter a remark for this claim'),
-					'lang_apply_statustext'			=> lang('Apply the values'),
-					'lang_cancel_statustext'		=> lang('Leave the claim untouched and return back to the list'),
-					'lang_save_statustext'			=> lang('Save the claim and return back to the list'),
-					'lang_no_cat'				=> lang('no category'),
-					'lang_cat_statustext'			=> lang('Select the category the claim belongs to. To do not use a category select NO CATEGORY'),
-					'select_name'				=> 'values[cat_id]',
-					'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'tenant_claim','order'=>'descr')),
+					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'edit_url'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_claim_id'						=> lang('ID'),
+					'value_claim_id'					=> $claim_id,
+					'lang_remark'						=> lang('remark'),
+					'lang_category'						=> lang('category'),
+					'lang_save'							=> lang('save'),
+					'lang_cancel'						=> lang('cancel'),
+					'lang_apply'						=> lang('apply'),
+					'value_remark'						=> $values['remark'],
+					'value_cat'							=> $values['cat'],
+					'lang_remark_statustext'			=> lang('Enter a remark for this claim'),
+					'lang_apply_statustext'				=> lang('Apply the values'),
+					'lang_cancel_statustext'			=> lang('Leave the claim untouched and return back to the list'),
+					'lang_save_statustext'				=> lang('Save the claim and return back to the list'),
+					'lang_no_cat'						=> lang('no category'),
+					'lang_cat_statustext'				=> lang('Select the category the claim belongs to. To do not use a category select NO CATEGORY'),
+					'select_name'						=> 'values[cat_id]',
+					'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $this->cat_id,'type' =>'tenant_claim','order'=>'descr')),
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id?lang('edit claim'):lang('add claim'));
 
@@ -1109,100 +1120,99 @@
 
 			$data = array
 				(
-					'table_header_workorder'		=> $table_header_workorder,
-					'lang_no_workorders'			=> lang('No workorder budget'),
-					'workorder_link'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
-					'lang_start_date'			=> lang('Project start date'),
-					'value_start_date'			=> $project_values['start_date'],
+					'table_header_workorder'			=> $table_header_workorder,
+					'lang_no_workorders'				=> lang('No workorder budget'),
+					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
+					'lang_start_date'					=> lang('Project start date'),
+					'value_start_date'					=> $project_values['start_date'],
 
-					'lang_end_date'				=> lang('Project end date'),
-					'value_end_date'			=> $project_values['end_date'],
+					'lang_end_date'						=> lang('Project end date'),
+					'value_end_date'					=> $project_values['end_date'],
 
-					'lang_charge_tenant'			=> lang('Charge tenant'),
-					'charge_tenant'				=> $project_values['charge_tenant'],
+					'lang_charge_tenant'				=> lang('Charge tenant'),
+					'charge_tenant'						=> $project_values['charge_tenant'],
 
-					'lang_power_meter'			=> lang('Power meter'),
-					'value_power_meter'			=> $project_values['power_meter'],
+					'lang_power_meter'					=> lang('Power meter'),
+					'value_power_meter'					=> $project_values['power_meter'],
 
-					'lang_budget'				=> lang('Budget'),
-					'value_budget'				=> $project_values['budget'],
+					'lang_budget'						=> lang('Budget'),
+					'value_budget'						=> $project_values['budget'],
 
-					'lang_reserve'				=> lang('reserve'),
-					'value_reserve'				=> $project_values['reserve'],
-					'lang_reserve_statustext'		=> lang('Enter the reserve'),
+					'lang_reserve'						=> lang('reserve'),
+					'value_reserve'						=> $project_values['reserve'],
+					'lang_reserve_statustext'			=> lang('Enter the reserve'),
 
-					'lang_reserve_remainder'		=> lang('reserve remainder'),
-					'value_reserve_remainder'		=> $reserve_remainder,
+					'lang_reserve_remainder'			=> lang('reserve remainder'),
+					'value_reserve_remainder'			=> $reserve_remainder,
 					'value_reserve_remainder_percent'	=> $remainder_percent,
 
-					'location_data'				=> $location_data,
-					'location_type'				=> 'view',
+					'location_data'						=> $location_data,
+					'location_type'						=> 'view',
 
-					'lang_project_id'			=> lang('Project ID'),
-					'value_project_id'			=> $project_values['project_id'],
-					'lang_name'				=> lang('Name'),
-					'value_name'				=> $project_values['name'],
+					'lang_project_id'					=> lang('Project ID'),
+					'value_project_id'					=> $project_values['project_id'],
+					'lang_name'							=> lang('Name'),
+					'value_name'						=> $project_values['name'],
 
-					'lang_descr'				=> lang('Description'),
+					'lang_descr'						=> lang('Description'),
 
-					'sum_workorder_budget'			=> $project_values['sum_workorder_budget'],
-					'sum_workorder_calculation'		=> $project_values['sum_workorder_calculation'],
-					'workorder_budget'			=> $project_values['workorder_budget'],
-					'sum_workorder_actual_cost'		=> $project_values['sum_workorder_actual_cost'],
-					'lang_actual_cost'			=> lang('Actual cost'),
-					'lang_coordinator'			=> lang('Coordinator'),
-					'lang_sum'				=> lang('Sum'),
-					'select_user_name'			=> 'project_values[coordinator]',
-					'lang_no_user'				=> lang('Select coordinator'),
-					'user_list'				=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+					'sum_workorder_budget'				=> $project_values['sum_workorder_budget'],
+					'sum_workorder_calculation'			=> $project_values['sum_workorder_calculation'],
+					'workorder_budget'					=> $project_values['workorder_budget'],
+					'sum_workorder_actual_cost'			=> $project_values['sum_workorder_actual_cost'],
+					'lang_actual_cost'					=> lang('Actual cost'),
+					'lang_coordinator'					=> lang('Coordinator'),
+					'lang_sum'							=> lang('Sum'),
+					'select_user_name'					=> 'project_values[coordinator]',
+					'lang_no_user'						=> lang('Select coordinator'),
+					'user_list'							=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-					'status_list'				=> $this->boproject->select_status_list('select',$project_values['status']),
-					'lang_no_status'			=> lang('Select status'),
-					'lang_status'				=> lang('Status'),
+					'status_list'						=> $this->boproject->select_status_list('select',$project_values['status']),
+					'lang_no_status'					=> lang('Select status'),
+					'lang_status'						=> lang('Status'),
 
-					'currency'				=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
+					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
-					'lang_contact_phone'			=> lang('Contact phone'),
-					'contact_phone'				=> $project_values['contact_phone'],
+					'lang_contact_phone'				=> lang('Contact phone'),
+					'contact_phone'						=> $project_values['contact_phone'],
 
-					'b_account_data'			=> $b_account_data,
+					'b_account_data'					=> $b_account_data,
 
-					'cat_list_project'			=> $cat_list_project,
+					'cat_list_project'					=> $cat_list_project,
 
 					//------------------
 
-					'lang_status'				=> lang('Status'),
-					'status_list'				=> $this->bo->get_status_list(array('format' => 'select', 'selected' => $values['status'],'default' => 'open')),
+					'lang_status'						=> lang('Status'),
+					'status_list'						=> $this->bo->get_status_list(array('format' => 'select', 'selected' => $values['status'],'default' => 'open')),
 
-					'lang_amount'				=> lang('amount'),
-					'value_amount'				=> $values['amount'],
+					'lang_amount'						=> lang('amount'),
+					'value_amount'						=> $values['amount'],
 
-					'lang_tenant'				=> lang('tenant'),
-					'value_tenant_id'			=> $values['tenant_id'],
-					'value_last_name'			=> $values['last_name'],
-					'value_first_name'			=> $values['first_name'],
-					'size_last_name'			=> strlen($values['last_name']),
-					'size_first_name'			=> strlen($values['first_name']),
+					'lang_tenant'						=> lang('tenant'),
+					'value_tenant_id'					=> $values['tenant_id'],
+					'value_last_name'					=> $values['last_name'],
+					'value_first_name'					=> $values['first_name'],
+					'size_last_name'					=> strlen($values['last_name']),
+					'size_first_name'					=> strlen($values['first_name']),
 
-					'lang_claim_id'				=> lang('ID'),
-					'value_claim_id'			=> $claim_id,
-					'lang_remark'				=> lang('remark'),
-					'lang_category'				=> lang('category'),
-					'lang_save'				=> lang('save'),
-					'lang_cancel'				=> lang('cancel'),
-					'lang_apply'				=> lang('apply'),
-					'value_remark'				=> $values['remark'],
-					'value_cat'				=> $values['cat'],
-					'cat_list'				=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'tenant_claim','order'=>'descr')),
+					'lang_claim_id'						=> lang('ID'),
+					'value_claim_id'					=> $claim_id,
+					'lang_remark'						=> lang('remark'),
+					'lang_category'						=> lang('category'),
+					'lang_save'							=> lang('save'),
+					'lang_cancel'						=> lang('cancel'),
+					'lang_apply'						=> lang('apply'),
+					'value_remark'						=> $values['remark'],
+					'value_cat'							=> $values['cat'],
+					'cat_list'							=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'tenant_claim','order'=>'descr')),
 
-					'done_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
-					'lang_done'				=> lang('done'),
-					'value_date'				=> $GLOBALS['phpgw']->common->show_date($tenant_claim['entry_date'])
+					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitenant_claim.index')),
+					'lang_done'							=> lang('done'),
+					'value_date'						=> $GLOBALS['phpgw']->common->show_date($tenant_claim['entry_date'])
 
 				);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . '::' . lang('view claim');
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}

@@ -13,23 +13,23 @@
 			}		
 		</script>
 
-			<tr>
-				<td valign="top">
-					<a href="javascript:project_group_lookup()" title="{lang_select_project_group_help}" ><xsl:value-of select="lang_project_group"/>
-					</a>
-				</td>
-				<td>
-					<input size="9" type="text" name="project_group" value="{value_project_group}">
-						<xsl:attribute name="title">
-								<xsl:value-of select="lang_select_project_group_help"/>
-						</xsl:attribute>
-					</input>
-					<input  size="30" type="text" name="project_group_descr" value="{value_project_group_descr}"  onClick="project_group_lookup();" readonly="readonly"> 
-						<xsl:attribute name="title">
-								<xsl:value-of select="lang_select_project_group_help"/>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
+		<tr>
+			<td valign="top">
+				<a href="javascript:project_group_lookup()" title="{lang_select_project_group_help}" ><xsl:value-of select="lang_project_group"/>
+				</a>
+			</td>
+			<td>
+				<input size="9" type="text" name="project_group" value="{value_project_group}">
+					<xsl:attribute name="title">
+						<xsl:value-of select="lang_select_project_group_help"/>
+					</xsl:attribute>
+				</input>
+				<input  size="30" type="text" name="project_group_descr" value="{value_project_group_descr}"  onClick="project_group_lookup();" readonly="readonly"> 
+					<xsl:attribute name="title">
+						<xsl:value-of select="lang_select_project_group_help"/>
+					</xsl:attribute>
+				</input>
+			</td>
+		</tr>
 
 	</xsl:template>

@@ -1,36 +1,36 @@
 <!-- attrib_history -->
 	<xsl:template match="attrib_history">
-	<div><br/></div>
-	<!--  DATATABLE -->	
-	<div align="left" id="paging_0"> </div>
-	<div id="datatable-container_0"></div>
-	<div id="contextmenu_0"></div>
-	<div><br/></div>
-	<!--  DATATABLE DEFINITIONS-->
+		<div><br/></div>
+		<!--  DATATABLE -->	
+		<div align="left" id="paging_0"> </div>
+		<div id="datatable-container_0"></div>
+		<div id="contextmenu_0"></div>
+		<div><br/></div>
+		<!--  DATATABLE DEFINITIONS-->
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
 			var base_java_url = <xsl:value-of select="base_java_url" />;
 			var datatable = new Array();
 			var myColumnDefs = new Array();
-	
+
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
 				{
-					values			:	<xsl:value-of select="values"/>,
-					total_records	: 	<xsl:value-of select="total_records"/>,
-					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-					permission  	: <xsl:value-of select="permission"/>,
-					footer			:	<xsl:value-of select="footer"/>
+				values			:	<xsl:value-of select="values"/>,
+				total_records	: 	<xsl:value-of select="total_records"/>,
+				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+				permission  	: <xsl:value-of select="permission"/>,
+				footer			:	<xsl:value-of select="footer"/>
 				}
 				]
 			</xsl:for-each>
-			
+
 			<xsl:for-each select="myColumnDefs">
 				myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
 			</xsl:for-each>
-			
+
 		</script>			
-		
+
 		<!--  
 		<table width="100%" cellpadding="2" cellspacing="2" align="center">
 			<xsl:choose>
@@ -57,7 +57,7 @@
 	<xsl:template match="table_header">
 		<xsl:variable name="sort_time_created" select="sort_time_created"/>
 		<xsl:variable name="sort_value" select="sort_value"/>
-	
+
 			<tr class="th">
 				<td width="40%">
 					<a href="{$sort_value}" class="th_text"><xsl:value-of select="lang_value"/></a>

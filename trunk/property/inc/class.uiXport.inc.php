@@ -37,11 +37,11 @@
 	class property_uiXport
 	{
 		var $public_functions = array
-		(
-			'import' 	=> true,
-			'export' 	=> true,
-			'rollback'	=> true
-		);
+			(
+				'import' 	=> true,
+				'export' 	=> true,
+				'rollback'	=> true
+			);
 
 		var $start;
 		var $query;
@@ -55,7 +55,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::invoice';
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bo       		= CreateObject('property.boXport',true);
 			$this->invoice  		= CreateObject('property.boinvoice');
 			$this->bocommon  		= CreateObject('property.bocommon');
@@ -92,16 +91,16 @@
 			$art				= phpgw::get_var('art', 'int');
 			$type				= phpgw::get_var('type');
 			$dim_b				= phpgw::get_var('dim_b', 'int');
-			$invoice_num			= phpgw::get_var('invoice_num');
+			$invoice_num		= phpgw::get_var('invoice_num');
 			$kid_nr				= phpgw::get_var('kid_nr');
 			$vendor_id			= phpgw::get_var('vendor_id', 'int');
-			$vendor_name			= phpgw::get_var('vendor_name');
+			$vendor_name		= phpgw::get_var('vendor_name');
 			$janitor			= phpgw::get_var('janitor');
 			$supervisor			= phpgw::get_var('supervisor');
-			$budget_responsible		= phpgw::get_var('budget_responsible');
-			$invoice_date 			= urldecode(phpgw::get_var('invoice_date'));
+			$budget_responsible	= phpgw::get_var('budget_responsible');
+			$invoice_date 		= urldecode(phpgw::get_var('invoice_date'));
 			$num_days			= phpgw::get_var('num_days', 'int');
-			$payment_date 			= urldecode(phpgw::get_var('payment_date'));
+			$payment_date 		= urldecode(phpgw::get_var('payment_date'));
 			$cancel 			= phpgw::get_var('cancel', 'bool');
 			$convert 			= phpgw::get_var('convert', 'bool');
 			$conv_type 			= phpgw::get_var('conv_type');
@@ -178,47 +177,48 @@
 					if($invoice_date)
 					{
 						$sdateparts = phpgwapi_datetime::date_array($invoice_date);
-			 			$sday = $sdateparts['day'];
-			 			$smonth = $sdateparts['month'];
-			 			$syear = $sdateparts['year'];
-			 			unset($sdateparts);
+						$sday = $sdateparts['day'];
+						$smonth = $sdateparts['month'];
+						$syear = $sdateparts['year'];
+						unset($sdateparts);
 
 						$edateparts = phpgwapi_datetime::date_array($payment_date);
-			 			$eday = $edateparts['day'];
-			 			$emonth = $edateparts['month'];
-			 			$eyear = $edateparts['year'];
-			 			unset($edateparts);
+						$eday = $edateparts['day'];
+						$emonth = $edateparts['month'];
+						$eyear = $edateparts['year'];
+						unset($edateparts);
 					}
 
 					$old = $tsvfile;
 					$tsvfile = $GLOBALS['phpgw_info']['server']['temp_dir'].'/invoice_import_'.basename($tsvfile);
 					rename($old,$tsvfile);
 
-					$invoice_common=array(
-								'bilagsnr'			=> $this->invoice->next_bilagsnr(),
-								'art'				=> $art,
-								'type'				=> $type,
-								'dim_b'				=> $dim_b,
-								'invoice_num'			=> $invoice_num,
-								'kid_nr'			=> $kid_nr,
-								'vendor_id'			=> $vendor_id,
-								'vendor_name'			=> $vendor_name,
-								'janitor'			=> $janitor,
-								'supervisor'			=> $supervisor,
-								'budget_responsible'		=> $budget_responsible,
-								'num_days'			=> $num_days,
-								'sday'				=> $sday,
-								'smonth'			=> $smonth,
-								'syear'				=> $syear,
-								'eday'				=> $eday,
-								'emonth'			=> $emonth,
-								'eyear'				=> $eyear,
-								'tsvfile'			=> $tsvfile,
-								'conv_type'			=> $conv_type,
-								'invoice_date'			=> $invoice_date,
-								'payment_date'			=> $payment_date,
-								'auto_tax'			=> $auto_tax
-							);
+					$invoice_common=array
+						(
+							'bilagsnr'				=> $this->invoice->next_bilagsnr(),
+							'art'					=> $art,
+							'type'					=> $type,
+							'dim_b'					=> $dim_b,
+							'invoice_num'			=> $invoice_num,
+							'kid_nr'				=> $kid_nr,
+							'vendor_id'				=> $vendor_id,
+							'vendor_name'			=> $vendor_name,
+							'janitor'				=> $janitor,
+							'supervisor'			=> $supervisor,
+							'budget_responsible'	=> $budget_responsible,
+							'num_days'				=> $num_days,
+							'sday'					=> $sday,
+							'smonth'				=> $smonth,
+							'syear'					=> $syear,
+							'eday'					=> $eday,
+							'emonth'				=> $emonth,
+							'eyear'					=> $eyear,
+							'tsvfile'				=> $tsvfile,
+							'conv_type'				=> $conv_type,
+							'invoice_date'			=> $invoice_date,
+							'payment_date'			=> $payment_date,
+							'auto_tax'				=> $auto_tax
+						);
 
 					$buffer = $this->bo->import($invoice_common,$download);
 
@@ -243,7 +243,7 @@
 						unset($payment_date);
 						unset($conv_type);
 						unset($auto_tax);
-//						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiXport.import'));
+						//						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiXport.import'));
 					}
 					else
 					{
@@ -258,10 +258,10 @@
 			set_time_limit(0);
 
 			$link_data = array
-			(
-				'menuaction'	=> 'property.uiXport.import',
-				'sub'		=> $sub
-			);
+				(
+					'menuaction'	=> 'property.uiXport.import',
+					'sub'		=> $sub
+				);
 
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
@@ -271,107 +271,107 @@
 			$jscal->add_listener('payment_date');
 
 			$data = array
-			(
-				'menu'							=> $this->bocommon->get_menu(),
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				(
+					'menu'								=> $this->bocommon->get_menu(),
+					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
-				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'				=> lang('Select date'),
+					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+					'lang_datetitle'					=> lang('Select date'),
 
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'cancel_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'sub'=> $sub)),
-				'lang_cancel'					=> lang('Cancel'),
-				'lang_cancel_statustext'			=> lang('cancel the import'),
-				'action_url'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiXport.import')),
-				'tsvfilename'					=> '',
+					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'cancel_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'sub'=> $sub)),
+					'lang_cancel'						=> lang('Cancel'),
+					'lang_cancel_statustext'			=> lang('cancel the import'),
+					'action_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>  'property' .'.uiXport.import')),
+					'tsvfilename'						=> '',
 
-				'lang_debug'					=> lang('Debug output in browser'),
-				'lang_debug_statustext'				=> lang('Check this to have the output to screen before import (recommended)'),
-				'value_debug'					=> $download,
+					'lang_debug'						=> lang('Debug output in browser'),
+					'lang_debug_statustext'				=> lang('Check this to have the output to screen before import (recommended)'),
+					'value_debug'						=> $download,
 
-				'lang_import'					=> lang('Import'),
-				'lang_import_statustext'			=> lang('click this button to start the import'),
+					'lang_import'						=> lang('Import'),
+					'lang_import_statustext'			=> lang('click this button to start the import'),
 
-				'lang_invoice_date'				=> lang('invoice date'),
-				'lang_payment_date'				=> lang('Payment date'),
-				'lang_no_of_days'				=> lang('Days'),
-				'lang_invoice_number'				=> lang('Invoice Number'),
-				'lang_invoice_num_statustext'			=> lang('Enter Invoice Number'),
+					'lang_invoice_date'					=> lang('invoice date'),
+					'lang_payment_date'					=> lang('Payment date'),
+					'lang_no_of_days'					=> lang('Days'),
+					'lang_invoice_number'				=> lang('Invoice Number'),
+					'lang_invoice_num_statustext'		=> lang('Enter Invoice Number'),
 
-				'lang_select'					=> lang('Select per button !'),
-				'lang_kidnr'					=> lang('KID nr'),
-				'lang_kid_nr_statustext'			=> lang('Enter Kid nr'),
+					'lang_select'						=> lang('Select per button !'),
+					'lang_kidnr'						=> lang('KID nr'),
+					'lang_kid_nr_statustext'			=> lang('Enter Kid nr'),
 
-				'lang_vendor'					=> lang('Vendor'),
-				'addressbook_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor')),
+					'lang_vendor'						=> lang('Vendor'),
+					'addressbook_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor')),
 
-				'lang_invoice_date_statustext'			=> lang('Enter the invoice date'),
-				'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
-				'lang_payment_date_statustext'			=> lang('Enter the payment date or the payment delay'),
-				'lang_file_statustext'				=> lang('Select the file to import from'),
-				'lang_vendor_statustext'			=> lang('Select the vendor by clicking the button'),
-				'lang_vendor_name_statustext'			=> lang('Select the vendor by clicking the button'),
-				'lang_select_vendor_statustext'			=> lang('Select the vendor by clicking this button'),
+					'lang_invoice_date_statustext'		=> lang('Enter the invoice date'),
+					'lang_num_days_statustext'			=> lang('Enter the payment date or the payment delay'),
+					'lang_payment_date_statustext'		=> lang('Enter the payment date or the payment delay'),
+					'lang_file_statustext'				=> lang('Select the file to import from'),
+					'lang_vendor_statustext'			=> lang('Select the vendor by clicking the button'),
+					'lang_vendor_name_statustext'		=> lang('Select the vendor by clicking the button'),
+					'lang_select_vendor_statustext'		=> lang('Select the vendor by clicking this button'),
 
 
-				'value_invoice_date'				=> $invoice_date,
-				'value_payment_date'				=> $payment_date,
-				'value_belop'					=> $belop,
-				'value_vendor_id'				=> $vendor_id,
-				'value_vendor_name'				=> $vendor_name,
-				'value_kid_nr'					=> $kid_nr,
-				'value_dim_b'					=> $dim_b,
-				'value_invoice_num'				=> $invoice_num,
-				'value_merknad'					=> $merknad,
-				'value_num_days'				=> $num_days,
-//				'value_tsvfile'					=> $tsvfile,
+					'value_invoice_date'				=> $invoice_date,
+					'value_payment_date'				=> $payment_date,
+					'value_belop'						=> $belop,
+					'value_vendor_id'					=> $vendor_id,
+					'value_vendor_name'					=> $vendor_name,
+					'value_kid_nr'						=> $kid_nr,
+					'value_dim_b'						=> $dim_b,
+					'value_invoice_num'					=> $invoice_num,
+					'value_merknad'						=> $merknad,
+					'value_num_days'					=> $num_days,
+	//				'value_tsvfile'						=> $tsvfile,
 
-				'lang_file'					=> lang('File'),
-				'lang_conv'					=> lang('Conversion'),
-				'conv_list'					=> $this->bo->select_import_conv($conv_type),
-				'select_conv'					=> 'conv_type',
-				'lang_select_conversion'			=> lang('Select the type of conversion:'),
-				'lang_conv_statustext'				=> lang('You have to select the Conversion for this import'),
+					'lang_file'							=> lang('File'),
+					'lang_conv'							=> lang('Conversion'),
+					'conv_list'							=> $this->bo->select_import_conv($conv_type),
+					'select_conv'						=> 'conv_type',
+					'lang_select_conversion'			=> lang('Select the type of conversion:'),
+					'lang_conv_statustext'				=> lang('You have to select the Conversion for this import'),
 
-				'lang_auto_tax'					=> lang('Auto TAX'),
-				'lang_auto_tax_statustext'			=> lang('Set tax during import'),
+					'lang_auto_tax'						=> lang('Auto TAX'),
+					'lang_auto_tax_statustext'			=> lang('Set tax during import'),
 
-				'lang_art'					=> lang('Art'),
-				'art_list'					=> $this->invoice->get_lisfm_ecoart($art),
-				'select_art'					=> 'art',
-				'lang_select_art' 				=> lang('Select Invoice Type'),
-				'lang_art_statustext'				=> lang('You have to select type of invoice'),
+					'lang_art'							=> lang('Art'),
+					'art_list'							=> $this->invoice->get_lisfm_ecoart($art),
+					'select_art'						=> 'art',
+					'lang_select_art' 					=> lang('Select Invoice Type'),
+					'lang_art_statustext'				=> lang('You have to select type of invoice'),
 
-				'lang_type'					=> lang('Type invoice II'),
-				'type_list'					=> $this->invoice->get_type_list($type),
-				'select_type'					=> 'type',
-				'lang_no_type'					=> lang('No type'),
-				'lang_type_statustext'				=> lang('Select the type  invoice. To do not use type -  select NO TYPE'),
+					'lang_type'							=> lang('Type invoice II'),
+					'type_list'							=> $this->invoice->get_type_list($type),
+					'select_type'						=> 'type',
+					'lang_no_type'						=> lang('No type'),
+					'lang_type_statustext'				=> lang('Select the type  invoice. To do not use type -  select NO TYPE'),
 
-				'lang_dimb'					=> lang('Dim B'),
-				'dimb_list'					=> $this->invoice->select_dimb_list($dim_b),
-				'select_dimb'					=> 'dim_b',
-				'lang_no_dimb'					=> lang('No Dim B'),
-				'lang_dimb_statustext'				=> lang('Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B'),
+					'lang_dimb'							=> lang('Dim B'),
+					'dimb_list'							=> $this->invoice->select_dimb_list($dim_b),
+					'select_dimb'						=> 'dim_b',
+					'lang_no_dimb'						=> lang('No Dim B'),
+					'lang_dimb_statustext'				=> lang('Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B'),
 
-				'lang_janitor'					=> lang('Janitor'),
-				'janitor_list'					=> $this->bocommon->get_user_list_right(32,$janitor,'.invoice'),
-				'select_janitor'				=> 'janitor',
-				'lang_no_janitor'				=> lang('No janitor'),
-				'lang_janitor_statustext'			=> lang('Select the janitor responsible for this invoice. To do not use janitor -  select NO JANITOR'),
+					'lang_janitor'						=> lang('Janitor'),
+					'janitor_list'						=> $this->bocommon->get_user_list_right(32,$janitor,'.invoice'),
+					'select_janitor'					=> 'janitor',
+					'lang_no_janitor'					=> lang('No janitor'),
+					'lang_janitor_statustext'			=> lang('Select the janitor responsible for this invoice. To do not use janitor -  select NO JANITOR'),
 
-				'lang_supervisor'				=> lang('Supervisor'),
-				'supervisor_list'				=> $this->bocommon->get_user_list_right(64,$supervisor,'.invoice'),
-				'select_supervisor'				=> 'supervisor',
-				'lang_no_supervisor'				=> lang('No supervisor'),
-				'lang_supervisor_statustext'			=> lang('Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR'),
+					'lang_supervisor'					=> lang('Supervisor'),
+					'supervisor_list'					=> $this->bocommon->get_user_list_right(64,$supervisor,'.invoice'),
+					'select_supervisor'					=> 'supervisor',
+					'lang_no_supervisor'				=> lang('No supervisor'),
+					'lang_supervisor_statustext'		=> lang('Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR'),
 
-				'lang_budget_responsible'			=> lang('B - responsible'),
-				'budget_responsible_list'			=> $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice'),
-				'select_budget_responsible'			=> 'budget_responsible',
-				'lang_select_budget_responsible'		=> lang('Select B-Responsible'),
-				'lang_budget_responsible_statustext'		=> lang('You have to select a budget responsible for this invoice in order to make the import')
-			);
+					'lang_budget_responsible'			=> lang('B - responsible'),
+					'budget_responsible_list'			=> $this->bocommon->get_user_list_right(128,$budget_responsible,'.invoice'),
+					'select_budget_responsible'			=> 'budget_responsible',
+					'lang_select_budget_responsible'	=> lang('Select B-Responsible'),
+					'lang_budget_responsible_statustext'=> lang('You have to select a budget responsible for this invoice in order to make the import')
+				);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice'));
 
@@ -380,7 +380,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('import' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function debug_import($buffer='',$invoice_common='')
@@ -418,40 +418,40 @@
 			foreach ($import as $text => $key)
 			{
 				$table_header[] = array
-				(
-					'header'	=> $text,
-					'width' 	=> '5%',
-					'align' 	=> 'center'
-				);
+					(
+						'header'	=> $text,
+						'width' 	=> '5%',
+						'align' 	=> 'center'
+					);
 			}
 
 			$link_data_add = array
-			(
-				'menuaction'	=> 'property.uiXport.import',
-				'convert'	=> 'true'
-			);
+				(
+					'menuaction'	=> 'property.uiXport.import',
+					'convert'	=> 'true'
+				);
 
 			$link_data_cancel = array
-			(
-				'menuaction'	=> 'property.uiXport.import',
-				'cancel'	=> true
+				(
+					'menuaction'	=> 'property.uiXport.import',
+					'cancel'	=> true
 
-			);
+				);
 
 			$link_data_add		= $link_data_add + $invoice_common;
 			$link_data_cancel	= $link_data_cancel + $invoice_common;
 
 
 			$table_add[] = array
-			(
-				'lang_add'					=> lang('Import'),
-				'lang_add_statustext'		=> lang('Import this invoice'),
-				'add_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_add),
-				'lang_cancel'				=> lang('cancel'),
-				'lang_cancel_statustext'	=> lang('Do not import this invoice'),
-				'cancel_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_cancel)
+				(
+					'lang_add'					=> lang('Import'),
+					'lang_add_statustext'		=> lang('Import this invoice'),
+					'add_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_add),
+					'lang_cancel'				=> lang('cancel'),
+					'lang_cancel_statustext'	=> lang('Do not import this invoice'),
+					'cancel_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data_cancel)
 
-			);
+				);
 
 			$vendor	= $this->contacts->read_single(array('id' => $invoice_common['vendor_id']), array('attributes'=>array(array('column_name' => 'org_name'))));
 
@@ -465,30 +465,30 @@
 			}
 
 			$data = array
-			(
-				'artid'							=> $invoice_common['art'],
-				'lang_type'						=> lang('Type'),
-				'lang_bilagsnr'					=> lang('bilagsnr'),
-				'bilagsnr'						=> $invoice_common['bilagsnr'],
-				'lang_vendor'					=> lang('Vendor'),
-				'vendor_name'					=> $vendor_name,
-				'spvend_code'					=> $invoice_common['vendor_id'],
-				'lang_fakturadato'				=> lang('invoice date'),
-				'fakturadato'					=> $invoice_common['invoice_date'],
-				'lang_forfallsdato'				=> lang('Payment date'),
-				'forfallsdato'					=> $table[0]['forfallsdato'],
-				'lang_janitor'					=> lang('Janitor'),
-				'oppsynsmannid'					=> $invoice_common['janitor'],
-				'lang_supervisor'				=> lang('Supervisor'),
-				'saksbehandlerid'				=> $invoice_common['supervisor'],
-				'lang_budget_responsible'		=> lang('Budget Responsible'),
-				'budsjettansvarligid'			=> $invoice_common['budget_responsible'],
-				'lang_sum'						=> lang('Sum'),
-				'sum'							=> number_format($sum, 2, ',', ''),
-				'table_header'					=> $table_header,
-				'values'						=> $content,
-				'table_add'						=> $table_add
-			);
+				(
+					'artid'							=> $invoice_common['art'],
+					'lang_type'						=> lang('Type'),
+					'lang_bilagsnr'					=> lang('bilagsnr'),
+					'bilagsnr'						=> $invoice_common['bilagsnr'],
+					'lang_vendor'					=> lang('Vendor'),
+					'vendor_name'					=> $vendor_name,
+					'spvend_code'					=> $invoice_common['vendor_id'],
+					'lang_fakturadato'				=> lang('invoice date'),
+					'fakturadato'					=> $invoice_common['invoice_date'],
+					'lang_forfallsdato'				=> lang('Payment date'),
+					'forfallsdato'					=> $table[0]['forfallsdato'],
+					'lang_janitor'					=> lang('Janitor'),
+					'oppsynsmannid'					=> $invoice_common['janitor'],
+					'lang_supervisor'				=> lang('Supervisor'),
+					'saksbehandlerid'				=> $invoice_common['supervisor'],
+					'lang_budget_responsible'		=> lang('Budget Responsible'),
+					'budsjettansvarligid'			=> $invoice_common['budget_responsible'],
+					'lang_sum'						=> lang('Sum'),
+					'sum'							=> number_format($sum, 2, ',', ''),
+					'table_header'					=> $table_header,
+					'values'						=> $content,
+					'table_add'						=> $table_add
+				);
 
 			unset($content);
 
@@ -499,7 +499,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('debug' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
+			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function export()
@@ -511,7 +511,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::export';
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
-										'search_field'));
+				'search_field'));
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
@@ -519,12 +519,12 @@
 
 			if($values['submit'])
 			{
-				if (!$values['conv_type'] && !$values['file'] ):
+				if (!$values['conv_type'] && !$values['file'] )
 				{
 
 					$receipt['error'][] =  array('msg'=> lang('No conversion type could be located.') . ' - ' . lang('Please choose a conversion type from the list'));
 				}
-				elseif($values['conv_type'] && !$values['file']):
+				else if($values['conv_type'] && !$values['file'])
 				{
 					$receipt = $this->bo->export(array('conv_type'=>$values['conv_type'],'download'=>$values['download'],'force_period_year'=>$values['force_period_year']));
 					if(!$values['download'])
@@ -537,46 +537,45 @@
 						echo '&nbsp<a href="'.$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.export')) . '">' . lang('Back') . '</a>';
 					}
 				}
-				endif;
 			}
 			else
 			{
 				$date = $GLOBALS['phpgw']->common->show_date(mktime(0,0,0,date("m"),date("d"),date("Y")),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			}
-//_debug_array($receipt);
+			//_debug_array($receipt);
 
 			$link_data = array
-			(
-				'menuaction'		=> 'property.uiXport.export'
-			);
+				(
+					'menuaction'		=> 'property.uiXport.export'
+				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'menu'						=> $this->bocommon->get_menu(),
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'lang_export_statustext'	=> lang('click this button to start the export'),
-				'lang_select_conv'			=> lang('Select conversion'),
-				'conv_list'					=> $this->bo->select_export_conv($values['conv_type']),
-				'select_conv'				=> 'values[conv_type]',
-				'lang_conv_statustext'		=> lang('Select conversion'),
+				(
+					'menu'						=> $this->bocommon->get_menu(),
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'lang_export_statustext'	=> lang('click this button to start the export'),
+					'lang_select_conv'			=> lang('Select conversion'),
+					'conv_list'					=> $this->bo->select_export_conv($values['conv_type']),
+					'select_conv'				=> 'values[conv_type]',
+					'lang_conv_statustext'		=> lang('Select conversion'),
 
-				'lang_rollback_file'		=> lang('Roll back'),
-				'link_rollback_file'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.rollback')),
+					'lang_rollback_file'		=> lang('Roll back'),
+					'link_rollback_file'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiXport.rollback')),
 
-				'lang_export_to_file'		=> lang('Export to file'),
-				'value_debug'				=> $values['debug'],
-				'lang_debug_statustext'		=> lang('Uncheck to debug the result'),
+					'lang_export_to_file'		=> lang('Export to file'),
+					'value_debug'				=> $values['debug'],
+					'lang_debug_statustext'		=> lang('Uncheck to debug the result'),
 
-				'lang_submit'				=> lang('Submit'),
-				'lang_cancel'				=> lang('Cancel'),
+					'lang_submit'				=> lang('Submit'),
+					'lang_cancel'				=> lang('Cancel'),
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_save'					=> lang('save')
-			);
+					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_save'					=> lang('save')
+				);
 
-//_debug_array($data);
+			//_debug_array($data);
 			$appname	= lang('Invoice');
 			$function_msg	= lang('Export invoice');
 
@@ -593,11 +592,11 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice',
-										'search_field'));
+				'search_field'));
 
 			$values 	= phpgw::get_var('values');
 			$date 	= phpgw::get_var('date');
-//_debug_array($values);
+			//_debug_array($values);
 
 			if($values['submit'])
 			{
@@ -623,54 +622,52 @@
 
 			$link_data = array('menuaction'	=> 'property.uiXport.rollback');
 
-//_debug_array($receipt);
+			//_debug_array($receipt);
 			$jscal = CreateObject('phpgwapi.jscalendar');
 			$jscal->add_listener('date');
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				(
+					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 
-				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-				'lang_datetitle'			=> lang('Select date'),
-				'calendar_setup'			=> "Calendar.setup({inputField  : 'date',ifFormat  : '" . $jsDateFormat . "',button : 'date-trigger'});",
+					'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+					'lang_datetitle'			=> lang('Select date'),
+					'calendar_setup'			=> "Calendar.setup({inputField  : 'date',ifFormat  : '" . $jsDateFormat . "',button : 'date-trigger'});",
 
-				'lang_select_conv'			=> lang('Select conversion'),
-				'conv_list'				=> $this->bo->select_export_conv($values['conv_type']),
-				'select_conv'				=> 'values[conv_type]',
-				'lang_conv_statustext'			=> lang('Select conversion'),
+					'lang_select_conv'			=> lang('Select conversion'),
+					'conv_list'					=> $this->bo->select_export_conv($values['conv_type']),
+					'select_conv'				=> 'values[conv_type]',
+					'lang_conv_statustext'		=> lang('Select conversion'),
 
-				'lang_select_file'			=> lang('Select file to roll back'),
-				'lang_no_file'				=> lang('No file selected'),
-				'lang_file_statustext'			=> lang('Select file to roll back'),
-				'select_file'				=> 'values[file]',
+					'lang_select_file'			=> lang('Select file to roll back'),
+					'lang_no_file'				=> lang('No file selected'),
+					'lang_file_statustext'		=> lang('Select file to roll back'),
+					'select_file'				=> 'values[file]',
 
-				'rollback_file_list'			=> $this->bo->select_rollback_file($values['file']),
-				'lang_export_to_file'			=> lang('Export to file'),
-				'value_debug'				=> $values['debug'],
+					'rollback_file_list'		=> $this->bo->select_rollback_file($values['file']),
+					'lang_export_to_file'		=> lang('Export to file'),
+					'value_debug'				=> $values['debug'],
 
-				'value_date'				=> $date,
-				'lang_date'				=> lang('Export date'),
-				'lang_date_statustext'			=> lang('Select date for the file to roll back'),
+					'value_date'				=> $date,
+					'lang_date'					=> lang('Export date'),
+					'lang_date_statustext'		=> lang('Select date for the file to roll back'),
 
-				'lang_submit'				=> lang('Submit'),
-				'lang_cancel'				=> lang('Cancel'),
+					'lang_submit'				=> lang('Submit'),
+					'lang_cancel'				=> lang('Cancel'),
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_save'				=> lang('save')
-			);
+					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_save'					=> lang('save')
+				);
 
-//_debug_array($data);
+			//_debug_array($data);
 
-			$appname		= lang('Invoice');
+			$appname			= lang('Invoice');
 			$function_msg		= lang('Rollback invoice');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('rollback' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 	}
-
