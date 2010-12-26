@@ -8,11 +8,11 @@
 			<select name="{$member_of_name}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
 				<xsl:attribute name="onMouseover">
 					<xsl:text>window.status='</xsl:text>
-						<xsl:value-of select="lang_cat_statustext"/>
+					<xsl:value-of select="lang_cat_statustext"/>
 					<xsl:text>'; return true;</xsl:text>
 				</xsl:attribute>
 				<option value=""><xsl:value-of select="lang_no_member"/></option>
-					<xsl:apply-templates select="member_of_list"/>
+				<xsl:apply-templates select="member_of_list"/>
 			</select>
 			<noscript>
 				<xsl:text> </xsl:text>
@@ -22,7 +22,7 @@
 	</xsl:template>
 
 	<xsl:template match="member_of_list">
-	<xsl:variable name="cat_id"><xsl:value-of select="cat_id"/></xsl:variable>
+		<xsl:variable name="cat_id"><xsl:value-of select="cat_id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected='selected'">
 				<option value="{$cat_id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>

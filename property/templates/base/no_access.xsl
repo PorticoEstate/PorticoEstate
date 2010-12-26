@@ -7,9 +7,9 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="no_access">
-		
+
 		<xsl:choose>
 			<xsl:when test="menu !=''">
 				<xsl:apply-templates select="menu"/> 
