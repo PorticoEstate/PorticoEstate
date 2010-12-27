@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	* @version $Id$
 	*/
 
 
@@ -33,12 +33,12 @@
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
 	$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 	$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
-	
+
 	$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
 
 	if ( isset($prefs['property']['mainscreen_show_new_updated_tts'])
-		&& $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
+	&& $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
@@ -73,7 +73,7 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$category_name = array(); // caching
@@ -118,7 +118,7 @@
 
 
 	if ( isset($prefs['property']['mainscreen_show_new_updated_tts_2'])
-		&& $prefs['property']['mainscreen_show_new_updated_tts_2'] == 'yes')
+	&& $prefs['property']['mainscreen_show_new_updated_tts_2'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['tts_status_2']) ? $prefs['property']['tts_status_2'] : '';
@@ -153,7 +153,7 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$category_name = array(); // caching
@@ -199,7 +199,7 @@
 
 
 	if ( isset($prefs['property']['mainscreen_show_new_updated_tts_3'])
-		&& $prefs['property']['mainscreen_show_new_updated_tts_3'] == 'yes')
+	&& $prefs['property']['mainscreen_show_new_updated_tts_3'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['tts_status_3']) ? $prefs['property']['tts_status_3'] : '';
@@ -234,7 +234,7 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$category_name = array(); // caching
@@ -278,7 +278,7 @@
 	}
 
 	if ( isset($prefs['property']['mainscreen_show_new_updated_tts_4'])
-		&& $prefs['property']['mainscreen_show_new_updated_tts_4'] == 'yes')
+	&& $prefs['property']['mainscreen_show_new_updated_tts_4'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['tts_status_4']) ? $prefs['property']['tts_status_4'] : '';
@@ -313,28 +313,28 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
-				$status = array();
-				$status['X'] = array
-				(
-					'name'			=> lang('closed'),
-				);
-				$status['O'] = array
-				(
-					'name'			=> lang('open'),
-				);
+		$status = array();
+		$status['X'] = array
+		(
+			'name'			=> lang('closed'),
+		);
+		$status['O'] = array
+		(
+			'name'			=> lang('open'),
+		);
 
-				$custom_status	= execMethod('property.botts.get_custom_status');
+		$custom_status	= execMethod('property.botts.get_custom_status');
 
-				foreach($custom_status as $custom)
-				{
-					$status["C{$custom['id']}"] = array
-					(
-						'status'			=> $custom['name'],
-					);
-				}
+		foreach($custom_status as $custom)
+		{
+			$status["C{$custom['id']}"] = array
+			(
+				'status'			=> $custom['name'],
+			);
+		}
 
 		$category_name = array(); // caching
 
@@ -370,7 +370,7 @@
 	}
 
 	if ( isset($prefs['property']['mainscreen_project_1'])
-		&& $prefs['property']['mainscreen_project_1'] == 'yes')
+	&& $prefs['property']['mainscreen_project_1'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['project_status_mainscreen_1']) ? $prefs['property']['project_status_mainscreen_1'] : '';
@@ -405,7 +405,7 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$portalbox->data = array();
@@ -426,7 +426,7 @@
 	}
 
 	if ( isset($prefs['property']['mainscreen_workorder_1'])
-		&& $prefs['property']['mainscreen_workorder_1'] == 'yes')
+	&& $prefs['property']['mainscreen_workorder_1'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
@@ -461,7 +461,7 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$portalbox->data = array();
@@ -481,7 +481,7 @@
 		unset($default_status);
 	}
 	if ( isset($prefs['property']['mainscreen_workorder_2'])
-		&& $prefs['property']['mainscreen_workorder_2'] == 'yes')
+	&& $prefs['property']['mainscreen_workorder_2'] == 'yes')
 	{
 
 		$default_status 	= isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
@@ -516,7 +516,7 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$portalbox->data = array();
@@ -537,11 +537,11 @@
 	}
 
 	if ( isset($prefs['property']['mainscreen_showapprovals_request'])
-		&& $prefs['property']['mainscreen_showapprovals_request'] == 'yes' )
+	&& $prefs['property']['mainscreen_showapprovals_request'] == 'yes' )
 	{
 		$total_records = 0;
 		$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title']? "{$prefs['property']['mainscreen_showapprovals_request_title']} ({$total_records})" : lang('approvals request') . " ({$total_records})";
-	
+
 		//TODO Make listbox css compliant
 		$portalbox = CreateObject('phpgwapi.listbox', array
 		(
@@ -572,14 +572,14 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$action_params = array
 		(
 			'appname'			=> 'property',
 			'location'			=> '.project',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> '',
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
@@ -605,7 +605,7 @@
 		(
 			'appname'			=> 'property',
 			'location'			=> '.project.workorder',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> '',
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
@@ -629,7 +629,7 @@
 		(
 			'appname'			=> 'property',
 			'location'			=> '.ticket',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> '',
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
@@ -649,7 +649,7 @@
 				'link' => $entry['url']
 			);
 		}
-		
+
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
 		unset($obj);
@@ -657,7 +657,7 @@
 	}
 
 	if ( isset($prefs['property']['mainscreen_showapprovals'])
-		&& $prefs['property']['mainscreen_showapprovals'] == 'yes' )
+	&& $prefs['property']['mainscreen_showapprovals'] == 'yes' )
 	{
 		$total_records = 0;
 		$title = 'dummy';	
@@ -691,14 +691,14 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$action_params = array
 		(
 			'appname'			=> 'property',
 			'location'			=> '.project',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> $accound_id,
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
@@ -718,14 +718,14 @@
 			);
 			$total_records++;
 		}
-		
-//		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
+
+		//		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 
 		$action_params = array
 		(
 			'appname'			=> 'property',
 			'location'			=> '.project.workorder',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> $accound_id,
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
@@ -735,7 +735,7 @@
 
 		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
-//		$portalbox->data = array();
+		//		$portalbox->data = array();
 		foreach ($pending_approvals as $entry)
 		{
 			$portalbox->data[] = array
@@ -750,7 +750,7 @@
 		(
 			'appname'			=> 'property',
 			'location'			=> '.ticket',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> $accound_id,
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
@@ -760,7 +760,7 @@
 
 		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
-//		$portalbox->data = array();
+		//		$portalbox->data = array();
 		foreach ($pending_approvals as $entry)
 		{
 			$portalbox->data[] = array
@@ -774,14 +774,14 @@
 		$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title']? "{$prefs['property']['mainscreen_showapprovals_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";	
 		$portalbox->setvar('title', $title);
 		$portalbox->start_template();
-		
+
 		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
 		unset($portalbox);
 		unset($pending_approvals);
 	}
 
 	if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
-		&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
+	&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
 	{
 		$total_records = 0;
 		$title = 'dummy';
@@ -814,14 +814,14 @@
 
 		foreach ( $var as $key => $value )
 		{
-//			$portalbox->set_controls($key,$value);
+			//			$portalbox->set_controls($key,$value);
 		}
 
 		$action_params = array
 		(
 			'appname'			=> 'property',
 			'location'			=> '.project.workorder',
-		//	'id'				=> $id,
+			//	'id'				=> $id,
 			'responsible'		=> '',
 			'responsible_type'  => 'vendor',
 			'action'			=> 'remind',
@@ -847,7 +847,7 @@
 			);
 			$total_records++;
 		}
-		
+
 		$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title']? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('vendor reminder') . " ({$total_records})";	
 		$portalbox->setvar('title', $title);
 		$portalbox->start_template();
@@ -856,7 +856,7 @@
 		unset($pending_reminder);
 		unset($portalbox);
 	}
-	
+
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
 	$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 

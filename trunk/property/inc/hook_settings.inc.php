@@ -24,20 +24,22 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	* @version $Id$
 	*/
 
 
-	$select_property_filter = array(
+	$select_property_filter =array
+	(
 		''	=> lang('Owner type'),
 		'owner'	=> lang('Owner')
 
 	);
 	create_select_box('Choose property filter','property_filter',$select_property_filter,'Filter by owner or owner type');
 
-	$yes_and_no = array(
+	$yes_and_no =array
+	(
 		'yes' => 'Yes',
-		'no'     => 'No'
+		'no'  => 'No'
 	);
 
 	create_select_box('Group filters in single query','group_filters',$yes_and_no,'Group filters - means that one has to hit the search button to apply the filter');
@@ -98,7 +100,7 @@
 
 	create_select_box('Default updated ticket status when creating project','tts_status_create_project',$_status_tts,'The default status when entering the helpdesk and mainscreen');
 	create_select_box('Autocreate project from ticket','auto_create_project_from_ticket',$yes_and_no);
-	
+
 	create_select_box('your projects on main screen - list 1','mainscreen_project_1',$yes_and_no,'Link to your projects');
 	create_select_box('Default project status 1','project_status_mainscreen_1',$_status_project,'The default status for list 1 when entering the mainscreen');
 	create_input_box('Custom title on projects on main screen - list 1','mainscreen_projects_1_title');
@@ -173,7 +175,8 @@
 	unset($sotts);
 	create_select_box('default ticket categories','tts_category',$_categories_tts,'The default category for TTS');
 
-	$yes_and_no = array(
+	$yes_and_no =array
+	(
 		'1' => 'Yes',
 		'2' => 'No'
 	);
@@ -192,13 +195,14 @@
 	create_select_box('Send order receipt as email ','order_email_rcpt',$yes_and_no,'Send the order as BCC to the user');
 	create_select_box('Notify owner of project/order on change','notify_project_owner',$yes_and_no,'By email');
 
-	$default_start_page = array(
+	$default_start_page =array
+	(
 		'location'   => lang('Location'),
 		'project' => lang('Project'),
 		'tts' => lang('Ticket'),
 		'invoice' => lang('Invoice'),
 		'document'=> lang('Document')
-		);
+	);
 	create_select_box('Default start page','default_start_page',$default_start_page,'Select your start-submodule');
 
 	$socommon= CreateObject('property.socommon');
@@ -253,7 +257,7 @@
 
 	create_select_box('Workorder Approval From','approval_from',$_accounts,'If you need approval from your supervisor for projects/workorders');
 
-//	if(!$email_org)
+	//	if(!$email_org)
 	{
 		create_input_box('Your Email','email','Insert your email address');
 	}
