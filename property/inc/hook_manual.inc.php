@@ -24,11 +24,12 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage core
- 	* @version $Id$
+	* @version $Id$
 	*/
 
 	// Only Modify the $file variable.....
-	$file = Array(
+	$file = array
+	(
 		'Location'							=>	'location.php',
 		'Entities'							=>	'entities.php',
 		'Project management'				=>	'project.php',
@@ -38,6 +39,6 @@
 		'Document register/Drawing register'	=>	'document.php',
 		'Helpdesk'							=>	'helpdesk.php'
 	);
-//Do not modify below this line
+	//Do not modify below this line
 	display_manual_section($appname,$file);
 
