@@ -4,8 +4,8 @@
 //phpgw::import_class('property.boitem');
 
     interface sobim {
-    	public $bimTypeTable = 'fm_bim_type';
-		public $bimItemTable = 'fm_bim_data';
+    	
+		const bimItemTable = 'fm_bim_data';
     	/*
     	 * @return array of BIM objects
     	 */
@@ -15,17 +15,7 @@
     	 * @return BIMItem 
     	 */
     	public function getBimObject($bimObjectId);
-    	/*
-    	 * @param string type
-    	 */
-    	public function getBimObjectType($type);
-    	/*
-    	 * @param $description max 512char string, may be null
-    	 * @param $name non empty string
-    	 * @throws exception if object type already exists
-    	 * @return int id of new object type
-    	 */
-    	public function addBimObjectType($name, $description);
+    	
     	
     }
     class sobim_impl implements sobim
@@ -54,29 +44,12 @@
             
             return $bimItemArray;
         }
-        /*
-         * @return boolean
-         */
-        public function addBimObjectType($name, $description = null) {
-        	if(is_null($description)) {
-        		$sql = "INSERT INTO $this->bimTypeTable (name) VALUES ('$name')";
-        	} else {
-        		$sql = "INSERT INTO $this->bimTypeTable (name, description) VALUES ('$name', '$description')";
-        	}
-			if(is_null($this->db->query($sql,__LINE__,__FILE__) )){
-				throw new Exception("Error adding object type!");
-			} else {
-				return true;
-			}
-        }
+        
         
         public function getBimObject($bimObjectGuid){
         	
         }
         
-        public function getBimObjectType($type) {
-        	
-        }
 
 
         
@@ -220,3 +193,5 @@
     	}
     	
     }
+    
+    
