@@ -18,6 +18,7 @@
 
 define('PHPGW_API_UNIT_TEST_PATH', dirname(__FILE__));
 
+
 include('..\..\inc\class.sobim.inc.php');
 include('..\..\inc\class.sobimtype.inc.php');
 
@@ -103,6 +104,8 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
      */
     public function tearDown()
     {
+    	//$this->removeTestItems();
+		//$this->removeTestTypes();
         $GLOBALS['phpgw']->session->destroy(self::$sessionid);
     }
     
@@ -127,7 +130,6 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 			//throw new Exception('At least one item already exists in database');
 			
 		} else {
-			echo "no";
 			$this->insertTestItem($this->projectXml->asXML(), $this->projectType, $this->projectGuid);
 			$this->insertTestItem($this->buildingStorey1xml->asXML(), $this->buildingStorey1Type, $this->buildingStorey1Guid);
 			$this->insertTestItem($this->buildingStorey2xml->asXML(), $this->buildingStorey2Type, $this->buildingStorey2Guid);

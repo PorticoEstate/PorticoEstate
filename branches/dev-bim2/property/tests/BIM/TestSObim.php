@@ -23,7 +23,7 @@
 
 
 
-class TestSOnotes extends PHPUnit_Framework_TestCase
+class TestSObim extends PHPUnit_Framework_TestCase
 {
 	private $bimTypeTableName = 'fm_bim_type';
 	private $bimItemTableName = 'fm_bim_data';
@@ -72,8 +72,7 @@ class TestSOnotes extends PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
-		//$this->removeTestItems();
-		//$this->removeTestTypes();
+		
 		 
 	}
 	
@@ -113,6 +112,31 @@ class TestSOnotes extends PHPUnit_Framework_TestCase
 		}
 	}
 	
-
+	public function testGetBimItem() {
+		$sobim = new sobim_impl($this->db);
+		/* @var $bimItem BimItem */
+		$bimItem = $sobim->getBimItem($this->projectGuid);
+		$this->assertNotNull($bimItem);
+		$bimItem->setDatabaseId(0);
+		$localBimItem = new BimItem(0, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
+		$this->assertEquals($localBimItem, $bimItem);
+	}
+	
+	public function testIfBimItemExists() {
+		$sobim = new sobim_impl($this->db);
+		$this->assertTrue($sobim->checkIfBimItemExists($this->projectGuid));
+	}
+	
+	public function testDeleteBimItem() {
+		$sobim = new sobim_impl($this->db);
+		$this->assertEquals(1, $sobim->deleteBimItem($this->projectGuid));
+	}
+	
+	public function testAddBimItem() {
+		$sobim = new sobim_impl($this->db);
+		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
+		var_dump($itemToBeAdded);
+		$this->assertEquals(1, $sobim->addBimItem($itemToBeAdded));
+	}
 	
 }
