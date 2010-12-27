@@ -20,6 +20,7 @@ interface sobim {
 	public function addBimItem($bimItem);
 	public function deleteBimItem($guid);
 	public function checkIfBimItemExists($guid);
+	public function updateBimItem($bimItem);
 }
 class sobim_impl implements sobim
 {
@@ -65,9 +66,10 @@ class sobim_impl implements sobim
 	
 	public function addBimItem($bimItem) {
 		/* @var $bimItem BimItem */
+		
 		$sql = "INSERT INTO ".self::bimItemTable." (type, guid, xml_representation) values (";
-		$sql = $sql."(select id from ".self::bimTypeTable." where name = '$bimItem->getType()'),";
-		$sql = $sql."'$bimItem->getGuid()', '$bimItem->getXml()')";
+		$sql = $sql."(select id from ".self::bimTypeTable." where name = '".$bimItem->getType()."'),";
+		$sql = $sql."'".$bimItem->getGuid()."', '".$bimItem->getXml()."')";
 		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
 			throw new Exception('Query to add item was unsuccessful');
 		} else {
@@ -96,6 +98,18 @@ class sobim_impl implements sobim
 			throw new Exception('Query to delete item was unsuccessful');
 		} else {
 			return $this->db->num_rows();
+		}
+	}
+	
+	public function updateBimItem($bimItem) {
+		if(!$this->checkIfBimItemExists($bimItem->getGuid())) {
+			throw new Exception("Item does not exist!");
+		}
+		$sql = "Update ".self::bimItemTable." set xml_representation='$bimItem->getXml()' where guid='".$bimItem->getGuid()."'";
+        if(is_null($this->db->query($sql,__LINE__,__FILE__) )){
+			throw new Exception("Error updating xml of bim item!");
+		} else {
+			return (bool)$this->db->num_rows();
 		}
 	}
 
@@ -181,7 +195,9 @@ class BimItem {
 	function getXml() {
 		return $this->xml;
 	}
-	
+	function setXml($xml) {
+		$this->xml = $xml;
+	}
 	 
 }
 

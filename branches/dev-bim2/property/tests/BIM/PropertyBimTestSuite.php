@@ -64,7 +64,8 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 		
         //$suite->addTestFiles(self::$suite_tests);
         
-        $suite_tests = array(dirname(__FILE__).'\TestSObim.php', dirname(__FILE__).'\TestSObimtype.php');
+       	$suite_tests = array(dirname(__FILE__).'\TestSObim.php', dirname(__FILE__).'\TestSObimtype.php');
+        
 		$suite->addTestFiles($suite_tests);
         return $suite;
     }

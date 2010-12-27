@@ -116,6 +116,7 @@ class TestSObim extends PHPUnit_Framework_TestCase
 		$sobim = new sobim_impl($this->db);
 		/* @var $bimItem BimItem */
 		$bimItem = $sobim->getBimItem($this->projectGuid);
+		var_dump($bimItem);
 		$this->assertNotNull($bimItem);
 		$bimItem->setDatabaseId(0);
 		$localBimItem = new BimItem(0, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
@@ -135,8 +136,17 @@ class TestSObim extends PHPUnit_Framework_TestCase
 	public function testAddBimItem() {
 		$sobim = new sobim_impl($this->db);
 		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
-		var_dump($itemToBeAdded);
 		$this->assertEquals(1, $sobim->addBimItem($itemToBeAdded));
+	}
+	
+	public function testUpdateBimItem() {
+		$sobim = new sobim_impl($this->db);
+		$bimItem = $sobim->getBimItem($this->projectGuid);
+		$xml = new SimpleXMLElement($bimItem->getXml());
+		$xml->attributes->name = "new name";
+		$bimItem->setXml($xml->asXML());
+		
+		$this->assertTrue($sobim->updateBimItem($bimItem));
 	}
 	
 }
