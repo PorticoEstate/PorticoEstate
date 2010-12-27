@@ -12,6 +12,7 @@ class property_uiitem {
     private $so;
     private $sogroup;
     private $bocommon;
+    private $dry_run;
     public $public_functions = array
     (
         'index' => true,
@@ -40,51 +41,37 @@ class property_uiitem {
                 'vendor'=>'invoice'
         );
 
-        $dry_run = false;
+        $this->dry_run = false;
 
         $datatable = array();
-
-        if(phpgw::get_var('phpgw_return_as') != 'json') {
-            // Set base URL. FIXME: Add more URL parameters when needed
-            $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-            (
-                'menuaction'=> 'property.uiitem.index',
-            ));
-            $datatable['config']['allow_allrows'] = true;
-            $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',group:'all'";
-			$this->setForm($datatable);
-			$dry_run=true;
+        $this->populateDataTable($datatable);
+		$json = $this->populateJson($datatable);
+		if( phpgw::get_var('phpgw_return_as') == 'json' )
+ 		{
+            return $json;
         }
+		$datatable['json_data'] = json_encode($json);
+		$this->loadYuiWidgets();
 
-        $item_list = $this->so->read($dry_run);
+        // Prepare template variables and process XSLT
+        $template_vars = array();
+        $template_vars['datatable'] = $datatable;
+        $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+        //print_r($template_vars);
+        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
-        $uicols	= $this->so->uicols;
-        $uicols_count = count($uicols['name']);
+        $this->setupCss();
 
-        
-		$this->populateDatatableRows($item_list, $datatable, $uicols, $uicols_count);
-		$this->addRowActionsToDatatable($datatable);
-		$this->populateColumnNames($datatable, $uicols, $uicols_count);
-        
+        //Title of Page
+        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
 
-        // path for property.js
-        $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+        // Prepare YUI Library
+        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'property' );
 
-        // Pagination and sort values
-		$this->setPagination($datatable, $item_list);
-		$this->setSorting($datatable);
-		
-        //$datatable['sorting']['order'] 	= phpgw::get_var('order', 'string'); // Column
-        //$datatable['sorting']['sort'] 	= phpgw::get_var('sort', 'string'); // ASC / DESC
-
-
-       
-
-
-//-- BEGIN----------------------------- JSON CODE ------------------------------
-
-            //values for Pagination
-            $json = array
+        //$this->save_sessiondata();
+    }
+    private function populateJson(&$datatable) {
+     	$json = array
             (
                 'recordsReturned' 	=> $datatable['pagination']['records_returned'],
                 'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
@@ -111,38 +98,51 @@ class property_uiitem {
                     $json['records'][] = $json_row;
                 }
             }
-
-            // right in datatable
+            
+    // right in datatable
             if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action'])) {
                 $json ['rights'] = $datatable['rowactions']['action'];
             }
-
-        if( phpgw::get_var('phpgw_return_as') == 'json' )
- 		{
-            return $json;
-        }
-			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
-
-        $this->loadYuiWidgets();
-
-        // Prepare template variables and process XSLT
-        $template_vars = array();
-        $template_vars['datatable'] = $datatable;
-        $GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-        //print_r($template_vars);
-        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
-
-        $this->setupCss();
-
-        //Title of Page
-        $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
-
-        // Prepare YUI Library
-        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'property' );
-
-        //$this->save_sessiondata();
+		return $json;
     }
+    private function populateDataTable(&$datatable) {
+    	if(phpgw::get_var('phpgw_return_as') != 'json') {
+            $this->setFormAndNonJsonProperties($datatable);
+        }
+
+        $item_list = $this->so->read($this->dry_run);
+
+        $uicols	= $this->so->uicols;
+        $uicols_count = count($uicols['name']);
+
+        
+		$this->populateDatatableRows($item_list, $datatable, $uicols, $uicols_count);
+		$this->addRowActionsToDatatable($datatable);
+		$this->populateColumnNames($datatable, $uicols, $uicols_count);
+        
+
+        // path for property.js
+        $datatable['property_js'] =  $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+        // Pagination and sort values
+		$this->setPagination($datatable, $item_list);
+		$this->setSorting($datatable);
+    }
+    private function setFormAndNonJsonProperties(&$datatable) {
+    	// Set base URL. FIXME: Add more URL parameters when needed
+            $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+            (
+                'menuaction'=> 'property.uiitem.index',
+            ));
+            $datatable['config']['allow_allrows'] = true;
+            $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',group:'all'";
+			$this->setForm($datatable);
+			$this->dry_run=true;
+    }
+    /*
+     * form on top of screen ( above the datatable)
+     * @see /phpgwapi/templates/base/datatable.xsl
+     */
     private function setForm(&$datatable) {
     	 $values_combo_box_0 = $this->sogroup->read(null);
             $default_value = array('id' => -1, 'name' => 'Alle grupper');
@@ -385,7 +385,16 @@ class property_uiitem {
     }
     
     public function foo() {
-    	echo "foooo";
+    	$formTest = array();
+    	$formTest['msgbox_text']= "ble1";
+    	$formTest['msgbox_class']= "classy";
+    	
+    	//$formTest['form_elm']['button']['value'] = "ble2";
+    	$template_vars = array();
+        $template_vars['msgbox_data'] = $formTest;
+        $GLOBALS['phpgw']->xslttpl->add_file(array('msgbox'));
+        //print_r($template_vars);
+        $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
     }
 
 
