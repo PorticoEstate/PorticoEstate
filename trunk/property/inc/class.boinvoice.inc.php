@@ -194,6 +194,11 @@
 			return $this->so->update_invoice_sub($values);
 		}
 
+		function update_single_line($values)
+		{
+			return $this->so->update_single_line($values);
+		}
+
 		function select_account_class($selected='')
 		{
 			$b_account_class_list= $this->so->select_account_class();

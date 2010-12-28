@@ -1778,46 +1778,67 @@
 			$voucher_id	= phpgw::get_var('voucher_id', 'int', 'GET');
 			$redirect	= false;
 
-			//_debug_array($id);
 			$values	= phpgw::get_var('values');
-
 
 			$receipt = array();
 			if (isset($values['save']))
 			{
+				$values['project_group'] = phpgw::get_var('project_group', 'int', 'POST');
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
 					$receipt['error'][]=array('msg'=>lang('repost'));
 				}
 
-				if(!isset($values['address']) || !$values['address'])
+				if(!isset($values['process_log']) || !$values['process_log'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Missing address'));
+					$receipt['error'][]=array('msg'=>lang('Missing log message'));
 				}
 
-				if(!isset($values['details']) || !$values['details'])
+				if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
 				{
-					$receipt['error'][]=array('msg'=>lang('Please give som details'));
+					$receipt['error'][]=array('msg'=>lang('No such order: %1',$values['order_id']));				
+				}
+
+				if(isset($values['split_line']) && isset($values['split_amount']) && $values['split_amount'])
+				{
+					$values['split_amount'] 		= str_replace(' ','',$values['split_amount']);
+					$values['split_amount'] 		= str_replace(',','.',$values['split_amount']);
+					if(!is_numeric($values['split_amount']))
+					{
+						$receipt['error'][]=array('msg'=>lang('Not a valid amount'));
+					}
 				}
 
 				if (!$receipt['error'])
 				{
 					$redirect = true;
+					$values['id'] = $id;
+					$line = $this->bo->update_single_line($values);
 				}
 			}
 
 			$line = $this->bo->get_single_line($id);
-			_debug_array($line);
+//			_debug_array($line);
+			$process_code_list = execMethod('property.bogeneric.get_list', array(
+				'type'		=> 'voucher_process_code',
+				'selected'	=> isset($values['process_code']) ? $values['process_code'] : $line['process_code']));
+
+			$project_group_data = $this->bocommon->initiate_project_group_lookup(array(
+				'project_group'			=> $values['project_group']?$values['project_group']:$line['project_group'],
+				'project_group_descr'	=> $values['project_group_descr']));
+
 
 			$data = array
-				(
-					'redirect'		=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)) : null,
-					'msgbox_data'	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
-					'from_name'		=> $GLOBALS['phpgw_info']['user']['fullname'],
-					'from_address'	=> $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
-					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
-					'support_address'	=> $support_address,
-				);
+			(
+					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)) : null,
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
+					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
+					'process_code_list' 	=> $process_code_list,
+					'project_group_data'	=> $project_group_data,
+					'order_id'				=> $line['order_id'],
+					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
+			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));

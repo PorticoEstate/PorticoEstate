@@ -190,6 +190,11 @@
 							'text'	=> lang('Accounting tax'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'tax') )
 						),
+						'process_code'	=> array
+						(
+							'text'	=> lang('voucher process code'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'voucher_process_code') )
+						),
 						'voucher_cats'	=> array
 						(
 							'text'	=> lang('Accounting voucher category'),

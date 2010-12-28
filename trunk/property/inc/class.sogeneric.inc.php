@@ -126,8 +126,10 @@
 				$uicols['sortable'][]		= isset($field['sortable']) && $field['sortable'] ? true : false;
 			}
 
+			$custom_fields = false;
 			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
 			{
+				$custom_fields = true;
 				$choice_table = 'phpgw_cust_choice';
 				$attribute_table = 'phpgw_cust_attribute';
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->location_info['acl_location']);
@@ -221,32 +223,35 @@
 				}
 				$querymethod .= ')';
 
-				$_querymethod = array();
-
-				$this->_db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'",__LINE__,__FILE__);
-
-				while ($this->_db->next_record())
+				if($custom_fields)
 				{
-					if($this->_db->f('datatype')=='V' || $this->_db->f('datatype')=='email' || $this->_db->f('datatype')=='CH')
+					$_querymethod = array();
+
+					$this->_db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'",__LINE__,__FILE__);
+
+					while ($this->_db->next_record())
 					{
-						$_querymethod[]= "$table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
-					}
-					else if($this->_db->f('datatype')=='I')
-					{
-						if(ctype_digit($query))
+						if($this->_db->f('datatype')=='V' || $this->_db->f('datatype')=='email' || $this->_db->f('datatype')=='CH')
 						{
-							$_querymethod[]= "$table." . $this->_db->f('column_name') . '=' . (int)$query;
+							$_querymethod[]= "$table." . $this->_db->f('column_name') . " {$this->_like} '%{$query}%'";
+						}
+						else if($this->_db->f('datatype')=='I')
+						{
+							if(ctype_digit($query))
+							{
+								$_querymethod[]= "$table." . $this->_db->f('column_name') . '=' . (int)$query;
+							}
+						}
+						else
+						{
+							$_querymethod[]= "$table." . $this->_db->f('column_name') . " = '$query'";
 						}
 					}
-					else
-					{
-						$_querymethod[]= "$table." . $this->_db->f('column_name') . " = '$query'";
-					}
-				}
 
-				if (isset($_querymethod) AND is_array($_querymethod))
-				{
-					$querymethod .= " $where (" . implode (' OR ',$_querymethod) . ')';
+					if (isset($_querymethod) AND is_array($_querymethod))
+					{
+						$querymethod .= " $where (" . implode (' OR ',$_querymethod) . ')';
+					}
 				}
 
 				$querymethod .= $_query_end;
@@ -299,13 +304,13 @@
 							{
 								switch ($method)
 								{
-								case 'get_user':
-									if($value)
-									{
-										$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
-									}
-									break;
-								default:
+									case 'get_user':
+										if($value)
+										{
+											$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
+										}
+										break;
+									default:
 									// nothing
 								}
 							}
@@ -322,8 +327,13 @@
 			$type_id		= (int)$type_id;
 			$this->type		= $type;
 			$this->type_id	= $type_id;
-
 			$info = array();
+
+			if(!$type)
+			{
+				return $info;
+			}
+
 			switch($type)
 			{
 				//-------- ID type integer
@@ -1171,6 +1181,33 @@
 					);
 
 				break;
+			case 'voucher_process_code':
+				$info = array
+					(
+						'table' 			=> 'fm_ecobilag_process_code',
+						'id'				=> array('name' => 'id', 'type' => 'varchar'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+						),
+						'edit_msg'			=> lang('edit process code'),
+						'add_msg'			=> lang('add process code'),
+						'name'				=> lang('process code'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::accounting::process_code',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						)
+					);
+				break;
 
 				//-------- ID type auto
 			case 'order_dim1':
@@ -1593,7 +1630,7 @@
 				$receipt = array();
 				$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
 				phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
-				//	throw new Exception(lang('ERROR: illegal type %1', $type));
+//				throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 
 			$this->location_info = $info;
@@ -1672,7 +1709,17 @@
 					$filtermthod = 'WHERE ' . implode(' AND ', $_filter);
 				}
 			}
-			$order		= isset($data['order']) && $data['order'] ? $data['order'] :'descr';
+
+			$order		= isset($data['order']) && $data['order'] ? $data['order'] :'';
+
+			if ($order)
+			{
+				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
+			}
+			else
+			{
+				$ordermethod = " ORDER BY {$table}.{$this->location_info['id']['name']} ASC";
+			}
 
 			foreach ($this->location_info['fields'] as $field)
 			{
@@ -1691,7 +1738,7 @@
 
 			$fields = implode(',', $fields);
 
-			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} ORDER BY {$order}");
+			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}");
 
 			while ($this->_db->next_record())
 			{
