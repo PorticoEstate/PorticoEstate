@@ -53,7 +53,7 @@
 			var frame = document.createElement('iframe');
 			frame.src = sUrl;
 			frame.width = "100%";
-			frame.height = "350";
+			frame.height = "400";
 			o.setBody(frame);
 		};
 		lightbox.showEvent.subscribe(onDialogShow, lightbox);

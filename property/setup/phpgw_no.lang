@@ -1007,6 +1007,7 @@ minor	property	no	Liten
 minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
+Missing log message	property	no	Angi grunn for endring
 missing value for %1	property	no	Mangler verdi for %1
 month	property	no	Måned
 Monthly (by day)	property	no	Månedlig (dag)
@@ -1778,6 +1779,8 @@ voucher id	property	no	Bilags nr
 voucher is updated	property	no	Bilag er oppdatert
 voucher is updated:	property	no	Bilag er oppdatert:
 voucher period is updated	property	no	bilags periode er oppdatert
+voucher process code	property	no	Årsakskode
+voucher process log	property	no	Fakturalogg
 Warning: the record has to be saved in order to plan an event	property	no	NB! posten må lagres før hendelse kan planlegges
 warning: show cost estimate	property	no	Advarsel: kostnadsestimat blir synlig for leverandør
 w_cost	property	no	Arbeidskostnad

@@ -358,9 +358,9 @@
 			}
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
-				. "fm_workorder.claim_issued, fm_workorder.paid_percent, project_group FROM $table"
+				. "fm_workorder.claim_issued, fm_workorder.paid_percent FROM $table"
 				. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
-				. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
+	//			. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
 				. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
@@ -376,7 +376,7 @@
 					(
 						'counter'				=> $i,
 						'claim_issued'			=> $this->db->f('claim_issued'),
-						'project_id'			=> $this->db->f('project_id'),
+				//		'project_id'			=> $this->db->f('project_id'),
 						'workorder_id'			=> $this->db->f('pmwrkord_code'),
 						'status'				=> $this->db->f('status'),
 						'closed'				=> $this->db->f('status') == $closed,
@@ -393,7 +393,7 @@
 						'charge_tenant'			=> $this->db->f('charge_tenant'),
 						'vendor'				=> $this->db->f('org_name'),
 						'paid_percent'			=> $this->db->f('paid_percent'),
-						'project_group'			=> $this->db->f('project_group'),
+						'project_group'			=> $this->db->f('project_id'),
 						'external_ref'			=> $this->db->f('external_ref'),
 						'currency'				=> $this->db->f('currency')
 					);
@@ -706,6 +706,70 @@
 			return $receipt;
 		}
 
+		function update_single_line($values)
+		{
+			$table ='fm_ecobilag';
+			$id = (int)$values['id'];
+
+			$value_set= array
+			(
+				'project_id'	=> $values['project_group'],
+				'pmwrkord_code'	=> $values['order_id'],
+				'process_log'	=> $this->db->db_addslashes($values['process_log']),
+				'process_code'	=> $values['process_code'],
+			);
+
+			$value_set	= $this->db->validate_update($value_set);
+			$this->db->transaction_begin();
+			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+
+			if(isset($values['split_line']) && $values['split_amount'] && isset($values['split_amount']) && $values['split_amount'])
+			{
+				$sql ="SELECT * FROM {$table} WHERE id= {$id}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$metadata = $this->db->metadata($table);
+
+				$value_set = array();
+
+				foreach($metadata as $_field)
+				{
+					if($_field->name != 'id')
+					{
+						$value_set[$_field->name] = $this->db->f($_field->name,true);
+					}
+				}
+
+				$this->db->query( "INSERT INTO {$table} (" . implode( ',', array_keys($value_set) ) . ')'
+					. ' VALUES (' . $this->db->validate_insert( array_values($value_set) ) . ')',__LINE__,__FILE__);
+
+				$new_id = $this->db->get_last_insert_id($table,'id');
+
+				$this->db->query("SELECT belop FROM {$table} WHERE id={$id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$amount = $this->db->f('belop');
+				$new_amount = $amount - $values['split_amount'];
+
+				$value_set= array
+				(
+					'belop'			=> $new_amount,
+					'godkjentbelop' => $new_amount,
+				);
+				$value_set	= $this->db->validate_update($value_set);
+				$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
+
+				$value_set= array
+				(
+					'belop'			=> $values['split_amount'],
+					'godkjentbelop' => $values['split_amount'],
+				);
+				$value_set	= $this->db->validate_update($value_set);
+				$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$new_id}" ,__LINE__,__FILE__);
+			}
+
+			$this->db->transaction_commit();
+		}
+
 		function read_remark($id='',$paid='')
 		{
 			if ($paid)
@@ -947,6 +1011,7 @@
 						'budget_responsible'=> $this->db->f('budsjettansvarligid'),
 						'invoice_date' 		=> $this->db->f('fakturadato'),
 						'project_id'		=> $this->db->f('project_id'),
+						'project_group'		=> $this->db->f('project_id'),
 						'payment_date' 		=> $this->db->f('forfallsdato'),
 						'merknad'			=> $this->db->f('merknad'),
 						'b_account_id'		=> $this->db->f('spbudact_code'),
@@ -954,7 +1019,9 @@
 						'order'				=> $this->db->f('pmwrkord_code'),
 						'order_id'			=> $this->db->f('pmwrkord_code'),
 						'kostra_id'			=> $this->db->f('kostra_id'),
-						'currency'			=> $this->db->f('currency')
+						'currency'			=> $this->db->f('currency'),
+						'process_code'		=> $this->db->f('process_code'),
+						'process_log'		=> $this->db->f('process_log',true),
 					);
 			}
 			//_debug_array($values);
