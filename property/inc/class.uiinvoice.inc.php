@@ -1769,6 +1769,11 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'invoice.list_sub', 'property' );
 		}
 
+		/**
+		 * Edit single line within a voucher
+		 *
+		 */
+
 		public function edit()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] =  true;
@@ -1777,6 +1782,29 @@
 			$user_lid	= phpgw::get_var('user_lid', 'string', 'GET');
 			$voucher_id	= phpgw::get_var('voucher_id', 'int', 'GET');
 			$redirect	= false;
+
+			$role_check = array
+			(
+				'is_janitor' 				=> lang('janitor'),
+				'is_supervisor' 			=> lang('supervisor'),
+				'is_budget_responsible' 	=> lang('b - responsible')
+			);
+
+			$roles 	= $this->bo->check_role();
+
+			$approve = array();
+			foreach ($roles as $role => $role_value)
+			{
+				if ($role_value && isset($role_check[$role]))
+				{
+					$approve[] = array
+					(
+						'id'		=> $role,
+						'name'		=> $role_check[$role],
+						'selected'	=> 0
+					);
+				}	
+			}
 
 			$values	= phpgw::get_var('values');
 
@@ -1789,14 +1817,19 @@
 					$receipt['error'][]=array('msg'=>lang('repost'));
 				}
 
+				if(!$approve)
+				{
+					$receipt['error'][]=array('msg'=>lang('you are not approved for this task'));					
+				}
+
 				if(!isset($values['process_log']) || !$values['process_log'])
 				{
-					$receipt['error'][]=array('msg'=>lang('Missing log message'));
+//					$receipt['error'][]=array('msg'=>lang('Missing log message'));
 				}
 
 				if( isset($values['order_id']) && $values['order_id'] && !execMethod('property.soXport.check_order',$values['order_id']) )
 				{
-					$receipt['error'][]=array('msg'=>lang('No such order: %1',$values['order_id']));				
+					$receipt['error'][]=array('msg'=>lang('no such order: %1',$values['order_id']));				
 				}
 
 				if(isset($values['split_line']) && isset($values['split_amount']) && $values['split_amount'])
@@ -1818,7 +1851,79 @@
 			}
 
 			$line = $this->bo->get_single_line($id);
+
 //			_debug_array($line);
+
+			$approved_list = array();
+			
+			$approved_list[] = array
+			(
+				'role'		=> $role_check['is_janitor'],
+				'initials'	=> $line['janitor'] ? $line['janitor'] : '',
+				'date'		=> $line['oppsynsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $line['oppsynsigndato'] ) ) :''
+			);
+			$approved_list[] = array
+			(
+				'role'		=> $role_check['is_supervisor'],
+				'initials'	=> $line['supervisor'] ? $line['supervisor'] : '',
+				'date'		=> $line['saksigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $line['saksigndato'] ) ) :''
+			);
+			$approved_list[] = array
+			(
+				'role'		=> $role_check['is_budget_responsible'],
+				'initials'	=> $line['budget_responsible'] ? $line['budget_responsible'] : '',
+				'date'		=> $line['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date( strtotime( $line['budsjettsigndato'] ) ) :''
+			);
+
+			$my_initials = $GLOBALS['phpgw_info']['user']['account_lid'];
+
+			foreach($approve as &$_approve)
+			{
+				if($_approve['id'] == 'is_janitor' && $my_initials == $line['janitor'] && $line['oppsynsigndato'])
+				{
+					$_approve['selected'] = 1;
+					$sign_orig = 'is_janitor';
+				}
+				else if($_approve['id'] == 'is_supervisor' && $my_initials == $line['supervisor'] && $line['saksigndato'])
+				{
+					$_approve['selected'] = 1;
+					$sign_orig = 'is_supervisor';
+				}
+				else if($_approve['id'] == 'is_budget_responsible' && $my_initials == $line['budget_responsible'] && $line['budsjettsigndato'])
+				{
+					$_approve['selected'] = 1;
+					$sign_orig = 'is_budget_responsible';
+				}
+			}
+
+			unset($_approve);
+
+			$approve_list = array();
+			foreach($approve as $_approve)
+			{
+				if($_approve['id'] == 'is_janitor')
+				{
+					if(($my_initials == $line['janitor'] && $line['oppsynsigndato']) || !$line['oppsynsigndato'])
+					{
+						$approve_list[] = $_approve;
+					}
+				}
+				if($_approve['id'] == 'is_supervisor')
+				{
+					if(($my_initials == $line['supervisor'] && $line['saksigndato']) || !$line['saksigndato'])
+					{
+						$approve_list[] = $_approve;
+					}
+				}
+				if($_approve['id'] == 'is_budget_responsible')
+				{
+					if(($my_initials == $line['budget_responsible'] && $line['budsjettsigndato']) || !$line['budsjettsigndato'])
+					{
+						$approve_list[] = $_approve;
+					}
+				}
+			}
+
 			$process_code_list = execMethod('property.bogeneric.get_list', array(
 				'type'		=> 'voucher_process_code',
 				'selected'	=> isset($values['process_code']) ? $values['process_code'] : $line['process_code']));
@@ -1827,16 +1932,21 @@
 				'project_group'			=> $values['project_group']?$values['project_group']:$line['project_group'],
 				'project_group_descr'	=> $values['project_group_descr']));
 
-
 			$data = array
 			(
 					'redirect'				=> $redirect ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub', 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)) : null,
 					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
 					'from_name'				=> $GLOBALS['phpgw_info']['user']['fullname'],
 					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiinvoice.edit', 'id' => $id, 'user_lid' => $user_lid, 'voucher_id' => $voucher_id)),
+					'approve_list'			=> $approve_list,
+					'approved_list'			=> $approved_list,
+					'sign_orig'				=> $sign_orig,
+					'my_initials'			=> $my_initials,
 					'process_code_list' 	=> $process_code_list,
 					'project_group_data'	=> $project_group_data,
 					'order_id'				=> $line['order_id'],
+					'value_amount'			=> $line['amount'],
+					'value_currency'		=> $line['currency'],
 					'value_process_log'		=>  isset($values['process_log']) && $values['process_log'] ? $values['process_log'] : $line['process_log']
 			);
 
@@ -3170,12 +3280,12 @@
 			$order_type = $soXport->check_order($order_id);
 			switch($order_type)
 			{
-			case 'workorder':
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id));
-				break;
-			case 's_agreement':
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
-				break;
+				case 'workorder':
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.edit', 'id'=> $order_id));
+					break;
+				case 's_agreement':
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
+					break;
 			}
 		}
 	}
