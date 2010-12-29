@@ -41,7 +41,7 @@
 							<xsl:value-of select="lang_content_statustext"/>
 							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
-						<xsl:value-of select="remark"/>		
+						<xsl:value-of select="remark"/>
 					</textarea>
 				</td>
 			</tr>
@@ -203,7 +203,7 @@
 				</xsl:attribute>
 				<xsl:for-each select="row" >
 					<td align="{align}">
-						<xsl:value-of select="value"/>					
+						<xsl:value-of select="value"/>
 					</td>
 				</xsl:for-each>
 			</tr>
@@ -249,8 +249,7 @@
 			function abook()
 			{
 			Window1=window.open('<xsl:value-of select="addressbook_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
-		</script>
+			}			</script>
 
 		<xsl:apply-templates select="menu"/>
 		<div align="left">
@@ -274,8 +273,8 @@
 						<tr>
 							<td align="left" colspan="3">
 								<xsl:variable name="link_receipt"><xsl:value-of select="link_receipt"/></xsl:variable>
-								<a href="{$link_receipt}" onMouseover="window.status='{lang_receipt}';return true;" onMouseout="window.status='';return true;" target="_blank"><xsl:value-of select="lang_receipt"/></a>
-
+								<a href="{$link_receipt}" onMouseover="window.status='{lang_receipt}';return true;" onMouseout="window.status='';return true;" target="_blank"><xsl:value-of select="lang_receipt"/>
+								</a>
 							</td>
 						</tr>
 					</xsl:when>
@@ -528,9 +527,8 @@
 									<xsl:value-of select="lang_merknad_statustext"/>
 									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
-								<xsl:value-of select="value_merknad"/>		
+								<xsl:value-of select="value_merknad"/>
 							</textarea>
-
 						</td>
 					</tr>
 
@@ -575,8 +573,7 @@
 			function abook()
 			{
 			Window1=window.open('<xsl:value-of select="addressbook_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-			}		
-		</script>
+			}			</script>
 
 		<xsl:apply-templates select="menu"/>
 		<div align="left">
@@ -880,8 +877,7 @@
 		</div>
 	</xsl:template>
 
-<!-- art_list -->	
-
+<!-- art_list -->
 	<xsl:template match="art_list">
 		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
@@ -894,8 +890,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- type_list -->	
-
+<!-- type_list -->
 	<xsl:template match="type_list">
 		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
@@ -908,8 +903,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- dimb_list -->	
-
+<!-- dimb_list -->
 	<xsl:template match="dimb_list">
 		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
@@ -923,8 +917,7 @@
 	</xsl:template>
 
 
-<!-- janitor_list -->	
-
+<!-- janitor_list -->
 	<xsl:template match="janitor_list">
 		<xsl:variable name="lid"><xsl:value-of select="lid"/></xsl:variable>
 		<xsl:choose>
@@ -937,8 +930,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- supervisor_list -->	
-
+<!-- supervisor_list -->
 	<xsl:template match="supervisor_list">
 		<xsl:variable name="lid"><xsl:value-of select="lid"/></xsl:variable>
 		<xsl:choose>
@@ -951,8 +943,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- budget_responsible_list -->	
-
+<!-- budget_responsible_list -->
 	<xsl:template match="budget_responsible_list">
 		<xsl:variable name="lid"><xsl:value-of select="lid"/></xsl:variable>
 		<xsl:choose>
@@ -966,8 +957,7 @@
 	</xsl:template>
 
 
-<!-- conv_list -->	
-
+<!-- conv_list -->
 	<xsl:template match="conv_list">
 		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
@@ -980,8 +970,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- rollback_file_list -->	
-
+<!-- rollback_file_list -->
 	<xsl:template match="rollback_file_list">
 		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
@@ -994,8 +983,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- tax_code_list -->	
-
+<!-- tax_code_list -->
 	<xsl:template match="tax_code_list">
 		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
@@ -1206,6 +1194,26 @@
 					</xsl:when>
 				</xsl:choose>
 				<!--<xsl:variable name="lang_process_code"><xsl:value-of select="php:function('lang', 'voucher process code')" /></xsl:variable>-->
+				<xsl:apply-templates select="approved_list"/>
+				<tr>
+					<input type="hidden" name="values[sign_orig]" value="{sign_orig}"></input>
+					<input type="hidden" name="values[my_initials]" value="{my_initials}"></input>
+					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
+						<xsl:value-of select="php:function('lang', 'approve')" />
+					</td>
+                    <td class="th_text" valign="top">
+						<select name="values[approve]" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'grant')" />
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')" />
+							</option>
+							<xsl:apply-templates select="approve_list"/>
+						</select>
+					</td>
+				</tr>
+
 				<tr>
 					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'voucher process code')" />
@@ -1219,8 +1227,7 @@
 								<xsl:value-of select="php:function('lang', 'voucher process code')" />
 							</option>
 							<xsl:apply-templates select="process_code_list"/>
-						</select>			
-					</td>
+						</select>							</td>
 				</tr>
 				<xsl:call-template name="project_group_form"/>
 				<tr>
@@ -1247,8 +1254,8 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'voucher process log')" />
 							</xsl:attribute>
-							<xsl:value-of select="value_process_log"/>		
-						</textarea>
+							<xsl:value-of select="value_process_log"/>
+							</textarea>
 					</td>
 				</tr>
 				<tr>
@@ -1261,6 +1268,11 @@
 								<xsl:value-of select="php:function('lang', 'split line')" />
 							</xsl:attribute>
 						</input>
+						<xsl:text> [ </xsl:text>
+						<xsl:value-of select="value_amount"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="value_currency"/>
+						<xsl:text> ]</xsl:text>
 					</td>
 				</tr>
 				<tr>
@@ -1281,7 +1293,7 @@
 
 				<tr height="50">
 					<td>
-						<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>					
+						<xsl:variable name="lang_send"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 						<input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'>
 						</input>
 					</td>
@@ -1296,7 +1308,29 @@
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected" />
 			</xsl:if>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
+			<xsl:value-of select="name"/>
 		</option>
+	</xsl:template>
+
+	<xsl:template match="approve_list">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of select="name"/>
+		</option>
+	</xsl:template>
+	<xsl:template match="approved_list">
+		<tr>
+			<td align = "left" style="white-space: nowrap;">
+				<xsl:value-of select="role"/>					</td>
+			<td align = "left" style="white-space: nowrap;">
+				<xsl:if test="initials != ''">
+					<xsl:value-of select="initials"/>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="date"/>
+				</xsl:if>
+			</td>
+		</tr>
 	</xsl:template>
 

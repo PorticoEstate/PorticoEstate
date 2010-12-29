@@ -278,7 +278,6 @@
 					$invoice[$i]['is_janitor']				= $role['is_janitor'];
 					$invoice[$i]['is_supervisor']			= $role['is_supervisor'];
 					$invoice[$i]['is_budget_responsible']	= $role['is_budget_responsible'];
-					$invoice[$i]['is_janitor']				= $role['is_janitor'];
 					$invoice[$i]['is_transfer']				= $role['is_transfer'];
 					$invoice[$i]['janitor']					= $this->db->f('oppsynsmannid');
 					$invoice[$i]['supervisor']				= $this->db->f('saksbehandlerid');
@@ -711,7 +710,49 @@
 			$table ='fm_ecobilag';
 			$id = (int)$values['id'];
 
-			$value_set= array
+			$this->db->transaction_begin();
+
+			// Approval applies to all lines within voucher
+			if( $values['approve'] != $values['sign_orig'] )
+			{
+				switch ( $values['sign_orig'] )
+				{
+					case 'is_janitor':
+						$value_set['oppsynsigndato'] = null;
+						break;
+					case 'is_supervisor':
+						$value_set['saksigndato'] = null;
+						break;
+					case 'is_budget_responsible':
+						$value_set['budsjettsigndato'] = null;
+						break;
+				}
+ 
+				switch ( $values['approve'] )
+				{
+					case 'is_janitor':
+						$value_set['oppsynsigndato'] = date( $this->db->datetime_format() );
+						$value_set['oppsynsmannid'] = $values['my_initials'];
+						break;
+					case 'is_supervisor':
+						$value_set['saksigndato'] = date( $this->db->datetime_format() );
+						$value_set['saksbehandlerid'] = $values['my_initials'];
+						break;
+					case 'is_budget_responsible':
+						$value_set['budsjettsigndato'] = date( $this->db->datetime_format() );
+						$value_set['budsjettansvarligid'] = $values['my_initials'];
+						break;
+				}
+
+				$sql ="SELECT bilagsnr FROM {$table} WHERE id= {$id}";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+				$bilagsnr = (int)$this->db->f('bilagsnr');
+				$value_set	= $this->db->validate_update($value_set);
+				$this->db->query("UPDATE {$table} SET $value_set WHERE bilagsnr= {$bilagsnr}" ,__LINE__,__FILE__);
+			}
+
+			$value_set = array
 			(
 				'project_id'	=> $values['project_group'],
 				'pmwrkord_code'	=> $values['order_id'],
@@ -720,15 +761,15 @@
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
-			$this->db->transaction_begin();
+
 			$this->db->query("UPDATE {$table} SET $value_set WHERE id= {$id}" ,__LINE__,__FILE__);
 
 			if(isset($values['split_line']) && $values['split_amount'] && isset($values['split_amount']) && $values['split_amount'])
 			{
+				$metadata = $this->db->metadata($table);
 				$sql ="SELECT * FROM {$table} WHERE id= {$id}";
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
-				$metadata = $this->db->metadata($table);
 
 				$value_set = array();
 
@@ -791,7 +832,7 @@
 		{
 			if(!isset($this->role) || !$this->role)
 			{
-				$this->role=array(
+				$this->role = array(
 					'is_janitor' 				=> $this->acl->check('.invoice', 32, 'property'),
 					'is_supervisor' 			=> $this->acl->check('.invoice', 64, 'property'),
 					'is_budget_responsible' 	=> $this->acl->check('.invoice', 128, 'property'),
@@ -996,34 +1037,40 @@
 			{
 				$values[] = array
 					(
-						'id'				=> $this->db->f('id'),
-						'art'				=> $this->db->f('artid'),
-						'type'				=> $this->db->f('typeid'),
-						'dim_a'				=> $this->db->f('dima'),
-						'dim_b'				=> $this->db->f('dimb'),
-						'dim_d'				=> $this->db->f('dimd'),
-						'tax'				=> $this->db->f('mvakode'),
-						'invoice_id'		=> $this->db->f('fakturanr'),
-						'kid_nr'			=> $this->db->f('kidnr'),
-						'vendor_id'			=> $this->db->f('spvend_code'),
-						'janitor'			=> $this->db->f('oppsynsmannid'),
-						'supervisor'		=> $this->db->f('saksbehandlerid'),
-						'budget_responsible'=> $this->db->f('budsjettansvarligid'),
-						'invoice_date' 		=> $this->db->f('fakturadato'),
-						'project_id'		=> $this->db->f('project_id'),
-						'project_group'		=> $this->db->f('project_id'),
-						'payment_date' 		=> $this->db->f('forfallsdato'),
-						'merknad'			=> $this->db->f('merknad'),
-						'b_account_id'		=> $this->db->f('spbudact_code'),
-						'amount'			=> $this->db->f('belop'),
-						'order'				=> $this->db->f('pmwrkord_code'),
-						'order_id'			=> $this->db->f('pmwrkord_code'),
-						'kostra_id'			=> $this->db->f('kostra_id'),
-						'currency'			=> $this->db->f('currency'),
-						'process_code'		=> $this->db->f('process_code'),
-						'process_log'		=> $this->db->f('process_log',true),
+						'id'					=> $this->db->f('id'),
+						'art'					=> $this->db->f('artid'),
+						'type'					=> $this->db->f('typeid'),
+						'dim_a'					=> $this->db->f('dima'),
+						'dim_b'					=> $this->db->f('dimb'),
+						'dim_d'					=> $this->db->f('dimd'),
+						'tax'					=> $this->db->f('mvakode'),
+						'invoice_id'			=> $this->db->f('fakturanr'),
+						'kid_nr'				=> $this->db->f('kidnr'),
+						'vendor_id'				=> $this->db->f('spvend_code'),
+						'janitor'				=> $this->db->f('oppsynsmannid'),
+						'supervisor'			=> $this->db->f('saksbehandlerid'),
+						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
+						'invoice_date' 			=> $this->db->f('fakturadato'),
+						'project_id'			=> $this->db->f('project_id'),
+						'project_group'			=> $this->db->f('project_id'),
+						'payment_date' 			=> $this->db->f('forfallsdato'),
+						'merknad'				=> $this->db->f('merknad'),
+						'b_account_id'			=> $this->db->f('spbudact_code'),
+						'amount'				=> $this->db->f('belop'),
+						'order'					=> $this->db->f('pmwrkord_code'),
+						'order_id'				=> $this->db->f('pmwrkord_code'),
+						'kostra_id'				=> $this->db->f('kostra_id'),
+						'currency'				=> $this->db->f('currency'),
+						'process_code'			=> $this->db->f('process_code'),
+						'process_log'			=> $this->db->f('process_log',true),
+						'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
+						'saksigndato'			=> $this->db->f('saksigndato'),
+						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
 					);
 			}
+
+
+
 			//_debug_array($values);
 			return $values;
 		}

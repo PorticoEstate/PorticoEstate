@@ -169,6 +169,7 @@ approvals	property	no	Godkjenninger
 approvals request	property	no	Anmodninger om godkjenning
 approval from	property	no	Godkjenning fra
 approval from is updated	property	no	Godkjenning fra er oppdatert
+approve	property	no	Godkjenn
 approved	property	no	Godkjent
 archive	property	no	Arkiv
 art	property	no	Art
@@ -1065,6 +1066,7 @@ no part of town	property	no	Bydel ikke valgt
 no revision	property	no	Ingen revisjon
 no role	property	no	Rolle ikke valgt
 no status	property	no	Status ikke valgt
+no such order: %1	property	no	Ordre %1 finnes ikke
 no supervisor	property	no	Attestant ikke valgt
 note	property	no	Notat
 nothing to do!	property	no	Ingen ting å gjøre
@@ -1547,6 +1549,7 @@ sorting	property	no	Sortering
 sort the tickets by their id	property	no	sorter meldinger etter ID
 sort the tickets by their priority	property	no	sorter meldinger etter prioritet
 space	property	no	Areal
+split line	property	no	Splitt linje
 sql	property	no	SQL
 standard	property	no	standard
 standard description	property	no	NS 3420

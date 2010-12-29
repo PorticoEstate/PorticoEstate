@@ -613,4 +613,10 @@
 			}
 			return $line;
 		}
+
+		function check_role()
+		{
+			return $this->so->check_role();
+		}
+
 	}
