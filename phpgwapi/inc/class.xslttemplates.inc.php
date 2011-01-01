@@ -172,7 +172,7 @@
 						return true;
 					case 6:
 						$this->halt("filename: file $new_filename.xsl does not exist.");
-						break true;
+						break;
 					default:
 						$this->add_file($filename, $rootdir, 2);
 						return true;
