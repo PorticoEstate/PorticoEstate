@@ -187,13 +187,18 @@
 
 				$cols .= ",fm_workorder.entry_date as entry_date";
 				$cols_return[] 				= 'entry_date';
+				$cols .= ",fm_workorder.start_date as start_date";
+				$cols_return[] 				= 'start_date';
+				$cols .= ",fm_workorder.end_date as end_date";
+				$cols_return[] 				= 'end_date';
+/*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
 				$uicols['descr'][]			= lang('Entry date');
 				$uicols['statustext'][]		= lang('Workorder entry date');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
-
+*/
 				$cols .= ",phpgw_accounts.account_lid as user_lid";
 				$cols_return[] 				= 'user_lid';
 				$uicols['input_type'][]		= 'text';

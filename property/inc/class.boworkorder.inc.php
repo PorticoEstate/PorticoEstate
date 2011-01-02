@@ -175,11 +175,29 @@
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = array();
+
+			$columns[] = array
+				(
+					'id' => 'entry_date',
+					'name'=> lang('entry date')
+				);
+
+			$columns[] = array
+				(
+					'id' => 'start_date',
+					'name'=> lang('start date')
+				);
+			$columns[] = array
+				(
+					'id' => 'end_date',
+					'name'=> lang('end date')
+				);
 			$columns[] = array
 				(
 					'id' => 'billable_hours',
 					'name'=> lang('billable hours')
 				);
+
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -402,6 +420,8 @@
 			foreach ($workorder as &$entry)
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
 			}
 
 			return $workorder;

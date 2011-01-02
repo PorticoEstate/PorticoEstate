@@ -126,6 +126,16 @@
 			$columns = array();
 			$columns[] = array
 				(
+					'id' => 'entry_date',
+					'name'=> lang('entry date')
+				);
+			$columns[] = array
+				(
+					'id' => 'start_date',
+					'name'=> lang('start date')
+				);
+			$columns[] = array
+				(
 					'id' => 'end_date',
 					'name'=> lang('end date')
 				);
@@ -348,6 +358,7 @@
 
 			foreach ($project as & $entry)
 			{
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
 				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
 				if(!isset($data['skip_origin']) || !$data['skip_origin'])
