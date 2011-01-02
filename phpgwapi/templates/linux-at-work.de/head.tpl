@@ -5,8 +5,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="AUTHOR" content="phpGroupWare http://www.phpgroupware.org" />
-		<meta NAME="description" CONTENT="phpGroupWare" />
-		<meta NAME="keywords" CONTENT="phpGroupWare" />
+		<meta name="description" content="phpGroupWare" />
+		<meta name="keywords" content="phpGroupWare" />
 		<meta name="robots" content="none" />
 		<link rel="ICON" href="{img_icon}" type="image/x-ico" />
 		<link rel="SHORTCUT ICON" href="{img_shortcut}" />
