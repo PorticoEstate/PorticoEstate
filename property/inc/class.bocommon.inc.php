@@ -1228,6 +1228,9 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+
 			}
 /*
 			$fm_location_cols = $soadmin_location->read_attrib(array('type_id'=>$type_id,'lookup_type'=>$type_id));
@@ -1265,6 +1268,8 @@
 				$uicols['exchange'][]		= true;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				for ($i=2;$i<($type_id+1);$i++)
 				{
@@ -1276,6 +1281,9 @@
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+
 				}
 			}
 
@@ -1290,6 +1298,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 			}
 
 			if($uicol_address)
@@ -1301,6 +1311,8 @@
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 			}
 
 			$config_count	= count($config);
@@ -1321,6 +1333,8 @@
 						$uicols['exchange'][]		= false;
 						$uicols['align'][] 			= '';
 						$uicols['datatype'][]		= '';
+						$uicols['formatter'][]		= '';
+						$uicols['classname'][]		= '';
 
 						$cols_return[] 				= 'street_number';
 						$uicols['input_type'][]		= 'hidden';
@@ -1330,6 +1344,9 @@
 						$uicols['exchange'][]		= false;
 						$uicols['align'][] 			= '';
 						$uicols['datatype'][]		= '';
+						$uicols['formatter'][]		= '';
+						$uicols['classname'][]		= '';
+
 
 						$cols_return[] 				= $config[$i]['column_name'];
 						$uicols['input_type'][]		= 'hidden';
@@ -1339,6 +1356,9 @@
 						$uicols['exchange'][]		= false;
 						$uicols['align'][] 			= '';
 						$uicols['datatype'][]		= '';
+						$uicols['formatter'][]		= '';
+						$uicols['classname'][]		= '';
+
 						if($lookup)
 						{
 							$cols_extra[] 			= 'street_name';
@@ -1357,6 +1377,8 @@
 						$uicols['exchange'][]		= false;
 						$uicols['align'][] 			= '';
 						$uicols['datatype'][]		= '';
+						$uicols['formatter'][]		= '';
+						$uicols['classname'][]		= '';
 
 						if($lookup)
 						{

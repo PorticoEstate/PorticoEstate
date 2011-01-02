@@ -126,9 +126,15 @@
 			$columns = array();
 			$columns[] = array
 				(
+					'id' => 'end_date',
+					'name'=> lang('end date')
+				);
+			$columns[] = array
+				(
 					'id' => 'billable_hours',
 					'name'=> lang('billable hours')
 				);
+
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -313,16 +319,6 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$this->uicols	= $this->so->uicols;
-			if(!isset($data['skip_origin']) || !$data['skip_origin'])
-			{
-				$this->uicols['input_type'][]	= 'text';
-				$this->uicols['name'][]			= 'ticket';
-				$this->uicols['descr'][]		= lang('ticket');
-				$this->uicols['statustext'][]	= false;
-				$this->uicols['exchange'][]		= false;
-				$this->uicols['align'][] 		= '';
-				$this->uicols['datatype'][]		= 'link';
-			}
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_columns'] : array();
 
@@ -337,11 +333,23 @@
 				$this->uicols['datatype'][]		= false;
 			}
 
+			if(!isset($data['skip_origin']) || !$data['skip_origin'])
+			{
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= 'ticket';
+				$this->uicols['descr'][]		= lang('ticket');
+				$this->uicols['statustext'][]	= false;
+				$this->uicols['exchange'][]		= false;
+				$this->uicols['align'][] 		= '';
+				$this->uicols['datatype'][]		= 'link';
+			}
+
 			$cols_extra		= $this->so->cols_extra;
 
 			foreach ($project as & $entry)
 			{
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
 				if(!isset($data['skip_origin']) || !$data['skip_origin'])
 				{
 					$origin = $this->interlink->get_relation('property', '.project', $entry['project_id'], 'origin');

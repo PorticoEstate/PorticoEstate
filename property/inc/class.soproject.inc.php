@@ -164,15 +164,8 @@
 
 				$cols.= ",$entity_table.start_date";
 				$cols_return[] 				= 'start_date';
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'start_date';
-				$uicols['descr'][]			= lang('start date');
-				$uicols['statustext'][]		= lang('Project start date');
-				$uicols['exchange'][]		= false;
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= '';
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
+				$cols.= ",$entity_table.end_date";
+				$cols_return[] 				= 'end_date';
 
 				$cols.= ",$entity_table.name as name";
 				$cols_return[] 				= 'name';
@@ -291,6 +284,17 @@
 				$this->bocommon->fm_cache('sql_project_' . !!$wo_hour_cat_id,$sql);
 
 				$this->uicols		= $this->bocommon->uicols;
+
+				$this->uicols['input_type'][]		= 'text';
+				$this->uicols['name'][]				= 'start_date';
+				$this->uicols['descr'][]			= lang('start date');
+				$this->uicols['statustext'][]		= lang('Project start date');
+				$this->uicols['exchange'][]			= false;
+				$this->uicols['align'][] 			= '';
+				$this->uicols['datatype'][]			= '';
+				$this->uicols['formatter'][]		= '';
+				$this->uicols['classname'][]		= '';
+
 				$cols_return		= $this->bocommon->cols_return;
 				$type_id		= $this->bocommon->type_id;
 				$this->cols_extra	= $this->bocommon->cols_extra;
@@ -369,7 +373,7 @@
 				$where= 'AND';
 			}
 
-			$group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.start_date,'
+			$group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.start_date,fm_project.end_date,'
 				. 'fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
 				. 'fm_project.budget,fm_project.reserve,planned_cost,project_group';
 
