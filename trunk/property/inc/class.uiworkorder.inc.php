@@ -728,7 +728,7 @@
 
 			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
 			{
-				$datatable['sorting']['order']	= 'entry_date'; // name key Column in myColumnDef
+				$datatable['sorting']['order']	= 'workorder_id'; // name key Column in myColumnDef
 				$datatable['sorting']['sort']	= 'desc'; // ASC / DESC
 			}
 			else
