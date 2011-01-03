@@ -157,6 +157,7 @@
 				$uicols['statustext'][]		= lang('Project ID');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				$cols .= ",fm_workorder.id as workorder_id";
 				$cols_return[] 				= 'workorder_id';
@@ -166,6 +167,7 @@
 				$uicols['statustext'][]		= lang('Workorder ID');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				$cols .= ",fm_workorder.title as title";
 				$cols_return[] 				= 'title';
@@ -175,6 +177,7 @@
 				$uicols['statustext'][]		= lang('Workorder title');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ",fm_workorder_status.descr as status";
 				$cols_return[] 				= 'status';
@@ -184,6 +187,7 @@
 				$uicols['statustext'][]		= lang('Workorder status');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ",fm_workorder.entry_date as entry_date";
 				$cols_return[] 				= 'entry_date';
@@ -191,6 +195,9 @@
 				$cols_return[] 				= 'start_date';
 				$cols .= ",fm_workorder.end_date as end_date";
 				$cols_return[] 				= 'end_date';
+				$cols.= ",fm_workorder.ecodimb";
+				$cols_return[] 				= 'ecodimb';
+
 /*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
@@ -207,6 +214,7 @@
 				$uicols['statustext'][]		= lang('Workorder User');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ',fm_workorder.vendor_id';
 				$cols_return[] = 'vendor_id';
@@ -216,6 +224,7 @@
 				$uicols['statustext'][]		= lang('Vendor ID');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols.= ",loc1_name";
 				$cols_return[] 				= 'loc1_name';
@@ -225,7 +234,7 @@
 				$uicols['statustext'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
-
+				$uicols['sortable'][]		= '';
 
 				$cols .= ",fm_project.user_id as project_owner";
 
@@ -243,6 +252,7 @@
 				$uicols['statustext'][]		= lang('Vendor name');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ',fm_workorder.combined_cost';
 				$cols_return[] = 'combined_cost';
@@ -252,6 +262,7 @@
 				$uicols['statustext'][]		= lang('Cost - either budget or calculation');
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= true;
 
 				$cols .= ',fm_workorder.act_mtrl_cost + fm_workorder.act_vendor_cost as actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -261,6 +272,7 @@
 				$uicols['statustext'][]		= lang('Actual cost - paid so far');
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= true;
 
 				$joinmethod .= " $this->left_join  fm_vendor ON (fm_workorder.vendor_id = fm_vendor.id))";
 				$paranthesis .='(';
@@ -307,6 +319,9 @@
 					$uicols['exchange'][]		= false;
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
+					$uicols['sortable'][]		= true;
 				}
 				else
 				{
