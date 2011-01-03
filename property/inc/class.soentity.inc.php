@@ -44,10 +44,10 @@
 
 
 		protected $type_app = array
-		(
-			'entity'	=> 'property',
-			'catch'		=> 'catch'
-		);
+			(
+				'entity'	=> 'property',
+				'catch'		=> 'catch'
+			);
 
 		function __construct($entity_id='',$cat_id='')
 		{
@@ -77,11 +77,11 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$sql= "SELECT phpgw_cust_choice.id, phpgw_cust_choice.value FROM phpgw_cust_attribute"
-			. " $this->join phpgw_cust_choice ON"
-			. " phpgw_cust_attribute.location_id= phpgw_cust_choice.location_id AND"
-			. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id"
-			. " WHERE phpgw_cust_attribute.column_name='status'"
-			. " AND phpgw_cust_choice.location_id={$location_id} ORDER BY phpgw_cust_choice.id";
+				. " $this->join phpgw_cust_choice ON"
+				. " phpgw_cust_attribute.location_id= phpgw_cust_choice.location_id AND"
+				. " phpgw_cust_attribute.id= phpgw_cust_choice.attrib_id"
+				. " WHERE phpgw_cust_attribute.column_name='status'"
+				. " AND phpgw_cust_choice.location_id={$location_id} ORDER BY phpgw_cust_choice.id";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -89,10 +89,10 @@
 			while ($this->db->next_record())
 			{
 				$status[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> stripslashes($this->db->f('value'))
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> stripslashes($this->db->f('value'))
+					);
 			}
 			return $status;
 		}
@@ -199,17 +199,17 @@
 				$uicols['datatype'][]		= 'user';
 
 				$cols_return_extra[]= array
-								(
-									'name'		=> 'user_id',
-									'datatype'	=> 'user'
-								);
+					(
+						'name'		=> 'user_id',
+						'datatype'	=> 'user'
+					);
 
 				// Don't work with LDAP - where phpgw_accounts is empty
-	//			$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
-	//			$paranthesis ='(';
+				//			$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
+				//			$paranthesis ='(';
 
 				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
-								'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
+					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
 
 				$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $sql);
 				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
@@ -234,7 +234,7 @@
 
 			if ($cat_id > 0)
 			{
-//-------------------
+				//-------------------
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:'';
 				$user_column_filter = '';
@@ -254,13 +254,13 @@
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
 					$uicols['cols_return_extra'][$i] = array
-					(
-						'name'	=> $this->db->f('column_name'),
-						'datatype'	=> $this->db->f('datatype'),
-						'attrib_id'	=> $this->db->f('id')					
-					);
-					
-					
+						(
+							'name'	=> $this->db->f('column_name'),
+							'datatype'	=> $this->db->f('datatype'),
+							'attrib_id'	=> $this->db->f('id')					
+						);
+
+
 					$cols_return_extra[]= array(
 						'name'	=> $this->db->f('column_name'),
 						'datatype'	=> $this->db->f('datatype'),
@@ -276,10 +276,10 @@
 				$uicols['statustext'][]		= lang('entry date' );
 				$uicols['datatype'][]		= 'timestamp';
 				$uicols['cols_return_extra'][$i] = array
-				(
-					'name'		=> 'entry_date',
-					'datatype'	=> 'timestamp',
-				);
+					(
+						'name'		=> 'entry_date',
+						'datatype'	=> 'timestamp',
+					);
 
 
 				$cols_return_extra[]= array(
@@ -293,7 +293,7 @@
 			}
 
 			$this->uicols	= $uicols;
-//_debug_array($cols_return_extra);
+			//_debug_array($cols_return_extra);
 
 			if ($order)
 			{
@@ -391,7 +391,7 @@
 					{
 						$__querymethod = array("{$entity_table}.id = -1"); // block query waiting for criteria
 					}
-//_debug_array($__querymethod);					
+					//_debug_array($__querymethod);					
 
 					$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
 
@@ -413,13 +413,13 @@
 								if(!$criteria_id)
 								{
 									$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
-									." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
-									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
-
+										." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+	
 									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
-									." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
-									." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
-
+										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
+										." AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
+	
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -466,9 +466,9 @@
 			{
 				$sql .= $_joinmethod;
 			}
-			
+
 			$querymethod = '';
-			
+
 			$_querymethod = array_merge($__querymethod, $_querymethod);
 			if ($_querymethod)
 			{
@@ -478,7 +478,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-//_debug_array($sql);
+			//_debug_array($sql);
 			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
@@ -505,32 +505,32 @@
 				foreach($cols_return as $key => $field)
 				{
 					$dataset[$j][$field] = array
-					(
-						'value'		=> $this->db->f($field),
-						'datatype'	=> $uicols['datatype'][$key],
-						'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
-					);
+						(
+							'value'		=> $this->db->f($field),
+							'datatype'	=> $uicols['datatype'][$key],
+							'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
+						);
 				}
 				if($lookup)
 				{
 					$dataset[$j]["entity_cat_name_{$entity_id}"] = array
-					(
-						'value'		=> $category['name'],
-						'datatype'	=> false,
-						'attrib_id'	=> false
-					);
+						(
+							'value'		=> $category['name'],
+							'datatype'	=> false,
+							'attrib_id'	=> false
+						);
 					$dataset[$j]["entity_id_{$entity_id}"] = array
-					(
-						'value'		=> $entity_id,
-						'datatype'	=> false,
-						'attrib_id'	=> false
-					);
+						(
+							'value'		=> $entity_id,
+							'datatype'	=> false,
+							'attrib_id'	=> false
+						);
 					$dataset[$j]["cat_id_{$entity_id}"] = array
-					(
-						'value'		=> $cat_id,
-						'datatype'	=> false,
-						'attrib_id'	=> false
-					);
+						(
+							'value'		=> $cat_id,
+							'datatype'	=> false,
+							'attrib_id'	=> false
+						);
 				}
 				$j++;				
 			}
@@ -547,30 +547,30 @@
 			$id =$data['id'];
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 
-				$this->db->query("SELECT * FROM $table WHERE id =$id");
+			$this->db->query("SELECT * FROM $table WHERE id =$id");
 
-				if($this->db->next_record())
+			if($this->db->next_record())
+			{
+				$values['id']				= $id;
+				$values['num']				= $this->db->f('num');
+				$values['p_num']			= $this->db->f('p_num');
+				$values['p_entity_id']		= $this->db->f('p_entity_id');
+				$values['p_cat_id']			= $this->db->f('p_cat_id');
+				$values['location_code']	= $this->db->f('location_code');
+				$values['tenant_id']		= $this->db->f('tenant_id');
+				$values['contact_phone']	= $this->db->f('contact_phone');
+				$values['status']			= $this->db->f('status');
+				$values['user_id']			= $this->db->f('user_id');
+				$values['entry_date']		= $this->db->f('entry_date');
+
+				if ( isset($values['attributes']) && is_array($values['attributes']) )
 				{
-					$values['id']				= $id;
-					$values['num']				= $this->db->f('num');
-					$values['p_num']			= $this->db->f('p_num');
-					$values['p_entity_id']		= $this->db->f('p_entity_id');
-					$values['p_cat_id']			= $this->db->f('p_cat_id');
-					$values['location_code']	= $this->db->f('location_code');
-					$values['tenant_id']		= $this->db->f('tenant_id');
-					$values['contact_phone']	= $this->db->f('contact_phone');
-					$values['status']			= $this->db->f('status');
-					$values['user_id']			= $this->db->f('user_id');
-					$values['entry_date']		= $this->db->f('entry_date');
-
-					if ( isset($values['attributes']) && is_array($values['attributes']) )
+					foreach ( $values['attributes'] as &$attr )
 					{
-						foreach ( $values['attributes'] as &$attr )
-						{
-							$attr['value'] 	= $this->db->f($attr['column_name']);
-						}
+						$attr['value'] 	= $this->db->f($attr['column_name']);
 					}
 				}
+			}
 
 			return	$values;
 		}
@@ -647,7 +647,7 @@
 				$cols[] = 'location_code';
 				$vals[] = $values['location_code'];			
 			}
-			
+
 			if(isset($values['location']) && is_array($values['location']))
 			{
 				foreach ($values['location'] as $input_name => $value)
@@ -722,14 +722,14 @@
 				if($values['origin'][0]['data'][0]['id'])
 				{
 					$interlink_data = array
-					(
-						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']),
-						'location1_item_id' => $values['origin'][0]['data'][0]['id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}"),
-						'location2_item_id' => $values['id'],
-						'account_id'		=> $this->account
-					);
-					
+						(
+							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $values['origin'][0]['location']),
+							'location1_item_id' => $values['origin'][0]['data'][0]['id'],
+							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}"),
+							'location2_item_id' => $values['id'],
+							'account_id'		=> $this->account
+						);
+
 					$interlink 	= CreateObject('property.interlink');
 					$interlink->add($interlink_data,$this->db);
 				}
@@ -776,7 +776,7 @@
 
 			if (isset($values['location_code']) && $values['location_code'])
 			{
-					$value_set['location_code'] = $values['location_code'];
+				$value_set['location_code'] = $values['location_code'];
 			}
 
 			$admin_location	= CreateObject('property.soadmin_location');
@@ -847,13 +847,13 @@
 						if($entry['value'] != $old_value)
 						{
 							$history_set[$entry['attrib_id']] = array('value' => $entry['value'],
-												'date'  => $this->bocommon->date_to_timestamp($entry['date']));
+								'date'  => $this->bocommon->date_to_timestamp($entry['date']));
 						}
 					}
 				}
 			}
 
-//_debug_array($history_set);
+			//_debug_array($history_set);
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
@@ -935,12 +935,12 @@
 				while ($this->db->next_record())
 				{
 					$category[] = array
-					(
-						'entity_id'	=> $this->db->f('entity_id'),
-						'cat_id'	=> $this->db->f('id'),
-						'name'		=> $this->db->f('name'),
-						'descr'		=> $this->db->f('descr')
-					);
+						(
+							'entity_id'	=> $this->db->f('entity_id'),
+							'cat_id'	=> $this->db->f('id'),
+							'name'		=> $this->db->f('name'),
+							'descr'		=> $this->db->f('descr')
+						);
 				}
 
 				foreach($category as $entry)
@@ -949,25 +949,25 @@
 					{
 						continue;
 					}
-					
+
 					$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
 					$this->db->query($sql,__LINE__,__FILE__);
 					$this->db->next_record();
 					if($this->db->f('hits'))
 					{
 						$entity['related'][] = array
-						(
-							'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
-															(
-																'menuaction'	=> "property.ui{$type}.index",
-																'entity_id'		=> $entry['entity_id'],
-																'cat_id'		=> $entry['cat_id'],
-																'p_entity_id'	=> $entity_id,
-																'p_cat_id' 		=> $cat_id,
-																'p_num' 		=> $id,
-																'type'			=> $type
-															)
-														),
+							(
+								'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
+								(
+									'menuaction'	=> "property.ui{$type}.index",
+									'entity_id'		=> $entry['entity_id'],
+									'cat_id'		=> $entry['cat_id'],
+									'p_entity_id'	=> $entity_id,
+									'p_cat_id' 		=> $cat_id,
+									'p_num' 		=> $id,
+									'type'			=> $type
+								)
+							),
 							'name'			=> $entry['name'] . ' [' . $this->db->f('hits') . ']',
 							'descr'			=> $entry['descr']
 						);
@@ -982,15 +982,15 @@
 			{
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
-				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index',
-														//	'p_entity_id'	=> $entity_id,
-														//	'p_cat_id' 		=> $cat_id,
-															'p_num' 		=> $id,
-															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
-					'name'		=> lang('Helpdesk') . " [{$hits}]",
-					'descr'		=> lang('Helpdesk')
-				);
+					(
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index',
+					//	'p_entity_id'	=> $entity_id,
+					//	'p_cat_id' 		=> $cat_id,
+						'p_num' 		=> $id,
+						'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+						'name'		=> lang('Helpdesk') . " [{$hits}]",
+						'descr'		=> lang('Helpdesk')
+					);
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
@@ -1000,15 +1000,15 @@
 			{
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
-				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index',
-													//		'p_entity_id'	=> $entity_id,
-													//		'p_cat_id' 		=> $cat_id,
-															'p_num' 		=> $id,
-															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
-					'name'		=> lang('request') . " [{$hits}]",
-					'descr'		=> lang('request')
-				);
+					(
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uirequest.index',
+					//	'p_entity_id'	=> $entity_id,
+					//	'p_cat_id' 		=> $cat_id,
+						'p_num' 		=> $id,
+						'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+						'name'		=> lang('request') . " [{$hits}]",
+						'descr'		=> lang('request')
+					);
 			}
 
 			$sql = "SELECT count(*) as hits FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
@@ -1018,13 +1018,13 @@
 			{
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
-				(
-					'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index',
-															'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}",
-															'criteria_id' => 6)), //FIXME: criteria 6 is for entities should be altered to locations
-					'name'		=> lang('project') . " [{$hits}]",
-					'descr'		=> lang('project')
-				);
+					(
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index',
+						'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}",
+						'criteria_id' => 6)), //FIXME: criteria 6 is for entities should be altered to locations
+						'name'		=> lang('project') . " [{$hits}]",
+						'descr'		=> lang('project')
+					);
 			}
 
 			return $entity;

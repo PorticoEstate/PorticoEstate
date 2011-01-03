@@ -46,10 +46,10 @@
 		{
 			if(is_array($data))
 			{
-				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query	= isset($data['query']) ? $data['query'] : '';
-				$sort	= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order	= isset($data['order']) ? $data['order'] : '';
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query		= isset($data['query']) ? $data['query'] : '';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order		= isset($data['order']) ? $data['order'] : '';
 				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
 			}
 
@@ -78,23 +78,23 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+			$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
+			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$method = array();
 			while ($this->db->next_record())
 			{
 				$method[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name',true),
-					'data'	=> $this->db->f('data',true),
-					'descr'	=> $this->db->f('descr',true)
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('name',true),
+						'data'	=> $this->db->f('data',true),
+						'descr'	=> $this->db->f('descr',true)
+					);
 			}
 			return $method;
 		}
@@ -151,7 +151,7 @@
 			$method['descr'] = $this->db->db_addslashes($method['descr']);
 
 			$this->db->query("UPDATE $table set descr='" . $method['descr'] . "', name='". $method['name'] . "', data='". $method['data']
-							. "' WHERE id='" . $method['id']. "'",__LINE__,__FILE__);
+				. "' WHERE id='" . $method['id']. "'",__LINE__,__FILE__);
 
 			$receipt['id'] = $method['id'];
 			$receipt['message'][] = array('msg' =>lang('method has been edited'));
@@ -165,4 +165,3 @@
 			$this->db->query("DELETE FROM $table WHERE id='" . $id . "'",__LINE__,__FILE__);
 		}
 	}
-

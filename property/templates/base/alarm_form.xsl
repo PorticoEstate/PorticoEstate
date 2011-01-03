@@ -12,7 +12,7 @@
 			<xsl:call-template name="add_alarm"/>
 		</table>
 	</xsl:template>
-	
+
 
 	<xsl:template match="header">
 		<tr class="th">
@@ -65,7 +65,7 @@
 				<input type="checkbox" name="values[alarm][{alarm_id}]" value=""  onMouseout="window.status='';return true;">
 					<xsl:attribute name="onMouseover">
 						<xsl:text>window.status='</xsl:text>
-							<xsl:value-of select="lang_select_statustext"/>
+						<xsl:value-of select="lang_select_statustext"/>
 						<xsl:text>'; return true;</xsl:text>
 					</xsl:attribute>
 				</input>
@@ -74,34 +74,34 @@
 	</xsl:template>
 
 	<xsl:template match="alter_alarm">
-			<tr height="20">
-				<td align="right" valign="bottom" colspan="5">
-					<xsl:variable name="lang_enable"><xsl:value-of select="lang_enable"/></xsl:variable>
-					<input type="submit" name="values[enable_alarm]" value="{$lang_enable}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_enable_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="lang_disable"><xsl:value-of select="lang_disable"/></xsl:variable>
-					<input type="submit" name="values[disable_alarm]" value="{$lang_disable}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_disable_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="lang_delete"><xsl:value-of select="lang_delete"/></xsl:variable>
-					<input type="submit" name="values[delete_alarm]" value="{$lang_delete}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-								<xsl:value-of select="lang_delete_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
+		<tr height="20">
+			<td align="right" valign="bottom" colspan="5">
+				<xsl:variable name="lang_enable"><xsl:value-of select="lang_enable"/></xsl:variable>
+				<input type="submit" name="values[enable_alarm]" value="{$lang_enable}" onMouseout="window.status='';return true;">
+					<xsl:attribute name="onMouseover">
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_enable_statustext"/>
+						<xsl:text>'; return true;</xsl:text>
+					</xsl:attribute>
+				</input>
+				<xsl:variable name="lang_disable"><xsl:value-of select="lang_disable"/></xsl:variable>
+				<input type="submit" name="values[disable_alarm]" value="{$lang_disable}" onMouseout="window.status='';return true;">
+					<xsl:attribute name="onMouseover">
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_disable_statustext"/>
+						<xsl:text>'; return true;</xsl:text>
+					</xsl:attribute>
+				</input>
+				<xsl:variable name="lang_delete"><xsl:value-of select="lang_delete"/></xsl:variable>
+				<input type="submit" name="values[delete_alarm]" value="{$lang_delete}" onMouseout="window.status='';return true;">
+					<xsl:attribute name="onMouseover">
+						<xsl:text>window.status='</xsl:text>
+						<xsl:value-of select="lang_delete_statustext"/>
+						<xsl:text>'; return true;</xsl:text>
+					</xsl:attribute>
+				</input>
+			</td>
+		</tr>
 	</xsl:template>
 
 	<xsl:template match="add_alarm">
@@ -142,7 +142,7 @@
 				<input type="submit" name="values[add_alarm]" value="{$lang_add}" onMouseout="window.status='';return true;">
 					<xsl:attribute name="onMouseover">
 						<xsl:text>window.status='</xsl:text>
-							<xsl:value-of select="lang_add_statustext"/>
+						<xsl:value-of select="lang_add_statustext"/>
 						<xsl:text>'; return true;</xsl:text>
 					</xsl:attribute>
 				</input>
@@ -150,7 +150,7 @@
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 
 
 
@@ -158,7 +158,7 @@
 <!-- day_list -->	
 
 	<xsl:template match="day_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
 				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="id"/></option>
@@ -173,7 +173,7 @@
 <!-- hour_list -->	
 
 	<xsl:template match="hour_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
 				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="id"/></option>
@@ -188,7 +188,7 @@
 <!-- minute_list -->	
 
 	<xsl:template match="minute_list">
-	<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 		<xsl:choose>
 			<xsl:when test="selected">
 				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="id"/></option>

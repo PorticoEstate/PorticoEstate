@@ -4741,3 +4741,63 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.600 to 0.9.17.601
+	* Add custom fields to request
+	* 
+	*/
+
+	$test[] = '0.9.17.600';
+	function property_upgrade0_9_17_600()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id	= $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
+		$sql = "UPDATE phpgw_locations SET allow_c_attrib = 1, c_attrib_table = 'fm_request' WHERE location_id = {$location_id}";
+		$GLOBALS['phpgw_setup']->oProc->query($sql);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.601';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.601 to 0.9.17.602
+	* Add fields voucher handling
+	* 
+	*/
+
+	$test[] = '0.9.17.601';
+	function property_upgrade0_9_17_601()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_ecobilag_process_code', array(
+				'fd' => array(
+					'id' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','process_log', array('type' => 'text','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','process_log', array('type' => 'text','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','process_code', array('type' => 'varchar','precision' => '10','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','process_code', array('type' => 'varchar','precision' => '10','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.602';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

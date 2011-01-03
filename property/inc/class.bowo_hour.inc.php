@@ -42,18 +42,17 @@
 		var $cat_id;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_bowo_hour($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so 		= CreateObject('property.sowo_hour');
+			$this->so 			= CreateObject('property.sowo_hour');
 			$this->bocommon 	= CreateObject('property.bocommon');
 
 			if ($session)
@@ -122,13 +121,13 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','wo_hour');
 
-			$this->start	= $data['start'];
-			$this->query	= $data['query'];
-			$this->filter	= $data['filter'];
-			$this->sort		= $data['sort'];
-			$this->order	= $data['order'];
-			$this->cat_id	= $data['cat_id'];
-			$this->allrows	= $data['allrows'];
+			$this->start		= $data['start'];
+			$this->query		= $data['query'];
+			$this->filter		= $data['filter'];
+			$this->sort			= $data['sort'];
+			$this->order		= $data['order'];
+			$this->cat_id		= $data['cat_id'];
+			$this->allrows		= $data['allrows'];
 			$this->chapter_id	= $data['chapter_id'];
 		}
 
@@ -136,12 +135,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('chapter_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('chapter_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('chapter_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('chapter_filter'));
+				break;
 			}
 
 			$chapters= $this->so->get_chapter_list();
@@ -166,11 +165,11 @@
 				}
 
 				$tolerance_list[] = array
-				(
-					'id'		=> $tolerance_entry['id'],
-					'name'		=> $tolerance_entry['id'],
-					'selected'	=> $sel_tolerance_entry
-				);
+					(
+						'id'		=> $tolerance_entry['id'],
+						'name'		=> $tolerance_entry['id'],
+						'selected'	=> $sel_tolerance_entry
+					);
 			}
 
 			for ($i=0;$i<count($tolerance_list);$i++)
@@ -206,11 +205,11 @@
 				}
 
 				$building_part_list[] = array
-				(
-					'id'		=> $building_part_entry['id'],
-					'name'		=> '[ ' . $building_part_entry['id'] . ' ] ' . $building_part_entry['name'],
-					'selected'	=> $sel_building_part_entry
-				);
+					(
+						'id'		=> $building_part_entry['id'],
+						'name'		=> '[ ' . $building_part_entry['id'] . ' ] ' . $building_part_entry['name'],
+						'selected'	=> $sel_building_part_entry
+					);
 			}
 
 			for ($i=0;$i<count($building_part_list);$i++)
@@ -291,20 +290,21 @@
 
 				$cost=($values['total_cost'][$n]*$quantity);
 
-				$hour[]=array(
-					'activity_id'		=> $values['activity_id'][$n],
-					'activity_num'		=> $values['activity_num'][$n],
-					'hours_descr'		=> $values['descr'][$n],
-					'unit'			=> $values['unit'][$n],
-					'cost' 			=> $cost,
-					'quantity'		=> $quantity,
-					'billperae'		=> $values['total_cost'][$n],
-					'ns3420_id'		=> $values['ns3420_id'][$n],
-					'dim_d'			=> $values['dim_d'][$n],
-					'workorder_id'		=> $workorder_id,
-					'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
-					'cat_per_cent'		=> $values['cat_per_cent'][$n]
-				);
+				$hour[] = array
+					(
+						'activity_id'		=> $values['activity_id'][$n],
+						'activity_num'		=> $values['activity_num'][$n],
+						'hours_descr'		=> $values['descr'][$n],
+						'unit'				=> $values['unit'][$n],
+						'cost' 				=> $cost,
+						'quantity'			=> $quantity,
+						'billperae'			=> $values['total_cost'][$n],
+						'ns3420_id'			=> $values['ns3420_id'][$n],
+						'dim_d'				=> $values['dim_d'][$n],
+						'workorder_id'		=> $workorder_id,
+						'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
+						'cat_per_cent'		=> $values['cat_per_cent'][$n]
+					);
 			}
 
 			if($hour)
@@ -313,7 +313,7 @@
 			}
 			else
 			{
-					$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
+				$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
 			}
 
 			return $receipt;
@@ -323,7 +323,7 @@
 		function add_hour_from_template($values,$workorder_id)
 		{
 
-//_debug_array($values);
+			//_debug_array($values);
 
 			foreach($values['quantity'] as $n => $quantity)
 			{
@@ -336,33 +336,33 @@
 				{
 					$values['cat_per_cent'][$n] = 100;
 				}
-	
+
 				$quantity		= str_replace(",",".",$quantity);
 				$cost=($values['billperae'][$n]*$quantity);
-	
+
 				$hour[]= array
-				(
-					'chapter_id'		=> $values['chapter_id'][$n],
-					'activity_id'		=> $values['activity_id'][$n],
-					'activity_num'		=> $values['activity_num'][$n],
-					'hours_descr'		=> $values['hours_descr'][$n],
-					'remark'			=> $values['remark'][$n],
-					'unit'				=> $values['unit'][$n],
-					'cost' 				=> $cost,
-					'quantity'			=> $quantity,
-					'new_grouping'		=> $values['grouping_descr'][$n],
-					'billperae'			=> $values['billperae'][$n],
-					'ns3420_id'			=> $values['ns3420_id'][$n],
-					'tolerance'			=> $values['tolerance'][$n],
-					'building_part'		=> $values['building_part'][$n],
-					'dim_d'				=> $values['dim_d'][$n],
-					'workorder_id'		=> $workorder_id,
-					'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
-					'cat_per_cent'		=> $values['cat_per_cent'][$n]
-				);
-	
+					(
+						'chapter_id'		=> $values['chapter_id'][$n],
+						'activity_id'		=> $values['activity_id'][$n],
+						'activity_num'		=> $values['activity_num'][$n],
+						'hours_descr'		=> $values['hours_descr'][$n],
+						'remark'			=> $values['remark'][$n],
+						'unit'				=> $values['unit'][$n],
+						'cost' 				=> $cost,
+						'quantity'			=> $quantity,
+						'new_grouping'		=> $values['grouping_descr'][$n],
+						'billperae'			=> $values['billperae'][$n],
+						'ns3420_id'			=> $values['ns3420_id'][$n],
+						'tolerance'			=> $values['tolerance'][$n],
+						'building_part'		=> $values['building_part'][$n],
+						'dim_d'				=> $values['dim_d'][$n],
+						'workorder_id'		=> $workorder_id,
+						'wo_hour_cat'		=> $values['wo_hour_cat'][$n],
+						'cat_per_cent'		=> $values['cat_per_cent'][$n]
+					);
+
 			}
-//_debug_array($hour);
+			//_debug_array($hour);
 
 			if($hour)
 			{
@@ -370,7 +370,7 @@
 			}
 			else
 			{
-					$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
+				$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
 			}
 
 			return $receipt;
@@ -402,7 +402,7 @@
 			}
 			else
 			{
-//_debug_array($values);
+				//_debug_array($values);
 				$receipt = $this->so->add_custom_hour($values,$workorder_id);
 			}
 			return $receipt;
@@ -423,10 +423,10 @@
 				}
 
 				$email_list[] = array
-				(
-					'email'		=> $email_entry['email'],
-					'selected'	=> $sel_email
-				);
+					(
+						'email'		=> $email_entry['email'],
+						'selected'	=> $sel_email
+					);
 			}
 
 			for ($i=0;$i<count($email_list);$i++)
@@ -456,4 +456,3 @@
 			return $this->so->delete_deviation($workorder_id,$hour_id,$id);
 		}
 	}
-

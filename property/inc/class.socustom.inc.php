@@ -37,9 +37,9 @@
 		function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db           = & $GLOBALS['phpgw']->db;
-			$this->join			= & $this->db->join;
-			$this->like			= & $this->db->like;
+			$this->db		= & $GLOBALS['phpgw']->db;
+			$this->join		= & $this->db->join;
+			$this->like		= & $this->db->like;
 		}
 
 		function read($data)
@@ -64,19 +64,17 @@
 				$ordermethod = ' order by id DESC';
 			}
 
-
 			$where = 'WHERE';
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where category='$cat_id' ";
 				$where = 'AND';
-
 			}
 
 			if($query)
 			{
-				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where name $this->like '%$query%'";
+				$query			= $this->db->db_addslashes($query);
+				$querymethod	= " $where name $this->like '%$query%'";
 			}
 
 			$sql = "SELECT * FROM fm_custom $filtermethod $querymethod";
@@ -96,12 +94,12 @@
 			while ($this->db->next_record())
 			{
 				$customs[] = array
-				(
-					'custom_id'		=> $this->db->f('id'),
-					'name'			=> stripslashes($this->db->f('name')),
-					'entry_date'	=> $this->db->f('entry_date'),
-					'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
-				);
+					(
+						'custom_id'		=> $this->db->f('id'),
+						'name'			=> stripslashes($this->db->f('name')),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'user'			=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+					);
 			}
 			return $customs;
 		}
@@ -115,13 +113,13 @@
 			if ($this->db->next_record())
 			{
 				$custom = array
-				(
-					'id'			=> (int)$this->db->f('id'),
-					'name'			=> $this->db->f('name', true),
-					'sql_text'		=> $this->db->f('sql_text', true),
-					'entry_date'	=> $this->db->f('entry_date'),
-					'cols'			=> $this->read_cols($custom_id)
-				);
+					(
+						'id'			=> (int)$this->db->f('id'),
+						'name'			=> $this->db->f('name', true),
+						'sql_text'		=> $this->db->f('sql_text', true),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'cols'			=> $this->read_cols($custom_id)
+					);
 			}
 
 			return $custom;
@@ -137,12 +135,12 @@
 			while ($this->db->next_record())
 			{
 				$cols[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('name'),
-					'descr'	=> $this->db->f('descr', true),
-					'sorting'=> $this->db->f('sorting')
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('name'),
+						'descr'	=> $this->db->f('descr', true),
+						'sorting'=> $this->db->f('sorting')
+					);
 
 			}
 			return $cols;
@@ -199,12 +197,12 @@
 					$custom['new_name'],
 					$this->db->db_addslashes($custom['new_descr']),
 					$sorting
-					);
+				);
 
 				$values	= $this->db->validate_insert($values);
 
 				$this->db->query("INSERT INTO fm_custom_cols (custom_id,id,name,descr,sorting) "
-				. "VALUES ($values)");
+					. "VALUES ($values)");
 			}
 
 
@@ -240,7 +238,7 @@
 
 		function resort($data)
 		{
-//html_print_r($data);
+			//html_print_r($data);
 			if(is_array($data))
 			{
 				$resort = (isset($data['resort'])?$data['resort']:'up');
@@ -301,7 +299,7 @@
 
 			//FIXME:
 			$ordermethod = '';
-			
+
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
@@ -326,7 +324,7 @@
 				$j++;
 			}
 
-//_debug_array($custom);
+			//_debug_array($custom);
 			return $custom;
 		}
 
@@ -337,4 +335,3 @@
 			$this->db->query("DELETE FROM fm_custom_cols WHERE custom_id={$custom_id}",__LINE__,__FILE__);
 		}
 	}
-

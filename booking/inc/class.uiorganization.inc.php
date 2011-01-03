@@ -97,6 +97,10 @@
 							'label' => lang('Organization shortname'),
 						),
 						array(
+							'key' => 'customer_number',
+							'label' => lang('Customer number')
+						),
+						array(
 							'key' => 'organization_number',
 							'label' => lang('Organization number')
 						),

@@ -43,36 +43,17 @@
 		var $cat_id;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
-
-		var $soap_functions = array(
-			'list' => array(
-				'in'  => array('int','int','struct','string','int'),
-				'out' => array('array')
-			),
-			'read' => array(
-				'in'  => array('int','struct'),
-				'out' => array('array')
-			),
-			'save' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			),
-			'delete' => array(
-				'in'  => array('int','struct'),
-				'out' => array()
-			)
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_bopricebook($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sopricebook');
 			$this->socommon = CreateObject('property.socommon');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -153,12 +134,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				break;
 			}
 
 			$status_entries= $this->so->select_status_list();
@@ -168,7 +149,7 @@
 		function read()
 		{
 			$pricebook = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -176,7 +157,7 @@
 		function read_agreement_group()
 		{
 			$agreement_group = $this->so->read_agreement_group(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 			return $agreement_group;
 		}
@@ -184,7 +165,7 @@
 		function read_activity_prize($activity_id,$agreement_id)
 		{
 			$pricebook = $this->so->read_activity_prize(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id,'agreement_id'=>$agreement_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id,'agreement_id'=>$agreement_id));
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -193,7 +174,7 @@
 		function read_activities_pr_agreement_group()
 		{
 			$pricebook = $this->so->read_activities_pr_agreement_group(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -201,7 +182,7 @@
 		function read_vendor_pr_activity($activity_id)
 		{
 			$pricebook = $this->so->read_vendor_pr_activity(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'activity_id'=>$activity_id));
 			$this->total_records = $this->so->total_records;
 			return $pricebook;
 		}
@@ -230,10 +211,10 @@
 		function update_pricebook($values)
 		{
 
-//_debug_array($values);
+			//_debug_array($values);
 			$date_array=phpgwapi_datetime::date_array($values['date']);
 
-	 		$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
+			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
 //			$date= date($this->bocommon->dateformat,$date);
 
 			$new_index=str_replace(",",".",$values['new_index']);
@@ -280,7 +261,7 @@
 				);
 
 			}
-//_debug_array($update);
+			//_debug_array($update);
 
 			if($update)
 			{
@@ -288,7 +269,7 @@
 			}
 			else
 			{
-					$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
+				$receipt['message'][] = array('msg'=>lang('Nothing to do!'));
 			}
 
 			return $receipt;
@@ -300,7 +281,7 @@
 
 			$date_array=phpgwapi_datetime::date_array($values['date']);
 
-	 		$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
+			$date = mktime (2,0,0,$date_array['month'],$date_array['day'],$date_array['year']);
 //			$date= date($this->bocommon->dateformat,$date);
 
 			$m_cost			= str_replace(",",".",$values['m_cost']);
@@ -318,12 +299,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$vendors= $this->so->get_vendor_list();
@@ -361,12 +342,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$agreement_groups= $this->so->get_agreement_group_list();
@@ -433,4 +414,3 @@
 			$this->so->delete_agreement_group($agreement_group_id);
 		}
 	}
-

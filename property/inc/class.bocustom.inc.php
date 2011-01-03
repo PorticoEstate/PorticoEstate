@@ -42,17 +42,16 @@
 		var $cat_id;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_bocustom($session=false)
 		{
-		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = CreateObject('property.socustom');
 
 			if ($session)
@@ -61,13 +60,13 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows			= phpgw::get_var('allrows', 'bool');
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{
@@ -138,7 +137,7 @@
 		function read()
 		{
 			$custom = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			for ($i=0; $i<count($custom); $i++)
@@ -201,11 +200,10 @@
 				$this->allrows=$allrows;
 			}
 			$custom = $this->so->read_custom(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
+				'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
 			$this->uicols = $this->so->uicols;
 			$this->total_records = $this->so->total_records;
 			return $custom;
 		}
 
 	}
-

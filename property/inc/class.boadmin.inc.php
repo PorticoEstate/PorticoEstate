@@ -44,7 +44,7 @@
 
 		function property_boadmin($session='')
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soadmin');
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
 			$this->bocommon 	= CreateObject('property.bocommon');
@@ -64,7 +64,7 @@
 			$filter	= phpgw::get_var('filter', 'int');
 			$cat_id	= phpgw::get_var('cat_id', 'string');
 			$permission	= phpgw::get_var('permission');
-	//		$location	= get_var('location',array('POST','GET')); // don't work for some reason...
+			//		$location	= get_var('location',array('POST','GET')); // don't work for some reason...
 			$module	= phpgw::get_var('module');
 			$granting_group	= phpgw::get_var('granting_group', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
@@ -144,12 +144,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$categories[0]['id']	= 'groups';
@@ -164,7 +164,7 @@
 		{
 			if ( !is_array($values) )
 			{
-//				return;
+				//				return;
 			}
 
 			$totalacl = array();
@@ -302,7 +302,7 @@
 
 			$allusers = $GLOBALS['phpgw']->accounts->get_list($type, -1,$this->sort, $this->order, $this->query);
 
-//			$allusers	= array_intersect_key($allusers, $valid_users);
+			//			$allusers	= array_intersect_key($allusers, $valid_users);
 
 			foreach($allusers as  $user)
 			{
@@ -376,20 +376,18 @@
 				}
 			}
 
-//_debug_array($user_list);
+			//_debug_array($user_list);
 			return $user_list;
 		}
 
 		function read_fm_id()
 		{
-
 			$fm_ids = $this->so->read_fm_id();
 			return $fm_ids;
-
 		}
+
 		function edit_id($values='')
 		{
 			return $this->so->edit_id($values);
-
 		}
 	}

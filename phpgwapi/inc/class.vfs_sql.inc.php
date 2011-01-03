@@ -1092,6 +1092,20 @@
 				)
 			);
 
+
+			if(!file_exists($t->real_leading_dirs))
+			{
+				$GLOBALS['phpgw']->log->error(array(
+					'text' => 'vfs::cp() : missing target directory %1',
+					'p1'   => $t->real_leading_dirs,
+					'p2'	 => '',
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+
+				return false;
+			}
+
 			if (!$this->acl_check (array(
 					'string'	=> $f->fake_full_path,
 					'relatives'	=> array ($f->mask),
@@ -1767,6 +1781,19 @@
 
 			if ($this->file_actions)
 			{
+				if(!file_exists($p->real_leading_dirs))
+				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text' => 'vfs::mkdir() : missing leading directory %1 when attempting to create %2',
+						'p1'   => $p->real_leading_dirs,
+						'p2'	 => $p->real_full_path,
+						'line' => __LINE__,
+						'file' => __FILE__
+					));
+
+					return false;
+				}
+
 				//if block from patch #1989 - auto create home - from lpiepho
 				if (!file_exists($this->basedir.'/home'))
  				{
@@ -1782,6 +1809,14 @@
 				}
 				elseif (!mkdir ($p->real_full_path, 0770))
 				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text' => 'vfs::mkdir() : failed to create directory %1',
+						'p1'   => $p->real_full_path,
+						'p2'	 => '',
+						'line' => __LINE__,
+						'file' => __FILE__
+					));
+
 					return False;
 				}
 			}

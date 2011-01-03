@@ -46,9 +46,9 @@
 			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.document');
 			$this->cats->supress_info	= true;
 
-			$this->db           	= & $GLOBALS['phpgw']->db;
-			$this->join				= & $this->db->join;
-			$this->like				= & $this->db->like;
+			$this->db           		= & $GLOBALS['phpgw']->db;
+			$this->join					= & $this->db->join;
+			$this->like					= & $this->db->like;
 		}
 
 
@@ -60,10 +60,10 @@
 			while ($this->db->next_record())
 			{
 				$status[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('descr',true)
+					);
 			}
 			return $status;
 		}
@@ -76,10 +76,10 @@
 			while ($this->db->next_record())
 			{
 				$branch[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('descr',true)
+					);
 			}
 			return $branch;
 		}
@@ -95,7 +95,7 @@
 				$order		= isset($data['order'])?$data['order']:'';
 				$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
 				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
-				$doc_type		= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
+				$doc_type	= isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type']: 0;
 			}
 
 			$doc_types = $this->get_sub_doc_types($doc_type);
@@ -142,16 +142,16 @@
 
 
 				$sql	= $this->bocommon->generate_sql(array('entity_table'=> $document_table,
-															'cols'			=> $cols,
-															'cols_return'	=> $cols_return,
-															'uicols'		=> $uicols,
-															'joinmethod'	=> $joinmethod,
-															'paranthesis'	=> $paranthesis,
-															'query'			=> $query,
-															'force_location'=> true,
-															'no_address'	=> true,
-															'uicol_address'=> true
-															));
+					'cols'			=> $cols,
+					'cols_return'	=> $cols_return,
+					'uicols'		=> $uicols,
+					'joinmethod'	=> $joinmethod,
+					'paranthesis'	=> $paranthesis,
+					'query'			=> $query,
+					'force_location'=> true,
+					'no_address'	=> true,
+					'uicol_address'=> true
+				));
 
 				$this->bocommon->fm_cache('sql_document_' . $entity_id,$sql);
 
@@ -235,7 +235,7 @@
 
 			$sql .= " $filtermethod $querymethod $groupmethod";
 
-//echo $sql;
+			//echo $sql;
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -262,7 +262,7 @@
 			}
 
 
-//_debug_array($document_list);
+			//_debug_array($document_list);
 			return $document_list;
 		}
 
@@ -322,12 +322,12 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where (fm_document.title $this->like '%$query%' OR fm_document.document_name"
-				. " $this->like '%$query%')";
+					. " $this->like '%$query%')";
 			}
 
 			$sql = "SELECT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
-			. " $this->join phpgw_categories on fm_document.category = phpgw_categories.cat_id"
-			. " $filtermethod $querymethod";
+				. " $this->join phpgw_categories on fm_document.category = phpgw_categories.cat_id"
+				. " $filtermethod $querymethod";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -345,14 +345,14 @@
 			while ($this->db->next_record())
 			{
 				$document_list[] = array
-				(
-					'document_id'		=> $this->db->f('id'),
-					'document_name'		=> $this->db->f('document_name', true),
-					'link'				=> $this->db->f('link', true),
-					'title'				=> $this->db->f('title', true),
-					'doc_type'			=> $this->db->f('category'),
-					'user_id'			=> $this->db->f('coordinator'),
-					'document_date'		=> $this->db->f('document_date')
+					(
+						'document_id'		=> $this->db->f('id'),
+						'document_name'		=> $this->db->f('document_name', true),
+						'link'				=> $this->db->f('link', true),
+						'title'				=> $this->db->f('title', true),
+						'doc_type'			=> $this->db->f('category'),
+						'user_id'			=> $this->db->f('coordinator'),
+						'document_date'		=> $this->db->f('document_date')
 					);
 			}
 
@@ -388,8 +388,8 @@
 				$document['p_cat_id']			= $this->db->f('p_cat_id');
 			}
 
-//_debug_array($document);
-				return $document;
+			//_debug_array($document);
+			return $document;
 		}
 
 		function add($document)
@@ -432,7 +432,7 @@
 
 			$document['descr'] = $this->db->db_addslashes($document['descr']);
 			$document['title'] = $this->db->db_addslashes($document['title']);
-//_debug_array($document);
+			//_debug_array($document);
 
 			$values= array(
 				$this->db->db_addslashes($document['document_name']),
@@ -557,8 +557,8 @@
 
 			if($old_link !=$document['link'] )
 			{
-					$this->historylog->add('L',$document['document_id'],$document['link'],$old_link);
-					$alter_link=true;
+				$this->historylog->add('L',$document['document_id'],$document['link'],$old_link);
+				$alter_link=true;
 			}
 
 
@@ -584,7 +584,7 @@
 				}
 
 				$receipt= $this->delete_file($file);
-			*/
+			 */
 			}
 
 			if($document['link'])
@@ -659,12 +659,12 @@
 				$y = 0; //level
 				$cache_x_at_y[$y] = $x;
 				$documents[$x] = array
-				(
-					'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
-					'text'		=> lang('documents') . ' [' . $hits . ']:',
-					'descr'		=> lang('Documentation'),
-					'level'		=> 0
-				);
+					(
+						'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
+						'text'		=> lang('documents') . ' [' . $hits . ']:',
+						'descr'		=> lang('Documentation'),
+						'level'		=> 0
+					);
 			}
 			else
 			{
@@ -697,21 +697,21 @@
 				}
 				$y = $level;
 
-					$map = '$documents'; 
-					for ($i = 0; $i < $level ; $i++)
-					{
+				$map = '$documents'; 
+				for ($i = 0; $i < $level ; $i++)
+				{
 
-						$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
-					}
+					$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
+				}
 
-					$map .= '[]'; 
+				$map .= '[]'; 
 
-					eval($map . ' =array('
+				eval($map . ' =array('
 					.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
 					.	"'text'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
 					.	"'descr'		=> '" . lang('Documentation') . "',\n"
 					.	"'level'		=> "  . ($category['level']+1) . "\n"
-					 . ');');
+					. ');');
 
 				$cache_x_at_y[$y] = $x;
 			}
@@ -723,17 +723,17 @@
 		{
 			$receipt = array();
 			if($this->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
+				'string' => $file,
+				'relatives' => Array(RELATIVE_NONE)
+			)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if(!$this->vfs->rm (array(
 					'string' => $file,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
+					'relatives' => array(
+						RELATIVE_NONE
+					)
 				)))
 				{
 					$receipt['error'][]=array('msg'=>lang('failed to delete file') . ' :'. $file);
@@ -785,22 +785,22 @@
 
 
 		/**
-		* used for retrive a child-node from a hierarchy
-		*
-		* @param string $dirname current path
-		* @param integer $level is increased when we go deeper into the tree,
-		* @param integer $maks_level is how deep we want to go
-		* @param integer $filter_level search for filter at a predefined level
-		* @param string $filter
-		* @param string $menuaction is used to make an url to the item
-		* @return array $child Children
-		*/
+		 * used for retrive a child-node from a hierarchy
+		 *
+		 * @param string $dirname current path
+		 * @param integer $level is increased when we go deeper into the tree,
+		 * @param integer $maks_level is how deep we want to go
+		 * @param integer $filter_level search for filter at a predefined level
+		 * @param string $filter
+		 * @param string $menuaction is used to make an url to the item
+		 * @return array $child Children
+		 */
 
 		protected function get_children($dirname, $level, $maks_level = 0, $filter_level=1, $filter = 'hei', $menuaction)
 		{
 			// prevent path traversal
 			if ( preg_match('/\./', $dirname) 
-			 || !is_dir($dirname) )
+				|| !is_dir($dirname) )
 			{
 				return array();
 			}
@@ -813,18 +813,18 @@
 				{
 					if ( ($file->isDot() || !$file->isReadable())
 						|| ($level == $filter_level && !preg_match("/{$filter}/i", $file->getFilename()))
-						)
- 					{
+					)
+					{
 						continue;
 					}
 					$children[] =array
-					(
-						'link'			=> $GLOBALS['phpgw']->link('/home.php'),
-						'text'			=> $file->getFilename(),
-						'is_dir'		=> $file->isDir(),
-						'path'			=> $file->getPathname(),
-						'level'			=> $level,
-					);
+						(
+							'link'			=> $GLOBALS['phpgw']->link('/home.php'),
+							'text'			=> $file->getFilename(),
+							'is_dir'		=> $file->isDir(),
+							'path'			=> $file->getPathname(),
+							'level'			=> $level,
+						);
 				}
 			}
 
@@ -842,22 +842,22 @@
 		}
 
 		/**
-		* used for retrive a filetree from a given start point
-		*
-		* @param string $dirname Start point
-		* @param integer $maks_level is how deep we want to go
-		* @param integer $filter_level search for filter at a predefined level
-		* @param string $filter
-		* @param string $menuaction is used to make an url to the item
-		* @return array $child Children
-		*/
+		 * used for retrive a filetree from a given start point
+		 *
+		 * @param string $dirname Start point
+		 * @param integer $maks_level is how deep we want to go
+		 * @param integer $filter_level search for filter at a predefined level
+		 * @param string $filter
+		 * @param string $menuaction is used to make an url to the item
+		 * @return array $child Children
+		 */
 
 		public function read_file_tree($dirname = '', $maks_level = 2, $filter_level, $filter, $menuaction = '')
 		{
 			$dirname = $dirname ? $dirname : $GLOBALS['phpgw_info']['server']['temp_dir'];
 			// prevent path traversal
 			if ( preg_match('/\./', $dirname) 
-			 || !is_dir($dirname) )
+				|| !is_dir($dirname) )
 			{
 				return array();
 			}
@@ -870,18 +870,18 @@
 				{
 					if ( $file->isDot()
 						|| !$file->isReadable()
-						)
- 					{
+					)
+					{
 						continue;
 					}
 					$file_list[] =array
-					(
-						'link'			=> $GLOBALS['phpgw']->link('/home.php'),
-						'text'			=> $file->getFilename(),
-						'is_dir'		=> $file->isDir(),
-						'path'			=> $file->getPathname(),
-						'level'			=> 0,
-					);
+						(
+							'link'			=> $GLOBALS['phpgw']->link('/home.php'),
+							'text'			=> $file->getFilename(),
+							'is_dir'		=> $file->isDir(),
+							'path'			=> $file->getPathname(),
+							'level'			=> 0,
+						);
 				}
 			}
 

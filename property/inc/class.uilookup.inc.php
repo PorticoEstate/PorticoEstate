@@ -48,21 +48,21 @@
 		var $currentapp;
 
 		var $public_functions = array
-		(
-			'addressbook'	=> true,
-			'organisation'	=> true,
-			'vendor'		=> true,
-			'b_account'		=> true,
-			'location'		=> true,
-			'entity'		=> true,
-			'ns3420'		=> true,
-			'street'		=> true,
-			'tenant'		=> true,
-			'phpgw_user'	=> true,
-			'project_group'	=> true,
-			'ecodimb'		=> true,
-			'order_template'=> true
-		);
+			(
+				'addressbook'	=> true,
+				'organisation'	=> true,
+				'vendor'		=> true,
+				'b_account'		=> true,
+				'location'		=> true,
+				'entity'		=> true,
+				'ns3420'		=> true,
+				'street'		=> true,
+				'tenant'		=> true,
+				'phpgw_user'	=> true,
+				'project_group'	=> true,
+				'ecodimb'		=> true,
+				'order_template'=> true
+			);
 
 		function __construct()
 		{
@@ -82,22 +82,22 @@
 			$this->district_id			= $this->bo->district_id;
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('dragdrop');
-		  	phpgwapi_yui::load_widget('datatable');
-		  	phpgwapi_yui::load_widget('menu');
-		  	phpgwapi_yui::load_widget('connection');
-		  	phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
 			phpgwapi_yui::load_widget('tabview');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
-	      	if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
-	      	{
-	        	$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
-	      	}
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
 			// Prepare CSS Style
-		  	$GLOBALS['phpgw']->css->validate_file('datatable');
-		  	$GLOBALS['phpgw']->css->validate_file('property');
-		  	$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
@@ -107,16 +107,16 @@
 		function save_sessiondata()
 		{
 			$data = array
-			(
-				'start'				=> $this->start,
-				'query'				=> $this->query,
-				'sort'				=> $this->sort,
-				'order'				=> $this->order,
-				'filter'			=> $this->filter,
-				'cat_id'			=> $this->cat_id,
-				'part_of_town_id'	=> $this->part_of_town_id,
-				'district_id'		=> $this->district_id
-			);
+				(
+					'start'				=> $this->start,
+					'query'				=> $this->query,
+					'sort'				=> $this->sort,
+					'order'				=> $this->order,
+					'filter'			=> $this->filter,
+					'cat_id'			=> $this->cat_id,
+					'part_of_town_id'	=> $this->part_of_town_id,
+					'district_id'		=> $this->district_id
+				);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -138,82 +138,92 @@
 			}
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.addressbook',
-							'second_display'	=> true,
-							'cat_id'			=> $this->cat_id,
-							'query'				=> $this->query,
-							'filter'			=> $this->filter,
-							'column'			=> $column
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.addressbook',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter,
+						'column'			=> $column
 
-	    				));
+					));
 
-	    		$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.addressbook',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}',"
-						 	                        ."column:'{$column}'";
-						 	                        
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}',"
+					."column:'{$column}'";
+
 				$values_combo_box[0]	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true));;
 				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.addressbook',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter,
-									'column'			=> $column
-									)
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.addressbook',
+								'second_display'	=> true,
+								'cat_id'			=> $this->cat_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter,
+								'column'			=> $column
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
-													array( //boton 	CATEGORY
-														'id' => 'btn_cat_id',
-														'name' => 'cat_id',
-														'value'	=> lang('Category'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 1
-													),
-													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 3
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 2
-													)
-		                           				),
-		                       		'hidden_value' => array(
-															array( //div values  combo_box_0
-																		'id' => 'values_combo_box_0',
-																		'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      )
-		                       								)
-												)
-										  )
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 3
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 2
+								)
+							),
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								)
+							)
+						)
+					)
 				);
 			}
-	
+
 			$uicols = array (
 				'input_type'	=>	array('text','text','text','text','text'),
 				'name'			=>	array('contact_id','contact_name','email','wphone','is_user'),
@@ -279,7 +289,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("contact_id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = data.getData("contact_name");' ."\r\n";
-			
+
 			$function_exchange_values .= 'window.close()';
 
 			$datatable['exchange_values'] = $function_exchange_values;
@@ -309,69 +319,69 @@
 			$function_msg					= lang('list vendors');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -394,82 +404,92 @@
 			}
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.organisation',
-							'second_display'	=> true,
-							'cat_id'			=> $this->cat_id,
-							'query'				=> $this->query,
-							'filter'			=> $this->filter,
-							'column'			=> $column
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.organisation',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter,
+						'column'			=> $column
 
-	    				));
+					));
 
-	    		$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.organisation',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}',"
-						 	                        ."column:'{$column}'";
-						 	                        
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}',"
+					."column:'{$column}'";
+
 				$values_combo_box[0]	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true));;
 				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.organisation',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter,
-									'column'			=> $column
-									)
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.organisation',
+								'second_display'	=> true,
+								'cat_id'			=> $this->cat_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter,
+								'column'			=> $column
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
-													array( //boton 	CATEGORY
-														'id' => 'btn_cat_id',
-														'name' => 'cat_id',
-														'value'	=> lang('Category'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 1
-													),
-													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 3
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 2
-													)
-		                           				),
-		                       		'hidden_value' => array(
-															array( //div values  combo_box_0
-																		'id' => 'values_combo_box_0',
-																		'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      )
-		                       								)
-												)
-										  )
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 3
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 2
+								)
+							),
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								)
+							)
+						)
+					)
 				);
 			}
-	
+
 			$uicols = array (
 				'input_type'	=>	array('text','text','text','text'),
 				'name'			=>	array('contact_id','org_name','email','wphone'),
@@ -535,7 +555,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("contact_id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = data.getData("org_name");' ."\r\n";
-			
+
 			$function_exchange_values .= 'window.close()';
 
 			$datatable['exchange_values'] = $function_exchange_values;
@@ -565,69 +585,69 @@
 			$function_msg					= lang('list organisations');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -650,85 +670,95 @@
 			}
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.vendor',
-							'second_display'	=> true,
-							'cat_id'			=> $this->cat_id,
-							'query'				=> $this->query,
-							'filter'			=> $this->filter,
-							'column'			=> $column
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.vendor',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter,
+						'column'			=> $column
 
-	    				));
+					));
 
-	    		$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.vendor',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}',"
-						 	                        ."column:'{$column}'";
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}',"
+					."column:'{$column}'";
 
 				$values_combo_box[0]	= $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,'globals' => true));
 				$default_value = array ('cat_id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
 
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.vendor',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter,
-									'column'			=> $column
-									)
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.vendor',
+								'second_display'	=> true,
+								'cat_id'			=> $this->cat_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter,
+								'column'			=> $column
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
-													array( //boton 	CATEGORY
-														'id' => 'btn_cat_id',
-														'name' => 'cat_id',
-														'value'	=> lang('Category'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 1
-													),
-													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 3
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 2
-													)
-		                           				),
-		                       		'hidden_value' => array(
-															array( //div values  combo_box_0
-																		'id' => 'values_combo_box_0',
-																		'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-							                                      )
-		                       								)
-												)
-										  )
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 3
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 2
+								)
+							),
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								)
+							)
+						)
+					)
 				);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(id,org_name),
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','org_name'),
 				'formatter'		=>	array('',''),
 				'descr'			=>	array(lang('ID'),lang('Name'))
 			);
@@ -744,8 +774,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $vendor[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $vendor[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -779,7 +809,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = "";' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$org_name.'")[0].value = "";' ."\r\n";
-			
+
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$org_name.'")[0].value = data.getData("org_name");' ."\r\n";
 			if($contact_id	== 'vendor_id')
@@ -818,69 +848,69 @@
 			$function_msg					= lang('list vendors');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.vendor.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -891,68 +921,76 @@
 			$parent = phpgw::get_var('parent');
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.b_account',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.b_account',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'role'				=> $role,
+						'parent'			=> $parent,
+						'filter'			=> $this->filter
+					));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.b_account',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."role:'{$role}',"
+					."parent:'{$parent}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.b_account',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
-								'role'				=> $role,
-								'parent'			=> $parent,
 								'filter'			=> $this->filter
-	    				));
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.b_account',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
-						 	                        ."role:'{$role}',"
-						 	                        ."parent:'{$parent}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.b_account',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(id,descr),
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','descr'),
 				'formatter'		=>	array('',''),
 				'descr'			=>	array(lang('ID'),lang('Name'))
 			);
@@ -969,8 +1007,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $b_account_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $b_account_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -1027,69 +1065,69 @@
 			$function_msg					= lang('list budget account');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -1098,66 +1136,74 @@
 		function street()
 		{
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.street',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.street',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter
+					));
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.street',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.street',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter
-	    				));
-
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.street',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.street',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(id,street_name),
-				'sort_field'	=>	array(id,descr),
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','street_name'),
+				'sort_field'	=>	array('id','descr'),
 				'formatter'		=>	array('',''),
 				'descr'			=>	array(lang('ID'),lang('Street name'))
 			);
@@ -1173,8 +1219,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $street_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $street_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -1209,7 +1255,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("street_id")[0].value = "";' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("street_name")[0].value = "";' ."\r\n";
-			
+
 			$function_exchange_values .= 'opener.document.getElementsByName("street_id")[0].value = data.getData("id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("street_name")[0].value = data.getData("street_name");' ."\r\n";
 
@@ -1242,70 +1288,70 @@
 			$function_msg					= lang('list street');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
 
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -1313,64 +1359,72 @@
 		function tenant()
 		{
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.tenant',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.tenant',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter
+					));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.tenant',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.tenant',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter
-	    				));
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.tenant',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.tenant',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text,text),
-				'name'			=>	array(id,last_name,first_name),
+				'input_type'	=>	array('text','text','text'),
+				'name'			=>	array('id','last_name','first_name'),
 				'formatter'		=>	array('','',''),
 				'descr'			=>	array(lang('ID'),lang('last name'),lang('first name'))
 			);
@@ -1386,8 +1440,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $tenant_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $tenant_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -1446,69 +1500,69 @@
 			$function_msg					= lang('list tenant');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -1516,66 +1570,74 @@
 		function ns3420()
 		{
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.ns3420',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.ns3420',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter
+					));
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ns3420',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.ns3420',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter
-	    				));
-
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ns3420',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.ns3420',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(id,ns3420_descr),
-				'sort_field'	=>	array(id,tekst1),
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','ns3420_descr'),
+				'sort_field'	=>	array('id','tekst1'),
 				'formatter'		=>	array('',''),
 				'descr'			=>	array(lang('ID'),lang('ns3420 description'))
 			);
@@ -1591,8 +1653,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $ns3420_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $ns3420_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -1650,69 +1712,69 @@
 			$function_msg					= lang('list standard description');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -1736,30 +1798,30 @@
 			$this->criteria_id			= $boentity->criteria_id;
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'		=> 'property.uilookup.entity',
-							'entity_id'			=> $this->entity_id,
-							'cat_id'			=> $this->cat_id,
-							'district_id'		=> $this->district_id,
-							'query'				=> $this->query,
-							'filter'			=> $this->filter,
-							'location_code'		=> $this->location_code,
-							'criteria_id'		=> $this->criteria_id
-	    				));
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'		=> 'property.uilookup.entity',
+						'entity_id'			=> $this->entity_id,
+						'cat_id'			=> $this->cat_id,
+						'district_id'		=> $this->district_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter,
+						'location_code'		=> $this->location_code,
+						'criteria_id'		=> $this->criteria_id
+					));
 
-	    		$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.entity',"
-	    											."entity_id:'{$this->entity_id}',"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."district_id:'{$this->district_id}',"
- 	                        						."query:'{$this->query}',"
-						 	                        ."filter:'{$this->filter}',"
-				 	                        		."criteria_id:'{$this->criteria_id}',"
-						 	                        ."location_code:'{$this->location_code}'";
+					."entity_id:'{$this->entity_id}',"
+					."cat_id:'{$this->cat_id}',"
+					."district_id:'{$this->district_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}',"
+					."criteria_id:'{$this->criteria_id}',"
+					."location_code:'{$this->location_code}'";
 
 				$values_combo_box[0] = $boentity->select_category_list('filter',$this->cat_id);
 				$default_value = array ('id'=>'','name'=>lang('no category'));
@@ -1773,77 +1835,91 @@
 				$default_value = array ('id'=>'','name'=>lang('no criteria'));
 				array_unshift ($values_combo_box[2],$default_value);
 
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.entity',
-									'entity_id'			=> $this->entity_id,
-									'cat_id'			=> $this->cat_id,
-									'district_id'		=> $this->district_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.entity',
+								'entity_id'			=> $this->entity_id,
+								'cat_id'			=> $this->cat_id,
+								'district_id'		=> $this->district_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
-													array( //boton 	CATEGORY
-														'id' => 'btn_cat_id',
-														'name' => 'cat_id',
-														'value'	=> lang('Category'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 1
-													),
-													array( //boton 	CATEGORY
-														'id' => 'btn_district_id',
-														'name' => 'district_id',
-														'value'	=> lang('District'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 2
-													),
-													array( //boton 	search criteria
-														'id' => 'btn_criteria_id',
-														'name' => 'criteria_id',
-														'value'	=> lang('search criteria'),
-														'type' => 'button',
-														'style' => 'filter',
-														'tab_index' => 3
-													),
-													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 5
-													),
-			   										array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 4
-													)
-		                           				),
-		                       		'hidden_value' => array(
-															array( //div values  combo_box_0
-																		'id' => 'values_combo_box_0',
-																		'value'	=> $bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
-							                                      ),
-															array( //div values  combo_box_1
-																		'id' => 'values_combo_box_1',
-																		'value'	=> $bocommon->select2String($values_combo_box[1]) //i.e.  id,value/id,vale/
-							                                      ),
-															array( //div values  combo_box_2
-																		'id' => 'values_combo_box_2',
-																		'value'	=> $bocommon->select2String($values_combo_box[2]) //i.e.  id,value/id,vale/
-							                                      )
-		                       								)
-												)
-										  )
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_district_id',
+									'name' => 'district_id',
+									'value'	=> lang('District'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 2
+								),
+								array
+								( //boton 	search criteria
+									'id' => 'btn_criteria_id',
+									'name' => 'criteria_id',
+									'value'	=> lang('search criteria'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 3
+								),
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 5
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 4
+								)
+							),
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
+								),
+								array
+								( //div values  combo_box_1
+									'id' => 'values_combo_box_1',
+									'value'	=> $bocommon->select2String($values_combo_box[1]) //i.e.  id,value/id,vale/
+								),
+								array
+								( //div values  combo_box_2
+									'id' => 'values_combo_box_2',
+									'value'	=> $bocommon->select2String($values_combo_box[2]) //i.e.  id,value/id,vale/
+								)
+							)
+						)
+					)
 				);
 			}
 
@@ -1866,9 +1942,9 @@
 			else
 			{
 
-					$uicols['name'][] 	= 'num';
-					$uicols['descr'][] 	= 'ID';
-					$uicols['input_type'][] 	= 'text';
+				$uicols['name'][] 	= 'num';
+				$uicols['descr'][] 	= 'ID';
+				$uicols['input_type'][] 	= 'text';
 			}
 
 			$content = array();
@@ -1968,64 +2044,64 @@
 			}
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array(),
 					'headers'			=> $uicols
 
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			if($this->entity_id)
 			{
@@ -2037,12 +2113,12 @@
 				$category = $boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 				$function_msg					= lang('lookup') . ' ' . $category['name'];
 			}
-			
+
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.entity.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.entity.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -2052,69 +2128,77 @@
 			$column = phpgw::get_var('column');
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.phpgw_user',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.phpgw_user',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter,
+						'column'			=> $column
+					));
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.phpgw_user',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}',"
+					."column:'{$column}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.phpgw_user',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter,
 								'column'			=> $column
-	    				));
-
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.phpgw_user',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}',"
- 	                        						."column:'{$column}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.phpgw_user',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter,
-									'column'			=> $column
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,hidden,text,text),
-				'name'			=>	array(id,account_lid,first_name,last_name),
-				'sort_field'	=>	array(account_id,account_lid,account_firstname,account_lastname),
+				'input_type'	=>	array('text','hidden','text','text'),
+				'name'			=>	array('id','account_lid','first_name','last_name'),
+				'sort_field'	=>	array('account_id','account_lid','account_firstname','account_lastname'),
 				'formatter'		=>	array('','','',''),
 				'descr'			=>	array(lang('ID'),'',lang('first name'),lang('last name'))
 			);
@@ -2130,8 +2214,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $phpgw_user_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $phpgw_user_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -2176,7 +2260,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_id.'")[0].value = "";' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_name.'")[0].value = "";' ."\r\n";
-			
+
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_id.'")[0].value = data.getData("id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$user_name.'")[0].value = data.getData("first_name") + " " + data.getData("last_name");' ."\r\n";
 
@@ -2209,69 +2293,69 @@
 			$function_msg					= lang('list standard description');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -2279,64 +2363,72 @@
 		function project_group()
 		{
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.project_group',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.project_group',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter
+					));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.project_group',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.project_group',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter
-	    				));
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.project_group',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.project_group',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(id,descr),
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','descr'),
 				'formatter'		=>	array('',''),
 				'descr'			=>	array(lang('ID'),lang('Name'))
 			);
@@ -2352,8 +2444,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $project_group_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $project_group_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -2377,7 +2469,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("project_group")[0].value = "";' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("project_group_descr")[0].value = "";' ."\r\n";
-			
+
 			$function_exchange_values .= 'opener.document.getElementsByName("project_group")[0].value = data.getData("id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("project_group_descr")[0].value = data.getData("descr");' ."\r\n";
 
@@ -2410,70 +2502,70 @@
 			$function_msg					= lang('list project group');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -2481,64 +2573,72 @@
 		function ecodimb()
 		{
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.ecodimb',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.ecodimb',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter
+					));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ecodimb',"
+					."second_display:true,"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.ecodimb',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
 								'filter'			=> $this->filter
-	    				));
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.ecodimb',"
-	    											."second_display:true,"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.ecodimb',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter
-									)
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
-				'input_type'	=>	array(text,text),
-				'name'			=>	array(id,descr),
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','descr'),
 				'formatter'		=>	array('',''),
 				'descr'			=>	array(lang('ID'),lang('Name'))
 			);
@@ -2554,8 +2654,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $ecodimb_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $ecodimb_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -2579,7 +2679,7 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb")[0].value = "";' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb_descr")[0].value = "";' ."\r\n";
-			
+
 			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb")[0].value = data.getData("id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("ecodimb_descr")[0].value = data.getData("descr");' ."\r\n";
 
@@ -2612,70 +2712,70 @@
 			$function_msg					= lang('list project group');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-    		//values for Pagination
-	    		$json = array
-	    		(
-	    			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    				'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	    			'startIndex' 		=> $datatable['pagination']['records_start'],
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
-	    			'dir'				=> $datatable['sorting']['sort'],
+					'dir'				=> $datatable['sorting']['sort'],
 					'records'			=> array()
-	    		);
+				);
 
-				// values for datatable
-	    		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	    			foreach( $datatable['rows']['row'] as $row )
-	    			{
-		    			$json_row = array();
-		    			foreach( $row['column'] as $column)
-		    			{
-		    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-		    				{
-		    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-		    				}
-		    				elseif(isset($column['format']) && $column['format']== "link")
-		    				{
-		    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-		    				}
-		    				else
-		    				{
-		    				  $json_row[$column['name']] = $column['value'];
-		    				}
-		    			}
-		    			$json['records'][] = $json_row;
-	    			}
-	    		}
-
-				// right in datatable
-				if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
 				{
-					$json ['rights'] = $datatable['rowactions']['action'];
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
 				}
+			}
 
-				if( phpgw::get_var('phpgw_return_as') == 'json' )
-				{
-		    		return $json;
-				}
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json ['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
@@ -2683,61 +2783,69 @@
 		function order_template()
 		{
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
-			 {
+			{
 
-		    	$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
-	    				(
-	    					'menuaction'			=> 'property.uilookup.order_template',
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction'			=> 'property.uilookup.order_template',
+						'second_display'	=> true,
+						'cat_id'			=> $this->cat_id,
+						'query'				=> $this->query,
+						'filter'			=> $this->filter
+					));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.order_template',"
+					."second_display:true,"
+					."type:'order_template',"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}'";
+
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.order_template',
 								'second_display'	=> true,
 								'cat_id'			=> $this->cat_id,
 								'query'				=> $this->query,
-								'filter'			=> $this->filter
-	    				));
-	    		$datatable['config']['allow_allrows'] = true;
-
-				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.order_template',"
-	    											."second_display:true,"
-	    											."type:'order_template',"
- 	                        						."cat_id:'{$this->cat_id}',"
-						 	                        ."query:'{$this->query}',"
- 	                        						."filter:'{$this->filter}'";
-
-				$datatable['actions']['form'] = array(
-					array(
-						'action'	=> $GLOBALS['phpgw']->link('/index.php',
-								array(
-									'menuaction' 		=> 'property.uilookup.order_template',
-									'second_display'	=> true,
-									'cat_id'			=> $this->cat_id,
-									'query'				=> $this->query,
-									'filter'			=> $this->filter,
-									'type'				=> 'order_template'
-									)
+								'filter'			=> $this->filter,
+								'type'				=> 'order_template'
+							)
 						),
-						'fields'	=> array(
-                                    'field' => array(
- 													array( //boton  SEARCH
-														'id' => 'btn_search',
-														'name' => 'search',
-														'value'    => lang('search'),
-														'type' => 'button',
-														'tab_index' => 2
-													),
-			   										 array( // TEXT IMPUT
-														'name'     => 'query',
-														'id'     => 'txt_query',
-														'value'    => '',//'',//$query,
-														'type' => 'text',
-														'size'    => 28,
-														'onkeypress' => 'return pulsar(event)',
-	                                    				'tab_index' => 1
-													)
-		                           				),
-		                       		'hidden_value' => array(
-		                       								)
-												)
-										  )
-				);
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
 			}
 
 			$uicols = array (
@@ -2759,8 +2867,8 @@
 				{
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
-							$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $template_entry[$uicols['name'][$i]];
-							$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $template_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
 					}
 					$j++;
 				}
@@ -2815,42 +2923,42 @@
 			$function_msg					= lang('list order template');
 
 
-//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
-   		//values for Pagination
-	   		$json = array
-	   		(
-	   			'recordsReturned' 	=> $datatable['pagination']['records_returned'],
-    			'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
-	   			'startIndex' 		=> $datatable['pagination']['records_start'],
-				'sort'				=> $datatable['sorting']['order'],
-	   			'dir'				=> $datatable['sorting']['sort'],
-				'records'			=> array()
-	   		);
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+					'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+				);
 
 			// values for datatable
-	   		if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
-	   			foreach( $datatable['rows']['row'] as $row )
-	   			{
-	    			$json_row = array();
-	    			foreach( $row['column'] as $column)
-	    			{
-	    				if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
-	    				{
-	    					$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
-	    				}
-	    				elseif(isset($column['format']) && $column['format']== "link")
-	    				{
-	    				  $json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
-	    				}
-	    				else
-	    				{
-	    				  $json_row[$column['name']] = $column['value'];
-	    				}
-	    			}
-	    			$json['records'][] = $json_row;
-	   			}
-	   		}
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
 
 			// right in datatable
 			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
@@ -2860,26 +2968,25 @@
 
 			if( phpgw::get_var('phpgw_return_as') == 'json' )
 			{
-	    		return $json;
+				return $json;
 			}
 
 			$datatable['json_data'] = json_encode($json);
-//-------------------- JSON CODE ----------------------
+			//-------------------- JSON CODE ----------------------
 
 			// Prepare template variables and process XSLT
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
-	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
 
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-	  		// Prepare YUI Library
-  			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
 
 			$this->save_sessiondata();
 		}
-
 	}

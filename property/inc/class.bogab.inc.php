@@ -43,13 +43,13 @@
 		var $gab_insert_level;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function __construct($session=false)
 		{
@@ -138,9 +138,9 @@
 			}
 
 			$gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
-											'cat_id' => $this->cat_id,'location_code' => $location_code,
-											'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
-											'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));
+				'cat_id' => $this->cat_id,'location_code' => $location_code,
+				'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
+				'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments));
 /*
 			foreach ($gab as &$_gab)
 			{
@@ -159,17 +159,17 @@
 					$_gab['address'] = $location_data['loc1_name'];
 				}
 			}
-*/
+ */
 			$this->total_records = $this->so->total_records;
 			$this->payment_date = $this->so->payment_date;
 			return $gab;
 		}
-		
+
 		//nguerra@ccfirst.com $allrows - variable to display all records
 		function read_detail($gab_id='', $allrows=0)
 		{
 			$gab = $this->so->read_detail(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,
-											'cat_id' => $this->cat_id,'gab_id' => $gab_id,'allrows'=>$allrows));
+				'cat_id' => $this->cat_id,'gab_id' => $gab_id,'allrows'=>$allrows));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -235,4 +235,3 @@
 			$this->so->delete($gab_id,$location_code);
 		}
 	}
-

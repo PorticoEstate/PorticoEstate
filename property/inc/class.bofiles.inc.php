@@ -43,12 +43,12 @@
 		var $rootdir;
 
 		/**
-		* constructor
-		*
-		* @param string $fakebase fakebase
-		*
-		* @return
-		*/
+		 * constructor
+		 *
+		 * @param string $fakebase fakebase
+		 *
+		 * @return
+		 */
 
 		function __construct($fakebase='/property')
 		{
@@ -77,28 +77,28 @@
 		}
 
 		/**
-		* Create catalog - starting with fakebase
-		*
-		* @param string $type part of path pointing to end target
-		*
-		* @return array Array with result on the action(failed/success) for each catalog down the path
-		*/
+		 * Create catalog - starting with fakebase
+		 *
+		 * @param string $type part of path pointing to end target
+		 *
+		 * @return array Array with result on the action(failed/success) for each catalog down the path
+		 */
 
 		function create_document_dir($type)
 		{
 			$receipt = array();
 
 			if(!$this->vfs->file_exists(array(
-					'string' => $this->fakebase,
-					'relatives' => array(RELATIVE_NONE)
-				)))
+				'string' => $this->fakebase,
+				'relatives' => array(RELATIVE_NONE)
+			)))
 			{
 				$this->vfs->override_acl = 1;
 				if(!$this->vfs->mkdir(array(
-				     'string' => $this->fakebase,
-				     'relatives' => array(
-				          RELATIVE_NONE
-				     )
+					'string' => $this->fakebase,
+					'relatives' => array(
+						RELATIVE_NONE
+					)
 				)))
 				{
 					$receipt['error'][] = array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase);
@@ -118,16 +118,16 @@
 				$catalog .= "/{$entry}";
 
 				if(!$this->vfs->file_exists(array(
-						'string' => "{$this->fakebase}{$catalog}",
-						'relatives' => array(RELATIVE_NONE)
-					)))
+					'string' => "{$this->fakebase}{$catalog}",
+					'relatives' => array(RELATIVE_NONE)
+				)))
 				{
 					$this->vfs->override_acl = 1;
 					if(!$this->vfs->mkdir(array(
-					     'string' => "{$this->fakebase}{$catalog}",
-					     'relatives' => array(
-					          RELATIVE_NONE
-					     )
+						'string' => "{$this->fakebase}{$catalog}",
+						'relatives' => array(
+							RELATIVE_NONE
+						)
 					)))
 					{
 						$receipt['error'][] = array('msg'=>lang('failed to create directory') . ' :'. $this->fakebase . $catalog);
@@ -139,18 +139,18 @@
 					$this->vfs->override_acl = 0;
 				}
 			}
-//_debug_array($receipt);
+			//_debug_array($receipt);
 			return $receipt;
 		}
 
 		/**
-		* Delete Files
-		*
-		* @param string $path   part of path where to look for files
-		* @param array  $values array holding information of selected files
-		*
-		* @return array Array with result on the action(failed/success) for each file
-		*/
+		 * Delete Files
+		 *
+		 * @param string $path   part of path where to look for files
+		 * @param array  $values array holding information of selected files
+		 *
+		 * @return array Array with result on the action(failed/success) for each file
+		 */
 
 		function delete_file($path, $values)
 		{
@@ -169,9 +169,9 @@
 
 					if(!$this->vfs->rm(array(
 						'string' => $file,
-					     'relatives' => array(
-					          RELATIVE_NONE
-					     )
+						'relatives' => array(
+							RELATIVE_NONE
+						)
 					)))
 					{
 						$receipt['error'][] = array('msg'=>lang('failed to delete file') . ' :'. $this->fakebase . $path . $file_name);
@@ -187,13 +187,13 @@
 		}
 
 		/**
-		* View File - echo (or download) to browser.
-		*
-		* @param string $type part of path where to look for files
-		* @param string $file optional filename
-		*
-		* @return null
-		*/
+		 * View File - echo (or download) to browser.
+		 *
+		 * @param string $type part of path where to look for files
+		 * @param string $file optional filename
+		 *
+		 * @return null
+		 */
 
 		function view_file($type = '', $file = '', $jasper = '')
 		{
@@ -216,14 +216,14 @@
 			if($this->vfs->file_exists(array(
 				'string' => $file,
 				'relatives' => array(RELATIVE_NONE)
-				)))
+			)))
 			{
 				$ls_array = $this->vfs->ls(array(
-						'string'		=>  $file,
-						'relatives' 	=> array(RELATIVE_NONE),
-						'checksubdirs'	=> false,
-						'nofiles'		=> true
-					));
+					'string'		=>  $file,
+					'relatives' 	=> array(RELATIVE_NONE),
+					'checksubdirs'	=> false,
+					'nofiles'		=> true
+				));
 
 				if(!$jasper)
 				{
@@ -260,13 +260,13 @@
 		}
 
 		/**
-		* Get attachments
-		*
-		* @param string $path   part of path where to look for files
-		* @param array  $values array holding information of selected files
-		*
-		* @return array Array with filecontent
-		*/
+		 * Get attachments
+		 *
+		 * @param string $path   part of path where to look for files
+		 * @param array  $values array holding information of selected files
+		 *
+		 * @return array Array with filecontent
+		 */
 		function get_attachments($path, $values)
 		{
 			$mime_magic = createObject('phpgwapi.mime_magic');
@@ -282,11 +282,11 @@
 					$mime       = $mime_magic->filename2mime($file_name);
 
 					$attachments[] = array
-					(
-						'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
-						'name' => $file_name,
-						'type' => $mime
-					);
+						(
+							'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
+							'name' => $file_name,
+							'type' => $mime
+						);
 				}
 			}
 			return $attachments;

@@ -35,7 +35,7 @@
 	</xsl:template>
 
 	<xsl:template match="list">
-	<xsl:variable name="list_img" select="list_img"/>
+		<xsl:variable name="list_img" select="list_img"/>
 		<table>
 			<tr>
 				<td colspan="2">
@@ -121,7 +121,7 @@
 	</xsl:template>
 
 	<xsl:template match="add">
-	<xsl:variable name="add_img" select="add_img"/>
+		<xsl:variable name="add_img" select="add_img"/>
 		<table>
 			<tr>
 				<td colspan="2">

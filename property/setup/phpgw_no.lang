@@ -169,6 +169,7 @@ approvals	property	no	Godkjenninger
 approvals request	property	no	Anmodninger om godkjenning
 approval from	property	no	Godkjenning fra
 approval from is updated	property	no	Godkjenning fra er oppdatert
+approve	property	no	Godkjenn
 approved	property	no	Godkjent
 archive	property	no	Arkiv
 art	property	no	Art
@@ -1007,6 +1008,7 @@ minor	property	no	Liten
 minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
+Missing log message	property	no	Angi grunn for endring
 missing value for %1	property	no	Mangler verdi for %1
 month	property	no	Måned
 Monthly (by day)	property	no	Månedlig (dag)
@@ -1064,6 +1066,7 @@ no part of town	property	no	Bydel ikke valgt
 no revision	property	no	Ingen revisjon
 no role	property	no	Rolle ikke valgt
 no status	property	no	Status ikke valgt
+no such order: %1	property	no	Ordre %1 finnes ikke
 no supervisor	property	no	Attestant ikke valgt
 note	property	no	Notat
 nothing to do!	property	no	Ingen ting å gjøre
@@ -1546,6 +1549,7 @@ sorting	property	no	Sortering
 sort the tickets by their id	property	no	sorter meldinger etter ID
 sort the tickets by their priority	property	no	sorter meldinger etter prioritet
 space	property	no	Areal
+split line	property	no	Splitt linje
 sql	property	no	SQL
 standard	property	no	standard
 standard description	property	no	NS 3420
@@ -1778,6 +1782,8 @@ voucher id	property	no	Bilags nr
 voucher is updated	property	no	Bilag er oppdatert
 voucher is updated:	property	no	Bilag er oppdatert:
 voucher period is updated	property	no	bilags periode er oppdatert
+voucher process code	property	no	Årsakskode
+voucher process log	property	no	Fakturalogg
 Warning: the record has to be saved in order to plan an event	property	no	NB! posten må lagres før hendelse kan planlegges
 warning: show cost estimate	property	no	Advarsel: kostnadsestimat blir synlig for leverandør
 w_cost	property	no	Arbeidskostnad

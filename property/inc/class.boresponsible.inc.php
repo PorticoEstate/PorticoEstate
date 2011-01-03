@@ -47,10 +47,10 @@
 		public $acl_location = '.admin';
 
 		/**
-		* Constructor
-		*
-		* @param bool $session whether to use stored session data or not
-		*/
+		 * Constructor
+		 *
+		 * @param bool $session whether to use stored session data or not
+		 */
 
 		public function __construct($session = false)
 		{
@@ -94,11 +94,11 @@
 
 			switch ($this->location)
 			{
-				case '.project.workorder':
-					$location = '.project';
-					break;
-					default:
-					$location = $this->location;
+			case '.project.workorder':
+				$location = '.project';
+				break;
+			default:
+				$location = $this->location;
 			}
 
 			$this->cats					= CreateObject('phpgwapi.categories', -1,'property', $location);
@@ -106,12 +106,12 @@
 		}
 
 		/**
-		* Save sessiondata for later use
-		*
-		* @param array $data session data to store
-		*
-		* @return void
-		*/
+		 * Save sessiondata for later use
+		 *
+		 * @param array $data session data to store
+		 *
+		 * @return void
+		 */
 
 		public function save_sessiondata($data)
 		{
@@ -122,10 +122,10 @@
 		}
 
 		/**
-		* Read previously saved sessiondata
-		*
-		* @return void
-		*/
+		 * Read previously saved sessiondata
+		 *
+		 * @return void
+		 */
 
 		private function read_sessiondata()
 		{
@@ -148,10 +148,10 @@
 		}
 
 		/**
-		* Read list of responsibility types
-		*
-		* @return array of types
-		*/
+		 * Read list of responsibility types
+		 *
+		 * @return array of types
+		 */
 
 		public function read_type()
 		{
@@ -170,10 +170,10 @@
 			}
 
 			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-												'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows,
-												'filter' => $filter));
+				'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows,
+				'filter' => $filter));
 			$this->total_records = $this->so->total_records;
-			
+
 			if($value['cat_id'])
 			{
 				foreach($values as & $value)
@@ -190,43 +190,43 @@
 		}
 
 		/**
-		* Read list of responsibility types
-		*
-		* @return array of types
-		*/
+		 * Read list of responsibility types
+		 *
+		 * @return array of types
+		 */
 
 		public function get_responsibilities($data = array())
 		{
 			$selected	= isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
 			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-												'order' => $this->order, 'location' => '', 'allrows'=>true,
-												'filter' => $filter));
+				'order' => $this->order, 'location' => '', 'allrows'=>true,
+				'filter' => $filter));
 			$responsibilities = array();
 			foreach($values as  $value)
 			{
 				$responsibilities[] = array
-				(
-					'id'		=> $value['id'],
-					'name'		=> $value['name'],
-					'selected'	=> $value['id'] == $selected ? 1 : 0
-				);
+					(
+						'id'		=> $value['id'],
+						'name'		=> $value['name'],
+						'selected'	=> $value['id'] == $selected ? 1 : 0
+					);
 			}
 
 			return $responsibilities;
 		}
 
 		/**
-		* Read list of contacts given responsibilities within locations
-		*
-		* @param integer $type_id filter by responsibility type
-		*
-		* @return array of contacts_responsibilities
-		*/
+		 * Read list of contacts given responsibilities within locations
+		 *
+		 * @param integer $type_id filter by responsibility type
+		 *
+		 * @return array of contacts_responsibilities
+		 */
 
 		public function read_contact($type_id = '')
 		{
 			$values = $this->so->read_contact(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-												'order' => $this->order, 'allrows'=>$this->allrows, 'type_id' => $type_id));
+				'order' => $this->order, 'allrows'=>$this->allrows, 'type_id' => $type_id));
 
 			$this->total_records = $this->so->total_records;
 			$soadmin_entity	= CreateObject('property.soadmin_entity');
@@ -252,19 +252,19 @@
 					$value['item']			= "{$value['p_cat_name']}::{$value['p_num']}";
 				}
 				$value['location_data']		= $solocation->read_single($value['location_code']);
-			
+
 			}
 			return $values;
 		}
 
 
 		/**
-		* Save responsibility type
-		*
-		* @param array $values values to be stored/edited and referencing ID if editing
-		*
-		* @return array $receip with result on the action(failed/success)
-		*/
+		 * Save responsibility type
+		 *
+		 * @param array $values values to be stored/edited and referencing ID if editing
+		 *
+		 * @return array $receip with result on the action(failed/success)
+		 */
 
 		public function save_type($values)
 		{
@@ -280,12 +280,12 @@
 		}
 
 		/**
-		* Save responsibility contact
-		*
-		* @param array $values values to be stored/edited and referencing ID if editing
-		*
-		* @return array $receip with result on the action(failed/success)
-		*/
+		 * Save responsibility contact
+		 *
+		 * @param array $values values to be stored/edited and referencing ID if editing
+		 *
+		 * @return array $receip with result on the action(failed/success)
+		 */
 
 		public function update_role_assignment($values)
 		{
@@ -307,7 +307,7 @@
 					$location_code		= $assign_arr[2];
 
 					$dont_add[] 		= $location_code;				
-	
+
 					if( !in_array($location_code, $values['assign']) )
 					{
 						$to_expire[] = $responsible_item;
@@ -316,14 +316,14 @@
 					if( in_array($location_code, $values['assign']) &&  $values['contact_id'] && !$values['contact_id'] == $contact_id )
 					{
 						$to_edit[] = array
-						(
-							'id'				=> $responsible_item,
-							'active_from'		=> time(),
-							'contact_id' 		=> $values['contact_id'],
-							'location_code' 	=> $location_code,
-							'responsibility_id'	=> $values['responsibility_id'],
-							'remark'			=> 'from role assignment'
-						);
+							(
+								'id'				=> $responsible_item,
+								'active_from'		=> time(),
+								'contact_id' 		=> $values['contact_id'],
+								'location_code' 	=> $location_code,
+								'responsibility_id'	=> $values['responsibility_id'],
+								'remark'			=> 'from role assignment'
+							);
 					}
 				}
 			}
@@ -351,13 +351,13 @@
 				}
 
 				$data = array
-				(
-					'location' 			=> explode('-', $location_code),
-					'active_from'		=> time(),
-					'responsibility_id'	=> $values['responsibility_id'],
-					'contact_id'		=> $values['contact_id'],
-					'remark'			=> 'from role assignment'
-				);
+					(
+						'location' 			=> explode('-', $location_code),
+						'active_from'		=> time(),
+						'responsibility_id'	=> $values['responsibility_id'],
+						'contact_id'		=> $values['contact_id'],
+						'remark'			=> 'from role assignment'
+					);
 
 				$this->so->add_contact($data);
 			}
@@ -375,12 +375,12 @@
 			return $receipt;
 		}
 		/**
-		* Save responsibility contact
-		*
-		* @param array $values values to be stored/edited and referencing ID if editing
-		*
-		* @return array $receip with result on the action(failed/success)
-		*/
+		 * Save responsibility contact
+		 *
+		 * @param array $values values to be stored/edited and referencing ID if editing
+		 *
+		 * @return array $receip with result on the action(failed/success)
+		 */
 
 		public function save_contact($values)
 		{
@@ -406,12 +406,12 @@
 		}
 
 		/**
-		* Read single responsibility type
-		*
-		* @param integer $id ID of responsibility type
-		*
-		* @return array holding data of responsibility type
-		*/
+		 * Read single responsibility type
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return array holding data of responsibility type
+		 */
 
 		public function read_single_type($id)
 		{
@@ -421,12 +421,12 @@
 		}
 
 		/**
-		* Read single contact for responsibility type at physical location
-		*
-		* @param integer $id ID of responsibility type
-		*
-		* @return array holding data of contact for responsibility type
-		*/
+		 * Read single contact for responsibility type at physical location
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return array holding data of contact for responsibility type
+		 */
 
 		public function read_single_contact($id)
 		{
@@ -434,18 +434,18 @@
 			$values['entry_date']	= $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
 			$contacts				= CreateObject('phpgwapi.contacts');
 			$contact_data			= $contacts->read_single_entry($values['contact_id'], array
-															(
-																'n_given'	=>'n_given',
-																'n_family'	=>'n_family',
-																'email'		=>'email'
-															));
+				(
+					'n_given'	=>'n_given',
+					'n_family'	=>'n_family',
+					'email'		=>'email'
+				));
 			$values['contact_name'] = "{$contact_data[0]['n_family']}, {$contact_data[0]['n_given']}";
 			$values['active_from']	= $GLOBALS['phpgw']->common->show_date($values['active_from'], $this->dateformat);
 			$values['active_to']	= $GLOBALS['phpgw']->common->show_date($values['active_to'], $this->dateformat);
 
 			$solocation 	= CreateObject('property.solocation');
 			$values['location_data'] = $solocation->read_single($values['location_code']);
-			
+
 			if($values['p_num'])
 			{
 				$soadmin_entity	= CreateObject('property.soadmin_entity');
@@ -460,12 +460,12 @@
 		}
 
 		/**
-		* Delete single responsibility type
-		*
-		* @param integer $id ID of responsibility type
-		*
-		* @return void
-		*/
+		 * Delete single responsibility type
+		 *
+		 * @param integer $id ID of responsibility type
+		 *
+		 * @return void
+		 */
 
 		public function delete_type($id)
 		{
@@ -473,12 +473,12 @@
 		}
 
 		/**
-		* Get the responsibility for a particular category conserning a given location or item
-		*
-		* @param array $values containing cat_id, location_code and optional item-information
-		*
-		* @return user_id
-		*/
+		 * Get the responsibility for a particular category conserning a given location or item
+		 *
+		 * @param array $values containing cat_id, location_code and optional item-information
+		 *
+		 * @return user_id
+		 */
 
 		public function get_responsible($values = array())
 		{

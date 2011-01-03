@@ -35,15 +35,15 @@
 	{
 		
 		/**
-		* Handle a new category being added, create location to hold ACL-data
-		*/
+		 * Handle a new category being added, create location to hold ACL-data
+		 */
 		function cat_add($data)
 		{
 			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
 			{
 				return false; //nothing needed to be done, we only care about global cats
 			}
-			
+
 			$location = '';
 			if($data['location_id'])
 			{
@@ -55,8 +55,8 @@
 		}
 
 		/**
-		* Handle a category being deleted, remove the location 
-		*/
+		 * Handle a category being deleted, remove the location 
+		 */
 		function cat_delete($data)
 		{
 			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
@@ -70,10 +70,10 @@
 				$GLOBALS['phpgw']->locations->delete('property', $location, false);
 			}
 		}
-		
+
 		/**
-		* Handle a category being edited, update the location info
-		*/
+		 * Handle a category being edited, update the location info
+		 */
 		function cat_edit($data)
 		{
 			if ( isset($data['cat_owner']) && $data['cat_owner'] != -1 )
