@@ -334,7 +334,7 @@
 				if ($_POST['cost'] != 0 and !$event['customer_organization_number'] and !$event['customer_ssn']) {
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				} 
-				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'])
+				if(!$errors['event'] && !$errors['from_'] && !$errors['time'] && !$errors['invoice_data'] && !$errors['resource_number'] && !$errors['organization_number'] && !$errors['contact_name'] && !$errors['cost'])
 				{
 					if (!$_POST['application_id'])
 					{
@@ -483,7 +483,7 @@
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
 				} 
 
-				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data'])
+				if(!$errors['event'] and !$errors['resource_number'] and !$errors['organization_number'] and !$errors['invoice_data']  && !$errors['contact_name'] && !$errors['cost'])
 				{
 					if (phpgw::get_var('mail', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
 					{
