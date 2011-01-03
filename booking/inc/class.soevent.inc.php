@@ -174,6 +174,10 @@
 			{
 				$errors['from_'] = lang('Invalid from date');
 			}
+			if(strlen($entity['contact_name']) > 50)
+			{
+				$errors['contact_name'] = lang('Contact information name is to long. max 50 characters');
+			}
 			if($entity['resources'])
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
