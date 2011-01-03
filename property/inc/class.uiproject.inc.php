@@ -676,7 +676,7 @@
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= false;
 
-					if($uicols['name'][$i]=='project_id' || $uicols['name'][$i]=='address' || $uicols['name'][$i]=='project_group')
+					if(isset($uicols['sortable'][$i]) && $uicols['sortable'][$i])
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
