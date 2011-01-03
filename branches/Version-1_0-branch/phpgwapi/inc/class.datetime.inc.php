@@ -851,7 +851,7 @@
 				return 0;
 			}
 
-			$date_array	= self::date_array($date);
+			$date_array	= self::date_array($datestr);
 			return mktime (13, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 		}
 
