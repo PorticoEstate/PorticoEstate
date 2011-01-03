@@ -936,6 +936,19 @@
 			'fk' => array(),
 			'uc' => array()
 		),
+		'fm_ecobilag_process_code' => array(
+			'fd' => array(
+				'id' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_ecobilag' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
@@ -976,7 +989,9 @@
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True),
-				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True)
+				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True),
+				'process_log' => array('type' => 'text','nullable' => True),
+				'process_code' => array('type' => 'varchar','precision' => '10','nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1025,7 +1040,9 @@
 				'item_type' => array('type' => 'int','precision' => '4','nullable' => True),
 				'item_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'external_ref' => array('type' => 'varchar','precision' => '30','nullable' => True),
-				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True)
+				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True),
+				'process_log' => array('type' => 'text','nullable' => True),
+				'process_code' => array('type' => 'varchar','precision' => '10','nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

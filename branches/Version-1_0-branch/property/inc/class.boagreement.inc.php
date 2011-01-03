@@ -44,18 +44,18 @@
 		var $member_id;
 
 		/**
-		* @var object $custom reference to custom fields object
-		*/
+		 * @var object $custom reference to custom fields object
+		 */
 		protected $custom;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_boagreement($session=false)
 		{
@@ -161,12 +161,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('select_vendor'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_vendor'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('select_vendor'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_vendor'));
+				break;
 			}
 
 			$input_list= $this->so->select_vendor_list();
@@ -178,8 +178,8 @@
 		function read()
 		{
 			$agreement = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-											'vendor_id'=>$this->vendor_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
+				'vendor_id'=>$this->vendor_id));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -204,8 +204,8 @@
 		function read_details($id)
 		{
 			$list = $this->so->read_details(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-											'agreement_id'=>$id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
+				'agreement_id'=>$id));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -265,8 +265,8 @@
 			$vfs->override_acl = 1;
 
 			$values['files'] = $vfs->ls (array(
-			     'string' => "/property/agreement/{$data['agreement_id']}",
-			     'relatives' => array(RELATIVE_NONE)));
+				'string' => "/property/agreement/{$data['agreement_id']}",
+				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
@@ -290,13 +290,13 @@
 		}
 
 		/**
-		* Arrange attributes within groups
-		*
-		* @param string  $location    the name of the location of the attribute
-		* @param array   $attributes  the array of the attributes to be grouped
-		*
-		* @return array the grouped attributes
-		*/
+		 * Arrange attributes within groups
+		 *
+		 * @param string  $location    the name of the location of the attribute
+		 * @param array   $attributes  the array of the attributes to be grouped
+		 *
+		 * @return array the grouped attributes
+		 */
 
 		public function get_attribute_groups($location, $attributes = array())
 		{
@@ -315,7 +315,7 @@
 			}
 
 			if ($action=='edit')
-//			if ($values['agreement_id'])
+				//			if ($values['agreement_id'])
 			{
 				if ($values['agreement_id'] != 0)
 				{
@@ -331,7 +331,7 @@
 
 		function save_item($values,$values_attribute='')
 		{
-//_debug_array($values);
+			//_debug_array($values);
 			$values['m_cost']	= str_replace(",",".",$values['m_cost']);
 			$values['w_cost']	= str_replace(",",".",$values['w_cost']);
 			$values['total_cost']		= $values['m_cost'] + $values['w_cost'];
@@ -390,7 +390,7 @@
 
 		function request_next_id()
 		{
-				return $this->so->request_next_id();
+			return $this->so->request_next_id();
 		}
 
 		function get_agreement_group_list($selected='')
@@ -415,12 +415,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				break;
 			}
 
 			$status_entries= $this->so->select_status_list();
@@ -433,4 +433,3 @@
 			return $this->so->get_activity_descr($id);
 		}
 	}
-

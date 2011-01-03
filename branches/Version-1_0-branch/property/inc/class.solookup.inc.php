@@ -38,7 +38,7 @@
 
 		function __construct()
 		{
-			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
@@ -48,12 +48,12 @@
 		{
 			if(is_array($data))
 			{
-				$start	= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter	= isset($data['filter'])?$data['filter']:'none';
-				$query  = isset($data['query'])?$data['query']:'';
-				$sort   = isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
-				$order  = isset($data['order'])?$data['order']:'';
-				$cat_id = isset($data['cat_id'])?$data['cat_id']:0;
+				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		= isset($data['filter'])?$data['filter']:'none';
+				$query		= isset($data['query'])?$data['query']:'';
+				$sort		= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order		= isset($data['order'])?$data['order']:'';
+				$cat_id		= isset($data['cat_id'])?$data['cat_id']:0;
 				$allrows	= isset($data['allrows'])?$data['allrows']:'';
 			}
 
@@ -100,12 +100,12 @@
 			while ($this->db->next_record())
 			{
 				$contact[] = array
-				(
-					'id'			=> $this->db->f('person_id'),
-					'contact_name'	=> $this->db->f('last_name',true) . ', ' . $this->db->f('first_name',true),
+					(
+						'id'			=> $this->db->f('person_id'),
+						'contact_name'	=> $this->db->f('last_name',true) . ', ' . $this->db->f('first_name',true),
 					);
 			}
-//_debug_array($vendor);
+			//_debug_array($vendor);
 
 			return $contact;
 		}
@@ -165,12 +165,12 @@
 			while ($this->db->next_record())
 			{
 				$vendor[] = array
-				(
-					'id'		=> $this->db->f('id'),
-					'org_name'	=> $this->db->f('org_name',true),
+					(
+						'id'		=> $this->db->f('id'),
+						'org_name'	=> $this->db->f('org_name',true),
 					);
 			}
-//_debug_array($vendor);
+			//_debug_array($vendor);
 
 			return $vendor;
 		}
@@ -252,10 +252,10 @@
 			while ($this->db->next_record())
 			{
 				$b_account[] = array
-				(
-					'id'			=> $this->db->f('id'),
-					'descr'			=> $this->db->f('descr',true)
-				);
+					(
+						'id'			=> $this->db->f('id'),
+						'descr'			=> $this->db->f('descr',true)
+					);
 			}
 
 			return $b_account;
@@ -308,10 +308,10 @@
 			while ($this->db->next_record())
 			{
 				$street[] = array
-				(
-					'id'			=> $this->db->f('id'),
-					'street_name'	=> $this->db->f('descr',true)
-				);
+					(
+						'id'			=> $this->db->f('id'),
+						'street_name'	=> $this->db->f('descr',true)
+					);
 			}
 
 			return $street;
@@ -364,10 +364,10 @@
 			while ($this->db->next_record())
 			{
 				$tenant[] = array
-				(
-					'id'			=> $this->db->f('id'),
-					'last_name'		=> $this->db->f('last_name',true),
-					'first_name'	=> $this->db->f('first_name',true)
+					(
+						'id'			=> $this->db->f('id'),
+						'last_name'		=> $this->db->f('last_name',true),
+						'first_name'	=> $this->db->f('first_name',true)
 					);
 			}
 
@@ -412,10 +412,10 @@
 			while ($this->db->next_record())
 			{
 				$ns3420[] = array
-				(
-					'id'			=> $this->db->f('id'),
-					'ns3420_descr'	=> $this->db->f('tekst1',true) . ' ' .$this->db->f('tekst2',true) . ' ' .$this->db->f('tekst3',true) . ' ' .$this->db->f('tekst4',true) . ' ' .$this->db->f('tekst5',true) . ' ' .$this->db->f('tekst6',true)
-				);
+					(
+						'id'			=> $this->db->f('id'),
+						'ns3420_descr'	=> $this->db->f('tekst1',true) . ' ' .$this->db->f('tekst2',true) . ' ' .$this->db->f('tekst3',true) . ' ' .$this->db->f('tekst4',true) . ' ' .$this->db->f('tekst5',true) . ' ' .$this->db->f('tekst6',true)
+					);
 			}
 
 			return $ns3420;
@@ -459,14 +459,13 @@
 			while ($this->db->next_record())
 			{
 				$phpgw_user[] = array
-				(
-					'id'			=> $this->db->f('account_id'),
-					'last_name'		=> $this->db->f('account_lastname',true),
-					'first_name'	=> $this->db->f('account_firstname',true)
+					(
+						'id'			=> $this->db->f('account_id'),
+						'last_name'		=> $this->db->f('account_lastname',true),
+						'first_name'	=> $this->db->f('account_firstname',true)
 					);
 			}
 			return $phpgw_user;
 		}
 
 	}
-

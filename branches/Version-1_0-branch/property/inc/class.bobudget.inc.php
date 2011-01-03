@@ -48,19 +48,19 @@
 		var $details;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_bobudget($session=false)
 		{
-			$this->so 					= CreateObject('property.sobudget');
-			$this->bocommon 			= CreateObject('property.bocommon');
-			$this->cats					= & $this->so->cats;
+			$this->so 				= CreateObject('property.sobudget');
+			$this->bocommon 		= CreateObject('property.bocommon');
+			$this->cats				= & $this->so->cats;
 
 			if ($session)
 			{
@@ -136,9 +136,9 @@
 		function read()
 		{
 			$budget = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-							'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
-							'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
-							'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
+				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,
+				'cat_id' => $this->cat_id, 'dimb_id' => $this->dimb_id));
 
 			$this->total_records = $this->so->total_records;
 
@@ -155,8 +155,8 @@
 		function read_basis()
 		{
 			$budget = $this->so->read_basis(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-							'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
-							'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,
+				'district_id' => $this->district_id,'year' => $this->year,'grouping' => $this->grouping,'revision' => $this->revision,));
 
 			$this->total_records = $this->so->total_records;
 
@@ -172,10 +172,10 @@
 		{
 			//cramirez: add strtoupper function for $this->sort. in YUI use asc/desc (lowercase letters)
 			$obligations = $this->so->read_obligations(array('start' => $this->start, 'query' => $this->query,
-							'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
-							'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
-							'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
-							'details' => $this->details,'dimb_id' => $this->dimb_id));
+				'sort' => strtoupper($this->sort), 'order' => $this->order, 'filter' => $this->filter,
+				'cat_id' => $this->cat_id, 'allrows'=>$this->allrows, 'district_id' => $this->district_id,
+				'year' => $this->year, 'grouping' => $this->grouping, 'revision' => $this->revision,
+				'details' => $this->details,'dimb_id' => $this->dimb_id));
 
 			$this->total_records = $this->so->total_records;
 			return $obligations;
@@ -306,7 +306,7 @@
 			for ($i=0; $i < $k; $i++)
 			{
 				// FIXME
-			//	if($year_list[$j-1]['id'] < date('Y') + 3)
+				//	if($year_list[$j-1]['id'] < date('Y') + 3)
 				{
 					$year_list[$j+$i]['id'] = $year_list[$j+$i-1]['id'] + 1;
 					$year_list[$j+$i]['name'] = $year_list[$j+$i-1]['id'] + 1;
@@ -349,4 +349,3 @@
 		}
 
 	}
-

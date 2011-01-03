@@ -41,7 +41,7 @@
 
 		function __construct()
 		{
-			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->socommon		= CreateObject('property.socommon');
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->db2          = clone($this->db);
@@ -271,7 +271,7 @@
 				return;
 			}
 
-//_debug_array($cols_return_extra);
+			//_debug_array($cols_return_extra);
 			if ($order)
 			{
 				if ($order=='id')
@@ -311,7 +311,7 @@
 				$filtermethod = " $where $entity_table.user_id=$filter ";
 				$where= 'AND';
 			}
-*/
+ */
 
 			if ($s_agreement_id)
 			{
@@ -342,13 +342,13 @@
 				$filtermethod .= " $where $entity_table.status='$status' ";
 				$where= 'AND';
 			}
-*/
+ */
 
 			$querymethod = '';
 			if($query)
 			{
-				$query = preg_replace("/'/",'',$query);
-				$query = preg_replace('/"/','',$query);
+				$query = $this->db->db_addslashes($query);
+
 				$query_arr = array();
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter");
 
@@ -372,7 +372,7 @@
 			}
 
 			$sql .= " $filtermethod $querymethod";
-//echo $sql;
+			//echo $sql;
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -387,7 +387,7 @@
 
 			$j=0;
 			$n=count($cols_return);
-//_debug_array($cols_return);
+			//_debug_array($cols_return);
 
 			$contacts			= CreateObject('phpgwapi.contacts');
 
@@ -464,7 +464,7 @@
 				}
 				$j++;
 			}
-//html_print_r($s_agreement_list);
+			//html_print_r($s_agreement_list);
 			return $s_agreement_list;
 		}
 
@@ -480,37 +480,37 @@
 
 			$cols = "fm_s_agreement_pricing.cost,fm_s_agreement_pricing.id as index_count,fm_s_agreement_pricing.index_date,fm_s_agreement_pricing.item_id,fm_s_agreement_pricing.this_index";
 
-			$cols_return[] 			= 'item_id';
+			$cols_return[] 				= 'item_id';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'item_id';
 			$uicols['descr'][]			= lang('ID');
 			$uicols['statustext'][]		= lang('ID');
 
-			$cols_return[] 			= 'id';
+			$cols_return[] 				= 'id';
 			$uicols['input_type'][]		= 'hidden';
 			$uicols['name'][]			= 'id';
 			$uicols['descr'][]			= false;
 			$uicols['statustext'][]		= false;
 
-			$cols_return[] 			= 'cost';
+			$cols_return[] 				= 'cost';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'cost';
 			$uicols['descr'][]			= lang('cost');
 			$uicols['statustext'][]		= lang('cost');
 
-			$cols_return[] 			= 'this_index';
+			$cols_return[] 				= 'this_index';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'this_index';
 			$uicols['descr'][]			= lang('index');
 			$uicols['statustext'][]		= lang('index');
 
-			$cols_return[] 			= 'index_count';
+			$cols_return[] 				= 'index_count';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'index_count';
 			$uicols['descr'][]			= lang('index_count');
 			$uicols['statustext'][]		= lang('index_count');
 
-			$cols_return[] 			= 'index_date';
+			$cols_return[] 				= 'index_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'index_date';
 			$uicols['descr'][]			= lang('date');
@@ -533,7 +533,7 @@
 
 
 			$sql .= " $filtermethod";
-//echo $sql;
+			//echo $sql;
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -548,7 +548,7 @@
 
 			$j=0;
 			$n=count($cols_return);
-//_debug_array($cols_return);
+			//_debug_array($cols_return);
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$n;$i++)
@@ -558,7 +558,7 @@
 				}
 				$j++;
 			}
-//_debug_array($s_agreement_list);
+			//_debug_array($s_agreement_list);
 			return $s_agreement_list;
 		}
 
@@ -642,7 +642,7 @@
 
 		function add($values,$values_attribute='')
 		{
-//_debug_array($values);
+			//_debug_array($values);
 			$table = 'fm_s_agreement';
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
@@ -652,10 +652,10 @@
 				$values['member_of']=',' . implode(',',$values['member_of']) . ',';
 			}
 
-
 			$this->db->transaction_begin();
 			$id = $this->socommon->increment_id('workorder');
 
+			$vals = array();
 			$vals[]	= $id;
 			$vals[]	= $values['name'];
 			$vals[]	= $values['descr'];
@@ -703,14 +703,14 @@
 			if(isset($values['budget']) && $values['budget'])
 			{
 				$_budget = array
-				(
-					'agreement_id'		=> $values['s_agreement_id'],
-					'category'			=> $values['order_category'],
-					'year'				=> (int)$values['year'],
-					'ecodimb'			=> (int)$values['ecodimb'],
-					'budget_account'	=> $values['b_account_id'],
-					'budget'			=> $values['budget'],				
-				);
+					(
+						'agreement_id'		=> $values['s_agreement_id'],
+						'category'			=> $values['order_category'],
+						'year'				=> (int)$values['year'],
+						'ecodimb'			=> (int)$values['ecodimb'],
+						'budget_account'	=> $values['b_account_id'],
+						'budget'			=> $values['budget'],				
+					);
 
 				$this->update_budget($_budget);
 			}
@@ -743,7 +743,7 @@
 					$vals[] = $value;
 				}
 			}
-*/
+ */
 
 			if(isset($values['extra']) && is_array($values['extra']))
 			{
@@ -825,7 +825,7 @@
 
 			$receipt['message'][] = array('msg'=>lang('s_agreement %1 has been saved',$receipt['s_agreement_id']));
 
-//---------- History
+			//---------- History
 
 			if (isset($history_set) AND is_array($history_set))
 			{
@@ -836,7 +836,7 @@
 				}
 			}
 
-//----------
+			//----------
 
 			$this->db->transaction_commit();
 			return $receipt;
@@ -854,38 +854,38 @@
 				$old_budget_account	= $this->db->f('budget_account');
 				$old_budget			= $this->db->f('budget');
 				$sql = "UPDATE fm_s_agreement_budget SET"
-				 . " category = {$data['category']},"
-				 . " ecodimb = {$data['ecodimb']},"
-				 . " budget_account = '{$data['budget_account']}',"
-				 . " budget = {$data['budget']},"
-				 . ' modified_date=' . time()
-				 . " WHERE agreement_id = {$data['agreement_id']} AND year = {$data['year']}";
-				 				
+					. " category = {$data['category']},"
+					. " ecodimb = {$data['ecodimb']},"
+					. " budget_account = '{$data['budget_account']}',"
+					. " budget = {$data['budget']},"
+					. ' modified_date=' . time()
+					. " WHERE agreement_id = {$data['agreement_id']} AND year = {$data['year']}";
+
 			}
 			else
 			{
 				$sql = "INSERT INTO fm_s_agreement_budget (agreement_id,year,category,ecodimb,budget_account,budget,user_id,entry_date) VALUES("
-				 . "{$data['agreement_id']},"
-				 . "{$data['year']},"
-				 . "{$data['category']},"
-				 . "{$data['ecodimb']},"
-				 . "'{$data['budget_account']}',"
-				 . "{$data['budget']},"
-				 . "{$this->account},"
-				 . time() . ')';
+					. "{$data['agreement_id']},"
+					. "{$data['year']},"
+					. "{$data['category']},"
+					. "{$data['ecodimb']},"
+					. "'{$data['budget_account']}',"
+					. "{$data['budget']},"
+					. "{$this->account},"
+					. time() . ')';
 			}
 
 			$this->db->query($sql,__LINE__,__FILE__);
-		
+
 		}
 
 		function edit($values,$values_attribute = array())
 		{
-//_debug_array($values);
-//_debug_array($values_attribute);
+			//_debug_array($values);
+			//_debug_array($values_attribute);
 
 			$table = 'fm_s_agreement';
-			
+
 			$values['s_agreement_id'] = $this->db->db_addslashes($values['s_agreement_id']); // bigint
 			$values['name'] = $this->db->db_addslashes($values['name']);
 
@@ -931,19 +931,19 @@
 			if(isset($values['budget']) && $values['budget'])
 			{
 				$_budget = array
-				(
-					'agreement_id'		=> $values['s_agreement_id'],
-					'category'			=> $values['order_category'],
-					'year'				=> (int)$values['year'],
-					'ecodimb'			=> (int)$values['ecodimb'],
-					'budget_account'	=> $values['b_account_id'],
-					'budget'			=> $values['budget'],				
-				);
+					(
+						'agreement_id'		=> $values['s_agreement_id'],
+						'category'			=> $values['order_category'],
+						'year'				=> (int)$values['year'],
+						'ecodimb'			=> (int)$values['ecodimb'],
+						'budget_account'	=> $values['b_account_id'],
+						'budget'			=> $values['budget'],				
+					);
 
 				$this->update_budget($_budget);
 			}
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
-							. $values['cat_id'] . "', member_of='" . $values['member_of'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . ", account_id=" . intval($values['b_account_id']) . "$value_set WHERE id='{$values['s_agreement_id']}'");
+				. $values['cat_id'] . "', member_of='" . $values['member_of'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . ", account_id=" . intval($values['b_account_id']) . "$value_set WHERE id='{$values['s_agreement_id']}'");
 
 			$this->db->query("UPDATE fm_s_agreement_pricing set index_date=" . intval($values['start_date']) . " WHERE id=1 AND agreement_id= '{$values['s_agreement_id']}'");
 
@@ -955,8 +955,8 @@
 
 		function edit_item($values,$values_attribute='')
 		{
-//_debug_array($values);
-//_debug_array($values_attribute);
+			//_debug_array($values);
+			//_debug_array($values_attribute);
 			$table = 'fm_s_agreement_detail';
 
 			while (is_array($values['extra']) && list($column,$value) = each($values['extra']))
@@ -988,7 +988,7 @@
 						if($entry['value'] != $old_value)
 						{
 							$history_set[$entry['attrib_id']] = array('value' => $entry['value'],
-												'date'  => phpgwapi_datetime::date_to_timestamp($entry['date']));
+								'date'  => phpgwapi_datetime::date_to_timestamp($entry['date']));
 						}
 					}
 				}
@@ -1023,7 +1023,6 @@
 			{
 				$historylog	= CreateObject('property.historylog','s_agreement');
 				foreach ($history_set as $attrib_id => $history)
-		//		while (list($attrib_id,$history) = each($history_set))
 				{
 					$historylog->add('SO',$values['s_agreement_id'],$history['value'],false, $attrib_id,$history['date'],$values['id']);
 				}
@@ -1152,17 +1151,17 @@
 			while($this->db->next_record())
 			{
 				$values[] = array
-				(
-					'agreement_id'		=> $agreement_id,
-					'year'				=> $this->db->f('year'),
-					'cat_id'			=> $this->db->f('category'),
-					'ecodimb'			=> $this->db->f('ecodimb'),
-					'budget_account'	=> $this->db->f('budget_account'),
-					'budget'			=> $this->db->f('budget'),
-					'actual_cost'		=> $this->db->f('actual_cost')
-				);
+					(
+						'agreement_id'		=> $agreement_id,
+						'year'				=> $this->db->f('year'),
+						'cat_id'			=> $this->db->f('category'),
+						'ecodimb'			=> $this->db->f('ecodimb'),
+						'budget_account'	=> $this->db->f('budget_account'),
+						'budget'			=> $this->db->f('budget'),
+						'actual_cost'		=> $this->db->f('actual_cost')
+					);
 			}
-			
+
 			return $values;
 		}
 

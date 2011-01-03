@@ -36,7 +36,7 @@
 	{
 		function property_boinvoice($session=false)
 		{
-			$this->so		= CreateObject('property.soinvoice',true);
+			$this->so			= CreateObject('property.soinvoice',true);
 			$this->bocommon		= CreateObject('property.bocommon');
 			$this->account_id	= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -84,7 +84,7 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','invoice');
 
-//	_debug_array($data);
+			//	_debug_array($data);
 
 			$this->start			= isset($data['start'])?$data['start']:'';
 			$this->query			= isset($data['query'])?$data['query']:'';
@@ -103,13 +103,13 @@
 		{
 			$start_date	= $this->bocommon->date_to_timestamp($start_date);
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
-			
+
 			$invoice = $this->so->read_invoice(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'user_lid' => $this->user_lid,'cat_id' => $this->cat_id, 'paid' => $paid,
-											'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
-											'loc1'=>$loc1,'workorder_id'=>$workorder_id,'allrows'=>$this->allrows,
-											'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
-											'district_id' => $this->district_id));
+				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id, 'paid' => $paid,
+				'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
+				'loc1'=>$loc1,'workorder_id'=>$workorder_id,'allrows'=>$this->allrows,
+				'voucher_id'=>$voucher_id,'b_account_class' =>$this->b_account_class,
+				'district_id' => $this->district_id));
 
 			$soXport    = CreateObject('property.soXport');
 			$soworkorder = CreateObject('property.soworkorder');
@@ -151,7 +151,7 @@
 		function read_invoice_sub($voucher_id='',$paid='')
 		{
 			$invoice = $this->so->read_invoice_sub(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid));
+				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,'voucher_id'=>$voucher_id,'paid' => $paid));
 			$this->total_records = $this->so->total_records;
 			return $invoice;
 		}
@@ -172,10 +172,10 @@
 			$end_date	= $this->bocommon->date_to_timestamp($end_date);
 
 			$invoice = $this->so->read_consume(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
-											'loc1'=>$loc1,'workorder_id'=>$workorder_id,'b_account_class' =>$b_account_class,
-											'district_id' => $district_id, 'b_account' => $this->b_account ));
+				'user_lid' => $this->user_lid,'cat_id' => $this->cat_id,
+				'start_date'=>$start_date,'end_date'=>$end_date,'vendor_id'=>$vendor_id,
+				'loc1'=>$loc1,'workorder_id'=>$workorder_id,'b_account_class' =>$b_account_class,
+				'district_id' => $district_id, 'b_account' => $this->b_account ));
 
 			$this->total_records = $this->so->total_records;
 
@@ -192,6 +192,11 @@
 		function update_invoice_sub($values)
 		{
 			return $this->so->update_invoice_sub($values);
+		}
+
+		function update_single_line($values)
+		{
+			return $this->so->update_single_line($values);
 		}
 
 		function select_account_class($selected='')
@@ -227,10 +232,10 @@
 				}
 
 				$tax_code_list[] = array
-				(
-					'id'			=> $code['id'],
-					'selected'		=> $sel_code
-				);
+					(
+						'id'			=> $code['id'],
+						'selected'		=> $sel_code
+					);
 			}
 
 			for ($i=0;$i<count($tax_code_list);$i++)
@@ -272,18 +277,17 @@
 			$arts=$this->so->get_lisfm_ecoart();
 			return $this->bocommon->select_list($selected,$arts);
 		}
-	//----------
 
 		function select_category($format='',$selected='')
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				break;
 			}
 
 			$categories= $this->so->get_type_list();
@@ -301,12 +305,12 @@
 
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('user_lid_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('user_lid_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('user_lid_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('user_lid_filter'));
+				break;
 			}
 			$users=$this->bocommon->get_user_list_right(array(32, 64, 128),$selected,'.invoice',$extra,$default);
 			return $users;
@@ -318,14 +322,12 @@
 			return $this->bocommon->select_list($selected,$types);
 		}
 
-	//----------
 		function select_dimb_list($selected='')
 		{
 			$dimbs=$this->so->select_dimb_list();
 			return $this->bocommon->select_list($selected,$dimbs);
 		}
 
-	//-------------------
 		function select_dimd_list($selected='')
 		{
 			$dimds=$this->so->select_dimd_list();
@@ -384,23 +386,23 @@
 			$values['kildeid'] 			= 1;
 			$values['kidnr'] 			= $values['kid_nr'];
 			$values['typeid'] 			= $values['type'];
-//_debug_array($values);die();
+			//_debug_array($values);die();
 			if($values['order_id'] && $order_type = $this->soXport->check_order($values['order_id']))
 			{
 				if($order_type=='workorder')
 				{
-					$soworkorder = CreateObject('property.soworkorder');
-					$soproject = CreateObject('property.soproject');
-					$workorder	= $soworkorder->read_single($values['order_id']);
-					$project	= $soproject->read_single($workorder['project_id']);
+					$soworkorder	= CreateObject('property.soworkorder');
+					$soproject		= CreateObject('property.soproject');
+					$workorder		= $soworkorder->read_single($values['order_id']);
+					$project		= $soproject->read_single($workorder['project_id']);
 
-					$values['spvend_code']	= $workorder['vendor_id'];
+					$values['spvend_code']		= $workorder['vendor_id'];
 					$values['spbudact_code']	= $workorder['b_account_id'];
-					$values['location_code']	=$project['location_code'];
-					$values['dima']				=str_replace('-','',$project['location_code']);
+					$values['location_code']	= $project['location_code'];
+					$values['dima']				= str_replace('-','',$project['location_code']);
 					$values['vendor_name']		= $this->get_vendor_name($workorder['vendor_id']);
 					$values['pmwrkord_code']	= $values['order_id'];
-					$values['project_id']			= $workorder['project_id'];
+					$values['project_id']		= $workorder['project_id'];
 					if(!$values['dimb'])
 					{
 						$values['dimb']			= $workorder['ecodimb'];
@@ -497,15 +499,15 @@
 			$contacts->get_location_info('vendor',false);
 
 			$criteria = array
-			(
-				'attributes' => array
 				(
-					array
+					'attributes' => array
 					(
-						'column_name' => 'org_name'
+						array
+						(
+							'column_name' => 'org_name'
+						)
 					)
-				)
-			);
+				);
 
 			$vendor_data	= $contacts->read_single(array('id' => $vendor_id), $criteria);
 
@@ -611,4 +613,10 @@
 			}
 			return $line;
 		}
+
+		function check_role()
+		{
+			return $this->so->check_role();
+		}
+
 	}

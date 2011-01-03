@@ -53,23 +53,23 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
-			$app	= phpgw::get_var('app');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$allrows			= phpgw::get_var('allrows', 'bool');
+			$app				= phpgw::get_var('app');
 
-			$this->start			= $start 							? $start 			: 0;
-			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
-			$this->sort				= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
-			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
-			$this->cat_id			= isset($_REQUEST['cat_id']) 		? $cat_id			: $this->cat_id;
-			$this->user_id			= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
-			$this->allrows			= isset($allrows) && $allrows 		? $allrows			: '';
-			$this->app				= isset($_REQUEST['app'])	 		? $app				: $this->app;
+			$this->start		= $start 							? $start 			: 0;
+			$this->query		= isset($_REQUEST['query']) 		? $query			: $this->query;
+			$this->sort			= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
+			$this->order		= isset($_REQUEST['order']) 		? $order			: $this->order;
+			$this->cat_id		= isset($_REQUEST['cat_id']) 		? $cat_id			: $this->cat_id;
+			$this->user_id		= isset($_REQUEST['user_id']) 		? $user_id			: $this->user_id;;
+			$this->allrows		= isset($allrows) && $allrows 		? $allrows			: '';
+			$this->app			= isset($_REQUEST['app'])	 		? $app				: $this->app;
 		}
 
 
@@ -99,7 +99,7 @@
 		public function read()
 		{
 			$jasper = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'app' => $this->app,'allrows' => $this->allrows));
+				'app' => $this->app,'allrows' => $this->allrows));
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
@@ -119,8 +119,8 @@
 				}
 
 				if($files = $vfs->ls (array(
-				     'string' => "/property/jasper/{$entry['id']}",
-				     'relatives' => array(RELATIVE_NONE))))
+					'string' => "/property/jasper/{$entry['id']}",
+					'relatives' => array(RELATIVE_NONE))))
 				{
 					$entry['file_name'] = $files[0]['name'];
 				}
@@ -138,8 +138,8 @@
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 			if($files = $vfs->ls (array(
-			     'string' => "/property/jasper/{$jasper['id']}",
-			     'relatives' => array(RELATIVE_NONE))))
+				'string' => "/property/jasper/{$jasper['id']}",
+				'relatives' => array(RELATIVE_NONE))))
 			{
 				$jasper['file_name'] = $files[0]['name'];
 			}
@@ -208,11 +208,11 @@
 				if($app_info['enabled'] == 1 && $app_info['status'] == 1)
 				{
 					$apps[] = array
-					(
-						'id'	=> $app,
-						'name'	=> $app_info['title'],
-						'selected' => $selected == $app
-					);
+						(
+							'id'	=> $app,
+							'name'	=> $app_info['title'],
+							'selected' => $selected == $app
+						);
 				}
 			}
 			return $apps;

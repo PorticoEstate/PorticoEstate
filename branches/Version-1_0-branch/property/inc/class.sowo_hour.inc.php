@@ -54,7 +54,7 @@
 			while ($this->db->next_record())
 			{
 				$chapter_entries[$i]['id']				= $this->db->f('id');
-				$chapter_entries[$i]['name']				= stripslashes($this->db->f('descr'));
+				$chapter_entries[$i]['name']			= $this->db->f('descr',true);
 				$i++;
 			}
 			return $chapter_entries;
@@ -68,7 +68,7 @@
 			while ($this->db->next_record())
 			{
 				$grouping_entries[$i]['id']				= $this->db->f('grouping_id');
-				$grouping_entries[$i]['name']				= stripslashes($this->db->f('grouping_descr'));
+				$grouping_entries[$i]['name']			= $this->db->f('grouping_descr',true);
 				$i++;
 			}
 			return $grouping_entries;
@@ -122,26 +122,26 @@
 			while ($this->db->next_record())
 			{
 				$hour_list[] = array
-				(
-					'hour_id'			=> $this->db->f('id'),
-					'activity_num'		=> $this->db->f('activity_num'),
-					'hours_descr'		=> stripslashes($this->db->f('hours_descr')),
-					'owner'				=> $this->db->f('owner'),
-					'quantity'			=> $this->db->f('quantity'),
-					'grouping_id'		=> $this->db->f('grouping_id'),
-					'grouping_descr'	=> $this->db->f('grouping_descr'),
-					'ns3420_id'			=> $this->db->f('ns3420_id'),
-					'tolerance'			=> $this->db->f('tolerance'),
-					'activity_id'		=> $this->db->f('activity_id'),
-					'unit'				=> $this->db->f('unit'),
-					'record'			=> $this->db->f('record'),
-					'cost'				=> $this->db->f('cost'),
-					'billperae'			=> $this->db->f('billperae'),
-					'remark'			=> $this->db->f('remark'),
-					'building_part'		=> $this->db->f('building_part'),
-					'dim_d'				=> $this->db->f('dim_d'),
-					'wo_hour_category'	=> $this->db->f('wo_hour_category'),
-					'cat_per_cent'		=> $this->db->f('cat_per_cent')
+					(
+						'hour_id'			=> $this->db->f('id'),
+						'activity_num'		=> $this->db->f('activity_num'),
+						'hours_descr'		=> stripslashes($this->db->f('hours_descr')),
+						'owner'				=> $this->db->f('owner'),
+						'quantity'			=> $this->db->f('quantity'),
+						'grouping_id'		=> $this->db->f('grouping_id'),
+						'grouping_descr'	=> $this->db->f('grouping_descr'),
+						'ns3420_id'			=> $this->db->f('ns3420_id'),
+						'tolerance'			=> $this->db->f('tolerance'),
+						'activity_id'		=> $this->db->f('activity_id'),
+						'unit'				=> $this->db->f('unit'),
+						'record'			=> $this->db->f('record'),
+						'cost'				=> $this->db->f('cost'),
+						'billperae'			=> $this->db->f('billperae'),
+						'remark'			=> $this->db->f('remark'),
+						'building_part'		=> $this->db->f('building_part'),
+						'dim_d'				=> $this->db->f('dim_d'),
+						'wo_hour_category'	=> $this->db->f('wo_hour_category'),
+						'cat_per_cent'		=> $this->db->f('cat_per_cent')
 					);
 			}
 
@@ -177,16 +177,16 @@
 			while ($this->db->next_record())
 			{
 				$deviation[] = array
-				(
-					'entry_date'		=> $this->db->f('entry_date'),
-					'workorder_id'		=> $workorder_id,
-					'hour_id'			=> $hour_id,
-					'id'				=> $this->db->f('id'),
-					'amount'			=> $this->db->f('amount'),
-					'descr'				=> stripslashes($this->db->f('descr'))
+					(
+						'entry_date'		=> $this->db->f('entry_date'),
+						'workorder_id'		=> $workorder_id,
+						'hour_id'			=> $hour_id,
+						'id'				=> $this->db->f('id'),
+						'amount'			=> $this->db->f('amount'),
+						'descr'				=> stripslashes($this->db->f('descr'))
 					);
 			}
-//_debug_array($deviation);
+			//_debug_array($deviation);
 			return $deviation;
 		}
 
@@ -204,14 +204,14 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$deviation = array
-			(
-				'entry_date'		=> $this->db->f('entry_date'),
-				'workorder_id'		=> $workorder_id,
-				'hour_id'			=> $hour_id,
-				'id'				=> $this->db->f('id'),
-				'amount'			=> $this->db->f('amount'),
-				'descr'				=> stripslashes($this->db->f('descr'))
-			);
+				(
+					'entry_date'		=> $this->db->f('entry_date'),
+					'workorder_id'		=> $workorder_id,
+					'hour_id'			=> $hour_id,
+					'id'				=> $this->db->f('id'),
+					'amount'			=> $this->db->f('amount'),
+					'descr'				=> stripslashes($this->db->f('descr'))
+				);
 			return $deviation;
 		}
 
@@ -231,7 +231,7 @@
 				$values['amount'],
 				$values['descr'],
 				time()
-				);
+			);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
@@ -250,7 +250,7 @@
 			$value_set=array(
 				'amount'			=> $values['amount'],
 				'descr'			=> $this->db->db_addslashes($values['descr'])
-				);
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -296,7 +296,7 @@
 				$values['descr'],
 				$workorder['chapter_id'],
 				time()
-				 );
+			);
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
@@ -335,8 +335,8 @@
 				$values_insert	= $this->db->validate_insert($values_insert);
 
 				$this->db->query("insert into fm_template_hours (activity_id,activity_num,owner,hours_descr,unit,"
-				. "cost,quantity,billperae,ns3420_id,dim_d,grouping_id,grouping_descr,remark,tolerance,building_part,record,template_id) "
-				. " values ($values_insert)",__LINE__,__FILE__);
+					. "cost,quantity,billperae,ns3420_id,dim_d,grouping_id,grouping_descr,remark,tolerance,building_part,record,template_id) "
+					. " values ($values_insert)",__LINE__,__FILE__);
 
 				$record++;
 			}
@@ -370,12 +370,12 @@
 					$hour[$i]['workorder_id'],
 					$hour[$i]['wo_hour_cat'],
 					$hour[$i]['cat_per_cent']
-					);
+				);
 
 				$values	= $this->db->validate_insert($values);
 
 				$this->db->query("insert into fm_wo_hours (activity_id,activity_num,owner,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,record,entry_date,workorder_id,category,cat_per_cent) "
-				. " values ($values)",__LINE__,__FILE__);
+					. " values ($values)",__LINE__,__FILE__);
 
 				$record++;
 			}
@@ -440,13 +440,13 @@
 					$workorder_id,
 					$hour[$i]['wo_hour_cat'],
 					$hour[$i]['cat_per_cent']
-					);
+				);
 
 				$values	= $this->db->validate_insert($values);
 
 				$this->db->query("insert into fm_wo_hours (owner,activity_id,activity_num,hours_descr,unit,cost,quantity,billperae,ns3420_id,dim_d,"
-				. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,workorder_id,category,cat_per_cent) "
-				. " values ($values)",__LINE__,__FILE__);
+					. " grouping_id,grouping_descr,record,building_part,tolerance,remark,entry_date,workorder_id,category,cat_per_cent) "
+					. " values ($values)",__LINE__,__FILE__);
 
 				$record++;
 			}
@@ -463,7 +463,7 @@
 			if($hour['chapter_id'])
 			{
 				$this->db->query("UPDATE fm_workorder set
-				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$workorder_id'",__LINE__,__FILE__);
+					chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$workorder_id'",__LINE__,__FILE__);
 			}
 
 			if($hour['grouping_id'])
@@ -497,27 +497,27 @@
 			{
 				$hour['cat_per_cent']= 100;
 			}
-//_debug
+			//_debug
 			$values= array(
-					$this->account,
-					$hour['descr'],
-					$hour['unit'],
-					$hour['cost'],
-					$hour['quantity'],
-					$hour['billperae'],
-					$hour['ns3420_id'],
-					$hour['dim_d'],
-					$hour['grouping_id'],
-					$hour['grouping_descr'],
-					$hour['record'],
-					$hour['building_part_id'],
-					$hour['tolerance_id'],
-					$hour['remark'],
-					time(),
-					$workorder_id,
-					$hour['wo_hour_cat'],
-					$hour['cat_per_cent']
-					);
+				$this->account,
+				$hour['descr'],
+				$hour['unit'],
+				$hour['cost'],
+				$hour['quantity'],
+				$hour['billperae'],
+				$hour['ns3420_id'],
+				$hour['dim_d'],
+				$hour['grouping_id'],
+				$hour['grouping_descr'],
+				$hour['record'],
+				$hour['building_part_id'],
+				$hour['tolerance_id'],
+				$hour['remark'],
+				time(),
+				$workorder_id,
+				$hour['wo_hour_cat'],
+				$hour['cat_per_cent']
+			);
 
 			$values	= $this->db->validate_insert($values);
 
@@ -571,13 +571,13 @@
 			{
 				$hour['cat_per_cent']= 100;
 			}
-//_debug_array($hour);
+			//_debug_array($hour);
 
 
 			if($hour['chapter_id'])
 			{
 				$this->db->query("UPDATE fm_workorder set
-				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$workorder_id'",__LINE__,__FILE__);
+					chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$workorder_id'",__LINE__,__FILE__);
 			}
 
 			if($hour['new_grouping'])
@@ -639,7 +639,7 @@
 
 					}
 
-*/
+ */
 				}
 			}
 
@@ -658,7 +658,7 @@
 				'grouping_descr'	=> $hour['grouping_descr'],
 				'category'		=> $hour['wo_hour_cat'],
 				'cat_per_cent'		=> $hour['cat_per_cent']
-				);
+			);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -754,4 +754,3 @@
 			return $receipt;
 		}
 	}
-

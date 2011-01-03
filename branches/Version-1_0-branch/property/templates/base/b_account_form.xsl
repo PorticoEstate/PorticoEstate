@@ -28,23 +28,23 @@
 				</tr>
 			</xsl:when>
 			<xsl:otherwise>
-			<tr>
-				<td valign="top">
-					<a href="javascript:b_account_lookup()" onMouseover="window.status='{lang_select_b_account_help}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_b_account"/></a>
-				</td>
-				<td>
-					<input size="9" type="text" name="b_account_id" value="{value_b_account_id}" >
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_select_b_account_help"/>
-						</xsl:attribute>
-					</input>
-					<input  size="30" type="text" name="b_account_name" value="{value_b_account_name}"  onClick="b_account_lookup();" readonly="readonly"> 
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_select_b_account_help"/>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
+				<tr>
+					<td valign="top">
+						<a href="javascript:b_account_lookup()" onMouseover="window.status='{lang_select_b_account_help}';return true;" onMouseout="window.status='';return true;"><xsl:value-of select="lang_b_account"/></a>
+					</td>
+					<td>
+						<input size="9" type="text" name="b_account_id" value="{value_b_account_id}" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_select_b_account_help"/>
+							</xsl:attribute>
+						</input>
+						<input  size="30" type="text" name="b_account_name" value="{value_b_account_name}"  onClick="b_account_lookup();" readonly="readonly"> 
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_select_b_account_help"/>
+							</xsl:attribute>
+						</input>
+					</td>
+				</tr>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

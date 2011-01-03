@@ -37,9 +37,9 @@
 	class property_uidebug_json
 	{
 		var $public_functions = array
-		(
-			'index' 		=> true
-		);
+			(
+				'index' 		=> true
+			);
 
 		public function __construct()
 		{
@@ -56,7 +56,7 @@
 				echo lang('no access');
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
-			
+
 			$app = phpgw::get_var('app', 'string', 'GET');
 
 			//get session's values
@@ -74,7 +74,7 @@
 				{
 					$data = htmlspecialchars($data);
 				}
-				_debug_array($data);				
+				_debug_array($data);
 			}
 			else
 			{
@@ -82,7 +82,7 @@
 			}
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
-		
+
 		static protected function _my_print_rec(&$val,$nivel=0)
 		{
 			foreach($val as $key => &$value)
@@ -93,13 +93,10 @@
 				}
 				else
 				{
-				//	$value = str_replace(array('<','>'),array('&lt;','&gt;'),$value);
+					//	$value = str_replace(array('<','>'),array('&lt;','&gt;'),$value);
 					$value = htmlspecialchars($value);
 				}
 			}
-		}		
-
-
-
+		}
 	}
 

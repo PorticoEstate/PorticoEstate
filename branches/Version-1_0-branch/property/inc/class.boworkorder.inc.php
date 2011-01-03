@@ -43,20 +43,19 @@
 		var $order_sent_adress; // in case we want to resend the order as an reminder
 
 		var $public_functions = array
-		(
-			'read'			=> true,
-			'read_single'		=> true,
-			'save'			=> true,
-			'delete'		=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'			=> true,
+				'read_single'		=> true,
+				'save'			=> true,
+				'delete'		=> true,
+				'check_perms'		=> true
+			);
 
 		function property_boworkorder($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 			= CreateObject('property.soworkorder');
 			$this->bocommon 	= CreateObject('property.bocommon');
-			$this->cats					= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+			$this->cats			= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 			$this->cats->supress_info	= true;
 			$this->interlink 	= & $this->so->interlink;
 			if ($session)
@@ -65,24 +64,24 @@
 				$this->use_session = true;
 			}
 
-			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			= phpgw::get_var('query');
-			$sort			= phpgw::get_var('sort');
-			$order			= phpgw::get_var('order');
-			$filter			= phpgw::get_var('filter', 'int');
-			$cat_id			= phpgw::get_var('cat_id', 'int');
-			$status_id		= phpgw::get_var('status_id');
-			$wo_hour_cat_id	= phpgw::get_var('wo_hour_cat_id', 'int');
-			$start_date		= phpgw::get_var('start_date');
-			$end_date		= phpgw::get_var('end_date');
-			$b_group		= phpgw::get_var('b_group');
-			$paid			= phpgw::get_var('paid', 'bool');
-			$b_account		= phpgw::get_var('b_account');
-			$district_id	= phpgw::get_var('district_id', 'int');
-			$criteria_id	= phpgw::get_var('criteria_id', 'int');
+			$start				= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query				= phpgw::get_var('query');
+			$sort				= phpgw::get_var('sort');
+			$order				= phpgw::get_var('order');
+			$filter				= phpgw::get_var('filter', 'int');
+			$cat_id				= phpgw::get_var('cat_id', 'int');
+			$status_id			= phpgw::get_var('status_id');
+			$wo_hour_cat_id		= phpgw::get_var('wo_hour_cat_id', 'int');
+			$start_date			= phpgw::get_var('start_date');
+			$end_date			= phpgw::get_var('end_date');
+			$b_group			= phpgw::get_var('b_group');
+			$paid				= phpgw::get_var('paid', 'bool');
+			$b_account			= phpgw::get_var('b_account');
+			$district_id		= phpgw::get_var('district_id', 'int');
+			$criteria_id		= phpgw::get_var('criteria_id', 'int');
 
-			$this->start			= $start ? $start : 0;
-			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
+			$this->start		= $start ? $start : 0;
+			$this->criteria_id	= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
 			if(array_key_exists('b_account',$_POST) || array_key_exists('b_account',$_GET) )
 			{
@@ -176,11 +175,29 @@
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = array();
+
 			$columns[] = array
-			(
-				'id' => 'billable_hours',
-				'name'=> lang('billable hours')
-			);
+				(
+					'id' => 'entry_date',
+					'name'=> lang('entry date')
+				);
+
+			$columns[] = array
+				(
+					'id' => 'start_date',
+					'name'=> lang('start date')
+				);
+			$columns[] = array
+				(
+					'id' => 'end_date',
+					'name'=> lang('end date')
+				);
+			$columns[] = array
+				(
+					'id' => 'billable_hours',
+					'name'=> lang('billable hours')
+				);
+
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
 		}
@@ -194,12 +211,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				break;
 			}
 
 			$status_entries= $this->so->select_status_list();
@@ -246,49 +263,49 @@
 		function get_criteria_list($selected='')
 		{
 			$criteria = array
-			(
-				array
 				(
-					'id'	=> '1',
-					'name'	=> lang('project group')
-				),
-				array
-				(
-					'id'	=> '2',
-					'name'	=> lang('project id')
-				),
-				array
-				(
-					'id'	=> '3',
-					'name'	=> lang('workorder id')
-				),
-				array
-				(
-					'id'	=> '4',
-					'name'	=> lang('address')
-				),
+					array
+					(
+						'id'	=> '1',
+						'name'	=> lang('project group')
+					),
+					array
+					(
+						'id'	=> '2',
+						'name'	=> lang('project id')
+					),
+					array
+					(
+						'id'	=> '3',
+						'name'	=> lang('workorder id')
+					),
+					array
+					(
+						'id'	=> '4',
+						'name'	=> lang('address')
+					),
 
-				array
-				(
-					'id'	=> '5',
-					'name'	=> lang('location code')
-				),
-				array
-				(
-					'id'	=> '6',
-					'name'	=> lang('title')
-				),
-				array
-				(
-					'id'	=> '7',
-					'name'	=> lang('vendor')
-				),
-				array
-				(
-					'id'	=> '8',
-					'name'	=> lang('vendor id')
-				),
-			);
+					array
+					(
+						'id'	=> '5',
+						'name'	=> lang('location code')
+					),
+					array
+					(
+						'id'	=> '6',
+						'name'	=> lang('title')
+					),
+					array
+					(
+						'id'	=> '7',
+						'name'	=> lang('vendor')
+					),
+					array
+					(
+						'id'	=> '8',
+						'name'	=> lang('vendor id')
+					),
+				);
 			return $this->bocommon->select_list($selected,$criteria);
 		}
 
@@ -297,69 +314,69 @@
 		{
 			$criteria = array();
 			$criteria[1] = array
-			(
-				'field'		=> 'project_group',
-				'type'		=> 'int',
-				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
-			);
+				(
+					'field'		=> 'project_group',
+					'type'		=> 'int',
+					'matchtype' => 'exact',
+					'front' => '',
+					'back' => ''
+				);
 			$criteria[2] = array
-			(
-				'field'		=> 'fm_project.id',
-				'type'		=> 'int',
-				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
-			);
+				(
+					'field'		=> 'fm_project.id',
+					'type'		=> 'int',
+					'matchtype' => 'exact',
+					'front' => '',
+					'back' => ''
+				);
 			$criteria[3] = array
-			(
-				'field'		=> 'fm_workorder.id',
-				'type'		=> 'bigint',
-				'matchtype' => 'exact',
-				'front' => "'",
-				'back' => "'"
-			);
+				(
+					'field'		=> 'fm_workorder.id',
+					'type'		=> 'bigint',
+					'matchtype' => 'exact',
+					'front' => "'",
+					'back' => "'"
+				);
 			$criteria[4] = array
-			(
-				'field'	=> 'fm_project.address',
-				'type'	=> 'varchar',
-				'matchtype' => 'like',
-				'front' => "'%",
-				'back' => "%'",
-			);
+				(
+					'field'	=> 'fm_project.address',
+					'type'	=> 'varchar',
+					'matchtype' => 'like',
+					'front' => "'%",
+					'back' => "%'",
+				);
 			$criteria[5] = array
-			(
-				'field'	=> 'fm_project.location_code',
-				'type'	=> 'varchar',
-				'matchtype' => 'like',
-				'front' => "'",
-				'back' => "%'"
-			);
+				(
+					'field'	=> 'fm_project.location_code',
+					'type'	=> 'varchar',
+					'matchtype' => 'like',
+					'front' => "'",
+					'back' => "%'"
+				);
 			$criteria[6] = array
-			(
-				'field'	=> 'fm_workorder.title',
-				'type'	=> 'varchar',
-				'matchtype' => 'like',
-				'front' => "'%",
-				'back' => "%'"
-			);
+				(
+					'field'	=> 'fm_workorder.title',
+					'type'	=> 'varchar',
+					'matchtype' => 'like',
+					'front' => "'%",
+					'back' => "%'"
+				);
 			$criteria[7] = array
-			(
-				'field'	=> 'fm_vendor.org_name',
-				'type'	=> 'varchar',
-				'matchtype' => 'like',
-				'front' => "'%",
-				'back' => "%'"
-			);
+				(
+					'field'	=> 'fm_vendor.org_name',
+					'type'	=> 'varchar',
+					'matchtype' => 'like',
+					'front' => "'%",
+					'back' => "%'"
+				);
 			$criteria[8] = array
-			(
-				'field'	=> 'fm_vendor.id',
-				'type'	=> 'int',
-				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
-			);
+				(
+					'field'	=> 'fm_vendor.id',
+					'type'	=> 'int',
+					'matchtype' => 'exact',
+					'front' => '',
+					'back' => ''
+				);
 
 			if($id)
 			{
@@ -377,14 +394,14 @@
 			$start_date	= $this->bocommon->date_to_timestamp($data['start_date']);
 			$end_date	= $this->bocommon->date_to_timestamp($data['end_date']);
 
-	
+
 			$workorder = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
-											'wo_hour_cat_id' => $this->wo_hour_cat_id,
-											'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
-											'b_group'=>$this->b_group,'paid'=>$this->paid,'b_account' => $this->b_account,
-											'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id)));
-			
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
+				'wo_hour_cat_id' => $this->wo_hour_cat_id,
+				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>$data['allrows'],
+				'b_group'=>$this->b_group,'paid'=>$this->paid,'b_account' => $this->b_account,
+				'district_id' => $this->district_id,'dry_run'=>$data['dry_run'], 'criteria' => $this->get_criteria($this->criteria_id)));
+
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -399,10 +416,12 @@
 				$this->uicols['descr'][]		= lang(str_replace('_', ' ', $col));
 				$this->uicols['statustext'][]	= $col;
 			}
-//_debug_array($this->uicols);die();
+			//_debug_array($this->uicols);die();
 			foreach ($workorder as &$entry)
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+				$entry['end_date'] = $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
 			}
 
 			return $workorder;
@@ -447,9 +466,9 @@
 			$vfs->override_acl = 1;
 
 			$workorder['files'] = $vfs->ls(array(
-			     'string' => "/property/workorder/{$workorder_id}",
-			     'relatives' => array(RELATIVE_NONE)
-			     ));
+				'string' => "/property/workorder/{$workorder_id}",
+				'relatives' => array(RELATIVE_NONE)
+			));
 
 			$vfs->override_acl = 0;
 
@@ -496,11 +515,11 @@
 			}
 
 			$event_criteria = array
-			(
-				'appname'		=> 'property',
-				'location'		=> '.project.workorder',
-				'location_item_id'	=> $workorder_id
-			);
+				(
+					'appname'		=> 'property',
+					'location'		=> '.project.workorder',
+					'location_item_id'	=> $workorder_id
+				);
 
 			$events = execMethod('property.soevent.read_at_location', $event_criteria);
 			$workorder['event_id'] = $events ? $events[0]['id'] : '';
@@ -522,37 +541,37 @@
 
 				switch ($value['status'])
 				{
-					case 'R': $type = lang('Re-opened'); break;
-					case 'RM': $type = lang('remark'); break;
-					case 'X': $type = lang('Closed');    break;
-					case 'O': $type = lang('Opened');    break;
-					case 'A': $type = lang('Re-assigned'); break;
-					case 'P': $type = lang('Priority changed'); break;
-					case 'M':
-						$type = lang('Sendt by email to');
-						$_order_sent_adress = explode(' ',$value['new_value']);
-						$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
-						unset($_order_sent_adress);
-						break;
-					case 'B': $type = lang('Budget changed'); break;
-					case 'CO': $type = lang('Initial Coordinator'); break;
-					case 'C': $type = lang('Coordinator changed'); break;
-					case 'TO': $type = lang('Initial Category'); break;
-					case 'T': $type = lang('Category changed'); break;
-					case 'SO': $type = lang('Initial Status'); break;
-					case 'S': $type = lang('Status changed'); break;
-					case 'SC': $type = lang('Status confirmed'); break;
-					case 'AP': $type = lang('Ask for approval'); break;
-					case 'ON': $type = lang('Owner notified'); break;
-					case 'H': $type = lang('Billable hours changed'); break;
-					default: break;
+				case 'R': $type = lang('Re-opened'); break;
+				case 'RM': $type = lang('remark'); break;
+				case 'X': $type = lang('Closed');    break;
+				case 'O': $type = lang('Opened');    break;
+				case 'A': $type = lang('Re-assigned'); break;
+				case 'P': $type = lang('Priority changed'); break;
+				case 'M':
+					$type = lang('Sendt by email to');
+					$_order_sent_adress = explode(' ',$value['new_value']);
+					$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
+					unset($_order_sent_adress);
+					break;
+				case 'B': $type = lang('Budget changed'); break;
+				case 'CO': $type = lang('Initial Coordinator'); break;
+				case 'C': $type = lang('Coordinator changed'); break;
+				case 'TO': $type = lang('Initial Category'); break;
+				case 'T': $type = lang('Category changed'); break;
+				case 'SO': $type = lang('Initial Status'); break;
+				case 'S': $type = lang('Status changed'); break;
+				case 'SC': $type = lang('Status confirmed'); break;
+				case 'AP': $type = lang('Ask for approval'); break;
+				case 'ON': $type = lang('Owner notified'); break;
+				case 'H': $type = lang('Billable hours changed'); break;
+				default: break;
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+					if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
 
 
-				$record_history[$i]['value_action']	= $type?$type:'';
+						$record_history[$i]['value_action']	= $type?$type:'';
 				unset($type);
 
 				if ($value['status'] == 'A')
@@ -625,7 +644,7 @@
 
 			if ($action=='edit')
 			{
-					$receipt = $this->so->edit($workorder);
+				$receipt = $this->so->edit($workorder);
 			}
 			else
 			{
@@ -640,10 +659,10 @@
 				$boclaim = CreateObject('property.botenant_claim');
 
 				$value_set = array
-				(
-					'workorder' 		=> $target,
-					'project_id'		=> $workorder['project_id'],
-				);
+					(
+						'workorder' 		=> $target,
+						'project_id'		=> $workorder['project_id'],
+					);
 
 				$claim = $boclaim->read(array('project_id' => $project['project_id']));
 				$target = array();

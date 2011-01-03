@@ -40,38 +40,38 @@
 		public $start;
 
 		/**
-		* @var string $query user input: search string
-		*/
+		 * @var string $query user input: search string
+		 */
 		public $query;
 
 		/**
-		* @var string $sort how to sort: ASC or DESC
-		*/
+		 * @var string $sort how to sort: ASC or DESC
+		 */
 		public $sort;
 
 		/**
-		* @var string $order field to order by
-		*/
+		 * @var string $order field to order by
+		 */
 		public $order;
 
 		/**
-		* @var string $type entity set
-		*/
+		 * @var string $type entity set
+		 */
 
 		public $type;
 		/**
-		* @var integer $entity_id entity type
-		*/
+		 * @var integer $entity_id entity type
+		 */
 		public $entity_id;
 
 		/**
-		* @var integer $cat_id category of entity type
-		*/
+		 * @var integer $cat_id category of entity type
+		 */
 		public $cat_id;
 
 		/**
-		* @var bool $use_session read vars from session or not
-		*/
+		 * @var bool $use_session read vars from session or not
+		 */
 		protected $use_session;
 
 		/**
@@ -80,19 +80,19 @@
 		protected $custom;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		var $type_app = array
-		(
-			'entity'	=> 'property',
-			'catch'		=> 'catch'
-		);
+			(
+				'entity'	=> 'property',
+				'catch'		=> 'catch'
+			);
 
 		function __construct($session=false)
 		{
@@ -118,7 +118,7 @@
 			$this->query			= isset($query) ? $query : $this->query;
 			$this->sort				= isset($sort) && $sort ? $sort : '';
 			$this->order			= isset($order) && $order ? $order : '';
-			$this->type				= isset($type)  && $type && isset($this->type_app[$type]) ? $type : 'entity';
+			$this->type				= isset($type) && $type && isset($this->type_app[$type]) ? $type : 'entity';
 			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id		= isset($entity_id) && $entity_id ? $entity_id : '';
 			$this->allrows			= isset($allrows) && $allrows ? $allrows : '';
@@ -260,12 +260,12 @@
 				if(isset($values['category_template']) && $values['category_template'] && isset($receipt['id']) && $receipt['id'])
 				{
 					$values2 = array
-					(
-						'entity_id'			=> $values['entity_id'],
-						'cat_id'			=> $receipt['id'],
-						'category_template'	=> $values['category_template'],
-						'selected'			=> $values['template_attrib']
-					);
+						(
+							'entity_id'			=> $values['entity_id'],
+							'cat_id'			=> $receipt['id'],
+							'category_template'	=> $values['category_template'],
+							'selected'			=> $values['template_attrib']
+						);
 
 					$this->_add_attrib_from_template($values2);
 				}
@@ -279,19 +279,19 @@
 			$template_entity_id = $template_info[0];
 			$template_cat_id = $template_info[1];
 
-			$attrib_group_list =  $this->read_attrib_group($template_entity_id, $template_cat_id, true);
+			$attrib_group_list = $this->read_attrib_group($template_entity_id, $template_cat_id, true);
 
 			foreach ($attrib_group_list as $attrib_group)
 			{
 				$group = array
-				(
-					'appname'		=> $this->type_app[$this->type],
- 					'location'		=> ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
- 					'group_name'	=> $attrib_group['name'],
- 					'descr'			=> $attrib_group['descr'],
- 					'remark'		=> $attrib_group['remark']
- 				);
- 				$this->custom->add_group($group);
+					(
+						'appname'		=> $this->type_app[$this->type],
+						'location'		=> ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
+						'group_name'	=> $attrib_group['name'],
+						'descr'			=> $attrib_group['descr'],
+						'remark'		=> $attrib_group['remark']
+					);
+				$this->custom->add_group($group);
 			}
 
 			$attrib_list = $this->read_attrib($template_entity_id,$template_cat_id, true);
@@ -332,12 +332,12 @@
 
 		function delete($cat_id='',$entity_id='',$attrib_id='',$acl_location='',$custom_function_id='', $group_id ='')
 		{
-			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id  && !$group_id)
+			if(!$attrib_id && !$cat_id && $entity_id && !$custom_function_id && !$group_id)
 			{
 				$this->so->delete_entity($entity_id);
 				execMethod('phpgwapi.menu.clear');
 			}
-			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
+			else if(!$attrib_id && $cat_id && $entity_id && !$custom_function_id && !$group_id)
 			{
 				$this->so->delete_category($entity_id, $cat_id);
 				execMethod('phpgwapi.menu.clear');
@@ -346,7 +346,7 @@
 			{
 				$this->custom->delete_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $group_id);
 			}
-			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id  && !$group_id)
+			else if($attrib_id && $cat_id && $entity_id && !$custom_function_id && !$group_id)
 			{
 				$this->custom->delete($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
 				$this->so->delete_history($entity_id, $cat_id,$attrib_id);
@@ -360,15 +360,15 @@
 		function get_attrib_group_list($entity_id,$cat_id, $selected)
 		{
 			$group_list = $this->read_attrib_group($entity_id, $cat_id, true);
-			
+
 			foreach($group_list as &$group)
 			{
-				if( $group['id'] ==  $selected )
+				if( $group['id'] == $selected )
 				{
 					$group['selected'] = true;
 				}
 			}
-//_debug_array($group_list);die();
+			//_debug_array($group_list);die();
 			return $group_list;
 		}
 
@@ -424,7 +424,7 @@
 		{
 			$receipt = array();
 			$group['appname'] = $this->type_app[$this->type];
- 			$group['location'] = ".{$this->type}.{$group['entity_id']}.{$group['cat_id']}";
+			$group['location'] = ".{$this->type}.{$group['entity_id']}.{$group['cat_id']}";
 			if ( $action=='edit' && $group['id'] )
 			{
 				if ( $this->custom->edit_group($group) )
@@ -439,7 +439,7 @@
 			else
 			{
 				$id = $this->custom->add_group($group);
-				if ( $id <= 0  )
+				if ( $id <= 0 )
 				{
 					$receipt['error'][]=array('msg'=>lang('unable to add group'));
 					return $receipt;
@@ -461,7 +461,7 @@
 		{
 			$receipt = array();
 			$attrib['appname'] = $this->type_app[$this->type];
- 			$attrib['location'] = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
+			$attrib['location'] = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
 			if ( $action=='edit' && $attrib['id'] )
 			{
 				if ( $this->custom->edit($attrib) )
@@ -476,7 +476,7 @@
 			else
 			{
 				$id = $this->custom->add($attrib);
-				if ( $id <= 0  )
+				if ( $id <= 0 )
 				{
 					$receipt['error'][]=array('msg'=>lang('Unable to add field'));
 					return $receipt;
@@ -508,7 +508,7 @@
 			}
 
 			$values = $GLOBALS['phpgw']->custom_functions->find(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'appname'=> $this->type_app[$this->type],'location' => $acl_location,'allrows'=>$this->allrows));
+				'appname'=> $this->type_app[$this->type],'location' => $acl_location,'allrows'=>$this->allrows));
 
 			$this->total_records = $GLOBALS['phpgw']->custom_functions->total_records;
 

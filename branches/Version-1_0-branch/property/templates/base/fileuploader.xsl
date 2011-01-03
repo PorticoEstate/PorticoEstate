@@ -1,7 +1,7 @@
-	<xsl:template match="fileuploader" xmlns:php="http://php.net/xsl">
-		<div class="header">
-			<h2><xsl:value-of select="php:function('lang', 'fileuploader')" /></h2>
-		</div>
+<xsl:template match="fileuploader" xmlns:php="http://php.net/xsl">
+	<div class="header">
+		<h2><xsl:value-of select="php:function('lang', 'fileuploader')" /></h2>
+	</div>
 
 <!--
 		<style>
@@ -9,12 +9,12 @@
 				color: #0000CC;
 				background-color: #FFFFFF;
 			}
-	
+
 			#selectFilesLink a:visited, #uploadFilesLink a:visited, #clearFilesLink a:visited {
 				color: #0000CC;
 				background-color: #FFFFFF;
 			}
-	
+
 			#uploadFilesLink a:hover, #clearFilesLink a:hover {	
 				color: #FFFFFF;
 				background-color: #000000;
@@ -33,11 +33,11 @@
 				</div>
 			</div>
 			<div id="uploadFilesLink">
-					<input id="uploadLink" type="button" name="uploadLink" title="" onClick="upload(); return false;">
-						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'Upload Files')" />
-						</xsl:attribute>
-					</input>
+				<input id="uploadLink" type="button" name="uploadLink" title="" onClick="upload(); return false;">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'Upload Files')" />
+					</xsl:attribute>
+				</input>
 			</div>
 		</div>
 

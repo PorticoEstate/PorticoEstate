@@ -46,13 +46,13 @@
 		var $allrows;
 
 		var $public_functions = array
-		(
-			'read'			=> true,
-			'read_single'		=> true,
-			'save'			=> true,
-			'delete'		=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'			=> true,
+				'read_single'		=> true,
+				'save'			=> true,
+				'delete'		=> true,
+				'check_perms'		=> true
+			);
 
 		function property_bodocument($session=false)
 		{
@@ -60,7 +60,7 @@
 			$this->bocommon 		= CreateObject('property.bocommon');
 			$this->solocation 		= CreateObject('property.solocation');
 			$this->historylog		= CreateObject('property.historylog','document');
-			$this->contacts	= CreateObject('property.sogeneric');
+			$this->contacts			= CreateObject('property.sogeneric');
 			$this->contacts->get_location_info('vendor',false);
 			$this->cats				= & $this->so->cats;
 			$this->bofiles			= CreateObject('property.bofiles');
@@ -71,17 +71,17 @@
 				$this->use_session = true;
 			}
 
-			$start			= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query			= phpgw::get_var('query');
-			$sort			= phpgw::get_var('sort');
-			$order			= phpgw::get_var('order');
-			$filter			= phpgw::get_var('filter', 'int');
-			$cat_id			= phpgw::get_var('cat_id', 'int');
-			$status_id		= phpgw::get_var('status_id');
-			$entity_id		= phpgw::get_var('entity_id', 'int');
-			$doc_type		= phpgw::get_var('doc_type');
-			$query_location	= phpgw::get_var('query_location');
-			$allrows		= phpgw::get_var('allrows', 'bool');
+			$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query					= phpgw::get_var('query');
+			$sort					= phpgw::get_var('sort');
+			$order					= phpgw::get_var('order');
+			$filter					= phpgw::get_var('filter', 'int');
+			$cat_id					= phpgw::get_var('cat_id', 'int');
+			$status_id				= phpgw::get_var('status_id');
+			$entity_id				= phpgw::get_var('entity_id', 'int');
+			$doc_type				= phpgw::get_var('doc_type');
+			$query_location			= phpgw::get_var('query_location');
+			$allrows				= phpgw::get_var('allrows', 'bool');
 
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) ? $query : '';
@@ -116,7 +116,7 @@
 			$this->sort		= $data['sort'];
 			$this->order	= $data['order'];
 			$this->cat_id	= $data['cat_id'];
-		//	$this->entity_id	= $data['entity_id'];
+//			$this->entity_id	= $data['entity_id'];
 			$this->doc_type	= $data['doc_type'];
 			$this->query_location	= $data['query_location'];
 		}
@@ -125,12 +125,12 @@
 		{
 			switch($format)
 			{
-				case 'select':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
-					break;
-				case 'filter':
-					$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
-					break;
+			case 'select':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_select'));
+				break;
+			case 'filter':
+				$GLOBALS['phpgw']->xslttpl->add_file(array('status_filter'));
+				break;
 			}
 
 			$status_entries= $this->so->select_status_list();
@@ -146,7 +146,7 @@
 		function read()
 		{
 			$documents = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_type'=>$this->doc_type));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,'doc_type'=>$this->doc_type));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
@@ -190,13 +190,13 @@
 			$use_svn = false;
 			if(ereg('svn[s:][:/]/', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
-		//		$use_svn = true;
+				//		$use_svn = true;
 			}
 
 
 			$document = $this->so->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
-											'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
+				'filter' => $this->filter,'cat_id' => $this->cat_id,'entity_id' => $this->entity_id,
+				'location_code' => $location_code,'doc_type'=>$this->doc_type, 'allrows' => $this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -290,29 +290,29 @@
 
 				switch ($value['status'])
 				{
-					case 'R': $type = lang('Re-opened'); break;
-					case 'X': $type = lang('Closed');    break;
-					case 'O': $type = lang('Opened');    break;
-					case 'A': $type = lang('Re-assigned'); break;
-					case 'P': $type = lang('Priority changed'); break;
-					case 'CO': $type = lang('Initial Coordinator'); break;
-					case 'C': $type = lang('Coordinator changed'); break;
-					case 'TO': $type = lang('Initial Category'); break;
-					case 'T': $type = lang('Category changed'); break;
-					case 'SO': $type = lang('Initial Status'); break;
-					case 'S': $type = lang('Status changed'); break;
-					case 'FO': $type = lang('Initial File'); break;
-					case 'F': $type = lang('File changed'); break;
-					case 'LO': $type = lang('Initial Link'); break;
-					case 'L': $type = lang('Link changed'); break;
-					default: break;
+				case 'R': $type = lang('Re-opened'); break;
+				case 'X': $type = lang('Closed');    break;
+				case 'O': $type = lang('Opened');    break;
+				case 'A': $type = lang('Re-assigned'); break;
+				case 'P': $type = lang('Priority changed'); break;
+				case 'CO': $type = lang('Initial Coordinator'); break;
+				case 'C': $type = lang('Coordinator changed'); break;
+				case 'TO': $type = lang('Initial Category'); break;
+				case 'T': $type = lang('Category changed'); break;
+				case 'SO': $type = lang('Initial Status'); break;
+				case 'S': $type = lang('Status changed'); break;
+				case 'FO': $type = lang('Initial File'); break;
+				case 'F': $type = lang('File changed'); break;
+				case 'LO': $type = lang('Initial Link'); break;
+				case 'L': $type = lang('Link changed'); break;
+				default: break;
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+					if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
 
 
-				$record_history[$i]['value_action']	= $type?$type:'';
+						$record_history[$i]['value_action']	= $type?$type:'';
 				unset($type);
 
 				if ($value['status'] == 'A')
@@ -372,17 +372,17 @@
 			}
 
 			if($this->bofiles->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)
-				)))
+				'string' => $file,
+				'relatives' => Array(RELATIVE_NONE)
+			)))
 			{
 
 				if($get_journal)
 				{
 					return $this->bofiles->vfs->get_journal(array(
-							'string' => $file,
-							'relatives' => Array(RELATIVE_NONE)
-							));
+						'string' => $file,
+						'relatives' => Array(RELATIVE_NONE)
+					));
 				}
 				else
 				{
@@ -398,7 +398,7 @@
 			$document_date	= phpgwapi_datetime::date_array($values['document_date']);
 			$values['document_date']	= mktime (2,0,0,$document_date['month'],$document_date['day'],$document_date['year']);
 
-//_debug_array($values);
+			//_debug_array($values);
 			if ($values['document_id'])
 			{
 				if ($values['document_id'] != 0)
@@ -418,4 +418,3 @@
 			$this->so->delete($document_id);
 		}
 	}
-

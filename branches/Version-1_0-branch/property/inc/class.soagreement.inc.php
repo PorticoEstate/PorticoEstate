@@ -45,7 +45,7 @@
 			$this->join			= $this->bocommon->join;
 			$this->left_join	= $this->bocommon->left_join;
 			$this->like			= $this->bocommon->like;
-//			$this->role		= 'agreement';
+			//			$this->role		= 'agreement';
 		}
 
 		function select_vendor_list()
@@ -217,7 +217,7 @@
 				$filtermethod = " $where $entity_table.user_id=$filter ";
 				$where= 'AND';
 			}
-*/
+ */
 
 			if ($agreement_id)
 			{
@@ -257,7 +257,7 @@
 
 				$querymethod[]= "fm_branch.descr {$this->like} '%{$query}%'";
 				$querymethod[]= "{$entity_table}.name {$this->like} '%{$query}%'";
-				
+
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
 				while ($this->db->next_record())
@@ -294,7 +294,7 @@
 
 			$j=0;
 			$n=count($cols_return);
-//_debug_array($cols_return);
+			//_debug_array($cols_return);
 
 			$contacts		= CreateObject('phpgwapi.contacts');
 			$agreement_list = array();
@@ -373,7 +373,7 @@
 				}
 				$j++;
 			}
-//_debug_array($agreement_list);
+			//_debug_array($agreement_list);
 			return $agreement_list;
 		}
 
@@ -390,7 +390,7 @@
 				$allrows		= (isset($data['allrows'])?$data['allrows']:'');
 				$agreement_id	= (isset($data['agreement_id'])?$data['agreement_id']:'');
 			}
-$allrows = true; // return all..
+			$allrows = true; // return all..
 
 			$entity_table = 'fm_activity_price_index';
 
@@ -470,7 +470,7 @@ $allrows = true; // return all..
 			}
 
 			$sql .= " $filtermethod";
-//echo $sql;
+			//echo $sql;
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -488,22 +488,22 @@ $allrows = true; // return all..
 			while ($this->db->next_record())
 			{
 				$details[] = array
-				(
-					'agreement_id'		=> $this->db->f('agreement_id'),
-					'activity_id'		=> $this->db->f('activity_id'),
-					'id'				=> $this->db->f('id'),
-					'num'				=> $this->db->f('num'),
-					'descr'				=> $this->db->f('descr'),
-					'unit'				=> $this->db->f('unit'),
-					'm_cost'			=> $this->db->f('m_cost'),
-					'w_cost'			=> $this->db->f('w_cost'),
-					'total_cost'		=> $this->db->f('total_cost'),
-					'this_index'		=> $this->db->f('this_index'),
-					'index_count'		=> $this->db->f('index_count'),
-					'index_date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('index_date'),$dateformat)
-				);
+					(
+						'agreement_id'		=> $this->db->f('agreement_id'),
+						'activity_id'		=> $this->db->f('activity_id'),
+						'id'				=> $this->db->f('id'),
+						'num'				=> $this->db->f('num'),
+						'descr'				=> $this->db->f('descr'),
+						'unit'				=> $this->db->f('unit'),
+						'm_cost'			=> $this->db->f('m_cost'),
+						'w_cost'			=> $this->db->f('w_cost'),
+						'total_cost'		=> $this->db->f('total_cost'),
+						'this_index'		=> $this->db->f('this_index'),
+						'index_count'		=> $this->db->f('index_count'),
+						'index_date'		=> $GLOBALS['phpgw']->common->show_date($this->db->f('index_date'),$dateformat)
+					);
 			}
-//html_print_r($details);
+			//html_print_r($details);
 			return $details;
 		}
 
@@ -520,47 +520,47 @@ $allrows = true; // return all..
 			$cols = "fm_activity_price_index.m_cost,fm_activity_price_index.w_cost,fm_activity_price_index.total_cost,"
 				. " fm_activity_price_index.index_count,fm_activity_price_index.index_date,fm_activity_price_index.activity_id,fm_activity_price_index.this_index";
 
-			$cols_return[] 			= 'activity_id';
+			$cols_return[] 				= 'activity_id';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'activity_id';
 			$uicols['descr'][]			= lang('activity ID');
 			$uicols['statustext'][]		= lang('activity ID');
 
-			$cols_return[] 			= 'id';
+			$cols_return[] 				= 'id';
 			$uicols['input_type'][]		= 'hidden';
 			$uicols['name'][]			= 'id';
 			$uicols['descr'][]			= false;
 			$uicols['statustext'][]		= false;
 
-			$cols_return[] 			= 'm_cost';
+			$cols_return[] 				= 'm_cost';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'm_cost';
 			$uicols['descr'][]			= lang('m_cost');
 			$uicols['statustext'][]		= lang('m_cost');
-			$cols_return[] 			= 'w_cost';
+			$cols_return[] 				= 'w_cost';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'w_cost';
 			$uicols['descr'][]			= lang('w_cost');
 			$uicols['statustext'][]		= lang('w_cost');
-			$cols_return[] 			= 'total_cost';
+			$cols_return[] 				= 'total_cost';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'total_cost';
 			$uicols['descr'][]			= lang('total cost');
 			$uicols['statustext'][]		= lang('total cost');
 
-			$cols_return[] 			= 'this_index';
+			$cols_return[] 				= 'this_index';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'this_index';
 			$uicols['descr'][]			= lang('index');
 			$uicols['statustext'][]		= lang('index');
 
-			$cols_return[] 			= 'index_count';
+			$cols_return[] 				= 'index_count';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'index_count';
 			$uicols['descr'][]			= lang('index_count');
 			$uicols['statustext'][]		= lang('index_count');
 
-			$cols_return[] 			= 'index_date';
+			$cols_return[] 				= 'index_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'index_date';
 			$uicols['descr'][]			= lang('date');
@@ -586,7 +586,7 @@ $allrows = true; // return all..
 
 
 			$sql .= " $filtermethod";
-//echo $sql;
+			//echo $sql;
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -601,7 +601,7 @@ $allrows = true; // return all..
 
 			$j=0;
 			$n=count($cols_return);
-//_debug_array($cols_return);
+			//_debug_array($cols_return);
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$n;$i++)
@@ -611,7 +611,7 @@ $allrows = true; // return all..
 				}
 				$j++;
 			}
-//_debug_array($agreement_list);
+			//_debug_array($agreement_list);
 			return $agreement_list;
 		}
 
@@ -682,7 +682,7 @@ $allrows = true; // return all..
 
 		function add($agreement,$values_attribute='')
 		{
-//_debug_array($agreement);
+			//_debug_array($agreement);
 			$table = 'fm_agreement';
 			$agreement['name'] = $this->db->db_addslashes($agreement['name']);
 			$agreement['descr'] = $this->db->db_addslashes($agreement['descr']);
@@ -754,7 +754,7 @@ $allrows = true; // return all..
 
 		function add_item($values,$values_attribute='')
 		{
-//_debug_array($values);
+			//_debug_array($values);
 
 			$this->db->transaction_begin();
 
@@ -788,8 +788,8 @@ $allrows = true; // return all..
 
 		function edit($values,$values_attribute='')
 		{
-//_debug_array($values);
-//_debug_array($values_attribute);
+			//_debug_array($values);
+			//_debug_array($values_attribute);
 			$table = 'fm_agreement';
 
 			$values['name'] = $this->db->db_addslashes($values['name']);
@@ -835,7 +835,7 @@ $allrows = true; // return all..
 			}
 
 			$this->db->query("UPDATE $table set entry_date='" . time() . "', category='"
-							. $values['cat_id'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . "$value_set WHERE id=" . intval($values['agreement_id']));
+				. $values['cat_id'] . "', start_date=" . intval($values['start_date']) . ", end_date=" . intval($values['end_date']) . ", termination_date=" . intval($values['termination_date']) . "$value_set WHERE id=" . intval($values['agreement_id']));
 
 			$this->db->query("UPDATE fm_activity_price_index set index_date=" . intval($values['start_date']) . " WHERE index_count=1 AND agreement_id= " . intval($values['agreement_id']));
 
@@ -846,7 +846,7 @@ $allrows = true; // return all..
 
 		function edit_item($values)
 		{
-//_debug_array($values);
+			//_debug_array($values);
 
 			$value_set['m_cost']		= $values['m_cost'];
 			$value_set['w_cost']		= $values['w_cost'];
@@ -869,7 +869,7 @@ $allrows = true; // return all..
 
 		function update($values)
 		{
-//_debug_array($values);
+			//_debug_array($values);
 			$values['new_index']=$this->floatval($values['new_index']);
 			$this->db->transaction_begin();
 
@@ -953,29 +953,29 @@ $allrows = true; // return all..
 		{
 			switch($table)
 			{
-				case 'fm_agreement':
-					$fd=array(
-						'group_id' => array('type' => 'int','precision' => '4','nullable' => false),
-						'id' => array('type' => 'int','precision' => '4','nullable' => false),
-						'vendor_id' => array('type' => 'int','precision' => '4','nullable' => false),
-						'name' => array('type' => 'varchar','precision' => '100','nullable' => false),
-						'descr' => array('type' => 'text','nullable' => true),
-						'status' => array('type' => 'varchar','precision' => '10','nullable' => true),
-						'entry_date' => array('type' => 'int','precision' => '4','nullable' => true),
-						'start_date' => array('type' => 'int','precision' => '4','nullable' => true),
-						'end_date' => array('type' => 'int','precision' => '4','nullable' => true),
-						'termination_date' => array('type' => 'int','precision' => '4','nullable' => true),
-						'category' => array('type' => 'int','precision' => '4','nullable' => true),
-						'user_id' => array('type' => 'int','precision' => '4','nullable' => true)
-						);
-					break;
-				case 'fm_agreement_detail':
+			case 'fm_agreement':
+				$fd=array(
+					'group_id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'vendor_id' => array('type' => 'int','precision' => '4','nullable' => false),
+					'name' => array('type' => 'varchar','precision' => '100','nullable' => false),
+					'descr' => array('type' => 'text','nullable' => true),
+					'status' => array('type' => 'varchar','precision' => '10','nullable' => true),
+					'entry_date' => array('type' => 'int','precision' => '4','nullable' => true),
+					'start_date' => array('type' => 'int','precision' => '4','nullable' => true),
+					'end_date' => array('type' => 'int','precision' => '4','nullable' => true),
+					'termination_date' => array('type' => 'int','precision' => '4','nullable' => true),
+					'category' => array('type' => 'int','precision' => '4','nullable' => true),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => true)
+				);
+				break;
+			case 'fm_agreement_detail':
 
 
-					break;
-				default:
-					return;
-					break;
+				break;
+			default:
+				return;
+				break;
 			}
 
 			return $fd;
@@ -1023,12 +1023,12 @@ $allrows = true; // return all..
 					}
 
 					$fd[$metadata[$i]['name']] = array(
-					 	'type' => $this->bocommon->translate_datatype_insert(stripslashes($this->db->f('datatype'))),
-					 	'precision' => $precision,
-					 	'nullable' => stripslashes($this->db->f('nullable')),
-					 	'default' => stripslashes($this->db->f('default_value')),
-					 	'scale' => $this->db->f('scale')
-					 		);
+						'type' => $this->bocommon->translate_datatype_insert(stripslashes($this->db->f('datatype'))),
+						'precision' => $precision,
+						'nullable' => stripslashes($this->db->f('nullable')),
+						'default' => stripslashes($this->db->f('default_value')),
+						'scale' => $this->db->f('scale')
+					);
 					unset($precision);
 				}
 			}
@@ -1036,8 +1036,8 @@ $allrows = true; // return all..
 			$table_def = array(
 				$table =>	array(
 					'fd' => $fd
-					)
-				);
+				)
+			);
 
 			$table_def[$table]['pk'] = $pk;
 			$table_def[$table]['fk'] = array();
@@ -1061,10 +1061,10 @@ $allrows = true; // return all..
 			while ($this->db->next_record())
 			{
 				$agreement_group_list[]=array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr')).' [ '. $GLOBALS['phpgw']->strip_html($this->db->f('status')).' ] '
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $GLOBALS['phpgw']->strip_html($this->db->f('descr')).' [ '. $GLOBALS['phpgw']->strip_html($this->db->f('status')).' ] '
+					);
 			}
 			return $agreement_group_list;
 		}
@@ -1094,14 +1094,14 @@ $allrows = true; // return all..
 			while ($this->db->next_record())
 			{
 				$activity_list[$this->db->f('id')]=array
-				(
-					'id'		=> $this->db->f('id'),
-					'num'		=> $this->db->f('num'),
-					'base_descr'	=> $this->db->f('base_descr'),
-					'descr'		=> $this->db->f('descr'),
-					'unit'		=> $this->db->f('unit'),
-					'ns3420'	=> $this->db->f('ns3420'),
-				);
+					(
+						'id'		=> $this->db->f('id'),
+						'num'		=> $this->db->f('num'),
+						'base_descr'	=> $this->db->f('base_descr'),
+						'descr'		=> $this->db->f('descr'),
+						'unit'		=> $this->db->f('unit'),
+						'ns3420'	=> $this->db->f('ns3420'),
+					);
 			}
 
 			$sql="SELECT activity_id FROM fm_activity_price_index WHERE agreement_id = $agreement_id";
@@ -1135,53 +1135,53 @@ $allrows = true; // return all..
 				if(!$date)
 				{
 					throw new Exception("missing start date for agreement {$agreement_id}");
-//					return $receipt['error'][] = array('msg'=>lang('missing start date for agreement %1',$agreement_id));
+					//					return $receipt['error'][] = array('msg'=>lang('missing start date for agreement %1',$agreement_id));
 				}
-				
+
 				$sql = 'INSERT INTO fm_activity_price_index (agreement_id, activity_id, index_count, current_index, index_date, entry_date, user_id)'
-							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
+					. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 				$valueset=array();
 
 				foreach($values['select'] as $activity_id)
 				{
 					$valueset[] = array
-					(
-						1	=> array
 						(
-							'value'	=> $agreement_id,
-							'type'	=> PDO::PARAM_INT
-						),
-						2	=> array
-						(
-							'value'	=> $activity_id,
-							'type'	=>	PDO::PARAM_INT
-						),
-						3	=> array
-						(
-							'value'	=> -1,
-							'type'	=> PDO::PARAM_INT
-						),
-						4	=> array
-						(
-							'value'	=> 1,
-							'type'	=>	PDO::PARAM_INT
-						),
-						5	=> array
-						(
-							'value'	=> $date,
-							'type'	=> PDO::PARAM_INT
-						),
-						6	=> array
-						(
-							'value'	=> time(),
-							'type'	=> PDO::PARAM_INT
-						),
-						7	=> array
-						(
-							'value'	=> $this->account,
-							'type'	=> PDO::PARAM_INT
-						)
-					);
+							1	=> array
+							(
+								'value'	=> $agreement_id,
+								'type'	=> PDO::PARAM_INT
+							),
+							2	=> array
+							(
+								'value'	=> $activity_id,
+								'type'	=>	PDO::PARAM_INT
+							),
+							3	=> array
+							(
+								'value'	=> -1,
+								'type'	=> PDO::PARAM_INT
+							),
+							4	=> array
+							(
+								'value'	=> 1,
+								'type'	=>	PDO::PARAM_INT
+							),
+							5	=> array
+							(
+								'value'	=> $date,
+								'type'	=> PDO::PARAM_INT
+							),
+							6	=> array
+							(
+								'value'	=> time(),
+								'type'	=> PDO::PARAM_INT
+							),
+							7	=> array
+							(
+								'value'	=> $this->account,
+								'type'	=> PDO::PARAM_INT
+							)
+						);
 				}
 
 				$this->db->insert($sql, $valueset, __LINE__, __FILE__);
@@ -1202,10 +1202,10 @@ $allrows = true; // return all..
 			while ($this->db->next_record())
 			{
 				$status[] = array
-				(
-					'id'	=> $this->db->f('id'),
-					'name'	=> $this->db->f('descr',true)
-				);
+					(
+						'id'	=> $this->db->f('id'),
+						'name'	=> $this->db->f('descr',true)
+					);
 			}
 			return $status;
 		}

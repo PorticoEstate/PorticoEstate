@@ -234,7 +234,7 @@
 			$owner['name'] = $this->db->db_addslashes($owner['name']);
 
 			$this->db->query("UPDATE fm_owner set remark='" . $owner['remark'] . "', entry_date='" . time() . "', abid='" . $owner['abid'] . "', contact_name='" . $owner['contact_name'] . "', category='"
-							. $owner['cat_id'] . "' WHERE owner_id=" . intval($owner['owner_id']),__LINE__,__FILE__);
+				. $owner['cat_id'] . "' WHERE owner_id=" . intval($owner['owner_id']),__LINE__,__FILE__);
 
 			$receipt['owner_id']= $owner['owner_id'];
 			$receipt['message'][] = array('msg'=>lang('owner %1 has been edited',$owner['owner_id']));
@@ -246,4 +246,3 @@
 			$this->db->query('DELETE FROM fm_owner WHERE owner_id=' . intval($owner_id),__LINE__,__FILE__);
 		}
 	}
-

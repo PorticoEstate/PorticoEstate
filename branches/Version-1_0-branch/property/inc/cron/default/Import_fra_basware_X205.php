@@ -226,8 +226,7 @@
 
 		function import($file)
 		{
-			$valid_data= False;
-			$bilagsnr = $this->invoice->next_bilagsnr();
+//			$valid_data= False;
 
 			$buffer = array();
 
@@ -270,7 +269,8 @@
 //					$_data['SUPPLIER.CODE']; // => 100644
 //					$_data['SUPPLIERREF']; // => 7869
 					$_data['VATAMOUNT']; // => 62500
-
+					
+					$bilagsnr = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
 					$order_id 		= $_data['PURCHASEORDERNO'];
 					$fakturanr		= $_data['KEY'];
@@ -372,6 +372,16 @@
 
 			if(!isset($this->receipt['error']) || !$this->receipt['error'])
 			{
+				if(!$bilagsnr)
+				{
+					$bilagsnr = $this->invoice->next_bilagsnr();
+					
+					foreach($buffer as &$entry)
+					{
+						$entry['bilagsnr'] = $bilagsnr;
+					}
+				}
+
 				return $this->import_end_file($buffer);
 			}
 			return false;

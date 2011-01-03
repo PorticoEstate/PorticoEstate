@@ -10,7 +10,7 @@
 			<xsl:apply-templates select="values"/>
 		</table>
 	</xsl:template>
-	
+
 
 	<xsl:template match="header">
 		<tr class="th">

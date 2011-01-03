@@ -47,18 +47,18 @@
 		var $currentapp;
 
 		var $public_functions = array
-		(
-			'list_acl'		=> true,
-			'aclprefs'		=> true,
-			'edit_id'		=> true,
-			'contact_info'	=> true
-		);
+			(
+				'list_acl'		=> true,
+				'aclprefs'		=> true,
+				'edit_id'		=> true,
+				'contact_info'	=> true
+			);
 
 		function property_uiadmin()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property';
-		//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -74,16 +74,16 @@
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
 
-	//		$this->acl_app			= $this->bo->acl_app;
-			$this->start			= $this->bo->start;
-			$this->query			= $this->bo->query;
-			$this->sort				= $this->bo->sort;
-			$this->order			= $this->bo->order;
-			$this->filter			= $this->bo->filter;
-			$this->cat_id			= $this->bo->cat_id;
-			$this->location			= $this->bo->location;
-			$this->granting_group	= $this->bo->granting_group;
-			$this->allrows			= $this->bo->allrows;
+	//		$this->acl_app				= $this->bo->acl_app;
+			$this->start				= $this->bo->start;
+			$this->query				= $this->bo->query;
+			$this->sort					= $this->bo->sort;
+			$this->order				= $this->bo->order;
+			$this->filter				= $this->bo->filter;
+			$this->cat_id				= $this->bo->cat_id;
+			$this->location				= $this->bo->location;
+			$this->granting_group		= $this->bo->granting_group;
+			$this->allrows				= $this->bo->allrows;
 
 
 		}
@@ -91,17 +91,17 @@
 		function save_sessiondata()
 		{
 			$data = array
-			(
-				'start'				=> $this->start,
-				'query'				=> $this->query,
-				'sort'				=> $this->sort,
-				'order'				=> $this->order,
-				'filter'			=> $this->filter,
-				'cat_id'			=> $this->cat_id,
-				'location'			=> $this->location,
-				'granting_group'	=> $this->granting_group,
-				'allrows'			=> $this->allrows
-			);
+				(
+					'start'				=> $this->start,
+					'query'				=> $this->query,
+					'sort'				=> $this->sort,
+					'order'				=> $this->order,
+					'filter'			=> $this->filter,
+					'cat_id'			=> $this->cat_id,
+					'location'			=> $this->location,
+					'granting_group'	=> $this->granting_group,
+					'allrows'			=> $this->allrows
+				);
 
 			$this->bo->save_sessiondata($data);
 		}
@@ -115,7 +115,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
-										'search_field'));
+				'search_field'));
 
 			$values 			= phpgw::get_var('values');
 			$r_processed		= phpgw::get_var('processed');
@@ -140,31 +140,31 @@
 					{
 						$processed[] = $user['account_id'];
 						$users[] = array
-						(
-							'account_id'			=> $user['account_id'],
-							'lid'					=> $user['account_lid'],
-							'name'					=> $user['account_firstname'] . ' ' . $user['account_lastname'],
-							'read_right'			=> (isset($user['right'][1])?$user['right'][1]:''),
-							'add_right'				=> (isset($user['right'][2])?$user['right'][2]:''),
-							'edit_right'			=> (isset($user['right'][4])?$user['right'][4]:''),
-							'delete_right'			=> (isset($user['right'][8])?$user['right'][8]:''),
-							'read_mask'				=> (isset($user['mask'][1])?$user['mask'][1]:''),
-							'add_mask'				=> (isset($user['mask'][2])?$user['mask'][2]:''),
-							'edit_mask'				=> (isset($user['mask'][4])?$user['mask'][4]:''),
-							'delete_mask'			=> (isset($user['mask'][8])?$user['mask'][8]:''),
-							'read_result'			=> (isset($user['result'][1])?$user['result'][1]:''),
-							'add_result'			=> (isset($user['result'][2])?$user['result'][2]:''),
-							'edit_result'			=> (isset($user['result'][4])?$user['result'][4]:''),
-							'delete_result'			=> (isset($user['result'][8])?$user['result'][8]:''),
-							'lang_right'			=> lang('right'),
-							'lang_mask'				=> lang('mask'),
-							'lang_result'			=> lang('result'),
-							'lang_read'				=> lang('Read'), 		//1
-							'lang_add'				=> lang('Add'), 		//2
-							'lang_edit'				=> lang('Edit'),		//4
-							'lang_delete'			=> lang('Delete'),		//8
-							'type'					=> 'users'
-						);
+							(
+								'account_id'			=> $user['account_id'],
+								'lid'					=> $user['account_lid'],
+								'name'					=> $user['account_firstname'] . ' ' . $user['account_lastname'],
+								'read_right'			=> (isset($user['right'][1])?$user['right'][1]:''),
+								'add_right'				=> (isset($user['right'][2])?$user['right'][2]:''),
+								'edit_right'			=> (isset($user['right'][4])?$user['right'][4]:''),
+								'delete_right'			=> (isset($user['right'][8])?$user['right'][8]:''),
+								'read_mask'				=> (isset($user['mask'][1])?$user['mask'][1]:''),
+								'add_mask'				=> (isset($user['mask'][2])?$user['mask'][2]:''),
+								'edit_mask'				=> (isset($user['mask'][4])?$user['mask'][4]:''),
+								'delete_mask'			=> (isset($user['mask'][8])?$user['mask'][8]:''),
+								'read_result'			=> (isset($user['result'][1])?$user['result'][1]:''),
+								'add_result'			=> (isset($user['result'][2])?$user['result'][2]:''),
+								'edit_result'			=> (isset($user['result'][4])?$user['result'][4]:''),
+								'delete_result'			=> (isset($user['result'][8])?$user['result'][8]:''),
+								'lang_right'			=> lang('right'),
+								'lang_mask'				=> lang('mask'),
+								'lang_result'			=> lang('result'),
+								'lang_read'				=> lang('Read'), 		//1
+								'lang_add'				=> lang('Add'), 		//2
+								'lang_edit'				=> lang('Edit'),		//4
+								'lang_delete'			=> lang('Delete'),		//8
+								'type'					=> 'users'
+							);
 					}
 				}
 
@@ -181,31 +181,31 @@
 					{
 						$processed[] = $group['account_id'];
 						$groups[] = array
-						(
-							'account_id'			=> $group['account_id'],
-							'lid'					=> $group['account_lid'],
-							'name'					=> $group['account_firstname'],
-							'read_right'			=> (isset($group['right'][1])?$group['right'][1]:''),
-							'add_right'				=> (isset($group['right'][2])?$group['right'][2]:''),
-							'edit_right'			=> (isset($group['right'][4])?$group['right'][4]:''),
-							'delete_right'			=> (isset($group['right'][8])?$group['right'][8]:''),
-							'read_mask'				=> (isset($group['mask'][1])?$group['mask'][1]:''),
-							'add_mask'				=> (isset($group['mask'][2])?$group['mask'][2]:''),
-							'edit_mask'				=> (isset($group['mask'][4])?$group['mask'][4]:''),
-							'delete_mask'			=> (isset($group['mask'][8])?$group['mask'][8]:''),
-							'read_result'			=> (isset($group['result'][1])?$group['result'][1]:''),
-							'add_result'			=> (isset($group['result'][2])?$group['result'][2]:''),
-							'edit_result'			=> (isset($group['result'][4])?$group['result'][4]:''),
-							'delete_result'			=> (isset($group['result'][8])?$group['result'][8]:''),
-							'lang_right'			=> lang('right'),
-							'lang_mask'				=> lang('mask'),
-							'lang_result'			=> lang('result'),
-							'lang_read'				=> lang('Read'), 		//1
-							'lang_add'				=> lang('Add'), 		//2
-							'lang_edit'				=> lang('Edit'),		//4
-							'lang_delete'			=> lang('Delete'),		//8
-							'type'					=> 'groups'
-						);
+							(
+								'account_id'			=> $group['account_id'],
+								'lid'					=> $group['account_lid'],
+								'name'					=> $group['account_firstname'],
+								'read_right'			=> (isset($group['right'][1])?$group['right'][1]:''),
+								'add_right'				=> (isset($group['right'][2])?$group['right'][2]:''),
+								'edit_right'			=> (isset($group['right'][4])?$group['right'][4]:''),
+								'delete_right'			=> (isset($group['right'][8])?$group['right'][8]:''),
+								'read_mask'				=> (isset($group['mask'][1])?$group['mask'][1]:''),
+								'add_mask'				=> (isset($group['mask'][2])?$group['mask'][2]:''),
+								'edit_mask'				=> (isset($group['mask'][4])?$group['mask'][4]:''),
+								'delete_mask'			=> (isset($group['mask'][8])?$group['mask'][8]:''),
+								'read_result'			=> (isset($group['result'][1])?$group['result'][1]:''),
+								'add_result'			=> (isset($group['result'][2])?$group['result'][2]:''),
+								'edit_result'			=> (isset($group['result'][4])?$group['result'][4]:''),
+								'delete_result'			=> (isset($group['result'][8])?$group['result'][8]:''),
+								'lang_right'			=> lang('right'),
+								'lang_mask'				=> lang('mask'),
+								'lang_result'			=> lang('result'),
+								'lang_read'				=> lang('Read'), 		//1
+								'lang_add'				=> lang('Add'), 		//2
+								'lang_edit'				=> lang('Edit'),		//4
+								'lang_delete'			=> lang('Delete'),		//8
+								'type'					=> 'groups'
+							);
 					}
 				}
 
@@ -213,27 +213,27 @@
 			}
 
 			$table_header[] = array
-			(
-				'lang_read'			=> lang('Read'), 	//1
-				'lang_add'			=> lang('Add'), 	//2
-				'lang_edit'			=> lang('Edit'),	//4
-				'lang_delete'		=> lang('Delete'),	//8
-				'lang_manager'		=> lang('Manager')	//16
-			);
+				(
+					'lang_read'			=> lang('Read'), 	//1
+					'lang_add'			=> lang('Add'), 	//2
+					'lang_edit'			=> lang('Edit'),	//4
+					'lang_delete'		=> lang('Delete'),	//8
+					'lang_manager'		=> lang('Manager')	//16
+				);
 
 
 			$link_data = array
-			(
-				'menuaction'		=> 'property.uiadmin.aclprefs',
-				'sort'				=> $this->sort,
-				'order'				=> $this->order,
-				'cat_id'			=> $this->cat_id,
-				'filter'			=> $this->filter,
-				'query'				=> $this->query,
-				'module'			=> $this->location,
-				'granting_group'	=> $this->granting_group,
-				'acl_app'			=> $acl_app
-			);
+				(
+					'menuaction'		=> 'property.uiadmin.aclprefs',
+					'sort'				=> $this->sort,
+					'order'				=> $this->order,
+					'cat_id'			=> $this->cat_id,
+					'filter'			=> $this->filter,
+					'query'				=> $this->query,
+					'module'			=> $this->location,
+					'granting_group'	=> $this->granting_group,
+					'acl_app'			=> $acl_app
+				);
 
 			if(!$this->location)
 			{
@@ -253,54 +253,54 @@
 			}
 
 			$data = array
-			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/preferences/index.php'),
-				'lang_save'						=> lang('save'),
-				'lang_done'						=> lang('done'),
-				'processed'						=> (isset($processed)?$processed:''),
-				'location'						=> $this->location,
+				(
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'					=> $GLOBALS['phpgw']->link('/preferences/index.php'),
+					'lang_save'						=> lang('save'),
+					'lang_done'						=> lang('done'),
+					'processed'						=> (isset($processed)?$processed:''),
+					'location'						=> $this->location,
 
-				'allow_allrows'					=> false,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records'					=> $num_records,
-				'all_records'					=> (isset($this->bo->total_records)?$this->bo->total_records:''),
-				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.aclprefs')),
-				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+					'allow_allrows'					=> false,
+					'start_record'					=> $this->start,
+					'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+					'num_records'					=> $num_records,
+					'all_records'					=> (isset($this->bo->total_records)?$this->bo->total_records:''),
+					'link_url'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.aclprefs')),
+					'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
-				'lang_groups'					=> lang('groups'),
-				'lang_users'					=> lang('users'),
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the permissions belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'						=> $this->bo->select_category_list('filter',$this->cat_id),
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'cat_id'						=> $this->cat_id,
-				'permission'					=> false,
-				'grant'							=> 1,
+					'lang_groups'					=> lang('groups'),
+					'lang_users'					=> lang('users'),
+					'lang_no_cat'					=> lang('no category'),
+					'lang_cat_statustext'			=> lang('Select the category the permissions belongs to. To do not use a category select NO CATEGORY'),
+					'select_name'					=> 'cat_id',
+					'cat_list'						=> $this->bo->select_category_list('filter',$this->cat_id),
+					'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'cat_id'						=> $this->cat_id,
+					'permission'					=> false,
+					'grant'							=> 1,
 
-				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_permission'		=> $table_header,
-				'values_groups'					=> (isset($groups)?$groups:''),
-				'values_users'					=> (isset($users)?$users:''),
-				'lang_no_location'				=> lang('No location'),
-				'lang_location_statustext'		=> lang('Select submodule'),
-				'select_name_location'			=> 'module',
-				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,true),
+					'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+					'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+					'query'							=> $this->query,
+					'lang_search'					=> lang('search'),
+					'table_header_permission'		=> $table_header,
+					'values_groups'					=> (isset($groups)?$groups:''),
+					'values_users'					=> (isset($users)?$users:''),
+					'lang_no_location'				=> lang('No location'),
+					'lang_location_statustext'		=> lang('Select submodule'),
+					'select_name_location'			=> 'module',
+					'location_list'					=> $this->bopreferences->select_location('filter',$this->location,true),
 
-				'is_admin'						=> $GLOBALS['phpgw_info']['user']['apps']['admin'],
-				'lang_group_statustext'			=> lang('Select the granting group. To do not use a granting group select NO GRANTING GROUP'),
-				'select_group_name'				=> 'granting_group',
-				'lang_no_group'					=> lang('No granting group'),
-				'group_list'					=> $this->bocommon->get_group_list('filter',$this->granting_group,$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
-				'lang_enable_inheritance'       => lang('enable inheritance'), 
-                'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
-			);
+					'is_admin'						=> $GLOBALS['phpgw_info']['user']['apps']['admin'],
+					'lang_group_statustext'			=> lang('Select the granting group. To do not use a granting group select NO GRANTING GROUP'),
+					'select_group_name'				=> 'granting_group',
+					'lang_no_group'					=> lang('No granting group'),
+					'group_list'					=> $this->bocommon->get_group_list('filter',$this->granting_group,$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
+					'lang_enable_inheritance'       => lang('enable inheritance'), 
+					'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
+				);
 
 			$appname	= lang('preferences');
 			$function_msg	= lang('set grants');
@@ -308,9 +308,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg . ': ' . $owner_name;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
-
 		}
 
 		function list_acl()
@@ -324,7 +322,7 @@
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('admin','nextmatchs',
-										'search_field'));
+				'search_field'));
 
 			$values 		= phpgw::get_var('values');
 			$r_processed	= phpgw::get_var('processed');
@@ -352,49 +350,49 @@
 					{
 						$processed[] = $user['account_id'];
 						$users[] = array
-						(
-							'account_id'				=> $user['account_id'],
-							'lid'						=> $user['account_lid'],
-							'name'						=> $user['account_firstname'] . ' ' . $user['account_lastname'] . ' [' . $user['account_lid'] . ']',
-							'read_right'				=> (isset($user['right'][1])?$user['right'][1]:''),
-							'add_right'					=> (isset($user['right'][2])?$user['right'][2]:''),
-							'edit_right'				=> (isset($user['right'][4])?$user['right'][4]:''),
-							'delete_right'				=> (isset($user['right'][8])?$user['right'][8]:''),
-							'manage_right'				=> (isset($user['right'][16])?$user['right'][16]:''),
-							'janitor_right'				=> (isset($user['right'][32])?$user['right'][32]:''),
-							'supervisor_right'			=> (isset($user['right'][64])?$user['right'][64]:''),
-							'budget_responsible_right'	=> (isset($user['right'][128])?$user['right'][128]:''),
-							'read_mask'					=> (isset($user['mask'][1])?$user['mask'][1]:''),
-							'add_mask'					=> (isset($user['mask'][2])?$user['mask'][2]:''),
-							'edit_mask'					=> (isset($user['mask'][4])?$user['mask'][4]:''),
-							'delete_mask'				=> (isset($user['mask'][8])?$user['mask'][8]:''),
-							'manage_mask'				=> (isset($user['mask'][16])?$user['mask'][16]:''),
-							'janitor_mask'				=> (isset($user['mask'][32])?$user['mask'][32]:''),
-							'supervisor_mask'			=> (isset($user['mask'][64])?$user['mask'][64]:''),
-							'budget_responsible_mask'	=> (isset($user['mask'][128])?$user['mask'][128]:''),
-							'read_result'				=> (isset($user['result'][1])?$user['result'][1]:''),
-							'add_result'				=> (isset($user['result'][2])?$user['result'][2]:''),
-							'edit_result'				=> (isset($user['result'][4])?$user['result'][4]:''),
-							'delete_result'				=> (isset($user['result'][8])?$user['result'][8]:''),
-							'manage_result'				=> (isset($user['result'][16])?$user['result'][16]:''),
-							'janitor_result'			=> (isset($user['result'][32])?$user['result'][32]:''),
-							'supervisor_result'			=> (isset($user['result'][64])?$user['result'][64]:''),
-							'budget_responsible_result'	=> (isset($user['result'][128])?$user['result'][128]:''),
-							'initials'					=> (isset($user['initials'])?$user['initials']:''),
-							'lang_right'				=> lang('right'),
-							'lang_mask'					=> lang('mask'),
-							'lang_result'				=> lang('result'),
-							'lang_read'					=> lang('Read'), 					//1
-							'lang_add'					=> lang('Add'), 					//2
-							'lang_edit'					=> lang('Edit'),					//4
-							'lang_delete'				=> lang('Delete'),					//8
-							'lang_manage'				=> lang('Manage'),					//16
-							'lang_janitor'				=> lang('Janitor'),					//32
-							'lang_supervisor'			=> lang('Supervisor'),				//64
-							'lang_budget_responsible'	=> lang('Budget Responsible'),		//128
-							'lang_initials'				=> lang('Initials'),
-							'type'						=> 'users'
-						);
+							(
+								'account_id'				=> $user['account_id'],
+								'lid'						=> $user['account_lid'],
+								'name'						=> $user['account_firstname'] . ' ' . $user['account_lastname'] . ' [' . $user['account_lid'] . ']',
+								'read_right'				=> (isset($user['right'][1])?$user['right'][1]:''),
+								'add_right'					=> (isset($user['right'][2])?$user['right'][2]:''),
+								'edit_right'				=> (isset($user['right'][4])?$user['right'][4]:''),
+								'delete_right'				=> (isset($user['right'][8])?$user['right'][8]:''),
+								'manage_right'				=> (isset($user['right'][16])?$user['right'][16]:''),
+								'janitor_right'				=> (isset($user['right'][32])?$user['right'][32]:''),
+								'supervisor_right'			=> (isset($user['right'][64])?$user['right'][64]:''),
+								'budget_responsible_right'	=> (isset($user['right'][128])?$user['right'][128]:''),
+								'read_mask'					=> (isset($user['mask'][1])?$user['mask'][1]:''),
+								'add_mask'					=> (isset($user['mask'][2])?$user['mask'][2]:''),
+								'edit_mask'					=> (isset($user['mask'][4])?$user['mask'][4]:''),
+								'delete_mask'				=> (isset($user['mask'][8])?$user['mask'][8]:''),
+								'manage_mask'				=> (isset($user['mask'][16])?$user['mask'][16]:''),
+								'janitor_mask'				=> (isset($user['mask'][32])?$user['mask'][32]:''),
+								'supervisor_mask'			=> (isset($user['mask'][64])?$user['mask'][64]:''),
+								'budget_responsible_mask'	=> (isset($user['mask'][128])?$user['mask'][128]:''),
+								'read_result'				=> (isset($user['result'][1])?$user['result'][1]:''),
+								'add_result'				=> (isset($user['result'][2])?$user['result'][2]:''),
+								'edit_result'				=> (isset($user['result'][4])?$user['result'][4]:''),
+								'delete_result'				=> (isset($user['result'][8])?$user['result'][8]:''),
+								'manage_result'				=> (isset($user['result'][16])?$user['result'][16]:''),
+								'janitor_result'			=> (isset($user['result'][32])?$user['result'][32]:''),
+								'supervisor_result'			=> (isset($user['result'][64])?$user['result'][64]:''),
+								'budget_responsible_result'	=> (isset($user['result'][128])?$user['result'][128]:''),
+								'initials'					=> (isset($user['initials'])?$user['initials']:''),
+								'lang_right'				=> lang('right'),
+								'lang_mask'					=> lang('mask'),
+								'lang_result'				=> lang('result'),
+								'lang_read'					=> lang('Read'), 					//1
+								'lang_add'					=> lang('Add'), 					//2
+								'lang_edit'					=> lang('Edit'),					//4
+								'lang_delete'				=> lang('Delete'),					//8
+								'lang_manage'				=> lang('Manage'),					//16
+								'lang_janitor'				=> lang('Janitor'),					//32
+								'lang_supervisor'			=> lang('Supervisor'),				//64
+								'lang_budget_responsible'	=> lang('Budget Responsible'),		//128
+								'lang_initials'				=> lang('Initials'),
+								'type'						=> 'users'
+							);
 					}
 				}
 
@@ -410,40 +408,40 @@
 					{
 						$processed[] = $group['account_id'];
 						$groups[] = array
-						(
-							'account_id'				=> $group['account_id'],
-							'lid'						=> $group['account_lid'],
-							'name'						=> $group['account_firstname'],
-							'read_right'				=> (isset($group['right'][1])?$group['right'][1]:''),
-							'add_right'					=> (isset($group['right'][2])?$group['right'][2]:''),
-							'edit_right'				=> (isset($group['right'][4])?$group['right'][4]:''),
-							'delete_right'				=> (isset($group['right'][8])?$group['right'][8]:''),
-							'manage_right'				=> (isset($group['right'][16])?$group['right'][16]:''),
-							'read_mask'					=> (isset($group['mask'][1])?$group['mask'][1]:''),
-							'add_mask'					=> (isset($group['mask'][2])?$group['mask'][2]:''),
-							'edit_mask'					=> (isset($group['mask'][4])?$group['mask'][4]:''),
-							'delete_mask'				=> (isset($group['mask'][8])?$group['mask'][8]:''),
-							'manage_mask'				=> (isset($group['mask'][16])?$group['mask'][16]:''),
-							'read_result'				=> (isset($group['result'][1])?$group['result'][1]:''),
-							'add_result'				=> (isset($group['result'][2])?$group['result'][2]:''),
-							'edit_result'				=> (isset($group['result'][4])?$group['result'][4]:''),
-							'delete_result'				=> (isset($group['result'][8])?$group['result'][8]:''),
-							'manage_result'				=> (isset($group['result'][16])?$group['result'][16]:''),
-				//			'initials'					=> (isset($group['initials'])?$group['initials']:''),
-							'lang_right'				=> lang('right'),
-							'lang_mask'					=> lang('mask'),
-							'lang_result'				=> lang('result'),
-							'lang_read'					=> lang('Read'), 		//1
-							'lang_add'					=> lang('Add'), 		//2
-							'lang_edit'					=> lang('Edit'),		//4
-							'lang_delete'				=> lang('Delete'),		//8
-							'lang_manage'				=> lang('Manage'),		//16
-							'lang_janitor'				=> lang('Janitor'),		//32
-							'lang_supervisor'			=> lang('Supervisor'),		//64
-							'lang_budget_responsible'	=> lang('Budget Responsible'),	//128
-							'lang_initials'				=> lang('Initials'),
-							'type'						=> 'groups'
-						);
+							(
+								'account_id'				=> $group['account_id'],
+								'lid'						=> $group['account_lid'],
+								'name'						=> $group['account_firstname'],
+								'read_right'				=> (isset($group['right'][1])?$group['right'][1]:''),
+								'add_right'					=> (isset($group['right'][2])?$group['right'][2]:''),
+								'edit_right'				=> (isset($group['right'][4])?$group['right'][4]:''),
+								'delete_right'				=> (isset($group['right'][8])?$group['right'][8]:''),
+								'manage_right'				=> (isset($group['right'][16])?$group['right'][16]:''),
+								'read_mask'					=> (isset($group['mask'][1])?$group['mask'][1]:''),
+								'add_mask'					=> (isset($group['mask'][2])?$group['mask'][2]:''),
+								'edit_mask'					=> (isset($group['mask'][4])?$group['mask'][4]:''),
+								'delete_mask'				=> (isset($group['mask'][8])?$group['mask'][8]:''),
+								'manage_mask'				=> (isset($group['mask'][16])?$group['mask'][16]:''),
+								'read_result'				=> (isset($group['result'][1])?$group['result'][1]:''),
+								'add_result'				=> (isset($group['result'][2])?$group['result'][2]:''),
+								'edit_result'				=> (isset($group['result'][4])?$group['result'][4]:''),
+								'delete_result'				=> (isset($group['result'][8])?$group['result'][8]:''),
+								'manage_result'				=> (isset($group['result'][16])?$group['result'][16]:''),
+					//			'initials'					=> (isset($group['initials'])?$group['initials']:''),
+								'lang_right'				=> lang('right'),
+								'lang_mask'					=> lang('mask'),
+								'lang_result'				=> lang('result'),
+								'lang_read'					=> lang('Read'), 		//1
+								'lang_add'					=> lang('Add'), 		//2
+								'lang_edit'					=> lang('Edit'),		//4
+								'lang_delete'				=> lang('Delete'),		//8
+								'lang_manage'				=> lang('Manage'),		//16
+								'lang_janitor'				=> lang('Janitor'),		//32
+								'lang_supervisor'			=> lang('Supervisor'),		//64
+								'lang_budget_responsible'	=> lang('Budget Responsible'),	//128
+								'lang_initials'				=> lang('Initials'),
+								'type'						=> 'groups'
+							);
 					}
 				}
 
@@ -453,65 +451,65 @@
 
 
 			$table_header[] = array
-			(
-				'sort_lid'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'account_lid',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
-														'cat_id'		=> $this->cat_id,
-														'query'			=> $this->query,
-														'module'		=> $this->location,
-														'submodule_id'	=> $this->submodule_id)
-										)),
-				'sort_lastname'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'account_lastname',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
-														'cat_id'		=> $this->cat_id,
-														'query'			=> $this->query,
-														'module'		=> $this->location,
-														'submodule_id'	=> $this->submodule_id)
-										)),
-				'sort_firstname'	=> $this->nextmatchs->show_sort_order(array
-										(
-											'sort'	=> $this->sort,
-											'var'	=> 'account_firstname',
-											'order'	=> $this->order,
-											'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
-														'cat_id'		=> $this->cat_id,
-														'query'			=> $this->query,
-														'module'		=> $this->location,
-														'submodule_id'	=> $this->submodule_id)
-										)),
+				(
+					'sort_lid'	=> $this->nextmatchs->show_sort_order(array
+					(
+						'sort'	=> $this->sort,
+						'var'	=> 'account_lid',
+						'order'	=> $this->order,
+						'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
+						'cat_id'		=> $this->cat_id,
+						'query'			=> $this->query,
+						'module'		=> $this->location,
+						'submodule_id'	=> $this->submodule_id)
+					)),
+					'sort_lastname'	=> $this->nextmatchs->show_sort_order(array
+					(
+						'sort'	=> $this->sort,
+						'var'	=> 'account_lastname',
+						'order'	=> $this->order,
+						'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
+						'cat_id'		=> $this->cat_id,
+						'query'			=> $this->query,
+						'module'		=> $this->location,
+						'submodule_id'	=> $this->submodule_id)
+					)),
+					'sort_firstname'	=> $this->nextmatchs->show_sort_order(array
+					(
+						'sort'	=> $this->sort,
+						'var'	=> 'account_firstname',
+						'order'	=> $this->order,
+						'extra'	=> array('menuaction'	=> 'property.uiadmin.list_acl',
+						'cat_id'		=> $this->cat_id,
+						'query'			=> $this->query,
+						'module'		=> $this->location,
+						'submodule_id'	=> $this->submodule_id)
+					)),
 
 
-				'lang_values'				=> lang('values'),
-				'lang_read'					=> lang('Read'), 				//1
-				'lang_add'					=> lang('Add'), 				//2
-				'lang_edit'					=> lang('Edit'),				//4
-				'lang_delete'				=> lang('Delete'),				//8
-				'lang_manager'				=> lang('Manager'),				//16
-				'lang_janitor'				=> lang('Janitor'),				//32
-				'lang_supervisor'			=> lang('Supervisor'),			//64
-				'lang_budget_responsible'	=> lang('Budget Responsible'),	//128
-				'lang_initials'				=> lang('Initials')
-			);
+					'lang_values'				=> lang('values'),
+					'lang_read'					=> lang('Read'), 				//1
+					'lang_add'					=> lang('Add'), 				//2
+					'lang_edit'					=> lang('Edit'),				//4
+					'lang_delete'				=> lang('Delete'),				//8
+					'lang_manager'				=> lang('Manager'),				//16
+					'lang_janitor'				=> lang('Janitor'),				//32
+					'lang_supervisor'			=> lang('Supervisor'),			//64
+					'lang_budget_responsible'	=> lang('Budget Responsible'),	//128
+					'lang_initials'				=> lang('Initials')
+				);
 
 			$link_data = array
-			(
-				'menuaction'=> 'property.uiadmin.list_acl',
-				'sort'		=> $this->sort,
-				'order'		=> $this->order,
-				'cat_id'	=> $this->cat_id,
-				'filter'	=> $this->filter,
-				'query'		=> $this->query,
-				'module'	=> $this->location
+				(
+					'menuaction'=> 'property.uiadmin.list_acl',
+					'sort'		=> $this->sort,
+					'order'		=> $this->order,
+					'cat_id'	=> $this->cat_id,
+					'filter'	=> $this->filter,
+					'query'		=> $this->query,
+					'module'	=> $this->location
 
-			);
+				);
 
 			if(!$this->location)
 			{
@@ -530,59 +528,58 @@
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
 			$data = array
-			(
-				'allrows'						=> $this->allrows,
-				'allow_allrows'					=> true,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
+				(
+					'allrows'						=> $this->allrows,
+					'allow_allrows'					=> true,
+					'start_record'					=> $this->start,
+					'record_limit'					=> $record_limit,
 
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'done_action'					=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'lang_save'						=> lang('save'),
-				'lang_done'						=> lang('done'),
-				'processed'						=> (isset($processed)?$processed:''),
-				'location'						=> $this->location,
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'done_action'					=> $GLOBALS['phpgw']->link('/admin/index.php'),
+					'lang_save'						=> lang('save'),
+					'lang_done'						=> lang('done'),
+					'processed'						=> (isset($processed)?$processed:''),
+					'location'						=> $this->location,
 
-				'num_records'					=> $num_records,
-				'all_records'					=> isset($this->bo->total_records) && $this->bo->total_records ? $this->bo->total_records : 0,
-				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+					'num_records'					=> $num_records,
+					'all_records'					=> isset($this->bo->total_records) && $this->bo->total_records ? $this->bo->total_records : 0,
+					'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
-				'lang_no_cat'					=> lang('no category'),
-				'lang_cat_statustext'			=> lang('Select the category the permissions belongs to. To do not use a category select NO CATEGORY'),
-				'select_name'					=> 'cat_id',
-				'cat_list'						=> $this->bo->select_category_list('filter',$this->cat_id),
-				'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'cat_id'						=> $this->cat_id,
-				'permission'					=> 1,
+					'lang_no_cat'					=> lang('no category'),
+					'lang_cat_statustext'			=> lang('Select the category the permissions belongs to. To do not use a category select NO CATEGORY'),
+					'select_name'					=> 'cat_id',
+					'cat_list'						=> $this->bo->select_category_list('filter',$this->cat_id),
+					'select_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'cat_id'						=> $this->cat_id,
+					'permission'					=> 1,
 
-				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
-				'lang_search'					=> lang('search'),
-				'table_header_permission'		=> $table_header,
-		//		'table_header_acl'				=> $table_header,
-		//		'values_acl'					=> $content,
-				'values_groups'					=> (isset($groups)?$groups:''),
-				'values_users'					=> (isset($users)?$users:''),
-				'lang_groups'					=> lang('groups'),
-				'lang_users'					=> lang('users'),
+					'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+					'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+					'query'							=> $this->query,
+					'lang_search'					=> lang('search'),
+					'table_header_permission'		=> $table_header,
+			//		'table_header_acl'				=> $table_header,
+			//		'values_acl'					=> $content,
+					'values_groups'					=> (isset($groups)?$groups:''),
+					'values_users'					=> (isset($users)?$users:''),
+					'lang_groups'					=> lang('groups'),
+					'lang_users'					=> lang('users'),
 
-				'lang_no_location'				=> lang('No location'),
-				'lang_location_statustext'		=> lang('Select submodule'),
-				'select_name_location'			=> 'module',
-				'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false),
-				'lang_enable_inheritance'       => lang('enable inheritance'), 
-                'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
-			);
+					'lang_no_location'				=> lang('No location'),
+					'lang_location_statustext'		=> lang('Select submodule'),
+					'select_name_location'			=> 'module',
+					'location_list'					=> $this->bopreferences->select_location('filter',$this->location,false),
+					'lang_enable_inheritance'       => lang('enable inheritance'), 
+					'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
+				);
 
 			$appname	= lang('permission');
 			$function_msg	= lang('set permission');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
 		}
 
@@ -611,48 +608,47 @@
 			{
 
 				$content[] = array
-				(
-					'descr' 	=> $fm_ids[$i]['descr'],
-					'value' 	=> $fm_ids[$i]['value'],
-					'remark' 	=> $fm_ids[$i]['remark'],
-					'key_id' 	=> $i
-				);
+					(
+						'descr' 	=> $fm_ids[$i]['descr'],
+						'value' 	=> $fm_ids[$i]['value'],
+						'remark' 	=> $fm_ids[$i]['remark'],
+						'key_id' 	=> $i
+					);
 			}
 
 			$table_header[] = array
-			(
-				'lang_select'		=> lang('Select'),
-				'lang_descr'		=> lang('Descr'),
-				'lang_value'		=> lang('Value'),
-				'lang_remark'		=> lang('Remark'),
-			);
+				(
+					'lang_select'		=> lang('Select'),
+					'lang_descr'		=> lang('Descr'),
+					'lang_value'		=> lang('Value'),
+					'lang_remark'		=> lang('Remark'),
+				);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.edit_id')),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'lang_submit'			=> lang('submit'),
-				'lang_save'				=> lang('Edit'),
-				'lang_add_statustext'	=> lang('Edit ID'),
-				'lang_done'				=> lang('done'),
-				'lang_done_statustext'	=> lang('Back to Admin'),
-				'lang_select'			=> lang('Select'),
-				'lang_descr'			=> lang('Descr'),
-				'lang_value'			=> lang('Value'),
-				'lang_remark'			=> lang('Remark'),
-				'id_table_header'		=> $table_header,
-				'id_values'				=> $content,
-			);
+				(
+					'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.edit_id')),
+					'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
+					'lang_submit'			=> lang('submit'),
+					'lang_save'				=> lang('Edit'),
+					'lang_add_statustext'	=> lang('Edit ID'),
+					'lang_done'				=> lang('done'),
+					'lang_done_statustext'	=> lang('Back to Admin'),
+					'lang_select'			=> lang('Select'),
+					'lang_descr'			=> lang('Descr'),
+					'lang_value'			=> lang('Value'),
+					'lang_remark'			=> lang('Remark'),
+					'id_table_header'		=> $table_header,
+					'id_values'				=> $content,
+				);
 
 			$appname	= lang('ID');
 			$function_msg	= lang('edit ID');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_id' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
 		}
 
@@ -732,11 +728,11 @@
 			foreach ( $group_list as $entry )
 			{
 				$groups_tts[] = array
-				(
-					'id'	=> $entry->id,
-					'name'	=> $entry->lid,
-					'selected' => $entry->id == $prefs['groupdefault']
-				);
+					(
+						'id'	=> $entry->id,
+						'name'	=> $entry->lid,
+						'selected' => $entry->id == $prefs['groupdefault']
+					);
 			}
 
 			$account_list = $acc->get_list('accounts',-1,'ASC','account_lastname');
@@ -746,80 +742,78 @@
 				if($entry->enabled == true)
 				{
 					$accounts_tts[] = array
-					(
-						'id'	=> $entry->id,
-						'name'	=> $entry->__toString(),
-						'selected' => $entry->id == $prefs['assigntodefault']
-					);
+						(
+							'id'	=> $entry->id,
+							'name'	=> $entry->__toString(),
+							'selected' => $entry->id == $prefs['assigntodefault']
+						);
 				}
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
-			(
-				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.contact_info')),
-				'done_action'					=> $GLOBALS['phpgw']->link('/admin/index.php'),
-				'lang_submit'					=> lang('submit'),
-				'lang_save'						=> lang('Edit'),
-				'lang_add_statustext'			=> lang('Edit ID'),
-				'lang_done'						=> lang('done'),
-				'lang_done_statustext'			=> lang('Back to Admin'),
+				(
+					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin.contact_info')),
+					'done_action'					=> $GLOBALS['phpgw']->link('/admin/index.php'),
+					'lang_submit'					=> lang('submit'),
+					'lang_save'						=> lang('Edit'),
+					'lang_add_statustext'			=> lang('Edit ID'),
+					'lang_done'						=> lang('done'),
+					'lang_done_statustext'			=> lang('Back to Admin'),
 
-				'lang_email_statustext'			=> lang('Enter the email-address for this user'),
+					'lang_email_statustext'			=> lang('Enter the email-address for this user'),
 
-				'lang_user'						=> lang('User'),
-				'lang_email'					=> lang('Email'),
-				'value_old_email'				=> $prefs['email'],
-				'value_email'					=> $prefs['email'],
+					'lang_user'						=> lang('User'),
+					'lang_email'					=> lang('Email'),
+					'value_old_email'				=> $prefs['email'],
+					'value_email'					=> $prefs['email'],
 
-				'lang_phone'					=> lang('Phone'),
-				'value_old_phone'				=> $prefs['cellphone'],
-				'value_phone'					=> $prefs['cellphone'],
+					'lang_phone'					=> lang('Phone'),
+					'value_old_phone'				=> $prefs['cellphone'],
+					'value_phone'					=> $prefs['cellphone'],
 
-				'lang_approval_from'			=> lang('Approval from'),
-				'value_old_approval_from'		=> $prefs['approval_from'],
-				'approval_from'					=> $this->bocommon->get_user_list('select',$prefs['approval_from'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
+					'lang_approval_from'			=> lang('Approval from'),
+					'value_old_approval_from'		=> $prefs['approval_from'],
+					'approval_from'					=> $this->bocommon->get_user_list('select',$prefs['approval_from'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-				'select_user_name'				=> 'approval_from',
-				'lang_approval_from_statustext'	=> lang('Select the users supervisor'),
+					'select_user_name'				=> 'approval_from',
+					'lang_approval_from_statustext'	=> lang('Select the users supervisor'),
 
-				'lang_default_vendor_category'	=> lang('default vendor category'),
-				'value_old_default_vendor_category'	=> $prefs['default_vendor_category'],
-				'vendor_category'				=> $cat_data['cat_list'],
+					'lang_default_vendor_category'	=> lang('default vendor category'),
+					'value_old_default_vendor_category'	=> $prefs['default_vendor_category'],
+					'vendor_category'				=> $cat_data['cat_list'],
 
-				'lang_default_tts_category'		=> lang('default ticket categories'),
-				'value_old_default_tts_category'	=> $prefs['tts_category'],
-				'tts_category'					=> $cat_data_tts['cat_list'],
+					'lang_default_tts_category'		=> lang('default ticket categories'),
+					'value_old_default_tts_category'	=> $prefs['tts_category'],
+					'tts_category'					=> $cat_data_tts['cat_list'],
 
-				'select_user_name'				=> 'approval_from',
-				'lang_default_vendor_category_statustext'=> lang('Select default vendor category'),
-				'lang_no_cat'					=> lang('No category'),
+					'select_user_name'				=> 'approval_from',
+					'lang_default_vendor_category_statustext'=> lang('Select default vendor category'),
+					'lang_no_cat'					=> lang('No category'),
 
 
-				'lang_user_statustext'			=> lang('Select the user to edit email'),
-				'select_user_name'				=> 'user_id',
-				'lang_no_user'					=> lang('No user'),
-				'value_user_id'					=> $user_id,
-				'user_list'						=> $this->bocommon->get_user_list('filter',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1, true),
-				'group_list_tts'				=> $groups_tts,
-				'account_list_tts'				=> $accounts_tts,
-				'lang_group_select'				=> lang('Default group TTS'),
-				'lang_account_select'			=> lang('Default assign to TTS'),
-				'value_old_assigntodefault'		=> $prefs['assigntodefault'],
-				'value_old_groupdefault'		=> $prefs['groupdefault'],
-				'lang_no_assigntodefault'		=> lang('no user'),
-				'lang_no_groupdefault'			=> lang('no group'),
-			);
+					'lang_user_statustext'			=> lang('Select the user to edit email'),
+					'select_user_name'				=> 'user_id',
+					'lang_no_user'					=> lang('No user'),
+					'value_user_id'					=> $user_id,
+					'user_list'						=> $this->bocommon->get_user_list('filter',$user_id,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1, true),
+					'group_list_tts'				=> $groups_tts,
+					'account_list_tts'				=> $accounts_tts,
+					'lang_group_select'				=> lang('Default group TTS'),
+					'lang_account_select'			=> lang('Default assign to TTS'),
+					'value_old_assigntodefault'		=> $prefs['assigntodefault'],
+					'value_old_groupdefault'		=> $prefs['groupdefault'],
+					'lang_no_assigntodefault'		=> lang('no user'),
+					'lang_no_groupdefault'			=> lang('no group'),
+				);
 
 			$appname	= lang('User contact info');
 			$function_msg	= lang('edit info');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('contact_info' => $data));
-		//	$GLOBALS['phpgw']->xslttpl->pp();
 			$this->save_sessiondata();
 		}
 	}
-

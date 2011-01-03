@@ -786,7 +786,7 @@
 					myLoading.hide();
 				}
 				values_ds = JSON.parse(o.responseText);
-				if(values_ds['sessionExpired'] == true)
+				if(values_ds && values_ds['sessionExpired'] == true)
 				{
 					window.alert('sessionExpired - please log in');
 					lightboxlogin();//defined i phpgwapi/templates/portico/js/base.js

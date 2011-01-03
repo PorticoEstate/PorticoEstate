@@ -42,17 +42,16 @@
 		var $cat_id;
 
 		var $public_functions = array
-		(
-			'read'				=> true,
-			'read_single'		=> true,
-			'save'				=> true,
-			'delete'			=> true,
-			'check_perms'		=> true
-		);
+			(
+				'read'				=> true,
+				'read_single'		=> true,
+				'save'				=> true,
+				'delete'			=> true,
+				'check_perms'		=> true
+			);
 
 		function property_botemplate($session=false)
 		{
-		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so 		= CreateObject('property.sotemplate');
 			$this->bocommon		= CreateObject('property.bocommon');
 
@@ -62,13 +61,13 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
-			$allrows= phpgw::get_var('allrows', 'bool');
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
+			$allrows	= phpgw::get_var('allrows', 'bool');
 			$chapter_id	= phpgw::get_var('chapter_id', 'int');
 
 			if ($start)
@@ -126,7 +125,7 @@
 			$this->start		= $data['start'];
 			$this->query		= $data['query'];
 			$this->filter		= $data['filter'];
-			$this->sort		= $data['sort'];
+			$this->sort			= $data['sort'];
 			$this->order		= $data['order'];
 			$this->cat_id		= $data['cat_id'];
 			$this->allrows		= $data['allrows'];
@@ -137,7 +136,7 @@
 		function read()
 		{
 			$template = $this->so->read(array('filter' => $this->filter,'start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows));
+				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -154,7 +153,7 @@
 		function read_template_hour($template_id)
 		{
 			$template = $this->so->read_template_hour(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
+				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
 			$this->total_records = $this->so->total_records;
 
 			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -239,4 +238,3 @@
 		}
 
 	}
-
