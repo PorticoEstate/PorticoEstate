@@ -145,7 +145,9 @@
                           label: "<en>" +_label.substring(4)+"</en>",
                           value: oData,
                           container: "divPeriodDropDown"+tmp_count,
-                          menu: [	{ text: Year-1 +"12", value: Year-1 +"12", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+                          menu: [
+                          		{ text: Year-1 +"11", value: Year-1 +"11", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+                          		{ text: Year-1 +"12", value: Year-1 +"12", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
                           		{ text: Year +"01", value: Year +"01", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
 							    { text:  Year +"02", value: Year +"02", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
 							    { text:  Year +"03", value: Year +"03", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
