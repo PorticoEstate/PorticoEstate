@@ -402,11 +402,9 @@
 													<xsl:value-of select="lang_mail"/>
 												</td>
 												<td  align="left">
-													<input type="text" name="to_email" value="{to_email}"  onMouseout="window.status='';return true;">
-														<xsl:attribute name="onMouseover">
-															<xsl:text>window.status='</xsl:text>
+													<input type="text" name="to_email" value="{to_email}">
+														<xsl:attribute name="title">
 															<xsl:value-of select="lang_to_email_address_statustext"/>
-															<xsl:text>'; return true;</xsl:text>
 														</xsl:attribute>
 													</input>
 												</td>
@@ -417,10 +415,8 @@
 												</td>
 												<td  align="left">
 													<input type="checkbox" name="update_email" value="true"  onMouseout="window.status='';return true;">
-														<xsl:attribute name="onMouseover">
-															<xsl:text>window.status='</xsl:text>
+														<xsl:attribute name="title">
 															<xsl:value-of select="lang_update_email_statustext"/>
-															<xsl:text>'; return true;</xsl:text>
 														</xsl:attribute>
 													</input>
 												</td>
@@ -437,6 +433,32 @@
 													</input>
 												</td>
 											</tr>
+											<tr>
+												<td class="th_text"  align="left">
+													<xsl:value-of select="php:function('lang', 'notify client by sms')" />
+												</td>
+												<td  align="left">
+													<table>
+													<tr>
+													<td>
+													<input type="checkbox" name="notify_client_by_sms" value="true">
+														<xsl:attribute name="title">
+															<xsl:value-of select="value_sms_client_order_notice"/>
+														</xsl:attribute>
+													</input>
+													</td>
+													<td>
+													<input type="text" name="to_sms_phone" value="{value_sms_phone}">
+														<xsl:attribute name="title">
+															<xsl:value-of select="value_sms_client_order_notice"/>
+														</xsl:attribute>
+													</input>
+													</td>
+													</tr>
+													</table>
+												</td>
+											</tr>
+
 											<tr>
 												<td class="th_text"  align="left">
 													<xsl:value-of select="php:function('lang', 'show calculated cost')" />
@@ -647,10 +669,8 @@
 									<br/>				
 									<xsl:choose>
 										<xsl:when test="ressursnr !=''">
-											<b>
 												<xsl:text>RessursNr: </xsl:text>
 												<xsl:value-of select="ressursnr"/>
-											</b>
 											<br/>
 										</xsl:when>
 									</xsl:choose>

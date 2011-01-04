@@ -1291,7 +1291,7 @@
 
 				$sms_data['heading'] = lang('Send the following SMS-message to %1 to update status for this order:',$config_sms->config_data['common']['gateway_number']);
 				$sms_data['message'] = 'status ' . $workorder_id . ' [' . lang('status code') .']';
-				$sms_data['status_code'][0]['name'] = '1 => ' . lang('closed');
+				$sms_data['status_code'][0]['name'] = '1 => ' . lang('performed');
 				$sms_data['status_code'][1]['name'] = '2 => ' . lang('No access');
 				$sms_data['status_code'][2]['name'] = '3 => ' . 'I arbeid';
 				$sms_data['status_code_text'] = lang('status code');
@@ -1540,6 +1540,22 @@ HTML;
 						$receipt['message'][]=array('msg' => $attachment_log);
 					}
 
+					if( phpgw::get_var('notify_client_by_sms', 'bool') 
+						&& isset($this->config->config_data['sms_client_order_notice']) 
+						&& $this->config->config_data['sms_client_order_notice']
+						&& (isset($project['contact_phone'])
+						&& $project['contact_phone']
+						|| phpgw::get_var('to_sms_phone')))
+					{
+						$to_sms_phone = phpgw::get_var('to_sms_phone');
+						$to_sms_phone = $to_sms_phone ? $to_sms_phone : $project['contact_phone'];
+						$project['contact_phone'] = $to_sms_phone;
+						
+						$sms	= CreateObject('sms.sms');
+						$sms->websend2pv($this->account,$to_sms_phone,$this->config->config_data['sms_client_order_notice']);
+						$historylog->add('MS',$workorder_id,$to_sms_phone);
+					}
+					
 					if( $this->boworkorder->order_sent_adress )
 					{
 						$action_params = array
@@ -1657,6 +1673,8 @@ HTML;
 					'lang_mail'							=> lang('E-Mail'),
 					'lang_update_email'					=> lang('Update email'),
 					'lang_update_email_statustext'		=> lang('Check to update the email-address for this vendor'),
+					'value_sms_client_order_notice'		=> isset($this->config->config_data['sms_client_order_notice']) ? $this->config->config_data['sms_client_order_notice'] : '',
+					'value_sms_phone'					=> $project['contact_phone'],
 					'lang_to_email_address_statustext'	=> lang('The address to which this order will be sendt'),
 					'to_email'							=> $to_email,
 					'email_list'						=> $email_list,

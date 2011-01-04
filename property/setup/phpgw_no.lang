@@ -957,7 +957,7 @@ list vendors per activity	property	no	List leverandør pr aktivitet
 list voucher	property	no	list underbilag
 list workorder	property	no	List arbeidsordre
 location	property	no	Lokalisering
-loc1_name	property	no	Navn
+loc1 name	property	no	Navn
 local files	property	no	Lokale filer
 location changed	property	no	Lokalisering er endret
 location code	property	no	Lokaliserings kode
@@ -1078,6 +1078,7 @@ no vendor	property	no	Leverandør ikke valgt
 no workorder budget	property	no	Ingen budsjett arbeidsordre/bestilling
 no workorder bugdet	property	no	Ingen arbeidsordrer er budsjettert
 no year	property	no	Ingen årstall
+notify client by sms	property	no	Varsle kunde via SMS
 ns3420	property	no	NS3420
 ns3420 description	property	no	NS3420 beskrivelse
 nullable	property	no	Kan være NULL
@@ -1121,6 +1122,7 @@ pdf	property	no	PDF
 per agreement	property	no	pr avtale
 per cent	property	no	Prosent
 percentage addition	property	no	prosentvis tillegg
+performed	property	no	Utført
 period	property	no	Periode
 permission	property	no	rettighet
 permissions	property	no	Rettigheter
@@ -1517,7 +1519,8 @@ send as pdf	property	no	Send som PDF
 send e-mail	property	no	Send epost
 send order	property	no	Send ordre
 Send pdf as attachment to email	property	no	Send PDF som vedlegg til epost
-sendt by email to	property	no	send med e-post til
+sent by email to	property	no	sendt med e-post til
+Sent by sms	property	no	sendt med SMS
 send the following sms-message to %1 to update status for this order:	property	no	Send følgende SMS-melding til %1 for å oppdatere status for denne ordren:
 send this order by email	property	no	send denne ordren med e-post
 send workorder	property	no	Send ordre

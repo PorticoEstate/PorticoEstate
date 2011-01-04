@@ -577,10 +577,13 @@
 				case 'A': $type = lang('Re-assigned'); break;
 				case 'P': $type = lang('Priority changed'); break;
 				case 'M':
-					$type = lang('Sendt by email to');
+					$type = lang('Sent by email to');
 					$_order_sent_adress = explode(' ',$value['new_value']);
 					$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
 					unset($_order_sent_adress);
+					break;
+				case 'MS':
+					$type = lang('Sent by sms');
 					break;
 				case 'B': $type = lang('Budget changed'); break;
 				case 'CO': $type = lang('Initial Coordinator'); break;
