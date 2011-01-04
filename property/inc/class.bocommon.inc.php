@@ -1602,15 +1602,15 @@
 
 			switch ($export_format)
 			{
-			case 'csv':
-				$this->csv_out($list,$name,$descr,$input_type);
-				break;
-			case 'excel':
-				$this->excel_out($list,$name,$descr,$input_type);
-				break;
-			case 'ods':
-				$this->ods_out($list,$name,$descr,$input_type);
-				break;
+				case 'csv':
+					$this->csv_out($list,$name,$descr,$input_type);
+					break;
+				case 'excel':
+					$this->excel_out($list,$name,$descr,$input_type);
+					break;
+				case 'ods':
+					$this->ods_out($list,$name,$descr,$input_type);
+					break;
 			}
 		}
 
