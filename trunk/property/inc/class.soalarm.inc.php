@@ -77,32 +77,35 @@
 
 		function read($data)
 		{
-			if(is_array($data))
+			$id			= isset($data['id']) && $data['id'] ? $data['id'] : 0;
+			$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter		= isset($data['filter']) ? $data['filter'] : '';
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows 	= isset($data['allrows']) ? $data['allrows'] : '';
+
+			if($order == 'undefined')
 			{
-				$id	= (isset($data['id'])?$data['id']:0);
-				$start	= (isset($data['start'])?$data['start']:0);
-				$filter	= (isset($data['filter'])?$data['filter']:'');
-				$query = (isset($data['query'])?$data['query']:'');
-				$sort = (isset($data['sort'])?$data['sort']:'DESC');
-				$order = (isset($data['order'])?$data['order']:'');
-				$allrows 		= (isset($data['allrows'])?$data['allrows']:'');
+				$order = '';
 			}
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod .= " ORDER BY $order $sort";
 			}
 			else
 			{
-				$ordermethod = ' order by id DESC';
+				$ordermethod = ' ORDER BY id DESC';
 			}
 
 			$where = 'WHERE';
+
+			$filtermethod = '';
 			if ($filter > 0)
 			{
-				$filtermethod .= " $where owner='$filter' ";
+				$filtermethod .= " $where owner='{$filter}' ";
 				$where = 'AND';
-
 			}
 
 			$id = $this->db->db_addslashes($id);
@@ -110,7 +113,7 @@
 			{
 				$filtermethod = "$where id $this->like '%$id%' AND id!='##last-check-run##'";
 			}
-			elseif (!$id)
+			else if (!$id)
 			{
 				$filtermethod = $where . ' next<='.time()." AND id!='##last-check-run##'";
 			}
