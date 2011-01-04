@@ -16,8 +16,9 @@
 	 * @package sms
 	 */
 
-	$status_code = array(
-		1 => 'closed',
+	$status_code = array
+	(
+		1 => 'utført',
 		2 => 'ikke_tilgang',
 		3 => 'i_arbeid',
 	);
@@ -29,10 +30,10 @@
 		$workorder_id 	= $param[0];
 		$status 	= $status_code[$param[1]];
 
-		$this->db->query("SELECT status FROM fm_workorder where id='$workorder_id'",__LINE__,__FILE__);
+		$this->db->query("SELECT status FROM fm_workorder where id='{$workorder_id}'",__LINE__,__FILE__);
 		if($this->db->next_record())
 		{
-			$this->db->query("UPDATE fm_workorder set status = '$status' WHERE id='$workorder_id'" ,__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_workorder set status = '{$status}' WHERE id='{$workorder_id}'" ,__LINE__,__FILE__);
 			$historylog	= CreateObject('property.historylog','workorder');
 	// temporary - fix this
 			$historylog->account = 6;
