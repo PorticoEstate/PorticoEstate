@@ -64,7 +64,7 @@
 
 			$this->start		= $this->bo->start;
 			$this->query		= $this->bo->query;
-			$this->sort		= $this->bo->sort;
+			$this->sort			= $this->bo->sort;
 			$this->order		= $this->bo->order;
 			$this->filter		= $this->bo->filter;
 			$this->method_id	= $this->bo->method_id;
@@ -230,28 +230,6 @@
 
 			foreach ($list as $alarm)
 			{
-				$times	= '';
-				$data	= '';
-
-				if(is_array($alarm['times']))
-				{
-					foreach ($alarm['times'] as $key => $value)
-					{
-						$times .= "{$key} => {$value} ";
-					}
-				}
-				else
-				{
-					$times = $GLOBALS['phpgw']->common->show_date($alarm['times']);
-				}
-				if(is_array($alarm['data']))
-				{
-					foreach ($alarm['data']as $key => $value)
-					{
-						$data .= "{$key} => {$value} ";
-					}
-				}
-
 				$link_edit				= '';
 				$lang_edit_statustext	= '';
 				$text_edit				= '';
@@ -267,15 +245,15 @@
 					$link_edit				= "-";
 				}
 
-				$check_box = "<input type=\"checkbox\" name=\"values[alarm][".$alarm[id]."]\" value=\"".$alarm[id]."\" class=\"myValuesForPHP\">";
+				$check_box = "<input type=\"checkbox\" name=\"values[alarm][".$alarm['id']."]\" value=\"".$alarm['id']."\" class=\"myValuesForPHP\">";
 
 				$content[] = array
 					(
 						'id'					=> $alarm['id'],
 						'next_run'				=> $GLOBALS['phpgw']->common->show_date($alarm['next']),
-						'times'					=> $times,
+						'times'					=> is_array($alarm['times']) ? print_r($alarm['times'],true) : $GLOBALS['phpgw']->common->show_date($alarm['times']),
 						'method'				=> $alarm['method'],
-						'data'					=> $data,
+						'data'					=> print_r($alarm['data'],true),
 						'enabled'				=> $alarm['enabled'],
 						'user'					=> $alarm['user'],
 						'check_box'				=> $check_box,

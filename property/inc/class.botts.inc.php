@@ -234,7 +234,7 @@
 				'H' => lang('Billing hours'),
 				'F' => lang('finnish date'),
 				'SC' => lang('Status changed'),
-				'M' => lang('Sendt by email to'),
+				'M' => lang('Sent by email to'),
 				'AC'=> lang('actual cost changed'),
 			);
 
@@ -579,14 +579,14 @@
 				case 'L': $type = lang('Location changed'); break;
 				case 'AC': $type = lang('actual cost changed'); break;
 				case 'M':
-					$type = lang('Sendt by email to');
+					$type = lang('Sent by email to');
 					$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
 					break;
 				default:
 					// nothing
 				}
 
-				//		if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
+		//		if ( $value['status'] == 'X' || $value['status'] == 'R' || (strlen($value['status']) == 2 && substr($value['new_value'], 0, 1) == 'C') ) // if custom status
 				if ( $value['status'] == 'X' || $value['status'] == 'R' || preg_match('/^C/i', $value['status']) || ( $value['status'] == 'R' && preg_match('/^C/i', $value['new_value']))) // if custom status
 				{
 					switch ($value['status'])

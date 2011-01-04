@@ -167,39 +167,49 @@
 			}
 		}
 
-		function column_list($selected = array(),$type_id='',$allrows='')
+		function column_list($selected = array())
 		{
 			if(!$selected)
 			{
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : '';
 			}
-			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = array();
 
-			$columns[] = array
+			$columns	= $this->get_column_list();
+			return $this->bocommon->select_multi_list($selected,$columns);
+		}
+
+		function get_column_list()
+		{
+			$columns = array();
+			$columns['ecodimb'] = array
+				(
+					'id'		=> 'ecodimb',
+					'name'		=> lang('accounting dim b'),
+					'sortable'	=> true
+				);
+			$columns['entry_date'] = array
 				(
 					'id' => 'entry_date',
 					'name'=> lang('entry date')
 				);
 
-			$columns[] = array
+			$columns['start_date'] = array
 				(
 					'id' => 'start_date',
 					'name'=> lang('start date')
 				);
-			$columns[] = array
+			$columns['end_date'] = array
 				(
 					'id' => 'end_date',
 					'name'=> lang('end date')
 				);
-			$columns[] = array
+			$columns['billable_hours'] = array
 				(
 					'id' => 'billable_hours',
 					'name'=> lang('billable hours')
 				);
 
-			$column_list=$this->bocommon->select_multi_list($selected,$columns);
-			return $column_list;
+			return $columns;
 		}
 
 		function next_id()
@@ -305,6 +315,11 @@
 						'id'	=> '8',
 						'name'	=> lang('vendor id')
 					),
+					array
+					(
+						'id'	=> '9',
+						'name'	=> lang('accounting dim b')
+					)
 				);
 			return $this->bocommon->select_list($selected,$criteria);
 		}
@@ -377,6 +392,14 @@
 					'front' => '',
 					'back' => ''
 				);
+			$criteria[9] = array
+				(
+					'field'	=> 'fm_workorder.ecodimb',
+					'type'	=> 'int',
+					'matchtype' => 'exact',
+					'front' => '',
+					'back' => ''
+				);
 
 			if($id)
 			{
@@ -409,14 +432,20 @@
 			$this->uicols	= $this->so->uicols;
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_columns'] : array();
 
-			foreach ($custom_cols as $col)
+			$column_list = $this->get_column_list();
+
+			foreach ($custom_cols as $col_id)
 			{
 				$this->uicols['input_type'][]	= 'text';
-				$this->uicols['name'][]			= $col;
-				$this->uicols['descr'][]		= lang(str_replace('_', ' ', $col));
-				$this->uicols['statustext'][]	= $col;
+				$this->uicols['name'][]			= $col_id;
+				$this->uicols['descr'][]		= $column_list[$col_id]['name'];
+				$this->uicols['statustext'][]	= $column_list[$col_id]['name'];
+				$this->uicols['exchange'][]		= false;
+				$this->uicols['align'][] 		= '';
+				$this->uicols['datatype'][]		= false;
+				$this->uicols['sortable'][]		= $column_list[$col_id]['sortable'];
 			}
-			//_debug_array($this->uicols);die();
+
 			foreach ($workorder as &$entry)
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
@@ -548,10 +577,13 @@
 				case 'A': $type = lang('Re-assigned'); break;
 				case 'P': $type = lang('Priority changed'); break;
 				case 'M':
-					$type = lang('Sendt by email to');
+					$type = lang('Sent by email to');
 					$_order_sent_adress = explode(' ',$value['new_value']);
 					$this->order_sent_adress = $_order_sent_adress[0]; // in case we want to resend the order as an reminder
 					unset($_order_sent_adress);
+					break;
+				case 'MS':
+					$type = lang('Sent by sms');
 					break;
 				case 'B': $type = lang('Budget changed'); break;
 				case 'CO': $type = lang('Initial Coordinator'); break;

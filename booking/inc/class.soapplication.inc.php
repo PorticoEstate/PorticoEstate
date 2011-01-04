@@ -98,6 +98,9 @@
 					$errors['from_'] = lang('Invalid from date');
 				}
 			}
+            if(strlen($entity['contact_name']) > 50) {
+                $errors['contact_name'] = lang('Contact information name is to long. max 50 characters');
+            }
 		}
 
 		function get_building_info($id)

@@ -137,6 +137,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				$cols .= ", project_group";
 				$cols_return[] 				= 'project_group';
@@ -149,6 +150,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ", fm_project_status.descr as status";
 				$cols_return[] 				= 'status';
@@ -161,6 +163,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				$cols.= ",$entity_table.entry_date";
 				$cols_return[] 				= 'entry_date';
@@ -168,6 +171,9 @@
 				$cols_return[] 				= 'start_date';
 				$cols.= ",$entity_table.end_date";
 				$cols_return[] 				= 'end_date';
+				$cols.= ",$entity_table.ecodimb";
+				$cols_return[] 				= 'ecodimb';
+
 /*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
@@ -178,6 +184,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 */
 				$cols.= ",$entity_table.name as name";
 				$cols_return[] 				= 'name';
@@ -190,6 +197,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols.= ",loc1_name";
 				$cols_return[] 				= 'loc1_name';
@@ -202,6 +210,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols.= ",account_lid as coordinator";
 				$cols_return[] 				= 'coordinator';
@@ -214,6 +223,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 				$cols.= ",(fm_project.budget + fm_project.reserve) as budget";
 				$cols_return[] 				= 'budget';
@@ -226,6 +236,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ',sum(fm_workorder.combined_cost) as combined_cost';
 				$cols_return[] = 'combined_cost';
@@ -238,6 +249,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ',(sum(fm_workorder.act_mtrl_cost) + sum(fm_workorder.act_vendor_cost)) as actual_cost';
 				$cols_return[] = 'actual_cost';
@@ -250,9 +262,11 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
+				$uicols['sortable'][]		= '';
 
 				$cols .= ',planned_cost';
 				$cols_return[] = 'planned_cost';
+/*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'planned_cost';
 				$uicols['descr'][]			= lang('planned cost');
@@ -262,7 +276,8 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= 'myFormatCount2';
 				$uicols['classname'][]		= 'rightClasss';
-
+				$uicols['sortable'][]		= '';
+*/
 				$cols.= ",$entity_table.user_id";
 
 				$cols .= ',sum(fm_workorder.billable_hours) as billable_hours';
@@ -375,7 +390,7 @@
 			}
 
 			$group_method = ' GROUP BY fm_project_status.descr,loc1_name,fm_project.location_code,fm_project.id,fm_project.entry_date,fm_project.start_date,fm_project.end_date,'
-				. 'fm_project.name,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
+				. 'fm_project.name,fm_project.ecodimb,phpgw_accounts.account_lid,fm_project.user_id,fm_project.address,'
 				. 'fm_project.budget,fm_project.reserve,planned_cost,project_group';
 
 
