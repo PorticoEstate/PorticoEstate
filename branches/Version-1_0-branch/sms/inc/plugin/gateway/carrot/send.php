@@ -29,7 +29,7 @@
 		function gw_send_sms($mobile_sender,$sms_sender,$sms_to,$sms_msg,$gp_code="",$uid="",$smslog_id="",$flash=false)
 		{
 			$result = array();
-			$sms_msg = utf8_decode($sms_msg);
+//			$sms_msg = utf8_decode($sms_msg);
 			
 			$sms_to = ltrim($sms_to, '+');
 			

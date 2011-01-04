@@ -1230,6 +1230,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= '';
 
 			}
 /*
@@ -1270,6 +1271,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				for ($i=2;$i<($type_id+1);$i++)
 				{
@@ -1283,7 +1285,7 @@
 					$uicols['datatype'][]		= '';
 					$uicols['formatter'][]		= '';
 					$uicols['classname'][]		= '';
-
+					$uicols['sortable'][]		= '';
 				}
 			}
 
@@ -1300,6 +1302,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 			}
 
 			if($uicol_address)
@@ -1313,6 +1316,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= true;
 			}
 
 			$config_count	= count($config);
@@ -1335,6 +1339,7 @@
 						$uicols['datatype'][]		= '';
 						$uicols['formatter'][]		= '';
 						$uicols['classname'][]		= '';
+						$uicols['sortable'][]		= true;
 
 						$cols_return[] 				= 'street_number';
 						$uicols['input_type'][]		= 'hidden';
@@ -1346,7 +1351,7 @@
 						$uicols['datatype'][]		= '';
 						$uicols['formatter'][]		= '';
 						$uicols['classname'][]		= '';
-
+						$uicols['sortable'][]		= '';
 
 						$cols_return[] 				= $config[$i]['column_name'];
 						$uicols['input_type'][]		= 'hidden';
@@ -1358,6 +1363,7 @@
 						$uicols['datatype'][]		= '';
 						$uicols['formatter'][]		= '';
 						$uicols['classname'][]		= '';
+						$uicols['sortable'][]		= '';
 
 						if($lookup)
 						{
@@ -1379,6 +1385,7 @@
 						$uicols['datatype'][]		= '';
 						$uicols['formatter'][]		= '';
 						$uicols['classname'][]		= '';
+						$uicols['sortable'][]		= '';
 
 						if($lookup)
 						{
@@ -1595,15 +1602,15 @@
 
 			switch ($export_format)
 			{
-			case 'csv':
-				$this->csv_out($list,$name,$descr,$input_type);
-				break;
-			case 'excel':
-				$this->excel_out($list,$name,$descr,$input_type);
-				break;
-			case 'ods':
-				$this->ods_out($list,$name,$descr,$input_type);
-				break;
+				case 'csv':
+					$this->csv_out($list,$name,$descr,$input_type);
+					break;
+				case 'excel':
+					$this->excel_out($list,$name,$descr,$input_type);
+					break;
+				case 'ods':
+					$this->ods_out($list,$name,$descr,$input_type);
+					break;
 			}
 		}
 

@@ -245,7 +245,7 @@
 		{
 			if(!$method)
 			{
-				$method = 'property' .'.boalarm.send_alarm';
+				$method = 'property.boalarm.send_alarm';
 			}
 //			echo "<p>save_alarm(event_id=$event_id, alarm="; print_r($alarm); echo ")</p>\n";
 
