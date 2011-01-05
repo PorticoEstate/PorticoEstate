@@ -887,10 +887,6 @@
 					'lang_no_user'						=> lang('Select coordinator'),
 					'user_list'							=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-					'status_list'						=> $this->boproject->select_status_list('select',$project_values['status']),
-					'lang_no_status'					=> lang('Select status'),
-					'lang_status'						=> lang('Status'),
-
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
 					'lang_contact_phone'				=> lang('Contact phone'),
@@ -1167,9 +1163,7 @@
 					'lang_no_user'						=> lang('Select coordinator'),
 					'user_list'							=> $this->bocommon->get_user_list('select',$project_values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
 
-					'status_list'						=> $this->boproject->select_status_list('select',$project_values['status']),
 					'lang_no_status'					=> lang('Select status'),
-					'lang_status'						=> lang('Status'),
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 

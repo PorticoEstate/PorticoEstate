@@ -584,7 +584,8 @@
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
 			'deadline'			=> '',
-			'created_by'		=> $accound_id
+			'created_by'		=> $accound_id,
+			'allrows'			=> true
 		);
 
 		$obj = CreateObject('property.sopending_action');
@@ -610,7 +611,8 @@
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
 			'deadline'			=> '',
-			'created_by'		=> $accound_id
+			'created_by'		=> $accound_id,
+			'allrows'			=> true
 		);
 
 		$pending_approvals = $obj->get_pending_action($action_params);
@@ -634,7 +636,8 @@
 			'responsible_type'  => 'user',
 			'action'			=> 'approval',
 			'deadline'			=> '',
-			'created_by'		=> $accound_id
+			'created_by'		=> $accound_id,
+			'allrows'			=> true
 		);
 
 		$pending_approvals = $obj->get_pending_action($action_params);
@@ -704,6 +707,7 @@
 			'action'			=> 'approval',
 			'deadline'			=> '',
 			'created_by'		=> '',
+			'allrows'			=> true
 		);
 
 		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
@@ -731,6 +735,7 @@
 			'action'			=> 'approval',
 			'deadline'			=> '',
 			'created_by'		=> '',
+			'allrows'			=> true
 		);
 
 		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
@@ -756,6 +761,7 @@
 			'action'			=> 'approval',
 			'deadline'			=> '',
 			'created_by'		=> '',
+			'allrows'			=> true
 		);
 
 		$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
@@ -827,6 +833,7 @@
 			'action'			=> 'remind',
 			'deadline'			=> '',
 			'created_by'		=> $accound_id,
+			'allrows'			=> true
 		);
 
 		$pending_reminder = execMethod('property.sopending_action.get_pending_action', $action_params);

@@ -770,26 +770,16 @@
 					</xsl:choose>
 				</td>
 				<td>
-					<xsl:choose>
-						<xsl:when test="charge_tenant='1'">
-							<input type="checkbox" name="values[charge_tenant]" value="1" checked="checked" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_charge_tenant_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</xsl:when>
-						<xsl:otherwise>
-							<input type="checkbox" name="values[charge_tenant]" value="1"  onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_charge_tenant_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
-								</xsl:attribute>
-							</input>
-						</xsl:otherwise>
-					</xsl:choose>
+					<input type="checkbox" name="values[charge_tenant]" value="1">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_charge_tenant_statustext"/>
+						</xsl:attribute>
+						<xsl:if test="charge_tenant = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
 				</td>
 			</tr>
 			<tr>
