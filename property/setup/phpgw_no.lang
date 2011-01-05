@@ -477,6 +477,7 @@ delete voucher	property	no	Slett bilag
 delete workorder	property	no	slett arbeidsordre
 delivered	property	no	Levert
 delivery address	property	no	Leveringsadresse
+deposit claim	property	no	Krav mot depositum
 description	property	no	Beskrivelse
 description order	property	no	Bestilling til leverandør
 descr	property	no	Beskrivelse
@@ -976,6 +977,7 @@ lookup template	property	no	Slå opp standardbeskrivelser
 lookup tenant	property	no	Slå opp leietaker
 lowest	property	no	Lavest
 mailing method is not chosen! (admin section)	property	no	Mail metode er ikke valgt! (admin seksjon)
+main claim	property	no	Hovedkrav
 make order	property	no	Lag bestilling
 manage	property	no	Forvalte
 manage groups	property	no	Administrere grupper

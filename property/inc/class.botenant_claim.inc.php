@@ -148,7 +148,7 @@
 			}
 			else
 			{
-				return;
+				return array();
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('status_' . $format));
