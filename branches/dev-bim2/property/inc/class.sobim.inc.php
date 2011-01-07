@@ -1,6 +1,6 @@
 <?php
 
-
+//phpgw::import_class('phpgwapi.datetime');  // just a test import
 
 
 interface sobim {
@@ -21,6 +21,7 @@ interface sobim {
 	public function deleteBimItem($guid);
 	public function checkIfBimItemExists($guid);
 	public function updateBimItem($bimItem);
+	public function getBimItemAttributeValue($bimItemGuid, $attribute);
 }
 class sobim_impl implements sobim
 {
@@ -55,7 +56,7 @@ class sobim_impl implements sobim
 					'FROM public.fm_bim_data,  public.fm_bim_type '.
 					'WHERE  fm_bim_data.type = fm_bim_type.id ' .
         			'AND fm_bim_data.guid =\''.$bimObjectGuid.'\'';
-		$this->db->query($sql);
+		$this->db->query($sql,__LINE__,__FILE__);
 		if($this->db->num_rows() == 0) {
 			throw new Exception('Item not found!');
 		} else {
@@ -76,7 +77,11 @@ class sobim_impl implements sobim
 			return $this->db->num_rows();
 		}
 	}
-	
+	/*
+	 * Checks if the bim item exists
+	 * @param string GUID
+	 * @return boolean
+	 */
 	public function checkIfBimItemExists($guid) {
 		$resultAlias = 'test_item_count';
 		$sql = "SELECT count(id) as $resultAlias from public.".self::bimItemTable." where guid = '$guid'";
@@ -105,11 +110,43 @@ class sobim_impl implements sobim
 		if(!$this->checkIfBimItemExists($bimItem->getGuid())) {
 			throw new Exception("Item does not exist!");
 		}
-		$sql = "Update ".self::bimItemTable." set xml_representation='$bimItem->getXml()' where guid='".$bimItem->getGuid()."'";
+		$sql = "Update ".self::bimItemTable." set xml_representation='".$bimItem->getXml()."' where guid='".$bimItem->getGuid()."'";
+		
         if(is_null($this->db->query($sql,__LINE__,__FILE__) )){
 			throw new Exception("Error updating xml of bim item!");
 		} else {
 			return (bool)$this->db->num_rows();
+		}
+	}
+	/*
+	 * Searches the xml representation and returns the values of any attributes that have the specified name
+	 * If there are multiple elements with the same name, all of their value's will be returned
+	 * Note: the name can be written in xpath format in relation to it's parent, so instead of 'name',
+	 * you could write 'attributes/name'
+	 * @access public
+	 * @param string $bimItemGuid the guid of the item
+	 * @param string $attribute the name of the attribute
+	 * @throws Exception if nothing is found
+	 * $return array results
+	 */
+	public function getBimItemAttributeValue($bimItemGuid, $attribute) {
+		$columnAlias = "attribute_values";
+		//$sql = "select xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from fm_bim_data where guid='$bimItemGuid'))";
+		$sql = "select array_to_string(xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from fm_bim_data where guid='$bimItemGuid')), ',') as $columnAlias";
+		$this->db->query($sql,__LINE__,__FILE__);
+		if($this->db->num_rows() == 0) {
+			throw new Exception('Error!');
+		} else {
+			$this->db->next_record();
+			$result = $this->db->f($columnAlias);
+			return preg_split('/,/', $result);
+			//$match; // xpath result from database will look like: '{data1, data2, data3}', or '{}' for no results
+			//preg_match('/^\{(.*)\}$/', $result, $match);
+			/*if(!$match[1]) {
+				throw new Exception('Attribute not found!');
+			} else {
+				return preg_split('/,/', $match[1]);
+			}*/
 		}
 	}
 

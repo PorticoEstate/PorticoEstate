@@ -29,6 +29,7 @@ class TestSObim extends PHPUnit_Framework_TestCase
 	private $bimItemTableName = 'fm_bim_data';
 	private $projectGuid;
 	private $projectType= 'ifcprojecttest';
+	private $newProjectName = 'New_project name';
 	private $projectXml;
 	private $buildingStorey1Guid;
 	private $buildingStorey2Guid;
@@ -97,7 +98,9 @@ class TestSObim extends PHPUnit_Framework_TestCase
 	public function testDb(){
 		$this->assertNotNull($this->db);
 	}
-	
+	/*
+	 * @depends testDb
+	 */
 	public function testGetAll() {
 		$sobim = new sobim_impl($this->db);
 		$bimItems = $sobim->getAll();
@@ -111,42 +114,71 @@ class TestSObim extends PHPUnit_Framework_TestCase
 			
 		}
 	}
-	
+	/*
+	 * @depends testGetAll
+	 */
 	public function testGetBimItem() {
 		$sobim = new sobim_impl($this->db);
-		/* @var $bimItem BimItem */
+		/* @var $bimItem BimItem */  
 		$bimItem = $sobim->getBimItem($this->projectGuid);
-		var_dump($bimItem);
+		
 		$this->assertNotNull($bimItem);
 		$bimItem->setDatabaseId(0);
 		$localBimItem = new BimItem(0, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
 		$this->assertEquals($localBimItem, $bimItem);
 	}
-	
+	/*
+	 * @depends testGetBimItem
+	 */
 	public function testIfBimItemExists() {
 		$sobim = new sobim_impl($this->db);
 		$this->assertTrue($sobim->checkIfBimItemExists($this->projectGuid));
 	}
-	
+	/*
+	 * @depends testIfBimItemExists
+	 */
 	public function testDeleteBimItem() {
 		$sobim = new sobim_impl($this->db);
 		$this->assertEquals(1, $sobim->deleteBimItem($this->projectGuid));
 	}
-	
+	/*
+	 * @depends testDeleteBimItem
+	 */
 	public function testAddBimItem() {
 		$sobim = new sobim_impl($this->db);
 		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
 		$this->assertEquals(1, $sobim->addBimItem($itemToBeAdded));
 	}
-	
+	/*
+	 * @depends testAddBimItem
+	 */
 	public function testUpdateBimItem() {
 		$sobim = new sobim_impl($this->db);
 		$bimItem = $sobim->getBimItem($this->projectGuid);
 		$xml = new SimpleXMLElement($bimItem->getXml());
-		$xml->attributes->name = "new name";
+		$xml->attributes->name = $this->newProjectName;
+		
 		$bimItem->setXml($xml->asXML());
 		
 		$this->assertTrue($sobim->updateBimItem($bimItem));
 	}
-	
+	public function testExistingAttributeValue() {
+		$sobim = new sobim_impl($this->db);
+		try {
+			$result = $sobim->getBimItemAttributeValue($this->projectGuid, "name");
+			$this->assertTrue(in_array($this->newProjectName, $result));
+		} catch (Exception $e) {
+			$this->fail($e);
+		}
+	}
+	public function testNonExistingAttributeValue() {
+		$sobim = new sobim_impl($this->db);
+		try {
+			$result = $sobim->getBimItemAttributeValue($this->projectGuid, "nonExisting");
+			var_dump($result);
+			$this->assertFalse(count($result) > 0);
+		} catch (Exception $e) {
+			$this->assertTrue(true);
+		}
+	}
 }
