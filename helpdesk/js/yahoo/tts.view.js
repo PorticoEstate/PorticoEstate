@@ -58,42 +58,6 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 	}
 
 
-	function SmsCountKeyUp(maxChar)
-	{
-		var msg  = document.getElementsByName("values[response_text]")[0];
-	    var left = document.forms.form.charNumberLeftOutput;
-	    var smsLenLeft = maxChar  - msg.value.length;
-	    if (smsLenLeft >= 0) 
-	    {
-			left.value = smsLenLeft;
-	    } 
-	    else 
-	    {
-			var msgMaxLen = maxChar;
-			left.value = 0;
-			msg.value = msg.value.substring(0, msgMaxLen);
-	    }
-	}
-
-	function SmsCountKeyDown(maxChar)
-	{
-		var msg  = document.getElementsByName("values[response_text]")[0];
-	    var left = document.forms.form.charNumberLeftOutput;
-	    var smsLenLeft = maxChar  - msg.value.length;
-	    if (smsLenLeft >= 0) 
-	    {
-			left.value = smsLenLeft;
-	    } 
-	    else 
-	    {
-			var msgMaxLen = maxChar;
-			left.value = 0; 
-			msg.value = msg.value.substring(0, msgMaxLen);
-	    }
-	}
-
-
-
 	this.fetch_vendor_email=function()
 	{
 //			formObject = document.body.getElementsByTagName('form');

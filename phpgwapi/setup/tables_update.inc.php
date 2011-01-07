@@ -2843,3 +2843,24 @@
 		}
 	}
 
+
+	$test[] = '0.9.17.531';
+	/**
+	* Add publishing flag to history log
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_531()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_history_log','publish',array('type' => 'int','precision' => 2,'nullable' => True));
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.532';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

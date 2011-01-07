@@ -1436,6 +1436,66 @@
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
 				break;
+
+			case 'helpdesk_status':
+				// the helpdesk app
+				$info = array
+					(
+						'table' 			=> 'phpgw_helpdesk_status',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
+								'name' => 'color',
+								'descr' => lang('color'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('event action'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::helpdesk::ticket_status'
+					);
+				break;
 			case 'pending_action_type':
 				$info = array
 					(
@@ -1497,6 +1557,48 @@
 						'name'				=> lang('order template'),
 						'acl_location' 		=> '.ticket.order',
 						'menu_selection'	=> 'property::helpdesk::order_template',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> true
+					);
+
+				break;
+			case 'response_template':
+
+				$info = array
+					(
+						'table' 			=> 'fm_response_template',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('response template'),
+						'acl_location' 		=> '.ticket',
+						'menu_selection'	=> 'property::helpdesk::response_template',
 						'default'			=> array
 						(
 							'user_id' 		=> array('add'	=> '$this->account'),

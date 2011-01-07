@@ -314,6 +314,10 @@
 			{
 				$name = 'workorder';
 			}
+			else if($name == 'helpdesk')
+			{
+				$name = 'workorder';
+			}
 			$this->db->query("SELECT value FROM fm_idgenerator WHERE name='{$name}'");
 			$this->db->next_record();
 			$next_id = $this->db->f('value') +1;

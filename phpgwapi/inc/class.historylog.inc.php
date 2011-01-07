@@ -15,10 +15,10 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class historylog
+	class phpgwapi_historylog
 	{
 		var $db;
-		var $location_id;
+		protected $location_id;
 		var $template;
 		var $nextmatchs;
 		var $types = array(
@@ -28,7 +28,7 @@
 		);
 		var $alternate_handlers = array();
 
-		function historylog($appname, $location = '.')
+		function __construct($appname, $location = '.')
 		{
 			if (! $appname)
 			{
@@ -50,12 +50,20 @@
 		{
 			if ($new_value != $old_value)
 			{
-				$this->db->query("INSERT INTO phpgw_history_log (history_record_id,"
-					. "location_id,history_owner,history_status,history_new_value,history_old_value,history_timestamp) "
-					. "VALUES ('".(int)$record_id."'," . $this->location_id . ",'"
-					. $GLOBALS['phpgw_info']['user']['account_id'] . "','$status','"
-					. $this->db->db_addslashes($new_value) . "','" . $this->db->db_addslashes($old_value) . "','" . date($this->db->datetime_format())
-					. "')",__LINE__,__FILE__);
+
+				$value_set = array
+				(
+					'history_record_id'	=> (int)$record_id,
+					'location_id'		=> $this->location_id,
+					'history_owner'		=> $GLOBALS['phpgw_info']['user']['account_id'],
+					'history_status'	=> $status,
+					'history_new_value'	=> $this->db->db_addslashes($new_value),
+					'history_old_value'	=> $this->db->db_addslashes($old_value),
+					'history_timestamp'	=> date($this->db->datetime_format())
+				);
+
+				$this->db->query( 'INSERT INTO phpgw_history_log (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES (' 
+				. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
 			}
 		}
 
@@ -108,14 +116,15 @@
 			{
 				$return_values[] = array
 				(
-					'id'         => $this->db->f('history_id'),
-					'record_id'  => $this->db->f('history_record_id'),
-					'owner'      => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
-//					'status'     => lang($this->types[$this->db->f('history_status')]),
-					'status'     => str_replace(' ','',$this->db->f('history_status')),
-					'new_value'  => htmlspecialchars_decode($this->db->f('history_new_value',true)),
-					'old_value'  => htmlspecialchars_decode($this->db->f('history_old_value',true)),
-					'datetime'   => $this->db->from_timestamp($this->db->f('history_timestamp'))
+					'id'		=> $this->db->f('history_id'),
+					'record_id'	=> $this->db->f('history_record_id'),
+					'owner'		=> $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
+//					'status'	=> lang($this->types[$this->db->f('history_status')]),
+					'status'	=> str_replace(' ','',$this->db->f('history_status')),
+					'new_value'	=> htmlspecialchars_decode($this->db->f('history_new_value',true)),
+					'old_value'	=> htmlspecialchars_decode($this->db->f('history_old_value',true)),
+					'datetime'	=> $this->db->from_timestamp($this->db->f('history_timestamp')),
+					'publish'	=> $this->db->f('publish')
 				);
 			}
 			return $return_values;
