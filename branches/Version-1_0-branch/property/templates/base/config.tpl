@@ -343,6 +343,16 @@
 		</tr>
 
 		<tr class="row_off">
+			<td>{lang_send_response_TTS}.</td>
+			<td>
+				<select name="newsettings[tts_send_response]">
+					<option value="" {selected_tts_send_response_}>NO</option>
+					<option value="1" {selected_tts_send_response_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+
+		<tr class="row_off">
 			<td>{lang_Ask_for_workorder_approval_by_e-mail}.</td>
 			<td>
 				<select name="newsettings[workorder_approval]">

@@ -4801,3 +4801,40 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.602 to 0.9.17.603
+	* Add templates to response from helpdesk
+	* 
+	*/
+
+	$test[] = '0.9.17.602';
+	function property_upgrade0_9_17_602()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_response_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'content' => array('type' => 'text','nullable' => True),
+					'public' => array('type' => 'int', 'precision' => 2,'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.603';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

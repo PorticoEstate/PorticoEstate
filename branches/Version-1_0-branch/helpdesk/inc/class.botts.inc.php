@@ -1,6 +1,6 @@
 <?php
 	/**
-	* phpGroupWare - property: a Facilities Management System.
+	* phpGroupWare - helpdesk: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
 	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
@@ -22,17 +22,17 @@
 	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
+	* @package helpdesk
 	* @subpackage helpdesk
- 	* @version $Id$
+ 	* @version $Id: class.botts.inc.php 6728 2011-01-04 13:20:59Z sigurdne $
 	*/
 
 	/**
 	 * Description
-	 * @package property
+	 * @package helpdesk
 	 */
 
-	class property_botts
+	class helpdesk_botts
 	{
 		var $start;
 		var $query;
@@ -58,14 +58,14 @@
 				'save'			=> true,
 			);
 
-		function property_botts($session=false)
+		function helpdesk_botts($session=false)
 		{
-			$this->so 					= CreateObject('property.sotts');
+			$this->so 					= CreateObject('helpdesk.sotts');
 			$this->bocommon 			= CreateObject('property.bocommon');
 			$this->historylog			= & $this->so->historylog;
-			$this->config				= CreateObject('phpgwapi.config','property');
+			$this->config				= CreateObject('phpgwapi.config','helpdesk');
 			$this->dateformat			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$this->cats					= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+			$this->cats					= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket');
 			$this->cats->supress_info	= true;
 			$this->acl_location			= $this->so->acl_location;
 
@@ -139,7 +139,7 @@
 		{
 			if(!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : '';
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : '';
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = array();
@@ -235,7 +235,6 @@
 				'F' => lang('finnish date'),
 				'SC' => lang('Status changed'),
 				'M' => lang('Sent by email to'),
-				'MS' => lang('Sent by sms'),
 				'AC'=> lang('actual cost changed'),
 			);
 
@@ -256,7 +255,7 @@
 
 			if(!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : $prioritylevels;
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['prioritydefault'] : $prioritylevels;
 			}
 
 			$priority_comment[$prioritylevels]=' - '.lang('Lowest');
@@ -287,7 +286,7 @@
 			return $related;
 		}
 
-		function read($start_date='',$end_date='', $external='',$dry_run = '', $download = '')
+		function read($start_date='', $end_date='', $dry_run = '', $download = '')
 		{
 			static $category_name = array();
 			static $account = array();
@@ -300,23 +299,16 @@
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 				'start_date'=>$start_date,'end_date'=>$end_date,
-				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
+				'allrows'=>$this->allrows,'user_id' => $this->user_id, 'dry_run' => $dry_run,
 				'location_code' => $this->location_code, 'p_num' => $this->p_num));
-			$this->total_records = $this->so->total_records;
-			if(!$external)
-			{
-				$entity	= $this->get_origin_entity_type();
-				$contacts	= CreateObject('property.sogeneric');
-				$contacts->get_location_info('vendor',false);
 
-				$custom 		= createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-			}
-			else
-			{
-				$entity[0]['type']='.project';
-				$this->uicols_related	= array('project');
-			}
+			$this->total_records = $this->so->total_records;
+			$entity	= $this->get_origin_entity_type();
+			$contacts	= CreateObject('property.sogeneric');
+			$contacts->get_location_info('vendor',false);
+
+			$custom 		= createObject('property.custom_fields');
+			$vendor_data['attributes'] = $custom->find('helpdesk','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 			foreach ($tickets as & $ticket)
 			{
@@ -390,7 +382,7 @@
 				{
 					for ($j=0;$j<count($entity);$j++)
 					{
-						$ticket['child_date'][$j] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
+						$ticket['child_date'][$j] = $interlink->get_child_date('helpdesk', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id'])?$entity[$j]['entity_id']:'',isset($entity[$j]['cat_id'])?$entity[$j]['cat_id']:'');
 						if($ticket['child_date'][$j]['date_info'] && !$download)
 						{
 							$ticket['child_date'][$j]['statustext'] = $interlink->get_relation_info(array('location' => $entity[$j]['type']), $ticket['child_date'][$j]['date_info'][0]['target_id']);
@@ -435,8 +427,8 @@
 			$ticket['group_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 
 			$interlink 	= CreateObject('property.interlink');
-			$ticket['origin'] = $interlink->get_relation('property', '.ticket', $id, 'origin');
-			$ticket['target'] = $interlink->get_relation('property', '.ticket', $id, 'target');
+			$ticket['origin'] = $interlink->get_relation('helpdesk', '.ticket', $id, 'origin');
+			$ticket['target'] = $interlink->get_relation('helpdesk', '.ticket', $id, 'target');
 			//_debug_array($ticket);
 			if(isset($ticket['finnish_date2']) && $ticket['finnish_date2'])
 			{
@@ -450,13 +442,13 @@
 
 			if($ticket['location_code'])
 			{
-				$solocation 	= CreateObject('property.solocation');
+				$solocation 	= CreateObject('helpdesk.solocation');
 				$ticket['location_data'] = $solocation->read_single($ticket['location_code']);
 			}
 			//_debug_array($ticket['location_data']);
 			if($ticket['p_num'])
 			{
-				$soadmin_entity	= CreateObject('property.soadmin_entity');
+				$soadmin_entity	= CreateObject('helpdesk.soadmin_entity');
 				$category = $soadmin_entity->read_single_category($ticket['p_entity_id'],$ticket['p_cat_id']);
 
 				$ticket['p'][$ticket['p_entity_id']]['p_num']=$ticket['p_num'];
@@ -508,7 +500,7 @@
 			$vfs->override_acl = 1;
 
 			$ticket['files'] = $vfs->ls (array(
-				'string' => "/property/fmticket/{$id}",
+				'string' => "/helpdesk/{$id}",
 				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
@@ -582,9 +574,6 @@
 				case 'M':
 					$type = lang('Sent by email to');
 					$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
-					break;
-				case 'MS':
-					$type = lang('Sent by sms');
 					break;
 				default:
 					// nothing
@@ -678,7 +667,7 @@
 
 			$criteria = array
 				(
-					'appname'	=> 'property',
+					'appname'	=> 'helpdesk',
 					'location'	=> $this->acl_location,
 					'allrows'	=> true
 				);
@@ -693,7 +682,7 @@
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 				if ( $entry['active'] && is_file($file) )
 				{
 					require_once $file;
@@ -713,11 +702,11 @@
 			$address_element = array();
 			if($location_code)
 			{
-				$solocation 		= CreateObject('property.solocation');
-				$custom = createObject('property.custom_fields');
+				$solocation 		= CreateObject('helpdesk.solocation');
+				$custom = createObject('helpdesk.custom_fields');
 				$location_data 		= $solocation->read_single($location_code);
 
-				$location_types = execMethod('property.soadmin_location.select_location_type');
+				$location_types = execMethod('helpdesk.soadmin_location.select_location_type');
 				$type_id=count(explode('-',$location_code));
 
 				for ($i=1; $i<$type_id+1; $i++)
@@ -729,7 +718,7 @@
 						);
 				}
 
-				$fm_location_cols = $custom->find('property','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$fm_location_cols = $custom->find('helpdesk','.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 				$i=0;
 				foreach($fm_location_cols as $location_entry)
 				{
@@ -773,19 +762,19 @@
 			// build subject
 			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $location_code .' ' .$this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
 
-			$prefs_user = $this->bocommon->create_preferences('property',$ticket['user_id']);
+			$prefs_user = $this->bocommon->create_preferences('helpdesk',$ticket['user_id']);
 
 			$from_address=$prefs_user['email'];
 
 			//-----------from--------
 
-			$current_prefs_user = $this->bocommon->create_preferences('property',$GLOBALS['phpgw_info']['user']['account_id']);
+			$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
 			$current_user_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 
 			//-----------from--------
 			// build body
 			$body  = '';
-			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
+			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
 			$body .= lang('Date Opened').': '.$entry_date."\n";
 			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
 //			$body .= lang('Subject').': '. $ticket['subject'] ."\n";
@@ -866,8 +855,8 @@
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
-			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
-					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+			if( (isset($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'])
+					&& ($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'] == 1)
 				)
 				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
 			{
@@ -876,8 +865,8 @@
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
-			if( (isset($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'])
-					&& ($GLOBALS['phpgw']->preferences->data['property']['tts_notify_me'] == 1)
+			if( (isset($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'])
+					&& ($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'] == 1)
 				)
 				|| ($this->config->config_data['assignednotification'] && $ticket['assignedto'])
 			)
@@ -893,7 +882,7 @@
 
 			foreach($members as $account_id => $account_name)
 			{
-				$prefs = $this->bocommon->create_preferences('property',$account_id);
+				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
 				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1)
 				{
 					if ($validator->check_email_address($prefs['email']))
