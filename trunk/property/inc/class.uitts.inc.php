@@ -2575,12 +2575,12 @@
 			}
 
 			$note_def = array
-				(
+			(
 					array('key' => 'value_count',	'label'=>'#',		'sortable'=>true,'resizeable'=>true),
 					array('key' => 'value_date',	'label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
 					array('key' => 'value_user',	'label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
 					array('key' => 'value_note',	'label'=>lang('Note'),'sortable'=>true,'resizeable'=>true)
-				);
+			);
 
 			if($access_order)
 			{
@@ -2588,17 +2588,22 @@
 				foreach($additional_notes as &$note)
 				{
 					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
-
-
 				}
 			}
 
-			$note_def[] = array('key' => 'publish_note','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');
+			if($GLOBALS['phpgw_info']['apps']['frontend']['enabled'])
+			{
+				$note_def[] = array('key' => 'publish_note','label'=>lang('publish text'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter');			
+				foreach($additional_notes as &$note)
+				{
+					$_checked = $note['value_publish'] ? 'checked' : '';
+					$note['publish_note'] = "<input type='checkbox' {$_checked}  name='values[publish_note][]' value='{$id}_{$note['value_id']}' title='".lang('Check to publish text at frontend')."'>";
+				}
+			}
+
 			foreach($additional_notes as &$note)
 			{
 				$note['value_note'] = nl2br($note['value_note']);
-				$_checked = $note['value_publish'] ? 'checked' : '';
-				$note['publish_note'] = "<input type='checkbox' {$_checked}  name='values[publish_note][]' value='{$id}_{$note['value_id']}' title='".lang('Check to publish text at frontend')."'>";
 			}
 
 
