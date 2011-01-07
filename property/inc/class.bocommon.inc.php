@@ -43,7 +43,7 @@
 		var $order;
 		var $cat_id;
 		var $district_id;
-
+		var	$xsl_rootdir;
 
 		var $public_functions = array
 			(
@@ -87,7 +87,7 @@
 				$this->datetimeformat 	= "Y-m-d G:i:s";
 				break;
 			}
-
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . '/property/templates/base';
 		}
 
 		function check_perms($rights, $required)
@@ -224,12 +224,12 @@
 		{
 			switch($format)
 			{
-			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'));
-				break;
-			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'));
-				break;
+				case 'select':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'),$this->xsl_rootdir);
+					break;
+				case 'filter':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'),$this->xsl_rootdir);
+					break;
 			}
 
 			if(!$selected && $default)
@@ -304,10 +304,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('group_select'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('group_select'), $this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('group_filter'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('group_filter'), $this->xsl_rootdir);
 				break;
 			}
 
@@ -459,12 +459,12 @@
 
 			switch($format)
 			{
-			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'));
-				break;
-			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'));
-				break;
+				case 'select':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $this->xsl_rootdir);
+					break;
+				case 'filter':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_filter'), $this->xsl_rootdir);
+					break;
 			}
 
 			if(!$selected && $default)
@@ -534,11 +534,11 @@
 
 			if( isset($data['type']) && $data['type']=='view')
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_form'), $this->xsl_rootdir);
 			}
 
 			$vendor['value_vendor_id']		= $data['vendor_id'];
@@ -583,11 +583,11 @@
 			$field = $data['field'];
 			if( isset($data['type']) && $data['type']=='view')
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_form'), $this->xsl_rootdir);
 			}
 
 			$contact['value_contact_id']		= $data['contact_id'];
@@ -616,11 +616,11 @@
 		{
 			if($data['type']=='view')
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_form'), $this->xsl_rootdir);
 			}
 
 			$tenant['value_tenant_id']			= $data['tenant_id'];
@@ -682,11 +682,11 @@
 		{
 			if( isset($data['type']) && $data['type']=='view')
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('b_account_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('b_account_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('b_account_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('b_account_form'), $this->xsl_rootdir);
 			}
 
 			$b_account['value_b_account_id']		= $data['b_account_id'];
@@ -729,11 +729,11 @@
 					return $project_group;
 				}
 
-				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('project_group_form'), $this->xsl_rootdir);
 			}
 
 			$project_group['value_project_group']				= $data['project_group'];
@@ -763,11 +763,11 @@
 					return $ecodimb;
 				}
 
-				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_form'), $this->xsl_rootdir);
 			}
 
 			$ecodimb['value_ecodimb']				= $data['ecodimb'];
@@ -800,11 +800,11 @@
 					//					return $event;
 				}
 
-				$GLOBALS['phpgw']->xslttpl->add_file(array('event_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('event_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('event_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('event_form'), $this->xsl_rootdir);
 			}
 
 			// If the record is not saved - issue a warning
@@ -891,11 +891,11 @@
 
 			if($data['type']=='view')
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('alarm_view'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('alarm_view'), $this->xsl_rootdir);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('alarm_form'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('alarm_form'), $this->xsl_rootdir);
 			}
 
 			$alarm['header'][] = array
@@ -1413,10 +1413,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('select_part_of_town'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('select_part_of_town'), $this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_part_of_town'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_part_of_town'), $this->xsl_rootdir);
 				break;
 			}
 
@@ -1456,10 +1456,10 @@
 			switch($format)
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('select_district'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('select_district'), $this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_district'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_district'), $this->xsl_rootdir);
 				break;
 			}
 
@@ -1474,10 +1474,10 @@
 			switch($data['format'])
 			{
 			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_select'), $this->xsl_rootdir);
 				break;
 			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'));
+				$GLOBALS['phpgw']->xslttpl->add_file(array('cat_filter'), $this->xsl_rootdir);
 				break;
 			}
 
@@ -1993,7 +1993,7 @@
 			{
 				return;
 			}
-			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('menu'), $this->xsl_rootdir);
 
 			if(!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
 			{
@@ -2037,7 +2037,7 @@
 
 		function no_access()
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('no_access','menu'), $this->xsl_rootdir);
 
 			$receipt['error'][]=array('msg'=>lang('NO ACCESS'));
 

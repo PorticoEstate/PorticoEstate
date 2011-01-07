@@ -2572,6 +2572,7 @@
 				foreach($additional_notes as &$note)
 				{
 					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
+
 				}
 			}
 
@@ -2752,6 +2753,7 @@
 					'lang_no_cat'					=> lang('no category'),
 					'value_cat_id'					=> $this->cat_id,
 					'cat_select'					=> $cat_select,
+
 					'value_category_name'			=> $ticket['category_name'],
 
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$form_link),
