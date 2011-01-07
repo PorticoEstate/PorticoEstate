@@ -2010,6 +2010,8 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files'));
 
+			$historylog	= CreateObject('property.historylog','tts');
+
 			if(isset($values['save']))
 			{
 				if(!$this->acl_edit)
@@ -2087,6 +2089,22 @@
 					}
 				}
 				//			$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
+
+
+				if( phpgw::get_var('notify_client_by_sms', 'bool') 
+					&& isset($values['response_text'])
+					&& $values['response_text']
+					&& phpgw::get_var('to_sms_phone'))
+				{
+					$to_sms_phone = phpgw::get_var('to_sms_phone');
+		//			$ticket['contact_phone'] = $to_sms_phone;
+					
+					$sms	= CreateObject('sms.sms');
+					$sms->websend2pv($this->account,$to_sms_phone,$values['response_text']);
+					$historylog->add('MS',$id,"{$to_sms_phone}::{$values['response_text']}");
+				}
+
+
 			}
 			//---------end files
 			$ticket = $this->bo->read_single($id);
@@ -2337,8 +2355,6 @@
 
 			if($vendor_email)
 			{
-				$historylog	= CreateObject('property.historylog','tts');
-
 				$subject = lang(workorder).": {$ticket['order_id']}";
 
 				$organisation = '';
@@ -2573,6 +2589,7 @@
 				{
 					$note['order_text'] = '<input type="checkbox" name="values[order_text][]" value="'.$note['value_note'].'" title="'.lang('Check to add text to order').'">';
 
+
 				}
 			}
 
@@ -2693,6 +2710,8 @@
 			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $ticket['order_cat_id']));
 			$data = array
 				(
+					'send_response'					=> isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
+					'value_sms_phone'				=> $ticket['contact_phone'],
 					'access_order'					=> $access_order,
 					'currency'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 					'value_order_id'				=> $ticket['order_id'],

@@ -1567,6 +1567,48 @@
 					);
 
 				break;
+			case 'response_template':
+
+				$info = array
+					(
+						'table' 			=> 'fm_response_template',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('response template'),
+						'acl_location' 		=> '.ticket',
+						'menu_selection'	=> 'property::helpdesk::response_template',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> true
+					);
+
+				break;
 
 			case 'responsibility_role':
 

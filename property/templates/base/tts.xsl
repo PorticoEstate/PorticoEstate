@@ -760,20 +760,26 @@
 			self.name="first_Window";
 			function generate_order()
 			{
-			Window1=window.open('<xsl:value-of select="order_link"/>');
+				Window1=window.open('<xsl:value-of select="order_link"/>');
 			}		
+
 			function generate_request()
 			{
-			Window1=window.open('<xsl:value-of select="request_link"/>');
+				Window1=window.open('<xsl:value-of select="request_link"/>');
 			}		
 
 			function template_lookup()
 			{
-			var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
+				var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
+				var strURL = phpGWLink('index.php', oArgs);
+				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			}
 
-			var strURL = phpGWLink('index.php', oArgs);
-
-			Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			function response_lookup()
+			{
+				var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
+				var strURL = phpGWLink('index.php', oArgs);
+				Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
 		</script>
 		<table cellpadding="2" cellspacing="2" width="95%" align="center">
@@ -1092,7 +1098,63 @@
 					<xsl:call-template name="file_upload"/>
 				</xsl:when>
 			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="send_response = 1">
+					<tr>
+						<td class="th_text"  align="left">
+							<xsl:value-of select="php:function('lang', 'notify client by sms')" />
+						</td>
+						<td  align="left">
+							<table>
+								<tr>
+									<td>
+										<input type="checkbox" name="notify_client_by_sms" value="true">
+											<xsl:attribute name="title">
+												<xsl:value-of select="value_sms_client_order_notice"/>
+											</xsl:attribute>
+										</input>
+									</td>
+									<td>
+										<input type="text" name="to_sms_phone" value="{value_sms_phone}">
+											<xsl:attribute name="title">
+												<xsl:value-of select="value_sms_client_order_notice"/>
+											</xsl:attribute>
+										</input>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							<a href="javascript:response_lookup()" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'response')" />
+									</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'response')" />
+							</a>
+						</td>
+						<td>
+							<textarea cols="{textareacols}" rows="{textarearows}" id='response_text' name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'response')" />
+								</xsl:attribute>
+								<xsl:value-of select="value_order_descr"/>
+							</textarea>
+						</td>
+					</tr>
 
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'character left')" />
+						</td>
+						<td>
+							<input type="text" readonly='readonly' size="3" maxlength="3" name="charNumberLeftOutput" id="charNumberLeftOutput" value="160">
+							</input>
+						</td>
+					</tr>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="access_order = 1">
 					<xsl:choose>

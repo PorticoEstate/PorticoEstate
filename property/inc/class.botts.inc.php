@@ -235,6 +235,7 @@
 				'F' => lang('finnish date'),
 				'SC' => lang('Status changed'),
 				'M' => lang('Sent by email to'),
+				'MS' => lang('Sent by sms'),
 				'AC'=> lang('actual cost changed'),
 			);
 
@@ -581,6 +582,9 @@
 				case 'M':
 					$type = lang('Sent by email to');
 					$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+					break;
+				case 'MS':
+					$type = lang('Sent by sms');
 					break;
 				default:
 					// nothing
