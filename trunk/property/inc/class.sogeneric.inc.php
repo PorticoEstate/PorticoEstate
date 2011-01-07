@@ -1436,6 +1436,66 @@
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
 				break;
+
+			case 'helpdesk_status':
+				// the helpdesk app
+				$info = array
+					(
+						'table' 			=> 'phpgw_helpdesk_status',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
+								'name' => 'color',
+								'descr' => lang('color'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('event action'),
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::helpdesk::ticket_status'
+					);
+				break;
 			case 'pending_action_type':
 				$info = array
 					(

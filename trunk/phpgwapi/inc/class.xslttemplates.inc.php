@@ -130,7 +130,7 @@
 			{
 				foreach ( $filename as $file )
 				{
-					$this->add_file($file);
+					$this->add_file($file, $rootdir);
 				}
 				return;
 			}
