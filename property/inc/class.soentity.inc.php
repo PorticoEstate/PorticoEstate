@@ -118,6 +118,7 @@
 			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -367,6 +368,13 @@
 				$filtermethod .= " $where $entity_table.location_code $this->like '$location_code%'";
 				$where= 'AND';			
 			}
+
+			if ($attrib_filter)
+			{
+				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
+				$where= 'AND';			
+			}
+
 
 			$_querymethod = array();
 			$__querymethod = array();

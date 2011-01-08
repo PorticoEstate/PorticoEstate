@@ -261,6 +261,24 @@
 				$data['allrows'] = true;
 			}
 
+			$custom	= createObject('phpgwapi.custom_fields');
+			$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
+
+			$attrib_filter = array();
+			if($attrib_data)
+			{
+				foreach ( $attrib_data as $attrib )
+				{
+					if($attrib['datatype'] == 'LB')
+					{
+						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
+						{
+							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+						}
+					}
+				}
+			}
+
 			$entity = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 				'lookup'=>isset($data['lookup'])?$data['lookup']:'','allrows'=>isset($data['allrows'])?$data['allrows']:'',
@@ -268,7 +286,7 @@
 				'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
 				'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
 				'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
-				'criteria_id' => $this->criteria_id));
+				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
