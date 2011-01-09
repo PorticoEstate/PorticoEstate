@@ -1089,7 +1089,8 @@
 			{
 				if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
 				{
-					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
+//					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
+					$values_attribute[$i]['value'] = ',' . implode(',', $values_attribute[$i]['value']) . ',';
 				}
 				if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
 				{

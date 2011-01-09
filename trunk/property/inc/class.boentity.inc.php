@@ -269,11 +269,18 @@
 			{
 				foreach ( $attrib_data as $attrib )
 				{
-					if($attrib['datatype'] == 'LB')
+					if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
 					{
 						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
 							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+						}
+					}
+					else if($attrib['datatype'] == 'CH')
+					{
+						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
+						{
+							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
 						}
 					}
 				}

@@ -4837,4 +4837,88 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.602 to 0.9.17.603
+	* convert data for datatype CH: from serialized array to comma separated list
+	* 
+	*/
+
+	$test[] = '0.9.17.603';
+	function property_upgrade0_9_17_603()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT count(*) as cnt FROM fm_location_type');
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$levels = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+
+		for ($i=1; $i<($levels +1); $i++)
+		{
+			$sql = "UPDATE phpgw_locations SET c_attrib_table = 'fm_location{$i}' WHERE name = '.location.{$i}' AND c_attrib_table IS NULL";
+			$GLOBALS['phpgw_setup']->oProc->query($sql);
+		}
+
+
+		$sql = "SELECT c_attrib_table, column_name FROM phpgw_cust_attribute JOIN phpgw_locations ON phpgw_cust_attribute.location_id = phpgw_locations.location_id WHERE datatype = 'CH' GROUP BY c_attrib_table, column_name";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql);
+		
+		$attribs = array();
+		
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$attribs[$GLOBALS['phpgw_setup']->oProc->f('c_attrib_table')][] = $GLOBALS['phpgw_setup']->oProc->f('column_name');
+		}
+
+		$value_set = array();
+		foreach($attribs as $table => $columns)
+		{
+			$id_name = 'id';
+			if(preg_match('/(^fm_location)/', $table))
+			{
+				$id_name = 'location_code';
+			}
+
+			foreach($columns as $column)
+			{
+				$sql = "SELECT {$id_name}, {$column} FROM {$table} WHERE {$column} IS NOT NULL";
+				$GLOBALS['phpgw_setup']->oProc->query($sql);
+				while ($GLOBALS['phpgw_setup']->oProc->next_record())
+				{
+					if($value = $GLOBALS['phpgw_setup']->oProc->f($column))
+					{
+						if(@unserialize($value))
+						{
+							$value = ',' . implode(',', unserialize($value)) . ',';
+						}
+						else
+						{
+							$value = ",{$value}";
+						}
+
+						$value_set[] = array
+						(
+							'table'		=> $table,
+							'id_name'	=> $id_name,
+							'id_value'	=> $GLOBALS['phpgw_setup']->oProc->f($id_name),
+							'column'	=> $column,
+							'value'		=> $value
+						);
+					}
+				}
+			}
+		}
+
+		foreach($value_set as $update)
+		{
+			$sql = "UPDATE {$update['table']} SET  {$update['column']} = '{$update['value']}' WHERE {$update['id_name']} = '{$update['id_value']}'";
+			$GLOBALS['phpgw_setup']->oProc->query($sql);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.604';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
