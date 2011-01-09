@@ -419,7 +419,7 @@
 				switch ( $attrib['datatype'] )
 				{
 					case 'CH':
-						$attrib['value'] = serialize($attrib['value']);
+						$attrib['value'] = ',' . implode(',', $attrib['value']) . ',';
 						break;
 
 					case 'R':
