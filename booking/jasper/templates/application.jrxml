@@ -25,14 +25,6 @@
 	<style name="Sans_Bold" fontName="FreeSerif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Italic" fontName="FreeSerif" fontSize="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Bold_Italic" fontName="FreeSerif" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
-	<subDataset name="resources">
-		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
-		<queryString>
-			<![CDATA[SELECT bb_resource.name AS resource_name, bb_resource.type AS resource_type FROM bb_application,bb_application_resource,bb_resource WHERE bb_application.id = $P!{APPLICATION_ID} AND bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = bb_resource.id]]>
-		</queryString>
-		<field name="resource_name" class="java.lang.String"/>
-		<field name="resource_type" class="java.lang.String"/>
-	</subDataset>
 	<parameter name="BK_APPLICATION_ID" class="java.lang.String"/>
 	<parameter name="BK_BUILDING_NAME" class="java.lang.String"/>
 	<queryString>
@@ -92,26 +84,6 @@
 				</textElement>
 				<text><![CDATA[Leie av kommunale bygg, anlegg og byrom.]]></text>
 			</staticText>
-			<componentElement>
-				<reportElement x="227" y="131" width="312" height="13"/>
-				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Horizontal">
-					<datasetRun subDataset="resources">
-						<datasetParameter name="APPLICATION_ID">
-							<datasetParameterExpression><![CDATA[$F{application_id}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:listContents height="13" width="312">
-						<textField>
-							<reportElement style="Sans_Bold" x="0" y="0" width="312" height="13"/>
-							<textElement>
-								<font isUnderline="false" pdfFontName="Helvetica" isPdfEmbedded="true"/>
-							</textElement>
-							<textFieldExpression class="java.lang.String"><![CDATA[$F{resource_name}]]></textFieldExpression>
-						</textField>
-					</jr:listContents>
-				</jr:list>
-			</componentElement>
 			<staticText>
 				<reportElement style="headers" x="6" y="105" width="546" height="20"/>
 				<textElement/>

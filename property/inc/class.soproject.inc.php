@@ -108,7 +108,7 @@
 			$sort			= isset($data['sort'])?$data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$status_id		= isset($data['status_id'])?$data['status_id']:'';
+			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
 			$allrows		= isset($data['allrows'])?$data['allrows']:'';
@@ -371,11 +371,26 @@
 				$where= 'AND';
 			}
 
-			if ($status_id)
+			if ($status_id && $status_id != 'all')
 			{
-				$filtermethod .= " $where fm_project.status='$status_id' ";
+
+				if($status_id == 'open')
+				{
+					$_status_filter = array();
+					$this->db->query("SELECT * FROM fm_project_status WHERE closed IS NULL");
+					while($this->db->next_record())
+					{
+						$_status_filter[] = $this->db->f('id');
+					}
+					$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')"; 
+				}
+				else
+				{
+					$filtermethod .= " $where fm_project.status='$status_id' ";
+				}
 				$where= 'AND';
 			}
+
 
 			if($wo_hour_cat_id)
 			{
