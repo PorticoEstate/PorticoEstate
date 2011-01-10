@@ -2432,3 +2432,27 @@
 		}
 	}
 
+	$test[] = '0.2.03';
+	/**
+	* Update booking version from 0.2.02 to 0.2.03
+	* Add custom fields to request
+	* 
+	*/
+	function booking_upgrade0_2_03()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_completed_reservation','cost',array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => true,'default' => '0.0'));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_wtemplate_alloc','cost',array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => true,'default' => '0.0'));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation','cost',array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => true,'default' => '0.0'));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_booking','cost',array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => true,'default' => '0.0'));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_event','cost',array('type' => 'decimal', 'precision' => 10, 'scale' => 2,'nullable' => true,'default' => '0.0'));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.04';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
