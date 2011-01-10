@@ -660,6 +660,7 @@
 		{
 			$this->db->query("SELECT * FROM fm_location_type ORDER BY id ");
 
+			$location_type = array();
 			while ($this->db->next_record())
 			{
 				$location_type[]	= array(

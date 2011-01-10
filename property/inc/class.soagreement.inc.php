@@ -336,8 +336,8 @@
 						}
 						else if($cols_return_extra[$i]['datatype']=='CH' && $value)
 						{
-							$ch= unserialize($value);
-
+//							$ch= unserialize($value);
+							$ch = explode(',', trim($data['value'], ','));
 							if (isset($ch) AND is_array($ch))
 							{
 								for ($k=0;$k<count($ch);$k++)

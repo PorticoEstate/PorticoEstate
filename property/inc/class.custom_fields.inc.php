@@ -208,7 +208,8 @@ JS;
 
 					if($attributes['datatype'] == 'CH')
 					{
-						$attributes['value'] = unserialize($attributes['value']);
+//						$attributes['value'] = unserialize($attributes['value']);
+						$attributes['value'] = explode(',', trim($attributes['value'], ','));
 
 						if (isset($attributes['choice']) AND is_array($attributes['choice']))
 						{
@@ -437,7 +438,8 @@ JS;
 					}
 					else if($data['datatype']=='CH' && $data['value'])
 					{
-						$ch= unserialize($data['value']);
+					//	$ch= unserialize($data['value']);
+						$ch = explode(',', trim($data['value'], ','));
 						if (isset($ch) AND is_array($ch))
 						{
 							for ($k=0;$k<count($ch);$k++)

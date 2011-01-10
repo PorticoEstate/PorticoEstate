@@ -368,6 +368,7 @@
 			// 	enters the first time
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
+
 				$datatable['menu']						=	$this->bocommon->get_menu($this->type_app[$this->type]);
 
 				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
@@ -375,12 +376,7 @@
 						'menuaction'			=> 'property.uientity.index',
 						'entity_id'        		=> $this->entity_id,
 						'cat_id'            	=> $this->cat_id,
-						'type'					=> $this->type,
-						//				'district_id'        	=> $this->district_id,
-						//				'status'    			=> $this->status,
-						//				'filter'        		=> $this->filter,
-						//																'location_code'			=> $this->location_code,
-						//				'criteria_id'			=> $this->criteria_id
+						'type'					=> $this->type
 					));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -388,11 +384,6 @@
 					"entity_id:'{$this->entity_id}',".
 					"cat_id:'{$this->cat_id}',".
 					"type:'{$this->type}'";
-				//		"district_id:'{$this->district_id}',".
-				//		"status:'{$this->status}',".
-				//		"filter:'{$this->filter}',".
-				// 		"criteria_id:'{$this->criteria_id}',".
-				//		"location_code:'{$this->location_code}'";
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
@@ -435,12 +426,13 @@
 						$arr_filter_hide[1] = 1;
 					}
 				}
-				//// ---- STATUS filter----------------------
-				$values_combo_box[2]  = $this->bo->select_status_list($group_filters,$this->status);
+
+				//// ---- USER filter----------------------
+				$values_combo_box[2]  = $this->bocommon->get_user_list_right2($group_filters,4,$this->filter,$this->acl_location,array('all'),$default='all');
 
 				if(count($values_combo_box[2]))
 				{
-					$default_value = array ('id'=>'','name'=>lang('no status'));
+					$default_value = array ('id'=>'','name'=>lang('no user'));
 					array_unshift ($values_combo_box[2],$default_value);
 					$arr_filter_hide[2] = 0;
 				}
@@ -449,24 +441,9 @@
 					$arr_filter_hide[2] = 1;
 				}
 
-
-				//// ---- USER filter----------------------
-				$values_combo_box[3]  = $this->bocommon->get_user_list_right2($group_filters,4,$this->filter,$this->acl_location,array('all'),$default='all');
-
-				if(count($values_combo_box[3]))
-				{
-					$default_value = array ('id'=>'','name'=>lang('no user'));
-					array_unshift ($values_combo_box[3],$default_value);
-					$arr_filter_hide[3] = 0;
-				}
-				else
-				{
-					$arr_filter_hide[3] = 1;
-				}
-
-				$values_combo_box[4]  = $this->bo->get_criteria_list($this->criteria_id);
+				$values_combo_box[3]  = $this->bo->get_criteria_list($this->criteria_id);
 				$default_value = array ('id'=>'','name'=>lang('no criteria'));
-				array_unshift ($values_combo_box[4],$default_value);
+				array_unshift ($values_combo_box[3],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -478,10 +455,6 @@
 								'menuaction'	=> 'property.uientity.index',
 								'entity_id'		=> $this->entity_id,
 								'cat_id'		=> $this->cat_id,
-								//												'district_id'   => $this->district_id,
-								//												'status'		=> $this->status,
-								//												'filter'		=> $this->filter,
-								//												'query'		 	=> $this->query,
 								'type'			=> $this->type
 							)),
 							'fields'  => array
@@ -507,22 +480,13 @@
 										'tab_index' => 2
 									),
 									array
-									( //boton 	STATUS
-										'id'   => 'btn_status_id',
-										'name' => 'status_id',
-										'value'=> lang('Status'),
-										'type' => 'button',
-										'style' => 'filter',
-										'tab_index' => 3
-									),
-									array
 									( //boton 	USER
 										'id'   => 'btn_user_id',
 										'name' => 'user_id',
 										'value'=> lang('User'),
 										'type' => 'button',
 										'style' => 'filter',
-										'tab_index' => 4
+										'tab_index' => 3
 									),
 									array
 									( //boton 	search criteria
@@ -531,7 +495,7 @@
 										'value'	=> lang('search criteria'),
 										'type' => 'button',
 										'style' => 'filter',
-										'tab_index' => 5
+										'tab_index' => 4
 									),
 									array
 									(//for link "columns", next to Export button
@@ -631,13 +595,72 @@
 										'id' => 'values_combo_box_3',
 										'value'	=> $this->bocommon->select2String($values_combo_box[3])
 									),
-									array
-									(
-										'id' => 'values_combo_box_4',
-										'value'	=> $this->bocommon->select2String($values_combo_box[4])
-									)
 								)
 							)));
+
+				$custom	= createObject('phpgwapi.custom_fields');
+				$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
+
+				$button_def[] = "oMenuButton_0";
+				$button_def[] = "oMenuButton_1";
+				$button_def[] = "oMenuButton_2";
+				$button_def[] = "oMenuButton_3";
+				$code_inner[] = "{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'genericbutton',dependiente:[]}";
+				$code_inner[] = "{order:1, var_URL:'district_id',name:'btn_district_id',style:'genericbutton',dependiente:[]}";
+				$code_inner[] = "{order:2, var_URL:'filter',name:'btn_user_id',style:'genericbutton',dependiente:[]}";
+				$code_inner[] = "{order:3, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
+
+
+				if($attrib_data)
+				{
+					$i = 4;
+					foreach ( $attrib_data as $attrib )
+					{
+						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+						{
+							$datatable['actions']['form'][0]['fields']['field'][] = array
+							(
+								'id' => "btn_{$attrib['column_name']}",
+								'name' => $attrib['column_name'],
+								'value'	=> $attrib['input_text'],
+								'type' => 'button',
+								'style' => 'filter',
+								'tab_index' => $i
+							);
+
+							$button_def[] = "oMenuButton_{$i}"; 
+							$code_inner[] = "{order:{$i}, var_URL:'{$attrib['column_name']}',name:'btn_{$attrib['column_name']}',style:'genericbutton',dependiente:[]}";
+
+							$values_combo_box[$i][]  = array
+							(
+								'id' 	=> '',
+								'name'	=> $attrib['input_text'],
+							);
+
+
+							foreach($attrib['choice'] as $choice)
+							{
+								$values_combo_box[$i][]  = array
+								(
+									'id' 	=> $choice['id'],
+									'name'	=> htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+								);
+							}
+
+							$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
+							(
+								'id' 	=> "values_combo_box_{$i}",
+								'value'	=> $this->bocommon->select2String($values_combo_box[$i])						
+							);
+							$i++;
+						}
+					}
+				}
+
+				$code = 'var ' . implode(',', $button_def)  . ";\n";
+				$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+
+				$GLOBALS['phpgw']->js->add_code('', $code);
 
 				//	eliminates those empty filters
 				$eliminate = 0;
