@@ -333,7 +333,7 @@
 
 				$valid_users = array_unique($valid_users);
 
-				$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$this->sort, $this->order, $this->query);
+				$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$sort, $order, $query);
 				foreach($allusers as  $user)
 				{
 					if(!in_array($user->id, $valid_users))
@@ -346,7 +346,7 @@
 				$total = count($allusers);
 				$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
-				if ($this->allrows)
+				if ($allrows)
 				{
 					$start = 0;
 					$length = $total;
@@ -520,6 +520,9 @@
 				'url_done'		=> 	$GLOBALS['phpgw']->link('/index.php',
 										array('menuaction' => 'admin.uimainscreen.mainscreen'))
 			);
+
+			$link_data['sort']	= $sort;
+			$link_data['order']	= $order;
 
 			$nm = array
 			(
