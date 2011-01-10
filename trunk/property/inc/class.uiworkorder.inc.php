@@ -262,8 +262,8 @@
 				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
 
 				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
-				$default_value = array ('id'=>'','name'=> lang('no status'));
-				array_unshift ($values_combo_box[2],$default_value);
+				array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
+				array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
 
 				$values_combo_box[3] =  $this->bocommon->select_category_list(array('format'=>'filter','selected' => $this->wo_hour_cat_id,'type' =>'wo_hours','order'=>'id'));
 				$default_value = array ('id'=>'','name'=> lang('no hour category'));
