@@ -48,7 +48,8 @@
 				'edit'   	=> true,
 				'delete' 	=> true,
 				'download'	=> true,
-				'view'		=> true
+				'view'		=> true,
+				'get_file'	=> true
 			);
 
 		function __construct()
@@ -115,6 +116,21 @@
 			$uicols['descr'][]	= lang('formats');
 
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
+		}
+
+		function get_file()
+		{
+			if(!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+			}
+
+			$jasper_id			= phpgw::get_var('jasper_id', 'int');
+			$values				= $this->bo->read_single($jasper_id);
+
+			$bofiles	= CreateObject('property.bofiles');
+			$file      = "{$bofiles->fakebase}/jasper/{$jasper_id}/{$values['file_name']}";
+			$bofiles->view_file('', $file);
 		}
 
 		function index()
@@ -303,6 +319,17 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uijasper.view',
+							'target'		=> '_blank'
+						)),
+						'parameters'			=> $parameters_view
+					);
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('download JasperReport %1 definition', $report['title']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uijasper.get_file',
 							'target'		=> '_blank'
 						)),
 						'parameters'			=> $parameters_view
@@ -753,6 +780,8 @@
 			}
 			if(!$user_input)
 			{
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 				$jasper_parameters = '';
