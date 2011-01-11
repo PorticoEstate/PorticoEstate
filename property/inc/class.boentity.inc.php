@@ -112,6 +112,11 @@
 			{
 				$this->query = $query;
 			}
+			else if($location_code)
+			{
+				$this->query = $location_code;			
+			}
+
 			if(isset($_POST['filter']) || isset($_GET['filter']))
 			{
 				$this->filter = $filter;
