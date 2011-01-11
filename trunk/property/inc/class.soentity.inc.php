@@ -412,7 +412,7 @@
 							case 'CH':
 								if(!$criteria_id)
 								{
-									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
