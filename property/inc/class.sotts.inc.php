@@ -359,7 +359,8 @@
 						. " OR address $this->like '%$query%' "
 						. " OR fm_location1.loc1_name $this->like '%$query%'"
 						. " OR fm_tts_tickets.location_code $this->like '%$query%'"
-						. " OR fm_tts_tickets.order_id =" . (int)$query . ')';
+						. " OR fm_tts_tickets.order_id =" . (int)$query
+						. " OR fm_tts_tickets.id =" . (int)$query . ')';
 				}
 			}
 

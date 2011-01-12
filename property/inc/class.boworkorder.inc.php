@@ -45,10 +45,10 @@
 		var $public_functions = array
 			(
 				'read'			=> true,
-				'read_single'		=> true,
+				'read_single'	=> true,
 				'save'			=> true,
 				'delete'		=> true,
-				'check_perms'		=> true
+				'check_perms'	=> true
 			);
 
 		function property_boworkorder($session=false)
@@ -190,23 +190,27 @@
 			$columns['entry_date'] = array
 				(
 					'id' => 'entry_date',
-					'name'=> lang('entry date')
+					'name'=> lang('entry date'),
+					'sortable'	=> true
 				);
 
 			$columns['start_date'] = array
 				(
 					'id' => 'start_date',
-					'name'=> lang('start date')
+					'name'=> lang('start date'),
+					'sortable'	=> true
 				);
 			$columns['end_date'] = array
 				(
 					'id' => 'end_date',
-					'name'=> lang('end date')
+					'name'=> lang('end date'),
+					'sortable'	=> true
 				);
 			$columns['billable_hours'] = array
 				(
 					'id' => 'billable_hours',
-					'name'=> lang('billable hours')
+					'name'=> lang('billable hours'),
+					'sortable'	=> true
 				);
 
 			return $columns;

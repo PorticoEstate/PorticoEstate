@@ -123,7 +123,7 @@
 				$hits = $this->db->f('hits');
 				$entity['related'][] = array
 					(
-						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code)),
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uitts.index', 'query'=> $location_code, 'status_id' => 'all')),
 						'name'		=> lang('Helpdesk') . " [{$hits}]",
 						'descr'		=> lang('Helpdesk')
 					);

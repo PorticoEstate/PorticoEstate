@@ -76,8 +76,8 @@ add a standard	property	no	legg til standard
 add a template	property	no	legg til mal
 add a ticket	property	no	legg til melding
 add attribute	property	no	legg til attribute
-add a workorder	property	no	legg til arbeidsordre
-add a workorder to this project	property	no	legg til en arbeidsordre til dette prosjektet
+add a workorder	property	no	legg til bestilling
+add a workorder to this project	property	no	legg til en bestilling til dette prosjektet
 add budget account	property	no	Legg til budsjettkonto
 add building	property	no	legg til bygning
 add category	property	no	Legg til kategori
@@ -111,22 +111,22 @@ add request	property	no	Legg til behov
 add request for this project	property	no	Legg til behov til dette prosjektet
 addressmasters	common	no	AddresseMaster
 address	property	no	Adresse
-adds a new project - then a new workorder	property	no	legger til nytt prosjekt - så arbeidsordre
-adds a new workorder to an existing project	property	no	legger til ny arbeidsordre til eksisterende prosjekt
+adds a new project - then a new workorder	property	no	legger til nytt prosjekt - så bestilling
+adds a new workorder to an existing project	property	no	legger til ny bestilling til eksisterende prosjekt
 add selected request to project	property	no	Legg valgte tiltak til prosjektet
 add service	property	no	Legg til service
 add single custom line	property	no	legg til en enkel tilpasset post
 add space	property	no	Legg til areal
 add standard	property	no	legg til standard
 add status	property	no	Legg til status
-adds this workorders calculation as a template for later use	property	no	legger kalkulasjonen for denne arbeidsordren som en mal for senere bruk
+adds this workorders calculation as a template for later use	property	no	legger kalkulasjonen for denne bestillingen som en mal for senere bruk
 add template	property	no	legg til mal
 add the selected items	property	no	legg til valgte element
 add this invoice	property	no	Legg til denne fakturaen
 add this vendor to this activity	property	no	legg til denne leverandøren til denne aktiviteten
 add ticket	property	no	legg til melding
 add to project	property	no	Legg til eksisterende prosjekt
-add workorder	property	no	Legg til Arbeidsordre
+add workorder	property	no	Legg til Bestilling
 admin async services	property	no	Administrer planlagte oppgaver
 admin custom functions	property	no	Administrer tilpassede funksjoner
 admin entity	property	no	Administrer entitet
@@ -208,7 +208,7 @@ back to investment list	property	no	Tilbake til liste over investeringer
 back to list	property	no	Tilbake til liste
 back to the list	property	no	Tilbake til liste
 back to the ticket list	property	no	Tilbake til meldings liste uten å lagre
-back to the workorder list	property	no	Tilbake til arbeidsordre liste
+back to the workorder list	property	no	Tilbake til bestilling liste
 base	property	no	Grunnlag
 base description	property	no	Beskrivelse av grunnlag
 basis	property	no	Basis
@@ -242,9 +242,9 @@ bulk import - contacts	common	no	Mengde import kontakter
 bulk import - csv	common	no	Mengde import CSV
 but your message could not be sent by mail!	property	no	Men din melding kunne ikke sendes med epost!
 calculate	property	no	Kalkulèr
-calculate this workorder	property	no	kalkuler arbeidsordren
-calculate workorder	property	no	kalkuler arbeidsordren
-calculate workorder by adding items from vendors prizebook or adding general hours	property	no	kalkuler arbeidsordren ved å legge til poster fra prisbok - eller egne tilpassede poster
+calculate this workorder	property	no	kalkuler bestillingen
+calculate workorder	property	no	kalkuler bestillingen
+calculate workorder by adding items from vendors prizebook or adding general hours	property	no	kalkuler bestillingen ved å legge til poster fra prisbok - eller egne tilpassede poster
 calculation	property	no	Kalkulasjon
 cancel the import	property	no	avbryt import
 categories	property	no	Kategorier
@@ -290,7 +290,7 @@ choose columns	property	no	Velg kolonner
 choose copy hour to copy this hour to a new hour	property	no	Kryss av for å kopiere denne posten til en ny post
 choose copy project to copy this project to a new project	property	no	Kryss av for å kopiere dette prosjektet til et nytt prosjekt
 choose copy request to copy this request to a new request	property	no	Kryss av for å kopiere denne anmodningen til en ny anmodning
-choose copy workorder to copy this workorder to a new workorder	property	no	Kryss av for å kopiere denne arbeidsordren til en ny arbeidsordre
+choose copy workorder to copy this workorder to a new workorder	property	no	Kryss av for å kopiere denne bestillingen til en ny bestilling
 choose generate id to automaticly assign new id based on type-prefix	property	no	Kryss av for generere ny ID basert på type-prefiks
 choose the end date for the next period	property	no	Velg slutt-dato for neste periode
 choose the start date for the next period	property	no	Velg start-dato for neste periode
@@ -357,7 +357,7 @@ coordinator changed	property	no	endret koordinator
 copy hour ?	property	no	kopier post ?
 copy project ?	property	no	kopier prosjekt ?
 copy request ?	property	no	kopier anmodning ?
-copy workorder ?	property	no	Kopier arbeidsordre ?
+copy workorder ?	property	no	Kopier bestilling ?
 correct error	property	no	Rett opp feil
 cost	property	no	kostnad
 cost estimate	property	no	Kostnadsestimat
@@ -469,12 +469,12 @@ delete this project	property	no	slett prosjekt
 delete this request	property	no	slett anmodning
 delete this value from the list of multiple choice	property	no	Slett denne verdien fra listen over fler-valg
 delete this vendor from this activity	property	no	slett denne leverandøren fra denne aktiviteten
-delete this workorder	property	no	slett arbeidsordre
+delete this workorder	property	no	slett bestilling
 delete ticket	property	no	slett melding
 delete value	property	no	Slett verdi
 delete vendor activity	property	no	slett aktivitet
 delete voucher	property	no	Slett bilag
-delete workorder	property	no	slett arbeidsordre
+delete workorder	property	no	slett bestilling
 delivered	property	no	Levert
 delivery address	property	no	Leveringsadresse
 deposit claim	property	no	Krav mot depositum
@@ -590,16 +590,16 @@ edit the request	property	no	rette anmodning
 edit the s_agreement	property	no	Rette serviceavtalen
 edit the standard	property	no	rette standard
 edit the template	property	no	rette mal
-edit the workorder	property	no	rette arbeidsordre
+edit the workorder	property	no	rette bestilling
 edit this activity	property	no	rette aktivitet
 edit this entity	property	no	Endre entiteten
 edit this entry	property	no	rette post
 edit this entry equipment	property	no	rett utstyr
 edit this entry project	property	no	rette prosjekt
 edit this entry request	property	no	rett anmodning
-edit this entry workorder	property	no	rett arbeidsordre
+edit this entry workorder	property	no	rett bestilling
 edit this meter	property	no	rett måler
-edit workorder	property	no	Endre arbeidsordre
+edit workorder	property	no	Endre bestilling
 email-address of the user, eg. %1	property	no	E-post adresse for bruker, %1
 enable	property	no	Aktiver
 enabled	property	no	Aktiv
@@ -642,7 +642,7 @@ enter a remark for this claim	property	no	Angi en merknad for dette kravet
 enter a remark for this entity	property	no	Angi en merknad for denne entiteten
 enter a remark - if any	property	no	gi en merknad - om noen
 enter a remark to add to the history of the project	property	no	Legg til en merknad til historikken for prosjektet
-enter a short description of the workorder	property	no	Gi en kort beskrivelse av arbeidsordren
+enter a short description of the workorder	property	no	Gi en kort beskrivelse av bestillingen
 enter a short description of this template	property	no	Gi en kort beskrivelse av malen
 enter a sql query	property	no	Skriv inn en sql-spørring
 enter a standard prefix for the id	property	no	Angi et prefix for ID
@@ -707,8 +707,8 @@ enter the status id	property	no	Angi statius ID
 enter the street number	property	no	angi gatenummer
 enter the subject of this ticket	property	no	angi overskrift for denne meldingen
 enter the total cost of this activity - if not to be calculated from unit-cost	property	no	angi total kostnad for denne posten - dersom den ikke skal beregnes fra enhetskostnader
-enter the workorder id to search by workorder - at any date	property	no	angi arbeidsordre ID for å søke etter arbeidsordre - gjelder alle datoer
-enter workorder title	property	no	angi arbeidsordre tittel
+enter the workorder id to search by workorder - at any date	property	no	angi bestilling ID for å søke etter bestilling - gjelder alle datoer
+enter workorder title	property	no	angi bestillings tittel
 entity	property	no	type
 entity has been added	property	no	Entitet er lagt til
 entity has been edited	property	no	Entitet er rettet
@@ -830,7 +830,7 @@ import vcard	common	no	Importer visittkort
 incl tax	property	no	inkl mva
 include in location form	property	no	Inkluder i lokaliseringsskjema
 include in search	property	no	Inkluder i søk
-include the workorder to this claim	property	no	Inkluder arbeidsordren i dette kravet
+include the workorder to this claim	property	no	Inkluder bestillingen i dette kravet
 include this entity	property	no	Inkluder denne entiteten
 index	property	no	indeks
 index count	property	no	Antall
@@ -956,7 +956,7 @@ list vendor	property	no	Oversikt leverandører
 list vendors	property	no	List leverandør
 list vendors per activity	property	no	List leverandør pr aktivitet
 list voucher	property	no	list underbilag
-list workorder	property	no	List arbeidsordre
+list workorder	property	no	List bestillinger
 location	property	no	Lokalisering
 loc1 name	property	no	Navn
 local files	property	no	Lokale filer
@@ -1077,8 +1077,8 @@ no type	property	no	Type ikke valgt
 no user	property	no	Bruker ikke valgt
 no user selected	property	no	Bruker ikke valgt
 no vendor	property	no	Leverandør ikke valgt
-no workorder budget	property	no	Ingen budsjett arbeidsordre/bestilling
-no workorder bugdet	property	no	Ingen arbeidsordrer er budsjettert
+no workorder budget	property	no	Ingen budsjett bestilling
+no workorder bugdet	property	no	Ingen bestillinger er budsjettert
 no year	property	no	Ingen årstall
 notify client by sms	property	no	Varsle kunde via SMS
 ns3420	property	no	NS3420
@@ -1102,8 +1102,8 @@ open JasperReport %1 in new window	property	no	Åpne JasperReport %1 i nytt vind
 open view in new window	property	no	Åpne visning i nytt vindu
 order	property	no	Bestilling
 order_dim1	property	no	Aktivitet
-order id	property	no	OrdreNr
-order_id	property	no	OrdreNr
+order id	property	no	BestillingsNr
+order_id	property	no	BestillingsNr
 order # that initiated the invoice	property	no	Bestillingsnr som referanse for fakturaen
 order template	property	no	Standardtekster
 order text	property	no	Bestillingstekst
@@ -1154,14 +1154,14 @@ please enter a name !	property	no	Angi et navn
 please - enter an amount!	property	no	Angi et beløp!
 please enter a new index for calkulating next value(s)!	property	no	angi en ny index for beregning av neste verdi(er)!
 please enter an integer !	property	no	Angi heltall
-please enter an integer for order!	property	no	Angi heltall for ordrenr
+please enter an integer for order!	property	no	Angi heltall for bestillingsnr
 Please - enter a invoice number	property	no	Angi FakturaNr
 please enter a project name !	property	no	angi prosjekt navn
 please enter a property id !	property	no	angi eiendoms ID
 please enter a request title !	property	no	angi tittel for anmodning
 please enter a sql query !	property	no	Angi en sql-spørring
 please enter a value for either material cost, labour cost or both !	property	no	angi enten material kostnader, arbeidskostnader eller begge
-please enter a workorder title !	property	no	angi en arbeidsordre tittel
+please enter a workorder title !	property	no	angi en bestillings tittel
 please enter precision as integer !	property	no	Angi heltall for presisjon
 please enter scale as integer !	property	no	Angi heltall for skalering
 please give som details !	property	no	angi detaljer
@@ -1236,7 +1236,7 @@ project info	property	no	Prosjekt info.
 project name	property	no	Prosjekt navn
 .project.request	property	no	Behov
 project start date	property	no	prosjekt startdato
-.project.workorder	property	no	Arbeidsordre
+.project.workorder	property	no	Bestilling
 propagate	property	no	Propager
 property	common	no	Eiendom
 property has been edited	property	no	eiendom er oppdater
@@ -1333,8 +1333,8 @@ save the standard	property	no	lagre standard
 save the status	property	no	Lagre status
 save the ticket	property	no	Lagre melding og bli stående i skjema
 save the voucher	property	no	lagre bilag
-save the workorder	property	no	lagre arbeidsordre
-save this workorder as a template for later use	property	no	lagre denne arbeidsordren som mal for senere bruk
+save the workorder	property	no	lagre bestilling
+save this workorder as a template for later use	property	no	lagre denne bestillingen som mal for senere bruk
 scale	property	no	Scale
 schedule	property	no	planlegge (tid)
 scheduled events	property	no	Planlagte oppgaver
@@ -1434,7 +1434,7 @@ select the category the r_agreement belongs to. to do not use a category select 
 select the category the request belongs to. to do not use a category select no category	property	no	velg kategori anmodning tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category the s_agreement belongs to. to do not use a category select no category	property	no	Velg kategorien denne serviceavtalen tilhører
 select the category the ticket belongs to. to do not use a category select no category	property	no	velg kategori melding tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
-select the category the workorder belongs to. to do not use a category select no category	property	no	velg kategori arbeidsordre tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the workorder belongs to. to do not use a category select no category	property	no	velg kategori bestillingen tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
 select the category. to do not use a category select no category	property	no	Velg kategori
 select the chapter (for tender) for this activity.	property	no	velg tilbudskapittel for denne posten
 select the coordinator the document belongs to. to do not use a category select no user	property	no	velg koordinator dokument tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
@@ -1491,7 +1491,7 @@ select the user the project belongs to. to do not use a category select no user	
 select the user the request belongs to. to do not use a category select no user	property	no	velg bruker anmodning tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user the selection belongs to. to do not use a user select no user	property	no	velg bruker utvalg tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user the template belongs to. to do not use a category select no user	property	no	velg bruker mal tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
-select the user the workorder belongs to. to do not use a category select no user	property	no	velg bruker arbeidsordre tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the workorder belongs to. to do not use a category select no user	property	no	velg bruker bestillingen tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
 select the user. to do not use a category select no user	property	no	Velg bruker
 select the user to edit email	property	no	Velg bruker for å rette epost
 select the vendor by clicking the button	property	no	velg leverandør
@@ -1640,7 +1640,7 @@ the property is private. if the property should be public, uncheck this box	prop
 the property is public. if the property should be private, check this box	property	no	Eiendommen er merket public. Dersom den skulle være privat - kryss av denne boksen
 the recipient did not get the email:	property	no	Addressaten fikk ikke epost:
 the total amount to claim	property	no	Total sum for krav
-the workorder has not been saved	property	no	Arbeidsordren er ikke lagret
+the workorder has not been saved	property	no	Bestillingen er ikke lagret
 this account is not valid:	property	no	Denne kontoen er ikke gyldig:
 this activity code is already registered!	property	no	denne aktivitetskoden er allrerede registert
 this agreement code is already registered!	property	no	denne avtalekoden er allrerede registert
@@ -1759,8 +1759,8 @@ view the budget account	property	no	Vis budsjettkonto
 view the building	property	no	vis bygning
 view the category	property	no	Vis kategorien
 view the claim	property	no	Vis kravet
-view the complete workorder	property	no	vis komplett arbeidsordre
-view the complete workorder as a tender for bidding	property	no	vis komplett arbeidsordre som beskrivelse
+view the complete workorder	property	no	vis komplett bestilling
+view the complete workorder as a tender for bidding	property	no	vis komplett bestilling som beskrivelse
 view the document	property	no	vis dokument
 view the entity	property	no	Vis entiteten
 view the entrance	property	no	vis inngang
@@ -1780,7 +1780,7 @@ view the vendor(s) for this activity	property	no	vis leverandør(er) for dette e
 view the workorder	property	no	vis arberidsordre
 view this entity	property	no	Vis denne entiteten
 view ticket detail	property	no	vis meldingsdetalj
-view workorder	property	no	Vis arbeidsordre
+view workorder	property	no	Vis bestilling
 voucher	property	no	Bilag
 voucher date	property	no	Bilags dato
 voucher id	property	no	Bilags nr
@@ -1798,26 +1798,26 @@ what is the current status of this document ?	property	no	hva er status for dett
 what is the current status of this equipment ?	property	no	hva er status for dette utstyret ?
 what is the current status of this project ?	property	no	hva er status for dette prosjektet ?
 what is the current status of this request ?	property	no	hva er status for denne anmodningen ?
-what is the current status of this workorder ?	property	no	hva er status for denne arbeidsordren ?
+what is the current status of this workorder ?	property	no	hva er status for denne bestillingen ?
 where to deliver the key	property	no	Nøkler leveres
 where to fetch the key	property	no	Nøkler hentes
 where to pick up the key	property	no	Nøkler hentes
 which entity type is to show up in location forms	property	no	Hvilke Entitet-type skal vises i lokaliseringsskjema
 work:____________	property	no	Arbeid:____________
-workorder	property	no	Arbeidsordre
-workorder %1 has been edited	property	no	Arbeidsordre %1 er oppdatert
-workorder %1 has been saved	property	no	Arbeidsordre %1 er lagret
+workorder	property	no	Bestilling
+workorder %1 has been edited	property	no	Bestilling %1 er oppdatert
+workorder %1 has been saved	property	no	Bestilling %1 er lagret
 workorder %1 needs approval	property	no	Bestilling %1 venter på godkjenning
-workorder detail categories	property	no	Detaljering av arbeidsordre/bestilling
-workorder end date	property	no	Arbeidsordre frist
+workorder detail categories	property	no	Detaljering av bestilling
+workorder end date	property	no	Frist for bestilling
 workorder entry date	property	no	Registreringsdato
-workorder id	property	no	Arbeidsordre
-workorder is sent by email!	property	no	Arbeidsordre er sendt pr e-post!
-workorders status	property	no	Status arbeidsordre/bestilling
-workorder start date	property	no	Arbeidsordre start dato
+workorder id	property	no	Bestilling
+workorder is sent by email!	property	no	Bestilling er sendt pr e-post!
+workorders status	property	no	Status bestilling
+workorder start date	property	no	Start dato for bestilling
 workorder status	property	no	Status
-workorder template	property	no	Arbeidsordre mal
-workorder title	property	no	Arbeidsordre tittel
+workorder template	property	no	Bestillings mal
+workorder title	property	no	Bestillings tittel
 workorder user	property	no	Bruker
 write off	property	no	avskrivning
 write off period	property	no	avskrivningsperiode
