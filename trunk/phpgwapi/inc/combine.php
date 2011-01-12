@@ -162,6 +162,20 @@
 			{
 				fwrite($fp, $contents);
 				fclose($fp);
+
+				/**
+				 * Remove files that are older than a day
+				 */
+				$min_ctime = time() - (60*60*24);
+				$dir = new DirectoryIterator($cachedir);
+				foreach ( $dir as $fileinfo )
+				{
+					if ( preg_match('/^cache-/', $fileinfo->getFilename())
+						&& $fileinfo->getCTime() < $min_ctime )
+					{
+						unlink($fileinfo->getPathname());
+					}
+				}
 			}
 		}
 	}
