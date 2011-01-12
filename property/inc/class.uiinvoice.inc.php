@@ -896,7 +896,8 @@
 						'text' 			=> lang('F'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uiinvoice.receipt'
+							'menuaction'	=> 'property.uiinvoice.receipt',
+							'target'		=> '_blank'
 						)),
 						'parameters'	=> $parameters
 					);
