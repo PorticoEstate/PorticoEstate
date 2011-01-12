@@ -51,7 +51,8 @@
 		{	
 			$browser = createObject('phpgwapi.browser');
 
-			if($browser->BROWSER_AGENT != 'IE')
+//			if($browser->BROWSER_AGENT != 'IE')
+			if(true)
 			{
 				$size = strlen($document);
 				$browser->content_header($document_name .'.pdf','application/pdf', $size);
@@ -104,14 +105,14 @@ HTML;
 		 */
 		protected function _clear_cache($dir)
 		{
-			$min_ctime = 60 * 60;
+			$min_ctime = time() - (60*60);
 			$dir = new DirectoryIterator($dir);
-			foreach ( $dir as $file )
+			foreach ( $dir as $fileinfo )
 			{
-				if ( preg_match('/^PDF_/', $file)
-					&& $file->getCTime() < $min_ctime )
+				if ( preg_match('/^PDF_/', $fileinfo->getFilename())
+					&& $fileinfo->getCTime() < $min_ctime )
 				{
-					unlink($file);
+					unlink($fileinfo->getPathname());
 				}
 			}
 		}
