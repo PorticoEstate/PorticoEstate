@@ -20,11 +20,11 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="headers" isDefault="false" forecolor="#808080" fontName="DejaVu Sans" fontSize="14"/>
-	<style name="Sans_Normal" isDefault="true" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Sans_Bold" isDefault="false" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Sans_Italic" isDefault="false" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Sans_Bold_Italic" isDefault="false" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="headers" isDefault="false" forecolor="#808080" fontName="Serif" fontSize="14"/>
+	<style name="Sans_Normal" isDefault="true" fontName="Serif" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" isDefault="false" fontName="Serif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Italic" isDefault="false" fontName="Serif" fontSize="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold_Italic" isDefault="false" fontName="Serif" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
 	<subDataset name="resources">
 		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
 		<queryString>
