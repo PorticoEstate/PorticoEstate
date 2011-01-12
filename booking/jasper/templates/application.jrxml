@@ -27,6 +27,7 @@
 	<style name="Sans_Bold_Italic" fontName="FreeSerif" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
 	<parameter name="BK_APPLICATION_ID" class="java.lang.String"/>
 	<parameter name="BK_BUILDING_NAME" class="java.lang.String"/>
+	<parameter name="BK_PATH" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT bb_application.id AS application_id, bb_application.status AS application_status, to_char(bb_application.created, 'DD/MM/YYYY HH24:MI') AS application_created, to_char(bb_application.modified, 'DD/MM/YYYY HH24:MI') AS application_modified,bb_application.contact_name, bb_application.contact_email, bb_application.contact_phone,bb_application.description, to_char(bb_application_date.from_, 'DD/MM/YYYY HH24:MI') AS from, to_char(bb_application_date.to_, 'DD/MM/YYYY HH24:MI') AS to, bb_activity.name AS activity_name, bb_event.cost AS price,bb_application_comment.comment AS comment FROM bb_application, bb_application_date,bb_activity, bb_event, bb_application_comment WHERE bb_application.id = ANY (string_to_array($P{BK_APPLICATION_ID}, ',')::int4[]) AND bb_application.id = bb_application_date.application_id AND bb_application.activity_id = bb_activity.id AND bb_application.id = bb_event.application_id AND bb_application.id = bb_application_comment.application_id LIMIT 1]]>
 	</queryString>
@@ -50,11 +51,11 @@
 		<band height="107" splitType="Stretch">
 			<image>
 				<reportElement x="0" y="11" width="102" height="74"/>
-				<imageExpression class="java.lang.String"><![CDATA["/srv/portico/webapp/booking/jasper/templates/logo.png"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA[$P{BK_PATH} + "/booking/jasper/templates/logo.png"]]></imageExpression>
 			</image>
 			<image>
 				<reportElement x="405" y="0" width="150" height="100"/>
-				<imageExpression class="java.lang.String"><![CDATA["/srv/portico/webapp/booking/jasper/templates/aktivby.png"]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA[$P{BK_PATH} + "/booking/jasper/templates/aktivby.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

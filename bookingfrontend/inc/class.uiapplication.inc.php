@@ -37,12 +37,13 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['print'])
 			{
 				$output_type = 'PDF';
-				$jasper_parameters = sprintf("\"BK_BUILDING_NAME|%s;BK_APPLICATION_ID|%s\"",
+				$jasper_parameters = sprintf("\"BK_BUILDING_NAME|%s;BK_APPLICATION_ID|%s;BK_PATH|%s\"",
 					$application['building_name'],
-					$id);
+					$id,
+                    $GLOBALS['_SERVER']['DOCUMENT_ROOT']);
 				// DEBUG
-				//print_r($jasper_parameters);
-				//exit(0);
+				// print_r($jasper_parameters);
+				// exit(0);
 
 				$jasper_wrapper 	= CreateObject('phpgwapi.jasper_wrapper');
 				$report_source		= PHPGW_SERVER_ROOT.'/booking/jasper/templates/application.jrxml';
@@ -53,7 +54,7 @@
 				catch(Exception $e)
 				{
 					$errors[] = $e->getMessage();
-					echo "<pre>\nErrors:";print_r($errors);exit;
+					echo "<pre>\nError: ";print_r($errors[0]);exit;
 				}
 			}
 
