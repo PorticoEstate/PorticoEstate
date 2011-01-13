@@ -323,6 +323,11 @@
 					(
 						'id'	=> '9',
 						'name'	=> lang('accounting dim b')
+					),
+					array
+					(
+						'id'	=> '10',
+						'name'	=> lang('budget account group')
 					)
 				);
 			return $this->bocommon->select_list($selected,$criteria);
@@ -399,6 +404,14 @@
 			$criteria[9] = array
 				(
 					'field'	=> 'fm_workorder.ecodimb',
+					'type'	=> 'int',
+					'matchtype' => 'exact',
+					'front' => '',
+					'back' => ''
+				);
+			$criteria[10] = array
+				(
+					'field'	=> 'fm_project.account_group',
 					'type'	=> 'int',
 					'matchtype' => 'exact',
 					'front' => '',
