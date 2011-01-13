@@ -210,7 +210,7 @@
 					}
 				}
 			}
-			if(phpgw::get_var('resource', 'GET') == '')
+			if(phpgw::get_var('building_name', 'GET') == '')
 			{			
 				array_set_default($allocation, 'resources', array());
 				$weekday =  'monday';
