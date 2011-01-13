@@ -867,6 +867,8 @@
 				{
 					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
 				}
+
+				$values['location_data'] = $ticket['location_data'];
 			}
 
 			if(isset($values['origin']) && $values['origin'])
@@ -1211,7 +1213,14 @@
 				$location_template_type = 'form';
 				$_location_data = array();
 
-				if(isset($values['location_data']) && $values['location_data'])
+				if(!$values['location_data'] && $origin_id)
+				{
+					$location_code = isset($values['location_code']) && $values['location_code'] ? $values['location_code'] : implode("-", $values['location']);
+					$values['extra']['view'] = true;
+					$values['location_data'] = $bolocation->read_single($location_code,$values['extra']);
+				}
+
+				if($values['location_data'])
 				{
 					$_location_data = $values['location_data'];
 				}
