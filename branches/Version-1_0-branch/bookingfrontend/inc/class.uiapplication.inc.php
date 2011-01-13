@@ -37,10 +37,9 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['print'])
 			{
 				$output_type = 'PDF';
-				$jasper_parameters = sprintf("\"BK_BUILDING_NAME|%s;BK_APPLICATION_ID|%s;BK_PATH|%s\"",
+				$jasper_parameters = sprintf("\"BK_BUILDING_NAME|%s;BK_APPLICATION_ID|%s\"",
 					$application['building_name'],
-					$id,
-                    $GLOBALS['_SERVER']['DOCUMENT_ROOT']);
+					$id);
 				// DEBUG
 				// print_r($jasper_parameters);
 				// exit(0);
