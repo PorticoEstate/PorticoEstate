@@ -81,6 +81,12 @@
 			<td>{lang_google_tracker_id}:</td>
 			<td><input name="newsettings[tracker_id]" value="{value_tracker_id}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_url_to_external_logout}:
+			<br/> Redirect is computed if url ends with '='
+			</td>
+			<td><input name="newsettings[external_logout]" value="{value_external_logout}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
