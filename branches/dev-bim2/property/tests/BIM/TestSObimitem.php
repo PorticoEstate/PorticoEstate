@@ -23,8 +23,9 @@
 
 
 
-class TestSObim extends PHPUnit_Framework_TestCase
+class TestSObimitem extends PHPUnit_Framework_TestCase
 {
+	private $modelId;
 	private $bimTypeTableName = 'fm_bim_type';
 	private $bimItemTableName = 'fm_bim_data';
 	private $projectGuid;
@@ -64,6 +65,7 @@ class TestSObim extends PHPUnit_Framework_TestCase
 		//$GLOBALS['phpgw']->acl->set_account_id(7); // not sure why this is needed...
 		$this->db = & $GLOBALS['phpgw']->db;
 		$this->loadXmlVariables();
+		$this->modelId = $this->getModelId(propertyBimSuite::$modelName);
 		
 	}
 	/**
@@ -102,7 +104,7 @@ class TestSObim extends PHPUnit_Framework_TestCase
 	 * @depends testDb
 	 */
 	public function testGetAll() {
-		$sobim = new sobim_impl($this->db);
+		$sobim = new sobimitem_impl($this->db);
 		$bimItems = $sobim->getAll();
 		$this->assertEquals(3, count($bimItems));
 		foreach($bimItems as $bimItem) {
@@ -118,42 +120,43 @@ class TestSObim extends PHPUnit_Framework_TestCase
 	 * @depends testGetAll
 	 */
 	public function testGetBimItem() {
-		$sobim = new sobim_impl($this->db);
+		$sobim = new sobimitem_impl($this->db);
 		/* @var $bimItem BimItem */  
 		$bimItem = $sobim->getBimItem($this->projectGuid);
 		
 		$this->assertNotNull($bimItem);
 		$bimItem->setDatabaseId(0);
-		$localBimItem = new BimItem(0, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
+		$localBimItem = new BimItem(0, $this->projectGuid, $this->projectType, $this->projectXml->asXML(), $this->modelId);
+		
 		$this->assertEquals($localBimItem, $bimItem);
 	}
 	/*
 	 * @depends testGetBimItem
 	 */
 	public function testIfBimItemExists() {
-		$sobim = new sobim_impl($this->db);
+		$sobim = new sobimitem_impl($this->db);
 		$this->assertTrue($sobim->checkIfBimItemExists($this->projectGuid));
 	}
 	/*
 	 * @depends testIfBimItemExists
 	 */
 	public function testDeleteBimItem() {
-		$sobim = new sobim_impl($this->db);
-		$this->assertEquals(1, $sobim->deleteBimItem($this->projectGuid));
+		$sobim = new sobimitem_impl($this->db);
+		$this->assertEquals(3, $sobim->deleteBimItem($this->projectGuid));
 	}
 	/*
 	 * @depends testDeleteBimItem
 	 */
 	public function testAddBimItem() {
-		$sobim = new sobim_impl($this->db);
-		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML());
-		$this->assertEquals(1, $sobim->addBimItem($itemToBeAdded));
+		$sobim = new sobimitem_impl($this->db);
+		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML(), $this->modelId);
+		$this->assertEquals(3, $sobim->addBimItem($itemToBeAdded));
 	}
 	/*
 	 * @depends testAddBimItem
 	 */
 	public function testUpdateBimItem() {
-		$sobim = new sobim_impl($this->db);
+		$sobim = new sobimitem_impl($this->db);
 		$bimItem = $sobim->getBimItem($this->projectGuid);
 		$xml = new SimpleXMLElement($bimItem->getXml());
 		$xml->attributes->name = $this->newProjectName;
@@ -163,7 +166,7 @@ class TestSObim extends PHPUnit_Framework_TestCase
 		$this->assertTrue($sobim->updateBimItem($bimItem));
 	}
 	public function testExistingAttributeValue() {
-		$sobim = new sobim_impl($this->db);
+		$sobim = new sobimitem_impl($this->db);
 		try {
 			$result = $sobim->getBimItemAttributeValue($this->projectGuid, "name");
 			$this->assertTrue(in_array($this->newProjectName, $result));
@@ -172,13 +175,24 @@ class TestSObim extends PHPUnit_Framework_TestCase
 		}
 	}
 	public function testNonExistingAttributeValue() {
-		$sobim = new sobim_impl($this->db);
+		$sobim = new sobimitem_impl($this->db);
 		try {
 			$result = $sobim->getBimItemAttributeValue($this->projectGuid, "nonExisting");
-			var_dump($result);
+			
 			$this->assertFalse(count($result) > 0);
 		} catch (Exception $e) {
 			$this->assertTrue(true);
 		}
+	}
+	
+	private function getModelId($modelName) {
+		$resultAlias = "id";
+		$sql = "select id as $resultAlias from ".sobim::bimModelTable." where name = '$modelName'";
+		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
+			throw new Exception('Error getting model Id');
+		} else {
+			$this->db->next_record();
+			return  $this->db->f($resultAlias);
+		}	
 	}
 }
