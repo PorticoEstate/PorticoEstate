@@ -942,10 +942,20 @@
                         'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.foo')),
                         'text'	=> lang('Foo')
                     ),
-                    'bar'		=> array
+                    'showModels'       => array
                     (
-                        'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.bar')),
-                        'text'	=> lang('Bar'),
+                        'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.showModels')),
+                        'text'	=> lang('Show Models')
+                    ),
+                    'ifc'       => array
+                    (
+                        'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiifc.import')),
+                        'text'	=> lang('Ifc')
+                    ),
+                    'upload'		=> array
+                    (
+                        'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.upload')),
+                        'text'	=> lang('Upload'),
                         'image'	=> array('property', 'project_tenant_claim')
                     )
                 ))

@@ -1,8 +1,12 @@
 <?php
 phpgw::import_class('phpgwapi.yui');
 phpgw::import_class('property.soitem');
+phpgw::import_class('property.sobim');
+phpgw::import_class('property.sobimmodel');
 phpgw::import_class('property.soitem_group');
+phpgw::import_class('property.bobimmodel');
 phpgw::import_class('phpgwapi.datetime');
+//phpgw::import_class('property.bobimcreate');
 /**
  * FIXME: Description
  * @package property
@@ -10,6 +14,7 @@ phpgw::import_class('phpgwapi.datetime');
 
 class property_uiitem {
     private $so;
+    private $db;
     private $sogroup;
     private $bocommon;
     private $dry_run;
@@ -17,7 +22,11 @@ class property_uiitem {
     (
         'index' => true,
     	'foo' => true,
+    	'showModels' => true,
+    	'upload' => true,
+    	'uploadFile' => true,
         'testdata' => true,
+    	'ifc' => true,
         'emptydb' => true
     );
 
@@ -26,7 +35,7 @@ class property_uiitem {
 
         $GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
         $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
-
+		$this->db = & $GLOBALS['phpgw']->db;
         $this->so = property_soitem::singleton();
         $this->sogroup = property_soitem_group::singleton();
     }
@@ -382,9 +391,18 @@ class property_uiitem {
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+        
+        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/bim.css');
+    }
+    private function setupBimCss() {
+    if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
+            $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+        }
+        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/bim.css');
     }
     
     public function foo() {
+    	/*
     	$formTest = array();
     	$formTest['msgbox_text']= "ble1";
     	$formTest['msgbox_class']= "classy";
@@ -392,10 +410,155 @@ class property_uiitem {
     	//$formTest['form_elm']['button']['value'] = "ble2";
     	$template_vars = array();
         $template_vars['msgbox_data'] = $formTest;
+        
         $GLOBALS['phpgw']->xslttpl->add_file(array('msgbox'));
         //print_r($template_vars);
         $GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+        */
+    	$xml=<<<XML
+    	<PHPGW>
+    	<project ifcObjectType="ifcproject">
+    <attributes>
+        <guid>3KFKb0sfrDJwSHalGIQFZT</guid>
+        <longName>FM Architectural Handover</longName>
+        <name>FM-A-01</name>
+    </attributes>
+    <ownerHistory>
+        <changeAction>ADDED</changeAction>
+        <creationDate>1179073813</creationDate>
+        <owningApplication>
+            <applicationDeveloper>
+                <name>AEC3</name>
+            </applicationDeveloper>
+            <applicationFullName>IFC text editor</applicationFullName>
+            <applicationIdentifier>IFCtext</applicationIdentifier>
+            <version>Version 1</version>
+        </owningApplication>
+        <owningUser>
+            <organization>
+                <name>AEC3</name>
+            </organization>
+            <person>
+                <familyName>Liebich</familyName>
+                <givenName>Thomas</givenName>
+            </person>
+        </owningUser>
+    </ownerHistory>
+    <decomposition>
+        <buildings>
+            <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+        </buildings>
+        <site>28hfXoRX9EMhvGvGhmaaad</site>
+    </decomposition>
+    <units>
+        <unit>
+            <name>LENGTHUNIT</name>
+            <value>METRE</value>
+        </unit>
+        <unit>
+            <name>PLANEANGLEUNIT</name>
+            <value>DEGREE</value>
+        </unit>
+        <unit>
+            <name>AREAUNIT</name>
+            <value>SQUARE_METRE</value>
+        </unit>
+        <unit>
+            <name>VOLUMEUNIT</name>
+            <value>CUBIC_METRE</value>
+        </unit>
+    </units>
+</project>
+</PHPGW>
+XML;
+
+    	$GLOBALS['phpgw']->xslttpl->add_file(array('testProject3'));
+    	$GLOBALS['phpgw']->xslttpl->set_xml_data($xml);
+   		
+    	$this->setupCss();
     }
+    
+    public function showModels() {
+    	$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showmodels'));
+    	$bobimmodel = new bobimmodel_impl();
+    	$sobimmodel = new sobimmodel_impl($this->db);
+     	$bobimmodel->setSobimmodel($sobimmodel);
+     	$output = $bobimmodel->createBimModelList();
+     	$data = array (
+     		'models' => $output
+     	);
+     	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('modelData' => $data));
+        $this->setupBimCss();
+    }
+    
+    private $form_upload_field_filename ="ifc_file_name";
+    private $form_upload_field_modelname ="ifc_model_name";
+    
+     public function upload() {
+     	$GLOBALS['phpgw']->xslttpl->add_file(array('bim_upload_ifc'));
+    	
+        $import_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.uploadFile', 'id'=> $id));
+        $data = array
+			(
+				'importfile'					=> $importfile,
+				'values'						=> $content,
+				'form_field_modelname'			=> $this->form_upload_field_modelname,
+				'form_field_filename'			=> $this->form_upload_field_filename,
+				'import_action'					=> $import_action,
+				'lang_import_statustext'		=> lang('import to this location from spreadsheet'),
+				'lang_import'					=> lang('import'),
+				'lang_cancel'					=> lang('cancel')
+			);
+        $GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('upload' => $data));
+        $this->setupBimCss();
+     }
+     public static $virtualFileSystemPath = "ifc";
+     
+     public function uploadFile() {
+     	$uploadedFileArray = $_FILES[$this->form_upload_field_filename];
+     	$modelName = phpgw::get_var($this->form_upload_field_modelname);
+     	$filename = $uploadedFileArray['name'];
+		$filenameWithPath = $uploadedFileArray['tmp_name'];
+     	$bobimmodel = new bobimmodel_impl();
+     	$sovfs = new sovfs_impl($filename, $filenameWithPath, $this->virtualFileSystemPath);
+     	$bobimmodel->setVfsObject($sovfs);
+     	$sobimmodel = new sobimmodel_impl($this->db);
+     	$bobimmodel->setSobimmodel($sobimmodel);
+     	$bobimmodel->setModelName($modelName);
+     	$error = "";
+     	try {
+     		$bobimmodel->addUploadedIfcModel();
+     		
+     	} catch (FileExistsException $e) {
+     		$error =  $e;
+     	} catch (Exception $e) {
+     		$error =  $e;
+     	}
+     	
+     	
+     	
+     	 $data = array
+			(
+				'importfile'					=> print_r($_FILES, true),
+				'modelName'						=> $modelName,
+				'error'							=> $error
+			);
+     	
+     	
+     	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('upload' => $data));
+     }
+     
+     public function listModels() {
+     	
+     }
+     
+     
+     
+     
+     
+     public function ifc() {
+     	$GLOBALS['phpgw']->xslttpl->add_file(array('ifc'));
+     }
 
 
     public function testdata() {
