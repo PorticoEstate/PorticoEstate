@@ -87,6 +87,12 @@
 			</td>
 			<td><input name="newsettings[external_logout]" value="{value_external_logout}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_bookingfrontend_host}:
+			<br/> Needed for the return from the external_logout
+			</td>
+			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
+		</tr>
 
 <!-- END body -->
 <!-- BEGIN footer -->
