@@ -19,8 +19,8 @@
 define('PHPGW_API_UNIT_TEST_PATH', dirname(__FILE__));
 
 
-include('..\..\inc\class.sobim.inc.php');
-include('..\..\inc\class.sobimtype.inc.php');
+//include('..\..\inc\class.sobim.inc.php');
+//include('..\..\inc\class.sobimtype.inc.php');
 
 class propertyBimSuite extends PHPUnit_Framework_TestSuite
 {
@@ -28,7 +28,8 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 
     // this is is a bit of a hack, but it should work
     protected static $sessionid = '';
-	
+	public static $modelName = "dummyModel";
+    private $modelId;
     private $bimTypeTableName = 'fm_bim_type';
 	private $bimItemTableName = 'fm_bim_data';
 	private $projectGuid;
@@ -49,8 +50,11 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
     
     protected static $suite_tests = array
     (
-       // 'TestCustomFunctions.php',
-        'TestCustomFields.php'
+        'TestSObimitem.php',
+    	'TestSObimtype.php',
+    	'TestSObimmodel.php',
+    	'TestSOvfs.php',
+    	'TestBObimmodel.php'
     );
 
     /**
@@ -64,7 +68,12 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 		
         //$suite->addTestFiles(self::$suite_tests);
         
-       	$suite_tests = array(dirname(__FILE__).'\TestSObim.php', dirname(__FILE__).'\TestSObimtype.php');
+       	
+        $suite_tests = self::$suite_tests;
+        foreach($suite_tests as & $entry) {
+        	$entry = dirname(__FILE__).DIRECTORY_SEPARATOR.$entry;
+        }
+       	//$suite_tests = array(dirname(__FILE__).'\TestSObimtype.php');
         
 		$suite->addTestFiles($suite_tests);
         return $suite;
@@ -91,10 +100,17 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 
         self::$sessionid = $GLOBALS['phpgw']->session->create(self::$login,
                                                             '', false);
-        
+        phpgw::import_class('property.sobim');
+        phpgw::import_class('property.sobimitem');
+        phpgw::import_class('property.sobimtype');
+        phpgw::import_class('property.sobimmodel');
+        phpgw::import_class('property.sovfs');
+        phpgw::import_class('property.bobimmodel');
         $this->db = & $GLOBALS['phpgw']->db;
 		$this->loadXmlVariables();
+		$this->addDummyModel();
 		$this->addTestTypes();
+		$this->removeTestItems();
 		$this->addTestItems();
     }
 
@@ -126,7 +142,62 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 		
 		//echo $this->projectXml->();
 	}
+	
+	private function addDummyModel() {
+		$modelName = self::$modelName;
+		if(!$this->checkIfModelExists($modelName)) {
+			$sobimmodel = new sobimmodel_impl($this->db);
+		
+			$bogusId = $this->getBogusId();
+			$sobimmodel->setModelName($modelName);
+			$sobimmodel->setVfsdatabaseid($bogusId);
+			$sobimmodel->addBimModel();
+		}
+		$this->modelId = $this->getModelId($modelName);
+	}
+	private function getModelId($modelName) {
+		$resultAlias = "id";
+		$sql = "select id as $resultAlias from ".sobim::bimModelTable." where name = '$modelName'";
+		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
+			throw new Exception('Error getting model Id');
+		} else {
+			$this->db->next_record();
+			return  $this->db->f($resultAlias);
+		}	
+	}
+	private function checkIfModelExists($modelName) {
+		$resultAlias = "id";
+		$sql = "select count(*) as $resultAlias from ".sobim::bimModelTable." where name = '$modelName'";
+		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
+			throw new Exception('Error checking if model exists!');
+		} else {
+			$this->db->next_record();
+			$rowCountOfModels =  $this->db->f($resultAlias);
+			return ($rowCountOfModels > 0);
+		}
+	}
+	/*
+	 * gets an entry from the vfs table in order to satisfy the foreign key constraint
+	 * If the table is empty then there will be a problem!
+	 */
+	private function getBogusId() {
+		$resultAlias = "id";
+		$sql = "select file_id as $resultAlias from phpgw_vfs limit 1";
+		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
+			throw new Exception('phpgw_vfs table is empty! An item must be added or the tests should be altered!');
+		} else {
+			$this->db->next_record();
+			return  $this->db->f($resultAlias);
+		}
+	}
 	private function addTestItems() {
+		/*
+		$sobim = new sobim_impl($this->db);
+		
+		if(!$sobim->checkIfBimItemExists($this->projectGuid)) {
+			$sobim->addBimItem(new BimItem(null,$this->projectGuid,$this->projectType, $this->projectXml->asXML() ));
+		}
+		*/
 		if($this->checkIfItemsAlreadyExist()) {
 			//throw new Exception('At least one item already exists in database');
 			
@@ -149,9 +220,9 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 	}
 	private function insertTestItem($itemXml, $itemType, $itemGuid) {
 		$itemXml = $this->db->db_addslashes($itemXml);
-		$sql = "INSERT INTO $this->bimItemTableName (type, guid, xml_representation) values (";
+		$sql = "INSERT INTO $this->bimItemTableName (type, guid, xml_representation, model) values (";
 		$sql = $sql."(select id from $this->bimTypeTableName where name = '$itemType'),";
-		$sql = $sql."'$itemGuid', '$itemXml')";
+		$sql = $sql."'$itemGuid', '$itemXml', '$this->modelId')";
 		//echo $sql;
 		$this->db->query($sql,__LINE__,__FILE__);
 	}
@@ -198,7 +269,7 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 			}
 		}
 	}
-
+	
 	private function checkIfTestTypesAlreadyExist() {
 		$resultAlias = 'test_type_count';
 		$sql  = 'SELECT  count('.$this->bimTypeTableName.'.id) as '.$resultAlias.' FROM public.'.$this->bimTypeTableName.' WHERE '.$this->bimTypeTableName.'.name = \''.$this->buildingStorey1Type.'\' OR '.$this->bimTypeTableName.'.name = \''.$this->projectType.'\'';
