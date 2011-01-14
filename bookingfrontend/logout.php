@@ -21,12 +21,15 @@
 
 	$verified = $GLOBALS['phpgw']->session->verify();
 	
+	$bookingfrontend_host = '';
 	$external_logout = '';
 	if ($verified)
 	{
 		$config		= CreateObject('phpgwapi.config','bookingfrontend');
 		$config->read();
 
+		$bookingfrontend_host = isset($config->config_data['bookingfrontend_host']) && $config->config_data['bookingfrontend_host'] ? $config->config_data['bookingfrontend_host'] : '';
+		$bookingfrontend_host = rtrim($bookingfrontend_host,'/');
 		$external_logout = isset($config->config_data['external_logout']) && $config->config_data['external_logout'] ? $config->config_data['external_logout'] : '';
 //		$external_logout = "https://login-vip.bergen.kommune.no/SSO/logout?p_done_url=";//https://www.bergen.kommune.no"
 
@@ -108,7 +111,7 @@
 		{
 			$result_redirect = $GLOBALS['phpgw']->link('/bookingfrontend/', $extra_vars, true);
 		}
-		$external_logout_url = "{$external_logout}{$result_redirect}";
+		$external_logout_url = "{$external_logout}{$bookingfrontend_host}{$result_redirect}";
 		Header("Location: {$external_logout_url}");
 	}
 	exit;
