@@ -4,8 +4,7 @@
 	 * do not add any global variables into this code!
 	 * Any global variables needed should be injected via methods
 	 */
-	interface sobimtype {
-		const bimTypeTable = 'fm_bim_type';
+	interface sobimtype extends sobim {
 		/*
     	 * @param string type
     	 */
@@ -116,4 +115,3 @@
     	}
     	
     }
-?>
