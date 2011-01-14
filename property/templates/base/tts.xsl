@@ -1219,6 +1219,22 @@
 							</tr>
 							<tr>
 								<td>
+									<xsl:value-of select="php:function('lang', 'branch')" />
+								</td>
+								<td>
+									<select name="values[branch_id]" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'select branch')" />
+										</xsl:attribute>
+										<option value="0">
+											<xsl:value-of select="php:function('lang', 'select branch')" />
+										</option>
+										<xsl:apply-templates select="branch_list/status_list"/>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
 									<xsl:value-of select="php:function('lang', 'order_dim1')" />
 								</td>
 								<td>

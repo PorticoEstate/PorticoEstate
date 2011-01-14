@@ -2818,6 +2818,7 @@
 					'order_cat_list'				=> $order_catetory,
 					'building_part_list'			=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 					'order_dim1_list'				=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'branch_list'					=> array('status_list' => execMethod('property.boproject.select_branch_list', $values['branch_id'])),
 				);
 
 			//---datatable settings--------------------

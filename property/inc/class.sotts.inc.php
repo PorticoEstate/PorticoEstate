@@ -518,7 +518,7 @@
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
 				$ticket['publish_note']		= $this->db->f('publish_note');
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
-
+				$ticket['branch_id']		= $this->db->f('branch_id');
 				$user_id=(int)$this->db->f('user_id');
 
 				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
@@ -1084,6 +1084,7 @@
 			$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
 			$value_set['ecodimb']		= $ticket['ecodimb'];
 			$value_set['budget']		= $ticket['budget'];
+			$value_set['branch_id']		= $ticket['branch_id'];
 			$value_set					= $this->db->validate_update($value_set);
 			$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 

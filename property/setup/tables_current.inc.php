@@ -837,6 +837,7 @@
 				'approved' => array('type' => 'int','precision' => '2','nullable' => True),
 				'in_progress' => array('type' => 'int','precision' => '2','nullable' => True),
 				'delivered' => array('type' => 'int','precision' => '2','nullable' => True),
+				'actual_cost' => array('type' => 'int','precision' => '2','nullable' => True),
 				'sorting' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
@@ -884,7 +885,8 @@
 				'order_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),
 				'order_dim1'=> array('type' => 'int','precision' => 4,'nullable' => True),
-				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True)
+				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True),
+				'branch_id' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
