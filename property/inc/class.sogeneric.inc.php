@@ -1427,6 +1427,12 @@
 								'name' => 'closed',
 								'descr' => lang('closed'),
 								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'actual_cost',
+								'descr' => lang('mandatory actual cost'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'			=> lang('edit'),
