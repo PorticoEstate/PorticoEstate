@@ -483,7 +483,7 @@
 										<xsl:variable name="lang_priority_statustext"><xsl:value-of select="lang_priority_statustext"/></xsl:variable>
 										<xsl:variable name="select_priority_name"><xsl:value-of select="select_priority_name"/></xsl:variable>
 										<select name="{$select_priority_name}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
-											<xsl:apply-templates select="priority_list"/>
+											<xsl:apply-templates select="priority_list/options"/>
 										</select>			
 									</td>
 								</tr>
@@ -496,7 +496,7 @@
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Set the status of the ticket')" />
 											</xsl:attribute>
-											<xsl:apply-templates select="status_list"/>
+											<xsl:apply-templates select="status_list/options"/>
 										</select>			
 									</td>
 								</tr>
@@ -742,18 +742,6 @@
 
 	</xsl:template>
 
-	<xsl:template match="priority_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 <!-- view -->
 	<xsl:template match="view" xmlns:php="http://php.net/xsl">
 		<script type="text/javascript">
@@ -988,7 +976,7 @@
 							<xsl:variable name="lang_priority_statustext"><xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')" /></xsl:variable>
 							<xsl:variable name="select_priority_name"><xsl:value-of select="select_priority_name"/></xsl:variable>
 							<select name="{$select_priority_name}" class="forms" title = "{$lang_priority_statustext}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
-								<xsl:apply-templates select="priority_list"/>
+								<xsl:apply-templates select="priority_list/options"/>
 							</select>			
 						</td>
 					</tr>
@@ -999,12 +987,11 @@
 									<xsl:value-of select="php:function('lang', 'status')" />
 								</td>
 								<td>
-									<xsl:variable name="status_name"><xsl:value-of select="status_name"/></xsl:variable>
-									<select name="{$status_name}" class="forms">
+									<select name="values[status]" class="forms">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'Set the status of the ticket')" />
 										</xsl:attribute>
-										<xsl:apply-templates select="status_list"/>
+										<xsl:apply-templates select="status_list/options"/>
 									</select>			
 								</td>
 							</tr>
@@ -1213,7 +1200,7 @@
 										<option value="0">
 											<xsl:value-of select="php:function('lang', 'select building part')" />
 										</option>
-										<xsl:apply-templates select="building_part_list/status_list"/>
+										<xsl:apply-templates select="building_part_list/options"/>
 									</select>
 								</td>
 							</tr>
@@ -1229,7 +1216,7 @@
 										<option value="0">
 											<xsl:value-of select="php:function('lang', 'select branch')" />
 										</option>
-										<xsl:apply-templates select="branch_list/status_list"/>
+										<xsl:apply-templates select="branch_list/options"/>
 									</select>
 								</td>
 							</tr>
@@ -1245,7 +1232,7 @@
 										<option value="0">
 											<xsl:value-of select="php:function('lang', 'order_dim1')" />
 										</option>
-										<xsl:apply-templates select="order_dim1_list/status_list"/>
+										<xsl:apply-templates select="order_dim1_list/options"/>
 									</select>
 								</td>
 							</tr>
@@ -1352,12 +1339,11 @@
 								<xsl:value-of select="php:function('lang', 'status')" />
 							</td>
 							<td>
-								<xsl:variable name="status_name"><xsl:value-of select="status_name"/></xsl:variable>
-								<select name="{$status_name}" class="forms">
+								<select name="values[status]" class="forms">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')" />
 									</xsl:attribute>
-									<xsl:apply-templates select="status_list"/>
+									<xsl:apply-templates select="status_list/options"/>
 								</select>			
 							</td>
 						</tr>
@@ -1689,9 +1675,8 @@
 				</td>
 				<td>
 				<xsl:variable name="lang_status_statustext"><xsl:value-of select="lang_status_statustext"/></xsl:variable>
-				<xsl:variable name="status_name"><xsl:value-of select="status_name"/></xsl:variable>
-					<select name="{$status_name}" class="forms" onMouseover="window.status='{$lang_status_statustext}'; return true;" onMouseout="window.status='';return true;">
-							<xsl:apply-templates select="status_list"/>
+					<select name="values[status]" class="forms" onMouseover="window.status='{$lang_status_statustext}'; return true;" onMouseout="window.status='';return true;">
+							<xsl:apply-templates select="status_list/options"/>
 					</select>			
 				</td>
 			</tr>
@@ -1882,16 +1867,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="priority_list">
-		<option value="{id}">
-			<xsl:if test="selected != 0">
-				<xsl:attribute name="selected" value="selected" />
-			</xsl:if>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
-		</option>
-	</xsl:template>
-
-	<xsl:template match="status_list">
+	<xsl:template match="options">
 		<option value="{id}">
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected" />

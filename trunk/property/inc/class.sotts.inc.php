@@ -740,10 +740,9 @@
 
 		}
 
-		function update_ticket($ticket,$id = 0)
+		function update_ticket($ticket,$id = 0, $receipt = array())
 		{
 			$id = (int) $id;
-			$receipt = array();
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
 			$this->db->next_record();
@@ -956,7 +955,7 @@
 				$this->db->query("UPDATE fm_tts_tickets SET actual_cost='" . (float)$ticket['actual_cost']
 					. "' WHERE id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('AC',$id,(float)$ticket['actual_cost'] , $old_actual_cost);
-				$receipt['message'][]= array('msg' => lang('actual_cost has been updated'));
+				$receipt['message'][]= array('msg' => lang('actual cost has been updated'));
 			}
 
 			if ((int)$old_order_cat_id != (int)$ticket['order_cat_id'])

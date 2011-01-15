@@ -29,6 +29,7 @@ actor	property	no	Aktør
 actual cost	property	no	Faktisk kostnad
 actual_cost	property	no	Faktisk kostnad
 actual cost changed	property	no	Faktisk kostnad er endret
+actual cost has been updated	property	no	Faktisk kostnad er oppdatert
 actual cost - paid so far	property	no	Faktisk betalt - pr dd
 add a apartment	property	no	Legg til leilighet
 add a attrib	property	no	Legg til en attibutt
@@ -1011,6 +1012,7 @@ minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
 Missing log message	property	no	Angi grunn for endring
+Missing value	property	no	Mangler verdi
 missing value for %1	property	no	Mangler verdi for %1
 month	property	no	Måned
 Monthly (by day)	property	no	Månedlig (dag)

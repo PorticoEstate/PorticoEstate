@@ -92,7 +92,9 @@
 			$location_code			= phpgw::get_var('location_code');
 
 
-			$this->start			= $start 							? $start 			: 0;
+//			$this->start			= $start 							? $start 			: 0;
+
+			$this->start			= isset($_REQUEST['start']) 		? $start			: $this->start;
 			$this->query			= isset($_REQUEST['query']) 		? $query			: $this->query;
 			$this->sort				= isset($_REQUEST['sort']) 			? $sort				: $this->sort;
 			$this->order			= isset($_REQUEST['order']) 		? $order			: $this->order;
@@ -981,9 +983,9 @@
 			return $receipt;
 		}
 
-		public function update_ticket($data, $id)
+		public function update_ticket($data, $id,$receipt = array())
 		{
-			$receipt 	= $this->so->update_ticket($data, $id);
+			$receipt = $this->so->update_ticket($data, $id, $receipt);
 			$this->fields_updated = $this->so->fields_updated;		
 			return $receipt;
 		}

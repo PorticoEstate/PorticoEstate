@@ -293,9 +293,23 @@
 				return lang('sorry - insufficient rights');
 			}
 
-
 			$new_status = phpgw::get_var('new_status', 'string', 'GET');
 			$id 		= phpgw::get_var('id', 'int');
+
+			$ticket = $this->bo->read_single($id);
+
+			if($ticket['order_id'] &&  abs($ticket['actual_cost']) == 0)
+			{
+				$sogeneric		= CreateObject('property.sogeneric');
+				$sogeneric->get_location_info('ticket_status',false);
+				$status_data	= $sogeneric->read_single(array('id' => (int)ltrim($new_status,'C')),array());
+
+				if($status_data['actual_cost'])
+				{
+					return "id ".$id." ".lang('actual cost') . ': ' . lang('Missing value');
+				}
+			}
+
 			$receipt 	= $this->bo->update_status(array('status'=>$new_status),$id);
 			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
 			{
@@ -1753,9 +1767,9 @@
 
 					'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
 					'select_priority_name'			=> 'values[priority]',
-					'priority_list'					=> $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:'')),
+					'priority_list'					=> array('options' => $this->bo->get_priority_list((isset($values['priority'])?$values['priority']:''))),
 
-					'status_list'					=> $this->bo->get_status_list('O'),
+					'status_list'					=> array('options' => $this->bo->get_status_list('O')),
 
 					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 
@@ -2007,10 +2021,24 @@
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
+			if(!$receipt)
+			{
+				$receipt = array();
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files'));
 
 			$historylog	= CreateObject('property.historylog','tts');
+
+			$order_read 			= $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
+			$order_add 				= $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
+			$order_edit 			= $this->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
+
+			$access_order = false;
+			if($order_add || $order_edit)
+			{
+				$access_order = true;
+			}
 
 			if(isset($values['save']))
 			{
@@ -2038,11 +2066,30 @@
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
 
+				$sogeneric		= CreateObject('property.sogeneric');
+				$sogeneric->get_location_info('ticket_status',false);
+				$status_data	= $sogeneric->read_single(array('id' => (int)ltrim($values['status'],'C')),array());
+
+				if($access_order && $status_data['actual_cost'])
+				{
+					if(!$values['actual_cost'] || !abs($values['actual_cost']) > 0)
+					{
+//_Debug_Array(abs($values['actual_cost']));
+//_debug_Array($values['actual_cost']);die();
+
+						$receipt['error'][]=array('msg'=>lang('actual cost') . ': ' . lang('Missing value'));
+					}
+					else if(!is_numeric($values['actual_cost']))
+					{
+						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter a numeric value'));					
+					}
+				}
+				
 				if(isset($values['takeover']) && $values['takeover'])
 				{
 					$values['assignedto'] = $this->account;
 				}
-				$receipt = $this->bo->update_ticket($values,$id);
+				$receipt = $this->bo->update_ticket($values,$id, $receipt);
 
 				if ( (isset($values['send_mail']) && $values['send_mail']) 
 					|| (isset($this->bo->config->config_data['mailnotification'])
@@ -2260,15 +2307,6 @@
 			}
 
 			// -------- start order section
-			$order_read 			= $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
-			$order_add 				= $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
-			$order_edit 			= $this->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
-
-			$access_order = false;
-			if($order_add || $order_edit)
-			{
-				$access_order = true;
-			}
 
 			if($access_order)
 			{
@@ -2752,9 +2790,8 @@
 
 					'location_data'					=> $location_data,
 
-					'status_name'					=> 'values[status]',
 					'value_status'					=> $ticket['status'],
-					'status_list'					=> $this->bo->get_status_list($ticket['status']),
+					'status_list'					=> array('options' => $this->bo->get_status_list($ticket['status'])),
 
 					'lang_no_user'					=> lang('Select user'),
 					'lang_user_statustext'			=> lang('Select the user the selection belongs to. To do not use a user select NO USER'),
@@ -2772,7 +2809,7 @@
 					'value_priority'				=> $ticket['priority'],
 					'lang_priority_statustext'		=> lang('Select the priority the selection belongs to.'),
 					'select_priority_name'			=> 'values[priority]',
-					'priority_list'					=> $this->bo->get_priority_list($ticket['priority']),
+					'priority_list'					=> array('options' => $this->bo->get_priority_list($ticket['priority'])),
 
 					'lang_no_cat'					=> lang('no category'),
 					'value_cat_id'					=> $this->cat_id,
@@ -2816,9 +2853,9 @@
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'order_cat_list'				=> $order_catetory,
-					'building_part_list'			=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
-					'order_dim1_list'				=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
-					'branch_list'					=> array('status_list' => execMethod('property.boproject.select_branch_list', $values['branch_id'])),
+					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'order_dim1_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'branch_list'					=> array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])),
 				);
 
 			//---datatable settings--------------------
@@ -3018,9 +3055,7 @@
 					'lang_ticket'					=> lang('Ticket'),
 					'table_header_additional_notes'	=> $table_header_additional_notes,
 					'table_header_history'			=> $table_header_history,
-					'lang_status'					=> lang('Status'),
-					'status_name'					=> 'values[status]',
-					'status_list'					=> $this->bo->get_status_list($ticket['status']),
+					'status_list'					=> array('options' => $this->bo->get_status_list($ticket['status'])),
 					'lang_status_statustext'		=> lang('Set the status of the ticket'),
 
 					'lang_no_user'					=> lang('Select user'),
