@@ -325,7 +325,7 @@
 										<option value="0">
 											<xsl:value-of select="php:function('lang', 'select building part')" />
 										</option>
-										<xsl:apply-templates select="building_part_list/status_list"/>
+										<xsl:apply-templates select="building_part_list/options"/>
 									</select>
 								</td>
 							</tr>
@@ -338,11 +338,17 @@
 								</td>
 							</tr>
 							<tr>
-								<td>
-									<xsl:value-of select="lang_status"/>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'status')" />
 								</td>
 								<td>
-									<xsl:call-template name="status_select"/>
+									<select name="values[status]" class="forms">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Set the status of the ticket')" />
+										</xsl:attribute>
+										<option value="0"><xsl:value-of select="php:function('lang', 'no status')" /></option>
+										<xsl:apply-templates select="status_list/options"/>
+									</select>			
 								</td>
 							</tr>
 							<tr>
@@ -351,10 +357,8 @@
 								</td>
 								<td>
 									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_start_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 									<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
@@ -366,10 +370,8 @@
 								</td>
 								<td>
 									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_end_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 									<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
@@ -381,9 +383,9 @@
 								</td>
 								<td>
 									<xsl:variable name="lang_branch_statustext"><xsl:value-of select="lang_branch_statustext"/></xsl:variable>
-									<select name="values[branch_id]" class="forms" onMouseover="window.status='{$lang_branch_statustext}'; return true;" onMouseout="window.status='';return true;">
+									<select name="values[branch_id]" class="forms" title="{$lang_branch_statustext}">
 										<option value=""><xsl:value-of select="lang_no_branch"/></option>
-										<xsl:apply-templates select="branch_list"/>
+										<xsl:apply-templates select="branch_list/options"/>
 									</select>
 								</td>
 							</tr>
@@ -426,25 +428,17 @@
 										<xsl:apply-templates select="condition_list"/>
 										<tr>
 											<td align="left">
-												<xsl:value-of select="lang_authorities_demands"/>
+												<xsl:value-of select="php:function('lang', 'Authorities Demands')" />
 											</td>
+
 											<td>
-												<xsl:choose>
-													<xsl:when test="authorities_demands='1'">
-														<input type="checkbox" name="values[authorities_demands]" value="1" checked="checked">
-															<xsl:attribute name="title">
-																<xsl:value-of select="lang_authorities_demands_statustext"/>
-															</xsl:attribute>
-														</input>
-													</xsl:when>
-													<xsl:otherwise>
-														<input type="checkbox" name="values[authorities_demands]" value="1">
-															<xsl:attribute name="title">
-																<xsl:value-of select="lang_authorities_demands_statustext"/>
-															</xsl:attribute>
-														</input>
-													</xsl:otherwise>
-												</xsl:choose>
+												<select name="values[authorities_demands]" class="forms">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'Is there a demand from the authorities to correct this condition?')" />
+													</xsl:attribute>
+													<option value="0"><xsl:value-of select="php:function('lang', 'no demands')" /></option>
+													<xsl:apply-templates select="authorities_demands/options"/>
+												</select>			
 											</td>
 										</tr>
 										<xsl:call-template name="attributes"/>
@@ -584,20 +578,20 @@
 			</td>
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][degree]" class="forms" onMouseover="window.status='{$lang_degree_statustext}'; return true;" onMouseout="window.status='';return true;">
-					<xsl:apply-templates select="degree"/>
+				<select name="values[condition][{condition_type}][degree]" class="forms" title="{$lang_degree_statustext}">
+					<xsl:apply-templates select="degree/options"/>
 				</select>
 			</td>
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_probability_statustext"><xsl:value-of select="//lang_probability_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][probability]" class="forms" onMouseover="window.status='{$lang_probability_statustext}'; return true;" onMouseout="window.status='';return true;">
-					<xsl:apply-templates select="probability"/>
+				<select name="values[condition][{condition_type}][probability]" class="forms" title="{$lang_probability_statustext}">
+					<xsl:apply-templates select="probability/options"/>
 				</select>
 			</td>
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_consequence_statustext"><xsl:value-of select="//lang_consequence_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][consequence]" class="forms" onMouseover="window.status='{$lang_consequence_statustext}'; return true;" onMouseout="window.status='';return true;">
-					<xsl:apply-templates select="consequence"/>
+				<select name="values[condition][{condition_type}][consequence]" class="forms" title="{$lang_consequence_statustext}">
+					<xsl:apply-templates select="consequence/options"/>
 				</select>
 			</td>
 		</tr>
@@ -639,274 +633,14 @@
 		</tr>
 	</xsl:template>
 
-
-	<xsl:template match="degree">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
-
-	<xsl:template match="probability">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-
-
-	<xsl:template match="branch_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="degree_list_safety">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="degree_list_aesthetics">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="degree_list_indoor_climate">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="degree_list_consequential_damage">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="degree_list_user_gratification">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="degree_list_residential_environment">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="probability_list_safety">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="probability_list_aesthetics">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-
-	<xsl:template match="probability_list_indoor_climate">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="probability_list_consequential_damage">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="probability_list_user_gratification">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="probability_list_residential_environment">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence_list_safety">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence_list_aesthetics">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence_list_indoor_climate">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence_list_consequential_damage">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence_list_user_gratification">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="consequence_list_residential_environment">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 
 	<xsl:template match="table_header_history">
 		<tr class="th">
@@ -1124,7 +858,7 @@
 					<td>
 						<xsl:value-of select="lang_status"/>
 					</td>
-					<xsl:for-each select="status_list" >
+					<xsl:for-each select="status_list/options" >
 						<xsl:choose>
 							<xsl:when test="selected">
 								<td>
@@ -1154,7 +888,7 @@
 					<td valign="top">
 						<xsl:value-of select="lang_branch"/>
 					</td>
-					<xsl:for-each select="branch_list" >
+					<xsl:for-each select="branch_list/options" >
 						<xsl:choose>
 							<xsl:when test="selected">
 								<td>
@@ -1252,5 +986,3 @@
 		</div>
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
 	</xsl:template>
-
-

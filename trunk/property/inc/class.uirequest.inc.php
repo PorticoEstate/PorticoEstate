@@ -1300,13 +1300,12 @@
 					'lang_no_user'						=> lang('Select coordinator'),
 					'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
 
-					'status_list'						=> $this->bo->select_status_list('select',$values['status']),
-					'status_name'						=> 'values[status]',
+					'status_list'						=> array('options' => $this->bo->select_status_list('select',$values['status'])),
 					'lang_no_status'					=> lang('Select status'),
 					'lang_status'						=> lang('Status'),
 					'lang_status_statustext'			=> lang('What is the current status of this request ?'),
 
-					'branch_list'						=> $this->boproject->select_branch_list($values['branch_id']),
+					'branch_list'						=> array('options' => $this->boproject->select_branch_list($values['branch_id'])),
 					'lang_branch'						=> lang('branch'),
 					'lang_no_branch'					=> lang('Select branch'),
 					'lang_branch_statustext'			=> lang('Select the branches for this request'),
@@ -1318,12 +1317,10 @@
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
-					'lang_authorities_demands'			=> lang('Authorities Demands'),
-					'lang_authorities_demands_statustext'	=> lang('Is there a demand from the authorities to correct this condition?'),
-					'authorities_demands'				=> $values['authorities_demands'],
+					'authorities_demands'				=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'authorities_demands', 'selected' => $values['authorities_demands']))),
 
 					'condition_list'					=> $this->bo->select_conditions($id),
-					'building_part_list'				=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 				);
 
 			phpgwapi_yui::load_widget('dragdrop');

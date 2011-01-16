@@ -192,6 +192,7 @@
 
 		function select_conditions($request_id='')
 		{
+			$conditions = array();
 			$condition_type_list = $this->so->select_condition_type_list();
 
 			if($request_id)
@@ -201,9 +202,9 @@
 
 			for ($i=0;$i<count($condition_type_list);$i++)
 			{
-				$conditions[$i]['degree'] 				= $this->select_degree_list($conditions[$i]['degree']);
-				$conditions[$i]['probability'] 			= $this->select_probability_list($conditions[$i]['probability']);
-				$conditions[$i]['consequence'] 			= $this->select_consequence_list($conditions[$i]['consequence']);
+				$conditions[$i]['degree'] 				= array('options' => $this->select_degree_list($conditions[$i]['degree']));
+				$conditions[$i]['probability'] 			= array('options' => $this->select_probability_list($conditions[$i]['probability']));
+				$conditions[$i]['consequence'] 			= array('options' => $this->select_consequence_list($conditions[$i]['consequence']));
 				$conditions[$i]['condition_type']		= $condition_type_list[$i]['id'];
 				$conditions[$i]['condition_type_name']	= $condition_type_list[$i]['name'];
 			}
