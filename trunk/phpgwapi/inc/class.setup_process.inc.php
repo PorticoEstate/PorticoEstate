@@ -23,14 +23,14 @@
 	* V : Version mismatch at end of upgrade (Not used, proposed only)
 	* M : Missing files at start of upgrade (Not used, proposed only)
 	*/
-	class setup_process
+	class phpgwapi_setup_process
 	{
 		var $oProc;
 		var $tables;
 		var $updateincluded = array();
 		var $translation;
 
- 		function setup_process()
+ 		function __construct()
 		{
 			$this->translation = createObject('phpgwapi.setup_translation');
 		}
