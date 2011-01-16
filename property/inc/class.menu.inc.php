@@ -400,6 +400,11 @@
 							'text'	=> lang('Request condition_type'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'r_condition_type') )
 						),
+						'authorities_demands'	=> array
+						(
+							'text'	=> lang('authorities demands'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'authorities_demands') )
+						),
 						'request_attribs'	=> array
 						(
 							'text'	=> lang('request Attributes'),
@@ -642,7 +647,7 @@
 			$menus['navigation']['helpdesk']['children']['response_template'] = array
 				(
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'response_template') ),
-					'text'	=> lang('order template'),
+					'text'	=> lang('response template'),
 					'image'		=> array('property', 'helpdesk')
 				);
 

@@ -199,7 +199,7 @@ attributes for the entity category	property	no	Attributter for entitet-kategori
 attributes for the location type	property	no	Attributter for lokaliserings type
 attributes for the standard	property	no	verdier for standard
 a unique code for this activity	property	no	En unik kode fo denne aktiviteten
-authorities demands	property	no	Offentlige pålegg
+authorities demands	property	no	Myndighetskrav
 auto tax	property	no	Auto MVA
 b_account	property	no	Budsjett konto
 back to admin	property	no	Tilbake til Admin
@@ -494,6 +494,7 @@ dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i 
 dim b	property	no	Kostnadssted
 dimb	property	no	Kostnadssted
 dimb roles	property	no	Roller kostnadssted
+no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
 dim d	property	no	Dim D
 directory created	property	no	katalog er opprettet
@@ -870,7 +871,7 @@ invoice number	property	no	Faktura nr
 invoice tranferred	property	no	bilag er overført
 is id	property	no	Er ID
 is registered	property	no	er registert
-is there a demand from the authorities to correct this condition?	property	no	Finnes det offentlige pålegg fo å rette opp tilstanden?
+is there a demand from the authorities to correct this condition?	property	no	Finnes det myndighetskrav for å rette opp tilstanden?
 items	property	no	Detaljer
 janitor	property	no	Bestiller
 jasper reports	property	no	JasperReports

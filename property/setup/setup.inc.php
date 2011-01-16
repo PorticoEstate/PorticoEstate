@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.605';
+	$setup_info['property']['version']		= '0.9.17.606';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -110,6 +110,7 @@
 		'fm_wo_hours_category',
 		'fm_wo_h_deviation',
 		'fm_key_loc',
+		'fm_authorities_demands',
 		'fm_request',
 		'fm_request_condition_type',
 		'fm_request_condition',
