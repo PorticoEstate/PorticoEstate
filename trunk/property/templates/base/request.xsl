@@ -417,8 +417,6 @@
 							</tr>
 						</table>
 					</div>
-
-
 					<div id="importance">
 						<table>
 							<tr>
@@ -436,7 +434,7 @@
 													<xsl:attribute name="title">
 														<xsl:value-of select="php:function('lang', 'Is there a demand from the authorities to correct this condition?')" />
 													</xsl:attribute>
-													<option value="0"><xsl:value-of select="php:function('lang', 'no demands')" /></option>
+													<option value="0"><xsl:value-of select="php:function('lang', 'no authorities demands')" /></option>
 													<xsl:apply-templates select="authorities_demands/options"/>
 												</select>			
 											</td>
