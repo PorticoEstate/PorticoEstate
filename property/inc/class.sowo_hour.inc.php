@@ -125,11 +125,11 @@
 					(
 						'hour_id'			=> $this->db->f('id'),
 						'activity_num'		=> $this->db->f('activity_num'),
-						'hours_descr'		=> stripslashes($this->db->f('hours_descr')),
+						'hours_descr'		=> htmlspecialchars_decode($this->db->f('hours_descr',true)),
 						'owner'				=> $this->db->f('owner'),
 						'quantity'			=> $this->db->f('quantity'),
 						'grouping_id'		=> $this->db->f('grouping_id'),
-						'grouping_descr'	=> $this->db->f('grouping_descr'),
+						'grouping_descr'	=> $this->db->f('grouping_descr',true),
 						'ns3420_id'			=> $this->db->f('ns3420_id'),
 						'tolerance'			=> $this->db->f('tolerance'),
 						'activity_id'		=> $this->db->f('activity_id'),
@@ -542,21 +542,21 @@
 			{
 				$hour['hour_id']			= $this->db->f('id');
 				$hour['record']				= $this->db->f('record');
-				$hour['activity_id']			= $this->db->f('activity_id');
-				$hour['activity_num']			= $this->db->f('activity_num');
-				$hour['grouping_id']			= $this->db->f('grouping_id');
-				$hour['hours_descr']			= $this->db->f('hours_descr');
+				$hour['activity_id']		= $this->db->f('activity_id');
+				$hour['activity_num']		= $this->db->f('activity_num');
+				$hour['grouping_id']		= $this->db->f('grouping_id');
+				$hour['hours_descr']		= htmlspecialchars_decode($this->db->f('hours_descr',true));
 				$hour['remark']				= $this->db->f('remark');
 				$hour['billperae']			= $this->db->f('billperae');
 				$hour['unit']				= $this->db->f('unit');
 				$hour['ns3420_id']			= $this->db->f('ns3420_id');
-				$hour['tolerance_id']			= (int)$this->db->f('tolerance');
-				$hour['building_part_id']		= (int)$this->db->f('building_part');
+				$hour['tolerance_id']		= (int)$this->db->f('tolerance');
+				$hour['building_part_id']	= (int)$this->db->f('building_part');
 				$hour['quantity']			= $this->db->f('quantity');
 				$hour['cost']				= $this->db->f('cost');
 				$hour['dim_d']				= $this->db->f('dim_d');
-				$hour['wo_hour_cat']			= $this->db->f('category');
-				$hour['cat_per_cent']			= $this->db->f('cat_per_cent');
+				$hour['wo_hour_cat']		= $this->db->f('category');
+				$hour['cat_per_cent']		= $this->db->f('cat_per_cent');
 			}
 
 			return $hour;
