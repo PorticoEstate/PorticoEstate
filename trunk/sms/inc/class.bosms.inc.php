@@ -1,22 +1,22 @@
 <?php
 	/**
-	* phpGroupWare - HRM: a  human resource competence management system.
+	* phpGroupWare - SMS: a  human resource competence management system.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2011 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package hrm
+	* @package sms
 	* @subpackage place
  	* @version $Id$
 	*/
 
 	/**
 	 * Description
-	 * @package hrm
+	 * @package sms
 	 */
 
-	class bosms
+	class sms_bosms
 	{
 		var $start;
 		var $query;
@@ -29,10 +29,10 @@
 		var $public_functions = array
 		(
 			'read'			=> true,
-			'read_single'		=> true,
+			'read_single'	=> true,
 			'save'			=> true,
 			'delete'		=> true,
-			'check_perms'		=> true
+			'check_perms'	=> true
 		);
 
 		function __construct($session=false)
@@ -110,14 +110,25 @@
 			$inbox = $this->so->read_inbox(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows,'acl_location' =>$this->acl_location));
 			$this->total_records = $this->so->total_records;
+
+			foreach($inbox as $dummy => &$msg)
+			{
+				$msg['entry_time'] = $GLOBALS['phpgw']->common->show_date(strtotime($msg['entry_time']));
+			}
+
 			return $inbox;
 		}
-
 
 		function read_outbox()
 		{
 			$outbox = $this->so->read_outbox(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 											'allrows'=>$this->allrows,'acl_location' =>$this->acl_location));
+
+			foreach($outbox as $dummy => &$msg)
+			{
+				$msg['entry_time'] = $GLOBALS['phpgw']->common->show_date(strtotime($msg['entry_time']));
+			}
+
 			$this->total_records = $this->so->total_records;
 			return $outbox;
 		}
