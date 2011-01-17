@@ -18,7 +18,7 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class setup
+	class phpgwapi_setup
 	{
 		var $db;
 		var $oProc;
@@ -35,7 +35,7 @@
 		var $tbl_config;
 		var $tbl_hooks;
 
-		function setup($html = False, $translation = False)
+		public function __construct($html = False, $translation = False)
 		{
 			$this->detection = createObject('phpgwapi.setup_detection');
 			$this->process   = createObject('phpgwapi.setup_process');

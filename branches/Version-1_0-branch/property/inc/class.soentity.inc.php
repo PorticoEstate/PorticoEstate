@@ -409,6 +409,13 @@
 						{
 							case 'V':
 							case 'email':
+							case 'T':
+								if(!$criteria_id)
+								{
+									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod = array(); // remove block
+								}
+								break;
 							case 'CH':
 								if(!$criteria_id)
 								{
@@ -486,7 +493,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-			//_debug_array($sql);
+_debug_array($sql);
 			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
