@@ -201,12 +201,12 @@
 			{
 				$table_add[] = array
 				(
-					'lang_send'			=> lang('Send text SMS'),
+					'lang_send'					=> lang('Send text SMS'),
 					'lang_send_statustext'		=> lang('send single'),
-					'send_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send', 'from'=>'index')),
-					'lang_send_group'		=> lang('Send broadcast SMS'),
+					'send_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send', 'from'=>'index')),
+					'lang_send_group'			=> lang('Send broadcast SMS'),
 					'lang_send_group_statustext'	=> lang('send group'),
-					'send_group_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send_group', 'from'=>'index')),
+					'send_group_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'sms.uisms.send_group', 'from'=>'index')),
 				);
 			}
 
@@ -217,19 +217,19 @@
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'menu'							=> execMethod('sms.menu.links'),
 				'allow_allrows'					=> true,
-				'allrows'					=> $this->allrows,
+				'allrows'						=> $this->allrows,
 				'start_record'					=> $this->start,
 				'record_limit'					=> $record_limit,
 				'num_records'					=> count($sms_info),
 				'all_records'					=> $this->bo->total_records,
-				'link_url'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'					=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'						=> $this->query,
+				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
+				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
+				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
-				'table_header_inbox'				=> $table_header,
-				'table_add'					=> $table_add,
+				'table_header_inbox'			=> $table_header,
+				'table_add'						=> $table_add,
 				'values_inbox'					=> $content
 			);
 
@@ -263,7 +263,7 @@
 
 			$sms_info = $this->bo->read_outbox();
 
-			while (is_array($sms_info) && list(,$entry) = each($sms_info))
+			foreach ($sms_info as $entry)
 			{
 				if($this->bocommon->check_perms($entry['grants'], PHPGW_ACL_DELETE))
 				{
@@ -279,11 +279,11 @@
 					'user'					=> $entry['user'],
 					'message'				=> $entry['message'],
 					'dst_group'				=> $entry['dst_group'],
-					'entry_time'				=> $entry['entry_time'],
+					'entry_time'			=> $entry['entry_time'],
 					'status'				=> $entry['status'],
-					'link_delete'				=> $link_delete,
-					'text_delete'				=> $text_delete,
-					'lang_delete_sms_text'			=> $lang_delete_sms_text,
+					'link_delete'			=> $link_delete,
+					'text_delete'			=> $text_delete,
+					'lang_delete_sms_text'	=> $lang_delete_sms_text,
 				);
 
 				unset ($link_delete);

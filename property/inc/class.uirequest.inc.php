@@ -768,13 +768,30 @@
 		}
 
 
-		function edit()
+		function edit($mode = 'edit')
 		{
 			$id 	= phpgw::get_var('id', 'int');
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uirequest.view', 'id'=> $id));
+			}
+
+			if($mode == 'view')
+			{
+				if( !$this->acl_read)
+				{
+					$this->bocommon->no_access();
+					return;
+				}
+			}
+			else
+			{
+				if(!$this->acl_add && !$this->acl_edit)
+				{
+					$this->bocommon->no_access();
+					return;
+				}
 			}
 
 			$values				= phpgw::get_var('values');
@@ -793,7 +810,7 @@
 				}
 				$values = $this->bocommon->collect_locationdata($values,$insert_record);
 			}
-			else
+			elseif ($mode == 'edit')
 			{
 				$location_code 	= phpgw::get_var('location_code');
 				$tenant_id 		= phpgw::get_var('tenant_id', 'int');
@@ -862,7 +879,7 @@
 			//_debug_array($values);
 			$this->config->read();
 
-			if ($values['save'])
+			if ($values['save'] && $mode == 'edit')
 			{
 				if(!$values['location'])
 				{
@@ -1026,7 +1043,7 @@
 
 			if ($id)
 			{
-				$function_msg = lang('Edit request');
+				$function_msg = lang("{$mode} request");
 			}
 			else
 			{
@@ -1038,7 +1055,8 @@
 			{
 				$this->cat_id = $values['cat_id'];
 			}
-			$lookup_type='form';
+
+			$lookup_type = $mode == 'edit' ? 'form' : 'view';
 
 			$location_data=$this->bolocation->initiate_ui_location(array
 				(
@@ -1066,7 +1084,7 @@
 
 			$link_data = array
 				(
-					'menuaction'	=> 'property.uirequest.edit',
+					'menuaction'	=> "property.uirequest.{$mode}",
 					'id'			=> $id
 				);
 
@@ -1198,6 +1216,8 @@
 
 			$data = array
 				(
+					'mode'								=> $mode,
+					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
 					'attributes'						=> $values['attributes'],
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'							=> $datavalues,
@@ -1225,6 +1245,7 @@
 					'lang_origin_statustext'			=> lang('Link to the origin for this request'),
 
 					'generate_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
+					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $id)),
 					'lang_generate_project'				=> lang('Generate project'),
 					'lang_generate_project_statustext'	=> lang('Generate a project from this request'),
 					'location_code'						=> $values['location_code'],
@@ -1300,13 +1321,12 @@
 					'lang_no_user'						=> lang('Select coordinator'),
 					'user_list'							=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
 
-					'status_list'						=> $this->bo->select_status_list('select',$values['status']),
-					'status_name'						=> 'values[status]',
+					'status_list'						=> array('options' => $this->bo->select_status_list('select',$values['status'])),
 					'lang_no_status'					=> lang('Select status'),
 					'lang_status'						=> lang('Status'),
 					'lang_status_statustext'			=> lang('What is the current status of this request ?'),
 
-					'branch_list'						=> $this->boproject->select_branch_list($values['branch_id']),
+					'branch_list'						=> array('options' => $this->boproject->select_branch_list($values['branch_id'])),
 					'lang_branch'						=> lang('branch'),
 					'lang_no_branch'					=> lang('Select branch'),
 					'lang_branch_statustext'			=> lang('Select the branches for this request'),
@@ -1318,12 +1338,10 @@
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
-					'lang_authorities_demands'			=> lang('Authorities Demands'),
-					'lang_authorities_demands_statustext'	=> lang('Is there a demand from the authorities to correct this condition?'),
-					'authorities_demands'				=> $values['authorities_demands'],
+					'authorities_demands'				=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'authorities_demands', 'selected' => $values['authorities_demands']))),
 
 					'condition_list'					=> $this->bo->select_conditions($id),
-					'building_part_list'				=> array('status_list' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 				);
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -1404,196 +1422,10 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$this->bocommon->no_access();
+				return;
 			}
-
-			$id 	= phpgw::get_var('id', 'int');
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('request', 'files'));
-
-			$values	= $this->bo->read_single($id);
-
-			$record_history = $this->bo->read_record_history($id);
-
-			$table_header_history[] = array
-				(
-					'lang_date'		=> lang('Date'),
-					'lang_user'		=> lang('User'),
-					'lang_action'		=> lang('Action'),
-					'lang_new_value'	=> lang('New value')
-				);
-
-			$function_msg = lang('View request');
-
-			if ($values['cat_id'])
-			{
-				$this->cat_id = $values['cat_id'];
-			}
-
-			$location_data=$this->bolocation->initiate_ui_location(array
-				(
-					'values'	=> $values['location_data'],
-					'type_id'	=> count(explode('-',$values['location_data']['location_code'])),
-					'no_link'	=> false, // disable lookup links for location type less than type_id
-					'tenant'	=> $values['location_data']['tenant_id'],
-					'lookup_type'	=> 'view',
-					'lookup_entity'	=> $this->bocommon->get_lookup_entity('project'),
-					'entity_data'	=> $values['p']
-				)
-			);
-
-			if($values['contact_phone'])
-			{
-				for ($i=0;$i<count($location_data['location']);$i++)
-				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
-					{
-						unset($location_data['location'][$i]['value']);
-					}
-				}
-			}
-
-
-			$link_data = array
-				(
-					'menuaction'	=> 'property.uirequest.edit',
-					'id'			=> $id
-				);
-
-			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$sep = '/';
-			$dlarr[strpos($dateformat,'y')] = 'yyyy';
-			$dlarr[strpos($dateformat,'m')] = 'MM';
-			$dlarr[strpos($dateformat,'d')] = 'DD';
-			ksort($dlarr);
-
-			$dateformat= (implode($sep,$dlarr));
-
-
-			$table_header_importance[] = array
-				(
-					'lang_subject'		=> lang('Subject'),
-					'lang_condition_degree'	=> lang('Condidtion degree'),
-					'lang_prob_worsening'	=> lang('Probability'),
-					'lang_consequence'	=> lang('Consequence')
-				);
-
-			if($values['project_id'])
-			{
-				$project_lookup_data = array
-					(
-						'menuaction'	=> 'property.uiproject.view'
-					);
-			}
-
-			$link_file_data = array
-				(
-					'menuaction'	=> 'property.uirequest.view_file',
-					'location_code'	=>$values['location_data']['location_code'],
-					'id'		=>$id
-				);
-
-			$this->config->read();
-			$link_to_files = $this->config->config_data['files_url'];
-
-			$j	= count($values['files']);
-			for ($i=0;$i<$j;$i++)
-			{
-				$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
-			}
-
-			$categories = $this->cats->formatted_xslt_list(array('selected' => $values['cat_id']));
-
-			$data = array
-				(
-					'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-					'link_to_files'					=> $link_to_files,
-					'files'							=> $values['files'],
-					'lang_files'					=> lang('files'),
-					'lang_filename'					=> lang('Filename'),
-					'lang_view_file_statustext'		=> lang('click to view file'),
-
-					'value_target'					=> $values['target'],
-					'value_origin'					=> $values['origin'],
-					'value_origin_type'				=> $origin,
-					'value_origin_id'				=> $origin_id,
-
-					'lang_project'					=> lang('Project'),
-					'lang_project_statustext'		=> lang('Link to the project originatet from this request'),
-					'link_project'					=> $GLOBALS['phpgw']->link('/index.php',$project_lookup_data),
-					'value_project_id'				=> $values['project_id'],
-
-					'lang_importance'				=> lang('Importance'),
-					'table_header_importance'		=> $table_header_importance,
-					'importance_weight_view'		=> $importance_weight,
-
-					'workorder_link'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit')),
-					'record_history'				=> $record_history,
-					'table_header_history'				=> $table_header_history,
-					'lang_history'					=> lang('History'),
-					'lang_no_history'				=> lang('No history'),
-
-					'lang_start_date'				=> lang('request start date'),
-					'value_start_date'				=> $values['start_date'],
-
-					'lang_end_date'					=> lang('request end date'),
-					'value_end_date'				=> $values['end_date'],
-
-					'lang_power_meter'				=> lang('Power meter'),
-					'value_power_meter'				=> $values['power_meter'],
-
-					'lang_budget'					=> lang('Budget'),
-					'value_budget'					=> $values['budget'],
-
-					'location_data'					=> $location_data,
-					'location_type'					=> 'view',
-					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
-					'lang_category'					=> lang('category'),
-					'lang_save'						=> lang('save'),
-					'lang_done'						=> lang('done'),
-
-					'lang_request_id'				=> lang('request ID'),
-					'value_request_id'				=> $values['request_id'],
-
-					'lang_title'					=> lang('Title'),
-					'value_title'					=> $values['title'],
-
-					'lang_descr'					=> lang('Description'),
-					'value_descr'					=> $values['descr'],
-					'lang_score'					=> lang('Score'),
-					'value_score'					=> $values['score'],
-					'lang_done_statustext'				=> lang('Back to the list'),
-					'value_cat_id'					=> $values['cat_id'],
-					'cat_list'						=> $categories['cat_list'],
-
-					'lang_coordinator'				=> lang('Coordinator'),
-					'lang_no_user'					=> lang('Select coordinator'),
-					'user_list'						=> $this->bocommon->get_user_list('select',$values['coordinator'],$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1),
-
-					'status_list'					=> $this->bo->select_status_list('select',$values['status']),
-					'lang_status'					=> lang('Status'),
-
-					'branch_list'					=> $this->boproject->select_branch_list($values['branch_id']),
-					'lang_branch'					=> lang('branch'),
-
-					'edit_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $id)),
-					'lang_edit_statustext'				=> lang('Edit this entry request'),
-					'lang_edit'						=> lang('Edit'),
-					'currency'						=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-					'lang_contact_phone'			=> lang('Contact phone'),
-					'contact_phone'					=> $values['contact_phone'],
-
-					'lang_authorities_demands'		=> lang('Authorities Demands'),
-					'authorities_demands'			=> $values['authorities_demands'],
-
-					'condition_list_view'			=> $this->bo->select_conditions($id),
-				);
-
-			$appname	= lang('request');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			$this->edit($mode = 'view');
 		}
 
 		protected function _generate_tabs()

@@ -114,22 +114,12 @@
 
 		function read_outbox($data)
 		{
-			if(is_array($data))
-			{
-				if ($data['start'])
-				{
-					$start=$data['start'];
-				}
-				else
-				{
-					$start=0;
-				}
-				$query		= (isset($data['query'])?$data['query']:'');
-				$sort		= (isset($data['sort'])?$data['sort']:'DESC');
-				$order		= (isset($data['order'])?$data['order']:'');
-				$allrows	= (isset($data['allrows'])?$data['allrows']:'');
-				$acl_location	= (isset($data['acl_location'])?$data['acl_location']:'');
-			}
+			$query			= isset($data['start']) && $data['start'] ? (int)$data['start']:0;
+			$query			= isset($data['query'])?$data['query']:'';
+			$sort			= isset($data['sort'])?$data['sort']:'DESC';
+			$order			= isset($data['order'])?$data['order']:'';
+			$allrows		= isset($data['allrows'])?$data['allrows']:'';
+			$acl_location	= isset($data['acl_location'])?$data['acl_location']:'';
 
 			if($acl_location)
 			{
@@ -139,7 +129,6 @@
 			if ($order)
 			{
 				$ordermethod = " ORDER BY $order $sort";
-
 			}
 			else
 			{

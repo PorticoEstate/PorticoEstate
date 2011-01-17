@@ -338,9 +338,12 @@
 
 			if (count($lang_selected))
 			{
-				$GLOBALS['phpgw']->db->query("SELECT config_value FROM phpgw_config WHERE config_app='phpgwapi' AND config_name='install_id'",__LINE__,__FILE__);
-				$GLOBALS['phpgw']->db->next_record();
-				$GLOBALS['phpgw_info']['server']['install_id'] = $GLOBALS['phpgw']->db->f('config_value', true);
+				$c = createObject('phpgwapi.config','phpgwapi');
+				$c->read();
+				foreach ($c->config_data as $k => $v)
+				{
+					$GLOBALS['phpgw_info']['server'][$k] = $v;
+				}
 
 				if ($upgrademethod == 'dumpold')
 				{

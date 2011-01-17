@@ -9,6 +9,7 @@
 			'index'			=>	true,
 			'add'			=>	true,
 			'edit'			=>	true,
+			'info'			=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
 		
@@ -23,6 +24,7 @@
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
 			$this->organization_bo = CreateObject('booking.boorganization');
+			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::applications::events');
 			$this->fields = array('activity_id', 'description',
 										'resources', 'cost', 'application_id',
@@ -592,6 +594,29 @@
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();
 			self::render_template('event_edit', array('event' => $event, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+		}
+
+		public function info()
+		{
+			$event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$event['resources']), 'sort'=>'name'));
+			$event['resources'] = $resources['results'];
+			$res_names = array();
+			foreach($event['resources'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+			$event['resource'] = phpgw::get_var('resource', 'GET');
+			$event['resource_info'] = join(', ', $res_names);
+			$event['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $event['resources'][0]['building_id']));
+			$event['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $event['organization_id']));
+			$event['add_link'] = self::link(array('menuaction' => 'booking.uibooking.add', 'allocation_id'=>$event['id'], 'from_'=>$event['from_'], 'to_'=>$event['to_'], 'resource'=>$event['resource']));
+			$event['when'] = pretty_timestamp($event['from_']).' - '.pretty_timestamp($event['to_']);
+
+			$event['edit_link'] = self::link(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+
+			self::render_template('event_info', array('event'=>$event));
+			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 
 	}

@@ -29,6 +29,7 @@ actor	property	no	Aktør
 actual cost	property	no	Faktisk kostnad
 actual_cost	property	no	Faktisk kostnad
 actual cost changed	property	no	Faktisk kostnad er endret
+actual cost has been updated	property	no	Faktisk kostnad er oppdatert
 actual cost - paid so far	property	no	Faktisk betalt - pr dd
 add a apartment	property	no	Legg til leilighet
 add a attrib	property	no	Legg til en attibutt
@@ -198,7 +199,7 @@ attributes for the entity category	property	no	Attributter for entitet-kategori
 attributes for the location type	property	no	Attributter for lokaliserings type
 attributes for the standard	property	no	verdier for standard
 a unique code for this activity	property	no	En unik kode fo denne aktiviteten
-authorities demands	property	no	Offentlige pålegg
+authorities demands	property	no	Myndighetskrav
 auto tax	property	no	Auto MVA
 b_account	property	no	Budsjett konto
 back to admin	property	no	Tilbake til Admin
@@ -493,6 +494,7 @@ dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i 
 dim b	property	no	Kostnadssted
 dimb	property	no	Kostnadssted
 dimb roles	property	no	Roller kostnadssted
+no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	K Ikke valgt
 dim d	property	no	Dim D
 directory created	property	no	katalog er opprettet
@@ -869,7 +871,7 @@ invoice number	property	no	Faktura nr
 invoice tranferred	property	no	bilag er overført
 is id	property	no	Er ID
 is registered	property	no	er registert
-is there a demand from the authorities to correct this condition?	property	no	Finnes det offentlige pålegg fo å rette opp tilstanden?
+is there a demand from the authorities to correct this condition?	property	no	Finnes det myndighetskrav for å rette opp tilstanden?
 items	property	no	Detaljer
 janitor	property	no	Bestiller
 jasper reports	property	no	JasperReports
@@ -1011,6 +1013,7 @@ minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
 Missing log message	property	no	Angi grunn for endring
+Missing value	property	no	Mangler verdi
 missing value for %1	property	no	Mangler verdi for %1
 month	property	no	Måned
 Monthly (by day)	property	no	Månedlig (dag)
@@ -1623,6 +1626,7 @@ termination date	property	no	oppsigelse dato
 test cron	property	no	Test cron
 text	property	no	Tekst
 text_view	property	no	Vis tekst
+Ticket %1 has been saved	property	no	Melding %1 er lagret
 that vendor id is not valid !	property	no	Denne leverandør ID er ikke gyldig
 the address to which this order will be sendt	property	no	Adressen ordren vil bli sendt til
 the apartment is private. if the apartment should be public, uncheck this box	property	no	Leiligheter er ikke

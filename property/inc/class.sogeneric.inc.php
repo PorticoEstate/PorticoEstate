@@ -894,9 +894,37 @@
 						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
-						'name'		=> '',
+						'name'		=> 'condition type',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_condition'
+					);
+				break;
+			case 'authorities_demands':
+				$info = array
+					(
+						'table' => 'fm_authorities_demands',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('authorities demands'),
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::authorities_demands',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
 					);
 				break;
 			case 'b_account':
@@ -1426,6 +1454,12 @@
 							(
 								'name' => 'closed',
 								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'actual_cost',
+								'descr' => lang('mandatory actual cost'),
 								'type' => 'checkbox'
 							)
 						),
