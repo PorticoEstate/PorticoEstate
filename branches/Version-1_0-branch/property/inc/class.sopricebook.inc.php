@@ -272,8 +272,8 @@
 						'unit'			=> $this->db->f('unit'),
 						'dim_d'			=> $this->db->f('dim_d'),
 						'ns3420_id'		=> $this->db->f('ns3420'),
-						'descr'			=> stripslashes($this->db->f('descr')),
-						'base_descr'		=> stripslashes($this->db->f('base_descr')),
+						'descr'			=> htmlspecialchars_decode($this->db->f('descr',true)),
+						'base_descr'		=> htmlspecialchars_decode($this->db->f('base_descr',true)),
 						'index_count'		=> $this->db->f('index_count'),
 						'agreement_id'		=> $this->db->f('fm_agreement.id')
 					);
@@ -504,12 +504,12 @@
 					(
 						'activity_id'	=> $this->db->f('activity_id'),
 						'num'			=> $this->db->f('num'),
-						'base_descr'	=> stripslashes($this->db->f('base_descr')),
+						'base_descr'	=> htmlspecialchars_decode($this->db->f('base_descr',true)),
 						'branch'		=> $this->db->f('branch'),
 						'dim_d'			=> $this->db->f('dim_d'),
 						'ns3420'		=> $this->db->f('ns3420'),
 						'unit'			=> $this->db->f('unit'),
-						'descr'			=> stripslashes($this->db->f('descr'))
+						'descr'			=> htmlspecialchars_decode($this->db->f('descr',true))
 					);
 			}
 			//		_debug_array($pricebook);
@@ -603,8 +603,8 @@
 				$activity['unit']		= $this->db->f('unit');
 				$activity['cat_id']		= $this->db->f('agreement_group_id');
 				$activity['ns3420_id']	= $this->db->f('ns3420');
-				$activity['descr']		= stripslashes($this->db->f('descr'));
-				$activity['base_descr']	= stripslashes($this->db->f('base_descr'));
+				$activity['descr']		= htmlspecialchars_decode($this->db->f('descr',true));
+				$activity['base_descr']	= htmlspecialchars_decode($this->db->f('base_descr',true));
 				$activity['dim_d']		= $this->db->f('dim_d');
 				$activity['branch_id']	= $this->db->f('branch_id');
 

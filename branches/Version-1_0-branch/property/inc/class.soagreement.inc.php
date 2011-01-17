@@ -379,17 +379,15 @@
 
 		function read_details($data)
 		{
-			if(is_array($data))
-			{
-				$start			= (isset($data['start'])?$data['start']:0);
-				$filter			= (isset($data['filter'])?$data['filter']:'none');
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order			= (isset($data['order'])?$data['order']:'');
-				$cat_id			= (isset($data['cat_id'])?$data['cat_id']:'');
-				$allrows		= (isset($data['allrows'])?$data['allrows']:'');
-				$agreement_id	= (isset($data['agreement_id'])?$data['agreement_id']:'');
-			}
+				$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+				$filter			= isset($data['filter']) && $data['filter'] ? $data['filter']:'none';
+				$query 			= isset($data['query']) ? $data['query'] : '';
+				$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
+				$order			= isset($data['order']) ? $data['order'] : '';
+				$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+				$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+				$agreement_id	= isset($data['agreement_id']) ? $data['agreement_id'] : '';
+
 			$allrows = true; // return all..
 
 			$entity_table = 'fm_activity_price_index';
@@ -493,7 +491,7 @@
 						'activity_id'		=> $this->db->f('activity_id'),
 						'id'				=> $this->db->f('id'),
 						'num'				=> $this->db->f('num'),
-						'descr'				=> $this->db->f('descr'),
+						'descr'				=> htmlspecialchars_decode($this->db->f('descr',true)),
 						'unit'				=> $this->db->f('unit'),
 						'm_cost'			=> $this->db->f('m_cost'),
 						'w_cost'			=> $this->db->f('w_cost'),
