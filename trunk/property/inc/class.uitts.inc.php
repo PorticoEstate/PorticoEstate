@@ -2066,22 +2066,27 @@
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 				}
 
-				$sogeneric		= CreateObject('property.sogeneric');
-				$sogeneric->get_location_info('ticket_status',false);
-				$status_data	= $sogeneric->read_single(array('id' => (int)ltrim($values['status'],'C')),array());
-
-				if($access_order && $status_data['actual_cost'])
+				if($access_order)
 				{
-					if(!$values['actual_cost'] || !abs($values['actual_cost']) > 0)
+					if((!isset($values['make_order']) || !$values['make_order']) && (!isset($values['budget']) || !$values['budget']) )
 					{
-//_Debug_Array(abs($values['actual_cost']));
-//_debug_Array($values['actual_cost']);die();
-
-						$receipt['error'][]=array('msg'=>lang('actual cost') . ': ' . lang('Missing value'));
+						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Missing value'));
 					}
-					else if(!is_numeric($values['actual_cost']))
+
+					$sogeneric		= CreateObject('property.sogeneric');
+					$sogeneric->get_location_info('ticket_status',false);
+					$status_data	= $sogeneric->read_single(array('id' => (int)ltrim($values['status'],'C')),array());
+
+					if(isset($status_data['actual_cost']) && $status_data['actual_cost'])
 					{
-						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter a numeric value'));					
+						if(!$values['actual_cost'] || !abs($values['actual_cost']) > 0)
+						{
+							$receipt['error'][]=array('msg'=>lang('actual cost') . ': ' . lang('Missing value'));
+						}
+						else if(!is_numeric($values['actual_cost']))
+						{
+							$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter a numeric value'));					
+						}
 					}
 				}
 				
