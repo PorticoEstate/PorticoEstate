@@ -1626,6 +1626,7 @@ termination date	property	no	oppsigelse dato
 test cron	property	no	Test cron
 text	property	no	Tekst
 text_view	property	no	Vis tekst
+Ticket %1 has been saved	property	no	Melding %1 er lagret
 that vendor id is not valid !	property	no	Denne leverandør ID er ikke gyldig
 the address to which this order will be sendt	property	no	Adressen ordren vil bli sendt til
 the apartment is private. if the apartment should be public, uncheck this box	property	no	Leiligheter er ikke
