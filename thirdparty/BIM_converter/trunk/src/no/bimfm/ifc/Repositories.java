@@ -27,4 +27,6 @@ public interface Repositories {
 	 * @throws RepositoryExceptionUc if it already exists
 	 */
 	public boolean addRepository(String repoName, String fileName);
+	
+	public boolean deleteAllRepositories();
 }

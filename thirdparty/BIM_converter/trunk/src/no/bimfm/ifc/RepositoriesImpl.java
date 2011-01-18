@@ -4,6 +4,9 @@ package no.bimfm.ifc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.bimfm.jaxb.rest.RepositoryStatus;
 
 import jsdai.lang.AEntity;
@@ -17,7 +20,7 @@ import jsdai.lang.SdaiRepository;
 import jsdai.lang.SdaiSession;
 
 public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repositories  {
-	
+	private Logger logger = LoggerFactory.getLogger("no.bimfm.ifc.RepositoriesImpl");
 	private List<String> repositoryNames= new ArrayList<String>();
 	private List<String> repositoryInfo= new ArrayList<String>();
 	private RepositoryStatus repositoryStatus = new RepositoryStatus();
@@ -55,7 +58,7 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 	protected void extractRepositories() throws SdaiException {
 		
 		repositoryAggregation = session.getKnownServers();
-		System.out.println("Known servers are count:"+repositoryAggregation.getMemberCount());
+		logger.debug("Known servers count is: {}",repositoryAggregation.getMemberCount());
 		repositoryIterator = repositoryAggregation.createIterator();
 	}
 	
@@ -235,6 +238,27 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 	}
 	
 	@Override
+	public boolean deleteAllRepositories() {
+		logger.info("Deleting all repositories");
+		super.openSdaiSession();
+		try {
+			this.extractRepositories();
+			while (repositoryIterator.next()) {
+				SdaiRepository repository = repositoryAggregation.getCurrentMember(repositoryIterator);
+				repository.deleteRepository();
+			}
+			logger.info("All found repositories have been deleted");
+			super.closeSdaiSession();
+			return true;
+		} catch (SdaiException e) {
+			super.closeSdaiSession();
+			logger.error("Sdai exception while trying to delete all repositories!");
+			e.printStackTrace();
+			throw new RepositoryExceptionUc("Error deleting all repositories", e);
+		}
+	}
+	
+	@Override
 	public boolean deleteRepository(String repositoryName){
 		try {
 			return findRepositoryAndDelete(repositoryName);
@@ -249,7 +273,7 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 		super.openSdaiSession();
 		this.extractRepositories();
 		while (repositoryIterator.next()) {
-			SdaiRepository repository = repositoryAggregation.getCurrentMember(repositoryIterator);				
+			SdaiRepository repository = repositoryAggregation.getCurrentMember(repositoryIterator);
 			if ( repository.getName().equals(repositoryName)) {
 				repository.deleteRepository();
 				super.closeSdaiSession();
