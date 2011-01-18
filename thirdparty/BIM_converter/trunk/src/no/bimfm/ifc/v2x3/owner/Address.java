@@ -1,6 +1,5 @@
 package no.bimfm.ifc.v2x3.owner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -201,7 +200,7 @@ public class Address extends CommonObjectDefinition{
 	}
 
 	public void setTelephoneNumbers(String telephoneNumbers) {
-		telephoneNumbers = telephoneNumbers;
+		this.telephoneNumbers = telephoneNumbers;
 	}
 
 	public String getFacsimileNumbers() {
@@ -209,7 +208,7 @@ public class Address extends CommonObjectDefinition{
 	}
 
 	public void setFacsimileNumbers(String facsimileNumbers) {
-		facsimileNumbers = facsimileNumbers;
+		this.facsimileNumbers = facsimileNumbers;
 	}
 
 	public String getPagerNumber() {
@@ -217,7 +216,7 @@ public class Address extends CommonObjectDefinition{
 	}
 
 	public void setPagerNumber(String pagerNumber) {
-		pagerNumber = pagerNumber;
+		this.pagerNumber = pagerNumber;
 	}
 
 	public String getElectronicMailAddresses() {
@@ -225,7 +224,7 @@ public class Address extends CommonObjectDefinition{
 	}
 
 	public void setElectronicMailAddresses(String electronicMailAddresses) {
-		electronicMailAddresses = electronicMailAddresses;
+		this.electronicMailAddresses = electronicMailAddresses;
 	}
 
 	public String getWWWHomePageURL() {
