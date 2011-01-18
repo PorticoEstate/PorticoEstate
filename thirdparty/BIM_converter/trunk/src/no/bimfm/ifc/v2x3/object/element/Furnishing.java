@@ -1,0 +1,48 @@
+package no.bimfm.ifc.v2x3.object.element;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import no.bimfm.ifc.v2x3.object.element.type.FurnishingType;
+import jsdai.SIfc2x3.EIfcbuildingstorey;
+import jsdai.SIfc2x3.EIfcelement;
+import jsdai.SIfc2x3.EIfcfurnishingelement;
+import jsdai.SIfc2x3.EIfcobjectdefinition;
+import jsdai.SIfc2x3.EIfcspace;
+import jsdai.SIfc2x3.EIfctypeobject;
+import jsdai.SIfc2x3.EIfcwindowstyle;
+import jsdai.lang.SdaiException;
+@XmlRootElement
+public class Furnishing  extends CommonElement{
+	private FurnishingType furnishingType = null;
+	
+	public Furnishing() {
+		super();
+		
+	}
+	@Override
+	public void load(EIfcobjectdefinition object) {
+		super.load(object);
+		EIfcfurnishingelement element = (EIfcfurnishingelement)object;
+		
+		try {
+			this.loadSpatialContainer(element);
+			this.loadFurnishingType(element);
+		} catch (SdaiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadSpatialContainer(EIfcelement entity) throws SdaiException {
+		
+		this.loadParentItemsIntoSpatialContainer(entity, EIfcspace.class);
+	}
+	private void loadFurnishingType(EIfcfurnishingelement entity) throws SdaiException {
+		EIfctypeobject typeObject = super.getTypeObject(entity);
+		if(typeObject != null && typeObject.isKindOf(EIfcwindowstyle.class)) {
+			this.furnishingType = new FurnishingType();
+			this.furnishingType.load((EIfcwindowstyle) typeObject);
+			
+		}
+	}
+}

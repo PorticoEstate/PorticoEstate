@@ -1,0 +1,23 @@
+package no.bimfm.jaxb.rest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.sun.xml.internal.txw2.annotation.XmlElement;
+
+@XmlRootElement
+public class SimpleList {
+	List<String> list = new ArrayList<String>();
+	public SimpleList() {
+	}
+	@XmlElement()
+	public List<String> getList() {
+		return list;
+	}
+	public void setList(List<String> list) {
+		this.list = list;
+	}
+	
+}
