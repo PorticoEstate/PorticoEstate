@@ -21,6 +21,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.bimfm.ifc.RepositoriesImpl;
 import no.bimfm.ifc.RepositoryExceptionUc;
 import no.bimfm.ifc.v2x3.IfcModelImpl;
@@ -31,6 +34,7 @@ import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/uploadIfc")
 public class UploadIfc {
+	private Logger logger = LoggerFactory.getLogger("no.ifc.rest.UploadIfc");
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String sayHtmlHello() {
@@ -42,7 +46,7 @@ public class UploadIfc {
 	@Consumes("multipart/form-data")
 	@Produces(MediaType.TEXT_HTML)
 	public String uploadFile(@FormDataParam("file") File file, @FormDataParam("file") FormDataContentDisposition fcdsFile,  @FormDataParam("file") InputStream attachmentFile,@FormDataParam("repoName") String repoName) {
-		
+		logger.debug("Upload initiated");
 		//String fileLocation = "/files/" + fcdsFile.getFileName();
 		String fileLocation = fcdsFile.getFileName();
 		/*try {
@@ -71,12 +75,12 @@ public class UploadIfc {
 			//file.close();
 			in.close();
 			out.close();
-			System.out.println("Upload success!");
+			logger.info("Upload success!");
 		} catch (FileNotFoundException e) {
-			System.out.println("Upload failure (fnf)!");
+			logger.error("Upload failure (fnf)!");
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("Upload failure (io)!");
+			logger.error("Upload failure (io)!");
 			e.printStackTrace();
 		}
 		//String ifcFilename = (Thread.currentThread().getContextClassLoader().get Resource(testIfcFileName)).toString();
@@ -87,9 +91,10 @@ public class UploadIfc {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println(path);
+		logger.info("Path to save the file in is {}", path);
 		
 		RepositoriesImpl repo = new RepositoriesImpl();
+		repo.deleteAllRepositories();
 		System.out.println(path + "\\" + testIfcFileName);
 		try {
 			if(repo.addRepository(repoName, path + File.separator + testIfcFileName)){
