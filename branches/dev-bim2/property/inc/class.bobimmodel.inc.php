@@ -165,7 +165,11 @@ class bobimmodel_impl implements bobimmodel {
 	 * needs sovfs object, with submodule set
 	 */
 	public function removeIfcModelByModelId() {
-		$this->checkIdArguments();
+		try {
+			$this->checkIdArguments();
+		} catch (InvalidArgumentException $e) {
+			throw $e;
+		}
 		/* @var $bimModel BimModel */
 		$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
 		$this->sobimmodel->setModelName($bimModel->getName());

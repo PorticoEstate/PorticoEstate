@@ -168,7 +168,7 @@ class sobimmodel_impl implements sobimmodel
 		}
 	}
 	private function checkArgModelId() {
-		if(!$this->modelName) {
+		if(!$this->modelId) {
 			throw new InvalidArgumentException("Invalid arguments! \n modelid: $this->modelId");
 		}
 	}
