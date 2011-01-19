@@ -1748,7 +1748,7 @@
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
-						'name'				=> lang('responsibility role'),
+						'name'				=> lang('custom menu items'),
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::custom_menu_items',
 						'default'			=> array
