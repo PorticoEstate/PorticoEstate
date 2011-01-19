@@ -2,14 +2,10 @@ package no.bimfm.ifc;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import jsdai.lang.SdaiException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import jsdai.lang.EEntity;
 
 public class RepositoriesImplTest {
 	Repositories repo = null;

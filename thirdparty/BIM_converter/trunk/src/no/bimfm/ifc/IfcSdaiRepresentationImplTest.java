@@ -5,8 +5,6 @@ package no.bimfm.ifc;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
-
 import jsdai.lang.SdaiException;
 import jsdai.lang.SdaiSession;
 
