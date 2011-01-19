@@ -2,6 +2,7 @@
 phpgw::import_class('phpgwapi.yui');
 phpgw::import_class('property.soitem');
 phpgw::import_class('property.sobim');
+phpgw::import_class('property.sovfs');
 phpgw::import_class('property.sobimmodel');
 phpgw::import_class('property.soitem_group');
 phpgw::import_class('property.bobimmodel');
@@ -13,6 +14,10 @@ phpgw::import_class('phpgwapi.datetime');
  */
 
 class property_uiitem {
+	
+	 public static $virtualFileSystemPath = "ifc";
+	 
+	 
     private $so;
     private $db;
     private $sogroup;
@@ -23,6 +28,8 @@ class property_uiitem {
         'index' => true,
     	'foo' => true,
     	'showModels' => true,
+    	'getModelsJson' => true,
+    	'removeModelJson' => true,
     	'upload' => true,
     	'uploadFile' => true,
         'testdata' => true,
@@ -477,8 +484,59 @@ XML;
    		
     	$this->setupCss();
     }
+    public function getModelsJson() {
+    	$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+    	header("Content-type: application/json");
+    	$bobimmodel = new bobimmodel_impl();
+    	$sobimmodel = new sobimmodel_impl($this->db);
+     	$bobimmodel->setSobimmodel($sobimmodel);
+     	$output = $bobimmodel->createBimModelList();
+     	echo json_encode($output);
+    }
+    /*
+     * 
+     */
+    public function removeModelJson($modelId = null) {
+    	$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+    	header("Content-type: application/json");
+    	$output = array();
+    	$output["result"] = 1;
+    	if($modelId == null) {
+    		$modelId = (int) phpgw::get_var("modelId");
+    	}
+    	
+    	$bobimmodel = new bobimmodel_impl();
+     	$sovfs = new sovfs_impl();
+     	$sovfs->setSubModule(self::$virtualFileSystemPath);
+     	$bobimmodel->setVfsObject($sovfs);
+     	$sobimmodel = new sobimmodel_impl($this->db);
+     	$sobimmodel->setModelId($modelId);
+     	$bobimmodel->setSobimmodel($sobimmodel);
+     	try {
+     		$bobimmodel->removeIfcModelByModelId();
+     		echo json_encode($output);
+     	} catch (InvalidArgumentException $e) {
+     		$output["result"] = 0;
+     		$output["error"] = "Invalid arguments";
+     		$output["exception"] = $e;
+     		echo json_encode($output);
+     	} catch (Exception $e) {
+     		$output["result"] = 0;
+     		$output["error"] = "General error";
+     		$output["exception"] = $e;
+     		echo json_encode($output);
+     	}
+    }
     
     public function showModels() {
+    	$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'property' );
+    	/*$GLOBALS['phpgw_info']['flags']['noheader'] = false;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw']->common->phpgw_header(true);*/
+    	
+    	
+    	
     	$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showmodels'));
     	$bobimmodel = new bobimmodel_impl();
     	$sobimmodel = new sobimmodel_impl($this->db);
@@ -489,6 +547,41 @@ XML;
      	);
      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('modelData' => $data));
         $this->setupBimCss();
+       // echo '<script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>';
+        $ble =  <<<HTML
+        <script>YUI().use("event-delegate", function(Y) {
+ 
+    Y.delegate("click", function(e) {
+ 
+        //  The list item that matched the provided selector is the
+        //  default 'this' object
+        Y.log("Default scope: " + this.get("id"));
+ 
+        //  The list item that matched the provided selector is
+        //  also available via the event's currentTarget property
+        //  in case the 'this' object is overridden in the subscription.
+        Y.log("Clicked list item: " + e.currentTarget.get("id"));
+ 
+        //  The actual click target, which could be the matched item or a
+        //  descendant of it.
+        Y.log("Event target: " + e.target);
+ 
+        //  The delegation container is added to the event facade
+        Y.log("Delegation container: " + e.container.get("id"));
+ 
+ 
+    }, "#container44", "li");
+ 
+});</script>
+HTML;
+        
+        $someOutput =  '<div id="container44"><ul id="list"><li id="li-1">List Item 1</li>
+        <li id="li-2">List Item 2</li> 
+	        <li id="li-3">List Item 3</li> 
+	        <li id="li-4">List Item 4</li> 
+	        <li id="li-5">List Item 5</li> 
+	    </ul> 
+	</div> <script>doDelegate()</script>';
     }
     
     private $form_upload_field_filename ="ifc_file_name";
@@ -512,7 +605,7 @@ XML;
         $GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('upload' => $data));
         $this->setupBimCss();
      }
-     public static $virtualFileSystemPath = "ifc";
+    
      
      public function uploadFile() {
      	$uploadedFileArray = $_FILES[$this->form_upload_field_filename];
