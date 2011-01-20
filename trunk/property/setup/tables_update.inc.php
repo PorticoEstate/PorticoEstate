@@ -4975,3 +4975,28 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	
+
+	/**
+	* Update property version from 0.9.17.606 to 0.9.17.607
+	* Add authorities demands type to request
+	* 
+	*/
+
+	$test[] = '0.9.17.606';
+	function property_upgrade0_9_17_606()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_b_account_category','active', array('type' => 'int','precision' => '2','nullable' => True,'default' => '0'));				
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_b_account_category','project_group', array('type' => 'int','precision' => '2','nullable' => True,'default' => '0'));				
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE fm_b_account_category SET active = 1',__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.607';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+

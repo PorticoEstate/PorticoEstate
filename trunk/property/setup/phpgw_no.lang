@@ -1233,7 +1233,7 @@ project budget	property	no	Prosjekt budsjett
 project categories	property	no	Prosjekt kategorier
 project coordinator	property	no	Prosjekt ansvarlig
 project end date	property	no	Prosjekt sluttdato
-project group	property	no	Prosjekt gruppe
+project group	property	no	Agresso prosjekt
 project id	property	no	Prosjekt ID
 project info	property	no	Prosjekt info.
 project name	property	no	Prosjekt navn
