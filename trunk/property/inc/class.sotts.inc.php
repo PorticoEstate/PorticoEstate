@@ -312,6 +312,12 @@
 				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',',array_keys($membership)) . ')))'; 
 			}
 
+			if ($user_id < 0)
+			{
+				$filtermethod .= " {$where} fm_tts_tickets.user_id=" . (int)abs($user_id);
+				$where = 'AND';
+			}
+
 			if ($owner_id > 0)
 			{
 				$filtermethod .= " $where fm_tts_tickets.user_id=" . (int)$owner_id;
