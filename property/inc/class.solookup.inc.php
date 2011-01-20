@@ -186,6 +186,8 @@
 			$role		= isset($data['role'])?$data['role']:'';
 			$parent		= isset($data['parent']) && $data['parent'] ? (int)$data['parent'] : 0;
 
+			$join = '';
+			$filter_parent = '';
 			if($role == 'group')
 			{
 				$table = 'fm_b_account_category';
@@ -193,26 +195,20 @@
 			else
 			{
 				$table = 'fm_b_account';
+				$join = " {$this->join} fm_b_account_category ON (fm_b_account.category = fm_b_account_category.id AND fm_b_account_category.active = 1)";
 			}
 
 			if ($order)
 			{
-				$ordermethod = " ORDER BY $order $sort";
+				$ordermethod = " ORDER BY {$table}.{$order} $sort";
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY id DESC';
+				$ordermethod = " ORDER BY {$table}.id DESC";
 			}
 
-			$where = 'WHERE';
-
-			$filtermethod = '';
-
-			if($role != 'group')
-			{
-				$filtermethod .= " {$where} active = 1";
-				$where = 'AND';
-			}
+			$filtermethod = " WHERE {$table}.active = 1";
+			$where = 'AND';
 
 			if($parent)
 			{
@@ -234,7 +230,7 @@
 				}
 			}
 
-			$sql = "SELECT * FROM {$table}{$filtermethod}{$querymethod}";
+			$sql = "SELECT {$table}.* FROM {$table}{$join}{$filtermethod}{$querymethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -252,10 +248,10 @@
 			while ($this->db->next_record())
 			{
 				$b_account[] = array
-					(
-						'id'			=> $this->db->f('id'),
-						'descr'			=> $this->db->f('descr',true)
-					);
+				(
+					'id'			=> $this->db->f('id'),
+					'descr'			=> $this->db->f('descr',true)
+				);
 			}
 
 			return $b_account;

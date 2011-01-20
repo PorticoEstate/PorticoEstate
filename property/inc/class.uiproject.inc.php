@@ -1071,6 +1071,27 @@
 					$error_id=true;
 				}
 
+				if(!isset($values['b_account_id']) || !$values['b_account_id'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select an account group!'));
+					$error_id=true;
+				}
+				else
+				{
+					$sogeneric		= CreateObject('property.sogeneric');
+					$sogeneric->get_location_info('b_account_category',false);
+					$status_data	= $sogeneric->read_single(array('id' => (int)$values['b_account_id']),array());
+
+					if(isset($status_data['project_group']) && $status_data['project_group'])//mandatory for this account group
+					{
+						if(!isset($values['project_group']) || !$values['project_group'])
+						{
+							$receipt['error'][]=array('msg'=>lang('Please select a project group!'));
+							$error_id=true;
+						}
+					}
+				}
+
 				if(!isset($values['end_date']) || !$values['end_date'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select an end date!'));
