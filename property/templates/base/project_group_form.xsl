@@ -14,11 +14,11 @@
 		</script>
 
 		<tr>
-			<td valign="top">
+			<td align="left" valign="top">
 				<a href="javascript:project_group_lookup()" title="{lang_select_project_group_help}" ><xsl:value-of select="lang_project_group"/>
 				</a>
 			</td>
-			<td>
+			<td align="left" >
 				<input size="9" type="text" name="project_group" value="{value_project_group}">
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_select_project_group_help"/>
