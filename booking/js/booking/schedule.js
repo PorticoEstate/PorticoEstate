@@ -201,7 +201,16 @@ YAHOO.booking.newApplicationForm = function(date, _from, _to, elCell) {
 	_to = _to ? '%20' + _to: '';
 	var url = YAHOO.booking.newApplicationUrl;
 	var state = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource;
+    var day = date.getDay();
+    var weekday=new Array(7);
+    weekday[0]="sunday";
+    weekday[1]="monday";
+    weekday[2]="tuesday";
+    weekday[3]="wednesday";
+    weekday[4]="thursday";
+    weekday[5]="friday";
+    weekday[6]="saturday";
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&resource=' + resource + '&weekday=' + weekday[day];
 	window.location.href = url;
 }
 
