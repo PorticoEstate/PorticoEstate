@@ -222,11 +222,11 @@
 
 				if($role == 'group')
 				{
-					$querymethod = " $where (id = " . (int)$query . " OR descr $this->like '%$query%')";
+					$querymethod = " $where ({$table}.id = " . (int)$query . " OR {$table}.descr $this->like '%$query%')";
 				}
 				else
 				{
-					$querymethod = " $where (id $this->like '%$query%' OR descr $this->like '%$query%')";
+					$querymethod = " $where ({$table}.id $this->like '%$query%' OR {$table}.descr $this->like '%$query%')";
 				}
 			}
 
