@@ -84,15 +84,16 @@
 		{
 			$this->soXport 		= CreateObject('property.soXport');	
 			$this->invoice 		= CreateObject('property.boinvoice');
-			$this->bocommon		= CreateObject('property.bocommon');
-			$this->dateformat	= $this->bocommon->dateformat;
-			$this->datetimeformat	= $this->bocommon->datetimeformat;
 			$this->config = CreateObject('phpgwapi.config','property');
 			$this->config->read_repository();
 			$this->meter_table = $this->config->config_data['meter_table'];
 
-			$this->db		= $this->bocommon->new_db();
-			$this->join		= $this->bocommon->join;
+			$this->db 				= & $GLOBALS['phpgw']->db;
+			$this->join				= & $this->db->join;
+			$this->left_join		= & $this->db->left_join;
+			$this->like				= & $this->db->like;
+			$this->datetimeformat	= $this->db->datetime_format();
+			$this->dateformat		= $this->db->date_format();
 		}
 
 		function import($invoice_common,$download)
@@ -126,7 +127,7 @@
 						if ($name=='Maalepunktid')
 						{
 							$name='anleggsnr';
-							$value= '7070575000' . $value;
+			//				$value= '7070575000' . $value;
 						}
 						if ($name=='Girobeloep')
 						{
@@ -213,8 +214,7 @@
 
 				if($name=='anleggsnr')
 				{
-					$buffer[$this->id]['merknad'] .= "\r\n" . 'anleggsnr:' . $this->bocommon->ascii2utf($value);
-					
+					$buffer[$this->id]['merknad'] .= "\r\nanleggsnr: {$value}";					
 					$maalerinfo=$this->anleggsnr_to_objekt($value,$this->meter_table);
 					$dima=$maalerinfo['dima'];
 					$loc1=$maalerinfo['loc1'];
@@ -241,23 +241,23 @@
 				}
 				if($name=='maalernr')
 				{
-					$buffer[$this->id]['merknad'] .= "\r\n" . 'maalernr: '  . $value;
+					$buffer[$this->id]['merknad'] .= "\r\nmaalernr: {$value}";
 				}
 				if($name=='under_fakturanr')
 				{
-					$buffer[$this->id]['merknad'] .= "\r\n" . 'Fakturanr: '  . $value;
+					$buffer[$this->id]['merknad'] .= "\r\nFakturanr: {$value}";
 				}
 				if($name=='kundenr')
 				{
-					$buffer[$this->id]['merknad'] .= "\r\n" . 'Kundenr: '  . $value;
+					$buffer[$this->id]['merknad'] .= "\r\nKundenr: {$value}";
 				}
 				if($name=='kunde_navn')
 				{
-					$buffer[$this->id]['merknad'] .= "\r\n" . 'Kundenavn: '  . $this->bocommon->ascii2utf($value);
+					$buffer[$this->id]['merknad'] .= "\r\nKundenavn: {$value}";					
 				}
 				if($name=='stedsnavn')
 				{
-					$buffer[$this->id]['merknad'] .= "\r\n" . 'Adresse: '  . $this->bocommon->ascii2utf($value);
+					$buffer[$this->id]['merknad'] .= "\r\nAdresse: {$value}";
 				}
 
 				$buffer[$this->id][$name] = $value;
@@ -296,9 +296,11 @@
 
 		function anleggsnr_to_objekt($anleggsnr,$meter_table)
 		{
-			$this->db->query("select $meter_table.ext_meter_id,$meter_table.loc1,$meter_table.loc2,$meter_table.loc3,fm_part_of_town.district_id "
-			. " from $meter_table $this->join fm_location1 ON $meter_table.loc1 = fm_location1.loc1 $this->join "
-  		          . " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id where $meter_table.ext_system_id2='$anleggsnr'");
+			$sql = "SELECT {$meter_table}.ext_meter_id,{$meter_table}.loc1,{$meter_table}.loc2,{$meter_table}.loc3,fm_part_of_town.district_id "
+			. " FROM {$meter_table} {$this->join} fm_location1 ON {$meter_table}.loc1 = fm_location1.loc1 $this->join "
+  		          . " fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id WHERE {$meter_table}.ext_system_id2 {$this->like} '%{$anleggsnr}'";
+//	_debug_array($sql);
+			$this->db->query($sql);
 
 			$this->db->next_record();
 			$loc1 = $this->db->f('loc1');
@@ -377,4 +379,3 @@
 			}
 		}
 	}
-?>
