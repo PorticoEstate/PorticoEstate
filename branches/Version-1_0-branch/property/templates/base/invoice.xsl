@@ -1183,7 +1183,7 @@
 			</xsl:when>
 		</xsl:choose>
 		<form name="form" method="post" action="{form_action}">
-			<table cellpadding="0" cellspacing="0" width="100%">
+			<table cellpadding="0" cellspacing="0" width="100%" >
 				<xsl:choose>
 					<xsl:when test="msgbox_data != ''">
 						<tr>
@@ -1201,7 +1201,7 @@
 					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'approve')" />
 					</td>
-                    <td class="th_text" valign="top">
+                    <td class="th_text" valign="top" align="left">
 						<select name="values[approve]" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'grant')" />
@@ -1218,7 +1218,7 @@
 					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'voucher process code')" />
 					</td>
-                    <td class="th_text" valign="top">
+                    <td align="left" class="th_text" valign="top">
 						<select name="values[process_code]" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'voucher process code')" />
@@ -1234,7 +1234,7 @@
 					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'order id')" />
 					</td>
-					<td class="th_text" valign="top">
+					<td align="left" class="th_text" valign="top">
 						<input type="text" name="values[order_id]" value="{order_id}">
 							<xsl:attribute name="size">
 								<xsl:text>20</xsl:text>
@@ -1249,7 +1249,7 @@
 					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'voucher process log')" />
 					</td>
-					<td>
+					<td align="left">
 						<textarea cols="60" rows="10" name="values[process_log]" wrap="virtual">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'voucher process log')" />
@@ -1279,7 +1279,7 @@
 					<td class="th_text" align = "left" valign="top" style="white-space: nowrap;">
 						<xsl:value-of select="php:function('lang', 'amount')" />
 					</td>
-					<td class="th_text" valign="top">
+					<td align="left" class="th_text" valign="top">
 						<input type="text" name="values[split_amount]">
 							<xsl:attribute name="size">
 								<xsl:text>20</xsl:text>
