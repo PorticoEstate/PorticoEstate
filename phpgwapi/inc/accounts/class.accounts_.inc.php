@@ -452,7 +452,7 @@
 		public function read()
 		{
 			if ( !is_object($this->account)
-				|| $this->account->id <> !$this->account_id )
+				|| $this->account->id != $this->account_id )
 			{
 				$this->read_repository();
 			}

@@ -928,6 +928,7 @@
 					);
 				break;
 			case 'b_account':
+			case 'b_account_category':
 				$info = array
 					(
 						'table' => 'fm_b_account_category',
@@ -939,11 +940,24 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked'
+							),
+							array
+							(
+								'name' => 'project_group',
+								'descr' => lang('mandatory project group'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
-						'name'		=> lang('budget account'),
+						'name'		=> lang('budget account group'),
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
@@ -1748,7 +1762,7 @@
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
-						'name'				=> lang('responsibility role'),
+						'name'				=> lang('custom menu items'),
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::custom_menu_items',
 						'default'			=> array

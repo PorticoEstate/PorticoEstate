@@ -1023,6 +1023,8 @@ muliple radio	property	no	Flervalgs radioknapp
 multiple checkbox	property	no	Flervalgs avkrysningsknapp
 multiple radio	property	no	Flervalgs radioknapp
 my preferences	property	no	Mine innstillinger
+my assigned tickets	property	no	Mine tildelte meldinger
+my submitted tickets	property	no	Mine innmeldte meldinger
 name not entered!	property	no	Navn er ikke angitt
 name of the user, eg. %1	property	no	Navn til bruker, %1
 narrow the search by dates	property	no	Avgrens søket med dato
@@ -1233,7 +1235,7 @@ project budget	property	no	Prosjekt budsjett
 project categories	property	no	Prosjekt kategorier
 project coordinator	property	no	Prosjekt ansvarlig
 project end date	property	no	Prosjekt sluttdato
-project group	property	no	Prosjekt gruppe
+project group	property	no	Agresso prosjekt
 project id	property	no	Prosjekt ID
 project info	property	no	Prosjekt info.
 project name	property	no	Prosjekt navn
