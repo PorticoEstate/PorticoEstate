@@ -23,6 +23,10 @@ import no.bimfm.jaxb.NameValuePair;
 import no.bimfm.jaxb.Units;
 import jsdai.SIfc2x3.AIfcunit;
 import jsdai.SIfc2x3.EIfcbuilding;
+import jsdai.SIfc2x3.EIfccurrencyenum;
+import jsdai.SIfc2x3.EIfcderivedunit;
+import jsdai.SIfc2x3.EIfcderivedunitenum;
+import jsdai.SIfc2x3.EIfcmonetaryunit;
 import jsdai.SIfc2x3.EIfcnamedunit;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfcproject;
@@ -174,10 +178,27 @@ public class Project extends CommonObjectImpl{
 		SdaiIterator unitsIterator = units.createIterator();
 		while(unitsIterator.next()) {
 			EEntity member = units.getCurrentMember(unitsIterator);
-			unit = (EIfcnamedunit) member;
-			String unitType = EIfcunitenum.toString(unit.getUnittype(null));
-			String unitName = extractUnitName();
-			this.units.addElement(unitType, unitName);			
+			if(member.isKindOf(EIfcnamedunit.class)) {
+				unit = (EIfcnamedunit) member;
+				String unitType = EIfcunitenum.toString(unit.getUnittype(null));
+				String unitName = extractUnitName();
+				this.units.addElement(unitType, unitName);
+			} else if (member.isKindOf(EIfcderivedunit.class)) {
+				//TODO  - complete derived unit handling!
+				EIfcderivedunit unit = (EIfcderivedunit) member;
+				String unitType = EIfcderivedunitenum.toString(unit.getUnittype(null));
+				String unitName = "Derived unit";
+				if(unit.testUserdefinedtype(null)) {
+					unitName = unitName + ": " + unit.getUserdefinedtype(null);
+				}
+				this.units.addElement(unitType, unitName);
+			} else if (member.isKindOf(EIfcmonetaryunit.class)) {
+				EIfcmonetaryunit unit = (EIfcmonetaryunit) member;
+				String unitType = "IfcMonetaryUnit";
+				String unitName = EIfccurrencyenum.toString(unit.getCurrency(null));
+				this.units.addElement(unitType, unitName);
+			}
+				
 		}
 	}
 
