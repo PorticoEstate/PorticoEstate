@@ -146,7 +146,6 @@
 					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['from_'])-60*60*24*7);
 					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday']." ".$_POST['to_'])-60*60*24*7);
 				} 
-
 				$_POST['from_'] = $allocation['from_'];
 				$_POST['to_'] = $allocation['to_'];
 
@@ -156,7 +155,6 @@
 				{
 					$step++;
 				}
-
 				if (!$errors && $_POST['outseason'] != 'on' )
 				{
 					try {
@@ -222,7 +220,7 @@
 				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'GET'));
 				array_set_default($allocation, 'from_', phpgw::get_var('from_', 'GET'));
 				array_set_default($allocation, 'to_', phpgw::get_var('to_', 'GET'));
-				$weekday =  strtolower(strftime("%A",strtotime($allocation['from_'][0])));
+				$weekday =  phpgw::get_var('weekday', 'GET');
 			}
 
 			$this->flash_form_errors($errors);
