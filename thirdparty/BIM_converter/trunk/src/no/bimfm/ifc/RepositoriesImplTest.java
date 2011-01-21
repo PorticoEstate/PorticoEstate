@@ -13,6 +13,8 @@ public class RepositoriesImplTest {
 	String testingRepository = "TestRepository";
 	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
 	String testIfcFileName = "sample.ifc";
+	String invalidIfcFileNameMixedCase = "fake1mixedcase.ifc";
+	String invalidIfcFileNameUpperCase = "fake2uppercase.ifc";
 	int numberOfIfcElements = 163;
 	@Before
 	public void setUp() throws Exception {
@@ -82,6 +84,48 @@ public class RepositoriesImplTest {
 		assertFalse(repo.deleteRepository(nonExistingRepository));
 	}
 	
+	@Test
+	public void testAddIvalidIfcMixedCase() {
+		String ifcFilename = Thread.currentThread().getContextClassLoader().getResource(invalidIfcFileNameMixedCase).toString();
+		
+		// OS specific!
+		ifcFilename = ifcFilename.replace("file:/", "");
+		if(repo.checkIfRepositoryExists(testingRepository)) {
+			repo.deleteRepository(testingRepository);
+		}
+		try {
+			repo.addRepository(testingRepository, ifcFilename);
+		}  catch (InvalidIfcFileException e) {
+			assertTrue(true);
+		}	catch (RepositoryExceptionUc e) {
+			System.out.println(e);
+			System.out.println("MSG:"+e.getMessage());
+			System.out.println("Cause:"+e.getCause().getMessage());
+		}
+	}
+	
+	@Test
+	public void testAddIvalidIfcUpperCase() {
+		String ifcFilename = Thread.currentThread().getContextClassLoader().getResource(invalidIfcFileNameUpperCase).toString();
+		
+		// OS specific!
+		ifcFilename = ifcFilename.replace("file:/", "");
+		if(repo.checkIfRepositoryExists(testingRepository)) {
+			repo.deleteRepository(testingRepository);
+		}
+		try {
+			repo.addRepository(testingRepository, ifcFilename);
+		} catch (InvalidIfcFileException e) {
+			assertTrue(true);
+		} catch (RepositoryExceptionUc e) {
+			System.out.println(e);
+			System.out.println("MSG:"+e.getMessage());
+			System.out.println("Cause:"+e.getCause().getMessage());
+			
+		}
+		
+		
+	}
 	
 
 }

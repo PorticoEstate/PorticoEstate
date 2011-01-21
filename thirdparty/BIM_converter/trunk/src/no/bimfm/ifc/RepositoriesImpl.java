@@ -143,16 +143,17 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 	}
 	@Override
 	public boolean addRepository(String repoName, String fileName) {
-		try {
+		return importRepository(repoName, fileName);
+		/*try {
 			return importRepository(repoName, fileName);
-		} catch (RepositoryException e) {
-			throw new RepositoryExceptionUc(e.getMessage());
-		}
+		} catch (RepositoryExceptionUc e) {
+			throw e;
+		}*/
 	}
-	private boolean importRepository(String repoName, String fileName) throws RepositoryException {
+	private boolean importRepository(String repoName, String fileName) {
 		try {
 			if(checkIfRepositoryExists(repoName)) {
-				throw new RepositoryException("Repository already exists!");
+				throw new RepositoryExceptionUc("Repository already exists!");
 			} else {
 				super.openSdaiSession();
 				
@@ -179,8 +180,20 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 				return true;
 			}
 		} catch (SdaiException e) {
-			e.printStackTrace();
-			throw new RepositoryException("Error adding repository", e);
+			super.closeSdaiSession();
+			logger.error("Exception thrown while adding repository");
+			//e.printStackTrace();
+			if(e.getMessage().contains("Exchange structure parsing error")) {
+				logger.error("Throwing invalidifcfileexception");
+				logger.error(e.getMessage());
+				throw new InvalidIfcFileException("Invalid file", e);
+			} else {
+				logger.error("Throwing repository exception");
+				throw new RepositoryExceptionUc("Error adding repository", e);
+			}
+			
+		} finally {
+			//super.closeSdaiSession();
 		}
 	}
 	/*
