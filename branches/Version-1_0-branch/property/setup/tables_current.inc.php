@@ -468,7 +468,9 @@
 		'fm_b_account_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'active' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '0'),
+				'project_group' => array('type' => 'int','precision' => '2','nullable' => True,'default' => '0')
 			),
 			'pk' => array('id'),
 			'fk' => array(),

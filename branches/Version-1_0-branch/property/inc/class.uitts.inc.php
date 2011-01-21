@@ -513,7 +513,18 @@
 					array_unshift ($values_combo_box[1],$default_value);
 
 					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
-					array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tickets')));
+					array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my assigned tickets')));
+					$_my_negative_self = (-1 * $GLOBALS['phpgw_info']['user']['account_id']);
+	
+					$default_value = array
+					(
+						'id'		=> $_my_negative_self,
+						'name'		=> lang('my submitted tickets'),
+						'selected' 	=> $_my_negative_self == $this->user_id
+					);
+					unset($_my_negative_self);
+					array_unshift ($values_combo_box[3],$default_value);
+
 					$default_value = array('id'=>'','name'=>lang('no user'));
 					array_unshift ($values_combo_box[3],$default_value);
 
@@ -3142,6 +3153,7 @@
 			{
 				$tab = 'general';
 			}
+
 
 			$tabs = array
 				(
