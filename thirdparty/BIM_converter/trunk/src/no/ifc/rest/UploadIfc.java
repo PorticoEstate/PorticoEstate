@@ -24,6 +24,7 @@ import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.bimfm.ifc.InvalidIfcFileException;
 import no.bimfm.ifc.RepositoriesImpl;
 import no.bimfm.ifc.RepositoryExceptionUc;
 import no.bimfm.ifc.v2x3.IfcModelImpl;
@@ -34,37 +35,27 @@ import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/uploadIfc")
 public class UploadIfc {
+	private String repositoryName = "temporaryRepository";
 	private Logger logger = LoggerFactory.getLogger("no.ifc.rest.UploadIfc");
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String sayHtmlHello() {
-		String test = "noData3";
-		return test;
+	
+		String returnData = "You have accept type set to text/html, use POST to upload data";
+		return returnData;
 	}
 	
 	@POST
 	@Consumes("multipart/form-data")
-	@Produces(MediaType.TEXT_HTML)
-	public String uploadFile(@FormDataParam("file") File file, @FormDataParam("file") FormDataContentDisposition fcdsFile,  @FormDataParam("file") InputStream attachmentFile,@FormDataParam("repoName") String repoName) {
+	@Produces(MediaType.APPLICATION_XML)
+	public String uploadFile(@FormDataParam("file") File file, @FormDataParam("file") FormDataContentDisposition fcdsFile,  @FormDataParam("file") InputStream attachmentFile) {
 		logger.debug("Upload initiated");
 		//String fileLocation = "/files/" + fcdsFile.getFileName();
-		String fileLocation = fcdsFile.getFileName();
-		/*try {
-			//System.out.println(attachmentFile.available());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
 		String testIfcFileName = "myfile.ifc";
-		
 		File destFile = new File(testIfcFileName);
-		
-		// your code here to copy file to destFile
-		
 		InputStream in;
 		OutputStream out;
 		try {
-			in = new FileInputStream(file);
 			in = attachmentFile;
 			out = new FileOutputStream(destFile);
 			byte[] buf = new byte[1024];
@@ -72,7 +63,6 @@ public class UploadIfc {
 			while ((len = in.read(buf)) > 0){
 				out.write(buf, 0, len);
 			}
-			//file.close();
 			in.close();
 			out.close();
 			logger.info("Upload success!");
@@ -94,42 +84,33 @@ public class UploadIfc {
 		logger.info("Path to save the file in is {}", path);
 		
 		RepositoriesImpl repo = new RepositoriesImpl();
-		repo.deleteAllRepositories();
+		//repo.deleteAllRepositories();
 		System.out.println(path + "\\" + testIfcFileName);
 		try {
-			if(repo.addRepository(repoName, path + File.separator + testIfcFileName)){
+			if(repo.addRepository(this.repositoryName, path + File.separator + testIfcFileName)){
 				WholeModelOutput wholeModel= new WholeModelOutput();
-				IfcModelImpl model  = new IfcModelImpl(repoName);
+				IfcModelImpl model  = new IfcModelImpl(this.repositoryName);
 				wholeModel.load(model);
-				return extractModelXml(wholeModel);
+				String result = extractModelXml(wholeModel);
+				repo.deleteRepository(this.repositoryName);
+				return result;
 			} else {
 				// should not get in here
-				return "Error importing!";
+				return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error><type>repository</type><message>Could not import repository</message></error>";
 			}
-				
+			
+		} catch (InvalidIfcFileException e) {
+			logger.error("File was invalid");
+			e.printStackTrace();
+			return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error><type>invalidFile</type><message>Invalid file</message></error>";
 		} catch (RepositoryExceptionUc e) {
-			return e.getMessage();
+			logger.error("Error importing");
+			e.printStackTrace();
+			return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error><type>general</type><message>"+e.getMessage()+"</message></error>";
 		} finally {
-			repo.deleteRepository(repoName);
+			
 			destFile.delete();
 		}
-		
-		/*
-		boolean repoCheck = false;
-		try {
-			repoCheck = repo.checkIfRepoExists(repoName);
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(repoCheck) {
-			return "repo: "+ repoName + " exists!";
-		} else {
-			return "repo: "+ repoName + " does not exist!";
-		}
-		
-		*/
-		
 	}
 
 	private String extractModelXml(WholeModelOutput wholeModel) {
