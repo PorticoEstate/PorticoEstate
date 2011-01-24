@@ -15,6 +15,15 @@
     <servlet-name>TestServlet</servlet-name>
     <servlet-class>test.TestServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<description>Sample functionality</description>
+  	<servlet-name>Samples</servlet-name>
+  	<jsp-file>/jsp/samples.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>Samples</servlet-name>
+	<url-pattern>/</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>TestServlet</servlet-name>
     <url-pattern>/TestServlet</url-pattern>
