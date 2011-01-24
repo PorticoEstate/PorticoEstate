@@ -10,5 +10,13 @@ Choose a file to upload: <input  name="file" type="file" /><br />
 <input type="submit" value="Upload File" />
 </form>
 
+<div>Testing REST service (rest/tests/)</div>
+<form enctype="multipart/form-data" action="http://localhost:8080/BIM_Facility_Management/rest/tests/testPut" method="POST">
+
+Choose a file to upload: <input  name="file" type="file" /><br />
+<input type="text" name="repoName" value="testRepo" />
+<input type="submit" value="Upload File" />
+</form>
+
 </body>
 </html>
