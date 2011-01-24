@@ -348,25 +348,38 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$query = str_replace(",",'.',$query);
-				if(stristr($query, '.') && !$p_num)
+				$querymethod = " $where ((subject $this->like '%$query%'"
+					. " OR address $this->like '%$query%' "
+					. " OR fm_location1.loc1_name $this->like '%$query%'"
+					. " OR fm_tts_tickets.location_code $this->like '%$query%'";
+
+				if(ctype_digit($query))
 				{
-					$query=explode(".",$query);
-					$querymethod = " $where (fm_tts_tickets.loc1='" . $query[0] . "' AND fm_tts_tickets.loc4='" . $query[1] . "')";
-				}
-				else if(stristr($query, '.') && $p_num)
-				{
-					$query=explode(".",$query);
-					$querymethod = " $where (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='" . (int)$query[3] . "')";
+					$querymethod .= " OR fm_tts_tickets.order_id =" . (int)$query
+					. " OR fm_tts_tickets.id =" . (int)$query . ')';
 				}
 				else
 				{
-					$querymethod = " $where (subject $this->like '%$query%'"
-						. " OR address $this->like '%$query%' "
-						. " OR fm_location1.loc1_name $this->like '%$query%'"
-						. " OR fm_tts_tickets.location_code $this->like '%$query%'"
-						. " OR fm_tts_tickets.order_id =" . (int)$query
-						. " OR fm_tts_tickets.id =" . (int)$query . ')';
+					$querymethod .= ')';
+				}
+
+				$query = str_replace(",",'.',$query);
+				if(stristr($query, '.'))
+				{
+					if(!$p_num)
+					{
+						$query=explode(".",$query);
+						$querymethod .= " OR (fm_tts_tickets.loc1='{$query[0]}' AND fm_tts_tickets.loc4='{$query[1]}'))";
+					}
+					else
+					{
+						$query=explode(".",$query);
+						$querymethod .= " OR (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='" . (int)$query[3] . "'))";
+					}
+				}
+				else
+				{
+					$querymethod .= ')';
 				}
 			}
 
@@ -378,15 +391,8 @@
 				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')"
 				. " $filtermethod $querymethod";
 
-/*
-				$sql2 = "SELECT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view FROM fm_tts_tickets"
-				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
-				. " $order_join"
-				. " $filtermethod $querymethod";
+//_debug_array($sql);
 
-				$sql2 = 'SELECT count(*) as cnt ' . substr($sql2,strripos($sql2,'FROM'));
- */
 			$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
@@ -417,7 +423,7 @@
 				while ($this->db->next_record())
 				{
 					$tickets[]= array
-						(
+					(
 							'id'				=> (int) $this->db->f('id'),
 							'subject'			=> $this->db->f('subject',true),
 							'loc1_name'			=> $this->db->f('loc1_name',true),
@@ -439,21 +445,8 @@
 							'estimate'			=> $this->db->f('budget'),
 							'new_ticket'		=> $this->db->f('view') ? false : true,
 							'billable_hours'	=> $this->db->f('billable_hours'),
-						);
+					);
 				}
-/*			
-				foreach ($tickets as &$ticket)
-				{
-					$this->db->query("SELECT count(*) as hits FROM fm_tts_views where id={$ticket['id']}"
-						. " AND account_id='{$this->account}'",__LINE__,__FILE__);
-					$this->db->next_record();
-
-					if(! $this->db->f('hits'))
-					{
-						$ticket['new_ticket'] = true;
-					}
-				}
- */
 			}
 
 			return $tickets;
@@ -560,8 +553,7 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$value_set[$input_name] = $value;
 					}
 				}
 			}
@@ -572,61 +564,59 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$value_set[$input_name] = $value;
 					}
 				}
-			}
-
-			if($cols)
-			{
-				$cols	= "," . implode(",", $cols);
-				$vals	= ",'" . implode("','", $vals) . "'";
 			}
 
 			$address = '';
 			if(isset($ticket['street_name']) && $ticket['street_name'])
 			{
-				$address[]= $ticket['street_name'];
-				$address[]= $ticket['street_number'];
-				$address	= $this->db->db_addslashes(implode(" ", $address));
+				$_address = array($ticket['street_name'], $ticket['street_number']);
+				$address	= $this->db->db_addslashes(implode(" ", $_address));
+				unset($_address);
 			}
 
-			if(!$address)
+			if(isset($ticket['location_name']) && $ticket['location_name'])
 			{
-				$address = $this->db->db_addslashes($ticket['location_name']);
+				$address .= '::' . $this->db->db_addslashes($ticket['location_name']);
 			}
 
-			$values= array
-				(
-					isset($ticket['priority'])?$ticket['priority']:0,
-					$GLOBALS['phpgw_info']['user']['account_id'],
-					$ticket['assignedto'],
-					$ticket['group_id'],
-					$this->db->db_addslashes($ticket['subject']),
-					$ticket['cat_id'],
-					$ticket['status'],
-					$this->db->db_addslashes($ticket['details']),
-					$ticket['location_code'],
-					$address,
-					time(),
-					$ticket['finnish_date'],
-					$ticket['contact_id'],
-					1
-				);
+			if(isset($ticket['additional_info']) && $ticket['additional_info'])
+			{
+				foreach($ticket['additional_info'] as $key => $value)
+				{
+					$address .= "::{$key}|{$value}";
+				}
+			}
 
-			$values	= $this->db->validate_insert($values);
+			$value_set['priority']		= isset($ticket['priority'])?$ticket['priority']:0;
+			$value_set['user_id']		= $GLOBALS['phpgw_info']['user']['account_id'];
+			$value_set['assignedto']	= $ticket['assignedto'];
+			$value_set['group_id']		= $ticket['group_id'];
+			$value_set['subject']		= $this->db->db_addslashes($ticket['subject']);
+			$value_set['cat_id']		= $ticket['cat_id'];
+			$value_set['status']		= $ticket['status'];
+			$value_set['details']		= $this->db->db_addslashes($ticket['details']);
+			$value_set['location_code']	= $ticket['location_code'];
+			$value_set['address']		= $address;
+			$value_set['entry_date']	= time();
+			$value_set['finnish_date']	= $ticket['finnish_date'];
+			$value_set['contact_id']	= $ticket['contact_id'];
+			$value_set['publish_note']	= 1;
+
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
 
-			$this->db->query("insert into fm_tts_tickets (priority,user_id,"
-				. "assignedto,group_id,subject,cat_id,status,details,location_code,"
-				. "address,entry_date,finnish_date,contact_id,publish_note $cols)"
-				. "VALUES ($values $vals )",__LINE__,__FILE__);
+			$table = 'fm_tts_tickets';
+			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
-			$id = $this->db->get_last_insert_id('fm_tts_tickets','id');
+			$id = $this->db->get_last_insert_id($table,'id');
 			if(isset($ticket['extra']['contact_phone']) && $ticket['extra']['contact_phone'] && isset($ticket['extra']['tenant_id']) && $ticket['extra']['tenant_id'])
 			{
-				$this->db->query("update fm_tenant set contact_phone='". $ticket['extra']['contact_phone']. "' where id='". $ticket['extra']['tenant_id']. "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_tenant SET contact_phone='{$ticket['extra']['contact_phone']}' WHERE id='{$ticket['extra']['tenant_id']}'",__LINE__,__FILE__);
 			}
 
 			if(isset($ticket['origin']) && is_array($ticket['origin']))
@@ -1013,21 +1003,28 @@
 				{
 					$value_set	= array();
 
+					$address = '';
 					if(isset($ticket['street_name']) && $ticket['street_name'])
 					{
-						$address[]= $ticket['street_name'];
-						$address[]= $ticket['street_number'];
-						$value_set['address'] = $this->db->db_addslashes(implode(" ", $address));
+						$_address = array($ticket['street_name'], $ticket['street_number']);
+						$address	= $this->db->db_addslashes(implode(" ", $_address));
+						unset($_address);
 					}
 
-					if(!isset($address) || !$address)
+					if(isset($ticket['location_name']) && $ticket['location_name'])
 					{
-						$address = isset($ticket['location_name']) ? $this->db->db_addslashes($ticket['location_name']) : '';
-						if($address)
+						$address .= '::' . $this->db->db_addslashes($ticket['location_name']);
+					}
+
+					if(isset($ticket['additional_info']) && $ticket['additional_info'])
+					{
+						foreach($ticket['additional_info'] as $key => $value)
 						{
-							$value_set['address'] = $address;
+							$address .= "::{$key}|{$value}";
 						}
 					}
+
+					$value_set['address'] = $address;
 
 					if (isset($ticket['location_code']) && $ticket['location_code'])
 					{
