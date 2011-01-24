@@ -352,7 +352,7 @@
 			$GLOBALS['phpgw']->interserver = createObject('phpgwapi.interserver');
 			$this->_login  = $login;
 			$this->_passwd = $passwd;
-			$login_array = explode('@', $login);
+			$login_array = explode('#', $login);
 			$this->_account_lid = $login_array[0];
 			$now = time();
 
@@ -1125,7 +1125,7 @@
 
 			$this->_session_flags = $session['session_flags'];
 
-			$lid_data = explode('@', $session['session_lid']);
+			$lid_data = explode('#', $session['session_lid']);
 			$this->_account_lid = $lid_data[0];
 
 			if ( isset($lid_data[1]) )
@@ -1359,7 +1359,7 @@
 			{
 				$filename = $file->getFilename();
 				// only try php session files
-				if ( !preg_match('/^sess_([a-f0-9]+)$/', $filename) )
+				if ( !preg_match('/^sess_([a-z0-9]+)$/', $filename) )
 				{
 					continue;
 				}
@@ -1457,7 +1457,7 @@
 			}
 			$login	= $this->_db->db_addslashes($login);
 			$sql	= 'SELECT COUNT(*) AS cnt FROM phpgw_access_log'
-					. " WHERE account_id = 0 AND (loginid='{$login}' OR loginid LIKE '$login@%')"
+					. " WHERE account_id = 0 AND (loginid='{$login}' OR loginid LIKE '$login#%')"
 						. " AND li > {$block_time}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
@@ -1558,7 +1558,7 @@
 			$this->_data['domain']      = $this->_account_domain;
 			$this->_data['sessionid']   = $this->_sessionid;
 			$this->_data['session_ip']  = $this->_get_user_ip();
-			$this->_data['session_lid'] = $this->_account_lid.'@'.$this->_account_domain;
+			$this->_data['session_lid'] = $this->_account_lid.'#'.$this->_account_domain;
 			$this->_data['account_id']  = $this->_account_id;
 			$this->_data['account_lid'] = $this->_account_lid;
 			$this->_data['userid']      = $this->_account_lid;
@@ -1580,7 +1580,7 @@
 		protected function _set_login($login)
 		{
 			$m = array();
-			if ( preg_match('/(.*)@(.*)/', $login, $m) )
+			if ( preg_match('/(.*)#(.*)/', $login, $m) )
 			{
 				$this->_account_lid = $m[1];
 				$this->_account_domain = $m[2];

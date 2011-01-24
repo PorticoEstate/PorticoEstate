@@ -172,9 +172,9 @@
 		}
 
 		$logindomain = phpgw::get_var('logindomain', 'string', 'POST');
-		if ( strstr($login,'@') === false && $logindomain )
+		if ( strstr($login,'#') === false && $logindomain )
 		{
-			$login .= "@{$logindomain}";
+			$login .= "#{$logindomain}";
 		}
 
 		$receipt = array();

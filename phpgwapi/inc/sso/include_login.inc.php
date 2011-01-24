@@ -340,7 +340,7 @@
 
 				if ($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']) && !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
 				{
-					$last_loginid .= '@' . $_COOKIE['last_domain'];
+					$last_loginid .= '#' . $_COOKIE['last_domain'];
 				}
 			}
 

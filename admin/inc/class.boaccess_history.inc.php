@@ -54,9 +54,9 @@
 					$record['lo'] = '';		// dont show a 0 for not loged out
 				}
 
-				if (ereg('@',$record['loginid']))
+				if (preg_match('/#/',$record['loginid']))
 				{
-					$t = split('@',$record['loginid']);
+					$t = explode('#',$record['loginid']);
 					$record['loginid'] = $t[0];
 				}
 

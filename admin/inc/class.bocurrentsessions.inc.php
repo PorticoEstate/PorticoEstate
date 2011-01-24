@@ -44,7 +44,7 @@
 			$values = $GLOBALS['phpgw']->session->list_sessions($start, $sort, $order);
 			foreach ( $values as &$value )
 			{
-				if ( preg_match('/^(.*)@(.*)$/', $value['lid'], $m) )
+				if ( preg_match('/^(.*)#(.*)$/', $value['lid'], $m) )
 				{
 					$value['lid'] = $m[1];
 				}
