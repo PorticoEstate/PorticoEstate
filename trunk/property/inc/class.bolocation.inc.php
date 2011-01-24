@@ -377,6 +377,11 @@
 					$location['location'][$i]['name']					= $fm_location_cols[$j]['input_text'];
 					$location['location'][$i]['value']					= isset($data['values'][$fm_location_cols[$j]['column_name']]) ? $data['values'][$fm_location_cols[$j]['column_name']] : '';
 					$location['location'][$i]['statustext']				= lang('click this link to select') . ' ' . $location_types[($fm_location_cols[$j]['location_type']-1)]['name'];
+					$insert_record['additional_info'][]					= array
+					(
+						'input_name'	=> $location['location'][$i]['input_name'],
+						'input_text'	=> $fm_location_cols[$j]['input_text']
+					);
 					$i++;
 
 				}
