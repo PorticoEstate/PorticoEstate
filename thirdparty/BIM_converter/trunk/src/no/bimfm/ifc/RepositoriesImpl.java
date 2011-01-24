@@ -156,7 +156,11 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 				throw new RepositoryExceptionUc("Repository already exists!");
 			} else {
 				super.openSdaiSession();
-				
+				StringBuilder sb = new StringBuilder();
+				sb.append("About to import following:\n");
+				sb.append("Repository name:\t"+repoName+"\n");
+				sb.append("filename:\t "+fileName);
+				logger.debug(sb.toString());
 				SdaiRepository repo = session.importClearTextEncoding(repoName,fileName, null);
 				/*
 				if(!repo.isActive()) {
@@ -183,7 +187,8 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 			super.closeSdaiSession();
 			logger.error("Exception thrown while adding repository");
 			//e.printStackTrace();
-			if(e.getMessage().contains("Exchange structure parsing error")) {
+			logger.debug("MSG:"+e.getMessage());
+			if(e.getMessage().contains("Exchange structure parsing error") || e.getMessage().contains("Exchange structure scanning error")) {
 				logger.error("Throwing invalidifcfileexception");
 				logger.error(e.getMessage());
 				throw new InvalidIfcFileException("Invalid file", e);
