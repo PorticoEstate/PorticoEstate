@@ -397,11 +397,11 @@ HTML;
 	if (isset($_POST['login']))	// on login
 	{
 		$GLOBALS['login'] = $_POST['login'];
-		if (strstr($GLOBALS['login'],'@') === False)
+		if (strstr($GLOBALS['login'],'#') === False)
 		{
-			$GLOBALS['login'] .= '@' . phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
+			$GLOBALS['login'] .= '#' . phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
 		}
-		list(,$GLOBALS['phpgw_info']['user']['domain']) = explode('@',$GLOBALS['login']);
+		list(,$GLOBALS['phpgw_info']['user']['domain']) = explode('#',$GLOBALS['login']);
 	}
 	else if (phpgw::get_var('domain', 'string', 'REQUEST', false))
 	{
@@ -630,7 +630,7 @@ HTML;
 		{
 			if ( isset($_POST['login']) && $_POST['login'] != '')
 			{
-				list($login) = explode("@",$_POST['login']);
+				list($login) = explode("#",$_POST['login']);
 				print_debug('LID',$login,'app');
 				$login_id = $GLOBALS['phpgw']->accounts->name2id($login);
 				print_debug('User ID',$login_id,'app');

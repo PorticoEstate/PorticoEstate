@@ -1953,8 +1953,9 @@
 		 * @param array $insert_record array containing fields to collect from post
 		 * @return updated values
 		 */
-		function collect_locationdata($values = '',$insert_record = '')
+		function collect_locationdata($values = '',$insert_record = array())
 		{
+//_debug_array($insert_record);die();
 			if($insert_record)
 			{
 				for ($i=0; $i<count($insert_record['location']); $i++)
@@ -1973,6 +1974,13 @@
 						{
 							$values['extra'][$column]	= phpgw::get_var($key, 'string', 'POST');
 						}
+					}
+				}
+				if(isset($insert_record['additional_info']) && is_array($insert_record['additional_info']))
+				{
+					foreach ($insert_record['additional_info'] as $additional_info)
+					{
+						$values['additional_info'][$additional_info['input_text']]	= phpgw::get_var($additional_info['input_name'], 'string', 'POST');
 					}
 				}
 			}
