@@ -1555,6 +1555,8 @@
 				if($location_code)
 				{
 					$values['location_data'] = $bolocation->read_single($location_code,array('tenant_id'=>$tenant_id,'p_num'=>$p_num, 'view' => true));
+					$values['street_name'] = $values['location_data']['street_name'];
+					$values['street_number'] = $values['location_data']['street_number'];
 				}
 			}
 
@@ -1717,7 +1719,6 @@
 				'lookup_entity'	=> $this->bocommon->get_lookup_entity('ticket'),
 				'entity_data'	=> (isset($values['p'])?$values['p']:'')
 			));
-
 
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id'		=> $ticket['contact_id'],
