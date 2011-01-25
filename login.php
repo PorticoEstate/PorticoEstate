@@ -11,10 +11,10 @@
 	* @version $Id$
 	*/
 
-	 if(isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
-	 {
-	 	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
-	 }
+	if(isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
+	{
+		$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	}
 
 	if(isset($_GET['logout']) && $_GET['logout']) // In case a user logged in via SSO - actively logs out
 	{
