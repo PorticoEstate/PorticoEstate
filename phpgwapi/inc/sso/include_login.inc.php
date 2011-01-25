@@ -31,6 +31,21 @@
 		exit;
 	}
 
+
+	/**
+	* check for emailaddress as username
+	*/
+	require_once dirname(realpath(__FILE__)) . '/../class.EmailAddressValidator.inc.php';
+
+	$validator = new phpgwapi_EmailAddressValidator();
+	if ( isset($_POST['login']) && $_POST['login'] != '')
+	{
+		if(!$validator->check_email_address($_POST['login']))
+		{
+			$_POST['login'] = str_replace('@', '#', $_POST['login']);
+		}
+	}
+
 	/**
 	* Include phpgroupware header
 	*/
