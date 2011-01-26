@@ -1,6 +1,7 @@
 package no.bimfm.ifc;
 
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 	private List<String> repositoryInfo= new ArrayList<String>();
 	private RepositoryStatus repositoryStatus = new RepositoryStatus();
 	java.util.Properties prop = new java.util.Properties();
-	private SdaiSession sdaiSession;
 	protected ASdaiRepository repositoryAggregation;
 	protected SdaiIterator repositoryIterator;
 	
@@ -149,6 +149,33 @@ public class RepositoriesImpl extends IfcSdaiRepresentationImpl implements Repos
 		} catch (RepositoryExceptionUc e) {
 			throw e;
 		}*/
+	}
+	public boolean importRepository(String repoName, InputStream stream) {
+		try {
+			if(checkIfRepositoryExists(repoName)) {
+				throw new RepositoryExceptionUc("Repository already exists!");
+			}
+			super.openSdaiSession();
+			SdaiRepository temporaryRepository = session.createRepository(repoName, null);
+			session.importClearTextEncoding(stream, temporaryRepository);
+			transaction.commit();
+			super.closeSdaiSession();
+		} catch (SdaiException e) {
+			e.printStackTrace();
+			super.closeSdaiSession();
+			logger.error("Exception thrown while adding repository");
+			//e.printStackTrace();
+			logger.debug("MSG:"+e.getMessage());
+			if(e.getMessage().contains("Exchange structure parsing error") || e.getMessage().contains("Exchange structure scanning error")) {
+				logger.error("Throwing invalidifcfileexception");
+				logger.error(e.getMessage());
+				throw new InvalidIfcFileException("Invalid file", e);
+			} else {
+				logger.error("Throwing repository exception");
+				throw new RepositoryExceptionUc("Error adding repository", e);
+			}
+		}
+		return true;
 	}
 	private boolean importRepository(String repoName, String fileName) {
 		try {
