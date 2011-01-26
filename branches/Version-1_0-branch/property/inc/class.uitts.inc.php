@@ -2080,7 +2080,7 @@
 
 				if($access_order)
 				{
-					if((!isset($values['make_order']) || !$values['make_order']) && (!isset($values['budget']) || !$values['budget']) )
+					if((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget']) )
 					{
 						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Missing value'));
 					}
