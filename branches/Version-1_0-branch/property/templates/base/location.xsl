@@ -248,7 +248,7 @@
 
 <!-- add / edit -->
 
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function street_lookup()
@@ -451,10 +451,8 @@
 												</xsl:attribute>
 											</input>
 											<input  size="{size_first_name}" type="text" name="first_name" value="{value_first_name}"  onClick="tenant_lookup();" readonly="readonly">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
+												<xsl:attribute name="title">
 													<xsl:value-of select="lang_tenant_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
 												</xsl:attribute>
 											</input>
 										</td>
@@ -466,6 +464,38 @@
 					</div>
 
 					<xsl:call-template name="attributes_values"/>
+					<xsl:choose>
+						<xsl:when test="roles != ''">
+							<div id="roles">
+								<table cellpadding="2" cellspacing="2" width="80%" align="left">
+									<tr class="th">
+										<td class="th_text">
+											<xsl:value-of select="php:function('lang', 'role')" />							
+										</td>
+										<td class="th_text">
+											<xsl:value-of select="php:function('lang', 'contact')" />							
+										</td>
+										<td class="th_text">
+											<xsl:value-of select="php:function('lang', 'responsibility')" />							
+										</td>
+									</tr>
+									<xsl:for-each select="roles">	
+										<tr>
+											<td>
+												<xsl:value-of select="name"/>
+											</td>
+											<td>
+												<xsl:value-of select="responsibility_contact"/>
+											</td>
+											<td>
+												<xsl:value-of select="responsibility_name"/>
+											</td>
+										</tr>
+									</xsl:for-each>
+								</table>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
