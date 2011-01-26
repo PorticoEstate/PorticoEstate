@@ -2064,6 +2064,32 @@
 			$file_tree = array();
 			if($location_code)
 			{
+				$_role_criteria = array
+				(
+					'type'		=> 'responsibility_role',
+					'filter'	=> array('location' => ".location.{$type_id}"),
+					'order'		=> 'name'
+				);
+
+				$roles = execMethod('property.sogeneric.get_list',$_role_criteria);
+			
+				$soresponsible		= CreateObject('property.soresponsible');
+				$contacts = createObject('phpgwapi.contacts');
+				foreach ($roles as & $role)
+				{
+					$responsible_item = $soresponsible->get_active_responsible_at_location($location_code, $role['id']);
+					$role['responsibility_contact'] = $contacts->get_name_of_person_id($responsible_item['contact_id']);
+					$responsibility = $soresponsible->read_single_contact($responsible_item['id']);
+					$role['responsibility_name'] = $responsibility['responsibility_name'];
+				}
+
+				if($roles)
+				{
+					$tabs['roles']	= array('label' => lang('roles'), 'link' => '#roles');
+				}
+
+//_debug_array($roles);die();
+
 				$related = $this->bo->read_entity_to_link($location_code);
 				$related_link = array();
 
@@ -2140,80 +2166,79 @@
 				}
 			}
 
+
 			$data = array
-				(
-					'edit'							=> $view ? '' : true,
-					'lang_change_type'				=> lang('Change type'),
-					'lang_no_change_type'			=> lang('No Change type'),
-					'lang_change_type_statustext'	=> lang('Type of changes'),
-					'change_type_list'				=> (isset($change_type_list)?$change_type_list:''),
-					'check_history'					=> (isset($check_history)?$check_history:''),
-					'lang_history'					=> lang('History'),
-					'lang_history_statustext'		=> lang('Fetch the history for this item'),
-					'table_header'					=> (isset($table_header)?$table_header:''),
-					'values'						=> (isset($content)?$content:''),
+			(
+				'roles'							=> $roles,
+				'edit'							=> $view ? '' : true,
+				'lang_change_type'				=> lang('Change type'),
+				'lang_no_change_type'			=> lang('No Change type'),
+				'lang_change_type_statustext'	=> lang('Type of changes'),
+				'change_type_list'				=> (isset($change_type_list)?$change_type_list:''),
+				'check_history'					=> (isset($check_history)?$check_history:''),
+				'lang_history'					=> lang('History'),
+				'lang_history_statustext'		=> lang('Fetch the history for this item'),
+				'table_header'					=> (isset($table_header)?$table_header:''),
+				'values'						=> (isset($content)?$content:''),
 
-					'lang_related_info'				=> lang('related info'),
-					'entities_link'					=> (isset($entities_link)?$entities_link:''),
-					'related_link'					=> $related_link,
-					'edit_street'					=> (isset($edit_street)?$edit_street:''),
-					'edit_tenant'					=> (isset($edit_tenant)?$edit_tenant:''),
-					'edit_part_of_town'				=> (isset($edit_part_of_town)?$edit_part_of_town:''),
-					'edit_owner'					=> (isset($edit_owner)?$edit_owner:''),
-					'select_name_part_of_town'		=> (isset($select_name_part_of_town)?$select_name_part_of_town:''),
-					'part_of_town_list'				=> (isset($part_of_town_list)?$part_of_town_list:''),
-					'lang_town_statustext'			=> (isset($lang_town_statustext)?$lang_town_statustext:''),
-					'lang_part_of_town'				=> lang('Part of town'),
-					'lang_no_part_of_town'			=> lang('No part of town'),
-					'lang_owner'					=> (isset($lang_owner)?$lang_owner:''),
-					'owner_list'					=> (isset($owner_list)?$owner_list:''),
-					'lang_select_owner'				=> (isset($lang_select_owner)?$lang_select_owner:''),
-					'lang_owner_statustext'			=> (isset($lang_owner_statustext)?$lang_owner_statustext:''),
-					'additional_fields'				=> $additional_fields,
-					'attributes_group'				=> $attributes,
-					//				'attributes_values'				=> $values['attributes'],
-					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
-					'lang_none'						=> lang('None'),
-
-					'msgbox_data'					=> (isset($msgbox_data)?$GLOBALS['phpgw']->common->msgbox($msgbox_data):''),
-
-					'street_link'					=> "menuaction:'" . 'property'.".uilookup.street'",
-					'lang_street'					=> lang('Address'),
-					'lang_select_street_help'		=> lang('Select the street name'),
-					'lang_street_num_statustext'	=> lang('Enter the street number'),
-					'value_street_id'				=> (isset($values['street_id'])?$values['street_id']:''),
-					'value_street_name'				=> (isset($values['street_name'])?$values['street_name']:''),
-					'value_street_number'			=> (isset($values['street_number'])?$values['street_number']:''),
-
-					'tenant_link'					=> "menuaction:'" . 'property'.".uilookup.tenant'",
-					'lang_tenant'					=> lang('tenant'),
-					'value_tenant_id'				=> (isset($values['tenant_id'])?$values['tenant_id']:''),
-					'value_last_name'				=> (isset($values['last_name'])?$values['last_name']:''),
-					'value_first_name'				=> (isset($values['first_name'])?$values['first_name']:''),
-					'lang_tenant_statustext'		=> lang('Select a tenant'),
-					'size_last_name'				=> (isset($values['last_name'])?strlen($values['last_name']):''),
-					'size_first_name'				=> (isset($values['first_name'])?strlen($values['first_name']):''),
-					'lookup_type'					=> $lookup_type,
-					'location_data'					=> $location_data,
-					'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index','type_id'=> $type_id, 'lookup_tenant'=> $lookup_tenant)),
-					'lang_save'						=> lang('save'),
-					'lang_done'						=> lang('done'),
-					'lang_done_statustext'			=> lang('Back to the list'),
-					'lang_save_statustext'			=> lang('Save the location'),
-					'lang_category'					=> lang('category'),
-					'lang_no_cat'					=> lang('no category'),
-					'lang_cat_statustext'			=> lang('Select the category the location belongs to. To do not use a category select NO CATEGORY'),
-					'select_name'					=> 'cat_id',
-					'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
-					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
-					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
-					'documents'						=> $documents,
-					'file_tree'						=> $file_tree,
-					'lang_expand_all'				=> lang('expand all'),
-					'lang_collapse_all'				=> lang('collapse all')
-				);
+				'lang_related_info'				=> lang('related info'),
+				'entities_link'					=> (isset($entities_link)?$entities_link:''),
+				'related_link'					=> $related_link,
+				'edit_street'					=> (isset($edit_street)?$edit_street:''),
+				'edit_tenant'					=> (isset($edit_tenant)?$edit_tenant:''),
+				'edit_part_of_town'				=> (isset($edit_part_of_town)?$edit_part_of_town:''),
+				'edit_owner'					=> (isset($edit_owner)?$edit_owner:''),
+				'select_name_part_of_town'		=> (isset($select_name_part_of_town)?$select_name_part_of_town:''),
+				'part_of_town_list'				=> (isset($part_of_town_list)?$part_of_town_list:''),
+				'lang_town_statustext'			=> (isset($lang_town_statustext)?$lang_town_statustext:''),
+				'lang_part_of_town'				=> lang('Part of town'),
+				'lang_no_part_of_town'			=> lang('No part of town'),
+				'lang_owner'					=> (isset($lang_owner)?$lang_owner:''),
+				'owner_list'					=> (isset($owner_list)?$owner_list:''),
+				'lang_select_owner'				=> (isset($lang_select_owner)?$lang_select_owner:''),
+				'lang_owner_statustext'			=> (isset($lang_owner_statustext)?$lang_owner_statustext:''),
+				'additional_fields'				=> $additional_fields,
+				'attributes_group'				=> $attributes,
+//				'attributes_values'				=> $values['attributes'],
+				'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
+				'lang_none'						=> lang('None'),
+				'msgbox_data'					=> (isset($msgbox_data)?$GLOBALS['phpgw']->common->msgbox($msgbox_data):''),
+				'street_link'					=> "menuaction:'" . 'property'.".uilookup.street'",
+				'lang_street'					=> lang('Address'),
+				'lang_select_street_help'		=> lang('Select the street name'),
+				'lang_street_num_statustext'	=> lang('Enter the street number'),
+				'value_street_id'				=> (isset($values['street_id'])?$values['street_id']:''),
+				'value_street_name'				=> (isset($values['street_name'])?$values['street_name']:''),
+				'value_street_number'			=> (isset($values['street_number'])?$values['street_number']:''),
+				'tenant_link'					=> "menuaction:'" . 'property'.".uilookup.tenant'",
+				'lang_tenant'					=> lang('tenant'),
+				'value_tenant_id'				=> (isset($values['tenant_id'])?$values['tenant_id']:''),
+				'value_last_name'				=> (isset($values['last_name'])?$values['last_name']:''),
+				'value_first_name'				=> (isset($values['first_name'])?$values['first_name']:''),
+				'lang_tenant_statustext'		=> lang('Select a tenant'),
+				'size_last_name'				=> (isset($values['last_name'])?strlen($values['last_name']):''),
+				'size_first_name'				=> (isset($values['first_name'])?strlen($values['first_name']):''),
+				'lookup_type'					=> $lookup_type,
+				'location_data'					=> $location_data,
+				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index','type_id'=> $type_id, 'lookup_tenant'=> $lookup_tenant)),
+				'lang_save'						=> lang('save'),
+				'lang_done'						=> lang('done'),
+				'lang_done_statustext'			=> lang('Back to the list'),
+				'lang_save_statustext'			=> lang('Save the location'),
+				'lang_category'					=> lang('category'),
+				'lang_no_cat'					=> lang('no category'),
+				'lang_cat_statustext'			=> lang('Select the category the location belongs to. To do not use a category select NO CATEGORY'),
+				'select_name'					=> 'cat_id',
+				'cat_list'						=> $this->bocommon->select_category_list(array('format'=>'select','selected' => $values['cat_id'],'type' =>'location','type_id' =>$type_id,'order'=>'descr')),
+				'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
+				'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'tabs'							=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'documents'						=> $documents,
+				'file_tree'						=> $file_tree,
+				'lang_expand_all'				=> lang('expand all'),
+				'lang_collapse_all'				=> lang('collapse all')
+			);
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
 			phpgwapi_yui::load_widget('treeview');
@@ -2643,7 +2668,8 @@
 				);
 
 			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
 				foreach( $datatable['rows']['row'] as $row )
 				{
 					$json_row = array();
@@ -2651,11 +2677,11 @@
 					{
 						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 						}
 						else if(isset($column['format']) && $column['format']== "link")
 						{
-							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='{$column['link']}'>{$column['value']}</a>";
 						}
 						else
 						{

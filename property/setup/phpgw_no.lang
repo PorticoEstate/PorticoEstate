@@ -1293,6 +1293,7 @@ reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
 responsible	property	no	Ansvarlig
+responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
 responsibility role	property	no	Rolle for Ansvarsmatrise
 result	property	no	Resultat
@@ -1300,6 +1301,8 @@ return back to the list	property	no	Returner til oversikt
 revision	property	no	Revisjon
 rig addition	property	no	Rigg tillegg
 right	property	no	Rettighet
+role	property	no	Rolle
+roles	property	no	Roller
 roll back	property	no	Rull tilbake
 rollback invoice	property	no	Rull  tilbake bilag
 run now	property	no	Kjør nå
