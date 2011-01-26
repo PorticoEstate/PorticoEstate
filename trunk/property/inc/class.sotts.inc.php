@@ -460,6 +460,8 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$entity = array();
+			$uicols = array();
 			$i=0;
 			while ($this->db->next_record())
 			{
@@ -547,6 +549,7 @@
 
 		function add($ticket)
 		{
+
 			if(isset($ticket['location']) && is_array($ticket['location']))
 			{
 				foreach ($ticket['location'] as $input_name => $value)
@@ -567,28 +570,44 @@
 						$value_set[$input_name] = $value;
 					}
 				}
+
+				if($ticket['extra']['p_num'] && $ticket['extra']['p_entity_id'] && $ticket['extra']['p_cat_id'])
+				{
+					$entity	= CreateObject('property.soadmin_entity');
+					$entity_category = $entity->read_single_category($ticket['extra']['p_entity_id'],$ticket['extra']['p_cat_id']);
+				}
 			}
 
-			$address = '';
+			$_address = array();
 			if(isset($ticket['street_name']) && $ticket['street_name'])
 			{
-				$_address = array($ticket['street_name'], $ticket['street_number']);
-				$address	= $this->db->db_addslashes(implode(" ", $_address));
-				unset($_address);
+				$_address[] = "{$ticket['street_name']} {$ticket['street_number']}";
 			}
 
 			if(isset($ticket['location_name']) && $ticket['location_name'])
 			{
-				$address .= '::' . $this->db->db_addslashes($ticket['location_name']);
+				$_address[] = $ticket['location_name'];
 			}
 
 			if(isset($ticket['additional_info']) && $ticket['additional_info'])
 			{
 				foreach($ticket['additional_info'] as $key => $value)
 				{
-					$address .= "::{$key}|{$value}";
+					if($value)
+					{
+						$_address[] = "{$key}|{$value}";
+					}
 				}
 			}
+
+			if(isset($entity_category) && $entity_category)
+			{
+				$_address[] = "{$entity_category['name']}::{$ticket['extra']['p_num']}";				
+			}
+
+			$address	= $this->db->db_addslashes(implode('::', $_address));
+
+			unset($_address);
 
 			$value_set['priority']		= isset($ticket['priority'])?$ticket['priority']:0;
 			$value_set['user_id']		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -765,19 +784,18 @@
 
 			if($oldcat_id ==0){$oldcat_id ='';}
 			if($old_order_cat_id ==0){$old_order_cat_id ='';}
-				if($oldassigned ==0){$oldassigned ='';}
-					if($oldgroup_id ==0){$oldgroup_id ='';}
+			if($oldassigned ==0){$oldassigned ='';}
+			if($oldgroup_id ==0){$oldgroup_id ='';}
 
-						// Figure out and last note
+			// Figure out and last note
 
-						$history_values = $this->historylog->return_array(array(),array('C'),'history_timestamp','DESC',$id);
+			$history_values = $this->historylog->return_array(array(),array('C'),'history_timestamp','DESC',$id);
 			$old_note = $history_values[0]['new_value'];
 
 			if(!$old_note)
 			{
 				$old_note = $this->db->f('details');
 			}
-
 
 			$this->db->transaction_begin();
 
@@ -1003,26 +1021,43 @@
 				{
 					$value_set	= array();
 
-					$address = '';
+					$_address = array();
 					if(isset($ticket['street_name']) && $ticket['street_name'])
 					{
-						$_address = array($ticket['street_name'], $ticket['street_number']);
-						$address	= $this->db->db_addslashes(implode(" ", $_address));
-						unset($_address);
+						$_address[] = "{$ticket['street_name']} {$ticket['street_number']}";
 					}
 
 					if(isset($ticket['location_name']) && $ticket['location_name'])
 					{
-						$address .= '::' . $this->db->db_addslashes($ticket['location_name']);
+						$_address[] = $ticket['location_name'];
 					}
 
 					if(isset($ticket['additional_info']) && $ticket['additional_info'])
 					{
 						foreach($ticket['additional_info'] as $key => $value)
 						{
-							$address .= "::{$key}|{$value}";
+							if($value)
+							{
+								$_address[] = "{$key}|{$value}";
+							}
 						}
 					}
+
+
+					if(isset($ticket['extra']['p_num']) && $ticket['extra']['p_num'] && $ticket['extra']['p_entity_id'] && $ticket['extra']['p_cat_id'])
+					{
+						$entity	= CreateObject('property.soadmin_entity');
+						$entity_category = $entity->read_single_category($ticket['extra']['p_entity_id'],$ticket['extra']['p_cat_id']);
+					}
+
+					if(isset($entity_category) && $entity_category)
+					{
+						$_address[] = "{$entity_category['name']}::{$ticket['extra']['p_num']}";				
+					}
+
+					$address	= $this->db->db_addslashes(implode('::', $_address));
+
+					unset($_address);
 
 					$value_set['address'] = $address;
 
