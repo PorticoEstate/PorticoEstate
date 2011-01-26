@@ -1169,6 +1169,7 @@
 								</td>
 								<td>
 									<xsl:value-of select="value_order_id"/>
+									<input type="hidden" name="values[order_id]" value="{value_order_id}"></input>
 								</td>
 							</tr>
 							<tr>
