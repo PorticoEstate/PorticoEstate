@@ -2085,7 +2085,7 @@
 
 				if($roles)
 				{
-					$tabs['roles']	= array('label' => lang('roles'), 'link' => '#roles');
+					$tabs['roles']	= array('label' => lang('contacts'), 'link' => '#roles');
 				}
 
 //_debug_array($roles);die();
