@@ -123,17 +123,17 @@
 				$errors = $this->bo->validate($booking);
 
 
-				if (strtotime($_POST['from_']) < $today[0])
-				{
-					if($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')
-					{					
-						$errors['booking'] = lang('Can not repeat from a date in the past');
-					}
-					else
-					{
-						$errors['booking'] = lang('Can not create a booking in the past');
-					}
-				} 
+#				if (strtotime($_POST['from_']) < $today[0])
+#				{
+#					if($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')
+#					{					
+#						$errors['booking'] = lang('Can not repeat from a date in the past');
+#					}
+#					else
+#					{
+#						$errors['booking'] = lang('Can not create a booking in the past');
+#					}
+#				} 
 				if (!$allocation_id &&  $_POST['outseason'] == 'on')
 				{
 					$errors['booking'] = lang('This booking is not connected to a season');
