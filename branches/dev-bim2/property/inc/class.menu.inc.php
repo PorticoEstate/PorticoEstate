@@ -944,7 +944,7 @@
                     ),
                     'showModels'       => array
                     (
-                        'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.showModels')),
+                        'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibim.showModels')),
                         'text'	=> lang('Show Models')
                     ),
                     'ifc'       => array
@@ -954,8 +954,8 @@
                     ),
                     'upload'		=> array
                     (
-                        'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.upload')),
-                        'text'	=> lang('Upload'),
+                        'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibim.upload')),
+                        'text'	=> lang('Upload Model'),
                         'image'	=> array('property', 'project_tenant_claim')
                     )
                 ))
