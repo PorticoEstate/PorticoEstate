@@ -159,6 +159,14 @@ class rental_soparty extends rental_socommon
 				$filter_clauses[] = "party.org_enhet_id = {$org_unit_id}";
 			}
 		}
+		
+		if(isset($filters['email'])){
+			$email = $this->marshal($filters['email'],'string');
+			if(isset($email))
+			{
+				$filter_clauses[] = "party.email = {$email}";
+			}
+		}
 
 		if(isset($filters['sync']))
 		{

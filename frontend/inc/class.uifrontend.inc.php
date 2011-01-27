@@ -53,6 +53,11 @@
 		{
 			// This module uses XSLT templates
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			
+			$config	= CreateObject('phpgwapi.config','frontend');
+			$config->read();
+			$use_fellesdata = $config->config_data['use_fellesdata'];
+			$logo_path = $config->config_data['logo_path'];
 
 			// Get the mode: in frame or full screen
 			$mode = phpgwapi_cache::session_get('frontend', 'noframework');
@@ -68,6 +73,8 @@
 			
 			// Get header state
 			$this->header_state = phpgwapi_cache::session_get('frontend', 'header_state');
+			$this->header_state['use_fellesdata'] = $use_fellesdata;
+			$this->header_state['logo_path'] = $logo_path;
 			
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
@@ -146,28 +153,37 @@
 				$this->insert_links_on_header_state();
 			} 
 			/* No state, first visit after login, or refresh request*/
-			else if(!isset($this->header_state) || isset($refresh))
+			else if(!isset($this->header_state) || isset($refresh) || !isset($this->header_state['locations']))
 			{
-				//Specify organisational units
-				$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
-				
-				//Merge with delegation units
-				$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
-				if(count($delegation_org_ids) > 0)
+				if($use_fellesdata)
 				{
-					$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
-					$org_units = array_merge($org_units,$delegation_units);
+					//Specify organisational units
+					$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
+					
+					//Merge with delegation units
+					$delegation_org_ids = frontend_bofrontend::get_delegations($GLOBALS['phpgw_info']['user']['account_id']);
+					if(count($delegation_org_ids) > 0)
+					{
+						$delegation_units = frontend_bofellesdata::get_instance()->populate_result_units($delegation_org_ids);
+						$org_units = array_merge($org_units,$delegation_units);
+					}
+					
+					//Update org units on header state
+					$this->header_state['org_unit'] = $org_units;
+					$this->header_state['number_of_org_units'] = count($org_units);
+					$this->header_state['selected_org_unit'] = 'all';
+					
+					//Update locations
+					$property_locations = frontend_borental::get_property_locations($org_units);
+				}
+				else 
+				{
+					//If no organisational database is in use: get rented properties based on username
+					$usernames[] = $GLOBALS['phpgw_info']['user']['account_lid'];
+					$property_locations = frontend_borental::get_property_locations($usernames);
 				}
 				
-				//Update org units on header state
-				$this->header_state['org_unit'] = $org_units;
-				$this->header_state['number_of_org_units'] = count($org_units);
-				$this->header_state['selected_org_unit'] = 'all';
-				
-				//Update locations
-				$property_locations = frontend_borental::get_property_locations($org_units);
 				$property_locations_update = true;
-
 				$this->insert_links_on_header_state();
 				
 			}
@@ -225,6 +241,7 @@
 
 				phpgwapi_cache::session_clear('frontend','contract_state');
 				phpgwapi_cache::session_clear('frontend','contract_state_in');
+				phpgwapi_cache::session_clear('frontend','contract_state_ex');
 			}
 			/* Store the header state on the session*/
 			$bomessenger = CreateObject('messenger.bomessenger');
@@ -317,7 +334,7 @@
 				 (
 				 	'menuaction'=> 'manual.uimanual.help',
 				 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-				 	'section' => 'contact_BKB'
+				 	'section' => 'contact'
 				 )) . "','700','600')";
 		 
 			$folder_url = "javascript:openwindow('"
