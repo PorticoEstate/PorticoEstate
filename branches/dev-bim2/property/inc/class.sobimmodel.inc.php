@@ -46,11 +46,15 @@ class sobimmodel_impl implements sobimmodel
 	public function __construct(& $db, $modelName = null, $vfs_id = null) {
 		// $this->db = & $GLOBALS['phpgw']->db;
 		$this->db = $db;
+		$db->Halt_On_Error = 'no';
+		$db->Exception_On_Error = true;
 	}
 	
 	public function retrieveBimModelList() {
 		$bimModelArray = array();
-		$sql = "select model.id,model.name,vfs.created,vfs.size as filesize,vfs.name as filename,vfs.file_id as vfs_file_id,(select count(*) from fm_bim_data where model=model.id) as used_item_count  from fm_bim_model as model left join phpgw_vfs as vfs on model.vfs_file_id = vfs.file_id";
+		$itemTable = self::bimItemTable;
+		$modelTable = self::bimModelTable;
+		$sql = "select model.id,model.name,vfs.created,vfs.size as filesize,vfs.name as filename,vfs.file_id as vfs_file_id,(select count(*) from $itemTable where model=model.id) as used_item_count  from $modelTable as model left join phpgw_vfs as vfs on model.vfs_file_id = vfs.file_id";
 		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
 			throw new Exception('Query to find bim models failed');
 		} else {
@@ -79,19 +83,22 @@ class sobimmodel_impl implements sobimmodel
 	}
 	/*
 	 * Needs modelId set
+	 * @throws ModelDoesNotExistException
 	 * @return null|BimModel
 	 */
 	public function retrieveBimModelInformationById() {
 		$this->checkArgModelId();
-		$sql = "Select * from ".self::bimModelTable." where id=".$this->modelId;
+		$itemTable = self::bimItemTable;
+		$modelTable = self::bimModelTable;
+		$sql = "Select * from $modelTable where id=".$this->modelId;
 		$sql = "select model.id,model.name,vfs.created,vfs.size as filesize,vfs.name as filename,vfs.file_id as vfs_file_id,".
-				"(select count(*) from fm_bim_data where model=model.id) as used_item_count  from fm_bim_model as model ".
+				"(select count(*) from $itemTable where model=model.id) as used_item_count  from $modelTable as model ".
 				"left join phpgw_vfs as vfs on model.vfs_file_id = vfs.file_id where id=".$this->modelId;
 		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
 			throw new Exception('Query to find bim model failed');
 		} else {
 			if($this->db->num_rows() == 0) {
-				return null;
+				throw new ModelDoesNotExistException();
 			} else {
 				$this->db->next_record();
 				

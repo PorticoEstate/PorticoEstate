@@ -7,7 +7,7 @@
  */
 interface sobim {
 	 
-	const bimItemTable = 'fm_bim_data';
+	const bimItemTable = 'fm_bim_item';
 	const bimTypeTable = 'fm_bim_type';
 	const bimModelTable = 'fm_bim_model';
 }

@@ -13,7 +13,6 @@ interface sobimitem extends sobim {
 	 * @return BIMItem
 	 */
 	public function getBimItem($bimObjectId);
-	
 	public function addBimItem($bimItem);
 	public function deleteBimItem($guid);
 	public function checkIfBimItemExists($guid);
@@ -28,14 +27,18 @@ class sobimitem_impl implements sobimitem
 	public function __construct(& $db) {
 		// $this->db = & $GLOBALS['phpgw']->db;
 		$this->db = $db;
+		$db->Halt_On_Error = 'no';
+		$db->Exception_On_Error = true;
 	}
 	/*
 	 * @return Array an array of BimItem objects
 	 */
 	public function getAll() {
-		$sql  = 'SELECT fm_bim_data.id, fm_bim_type.name AS type, fm_bim_data.guid, fm_bim_data.xml_representation '.
-					'FROM public.fm_bim_data,  public.fm_bim_type '.
-					'WHERE  fm_bim_data.type = fm_bim_type.id';
+		$itemTable = self::bimItemTable;
+		$typeTable = self::bimTypeTable;
+		$sql  = "SELECT $itemTable.id, fm_bim_type.name AS type,  $itemTable.guid,  $itemTable.xml_representation ".
+					"FROM public. $itemTable,  public.$typeTable ".
+					"WHERE   $itemTable.type = $typeTable.id";
 		$bimItemArray = array();
 		$this->db->query($sql);
 		while($this->db->next_record())
@@ -49,10 +52,12 @@ class sobimitem_impl implements sobimitem
 
 
 	public function getBimItem($bimObjectGuid){
-		$sql  = 'SELECT fm_bim_data.id, fm_bim_type.name AS type, fm_bim_data.guid, fm_bim_data.xml_representation, fm_bim_data.model '.
-					'FROM public.fm_bim_data,  public.fm_bim_type '.
-					'WHERE  fm_bim_data.type = fm_bim_type.id ' .
-        			'AND fm_bim_data.guid =\''.$bimObjectGuid.'\'';
+		$itemTable = self::bimItemTable;
+		$typeTable = self::bimTypeTable;
+		$sql  = "SELECT $itemTable.id, fm_bim_type.name AS type, $itemTable.guid, $itemTable.xml_representation, $itemTable.model ".
+					"FROM public.$itemTable,  public.$typeTable ".
+					"WHERE  $itemTable.type = $typeTable.id " .
+        			"AND $itemTable.guid ='$bimObjectGuid'";
 		$this->db->query($sql,__LINE__,__FILE__);
 		if($this->db->num_rows() == 0) {
 			throw new Exception('Item not found!');
@@ -68,12 +73,16 @@ class sobimitem_impl implements sobimitem
 		$sql = "INSERT INTO ".self::bimItemTable." (type, guid, xml_representation, model) values (";
 		$sql = $sql."(select id from ".self::bimTypeTable." where name = '".$bimItem->getType()."'),";
 		$sql = $sql."'".$bimItem->getGuid()."', '".$bimItem->getXml()."', ".$bimItem->getModelId().")";
-		
-		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
-			throw new Exception('Query to add item was unsuccessful');
-		} else {
-			return $this->db->num_rows();
+		try {
+			if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
+				throw new Exception('Query to add item was unsuccessful');
+			} else {
+				return $this->db->num_rows();
+			}
+		}catch (PDOException $e) {
+			throw new BimDataException("Could not add item",$e);
 		}
+		
 	}
 	/*
 	 * Checks if the bim item exists
@@ -129,8 +138,9 @@ class sobimitem_impl implements sobimitem
 	 */
 	public function getBimItemAttributeValue($bimItemGuid, $attribute) {
 		$columnAlias = "attribute_values";
+		$itemTable = self::bimItemTable;
 		//$sql = "select xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from fm_bim_data where guid='$bimItemGuid'))";
-		$sql = "select array_to_string(xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from fm_bim_data where guid='$bimItemGuid')), ',') as $columnAlias";
+		$sql = "select array_to_string(xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from $itemTable where guid='$bimItemGuid')), ',') as $columnAlias";
 		$this->db->query($sql,__LINE__,__FILE__);
 		if($this->db->num_rows() == 0) {
 			throw new Exception('Error!');
@@ -150,53 +160,7 @@ class sobimitem_impl implements sobimitem
 
 
 
-	/**
-	 * Retreive any number of items.
-	 * @param array $data
-	 * @return array Array of zero or more items
-	 */
-	public function read(array $data)
-	{
-
-		$select_cols = array(
-                'i.id',
-                'i.group_id',
-                'i.location_id',
-                'i.vendor_id',
-                'i.installed'
-                );
-                $from_tables = array('fm_item i');
-                $joins = array(
-                //$this->db->left_join.' fm_item_group g ON i.group_id = g.id',
-                $this->db->left_join.' fm_vendor v ON i.vendor_id = v.id'
-                );
-                $where_clauses = array(' WHERE 1=1');
-
-                if($specific_item_id) {
-                	// FIXME Sanitize input!!
-                	$where_clauses[] = "i.id = $specific_item_id";
-                }
-
-                $sql  = 'SELECT ' . implode($select_cols, ', ') .
-                    ' FROM ' . implode($from_tables, ', ') .
-                implode($joins, ' ') .
-                implode($where_clauses, ' AND ');
-                	
-                $this->db->query($sql);
-                $i = 0;
-                while($this->db->next_record())
-                {
-                	$items[$i]['id']       = $this->db->f('id');
-                	$items[$i]['group']    = $this->db->f('group_id');
-                	$items[$i]['location'] = $this->db->f('location_id');
-                	$items[$i]['vendor']   = $this->db->f('vendor_id');
-                	$items[$i]['installed']= $this->db->f('installed');
-
-                	$i++;
-                }
-
-                return $items;
-	}
+	
 }
 class BimItem {
 	private $databaseId;
