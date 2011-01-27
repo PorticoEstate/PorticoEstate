@@ -214,6 +214,9 @@
 		{
 			$this->basedir = $GLOBALS['phpgw_info']['server']['files_dir'];
 			$this->working_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			if(empty($this->working_id)) {
+				throw new Exception("VFS error! Missing user id!");
+			}
 			$this->working_lid = $GLOBALS['phpgw_info']['user']['account_lid'];
 			$this->now = date ('Y-m-d');
 			/* These are stored in the MIME-type field and should normally 
