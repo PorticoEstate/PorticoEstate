@@ -102,7 +102,7 @@
 						<dd><xsl:value-of select="comment" disable-output-escaping="yes"/></dd>
 					</xsl:when>
 					<xsl:otherwise>				
-						<dd><xsl:value-of select="comment"/></dd>
+						<dd><div style="width: 80%;"><xsl:value-of select="comment"/></div></dd>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
@@ -113,7 +113,7 @@
             <dt><xsl:value-of select="php:function('lang', 'Activity')" /></dt>
             <dd><xsl:value-of select="application/activity_name"/></dd>
             <dt><xsl:value-of select="php:function('lang', 'Description')" /></dt>
-			<dd><pre><xsl:value-of select="application/description"/></pre></dd>
+			<dd><div style="width: 80%;"><xsl:value-of select="application/description"/></div></dd>
 		</dl>
         <dl class="proplist-col">
             <dt class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></dt>
