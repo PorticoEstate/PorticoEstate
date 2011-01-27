@@ -233,10 +233,19 @@
 			foreach($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
+				
 				if($location != null) // There is an underlying property location
 				{
-					$addresses .= $location->get_address_1() . "<br>\n";
-					$location_codes .= $location->get_location_code() . "<br>\n";
+					$address = $location->get_address_1();
+					if(isset($address) && $address != '')
+					{
+						$addresses .= $address . "<br>\n";
+					}
+					else
+					{
+						$addresses .= $location->get_concat_name() . "<br/>\n";
+					}
+					$location_codes .= $location->get_location_code() . "<br/>\n";
 					$gab_ids .= $location->get_gab_id() . "<br>\n";
 				}
 			}

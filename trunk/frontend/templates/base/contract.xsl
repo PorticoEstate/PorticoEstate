@@ -130,7 +130,7 @@
 												<li>
 													<dl style="padding-left: 1em;">
 														<dt style="float: left;"><img src="frontend/templates/base/images/16x16/house.png" class="list_image" /></dt>
-														<dd>
+														<dd><br/>
 															<xsl:if test="normalize-space(address)">
 																<xsl:value-of select="address" disable-output-escaping="yes"/>
 															</xsl:if>

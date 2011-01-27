@@ -74,7 +74,16 @@
 		<tr class="row_off">
 			<td>{lang_delegate_limit}:</td>
 			<td><input name="newsettings[delegate_limit]" value="{value_delegate_limit}"></td>
-		</tr>		
+		</tr>
+		<tr class="row_off">
+			<td>{lang_use_fellesdata}:</td>
+			<td>
+				<select name="newsettings[use_fellesdata]">
+					<option value="" {selected_use_fellesdata_}>NO</option>
+					<option value="1" {selected_use_fellesdata_1}>YES</option>
+				</select>
+			</td>
+		</tr>	
 		<tr class="row_on">
 			<td colspan="2">&nbsp;<b>{lang_external_db}</b></td>
 		</tr>
@@ -123,6 +132,13 @@
 		<tr class="row_on">
 			<td>{lang_email_contract_messages}:</td>
 			<td><input name="newsettings[email_contract_messages]" value="{value_email_contract_messages}"></td>
+		</tr>
+		<tr class="row_on">
+			<td colspan="2">&nbsp;<b>{lang_logo_settings}</b></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_logo_contract_messages}:</td>
+			<td><input name="newsettings[logo_path]" value="{value_logo_path}"></td>
 		</tr>
 <!-- END body -->
 <!-- BEGIN footer -->

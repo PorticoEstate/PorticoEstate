@@ -78,7 +78,7 @@
          *
          * @param integer $org_unit_ids
          */
-        public static function get_property_locations($org_unit_ids)
+        public static function get_property_locations($array)
         {
         	
         	$property_locations = array();
@@ -90,22 +90,28 @@
         	$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 			$location_id_internal = array_search('contract_type_internleie', $types);
         	$location_id_in = array_search('contract_type_innleie', $types);
+        	$location_id_ex = array_search('contract_type_eksternleie', $types);
         	
-        	foreach($org_unit_ids as $org_unit_id){
+        	foreach($array as $row){
         		/*
              * 1. hent alle kontraktsparter som har org unit id (foreløpig bruker vi result_unit_number i rentalparty)
              * 2. hent alle kontrakter på kontraktspartene
              * 3. hent alle leieobjekt på kontraktene
              * 4. hent ut bygg-ider, location_code, fra leieobjektet
              */
-        	
-        		if(!isset($org_unit_id['ORG_UNIT_ID']) || $org_unit_id['ORG_UNIT_ID'] == '')
+        		if(is_array($row))
         		{
-        			continue;
+	        		if(!isset($row['ORG_UNIT_ID']) || $row['ORG_UNIT_ID'] == '')
+	        		{
+	        			continue;
+	        		}
+	        		$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $row['ORG_UNIT_ID']));
         		}
-        		
-	        	$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('org_unit_id' => $org_unit_id['ORG_UNIT_ID']));
-	        	
+        		else
+        		{
+        			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('email' => $row));
+        		}
+        	
 	        	$contracts = array();
 	        	$composites = array();
 	        	
@@ -133,8 +139,6 @@
 			        		{
 			        			$property_location = $unit->get_location();
 			        			$property_locations[$property_location->get_location_code()] = $property_location;
-			        			
-			        			
 			        			
 			        			// Contract holders: contracts_per_location (internal) and contracts_in_per_location (in)
 			        			
@@ -173,6 +177,24 @@
 				        			}
 				        			array_push($contracts_in_per_location[$property_location->get_location_code()], $contract);
 			        			}
+			        			else if($contract->get_location_id() == $location_id_ex)
+			        			{
+			        				$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
+			        				$contract->set_total_price($total_price);
+			        				
+			        				if(!is_array($contracts_ex_per_location[$property_location->get_location_code()]))
+				        			{
+				        				$contracts_ex_per_location[$property_location->get_location_code()] = array();	
+				        			}
+				        			array_push($contracts_ex_per_location[$property_location->get_location_code()], $contract);
+				        			
+			        				if($contract->is_active())
+				        			{
+				        				$property_locations_active[$property_location->get_location_code()] = true;
+				        				$rented_area_per_location[$property_location->get_location_code()] += $contract->get_rented_area();
+				        				$rented_price_per_location[$property_location->get_location_code()] += $total_price;
+				        			}
+			        			}
 			        		}        		
 			        	}
 		        	}
@@ -181,6 +203,7 @@
         	
         	phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
         	phpgwapi_cache::session_set('frontend', 'contracts_in_per_location', $contracts_in_per_location);
+        	phpgwapi_cache::session_set('frontend', 'contracts_ex_per_location', $contracts_ex_per_location);
         	phpgwapi_cache::session_set('frontend', 'rented_area_per_location', $rented_area_per_location);
         	phpgwapi_cache::session_set('frontend', 'total_price_per_location', $rented_price_per_location);
         	
