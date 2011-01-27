@@ -4,6 +4,7 @@ phpgw::import_class('property.soitem');
 phpgw::import_class('property.sobim');
 phpgw::import_class('property.sovfs');
 phpgw::import_class('property.sobimmodel');
+phpgw::import_class('property.sobim_converter');
 phpgw::import_class('property.soitem_group');
 phpgw::import_class('property.bobimmodel');
 phpgw::import_class('phpgwapi.datetime');
@@ -30,6 +31,7 @@ class property_uiitem {
     	'showModels' => true,
     	'getModelsJson' => true,
     	'removeModelJson' => true,
+    	'getFacilityManagementXmlByModelId' => true,
     	'upload' => true,
     	'uploadFile' => true,
         'testdata' => true,
@@ -520,6 +522,11 @@ XML;
      		$output["error"] = "Invalid arguments";
      		$output["exception"] = $e;
      		echo json_encode($output);
+     	} catch (ModelDoesNotExistException $e) {
+     		$output["result"] = 0;
+     		$output["error"] = "Model does not exist!";
+     		$output["exception"] = $e;
+     		echo json_encode($output);
      	} catch (Exception $e) {
      		$output["result"] = 0;
      		$output["error"] = "General error";
@@ -527,6 +534,46 @@ XML;
      		echo json_encode($output);
      	}
     }
+    
+    public function getFacilityManagementXmlByModelId($modelId = null) {
+    	$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+    	header("Content-type: application/xml");
+    	$restUrl = "http://localhost:8080/BIM_Facility_Management/rest/uploadIfc";
+   		if($modelId == null) {
+    		$modelId = (int) phpgw::get_var("modelId");
+    	}
+    	echo "ModelId is:".$modelId;
+    	$bobimmodel = new bobimmodel_impl();
+     	$sovfs = new sovfs_impl();
+     	$sovfs->setSubModule(self::$virtualFileSystemPath);
+     	$bobimmodel->setVfsObject($sovfs);
+     	$sobimmodel = new sobimmodel_impl($this->db);
+     	$sobimmodel->setModelId($modelId);
+     	$bobimmodel->setSobimmodel($sobimmodel);
+     	$ifcFileWithRealPath = $bobimmodel->getIfcFileNameWithRealPath();
+     	$xmlResult = $this->getFacilityManagementXmlFromIfc($ifcFileWithRealPath);
+     	
+     	$bobimitem = new bobimitem_impl();
+		$bobimitem->setModelId($modelId);
+		$bobimitem->setIfcXml($xmlResult);
+		$bobimitem->setSobimitem(new sobimitem_impl($this->db));
+		$bobimitem->setSobimtype(new sobimtype_impl($this->db));
+		
+		$bobimitem->loadIfcItemsIntoDatabase();
+    	
+    }
+    
+	private function getFacilityManagementXmlFromIfc($fileWithPath) {
+		$sobim_converter = new sobim_converter_impl();
+		$sobim_converter->setFileToSend($fileWithPath);
+		try {
+			$returnedXml =  $sobim_converter->getFacilityManagementXml();
+			$sxe = simplexml_load_string($returnedXml);
+			return $sxe;			
+		} catch ( Exception $e) {
+			echo $e;
+		}
+	}
     
     public function showModels() {
     	$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'property' );
@@ -542,8 +589,10 @@ XML;
     	$sobimmodel = new sobimmodel_impl($this->db);
      	$bobimmodel->setSobimmodel($sobimmodel);
      	$output = $bobimmodel->createBimModelList();
+     	$loadingImage = $GLOBALS['phpgw']->common->find_image('property', 'ajaxLoader.gif');
      	$data = array (
-     		'models' => $output
+     		'models' => $output,
+     		'loadingImage' => $loadingImage
      	);
      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('modelData' => $data));
         $this->setupBimCss();
