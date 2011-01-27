@@ -16,6 +16,11 @@ phpgw::import_class('property.bimExceptions');
 		public function setFilename($filename);
 		public function setFileNameWithFullPath($fileNameWithFullPath);
 		/*
+		 * Arguments that needed to be set: Filename and Submodule
+		 * @return the absolute file name and path of the VFS file in the current filesystem
+		 */
+		public function getAbsolutePathOfVfsFile();
+		/*
 		 * Submodule is in effect the subdirectory under /property that the file is put into
 		 */
 		public function setSubModule($subModule);
@@ -37,6 +42,20 @@ phpgw::import_class('property.bimExceptions');
 			$this->subModule = $subModule;
 		}
 		/*
+		 * Required fields: filename and submodule
+		 */
+		public function getAbsolutePathOfVfsFile() {
+			if(empty($this->filename)) {
+				throw new Exception("Missing filename");
+			}
+			$vfsFilenameWithPath = $this->createResultingFileName($this->subModule, $this->filename);
+			$pathInfo = ($this->bofiles->vfs->path_parts(array(
+										'string'	=> $vfsFilenameWithPath,
+										'mask'	=> array (RELATIVE_NONE),
+										'fake'	=> false )));
+			return $pathInfo->real_full_path;
+		}
+		/*
 		 * code derived from class.uitts.inc.php, from the part where it says '//------------ files'
 		 * This method will save files under the 'property' folder in the vfs structure
 		 * @return The filename that was added
@@ -46,13 +65,13 @@ phpgw::import_class('property.bimExceptions');
 		 */
 		public function addFileToVfs() {
 			if(!$this->filename || !$this->fileNameWithFullPath) {
-				$errorString = "Illegal arguments";
+				$errorString = "\nIllegal arguments\n";
 				$errorString = $errorString."filename:$this->filename \n";
 				$errorString = $errorString."fileNameWithFullPath:$this->fileNameWithFullPath \n";
 				throw new Exception($errorString);
 			}
 			if($this->debug) {
-				echo "Starting add file to VFS with following arguments:";
+				echo "Starting add file to VFS with following arguments:\n";
 				echo "filename: \t $this->filename \n";
 				echo "filename with full path:\t $this->fileNameWithFullPath \n";
 				echo "subModule: $this->subModule \n";
@@ -61,6 +80,10 @@ phpgw::import_class('property.bimExceptions');
 			$filename = $this->convertSpacesToUnderscores($this->filename);
 			$to_file = $this->createResultingFileName($this->subModule, $this->filename);
 			
+			if($this->debug) {
+				echo "Altered filename:\t $filename \n".
+					"The TO-FILE:\t $to_file \n";
+			}
 			
 			try {
 				if($this->checkIfFileExists()) {
@@ -84,11 +107,17 @@ phpgw::import_class('property.bimExceptions');
 			return $filename;
 		}
 		private function copyFileToVfs($sourceFile, $destinationFile) {
-			try {
-				$this->bofiles->vfs->cp2(array (
+			
+			$inputArray = array (
 				'from'	=> $sourceFile,
 				'to'	=> $destinationFile,
-				'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL)));
+				'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL));
+			if($this->debug) {
+				echo "InputArray\n";
+				print_r($inputArray);
+			}
+			try {
+				$this->bofiles->vfs->cp2($inputArray);
 			} catch ( Exception $e) {
 				throw $e;
 			}
@@ -121,6 +150,7 @@ phpgw::import_class('property.bimExceptions');
 		}
 		
 		public function getFileFromVfs() {
+			
 			
 		}
 		/*
