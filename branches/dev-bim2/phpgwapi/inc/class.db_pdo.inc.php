@@ -308,7 +308,7 @@
 		*/
 		public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false)
 		{
-
+			
 			$this->_get_fetchmode();
 			$this->fetch_single = $fetch_single;
 
@@ -370,6 +370,8 @@
 					}
 					$this->transaction_abort();
 					exit;
+				} else if($this->Exception_On_Error) {
+					throw $e;
 				}
 			}
 

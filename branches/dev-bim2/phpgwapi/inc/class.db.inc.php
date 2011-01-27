@@ -92,7 +92,11 @@
 		* @var string $Halt_On_Error should connection and script be terminated on error?
 		*/
 		var $Halt_On_Error = 'yes'; // should be true or false
-
+		
+		/*
+		 * @var boolean $Exception_On_Error should SQL throw exception on error ?
+		 */
+		var $Exception_On_Error = false;
 		/**
 		* @var bool $auto_stripslashes automagically remove slashes from field values returned?
 		*/
