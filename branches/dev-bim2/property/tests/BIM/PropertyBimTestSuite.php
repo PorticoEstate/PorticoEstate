@@ -31,7 +31,7 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 	public static $modelName = "dummyModel";
     private $modelId;
     private $bimTypeTableName = 'fm_bim_type';
-	private $bimItemTableName = 'fm_bim_data';
+	private $bimItemTableName = 'fm_bim_item';
 	private $projectGuid;
 	private $projectType= 'ifcprojecttest';
 	private $projectXml;
@@ -50,11 +50,13 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
     
     protected static $suite_tests = array
     (
-        'TestSObimitem.php',
-    	'TestSObimtype.php',
-    	'TestSObimmodel.php',
-    	'TestSOvfs.php',
-    	'TestBObimmodel.php'
+    //    'TestSObimitem.php',
+    //	'TestSObimtype.php',
+    //	'TestSObimmodel.php',
+   // 	'TestSOvfs.php',
+    	'TestBObimmodel.php',
+   // 	'TestBObimitem.php'
+   		'TestUIbim.php'
     );
 
     /**
@@ -100,12 +102,16 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
 
         self::$sessionid = $GLOBALS['phpgw']->session->create(self::$login,
                                                             '', false);
+        $GLOBALS['phpgw_info']['user']['account_id'] = 7;
         phpgw::import_class('property.sobim');
         phpgw::import_class('property.sobimitem');
         phpgw::import_class('property.sobimtype');
         phpgw::import_class('property.sobimmodel');
         phpgw::import_class('property.sovfs');
         phpgw::import_class('property.bobimmodel');
+        phpgw::import_class('property.sobim_converter');
+        phpgw::import_class('property.bobimitem');
+        phpgw::import_class('property.uibim');
         $this->db = & $GLOBALS['phpgw']->db;
 		$this->loadXmlVariables();
 		$this->addDummyModel();

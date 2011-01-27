@@ -27,7 +27,7 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 {
 	private $modelId;
 	private $bimTypeTableName = 'fm_bim_type';
-	private $bimItemTableName = 'fm_bim_data';
+	private $bimItemTableName = 'fm_bim_item';
 	private $projectGuid;
 	private $projectType= 'ifcprojecttest';
 	private $newProjectName = 'New_project name';
@@ -106,7 +106,7 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	public function testGetAll() {
 		$sobim = new sobimitem_impl($this->db);
 		$bimItems = $sobim->getAll();
-		$this->assertEquals(3, count($bimItems));
+		$this->assertGreaterThanOrEqual(3, count($bimItems));
 		foreach($bimItems as $bimItem) {
 			/* @var $bimItem BimItem */
 			$this->assertTrue(strlen($bimItem->getType()) > 0);
@@ -142,7 +142,7 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	 */
 	public function testDeleteBimItem() {
 		$sobim = new sobimitem_impl($this->db);
-		$this->assertEquals(3, $sobim->deleteBimItem($this->projectGuid));
+		$this->assertEquals(1, $sobim->deleteBimItem($this->projectGuid)); // used to be 3
 	}
 	/*
 	 * @depends testDeleteBimItem
@@ -150,7 +150,7 @@ class TestSObimitem extends PHPUnit_Framework_TestCase
 	public function testAddBimItem() {
 		$sobim = new sobimitem_impl($this->db);
 		$itemToBeAdded = new BimItem(null, $this->projectGuid, $this->projectType, $this->projectXml->asXML(), $this->modelId);
-		$this->assertEquals(3, $sobim->addBimItem($itemToBeAdded));
+		$this->assertEquals(1, $sobim->addBimItem($itemToBeAdded));
 	}
 	/*
 	 * @depends testAddBimItem

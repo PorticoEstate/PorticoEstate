@@ -71,6 +71,7 @@ class TestBObimmodel extends TestBimCommon
 		$filenameWithPath = $this->vfsFileNameWithFullPath;
      	$this->bobimmodel = new bobimmodel_impl();
      	$this->sovfs = new sovfs_impl($filename, $filenameWithPath, $this->vfsSubModule);
+     	$this->sovfs->debug = true;
      	$this->bobimmodel->setVfsObject($this->sovfs);
      	$this->sobimmodel = new sobimmodel_impl($this->db);
      	$this->bobimmodel->setSobimmodel($this->sobimmodel);
@@ -78,6 +79,7 @@ class TestBObimmodel extends TestBimCommon
      	$error = "";
      	try {
      		$this->bobimmodel->addUploadedIfcModel();
+     		//var_dump($this->sovfs->getFileInformation());
      	} catch (FileExistsException $e) {
      		$error =  $e;
      	} catch (Exception $e) {

@@ -34,7 +34,7 @@ class TestSObim extends PHPUnit_Framework_TestCase
     protected static $sessionid = '';
     
 	private $bimTypeTableName = 'fm_bim_type';
-	private $bimItemTableName = 'fm_bim_data';
+	private $bimItemTableName = 'fm_bim_item';
 	private $projectGuid;
 	private $projectType= 'ifcprojecttest';
 	private $projectXml;

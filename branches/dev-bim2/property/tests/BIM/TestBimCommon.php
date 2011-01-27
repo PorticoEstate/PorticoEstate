@@ -13,8 +13,10 @@ class TestBimCommon extends PHPUnit_Framework_TestCase
 	protected $vfsFileId = 10101010;
 	
 	public function __construct() {
-		$GLOBALS['phpgw_info']['user']['account_id'] = 7;
-		
+		//$GLOBALS['phpgw_info']['user']['account_id'] = 7;
+		$currentDirectory = dirname(__FILE__);
+		$this->vfsFileNameWithFullPath = $currentDirectory.DIRECTORY_SEPARATOR.$this->vfsFileName;
+		echo "Var set to:".$this->vfsFileNameWithFullPath;
 	}
 	
 	protected function initDatabase() {
@@ -22,8 +24,7 @@ class TestBimCommon extends PHPUnit_Framework_TestCase
 	}
 	
 	protected function createDummyFile() {
-		$currentDirectory = dirname(__FILE__);
-		$this->vfsFileNameWithFullPath = $currentDirectory.DIRECTORY_SEPARATOR.$this->vfsFileName;
+		
 		
 		$fileHandle = fopen($this->vfsFileNameWithFullPath, 'w') or die("Can't open file");
 		$result = fwrite($fileHandle, $this->vfsFileContents);

@@ -43,8 +43,48 @@ class TestSOvfs extends TestBimCommon
 		$this->vfsFileName = "soVfsTestDummyFile.txt"; // so that these tests will not interfere with the sobimmodel tests
 	}
 	
-	
+	public function testAddFile() {
+		$this->createDummyFile();
+		$sovfs = new sovfs_impl();
+		//$sovfs->debug = true;
+		$sovfs->setFilename($this->vfsFileName);
+		$sovfs->setFileNameWithFullPath($this->vfsFileNameWithFullPath);
+		$sovfs->setSubModule($this->vfsSubModule);
+		$sovfs->debug = true;
+		try {
+			$sovfs->addFileToVfs();
+			echo "Success!";
+		} catch (FileExistsException $e) {
+			echo "File already exists\n";
+		}
+		$this->removeDummyFile();
+	}
+	/*
 	public function testaddCheckDeleteFileToVfs() {
+		$this->createDummyFile();
+		
+		$sovfs = new sovfs_impl();
+		//$sovfs->debug = true;
+		$sovfs->setFilename($this->vfsFileName);
+		$sovfs->setFileNameWithFullPath($this->vfsFileNameWithFullPath);
+		$sovfs->setSubModule($this->vfsSubModule);
+		$sovfs->debug = true;
+		try {
+			$sovfs->addFileToVfs();
+		} catch (FileExistsException $e) {
+			echo "File already exists\n";
+		}
+		$this->assertTrue($sovfs->checkIfFileExists());
+		$sovfs->removeFileFromVfs();
+		$this->assertTrue(!$sovfs->checkIfFileExists());
+		
+		$this->removeDummyFile();
+	}
+	*/
+	/*
+	 * This test checks the OS for the file
+	 */ /*
+	public function testaddCheckOSDeleteFileToVfs() {
 		$this->createDummyFile();
 		
 		$sovfs = new sovfs_impl();
@@ -57,12 +97,20 @@ class TestSOvfs extends TestBimCommon
 		} catch (FileExistsException $e) {
 			echo "File already exists\n";
 		}
-		$this->assertTrue($sovfs->checkIfFileExists());
+		$sovfs2 = new sovfs_impl();
+		$sovfs2->setFilename($this->vfsFileName);
+		$sovfs2->setSubModule($this->vfsSubModule);
+		$OS_pathAndFilename = $sovfs2->getAbsolutePathOfVfsFile();
+		$this->assertTrue(file_exists($OS_pathAndFilename), "File does not exist!");
+		
 		$sovfs->removeFileFromVfs();
+		$this->assertTrue(!file_exists($OS_pathAndFilename), "File still exists!");
 		$this->assertTrue(!$sovfs->checkIfFileExists());
 		
 		$this->removeDummyFile();
 	}
+	
+	*/
 	
 	/*private function createDummyFile() {
 		$currentDirectory = dirname(__FILE__);
