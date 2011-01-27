@@ -18,6 +18,7 @@ interface bobimmodel {
 	public function removeIfcModelByModelId();
 	public function setModelName($name);
 	public function getModelName();
+	public function getIfcFileNameWithRealPath();
 }
 
 class bobimmodel_impl implements bobimmodel {
@@ -128,6 +129,13 @@ class bobimmodel_impl implements bobimmodel {
 		return false;
 		
 	}
+	public function getIfcFileNameWithRealPath() {
+		$this->checkIdArguments();
+		/* @var $bimModel BimModel */
+		$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
+		$this->sovfs->setFilename($bimModel->getFileName());
+		return $this->sovfs->getAbsolutePathOfVfsFile();
+	}
 	/*
 	 * needs sobimmodel object with db and  modelId set
 	 * @return boolean
@@ -141,9 +149,10 @@ class bobimmodel_impl implements bobimmodel {
 	private function displayArguments() {
 		$string = "Argument list:\n".
 				"Model name:\t $this->modelName \n".
-				"Model id:\t $this->modelId \n".
+				"Model id:\t ".$this->sobimmodel->getModelId()." \n".
 				"SOvfs:\t ".gettype($this->sovfs)."\n".
-				"SObimmodel:\t ".gettype($this->sobimmodel)."\n";
+				"SObimmodel:\t ".gettype($this->sobimmodel)."\n".
+				"Submodule:\t ".$this->sovfs->getSubModule()."\n";
 		return $string;
 		
 	}
@@ -163,6 +172,7 @@ class bobimmodel_impl implements bobimmodel {
 	/*
 	 * needs sobimmodel object with db and  modelId set
 	 * needs sovfs object, with submodule set
+	 * @throws ModelDoesNotExistException
 	 */
 	public function removeIfcModelByModelId() {
 		try {
@@ -171,12 +181,17 @@ class bobimmodel_impl implements bobimmodel {
 			throw $e;
 		}
 		/* @var $bimModel BimModel */
-		$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
-		$this->sobimmodel->setModelName($bimModel->getName());
-		$this->sobimmodel->setVfsdatabaseid($bimModel->getVfsFileId());
+		try {
+			$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
+			$this->sobimmodel->setModelName($bimModel->getName());
+			$this->sobimmodel->setVfsdatabaseid($bimModel->getVfsFileId());
+			
+			$this->sovfs->setFilename($bimModel->getFileName());
+			$this->removeIfcModel();
+		} catch (ModelDoesNotExistException $e) {
+			throw new ModelDoesNotExistException();
+		}
 		
-		$this->sovfs->setFilename($bimModel->getFileName());
-		$this->removeIfcModel();
 	}
 	
 	private function checkIdArguments() {
