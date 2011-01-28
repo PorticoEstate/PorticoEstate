@@ -153,6 +153,8 @@ create_shortcut	rental	no	Ny snarvei
 create_contract_contract_type_eksternleie	rental	no	Opprett eksternleiekontrakt
 create_contract_contract_type_innleie	rental	no	Opprett innleiekontrakt
 create_contract_contract_type_internleie	rental	no	Opprett internleiekontrakt
+create_user_based_on_email_link	rental	no	Opprett bruker basert på e-post
+create user based on email group	rental	no	Velg gruppe nye brukere blir innmeldt i
 cs15_export	rental	no	Kundefil
 currency decimal places	rental	no	Antall desimaler for valuta
 currency prefix	rental	no	Valuta prefix
@@ -188,8 +190,13 @@ edit_contract	rental	no	Redigér kontrakt
 edit	rental	no	Redigér
 elements_pr_page	rental	no	elementer per side
 elements	rental	no	Elementer
-email	renal	no	E-post
+email	rental	no	E-post
+email_create_user_based_on_email_title	rental	no	Tilgang til Portico Estate
+email_create_user_based_on_email_message	rental	no	Hei %1 %2:<br/>Det er opprettet en tilgang for deg i Portico Estate<br/><br/>Brukernavnet er e-posten din<br/>Passordet er %3<br/><br/>Systemet kan nås på adressen %4
 ended	rental	no	Avsluttet
+error_create_user_based_on_email	rental 	no	En feil oppstod under opprettelse av bruker
+error_create_user_based_on_email_account_exist	rental	no	En konto med denne e-posten som brukernavn eksisterer allerede
+error_create_user_based_on_email_not_valid_address	rental	no	Kan ikke opprette kontoen pga av e-postadressen ikke er gyldig
 error_no_contract_or_party	rental	no	Ingen kontrakt eller kontraktspart å utføre handlingen på
 events	rental	no	Hendelser
 every_second_week	rental	no	Hver 14. dag
@@ -222,6 +229,7 @@ f_new_party	rental	no	Ny kontraktspart
 f_new_price_item	rental	no	Nytt priselement
 f_new_rc	rental	no	Nytt leieobjekt
 from	rental	no	Fra
+from email setting	rental	no	E-post adresse systemmeldinger (Fra)
 frontpage_was_reset	rental	no	Oppsettet på forsiden ble nullstilt
 frontpage_reset_setup	rental	no	Nullstill oppsett 
 f_select_columns	rental	no	Velg kolonner
@@ -234,6 +242,7 @@ hidden	rental	no	Skjult
 hidden_for_pick	rental	no	skjult
 has_custom_address	rental	no	Er adressen overstyrt?
 house_number	rental	no	Husnummer
+http address for external users	rental	no	HTTP adresse for eksterne brukere
 id	rental	no	ID
 Identifier	rental	no	Identifikator
 import_log_messages	rental	no	Import log
@@ -492,6 +501,7 @@ status_date	rental	no	den
 status_unknown	rental	no	Ukjent status
 status	rental	no	Status
 Success	rental	no	Suksess
+success_create_user_based_on_email	rental	no	En brukerkonto ble opprettet og en e-post ble sendt til brukeren
 sum	rental	no	Sum
 sync	rental	no	Synkroniser
 sync_identifier	rental	no	Kun identifikator

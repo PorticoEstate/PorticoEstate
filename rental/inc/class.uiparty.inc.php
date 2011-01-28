@@ -21,7 +21,8 @@ class rental_uiparty extends rental_uicommon
 			'download_agresso'	=> true,
 			'sync'				=> true,
 			'update_all_org_enhet_id'	=> true,
-			'syncronize_party'	=> true
+			'syncronize_party'	=> true,
+			'create_user_based_on_email' => true
 	);
 
 	public function __construct()
@@ -486,6 +487,111 @@ class rental_uiparty extends rental_uicommon
 				rental_soparty::get_instance()->store($party);
 			}
 		}
+	}
+	
+	/**
+	 * Function to create Portico Estate users based on email, first- and lastname on contract parties.
+	 */
+	public function create_user_based_on_email()
+	{	
+		//Get the party identifier from the reuest
+		$party_id = phpgw::get_var('id');
+		
+		//Access control: only executive officers and administrators can create such accounts
+		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			if(isset($party_id) && $party_id > 0)
+			{
+				//Load the party from the database
+				$party = rental_soparty::get_instance()->get_single($party_id);
+				$email = $party->get_email();
+				
+				//Validate the email
+				$validator = CreateObject('phpgwapi.EmailAddressValidator');
+				if(!$validator->check_email_address($email))
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email_not_valid_address')));
+				}
+				if ($GLOBALS['phpgw']->accounts->exists($email) )
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email_account_exist')));
+				}
+				
+				//Read group configuration
+				$config	= CreateObject('phpgwapi.config','rental');
+				$config->read();
+				$renter_group = $config->config_data['create_user_based_on_email_group'];
+				
+				//Get namae and generate password
+				$first_name = $party->get_first_name();
+				$last_name = $party->get_last_name();
+				$passwd = $GLOBALS['phpgw']->common->randomstring(6)."ABab1!"; 
+				
+				
+				try {
+					//Create account which never expires
+					$account			= new phpgwapi_user();
+					$account->lid		= $email;
+					$account->firstname	= $first_name;
+					$account->lastname	= $last_name;
+					$account->passwd	= $passwd;
+					$account->enabled	= true;
+					$account->expires	= -1;
+					$frontend_account	= $GLOBALS['phpgw']->accounts->create($account, array($renter_group), array(), array('frontend'));
+					
+					//Specify the accounts access to modules 
+					$aclobj =& $GLOBALS['phpgw']->acl;
+					$aclobj->set_account_id($frontend_account, true);
+					$aclobj->add('frontend', '.', 1);
+					$aclobj->add('frontend', 'run', 1);
+					$aclobj->add('manual', '.', 1);
+					$aclobj->add('manual', 'run', 1);
+					$aclobj->add('preferences', 'changepassword',1);
+					$aclobj->add('preferences', '.',1);
+					$aclobj->add('preferences', 'run',1);
+					$aclobj->save_repository();
+					
+					//Set the default module for the account
+					$preferences = createObject('phpgwapi.preferences', $frontend_account);
+					$preferences->add('common','default_app','frontend');
+					$preferences->save_repository();
+				
+				} catch (Exception $e) {
+					//Redirect with error message if something goes wrong
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => $e->getMessage()));
+				}
+		
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'] )
+				{
+					if (!is_object($GLOBALS['phpgw']->send))
+					{
+						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+					}
+					
+					//Get addresses from module configuration
+					$from = $config->config_data['from_email_setting'];
+					$address = $config->config_data['http_address_for_external_users'];
+					
+					// Define email content
+					$title = lang('email_create_user_based_on_email_title');
+					$message = lang('email_create_user_based_on_email_message',$first_name,$last_name,$passwd, $address);
+				
+					//Send email
+					$rcpt = $GLOBALS['phpgw']->send->msg('email',$email,$title,
+						 stripslashes(nl2br($message)), '', '', '',
+						 $from , 'System message',
+						 'html', '', array() , false);
+					
+					//Redirect with sucess message if receipt is ok
+					if($rcpt)
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'message' => lang('success_create_user_based_on_email')));
+					}
+				}
+			}	
+		}
+		//Redirect to edit mode with error message if user reaches this point.
+		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email')));
 	}
 }
 ?>

@@ -60,6 +60,18 @@ class rental_property_location
 
 	public function get_area_net(){ return $this->area_net; }
 	
+	public function get_concat_name()
+	{
+		if(count($this->names) > 0)
+		{
+			return implode(', ',$this->names);	
+		}
+		else
+		{
+			return '';
+		}
+	}
+	
 	public function serialize()
 	{
 		$result = array();		

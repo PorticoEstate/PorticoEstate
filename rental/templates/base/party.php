@@ -266,6 +266,12 @@
 						?>
 							<input type="text" name="email" id="email" value="<?php echo $party->get_email() ?>" />
 						<?php
+							$validator = CreateObject('phpgwapi.EmailAddressValidator');
+							$email = $party->get_email();
+							if($validator->check_email_address($email) && !$GLOBALS['phpgw']->accounts->exists($email))
+							{
+								?><br/><a href="?menuaction=rental.uiparty.create_user_based_on_email&id=<?php echo $party->get_id() ?>"><?php echo lang('create_user_based_on_email_link') ?></a> <?php	
+							}
 						}
 						else
 						{

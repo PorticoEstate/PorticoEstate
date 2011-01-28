@@ -12,7 +12,7 @@
 	*/
 
 	/**
-	* Update frontend version from 0.1 to 0.9.17.500
+	* Update frontend version from 0.1 to 0.2
 	* Add locations as placeholders for functions and menues
 	* 
 	*/
@@ -32,13 +32,33 @@
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['frontend']['currentver'] = '0.9.17.500';
+			$GLOBALS['setup_info']['frontend']['currentver'] = '0.2';
 			return $GLOBALS['setup_info']['frontend']['currentver'];
 		}
 	}
 	
+	/**
+	* Update frontend version from 0.1 to 0.2
+	* Add new location as placeholders for functions and menues
+	* 
+	*/
 	$test[] = '0.2';
 	function frontend_upgrade0_2()
 	{
 		$GLOBALS['phpgw']->locations->add('.rental.contract_in','contract_in','frontend', false);
+		$GLOBALS['setup_info']['frontend']['currentver'] = '0.3';
+		return $GLOBALS['setup_info']['frontend']['currentver'];
+	}
+	
+	/**
+	* Update frontend version from 0.2 to 0.3
+	* Add new location as placeholders for functions and menues
+	* 
+	*/
+	$test[] = '0.3';
+	function frontend_upgrade0_3()
+	{
+		$GLOBALS['phpgw']->locations->add('.rental.contract_ex','contract_ex','frontend', false);
+		$GLOBALS['setup_info']['frontend']['currentver'] = '0.4';
+		return $GLOBALS['setup_info']['frontend']['currentver'];
 	}

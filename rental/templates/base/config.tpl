@@ -36,6 +36,22 @@
 			<td>{lang_billing_time_limit}:</td>
 			<td><input name="newsettings[billing_time_limit]" value="{value_billing_time_limit}"></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_from_email_setting}:</td>
+			<td><input name="newsettings[from_email_setting]" value="{value_from_email_setting}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_http_address_for_external_users}:</td>
+			<td><input name="newsettings[http_address_for_external_users]" value="{value_http_address_for_external_users}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_create_user_based_on_email_group}:</td>
+			<td>
+			 <select name="newsettings[create_user_based_on_email_group]">
+{hook_create_user_based_on_email_group}
+			 </select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_use_fellesdata}:</td>
 			<td>

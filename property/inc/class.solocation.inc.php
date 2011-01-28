@@ -1141,7 +1141,7 @@
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
-			//echo $sql;
+//			_debug_array($sql);
 			$cols_return	= $this->cols_return;
 
 			$this->db->next_record();
