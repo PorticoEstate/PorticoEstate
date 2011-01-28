@@ -171,3 +171,30 @@ HTML;
 		return $out;
 	}
 
+
+	/**
+	* Get HTML checkbox with location levels that should be listed in lists
+	*
+	* @param $config
+	* @return string HTML checkboxes to be placed in a table
+	*/
+	function list_location_level($config)
+	{
+		$location_types = execMethod('property.soadmin_location.select_location_type');
+
+		$level_assigned = isset($config['list_location_level']) ? $config['list_location_level'] : array();
+		$out = '';
+		foreach ( $location_types as $dummy => $level)
+		{
+			$checked = '';
+			if ( in_array($level['id'], $level_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .=  <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[list_location_level][]" value="{$level['id']}" {$checked}><label>{$level['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}

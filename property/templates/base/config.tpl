@@ -341,7 +341,6 @@
 				</table>
 			</td>
 		</tr>
-
 		<tr class="row_off">
 			<td>{lang_send_response_TTS}.</td>
 			<td>
@@ -444,6 +443,16 @@
 					<option value="" {selected_budget_at_project_}>NO</option>
 					<option value="1" {selected_budget_at_project_1}>YES</option>
 				</select>
+			</td>
+		</tr>
+		<tr class="row_on">
+			<td valign = 'top'>{lang_list_location_level}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[list_location_level][]" value="">
+				<table>
+					{hook_list_location_level}
+				</table>
 			</td>
 		</tr>
 		<!--

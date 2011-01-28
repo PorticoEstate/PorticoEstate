@@ -2011,12 +2011,12 @@
 
 			for ($i=0;$i<count($input_name);$i++)
 			{
-				$function_exchange_values .= 'opener.document.getElementsByName("'.$input_name[$i].'")[0].value = "";' ."\r\n";
+				$function_exchange_values .= "opener.document.getElementsByName('{$input_name[$i]}')[0].value = '';\r\n";
 			}
 
 			for ($i=0;$i<count($input_name);$i++)
 			{
-				$function_exchange_values .= 'opener.document.getElementsByName("'.$input_name[$i].'")[0].value = data.getData("'.$input_name[$i].'");' ."\r\n";
+				$function_exchange_values .= "opener.document.getElementsByName('{$input_name[$i]}')[0].value = data.getData('{$input_name[$i]}');\r\n";
 			}
 
 			$function_exchange_values .= 'window.close()';
@@ -2069,11 +2069,11 @@
 					{
 						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
 						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 						}
 						else if(isset($column['format']) && $column['format']== "link")
 						{
-							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='{$column['link']}' target='_blank'>{$column['value']}</a>";
 						}
 						else
 						{

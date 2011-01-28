@@ -1259,29 +1259,35 @@
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
 
-			if($lookup)
+//			if($lookup)
 			{
+				$GLOBALS['phpgw']->config->read();
+				$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+/*
 				$cols_return[] 				= 'loc1_name';
 				$cols_extra[] 				= 'loc1_name';
-				$uicols['input_type'][]		= 'text';
+				$cols_return_lookup[] 		= "loc{$i}_name";
+				$uicols['input_type'][]		= in_array(1, $list_location_level) ? 'text' : 'hidden';
 				$uicols['name'][]			= 'loc1_name';
-				$uicols['descr'][]			= lang('Property Name');
-				$uicols['statustext'][]		= lang('Property Name');
-				$uicols['exchange'][]		= true;
+				$uicols['descr'][]			= $location_types[0]['name'];
+				$uicols['statustext'][]		= $location_types[0]['descr'];
+				$uicols['exchange'][]		= $lookup;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= true;
-
-				for ($i=2;$i<($type_id+1);$i++)
+*/
+				for ($i=1;$i<($type_id+1);$i++)
 				{
-					$cols_return_lookup[] 		= 'loc' . $i . '_name';
-					$uicols['input_type'][]		= 'hidden';
-					$uicols['name'][]			= 'loc' . $i . '_name';
-					$uicols['descr'][]			= '';
-					$uicols['statustext'][]		= '';
-					$uicols['exchange'][]		= true;
+					$cols_return[] 				= "loc{$i}_name";
+					$cols_extra[] 				= "loc{$i}_name";
+					$cols_return_lookup[] 		= "loc{$i}_name";
+					$uicols['input_type'][]		= in_array($i, $list_location_level) ? 'text' : 'hidden';
+					$uicols['name'][]			= "loc{$i}_name";
+					$uicols['descr'][]			= $location_types[($i-1)]['name'];
+					$uicols['statustext'][]		= $location_types[$i-1]['descr'];
+					$uicols['exchange'][]		= $lookup;
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
 					$uicols['formatter'][]		= '';

@@ -755,10 +755,8 @@
 			}
 
 			$ticket_list = array();
-			//			if(!$dry_run)
-				{
-					$ticket_list = $this->bo->read($start_date, $end_date,'',$dry_run);
-				}
+
+			$ticket_list = $this->bo->read($start_date, $end_date,'',$dry_run);
 
 			$this->bo->get_origin_entity_type();
 			$uicols_related = $this->bo->uicols_related;
@@ -766,53 +764,95 @@
 			$uicols = array();
 
 			$uicols['name'][] = 'priority';
+			$uicols['descr'][]	= lang('priority');
 			$uicols['name'][] = 'id';
+			$uicols['descr'][]	= lang('id');
 			$uicols['name'][] = 'bgcolor';
+			$uicols['descr'][]	= lang('bgcolor');
 			$uicols['name'][] = 'subject';
-			$uicols['name'][] = 'loc1_name';
+			$uicols['descr'][]	= lang('subject');
 			$uicols['name'][] = 'location_code';
+			$uicols['descr'][]	= lang('location code');
+			$location_types = execMethod('property.soadmin_location.select_location_type');
+			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
+
+			foreach ( $location_types as $dummy => $level)
+			{
+				if ( in_array($level['id'], $level_assigned))
+				{
+					$uicols['name'][] = "loc{$level['id']}_name";
+					$uicols['descr'][]	= $level['name'];
+					if($level['id'] > 1)
+					{
+						foreach ($ticket_list as & $ticket)
+						{
+							$location_data = execMethod('property.solocation.read_single', $ticket['location_code']);
+							$ticket["loc{$level['id']}_name"] = $location_data["loc{$level['id']}_name"];
+						}
+					}
+				}
+			}
+
+//			$uicols['name'][] = 'loc1_name';
+
 			$uicols['name'][] = 'address';
-			//			$uicols['name'][] = 'user';
+			$uicols['descr'][]	= lang('address');
+//			$uicols['name'][] = 'user';
+//			$uicols['descr'][]	= lang('user');
 			$uicols['name'][] = 'assignedto';
+			$uicols['descr'][]	= lang('assignedto');
 			$uicols['name'][] = 'entry_date';
+			$uicols['descr'][]	= lang('entry date');
 			$uicols['name'][] = 'status';
+			$uicols['descr'][]	= lang('status');
 
 			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
 			{
 				$uicols['name'][] = 'order_id';
+				$uicols['descr'][]	= lang('order id');
 				$uicols['name'][] = 'vendor';
+				$uicols['descr'][]	= lang('vendor');
 			}
 
 			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
 			{
 				$uicols['name'][] = 'estimate';
+				$uicols['descr'][]	= lang('estimate');
 				$uicols['name'][] = 'actual_cost';
+				$uicols['descr'][]	= lang('actual cost');
 			}
 
 			foreach($uicols_related as $related)
 			{
 				$uicols['name'][] = $related;			
+				$uicols['descr'][]	= lang(str_replace('_', ' ', $related));
 			}
 
 			if( $this->_show_finnish_date )
 			{
 				$uicols['name'][] = 'finnish_date';
+				$uicols['descr'][]	= lang('finnish date');
 				$uicols['name'][] = 'delay';
+				$uicols['descr'][]	= lang('delay');
 			}
 
 			$uicols['name'][] = 'child_date';
+			$uicols['descr'][]	= lang('child date');
 			$uicols['name'][] = 'link_view';
+			$uicols['descr'][]	= lang('link view');
 			$uicols['name'][] = 'lang_view_statustext';
+			$uicols['descr'][]	= lang('lang view statustext');
 			$uicols['name'][] = 'text_view';
+			$uicols['descr'][]	= lang('text view');
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
 
 			foreach ($custom_cols as $col)
 			{
-				//			$uicols['input_type'][]	= 'text';
-				$uicols['name'][]			= $col;
-				//			$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
-				//			$uicols['statustext'][]	= $col;
+	//			$uicols['input_type'][]	= 'text';
+				$uicols['name'][]		= $col;
+	//			$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+	//			$uicols['statustext'][]	= $col;
 			}
 
 
@@ -1018,24 +1058,24 @@
 			unset($parameters);
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				//		if($uicols['input_type'][$i]!='hidden')
-			{
-				$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
-				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
-				$datatable['headers']['header'][$i]['text'] 			= lang(str_replace('_', ' ', $uicols['name'][$i]));
-				$datatable['headers']['header'][$i]['visible'] 			= true;
-				$datatable['headers']['header'][$i]['sortable']			= false;
-				if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date' || $uicols['name'][$i]=='order_id')
+	//		if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['sortable']		= true;
-					$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= false;
+					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date' || $uicols['name'][$i]=='order_id')
+					{
+						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sort_field']   = $uicols['name'][$i];
+					}
+					if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext')
+					{
+						$datatable['headers']['header'][$i]['visible'] 		= false;
+						$datatable['headers']['header'][$i]['format'] 		= 'hidden';
+					}
 				}
-				if($uicols['name'][$i]=='text_view' || $uicols['name'][$i]=='bgcolor' || $uicols['name'][$i]=='child_date' || $uicols['name'][$i]== 'link_view' || $uicols['name'][$i]=='lang_view_statustext')
-				{
-					$datatable['headers']['header'][$i]['visible'] 		= false;
-					$datatable['headers']['header'][$i]['format'] 		= 'hidden';
-				}
-			}
 			}
 
 			//path for property.js

@@ -308,21 +308,21 @@
 			//_debug_array($cols_extra);
 			//_debug_array($cols_return_lookup);
 
-			if(isset($data['lookup']) && $data['lookup'])
+//			if(isset($data['lookup']) && $data['lookup'])
 			{
-				for ($i=0;$i<count($entity);$i++)
+				foreach ($entity as &$entry)
 				{
-					$location_data=$this->solocation->read_single($entity[$i]['location_code']);
+					$location_data = $this->solocation->read_single($entry['location_code']);
 					for ($j=0;$j<count($cols_extra);$j++)
 					{
-						$entity[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+						$entry[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 					}
 
 					if($cols_return_lookup)
 					{
 						for ($k=0;$k<count($cols_return_lookup);$k++)
 						{
-							$entity[$i][$cols_return_lookup[$k]] = $location_data[$cols_return_lookup[$k]];
+							$entry[$cols_return_lookup[$k]] = $location_data[$cols_return_lookup[$k]];
 						}
 					}
 				}
