@@ -280,11 +280,13 @@
   	this.addFooterDatatable = function()
   	{
   		//call getSumPerPage(name of column) in property.js
-  		tmp_sum = getSumPerPage('amount_lnk',2);
+// 		tmp_sum = getSumPerPage('amount_lnk',2);
+		tmp_sum = YAHOO.util.Number.format(values_ds.sum_amount, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
 
 		//Create ROW
 		newTR = document.createElement('tr');
-		td_empty(15);
+		td_empty(14);
+		td_sum('Total');
 		td_sum(tmp_sum);
 		td_empty(7);
 		//RowChecked

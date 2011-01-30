@@ -38,6 +38,9 @@
 	{
 		var $uicols_related = array();
 		var $acl_location = '.ticket';
+		public $total_records	= 0;
+		public $sum_budget		= 0;
+		public $sum_actual_cost	= 0;
 
 		public $soap_functions = array
 			(
@@ -393,10 +396,12 @@
 
 //_debug_array($sql);
 
-			$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
+			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql}) as t";
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
-			$this->total_records = $this->db->f('cnt');
+			$this->total_records	= $this->db->f('cnt');
+			$this->sum_budget		= $this->db->f('sum_budget');
+			$this->sum_actual_cost	= $this->db->f('sum_actual_cost');
 			unset($sql2);
 
 			$tickets = array();
