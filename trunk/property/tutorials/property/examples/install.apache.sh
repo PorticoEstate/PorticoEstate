@@ -54,8 +54,8 @@ APACHE="httpd-2.2.17"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.4.tar.bz2"
-PHP="php-5.3.4"
+PHPTAR="php-5.3.5.tar.bz2"
+PHP="php-5.3.5"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
