@@ -1055,12 +1055,19 @@
 					);
 			}
 
+
+			$uicols_formatter = array
+			(
+				'estimate'		=> 'FormatterRight',
+				'actual_cost'	=> 'FormatterRight'
+			);
+			
 			unset($parameters);
 			for ($i=0;$i<$count_uicols_name;$i++)
 			{
 	//		if($uicols['input_type'][$i]!='hidden')
 				{
-					$datatable['headers']['header'][$i]['formatter'] 		= !isset($uicols['formatter'][$i]) || $uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i];
+					$datatable['headers']['header'][$i]['formatter'] 		= isset($uicols_formatter[$uicols['name'][$i]]) && $uicols_formatter[$uicols['name'][$i]] ? $uicols_formatter[$uicols['name'][$i]] : '""';
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
@@ -1119,7 +1126,10 @@
 					'startIndex' 		=> $datatable['pagination']['records_start'],
 					'sort'				=> $datatable['sorting']['order'],
 					'dir'				=> $datatable['sorting']['sort'],
-					'records'			=> array()
+					'records'			=> array(),
+					'show_sum'			=> $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property'),
+					'sum_budget'		=> $this->bo->sum_budget,
+					'sum_actual_cost'	=> $this->bo->sum_actual_cost
 				);
 
 			// values for datatable

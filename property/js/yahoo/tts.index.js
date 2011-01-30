@@ -39,6 +39,12 @@
 		date_search : 1 //if search has link "Data search"
 	}
 
+	var tableYUI;
+
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<P align=\"right\">"+oData+"</p>";
+	}
 
 	this.onChangeSelect = function()
 	{
@@ -59,6 +65,9 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+
 			//category
 			index = locate_in_array_options(0,"value",path_values.cat_id);
 			if(index)
@@ -100,8 +109,45 @@
 
   	this.myParticularRenderEvent = function()
   	{
-  		//nothing
+		if(values_ds.show_sum)
+		{
+			tableYUI.deleteTFoot();
+			addFooterDatatable();
+		}
   	}
+
+  	this.addFooterDatatable = function()
+  	{
+		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		tmp_sum_actual_cost = YAHOO.util.Number.format(values_ds.sum_actual_cost, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+
+		count_empty = 0;
+		for(i=0;i<myColumnDefs.length;i++)
+		{
+			if (myColumnDefs[i].key == 'estimate')
+			{
+				count_empty = i;
+				break;
+			}
+		}
+
+		count_empty_end = myColumnDefs.length - count_empty - 2;
+
+		//Create ROW
+		newTR = document.createElement('tr');
+		td_empty(count_empty);
+		td_sum(tmp_sum_budget);
+		td_sum(tmp_sum_actual_cost);
+		td_empty(count_empty_end);
+		//Add to Table
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR.cloneNode(true));
+
+		//clean value for values_ds.message
+		//values_ds.message = null;
+  	}
+
 
 /****************************************************************************************/
 
