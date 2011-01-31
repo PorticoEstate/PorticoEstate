@@ -200,7 +200,8 @@
 				$uicols['sortable'][]		= '';
 
 				$cols.= ",loc1_name";
-				$cols_return[] 				= 'loc1_name';
+//				$cols_return[] 				= 'loc1_name';
+/*
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'loc1_name';
 				$uicols['descr'][]			= lang('loc1_name');
@@ -211,7 +212,7 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
-
+*/
 				$cols.= ",account_lid as coordinator";
 				$cols_return[] 				= 'coordinator';
 				$uicols['input_type'][]		= 'text';
