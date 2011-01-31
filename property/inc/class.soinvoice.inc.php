@@ -34,8 +34,9 @@
 
 	class property_soinvoice
 	{
-		var $total_records = 0;
-		var $role = array();
+		public $total_records = 0;
+		public $sum_amount = 0;
+		public $role = array();
 		protected $invoice_approval = 2;
 
 		function __construct()
@@ -188,6 +189,12 @@
 
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
+
+			$sql3 = "SELECT sum(belop) as sum_amount FROM  $table $join_tables $filtermethod $querymethod";
+			$this->db->query($sql3,__LINE__,__FILE__);
+			$this->db->next_record();
+			$this->sum_amount		= $this->db->f('sum_amount');
+
 
 			if(!$allrows)
 			{
