@@ -115,7 +115,7 @@
 
 		function read($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
+			$start			= isset($data['start']) && $data['start'] ? (int)$data['start']:0;
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
 			$user_id		= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id']: 0;
 			$owner_id		= isset($data['owner_id'])?$data['owner_id']:'';
@@ -123,7 +123,8 @@
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
+			$district_id	= isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id']:0;
+			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id']:0;
 			$allrows		= isset($data['allrows'])?$data['allrows']:'';
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
@@ -330,6 +331,12 @@
 			if ($district_id > 0)
 			{
 				$filtermethod .= " $where  district_id=" .(int)$district_id;
+				$where = 'AND';
+			}
+
+			if ($part_of_town_id > 0)
+			{
+				$filtermethod .= " $where fm_part_of_town.part_of_town_id= " . (int)$part_of_town_id;
 				$where = 'AND';
 			}
 

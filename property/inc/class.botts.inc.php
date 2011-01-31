@@ -126,17 +126,18 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','fm_tts');
 
-			$this->start		= isset($data['start'])?$data['start']:'';
-			$this->query		= isset($data['query'])?$data['query']:'';
-			$this->user_id		= isset($data['user_id'])?$data['user_id']:'';
-			$this->sort			= isset($data['sort'])?$data['sort']:'';
-			$this->order		= isset($data['order'])?$data['order']:'';
-			$this->status_id	= isset($data['status_id'])?$data['status_id']:'';
-			$this->cat_id		= isset($data['cat_id'])?$data['cat_id']:'';
-			$this->district_id	= isset($data['district_id'])?$data['district_id']:'';
-			$this->allrows		= isset($data['allrows'])?$data['allrows']:'';
-			$this->start_date	= isset($data['start_date'])?$data['start_date']:'';
-			$this->end_date		= isset($data['end_date'])?$data['end_date']:'';
+			$this->start			= isset($data['start'])?$data['start']:'';
+			$this->query			= isset($data['query'])?$data['query']:'';
+			$this->user_id			= isset($data['user_id'])?$data['user_id']:'';
+			$this->sort				= isset($data['sort'])?$data['sort']:'';
+			$this->order			= isset($data['order'])?$data['order']:'';
+			$this->status_id		= isset($data['status_id'])?$data['status_id']:'';
+			$this->cat_id			= isset($data['cat_id'])?$data['cat_id']:'';
+			$this->district_id		= isset($data['district_id'])?$data['district_id']:'';
+			$this->part_of_town_id	= isset($data['part_of_town_id'])?$data['part_of_town_id']:'';
+			$this->allrows			= isset($data['allrows'])?$data['allrows']:'';
+			$this->start_date		= isset($data['start_date'])?$data['start_date']:'';
+			$this->end_date			= isset($data['end_date'])?$data['end_date']:'';
 		}
 
 		function column_list($selected = array(),$type_id='',$allrows='')
@@ -303,7 +304,7 @@
 
 			$tickets = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
-				'start_date'=>$start_date,'end_date'=>$end_date,
+				'part_of_town_id' => $this->part_of_town_id, 'start_date'=>$start_date,'end_date'=>$end_date,
 				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
 				'location_code' => $this->location_code, 'p_num' => $this->p_num));
 
