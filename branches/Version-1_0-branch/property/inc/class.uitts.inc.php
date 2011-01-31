@@ -98,6 +98,7 @@
 			$this->user_id				= $this->bo->user_id;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->district_id			= $this->bo->district_id;
+			$this->part_of_town_id		= $this->bo->part_of_town_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
@@ -140,6 +141,7 @@
 					'user_id'		=> $this->user_id,
 					'cat_id'		=> $this->cat_id,
 					'district_id'	=> $this->district_id,
+					'part_of_town_id'=> $this->part_of_town_id,
 					'allrows'		=> $this->allrows,
 					'start_date'	=> $this->start_date,
 					'end_date'		=> $this->end_date
@@ -467,6 +469,7 @@
 					."query: '{$this->query}',"
 					."p_num: '{$this->p_num}',"
 					."district_id: '{$this->district_id}',"
+					."part_of_town_id: '{$this->part_of_town_id}',"
 					."start_date: '{$start_date}',"
 					."end_date: '{$end_date}',"
 					."location_code: '{$this->location_code}',"
@@ -474,33 +477,34 @@
 
 				$link_data = array
 					(
-						'menuaction'	=> 'property.uitts.index',
-						'second_display'=> true,
-						'sort'			=> $this->sort,
-						'order'			=> $this->order,
-						'cat_id'		=> $this->cat_id,
-						'status_id'		=> $this->status_id,
-						'user_id'		=> $this->user_id,
-						'query'			=> $this->query,
-						'district_id'	=> $this->district_id,
-						'start_date'	=> $start_date,
-						'end_date'		=> $end_date,
-						'location_code'	=> $this->location_code,
-						'allrows'		=> $this->allrows
+						'menuaction'		=> 'property.uitts.index',
+						'second_display'	=> true,
+						'sort'				=> $this->sort,
+						'order'				=> $this->order,
+						'cat_id'			=> $this->cat_id,
+						'status_id'			=> $this->status_id,
+						'user_id'			=> $this->user_id,
+						'query'				=> $this->query,
+						'district_id'		=> $this->district_id,
+						'part_of_town_id'   => $this->part_of_town_id,
+						'start_date'		=> $start_date,
+						'end_date'			=> $end_date,
+						'location_code'		=> $this->location_code,
+						'allrows'			=> $this->allrows
 					);
 
 				$group_filters = 'select';
 
 				$values_combo_box = array();
 
-				$values_combo_box[2]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
+				$values_combo_box[3]  = $this->bo->filter(array('format' => $group_filters, 'filter'=> $this->status_id,'default' => 'O'));
 
 				if(isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
 				{
-					array_unshift ($values_combo_box[2],array ('id'=>'O2','name'=>$this->bo->config->config_data['tts_lang_open']));
+					array_unshift ($values_combo_box[3],array ('id'=>'O2','name'=>$this->bo->config->config_data['tts_lang_open']));
 				}
 				$default_value = array ('id'=>'','name'=>lang('Open'));
-				array_unshift ($values_combo_box[2],$default_value);
+				array_unshift ($values_combo_box[3],$default_value);
 
 				if(!$this->_simple)
 				{
@@ -512,8 +516,12 @@
 					$default_value = array ('id'=>'','name'=>lang('no district'));
 					array_unshift ($values_combo_box[1],$default_value);
 
-					$values_combo_box[3]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
-					array_unshift ($values_combo_box[3],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my assigned tickets')));
+					$values_combo_box[2] =  $this->bocommon->select_part_of_town('filter',$this->part_of_town_id,$this->district_id);
+					$default_value = array ('id'=>'','name'=>lang('no part of town'));
+					array_unshift ($values_combo_box[2],$default_value);
+
+					$values_combo_box[4]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_EDIT,$this->user_id,$this->acl_location);
+					array_unshift ($values_combo_box[4],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('my assigned tickets')));
 					$_my_negative_self = (-1 * $GLOBALS['phpgw_info']['user']['account_id']);
 	
 					$default_value = array
@@ -523,10 +531,10 @@
 						'selected' 	=> $_my_negative_self == $this->user_id
 					);
 					unset($_my_negative_self);
-					array_unshift ($values_combo_box[3],$default_value);
+					array_unshift ($values_combo_box[4],$default_value);
 
 					$default_value = array('id'=>'','name'=>lang('no user'));
-					array_unshift ($values_combo_box[3],$default_value);
+					array_unshift ($values_combo_box[4],$default_value);
 
 					$datatable['actions']['form'] = array
 						(
@@ -566,13 +574,22 @@
 										'tab_index' => 2
 									),
 									array
+									( //boton 	PART OF TOWN
+										'id' => 'btn_part_of_town_id',
+										'name' => 'part_of_town_id',
+										'value'	=> lang('Part of Town'),
+										'type' => 'button',
+										'style' => 'filter',
+										'tab_index' => 3
+									),
+									array
 									( //boton 	HOUR CATEGORY
 										'id' => 'btn_status_id',
 										'name' => 'status_id',
 										'value'	=> lang('Status'),
 										'type' => 'button',
 										'style' => 'filter',
-										'tab_index' => 3
+										'tab_index' => 4
 									),
 									array
 									( //boton 	USER
@@ -582,9 +599,9 @@
 										'value'	=> lang('User'),
 										'type' => 'select',
 										'style' => 'filter',
-										'values' => $values_combo_box[3],
+										'values' => $values_combo_box[4],
 										'onchange'=> 'onChangeSelect();',
-										'tab_index' => 4
+										'tab_index' => 5
 									),
 									array
 									(//for link "columns", next to Export button
@@ -597,21 +614,21 @@
 										)
 									)."','','width=300,height=600,scrollbars=1')",
 									'value' => lang('columns'),
-									'tab_index' => 10
+									'tab_index' => 11
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 9
+									'tab_index' => 10
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 8
+									'tab_index' => 9
 								),
 								array
 								( //hidden start_date
@@ -638,7 +655,7 @@
 									(
 										'menuaction' => 'property.uiproject.date_search'))."','','width=350,height=250')",
 										'value' => lang('Date search'),
-										'tab_index' => 7
+										'tab_index' => 8
 									),
 									array
 									( //boton     SEARCH
@@ -646,7 +663,7 @@
 										'name' => 'search',
 										'value'    => lang('search'),
 										'type' => 'button',
-										'tab_index' => 6
+										'tab_index' => 7
 									),
 									array
 									( // TEXT INPUT
@@ -656,7 +673,7 @@
 										'type' => 'text',
 										'onkeypress' => 'return pulsar(event)',
 										'size'    => 28,
-										'tab_index' => 5
+										'tab_index' => 6
 									)
 								),
 								'hidden_value' => array
@@ -680,6 +697,11 @@
 									( //div values  combo_box_3
 										'id' => 'values_combo_box_3',
 										'value'	=> $this->bocommon->select2String($values_combo_box[3])
+									),
+									array
+									( //div values  combo_box_4
+										'id' => 'values_combo_box_4',
+										'value'	=> $this->bocommon->select2String($values_combo_box[4])
 									)
 								)
 							)
