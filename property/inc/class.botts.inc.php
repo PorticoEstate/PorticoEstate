@@ -93,6 +93,12 @@
 			$end_date				= phpgw::get_var('end_date', 'string');
 			$location_code			= phpgw::get_var('location_code');
 			$vendor_id				= phpgw::get_var('vendor_id', 'int');
+			$ecodimb				= phpgw::get_var('ecodimb', 'int');
+			$b_account				= phpgw::get_var('b_account', 'string');
+			$building_part			= phpgw::get_var('building_part', 'string');
+			$branch_id				= phpgw::get_var('branch_id', 'int');
+			$order_dim1				= phpgw::get_var('order_dim1', 'int');
+
 
 //			$this->start			= $start 							? $start 			: 0;
 
@@ -111,6 +117,11 @@
 			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
 			$this->vendor_id		= isset($_REQUEST['vendor_id']) 	? $vendor_id		: $this->vendor_id;
 			$this->p_num			= phpgw::get_var('p_num');
+			$this->ecodimb			= isset($_REQUEST['ecodimb']) 		? $ecodimb			: $this->ecodimb;
+			$this->b_account		= isset($_REQUEST['b_account']) 	? $b_account		: $this->b_account;
+			$this->building_part	= isset($_REQUEST['building_part']) ? $building_part	: $this->building_part;
+			$this->branch_id		= isset($_REQUEST['branch_id']) 	? $branch_id		: $this->branch_id;
+			$this->order_dim1		= isset($_REQUEST['order_dim1']) 	? $order_dim1		: $this->order_dim1;
 		}
 
 
@@ -307,7 +318,9 @@
 				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 				'part_of_town_id' => $this->part_of_town_id, 'start_date'=>$start_date,'end_date'=>$end_date,
 				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
-				'location_code' => $this->location_code, 'p_num' => $this->p_num, 'vendor_id' => $this->vendor_id));
+				'location_code' => $this->location_code, 'p_num' => $this->p_num, 'vendor_id' => $this->vendor_id,
+				'ecodimb' => $this->ecodimb, 'b_account' => $this->b_account, 'building_part' => $this->building_part,
+				'branch_id' => $this->branch_id ,'order_dim1' => $this->order_dim1));
 
 			$this->total_records = $this->so->total_records;
 			$this->sum_budget = $this->so->sum_budget;
@@ -408,7 +421,7 @@
 					}
 				}
 				if( $ticket['vendor_id'])
-				{;
+				{
 					if(isset($vendor_cache[$ticket['vendor_id']]))
 					{
 						$ticket['vendor'] = $vendor_cache[$ticket['vendor_id']];
@@ -1016,5 +1029,105 @@
 			);
 			array_unshift($vendors,$default_value);
 			return $vendors;
+		}
+		public function get_ecodimb($selected)
+		{
+			$values = $this->so->get_ecodimb();
+			foreach ($values as &$value)
+			{
+				if($value['id'] == $selected)
+				{
+					$value['selected'] = 1;
+					break;
+				}
+			}
+
+			$default_value = array
+			(
+				'id'	=> '',
+				'name'	=> lang('dimb')
+			);
+			array_unshift($values,$default_value);
+			return $values;
+		}
+		public function get_b_account($selected)
+		{
+			$values = $this->so->get_b_account();
+			foreach ($values as &$value)
+			{
+				if($value['id'] == $selected)
+				{
+					$value['selected'] = 1;
+					break;
+				}
+			}
+
+			$default_value = array
+			(
+				'id'	=> '',
+				'name'	=> lang('budget account')
+			);
+			array_unshift($values,$default_value);
+			return $values;
+		}
+		public function get_building_part($selected)
+		{
+			$values = $this->so->get_building_part();
+			foreach ($values as &$value)
+			{
+				if($value['id'] == $selected)
+				{
+					$value['selected'] = 1;
+					break;
+				}
+			}
+
+			$default_value = array
+			(
+				'id'	=> '',
+				'name'	=> lang('building part')
+			);
+			array_unshift($values,$default_value);
+			return $values;
+		}
+		public function get_branch($selected)
+		{
+			$values = $this->so->get_branch();
+			foreach ($values as &$value)
+			{
+				if($value['id'] == $selected)
+				{
+					$value['selected'] = 1;
+					break;
+				}
+			}
+
+			$default_value = array
+			(
+				'id'	=> '',
+				'name'	=> lang('branch')
+			);
+			array_unshift($values,$default_value);
+			return $values;
+		}
+		public function get_order_dim1($selected)
+		{
+			$values = $this->so->get_order_dim1();
+			foreach ($values as &$value)
+			{
+				if($value['id'] == $selected)
+				{
+					$value['selected'] = 1;
+					break;
+				}
+			}
+
+			$default_value = array
+			(
+				'id'	=> '',
+				'name'	=> lang('order_dim1')
+			);
+			array_unshift($values,$default_value);
+			return $values;
 		}
 	}
