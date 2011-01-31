@@ -227,7 +227,8 @@
 				$uicols['sortable'][]		= '';
 
 				$cols.= ",loc1_name";
-				$cols_return[] 				= 'loc1_name';
+//				$cols_return[] 				= 'loc1_name';
+/*
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'loc1_name';
 				$uicols['descr'][]			= '';
@@ -235,7 +236,7 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
-
+*/
 				$cols .= ",fm_project.user_id as project_owner";
 
 				$joinmethod .= " $this->join  fm_workorder ON ($entity_table.id = fm_workorder.project_id) $this->join  phpgw_accounts ON (fm_workorder.user_id = phpgw_accounts.account_id))";

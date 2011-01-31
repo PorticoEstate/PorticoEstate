@@ -1220,11 +1220,12 @@
 			}
 			$this->type_id	= $type_id;
 
+/*
 			for ($i=0; $i<$type_id; $i++)
 			{
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]		= 'loc' . $location_types[$i]['id'];
-				$uicols['descr'][]		= $location_types[$i]['name'];
+				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
+				$uicols['descr'][]			= $location_types[$i]['name'];
 				$uicols['statustext'][]		= $location_types[$i]['descr'];
 				$uicols['exchange'][]		= false;
 				$uicols['align'][] 			= '';
@@ -1232,26 +1233,8 @@
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= '';
-
 			}
-/*
-			$fm_location_cols = $soadmin_location->read_attrib(array('type_id'=>$type_id,'lookup_type'=>$type_id));
-			$location_cols_count	= count($fm_location_cols);
-
-			for ($i=0;$i<$location_cols_count;$i++)
-			{
-				if($fm_location_cols[$i]['list']==1)
-				{
-					$cols_extra[] 				= $fm_location_cols[$i]['column_name']; // only for lookup
-					$cols_return[] 				= $fm_location_cols[$i]['column_name'];
-					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= $fm_location_cols[$i]['column_name'];
-					$uicols['descr'][]			= $fm_location_cols[$i]['input_text'];
-					$uicols['statustext'][]		= $fm_location_cols[$i]['statustext'];
-				}
-			}
-
- */
+*/
 			unset($soadmin_location);
 
 			for ($i=0; $i< $this->type_id; $i++)
@@ -1259,41 +1242,23 @@
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
 
-//			if($lookup)
+			$GLOBALS['phpgw']->config->read();
+			$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
+			for ($i=1;$i<($type_id+1);$i++)
 			{
-				$GLOBALS['phpgw']->config->read();
-				$list_location_level = isset($GLOBALS['phpgw']->config->config_data['list_location_level'])	&& $GLOBALS['phpgw']->config->config_data['list_location_level'] ? $GLOBALS['phpgw']->config->config_data['list_location_level'] : array();
-/*
-				$cols_return[] 				= 'loc1_name';
-				$cols_extra[] 				= 'loc1_name';
+				$cols_return[] 				= "loc{$i}_name";
+				$cols_extra[] 				= "loc{$i}_name";
 				$cols_return_lookup[] 		= "loc{$i}_name";
-				$uicols['input_type'][]		= in_array(1, $list_location_level) ? 'text' : 'hidden';
-				$uicols['name'][]			= 'loc1_name';
-				$uicols['descr'][]			= $location_types[0]['name'];
-				$uicols['statustext'][]		= $location_types[0]['descr'];
+				$uicols['input_type'][]		= in_array($i, $list_location_level) ? 'text' : 'hidden';
+				$uicols['name'][]			= "loc{$i}_name";
+				$uicols['descr'][]			= $location_types[($i-1)]['name'];
+				$uicols['statustext'][]		= $location_types[$i-1]['descr'];
 				$uicols['exchange'][]		= $lookup;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= true;
-*/
-				for ($i=1;$i<($type_id+1);$i++)
-				{
-					$cols_return[] 				= "loc{$i}_name";
-					$cols_extra[] 				= "loc{$i}_name";
-					$cols_return_lookup[] 		= "loc{$i}_name";
-					$uicols['input_type'][]		= in_array($i, $list_location_level) ? 'text' : 'hidden';
-					$uicols['name'][]			= "loc{$i}_name";
-					$uicols['descr'][]			= $location_types[($i-1)]['name'];
-					$uicols['statustext'][]		= $location_types[$i-1]['descr'];
-					$uicols['exchange'][]		= $lookup;
-					$uicols['align'][] 			= '';
-					$uicols['datatype'][]		= '';
-					$uicols['formatter'][]		= '';
-					$uicols['classname'][]		= '';
-					$uicols['sortable'][]		= '';
-				}
+				$uicols['sortable'][]		= '';
 			}
 
 			if(!$no_address)

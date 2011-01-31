@@ -474,8 +474,8 @@
 			$workorder_list = array();
 
 			$workorder_list = $this->bo->read(array('start_date' => $start_date, 'end_date' => $end_date, 'allrows' =>$allrows, 'dry_run' => $dry_run));
-			$uicols = $this->bo->uicols;
-
+			$uicols =$this->bo->uicols;
+//_debug_Array($uicols);die();
 			$content = array();
 			$j=0;
 			if (isset($workorder_list) && is_array($workorder_list))
