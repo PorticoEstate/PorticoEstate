@@ -122,7 +122,7 @@
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
-			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']:0;
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id']:0;
 			$part_of_town_id= isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id']:0;
 			$allrows		= isset($data['allrows'])?$data['allrows']:'';
@@ -133,6 +133,7 @@
 			$new			= isset($data['new']) ? $data['new'] : '';
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+			$vendor_id		= isset($data['vendor_id']) && $data['vendor_id'] ? (int)$data['vendor_id']:0;
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -304,6 +305,12 @@
 			if ($cat_id > 0)
 			{
 				$filtermethod .= " $where cat_id=" . (int)$cat_id;
+				$where = 'AND';
+			}
+
+			if ($vendor_id > 0)
+			{
+				$filtermethod .= " $where vendor_id=" . (int)$vendor_id;
 				$where = 'AND';
 			}
 
@@ -1246,5 +1253,24 @@
 			{
 				return false;
 			}
+		}
+
+		public function get_vendors()
+		{
+			$vendors = array();
+			$sql = "SELECT DISTINCT fm_vendor.id, fm_vendor.org_name FROM fm_tts_tickets {$this->join} fm_vendor ON fm_tts_tickets.vendor_id = fm_vendor.id ORDER BY org_name ASC";
+			
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$vendors[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('org_name', true)
+				);
+			}
+	
+			return $vendors;
 		}
 	}

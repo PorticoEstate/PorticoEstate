@@ -92,7 +92,7 @@
 			$start_date				= phpgw::get_var('start_date', 'string');
 			$end_date				= phpgw::get_var('end_date', 'string');
 			$location_code			= phpgw::get_var('location_code');
-
+			$vendor_id				= phpgw::get_var('vendor_id', 'int');
 
 //			$this->start			= $start 							? $start 			: 0;
 
@@ -109,7 +109,7 @@
 			$this->start_date		= isset($_REQUEST['start_date']) 	? $start_date		: $this->start_date;
 			$this->end_date			= isset($_REQUEST['end_date'])		? $end_date			: $this->end_date;
 			$this->location_code	= isset($location_code) && $location_code ? $location_code : '';
-
+			$this->vendor_id		= isset($_REQUEST['vendor_id']) 	? $vendor_id		: $this->vendor_id;
 			$this->p_num			= phpgw::get_var('p_num');
 		}
 
@@ -138,6 +138,7 @@
 			$this->allrows			= isset($data['allrows'])?$data['allrows']:'';
 			$this->start_date		= isset($data['start_date'])?$data['start_date']:'';
 			$this->end_date			= isset($data['end_date'])?$data['end_date']:'';
+			$this->vendor_id		= isset($data['vendor_id'])?$data['vendor_id']:'';
 		}
 
 		function column_list($selected = array(),$type_id='',$allrows='')
@@ -306,7 +307,7 @@
 				'status_id' => $this->status_id,'cat_id' => $this->cat_id,'district_id' => $this->district_id,
 				'part_of_town_id' => $this->part_of_town_id, 'start_date'=>$start_date,'end_date'=>$end_date,
 				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
-				'location_code' => $this->location_code, 'p_num' => $this->p_num));
+				'location_code' => $this->location_code, 'p_num' => $this->p_num, 'vendor_id' => $this->vendor_id));
 
 			$this->total_records = $this->so->total_records;
 			$this->sum_budget = $this->so->sum_budget;
@@ -407,7 +408,7 @@
 					}
 				}
 				if( $ticket['vendor_id'])
-				{
+				{;
 					if(isset($vendor_cache[$ticket['vendor_id']]))
 					{
 						$ticket['vendor'] = $vendor_cache[$ticket['vendor_id']];
@@ -430,7 +431,6 @@
 					}
 				}
 			}
-
 			return $tickets;
 		}
 
@@ -995,5 +995,26 @@
 			$receipt = $this->so->update_ticket($data, $id, $receipt);
 			$this->fields_updated = $this->so->fields_updated;		
 			return $receipt;
+		}
+
+		public function get_vendors($selected)
+		{
+			$vendors = $this->so->get_vendors();
+			foreach ($vendors as &$vendor)
+			{
+				if($vendor['id'] == $selected)
+				{
+					$vendor['selected'] = 1;
+					break;
+				}
+			}
+
+			$default_value = array
+			(
+				'id'	=> '',
+				'name'	=> lang('vendor')
+			);
+			array_unshift($vendors,$default_value);
+			return $vendors;
 		}
 	}
