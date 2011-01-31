@@ -717,7 +717,7 @@
 					if($order_read)
 					{
 						$datatable['actions']['form'][0]['fields']['field'][] = array
-							(
+						(
 									'id' => 'sel_vendor_id', // testing traditional listbox for long list
 									'name' => 'vendor_id',
 									'value'	=> lang('vendor'),
@@ -726,7 +726,62 @@
 									'values' => $this->bo->get_vendors($this->vendor_id),
 									'onchange'=> 'onChangeSelect("vendor_id");',
 									'tab_index' => 12
-							);
+						);
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+						(
+									'id' => 'sel_ecodimb', // testing traditional listbox for long list
+									'name' => 'ecodimb',
+									'value'	=> lang('dimb'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $this->bo->get_ecodimb($this->ecodimb),
+									'onchange'=> 'onChangeSelect("ecodimb");',
+									'tab_index' => 13
+						);
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+						(
+									'id' => 'sel_b_account', // testing traditional listbox for long list
+									'name' => 'b_account',
+									'value'	=> lang('budget account'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $this->bo->get_b_account($this->b_account),
+									'onchange'=> 'onChangeSelect("b_account");',
+									'tab_index' => 14
+						);
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+						(
+									'id' => 'sel_building_part', // testing traditional listbox for long list
+									'name' => 'building_part',
+									'value'	=> lang('building part'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $this->bo->get_building_part($this->building_part),
+									'onchange'=> 'onChangeSelect("building_part");',
+									'tab_index' => 15
+						);
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+						(
+									'id' => 'sel_branch_id', // testing traditional listbox for long list
+									'name' => 'branch_id',
+									'value'	=> lang('branch'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $this->bo->get_branch($this->branch_id),
+									'onchange'=> 'onChangeSelect("branch_id");',
+									'tab_index' => 16
+						);
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+						(
+									'id' => 'sel_order_dim1', // testing traditional listbox for long list
+									'name' => 'order_dim1',
+									'value'	=> lang('order_dim1'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $this->bo->get_order_dim1($this->order_dim1),
+									'onchange'=> 'onChangeSelect("order_dim1");',
+									'tab_index' => 17
+						);
 					}
 				}
 				else
