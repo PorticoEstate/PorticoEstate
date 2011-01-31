@@ -49,7 +49,9 @@
 		var $user_id;
 		var $part_of_town_id;
 		var $district_id;
-		var $total_records;
+		public $total_records	= 0;
+		public $sum_budget		= 0;
+		public $sum_actual_cost	= 0;
 
 		var $public_functions = array
 			(
@@ -304,7 +306,11 @@
 				'start_date'=>$start_date,'end_date'=>$end_date,
 				'allrows'=>$this->allrows,'user_id' => $this->user_id,'external'=>$external, 'dry_run' => $dry_run,
 				'location_code' => $this->location_code, 'p_num' => $this->p_num));
+
 			$this->total_records = $this->so->total_records;
+			$this->sum_budget = $this->so->sum_budget;
+			$this->sum_actual_cost = $this->so->sum_actual_cost;
+
 			if(!$external)
 			{
 				$entity	= $this->get_origin_entity_type();

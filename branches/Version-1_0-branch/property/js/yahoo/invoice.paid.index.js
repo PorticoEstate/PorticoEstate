@@ -49,6 +49,8 @@
 	   	{
 	    	elCell.innerHTML = YAHOO.util.Number.format(oData, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
 	    }
+
+		var tableYUI;
 	/********************************************************************************
 	* Delete all message un DIV 'message'
 	*/
@@ -56,6 +58,10 @@
 		{
 			if(flag_particular_setting=='init')
 			{
+
+				tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+				tableYUI.setAttribute("id","tableYUI");
+
 				//necesary for don't show any records in datatable
 				oMenuButton_1.set("label", ("<em>All</em>"));
 				oMenuButton_1.set("value", 'all');
@@ -76,8 +82,33 @@
 	*/
 		this.myParticularRenderEvent = function()
 		{
-			//nothing don't delete
+			tableYUI.deleteTFoot();
+			addFooterDatatable();
 		}
+
+	/********************************************************************************
+	 *
+	 */
+  	this.addFooterDatatable = function()
+  	{
+  		//call getSumPerPage(name of column) in property.js
+// 		tmp_sum = getSumPerPage('amount_lnk',2);
+		tmp_sum = YAHOO.util.Number.format(values_ds.sum_amount, {decimalPlaces:2, decimalSeparator:",", thousandsSeparator:" "});
+
+		//Create ROW
+		newTR = document.createElement('tr');
+		td_empty(14);
+		td_sum('Total');
+		td_sum(tmp_sum);
+		td_empty(12);
+
+		//Add to Table
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR.cloneNode(true));
+		//clean value for values_ds.message
+		values_ds.message = null;
+  	}
 
 
 	//----------------------------------------------------------

@@ -34,6 +34,9 @@
 
 	class property_boinvoice
 	{
+		public $total_records = 0;
+		public $sum_amount = 0;
+
 		function property_boinvoice($session=false)
 		{
 			$this->so			= CreateObject('property.soinvoice',true);
@@ -144,7 +147,7 @@
 			}
 
 			$this->total_records = $this->so->total_records;
-
+			$this->sum_amount = $this->so->sum_amount;
 			return $invoice;
 		}
 

@@ -1026,7 +1026,8 @@
 					'sort'				=> $datatable['sorting']['order'],
 					'dir'				=> $datatable['sorting']['sort'],
 					'currentPage'		=> $datatable['sorting']['currentPage'],
-					'records'			=> array()
+					'records'			=> array(),
+					'sum_amount'		=> $this->bo->sum_amount
 				);
 			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
