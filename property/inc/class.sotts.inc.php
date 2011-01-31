@@ -134,6 +134,11 @@
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$vendor_id		= isset($data['vendor_id']) && $data['vendor_id'] ? (int)$data['vendor_id']:0;
+			$ecodimb		= isset($data['ecodimb']) && $data['ecodimb'] ? (int)$data['ecodimb']:0;
+			$b_account		= isset($data['b_account']) && $data['b_account'] ? $data['b_account']:'';
+			$building_part	= isset($data['building_part']) && $data['building_part'] ? $data['building_part']:'';
+			$branch_id		= isset($data['branch_id']) && $data['branch_id'] ? (int)$data['branch_id']:0;
+			$order_dim1		= isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1']:0;
 
 			$this->grants 	= $GLOBALS['phpgw']->session->appsession('grants_ticket','property');
 
@@ -311,6 +316,31 @@
 			if ($vendor_id > 0)
 			{
 				$filtermethod .= " $where vendor_id=" . (int)$vendor_id;
+				$where = 'AND';
+			}
+			if ($ecodimb > 0)
+			{
+				$filtermethod .= " $where ecodimb=" . (int)$ecodimb;
+				$where = 'AND';
+			}
+			if ($b_account > 0)
+			{
+				$filtermethod .= " $where b_account_id='{$b_account}'";
+				$where = 'AND';
+			}
+			if ($building_part)
+			{
+				$filtermethod .= " $where building_part='{$building_part}'";
+				$where = 'AND';
+			}
+			if ($branch_id > 0)
+			{
+				$filtermethod .= " $where branch_id=" . (int)$branch_id;
+				$where = 'AND';
+			}
+			if ($order_dim1 > 0)
+			{
+				$filtermethod .= " $where order_dim1=" . (int)$order_dim1;
 				$where = 'AND';
 			}
 
@@ -1257,20 +1287,111 @@
 
 		public function get_vendors()
 		{
-			$vendors = array();
+			$values = array();
 			$sql = "SELECT DISTINCT fm_vendor.id, fm_vendor.org_name FROM fm_tts_tickets {$this->join} fm_vendor ON fm_tts_tickets.vendor_id = fm_vendor.id ORDER BY org_name ASC";
 			
 			$this->db->query($sql, __LINE__,__FILE__);
 
 			while ($this->db->next_record())
 			{
-				$vendors[] = array
+				$values[] = array
 				(
 					'id'	=> $this->db->f('id'),
 					'name'	=> $this->db->f('org_name', true)
 				);
 			}
 	
-			return $vendors;
+			return $values;
+		}
+		public function get_ecodimb()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_ecodimb.id, fm_ecodimb.descr as name FROM fm_tts_tickets {$this->join} fm_ecodimb ON fm_tts_tickets.ecodimb = fm_ecodimb.id ORDER BY name ASC";
+			
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name', true)
+				);
+			}
+	
+			return $values;
+		}
+		public function get_b_account()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_b_account.id, fm_b_account.descr as name FROM fm_tts_tickets {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id ORDER BY id ASC";
+			
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name', true)
+				);
+			}
+	
+			return $values;
+		}
+		public function get_building_part()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_building_part.id, fm_building_part.descr as name FROM fm_tts_tickets {$this->join} fm_building_part ON fm_tts_tickets.building_part = fm_building_part.id ORDER BY id ASC";
+			
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$id	= $this->db->f('id');
+				$values[] = array
+				(
+					'id'	=> $id,
+					'name'	=> $id . ' ' . $this->db->f('name', true)
+				);
+			}
+	
+			return $values;
+		}
+		public function get_branch()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_branch.id, fm_branch.descr as name FROM fm_tts_tickets {$this->join} fm_branch ON fm_tts_tickets.branch_id = fm_branch.id ORDER BY name ASC";
+			
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name', true)
+				);
+			}
+	
+			return $values;
+		}
+		public function get_order_dim1()
+		{
+			$values = array();
+			$sql = "SELECT DISTINCT fm_order_dim1.id, fm_order_dim1.descr as name FROM fm_tts_tickets {$this->join} fm_order_dim1 ON fm_tts_tickets.order_dim1 = fm_order_dim1.id ORDER BY name ASC";
+			
+			$this->db->query($sql, __LINE__,__FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name', true)
+				);
+			}
+	
+			return $values;
 		}
 	}
