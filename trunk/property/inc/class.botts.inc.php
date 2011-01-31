@@ -408,7 +408,7 @@
 					}
 				}
 				if( $ticket['vendor_id'])
-				{;
+				{
 					if(isset($vendor_cache[$ticket['vendor_id']]))
 					{
 						$ticket['vendor'] = $vendor_cache[$ticket['vendor_id']];
