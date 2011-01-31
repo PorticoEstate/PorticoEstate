@@ -47,9 +47,9 @@
 		elCell.innerHTML = "<P align=\"right\">"+oData+"</p>";
 	}
 
-	this.onChangeSelect = function()
+	this.onChangeSelect = function(type)
 	{
-		var myselect=document.getElementById("sel_user_id");
+		var myselect=document.getElementById("sel_"+ type);
 		for (var i=0; i<myselect.options.length; i++)
 		{
 			if (myselect.options[i].selected==true)
@@ -57,7 +57,7 @@
 				break;
 			}
 		}
-		eval("path_values.user_id='"+myselect.options[i].value+"'");
+		eval("path_values." +type +"='"+myselect.options[i].value+"'");
 		execute_ds();
 	}
 

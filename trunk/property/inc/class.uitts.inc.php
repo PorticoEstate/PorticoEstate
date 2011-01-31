@@ -97,6 +97,7 @@
 			$this->status_id			= $this->bo->status_id;
 			$this->user_id				= $this->bo->user_id;
 			$this->cat_id				= $this->bo->cat_id;
+			$this->vendor_id			= $this->bo->vendor_id;
 			$this->district_id			= $this->bo->district_id;
 			$this->part_of_town_id		= $this->bo->part_of_town_id;
 			$this->allrows				= $this->bo->allrows;
@@ -140,6 +141,7 @@
 					'status_id'		=> $this->status_id,
 					'user_id'		=> $this->user_id,
 					'cat_id'		=> $this->cat_id,
+					'vendor_id'		=> $this->vendor_id,
 					'district_id'	=> $this->district_id,
 					'part_of_town_id'=> $this->part_of_town_id,
 					'allrows'		=> $this->allrows,
@@ -441,6 +443,7 @@
 			$allrows  		= phpgw::get_var('allrows', 'bool');
 
 			$datatable = array();
+			$order_read 	= $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -464,6 +467,7 @@
 					."sort: '{$this->sort}',"
 					."order: '{$this->order}',"
 					."cat_id:'{$this->cat_id}',"
+					."vendor_id:'{$this->vendor_id}',"
 					."status_id: '{$this->status_id}',"
 					."user_id: '{$this->user_id}',"
 					."query: '{$this->query}',"
@@ -482,6 +486,7 @@
 						'sort'				=> $this->sort,
 						'order'				=> $this->order,
 						'cat_id'			=> $this->cat_id,
+						'vendor_id'			=> $this->vendor_id,
 						'status_id'			=> $this->status_id,
 						'user_id'			=> $this->user_id,
 						'query'				=> $this->query,
@@ -548,6 +553,7 @@
 									'district_id'       => $this->district_id,
 									'part_of_town_id'   => $this->part_of_town_id,
 									'cat_id'        	=> $this->cat_id,
+									'vendor_id'        	=> $this->vendor_id,
 									'status'			=> $this->status
 								)
 							),
@@ -600,7 +606,7 @@
 										'type' => 'select',
 										'style' => 'filter',
 										'values' => $values_combo_box[4],
-										'onchange'=> 'onChangeSelect();',
+										'onchange'=> 'onChangeSelect("user_id");',
 										'tab_index' => 5
 									),
 									array
@@ -707,6 +713,21 @@
 							)
 						)
 					);
+
+					if($order_read)
+					{
+						$datatable['actions']['form'][0]['fields']['field'][] = array
+							(
+									'id' => 'sel_vendor_id', // testing traditional listbox for long list
+									'name' => 'vendor_id',
+									'value'	=> lang('vendor'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values' => $this->bo->get_vendors($this->vendor_id),
+									'onchange'=> 'onChangeSelect("vendor_id");',
+									'tab_index' => 12
+							);
+					}
 				}
 				else
 				{
@@ -828,7 +849,7 @@
 			$uicols['name'][] = 'status';
 			$uicols['descr'][]	= lang('status');
 
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property') )
+			if( $order_read )
 			{
 				$uicols['name'][] = 'order_id';
 				$uicols['descr'][]	= lang('order id');
@@ -1441,6 +1462,7 @@
 					(
 						'sort'	=> $this->sort,
 						'var'	=> 'finnish_date',
+
 						'order'	=> $this->order,
 						'extra'	=> array
 						(
