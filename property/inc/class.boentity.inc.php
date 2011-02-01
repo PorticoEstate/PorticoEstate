@@ -213,7 +213,7 @@
 				break;
 			}
 
-			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id, 'required' => $required));
+			$categories= $this->soadmin_entity->read_category(array('allrows'=>true,'entity_id'=>$this->entity_id, 'required' => $required, 'order' => 'name', 'sort' => 'ASC'));
 
 			return $this->bocommon->select_list($selected,$categories);
 		}
