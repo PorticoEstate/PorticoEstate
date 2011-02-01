@@ -55,6 +55,7 @@ function build_schedule_table($bookings, $resources)
 				$row['_from'] = $t;
 				$row['_to'] = $tmp_t;
 				$empty = true;
+                $testdata = array();
 				foreach($bookings as $booking)
 				{
 					if($booking['from_'] > $t)
@@ -63,8 +64,15 @@ function build_schedule_table($bookings, $resources)
 					}
 					if(in_array($res['id'], $booking['resources']))
 					{
-						$empty = false;
-						$row[$booking['wday']] = $booking;
+                        if(($testdata['wday'] == $booking['wday']) and ($testdata['from_'] == $booking['from_']) and ($testdata['to_'] == $booking['to_']) and ($testdata['allocation_id'] == $booking['id'])){
+                            //
+                       } else {
+						    $empty = false;
+						    $row[$booking['wday']] = $booking;
+                        }
+                        if($booking['type'] == 'booking'){
+    						$testdata = $booking;
+                        } 
 					}
 				}
 				if(!$empty) {
