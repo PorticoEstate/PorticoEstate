@@ -761,7 +761,7 @@
 
 			$value_set = array
 			(
-				'project_id'	=> $values['project_group'],
+				'project_id'	=> $values['project_group'] ? $values['project_group'] : '',
 				'pmwrkord_code'	=> $values['order_id'],
 				'process_log'	=> $this->db->db_addslashes($values['process_log']),
 				'process_code'	=> $values['process_code'],
