@@ -64,14 +64,14 @@ function build_schedule_table($bookings, $resources)
 					}
 					if(in_array($res['id'], $booking['resources']))
 					{
-                        if(($testdata['wday'] == $booking['wday']) and ($testdata['from_'] == $booking['from_']) and ($testdata['to_'] == $booking['to_']) and ($testdata['allocation_id'] == $booking['id'])){
+                        if(($testdata[$booking['wday']]['from_'] == $booking['from_']) and ($testdata[$booking['wday']]['to_'] == $booking['to_']) and ($testdata[$booking['wday']]['allocation_id'] == $booking['id'])){
                             //
                        } else {
 						    $empty = false;
 						    $row[$booking['wday']] = $booking;
                         }
                         if($booking['type'] == 'booking'){
-    						$testdata = $booking;
+    						$testdata[$booking['wday']] = $booking;
                         } 
 					}
 				}
