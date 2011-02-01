@@ -347,6 +347,7 @@
 			$start_date	= urldecode($this->start_date);
 			$end_date 	= urldecode($this->end_date);
 			$dry_run = false;
+			$second_display = phpgw::get_var('second_display', 'bool');
 
 			$this->save_sessiondata();
 
@@ -360,6 +361,13 @@
 			{
 				$group_filters = 'filter';
 				$GLOBALS['phpgw']->xslttpl->add_file(array('search_field'));
+			}
+			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+
+			if ($default_district && !$second_display && !$this->district_id)
+			{
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
 			}
 
 			$datatable = array();
@@ -376,14 +384,17 @@
 						'menuaction'			=> 'property.uientity.index',
 						'entity_id'        		=> $this->entity_id,
 						'cat_id'            	=> $this->cat_id,
-						'type'					=> $this->type
+						'type'					=> $this->type,
+						'district_id'			=> $this->district_id
 					));
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url']	=	"menuaction:'property.uientity.index',".
+					"second_display:1,".
 					"entity_id:'{$this->entity_id}',".
 					"cat_id:'{$this->cat_id}',".
-					"type:'{$this->type}'";
+					"type:'{$this->type}',".
+					"district_id:'{$this->district_id}'";
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
@@ -452,10 +463,11 @@
 							'action'  => $GLOBALS['phpgw']->link('/index.php',
 							array
 							(
-								'menuaction'	=> 'property.uientity.index',
-								'entity_id'		=> $this->entity_id,
-								'cat_id'		=> $this->cat_id,
-								'type'			=> $this->type
+								'menuaction'		=> 'property.uientity.index',
+								'second_display'	=> $second_display,
+								'entity_id'			=> $this->entity_id,
+								'cat_id'			=> $this->cat_id,
+								'type'				=> $this->type
 							)),
 							'fields'  => array
 							(
