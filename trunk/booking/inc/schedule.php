@@ -11,7 +11,6 @@ function build_schedule_table($bookings, $resources)
 	function get_to($a) {return $a['to_'];};
 	function cmp_from($a, $b) {return strcmp($a['from_'], $b['from_']);};
 	function cmp_to($a, $b) {return strcmp($a['to_'], $b['to_']);};
-	
 	while(true) {
 		usort($bookings, 'cmp_from');
 		// No bookings left
@@ -55,7 +54,7 @@ function build_schedule_table($bookings, $resources)
 				$row['_from'] = $t;
 				$row['_to'] = $tmp_t;
 				$empty = true;
-                $testdata = array();
+                $tempbooking = array();
 				foreach($bookings as $booking)
 				{
 					if($booking['from_'] > $t)
@@ -64,14 +63,12 @@ function build_schedule_table($bookings, $resources)
 					}
 					if(in_array($res['id'], $booking['resources']))
 					{
-                        if(($testdata[$booking['wday']]['from_'] == $booking['from_']) and ($testdata[$booking['wday']]['to_'] == $booking['to_']) and ($testdata[$booking['wday']]['allocation_id'] == $booking['id'])){
-                            //
-                       } else {
+                        if(!(($tempbooking[$booking['wday']]['from_'] <= $booking['from_']) and ($tempbooking[$booking['wday']]['to_'] == $booking['to_']) and ($tempbooking[$booking['wday']]['allocation_id'] == $booking['id']) and ($booking['type'] == 'allocation'))){
 						    $empty = false;
 						    $row[$booking['wday']] = $booking;
                         }
                         if($booking['type'] == 'booking'){
-    						$testdata[$booking['wday']] = $booking;
+    						$tempbooking[$booking['wday']] = $booking;
                         } 
 					}
 				}
