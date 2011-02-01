@@ -882,11 +882,12 @@
 					$uicols['descr'][]	= $level['name'];
 					if($level['id'] > 1)
 					{
-						foreach ($ticket_list as & $ticket)
+						foreach ($ticket_list as & $_ticket)
 						{
-							$location_data = execMethod('property.solocation.read_single', $ticket['location_code']);
-							$ticket["loc{$level['id']}_name"] = $location_data["loc{$level['id']}_name"];
+							$location_data = execMethod('property.solocation.read_single', $_ticket['location_code']);
+							$_ticket["loc{$level['id']}_name"] = $location_data["loc{$level['id']}_name"];
 						}
+						unset($_ticket);
 					}
 				}
 			}
