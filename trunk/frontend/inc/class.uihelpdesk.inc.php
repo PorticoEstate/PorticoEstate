@@ -429,7 +429,8 @@
 				$custom 		= createObject('property.custom_fields');
 				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-				$vendor_data	= $contacts->read_single(array('id' => $data['vendor_id']),$vendor_data);
+				$vendor_data	= $contacts->read_single(array('id' => $vendor_id),$vendor_data);
+
 				if(is_array($vendor_data))
 				{
 					foreach($vendor_data['attributes'] as $attribute)
@@ -442,7 +443,7 @@
 					}
 				}
 			}
-			
+
 			$notes = $bo->read_additional_notes($ticketid);
 			//$history = $bo->read_record_history($ticketid);
 
