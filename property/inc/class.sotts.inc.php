@@ -421,7 +421,7 @@
 					else
 					{
 						$query=explode(".",$query);
-						$querymethod .= " OR (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='" . (int)$query[3] . "'))";
+						$querymethod = " {$where} (fm_tts_tickets.p_entity_id='" . (int)$query[1] . "' AND fm_tts_tickets.p_cat_id='" . (int)$query[2] . "' AND fm_tts_tickets.p_num='{$query[3]}')";
 					}
 				}
 				else
@@ -598,7 +598,6 @@
 
 		function add($ticket)
 		{
-
 			if(isset($ticket['location']) && is_array($ticket['location']))
 			{
 				foreach ($ticket['location'] as $input_name => $value)

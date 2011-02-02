@@ -932,7 +932,7 @@
 
 			$cat_id = (int)$data['cat_id'];
 			$entity_id = (int)$data['entity_id'];
-			$id = (int)$data['id'];
+			$id = $data['id'];
 
 			$entity = array();
 
@@ -1002,7 +1002,7 @@
 					//	'p_entity_id'	=> $entity_id,
 					//	'p_cat_id' 		=> $cat_id,
 						'p_num' 		=> $id,
-						'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+						'query'=> "entity.{$entity_id}.{$cat_id}.{$id}")),
 						'name'		=> lang('Helpdesk') . " [{$hits}]",
 						'descr'		=> lang('Helpdesk')
 					);
@@ -1020,7 +1020,7 @@
 					//	'p_entity_id'	=> $entity_id,
 					//	'p_cat_id' 		=> $cat_id,
 						'p_num' 		=> $id,
-						'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}")),
+						'query'=> "entity.{$entity_id}.{$cat_id}.{$id}")),
 						'name'		=> lang('request') . " [{$hits}]",
 						'descr'		=> lang('request')
 					);
@@ -1035,7 +1035,7 @@
 				$entity['related'][] = array
 					(
 						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiproject.index',
-						'query'=> "entity.{$entry['entity_id']}.{$entry['cat_id']}.{$id}",
+						'query'=> "entity.{$entity_id}.{$cat_id}.{$id}",
 						'criteria_id' => 6)), //FIXME: criteria 6 is for entities should be altered to locations
 						'name'		=> lang('project') . " [{$hits}]",
 						'descr'		=> lang('project')
