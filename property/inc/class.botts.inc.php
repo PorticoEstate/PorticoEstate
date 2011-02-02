@@ -932,7 +932,7 @@
 					}
 					else
 					{
-						$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
+//						$receipt['error'][] = array('msg'=> lang('Your message could not be sent!'));
 						$receipt['error'][] = array('msg'=>lang('This user has not defined an email address !') . ' : ' . $account_name);
 					}
 				}
@@ -960,6 +960,7 @@
 				}
 			}
 
+/*
 			if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
 			{
 				$receipt['error'][] = array('msg'=> lang('Your message could not be sent by mail!'));
@@ -975,7 +976,7 @@
 				$receipt['error'][] = array('msg'=> 'err_msg: '. htmlspecialchars($this->send->err['msg']));
 				$receipt['error'][] = array('msg'=> 'err_desc: '. $this->send->err['desc']);
 			}
-
+*/
 			//_debug_array($receipt);
 			return $receipt;
 		}
