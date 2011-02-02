@@ -710,37 +710,37 @@
 			}
 			else
 			{
-				$error = array();
+				$_error = array();
 				switch ( $GLOBALS['phpgw_info']['server']['password_level'] )
 				{
 					default:
 					case 'NONALPHA':
-						$error[] = self::_validate_password_level_nonalpha($passwd);
+						$_error[] = self::_validate_password_level_nonalpha($passwd);
 						// fall through
 					case '1NUM':
-						$error[] = self::_validate_password_level_1num($passwd);
+						$_error[] = self::_validate_password_level_1num($passwd);
 						// fall through
 					case '2LOW':
-						$error[] = self::_validate_password_level_2low($passwd);
+						$_error[] = self::_validate_password_level_2low($passwd);
 						// fall through
 					case '2UPPER':
-						$error[] = self::_validate_password_level_2upper($passwd);
+						$_error[] = self::_validate_password_level_2upper($passwd);
 						// fall through
 					case '8CHAR':
-						$error[] = self::_validate_password_level_8char($passwd);
+						$_error[] = self::_validate_password_level_8char($passwd);
+				}
+			}
+			$error = array();
+			foreach($_error as $_msq)
+			{
+				if($_msq)
+				{
+					$error[] = $_msq;
 				}
 			}
 			if($error)
 			{
-				$msq = array();
-				foreach($error as $_msq)
-				{
-					if($_msq)
-					{
-						$msq[] = $_msq;
-					}
-				}
-				throw new Exception(implode('<br/>',array_reverse($msq)));
+				throw new Exception(implode('<br/>',array_reverse($error)));
 			}
 		}
 
