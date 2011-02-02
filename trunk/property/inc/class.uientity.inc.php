@@ -1750,7 +1750,7 @@
  */			
 			if ($id)
 			{
-				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$id));
+				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
 				$related_link = array();
 
 				if(isset($related['related']))
