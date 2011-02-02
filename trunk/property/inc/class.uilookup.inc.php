@@ -1798,6 +1798,15 @@
 			$this->location_code		= $boentity->location_code;
 			$this->criteria_id			= $boentity->criteria_id;
 
+			$second_display = phpgw::get_var('second_display', 'bool');
+			$default_district 	= (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']:'');
+
+			if ($default_district && !$second_display && !$this->district_id)
+			{
+				$this->bo->district_id	= $default_district;
+				$this->district_id		= $default_district;
+			}
+
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 
@@ -1816,6 +1825,7 @@
 				$datatable['config']['allow_allrows'] = true;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.entity',"
+					."second_display:1,"
 					."entity_id:'{$this->entity_id}',"
 					."cat_id:'{$this->cat_id}',"
 					."district_id:'{$this->district_id}',"
@@ -1844,6 +1854,7 @@
 							array
 							(
 								'menuaction' 		=> 'property.uilookup.entity',
+								'second_display'	=> $second_display,
 								'entity_id'			=> $this->entity_id,
 								'cat_id'			=> $this->cat_id,
 								'district_id'		=> $this->district_id,

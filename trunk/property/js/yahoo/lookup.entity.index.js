@@ -32,6 +32,13 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+			//district
+			index = locate_in_array_options(1,"value",path_values.district_id);
+			if(index)
+			{
+				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+			}
+
 			oMenuButton_0.focus();
 		}
 		else if(flag_particular_setting=='update')
