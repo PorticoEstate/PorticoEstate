@@ -1,10 +1,15 @@
 <?php
+
+	phpgw::import_class('property.bimmodelinformation');
+	
 	interface bobimitem {
 		public function setIfcXml(SimpleXMLElement  $xml);
 		public function setSobimitem(sobimitem $sobimitem);
 		public function setSobimtype(sobimtype $sobimtype);
+		public function setSobimmodelinformation(sobimmodelinformation  $sobimmodelinformation);
 		public function setModelId(int $id);
 		public function loadIfcItemsIntoDatabase();
+		public function fetchItemsByModelId();
 	}
 	
 	class bobimitem_impl implements bobimitem {
@@ -12,6 +17,7 @@
 		/* @var $sobimitem sobimitem */
 		private $sobimitem;
 		private $sobimtype;
+		private $sobimmodelinformation;
 		private $modelId;
 		
 		public function __construct() {
@@ -23,6 +29,14 @@
 			/* @var $modelInfo SimpleXMLElement */
 			$modelInfo = $this->ifcXml->modelInformation[0];
 			$modelInfoXml =  $modelInfo->asXML();
+			$bimmodelInformation = new BimModelInformation();
+			$bimmodelInformation->loadVariablesFromXml($modelInfo);
+			$this->sobimmodelinformation->setBimModelInformation($bimmodelInformation);
+			try {
+				$this->sobimmodelinformation->updateModelInformation();
+			} catch (Exception $e) {
+				throw $e;
+			}
 			//var_dump($this->ifcXml);
 			
 			$BimItems = $this->loopThrough();
@@ -37,9 +51,10 @@
 				try {
 					$this->sobimitem->addBimItem($item);
 				} catch (BimDataException $e) {
-					echo "Data exception with message:".$e->getMessage()."\n";
-					echo "Reason:".$e->getPrevious()->getMessage();
-					break;
+					throw new BimDataException("Data exception\n MSG:".$e->getMessage()."\nReason:".$e->getPrevious()->getMessage(), $e);
+					//echo "Data exception with message:".$e->getMessage()."\n";
+					//echo "Reason:".$e->getPrevious()->getMessage();
+					//break;
 				}
 			}
 			
@@ -70,6 +85,13 @@
 			return $BimItemArray;
 		}
 		/*
+		 * Needs the following variables set
+		 * 
+		 */
+		public function fetchItemsByModelId() {
+			
+		}
+		/*
 		 * @throws IncompleteItemException if the ifc object is missing anything
 		 */
 		private function createBimItem(& $ifcObject) {
@@ -86,9 +108,17 @@
 		}
 		
 		private function checkArguments() {
-			if(empty($this->ifcXml) || empty($this->sobimitem) || empty($this->modelId) || empty($this->sobimtype)) {
-				throw new InvalidArgumentException("Incorrect arguments");
+			if(empty($this->ifcXml) || empty($this->sobimitem) || empty($this->modelId) || empty($this->sobimtype) || empty($this->sobimmodelinformation)) {
+				$args = "IfcXml type:".gettype($this->ifcXml)."\n".
+						"Sobimitem type:".gettype($this->sobimitem)."\n".
+						"Model id:".$this->modelId."\n".
+						"Sobimtype type:".gettype($this->sobimtype)."\n".
+						"Sobimmodelinformation type:".gettype($this->sobimmodelinformation)."\n";
+				throw new InvalidArgumentException("BObimitem:Incorrect arguments\b".$args);
 			}
+		}
+		public function setSobimmodelinformation(sobimmodelinformation  $sobimmodelinformation) {
+			$this->sobimmodelinformation = $sobimmodelinformation;
 		}
 		public function setModelId(int $id) {
 			$this->modelId = $id;
