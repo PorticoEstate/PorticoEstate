@@ -12,9 +12,8 @@ function include_yui3(filename) {
 function doDelegateDeleteModel(){
 	function deleteModelCall(e) {
 		var path_update = new Array();
-		path_update["menuaction"] = "property.uiitem.removeModelJson";
+		path_update["menuaction"] = "property.uibim.removeModelJson";
 		var postUrl = phpGWLink('index.php',path_update);
-		console.log(this);
 		var modelDatabaseId = this.getAttribute("value"); // getAttribute("value");
 		
 		var inputAlert = confirm("Are you sure you want to delete this model ?");
@@ -32,9 +31,8 @@ function doDelegateDeleteModel(){
 function doDelegateLoadModel(){
 	function loadModelCall(e) {
 		var path_update = new Array();
-		path_update["menuaction"] = "property.uiitem.getFacilityManagementXmlByModelId";
+		path_update["menuaction"] = "property.uibim.getFacilityManagementXmlByModelId";
 		var postUrl = phpGWLink('index.php',path_update);
-		console.log(this);
 		var modelDatabaseId = this.getAttribute("value");  //getAttribute("value");
 		
 		var inputAlert = confirm("Are you sure you want to load this model(id:"+modelDatabaseId+") ?");
@@ -46,6 +44,31 @@ function doDelegateLoadModel(){
 	};
 	YUI().use("event-delegate", function(Y){
 		Y.delegate("click", loadModelCall, "#bimModelList2", "button.load");
+	});
+};
+function doDelegateModelInfo(){
+	function loadModelInfoCall(e) {
+		var path_update = new Array();
+		path_update["menuaction"] = "property.uibim.displayModelInformation";
+		var postUrl = phpGWLink('index.php',path_update);
+		var modelDatabaseId = this.getAttribute("value");  //getAttribute("value");
+		var form = document.createElement("form");
+    	form.setAttribute("method", "post");
+		form.setAttribute("action", postUrl);
+		var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "modelId");
+        hiddenField.setAttribute("value", modelDatabaseId);
+		form.appendChild(hiddenField);
+		document.body.appendChild(form);
+    	form.submit();
+
+
+
+		//var Y = new YUI({ debug : true });
+	};
+	YUI().use("event-delegate", function(Y){
+		Y.delegate("click", loadModelInfoCall, "#bimModelList2", "button.info");
 	});
 };
 
@@ -104,26 +127,29 @@ function getModelList() {
 			for (var i = 0; i < data.length; i++) {
 			    var bimModel = data[i];
 				var currentRow = modelTable.invoke("insertRow",rowCount);
-				var cell = currentRow.invoke("insertCell", 0);
+				var cellIndex = 0;
+				var cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.databaseId));
-				cell = currentRow.invoke("insertCell", 1);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.name));
-				cell = currentRow.invoke("insertCell", 2);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.creationDate));
-				cell = currentRow.invoke("insertCell", 3);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.fileSize));
-			   	cell = currentRow.invoke("insertCell", 4);
+			   	cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.fileName));
-				cell = currentRow.invoke("insertCell", 5);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.usedItemCount));
-				cell = currentRow.invoke("insertCell", 6);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.vfsFileId));
-				cell = currentRow.invoke("insertCell", 7);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.used));
-				cell = currentRow.invoke("insertCell", 8);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(createLoadButton(bimModel.databaseId));
-				cell = currentRow.invoke("insertCell", 9);
+				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(createDeleteButton(bimModel.databaseId));
+				cell = currentRow.invoke("insertCell", cellIndex++);
+				cell.appendChild(createInfoButton(bimModel.databaseId));
 				
 				rowCount++;
 			}
@@ -146,6 +172,13 @@ function getModelList() {
 			buttonNode.appendChild(document.createTextNode("Load"));
 			return buttonNode;
 		}
+		function createInfoButton(modelId) {
+			var buttonNode = document.createElement("button");
+			buttonNode.setAttribute('value', modelId);
+			buttonNode.setAttribute('class', "info");
+			buttonNode.appendChild(document.createTextNode("Info"));
+			return buttonNode;
+		}
  
 		//Provide a function that can help debug failed
 		//requests:
@@ -157,7 +190,7 @@ function getModelList() {
 		}
  
 		function getModule(){
-			var entryPoint = '/share/html/dev-bim2/index.php?menuaction=property.uiitem.getModelsJson';
+			var entryPoint = '/share/html/dev-bim2/index.php?menuaction=property.uibim.getModelsJson';
  			var sUrl = entryPoint;
  			Y.log("Submitting request; ","info", "example");
  			var request = Y.io(sUrl, {
@@ -182,7 +215,6 @@ function reloadModelList() {
 	showLoadingDiv();
 	clearModelList();
 	getModelList();
-	hideLoadingDiv();
 }
 
 function deleteModel(targetUrl, modelId) {
@@ -238,7 +270,7 @@ function loadModel(targetUrl, modelId) {
 	YUI().use('io-base','node', 'json-parse', function(Y) {
 		
 		function successHandler(id, o){
-			Y.log("Success handler called; handler will parse the retrieved XML and insert into DOM.", "info", "example");
+			//Y.log("Success handler called; handler will parse the retrieved XML and insert into DOM.", "info", "example");
 			
 			var root = o.responseText;
 			try {
@@ -246,12 +278,21 @@ function loadModel(targetUrl, modelId) {
 			} catch (e) {
 			    alert("Invalid data");
 			}
+			if(data.result == 1) {
+				Y.log("Load was successful", "info");
+				alert('Success!');
+			} else {
+				Y.log("Error loading!", "info");
+				var string = "An error occurred! \nerror: "+data.error;
+				alert(string);
+			}
+			reloadModelList();
 			Y.log(data);
-			Y.log("Success handler is complete.", "info", "example");
+			//Y.log("Success handler is complete.", "info", "example");
 		}
 	
 		function failureHandler(id, o){
-			Y.log("Failure handler called; http status: " + o.status, "info", "example");
+			//Y.log("Failure handler called; http status: " + o.status, "info", "example");
 			alert(o.status + " " + o.statusText);
 		}
  
@@ -379,6 +420,8 @@ console.log(Event.delegate("container44", "click", onLIClick, "li"));
 */
 YUI().use('node-base', function(Y) {
 		Y.on("load",  getModelList);
+		
+		
 	//	Y.on("load", doDelegateDeleteModel);
 
 		}); 
