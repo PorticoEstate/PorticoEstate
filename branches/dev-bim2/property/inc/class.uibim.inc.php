@@ -7,6 +7,10 @@ phpgw::import_class('property.sobimmodel');
 phpgw::import_class('property.sobim_converter');
 phpgw::import_class('property.soitem_group');
 phpgw::import_class('property.bobimmodel');
+phpgw::import_class('property.bobimitem');
+phpgw::import_class('property.sobimitem');
+phpgw::import_class('property.sobimtype');
+phpgw::import_class('property.sobimmodelinformation');
 /*
  * This class serves as the 'Controller' or 'Container' in a dependancy injection context
  */
@@ -18,6 +22,7 @@ class property_uibim implements uibim {
 	private $db;
 	/* @var $bocommon property_bocommon */
 	private $bocommon;
+	private $bimconverterUrl = "http://localhost:8080/bm/rest/";
 
 	public function __construct() {
 		$this->bocommon = CreateObject('property.bocommon');
@@ -37,9 +42,7 @@ class property_uibim implements uibim {
     	'getFacilityManagementXmlByModelId' => true,
     	'upload' => true,
     	'uploadFile' => true,
-        'testdata' => true,
-    	'ifc' => true,
-        'emptydb' => true
+        'displayModelInformation' => true
 	);
 	private function setupBimCss() {
 		if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
@@ -67,7 +70,7 @@ class property_uibim implements uibim {
 		if($modelId == null) {
 			$modelId = (int) phpgw::get_var("modelId");
 		}
-		 
+			
 		$bobimmodel = new bobimmodel_impl();
 		$sovfs = new sovfs_impl();
 		$sovfs->setSubModule(self::$virtualFileSystemPath);
@@ -99,11 +102,11 @@ class property_uibim implements uibim {
 	public function getFacilityManagementXmlByModelId($modelId = null) {
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 		header("Content-type: application/xml");
-		$restUrl = "http://localhost:8080/BIM_Facility_Management/rest/uploadIfc";
+		$restUrl = $this->bimconverterUrl;
 		if($modelId == null) {
 			$modelId = (int) phpgw::get_var("modelId");
 		}
-		echo "ModelId is:".$modelId;
+		//echo "ModelId is:".$modelId;
 		$bobimmodel = new bobimmodel_impl();
 		$sovfs = new sovfs_impl();
 		$sovfs->setSubModule(self::$virtualFileSystemPath);
@@ -111,26 +114,58 @@ class property_uibim implements uibim {
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$sobimmodel->setModelId($modelId);
 		$bobimmodel->setSobimmodel($sobimmodel);
-		$ifcFileWithRealPath = $bobimmodel->getIfcFileNameWithRealPath();
-		$xmlResult = $this->getFacilityManagementXmlFromIfc($ifcFileWithRealPath);
+		$sobimmodelinformation = new sobimmodelinformation_impl($this->db,$modelId);
+		
+		
+		try {
+			if($bobimmodel->checkBimModelIsUsed()) {
+				throw new Exception("Model is already in use!");
+			}
+			$ifcFileWithRealPath = $bobimmodel->getIfcFileNameWithRealPath();
+			$xmlResult = $this->getFacilityManagementXmlFromIfc($ifcFileWithRealPath);
+			$bobimitem = new bobimitem_impl();
+			$bobimitem->setSobimmodelinformation($sobimmodelinformation);
+			$bobimitem->setModelId($modelId);
+			$bobimitem->setIfcXml($xmlResult);
+			$bobimitem->setSobimitem(new sobimitem_impl($this->db));
+			$bobimitem->setSobimtype(new sobimtype_impl($this->db));
 
-		$bobimitem = new bobimitem_impl();
-		$bobimitem->setModelId($modelId);
-		$bobimitem->setIfcXml($xmlResult);
-		$bobimitem->setSobimitem(new sobimitem_impl($this->db));
-		$bobimitem->setSobimtype(new sobimtype_impl($this->db));
+			$bobimitem->loadIfcItemsIntoDatabase();
+			
+			$result = array();
+			$result["result"] = 1;
+			$result["error"] = "";
+			echo json_encode($result);
+		} catch (NoResponseException $e) {
+			$result = array();
+			$result["result"] = 0;
+			$result["error"] = "Could not connect to BIM converter rest service!";
+			$result["Exception"] = $e;
+			echo json_encode($result);
+		} catch (Exception $e) {
+			$result = array();
+			$result["result"] = 0;
+			$result["error"] = "General error!\nMessage: ".$e->getMessage();
+			echo json_encode($result);
+		}
 
-		$bobimitem->loadIfcItemsIntoDatabase();
-		 
+		
+			
 	}
 
 	private function getFacilityManagementXmlFromIfc($fileWithPath) {
 		$sobim_converter = new sobim_converter_impl();
+		$sobim_converter->setBaseUrl($this->bimconverterUrl);
 		$sobim_converter->setFileToSend($fileWithPath);
+		
 		try {
 			$returnedXml =  $sobim_converter->getFacilityManagementXml();
 			$sxe = simplexml_load_string($returnedXml);
 			return $sxe;
+		} catch (NoResponseException $e) {
+			throw $e;
+		} catch (InvalidArgumentException $e) {
+			throw $e;
 		} catch ( Exception $e) {
 			echo $e;
 		}
@@ -142,9 +177,9 @@ class property_uibim implements uibim {
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$GLOBALS['phpgw']->common->phpgw_header(true);*/
-		 
-		 
-		 
+			
+			
+			
 		$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showmodels'));
 		$bobimmodel = new bobimmodel_impl();
 		$sobimmodel = new sobimmodel_impl($this->db);
@@ -199,7 +234,7 @@ HTML;
 
 	public function upload() {
 		$GLOBALS['phpgw']->xslttpl->add_file(array('bim_upload_ifc'));
-		 
+			
 		$import_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uibim.uploadFile', 'id'=> $id));
 		$data = array
 		(
@@ -216,12 +251,12 @@ HTML;
 		$this->setupBimCss();
 	}
 
-	 
+
 	public function uploadFile($uploadedFileArray = null, $modelName = null, $unitTest = false) {
 		if(!$unitTest) {
 			$GLOBALS['phpgw']->xslttpl->add_file(array('bim_upload_ifc_result'));
 		}
-		
+
 		if(!$uploadedFileArray) {
 			$uploadedFileArray = $_FILES[$this->form_upload_field_filename];
 		}
@@ -229,7 +264,7 @@ HTML;
 			$modelName = phpgw::get_var($this->form_upload_field_modelname);
 		}
 		$returnValue = array();
-		
+
 		$filename = $uploadedFileArray['name'];
 		$filenameWithPath = $uploadedFileArray['tmp_name'];
 		$bobimmodel = new bobimmodel_impl();
@@ -242,7 +277,7 @@ HTML;
 		$error = false;
 		try {
 			$bobimmodel->addUploadedIfcModel();
-			 
+
 		} catch (FileExistsException $e) {
 			$error = true;
 			$errorMessage =  "Filename in use! \n Try renaming the file";
@@ -268,12 +303,44 @@ HTML;
 				'linkToModels'					=> $link_to_models,
 				'linkToUpload'					=> $link_to_upload
 		);
-		
+
 		if(!$unitTest) {
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('uploadResult' => $data));
 		}
-		
+
 		return $data;
+	}
+
+	public function displayModelInformation() {
+		/*$GLOBALS['phpgw_info']['flags']['noheader'] = false;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw']->common->phpgw_header(true);*/
+		$GLOBALS['phpgw']->xslttpl->add_file(array('bim_modelinformation'));
+		$modelId = phpgw::get_var("modelId");
+		//$modelId = 3;
+		if(empty($modelId)) {
+			// go apeshit
+			echo "No modelId!";
+			
+		} else {
+			$sobimInfo = new sobimmodelinformation_impl($this->db, $modelId);
+			/* @var $modelInfo BimModelInformation */
+			$modelInfo = $sobimInfo->getModelInformation();
+			$sobimmodel = new sobimmodel_impl($this->db);
+			$sobimmodel->setModelId($modelId);
+			/* @var $model BimModel */
+			$model = $sobimmodel->retrieveBimModelInformationById();
+			$data = array (
+				'model'		=> $model->transformObjectToArray(),
+				'information' => $modelInfo->transformObjectToArray()
+			);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('modelInformation' => $data));
+			
+		}
+		
+		$this->setupBimCss();
+		
 	}
 
 
