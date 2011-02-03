@@ -67,6 +67,7 @@
 				<th>used</th>
 				<th></th>
 				<th></th>
+				<th></th>
 			</tr>
 		</table>
 		<div id="modelsLoader">
@@ -83,6 +84,8 @@
 		//Y.on("load", doDelegateDeleteModel);
 		doDelegateDeleteModel();
 		Y.on("load", doDelegateLoadModel);
+		Y.on("load", doDelegateModelInfo);
+		
 		}); 
 		}
 	</script>
