@@ -14,7 +14,7 @@
 		<!-- BEGIN stylesheet -->
         	<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
-
+		<script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>
 		{css}
 
 		<script type="text/javascript">
@@ -33,7 +33,8 @@
 		<!-- BEGIN javascript -->
        		<script type="text/javascript" src="{javascript_uri}"></script>
     	<!-- END javascript -->
-
+    		
+		
 	</head>
 	<body class="yui-skin-sam">
 

@@ -56,7 +56,8 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
    // 	'TestSOvfs.php',
     	'TestBObimmodel.php',
    // 	'TestBObimitem.php'
-   		'TestUIbim.php'
+   		'TestUIbim.php',
+    	'TestSObimmodelinformation.php'
     );
 
     /**
@@ -112,6 +113,8 @@ class propertyBimSuite extends PHPUnit_Framework_TestSuite
         phpgw::import_class('property.sobim_converter');
         phpgw::import_class('property.bobimitem');
         phpgw::import_class('property.uibim');
+        phpgw::import_class('property.bimmodelinformation');
+        phpgw::import_class('property.sobimmodelinformation');
         $this->db = & $GLOBALS['phpgw']->db;
 		$this->loadXmlVariables();
 		$this->addDummyModel();
