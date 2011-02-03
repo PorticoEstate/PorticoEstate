@@ -103,14 +103,16 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 	public function testGet() {
 		
 		$rest = new RestRequest();
-		$rest->setUrl("http://localhost:8080/BIM_Facility_Management/rest/uploadIfc");
+		$rest->setUrl("http://localhost:8080/bm/rest/uploadIfc");
 		$rest->setAcceptType("text/html");
 		$rest->execute();
-		echo $rest->getResponseBody() ."\n";
+		$body = $rest->getResponseBody();
+		echo "Response Body:$body\n";
+		$this->assertTrue(strlen(strstr($body, "You have accept type")) > 0);
 	}
 	public function testRestRequestPost() {
 		
-		$url = "http://localhost:8080/BIM_Facility_Management/rest/tests/testPut";
+		$url = "http://localhost:8080/bm/rest/tests/testPut";
 		$verb = "POST";
 		$data = array (
 			'file'=>'@'.$this->testingFileWithPath
@@ -190,6 +192,7 @@ class TestSObim_converter extends PHPUnit_Framework_TestCase
 	public function testgetFacilityManagementXmlWithValidIfc() {
 		$sobim_converter = new sobim_converter_impl();
 		$sobim_converter->setFileToSend($this->validIfcFileWithPath);
+		$sobim_converter->setBaseUrl("http://localhost:8080/bm/rest/");
 		try {
 			$returnedXml =  $sobim_converter->getFacilityManagementXml();
 			$sxe = simplexml_load_string($returnedXml);
