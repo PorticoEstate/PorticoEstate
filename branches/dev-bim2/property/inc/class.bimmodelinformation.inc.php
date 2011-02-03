@@ -1,6 +1,7 @@
 <?php
+phpgw::import_class('property.bimobject');
 
-class BimModelInformation {
+class BimModelInformation extends BimObject{
 	private $authorization;
 	private $author;
 	private $changeDate;
@@ -10,11 +11,48 @@ class BimModelInformation {
 	private $preProcessor;
 	private $valDate;
 	private $nativeSchema;
-	
+
 	public function loadVariablesFromXml(SimpleXMLElement $modelInformation) {
-		$this->setAuthorization($modelInformation->authorization);
+		if(!empty($modelInformation->authorization)){
+			$this->setAuthorization((string)$modelInformation->authorization);
+		}
+		if(!empty($modelInformation->author)) {
+			$this->setAuthor((string)$modelInformation->author);
+		}
+		if(!empty($modelInformation->changeDate)) {
+			$this->setChangeDate($modelInformation->changeDate);
+		}
+		if(!empty($modelInformation->valDate)) {
+			$this->setValDate($modelInformation->valDate);
+		}
+		if(!empty($modelInformation->description)) {
+			$this->setDescription((string)$modelInformation->description);
+		}
+		if(!empty($modelInformation->organization)) {
+			$this->setOrganization((string)$modelInformation->organization);
+		}
+		if(!empty($modelInformation->originatingSystem)) {
+			$this->setOriginatingSystem((string)$modelInformation->originatingSystem);
+		}
+		if(!empty($modelInformation->originatingSystem)) {
+			$this->setOriginatingSystem((string)$modelInformation->originatingSystem);
+		}
+		if(!empty($modelInformation->preProcessor)) {
+			$this->setPreProcessor((string)$modelInformation->preProcessor);
+		}
+		if(!empty($modelInformation->nativeSchema)) {
+			$this->setNativeSchema((string)$modelInformation->nativeSchema);
+		}
 	}
-	
+
+	/* 
+	 *Converts ISO8601 string to timestamp
+	 * Not needed, postgres accepts iso8601 as input
+	 */
+	public function convertToTimestamp($iso8601date) {
+		return strtotime($iso8601date);
+	}
+
 	public function getOrganization() {
 		return $this->organization;
 	}
