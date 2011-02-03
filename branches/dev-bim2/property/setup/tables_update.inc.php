@@ -4930,6 +4930,71 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	$test[] = '0.9.17.601';
+	function property_upgrade0_9_17_601()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_type', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 64,'nullable' => False),
+					'description' => array('type' => 'varchar', 'precision' => 512,'nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array('name')
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_model', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => True),
+					'name' => array('type' => 'varchar', 'precision' => 128,'nullable' => False),
+					'vfs_file_id' => array('type' => 'int', 'nullable' => False),
+					'authorization_value' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'author' => array('type' => 'varchar', 'precision' => 256,'nullable' => True),
+					'changedate' => array('type' => 'timestamp','nullable' => True),
+					'description' => array('type' => 'varchar', 'precision' => 512,'nullable' => True),
+					'organization' => array('type' => 'varchar', 'precision' => 256,'nullable' => True),
+					'originatingsystem' => array('type' => 'varchar', 'precision' => 256,'nullable' => True),
+					'preprocessor' => array('type' => 'varchar', 'precision' => 256,'nullable' => True),
+					'valdate' => array('type' => 'timestamp','nullable' => True),
+					'nativeschema' => array('type' => 'varchar', 'precision' => 256,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array('phpgw_vfs' => array('vfs_file_id' => 'file_id')),
+				'ix' => array(),
+				'uc' => array('')
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'type' => array('type' => 'int','nullable' => False),
+					'guid' => array('type' => 'varchar', 'precision' => 24,'nullable' => False),
+					'xml_representation' => array('type' => 'xml','nullable' => False),
+					'model' => array('type' => 'int','nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_bim_model' => array('model' => 'id'),
+								'fm_bim_type' => array('type' => 'id')),
+				'ix' => array(),
+				'uc' => array('guid')
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.601';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 	
 	
 
