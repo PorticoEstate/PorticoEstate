@@ -11,10 +11,11 @@ phpgw::import_class('property.restrequest');
  */
 interface sobim_converter {
 	public function getFacilityManagementXml();
+	public function setBaseUrl($url);
 }
 
 class sobim_converter_impl implements sobim_converter {
-	private $baseUrl = "http://localhost:8080/BIM_Facility_Management/rest/";
+	private $baseUrl = "http://localhost:8080/bm/rest/";
 	private $fileToSend;
 	
 	public function __construct() {
@@ -27,6 +28,7 @@ class sobim_converter_impl implements sobim_converter {
 	}
 	
 	public function getFacilityManagementXml() {
+		$this->checkArgumentsForXmlDownload();
 		$restCall = "uploadIfc";
 		$url = $this->baseUrl.$restCall;
 		$verb = "POST";
@@ -35,12 +37,31 @@ class sobim_converter_impl implements sobim_converter {
 		);
 		
 		$rest = new RestRequest($url, $verb, $data);
+		
 		$rest->setAcceptType("application/xml");
 		$rest->execute();
+		//echo "SObim converter: response info\n";
+		//print_r($rest->getResponseInfo());
 		if( $rest->isError()) {
+			$info = $rest->getResponseInfo();
+			$http_code = $info["http_code"];
+			if($http_code == 0) {
+				throw new NoResponseException();
+			}
 			throw new Exception("Rest call error : ".var_export($rest->getResponseInfo()));
 		}
 		return $rest->getResponseBody();
+	}
+	public function checkArgumentsForXmlDownload() {
+		if(empty($this->fileToSend)) {
+			throw new InvalidArgumentException("File to send has not been specified");
+		}
+		if(!file_exists($this->fileToSend)) {
+			throw new InvalidArgumentException("File to send not found in filesystem");
+		}
+		if(empty($this->baseUrl) || strlen($this->baseUrl) < 2) {
+			throw new InvalidArgumentException("Base url not set!");
+		}
 	}
 	public function getRepositoryCountJson() {
 		
@@ -51,6 +72,12 @@ class sobim_converter_impl implements sobim_converter {
 		$rest->execute();
 		$output = $rest->getResponseBody();
 		echo $output;
+	}
+	public function setBaseUrl($url) {
+		if(substr($url, -1) != "/") {
+			$url = $url . "/";
+		}
+		$this->baseUrl = $url;
 	}
 	
 	public function getRepositoryNames() {
