@@ -13,8 +13,9 @@ class RestRequest
 	protected $responseInfo;
 	protected $localFile;
 	protected $error = false;
+	public $debug = false;
 	
-	public function __construct ($url = null, $verb = 'GET', $requestBody = null)
+	public function __construct ($url = null, $verb = 'GET', $requestBody = null, $debug = false)
 	{
 		$this->url				= $url;
 		$this->verb				= $verb;
@@ -25,7 +26,12 @@ class RestRequest
 		$this->acceptType		= 'application/json';
 		$this->responseBody		= null;
 		$this->responseInfo		= null;
-		
+		$this->debug = $debug;
+		if($this->debug) {
+    		echo "Request created\n".
+    			"URL:".$url."\n".
+    			"Method:".$verb."\n";
+    	}
 		/*if ($this->requestBody !== null)
 		{
 			$this->buildPostBody();
@@ -160,7 +166,9 @@ class RestRequest
 	
 	protected function setCurlOpts (&$curlHandle)
 	{
-		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 5*60); // (seconds) need long timeout because of large file uploads
+		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10); // (seconds) need long timeout because of large file uploads
+		curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 10);
+		
 		curl_setopt($curlHandle, CURLOPT_URL, $this->url);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 		$headerArray =  array ('Accept: ' . $this->acceptType);
