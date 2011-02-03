@@ -14,6 +14,7 @@ interface bobimmodel {
 	public function setSobimmodel(sobimmodel $sobimmodel);
 	public function checkBimModelExists();
 	public function checkBimModelExistsByModelId();
+	public function checkBimModelIsUsed();
 	public function removeIfcModel();
 	public function removeIfcModelByModelId();
 	public function setModelName($name);
@@ -85,30 +86,16 @@ class bobimmodel_impl implements bobimmodel {
 			
 			foreach($BimModelArray as $BimModel) {
 				//var_dump($BimModel);
-				array_push($outputArray, $this->transformObjectToArray($BimModel));
+				/* @var $BimModel BimModel */
+				//array_push($outputArray, $this->transformObjectToArray($BimModel));
+				array_push($outputArray, $BimModel->transformObjectToArray());
 			}
 			return $outputArray;
 		}
 		
 	}
-	/*
-	 * Takes an object, gets the varibles from the public getter function and returns
-	 * an associative array
-	 */
-	private function transformObjectToArray($object) {
-		$reflection = new ReflectionObject($object);
-		$publicMethods = $reflection->getMethods(ReflectionProperty::IS_PUBLIC);
-		$result = array();
-		foreach($publicMethods as $method) {
-			/* @var $method ReflectionMethod */
-			if(preg_match("/^get(.+)/", $method->getName(), $matches)) {
-				$memberVarible = lcfirst($matches[1]);
-				$value = $method->invoke($object);
-				$result[$memberVarible] = $value;
-			}
-		}
-		return $result;
-	}
+	
+	
 	/*
 	 * This function requires:
 	 * An SOvfs object with the filename and the submodule set
@@ -130,7 +117,7 @@ class bobimmodel_impl implements bobimmodel {
 		
 	}
 	public function getIfcFileNameWithRealPath() {
-		$this->checkIdArguments();
+		$this->checkIdVfsArguments();
 		/* @var $bimModel BimModel */
 		$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
 		$this->sovfs->setFilename($bimModel->getFileName());
@@ -145,9 +132,15 @@ class bobimmodel_impl implements bobimmodel {
 		$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
 		return ($bimModel != null);
 	}
+	public function checkBimModelIsUsed() {
+		$this->checkIdArguments();
+		/* @var $bimModel BimModel */
+		$bimModel = $this->sobimmodel->retrieveBimModelInformationById();
+		return ($bimModel->getUsedItemCount() > 0);
+	}
 	
 	private function displayArguments() {
-		$string = "Argument list:\n".
+		$string = "(bobimmodel)Argument list:\n".
 				"Model name:\t $this->modelName \n".
 				"Model id:\t ".$this->sobimmodel->getModelId()." \n".
 				"SOvfs:\t ".gettype($this->sovfs)."\n".
@@ -176,7 +169,7 @@ class bobimmodel_impl implements bobimmodel {
 	 */
 	public function removeIfcModelByModelId() {
 		try {
-			$this->checkIdArguments();
+			$this->checkIdVfsArguments();
 		} catch (InvalidArgumentException $e) {
 			throw $e;
 		}
@@ -194,8 +187,13 @@ class bobimmodel_impl implements bobimmodel {
 		
 	}
 	
-	private function checkIdArguments() {
+	private function checkIdVfsArguments() {
 		if(!$this->sobimmodel || !$this->sovfs || !$this->sobimmodel->getModelId() || !$this->sovfs->getSubModule()) {
+			throw new InvalidArgumentException($this->displayArguments());
+		}
+	}
+	private function checkIdArguments() {
+		if(!$this->sobimmodel || !$this->sobimmodel->getModelId() || !$this->sovfs->getSubModule()) {
 			throw new InvalidArgumentException($this->displayArguments());
 		}
 	}
