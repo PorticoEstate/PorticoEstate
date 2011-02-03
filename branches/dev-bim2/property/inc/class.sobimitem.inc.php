@@ -1,7 +1,7 @@
 <?php
 
 phpgw::import_class('property.sobim');
-
+phpgw::import_class('property.bimitem');
 
 interface sobimitem extends sobim {
 	/*
@@ -18,11 +18,14 @@ interface sobimitem extends sobim {
 	public function checkIfBimItemExists($guid);
 	public function updateBimItem($bimItem);
 	public function getBimItemAttributeValue($bimItemGuid, $attribute);
+	public function retrieveItemsByModelId();
+	public function setModelId();
 }
 class sobimitem_impl implements sobimitem
 {
 	/* @var phpgwapi_db_ */
 	private $db;
+	private $modelId;
 
 	public function __construct(& $db) {
 		// $this->db = & $GLOBALS['phpgw']->db;
@@ -157,52 +160,35 @@ class sobimitem_impl implements sobimitem
 			}*/
 		}
 	}
-
+	
+	public function retrieveItemsByModelId($modelId) {
+		if(empty($this->modelId)) {
+			throw new InvalidArgumentException("Missing modelId!");
+		}
+		$itemTable = self::bimItemTable;
+		$typeTable = self::bimTypeTable;
+		$bimItems = array();
+		$sql = "select $itemTable.id, (select name from fm_bim_type where $itemTable.type = $typeTable.id) as type, $itemTable.guid from $itemTable where $itemTable.model =".$this->modelId;
+		try {
+			$this->db->query($sql,__LINE__,__FILE__);
+			if($this->db->num_rows() == 0) {
+				return null;
+			} else {
+				while($this->db->next_record())
+				{
+					$bimItem = new BimItem($this->db->f('id'),$this->db->f('guid'));
+					array_push($bimItems, $bimModel);
+				}
+			}
+		} catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function setModelId($modelId) {
+		$this->modelId = $modelId;
+	}
 
 
 	
-}
-class BimItem {
-	private $databaseId;
-	private $guid;
-	private $type;
-	private $xml;
-	private $modelId;
-	 
-	function __construct($databaseId = null, $guid = null, $type = null, $xml = null, $modelId = null) {
-		//$this->databaseId = (is_null($databaseId)) ? null : (int)$databaseId;
-		$this->databaseId = (int)$databaseId;
-		$this->guid =  $guid;
-		$this->type = $type;
-		$this->xml = $xml;
-		$this->modelId = $modelId;
-	}
-	function getDatabaseId() {
-		return $this->databaseId;
-	}
-	function setDatabaseId($databaseId) {
-		$this->databaseId = $databaseId;
-	}
-	function getGuid() {
-		return $this->guid;
-	}
-	function getType() {
-		return $this->type;
-	}
-	function setType($type) {
-		$this->type = $type;
-	}
-	function getXml() {
-		return $this->xml;
-	}
-	function setXml($xml) {
-		$this->xml = $xml;
-	}
-	function getModelId() {
-		return $this->modelId;
-	}
-	function setModelId($id) {
-		$this->modelId = $id;
-	}
-	 
 }
