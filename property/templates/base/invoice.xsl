@@ -34,15 +34,20 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="center">
-					<textarea cols="60" rows="15" name="remark" readonly="readonly" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-							<xsl:value-of select="lang_content_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="remark"/>
-					</textarea>
+				<td align="left">
+					<xsl:choose>
+						<xsl:when test="html = ''">
+							<textarea cols="60" rows="15" name="remark" readonly="readonly">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_content_statustext"/>
+								</xsl:attribute>
+								<xsl:value-of select="remark"/>
+							</textarea>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of disable-output-escaping="yes" select="remark"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</td>
 			</tr>
 
