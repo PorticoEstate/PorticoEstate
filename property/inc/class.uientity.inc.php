@@ -891,14 +891,14 @@
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
-					$datatable['headers']['header'][$i]['sortable']			= false;
+					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];;
 					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					//according to stable bruch this columns is not SORTABLE'
 					$denied = array('merknad');//$denied = array('merknad','account_lid');
 					//if not include
-					if(!in_array ($uicols['name'][$i], $denied))
+					if(in_array ($uicols['name'][$i], $denied))
 					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
+						$datatable['headers']['header'][$i]['sortable']		= false;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 					else if(isset($uicols['cols_return_extra'][$i]) && ($uicols['cols_return_extra'][$i]!='T' || $uicols['cols_return_extra'][$i]!='CH'))
