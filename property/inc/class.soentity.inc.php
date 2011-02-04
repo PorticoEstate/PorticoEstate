@@ -161,6 +161,7 @@
 				$uicols['statustext'][]		= 'dummy';
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				$cols_return[] 				= 'num';
 				$uicols['input_type'][]		= 'text';
@@ -169,6 +170,7 @@
 				$uicols['statustext'][]		= lang('ID');
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= true;
 
 				$cols_return[] 				= 'id';
 				$uicols['input_type'][]		= 'hidden';
@@ -177,6 +179,7 @@
 				$uicols['statustext'][]		= false;
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
+				$uicols['sortable'][]		= false;
 
 				if($lookup)
 				{
@@ -188,6 +191,7 @@
 					$uicols['statustext'][]		= 'dummy';
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
+					$uicols['sortable'][]		= false;
 				}
 
 				$cols .= ", {$entity_table}.user_id";
@@ -198,6 +202,7 @@
 				$uicols['statustext'][]		= lang('User');
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= 'user';
+				$uicols['sortable'][]		= false;
 
 				$cols_return_extra[]= array
 					(
@@ -254,6 +259,7 @@
 					$uicols['descr'][]			= $this->db->f('input_text');
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$uicols['sortable'][$i]		= true;
 					$uicols['cols_return_extra'][$i] = array
 						(
 							'name'	=> $this->db->f('column_name'),
@@ -276,6 +282,7 @@
 				$uicols['descr'][]			= lang('entry date');
 				$uicols['statustext'][]		= lang('entry date' );
 				$uicols['datatype'][]		= 'timestamp';
+				$uicols['sortable'][]		= true;
 				$uicols['cols_return_extra'][$i] = array
 					(
 						'name'		=> 'entry_date',
@@ -302,6 +309,9 @@
 				{
 					case 'user_id':
 		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+						break;
+					case 'loc1_name':
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
 						break;
 					default:
 						$ordermethod = " ORDER BY $entity_table.$order $sort";	
@@ -351,7 +361,7 @@
 				$where= 'AND';
 			}
 
-			if ($district_id > 0)
+			if ($district_id > 0 && $category['location_level'])
 			{
 				$filtermethod .= " $where  fm_part_of_town.district_id='$district_id' ";
 				$where = 'AND';

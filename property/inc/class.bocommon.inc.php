@@ -1258,7 +1258,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= '';
+				$uicols['sortable'][]		= $i == 1;
 			}
 
 			if(!$no_address)
