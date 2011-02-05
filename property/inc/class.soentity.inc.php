@@ -1052,6 +1052,22 @@
 					);
 			}
 
+			$sql = "SELECT count(*) as hits FROM fm_s_agreement {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			if($this->db->f('hits'))
+			{
+				$hits = $this->db->f('hits');
+				$entity['related'][] = array
+					(
+						'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uis_agreement.index',
+																'query'	=> "entity.{$entity_id}.{$cat_id}.{$id}",
+																'p_num' => $id)),
+						'name'			=> lang('service agreement') . " [{$hits}]",
+						'descr'			=> lang('service agreement')
+					);
+			}
+
 			return $entity;
 		}
 	}

@@ -65,11 +65,11 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $this->location_info['menu_selection'];
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= $this->location_info['acl_location'];
-			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, 'property');
+			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->location_info['acl_app']);
+			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->location_info['acl_app']);
+			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->location_info['acl_app']);
+			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->location_info['acl_app']);
+			$this->acl_manage 			= $this->acl->check($this->acl_location, 16, $this->location_info['acl_app']);
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -117,7 +117,7 @@
 			{
 				$GLOBALS['phpgw']->preferences->account_id = $this->account;
 				$GLOBALS['phpgw']->preferences->read();
-				$GLOBALS['phpgw']->preferences->add('property',"generic_columns_{$this->type}_{$this->type_id}",$values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->add($this->location_info['acl_app'],"generic_columns_{$this->type}_{$this->type_id}",$values['columns'],'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 
 				$receipt['message'][] = array('msg' => lang('columns is updated'));
@@ -155,7 +155,8 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
+				$this->bocommon->no_access();
+				return;
 			}
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}");
@@ -249,7 +250,7 @@
 				);
 
 
-				if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+				if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 				{
 					$datatable['actions']['form'][0]['fields']['field'][] =  array
 						(
@@ -557,7 +558,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'generic.index', 'property' );
 		}
@@ -566,14 +567,22 @@
 		{
 			if(!$this->acl_add)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=> 2, 'acl_location'=> $this->acl_location));
+				$this->bocommon->no_access();
+				return;
 			}
 
 			$id			= phpgw::get_var($this->location_info['id']['name']);
 			$values		= phpgw::get_var('values');
 
 			$values_attribute  = phpgw::get_var('values_attribute');
-
+			if(is_array($values_attribute))
+			{
+				foreach($values_attribute as &$_attr)
+				{
+					$_attr['value'] = phpgw::get_var($_attr['name']);
+				}
+			}
+			
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('generic','attributes_form'));
@@ -581,16 +590,16 @@
 
 			if (is_array($values))
 			{
-				$insert_record_values = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",'property');
+				$insert_record_values = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",$this->location_info['acl_app']);
 
 				if(is_array($insert_record_values))
 				{
 					foreach($insert_record_values as $field)
 					{
-						$values['extra'][$field] = 	phpgw::get_var($field);
+//						$values['extra'][$field] = 	phpgw::get_var($field);
 					}
 				}
-
+//				$values = $this->bocommon->collect_locationdata($values,$insert_record_values);
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
 					if($GLOBALS['phpgw']->session->is_repost())
@@ -624,7 +633,7 @@
 					{
 						foreach ($values_attribute as $attribute )
 						{
-							if($attribute['nullable'] != 1 && !$attribute['value'])
+							if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 							{
 								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
 							}
@@ -640,7 +649,8 @@
 					{
 						$id =	$values['id'];
 					}
-
+//_debug_array($values);
+//_debug_array($values_attribute);die();
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->save($values,$action,$values_attribute);
@@ -722,19 +732,23 @@
 				}
 
 				phpgwapi_yui::tabview_setup('general_edit_tabview');
-				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
-				$attributes_groups = $this->custom->get_attribute_groups('property', $this->acl_location, $values['attributes']);
+				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $this->acl_location, $values['attributes']);
+
+				if((isset($attributes_groups[0]['id']) && $attributes_groups[0]['id'] > 0 ) || count($attributes_groups) > 1 )
+				{
+					$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+				}
 
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
-					if(isset($group['attributes']))
+					if(isset($group['attributes']) && isset($tabs['general']))
 					{
 						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
 						$group['link'] = str_replace(' ', '_', $group['name']);
-						$attributes[] = $group;
 					}
+					$attributes[] = $group;
 				}
 				unset($attributes_groups);
 				unset($values['attributes']);
@@ -794,7 +808,7 @@
 
 			$appname	=  $this->location_info['name'];
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . "::{$appname}::{$function_msg}";
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
