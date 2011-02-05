@@ -112,11 +112,11 @@
 		{
 			if(!$selected)
 			{
-				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"];
+				$selected = $GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"];
 			}
 
 			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = $this->custom->find('property',$this->location_info['acl_location'], 0, '','','',true, false, $filter);
+			$columns = $this->custom->find($this->location_info['acl_app'],$this->location_info['acl_location'], 0, '','','',true, false, $filter);
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 
 			return $column_list;
@@ -147,11 +147,11 @@
 		public function read_single($data=array())
 		{
 			$custom_fields = false;
-			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+			if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
 				$custom_fields = true;
 				$values = array();
-				$values['attributes'] = $this->custom->find('property', $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
 			if(isset($data['id']) && $data['id'])
@@ -160,7 +160,7 @@
 			}
 			if($custom_fields)
 			{
-				$values = $this->custom->prepare($values, 'property',$this->location_info['acl_location'], $data['view']);
+				$values = $this->custom->prepare($values, $this->location_info['acl_app'],$this->location_info['acl_location'], $data['view']);
 			}
 			return $values;
 		}
