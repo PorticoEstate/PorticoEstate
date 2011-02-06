@@ -7,7 +7,6 @@
 		public function setSobimitem(sobimitem $sobimitem);
 		public function setSobimtype(sobimtype $sobimtype);
 		public function setSobimmodelinformation(sobimmodelinformation  $sobimmodelinformation);
-		public function setModelId(int $id);
 		public function loadIfcItemsIntoDatabase();
 		public function fetchItemsByModelId();
 	}
@@ -18,7 +17,6 @@
 		private $sobimitem;
 		private $sobimtype;
 		private $sobimmodelinformation;
-		private $modelId;
 		
 		public function __construct() {
 			
@@ -86,10 +84,12 @@
 		}
 		/*
 		 * Needs the following variables set
+		 * sobimitem (with modelId set)
 		 * 
 		 */
 		public function fetchItemsByModelId() {
-			
+			$this->checkFetchArguments();
+			return $this->sobimitem->retrieveItemsByModelId();
 		}
 		/*
 		 * @throws IncompleteItemException if the ifc object is missing anything
@@ -104,14 +104,18 @@
 								"XML:".$xml;
 				throw new IncompleteItemException($currentItem);
 			}
-			return new BimItem(null, $guid, $type, $xml, $this->modelId);
+			return new BimItem(null, $guid, $type, $xml, $this->sobimitem->getModelId());
 		}
 		
+		private function checkFetchArguments() {
+			if(!$this->sobimitem) {
+				throw new InvalidArgumentException("Missing sobimitem");
+			}
+		}
 		private function checkArguments() {
-			if(empty($this->ifcXml) || empty($this->sobimitem) || empty($this->modelId) || empty($this->sobimtype) || empty($this->sobimmodelinformation)) {
+			if(empty($this->ifcXml) || empty($this->sobimitem) || empty($this->sobimtype) || empty($this->sobimmodelinformation)) {
 				$args = "IfcXml type:".gettype($this->ifcXml)."\n".
 						"Sobimitem type:".gettype($this->sobimitem)."\n".
-						"Model id:".$this->modelId."\n".
 						"Sobimtype type:".gettype($this->sobimtype)."\n".
 						"Sobimmodelinformation type:".gettype($this->sobimmodelinformation)."\n";
 				throw new InvalidArgumentException("BObimitem:Incorrect arguments\b".$args);
@@ -119,9 +123,6 @@
 		}
 		public function setSobimmodelinformation(sobimmodelinformation  $sobimmodelinformation) {
 			$this->sobimmodelinformation = $sobimmodelinformation;
-		}
-		public function setModelId(int $id) {
-			$this->modelId = $id;
 		}
 		public function setIfcXml(SimpleXMLElement  $xml) {
 			$this->ifcXml = $xml;
