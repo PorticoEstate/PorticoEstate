@@ -1750,6 +1750,16 @@
  */			
 			if ($id)
 			{
+
+				$document = CreateObject('property.sodocument');
+				$documents = $document->get_files_at_location(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'num'=>$values['num']));
+
+				if($documents)
+				{
+					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+					$documents = json_encode($documents);				
+				}
+
 				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
 				$related_link = array();
 
@@ -1786,18 +1796,11 @@
 					'lang_start_ticket'				=> lang('start ticket'),
 					'ticket_link'					=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
 					'fileupload'					=> $category['fileupload'],
-					//		'jasperupload'					=> $category['jasperupload'],
+			//		'jasperupload'					=> $category['jasperupload'],
 					'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-					//		'link_to_files'					=> $link_to_files,
+			//		'link_to_files'					=> $link_to_files,
 					'files'							=> isset($values['files'])?$values['files']:'',
-					//		'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
-					'lang_files'					=> lang('files'),
-					'lang_filename'					=> lang('Filename'),
-					'lang_file_action'				=> lang('Delete file'),
-					'lang_view_file_statustext'		=> lang('click to view file'),
-					'lang_file_action_statustext'	=> lang('Check to delete file'),
-					'lang_upload_file'				=> lang('Upload file'),
-					'lang_file_statustext'			=> lang('Select file to upload'),
+			//		'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
 					'multiple_uploader'				=> $id ? true : '',
 					'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
 															."upload_target:'property.uientity.addfiles',"
@@ -1849,10 +1852,11 @@
 					'integration'					=> $integration,
 					'value_integration_src'			=> $integration_src,
 					'base_java_url'					=>	"{menuaction:'property.uientity.get_files',".
-					"id:'{$id}',".
-					"entity_id:'{$this->entity_id}',".
-					"cat_id:'{$this->cat_id}',".
-					"type:'{$this->type}'}"
+														"id:'{$id}',".
+														"entity_id:'{$this->entity_id}',".
+														"cat_id:'{$this->cat_id}',".
+														"type:'{$this->type}'}",
+					'documents'						=> $documents
 				);
 
 			phpgwapi_yui::load_widget('dragdrop');
@@ -1864,6 +1868,8 @@
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('animation');
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/examples/treeview/assets/css/folders/tree.css');
+			phpgwapi_yui::load_widget('treeview');
 			$appname	= $entity['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;

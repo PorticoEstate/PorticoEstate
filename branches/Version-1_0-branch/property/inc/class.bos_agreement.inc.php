@@ -83,6 +83,7 @@
 			$role				= phpgw::get_var('role');
 			$member_id			= phpgw::get_var('member_id', 'int');
 
+			$this->p_num		= phpgw::get_var('p_num');
 
 			$this->role			= $role;
 			$this->so->role		= $role;
@@ -150,7 +151,7 @@
 		{
 			$s_agreement = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-				'vendor_id'=>$this->vendor_id));
+				'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;

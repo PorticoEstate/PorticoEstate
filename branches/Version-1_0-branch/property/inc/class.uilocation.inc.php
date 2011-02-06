@@ -2094,7 +2094,7 @@
 				$related_link = array();
 
 				$document = CreateObject('property.sodocument');
-				$documents = $document->get_files_at_location($location_code);
+				$documents = $document->get_files_at_location( array('location_code' => $location_code) );
 
 				if($documents)
 				{
@@ -2161,6 +2161,7 @@
 									'lang_entity_statustext'	=> $entry['descr'],
 									'text_entity'				=> $entry['name'],
 								);
+
 						}
 					}
 				}
