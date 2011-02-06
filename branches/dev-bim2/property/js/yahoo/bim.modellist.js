@@ -52,26 +52,53 @@ function doDelegateModelInfo(){
 		path_update["menuaction"] = "property.uibim.displayModelInformation";
 		var postUrl = phpGWLink('index.php',path_update);
 		var modelDatabaseId = this.getAttribute("value");  //getAttribute("value");
-		var form = document.createElement("form");
-    	form.setAttribute("method", "post");
-		form.setAttribute("action", postUrl);
-		var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "modelId");
-        hiddenField.setAttribute("value", modelDatabaseId);
-		form.appendChild(hiddenField);
-		document.body.appendChild(form);
-    	form.submit();
-
-
-
-		//var Y = new YUI({ debug : true });
+		createAppendSubmitModelIdForm(postUrl,"modelId",modelDatabaseId);
 	};
 	YUI().use("event-delegate", function(Y){
 		Y.delegate("click", loadModelInfoCall, "#bimModelList2", "button.info");
 	});
 };
 
+
+function doDelegateModelView(){
+	function loadModelViewCall(e) {
+		var path_update = new Array();
+		path_update["menuaction"] = "property.uibimitem.showItems";
+		var postUrl = phpGWLink('index.php',path_update);
+		var modelDatabaseId = this.getAttribute("value");  //getAttribute("value");
+		createAppendSubmitModelIdForm(postUrl,"modelId",modelDatabaseId);
+	};
+	YUI().use("event-delegate", function(Y){
+		Y.delegate("click", loadModelViewCall, "#bimModelList2", "button.view");
+	});
+};
+function doDelegateViewItem(){
+	function loadViewItemCall(e) {
+		YUI().use('node', function(Y) {
+			var path_update = new Array();
+			path_update["menuaction"] = "property.uibimitem.showBimItem";
+			var postUrl = phpGWLink('index.php',path_update);
+			var guid = e.currentTarget.getContent();
+			createAppendSubmitModelIdForm(postUrl,"modelGuid",guid);
+		});
+	};
+	
+	YUI().use("event-delegate", function(Y){
+		Y.delegate("click", loadViewItemCall, "#bimItems", "td.guid");
+	});
+};
+function createAppendSubmitModelIdForm(postUrl, varName, varValue) {
+	var form = document.createElement("form");
+	form.setAttribute("method", "post");
+	form.setAttribute("action", postUrl);
+	var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", varName);
+    hiddenField.setAttribute("value", varValue);
+	form.appendChild(hiddenField);
+	document.body.appendChild(form);
+	form.submit();
+}
 /*
 function populateModelList() {
 	YUI().use('io-base','node', function(Y) {
@@ -145,38 +172,24 @@ function getModelList() {
 				cell = currentRow.invoke("insertCell", cellIndex++);
 				cell.appendChild(document.createTextNode(bimModel.used));
 				cell = currentRow.invoke("insertCell", cellIndex++);
-				cell.appendChild(createLoadButton(bimModel.databaseId));
+				cell.appendChild(createFunctionButton(bimModel.databaseId, "view", "View"));
 				cell = currentRow.invoke("insertCell", cellIndex++);
-				cell.appendChild(createDeleteButton(bimModel.databaseId));
+				cell.appendChild(createFunctionButton(bimModel.databaseId, "load", "Load"));
 				cell = currentRow.invoke("insertCell", cellIndex++);
-				cell.appendChild(createInfoButton(bimModel.databaseId));
+				cell.appendChild(createFunctionButton(bimModel.databaseId, "del", "Remove"));
+				cell = currentRow.invoke("insertCell", cellIndex++);
+				cell.appendChild(createFunctionButton(bimModel.databaseId, "info", "Info"));
 				
 				rowCount++;
 			}
 			hideLoadingDiv();
 			Y.log("Success handler is complete.", "info", "example");
 		}
-		
-		function createDeleteButton(modelId) {
+		function createFunctionButton(modelId, buttonClass, buttonText) {
 			var buttonNode = document.createElement("button");
 			buttonNode.setAttribute('value', modelId);
-			buttonNode.setAttribute('class', "del");
-			buttonNode.appendChild(document.createTextNode("Remove"));
-			return buttonNode;
-		}
-		
-		function createLoadButton(modelId) {
-			var buttonNode = document.createElement("button");
-			buttonNode.setAttribute('value', modelId);
-			buttonNode.setAttribute('class', "load");
-			buttonNode.appendChild(document.createTextNode("Load"));
-			return buttonNode;
-		}
-		function createInfoButton(modelId) {
-			var buttonNode = document.createElement("button");
-			buttonNode.setAttribute('value', modelId);
-			buttonNode.setAttribute('class', "info");
-			buttonNode.appendChild(document.createTextNode("Info"));
+			buttonNode.setAttribute('class', buttonClass);
+			buttonNode.appendChild(document.createTextNode(buttonText));
 			return buttonNode;
 		}
  
@@ -417,7 +430,7 @@ var onLIClick = function (event, matchedEl, container) {
 console.log(Event.delegate("container44", "click", onLIClick, "li"));
 
 })();
-*/
+
 YUI().use('node-base', function(Y) {
 		Y.on("load",  getModelList);
 		
@@ -425,4 +438,4 @@ YUI().use('node-base', function(Y) {
 	//	Y.on("load", doDelegateDeleteModel);
 
 		}); 
-
+*/
