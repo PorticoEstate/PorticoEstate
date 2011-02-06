@@ -49,8 +49,7 @@ public class CoveringTest {
 	@Before
 	public void setUp() {
 		model = new IfcModelImpl(testingRepository);
-		ifcFilename = (Thread.currentThread().getContextClassLoader().getResource(testIfcFileName)).toString();
-		ifcFilename = ifcFilename.replace("file:/", "");
+		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
 		repo = new RepositoriesImpl();
 		repo.addRepository(testingRepository, ifcFilename);
 		coverings = model.getCoverings();

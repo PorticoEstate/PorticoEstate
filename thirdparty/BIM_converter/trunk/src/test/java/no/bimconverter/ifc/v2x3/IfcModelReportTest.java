@@ -29,8 +29,7 @@ public class IfcModelReportTest {
 	
 	@Before
 	public void setUp() {
-		ifcFilename = (Thread.currentThread().getContextClassLoader().getResource(testIfcFileName)).toString();
-		ifcFilename = ifcFilename.replace("file:/", "");
+		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
 		repo = new RepositoriesImpl();
 		repo.addRepository(testingRepository, ifcFilename);
 	}

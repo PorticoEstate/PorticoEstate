@@ -40,8 +40,8 @@ public class WholeModelOutputTest {
 	@Before
 	public void setUp() {
 		model = new IfcModelImpl(testingRepository);
-		ifcFilename = (Thread.currentThread().getContextClassLoader().getResource(testIfcFileName)).toString();
-		ifcFilename = ifcFilename.replace("file:/", "");
+		
+		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
 		repo = new RepositoriesImpl();
 		System.out.println(ifcFilename);
 		repo.addRepository(testingRepository, ifcFilename);

@@ -32,8 +32,8 @@ public class ModelInformationTest {
 	@Before
 	public void setUp() {
 		model = new IfcModelImpl(testingRepository);
-		String ifcFilename = (Thread.currentThread().getContextClassLoader().getResource(testIfcFileName)).toString();
-		ifcFilename = ifcFilename.replace("file:/", "");
+		String ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
+		
 		repo = new RepositoriesImpl();
 		repo.addRepository(testingRepository, ifcFilename);
 		this.modelInformation = model.getExchangeFileProperties();

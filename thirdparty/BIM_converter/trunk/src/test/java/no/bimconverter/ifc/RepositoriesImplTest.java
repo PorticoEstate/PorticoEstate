@@ -68,7 +68,7 @@ public class RepositoriesImplTest {
 	
 	@Test(expected=RepositoryExceptionUc.class)
 	public void testAddIfcAgain() {
-		String ifcFilename = Thread.currentThread().getContextClassLoader().getResource(testIfcFileName).toString();
+		String ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();//Thread.currentThread().getContextClassLoader().getResource(testIfcFileName).toString();
 		// OS specific!
 		ifcFilename = ifcFilename.replace("file:/", "");
 		assertTrue(repo.addRepository(testingRepository, ifcFilename));
@@ -87,7 +87,7 @@ public class RepositoriesImplTest {
 	
 	@Test
 	public void testAddIvalidIfcMixedCase() {
-		String ifcFilename = Thread.currentThread().getContextClassLoader().getResource(invalidIfcFileNameMixedCase).toString();
+		String ifcFilename = getClass().getResource( "/" +invalidIfcFileNameMixedCase ).toString();//Thread.currentThread().getContextClassLoader().getResource(invalidIfcFileNameMixedCase).toString();
 		
 		// OS specific!
 		ifcFilename = ifcFilename.replace("file:/", "");
@@ -107,10 +107,8 @@ public class RepositoriesImplTest {
 	
 	@Test
 	public void testAddIvalidIfcUpperCase() {
-		String ifcFilename = Thread.currentThread().getContextClassLoader().getResource(invalidIfcFileNameUpperCase).toString();
+		String ifcFilename = getClass().getResource( "/" +invalidIfcFileNameUpperCase ).toString();//Thread.currentThread().getContextClassLoader().getResource(invalidIfcFileNameUpperCase).toString();
 		
-		// OS specific!
-		ifcFilename = ifcFilename.replace("file:/", "");
 		if(repo.checkIfRepositoryExists(testingRepository)) {
 			repo.deleteRepository(testingRepository);
 		}
