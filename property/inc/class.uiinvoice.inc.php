@@ -1965,19 +1965,25 @@
 			$id 	= phpgw::get_var('id', 'int');
 			$paid 	= phpgw::get_var('paid', 'bool');
 
+			$text = $this->bo->read_remark($id,$paid);
+			
+			$html = '';
+			if(stripos($text, '<table') )
+			{
+				$html = 1;
+			}
+			
 			$data = array
-				(
-					'remark' => $this->bo->read_remark($id,$paid)
-				);
-
-			//_debug_array($data);
+			(
+				'remark' => $text,
+				'html'	=> $html
+			);
 
 			$appname	= lang('invoice');
 			$function_msg	= lang('remark');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('remark' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function consume()

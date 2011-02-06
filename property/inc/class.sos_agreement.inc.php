@@ -81,6 +81,7 @@
 				$member_id		= isset($data['member_id']) && $data['member_id'] ? $data['member_id'] : 0;
 				$s_agreement_id	= isset($data['s_agreement_id'])?$data['s_agreement_id']:'';
 				$detail			= isset($data['detail'])?$data['detail']:'';
+				$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			}
 
 			$choice_table = 'phpgw_cust_choice';
@@ -94,9 +95,11 @@
 				$attribute_filter = " location_id = {$location_id}";
 
 				$paranthesis ='(';
-				$joinmethod = " $this->join $category_table ON ( $entity_table.category =$category_table.id))";
+				$joinmethod = " {$this->join} {$category_table} ON ( $entity_table.category =$category_table.id))";
 				$paranthesis .='(';
-				$joinmethod .= " $this->left_join fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id))";
+				$joinmethod .= " {$this->left_join} fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id))";
+				$paranthesis .='(';
+				$joinmethod .= " {$this->left_join} fm_s_agreement_detail ON ( fm_s_agreement.id = fm_s_agreement_detail.agreement_id))";
 
 				$cols = $entity_table . ".*,$category_table.descr as category, org_name";
 
@@ -234,7 +237,7 @@
 				$uicols['import'][]			= false;
 			}
 
-			$sql = "SELECT $cols FROM $paranthesis $entity_table $joinmethod";
+			$sql = "SELECT DISTINCT $cols FROM $paranthesis $entity_table $joinmethod";
 
 			$i	= count($uicols['name']);
 
@@ -349,30 +352,39 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$query_arr = array();
-				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter");
-
-				while ($this->db->next_record())
+				if($p_num)
 				{
-					if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH')
-					{
-						$query_arr[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
-					}
-					else
-					{
-						$query_arr[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
-					}
-				}
-
-				if (isset($query_arr[0]))
-				{
-					$querymethod = " $where (" . implode (' OR ',$query_arr) . ')';
+					$query=explode(".",$query);
+					$querymethod = " {$where} (fm_s_agreement_detail.p_entity_id='" . (int)$query[1] . "' AND fm_s_agreement_detail.p_cat_id='" . (int)$query[2] . "' AND fm_s_agreement_detail.p_num='{$query[3]}')";
 					$where = 'AND';
+				}
+				else
+				{
+					$query_arr = array();
+					$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter");
+
+					while ($this->db->next_record())
+					{
+						if($this->db->f('datatype')=='V' || $this->db->f('datatype')=='email' || $this->db->f('datatype')=='CH')
+						{
+							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
+						}
+						else
+						{
+							$query_arr[]= "$entity_table." . $this->db->f('column_name') . " = '$query'";
+						}
+					}
+
+					if (isset($query_arr[0]))
+					{
+						$querymethod = " $where (" . implode (' OR ',$query_arr) . ')';
+						$where = 'AND';
+					}
 				}
 			}
 
 			$sql .= " $filtermethod $querymethod";
-			//echo $sql;
+//			echo $sql;
 
 			$this->db2->query($sql,__LINE__,__FILE__);
 			$this->total_records = $this->db2->num_rows();
@@ -464,7 +476,7 @@
 				}
 				$j++;
 			}
-			//html_print_r($s_agreement_list);
+//_debug_array($s_agreement_list);
 			return $s_agreement_list;
 		}
 

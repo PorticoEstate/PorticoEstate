@@ -179,9 +179,9 @@
 			return $documents;
 		}
 
-		function get_files_at_location($location_code)
+		function get_files_at_location($data)
 		{
-			return $this->so->get_files_at_location($location_code);
+			return $this->so->get_files_at_location($data);
 		}
 
 

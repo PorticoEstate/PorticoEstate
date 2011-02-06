@@ -89,6 +89,7 @@
 			$this->vendor_id			= $this->bo->vendor_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->member_id			= $this->bo->member_id;
+			$this->p_num				= $this->bo->p_num;
 		}
 
 		function save_sessiondata()
@@ -189,7 +190,8 @@
 						'filter'	=>$this->filter,
 						'query'		=>$this->query,
 						'role'		=> $this->role,
-						'member_id'	=> $this->member_id
+						'member_id'	=> $this->member_id,
+						'p_num'		=> $this->p_num
 					));
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uis_agreement.index',"
@@ -198,6 +200,7 @@
 					."cat_id: '{$this->cat_id}',"
 					."filter:'{$this->filter}',"
 					."query:'{$this->query}',"
+					."p_num: '{$this->p_num}',"
 					."role:'{$this->role}',"
 					."member_id:'{$this->member_id}'";
 
@@ -295,7 +298,7 @@
 								( // TEXT INPUT
 									'name'     => 'query',
 									'id'     => 'txt_query',
-									'value'    => '',//$query,
+									'value'    => $this->query,
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
@@ -341,7 +344,7 @@
 			}
 
 			$list = $this->bo->read();
-
+//_debug_array($list);
 			$uicols	= $this->bo->uicols;
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);

@@ -127,15 +127,15 @@
 			}
 
 			$custom_fields = false;
-			if($GLOBALS['phpgw']->locations->get_attrib_table('property', $this->location_info['acl_location']))
+			if($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
 				$custom_fields = true;
 				$choice_table = 'phpgw_cust_choice';
 				$attribute_table = 'phpgw_cust_attribute';
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->location_info['acl_location']);
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
 				$attribute_filter = " location_id = {$location_id}";
 
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"])?$GLOBALS['phpgw_info']['user']['preferences']['property']["generic_columns_{$this->type}_{$this->type_id}"]:'';
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"]:'';
 
 				$user_column_filter = '';
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
@@ -248,7 +248,7 @@
 						}
 					}
 
-					if (isset($_querymethod) AND is_array($_querymethod))
+					if (isset($_querymethod) && is_array($_querymethod) && $_querymethod)
 					{
 						$querymethod .= " $where (" . implode (' OR ',$_querymethod) . ')';
 					}
@@ -370,6 +370,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('part of town'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::location::town',
 /*
@@ -402,6 +403,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::project_group'
 					);
@@ -423,6 +425,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('dimb'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_dimb'
 					);
@@ -444,6 +447,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('dimd'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_dimd'
 					);
@@ -465,6 +469,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_tax'
 					);
@@ -486,6 +491,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::voucher_cats'
 					);
@@ -507,6 +513,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::voucher_type'
 					);
@@ -528,6 +535,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tender'
 					);
@@ -554,6 +562,7 @@
 							'edit_msg'	=> lang('edit'),
 							'add_msg'	=> lang('add'),
 							'name'		=> '',
+							'acl_app' 			=> 'property',
 							'acl_location' => '.admin',
 							'menu_selection' => "admin::property::location::location::category_{$type_id}"
 						);
@@ -580,6 +589,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::owner::owner_cats'
 					);
@@ -601,6 +611,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('tenant category'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tenant::tenant_cats'
 					);
@@ -622,6 +633,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('vendor category'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::vendor::vendor_cats'
 					);
@@ -675,6 +687,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('vendor'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.vendor',
 						'menu_selection' => 'property::invoice::vendor',
 						'default'			=> array
@@ -718,6 +731,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('owner'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.owner',
 						'menu_selection' => 'admin::property::owner',
 						'default'			=> array
@@ -762,6 +776,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('tenant'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.tenant',
 						'menu_selection' => 'admin::property::tenant',
 						'default'			=> array
@@ -790,6 +805,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('district'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::district'
 					);
@@ -811,6 +827,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('streetaddress'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::location::street'
 					);
@@ -832,6 +849,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::agreement::service_agree_cats'
 					);
@@ -853,6 +871,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::tenant::claims_cats'
 					);
@@ -874,6 +893,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> '',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::workorder_detail'
 					);
@@ -895,6 +915,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> 'condition type',
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::request_condition'
 					);
@@ -916,6 +937,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('authorities demands'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::authorities_demands',
 						'default'			=> array
@@ -958,6 +980,7 @@
 						'edit_msg'	=> lang('edit'),
 						'add_msg'	=> lang('add'),
 						'name'		=> lang('budget account group'),
+						'acl_app' 			=> 'property',
 						'acl_location' => '.admin',
 						'menu_selection' => 'admin::property::accounting::accounting_cats'
 					);
@@ -992,6 +1015,7 @@
 						'edit_msg'			=> lang('edit status'),
 						'add_msg'			=> lang('add status'),
 						'name'				=> lang('project status'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::project_status'
 					);
@@ -1037,6 +1061,7 @@
 						'edit_msg'			=> lang('edit status'),
 						'add_msg'			=> lang('add status'),
 						'name'				=> lang('workorder status'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::workorder_status'
 					);
@@ -1058,6 +1083,7 @@
 						'edit_msg'			=> lang('edit status'),
 						'add_msg'			=> lang('add status'),
 						'name'				=> lang('request status'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::request_status'
 					);
@@ -1079,6 +1105,7 @@
 						'edit_msg'			=> lang('edit status'),
 						'add_msg'			=> lang('add status'),
 						'name'				=> lang('agreement status'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::agreement::agreement_status'
 					);
@@ -1100,6 +1127,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('building part'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::building_part'
 					);
@@ -1121,6 +1149,7 @@
 						'edit_msg'			=> lang('edit status'),
 						'add_msg'			=> lang('add status'),
 						'name'				=> lang('document status'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::document_status'
 					);
@@ -1142,6 +1171,7 @@
 						'edit_msg'			=> lang('edit unit'),
 						'add_msg'			=> lang('add unit'),
 						'name'				=> lang('unit'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::unit'
 					);
@@ -1211,6 +1241,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('budget account'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.b_account',
 						'menu_selection'	=> 'property::invoice::budget_account',
 						'default'			=> array
@@ -1240,6 +1271,7 @@
 						'edit_msg'			=> lang('edit process code'),
 						'add_msg'			=> lang('add process code'),
 						'name'				=> lang('process code'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::accounting::process_code',
 						'default'			=> array
@@ -1276,6 +1308,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('order_dim1'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::order_dim1'
 					);
@@ -1303,6 +1336,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('branch'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::branch'
 					);
@@ -1331,6 +1365,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('branch'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::key_location'
 					);
@@ -1366,6 +1401,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('Async services'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::async'
 					);
@@ -1407,6 +1443,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('event action'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::event_action',
 						'default'			=> array
@@ -1480,11 +1517,12 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('event action'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket_status'
 					);
 				break;
-
+//START HELPDESK - APP
 			case 'helpdesk_status':
 				// the helpdesk app
 				$info = array
@@ -1540,10 +1578,13 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('event action'),
+						'acl_app' 			=> 'helpdesk',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::helpdesk::ticket_status'
 					);
 				break;
+
+//END HELPDESK - APP
 			case 'pending_action_type':
 				$info = array
 					(
@@ -1567,6 +1608,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('Pending action type'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::action_type'
 					);
@@ -1603,6 +1645,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('order template'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.ticket.order',
 						'menu_selection'	=> 'property::helpdesk::order_template',
 						'default'			=> array
@@ -1645,6 +1688,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('response template'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.ticket',
 						'menu_selection'	=> 'property::helpdesk::response_template',
 						'default'			=> array
@@ -1706,6 +1750,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('responsibility role'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::responsibility_role',
 						'default'			=> array
@@ -1720,7 +1765,6 @@
 				break;
 
 			case 'custom_menu_items':
-
 				$info = array
 					(
 						'table' 			=> 'fm_custom_menu_items',
@@ -1763,6 +1807,7 @@
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
 						'name'				=> lang('custom menu items'),
+						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::custom_menu_items',
 						'default'			=> array
@@ -1775,7 +1820,76 @@
 					);
 
 				break;
+// START BOOKING TABLES
+			case 'bb_office':
+				$info = array
+					(
+						'table' 			=> 'bb_office',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=>  $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
+						'acl_app' 			=> 'booking',
+						'acl_location' 		=> '.office',
+						'menu_selection'	=> 'booking::settings::office',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
 
+				break;
+			case 'bb_office_user':
+				$info = array
+					(
+						'table' 			=> 'bb_office_user',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name'			=> 'office',
+								'descr'			=> $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
+								'type'			=> 'select',
+								'filter'		=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'bb_office',	'selected' => '##office##')
+								)
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=>  $GLOBALS['phpgw']->translation->translate('office user', array(), false, 'booking'),
+						'acl_app' 			=> 'booking',
+						'acl_location' 		=> '.office.user',
+						'menu_selection'	=> 'booking::settings::office::office_user',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						),
+						'check_grant'		=> false
+					);
+
+				break;
+
+// END BOOKING TABLES
 			default:
 				$receipt = array();
 				$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
