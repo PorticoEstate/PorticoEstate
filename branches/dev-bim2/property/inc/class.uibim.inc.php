@@ -125,7 +125,6 @@ class property_uibim implements uibim {
 			$xmlResult = $this->getFacilityManagementXmlFromIfc($ifcFileWithRealPath);
 			$bobimitem = new bobimitem_impl();
 			$bobimitem->setSobimmodelinformation($sobimmodelinformation);
-			$bobimitem->setModelId($modelId);
 			$bobimitem->setIfcXml($xmlResult);
 			$bobimitem->setSobimitem(new sobimitem_impl($this->db));
 			$bobimitem->setSobimtype(new sobimtype_impl($this->db));
