@@ -29,7 +29,7 @@ div.bimObject dl dd {
 
 div.showModels {
 	width:100%;
-	margin:20px;
+	/*padding:20px;*/
 }
 div.showModels table {
 	width:100%;
@@ -40,5 +40,9 @@ div.showModels #modelsLoader  {
     margin-bottom:0px;
     padding:0px;
 
+}
+div.showModels .guid {
+	color:blue;
+	text-decoration:underline;
 }
 
