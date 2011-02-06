@@ -80,12 +80,12 @@
 		
 		if (typeof YUI != 'undefined') {
 		YUI().use('node-base', function(Y) {
-		//Y.on("load",  getModelList);
+		Y.on("load",  getModelList);
 		//Y.on("load", doDelegateDeleteModel);
 		doDelegateDeleteModel();
 		Y.on("load", doDelegateLoadModel);
 		Y.on("load", doDelegateModelInfo);
-		
+		Y.on("load", doDelegateModelView);
 		}); 
 		}
 	</script>
