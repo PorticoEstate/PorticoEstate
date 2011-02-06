@@ -19,7 +19,7 @@ interface sobimitem extends sobim {
 	public function updateBimItem($bimItem);
 	public function getBimItemAttributeValue($bimItemGuid, $attribute);
 	public function retrieveItemsByModelId();
-	public function setModelId();
+	public function setModelId($modelId);
 }
 class sobimitem_impl implements sobimitem
 {
@@ -160,11 +160,13 @@ class sobimitem_impl implements sobimitem
 			}*/
 		}
 	}
-	
-	public function retrieveItemsByModelId($modelId) {
+	/*
+	 * Needs the modelId field set
+	 */
+	public function retrieveItemsByModelId() {
 		if(empty($this->modelId)) {
 			throw new InvalidArgumentException("Missing modelId!");
-		}
+		} 
 		$itemTable = self::bimItemTable;
 		$typeTable = self::bimTypeTable;
 		$bimItems = array();
@@ -176,9 +178,10 @@ class sobimitem_impl implements sobimitem
 			} else {
 				while($this->db->next_record())
 				{
-					$bimItem = new BimItem($this->db->f('id'),$this->db->f('guid'));
-					array_push($bimItems, $bimModel);
+					$bimItem = new BimItem($this->db->f('id'),$this->db->f('guid'),$this->db->f('type'));
+					array_push($bimItems, $bimItem);
 				}
+				return $bimItems;
 			}
 		} catch (Exception $e) {
 			throw $e;
@@ -188,7 +191,9 @@ class sobimitem_impl implements sobimitem
 	public function setModelId($modelId) {
 		$this->modelId = $modelId;
 	}
-
+	public function getModelId() {
+		return $this->modelId;
+	}
 
 	
 }
