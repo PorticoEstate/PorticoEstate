@@ -668,6 +668,7 @@
 				}
 			}
 
+			$acl_add = $GLOBALS['phpgw']->acl->check('.document', PHPGW_ACL_ADD, 'property');
 			$documents = array();
 			if($location_code)
 			{
@@ -763,7 +764,7 @@
 
 //--add node
 
-				if(count($doc_types) == 1) // node
+				if($acl_add && count($doc_types) == 1) // node
 				{
 					$level = $level+1;
 					if($level == $y)
