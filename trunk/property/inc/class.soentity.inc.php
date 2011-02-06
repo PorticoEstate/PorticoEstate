@@ -567,12 +567,22 @@
 
 		function read_single($data,$values = array())
 		{
-			$entity_id =$data['entity_id'];
-			$cat_id =$data['cat_id'];
-			$id =$data['id'];
+			$entity_id	= (int)$data['entity_id'];
+			$cat_id		= (int)$data['cat_id'];
+			$id			= (int)$data['id'];
+			$num		= isset($data['num']) && $data['num'] ? $data['num'] : '';
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 
-			$this->db->query("SELECT * FROM $table WHERE id =$id");
+			if($num)
+			{
+				$filtermethod = "WHERE num = '{$num}'";
+			}
+			else
+			{
+				$filtermethod = "WHERE id = {$id}";
+			}
+			
+			$this->db->query("SELECT * FROM {$table} {$filtermethod}");
 
 			if($this->db->next_record())
 			{

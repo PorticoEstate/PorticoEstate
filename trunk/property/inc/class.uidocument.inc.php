@@ -534,9 +534,6 @@
 
 			$p_num = phpgw::get_var('p_num');
 
-			$location = $this->bo->read_location_data($location_code);
-			//_debug_array($location);
-
 			if($this->cat_id)
 			{
 				$entity_data[$this->entity_id]['p_num']=$p_num;
@@ -546,9 +543,15 @@
 				$category = $this->boadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 				$lookup_entity	= $this->bocommon->get_lookup_entity('document');
 				$appname_sub	= $entity['name'];
+				$_values	= execMethod('property.soentity.read_single',array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id, 'num' => $p_num));
+
+				$location = $this->bo->read_location_data($_values['location_code']);
+				$location_code = $_values['location_code'];
+				unset($_values);
 			}
 			else
 			{
+				$location = $this->bo->read_location_data($location_code);
 				$appname_sub	= lang('location');
 			}
 
@@ -1096,6 +1099,15 @@
 					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
 				}
 
+				if(phpgw::get_var('p_num'))
+				{
+					$_values	= execMethod('property.soentity.read_single',array('entity_id'=>$p_entity_id,'cat_id'=>$p_cat_id, 'num' => phpgw::get_var('p_num')));
+	
+					$location = $this->bo->read_location_data($_values['location_code']);
+					$location_code = $_values['location_code'];
+					unset($_values);
+				}
+
 				if($location_code)
 				{
 					$values['location_data'] = $this->bolocation->read_single($location_code,array('view' => true));
@@ -1394,12 +1406,12 @@
 					'lang_no_cat'					=> lang('Select category'),
 					'lang_cat_statustext'			=> lang('Select the category the document belongs to. To do not use a category select NO CATEGORY'),
 					'value_cat_id'					=> $values['doc_type'],
-					'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[doc_type]','selected' => $values['doc_type'])),
+					'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[doc_type]','selected' => $values['doc_type']?$values['doc_type']:$this->doc_type)),
 					'lang_coordinator'				=> lang('Coordinator'),
 					'lang_user_statustext'			=> lang('Select the coordinator the document belongs to. To do not use a category select NO USER'),
 					'select_user_name'				=> 'values[coordinator]',
 					'lang_no_user'					=> lang('Select coordinator'),
-					'user_list'						=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator'],$this->acl_location),
+					'user_list'						=> $this->bocommon->get_user_list_right2('select',4,$values['coordinator']?$values['coordinator']:$this->account,$this->acl_location),
 
 					'status_list'					=> $this->bo->select_status_list('select',$values['status']),
 					'status_name'					=> 'values[status]',

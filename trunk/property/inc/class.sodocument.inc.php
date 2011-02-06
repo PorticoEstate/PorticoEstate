@@ -646,10 +646,37 @@
 		 * @return array parent and children
 		 */
 
-		function get_files_at_location($location_code)
+		function get_files_at_location($data)
 		{
+			$location_code = isset($data['location_code']) ? $data['location_code'] : '';
+			$entity_id = (int)$data['entity_id'];
+			$cat_id = (int)$data['cat_id'];
+			$num = $data['num'];
+
+			if( !$location_code )
+			{
+				if( !$entity_id  || !$cat_id || !$num)
+				{
+					throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
+				}
+			}
+			else if( !$entity_id  || !$cat_id || !$num)
+			{
+				if( !$location_code)
+				{
+					throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
+				}
+			}
+
 			$documents = array();
-			$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%'";
+			if($location_code)
+			{
+				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code {$this->like} '$location_code%' AND p_num IS NULL";
+			}
+			else
+			{
+				$sql = "SELECT count(*) as hits FROM fm_document WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$num}'";
+			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			if($this->db->next_record())
 			{
@@ -660,7 +687,10 @@
 				$cache_x_at_y[$y] = $x;
 				$documents[$x] = array
 					(
-						'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code)),
+						'link'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code,
+															'entity_id' => $entity_id,
+															'cat_id'	=> $cat_id,
+															'p_num'		=> $num)),
 						'text'		=> lang('documents') . ' [' . $hits . ']:',
 						'descr'		=> lang('Documentation'),
 						'level'		=> 0
@@ -668,16 +698,27 @@
 			}
 			else
 			{
-				return $documents;
+//				return $documents;
 			}
 
 			$categories = $this->cats->return_sorted_array(0, false);
+
+			$location_filter = 'WHERE 1=1';
+
+			if($location_code)
+			{
+				$location_filter = "WHERE location_code {$this->like} '{$location_code}%' AND p_num IS NULL";
+			}
+			else
+			{
+				$location_filter = "WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$num}'";
+			}
 
 			foreach ($categories as $category)
 			{
 				$doc_types = $this->get_sub_doc_types($category['id']);
 
-				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code $this->like '$location_code%' AND category IN (". implode(',', $doc_types) . ')';
+				$sql = "SELECT count(*) as hits FROM fm_document {$location_filter} AND category IN (". implode(',', $doc_types) . ')';
 				$this->db->query($sql,__LINE__,__FILE__);
 				$this->db->next_record();
 				$hits = (int) $this->db->f('hits');
@@ -707,15 +748,61 @@
 				$map .= '[]'; 
 
 				eval($map . ' =array('
-					.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uidocument.list_doc','location_code'=> $location_code, 'doc_type'=> $category['id'])) . "',\n"
+					.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'property.uidocument.list_doc',
+																				'location_code'	=> $location_code,
+																				'doc_type'		=> $category['id'],
+																				'entity_id' 	=> $entity_id,
+																				'cat_id'		=> $cat_id,
+																				'p_num'			=> $num)) . "',\n"
 					.	"'text'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
 					.	"'descr'		=> '" . lang('Documentation') . "',\n"
 					.	"'level'		=> "  . ($category['level']+1) . "\n"
 					. ');');
 
 				$cache_x_at_y[$y] = $x;
-			}
 
+//--add node
+
+				if(count($doc_types) == 1) // node
+				{
+					$level = $level+1;
+					if($level == $y)
+					{
+						$x++;
+					}
+					else if($level < $y )
+					{
+						$x = $cache_x_at_y[$level]+1;
+					}
+					else if($level > $y )
+					{
+						$x = 0;
+					}
+					$y = $level;
+	
+					$map = '$documents'; 
+					for ($i = 0; $i < $level ; $i++)
+					{
+						$map .= '[' . $cache_x_at_y[$i] ."]['children']"; 
+					}
+
+					$map .= '[]'; 
+
+					eval($map . ' =array('
+						.	"'link'	=> '" . $GLOBALS['phpgw']->link('/index.php',array('menuaction'	=> 'property.uidocument.edit',
+																				'location_code'	=> $location_code,
+																				'doc_type'		=> $category['id'],
+																				'p_entity_id' 	=> $entity_id,
+																				'p_cat_id'		=> $cat_id,
+																				'p_num'			=> $num)) . "',\n"
+						.	"'text'			=> '" . lang('add') . "',\n"
+						.	"'descr'		=> '" . lang('Add Document') . "',\n"
+						.	"'level'		=> "  . $y . "\n"
+						. ');');
+
+					$cache_x_at_y[$y] = $x;
+				}
+			}
 			return $documents;
 		}
 
