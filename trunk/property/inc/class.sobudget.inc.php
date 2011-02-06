@@ -419,6 +419,7 @@
 
 			$this->db->transaction_begin();
 
+/*
 			if($budget['district_id'])
 			{
 				$district_filter =  "AND district_id='{$budget['district_id']}'";
@@ -431,7 +432,7 @@
 			{
 				$receipt['error'][] = array('msg'=>lang('budget %1 already saved',$this->db->f('id')));
 			}
-
+*/
 			if(!$receipt['error'])
 			{
 				$id = $this->db->next_id('fm_budget');
