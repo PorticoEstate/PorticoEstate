@@ -277,35 +277,33 @@
 		}
 		function get_lookup_entity($location)
 		{
-			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup $this->join fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='lookup' AND location='$location'  ");
-
-			$i = 0;
-
+			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup {$this->join} fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='lookup' AND location='{$location}'  ");
+			$entity = array();
 			while ($this->db->next_record())
 			{
-				$entity[$i]['id']				= $this->db->f('entity_id');
-				$entity[$i]['name']				= $this->db->f('name');
-				$i++;
+				$entity[] = array
+				(
+					'id'	=> $this->db->f('entity_id'),
+					'name'	=> $this->db->f('name',true)
+				);
 			}
 			return $entity;
 		}
 
 		function get_start_entity($location)
 		{
-			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup $this->join fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='start' AND location='$location'  ");
+			$this->db->query("SELECT entity_id,name FROM fm_entity_lookup {$this->join} fm_entity on fm_entity_lookup.entity_id=fm_entity.id WHERE type='start' AND location='{$location}'  ");
 
-			$i = 0;
+			$entity = array();
 			while ($this->db->next_record())
 			{
-				$entity[$i]['id']				= $this->db->f('entity_id');
-				$entity[$i]['name']				= $this->db->f('name');
-				$i++;
+				$entity[] = array
+				(
+					'id'	=> $this->db->f('entity_id'),
+					'name'	=> $this->db->f('name',true)
+				);
 			}
-
-			if (isset($entity))
-			{
-				return $entity;
-			}
+			return $entity;
 		}
 
 		function increment_id($name)
