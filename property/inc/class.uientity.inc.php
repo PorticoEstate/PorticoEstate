@@ -1750,14 +1750,27 @@
  */			
 			if ($id)
 			{
-
-				$document = CreateObject('property.sodocument');
-				$documents = $document->get_files_at_location(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'num'=>$values['num']));
-
-				if($documents)
+				$get_docs = false;
+				$check_doc = $this->bocommon->get_lookup_entity('document');
+				foreach ($check_doc as $_check)
 				{
-					$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
-					$documents = json_encode($documents);				
+					if ($_check['id'] == $this->entity_id)
+					{
+						$get_docs = true;
+						break;
+					}
+				}
+
+				if($get_docs)
+				{
+					$document = CreateObject('property.sodocument');
+					$documents = $document->get_files_at_location(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'num'=>$values['num']));
+
+					if($documents)
+					{
+						$tabs['document']	= array('label' => lang('document'), 'link' => '#document');
+						$documents = json_encode($documents);				
+					}
 				}
 
 				$related = $this->bo->read_entity_to_link(array('entity_id'=>$this->entity_id,'cat_id'=>$this->cat_id,'id'=>$values['num']));
