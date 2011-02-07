@@ -162,6 +162,9 @@
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['sortable'][]		= true;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols_return[] 				= 'num';
 				$uicols['input_type'][]		= 'text';
@@ -171,6 +174,9 @@
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['sortable'][]		= true;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols_return[] 				= 'id';
 				$uicols['input_type'][]		= 'hidden';
@@ -180,6 +186,9 @@
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= '';
 				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				if($lookup)
 				{
@@ -192,6 +201,9 @@
 					$uicols['align'][] 			= '';
 					$uicols['datatype'][]		= '';
 					$uicols['sortable'][]		= false;
+					$uicols['exchange'][]		= false;
+					$uicols['formatter'][]		= '';
+					$uicols['classname'][]		= '';
 				}
 
 				$cols .= ", {$entity_table}.user_id";
@@ -203,12 +215,15 @@
 				$uicols['align'][] 			= '';
 				$uicols['datatype'][]		= 'user';
 				$uicols['sortable'][]		= false;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
 
 				$cols_return_extra[]= array
-					(
-						'name'		=> 'user_id',
-						'datatype'	=> 'user'
-					);
+				(
+					'name'		=> 'user_id',
+					'datatype'	=> 'user'
+				);
 
 				// Don't work with LDAP - where phpgw_accounts is empty
 				//			$joinmethod = " $this->join phpgw_accounts ON ($entity_table.user_id = phpgw_accounts.account_id))";
