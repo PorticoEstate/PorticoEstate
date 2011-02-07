@@ -375,6 +375,8 @@
 						}
 					}
 
+					$query_arr[]= "location_code {$this->like} '$query%'";
+
 					if (isset($query_arr[0]))
 					{
 						$querymethod = " $where (" . implode (' OR ',$query_arr) . ')';
