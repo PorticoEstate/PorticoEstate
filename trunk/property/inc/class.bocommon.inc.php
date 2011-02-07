@@ -1175,17 +1175,17 @@
 		{
 			//_debug_array($data);
 
-			$cols 				= (isset($data['cols'])?$data['cols']:'');
-			$entity_table 		= (isset($data['entity_table'])?$data['entity_table']:'');
-			$cols_return 		= (isset($data['cols_return'])?$data['cols_return']:'');
-			$uicols 			= (isset($data['uicols'])?$data['uicols']:'');
-			$joinmethod 		= (isset($data['joinmethod'])?$data['joinmethod']:'');
-			$paranthesis 		= (isset($data['paranthesis'])?$data['paranthesis']:'');
-			$lookup 			= (isset($data['lookup'])?$data['lookup']:'');
-			$location_level 	= (isset($data['location_level'])?$data['location_level']:'');
-			$no_address 		= (isset($data['no_address'])?$data['no_address']:'');
-			$uicol_address		= (isset($data['uicol_address'])?$data['uicol_address']:'');
-			$force_location		= (isset($data['force_location'])?$data['force_location']:'');
+			$cols 				= isset($data['cols'])?$data['cols']:'';
+			$entity_table 		= isset($data['entity_table'])?$data['entity_table']:'';
+			$cols_return 		= isset($data['cols_return']) && $data['cols_return'] ? $data['cols_return']:array();
+			$uicols 			= isset($data['uicols']) && $data['uicols'] ? $data['uicols']: array();
+			$joinmethod 		= isset($data['joinmethod'])?$data['joinmethod']:'';
+			$paranthesis 		= isset($data['paranthesis'])?$data['paranthesis']:'';
+			$lookup 			= isset($data['lookup'])?$data['lookup']:'';
+			$location_level 	= isset($data['location_level'])?$data['location_level']:'';
+			$no_address 		= isset($data['no_address'])?$data['no_address']:'';
+			$uicol_address		= isset($data['uicol_address'])?$data['uicol_address']:'';
+			$force_location		= isset($data['force_location'])?$data['force_location']:'';
 			$cols_extra 		= array();
 			$cols_return_lookup	= array();
 
@@ -1220,7 +1220,7 @@
 			}
 			$this->type_id	= $type_id;
 
-/*
+
 			for ($i=0; $i<$type_id; $i++)
 			{
 				$uicols['input_type'][]		= 'text';
@@ -1232,9 +1232,9 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
-				$uicols['sortable'][]		= '';
+				$uicols['sortable'][]		= $i === 0;
 			}
-*/
+
 			unset($soadmin_location);
 
 			for ($i=0; $i< $this->type_id; $i++)
