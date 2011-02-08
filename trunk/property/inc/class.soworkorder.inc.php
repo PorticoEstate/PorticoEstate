@@ -369,7 +369,8 @@
 			{
 				if($order == 'workorder_id')
 				{
-					$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";	
+	//				$ordermethod = " ORDER BY fm_workorder.project_id {$sort},fm_workorder.id {$sort}";	
+					$ordermethod = " ORDER BY fm_workorder.id {$sort}";	
 				}
 				else
 				{
@@ -378,7 +379,8 @@
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY fm_workorder.project_id DESC,fm_workorder.id DESC';
+	//			$ordermethod = ' ORDER BY fm_workorder.project_id DESC,fm_workorder.id DESC';
+				$ordermethod = ' ORDER BY fm_workorder.id DESC';
 			}
 
 			$where= 'WHERE';
