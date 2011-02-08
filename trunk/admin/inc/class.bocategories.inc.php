@@ -138,9 +138,9 @@
 			return $this->cats->formatted_list($data);
 		}
 
-		function delete($data)
+		function delete($cat_id, $drop_subs = False, $modify_subs = False)
 		{
-			$this->cats->delete($data);
+			$this->cats->delete($cat_id, $drop_subs, $modify_subs);
 		}
 
 		function check_values($values)
