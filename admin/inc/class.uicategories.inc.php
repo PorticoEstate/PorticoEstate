@@ -394,7 +394,7 @@
 			$appname = phpgw::get_var('appname');
 			$location= phpgw::get_var('location');
 			$global_cats  = phpgw::get_var('global_cats');
-
+			$receipt = array();
 			$link_data = array
 			(
 				'menuaction'  => 'admin.uicategories.index',
@@ -425,8 +425,7 @@
 							$GLOBALS['phpgw']->redirect_link('/index.php',$link_data);
 							break;
 						default:
-							$error		= array('Please choose one of the methods to handle the subcategories');
-							$msgbox_error	= $GLOBALS['phpgw']->common->error_list($error);
+							$receipt['error'][]=array('msg'=>'Please choose one of the methods to handle the subcategories');
 							break;
 					}
 				}
@@ -459,10 +458,8 @@
 
 			if ($apps_cats)
 			{
-				$error = array('This category is currently being used by applications as a parent category',
-								'You will need to reassign these subcategories before you can delete this category');
-
-				$msgbox_error	= $GLOBALS['phpgw']->common->error_list($error);
+				$receipt['message'][]=array('msg'=>'This category is currently being used by applications as a parent category');
+				$receipt['message'][]=array('msg'=>'You will need to reassign these subcategories before you can delete this category');
 				$show_done		= 'yes';
 			}
 			else
@@ -495,11 +492,12 @@
 			);
 			$link_data['menu_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 			$data = array
 			(
 				'form_action'			=> $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'show_done'				=> $show_done,
-				'msgbox_data'			=> $msgbox_error,
+				'msgbox_data'			=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'lang_delete'			=> lang('delete'),
 				'subs'					=> $subs,
 				'lang_confirm_msg'		=> $confirm_msg,

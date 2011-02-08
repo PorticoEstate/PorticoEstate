@@ -834,16 +834,29 @@
 				}
 			}
 
+			$this->db->query('SELECT cat_id FROM phpgw_categories WHERE cat_id=' . $cat_id . $subdelete . " AND cat_appname='"
+							. $this->app_name . "'",__LINE__,__FILE__);
+			$_cats = array();
+			while ($this->db->next_record())
+			{
+				$_cats[] = $this->db->f('cat_id');			
+			}
+
 			$this->db->query('DELETE FROM phpgw_categories WHERE cat_id=' . $cat_id . $subdelete . " AND cat_appname='"
 							. $this->app_name . "'",__LINE__,__FILE__);
-			$args = array
-			(
-				'cat_id'	=> $cat_id,
-				'cat_owner'	=> $this->account_id,
-				'location'	=> 'cat_delete',
-				'location_id' => $this->location_id
-			);
-			$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
+			
+			foreach($_cats as $_cat_id)
+			{
+				$args = array
+				(
+					'cat_id'	=> $_cat_id,
+					'cat_owner'	=> $this->account_id,
+					'location'	=> 'cat_delete',
+					'location_id' => $this->location_id
+				);
+
+				$GLOBALS['phpgw']->hooks->single($args, $this->app_name);
+			}
 		}
 
 		/**
