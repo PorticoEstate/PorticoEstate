@@ -575,14 +575,7 @@
 			$values		= phpgw::get_var('values');
 
 			$values_attribute  = phpgw::get_var('values_attribute');
-			if(is_array($values_attribute))
-			{
-				foreach($values_attribute as &$_attr)
-				{
-					$_attr['value'] = phpgw::get_var($_attr['name']);
-				}
-			}
-			
+
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('generic','attributes_form'));
@@ -633,9 +626,15 @@
 					{
 						foreach ($values_attribute as $attribute )
 						{
+
 							if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
 							{
 								$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+							}
+	
+							if(isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && ! ctype_digit($attribute['value']))
+							{
+								$receipt['error'][]=array('msg'=>lang('Please enter integer for attribute %1', $attribute['input_text']));						
 							}
 						}
 					}
@@ -649,8 +648,7 @@
 					{
 						$id =	$values['id'];
 					}
-//_debug_array($values);
-//_debug_array($values_attribute);die();
+
 					if(!$receipt['error'])
 					{
 						$receipt = $this->bo->save($values,$action,$values_attribute);
@@ -662,16 +660,11 @@
 						}
 						$id = $receipt['id'];
 					}
-					else
-					{
-						unset($values['id']);
-						$id = '';
-					}
 
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type,	'type_id' => $this->type_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id' => $this->type_id));
 				}
 			}
 
@@ -734,10 +727,10 @@
 				phpgwapi_yui::tabview_setup('general_edit_tabview');
 
 				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $this->acl_location, $values['attributes']);
-
+//_debug_array($attributes_groups);die();
 				if((isset($attributes_groups[0]['id']) && $attributes_groups[0]['id'] > 0 ) || count($attributes_groups) > 1 )
 				{
-					$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
+//					$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 				}
 
 				$attributes = array();
@@ -745,8 +738,8 @@
 				{
 					if(isset($group['attributes']) && isset($tabs['general']))
 					{
-						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
-						$group['link'] = str_replace(' ', '_', $group['name']);
+//						$tabs[str_replace(' ', '_', $group['name'])] = array('label' => $group['name'], 'link' => '#' . str_replace(' ', '_', $group['name']));
+//						$group['link'] = str_replace(' ', '_', $group['name']);
 					}
 					$attributes[] = $group;
 				}
