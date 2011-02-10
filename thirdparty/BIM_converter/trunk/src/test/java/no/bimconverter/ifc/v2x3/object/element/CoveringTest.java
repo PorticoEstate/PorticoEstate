@@ -13,6 +13,7 @@ import javax.xml.bind.Marshaller;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -23,24 +24,20 @@ import no.bimconverter.ifc.v2x3.IfcModelImpl;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
-public class CoveringTest {
-	//String testingRepository = "ModelTestRepository";
-	String testingRepository = "FMHandoverRepository";
-	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	//String testIfcFileName = "sample.ifc";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
+public class CoveringTest extends IfcTestMethods{
+	
 	
 	int numberOfIfcElements = 1420;
 	int numberOfIfcModels = 0;
-	String ifcFilename = null;
-	private IfcModelImpl model;
+	
 	private Covering covering1;
 	private Covering covering2;
 	private Covering covering3;
-	Repositories repo = null;
+	
 	private List<Covering> coverings;
 	private Map<String,String> baseQuantitiesTestData;
 	private Map<String,String> baseQuantitiesCurrentData;
@@ -48,10 +45,7 @@ public class CoveringTest {
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		coverings = model.getCoverings();
 		
 		covering1 = coverings.get(0);
@@ -60,7 +54,7 @@ public class CoveringTest {
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
+		
 	}
 	
 	@Test
@@ -69,6 +63,7 @@ public class CoveringTest {
 		assertNotNull(coverings);
 	}
 	@Test
+	@Ignore
 	public void testDisplayCovering1() throws JAXBException {
 		assertNotNull(covering1);
 		JAXBContext jc = JAXBContext.newInstance(Covering.class);
@@ -154,6 +149,7 @@ public class CoveringTest {
 		assertEquals("0h$ksovXH3Jeg02dH7s8af", spatialDecompostion.getSpaces().get(0));
 	}
 	@Test
+	@Ignore
 	public void testDisplayCovering2() throws JAXBException {
 		assertNotNull(covering2);
 		JAXBContext jc = JAXBContext.newInstance(Covering.class);
@@ -242,6 +238,7 @@ public class CoveringTest {
 		assertEquals("0h$ksovXH3Jeg0w$H7s8af", spatialDecompostion.getSpaces().get(0));
 	}
 	@Test
+	@Ignore
 	public void testDisplayCovering3() throws JAXBException {
 		assertNotNull(covering3);
 		JAXBContext jc = JAXBContext.newInstance(Covering.class);

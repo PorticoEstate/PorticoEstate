@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 
@@ -19,28 +20,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ModelInformationTest {
+public class ModelInformationTest extends IfcTestMethods{
 
-	String testingRepository = "FMHandoverRepository";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
 	
-	private IfcModelImpl model;
 	private ModelInformation modelInformation;
-
-	Repositories repo = null;
-	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		String ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		this.modelInformation = model.getExchangeFileProperties();
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
+		//repo.deleteRepository(testingRepository);
 	}
 	@Test
 	public void testDisplayObject() throws JAXBException {

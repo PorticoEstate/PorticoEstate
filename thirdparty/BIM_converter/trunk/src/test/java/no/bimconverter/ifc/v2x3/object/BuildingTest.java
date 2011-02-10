@@ -17,6 +17,7 @@ import junit.framework.Assert;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -28,32 +29,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BuildingTest {
-	String testingRepository = "FMHandoverRepository";
-	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
+public class BuildingTest extends IfcTestMethods{
 	
 	int numberOfIfcElements = 1420;
 	int numberOfIfcModels = 0;
 	String ifcFilename = null;
-	private IfcModelImpl model;
+	
 	private List<Building> buildingsList;
 	Building building;
-	Repositories repo = null;
-	
+
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		buildingsList = model.getBuildings();
 		building = buildingsList.get(0);
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
 	}
 	
 	@Test

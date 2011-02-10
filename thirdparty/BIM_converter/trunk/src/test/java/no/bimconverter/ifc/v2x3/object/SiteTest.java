@@ -21,6 +21,7 @@ import jsdai.lang.SdaiTransaction;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -34,33 +35,23 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SiteTest {
+public class SiteTest extends IfcTestMethods{
 
-	//String testingRepository = "ModelTestRepository";
-	String testingRepository = "FMHandoverRepository";
-	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	//String testIfcFileName = "sample.ifc";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
 	
 	int numberOfIfcElements = 1420;
 	int numberOfIfcModels = 0;
-	String ifcFilename = null;
-	private IfcModelImpl model;
+	
+	
 	private Site site;
-	Repositories repo = null;
+	
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		site = model.getSite();
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
 	}
 	@Test
 	public void outputNewModel() throws SdaiException {
@@ -112,7 +103,7 @@ public class SiteTest {
 	@Test
 	public void testSiteAddress() {
 		Address attributes = site.getAddress();
-		assertEquals("Albrecht-Dürer-Strasse 18", attributes.getAddressLines());
+		assertEquals("Albrecht-DÃ¼rer-Strasse 18", attributes.getAddressLines());
 		assertEquals("Weimar", attributes.getTown());
 		assertEquals(null, attributes.getRegion());
 		assertEquals("99423", attributes.getPostalCode());

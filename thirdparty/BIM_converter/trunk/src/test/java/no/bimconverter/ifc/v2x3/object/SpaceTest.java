@@ -2,7 +2,7 @@ package no.bimconverter.ifc.v2x3.object;
 
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +15,7 @@ import javax.xml.bind.Marshaller;
 import jsdai.SIfc2x3.EIfcinternalorexternalenum;
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -33,12 +34,8 @@ import org.junit.Test;
 /*
  * TODO: complete testSpaceXSpatialContainer tests
  */
-public class SpaceTest {
+public class SpaceTest extends IfcTestMethods{
 
-	String testingRepository = "FMHandoverRepository";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
-	
-	private IfcModelImpl model;
 	private List<Space> spaceList;
 	private Space space1;
 	private Space space2;
@@ -49,17 +46,13 @@ public class SpaceTest {
 	private Space space7;
 	private Space space8;
 	
-	Repositories repo = null;
+	
 	private Map<String,String> baseQuantitiesTestData;
 	private Map<String,String> baseQuantitiesCurrentData;
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		String ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		spaceList = model.getSpaces();
 		space1 = spaceList.get(0);
 		space2 = spaceList.get(1);
@@ -73,7 +66,6 @@ public class SpaceTest {
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
 	}
 	
 	@Test
@@ -106,7 +98,7 @@ public class SpaceTest {
 		ClassificationItem item1 = classifications.get(0);
 		assertTrue(classifications.size() == 1);
 		assertEquals("1.5", item1.itemKey);
-		assertEquals("Speiser‰ume", item1.itemName);
+		assertEquals("Speiser√§ume", item1.itemName);
 		assertEquals("DIN277-2", item1.systemName);
 		assertEquals("2005", item1.systemEdition);
 	}
@@ -228,7 +220,7 @@ public class SpaceTest {
 		ClassificationItem item1 = classifications.get(0);
 		assertTrue(classifications.size() == 1);
 		assertEquals("3.8", item1.itemKey);
-		assertEquals("K¸chen", item1.itemName);
+		assertEquals("K√ºchen", item1.itemName);
 		assertEquals("DIN277-2", item1.systemName);
 		assertEquals("2005", item1.systemEdition);
 	}
@@ -338,7 +330,7 @@ public class SpaceTest {
 		ClassificationItem item1 = classifications.get(0);
 		assertTrue(classifications.size() == 1);
 		assertEquals("7", item1.itemKey);
-		assertEquals("sonstige Nutzfl‰chen", item1.itemName);
+		assertEquals("sonstige Nutzfl√§chen", item1.itemName);
 		assertEquals("DIN277-2", item1.systemName);
 		assertEquals("2005", item1.systemEdition);
 	}
@@ -436,7 +428,7 @@ public class SpaceTest {
 		ClassificationItem item1 = classifications.get(0);
 		assertTrue(classifications.size() == 1);
 		assertEquals("7", item1.itemKey);
-		assertEquals("sonstige Nutzfl‰chen", item1.itemName);
+		assertEquals("sonstige Nutzfl√§chen", item1.itemName);
 		assertEquals("DIN277-2", item1.systemName);
 		assertEquals("2005", item1.systemEdition);
 	}
@@ -868,7 +860,7 @@ public class SpaceTest {
 		ClassificationItem item1 = classifications.get(0);
 		assertTrue(classifications.size() == 1);
 		assertEquals("7", item1.itemKey);
-		assertEquals("sonstige Nutzfl‰chen", item1.itemName);
+		assertEquals("sonstige Nutzfl√§chen", item1.itemName);
 		assertEquals("DIN277-2", item1.systemName);
 		assertEquals("2005", item1.systemEdition);
 	}

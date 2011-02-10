@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -25,19 +26,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FurnishingTest {
+public class FurnishingTest extends IfcTestMethods{
 
-	String testingRepository = "FMHandoverRepository";
-	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	//String testIfcFileName = "sample.ifc";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
 	
 	int numberOfIfcElements = 1420;
 	int numberOfIfcModels = 0;
-	String ifcFilename = null;
-	private IfcModelImpl model;
 	
-	Repositories repo = null;
 	private List<Furnishing> furnishings;
 	private Furnishing furnishing1;
 	private Furnishing furnishing2;
@@ -61,10 +55,7 @@ public class FurnishingTest {
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		furnishings = model.getFurnishing();
 		furnishing1 = furnishings.get(0);
 		furnishing2 = furnishings.get(1);
@@ -72,7 +63,7 @@ public class FurnishingTest {
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
+		
 	}
 	
 	@Test

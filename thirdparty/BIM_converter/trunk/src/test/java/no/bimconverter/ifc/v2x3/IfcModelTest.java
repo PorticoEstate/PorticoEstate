@@ -16,6 +16,7 @@ import jsdai.lang.SdaiException;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -28,30 +29,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IfcModelTest {
-	//String testingRepository = "ModelTestRepository";
-	String testingRepository = "FMHandoverRepository";
-	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	//String testIfcFileName = "sample.ifc";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
-	
+public class IfcModelTest extends IfcTestMethods {
+		
 	int numberOfIfcElements = 1420;
 	int numberOfIfcModels = 0;
 	String ifcFilename = null;
-	private IfcModelImpl model;
+	
 	Repositories repo = null;
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
+		
 	}
 	
 	@Test

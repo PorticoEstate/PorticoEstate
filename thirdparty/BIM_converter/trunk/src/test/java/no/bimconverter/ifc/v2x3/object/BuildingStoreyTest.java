@@ -13,6 +13,7 @@ import javax.xml.bind.Marshaller;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -23,28 +24,21 @@ import no.bimconverter.ifc.v2x3.IfcModelImpl;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class BuildingStoreyTest {
+public class BuildingStoreyTest extends IfcTestMethods{
 
-	String testingRepository = "FMHandoverRepository";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
-	
-	private IfcModelImpl model;
 	
 	private List<BuildingStorey> buildingStoreyList;
 	BuildingStorey buildingStorey1;
 	BuildingStorey buildingStorey2;
 	BuildingStorey buildingStorey3;
-	Repositories repo = null;
+	
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		String ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		buildingStoreyList = model.getBuildingStoreys();
 		buildingStorey1 = buildingStoreyList.get(0);
 		buildingStorey2 = buildingStoreyList.get(1);
@@ -61,6 +55,7 @@ public class BuildingStoreyTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testFirstStorey() throws JAXBException {
 		
 		//this.testFirstStoreyAttributes();
@@ -70,6 +65,7 @@ public class BuildingStoreyTest {
 		m.marshal( buildingStorey1, System.out );
 	}
 	@Test
+	@Ignore
 	public void testSecondStorey() throws JAXBException {
 		
 		//this.testFirstStoreyAttributes();
@@ -79,6 +75,7 @@ public class BuildingStoreyTest {
 		m.marshal( buildingStorey2, System.out );
 	}
 	@Test
+	@Ignore
 	public void testThirdStorey() throws JAXBException {
 		
 		//this.testFirstStoreyAttributes();

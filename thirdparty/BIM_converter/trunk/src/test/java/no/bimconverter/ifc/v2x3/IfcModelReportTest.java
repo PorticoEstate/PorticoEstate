@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 
@@ -14,28 +15,32 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IfcModelReportTest {
-
-	String testingRepository = "ModelTestRepository";
+public class IfcModelReportTest extends IfcTestMethods{
+	public IfcModelReportTest() {
+		super.testIfcFileName = "sample.ifc";
+	}
+	/*String testingRepository = "ModelTestRepository";
 	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	String testIfcFileName = "sample.ifc";
+	String testIfcFileName = "sample.ifc";*/
+	
 	int numberOfIfcElements = 163;
 	int numberOfIfcObjects = 7;
 	int numberOfIfcRelations = 12;
-	String ifcFilename = null;
-	Repositories repo = null;
+	/*String ifcFilename = null;
+	Repositories repo = null;*/
 	private int numberOfIfcResourceSchemas = 139;
 	private int numberOfIfPropertySets = 5;
 	
 	@Before
 	public void setUp() {
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
+		/*ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
 		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		repo.addRepository(testingRepository, ifcFilename);*/
+		super.createTestRepo();
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
+		//repo.deleteRepository(testingRepository);
 	}
 	
 	@Test

@@ -14,6 +14,7 @@ import javax.xml.bind.Marshaller;
 
 
 
+import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.Repositories;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
@@ -29,19 +30,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DoorTest {
+public class DoorTest extends IfcTestMethods{
 
-	String testingRepository = "FMHandoverRepository";
-	String nonExistingRepository = "dummmmmyRepoThatDoesNotExist";
-	//String testIfcFileName = "sample.ifc";
-	String testIfcFileName = "20091007_Test_BasicFM-HandOver_01_valid.ifc";
+	
 	
 	int numberOfIfcElements = 1420;
 	int numberOfIfcModels = 0;
-	String ifcFilename = null;
-	private IfcModelImpl model;
 	
-	Repositories repo = null;
+	
+	
+	
 	private List<Door> doors;
 	private Door door1;
 	private Door door2;
@@ -71,10 +69,7 @@ public class DoorTest {
 	
 	@Before
 	public void setUp() {
-		model = new IfcModelImpl(testingRepository);
-		ifcFilename = getClass().getResource( "/" +testIfcFileName ).toString();
-		repo = new RepositoriesImpl();
-		repo.addRepository(testingRepository, ifcFilename);
+		super.createTestRepo();
 		doors = model.getDoors();
 		door1 = doors.get(0);
 		door2 = doors.get(1);
@@ -88,7 +83,7 @@ public class DoorTest {
 	}
 	@After
 	public void tearDown() {
-		repo.deleteRepository(testingRepository);
+		
 	}
 	
 	@Test
