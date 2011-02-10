@@ -88,7 +88,6 @@
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage 			= $this->acl->check($this->acl_location, PHPGW_ACL_PRIVATE, 'property'); // manage
-			$this->bo->acl_location		= $this->acl_location;
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -1422,6 +1421,7 @@
 							'start_date'	=>$start_date,
 							'end_date'	=>$end_date
 						)
+
 					)),
 
 					'lang_priority'		=> lang('Priority'),
@@ -3008,6 +3008,10 @@
 					'contact_phone'					=> $ticket['contact_phone'],
 					'pref_send_mail'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:'',
 					'fileupload'					=> isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:'',
+					'multiple_uploader'				=> true,
+					'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
+															."upload_target:'property.botts.addfiles',"
+															."id:'{$id}'}",
 					'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 					'link_to_files'					=> isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'',
 					'files'							=> isset($ticket['files'])?$ticket['files']:'',
