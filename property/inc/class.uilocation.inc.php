@@ -1347,6 +1347,39 @@
 
 			$uicols = $this->bo->uicols;
 
+			$uicols['name'][]			= 'responsible_contact';
+			$uicols['descr'][]		= lang('responsible');
+			$uicols['sortable'][]		= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= '';
+
+			$uicols['name'][]			= 'responsible_contact_id';
+			$uicols['descr'][]		= 'dummy';
+			$uicols['sortable'][]		= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]			= 'responsible_item';
+			$uicols['descr'][]		= 'dummy';
+			$uicols['sortable'][]		= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]			= 'select';
+			$uicols['descr'][]		= lang('select');
+			$uicols['sortable'][]		= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= $this->acl_edit ? 'myFormatterCheck' : '';
+			$uicols['input_type'][]	= '';
+
+
 			$content = array();
 			$j=0;
 			if (isset($location_list) && is_array($location_list))
