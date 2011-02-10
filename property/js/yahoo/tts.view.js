@@ -96,18 +96,19 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 	this.fetch_vendor_email=function()
 	{
-//			formObject = document.body.getElementsByTagName('form');
-//			YAHOO.util.Connect.setForm(formObject[0]);//First form
-			if(document.getElementById('vendor_id').value)
-			{
-				base_java_url['vendor_id'] = document.getElementById('vendor_id').value;
-			}
-			
-			if(document.getElementById('vendor_id').value != vendor_id)
-			{
-				execute_async(myDataTable_3);
-				vendor_id = document.getElementById('vendor_id').value;
-			}
+//		formObject = document.body.getElementsByTagName('form');
+//		YAHOO.util.Connect.setForm(formObject[0]);//First form
+		if(document.getElementById('vendor_id').value)
+		{
+			base_java_url['vendor_id'] = document.getElementById('vendor_id').value;
+		}
+
+		if(document.getElementById('vendor_id').value != vendor_id)
+		{
+			base_java_url['action'] = 'get_vendor';
+			execute_async(myDataTable_3);
+			vendor_id = document.getElementById('vendor_id').value;
+		}
 	}
 
 
@@ -138,6 +139,7 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 	this.refresh_files = function()
 	{
+		base_java_url['action'] = 'get_files';
 		execute_async(myDataTable_2);
 	}
 
