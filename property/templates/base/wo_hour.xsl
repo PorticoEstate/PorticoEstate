@@ -693,7 +693,19 @@
 								</xsl:when>
 							</xsl:choose>
 							<xsl:call-template name="location_view"/>
-
+							
+							<xsl:choose>
+								<xsl:when test="formatted_gab_id !=''">		
+									<tr>
+										<td class="th_text"  align="left">
+											Gnr/Bnr/Feste/Seksjon
+										</td>
+										<td  align="left" colspan="2">
+											<xsl:value-of select="formatted_gab_id"/>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="contact_phone !=''">
 									<tr>
