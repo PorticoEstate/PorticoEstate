@@ -178,13 +178,24 @@ HTML;
 		{
 			if(!isset($images[$item['image'][0]][$item['image'][1]]))
 			{
-				$icon_style = ' style="background-image: url(' . $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]) . ')"';
+				$icon = $GLOBALS['phpgw']->common->image($item['image'][0], $item['image'][1]);
+				if(!$icon)
+				{
+					$icon = $GLOBALS['phpgw']->common->image('phpgwapi', 'folder');
+				}
+				$icon_style = ' style="background-image: url(' . $icon . ')"';
 				$images[$item['image'][0]][$item['image'][1]] = $icon_style;
 			}
 			else
 			{
 				$icon_style = $images[$item['image'][0]][$item['image'][1]];
 			}
+		}
+		else
+		{
+			$icon = $GLOBALS['phpgw']->common->image('phpgwapi', 'folder');
+			$icon_style = ' style="background-image: url(' . $icon . ')"';
+			$images[$item['image'][0]][$item['image'][1]] = $icon_style;
 		}
 		if ( $children )
 		{

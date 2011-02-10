@@ -76,6 +76,8 @@
 		*/
 		protected $_total_records = 0;
 
+		protected $global_lock = false;
+
 		/**
 		 * Constructor
 		 *
@@ -318,7 +320,14 @@
 
 			unset($attrib);
 
-			$this->_db->transaction_begin();
+			if ( $this->_db->Transaction )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->_db->transaction_begin();
+			}
 
 			$sql = "SELECT id FROM phpgw_cust_attribute"
 				. " WHERE location_id = {$values['location_id']}"
@@ -385,9 +394,12 @@
 
 			$this->_oProc->AddColumn($attrib_table, $values['column_name'], $col_info);
 
-			if ( $this->_db->transaction_commit() )
+			if ( !$this->global_lock )
 			{
-				return $values['id'];
+				if ( $this->_db->transaction_commit() )
+				{
+					return $values['id'];
+				}
 			}
 
 			return 0;
