@@ -1140,8 +1140,8 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$acl 			= & $GLOBALS['phpgw']->acl;
-			$acl_add 		= $this->check('.ticket', PHPGW_ACL_ADD, 'property');
-			$acl_edit 		= $this->check('.ticket', PHPGW_ACL_EDIT, 'property');
+			$acl_add 		= $acl->check('.ticket', PHPGW_ACL_ADD, 'property');
+			$acl_edit 		= $acl->check('.ticket', PHPGW_ACL_EDIT, 'property');
 			$id				= phpgw::get_var('id', 'int');
 			$fileuploader	= CreateObject('property.fileuploader');
 
