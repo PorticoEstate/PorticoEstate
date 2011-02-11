@@ -675,38 +675,6 @@ JS;
 				$location['responsible_contact_id'] = $responsible_item['contact_id'];
 			}
 
-			$this->uicols['name'][]			= 'responsible_contact';
-			$this->uicols['descr'][]		= lang('responsible');
-			$this->uicols['sortable'][]		= false;
-			$this->uicols['sort_field'][]	= '';
-			$this->uicols['format'][]		= '';
-			$this->uicols['formatter'][]	= '';
-			$this->uicols['input_type'][]	= '';
-
-			$this->uicols['name'][]			= 'responsible_contact_id';
-			$this->uicols['descr'][]		= 'dummy';
-			$this->uicols['sortable'][]		= false;
-			$this->uicols['sort_field'][]	= '';
-			$this->uicols['format'][]		= '';
-			$this->uicols['formatter'][]	= '';
-			$this->uicols['input_type'][]	= 'hidden';
-
-			$this->uicols['name'][]			= 'responsible_item';
-			$this->uicols['descr'][]		= 'dummy';
-			$this->uicols['sortable'][]		= false;
-			$this->uicols['sort_field'][]	= '';
-			$this->uicols['format'][]		= '';
-			$this->uicols['formatter'][]	= '';
-			$this->uicols['input_type'][]	= 'hidden';
-
-			$this->uicols['name'][]			= 'select';
-			$this->uicols['descr'][]		= lang('select');
-			$this->uicols['sortable'][]		= false;
-			$this->uicols['sort_field'][]	= '';
-			$this->uicols['format'][]		= '';
-			$this->uicols['formatter'][]	= 'myFormatterCheck';
-			$this->uicols['input_type'][]	= '';
-
 			//_debug_array($locations);
 
 			return $locations;

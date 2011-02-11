@@ -1338,8 +1338,39 @@
 				'type'				=> 'view'));
 
 
+			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
+			$location_code = explode('-',$location_code);
+
+
+			$gab_insert_level = isset($this->config->config_data['gab_insert_level']) && $this->config->config_data['gab_insert_level'] ? $this->config->config_data['gab_insert_level'] : 3;
+			$i = 1;		
+			foreach($location_code as $_loc)
+			{
+				$loc[] = $_loc;
+				if($i == $gab_insert_level)
+				{
+					break;
+				}
+				$i++;
+			}
+			$location_code = implode('-', $loc);
+
+			$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
+			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+			{
+				$gabinfo = array_shift($gabinfos);
+				$gab_id = $gabinfo['gab_id'];
+			}
+
+			$formatted_gab_id = '';
+			if(isset($gab_id))
+			{
+				$formatted_gab_id = substr($gab_id,4,5).' / '.substr($gab_id,9,4).' / '.substr($gab_id,13,4).' / '.substr($gab_id,17,3);
+			}
+
 			$email_data = array
 				(
+					'formatted_gab_id'				=> $formatted_gab_id,
 					'org_name'						=> isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
 					'location_data'					=> $location_data,
 					'lang_workorder'				=> lang('Workorder ID'),

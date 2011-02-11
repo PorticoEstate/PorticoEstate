@@ -1393,6 +1393,7 @@ select either a location or an equipment	property	no	velg enten en lokalisering 
 select email	property	no	velg e-post
 select file to roll back	property	no	velg fil for tilbakerulling
 select file to upload	property	no	Velg fil for opplasting
+select files	property	no	Velg filer
 select grouping	property	no	velg gruppering
 select invoice type	property	no	Velg Art
 select key responsible	property	no	velg nøkkelansvarlig
@@ -1718,6 +1719,7 @@ update the category to not active based on if there is only nonactive apartments
 update the not active category for locations	property	no	Oppdater kategori til utgått for lokaliseringer
 upload file	property	no	Last opp fil
 upload multiple files	property	no	Last opp flere filer
+upload files	property	no	Last opp filer
 url	property	no	URL
 user	property	no	Bruker
 user contact info	property	no	Bruker kontaktinfo
