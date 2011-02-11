@@ -71,9 +71,11 @@
 				$check_payments	= isset($data['check_payments']) ? $data['check_payments'] : '';
 			}
 
+
+
 			if ($order)
 			{
-				$ordermethod = " order by fm_gab_location.$order $sort";
+				$ordermethod = " order by fm_gab_location.{$order} {$sort}";
 			}
 			else
 			{
@@ -85,39 +87,52 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_gab_location.category='$cat_id' ";
+				$filtermethod .= " {$where} fm_gab_location.category='{$cat_id}' ";
 				$where = 'AND';
 			}
 
 			if ($address)
 			{
-				$filtermethod .= " $where fm_gab_location.address $this->like '%$address%' ";
+				$filtermethod .= " {$where} fm_gab_location.address {$this->like} '%{$address}%' ";
 				$where = 'AND';
 			}
 			if ($location_code)
 			{
-				$filtermethod .= " $where fm_gab_location.location_code $this->like '$location_code%' ";
+				$location_code = explode('-',$location_code);
+				$i = 1;		
+				foreach($location_code as $_loc)
+				{
+					$loc[] = $_loc;
+					if($i == $this->gab_insert_level)
+					{
+						break;
+					}
+					$i++;
+				}
+				$location_code = implode('-', $loc);
+
+				$filtermethod .= " {$where} fm_gab_location.location_code {$this->like} '{$location_code}%' ";
 				$where = 'AND';
 			}
 
 			if ($gaards_nr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,5,5) $this->like '%$gaards_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,5,5) {$this->like} '%$gaards_nr' ";
 				$where = 'AND';
 			}
 			if ($bruksnr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,10,4) $this->like '%$bruksnr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,10,4) {$this->like} '%$bruksnr' ";
 				$where = 'AND';
 			}
 			if ($feste_nr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,14,4) $this->like '%$feste_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,14,4) {$this->like} '%$feste_nr' ";
 				$where = 'AND';
 			}
 			if ($seksjons_nr)
 			{
-				$filtermethod .= " $where SUBSTRING(gab_id,18,3) $this->like '%$seksjons_nr' ";
+				$filtermethod .= " {$where} SUBSTRING(gab_id,18,3) {{$this->like}} '%$seksjons_nr' ";
 				$where = 'AND';
 			}
 
