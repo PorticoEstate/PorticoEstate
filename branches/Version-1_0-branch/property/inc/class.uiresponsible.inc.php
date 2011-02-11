@@ -1135,7 +1135,7 @@
 				. "{\r\n"
 				. ' var oArgs = {' . $lookup_link_contact . "};\n"
 				. " var strURL = phpGWLink('index.php', oArgs);\n"
-				. ' Window1=window.open(strURL,"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
+				. ' Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");' . "\r\n"
 				. '}'."\r\n"
 				//				. 'function lookup_responsibility()' ."\r\n"
 				//				. "{\r\n"

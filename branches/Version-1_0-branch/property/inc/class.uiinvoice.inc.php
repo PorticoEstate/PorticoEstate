@@ -463,7 +463,7 @@
 								array
 								(
 									'menuaction' => 'property.uilookup.vendor',
-								))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+								))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 								'value' => lang('Vendor'),
 								'tab_index' => 7,
 								'style' => 'filter'
@@ -498,7 +498,7 @@
 									'lookup'  	=> 1,
 									'type_id'  	=> 1,
 									'lookup_name'  	=> 0,
-								))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+								))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 								'value' => lang('property'),
 								'tab_index' => 9,
 								'style' => 'filter'
@@ -2132,7 +2132,7 @@
 							array
 							(
 								'menuaction' => 'property.uilookup.vendor',
-							))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+							))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 							'value' 	=> lang('Vendor'),
 							'tab_index' => 7,
 							'style' 	=> 'filter'
@@ -2168,7 +2168,7 @@
 								'lookup'  	=> 1,
 								'type_id'  	=> 1,
 								'lookup_name'  	=> 0,
-							))."','Search','width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
+							))."','Search','left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes')",
 							'value' => lang('property'),
 							'tab_index' => 9,
 							'style' => 'filter'
