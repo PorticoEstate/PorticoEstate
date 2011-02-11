@@ -1837,7 +1837,7 @@
 					'lang_entity'					=> lang('entity'),
 					'entity_name'					=> $entity['name'],
 					'lang_category'					=> lang('category'),
-					'category_name'					=> $category['name'] . ' - ' . $category['descr'],
+					'category_name'					=> $category['name'],
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'attributes_group'				=> $attributes,
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
