@@ -1339,21 +1339,6 @@
 
 
 			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
-			$location_code = explode('-',$location_code);
-
-
-			$gab_insert_level = isset($this->config->config_data['gab_insert_level']) && $this->config->config_data['gab_insert_level'] ? $this->config->config_data['gab_insert_level'] : 3;
-			$i = 1;		
-			foreach($location_code as $_loc)
-			{
-				$loc[] = $_loc;
-				if($i == $gab_insert_level)
-				{
-					break;
-				}
-				$i++;
-			}
-			$location_code = implode('-', $loc);
 
 			$gabinfos  = execMethod('property.sogab.read', array('location_code' => $location_code, 'allrows' => true));
 			if($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
