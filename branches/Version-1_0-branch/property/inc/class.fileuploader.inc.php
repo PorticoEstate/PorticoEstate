@@ -72,6 +72,7 @@
 			$js_code = self::get_js($oArgs);
 
 			$title = lang('fileuploader');
+			$lang_cancel = lang('cancel');
 			$html = <<<HTML
 			<!DOCTYPE html>
 			<html>
@@ -97,7 +98,7 @@
 						<div id="divStatus">0 Files Uploaded</div>
 							<div>
 								<span id="spanButtonPlaceHolder"></span>
-								<input id="btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+								<input id="btnCancel" type="button" value="{$lang_cancel}" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
 							</div>
 					</form>
 				</div>
@@ -110,13 +111,14 @@ HTML;
 
 		static function get_js($oArgs = '')
 		{
-			$button_text = lang('Select Files');
+			$button_text = lang('Select');
 			$str_base_url = 'http';
 			$str_base_url .= phpgw::get_var('HTTPS', 'bool', 'SERVER') ? 's' : '' ;
 			$str_base_url .= '://';
 			$str_base_url .= phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
 
 			$str_base_url .= $GLOBALS['phpgw']->link('/', array(), true);
+			$image_url = $GLOBALS['phpgw']->common->image('property', 'TestImageNoText_65x29');
 			$js_code = <<<JS
 <script type="text/javascript">
 		var swfu;
@@ -142,7 +144,7 @@ HTML;
 				debug: false,
 
 				// Button settings
-				button_image_url: "images/TestImageNoText_65x29.png",
+				button_image_url: "{$image_url}",
 				button_width: "65",
 				button_height: "29",
 				button_placeholder_id: "spanButtonPlaceHolder",

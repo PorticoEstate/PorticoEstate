@@ -37,22 +37,22 @@
 	class property_uitts
 	{
 		var $public_functions = array
-			(
-				'index'				=> true,
-				'index2'			=> true,
-				'view'				=> true,
-				'view2'				=> true,
-				'add'				=> true,
-				'add2'				=> true,
-				'delete'			=> true,
-				'download'			=> true,
-				'download2'			=> true,
-				'view_file'			=> true,
-				'edit_status'		=> true,
-				'get_vendor_email'	=> true,
-				'_print'			=> true,
-				'columns'			=> true
-			);
+		(
+			'index'				=> true,
+			'index2'			=> true,
+			'view'				=> true,
+			'view2'				=> true,
+			'add'				=> true,
+			'add2'				=> true,
+			'delete'			=> true,
+			'download'			=> true,
+			'download2'			=> true,
+			'view_file'			=> true,
+			'edit_status'		=> true,
+			'update_data'		=> true,
+			'_print'			=> true,
+			'columns'			=> true
+		);
 
 		/**
 		 * @var boolean $_simple use simplified interface
@@ -88,7 +88,6 @@
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage 			= $this->acl->check($this->acl_location, PHPGW_ACL_PRIVATE, 'property'); // manage
-			$this->bo->acl_location		= $this->acl_location;
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
@@ -1422,6 +1421,7 @@
 							'start_date'	=>$start_date,
 							'end_date'	=>$end_date
 						)
+
 					)),
 
 					'lang_priority'		=> lang('Priority'),
@@ -2123,6 +2123,70 @@
 			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
+
+		function update_data()
+		{
+			$action = phpgw::get_var('action', 'string', 'GET');
+			switch($action)
+			{
+				case 'get_vendor':
+					return $this->get_vendor_email();
+					break;
+				case 'get_files':
+					return $this->get_files();
+					break;
+				default:
+			}
+		}
+
+		function get_files()
+		{
+			$id 	= phpgw::get_var('id', 'int');
+
+			if( !$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+			(
+				'menuaction'	=> 'property.uitts.view_file',
+				'id'			=> $id
+			);
+
+			$link_to_files = isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url']:'';
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
+			$values	= $this->bo->read_single($id);
+
+			$content_files = array();
+
+			foreach($values['files'] as $_entry )
+			{
+				$content_files[] = array
+				(
+					'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="'.$_entry['name'].'" title="'.lang('Check to attach file').'">'
+				);
+			}							
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+
+				if(count($content_files))
+				{
+					return json_encode($content_files);
+				}
+				else
+				{
+					return "";
+				}
+			}
+			return $content_files;
+		}
+
+
 		function get_vendor_email($vendor_id = 0)
 		{
 			if(!$vendor_id)
@@ -2560,7 +2624,7 @@
 
 			if($vendor_email)
 			{
-				$subject = lang(workorder).": {$ticket['order_id']}";
+				$subject = lang('workorder').": {$ticket['order_id']}";
 
 				$organisation = '';
 				$contact_name = '';
@@ -2941,7 +3005,7 @@
 					'show_finnish_date'				=> $this->_show_finnish_date,
 					'tabs'							=> self::_generate_tabs(true),
 					'td_count'						=> '""',
-					'base_java_url'					=> "{menuaction:'property.uitts.get_vendor_email'}",
+					'base_java_url'					=> "{menuaction:'property.uitts.update_data',id:{$id}}",
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,
@@ -3008,6 +3072,10 @@
 					'contact_phone'					=> $ticket['contact_phone'],
 					'pref_send_mail'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'])?$GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']:'',
 					'fileupload'					=> isset($this->bo->config->config_data['fmttsfileupload'])?$this->bo->config->config_data['fmttsfileupload']:'',
+					'multiple_uploader'				=> true,
+					'fileuploader_action'			=> "{menuaction:'property.fileuploader.add',"
+															."upload_target:'property.botts.addfiles',"
+															."id:'{$id}'}",
 					'link_view_file'				=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 					'link_to_files'					=> isset($this->bo->config->config_data['files_url'])?$this->bo->config->config_data['files_url']:'',
 					'files'							=> isset($ticket['files'])?$ticket['files']:'',

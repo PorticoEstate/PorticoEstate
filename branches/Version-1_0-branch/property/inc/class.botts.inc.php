@@ -54,11 +54,12 @@
 		public $sum_actual_cost	= 0;
 
 		var $public_functions = array
-			(
-				'read'			=> true,
-				'read_single'	=> true,
-				'save'			=> true,
-			);
+		(
+			'read'			=> true,
+			'read_single'	=> true,
+			'save'			=> true,
+			'addfiles'		=> true,
+		);
 
 		function property_botts($session=false)
 		{
@@ -1130,5 +1131,42 @@
 			);
 			array_unshift($values,$default_value);
 			return $values;
+		}
+
+		public function addfiles()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$acl 			= & $GLOBALS['phpgw']->acl;
+			$acl_add 		= $acl->check('.ticket', PHPGW_ACL_ADD, 'property');
+			$acl_edit 		= $acl->check('.ticket', PHPGW_ACL_EDIT, 'property');
+			$id				= phpgw::get_var('id', 'int');
+			$fileuploader	= CreateObject('property.fileuploader');
+
+			if(!$acl_add && !$acl_edit)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			if(!$id)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$test = false;//true;
+			if ($test)
+			{
+				foreach ($_FILES as $fieldName => $file)
+				{
+					move_uploaded_file($file['tmp_name'], "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . strip_tags(basename($file['name'])));
+				}
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$bofiles	= CreateObject('property.bofiles');
+
+			$fileuploader->upload($bofiles, "{$bofiles->fakebase}/fmticket/{$id}");
 		}
 	}
