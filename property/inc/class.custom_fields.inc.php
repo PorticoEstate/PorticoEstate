@@ -120,7 +120,7 @@
 					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.addressbook', 'column'=> $attributes['name']));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 
 					$clear_functions[$m]['name']	= "clear_{$attributes['name']}()";
 					$confirm_msg = lang('delete') . '?';
@@ -162,7 +162,7 @@ JS;
 					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.organisation', 'column'=> $attributes['name']));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'VENDOR')
@@ -185,7 +185,7 @@ JS;
 					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.vendor', 'column'=> $attributes['name']));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'user')
@@ -199,7 +199,7 @@ JS;
 					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> $this->_appname.'.uilookup.phpgw_user', 'column'=> $attributes['name']));
 
 					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
-					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if($attributes['datatype'] == 'R' || $attributes['datatype'] == 'CH' || $attributes['datatype'] == 'LB')
@@ -289,7 +289,7 @@ JS;
 					$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
 					$lookup_functions[$m]['action'] .= "}\n";
 					$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
-					$lookup_functions[$m]['action']	.= 'Window1=window.open(strURL,"Search","width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
+					$lookup_functions[$m]['action']	.= 'Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=500,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype']!='I' && $entity['attributes'][$i]['value'])

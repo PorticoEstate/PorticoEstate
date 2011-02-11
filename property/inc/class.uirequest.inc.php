@@ -312,7 +312,7 @@
 									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
 									array
 									(
-										'menuaction' => 'property.uirequest.priority_key'))."','','width=350,height=250')",
+										'menuaction' => 'property.uirequest.priority_key'))."','','left=50,top=100,width=350,height=250')",
 										'value' => lang('Priority key'),
 										'tab_index' => 4
 									)
