@@ -1861,7 +1861,7 @@
 			}
 
 			$location_data=$bolocation->initiate_ui_location(array(
-				'values'	=> (isset($values['location_data'])?$values['location_data']:''),
+				'values'	=> isset($values['location_data'])?$values['location_data']:'',
 				'type_id'	=> -1, // calculated from location_types
 				'no_link'	=> false, // disable lookup links for location type less than type_id
 				'tenant'	=> true,

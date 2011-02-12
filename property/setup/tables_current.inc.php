@@ -1555,6 +1555,7 @@
 				'lookup_tenant' => array('type' => 'int','precision' => '4','nullable' => True),
 				'tracking' => array('type' => 'int','precision' => '4','nullable' => True),
 				'location_level' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_link_level' => array('type' => 'int','precision' => '4','nullable' => True),
 				'fileupload' => array('type' => 'int','precision' => '4','nullable' => True),
 				'loc_link' => array('type' => 'int','precision' => '4','nullable' => True),
 				'start_project' => array('type' => 'int','precision' => '4','nullable' => True),

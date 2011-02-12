@@ -435,6 +435,7 @@
 						'lookup_tenant'				=> $this->db->f('lookup_tenant'),
 						'tracking'					=> $this->db->f('tracking'),
 						'location_level'			=> $this->db->f('location_level'),
+						'location_link_level'		=> $this->db->f('location_link_level'),
 						'fileupload'				=> $this->db->f('fileupload'),
 						'loc_link'					=> $this->db->f('loc_link'),
 						'start_project'				=> $this->db->f('start_project'),
@@ -547,6 +548,7 @@
 					$values['lookup_tenant'],
 					$values['tracking'],
 					$values['location_level'],
+					$values['location_link_level'],
 					$values['fileupload'],
 					$values['loc_link'],
 					$values['start_project'],
@@ -558,7 +560,7 @@
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,fileupload,loc_link,start_project,start_ticket,jasperupload,parent_id,level ) "
+			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,jasperupload,parent_id,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
 			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
@@ -745,6 +747,7 @@
 						'lookup_tenant'				=> $entity['lookup_tenant'],
 						'tracking'					=> $entity['tracking'],
 						'location_level'			=> $entity['location_level'],
+						'location_link_level'		=> $entity['location_link_level'],
 						'fileupload'				=> $entity['fileupload'],
 						'loc_link'					=> $entity['loc_link'],
 						'start_project'				=> $entity['start_project'],
@@ -756,7 +759,7 @@
 
 				$value_set	= $this->db->validate_update($value_set);
 
-				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . $entity['entity_id']. " AND id=" . $entity['id'],__LINE__,__FILE__);
+				$this->db->query("UPDATE $table set $value_set WHERE entity_id=" . (int)$entity['entity_id']. " AND id=" . (int)$entity['id'],__LINE__,__FILE__);
 
 				$GLOBALS['phpgw']->locations->update_description(".{$this->type}.{$entity['entity_id']}.{$entity['id']}", $entity['name'],  $this->type_app[$this->type]);
 
