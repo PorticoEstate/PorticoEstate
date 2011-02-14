@@ -9,7 +9,7 @@
 					<xsl:variable name="link_date_search"><xsl:value-of select="link_date_search"/></xsl:variable>
 					<xsl:variable name="lang_date_search_help"><xsl:value-of select="lang_date_search_help"/></xsl:variable>
 					<xsl:variable name="lang_date_search"><xsl:value-of select="lang_date_search"/></xsl:variable>
-					<a href="javascript:var w=window.open('{$link_date_search}','','width=300,height=300')"
+					<a href="javascript:var w=window.open('{$link_date_search}','','left=50,top=100,width=300,height=300')"
 						onMouseOver="overlib('{$lang_date_search_help}', CAPTION, '{$lang_date_search}')"
 						onMouseOut="nd()">
 						<xsl:value-of select="lang_date_search"/></a>					
