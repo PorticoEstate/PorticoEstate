@@ -1414,13 +1414,18 @@
 				$category['location_level']= -1;
 			}
 
+			$_no_link = false;
+			if($lookup_entity && $category['location_link_level'])
+			{
+				$_no_link = (int)$category['location_link_level'] + 2;
+			}
 			if($entity['location_form'] )
 			{
 				$location_data=$bolocation->initiate_ui_location(array
 					(
 						'values'	=> $values['location_data'],
 						'type_id'	=> (int)$category['location_level'],
-						'no_link'	=> $lookup_entity ? (int)$category['location_link_level'] + 2 : false, // disable lookup links for location type less than type_id
+						'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $lookup_tenant,
 						'lookup_entity'	=> $lookup_entity,

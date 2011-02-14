@@ -351,18 +351,17 @@
 				$m=$i;
 			}
 
-			//_debug_array($fm_location_cols);die();
-			//_debug_array($data);
-
-//die();
-
 			$location_cols_count =count($fm_location_cols);
 			for ($j=0;$j<$location_cols_count;$j++)
 			{
 				$_lookup_link = true;
-				if(isset($data['no_link']) && $data['no_link'] && $data['no_link'] <= $fm_location_cols[$j]['location_type'] + 2)
+				if(isset($data['no_link']) && $data['no_link'])
 				{
 					$_lookup_link = false;
+					if( $data['no_link'] < ($fm_location_cols[$j]['location_type']+2))
+					{
+						$_lookup_link = true;
+					}
 				}
 
 				if( $fm_location_cols[$j]['lookup_form'] && $fm_location_cols[$j]['location_type'] == $data['type_id'] )
@@ -391,9 +390,13 @@
 			for ($j=0;$j<$config_count;$j++)
 			{
 				$_lookup_link = true;
-				if(isset($data['no_link']) && $data['no_link'] && $data['no_link'] <= $config[$j]['location_type'] + 2)
+				if(isset($data['no_link']) && $data['no_link'])
 				{
 					$_lookup_link = false;
+					if( $data['no_link'] < ($config[$j]['location_type']+2))
+					{
+						$_lookup_link = true;
+					}
 				}
 				if($config[$j]['location_type'] <= $data['type_id'] && $config[$j]['lookup_form'] )
 				{
