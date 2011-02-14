@@ -22,7 +22,7 @@ class property_uibim implements uibim {
 	private $db;
 	/* @var $bocommon property_bocommon */
 	private $bocommon;
-	private $bimconverterUrl = "http://localhost:8080/bm/rest/";
+	private $bimconverterUrl = "http://localhost:8080/bimconverter/rest/";
 
 	public function __construct() {
 		$this->bocommon = CreateObject('property.bocommon');
@@ -51,12 +51,15 @@ class property_uibim implements uibim {
 		$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/bim.css');
 	}
 	public function getModelsJson() {
+		$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 		header("Content-type: application/json");
 		$bobimmodel = new bobimmodel_impl();
 		$sobimmodel = new sobimmodel_impl($this->db);
 		$bobimmodel->setSobimmodel($sobimmodel);
 		$output = $bobimmodel->createBimModelList();
+//		return $output;
 		echo json_encode($output);
 	}
 	/*
@@ -100,6 +103,8 @@ class property_uibim implements uibim {
 	}
 
 	public function getFacilityManagementXmlByModelId($modelId = null) {
+		$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 		header("Content-type: application/xml");
 		$restUrl = $this->bimconverterUrl;
@@ -126,6 +131,7 @@ class property_uibim implements uibim {
 			$bobimitem = new bobimitem_impl();
 			$bobimitem->setSobimmodelinformation($sobimmodelinformation);
 			$bobimitem->setIfcXml($xmlResult);
+
 			$bobimitem->setSobimitem(new sobimitem_impl($this->db));
 			$bobimitem->setSobimtype(new sobimtype_impl($this->db));
 
