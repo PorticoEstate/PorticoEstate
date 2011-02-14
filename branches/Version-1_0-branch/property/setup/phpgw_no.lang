@@ -968,6 +968,7 @@ location_code	property	no	Lokaliserings kode
 location config	property	no	Konfigurering av lokalisering
 location form	property	no	Lokaliseringsskjema
 location level	property	no	Lokaliserings-nivå
+location link level	property	no	Fjern link til lokaliserings-nivå
 location manager	property	no	Forvalter lokasjon
 location name	property	no	Modul
 location not chosen!	property	no	Lokalisering er ikke valgt

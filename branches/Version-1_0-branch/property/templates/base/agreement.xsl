@@ -66,7 +66,7 @@
 							<xsl:variable name="link_columns"><xsl:value-of select="link_columns"/></xsl:variable>
 							<xsl:variable name="lang_columns_help"><xsl:value-of select="lang_columns_help"/></xsl:variable>
 							<xsl:variable name="lang_columns"><xsl:value-of select="lang_columns"/></xsl:variable>
-							<a href="javascript:var w=window.open('{$link_columns}','','width=300,height=600')"
+							<a href="javascript:var w=window.open('{$link_columns}','','left=50,top=100,width=300,height=600')"
 								onMouseOver="overlib('{$lang_columns_help}', CAPTION, '{$lang_columns}')"
 								onMouseOut="nd()">
 								<xsl:value-of select="lang_columns"/></a>
@@ -718,7 +718,7 @@
 											<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
 											<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
 											<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
-											<a href="javascript:var w=window.open('{$link_download}','','')"
+											<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')"
 												onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
 												onMouseOut="nd()">
 												<xsl:value-of select="lang_download"/></a>

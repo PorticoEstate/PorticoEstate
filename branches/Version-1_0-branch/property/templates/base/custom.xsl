@@ -234,7 +234,7 @@
 					<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
 					<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
 					<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
-					<a href="javascript:var w=window.open('{$link_download}','','')"
+					<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')"
 						onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
 						onMouseOut="nd()">
 						<xsl:value-of select="lang_download"/></a>

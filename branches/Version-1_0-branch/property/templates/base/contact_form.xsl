@@ -9,7 +9,7 @@
 			self.name="first_Window";
 			function <xsl:value-of select="field"/>_contact_lookup()
 			{
-				Window1=window.open('<xsl:value-of select="contact_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+				Window1=window.open('<xsl:value-of select="contact_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}		
 		</script>
 

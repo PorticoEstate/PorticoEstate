@@ -1385,9 +1385,9 @@
 				$this->cat_id = $values['cat_id'];
 			}
 
+			$lookup_entity = array();
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 			{	
-				$lookup_entity = array();
 				foreach ($entity['lookup_entity'] as $lookup_id)
 				{
 					$entity_lookup = $this->soadmin_entity->read_single($lookup_id);
@@ -1414,13 +1414,18 @@
 				$category['location_level']= -1;
 			}
 
-			if($entity['location_form'] && $category['location_level'] > 0 )
+			$_no_link = false;
+			if($lookup_entity && $category['location_link_level'])
+			{
+				$_no_link = (int)$category['location_link_level'] + 2;
+			}
+			if($entity['location_form'] )
 			{
 				$location_data=$bolocation->initiate_ui_location(array
 					(
 						'values'	=> $values['location_data'],
-						'type_id'	=> $category['location_level'],
-						'no_link'	=> false, // disable lookup links for location type less than type_id
+						'type_id'	=> (int)$category['location_level'],
+						'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
 						'lookup_type'	=> $lookup_type,
 						'tenant'	=> $lookup_tenant,
 						'lookup_entity'	=> $lookup_entity,
@@ -2296,14 +2301,14 @@
 
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 			{	for ($i=0;$i<count($entity['lookup_entity']);$i++)
-			{
-				if(isset($values['p'][$entity['lookup_entity'][$i]]) && $values['p'][$entity['lookup_entity'][$i]])
 				{
-					$lookup_entity[$i]['id'] = $entity['lookup_entity'][$i];
-					$entity_lookup = $this->soadmin_entity->read_single($entity['lookup_entity'][$i]);
-					$lookup_entity[$i]['name'] = $entity_lookup['name'];
+					if(isset($values['p'][$entity['lookup_entity'][$i]]) && $values['p'][$entity['lookup_entity'][$i]])
+					{
+						$lookup_entity[$i]['id'] = $entity['lookup_entity'][$i];
+						$entity_lookup = $this->soadmin_entity->read_single($entity['lookup_entity'][$i]);
+						$lookup_entity[$i]['name'] = $entity_lookup['name'];
+					}
 				}
-			}
 			}
 
 			$location_data=$bolocation->initiate_ui_location(array
