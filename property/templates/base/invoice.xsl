@@ -58,7 +58,7 @@
 		<xsl:variable name="link_download"><xsl:value-of select="link_download"/></xsl:variable>
 		<xsl:variable name="lang_download_help"><xsl:value-of select="lang_download_help"/></xsl:variable>
 		<xsl:variable name="lang_download"><xsl:value-of select="lang_download"/></xsl:variable>
-		<a href="javascript:var w=window.open('{$link_download}','','')"
+		<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')"
 			onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')"
 			onMouseOut="nd()">
 			<xsl:value-of select="lang_download"/></a>
@@ -253,7 +253,7 @@
 			self.name="first_Window";
 			function abook()
 			{
-			Window1=window.open('<xsl:value-of select="addressbook_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			Window1=window.open('<xsl:value-of select="addressbook_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}			</script>
 
 		<xsl:apply-templates select="menu"/>
@@ -577,7 +577,7 @@
 			self.name="first_Window";
 			function abook()
 			{
-			Window1=window.open('<xsl:value-of select="addressbook_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			Window1=window.open('<xsl:value-of select="addressbook_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}			</script>
 
 		<xsl:apply-templates select="menu"/>

@@ -22,7 +22,7 @@
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
 							<xsl:variable name="help_url"><xsl:value-of select="help_url"/></xsl:variable>
-							<a href="javascript:var w=window.open('{$help_url}','','width=550,height=400,scrollbars')">
+							<a href="javascript:var w=window.open('{$help_url}','','left=50,top=100,width=550,height=400,scrollbars')">
 								<xsl:text>[</xsl:text><xsl:value-of select="input_text"/><xsl:text>]</xsl:text>
 							</a>
 						</xsl:when>
@@ -362,7 +362,7 @@
 									<xsl:variable name="link_history"><xsl:value-of select="link_history"/></xsl:variable>
 									<xsl:variable name="lang_history_help"><xsl:value-of select="//lang_history_help"/></xsl:variable>
 									<xsl:variable name="lang_history"><xsl:value-of select="//lang_history"/></xsl:variable>
-									<a href="javascript:var w=window.open('{$link_history}','','width=550,height=400,scrollbars')"
+									<a href="javascript:var w=window.open('{$link_history}','','left=50,top=100,width=550,height=400,scrollbars')"
 										onMouseOver="overlib('{$lang_history_help}', CAPTION, '{$lang_history}')"
 										onMouseOut="nd()">
 										<xsl:value-of select="//lang_history"/></a>								

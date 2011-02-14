@@ -1945,7 +1945,7 @@
 			self.name="first_Window";
 			function ns3420_lookup()
 			{
-			Window1=window.open('<xsl:value-of select="ns3420_link"/>',"Search","width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			Window1=window.open('<xsl:value-of select="ns3420_link"/>',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 			}
 		</script>
 		<div align="left">
