@@ -694,7 +694,19 @@
 									<xsl:variable name="lang_location_level_statustext"><xsl:value-of select="lang_location_level_statustext"/></xsl:variable>
 									<select name="values[location_level]" class="forms" onMouseover="window.status='{$lang_location_level_statustext}'; return true;" onMouseout="window.status='';return true;">
 										<option value=""><xsl:value-of select="lang_no_location_level"/></option>
-										<xsl:apply-templates select="location_level_list"/>
+											<xsl:apply-templates select="location_level_list/options"/>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<xsl:value-of select="lang_location_link_level"/>
+								</td>
+								<td valign="top">
+									<xsl:variable name="lang_location_link_level_statustext"><xsl:value-of select="lang_location_link_level_statustext"/></xsl:variable>
+									<select name="values[location_link_level]" title="{$lang_location_link_level_statustext}">
+										<option value=""><xsl:value-of select="lang_no_location_link_level"/></option>
+											<xsl:apply-templates select="location_link_level_list/options"/>
 									</select>
 								</td>
 							</tr>
@@ -1751,21 +1763,6 @@
 	</xsl:template>
 
 
-
-<!-- location_level_list -->	
-
-	<xsl:template match="location_level_list">
-		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		<xsl:choose>
-			<xsl:when test="selected">
-				<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:when>
-			<xsl:otherwise>
-				<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 <!-- attrib_group_list -->	
 
 	<xsl:template match="attrib_group_list">
@@ -2076,3 +2073,11 @@
 		</table>
 	</xsl:template>
 
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
