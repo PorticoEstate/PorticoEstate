@@ -203,8 +203,10 @@ function getModelList() {
 		}
  
 		function getModule(){
-			var entryPoint = '/share/html/dev-bim2/index.php?menuaction=property.uibim.getModelsJson';
- 			var sUrl = entryPoint;
+			var oArgs = {menuaction:'property.uibim.getModelsJson'};
+			var sUrl = phpGWLink('index.php', oArgs, false);
+//			var entryPoint = '/share/html/dev-bim2/index.php?menuaction=property.uibim.getModelsJson';
+// 			var sUrl = entryPoint;
  			Y.log("Submitting request; ","info", "example");
  			var request = Y.io(sUrl, {
 				method:"POST",
