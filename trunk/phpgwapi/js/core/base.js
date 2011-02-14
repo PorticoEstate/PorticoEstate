@@ -239,7 +239,7 @@ function openwindow(url, h, w)
 			phpgw_popup.close;
 		}
 	}*/
-	phpgw_popup = window.open(url, "pageWindow","width="+h+",height="+w+",location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=yes");
+	phpgw_popup = window.open(url, "pageWindow","left=50,top=100,width="+h+",height="+w+",location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=yes");
 	if (phpgw_popup.opener == null)
 	{
 		phpgw_popup.opener = window;
