@@ -104,7 +104,8 @@
 								"XML:".$xml;
 				throw new IncompleteItemException($currentItem);
 			}
-			return new BimItem(null, $guid, $type, $xml, $this->sobimitem->getModelId());
+		//	return new BimItem(null, $guid, $type, $xml, $this->sobimitem->getModelId());
+			return new BimItem(null, $guid, $type, $xml, $this->sobimmodelinformation->getModelId());// Sigurd 15.feb 2011: this one seems to work
 		}
 		
 		private function checkFetchArguments() {
