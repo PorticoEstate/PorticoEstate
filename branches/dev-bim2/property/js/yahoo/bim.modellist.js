@@ -16,7 +16,7 @@ function doDelegateDeleteModel(){
 		var postUrl = phpGWLink('index.php',path_update);
 		var modelDatabaseId = this.getAttribute("value"); // getAttribute("value");
 		
-		var inputAlert = confirm("Are you sure you want to delete this model ?");
+		var inputAlert = confirm("Are you sure you want to delete this model(id:"+modelDatabaseId+") ?");
 		if(inputAlert) {
 			deleteModel(postUrl, modelDatabaseId);
 		}

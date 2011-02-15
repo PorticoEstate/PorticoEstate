@@ -161,13 +161,27 @@ class sobimmodel_impl implements sobimmodel
 		}
 		return true;
 	}
-	private function removeBimModelDatabaseEntry() {
-		$sql = "delete from ".sobim::bimModelTable." where name = '$this->modelName' and vfs_file_id=$this->vfs_database_id";
+
+	private function removeBimModelDatabaseEntry()
+	{
+		$sql = "SELECT id FROM ".sobim::bimModelTable." WHERE name = '$this->modelName' AND vfs_file_id=$this->vfs_database_id";
+		$this->db->query($sql,__LINE__,__FILE__);
+		$this->db->next_record();
+		$model_id = (int)$this->db->f('id');
 		
-		if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
-			throw new Exception('Query to delete model was unsuccessful');
-		} else {
-			return ($this->db->num_rows() > 0);
+		$this->db->transaction_begin();
+		$sql = "DELETE FROM public.".sobim::bimItemTable." WHERE model = '$model_id'";
+		$this->db->query($sql,__LINE__,__FILE__);
+
+		$sql = "DELETE FROM ".sobim::bimModelTable." WHERE name = '$this->modelName' AND vfs_file_id=$this->vfs_database_id";
+		$this->db->query($sql,__LINE__,__FILE__);
+		if( $this->db->transaction_commit() )
+		{
+			return ($this->db->num_rows() > 0);		
+		}
+		else
+		{
+			throw new Exception('Query to delete model was unsuccessful');		
 		}
 	}
 	
