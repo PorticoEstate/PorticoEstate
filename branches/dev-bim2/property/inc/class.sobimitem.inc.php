@@ -46,7 +46,7 @@ class sobimitem_impl implements sobimitem
 		$this->db->query($sql);
 		while($this->db->next_record())
 		{
-			$bimItem = new BimItem($this->db->f('id'),$this->db->f('guid'), $this->db->f('type'), $this->db->f('xml_representation'));
+			$bimItem = new BimItem($this->db->f('id'),$this->db->f('guid'), $this->db->f('type'), $this->db->f('xml_representation',true));
 			array_push($bimItemArray, $bimItem);
 		}
 
@@ -66,16 +66,20 @@ class sobimitem_impl implements sobimitem
 			throw new Exception('Item not found!');
 		} else {
 			$this->db->next_record();
-			return new BimItem($this->db->f('id'),$this->db->f('guid'), $this->db->f('type'), $this->db->f('xml_representation'),$this->db->f('model'));
+			return new BimItem($this->db->f('id'),$this->db->f('guid'), $this->db->f('type'), $this->db->f('xml_representation',true),$this->db->f('model'));
 		}
 	}
 	
 	public function addBimItem($bimItem) {
 		/* @var $bimItem BimItem */
+		if(!$bimItem->getModelId())
+		{
+			throw new Exception('ModelId not set');
+		}
 		
 		$sql = "INSERT INTO ".self::bimItemTable." (type, guid, xml_representation, model) values (";
 		$sql = $sql."(select id from ".self::bimTypeTable." where name = '".$bimItem->getType()."'),";
-		$sql = $sql."'".$bimItem->getGuid()."', '".$bimItem->getXml()."', ".$bimItem->getModelId().")";
+		$sql = $sql."'".$bimItem->getGuid()."', '".$this->db->db_addslashes($bimItem->getXml())."', ".$bimItem->getModelId().")";
 		try {
 			if(is_null($this->db->query($sql,__LINE__,__FILE__))) {
 				throw new Exception('Query to add item was unsuccessful');
@@ -120,7 +124,7 @@ class sobimitem_impl implements sobimitem
 		if(!$this->checkIfBimItemExists($bimItem->getGuid())) {
 			throw new Exception("Item does not exist!");
 		}
-		$sql = "Update ".self::bimItemTable." set xml_representation='".$bimItem->getXml()."' where guid='".$bimItem->getGuid()."'";
+		$sql = "Update ".self::bimItemTable." set xml_representation='".$this->db->db_addslashes($bimItem->getXml())."' where guid='".$bimItem->getGuid()."'";
 		
         if(is_null($this->db->query($sql,__LINE__,__FILE__) )){
 			throw new Exception("Error updating xml of bim item!");
@@ -149,7 +153,7 @@ class sobimitem_impl implements sobimitem
 			throw new Exception('Error!');
 		} else {
 			$this->db->next_record();
-			$result = $this->db->f($columnAlias);
+			$result = $this->db->f($columnAlias,true);
 			return preg_split('/,/', $result);
 			//$match; // xpath result from database will look like: '{data1, data2, data3}', or '{}' for no results
 			//preg_match('/^\{(.*)\}$/', $result, $match);
