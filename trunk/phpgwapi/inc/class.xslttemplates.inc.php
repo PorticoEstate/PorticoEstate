@@ -222,6 +222,11 @@
 			}
 		}
 
+		function set_xml_data($xml)
+		{
+			$this->xmldata = $xml;
+		}
+
 		function get_var($name)
 		{
 			return $this->vars[$name];
@@ -294,19 +299,20 @@ XSLT;
 
 		function xml_parse()
 		{
-			$this->xmldata = '';
-
-			$xmldata = $this->vars;
-
-			/* auto generate xml based on vars */
-			foreach ( $this->xmlvars as $key => $value )
+			if(strlen($this->xmldata)== 0)
 			{
-				$xmldata[$key] = $value;
+				$xmldata = $this->vars;
+	
+				/* auto generate xml based on vars */
+				foreach ( $this->xmlvars as $key => $value )
+				{
+					$xmldata[$key] = $value;
+				}
+	
+			//	$this->xmldata = var2xml('PHPGW', $xmldata);
+			//  use simplexml - it's faster.
+				$this->xmldata = phpgwapi_xmlhelper::toXML($xmldata, 'PHPGW');
 			}
-
-		//	$this->xmldata = var2xml('PHPGW', $xmldata);
-			//use simplexml - it's faster.
-			$this->xmldata = phpgwapi_xmlhelper::toXML($xmldata, 'PHPGW');
 
 			$debug = false;
 		//	$debug = true;			
