@@ -103,6 +103,9 @@
 				case 'bool':
 					$sTranslated = 'boolean';
 					break;
+				case 'xml':
+					$sTranslated = 'xml';
+					break;
 			}
 			return $sTranslated;
 		}

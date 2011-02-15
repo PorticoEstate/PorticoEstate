@@ -245,6 +245,10 @@
 					$this->transaction_abort();
 					exit;
 				}
+				else if($this->Exception_On_Error)
+				{
+					throw $e;
+				}
 			}
 
 			$this->delayPointer = true;
@@ -292,6 +296,10 @@
 					}
 					$this->transaction_abort();
 					exit;
+				}
+				else if($this->Exception_On_Error)
+				{
+					throw $e;
 				}
 			}
 
