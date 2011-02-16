@@ -5,6 +5,28 @@ function include_yui3(filename) {
 	script.type = 'text/javascript';
 	head.appendChild(script)
 }
+
+
+
+//Does not work
+YUI({
+       lang: 'ko-KR,en-GB,zh-Hant-TW', // languages in order of preference
+       base: 'phpgwapi/js/yui3/', // the base path to the YUI install.  Usually not needed because the default is the same base path as the yui.js include file
+       charset: 'utf-8', // specify a charset for inserted nodes, default is utf-8
+       loadOptional: true, // automatically load optional dependencies, default false
+       combine: true, // use the Yahoo! CDN combo service for YUI resources, default is true unless 'base' has been changed
+       filter: 'raw', // apply a filter to load the raw or debug version of YUI files
+       timeout: 10000, // specify the amount of time to wait for a node to finish loading before aborting
+       insertBefore: 'customstyles', // The insertion point for new nodes
+       // one or more external modules that can be loaded along side of YUI.  This is the only pattern
+       // that was supported in 3.0.0 for declaring external modules.  3.1.0 adds 'groups' support,
+       // which is an easier way to define a group of modules.  See below.
+
+}).use('dd', 'yui_flot', function(Y) {
+
+});
+
+
 // Load YUI3
 //include_yui3('http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js');
 

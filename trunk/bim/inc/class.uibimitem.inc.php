@@ -26,6 +26,7 @@ class bim_uibimitem implements uibimitem {
 	);
 	
 	public function showItems() {
+		$GLOBALS['phpgw']->js->validate_file( 'yui3', 'yui/yui-min', 'phpgwapi' );
 		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelId = phpgw::get_var("modelId");
 		//$modelId = 3;
@@ -65,6 +66,7 @@ class bim_uibimitem implements uibimitem {
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$GLOBALS['phpgw']->common->phpgw_header(true);*/
 			
+		$GLOBALS['phpgw']->js->validate_file( 'yui3', 'yui/yui-min', 'phpgwapi' );
 		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelGuid = phpgw::get_var("modelGuid");
 		//$modelId = 3;
