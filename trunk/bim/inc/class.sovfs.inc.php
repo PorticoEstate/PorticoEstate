@@ -2,7 +2,7 @@
 /*
  * Class that interacts with the VFS system in portico
  */
-phpgw::import_class('property.bimExceptions');
+phpgw::import_class('bim.bimExceptions');
 	/*
 	 * Interface for communicating with Portico estate's virtual file system
 	 */

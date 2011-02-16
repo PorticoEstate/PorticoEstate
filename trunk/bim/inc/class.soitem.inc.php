@@ -1,14 +1,14 @@
 <?php
 
-phpgw::import_class('property.soitem_group');
-phpgw::import_class('property.boitem');
+phpgw::import_class('bim.soitem_group');
+phpgw::import_class('bim.boitem');
 
     /**
      * Description of soitem
      *
      * @author Espen
      */
-    class property_soitem
+    class bim_soitem
     {
         private $db;
         private static $instance;
@@ -20,7 +20,7 @@ phpgw::import_class('property.boitem');
 
 
         /**
-         * @return property_soitem
+         * @return bim_soitem
          */
         public static function singleton()
         {
@@ -136,11 +136,11 @@ phpgw::import_class('property.boitem');
             }
 
             $return_objects = array();
-            $sogroup = property_sogroup::singleton();
+            $sogroup = bim_sogroup::singleton();
 
             foreach($items as $item)
             {
-                $item_obj = new property_boitem($items['installed_date']);
+                $item_obj = new bim_boitem($items['installed_date']);
                 $item_obj->set_group($sogroup->get($item['group_id']));
 
                 $return_objects[] = $item_obj;
@@ -153,9 +153,9 @@ phpgw::import_class('property.boitem');
         /**
          * Save changes on an item to database or insert a new one if ID is empty.
          *
-         * @param property_boitem $obj
+         * @param bim_boitem $obj
          */
-        public function save(property_boitem $obj)
+        public function save(bim_boitem $obj)
         {
             // If item has an ID, do an update, otherwise, do an insert
             $ins_or_upd = ($obj->get_id() != null ? 'UPDATE' : 'INSERT INTO');

@@ -5,7 +5,7 @@
      *
      * @author Espen
      */
-    class property_soitem_group {
+    class bim_soitem_group {
         private $db;
         private static $instance;
 
@@ -15,7 +15,7 @@
 
 
         /**
-         * @return property_sogroup
+         * @return bim_sogroup
          */
         public static function singleton()
         {
@@ -90,10 +90,10 @@
             }
 
             $return_objects = array();
-            $socatalog = property_socatalog::get_instance();
+            $socatalog = bim_socatalog::get_instance();
 
             foreach($groups as $group) {
-                $group_obj = new property_bogroup();
+                $group_obj = new bim_bogroup();
                 $group_obj->set_bpn($group['bpn']);
                 $group_obj->set_name($group['name']);
                 $group_obj->set_nat_group_no($group['ngno']);

@@ -5,7 +5,7 @@
      * @author Espen
      * @abstract
      */
-    abstract class property_boattribute_owner
+    abstract class bim_boattribute_owner
     {
         protected $attributes;
 
@@ -20,10 +20,10 @@
          *
          * @abstract
          * @param string $attr_def
-         * @param property_boattribute $attr
+         * @param bim_boattribute $attr
          * @return bool FALSE if failed, TRUE otherwise.
          */
-        public abstract function set_attribute($attr_def, property_boattribute $attr);
+        public abstract function set_attribute($attr_def, bim_boattribute $attr);
 
 
         /**
@@ -34,7 +34,7 @@
          */
         public function get_attribute($attr_def)
         {
-            return ($this->attributes[$attr_def] instanceof property_boattribute ? $this->attributes[$attr_def] : null);
+            return ($this->attributes[$attr_def] instanceof bim_boattribute ? $this->attributes[$attr_def] : null);
         }
 
 
