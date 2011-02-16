@@ -22,7 +22,7 @@
 	*
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
-	* @package property
+	* @package bim
 	* @subpackage ifc
  	* @version $Id$
 	*/
@@ -55,18 +55,18 @@
 		function uiifc()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::ifc';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'bim::ifc';
 		//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->cats				= CreateObject('phpgwapi.categories');
 			$this->nextmatchs		= CreateObject('phpgwapi.nextmatchs');
 			$this->account			= $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo				= CreateObject('property.boifc',true);
+			$this->bo				= CreateObject('bim.boifc',true);
 			$this->acl 				= & $GLOBALS['phpgw']->acl;
 			$this->acl_location 	= '.ifc';
-			$this->acl_read 			= true;//$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add 				= true;//$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit 			= true;//$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete 			= true;//$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_read 			= true;//$this->acl->check($this->acl_location, PHPGW_ACL_READ, 'bim');
+			$this->acl_add 				= true;//$this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'bim');
+			$this->acl_edit 			= true;//$this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'bim');
+			$this->acl_delete 			= true;//$this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'bim');
 
 			$this->start			= $this->bo->start;
 			$this->query			= $this->bo->query;
@@ -136,19 +136,19 @@
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('view the record');
 						$content[$j]['row'][$i]['text']					= lang('view');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.view','ifc_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'bim.uiifc.view','ifc_id'=> $entry['id']));
 					}
 					if($this->acl_edit)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('edit the record');
 						$content[$j]['row'][$i]['text']					= lang('edit');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.edit', 'ifc_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'bim.uiifc.edit', 'ifc_id'=> $entry['id']));
 					}
 					if($this->acl_delete)
 					{
 						$content[$j]['row'][$i]['statustext']			= lang('delete the record');
 						$content[$j]['row'][$i]['text']					= lang('delete');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.delete', 'ifc_id'=> $entry['id']));
+						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'bim.uiifc.delete', 'ifc_id'=> $entry['id']));
 					}
 
 					$j++;
@@ -170,7 +170,7 @@
 								'sort'	=> $this->sort,
 								'var'	=> $uicols['name'][$i],
 								'order'	=> $this->order,
-								'extra'	=> array('menuaction'	=> 'property.uiifc.index',
+								'extra'	=> array('menuaction'	=> 'bim.uiifc.index',
 												'query'			=> $this->query,
 												'cat_id'		=> $this->cat_id,
 												'filter'		=> $this->filter,
@@ -211,7 +211,7 @@
 				(
 					'lang_add'				=> lang('add'),
 					'lang_add_statustext'	=> lang('add a ifc'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.edit','output'=>$output)),
+					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'bim.uiifc.edit','output'=>$output)),
 				);
 			}
 
@@ -226,7 +226,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiifc.index',
+				'menuaction'	=> 'bim.uiifc.index',
 				'sort'			=> $this->sort,
 				'order'			=> $this->order,
 				'cat_id'		=> $this->cat_id,
@@ -262,7 +262,7 @@
 //_debug_array($data);
 			$function_msg= lang('list ifc values');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property'). ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('bim'). ': ' . $function_msg;
 
 			if($output == 'wml')
 			{
@@ -274,10 +274,10 @@
 
 		function import()
 		{
-			//$GLOBALS['phpgw']->locations->add('.ifc', 'ifc integration','property',true);
+			//$GLOBALS['phpgw']->locations->add('.ifc', 'ifc integration','bim',true);
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::import';
 			$acl_location = '.ifc.import';
-			if(!$this->acl->check($acl_location,PHPGW_ACL_ADD, 'property'))
+			if(!$this->acl->check($acl_location,PHPGW_ACL_ADD, 'bim'))
 			{
 //				$this->no_access();
 //				return;
@@ -312,7 +312,7 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','ifc_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiifc.index'));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'bim.uiifc.index'));
 						}
 					}
 				}
@@ -322,7 +322,7 @@
 					{
 						unlink ($ifcfile);
 					}
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiifc.index'));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'bim.uiifc.index'));
 				}
 			}
 
@@ -339,7 +339,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiifc.import'
+				'menuaction'	=> 'bim.uiifc.import'
 			);
 
 			$msgbox_data = isset($msgbox_data) ? $GLOBALS['phpgw']->common->msgbox_data($receipt) : '';
@@ -467,13 +467,13 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','hrm_training_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiifc.index', 'output'=> $output));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'bim.uiifc.index', 'output'=> $output));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'property.uiifc.index', 'output'=> $output));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'bim.uiifc.index', 'output'=> $output));
 				}
 			}
 
@@ -496,7 +496,7 @@
 
 			$link_data = array
 			(
-				'menuaction'	=> 'property.uiifc.edit',
+				'menuaction'	=> 'bim.uiifc.edit',
 				'ifc_id'		=> $ifc_id,
 				'output'		=> $output
 			);
@@ -545,7 +545,7 @@
 
 			$appname		= lang('ifc');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('bim') . ' - ' . $appname . ': ' . $function_msg;
 			if($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
@@ -600,7 +600,7 @@
 				'lang_town'					=> lang('town'),
 				'lang_remark'				=> lang('remark'),
 
-				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.index','output'=>$output)),
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'bim.uiifc.index','output'=>$output)),
 				'lang_cancel'				=> lang('cancel'),
 				'value_id'					=> $ifc_id,
 				'lang_category'				=> lang('category'),
@@ -614,7 +614,7 @@
 
 			$appname	= lang('ifc');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('bim') . ' - ' . $appname . ': ' . $function_msg;
 			if($output == 'wml')
 			{
 				$GLOBALS['phpgw']->xslttpl->set_output('wml');
@@ -643,7 +643,7 @@
 
 			$link_data = array
 			(
-				'menuaction' => 'property.uiifc.index'
+				'menuaction' => 'bim.uiifc.index'
 			);
 
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
@@ -657,7 +657,7 @@
 			$data = array
 			(
 				'done_action'			=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'property.uiifc.delete', 'ifc_id'=> $ifc_id)),
+				'delete_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'bim.uiifc.delete', 'ifc_id'=> $ifc_id)),
 				'lang_confirm_msg'		=> lang('do you really want to delete this entry'),
 				'lang_yes'				=> lang('yes'),
 				'lang_yes_statustext'	=> lang('Delete the entry'),
@@ -668,7 +668,7 @@
 			$appname		= lang('ifc');
 			$function_msg	= lang('delete');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('bim') . ' - ' . $appname . ': ' . $function_msg;
 
 			if($output == 'wml')
 			{
@@ -693,7 +693,7 @@
 
 			$appname	= lang('No access');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('bim') . ' - ' . $appname;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('no_access' => $data));
 		}
 	}

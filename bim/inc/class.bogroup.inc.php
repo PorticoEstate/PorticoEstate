@@ -5,7 +5,7 @@
      *
      * @author Espen
      */
-    class property_bogroup extends property_boattribute_owner
+    class bim_bogroup extends bim_boattribute_owner
     {
         private $id, $name, $bpn, $nat_group_no, $catalog;
 
@@ -57,7 +57,7 @@
             return $this->catalog;
         }
 
-        public function set_catalog(property_bocatalog $catalog)
+        public function set_catalog(bim_bocatalog $catalog)
         {
             $this->catalog = $catalot;
         }

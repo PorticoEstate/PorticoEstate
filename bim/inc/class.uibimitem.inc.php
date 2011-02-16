@@ -1,7 +1,7 @@
 <?php
 phpgw::import_class('phpgwapi.yui');
-phpgw::import_class('property.bobimitem');
-phpgw::import_class('property.sobimitem');
+phpgw::import_class('bim.bobimitem');
+phpgw::import_class('bim.sobimitem');
 /*
  * This class serves as the 'Controller' or 'Container' in a dependancy injection context
  */
@@ -9,7 +9,7 @@ interface uibimitem {
 	public function showItems();
 	public function showBimItem();
 }
-class property_uibimitem implements uibimitem {
+class bim_uibimitem implements uibimitem {
 	private $db;
 
 	public function __construct() {
@@ -26,7 +26,7 @@ class property_uibimitem implements uibimitem {
 	);
 	
 	public function showItems() {
-		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'property' );
+		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelId = phpgw::get_var("modelId");
 		//$modelId = 3;
 		if(empty($modelId)) {
@@ -65,7 +65,7 @@ class property_uibimitem implements uibimitem {
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$GLOBALS['phpgw']->common->phpgw_header(true);*/
 			
-		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'property' );
+		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelGuid = phpgw::get_var("modelGuid");
 		//$modelId = 3;
 		if(empty($modelGuid)) {
@@ -90,7 +90,7 @@ class property_uibimitem implements uibimitem {
 		phpgw::import_class('phpgwapi.template_portico');
 		$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-		$GLOBALS['phpgw']->template->set_root("C:\\vBoxShare\\html\\dev-bim2\\property\\templates\\portico");
+		$GLOBALS['phpgw']->template->set_root("C:\\vBoxShare\\html\\dev-bim2\\bim\\templates\\portico");
 		$GLOBALS['phpgw']->template->set_unknowns('remove');
 		$GLOBALS['phpgw']->template->set_file('test', 'test.tpl');
 		$tpl_vars = array
@@ -106,7 +106,7 @@ class property_uibimitem implements uibimitem {
     if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
             $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
         }
-        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/bim.css');
+        $GLOBALS['phpgw']->css->add_external_file('bim/templates/base/css/bim.css');
     }
 	
 

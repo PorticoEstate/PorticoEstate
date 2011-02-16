@@ -5,7 +5,7 @@
  * HTTP_Request (Pear)
  */
 
-phpgw::import_class('property.restrequest');
+phpgw::import_class('bim.restrequest');
 /*
  * 
  */

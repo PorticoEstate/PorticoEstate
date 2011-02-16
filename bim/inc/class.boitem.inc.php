@@ -1,19 +1,19 @@
 <?php
 
-include_class('property', 'boattribute_owner', 'inc/');
+include_class('bim', 'boattribute_owner', 'inc/');
 
     /**
      * FIXME: Description
      *
      * @author Espen
      */
-    class property_boitem extends property_boattribute_owner
+    class bim_boitem extends bim_boattribute_owner
     {
         private $id, $installed_date, $location_id, $vendor_id;
 
         /**
          * Should contain the group object of which this item belongs to.
-         * @var property_bogroup
+         * @var bim_bogroup
          */
         private $group;
 
@@ -30,7 +30,7 @@ include_class('property', 'boattribute_owner', 'inc/');
             $this->attributes[$attr_def] = null;
         }
 
-        public function set_attribute($attr_def, property_boattribute $attr) {
+        public function set_attribute($attr_def, bim_boattribute $attr) {
             $group_attrs = $this->group->get_attribute_list();
             if(array_key_exists($attr_def, $group_attrs))
             {
@@ -61,7 +61,7 @@ include_class('property', 'boattribute_owner', 'inc/');
             $this->id = $id;
         }
 
-        public function set_group(property_bogroup $group)
+        public function set_group(bim_bogroup $group)
         {
             $this->group = $group;
         }

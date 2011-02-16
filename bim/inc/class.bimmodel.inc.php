@@ -1,5 +1,5 @@
 <?php
-phpgw::import_class('property.bimobject');
+phpgw::import_class('bim.bimobject');
 class BimModel extends BimObject{
 	private $databaseId;
 	private $name;

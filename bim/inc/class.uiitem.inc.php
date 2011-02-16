@@ -1,20 +1,20 @@
 <?php
 phpgw::import_class('phpgwapi.yui');
-phpgw::import_class('property.soitem');
-phpgw::import_class('property.sobim');
-phpgw::import_class('property.sovfs');
-phpgw::import_class('property.sobimmodel');
-phpgw::import_class('property.sobim_converter');
-phpgw::import_class('property.soitem_group');
-phpgw::import_class('property.bobimmodel');
+phpgw::import_class('bim.soitem');
+phpgw::import_class('bim.sobim');
+phpgw::import_class('bim.sovfs');
+phpgw::import_class('bim.sobimmodel');
+phpgw::import_class('bim.sobim_converter');
+phpgw::import_class('bim.soitem_group');
+phpgw::import_class('bim.bobimmodel');
 phpgw::import_class('phpgwapi.datetime');
-//phpgw::import_class('property.bobimcreate');
+//phpgw::import_class('bim.bobimcreate');
 /**
  * FIXME: Description
- * @package property
+ * @package bim
  */
 
-class property_uiitem {
+class bim_uiitem {
 	
 	 public static $virtualFileSystemPath = "ifc";
 	 
@@ -43,10 +43,10 @@ class property_uiitem {
         $this->bocommon = CreateObject('property.bocommon');
 
         $GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-        $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::item::index';
+        $GLOBALS['phpgw_info']['flags']['menu_selection'] = 'bim::item::index';
 		$this->db = & $GLOBALS['phpgw']->db;
-        $this->so = property_soitem::singleton();
-        $this->sogroup = property_soitem_group::singleton();
+        $this->so = bim_soitem::singleton();
+        $this->sogroup = bim_soitem_group::singleton();
     }
 
 
@@ -84,7 +84,7 @@ class property_uiitem {
         $GLOBALS['phpgw_info']['flags']['app_header'] = lang('actor') . ': ' . lang('list ' . $this->role);
 
         // Prepare YUI Library
-        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'property' );
+        $GLOBALS['phpgw']->js->validate_file( 'yahoo', 'item.index', 'bim' );
 
         //$this->save_sessiondata();
     }
@@ -150,10 +150,10 @@ class property_uiitem {
     	// Set base URL. FIXME: Add more URL parameters when needed
             $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
             (
-                'menuaction'=> 'property.uiitem.index',
+                'menuaction'=> 'bim.uiitem.index',
             ));
             $datatable['config']['allow_allrows'] = true;
-            $datatable['config']['base_java_url'] = "menuaction:'property.uiitem.index',group:'all'";
+            $datatable['config']['base_java_url'] = "menuaction:'bim.uiitem.index',group:'all'";
 			$this->setForm($datatable);
 			$this->dry_run=true;
     }
@@ -169,7 +169,7 @@ class property_uiitem {
                 array(
                     'action' => $GLOBALS['phpgw']->link('/index.php',
                             array(
-                                'menuaction' 	=> 'property.uiitem.index',
+                                'menuaction' 	=> 'bim.uiitem.index',
                                 'group_id'        => 0
                             )
                     ),
@@ -188,7 +188,7 @@ class property_uiitem {
                                     'id'  => 'btn_columns',
                                     'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
                                             array(
-                                            'menuaction' => 'property.uiitem.columns',
+                                            'menuaction' => 'bim.uiitem.columns',
                                             'role'		=> $this->role
                                             ))."','','width=350,height=370')",
                                     'value' => lang('columns'),
@@ -313,7 +313,7 @@ class property_uiitem {
                 'text' 			=> lang('view'),
                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                 (
-                    'menuaction'	=> 'property.uiitem.view',
+                    'menuaction'	=> 'bim.uiitem.view',
                     'role'          => $this->role
                 )),
                 'parameters'	=> $parameters
@@ -323,7 +323,7 @@ class property_uiitem {
                 'text' 			=> lang('open view in new window'),
                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                 (
-                    'menuaction'	=> 'property.uiitem.view',
+                    'menuaction'	=> 'bim.uiitem.view',
                     'role'			=> $this->role,
                     'target'		=> '_blank'
                 )),
@@ -336,7 +336,7 @@ class property_uiitem {
                 'text' 			=> lang('edit'),
                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                 (
-                    'menuaction'=> 'property.uiitem.edit',
+                    'menuaction'=> 'bim.uiitem.edit',
                     'role'      => $this->role
                 )),
                 'parameters'	=> $parameters
@@ -346,7 +346,7 @@ class property_uiitem {
                 'text' 			=> lang('open edit in new window'),
                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                 (
-                'menuaction'	=> 'property.uiitem.edit',
+                'menuaction'	=> 'bim.uiitem.edit',
                 'role'			=> $this->role,
                 'target'		=> '_blank'
                 )),
@@ -359,7 +359,7 @@ class property_uiitem {
                 'confirm_msg'	=> lang('do you really want to delete this entry'),
                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                 (
-                'menuaction'	=> 'property.uiitem.delete',
+                'menuaction'	=> 'bim.uiitem.delete',
                 'role'	=> $this->role
                 )),
                 'parameters'	=> $parameters
@@ -369,7 +369,7 @@ class property_uiitem {
                 'text' 			=> lang('add'),
                 'action'		=> $GLOBALS['phpgw']->link('/index.php',array
                 (
-                'menuaction'	=> 'property.uiitem.edit',
+                'menuaction'	=> 'bim.uiitem.edit',
                 'role'	=> $this->role
                 ))
         );
@@ -401,13 +401,13 @@ class property_uiitem {
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
         $GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
         
-        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/bim.css');
+        $GLOBALS['phpgw']->css->add_external_file('bim/templates/base/css/bim.css');
     }
     private function setupBimCss() {
     if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) ) {
             $GLOBALS['phpgw']->css = createObject('phpgwapi.css');
         }
-        $GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/bim.css');
+        $GLOBALS['phpgw']->css->add_external_file('bim/templates/base/css/bim.css');
     }
     
     public function foo() {
@@ -501,7 +501,7 @@ XML;
 	}
     
     public function showModels() {
-    	$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'property' );
+    	$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
     	/*$GLOBALS['phpgw_info']['flags']['noheader'] = false;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -514,7 +514,7 @@ XML;
     	$sobimmodel = new sobimmodel_impl($this->db);
      	$bobimmodel->setSobimmodel($sobimmodel);
      	$output = $bobimmodel->createBimModelList();
-     	$loadingImage = $GLOBALS['phpgw']->common->find_image('property', 'ajaxLoader.gif');
+     	$loadingImage = $GLOBALS['phpgw']->common->find_image('bim', 'ajaxLoader.gif');
      	$data = array (
      		'models' => $output,
      		'loadingImage' => $loadingImage
@@ -564,7 +564,7 @@ HTML;
      public function upload() {
      	$GLOBALS['phpgw']->xslttpl->add_file(array('bim_upload_ifc'));
     	
-        $import_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiitem.uploadFile', 'id'=> $id));
+        $import_action	= $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'bim.uiitem.uploadFile', 'id'=> $id));
         $data = array
 			(
 				'importfile'					=> $importfile,

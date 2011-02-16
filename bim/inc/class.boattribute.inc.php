@@ -4,7 +4,7 @@
      *
      * @author Espen
      */
-    class property_boattribute
+    class bim_boattribute
     {
         private $id, $name, $display_name, $value, $data_type, $unit, $desc;
 

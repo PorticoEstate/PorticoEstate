@@ -1,7 +1,7 @@
 <?php
 
-phpgw::import_class('property.bimExceptions');
-phpgw::import_class('property.bimmodelinformation');
+phpgw::import_class('bim.bimExceptions');
+phpgw::import_class('bim.bimmodelinformation');
 
 /*
  * @see sobimmodel_impl
