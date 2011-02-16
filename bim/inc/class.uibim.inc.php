@@ -197,6 +197,7 @@ class bim_uibim implements uibim {
 		);
 		$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('modelData' => $data));
 		$this->setupBimCss();
+		$GLOBALS['phpgw']->js->validate_file( 'yui3', 'yui/yui-min', 'phpgwapi' );
 		// echo '<script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>';
 		$ble =  <<<HTML
         <script>YUI().use("event-delegate", function(Y) {
