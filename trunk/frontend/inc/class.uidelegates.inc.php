@@ -18,7 +18,8 @@
 		
 
 		public function index()
-		{			
+		{		
+			$use_fellesdata = $config->config_data['use_fellesdata'];	
 			if(isset($_POST['search']))
 			{
 				$username = phpgw::get_var('username');
@@ -40,11 +41,14 @@
 					}
 					else
 					{
-						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
-						if($fellesdata_user)
-						{
-							$search = $fellesdata_user;
-							$msglog['message'][] = array('msg' => lang('user_found_in_Fellesdata'));
+						if($use_fellesdata){
+							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
+						
+							if($fellesdata_user)
+							{
+								$search = $fellesdata_user;
+								$msglog['message'][] = array('msg' => lang('user_found_in_Fellesdata'));
+							}
 						}
 						else
 						{
@@ -56,33 +60,34 @@
 			else if(isset($_POST['add']))
 			{
 				$account_id = phpgw::get_var('account_id');
-				
-				$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
-				
-				//Parameter to delegate access to only a single organisational unit
-				$org_unit_id = $this->header_state['selected_org_unit'];
-				$success = true;
-				
-				foreach($org_units as $org_unit)
-				{
-					if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
+				$success = false;
+				if($use_fellesdata){
+					$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
+					
+					//Parameter to delegate access to only a single organisational unit
+					$org_unit_id = $this->header_state['selected_org_unit'];
+					$success = true;
+					
+					foreach($org_units as $org_unit)
 					{
-						//$curr_success = true;
-						$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
-						if($res)
+						if($org_unit_id == 'all' || $org_unit['ORG_UNIT_ID'] == $org_unit_id)
 						{
-							//$mail_contents[] = $res;
-							$org_unit_names[] = $org_unit['ORG_NAME'];
+							//$curr_success = true;
+							$res = $this->add_delegate($account_id,$org_unit['ORG_UNIT_ID'],$org_unit['ORG_NAME']);
+							if($res)
+							{
+								//$mail_contents[] = $res;
+								$org_unit_names[] = $org_unit['ORG_NAME'];
+							}
+							else
+							{
+								$msglog['error'][] = array('msg' => lang('error_delegating_unit',$org_unit['ORG_NAME']));
+							}
+							
+							$success = $success && $res;
 						}
-						else
-						{
-							$msglog['error'][] = array('msg' => lang('error_delegating_unit',$org_unit['ORG_NAME']));
-						}
-						
-						$success = $success && $res;
 					}
 				}
-				
 				if($success)
 				{
 					//Retrieve the usernames
@@ -199,6 +204,11 @@
 		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
+			$use_fellesdata = $config->config_data['use_fellesdata'];
+			if(!$use_fellesdata)
+			{
+				return;
+			}
 			if(!isset($account_id) || $account_id == '')
 			{
 				//User is only registered in Fellesdata
