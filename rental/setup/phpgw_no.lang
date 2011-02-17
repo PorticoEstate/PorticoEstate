@@ -213,6 +213,7 @@ external	rental	no	Eksterne kontraktsparter
 facilit_import	rental	no	Import fra Facilit
 failed_removing_delegate	rental	no	Det oppstod en feil under sletting av delegaten.
 fax	rental	no	Faks
+fellesdata_not_in_use	rental	no	Fellesdata er ikke i bruk
 field_of_responsibility	rental	no	Ansvarsområde
 filters 	rental	no	Filtre
 Finish	rental	no	Avslutt
@@ -555,6 +556,7 @@ view_contract	rental	no	Vis kontrakt
 unable_to_connect_to_database	rental	no	Problemer med å koble til databasen.
 unknown_user	rental	no	Personen finnes ikke.
 user_found_in_Fellesdata	rental	no	Personen finnes i Fellesdata.
+user_not_in_fellesdata	rental	no	Personen finnes ikke i Fellesdata.
 user_found_in_PE	rental	no	Personen er bruker av dette systemet.
 warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
 warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!

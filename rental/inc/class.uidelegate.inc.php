@@ -49,8 +49,9 @@
 		}
 		
 		public function add_actions(&$value, $key, $params)
-		{
-			if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{			
+			$use_fellesdata = $config->config_data['use_fellesdata'];
+			if(($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
 			{
 				$unit_id = $params[0];
 				

@@ -583,15 +583,22 @@
 
 			if (is_array($values))
 			{
-				$insert_record_values = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",$this->location_info['acl_app']);
+				$insert_record_attributes = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}",$this->location_info['acl_app']);
 
-				if(is_array($insert_record_values))
+				if(is_array($insert_record_attributes))
 				{
-					foreach($insert_record_values as $field)
+					foreach ($insert_record_attributes as $attribute)
 					{
-//						$values['extra'][$field] = 	phpgw::get_var($field);
+						foreach ($values_attribute as &$attr)
+						{
+							if($attr['name'] ==  $attribute)
+							{
+								$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
+							}
+						}
 					}
 				}
+
 //				$values = $this->bocommon->collect_locationdata($values,$insert_record_values);
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
