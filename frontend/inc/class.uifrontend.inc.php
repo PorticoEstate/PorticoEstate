@@ -125,32 +125,33 @@
 			else if(isset($param_only_org_unit)) 
 			{
 				//TODO: check permissions
-				
-				$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_info($param_only_org_unit);
-				
-				//Specify unit
-				$org_unit_ids = array(
-					array(
-						"ORG_UNIT_ID" => $param_only_org_unit,
-						"ORG_NAME" => $name_and_result_number['UNIT_NAME'],
-						"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
-					)
-				);
-								
-				//Update header state
-				$this->header_state['org_unit'] = $org_unit_ids;
-				$this->header_state['number_of_org_units'] = '1';
-				//$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
-				$this->header_state['selected_org_unit'] = $param_only_org_unit;
-				
-				//Update locations
-				$property_locations = frontend_borental::get_property_locations($org_unit_ids);
-				$property_locations_update = true;
-				
-				$noframework = false; // In regular frames
-				phpgwapi_cache::session_set('frontend', 'noframework', $noframework); // Store mode on session
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
-				$this->insert_links_on_header_state();
+				if($use_fellesdata){
+					$name_and_result_number = frontend_bofellesdata::get_instance()->get_organisational_unit_info($param_only_org_unit);
+									
+					//Specify unit
+					$org_unit_ids = array(
+						array(
+							"ORG_UNIT_ID" => $param_only_org_unit,
+							"ORG_NAME" => $name_and_result_number['UNIT_NAME'],
+							"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
+						)
+					);
+									
+					//Update header state
+					$this->header_state['org_unit'] = $org_unit_ids;
+					$this->header_state['number_of_org_units'] = '1';
+					//$this->header_state['selected_org_unit'] = $name_and_result_number['UNIT_NUMBER'];
+					$this->header_state['selected_org_unit'] = $param_only_org_unit;
+					
+					//Update locations
+					$property_locations = frontend_borental::get_property_locations($org_unit_ids);
+					$property_locations_update = true;
+					
+					$noframework = false; // In regular frames
+					phpgwapi_cache::session_set('frontend', 'noframework', $noframework); // Store mode on session
+					$GLOBALS['phpgw_info']['flags']['menu_selection'] = "frontend::{$selected}";
+					$this->insert_links_on_header_state();
+				}
 			} 
 			/* No state, first visit after login, or refresh request*/
 			else if(!isset($this->header_state) || isset($refresh) || !isset($this->header_state['locations']))
