@@ -24,6 +24,7 @@
 		
 		public function query()
 		{
+			$use_fellesdata = $config->config_data['use_fellesdata'];
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -93,10 +94,11 @@
 		public function edit(){
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
+			$use_fellesdata = $config->config_data['use_fellesdata'];
 			
 			$unit_id = (int)phpgw::get_var('id');
 			
-			if (isset($unit_id) && $unit_id > 0) {
+			if (isset($unit_id) && $unit_id > 0 && $use_fellesdata) {
 				
 				$msglog['error']['msg'] = phpgw::get_var('error');
 				$msglog['message']['msg'] = phpgw::get_var('message');
@@ -172,7 +174,8 @@
 		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
-			if(!isset($account_id) || $account_id == '')
+			$use_fellesdata = $config->config_data['use_fellesdata'];
+			if(!isset($account_id) || $account_id == '' && $use_fellesdata)
 			{
 				//User is only registered in Fellesdata
 				$username = phpgw::get_var('username'); 
@@ -199,7 +202,7 @@
 				$org_name_string = $org_name;
 
 				//If the usernames are set retrieve account data from Fellesdata
-				if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '')
+				if(isset($user_name) && $user_name != '' && $owner_name && $owner_name != '' && $use_fellesdata)
 				{
 					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($user_name);
 					$fellesdata_owner = frontend_bofellesdata::get_instance()->get_user($owner_name);

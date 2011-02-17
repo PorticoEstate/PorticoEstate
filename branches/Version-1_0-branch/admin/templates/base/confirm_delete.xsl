@@ -34,14 +34,18 @@
 						</xsl:when>
 					</xsl:choose>
 					<input type="submit" name="cancel" value="{lang_no}" title="{lang_no_statustext}"/>
-
 					<xsl:choose>
-						<xsl:when test="show_done = ''">
-							<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}"/>
+						<xsl:when test="show_done">
+							<xsl:choose>
+								<xsl:when test="show_done = ''">
+									<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}"/>
+								</xsl:when>
+							</xsl:choose>
 						</xsl:when>
+						<xsl:otherwise>
+							<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}"/>
+						</xsl:otherwise>
 					</xsl:choose>
-
-
 				</form>
 			</div>
 	</xsl:template>

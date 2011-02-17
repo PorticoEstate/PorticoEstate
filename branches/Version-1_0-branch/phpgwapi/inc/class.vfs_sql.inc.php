@@ -1334,7 +1334,269 @@
 
 			return True;
 		}
+		/*
+		 * Same as cp function, except an exception is thrown if there is a failure
+		 * errors have also been expanded
+		 */
+		function cp2 ($data)
+		{
+			if (!is_array ($data))
+			{
+				$data = array ();
+			}
 
+			$default_values = array
+				(
+					'relatives'	=> array (RELATIVE_CURRENT, RELATIVE_CURRENT)
+				);
+
+			$data = array_merge ($this->default_values ($data, $default_values), $data);
+
+			$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$f = $this->path_parts (array(
+					'string'	=> $data['from'],
+					'relatives'	=> array ($data['relatives'][0])
+				)
+			);
+
+			$t = $this->path_parts (array(
+					'string'	=> $data['to'],
+					'relatives'	=> array ($data['relatives'][1])
+				)
+			);
+
+			if (!$this->acl_check (array(
+					'string'	=> $f->fake_full_path,
+					'relatives'	=> array ($f->mask),
+					'operation'	=> PHPGW_ACL_READ
+				))
+			)
+			{
+				throw new Exception('ACL (READ) check failed!');
+			}
+
+			if ($this->file_exists (array(
+					'string'	=> $t->fake_full_path,
+					'relatives'	=> array ($t->mask)
+				))
+			)
+			{
+				if (!$this->acl_check (array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array ($t->mask),
+						'operation'	=> PHPGW_ACL_EDIT
+					))
+				)
+				{
+					throw new Exception('ACL (EDII) check failed!');
+				}
+			}
+			else
+			{
+				if (!$this->acl_check (array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array ($t->mask),
+						'operation'	=> PHPGW_ACL_ADD
+					))
+				)
+				{
+					throw new Exception('ACL (ADD) check failed!');
+				}
+
+			}
+
+			umask(000);
+
+			if ($this->file_type (array(
+					'string'	=> $f->fake_full_path,
+					'relatives'	=> array ($f->mask)
+				)) != 'Directory'
+			)
+			{
+				if ($this->file_actions)
+				{
+					if (!copy ($f->real_full_path, $t->real_full_path))
+					{
+						$error = "Copy failed!\n";
+						$error = $error. "f->real_full_path: $f->real_full_path \n";
+						$error = $error. "t->real_full_path: $t->real_full_path \n";
+						throw new Exception($error);
+					}
+
+					$size = filesize ($t->real_full_path);
+				}
+				else
+				{
+					$content = $this->read (array(
+							'string'	=> $f->fake_full_path,
+							'relatives'	=> array ($f->mask)
+						)
+					);
+
+					$size = strlen ($content);
+				}
+
+				if ($t->outside)
+				{
+					return True;
+				}
+
+				$ls_array = $this->ls (array(
+						'string'	=> $f->real_full_path, // Sigurd: seems to work better with real - old: 'string'	=> $f->fake_full_path,
+						'relatives'	=> array ($f->mask),
+						'checksubdirs'	=> False,
+						'mime_type'	=> False,
+						'nofiles'	=> True
+					)
+				);
+				$record = $ls_array[0];
+
+				if ($this->file_exists (array(
+						'string'	=> $data['to'],
+						'relatives'	=> array ($data['relatives'][1])
+					))
+				)
+				{
+					$query = $GLOBALS['phpgw']->db->query ("UPDATE phpgw_vfs SET owner_id='$this->working_id', directory='$t->fake_leading_dirs_clean', name='$t->fake_name_clean' WHERE owner_id='$this->working_id' AND directory='$t->fake_leading_dirs_clean' AND name='$t->fake_name_clean'" . $this->extra_sql (VFS_SQL_UPDATE), __LINE__, __FILE__);
+
+					$set_attributes_array = array (
+						'createdby_id' => $account_id,
+						'created' => $this->now,
+						'size' => $size,
+						'mime_type' => $record['mime_type'],
+						'deleteable' => $record['deleteable'],
+						'comment' => $record['comment'],
+						'app' => $record['app']
+					);
+
+					if (!$this->file_actions)
+					{
+						$set_attributes_array['content'] = $content;
+					}
+
+					$this->set_attributes(array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array ($t->mask),
+						'attributes'	=> $set_attributes_array
+						)
+					);
+
+					$this->add_journal (array(
+							'string'	=> $t->fake_full_path,
+							'relatives'	=> array ($t->mask),
+							'operation'	=> VFS_OPERATION_EDITED
+						)
+					);
+				}
+				else
+				{
+					$this->touch (array(
+							'string'	=> $t->fake_full_path,
+							'relatives'	=> array ($t->mask)
+						)
+					);
+
+					$set_attributes_array = array (
+						'createdby_id' => $account_id,
+						'created' => $this->now,
+						'size' => $size,
+						'mime_type' => $record['mime_type'],
+						'deleteable' => $record['deleteable'],
+						'comment' => $record['comment'],
+						'app' => $record['app']
+					);
+
+					if (!$this->file_actions)
+					{
+						$set_attributes_array['content'] = $content;
+					}
+
+					$this->set_attributes(array(
+							'string'	=> $t->fake_full_path,
+							'relatives'	=> array ($t->mask),
+							'attributes'	=> $set_attributes_array
+						)
+					);
+				}
+				$this->correct_attributes (array(
+						'string'	=> $t->fake_full_path,
+						'relatives'	=> array ($t->mask)
+					)
+				);
+			}
+			else	/* It's a directory */
+			{
+				/* First, make the initial directory */
+				if ($this->mkdir (array(
+						'string'	=> $data['to'],
+						'relatives'	=> array ($data['relatives'][1])
+					)) === False
+				)
+				{
+					throw new Exception('Error, it is a directory');
+				}
+
+				/* Next, we create all the directories below the initial directory */
+				$ls = $this->ls (array(
+						'string'	=> $f->fake_full_path,
+						'relatives'	=> array ($f->mask),
+						'checksubdirs'	=> True,
+						'mime_type'	=> 'Directory'
+					)
+				);
+
+				while (list ($num, $entry) = each ($ls))
+				{
+					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					if ($this->mkdir (array(
+							'string'	=> $newdir.'/'.$entry['name'],
+							'relatives'	=> array ($t->mask)
+						)) === False
+					)
+					{
+						throw new Exception('While loop error!');
+					}
+				}
+
+				/* Lastly, we copy the files over */
+				$ls = $this->ls (array(
+						'string'	=> $f->fake_full_path,
+						'relatives'	=> array ($f->mask)
+					)
+				);
+
+				while (list ($num, $entry) = each ($ls))
+				{
+					if ($entry['mime_type'] == 'Directory')
+					{
+						continue;
+					}
+
+					$newdir = ereg_replace ("^$f->fake_full_path", "$t->fake_full_path", $entry['directory']);
+					$this->cp (array(
+							'from'	=> "$entry[directory]/$entry[name]",
+							'to'	=> "$newdir/$entry[name]",
+							'relatives'	=> array ($f->mask, $t->mask)
+						)
+					);
+				}
+			}
+
+			if (!$f->outside)
+			{
+				$this->add_journal (array(
+						'string'	=> $f->fake_full_path,
+						'relatives'	=> array ($f->mask),
+						'operation'	=> VFS_OPERATION_COPIED,
+						'state_one'	=> NULL,
+						'state_two'	=> $t->fake_full_path
+					)
+				);
+			}
+
+			return True;
+		}
 		/*
 		 * See vfs_shared
 		 */
