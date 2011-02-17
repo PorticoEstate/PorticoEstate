@@ -96,6 +96,7 @@
 				);
 			}
 
+/*
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['clear_user_cache'] = array
@@ -104,7 +105,7 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.clear_user_cache') )
 				);
 			}
-
+*/
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['clear_cache'] = array
