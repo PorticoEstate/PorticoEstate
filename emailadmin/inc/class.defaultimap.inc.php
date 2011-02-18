@@ -11,7 +11,10 @@
 	\***************************************************************************/
 	/* $Id$ */
 
-	require_once PHPGW_INCLUDE_ROOT.'/felamimail/inc/egw-pear/Net/IMAP.php';
+	if(!include_once PHPGW_INCLUDE_ROOT.'/felamimail/inc/egw-pear/Net/IMAP.php')
+	{
+		throw new Exception('missing egw-pear package');
+	}
 
 	define('IMAP_NAMESPACE_PERSONAL', 'personal');
 	define('IMAP_NAMESPACE_OTHERS'	, 'others');
