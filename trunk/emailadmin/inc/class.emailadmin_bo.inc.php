@@ -488,7 +488,16 @@
 				// fetch the IMAP / incomming server data
 				$icClass = isset($this->IMAPServerType[$data['imapType']]) ? $this->IMAPServerType[$data['imapType']]['classname'] : 'defaultimap';
 
-				$icServer =& CreateObject('emailadmin.'.$icClass);
+				try
+				{
+					$icServer =& CreateObject('emailadmin.'.$icClass);
+				}
+				catch(Exception $e)
+				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+					return false;
+				}
+
 				$icServer->encryption	= ($data['imapTLSEncryption'] == 'yes' ? 1 : (int)$data['imapTLSEncryption']);
 				$icServer->host		= $data['imapServer'];
 				$icServer->port 	= $data['imapPort'];
