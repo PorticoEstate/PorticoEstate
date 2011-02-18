@@ -156,6 +156,7 @@
 
 				if(!is_a($profileData, 'ea_preferences') || !is_a($profileData->ic_server[0], 'defaultimap')) {
 
+	//				throw new Exception('No preferences or Incoming server defined');
 					return false;
 				}
 				if($profileData->userDefinedAccounts) {
