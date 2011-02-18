@@ -207,6 +207,19 @@
 				$booking['organization_name'] = $allocation['organization_name'];
 			}
 
+            //start Debug code for testing problem on production server. to be removed ASAP!
+            if (phpgw::get_var('DEBUG', 'str', 'GET') == 'yes') {
+                echo "<pre>\n";
+                echo mb_detect_encoding(phpgw::get_var('from_', 'str', 'GET'), "auto");echo "\n";
+                print_r($allocation_id);echo "\n";
+                print_r($booking['from_']);echo "\n";
+                print_r($booking['to_']);echo "\n";
+                print_r($time_from);echo "\n";
+                print_r($time_to);echo "\n";
+                print_r($booking);echo "\n";
+                exit;
+            }
+            //end
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$today = getdate();
@@ -325,6 +338,21 @@
 			{
 				$res_names[] = array('id' => $res['id'],'name' => $res['name']);
 			}
+
+            //start Debug code for testing problem on production server. to be removed ASAP!
+            if (phpgw::get_var('DEBUG', 'str', 'GET') == 'end') {
+                echo "<pre>\n";
+                echo "encoding: ";echo mb_detect_encoding(phpgw::get_var('from_', 'str', 'GET'), "auto");echo "\n";
+                echo "encoding array: ";echo mb_detect_encoding($booking['from_'], "auto");echo "\n";
+                echo "allocation_id: ";print_r($allocation_id);echo "\n";
+                echo "booking from: ";print_r($booking['from_']);echo "\n";
+                echo "booking to: ";print_r($booking['to_']);echo "\n";
+                echo "time from: ";print_r($time_from);echo "\n";
+                echo "time to:";print_r($time_to);echo "\n";
+                echo "booking:\n";print_r($booking);echo "\n";
+                exit;
+            }
+            //end
 
 			if ($step < 2) 
 			{
