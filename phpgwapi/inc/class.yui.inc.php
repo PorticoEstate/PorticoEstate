@@ -52,56 +52,60 @@
 		*/
 		public static function load_widget($widget)
 		{
+			$_type = '-min';	// save som download
+	//		$_type = '';		// full
+	//		$_type = '-debug';	// debug
+
 			$load = array();
 			switch ( $widget )
 			{
 				case 'animation':
-					$load = array('animation-min', 'container-min');
+					$load = array("animation{$_type}", "container{$_type}");
 					break;
 
 				case 'autocomplete':
-					$load = array('autocomplete-min', 'connection-min');
+					$load = array("autocomplete{$_type}", "connection{$_type}");
 					break;
 
 				case 'button':
-					$load = array('button-min', 'element-min');
+					$load = array("button{$_type}", "element{$_type}");
 					break;
 
 				case 'calendar':
-					$load = array('calendar-min');
+					$load = array("calendar{$_type}");
 					break;
 
 				case 'colorpicker':
 				case 'colourpicker': // be nice to the speakers of H.M. English :)
-					$load = array('colorpicker-min');
+					$load = array("colorpicker{$_type}");
 					break;
 
 				case 'container':
-					$load = array('container-min', 'dragdrop-min');
+					$load = array("container{$_type}", "dragdrop{$_type}");
 					break;
 
 				case 'history':
-					$load = array('history-min');
+					$load = array("history{$_type}");
 					break;
 
 				case 'utilities':
-					$load = array('container-min');
+					$load = array("container{$_type}");
 					break;
 
 				case 'connection':
-					$load = array('connection-min');
+					$load = array("connection{$_type}");
 					break;
 
 				case 'datasource':
-					$load = array('json-min', 'datasource-min', 'connection-min');
+					$load = array("json{$_type}", "datasource{$_type}", "connection{$_type}");
 					break;
 
 				case 'datatable':
-					$load = array('json-min', 'element-min', 'datasource-min', 'datatable-min' );
+					$load = array("json{$_type}", "element{$_type}", "datasource{$_type}", "datatable{$_type}" );
 					break;
 				// cramirez: necesary for include a partucular js
 				case 'loader':
-					$load = array('yuiloader-min');
+					$load = array("yuiloader{$_type}");
 					break;
 
 				case 'dom':
@@ -109,19 +113,19 @@
 					break;
 
 				case 'dragdrop':
-					$load = array('dragdrop-min');
+					$load = array("dragdrop{$_type}");
 					break;
 
 				case 'editor':
-					$load = array('dragdrop-min', 'element-min', 'animation-min', 'resize-min', 'container_core-min', 'menu-min', 'button-min', 'editor-min');
+					$load = array("dragdrop{$_type}", "element{$_type}", "animation{$_type}", "resize{$_type}", "container_core{$_type}", "menu{$_type}", "button{$_type}", "editor{$_type}");
 					break;
 
 				case 'element':
-					$load = array('element-min');
+					$load = array("element{$_type}");
 					break;
 
 				case 'paginator':
-					$load = array('paginator-min');
+					$load = array("paginator{$_type}");
 					break;
 
 				case 'event':
@@ -131,39 +135,39 @@
 				// not including history - as it isn't needed - need to handle the not included/used types somewhere
 
 				case 'imageloader':
-					$load = array('imageloader-min');
+					$load = array("imageloader{$_type}");
 					break;
 
 				case 'logger':
-					$load = array('dragdrop-min', 'logger-min');
+					$load = array("dragdrop{$_type}", "logger{$_type}");
 					break;
 
 				case 'menu':
-					$load = array('container_core-min', 'menu-min');
+					$load = array("container_core{$_type}", "menu{$_type}");
 					break;
 
                 case 'resize':
-					$load = array('dragdrop-min', 'element-min', 'resize-min');
+					$load = array("dragdrop{$_type}", "element{$_type}", "resize{$_type}");
 					break;
 
 				case 'layout':
-					$load = array('dragdrop-min', 'element-min', 'resize-min', 'layout-min');
+					$load = array("dragdrop{$_type}", "element{$_type}", "resize{$_type}", "layout{$_type}");
 					break;
 
 				case 'slider':
-					$load = array('dragdrop-min', 'animation-min', 'slider-min');
+					$load = array("dragdrop{$_type}", "animation{$_type}", "slider{$_type}");
 					break;
 
 				case 'tabview':
-					$load = array('element-min', 'tabview-min');
+					$load = array("element{$_type}", "tabview{$_type}");
 					break;
 
 				case 'treeview':
-					$load = array('treeview-min');
+					$load = array("treeview{$_type}");
 					break;
 
 				case 'uploader':
-					$load = array('element-min', 'uploader-min', 'datasource-min', 'datatable-min');
+					$load = array("element{$_type}", "uploader{$_type}", "datasource{$_type}", "datatable{$_type}");
 					break;
 
 				default:
@@ -172,6 +176,10 @@
 					return '';
 			}
 
+			if($_type == '-debug')
+			{
+				$load[] = 'logger';
+			}
 			$ok = true;
 			$GLOBALS['phpgw']->js->validate_file('yahoo', 'yahoo-dom-event/yahoo-dom-event');
 			foreach ( $load as $script )
