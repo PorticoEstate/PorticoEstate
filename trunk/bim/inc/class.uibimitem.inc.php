@@ -25,14 +25,18 @@ class bim_uibimitem implements uibimitem {
 		'showBimItem' => true
 	);
 	
-	public function showItems() {
+	public function showItems()
+	{
 		$GLOBALS['phpgw']->js->validate_file( 'yui3', 'yui/yui-min', 'phpgwapi' );
 		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelId = phpgw::get_var("modelId");
 		//$modelId = 3;
-		if(empty($modelId)) {
+		if(empty($modelId))
+		{
 			echo "No modelId!";
-		} else {
+		}
+		else
+		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showitems'));
 			$sobimitem = new sobimitem_impl($this->db);
 			$sobimitem->setModelId($modelId);
@@ -41,26 +45,28 @@ class bim_uibimitem implements uibimitem {
 			$items = $bobimitem->fetchItemsByModelId();
 			$bimItems = array();
 			$count = count(($items));
-			foreach( $items as $bimItem) {
+			foreach( $items as $bimItem)
+			{
 				/* @var $bimItem BimItem*/
 				array_push($bimItems, $bimItem->transformObjectToArray());//$bimItem->);
 			}
 			//$bimItems = print_r($items, true);
 			
-			$data = array(
+			$data = array
+			(
 				'someData' => "data",
 				'modelId' => $modelId,
 				'count' => $count,
 				'bimItems' => array("item" => $bimItems)
 			);
 			
-			
 			$this->setupBimCss();
 			$GLOBALS['phpgw']->xslttpl->set_var('bimitems',$data);
 		}
 		
 	}
-	public function showBimItem() {
+	public function showBimItem()
+	{
 		/*$GLOBALS['phpgw_info']['flags']['noheader'] = false;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = false;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -70,19 +76,16 @@ class bim_uibimitem implements uibimitem {
 		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'bim.modellist', 'bim' );
 		$modelGuid = phpgw::get_var("modelGuid");
 		//$modelId = 3;
-		if(empty($modelGuid)) {
+		if(empty($modelGuid))
+		{
 			echo "No guid!";
-		} else {
+		}
+		else
+		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('bim_showSingleItem'));
 			$sobimitem = new sobimitem_impl($this->db);
 			/* @var $bimItem BimItem */
-			$bimItem = $sobimitem->getBimItem($modelGuid);
-			$data = array(
-				'item' => $bimItem->transformObjectToArray(),
-				'dir' => PHPGW_TEMPLATE_DIR
-			);
-			//$GLOBALS['phpgw']->xslttpl->set_var('bimitem',$data);
-			
+			$bimItem = $sobimitem->getBimItem($modelGuid);			
     		$GLOBALS['phpgw']->xslttpl->set_xml_data($bimItem->getXml());
 			$this->setupBimCss();
 		}
