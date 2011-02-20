@@ -316,7 +316,7 @@
 			{
 				$location_types	= $this->soadmin_location->select_location_type();
 
-				$cols = "fm_location" . ($type_id) .'.*';
+				$cols = "fm_location{$type_id}.*";
 				$cols_return[] 				= 'location_code';
 				$uicols['input_type'][]		= 'hidden';
 				$uicols['name'][]			= 'location_code';
@@ -330,15 +330,15 @@
 				for ($i=0; $i<($type_id); $i++)
 				{
 					$uicols['input_type'][]		= 'text';
-					$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
+					$uicols['name'][]			= "loc{$location_types[$i]['id']}";
 					$uicols['descr'][]			= $location_types[$i]['name'];
 					$uicols['statustext'][]		= $location_types[$i]['descr'];
 					$uicols['exchange'][]		= true;
 					$uicols['align'][] 			= 'center';
 					$uicols['datatype'][]		= 'link';
 					$uicols['formatter'][]		= '';
-					$cols 						.= ",fm_location" . ($type_id) .".loc" . $location_types[$i]['id'];
-					$cols_return[] 				= 'loc' . $location_types[$i]['id'];
+					$cols 						.= ",fm_location{$type_id}.loc{$location_types[$i]['id']}";
+					$cols_return[] 				= "loc{$location_types[$i]['id']}";
 				}
 
 				$uicols['datatype'][$type_id] = 'I'; // correct the last one
@@ -349,10 +349,10 @@
 				{
 					if(isset($list_info[$i]) && $list_info[$i])
 					{
-						$cols.= ',fm_location' . $i . '.loc' . ($i) . '_name';
-						$cols_return[] 				= 'loc' . ($i) . '_name';
+						$cols.= ",fm_location{$i}.loc{$i}_name";
+						$cols_return[] 				= "loc{$i}_name";
 						$uicols['input_type'][]		= 'text';
-						$uicols['name'][]			= 'loc' . ($i) . '_name';
+						$uicols['name'][]			= "loc{$i}_name";
 						$uicols['descr'][]			= $location_types[($i-1)]['name'] . ' ' . lang('name');
 						$uicols['statustext'][]		= $location_types[($i-1)]['name'] . ' ' . lang('name');
 						$uicols['exchange'][]		= true;
@@ -366,14 +366,14 @@
 				$paranthesis = '';
 				for ($j=($type_id-1); $j>0; $j--)
 				{
-					$joinmethod .= " $this->join fm_location". ($j);
+					$joinmethod .= " {$this->join} fm_location{$j}";
 
 					$paranthesis .='(';
 
 					$on = 'ON';
 					for ($i=($j); $i>0; $i--)
 					{
-						$joinmethod .= " $on (fm_location" . ($j+1) .".loc" . ($i). " = fm_location" . ($j) . ".loc" . ($i) . ")";
+						$joinmethod .= " $on (fm_location" . ($j+1) .".loc{$i} = fm_location{$j}.loc{$i})";
 						$on = 'AND';
 						if($i==1)
 						{
@@ -381,6 +381,9 @@
 						}
 					}
 				}
+
+	//			$paranthesis .='(';
+	//			$joinmethod .= " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id))";
 
 				$config = $this->soadmin_location->read_config('');
 
@@ -449,7 +452,7 @@
 						}
 						else
 						{
-							$joinmethod .= " $this->left_join  " . $config[$i]['reference_table'] . " ON ( fm_location" . $config[$i]['location_type'] . "." . $config[$i]['column_name'] . "=" . $config[$i]['reference_table'] . ".".$config[$i]['reference_id']."))";
+							$joinmethod .= " {$this->left_join} {$config[$i]['reference_table']} ON ( fm_location{$config[$i]['location_type']}.{$config[$i]['column_name']} = {$config[$i]['reference_table']}.{$config[$i]['reference_id']}))";
 							$paranthesis .='(';
 						}
 					}
@@ -760,7 +763,7 @@
 					$query_name = '';
 					for ($i=1;$i<($type_id+1);$i++)
 					{
-						$query_name .= "OR loc{$i}_name $this->like '%$query%'";
+						$query_name .= "OR loc{$i}_name {$this->like} '%{$query}%'";
 					}
 
 					if(!$criteria_id)
@@ -911,32 +914,32 @@
 			return $values;
 		}
 
-		function generate_sql($type_id='',$cols='',$cols_return='',$uicols='',$read_single='')
+		function generate_sql($type_id,$cols='',$cols_return='',$uicols='',$read_single='')
 		{
-			$joinmethod = " fm_location" . ($type_id);
+			$joinmethod = " fm_location{$type_id}";
 
 			$location_types	= $this->soadmin_location->select_location_type();
 
-			//		$cols .= "fm_location" . ($type_id) .".location_code";
+	//		$cols .= "fm_location" . ($type_id) .".location_code";
 			$cols_return[] = 'location_code';
 			for ($i=0; $i<($type_id); $i++)
 			{
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]		= 'loc' . $location_types[$i]['id'];
-				$uicols['descr'][]		= $location_types[$i]['name'];
+				$uicols['name'][]			= 'loc' . $location_types[$i]['id'];
+				$uicols['descr'][]			= $location_types[$i]['name'];
 				$uicols['statustext'][]		= $location_types[$i]['descr'];
-				//			$cols 				.= ",fm_location" . ($type_id) .".loc" . $location_types[$i]['id'];
-				$cols_return[] 			= 'loc' . $location_types[$i]['id'];
+	//			$cols 						.= ",fm_location" . ($type_id) .".loc" . $location_types[$i]['id'];
+				$cols_return[] 				= 'loc' . $location_types[$i]['id'];
 			}
 
 
 			if($type_id !=1)
 			{
-				//				$cols.= ',fm_location1.loc1_name as loc1_name';
-				//				$cols_return[] 			= 'loc1_name';
+//				$cols.= ',fm_location1.loc1_name as loc1_name';
+//				$cols_return[] 				= 'loc1_name';
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]		= 'loc1_name';
-				$uicols['descr'][]		= lang('Property Name');
+				$uicols['name'][]			= 'loc1_name';
+				$uicols['descr'][]			= lang('Property Name');
 				$uicols['statustext'][]		= lang('Property Name');
 			}
 
@@ -950,7 +953,7 @@
 				$on = 'ON';
 				for ($i=($j); $i>0; $i--)
 				{
-					$joinmethod .= " $on (fm_location" . ($j+1) .".loc" . ($i). " = fm_location" . ($j) . ".loc" . ($i) . ")";
+					$joinmethod .= " {$on} (fm_location" . ($j+1) . ".loc{$i}  = fm_location{$j}.loc{$i})";
 					$on = 'AND';
 					if($i==1)
 					{
@@ -966,7 +969,6 @@
 			{
 				if (($config[$i]['location_type'] <= $type_id) && ($config[$i]['f_key'] ==1))
 				{
-
 					if($config[$i]['column_name']=='tenant_id' || $config[$i]['column_name']=='street_id')
 					{
 						$join=$this->left_join;
@@ -1522,10 +1524,10 @@
 		{
 			if(is_array($data))
 			{
-				$filter	= (isset($data['filter'])?$data['filter']:0);
-				$type_id = (isset($data['type_id'])?$data['type_id']:'');
-				$district_id = (isset($data['district_id'])?$data['district_id']:'');
-				$part_of_town_id = (isset($data['part_of_town_id'])?$data['part_of_town_id']:'');
+				$filter	=  isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
+				$type_id =  isset($data['type_id']) && $data['type_id'] ?(int)$data['type_id'] : 0;
+				$district_id =  isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id']:0;
+				$part_of_town_id =  isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id']:0;
 			}
 
 			if(!$type_id)
@@ -1554,7 +1556,7 @@
 				$uicols['input_type'][]	= 'text';
 				$cols.=", fm_part_of_town.district_id as district_id";
 				$groupmethod .= " ,fm_part_of_town.district_id";
-				$filtermethod = " $where fm_part_of_town.district_id=$district_id";
+				$filtermethod = " $where fm_part_of_town.district_id = {$district_id}";
 				$where = 'AND';
 			}
 
@@ -1565,7 +1567,7 @@
 				$uicols['input_type'][]	= 'text';
 				$groupmethod .= " ,fm_part_of_town.name";
 				$cols.=", fm_part_of_town.name as part_of_town";
-				$filtermethod .= " $where fm_part_of_town.part_of_town_id=$part_of_town_id";
+				$filtermethod .= " $where fm_part_of_town.part_of_town_id = {$part_of_town_id}";
 				$where = 'AND';
 			}
 
