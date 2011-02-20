@@ -1767,7 +1767,11 @@
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
 			$GLOBALS['phpgw']->session->appsession('receipt','property','');
 
-			$id	= phpgw::get_var('id');
+			if(!$id	= phpgw::get_var('id'))
+			{
+				phpgwapi_cache::message_set('ID is required for the function uiworkorder::view()', 'error'); 
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.index'));
+			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder', 'hour_data_view', 'files'));
 
