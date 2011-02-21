@@ -26,5 +26,13 @@
 								
 	include('../header.inc.php');
 
-	execmethod('felamimail.uifelamimail.viewMainScreen');
+	try
+	{
+		execmethod('felamimail.uifelamimail.viewMainScreen');
+	}
+	catch(Exception $e)
+	{
+		phpgwapi_cache::message_set($e->getMessage(), 'error');
+		$GLOBALS['phpgw']->redirect_link('/home.php');
+	}
 ?>

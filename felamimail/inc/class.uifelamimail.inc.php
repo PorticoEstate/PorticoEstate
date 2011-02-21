@@ -11,6 +11,10 @@
 	* Free Software Foundation; version 2 of the License.                       *
 	\***************************************************************************/
 	/* $Id$ */
+	if(! is_file(PHPGW_INCLUDE_ROOT.'/felamimail/inc/egw-pear/Net/IMAP.php'))
+	{
+		throw new Exception('missing egw-pear package');
+	}
 
 	class uifelamimail
 	{

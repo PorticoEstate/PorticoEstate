@@ -41,7 +41,7 @@
 		public function clear_userlist()
 		{
 			$cleared = ExecMethod('property.bocommon.reset_fm_cache_userlist');
-			$receipt['message'][] = array('msg' => lang('%1 userlists cleared from cache',$cleared));
-			phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+			$message =lang('%1 userlists cleared from cache',$cleared);
+			phpgwapi_cache::message_set($message, 'message');
 		}
 	}

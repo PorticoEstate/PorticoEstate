@@ -1891,9 +1891,8 @@
 
 // END BOOKING TABLES
 			default:
-				$receipt = array();
-				$receipt['error'][]=array('msg'=>lang('ERROR: illegal type %1', $type));
-				phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+				$message =lang('ERROR: illegal type %1', $type);
+				phpgwapi_cache::message_set($message, 'error');
 //				throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 

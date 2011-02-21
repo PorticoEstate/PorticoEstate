@@ -561,4 +561,39 @@
 			}
 			return self::_file_set($key, $value);
 		}
+
+		/**
+		 * Store system message in the session cache
+		 *
+		 * @param string or array $message the message set to register
+		 * @param string $type the type (error/message) of message
+		 * @return bool was the data stored in the session cache?
+		 */
+		public static function message_set($message, $type = 'message')
+		{
+			if(!$type == 'message')
+			{
+				$type == 'error';
+			}
+			$receipt = self::session_get('phpgwapi', 'phpgw_messages');
+			if(!is_array($receipt))
+			{
+				$receipt =array();
+			}
+			
+			if(!is_array($message))
+			{
+				$_input = array($message);
+			}
+			else
+			{
+				$_input = $message;
+			}
+			foreach($_input as $msg)
+			{
+				$receipt[$type][]=array('msg'=> $msg);
+			}
+
+			return !!self::session_set('phpgwapi', 'phpgw_messages', $receipt);
+		}
 	}
