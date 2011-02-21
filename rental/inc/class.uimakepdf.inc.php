@@ -335,13 +335,20 @@
 					$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
 					$composite = reset($composites);
 					
+					$units = $composite->get_units();
+					$unit = reset($units);
 					
+					
+					$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+
 					$data = array
 					(
 						'contract' 	=> $contract,
 						'contract_party' => $party,
 						'contract_dates' => $contract_dates,
 						'composite' => $composite,
+						'unit' => $unit,
+						'price_items' =>$price_items,
 						'notification' => $notification,
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
@@ -351,9 +358,10 @@
 						
 					);
 					$contract->check_consistency();
-				//	include PHPGW_SERVER_ROOT . "/rental/inc/plugins/fellesdata/party.edit.php";
+
 					
-					$this->render('pdf/rental_contract_form_hybler.php', $data);
+				//	$this->render('pdf/rental_contract_form_hybler.php', $data);
+					$this->render('pdf/rental_contract_form_personalbolig.php', $data);
 				}
 			}
 			else

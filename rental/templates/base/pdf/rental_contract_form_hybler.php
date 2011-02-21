@@ -1,5 +1,7 @@
 <?php 
 $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+$valuta_prefix = isset($config->config_data['currency_prefix']) ? $config->config_data['currency_prefix'] : '';
+$valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : '';
 ?>
 <style>
 <?php include "css/contract.css"?>
@@ -16,7 +18,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 	<dt><span class="checkbox_bg"><input type="checkbox" /></span>&nbsp Innflytting</dt>
 	<dd>&nbsp</dd>
 	<dt>Navn:</dt>
-	<dd><?php echo $contract->get_party_name_as_list();?></dd>
+	<dd><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?></dd>
 	<dt>Fnr.:</dt>
 	<dd><?php echo $contract_party->get_identifier();?></dd>
 	<dt>Adresse:</dt>
@@ -55,42 +57,20 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 <div class="one_column">
 
 <table>
+<?php
+foreach ($price_items as $item)
+{
+	?>
 	<tr>
-		<td>Husleie uten møbler</td>
+		<td width="80%"><?php echo $item->get_title();?></td>
 		<td>Kr.:</td>
-		<td>[hentes fra db]</td>
+		<td align="right"><?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?></td>
 		<td>Pr.mnd.</td>
 	</tr>
-	<tr>
-		<td>Husleie med møbler</td>
-		<td>Kr.:</td>
-		<td>[hentes fra db]</td>
-		<td>Pr.mnd.</td>
-	</tr>
-	<tr>
-		<td>Utstyr</td>
-		<td>Kr.:</td>
-		<td>[hentes fra db]</td>
-		<td>Pr.mnd.</td>
-	</tr>
-	<tr>
-		<td>Sengetøy/Håndduker</td>
-		<td>Kr.:</td>
-		<td>[hentes fra db]</td>
-		<td>Pr.mnd.</td>
-	</tr>
-	<tr>
-		<td>Husleie</td>
-		<td>Kr.:</td>
-		<td>[hentes fra db]</td>
-		<td>Pr.mnd.</td>
-	</tr>
-	<tr>
-		<td>1 mnd forskudd</td>
-		<td>Kr.:</td>
-		<td>[hentes fra db]</td>
-		<td>Pr.mnd.</td>
-	</tr>
+
+	<?php
+}
+?>
 </table>
 </div>
 
@@ -102,7 +82,7 @@ $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateform
 </div>
 
 <div class="one_column">
-<p>Dato:</p>
+<p>Dato: <?php echo date($date_format, time());?></p>
 <table>
 	<tr>
 		<td align="center">
