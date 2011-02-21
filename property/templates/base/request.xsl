@@ -339,32 +339,37 @@
 									</select>			
 								</td>
 							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_start_date"/>
-								</td>
-								<td>
-									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" >
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_start_date_statustext"/>
-										</xsl:attribute>
-									</input>
-									<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_end_date"/>
-								</td>
-								<td>
-									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" >
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_end_date_statustext"/>
-										</xsl:attribute>
-									</input>
-									<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-								</td>
-							</tr>
+
+							<xsl:choose>
+								<xsl:when test="show_dates !=''">
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_start_date"/>
+										</td>
+										<td>
+											<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" >
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_start_date_statustext"/>
+												</xsl:attribute>
+											</input>
+											<img id="values_start_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+										</td>
+									</tr>
+									<tr>
+										<td valign="top">
+											<xsl:value-of select="lang_end_date"/>
+										</td>
+										<td>
+											<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" >
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_end_date_statustext"/>
+												</xsl:attribute>
+											</input>
+											<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
 <!--
 							<tr>
 								<td valign="top">
