@@ -1,11 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Leiekontrakt for pesonalbolig</title>
-<link rel="stylesheet" type="text/css" href="css/contract.css" />
-</head>
-<body>
+<?php 
+$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+$valuta_prefix = isset($config->config_data['currency_prefix']) ? $config->config_data['currency_prefix'] : '';
+$valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : '';
+?>
+<style>
+<?php include "css/contract.css"?>
+</style>
+
 <img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />
 <h1>LEIEKONTRAKT</h1>
 <h2>FOR PERSONALBOLIG</h2>
@@ -20,17 +21,17 @@
 	<tr>
 		<td>Nordlandssykehuset</td>
 		<td bgcolor="#C0C0C0" width="120px">Navn:</td>
-		<td>[hentes fra db]</td>
+		<td><?php echo $contract->get_party_name_as_list();?></td>
 	</tr>
 	<tr>
 		<td>Boligseksjonen</td>
 		<td bgcolor="#C0C0C0">Fødselsnummer:</td>
-		<td>[hentes fra db]</td>
+		<td><?php echo $contract_party->get_identifier();?></td>
 	</tr>
 	<tr>
 		<td><strong>Kløveråsv. 1 8002 Bodø</strong></td>
 		<td bgcolor="#C0C0C0">Arbeidssted:</td>
-		<td><input type="text" /></td>
+		<td><?php echo $contract_party->get_department();?></td>
 	</tr>
 </table>
 
@@ -41,7 +42,7 @@
 </dl>
 <dl class="checkbox_list">
 	<dt><input type="checkbox" /></dt>
-	<dd>Gnr.[hentes fra db] Bnr. [hentes fra db] i Bodø kommune.</dd>
+	<dd>G.nr. / B.nr. / F.nr. / S.nr. <?php echo $unit->get_location()->get_gab_id();?>  i Bodø kommune.</dd>
 
 </dl>
 
@@ -78,8 +79,8 @@
 	<dd>Leiekontrakten gjelder en <i>PERSONALBOLIG</i>s, bolig som leier har leid i egenskap av arbeidstaker, og er knyttet opp mot leiers tilsetting i Nordlandssykehuset.<br />
 	<i>OBS: Utleieformen gir leier færre rettigheter enn ved leie av annen bolig.</i></dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Leieforholdet er tidsbestemt og starter den [hentes fra db] kl. 1200<br />
-	og opphører uten oppsigelse den [hentes fra db] kl. 1200<br />
+	<dd>Leieforholdet er tidsbestemt og starter den <?php echo date($date_format, $contract_dates->get_start_date());?> kl. 1200<br />
+	og opphører uten oppsigelse den <?php echo date($date_format, $contract_dates->get_end_date());?> kl. 1200<br />
 	<i>Minstetiden er i utgangspunktet tre år for tidsbestemte leieavtaler. Dersom kortere tid enn minstetiden er valgt i denne kontrakt, er det likevel lovlig fordi utleier har en annen saklig grunn
 	for tidsavgrensningen, jfr punkt 25.</i></dd>
 	<dt><input type="checkbox" /></dt>
@@ -98,8 +99,17 @@
 	<dt>7.</dt>
 	<dd>Leiesum</dd>
 </dl>
+<?php
+foreach ($price_items as $item)
+{
+	if($item->get_title()=="Leie"){
+		?>
 <p>Leien er ved kontraktsinngåelse fastsatt til <br />
-Kr [hentes fra db] pr. måned.</p>
+Kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</p>
+		<?php
+	}
+}?>
+
 
 <dl class="section_header">
 	<dt>8.</dt>
@@ -109,8 +119,16 @@ Kr [hentes fra db] pr. måned.</p>
 <dl class="checkbox_list">
 	<dt><input type="checkbox" /></dt>
 	<dd>Leier tegner eget strømabonnement</dd>
-	<dt><input type="checkbox" /></dt>
-	<dd>A konto i tillegg til leien, for tiden kr pr. mnd.</dd>
+	<?php
+	foreach ($price_items as $item)
+	{
+		if($item->get_title()=="Strøm"){
+			?>
+	<dt><input type="checkbox" checked="checked" /></dt>
+	<dd><?php echo $item->get_title();?>, kr  <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
+	<?php
+		}
+	}?>
 </dl>
 
 <dl class="section_header">
@@ -119,12 +137,16 @@ Kr [hentes fra db] pr. måned.</p>
 </dl>
 
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
-	<dd>kabel-tv, [hentes fra db] pr måned / kroner</dd>
-	<dt><input type="checkbox" /></dt>
-	<dd>miljøtillegg, [hentes fra db] pr måned / kroner</dd>
-	<dt><input type="checkbox" /></dt>
-	<dd>garasje, [hentes fra db] pr måned / kroner</dd>
+<?php
+foreach ($price_items as $item)
+{
+	if(!($item->get_title()=="Leie" || $item->get_title()=="Strøm")){
+		?>
+	<dt><input type="checkbox" checked="checked"/></dt>
+	<dd><?php echo $item->get_title();?>: kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
+	<?php
+	}
+}?>
 </dl>
 
 <dl class="section_header">
@@ -225,7 +247,7 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dt><input type="checkbox" /></dt>
 	<dd>Dyrehold er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Dyrehold er tillatt, ved at leier kan ha .......................</dd>
+	<dd>Dyrehold er tillatt, ved at leier kan ha <input type="text" /></dd>
 	<dt></dt>
 	<dd><i>Leier kan holde dyr dersom gode grunner taler for det, og dyreholdet ikke er til ulempe for utleier eller andre brukere av eiendommen. Utleiers skriftlige samtykke, og eventuelle
 	vilkår for avtalt dyrehold, skal påføres denne kontrakten, jfr pkt 25.</i></dd>
@@ -308,7 +330,7 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 	<dt><input type="checkbox" /></dt>
 	<dd>Boligen skal selges.</dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Ettersom Nordlandssykehuset står foran salg av personalboliger må det presiseres at sykehuset ikke står ansvarlig for å skaffe deg ny bolig dersom salg skulle skje innen botidens utløp [hentes fra db].</dd>
+	<dd>Ettersom Nordlandssykehuset står foran salg av personalboliger må det presiseres at sykehuset ikke står ansvarlig for å skaffe deg ny bolig dersom salg skulle skje innen botidens utløp <?php echo date($date_format, $contract_dates->get_end_date());?>.</dd>
 </dl>
 
 <dl class="section_header">
@@ -320,7 +342,7 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 
 <table>
 	<tr>
-		<td colspan="2" align="center"><i>Bodø den [dato]</i></td>
+		<td colspan="2" align="center"><i>Bodø den  <?php echo date($date_format, time());?></i></td>
 	</tr>
 	<tr>
 		<th>Utleier</th>
@@ -335,12 +357,9 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 		Boligforvalter</p>
 		</td>
 		<td align="center">
-		<p class="sign">[Navn på leietaker hentes fra db]<br />
+		<p class="sign"><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?><br />
 		&nbsp</p>
 		</td>
 	</tr>
 </table>
-<input type="submit" value="Lag pdf"></form>
-
-</body>
-</html>
+<input type="submit" value="Neste"></form>
