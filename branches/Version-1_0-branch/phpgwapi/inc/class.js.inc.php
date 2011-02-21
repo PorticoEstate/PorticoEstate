@@ -124,9 +124,8 @@
 				$combine = false;
 				if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
 				{
-					$receipt = array();
-					$receipt['error'][]=array('msg'=> 'Speed could be gained from setting suhosin.get.max_value_length = 2000 in php.ini');
-					phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+					$message ='Speed could be gained from setting suhosin.get.max_value_length = 2000 in php.ini';
+					phpgwapi_cache::message_set($message, 'error');
 				}
 			}
 			$links = "<!--JS Imports from phpGW javascript class -->\n";

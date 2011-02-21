@@ -188,7 +188,7 @@
 //				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", array('cd' =>22)); // already within a session
 //				exit;
 
-				$receipt['message'][]=array('msg'=> lang('Info: you have changed domain from "%1" to "%2"' ,$_COOKIE['domain'],$logindomain));
+				$receipt[] = lang('Info: you have changed domain from "%1" to "%2"' ,$_COOKIE['domain'],$logindomain);
 			}
 		}
 
@@ -209,7 +209,7 @@
 
 		if($receipt)
 		{
-			phpgwapi_cache::session_set('phpgwapi', 'phpgw_messages', $receipt);
+			phpgwapi_cache::message_set($receipt, 'message');
 		}
 
 		$forward = phpgw::get_var('phpgw_forward');
