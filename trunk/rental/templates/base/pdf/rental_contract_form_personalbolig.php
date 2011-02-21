@@ -54,9 +54,29 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	<dt><input type="checkbox" /></dt>
 	<dd>[hentes fra db] rom + <input type="checkbox" /> kjøkken, <input type="checkbox" /> bad</dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Annet: <input type="text" /></dd>
+	<dd>Annet: 
+<?php if (isset($_POST['preview']) )
+	{
+		?> <?php echo $_POST['other']?> <input type="hidden" name="other" value="<?php echo $_POST['other']?>" /> <?php
+	}
+	else
+	{
+		?> <input type="text" name="other" value="<?php echo $_POST['other']?>" /> <?php
+	}
+?>
+	</dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Ytre rom:<input type="text" /></dd>
+	<dd>Ytre rom: 
+<?php if (isset($_POST['preview']) )
+	{
+		?> <?php echo $_POST['outer_space']?> <input type="hidden" name="outer_space" value="<?php echo $_POST['outer_space']?>" /> <?php
+	}
+	else
+	{
+		?> <input type="text" name="outer_space" value="<?php echo $_POST['outer_space']?>" /> <?php
+	}
+?>
+	</dd>
 </dl>
 <dl class="section_header">
 	<dt>5.</dt>
@@ -65,7 +85,19 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 <dl class="checkbox_list">
 	<dt><input type="checkbox" /></dt>
 	<dd>Leier har ikke rett til å bruke:<br/>
-	<textarea cols="100" rows="3"></textarea></dd>
+	<?php if (isset($_POST['preview']) )
+{
+	?>
+<p><?php echo $_POST['limitations']?></p>
+<input type="hidden" name="limitations" value="<?php echo $_POST['limitations']?>" />
+	<?php
+}
+else
+{
+	?> <textarea rows="3" cols="" name="limitations"><?php echo $_POST['limitations']?></textarea> <?php
+}
+?> 
+	</dd>
 
 </dl>
 
@@ -104,8 +136,7 @@ foreach ($price_items as $item)
 {
 	if($item->get_title()=="Leie"){
 		?>
-<p>Leien er ved kontraktsinngåelse fastsatt til <br />
-Kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</p>
+<p>Leien er ved kontraktsinngåelse fastsatt til kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</p>
 		<?php
 	}
 }?>
@@ -234,7 +265,15 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dt><input type="checkbox" /></dt>
 	<dd>Framleie er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Framleie er tillatt til <input type="text" /></dd>
+	<dd>Framleie er tillatt til: <?php if (isset($_POST['preview']) )
+	{
+		?> <?php echo $_POST['subtenant']?> <input type="hidden" name="subtenant" value="<?php echo $_POST['subtenant']?>" /> <?php
+	}
+	else
+	{
+		?> <input type="text" name="subtenant" value="<?php echo $_POST['subtenant']?>" /> <?php
+	}
+?></dd>
 	<dt></dt>
 	<dd><i>Vilkår for avtalt framleie / husstandsfellesskap, skal påføres kontraktens pkt 25.</i></dd>
 </dl>
@@ -247,7 +286,15 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dt><input type="checkbox" /></dt>
 	<dd>Dyrehold er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
 	<dt><input type="checkbox" /></dt>
-	<dd>Dyrehold er tillatt, ved at leier kan ha <input type="text" /></dd>
+	<dd>Dyrehold er tillatt, ved at leier kan ha: <?php if (isset($_POST['preview']) )
+	{
+		?> <?php echo $_POST['animals']?> <input type="hidden" name="animals" value="<?php echo $_POST['animals']?>" /> <?php
+	}
+	else
+	{
+		?> <input type="text" name="animals" value="<?php echo $_POST['animals']?>" /> <?php
+	}
+?></dd>
 	<dt></dt>
 	<dd><i>Leier kan holde dyr dersom gode grunner taler for det, og dyreholdet ikke er til ulempe for utleier eller andre brukere av eiendommen. Utleiers skriftlige samtykke, og eventuelle
 	vilkår for avtalt dyrehold, skal påføres denne kontrakten, jfr pkt 25.</i></dd>
@@ -362,4 +409,11 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 		</td>
 	</tr>
 </table>
-<input type="submit" value="Neste"></form>
+<?php if (isset($_POST['preview']) ){ ?>
+<input type="submit" value="Rediger" name="edit"> 
+<input type="submit" value="Lagre som PDF" name="make_PDF"> 
+<?php }else{?>
+
+<input type="submit" value="Forhåndsvis" name="preview"> 
+<?php }?>
+</form>
