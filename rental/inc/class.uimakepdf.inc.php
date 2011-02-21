@@ -9,6 +9,7 @@
 	phpgw::import_class('rental.soprice_item');
 	phpgw::import_class('rental.socontract_price_item');
 	phpgw::import_class('rental.soadjustment');
+	phpgw::import_class('rental.soparty');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
@@ -16,7 +17,7 @@
 	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'notification', 'inc/model/');
 
-	class rental_uicontract extends rental_uicommon
+	class rental_uimakepdf extends rental_uicommon
 	{
 		public $public_functions = array
 		(
@@ -251,7 +252,9 @@
 																									'initial_load' => 'no',
 																									'adjustment_id' => $adjustment_id)));
 					$value['labels'][] = lang('show');
-			
+						
+
+						
 					break;
 				default:
 					if(!isset($ids) || count($ids) > 0)
@@ -267,7 +270,7 @@
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('show');
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('make_pdf');
 				}
 		}
@@ -324,18 +327,33 @@
 						return;
 					}
 					
+					$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+					$party = reset($parties); //
+					
+					$contract_dates = $contract->get_contract_date();
+					
+					$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+					$composite = reset($composites);
+					
+					
 					$data = array
 					(
 						'contract' 	=> $contract,
+						'contract_party' => $party,
+						'contract_dates' => $contract_dates,
+						'composite' => $composite,
 						'notification' => $notification,
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
 						'cancel_link' => $cancel_link,
 						'cancel_text' => $cancel_text
+						
 					);
 					$contract->check_consistency();
-					$this->render('contract.php', $data);
+				//	include PHPGW_SERVER_ROOT . "/rental/inc/plugins/fellesdata/party.edit.php";
+					
+					$this->render('pdf/rental_contract_form_hybler.php', $data);
 				}
 			}
 			else
