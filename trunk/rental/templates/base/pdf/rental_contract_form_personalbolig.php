@@ -13,6 +13,32 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 
 
 <form action="" method="post">
+<?php
+$disabled="";
+$color_checkbox = "checkbox_bg";
+$checkb_in_value = true;
+
+if (isset($_POST['preview']) )
+{
+	$disabled = 'disabled="disabled"';
+	$color_checkbox = "";
+
+	echo "er post";
+	
+
+}
+
+if(isset($_POST['checkb_gab'])){?><input type="hidden" name="checkb_gab_hidden"  /><?php }
+if(isset($_POST['checkb_unit'])){?><input type="hidden" name="checkb_unit_hidden"  /><?php }
+if(isset($_POST['checkb_kitchen'])){?><input type="hidden" name="checkb_kitchen_hidden"  /><?php }
+if(isset($_POST['checkb_bath'])){?><input type="hidden" name="checkb_bath_hidden"  /><?php }
+if(isset($_POST['checkb_phone'])){?><input type="hidden" name="checkb_phone"  /><?php }
+if(isset($_POST['checkb_HR'])){?><input type="hidden" name="checkb_HR_hidden"  /><?php }
+if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_payroll_office_hidden"  /><?php }
+
+?>
+
+
 <table class="header">
 	<tr>
 		<th>1. Utleier</th>
@@ -41,7 +67,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	<dd>Eiendom</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_gab" <?php echo $disabled; if(isset($_POST['checkb_gab']) || isset($_POST['checkb_gab_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>G.nr. / B.nr. / F.nr. / S.nr. <?php echo $unit->get_location()->get_gab_id();?>  i Bodø kommune.</dd>
 
 </dl>
@@ -51,9 +77,9 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	<dd>Leieobjekt</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
-	<dd>[hentes fra db] rom + <input type="checkbox" /> kjøkken, <input type="checkbox" /> bad</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_unit" <?php echo $disabled; if(isset($_POST['checkb_unit']) || isset($_POST['checkb_unit_hidden'])) {echo 'checked="checked"';}?>  /></dt>
+	<dd>[hentes fra db] rom + <input type="checkbox" name="checkb_kitchen" <?php echo $disabled; if(isset($_POST['checkb_kitchen']) || isset($_POST['checkb_kitchen_hidden'])) {echo 'checked="checked"';}?>  /> kjøkken, <input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /> bad</dd>
+	<dt><input type="checkbox" name="checkb_bath" <?php echo $disabled; if(isset($_POST['checkb_bath']) || isset($_POST['checkb_bath_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Annet: 
 <?php if (isset($_POST['preview']) )
 	{
@@ -65,7 +91,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	}
 ?>
 	</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_other" <?php echo $disabled; if(isset($_POST['checkb_other']) || isset($_POST['checkb_other_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Ytre rom: 
 <?php if (isset($_POST['preview']) )
 	{
@@ -83,7 +109,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 	<dd>Begrensning</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Leier har ikke rett til å bruke:<br/>
 	<?php if (isset($_POST['preview']) )
 {
@@ -107,20 +133,20 @@ else
 </dl>
 
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Leiekontrakten gjelder en <i>PERSONALBOLIG</i>s, bolig som leier har leid i egenskap av arbeidstaker, og er knyttet opp mot leiers tilsetting i Nordlandssykehuset.<br />
 	<i>OBS: Utleieformen gir leier færre rettigheter enn ved leie av annen bolig.</i></dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Leieforholdet er tidsbestemt og starter den <?php echo date($date_format, $contract_dates->get_start_date());?> kl. 1200<br />
 	og opphører uten oppsigelse den <?php echo date($date_format, $contract_dates->get_end_date());?> kl. 1200<br />
 	<i>Minstetiden er i utgangspunktet tre år for tidsbestemte leieavtaler. Dersom kortere tid enn minstetiden er valgt i denne kontrakt, er det likevel lovlig fordi utleier har en annen saklig grunn
 	for tidsavgrensningen, jfr punkt 25.</i></dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Leier kan si opp leieavtalen med 2 - to - måneders frist til fraflytting ved utløpet av den kalendermåned fristen utløper i. Oppsigelsen skal være skriftlig.</dd>
 </dl>
 <div class="one_column">
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Oppsigelse av leiers tilsettingsforhold i Nordlandssykehuset gir saklig grunnlag for oppsigelse av leieavtalen, jfr pkt 19.</dd>
 
 </dl>
@@ -148,14 +174,14 @@ foreach ($price_items as $item)
 </dl>
 
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Leier tegner eget strømabonnement</dd>
 	<?php
 	foreach ($price_items as $item)
 	{
 		if($item->get_title()=="Strøm"){
 			?>
-	<dt><input type="checkbox" checked="checked" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  checked="checked" /></dt>
 	<dd><?php echo $item->get_title();?>, kr  <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
 	<?php
 		}
@@ -173,7 +199,7 @@ foreach ($price_items as $item)
 {
 	if(!($item->get_title()=="Leie" || $item->get_title()=="Strøm")){
 		?>
-	<dt><input type="checkbox" checked="checked"/></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  checked="checked"/></dt>
 	<dd><?php echo $item->get_title();?>: kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
 	<?php
 	}
@@ -262,9 +288,9 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dd>Framleie</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Framleie er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Framleie er tillatt til: <?php if (isset($_POST['preview']) )
 	{
 		?> <?php echo $_POST['subtenant']?> <input type="hidden" name="subtenant" value="<?php echo $_POST['subtenant']?>" /> <?php
@@ -283,9 +309,9 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dd>Dyrehold</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Dyrehold er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Dyrehold er tillatt, ved at leier kan ha: <?php if (isset($_POST['preview']) )
 	{
 		?> <?php echo $_POST['animals']?> <input type="hidden" name="animals" value="<?php echo $_POST['animals']?>" /> <?php
@@ -370,13 +396,13 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 	<dd>Særlige bestemmelser</dd>
 </dl>
 <dl class="checkbox_list">
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Boligen er øremerket til andre tilsatte.</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Boligen er allerede utleid til tilsatte som skal flytte inn dag. måned år</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Boligen skal selges.</dd>
-	<dt><input type="checkbox" /></dt>
+	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Ettersom Nordlandssykehuset står foran salg av personalboliger må det presiseres at sykehuset ikke står ansvarlig for å skaffe deg ny bolig dersom salg skulle skje innen botidens utløp <?php echo date($date_format, $contract_dates->get_end_date());?>.</dd>
 </dl>
 

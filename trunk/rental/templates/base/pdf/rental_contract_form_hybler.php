@@ -34,7 +34,7 @@ if(isset($_POST['checkb_in'])){?><input type="hidden" name="checkb_in_hidden"  /
 if(isset($_POST['checkb_out'])){?><input type="hidden" name="checkb_out_hidden"  /><?php }
 if(isset($_POST['checkb_keys'])){?><input type="hidden" name="checkb_keys_hidden"  /><?php }
 if(isset($_POST['checkb_janitor'])){?><input type="hidden" name="checkb_janitor_hidden"  /><?php }
-if(isset($_POST['checkb_phone'])){?><input type="hidden" name="checkb_phone"  /><?php }
+if(isset($_POST['checkb_phone'])){?><input type="hidden" name="checkb_phone_hidden"  /><?php }
 if(isset($_POST['checkb_HR'])){?><input type="hidden" name="checkb_HR_hidden"  /><?php }
 if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_payroll_office_hidden"  /><?php }
 
