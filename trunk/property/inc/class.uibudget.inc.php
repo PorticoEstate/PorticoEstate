@@ -1864,9 +1864,9 @@
 		{
 			switch (phpgw::get_var('download'))
 			{
-			case 'basis':
-				$list= $this->bo->read_basis();
-				$names = array
+				case 'basis':
+					$list= $this->bo->read_basis();
+					$names = array
 					(
 						'year',
 						'revision',
@@ -1876,7 +1876,7 @@
 						'category',
 						'budget_cost'
 					);
-				$descr = array
+					$descr = array
 					(
 						lang('year'),
 						lang('revision'),
@@ -1886,10 +1886,10 @@
 						lang('category'), 
 						lang('budget')
 					);
-				break;
-			case 'budget':
-				$list= $this->bo->read();
-				$names = array
+					break;
+				case 'budget':
+					$list= $this->bo->read();
+					$names = array
 					(
 						'year',
 						'revision',
@@ -1899,9 +1899,9 @@
 						'district_id',
 						'ecodimb',
 						'category', 
-						'budget'
-					);
-				$descr = array
+						'budget_cost'
+						);
+					$descr = array
 					(
 						lang('year'),
 						lang('revision'),
@@ -1913,15 +1913,14 @@
 						lang('category'), 
 						lang('budget')
 					);
-
-				break;
-			case 'obligations':
-				$gross_list= $this->bo->read_obligations();
-				$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
-				$list = array();
-				foreach($gross_list as $entry)
-				{
-					$list[] = array
+					break;
+				case 'obligations':
+					$gross_list= $this->bo->read_obligations();
+					$sum_obligation = $sum_hits = $sum_budget_cost = $sum_actual_cost = 0;	
+					$list = array();
+					foreach($gross_list as $entry)
+					{
+						$list[] = array
 						(
 							'grouping'			=> $entry['grouping'],
 							'b_account'			=> $entry['b_account'],	
@@ -1933,8 +1932,8 @@
 							'actual_cost'		=> $entry['actual_cost'],
 							'diff'				=> ($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation']),
 						);	
-				}
-				$names = array
+					}
+					$names = array
 					(
 						'grouping',
 						'b_account',
@@ -1946,7 +1945,7 @@
 						'actual_cost',
 						'diff'
 					);
-				$descr = array
+					$descr = array
 					(
 						lang('grouping'),
 						lang('budget account'),
@@ -1958,10 +1957,11 @@
 						lang('paid'),
 						lang('difference')
 					);
-				break;
-			default:
-				return;
+					break;
+				default:
+					return;
 			}
+
 			if($list)
 			{
 				$this->bocommon->download($list,$names,$descr);
