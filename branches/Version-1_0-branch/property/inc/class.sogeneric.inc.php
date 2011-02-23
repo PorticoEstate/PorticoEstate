@@ -1078,6 +1078,31 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable'=> true
+							),
+							array
+							(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+							(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg'			=> lang('edit status'),

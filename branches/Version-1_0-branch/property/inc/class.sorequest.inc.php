@@ -43,6 +43,7 @@
 			$this->custom 		= createObject('property.custom_fields');
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
+			$this->left_join	= & $this->db->left_join;
 			$this->like			= & $this->db->like;
 			$this->interlink 	= CreateObject('property.interlink');
 		}
@@ -122,16 +123,18 @@
 
 		function select_status_list()
 		{
-			$this->db->query("SELECT id, descr FROM fm_request_status ORDER BY id ");
+			$this->db->query("SELECT id, descr FROM fm_request_status ORDER BY sorting ");
 
-			$i = 0;
+			$status = array();
 			while ($this->db->next_record())
 			{
-				$status_entries[$i]['id']				= $this->db->f('id');
-				$status_entries[$i]['name']				= stripslashes($this->db->f('descr'));
-				$i++;
+				$status[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('descr',true)
+				);
 			}
-			return $status_entries;
+			return $status;
 		}
 
 		function select_condition_type_list()
@@ -192,6 +195,26 @@
 			$uicols['name'][]			= 'request_id';
 			$uicols['descr'][]			= lang('Request');
 			$uicols['statustext'][]		= lang('Request ID');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
+
+			$cols.= ",fm_request_status.descr as status";
+			$cols_return[] 				= 'status';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'status';
+			$uicols['descr'][]			= lang('status');
+			$uicols['statustext'][]		= lang('status');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= false;
 
 			$cols.= ",$entity_table.start_date";
 			$cols_return[] 				= 'start_date';
@@ -199,6 +222,13 @@
 			$uicols['name'][]			= 'start_date';
 			$uicols['descr'][]			= lang('start date');
 			$uicols['statustext'][]		= lang('Request start date');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
 
 			$cols.= ",$entity_table.title as title";
 			$cols_return[] 				= 'title';
@@ -206,6 +236,13 @@
 			$uicols['name'][]			= 'title';
 			$uicols['descr'][]			= lang('title');
 			$uicols['statustext'][]		= lang('Request title');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
 
 			if($list_descr)
 			{
@@ -215,6 +252,12 @@
 				$uicols['name'][]			= 'descr';
 				$uicols['descr'][]			= lang('descr');
 				$uicols['statustext'][]		= lang('Request descr');
+				$uicols['exchange'][]		= '';
+				$uicols['align'][]			= '';
+				$uicols['datatype'][]		= '';
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= false;
 			}
 
 
@@ -224,6 +267,12 @@
 			$uicols['name'][]			= 'budget';
 			$uicols['descr'][]			= lang('budget');
 			$uicols['statustext'][]		= lang('Request budget');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
 
 			$cols.= ",$entity_table.coordinator";
 			$cols_return[] 				= 'coordinator';
@@ -231,6 +280,13 @@
 			$uicols['name'][]			= 'coordinator';
 			$uicols['descr'][]			= lang('Coordinator');
 			$uicols['statustext'][]		= lang('Project coordinator');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= false;
+
 
 			$cols.= ",$entity_table.score";
 			$cols_return[] 				= 'score';
@@ -238,6 +294,16 @@
 			$uicols['name'][]			= 'score';
 			$uicols['descr'][]			= lang('score');
 			$uicols['statustext'][]		= lang('score');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
+
+			$paranthesis = '(';
+			$joinmethod = "{$this->left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
 
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
@@ -265,13 +331,13 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_request.category='$cat_id' ";
+				$filtermethod .= " $where fm_request.category='{$cat_id}' ";
 				$where = 'AND';
 			}
 
 			if ($status_id)
 			{
-				$filtermethod .= " $where  fm_request.status='$status_id' ";
+				$filtermethod .= " $where  fm_request.status='{$status_id}' ";
 				$where = 'AND';
 			}
 
@@ -281,9 +347,10 @@
 				$where = 'AND';
 			}
 
-			if ($project_id)// lookup requests not already allocated to projects
+			if ($project_id && !$status_id)// lookup requests not already allocated to projects
 			{
-				$filtermethod .= " $where project_id is NULL ";
+//				$filtermethod .= " $where project_id is NULL ";
+				$filtermethod .= " $where fm_request_status.closed is NULL ";
 				$where = 'AND';
 			}
 
@@ -308,7 +375,7 @@
 			}
 
 			$sql .= " $filtermethod $querymethod";
-
+//_debug_array($sql);
 			$this->uicols		= $this->bocommon->uicols;
 			$cols_return		= $this->bocommon->cols_return;
 			$type_id			= $this->bocommon->type_id;

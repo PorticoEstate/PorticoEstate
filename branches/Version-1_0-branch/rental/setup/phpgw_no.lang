@@ -279,6 +279,7 @@ link	rental	no	Lenke
 location_code	rental	no	Enhetsnummer
 location_id	rental	no	Intern organisasjonstilknytning
 log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus.
+make_pdf	rental	no	Lag PDF for utskrift
 manual_adjust_price_item	rental	no	Manuell regulering av priselement
 manual_adjust_price_item_select	rental	no	Velg priselement
 manual_adjustment	rental	no	Manuell regulering
