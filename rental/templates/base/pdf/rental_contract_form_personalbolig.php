@@ -506,7 +506,7 @@ $_SESSION['contract_html'] = $HtmlCode;
 <input type="submit" value="Rediger" name="edit"> 
 </form>
 
-<form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $value['id'], 'initial_load' => 'no'))));?>" method="post">
+<form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $contract->get_id(), 'initial_load' => 'no'))));?>" method="post">
 <input type="submit" value="Lagre som PDF" name="make_PDF" /> 
 
 </form>

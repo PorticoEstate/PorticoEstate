@@ -11,6 +11,7 @@
 	phpgw::import_class('rental.soadjustment');
 	phpgw::import_class('rental.soparty');
 	include_class('rental', 'contract', 'inc/model/');
+	include_class('rental', 'document', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'price_item', 'inc/model/');
@@ -413,7 +414,6 @@
 		 */
 		public function makePDF()
 		{
-			
 			$myFile = "/opt/portico/pe/rental/tmp/testFile.html";
 			$fh = fopen($myFile, 'w') or die("can't open file");
 			$stringData = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
@@ -425,12 +425,95 @@
 			$stringData = '</div></body></html>';
 			fwrite($fh, $stringData);
 			fclose($fh);
-			echo $_SESSION['contract_html'];
+			//echo $_SESSION['contract_html'];
 			 $_SESSION['contract_html'] = "";
 			 
 			$snappy = new SnappyPdf;
 			$snappy->setExecutable('/opt/portico/pe/rental/wkhtmltopdf-i386'); // or whatever else
 			$snappy->save('/opt/portico/pe/rental/tmp/testFile.html', '/opt/portico/pe/rental/tmp/testFile.pdf');
+			
+			$contract_id = phpgw::get_var('id');
+			//var_dump("contr: " . phpgw::get_var('id'));
+			$pdf_file_name = "/opt/portico/pe/rental/tmp/testFile.pdf";
+			//$pdf_file = fopen($pdf_file_name, 'r') or die("cannot open file $pdf_file_name");
+			$this->savePDFToContract($pdf_file_name, $contract_id, 'Kontrakt');
+		}
+		
+		/*
+		 * Store a contract as PDF to VFS
+		 * Add generated PDF to list of contract documents
+		 */
+		public function savePDFToContract($file, $contract_id, $title)
+		{
+			//Create a document object
+			$document = new rental_document();
+			$document->set_title($title);
+			$document->set_name("Kontrakt_".strtotime(date('Y-m-d')).".pdf");
+			$document->set_type_id(1);
+			$document->set_contract_id($contract_id);
+			$document->set_party_id(NULL);
+			
+			
+			//Retrieve the document properties
+			$document_properties = $this->get_type_and_id($document);
+			
+			// Move file from temporary storage to vfs
+			$result = rental_sodocument::get_instance()->write_document_to_vfs
+			(
+				$document_properties['document_type'], 
+				$file,
+				$document_properties['id'],
+				"Kontrakt_".strtotime(date('Y-m-d')).".pdf"
+			);
+			
+			if($result)
+			{
+				if(rental_sodocument::get_instance()->store($document))
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract_id, 'tab' => 'documents'));
+				}
+				else
+				{
+					// Handle failure on storing document
+					$this->redirect($document, $document_properties,'','');
+				}
+			}
+			else
+			{
+				//Handle vfs failure to store document
+				$this->redirect($document, $document_properties,'','');
+			}
+			return false;
+		}
+		
+		/**
+		 * Utility method for finding out whether a document is bound to a
+		 * contract or a party.
+		 * 
+		 * @param $document	the given document
+		 * @return name/value array ('document_type','id')
+		 */
+		private function get_type_and_id($document)
+		{
+			$document_type;
+			$id;
+			$contract_id = $document->get_contract_id();
+			$party_id = $document->get_party_id();
+			if(isset($contract_id) && $contract_id > 0)
+			{
+				$document_type = rental_sodocument::$CONTRACT_DOCUMENTS;
+				$id = $contract_id;
+			} 
+			else if(isset($party_id) && $party_id > 0)
+			{
+				$document_type = rental_sodocument::$PARTY_DOCUMENTS;
+				$id = $party_id;
+			}
+			return array
+			(
+				'document_type' => $document_type,
+				'id' => $id
+			);
 		}
 
 		/**

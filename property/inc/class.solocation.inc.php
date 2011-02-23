@@ -1184,6 +1184,7 @@
 
 		function add($location,$values_attribute = array(),$type_id='')
 		{
+			$receipt = array();
 			foreach ($location as $input_name => $value)
 			{
 				if($value)
@@ -1240,12 +1241,13 @@
 				}
 			}
 
+			$receipt['location_code'] = $location['location_code'];
 			return $receipt;
 		}
 
-		function edit($location='',$values_attribute='',$type_id='')
+		function edit($location,$values_attribute=array(),$type_id='')
 		{
-			//_debug_array($values_attribute);
+			$receipt = array();
 			while (is_array($location) && list($input_name,$value) = each($location))
 			{
 				if($value)
@@ -1320,6 +1322,7 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg'=>lang('Location %1 has been edited',$location['location_code']));
+			$receipt['location_code'] = $location['location_code'];
 			return $receipt;
 		}
 
