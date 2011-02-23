@@ -891,19 +891,27 @@
 
 					if($entry['history'] == 1)
 					{
-						$this->db->query("select " . $entry['name'] . " from $table WHERE id=" . $values['id'],__LINE__,__FILE__);
+						$this->db->query("SELECT {$entry['name']} FROM {$table} WHERE id = '{$values['id']}'",__LINE__,__FILE__);
 						$this->db->next_record();
-						$old_value = $this->db->f($entry['name']);
+						$old_value = $this->db->f($entry['name'],true);
+
+						if($entry['datatype'] == 'D')
+						{
+							$old_value = date(phpgwapi_db::date_format(), strtotime($old_value));
+						}
+
 						if($entry['value'] != $old_value)
 						{
-							$history_set[$entry['attrib_id']] = array('value' => $entry['value'],
-								'date'  => $this->bocommon->date_to_timestamp($entry['date']));
+							$history_set[$entry['attrib_id']] = array
+							(
+								'value' => $entry['value'],
+								'date'  => $this->bocommon->date_to_timestamp($entry['date'])
+							);
 						}
 					}
 				}
 			}
 
-			//_debug_array($history_set);
 			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();

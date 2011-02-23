@@ -529,12 +529,36 @@
 
 		function read_attrib_history($data)
 		{
-			//	_debug_array($data);
+			$attrib_data = $this->custom->get($this->type_app[$this->type], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
 			$history_type = $this->get_history_type_for_location($data['acl_location']);
 			$historylog = CreateObject('property.historylog',$history_type);
 			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id'], $data['detail_id']);
+
+			if($attrib_data['column_info']['type'] == 'LB')
+			{
+				foreach($history_values as &$value_set)
+				{
+					foreach ($attrib_data['choice'] as $choice)
+					{
+						if ($choice['id'] == $value_set['new_value'])
+						{
+							 $value_set['new_value'] = $choice['value'];
+						}
+					}
+				}
+			}
+
+
+			if($attrib_data['column_info']['type'] == 'D')
+			{
+				foreach($history_values as &$value_set)
+				{
+					 $value_set['new_value'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime( $value_set['new_value']));
+				}
+			}
+
+			reset($history_values);
 			$this->total_records = count($history_values);
-			//	_debug_array($history_values);
 			return $history_values;
 		}
 

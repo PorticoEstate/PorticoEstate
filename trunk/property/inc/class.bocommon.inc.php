@@ -1081,48 +1081,6 @@
 			return $datatype;
 		}
 
-
-		function save_attributes($values_attribute,$type)
-		{
-
-			for ($i=0;$i<count($values_attribute);$i++)
-			{
-				if($values_attribute[$i]['datatype']=='CH' && $values_attribute[$i]['value'])
-				{
-//					$values_attribute[$i]['value'] = serialize($values_attribute[$i]['value']);
-					$values_attribute[$i]['value'] = ',' . implode(',', $values_attribute[$i]['value']) . ',';
-				}
-				if($values_attribute[$i]['datatype']=='R' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = $values_attribute[$i]['value'][0];
-				}
-
-				if($values_attribute[$i]['datatype']=='N' && $values_attribute[$i]['value'])
-				{
-					$values_attribute[$i]['value'] = str_replace(",",".",$values_attribute[$i]['value']);
-				}
-
-				if($values_attribute[$i]['datatype']=='D' && $values_attribute[$i]['value'])
-				{
-					$dateformat= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-					$dateformat = str_replace(".","",$dateformat);
-					$dateformat = str_replace("-","",$dateformat);
-					$dateformat = str_replace("/","",$dateformat);
-					$y=strpos($dateformat,'Y');
-					$d=strpos($dateformat,'d');
-					$m=strpos($dateformat,'m');
-
-					$dateparts = explode('/', $values_attribute[$i]['value']);
-					$day		= $dateparts[$d];
-					$month		= $dateparts[$m];
-					$year		= $dateparts[$y];
-					$values_attribute[$i]['value'] = date($this->dateformat,mktime(2,0,0,$month,$day,$year));
-				}
-			}
-
-			$this->socommon->save_attributes($values_attribute,$type);
-		}
-
 		function add_leading_zero($num,$id_type='')
 		{
 			if ($id_type == "hex")
@@ -2083,7 +2041,7 @@
 			$split_values = array ();			
 			foreach ($array as $value)
 			{
-				array_push($split_values,array (text => "$value[id]", value => $value[id], onclick => array(fn => onDateClick, obj => array (id_button=>$id_buttons, opt=>$value[id], hidden_name=>$name_hidden))));
+				array_push($split_values,array ('text' => $value['id'], 'value' => $value['id'], 'onclick' => array('fn' => 'onDateClick', 'obj' => array ('id_button'=>$id_buttons, 'opt'=>$value['id'], 'hidden_name'=>$name_hidden))));
 			}	
 			return 	$split_values;	
 		}
@@ -2093,7 +2051,7 @@
 			$split_values = array ();			
 			foreach ($array as $value)
 			{
-				array_push($split_values,array (text => "$value[name]", value => $value[id], onclick => array(fn => onUserClick, obj => array (id_button=>$id_buttons, id=>$value[id], name =>$value[name], hidden_name=>$name_hidden))));
+				array_push($split_values,array ('text' => $value['name'], 'value' => $value['id'], 'onclick' => array('fn' => 'onUserClick', 'obj' => array ('id_button'=>$id_buttons, 'id'=>$value['id'], 'name' =>$value['name'], 'hidden_name'=>$name_hidden))));
 			}	
 			return 	$split_values;	
 		}
