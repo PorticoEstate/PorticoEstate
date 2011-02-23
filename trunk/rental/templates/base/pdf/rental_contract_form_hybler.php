@@ -1,4 +1,9 @@
 <?php 
+
+$template_name = "Korttidskontrakt";
+
+
+if(!$get_template_config){
 if (isset($_POST['preview']))
 {
 ob_start();
@@ -111,12 +116,12 @@ foreach ($price_items as $item)
 {
 	?>
 <p><?php echo $_POST['notes']?></p>
-<input type="hidden" name="notes" value="<?php echo (htmlspecialchars($_POST['notes'],ENT_QUOTES, UTF-8,true));?>" />
+<input type="hidden" name="notes" value="<?php echo (htmlspecialchars($_POST['notes'],ENT_QUOTES, UTF-8,false));?>" />
 	<?php
 }
 else
 {
-	?> <textarea rows="3" cols="" name="notes">blabla<?php echo (htmlspecialchars($_POST['notes'],ENT_QUOTES, UTF-8));?></textarea> <?php
+	?> <textarea rows="3" cols="" name="notes"><?php echo (htmlspecialchars($_POST['notes'],ENT_QUOTES, UTF-8,false));?></textarea> <?php
 }
 ?> <br />
 </div>
@@ -139,7 +144,7 @@ else
 <p>Kopi:</p>
 <p><input type="checkbox" name="checkb_HR" <?php echo $disabled; if(isset($_POST['checkb_HR']) || isset($_POST['checkb_HR_hidden'])) {echo 'checked="checked"';}?> />Personalkontoret</p>
 <p><input type="checkbox" name="checkb_payroll_office"<?php echo $disabled; if(isset($_POST['checkb_payroll_office']) || isset($_POST['checkb_payroll_office_hidden'])) {echo 'checked="checked"';}?> />Lønningskontoret</p>
-<br />
+
 
 <?php if (isset($_POST['preview'])  ){ 
 $HtmlCode= ob_get_contents();
@@ -165,4 +170,4 @@ $_SESSION['contract_html'] = $HtmlCode;
 
 </div>
 
-
+<?php }
