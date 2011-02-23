@@ -69,7 +69,7 @@
 			$this->cats					= & $this->bo->cats;
 			$this->bolocation			= CreateObject('property.bolocation');
 			$this->config				= CreateObject('phpgwapi.config','property');
-
+			$this->config->read();
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
 			$this->acl_location			= '.project.request';
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
@@ -540,25 +540,27 @@
 
 			$uicols_count	= count($uicols['descr']);
 
+			$show_dates	= isset($this->config->config_data['request_show_dates']) && $this->config->config_data['request_show_dates'] ? 1 : '';
+
 			for ($i=0;$i<$uicols_count;$i++)
 			{
+				if(!$show_dates && $uicols['name'][$i] == 'start_date')
+				{
+					$uicols['input_type'][$i] = 'hidden';
+				}
 
 				//all colums should be have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-
+				
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
-					$datatable['headers']['header'][$i]['sortable']			= false;
+					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
+					$datatable['headers']['header'][$i]['sort_field']		= $uicols['name'][$i];
 
-					if($uicols['name'][$i]=='request_id' || $uicols['name'][$i]=='budget' ||  $uicols['name'][$i]=='score' ||  $uicols['name'][$i]=='start_date')
-					{
-						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
-					}
 					if($uicols['name'][$i]=='loc1')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
@@ -571,7 +573,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		= false;
+					$datatable['headers']['header'][$i]['sortable']			= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
@@ -877,7 +879,6 @@
 
 
 			//_debug_array($values);
-			$this->config->read();
 
 			if ($values['save'] && $mode == 'edit')
 			{
@@ -1122,9 +1123,13 @@
 					);
 			}
 
-			$jscal = CreateObject('phpgwapi.jscalendar');
-			$jscal->add_listener('values_start_date');
-			$jscal->add_listener('values_end_date');
+			$show_dates = isset($this->config->config_data['request_show_dates']) && $this->config->config_data['request_show_dates'] ? 1 : '';
+			if($show_dates)
+			{
+				$jscal = CreateObject('phpgwapi.jscalendar');
+				$jscal->add_listener('values_start_date');
+				$jscal->add_listener('values_end_date');
+			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
@@ -1214,10 +1219,12 @@
 				}
 			}
 
+			
 			$data = array
 				(
 					'mode'								=> $mode,
 					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
+					'show_dates'						=> $show_dates,
 					'attributes'						=> $values['attributes'],
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'							=> $datavalues,
@@ -1382,6 +1389,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>8, 'acl_location'=> $this->acl_location));
 			}
+
 
 			//$id = phpgw::get_var('id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');

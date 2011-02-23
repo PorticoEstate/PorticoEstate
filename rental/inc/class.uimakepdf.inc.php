@@ -9,14 +9,17 @@
 	phpgw::import_class('rental.soprice_item');
 	phpgw::import_class('rental.socontract_price_item');
 	phpgw::import_class('rental.soadjustment');
+	phpgw::import_class('rental.soparty');
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'party', 'inc/model/');
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'price_item', 'inc/model/');
 	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'notification', 'inc/model/');
+	include 'SnappyMedia.php';
+	include 'SnappyPdf.php';
 
-	class rental_uicontract extends rental_uicommon
+	class rental_uimakepdf extends rental_uicommon
 	{
 		public $public_functions = array
 		(
@@ -36,7 +39,8 @@
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
 			'download'              => true,
-			'get_total_price'		=> true
+			'get_total_price'		=> true,
+			'makePDF'				=> true
 		);
 
 		public function __construct()
@@ -251,7 +255,9 @@
 																									'initial_load' => 'no',
 																									'adjustment_id' => $adjustment_id)));
 					$value['labels'][] = lang('show');
-			
+						
+
+						
 					break;
 				default:
 					if(!isset($ids) || count($ids) > 0)
@@ -267,7 +273,7 @@
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('show');
 					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'])));
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('make_pdf');
 				}
 		}
@@ -324,18 +330,41 @@
 						return;
 					}
 					
+					$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+					$party = reset($parties); //
+					
+					$contract_dates = $contract->get_contract_date();
+					
+					$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+					$composite = reset($composites);
+					
+					$units = $composite->get_units();
+					$unit = reset($units);
+					
+					
+					$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
+
 					$data = array
 					(
 						'contract' 	=> $contract,
+						'contract_party' => $party,
+						'contract_dates' => $contract_dates,
+						'composite' => $composite,
+						'unit' => $unit,
+						'price_items' =>$price_items,
 						'notification' => $notification,
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
 						'error' => isset($error) ? $error : phpgw::get_var('error'),
 						'cancel_link' => $cancel_link,
 						'cancel_text' => $cancel_text
+						
 					);
 					$contract->check_consistency();
-					$this->render('contract.php', $data);
+
+					
+				//	$this->render('pdf/rental_contract_form_hybler.php', $data);
+					$this->render('pdf/rental_contract_form_personalbolig.php', $data);
 				}
 			}
 			else
@@ -377,6 +406,31 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 			$contract_id = (int)phpgw::get_var('id');
 			return $this->viewedit(false, $contract_id);
+		}
+		
+		/**
+		 * Save a contract as PDF
+		 */
+		public function makePDF()
+		{
+			
+			$myFile = "/opt/portico/pe/rental/tmp/testFile.html";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			$stringData = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
+			fwrite($fh, $stringData);
+			$stringData = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title></title></head><body>';
+			fwrite($fh, $stringData);
+			$stringData = $_SESSION['contract_html'];
+			fwrite($fh, $stringData);
+			$stringData = '</div></body></html>';
+			fwrite($fh, $stringData);
+			fclose($fh);
+			echo $_SESSION['contract_html'];
+			 $_SESSION['contract_html'] = "";
+			 
+			$snappy = new SnappyPdf;
+			$snappy->setExecutable('/opt/portico/pe/rental/wkhtmltopdf-i386'); // or whatever else
+			$snappy->save('/opt/portico/pe/rental/tmp/testFile.html', '/opt/portico/pe/rental/tmp/testFile.pdf');
 		}
 
 		/**

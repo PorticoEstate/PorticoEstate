@@ -390,6 +390,16 @@
 			</td>
 		</tr>
 
+		<tr class="row_off">
+			<td>{lang_request_show_dates}.</td>
+			<td>
+				<select name="newsettings[request_show_dates]">
+					<option value="" {selected_request_show_dates_}>NO</option>
+					<option value="1" {selected_request_show_dates_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+
 		<tr class="row_on">
 			<td>{lang_meter_table}:</td>
 			<td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
