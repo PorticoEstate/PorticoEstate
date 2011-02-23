@@ -81,7 +81,12 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 </dl>
 <dl class="checkbox_list">
 	<dt><input type="checkbox" name="checkb_gab" <?php echo $disabled; if(isset($_POST['checkb_gab']) || isset($_POST['checkb_gab_hidden'])) {echo 'checked="checked"';}?>  /></dt>
-	<dd>G.nr. / B.nr. / F.nr. / S.nr. <?php echo $unit->get_location()->get_gab_id();?>  i Bodø kommune.</dd>
+	<?php
+
+	$gab = preg_split('/ /', $unit->get_location()->get_gab_id(), -1);
+
+	?>
+	<dd>G.nr. <?php echo $gab[0];?>  B.nr.  <?php echo $gab[2];?>  i Bodø kommune.</dd>
 
 </dl>
 
@@ -91,7 +96,15 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 </dl>
 <dl class="checkbox_list">
 	<dt><input type="checkbox" name="checkb_unit" <?php echo $disabled; if(isset($_POST['checkb_unit']) || isset($_POST['checkb_unit_hidden'])) {echo 'checked="checked"';}?>  /></dt>
-	<dd>[hentes fra db] rom + <input type="checkbox" name="checkb_kitchen" <?php echo $disabled; if(isset($_POST['checkb_kitchen']) || isset($_POST['checkb_kitchen_hidden'])) {echo 'checked="checked"';}?>  /> kjøkken, <input type="checkbox" name="checkb_bath" <?php echo $disabled; if(isset($_POST['checkb_bath']) || isset($_POST['checkb_bath_hidden'])) {echo 'checked="checked"';}?>  /> bad</dd>
+	<dd><?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
+	{
+		?> <?php echo $_POST['rooms']." "?><input type="hidden" name="rooms" value="<?php echo $_POST['rooms']?>" /><?php
+	}
+	else
+	{
+		?><input type="text" name="rooms" class="date" value="<?php echo $_POST['rooms']?>"  /><?php 
+	}
+?> rom + <input type="checkbox" name="checkb_kitchen" <?php echo $disabled; if(isset($_POST['checkb_kitchen']) || isset($_POST['checkb_kitchen_hidden'])) {echo 'checked="checked"';}?>  /> kjøkken, <input type="checkbox" name="checkb_bath" <?php echo $disabled; if(isset($_POST['checkb_bath']) || isset($_POST['checkb_bath_hidden'])) {echo 'checked="checked"';}?>  /> bad</dd>
 	<dt><input type="checkbox" name="checkb_other" <?php echo $disabled; if(isset($_POST['checkb_other']) || isset($_POST['checkb_other_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Annet: 
 <?php if (isset($_POST['preview'])|| isset($_POST['make_PDF']) )
@@ -421,7 +434,32 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 	<dt><input type="checkbox" name="checkb_remarks1" <?php echo $disabled; if(isset($_POST['checkb_remarks1']) || isset($_POST['checkb_remarks1_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Boligen er øremerket til andre tilsatte.</dd>
 	<dt><input type="checkbox" name="checkb_remarks2" <?php echo $disabled; if(isset($_POST['checkb_remarks2']) || isset($_POST['checkb_remarks2_hidden'])) {echo 'checked="checked"';}?>  /></dt>
-	<dd>Boligen er allerede utleid til tilsatte som skal flytte inn dag. måned år</dd>
+	<dd>Boligen er allerede utleid til tilsatte som skal flytte inn
+	<?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
+	{
+		?> <?php echo $_POST['day']."/"?><input type="hidden" name="day" value="<?php echo $_POST['day']?>" /><?php
+	}
+	else
+	{
+		?><input type="text" name="day" class="date" value="<?php echo $_POST['day']?>"  /><?php echo "/&nbsp&nbsp";
+	}
+?><?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
+	{
+		?><?php echo $_POST['month']."/"?><input type="hidden" name="month" value="<?php echo $_POST['month']?>" /><?php
+	}
+	else
+	{
+		?><input type="text" name="month" class="date" value="<?php echo $_POST['month']?>" /><?php echo "/&nbsp&nbsp";
+	}
+?><?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
+	{
+		?><?php echo $_POST['year']."."?><input type="hidden" name="year" value="<?php echo $_POST['year']?>" /><?php 
+	}
+	else
+	{
+		?><input type="text" name="year" class="date" value="<?php echo $_POST['year']?>"  /> <?php
+	}
+?> </dd>
 	<dt><input type="checkbox" name="checkb_remarks3" <?php echo $disabled; if(isset($_POST['checkb_remarks3']) || isset($_POST['checkb_remarks3_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Boligen skal selges.</dd>
 	<dt><input type="checkbox" name="checkb_remarks4" <?php echo $disabled; if(isset($_POST['checkb_remarks4']) || isset($_POST['checkb_remarks4_hidden'])) {echo 'checked="checked"';}?>  /></dt>
