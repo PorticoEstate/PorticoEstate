@@ -22,6 +22,7 @@
 
 	class rental_uimakepdf extends rental_uicommon
 	{
+		private $pdf_templates = array();
 		public $public_functions = array
 		(
 			'add'					=> true,
@@ -340,7 +341,6 @@
 					$composite = reset($composites);
 					
 					$units = $composite->get_units();
-					$unit = reset($units);
 					
 					
 					$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
@@ -351,7 +351,7 @@
 						'contract_party' => $party,
 						'contract_dates' => $contract_dates,
 						'composite' => $composite,
-						'unit' => $unit,
+						'units' => $units,
 						'price_items' =>$price_items,
 						'notification' => $notification,
 						'editable' => $editable,
@@ -363,9 +363,10 @@
 					);
 					$contract->check_consistency();
 
-					
-				//	$this->render('pdf/rental_contract_form_hybler.php', $data);
-					$this->render('pdf/rental_contract_form_personalbolig.php', $data);
+					$this->get_pdf_templates();
+					$template_file = 'pdf/'.$this->pdf_templates[$_GET[pdf_template]][1];
+					$this->render($template_file, $data);
+
 				}
 			}
 			else
@@ -410,11 +411,12 @@
 		}
 		
 		/**
-		 * Save a contract as PDF
+		 * Make PDF of a contract
 		 */
 		public function makePDF()
-		{
-			$myFile = "/opt/portico/pe/rental/tmp/testFile.html";
+		{	
+			
+			$myFile = "/tmp/temp_contract_".strtotime(date('Y-m-d')).".html";
 			$fh = fopen($myFile, 'w') or die("can't open file");
 			$stringData = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
 			fwrite($fh, $stringData);
@@ -426,15 +428,16 @@
 			fwrite($fh, $stringData);
 			fclose($fh);
 			//echo $_SESSION['contract_html'];
-			 $_SESSION['contract_html'] = "";
+			$_SESSION['contract_html'] = "";
 			 
+			$pdf_file_name = "/tmp/temp_contract_".strtotime(date('Y-m-d')).".pdf";
 			$snappy = new SnappyPdf;
 			$snappy->setExecutable('/opt/portico/pe/rental/wkhtmltopdf-i386'); // or whatever else
-			$snappy->save('/opt/portico/pe/rental/tmp/testFile.html', '/opt/portico/pe/rental/tmp/testFile.pdf');
+			$snappy->save($myFile, $pdf_file_name);
 			
 			$contract_id = phpgw::get_var('id');
 			//var_dump("contr: " . phpgw::get_var('id'));
-			$pdf_file_name = "/opt/portico/pe/rental/tmp/testFile.pdf";
+			
 			//$pdf_file = fopen($pdf_file_name, 'r') or die("cannot open file $pdf_file_name");
 			$this->savePDFToContract($pdf_file_name, $contract_id, 'Kontrakt');
 		}
@@ -965,6 +968,23 @@
 			$result_array = array('max_area' => $max_area);
 			$result_data = array('results' => $result_array, 'total_records' => 1);
 			return $this->yui_results($result_data, 'total_records', 'results');
+		}
+		
+		/**
+		 * 
+		 * Public function scans the contract template directory for pdf contract templates 
+		 */
+		public function get_pdf_templates(){
+			$get_template_config= true;
+			$files = scandir('rental/templates/base/pdf/');			
+			foreach ($files as $file){
+				$ending = substr($file, -3, 3);
+				if($ending=='php'){
+					include 'rental/templates/base/pdf/'.$file;
+					$template_files = array($template_name,$file);
+					$this->pdf_templates[] = $template_files;
+				}
+			}	
 		}
 	}
 ?>

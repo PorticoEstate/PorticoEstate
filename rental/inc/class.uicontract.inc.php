@@ -18,6 +18,8 @@
 
 	class rental_uicontract extends rental_uicommon
 	{
+		private $pdf_templates = array();
+		
 		public $public_functions = array
 		(
 			'add'					=> true,
@@ -41,6 +43,7 @@
 
 		public function __construct()
 		{
+			$this->get_pdf_templates();
 			parent::__construct();
 			self::set_active_menu('rental::contracts');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('contracts');
@@ -48,6 +51,7 @@
 
 		public function query()
 		{
+			
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -180,6 +184,8 @@
 				//var_dump("Usage " .memory_get_usage() . " bytes after serializing");
 			}
 			
+			
+			
 			if(!$export){
 				//Add context menu columns (actions and labels)
 				array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id));
@@ -266,9 +272,14 @@
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
 					$value['labels'][] = lang('show');
-					$value['ajax'][] = false;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'])));
-					$value['labels'][] = lang('make_pdf');
+					$temlate_counter = 0;
+					foreach ($this->pdf_templates as $pdf_template){
+						
+						$value['ajax'][] = false;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'], 'pdf_template' => $temlate_counter )));
+						$value['labels'][] = lang('make_pdf').": ". $pdf_template[0];
+						$temlate_counter++;
+					}
 				}
 		}
 
@@ -277,6 +288,7 @@
 		 */
 		public function index()
 		{
+
 			$search_for = phpgw::get_var('search_for');
 			if($search_for)
 			{
@@ -298,6 +310,7 @@
 		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
 		{
 			
+					
 			$cancel_link = self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes'));
 			$adjustment_id = (int)phpgw::get_var('adjustment_id');
 			if($adjustment_id){
@@ -828,6 +841,24 @@
 			$result_array = array('max_area' => $max_area);
 			$result_data = array('results' => $result_array, 'total_records' => 1);
 			return $this->yui_results($result_data, 'total_records', 'results');
+		}
+		
+
+		/**
+		 * 
+		 * Public function scans the contract template directory for pdf contract templates 
+		 */
+		public function get_pdf_templates(){
+			$get_template_config= true;
+			$files = scandir('rental/templates/base/pdf/');			
+			foreach ($files as $file){
+				$ending = substr($file, -3, 3);
+				if($ending=='php'){
+					include 'rental/templates/base/pdf/'.$file;
+					$template_files = array($template_name,$file);
+					$this->pdf_templates[] = $template_files;
+				}
+			}	
 		}
 	}
 ?>

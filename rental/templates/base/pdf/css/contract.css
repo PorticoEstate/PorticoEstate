@@ -149,3 +149,9 @@ input[type=text].date {
 	width: 30px;
 	background-color: #ddffcc;
 }
+
+input[type=submit] {
+	float: left;
+	margin: 30px 10px 10px 0 ;
+	
+}
