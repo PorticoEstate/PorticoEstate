@@ -1627,6 +1627,7 @@
 			$parent				= phpgw::get_var('parent');
 			$values_attribute	= phpgw::get_var('values_attribute');
 			$location 			= explode('-',$location_code);
+			$error_id			= false;
 
 			if($sibling)
 			{
@@ -1712,24 +1713,23 @@
 				}
 			}
 
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('location','attributes_form'));
 
 			if ($values)
 			{
 				for ($i=1; $i<($type_id+1); $i++)
 				{
-					if((!$values['loc' . $i]  && (!isset($location[($i-1)])  || !$location[($i-1)])  ) || !$values['loc' . $i])
+					if((!$values["loc{$i}"]  && (!isset($location[($i-1)])  || !$location[($i-1)])  ) || !$values["loc{$i}"])
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a location %1 ID !',$i));
-						$error_id=true;
+						$error_id = true;
 					}
 
-					$values['location_code'][]= $values['loc' . $i];
+					$values['location_code'][]= $values["loc{$i}"];
 
 					if($i<$type_id)
 					{
-						$location_parent[]= $values['loc' . ($i)];
+						$location_parent[]= $values["loc{$i}"];
 					}
 				}
 
@@ -1772,12 +1772,10 @@
 				if($values['location_code'] && !$location_code)
 				{
 					if($this->bo->check_location($values['location_code'],$type_id))
-
-
 					{
 						$receipt['error'][]=array('msg'=>lang('This location is already registered!') . '[ '.$values['location_code'].' ]');
 						$error_location_id=true;
-						$error_id=true;
+						$error_id = true;
 					}
 				}
 
@@ -1792,21 +1790,23 @@
 						$receipt['error'][]=array('msg'=>lang('Please select change type'));
 					}
 				}
-				elseif(!$location_code && !$error_id )
-				{
-					$location_code=$values['location_code'];
-				}
 
 				if(!isset($receipt['error']))
 				{
 					$receipt = $this->bo->save($values,$values_attribute,$action,$type_id,isset($location_parent)?$location_parent:'');
+					$error_id = isset($receipt['location_code']) && $receipt['location_code'] ? false : true;
+					$location_code = $receipt['location_code'];
 				}
 				else
 				{
 					if(isset($location_parent) && $location_parent)
 					{
-						$location_code_parent=implode("-", $location_parent);
+						$location_code_parent=implode('-', $location_parent);
 						$values = $this->bo->read_single($location_code_parent);
+
+						$values['attributes']	= $this->bo->find_attribute(".location.{$this->type_id}");
+						$values					= $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
+
 						/* restore date from posting */
 						if(isset($insert_record['extra']) && is_array($insert_record['extra']))
 						{
@@ -1819,7 +1819,7 @@
 				}
 			}
 
-			if(!isset($error_id) && $location_code)
+			if(!$error_id && $location_code)
 			{
 				$values = $this->bo->read_single($location_code,array('tenant_id'=>'lookup'));
 
@@ -1927,6 +1927,7 @@
 			$function_msg .= ' ' .$location_types[($type_id-1)]['name'];
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record','property');
+
 
 			if(!is_array($insert_record))
 			{
