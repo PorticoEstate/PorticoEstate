@@ -72,7 +72,7 @@
 											</xsl:when>
 										</xsl:choose>
 										<option value=""><xsl:value-of select="//lang_none"/></option>
-										<xsl:for-each select="choice">	
+										<xsl:for-each select="choice">
 											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 											<xsl:choose>
 												<xsl:when test="checked='checked'">
@@ -81,7 +81,7 @@
 												<xsl:otherwise>
 													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
 												</xsl:otherwise>
-											</xsl:choose>				
+											</xsl:choose>
 										</xsl:for-each>
 									</select>
 								</xsl:when>
@@ -207,7 +207,7 @@
 											</xsl:when>
 										</xsl:choose>
 									</input>
-								</xsl:when>	
+								</xsl:when>
 								<xsl:when test="datatype='user'">
 									<xsl:variable name="user_name"><xsl:value-of select="name"/><xsl:text>_user_name</xsl:text></xsl:variable>
 									<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
@@ -244,7 +244,7 @@
 										</xsl:choose>
 									</input>
 									<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
-								</xsl:when>	
+								</xsl:when>
 								<xsl:when test="datatype='T'">
 									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" >
 										<xsl:choose>
@@ -254,7 +254,7 @@
 												</xsl:attribute>
 											</xsl:when>
 										</xsl:choose>
-										<xsl:value-of select="value"/>		
+										<xsl:value-of select="value"/>
 									</textarea>
 								</xsl:when>
 								<xsl:when test="datatype='pwd'">
@@ -297,7 +297,7 @@
 											</xsl:when>
 										</xsl:choose>
 									</input>
-								</xsl:when>	
+								</xsl:when>
 								<xsl:when test="datatype='event'">
 									<xsl:choose>
 										<xsl:when test="warning!=''">
@@ -342,7 +342,7 @@
 											</table>
 										</xsl:otherwise>
 									</xsl:choose>
-								</xsl:when>	
+								</xsl:when>
 								<xsl:otherwise>
 									<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
 										<xsl:choose>
@@ -365,7 +365,7 @@
 									<a href="javascript:var w=window.open('{$link_history}','','left=50,top=100,width=550,height=400,scrollbars')"
 										onMouseOver="overlib('{$lang_history_help}', CAPTION, '{$lang_history}')"
 										onMouseOut="nd()">
-										<xsl:value-of select="//lang_history"/></a>								
+										<xsl:value-of select="//lang_history"/></a>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:when>
@@ -408,6 +408,6 @@
 						</xsl:choose>
 					</td>
 				</tr>
-			</xsl:for-each>				
+			</xsl:for-each>
 		</table>
 	</xsl:template>
