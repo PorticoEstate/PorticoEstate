@@ -363,8 +363,7 @@
 									<xsl:variable name="lang_history_help"><xsl:value-of select="//lang_history_help"/></xsl:variable>
 									<xsl:variable name="lang_history"><xsl:value-of select="//lang_history"/></xsl:variable>
 									<a href="javascript:var w=window.open('{$link_history}','','left=50,top=100,width=550,height=400,scrollbars')"
-										onMouseOver="overlib('{$lang_history_help}', CAPTION, '{$lang_history}')"
-										onMouseOut="nd()">
+										title="{$lang_history_help}">
 										<xsl:value-of select="//lang_history"/></a>
 								</xsl:when>
 							</xsl:choose>
