@@ -16,6 +16,8 @@
 	include_class('rental', 'price_item', 'inc/model/');
 	include_class('rental', 'contract_price_item', 'inc/model/');
 	include_class('rental', 'notification', 'inc/model/');
+	include 'SnappyMedia.php';
+	include 'SnappyPdf.php';
 
 	class rental_uimakepdf extends rental_uicommon
 	{
@@ -37,7 +39,8 @@
 			'remove_price_item'		=> true,
 			'reset_price_item'		=> true,
 			'download'              => true,
-			'get_total_price'		=> true
+			'get_total_price'		=> true,
+			'makePDF'				=> true
 		);
 
 		public function __construct()
@@ -403,6 +406,31 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 			$contract_id = (int)phpgw::get_var('id');
 			return $this->viewedit(false, $contract_id);
+		}
+		
+		/**
+		 * Save a contract as PDF
+		 */
+		public function makePDF()
+		{
+			
+			$myFile = "/opt/portico/pe/rental/tmp/testFile.html";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			$stringData = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
+			fwrite($fh, $stringData);
+			$stringData = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title></title></head><body>';
+			fwrite($fh, $stringData);
+			$stringData = $_SESSION['contract_html'];
+			fwrite($fh, $stringData);
+			$stringData = '</div></body></html>';
+			fwrite($fh, $stringData);
+			fclose($fh);
+			echo $_SESSION['contract_html'];
+			 $_SESSION['contract_html'] = "";
+			 
+			$snappy = new SnappyPdf;
+			$snappy->setExecutable('/opt/portico/pe/rental/wkhtmltopdf-i386'); // or whatever else
+			$snappy->save('/opt/portico/pe/rental/tmp/testFile.html', '/opt/portico/pe/rental/tmp/testFile.pdf');
 		}
 
 		/**

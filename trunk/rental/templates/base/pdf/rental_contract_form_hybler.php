@@ -6,7 +6,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 <style>
 <?php include "css/contract.css"?>
 </style>
-
+<div class="contract">
 
 
 <img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />
@@ -137,6 +137,7 @@ else
 <p>Kopi:</p>
 <p><span class="<?php echo $color_checkbox;?>"><input type="checkbox" name="checkb_HR" <?php echo $disabled; if(isset($_POST['checkb_HR']) || isset($_POST['checkb_HR_hidden'])) {echo 'checked="checked"';}?> /></span>Personalkontoret</p>
 <p><span class="<?php echo $color_checkbox;?>"><input type="checkbox" name="checkb_payroll_office"<?php echo $disabled; if(isset($_POST['checkb_payroll_office']) || isset($_POST['checkb_payroll_office_hidden'])) {echo 'checked="checked"';}?> /></span>Lønningskontoret</p>
+<br />
 <?php if (isset($_POST['preview']) ){ ?>
 <input type="submit" value="Rediger" name="edit"> 
 <input type="submit" value="Lagre som PDF" name="make_PDF"> 
@@ -145,3 +146,4 @@ else
 <input type="submit" value="Forhåndsvis" name="preview"> 
 <?php }?>
 </form>
+</div>

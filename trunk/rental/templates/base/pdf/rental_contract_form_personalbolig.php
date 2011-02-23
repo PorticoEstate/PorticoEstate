@@ -1,4 +1,8 @@
 <?php 
+if (isset($_POST['preview']))
+{
+ob_start();
+}
 $date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 $valuta_prefix = isset($config->config_data['currency_prefix']) ? $config->config_data['currency_prefix'] : '';
 $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->config_data['currency_suffix'] : '';
@@ -6,7 +10,7 @@ $valuta_suffix = isset($config->config_data['currency_suffix']) ? $config->confi
 <style>
 <?php include "css/contract.css"?>
 </style>
-
+<div class="contract">
 <img src="http://www.nordlandssykehuset.no/getfile.php/NLSH_bilde%20og%20filarkiv/Internett/NLSH_logo_siste.jpg%20%28352x58%29.jpg" alt="Nordlanssykehuset logo" />
 <h1>LEIEKONTRAKT</h1>
 <h2>FOR PERSONALBOLIG</h2>
@@ -18,14 +22,10 @@ $disabled="";
 $color_checkbox = "checkbox_bg";
 $checkb_in_value = true;
 
-if (isset($_POST['preview']) )
+if (isset($_POST['preview']))
 {
 	$disabled = 'disabled="disabled"';
 	$color_checkbox = "";
-
-	echo "er post";
-	
-
 }
 
 if(isset($_POST['checkb_gab'])){?><input type="hidden" name="checkb_gab_hidden"  /><?php }
@@ -60,7 +60,7 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 	<tr>
 		<td>Nordlandssykehuset</td>
 		<td bgcolor="#C0C0C0" width="120px">Navn:</td>
-		<td><?php echo $contract->get_party_name_as_list();?></td>
+		<td><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?></td>
 	</tr>
 	<tr>
 		<td>Boligseksjonen</td>
@@ -94,7 +94,7 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 	<dd>[hentes fra db] rom + <input type="checkbox" name="checkb_kitchen" <?php echo $disabled; if(isset($_POST['checkb_kitchen']) || isset($_POST['checkb_kitchen_hidden'])) {echo 'checked="checked"';}?>  /> kjøkken, <input type="checkbox" name="checkb_bath" <?php echo $disabled; if(isset($_POST['checkb_bath']) || isset($_POST['checkb_bath_hidden'])) {echo 'checked="checked"';}?>  /> bad</dd>
 	<dt><input type="checkbox" name="checkb_other" <?php echo $disabled; if(isset($_POST['checkb_other']) || isset($_POST['checkb_other_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Annet: 
-<?php if (isset($_POST['preview']) )
+<?php if (isset($_POST['preview'])|| isset($_POST['make_PDF']) )
 	{
 		?> <?php echo $_POST['other']?> <input type="hidden" name="other" value="<?php echo $_POST['other']?>" /> <?php
 	}
@@ -106,7 +106,7 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 	</dd>
 	<dt><input type="checkbox" name="checkb_outer_space" <?php echo $disabled; if(isset($_POST['checkb_outer_space']) || isset($_POST['checkb_outer_space_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Ytre rom: 
-<?php if (isset($_POST['preview']) )
+<?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
 	{
 		?> <?php echo $_POST['outer_space']?> <input type="hidden" name="outer_space" value="<?php echo $_POST['outer_space']?>" /> <?php
 	}
@@ -124,7 +124,7 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 <dl class="checkbox_list">
 	<dt><input type="checkbox" name="checkb_limitations" <?php echo $disabled; if(isset($_POST['checkb_limitations']) || isset($_POST['checkb_limitations_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Leier har ikke rett til å bruke:<br/>
-	<?php if (isset($_POST['preview']) )
+	<?php if (isset($_POST['preview'])|| isset($_POST['make_PDF']) )
 {
 	?>
 <p><?php echo $_POST['limitations']?></p>
@@ -313,7 +313,7 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dt><input type="checkbox" name="checkb_sublease_disallowed" <?php echo $disabled; if(isset($_POST['checkb_sublease_disallowed']) || isset($_POST['checkb_sublease_disallowed_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Framleie er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
 	<dt><input type="checkbox" name="checkb_sublease_allowed" <?php echo $disabled; if(isset($_POST['checkb_sublease_allowed']) || isset($_POST['checkb_sublease_allowed_hidden'])) {echo 'checked="checked"';}?>  /></dt>
-	<dd>Framleie er tillatt til: <?php if (isset($_POST['preview']) )
+	<dd>Framleie er tillatt til: <?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
 	{
 		?> <?php echo $_POST['subtenant']?> <input type="hidden" name="subtenant" value="<?php echo $_POST['subtenant']?>" /> <?php
 	}
@@ -334,7 +334,7 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dt><input type="checkbox" name="checkb_animals_disallowed" <?php echo $disabled; if(isset($_POST['checkb_animals_disallowed']) || isset($_POST['checkb_animals_disallowed_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Dyrehold er ikke tillatt, med mindre det er skriftlig avtalt.</dd>
 	<dt><input type="checkbox" name="checkb_animals_allowed" <?php echo $disabled; if(isset($_POST['checkb_animals_allowed']) || isset($_POST['checkb_animals_allowed_hidden'])) {echo 'checked="checked"';}?>  /></dt>
-	<dd>Dyrehold er tillatt, ved at leier kan ha: <?php if (isset($_POST['preview']) )
+	<dd>Dyrehold er tillatt, ved at leier kan ha: <?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
 	{
 		?> <?php echo $_POST['animals']?> <input type="hidden" name="animals" value="<?php echo $_POST['animals']?>" /> <?php
 	}
@@ -457,11 +457,29 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 		</td>
 	</tr>
 </table>
-<?php if (isset($_POST['preview']) ){ ?>
-<input type="submit" value="Rediger" name="edit"> 
-<input type="submit" value="Lagre som PDF" name="make_PDF"> 
-<?php }else{?>
 
-<input type="submit" value="Forhåndsvis" name="preview"> 
-<?php }?>
+<?php if (isset($_POST['preview'])  ){ 
+$HtmlCode= ob_get_contents();
+ob_end_flush();
+
+$_SESSION['contract_html'] = $HtmlCode;
+	
+	?>
+<input type="submit" value="Rediger" name="edit"> 
 </form>
+
+<form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $value['id'], 'initial_load' => 'no'))));?>" method="post">
+<input type="submit" value="Lagre som PDF" name="make_PDF" /> 
+
+</form>
+<?php
+
+
+}else{?>
+
+<input type="submit" value="Forhåndsvis" name="preview"> </form>
+<?php }?>
+
+</div>
+
+

@@ -1,5 +1,16 @@
 <script type="text/javascript">
-	//Add listener resetting form: redirects browser to call index  again
+
+function checkAvailabitily()
+{
+	if(document.forms[0].availability_date_to.value == '')
+	{
+		document.forms[0].availability_date_to.value = document.forms[0].availability_date_from.value;
+		document.forms[0].availability_date_to.value_hidden = document.forms[0].availability_date_from_hidden.value
+	} 
+	return true;
+}
+
+//Add listener resetting form: redirects browser to call index  again
 	YAHOO.util.Event.addListener(
 		'ctrl_reset_button',
 		'click',
@@ -36,6 +47,11 @@
 			key: "gab_id",
 			label: "<?php echo lang('propertyident') ?>",
 		    sortable: false
+		},
+		{
+			key: "status",
+			label: "<?php echo lang('status') ?>",
+		    sortable: true
 		},
 		{
 			key: "actions",
@@ -126,7 +142,7 @@
 			<option value="address" <?php echo ($s_type == 'address') ? 'selected' : ''?>><?php echo lang('address') ?></option>
 			<option value="property_id" <?php echo ($s_type == 'property_id') ? 'selected' : ''?>><?php echo lang('object_number') ?></option>
 		</select>
-		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
+		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" onclick="javascript: checkAvailabitily();" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
 
@@ -135,9 +151,9 @@
 		<h3><?php echo lang('filters') ?></h3>
 		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('availability') ?></label>
 		<select name="is_active" id="<?php echo $list_id ?>_ctrl_toggle_active_rental_composites">
+			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
 			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('in_operation') ?></option>
 			<option value="non_active" <?php echo ($status == 'non_active') ? 'selected' : ''?>><?php echo lang('out_of_operation') ?></option>
-			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
 		</select>
 		<select name="has_contract" id="<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites">
 			<option value="both" <?php echo ($status_contract == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
@@ -145,7 +161,7 @@
 			<option value="has_no_contract" <?php echo ($status_contract == 'has_no_contract') ? 'selected' : ''?>><?php echo lang('composite_has_no_contract') ?></option>
 		</select>
 		<label for="availability_period"><?php echo lang('availability_date')?></label>
-		<?php echo $GLOBALS['phpgw']->yuical->add_listener('availability_date', $availability_date); ?>
+		<?php echo $GLOBALS['phpgw']->yuical->add_listener('availability_date_from', $availability_date_from); ?>&nbsp;&ndash;&nbsp;<?php echo $GLOBALS['phpgw']->yuical->add_listener('availability_date_to', $availability_date_to); ?>
 	</fieldset>
 </form>
 <?php
