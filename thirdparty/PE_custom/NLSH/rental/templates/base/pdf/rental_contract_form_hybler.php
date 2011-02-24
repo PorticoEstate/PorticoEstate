@@ -46,9 +46,9 @@ if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_p
 	<dt><input type="checkbox" name="checkb_in" <?php echo $disabled; if(isset($_POST['checkb_in']) || isset($_POST['checkb_in_hidden'])) {echo 'checked="checked"';}?> />&nbsp Innflytting</dt>
 	<dd>&nbsp</dd>
 	<dt>Navn:</dt>
-	<dd><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?></dd>
+	<dd><?php echo $contract_party->get_first_name()." ". $contract_party->get_last_name();?>&nbsp;</dd>
 	<dt>Fnr.:</dt>
-	<dd><?php echo $contract_party->get_identifier();?></dd>
+	<dd><?php echo $contract_party->get_identifier();?>&nbsp;</dd>
 	<dt>Adresse:</dt>
 	<dd><?php echo $contract_party->get_address_1().", ";
 	if($contract_party->get_address_2())
@@ -59,7 +59,7 @@ if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_p
 	?>
 	</dd>
 	<dt>Tildelt bolig:</dt>
-	<dd><?php echo $composite->get_name();?></dd>
+	<dd><?php echo $composite->get_name();?>&nbsp;</dd>
 </dl>
 
 
@@ -67,13 +67,13 @@ if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_p
 	<dt><input type="checkbox" name="checkb_out" <?php echo $disabled; if(isset($_POST['checkb_out'])|| isset($_POST['checkb_out_hidden'])) {echo 'checked="checked"';}?>/>&nbsp Utflytting</dt>
 	<dd>&nbsp</dd>
 	<dt>Stilling:</dt>
-	<dd><?php echo $contract_party->get_title();?></dd>
+	<dd><?php echo $contract_party->get_title();?>&nbsp;</dd>
 	<dt>Avd.:</dt>
-	<dd><?php echo $contract_party->get_department();?></dd>
+	<dd><?php echo $contract_party->get_department();?>&nbsp;</dd>
 	<dt>Innflytting-dato:</dt>
-	<dd><?php echo date($date_format, $contract_dates->get_start_date());?></dd>
+	<dd><?php echo date($date_format, $contract_dates->get_start_date());?>&nbsp;</dd>
 	<dt>Utflytting-dato:</dt>
-	<dd><?php echo date($date_format, $contract_dates->get_end_date());?></dd>
+	<dd><?php echo date($date_format, $contract_dates->get_end_date());?>&nbsp;</dd>
 </dl>
 </div>
 
@@ -156,7 +156,7 @@ $_SESSION['contract_html'] = $HtmlCode;
 <input type="submit" value="Rediger" name="edit"> 
 </form>
 
-<form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $value['id'], 'initial_load' => 'no'))));?>" method="post">
+<form action="<?php echo(html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.makePDF', 'id' => $contract->get_id(), 'initial_load' => 'no'))));?>" method="post">
 <input type="submit" value="Lagre som PDF" name="make_PDF" /> 
 
 </form>
