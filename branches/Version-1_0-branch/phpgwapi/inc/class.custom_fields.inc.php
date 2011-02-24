@@ -303,7 +303,7 @@
 			{
 				case 'R':
 				case 'CH':
-				case 'LB':
+			//	case 'LB':
 				case 'AB':
 				case 'ABO':
 				case 'VENDOR':
@@ -629,7 +629,7 @@
 			{
 				case 'R':
 				case 'CH':
-				case 'LB':
+		//		case 'LB':
 				case 'AB':
 				case 'ABO':
 				case 'VENDOR':

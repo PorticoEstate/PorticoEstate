@@ -1800,8 +1800,44 @@
 				}
 			}
 
+
+			$dateformat = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$sep = '/';
+			$dlarr[strpos($dateformat,'y')] = 'yyyy';
+			$dlarr[strpos($dateformat,'m')] = 'MM';
+			$dlarr[strpos($dateformat,'d')] = 'DD';
+			ksort($dlarr);
+
+			$dateformat= (implode($sep,$dlarr));
+
+			switch(substr($dateformat,0,1))
+			{
+			case 'M':
+				$dateformat_validate= "javascript:vDateType='1'";
+				$onKeyUp	= "DateFormat(this,this.value,event,false,'1')";
+				$onBlur		= "DateFormat(this,this.value,event,true,'1')";
+				break;
+			case 'y':
+				$dateformat_validate="javascript:vDateType='2'";
+				$onKeyUp	= "DateFormat(this,this.value,event,false,'2')";
+				$onBlur		= "DateFormat(this,this.value,event,true,'2')";
+				break;
+			case 'D':
+				$dateformat_validate="javascript:vDateType='3'";
+				$onKeyUp	= "DateFormat(this,this.value,event,false,'3')";
+				$onBlur		= "DateFormat(this,this.value,event,true,'3')";
+				break;
+			}
+			$GLOBALS['phpgw']->js->validate_file('dateformat','dateformat','property');
+
+
 			$data = array
 				(
+					'lang_dateformat' 				=> strtolower($dateformat),
+					'dateformat_validate'			=> $dateformat_validate,
+					'onKeyUp'						=> $onKeyUp,
+					'onBlur'						=> $onBlur,
+
 					'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'						=> $datavalues,
 					'myColumnDefs'					=> $myColumnDefs,	
@@ -2012,19 +2048,15 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('attrib_history','nextmatchs'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
-			$acl_location = phpgw::get_var('acl_location', 'string');
-			$id		= phpgw::get_var('id', 'int');
-			//		$entity_id	= phpgw::get_var('entity_id', 'int');
-			//		$cat_id 	= phpgw::get_var('cat_id', 'int');
-			$attrib_id 	= phpgw::get_var('attrib_id', 'int');
-			$detail_id 	= phpgw::get_var('detail_id', 'int');
+			$acl_location 	= phpgw::get_var('acl_location', 'string');
+			$id				= phpgw::get_var('id', 'int');
+			$attrib_id 		= phpgw::get_var('attrib_id', 'int');
+			$detail_id 		= phpgw::get_var('detail_id', 'int');
 
 			$data_lookup= array
 				(
 					'acl_location'	=> $acl_location,
-					'id'		=> $id,
-			//		'entity_id'	=> $entity_id,
-			//		'cat_id' 	=> $cat_id,
+					'id'			=> $id,
 					'attrib_id' 	=> $attrib_id,
 					'detail_id' 	=> $detail_id,
 				);
@@ -2047,8 +2079,6 @@
 					(
 						'menuaction'	=> 'property.uientity.attrib_history',
 						'acl_location'	=> $acl_location,
-				//		'entity_id'		=> $data_lookup['entity_id'],
-				//		'cat_id'		=> $data_lookup['cat_id'],
 						'id'			=> $data_lookup['id'],
 						'attrib_id'		=> $data_lookup['attrib_id'],
 						'detail_id' 	=> $data_lookup['detail_id'],
