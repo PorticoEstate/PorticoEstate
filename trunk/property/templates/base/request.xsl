@@ -149,6 +149,39 @@
 											<xsl:value-of select="value_request_id"/>
 										</td>
 									</tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'entry date')" />
+										</td>
+										<td>
+											<xsl:value-of select="value_entry_date"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'in progress date')" />
+										</td>
+										<td>
+											<xsl:value-of select="value_in_progress_date"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'delivered date')" />
+										</td>
+										<td>
+											<xsl:value-of select="value_delivered_date"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'closed date')" />
+										</td>
+										<td>
+											<xsl:value-of select="value_closed_date"/>
+										</td>
+									</tr>
+
 									<xsl:for-each select="value_origin" >
 										<tr>
 											<td class="th_text" valign ="top">
@@ -156,14 +189,11 @@
 											</td>
 											<td>
 												<table>
-
 													<xsl:for-each select="data">
 														<tr>
-
 															<td class="th_text"  align="left" >
-																<a href="{link}"  title="{statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+																<a href="{link}"  title="{statustext}" ><xsl:value-of select="id"/></a>
 																<xsl:text> </xsl:text>
-
 																<xsl:choose>
 																	<xsl:when test="location ='.project.request'">
 																		<input type="checkbox" name="values[delete_request][]" value="{id}" >
@@ -192,7 +222,7 @@
 													<xsl:for-each select="data">
 														<tr>
 															<td class="th_text"  align="left" >
-																<a href="{link}"  title="{statustext}" style ="cursor:help"><xsl:value-of select="id"/></a>
+																<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 																<xsl:text> </xsl:text>
 															</td>
 														</tr>
@@ -210,7 +240,7 @@
 									</td>
 									<td class="th_text"  align="left" >
 										<xsl:for-each select="data">
-											<a href="{link}"  title="{//lang_target_statustext}"><xsl:value-of select="id"/></a>
+											<a href="{link}"  title="{statustext}"><xsl:value-of select="id"/></a>
 											<xsl:text> </xsl:text>
 										</xsl:for-each>
 									</td>

@@ -142,6 +142,51 @@
 			$this->status_id	= $data['status_id'];
 		}
 
+
+		function column_list($selected = array())
+		{
+			if(!$selected)
+			{
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : '';
+			}
+
+			$columns	= $this->get_column_list();
+			return $this->bocommon->select_multi_list($selected,$columns);
+		}
+
+		function get_column_list()
+		{
+			$columns = array();
+			$columns['entry_date'] = array
+				(
+					'id' => 'entry_date',
+					'name'=> lang('entry date'),
+					'sortable'	=> true
+				);
+
+			$columns['in_progress_date'] = array
+				(
+					'id'		=> 'in_progress_date',
+					'name'		=> lang('in progress date'),
+					'sortable'	=> true
+				);
+			$columns['delivered_date'] = array
+				(
+					'id'		=> 'delivered_date',
+					'name'		=> lang('delivered date'),
+					'sortable'	=> true
+				);
+			$columns['closed_date'] = array
+				(
+					'id'		=> 'closed_date',
+					'name'		=> lang('closed date'),
+					'sortable'	=> true
+				);
+
+			return $columns;
+		}
+
+
 		function select_degree_list($degree_value='',$degreedefault_type='')
 		{
 			if ($degree_value)
@@ -286,6 +331,11 @@
 			{
 				$request[$i]['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($request[$i]['coordinator']);
 				$request[$i]['start_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['start_date'],$dateformat);
+				$request[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['entry_date'],$dateformat);
+				$request[$i]['closed_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['closed_date'],$dateformat);
+				$request[$i]['in_progress_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['in_progress_date'],$dateformat);
+				$request[$i]['delivered_date'] = $GLOBALS['phpgw']->common->show_date($request[$i]['delivered_date'],$dateformat);
+
 				if($cols_extra)
 				{
 					$location_data=$this->solocation->read_single($request[$i]['location_code']);
@@ -296,6 +346,21 @@
 				}
 			}
 
+			$column_list = $this->get_column_list();
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : array();
+			foreach ($custom_cols as $col_id)
+			{
+				$this->uicols['input_type'][]	= 'text';
+				$this->uicols['name'][]			= $col_id;
+				$this->uicols['descr'][]		= $column_list[$col_id]['name'];
+				$this->uicols['statustext'][]	= $column_list[$col_id]['name'];
+				$this->uicols['exchange'][]		= false;
+				$this->uicols['align'][] 		= '';
+				$this->uicols['datatype'][]		= '';
+				$this->uicols['sortable'][]		= $column_list[$col_id]['sortable'];
+				$this->uicols['formatter'][] 	= '';
+				$this->uicols['classname'][] 	= '';
+			}
 			return $request;
 		}
 
@@ -318,6 +383,10 @@
 			$dateformat					= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$values['start_date']		= $GLOBALS['phpgw']->common->show_date($values['start_date'],$dateformat);
 			$values['end_date']			= $GLOBALS['phpgw']->common->show_date($values['end_date'],$dateformat);
+			$values['entry_date']		= $GLOBALS['phpgw']->common->show_date($values['entry_date'],$dateformat);
+			$values['closed_date']		= $GLOBALS['phpgw']->common->show_date($values['closed_date'],$dateformat);
+			$values['in_progress_date']	= $GLOBALS['phpgw']->common->show_date($values['in_progress_date'],$dateformat);
+			$values['delivered_date']	= $GLOBALS['phpgw']->common->show_date($values['delivered_date'],$dateformat);
 
 			if($values['location_code'])
 			{
