@@ -103,6 +103,11 @@
 			<td>{lang_login_external_db_password}:</td>
 			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
 		</tr>
+		
+		<tr class="row_on">
+			<td>{lang_path_to_wkhtmltopdf}:</td>
+			<td><input name="newsettings[path_to_wkhtmltopdf]" value="{value_path_to_wkhtmltopdf}"></td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
