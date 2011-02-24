@@ -1,4 +1,7 @@
 <?php 
+
+$template_name = "Langtidskontrakt";
+if(!$get_template_config){
 if (isset($_POST['preview']))
 {
 ob_start();
@@ -79,20 +82,25 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 	<dt>3.</dt>
 	<dd>Eiendom</dd>
 </dl>
+
+
 <dl class="checkbox_list">
 	<dt><input type="checkbox" name="checkb_gab" <?php echo $disabled; if(isset($_POST['checkb_gab']) || isset($_POST['checkb_gab_hidden'])) {echo 'checked="checked"';}?>  /></dt>
+	
 	<?php
-
-	$gab = preg_split('/ /', $unit->get_location()->get_gab_id(), -1);
-
-	?>
-	<dd>G.nr. <?php echo $gab[0];?>  B.nr.  <?php echo $gab[2];?>  i Bodø kommune.</dd>
-
+	
+	foreach ($units as $unit){
+	
+	$gb = preg_split('/ /', $unit->get_location()->get_gab_id(), -1);
+	if(!($gb[0]=="")){
+	?><dt></dt>
+	<dd>G.nr. <?php echo $gb[0];?>  B.nr.  <?php echo $gb[2];?>  i Bodø kommune.</dd>
+<?php }}?>
 </dl>
 
 <dl class="section_header">
 	<dt>4.</dt>
-	<dd>Leieobjekt</dd>
+	<dd>Leieobjekt: <?php echo $composite->get_name();?></dd>
 </dl>
 <dl class="checkbox_list">
 	<dt><input type="checkbox" name="checkb_unit" <?php echo $disabled; if(isset($_POST['checkb_unit']) || isset($_POST['checkb_unit_hidden'])) {echo 'checked="checked"';}?>  /></dt>
@@ -121,7 +129,9 @@ if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks
 	<dd>Ytre rom: 
 <?php if (isset($_POST['preview']) || isset($_POST['make_PDF']))
 	{
-		?> <?php echo $_POST['outer_space']?> <input type="hidden" name="outer_space" value="<?php echo $_POST['outer_space']?>" /> <?php
+		?>  
+		<?php echo $_POST['outer_space']?>
+		<input type="hidden" name="outer_space" value="<?php echo $_POST['outer_space']?>" /> <?php
 	}
 	else
 	{
@@ -209,7 +219,7 @@ foreach ($price_items as $item)
 			$on_account = true;
 			?>
 	<dt><input type="checkbox" disabled="disabled" checked="checked" /></dt>
-	<dd><?php echo $item->get_title();?>, kr  <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
+	<dd><?php echo $item->get_title();?>: kr  <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
 	<?php
 		}
 	}
@@ -503,6 +513,7 @@ ob_end_flush();
 $_SESSION['contract_html'] = $HtmlCode;
 	
 	?>
+
 <input type="submit" value="Rediger" name="edit"> 
 </form>
 
@@ -510,6 +521,7 @@ $_SESSION['contract_html'] = $HtmlCode;
 <input type="submit" value="Lagre som PDF" name="make_PDF" /> 
 
 </form>
+
 <?php
 
 
@@ -521,3 +533,4 @@ $_SESSION['contract_html'] = $HtmlCode;
 </div>
 
 
+<?php }
