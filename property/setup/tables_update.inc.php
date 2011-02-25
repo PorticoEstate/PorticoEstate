@@ -5045,6 +5045,28 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.609 to 0.9.17.610
+	* Add location_link_level
+	* 
+	*/
+
+	$test[] = '0.9.17.609';
+	function property_upgrade0_9_17_609()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','closed_date',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','in_progress_date',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request','delivered_date',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.610';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608

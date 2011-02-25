@@ -726,8 +726,8 @@ entrance	property	no	inngang
 entrance has been edited	property	no	inngang er rettet
 entrance has been saved	property	no	inngang er lagret
 entrance id	property	no	inngang ID
-entry date	property	no	Dato
-entry_date	property	no	Dato
+entry date	property	no	Registrert dato
+entry_date	property	no	Registrert dato
 equipment	property	no	Utstyr
 equipment %1 has been edited	property	no	utstyr %1 er rettet
 equipment %1 has been saved	property	no	utstyr %1 er lagret
@@ -1847,3 +1847,6 @@ your message could not be sent by mail!	property	no	Din melding kunne ikke sende
 usertype	common	no	Brukertype
 tenant	common	no	Leietaker
 internal	common	no	Intern
+in progress date	property	no	Påbegynt dato
+delivered date	property	no	Utført dato
+closed date	property	no	Avsluttet dato
