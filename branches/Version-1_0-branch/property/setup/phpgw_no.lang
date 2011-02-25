@@ -1,10 +1,10 @@
-%1 buildings has been updated to not active of %2 already not active	property	no	%1 Bygninger er oppdatert til IKKE AKTIVE av %2 som var IKKE ACTIVE fra før
-%1 entrances has been updated to not active of %2 already not active	property	no	%1 Innganger er oppdatert til IKKE AKTIVE av %2 som var IKKE ACTIVE fra før
+%1 buildings has been updated to not active of %2 already not active	property	no	%1 Bygninger er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
+%1 entrances has been updated to not active of %2 already not active	property	no	%1 Innganger er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
 %1 entries is added!	property	no	%1 poster er lagt til
 %1 entries is updated!	property	no	%1 poster er oppdatert
 %1 group	property	no	%1 gruppe
 %1 is notified	property	no	Melding sendt til %1
-%1 properties has been updated to not active of %2 already not active	property	no	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE ACTIVE fra før
+%1 properties has been updated to not active of %2 already not active	property	no	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
 about	common	no	Om
 access error	property	no	Manglende tilgang
 accounting	property	no	Regnskap
@@ -18,6 +18,7 @@ acl_locastion is missing	property	no	ACL-lokalisering mangler
 acquisition date	property	no	Anskaffelses dato
 action	property	no	Handling
 acivate tracking of dates in helpdesk main list	property	no	Aktiver visning av datoer for denne entiteten i hovedliste for helpdesk
+active	property	no	Aktiv
 activities	property	no	Aktiviteter
 activity	property	no	Aktivitet
 activity code	property	no	Aktivitets kode
