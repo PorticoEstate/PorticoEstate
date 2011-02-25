@@ -968,7 +968,13 @@
 								'name' => 'active',
 								'descr' => lang('active'),
 								'type' => 'checkbox',
-								'default' => 'checked'
+								'default' => 'checked',
+								'filter'		=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> array(array('id' => 1, 'name' => lang('active'))),
+								)
 							),
 							array
 							(
