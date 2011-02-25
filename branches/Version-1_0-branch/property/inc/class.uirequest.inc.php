@@ -55,7 +55,8 @@
 				'delete'		=> true,
 				'priority_key'	=> true,
 				'view_file'		=> true,
-				'download'		=> true
+				'download'		=> true,
+				'columns'		=> true
 			);
 
 		function property_uirequest()
@@ -107,6 +108,51 @@
 				);
 			$this->bo->save_sessiondata($data);
 		}
+
+		function columns()
+		{
+			$receipt = array();
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values 		= phpgw::get_var('values');
+
+			$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->add('property','request_columns', $values['columns'],'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+			}
+
+			$function_msg	= lang('Select Column');
+
+			$link_data = array
+			(
+				'menuaction'	=> 'property.uirequest.columns',
+			);
+
+			$selected = isset($values['columns']) && $values['columns'] ? $values['columns'] : array();
+			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+
+			$data = array
+				(
+					'msgbox_data'		=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'column_list'		=> $this->bo->column_list($selected , $this->type_id, $allrows=true),
+					'function_msg'		=> $function_msg,
+					'form_action'		=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'lang_columns'		=> lang('columns'),
+					'lang_none'			=> lang('None'),
+					'lang_save'			=> lang('save'),
+				);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
+		}
+
 
 		function view_file()
 		{
@@ -315,8 +361,19 @@
 										'menuaction' => 'property.uirequest.priority_key'))."','','left=50,top=100,width=350,height=250')",
 										'value' => lang('Priority key'),
 										'tab_index' => 4
-									)
 								),
+								array
+								(
+									'type' => 'link',
+									'id' => 'btn_columns',
+									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+									array
+									(
+										'menuaction' => 'property.uirequest.columns'))."','','width=300,height=600,scrollbars=1')",
+										'value' => lang('columns'),
+										'tab_index' => 10
+								),
+							),
 								'hidden_value' => array
 								(
 									array
@@ -1274,6 +1331,11 @@
 
 					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 					'lang_datetitle'					=> lang('Select date'),
+
+					'value_entry_date'					=> $values['entry_date'],
+					'value_closed_date'					=> $values['closed_date'],
+					'value_in_progress_date'			=> $values['in_progress_date'],
+					'value_delivered_date'				=> $values['delivered_date'],
 
 					'lang_start_date_statustext'		=> lang('Select the estimated end date for the request'),
 					'lang_start_date'					=> lang('request start date'),

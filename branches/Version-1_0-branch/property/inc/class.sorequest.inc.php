@@ -216,8 +216,12 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= false;
 
-			$cols.= ",$entity_table.start_date";
+			$cols.= ",$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
 			$cols_return[] 				= 'start_date';
+			$cols_return[] 				= 'entry_date';
+			$cols_return[] 				= 'closed_date';
+			$cols_return[] 				= 'in_progress_date';
+			$cols_return[] 				= 'delivered_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'start_date';
 			$uicols['descr'][]			= lang('start date');
@@ -461,6 +465,10 @@
 						'p_cat_id'				=> $this->db->f('p_cat_id'),
 						'contact_phone'			=> $this->db->f('contact_phone', true),
 						'building_part'			=> $this->db->f('building_part'),
+						'entry_date'			=> $this->db->f('entry_date'),
+						'closed_date'			=> $this->db->f('closed_date'),
+						'in_progress_date'		=> $this->db->f('in_progress_date'),
+						'delivered_date'		=> $this->db->f('delivered_date')
 					);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
@@ -574,7 +582,9 @@
 			$value_set['branch_id']				= $request['branch_id'];
 			$value_set['coordinator']			= $request['coordinator'];
 			$value_set['authorities_demands']	= $request['authorities_demands'];
-			$value_set['building_part']			= 	$request['building_part'];
+			$value_set['building_part']			= $request['building_part'];
+			$value_set['start_date']			= $request['start_date'];
+			$value_set['end_date']				= $request['end_date'];
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->bocommon->validate_db_insert(array_values($value_set));
@@ -620,6 +630,30 @@
 
 				$this->interlink->add($interlink_data,$this->db);
 			}
+			
+			$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$value_set = array();
+			if($this->db->f('in_progress'))
+			{
+				$value_set['in_progress_date']	= time();
+			}
+			if($this->db->f('closed'))
+			{
+				$value_set['closed_date']		= time();
+			}
+			if($this->db->f('delivered'))
+			{
+				$value_set['delivered_date']	= time();
+			}
+
+			if($value_set)
+			{
+				$value_set	= $this->db->validate_update($value_set);
+				$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$id}'",__LINE__,__FILE__);
+			}
 
 			if($this->db->transaction_commit())
 			{
@@ -652,7 +686,6 @@
 			{
 				$address = $this->db->db_addslashes($request['location_name']);
 			}
-
 
 			$value_set = array
 				(
@@ -687,7 +720,6 @@
 				$value_set = array_merge($value_set, $data_attribute['value_set']);
 			}
 
-			$value_set	= $this->db->validate_update($value_set);
 
 			$this->db->transaction_begin();
 
@@ -697,10 +729,31 @@
 			$old_status = $this->db->f('status');
 			$old_category = $this->db->f('category');
 			$old_coordinator = $this->db->f('coordinator');
+			if($old_status != $request['status'])
+			{
+				$sql = "SELECT * FROM fm_request_status WHERE id='{$request['status']}'";
+				$this->db->query($sql,__LINE__,__FILE__);
+				$this->db->next_record();
+			
+				if($this->db->f('in_progress'))
+				{
+					$value_set['in_progress_date']	= time();
+				}
+				if($this->db->f('closed'))
+				{
+					$value_set['closed_date']		= time();
+				}
+				if($this->db->f('delivered'))
+				{
+					$value_set['delivered_date']	= time();
+				}
+			}
 
-			$this->db->query("UPDATE fm_request set $value_set WHERE id= '" . $request['id'] ."'",__LINE__,__FILE__);
+			$value_set	= $this->db->validate_update($value_set);
 
-			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='" . $request['id'] . "'",__LINE__,__FILE__);
+			$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$request['id']}'",__LINE__,__FILE__);
+
+			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='{$request['id']}'",__LINE__,__FILE__);
 			while (is_array($request['condition']) && list($condition_type,$value_type) = each($request['condition']))
 			{
 				$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
@@ -718,7 +771,7 @@
 
 			if($request['extra']['contact_phone'] && $request['extra']['tenant_id'])
 			{
-				$this->db->query("update fm_tenant set contact_phone='". $request['extra']['contact_phone']. "' where id='". $request['extra']['tenant_id']. "'",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_tenant SET contact_phone='{$request['extra']['contact_phone']}' WHERE id='{$request['extra']['tenant_id']}'",__LINE__,__FILE__);
 			}
 
 			if ($request['power_meter'] )
