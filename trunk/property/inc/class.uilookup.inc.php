@@ -987,6 +987,93 @@
 							)
 						)
 					);
+
+
+				$values_combo_box = array();
+				$i = 0;
+				$button_def = array();
+				$code_inner = array();
+				if ( $role != 'group' )
+				{
+					$datatable['actions']['form'][0]['fields']['field'][] = array
+					(
+						'id' => "btn_parent",
+						'name' => 'parent',
+						'value'	=> 'parent',
+						'type' => 'button',
+						'style' => 'filter',
+						'tab_index' => $i
+					);
+
+					$button_def[] = "oMenuButton_{$i}"; 
+					$code_inner[] = "{order:{$i}, var_URL:'parent',name:'btn_parent',style:'genericbutton',dependiente:[]}";
+
+					$values_combo_box[] = execMethod('property.bogeneric.get_list',array('type' => 'b_account','selected' => $parent,'filter' => array('active' =>1)));
+					$default_value = array ('id'=>'','name'=> lang('select'));
+					array_unshift ($values_combo_box[$i],$default_value);
+				}
+
+				if($button_def)
+				{
+					$code = 'var ' . implode(',', $button_def)  . ";\n";
+					$code .= 'var selectsButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+					$code .=	<<<JS
+						this.particular_setting = function()
+						{
+							if(flag_particular_setting=='init')
+							{
+								//parent
+								index = locate_in_array_options(0,"value",path_values.parent);
+								if(index)
+								{
+									oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+								}
+
+								//--focus for txt_query---
+								YAHOO.util.Dom.get(textImput[0].id).focus();
+							}
+							else if(flag_particular_setting=='update')
+							{
+								// nothing
+							}
+						}
+JS;
+
+				}
+				else
+				{
+					$code = 'var selectsButtons = [];';
+					$code .=	<<<JS
+						this.particular_setting = function()
+						{
+							if(flag_particular_setting=='init')
+							{
+								//--focus for txt_query---
+								YAHOO.util.Dom.get(textImput[0].id).focus();
+							}
+							else if(flag_particular_setting=='update')
+							{
+								// nothing
+							}
+						}
+JS;
+				}
+
+				$GLOBALS['phpgw']->js->add_code('', $code);
+
+				if($values_combo_box)
+				{
+					$i = 0;
+					foreach ( $values_combo_box as $combo )
+					{
+						$datatable['actions']['form'][0]['fields']['hidden_value'][] = array
+						(
+							'id' 	=> "values_combo_box_{$i}",
+							'value'	=> execMethod('property.bocommon.select2String',$combo)
+						);
+						$i++;
+					}
+				}
 			}
 
 			$uicols = array (
@@ -1128,7 +1215,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			// Prepare YUI Library
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.b_account.index', 'property' );
 
 			$this->save_sessiondata();
 		}
