@@ -417,7 +417,8 @@
 		{	
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
-			$myFile = "/tmp/temp_contract_".strtotime(date('Y-m-d')).".html";
+			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$myFile = $tmp_dir . "/temp_contract_".strtotime(date('Y-m-d')).".html";
 			$fh = fopen($myFile, 'w') or die("can't open file");
 			$stringData = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
 			fwrite($fh, $stringData);
@@ -431,7 +432,7 @@
 			//echo $_SESSION['contract_html'];
 			$_SESSION['contract_html'] = "";
 			 
-			$pdf_file_name = "/tmp/temp_contract_".strtotime(date('Y-m-d')).".pdf";
+			$pdf_file_name = $tmp_dir . "/temp_contract_".strtotime(date('Y-m-d')).".pdf";
 			//var_dump($config->config_data['path_to_wkhtmltopdf']);
 			//var_dump($GLOBALS['phpgw_info']);
 			$wkhtmltopdf_executable = $config->config_data['path_to_wkhtmltopdf'];
