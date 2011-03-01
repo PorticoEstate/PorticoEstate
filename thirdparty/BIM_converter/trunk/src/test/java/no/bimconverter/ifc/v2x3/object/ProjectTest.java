@@ -24,6 +24,7 @@ import no.bimconverter.ifc.v2x3.IfcModelImpl;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProjectTest extends IfcTestMethods{
@@ -45,11 +46,8 @@ public class ProjectTest extends IfcTestMethods{
 	
 	@Test
 	public void testProjectObject() throws JAXBException {
+		//super.outputXmlToSystemOut(project);
 		
-		JAXBContext jc = JAXBContext.newInstance(Project.class);
-		Marshaller m = jc.createMarshaller();
-		 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( project, System.out );
 		assertNotNull(project);
 	}
 	
@@ -58,10 +56,7 @@ public class ProjectTest extends IfcTestMethods{
 		OwnerHistory ownerHistory = project.getOwnerHistory();
 		PersonAndOrganization owningUser = ownerHistory.getOwningUser();
 		Person thePerson = owningUser.getPerson();
-		JAXBContext jc = JAXBContext.newInstance(OwnerHistory.class);
-		Marshaller m = jc.createMarshaller();
-		 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( ownerHistory, System.out );
+		//super.outputXmlToSystemOut(ownerHistory);
 		assertNotNull(ownerHistory);
 	}
 	@Test

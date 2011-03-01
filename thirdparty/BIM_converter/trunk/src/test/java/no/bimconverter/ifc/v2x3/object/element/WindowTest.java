@@ -82,26 +82,17 @@ public class WindowTest extends IfcTestMethods{
 	@Test
 	public void testDisplayWindow1() throws JAXBException {
 		assertNotNull(window1);
-		JAXBContext jc = JAXBContext.newInstance(Window.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(window1, System.out );
+		//super.outputXmlToSystemOut(window1)
 	}
 	@Test
 	public void testDisplayWindow2() throws JAXBException {
 		assertNotNull(window1);
-		JAXBContext jc = JAXBContext.newInstance(Window.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(window2, System.out );
+		//super.outputXmlToSystemOut(window2)
 	}
 	@Test
 	public void testDisplayWindow3() throws JAXBException {
 		assertNotNull(window1);
-		JAXBContext jc = JAXBContext.newInstance(Window.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(window3, System.out );
+		//super.outputXmlToSystemOut(window3)
 	}
 	@Test
 	public void testWindow1Attributes() {

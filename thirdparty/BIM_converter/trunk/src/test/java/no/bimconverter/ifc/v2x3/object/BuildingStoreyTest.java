@@ -55,34 +55,20 @@ public class BuildingStoreyTest extends IfcTestMethods{
 	}
 	
 	@Test
-	@Ignore
 	public void testFirstStorey() throws JAXBException {
 		
 		//this.testFirstStoreyAttributes();
-		JAXBContext jc = JAXBContext.newInstance(BuildingStorey.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( buildingStorey1, System.out );
+		//super.outputXmlToSystemOut(buildingStorey1);
 	}
 	@Test
-	@Ignore
 	public void testSecondStorey() throws JAXBException {
 		
-		//this.testFirstStoreyAttributes();
-		JAXBContext jc = JAXBContext.newInstance(BuildingStorey.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( buildingStorey2, System.out );
+		//super.outputXmlToSystemOut(buildingStorey2);
 	}
 	@Test
-	@Ignore
 	public void testThirdStorey() throws JAXBException {
 		
-		//this.testFirstStoreyAttributes();
-		JAXBContext jc = JAXBContext.newInstance(BuildingStorey.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( buildingStorey3, System.out );
+		//super.outputXmlToSystemOut(buildingStorey1);
 	}
 	
 	@Test

@@ -94,10 +94,7 @@ public class DoorTest extends IfcTestMethods{
 	
 	public void testDisplayDoor(Door theDoor) throws JAXBException {
 		assertNotNull(theDoor);
-		JAXBContext jc = JAXBContext.newInstance(Door.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(theDoor, System.out );
+		//super.outputXmlToSystemOut(theDoor);
 	}
 	@Test
 	public void testDisplayDoor1() throws JAXBException {

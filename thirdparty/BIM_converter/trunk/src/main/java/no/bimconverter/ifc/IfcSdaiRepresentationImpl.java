@@ -27,6 +27,7 @@ public class IfcSdaiRepresentationImpl implements IfcSdaiRepresentation{
 			//logger.debug("Opening following properties file:{}", Thread.currentThread().getContextClassLoader().getResource(propertiesFileNameArg).toString());
 			//inStream =  Thread.currentThread().getContextClassLoader().getResourceAsStream(propertiesFileNameArg);
 			inStream = getClass().getResourceAsStream( "/" +propertiesFileNameArg );
+			//System.out.println(getClass().getResource("/").toString());
 			//getClass().get
 			if(inStream == null) {
 				logger.error("Properties file not found!!");

@@ -24,11 +24,9 @@ import no.bimconverter.ifc.jaxb.ClassificationItem;
 import no.bimconverter.ifc.jaxb.Decomposition;
 import no.bimconverter.ifc.jaxb.PropertyList;
 import no.bimconverter.ifc.jaxb.SpaceSpatialContainer;
-import no.bimconverter.ifc.v2x3.IfcModelImpl;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /*
@@ -76,12 +74,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(this.baseQuantitiesTestData,this.baseQuantitiesCurrentData);
 	}
 	@Test
-	
 	public void testSpace1() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space1, System.out );
+		//super.outputXmlToSystemOut(space1);
 	}
 	@Test
 	public void testSpace1Attributes(){
@@ -198,12 +192,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(referenceItemn, item1);
 	}
 	@Test
-	@Ignore
 	public void testSpace2() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space2, System.out );
+		//super.outputXmlToSystemOut(space3);
 	}
 	@Test
 	public void testSpace2Attributes(){
@@ -308,12 +298,8 @@ public class SpaceTest extends IfcTestMethods{
 		
 	}
 	@Test
-	@Ignore
 	public void testSpace3() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space3, System.out );
+		//super.outputXmlToSystemOut(space3);
 	}
 	@Test
 	public void testSpace3Attributes(){
@@ -406,12 +392,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(null, boundary);
 	}
 	@Test
-	@Ignore
 	public void testSpace4() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space4, System.out );
+		//super.outputXmlToSystemOut(space4);
 	}
 	@Test
 	public void testSpace4Attributes(){
@@ -505,12 +487,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(null, boundary);
 	}
 	@Test
-	@Ignore
 	public void testSpace5() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space5, System.out );
+		//super.outputXmlToSystemOut(space5);
 	}
 	@Test
 	public void testSpace5Attributes(){
@@ -597,12 +575,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(null, boundary);
 	}
 	@Test
-	@Ignore
 	public void testSpace6() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space6, System.out );
+		//super.outputXmlToSystemOut(space6);
 	}
 	@Test
 	public void testSpace6Attributes(){
@@ -721,12 +695,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(referenceItem2, item2);
 	}
 	@Test
-	@Ignore
 	public void testSpace7() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space7, System.out );
+		//super.outputXmlToSystemOut(space7);
 	}
 	@Test
 	public void testSpace7Attributes(){
@@ -838,12 +808,8 @@ public class SpaceTest extends IfcTestMethods{
 		assertEquals(null, boundary);
 	}
 	@Test
-	@Ignore
 	public void testSpace8() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Space.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( space8, System.out );
+		//super.outputXmlToSystemOut(space8);
 	}
 	@Test
 	public void testSpace8Attributes(){

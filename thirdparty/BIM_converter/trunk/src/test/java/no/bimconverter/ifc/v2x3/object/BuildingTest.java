@@ -27,6 +27,7 @@ import no.bimconverter.ifc.v2x3.IfcModelImpl;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BuildingTest extends IfcTestMethods{
@@ -51,13 +52,7 @@ public class BuildingTest extends IfcTestMethods{
 	@Test
 	public void testCreateAndIntializeBuildingObject() throws JAXBException {
 		Building building = buildingsList.get(0);
-		
-		JAXBContext jc = JAXBContext.newInstance(Building.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( building, System.out );
-		
-		 
+		//super.outputXmlToSystemOut(building);
 		assertNotNull(buildingsList);
 	}
 	@Test

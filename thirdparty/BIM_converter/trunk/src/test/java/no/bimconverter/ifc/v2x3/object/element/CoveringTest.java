@@ -63,13 +63,9 @@ public class CoveringTest extends IfcTestMethods{
 		assertNotNull(coverings);
 	}
 	@Test
-	@Ignore
 	public void testDisplayCovering1() throws JAXBException {
 		assertNotNull(covering1);
-		JAXBContext jc = JAXBContext.newInstance(Covering.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(covering1, System.out );
+		//super.outputXmlToSystemOut(covering1);
 	}
 	@Test
 	public void testCovering1Attributes() {
@@ -149,13 +145,9 @@ public class CoveringTest extends IfcTestMethods{
 		assertEquals("0h$ksovXH3Jeg02dH7s8af", spatialDecompostion.getSpaces().get(0));
 	}
 	@Test
-	@Ignore
 	public void testDisplayCovering2() throws JAXBException {
 		assertNotNull(covering2);
-		JAXBContext jc = JAXBContext.newInstance(Covering.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(covering2, System.out );
+		//super.outputXmlToSystemOut(covering2);
 	}
 	@Test
 	public void testCovering2Attributes() {
@@ -238,13 +230,9 @@ public class CoveringTest extends IfcTestMethods{
 		assertEquals("0h$ksovXH3Jeg0w$H7s8af", spatialDecompostion.getSpaces().get(0));
 	}
 	@Test
-	@Ignore
 	public void testDisplayCovering3() throws JAXBException {
 		assertNotNull(covering3);
-		JAXBContext jc = JAXBContext.newInstance(Covering.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(covering3, System.out );
+		//super.outputXmlToSystemOut(covering3);
 	}
 	@Test
 	public void testCovering3Attributes() {

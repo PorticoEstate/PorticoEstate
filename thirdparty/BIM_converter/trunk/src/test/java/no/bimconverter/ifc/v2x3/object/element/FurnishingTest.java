@@ -74,10 +74,7 @@ public class FurnishingTest extends IfcTestMethods{
 	
 	public void testDisplayFurnishing(Furnishing theFurnishing) throws JAXBException {
 		assertNotNull(theFurnishing);
-		JAXBContext jc = JAXBContext.newInstance(Furnishing.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal(theFurnishing, System.out );
+		//super.outputXmlToSystemOut(theFurnishing);
 	}
 	@Test
 	public void testDisplayFurnishings() throws JAXBException {

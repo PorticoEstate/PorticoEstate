@@ -33,6 +33,7 @@ import no.bimconverter.ifc.v2x3.IfcModelImpl;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SiteTest extends IfcTestMethods{
@@ -55,7 +56,9 @@ public class SiteTest extends IfcTestMethods{
 	}
 	@Test
 	public void outputNewModel() throws SdaiException {
-		model.createNewMiniModel();
+		// Following line outputs IFC representation
+		//model.createNewMiniModel();
+		
 		/*
 		SdaiSession session2 = SdaiSession.openSession();
 		SdaiTransaction transaction = session2.startTransactionReadWriteAccess(); 
@@ -77,15 +80,7 @@ public class SiteTest extends IfcTestMethods{
 	}
 	@Test
 	public void testCreateAndIntializeSiteObject() throws JAXBException {
-		
-		
-		 
-		JAXBContext jc = JAXBContext.newInstance(Site.class);
-		Marshaller m = jc.createMarshaller();
-		 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( site, System.out );
-
-		 
+		//super.outputXmlToSystemOut(site);
 		assertNotNull(site);
 	}
 	@Test

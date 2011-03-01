@@ -11,7 +11,9 @@ import javax.xml.bind.Marshaller;
 import no.bimconverter.ifc.IfcTestMethods;
 import no.bimconverter.ifc.v2x3.object.Zone;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ZoneTest extends IfcTestMethods{	
@@ -32,10 +34,8 @@ public class ZoneTest extends IfcTestMethods{
 	
 	@Test
 	public void testZone1() throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(Zone.class);
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m.marshal( zone1, System.out );
+		//super.outputXmlToSystemOut(zone1);
+		Assert.assertNotNull(zone1);
 	}
 
 }
