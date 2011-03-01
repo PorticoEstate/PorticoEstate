@@ -207,8 +207,9 @@ public class Project extends CommonObjectImpl{
 		String unitName = null;
 		Class<? extends EEntity> currentClass = unit.getClass();
 		Method[] classMethods = currentClass.getDeclaredMethods();
-		
+		//System.out.println(currentClass.getName());
 		for(Method m : classMethods) {
+			//System.out.println(m.getName());
 			if(m.getName().startsWith("getName")) {
 				
 				try {
@@ -229,8 +230,9 @@ public class Project extends CommonObjectImpl{
 					e.printStackTrace();
 					throw new SdaiException();
 				}
+				break;
 			}
-			break;
+			
 		}
 		return unitName;
 	}
