@@ -67,11 +67,11 @@
 			// Form variables
 			$search_for 	= phpgw::get_var('query');
 			$search_type	= phpgw::get_var('search_option');
-			$include_price_items = phpgw::get_var('price_items');
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
 			
+			$price_items_only = phpgw::get_var('price_items'); //should only export contract price items
 			$exp_param 	= phpgw::get_var('export');
 			$export = false;
 			if(isset($exp_param)){
@@ -179,9 +179,9 @@
 				foreach ($result_objects as $result) {
 					if(isset($result))
 					{
-						if(isset($include_price_items))
+						if(isset($price_items_only))
 						{
-							//$rows[] = $result->serialize();
+							//export contract price items
 							$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true'));
 							foreach ($result_objects_pi as $result_pi) {
 								if(isset($result_pi))
@@ -192,6 +192,7 @@
 						}
 						else
 						{
+							//export contracts
 							$rows[] = $result->serialize();
 						}
 					}
