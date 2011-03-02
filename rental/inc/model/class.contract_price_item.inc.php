@@ -187,13 +187,13 @@
 				'contract_id' => $this->get_contract_id(),
 				'area' => $this->get_area(),
 				'count' => $this->get_count(),
-				//'total_price' => $currency_prefix.' '.$this->get_total_price(),
-				'total_price' => $this->get_total_price(),
-				'title' => $this->get_title(),
 				'agresso_id' => $this->get_agresso_id(),
+				'title' => $this->get_title(),
 				'is_area' => $this->get_type_text(),
 				//'price' => money_format($currency_prefix.' %.2n',$this->get_price()),
 				'price' => $this->get_price(),
+				//'total_price' => $currency_prefix.' '.$this->get_total_price(),
+				'total_price' => $this->get_total_price(),
 				'is_one_time' => $this->is_one_time(),
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not

@@ -67,6 +67,7 @@
 			// Form variables
 			$search_for 	= phpgw::get_var('query');
 			$search_type	= phpgw::get_var('search_option');
+			$include_price_items = phpgw::get_var('price_items');
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -178,7 +179,21 @@
 				foreach ($result_objects as $result) {
 					if(isset($result))
 					{
-						$rows[] = $result->serialize();
+						if(isset($include_price_items))
+						{
+							//$rows[] = $result->serialize();
+							$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true'));
+							foreach ($result_objects_pi as $result_pi) {
+								if(isset($result_pi))
+								{
+									$rows[] = $result_pi->serialize();
+								}
+							}
+						}
+						else
+						{
+							$rows[] = $result->serialize();
+						}
 					}
 				}
 				//var_dump("Usage " .memory_get_usage() . " bytes after serializing");
