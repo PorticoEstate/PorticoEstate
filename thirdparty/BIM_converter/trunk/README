@@ -1,0 +1,7 @@
+The BIM_converter is a standalone rest service running within tomcat.
+
+make "war" by issuing the command:
+
+mvn package -Djava.awt.headless=true
+
+The 'bimconverter.war' will be fount at target/
