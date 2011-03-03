@@ -90,6 +90,10 @@ class rental_socontract_price_item extends rental_socommon
 			$cols = 'COUNT(DISTINCT(id)) AS count';
 			$order = "";
 		}
+		else if(isset($filters['export']))
+		{
+			$cols = 'id, price_item_id, contract_id, area, count, agresso_id, title, is_area, price, total_price, is_one_time, date_start, date_end';
+		}
 		else
 		{
 			$cols = '*';
@@ -97,7 +101,7 @@ class rental_socontract_price_item extends rental_socommon
 		
 		$tables = "rental_contract_price_item";
 		$joins = "";
-		
+
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	

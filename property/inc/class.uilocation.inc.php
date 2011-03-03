@@ -654,7 +654,22 @@
 							)),
 							'parameters'	=> $parameters3
 						);
+						
+					$datatable['rowactions']['action'][] = array
+						(
+							'my_name'			=> 'view',
+							'text' 			=> lang('composites'),
+							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+							(
+								'menuaction'	  => 'rental.uicomposite.index',
+								'search_type'	  => 'location_id',
+								'populate_form'   => 'yes'
+							)),
+							'parameters'	=> $parameters3
+						);
 				}
+				
+				
 
 				if($this->acl_read)
 				{

@@ -205,6 +205,8 @@ execute_adjustments	rental	no	Utfør reguleringer
 executive_officer	rental	no	Saksbehandler
 executive_officer_for	rental	no	Saksbehandler for
 export	rental	no	Eksport
+export_contracts	rental	no	Eksporter kontrakter
+export_contract_price_items	rental	no	Eksporter priselementer på kontrakter
 Export failed.	rental	no	Eksporten feilet.
 Export format	rental	no	Format
 Export generated.	rental	no	Eksporten ble generert.
@@ -416,6 +418,7 @@ postal_code	rental	no	Postnummer
 place	rental	no	Sted
 previous	rental	no	Forrige
 price_item	rental	no	Priselement
+price_item_id	rental	no	Priselement ID
 price_item_type_apiece	rental	no	Stk.
 price_item_type_area	rental	no	Areal
 price_item_inactive	rental	no	Inaktiv
