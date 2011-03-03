@@ -24,6 +24,8 @@
 		
 		public function query()
 		{
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
@@ -91,11 +93,13 @@
 			}
 		}
 		
-		public function edit(){
-			
+		public function edit()
+		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];
-			
+
 			$unit_id = (int)phpgw::get_var('id');
 			
 			if (isset($unit_id) && $unit_id > 0 && $use_fellesdata) {
@@ -174,6 +178,8 @@
 		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];
 			if(!isset($account_id) || $account_id == '' && $use_fellesdata)
 			{

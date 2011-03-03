@@ -50,6 +50,9 @@
 		
 		public function add_actions(&$value, $key, $params)
 		{			
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+
 			$use_fellesdata = $config->config_data['use_fellesdata'];
 			if(($this->isExecutiveOfficer() || $this->isAdministrator()) && $use_fellesdata)
 			{
