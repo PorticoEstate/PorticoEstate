@@ -71,6 +71,7 @@
 			$result_objects = array();
 			$result_count = 0;
 			
+			$price_items_only = phpgw::get_var('price_items'); //should only export contract price items
 			$exp_param 	= phpgw::get_var('export');
 			$export = false;
 			if(isset($exp_param)){
@@ -178,7 +179,22 @@
 				foreach ($result_objects as $result) {
 					if(isset($result))
 					{
-						$rows[] = $result->serialize();
+						if(isset($price_items_only))
+						{
+							//export contract price items
+							$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true'));
+							foreach ($result_objects_pi as $result_pi) {
+								if(isset($result_pi))
+								{
+									$rows[] = $result_pi->serialize();
+								}
+							}
+						}
+						else
+						{
+							//export contracts
+							$rows[] = $result->serialize();
+						}
 					}
 				}
 				//var_dump("Usage " .memory_get_usage() . " bytes after serializing");

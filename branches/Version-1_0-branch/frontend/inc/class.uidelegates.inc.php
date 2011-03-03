@@ -19,6 +19,8 @@
 
 		public function index()
 		{		
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];	
 			if(isset($_POST['search']))
 			{
@@ -204,6 +206,9 @@
 		
 		public function add_delegate(int $account_id, $org_unit_id, $org_name)
 		{
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
+
 			$use_fellesdata = $config->config_data['use_fellesdata'];
 			if(!$use_fellesdata)
 			{

@@ -55,8 +55,11 @@ class frontend_uicontract extends frontend_uifrontend
 		{
 			$contract_id = phpgw::get_var('contract_id');
 			$contract_message = phpgw::get_var('contract_message');
+			$config	= CreateObject('phpgwapi.config','rental');
+			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];
-			if($use_fellesdata){
+			if($use_fellesdata)
+			{
 				$user_data = frontend_bofellesdata::get_instance()->get_user($GLOBALS['phpgw_info']['user']['account_lid']);
 					
 				if($user_data['email'])
