@@ -76,6 +76,9 @@ class rental_uiparty extends rental_uicommon
 		
 		//Retrieve the type of query and perform type specific logic
 		$type = phpgw::get_var('type');
+
+		$config	= CreateObject('phpgwapi.config','rental');
+		$config->read();
 		$use_fellesdata = $config->config_data['use_fellesdata'];	
 		switch($type)
 		{
@@ -178,6 +181,9 @@ class rental_uiparty extends rental_uicommon
 	 */
 	public function update_all_org_enhet_id()
 	{
+		$config	= CreateObject('phpgwapi.config','rental');
+		$config->read();
+
 		$use_fellesdata = $config->config_data['use_fellesdata'];	
 		if(!$use_fellesdata){
 			return;
