@@ -788,6 +788,11 @@
 					visible: <xsl:value-of select="phpgw:conditional(not(visible = 0), 'true', 'false')"/>,
 					format: "<xsl:value-of select="format"/>",
 					formatter: <xsl:value-of select="formatter"/>,
+					<xsl:choose>
+						<xsl:when test="width">
+							width: <xsl:value-of select="width"/>,
+						</xsl:when>
+					</xsl:choose>
 					source: "<xsl:value-of select="sort_field"/>",
 					className: "<xsl:value-of select="className"/>"
 				}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
