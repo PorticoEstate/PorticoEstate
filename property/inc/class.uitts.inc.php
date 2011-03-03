@@ -851,8 +851,6 @@
 				$dry_run = true;
 			}
 
-			$ticket_list = array();
-
 			$ticket_list = $this->bo->read($start_date, $end_date,'',$dry_run);
 
 			$this->bo->get_origin_entity_type();
@@ -1170,6 +1168,7 @@
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
+//					$datatable['headers']['header'][$i]['width']			= (int)$uicols['width'][$i];
 					if($uicols['name'][$i]=='priority' || $uicols['name'][$i]=='id' || $uicols['name'][$i]=='assignedto' || $uicols['name'][$i]=='finnish_date'|| $uicols['name'][$i]=='user'|| $uicols['name'][$i]=='entry_date' || $uicols['name'][$i]=='order_id')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
