@@ -140,19 +140,6 @@
 				$filtermethod .= " $where  dima $this->like '%$loc1%' ";
 				$where= 'AND';
 			}
-			if ($workorder_id)
-			{
-				$filtermethod .= " $where  pmwrkord_code ='$workorder_id' ";
-				$where= 'AND';
-			}
-
-
-			if ($voucher_id)
-			{
-				$filtermethod .= " $where  bilagsnr = " . (int)$voucher_id;
-				$where= 'AND';
-			}
-
 
 			if ($paid)
 			{
@@ -165,12 +152,13 @@
 					$join_tables .= " $this->join fm_b_account ON fm_ecobilagoverf.spbudact_code = fm_b_account.id";
 				}
 
-				if (!$workorder_id && !$voucher_id  && $start_date)
+				if (!$workorder_id && !$voucher_id)
 				{
 					$start_periode = date('Ym',$start_date);
 					$end_periode = date('Ym',$end_date);
 
 					$filtermethod .= " $where (periode >='$start_periode' AND periode <= '$end_periode')";
+					$where= 'AND';
 				}
 			}
 			else
@@ -178,7 +166,20 @@
 				$table ='fm_ecobilag';
 			}
 
-			if($query)
+			$no_q = false;
+			if ($voucher_id)
+			{
+				$filtermethod = " WHERE bilagsnr = " . (int)$voucher_id;
+				$no_q = true;
+			}
+
+			if ($workorder_id)
+			{
+				$filtermethod = " WHERE pmwrkord_code ='$workorder_id' ";
+				$no_q = true;
+			}
+
+			if($query && !$no_q)
 			{
 				$query = (int) $query;
 				$querymethod = " $where ( spvend_code = {$query} OR bilagsnr = {$query})";
@@ -329,15 +330,14 @@
 
 		function read_invoice_sub($data)
 		{
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
-				$filter		= isset($data['filter']) ? $data['filter'] : 'none';
-				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
-				$order		= isset($data['order']) ? $data['order'] : '';
-				$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
-				$paid		= isset($data['paid']) ? $data['paid'] : '';
-			}
+			$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$filter		= isset($data['filter']) ? $data['filter'] : 'none';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$voucher_id	= isset($data['voucher_id']) && $data['voucher_id'] ? (int)$data['voucher_id'] : 0;
+			$paid		= isset($data['paid']) ? $data['paid'] : '';
+			$project_id	= isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
+			$order_id 	= isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0 ;//might be bigint
 
 			if ($paid)
 			{
@@ -358,15 +358,31 @@
 				$ordermethod = ' order by id DESC';
 			}
 
+			$filtermethod = '';
+			$where = 'WHERE';
+
 			if ($voucher_id)
 			{
-				$filtermethod = " WHERE ( bilagsnr= '$voucher_id')";
+				$filtermethod .= " {$where} bilagsnr= '$voucher_id'";
+				$where = 'AND';
+			}
+
+			if ($order_id)
+			{
+				$filtermethod .= " {$where} pmwrkord_code= '{$order_id}'";
+				$where = 'AND';
+			}
+
+			if ($project_id)
+			{
+				$filtermethod .= " {$where} fm_project.id = '{$project_id}'";
+				$where = 'AND';
 			}
 
 			$sql = "SELECT $table.*,fm_workorder.status,fm_workorder.charge_tenant,org_name,"
 				. "fm_workorder.claim_issued, fm_workorder.paid_percent FROM $table"
 				. " $this->left_join fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
-	//			. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
+				. " $this->left_join fm_project ON fm_workorder.project_id = fm_project.id"
 				. " $this->join fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
@@ -386,7 +402,7 @@
 						'workorder_id'			=> $this->db->f('pmwrkord_code'),
 						'status'				=> $this->db->f('status'),
 						'closed'				=> $this->db->f('status') == $closed,
-						'voucher_id'			=> $voucher_id,
+						'voucher_id'			=> $this->db->f('bilagsnr'),
 						'id'					=> $this->db->f('id'),
 						'invoice_id'			=> $this->db->f('fakturanr'),
 						'budget_account'		=> $this->db->f('spbudact_code'),
@@ -401,7 +417,10 @@
 						'paid_percent'			=> $this->db->f('paid_percent'),
 						'project_group'			=> $this->db->f('project_id'),
 						'external_ref'			=> $this->db->f('external_ref'),
-						'currency'				=> $this->db->f('currency')
+						'currency'				=> $this->db->f('currency'),
+						'budget_responsible'	=> $this->db->f('budsjettansvarligid'),
+						'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
+						'transfer_time'			=> $this->db->f('overftid'),
 					);
 
 				$i++;
@@ -420,12 +439,12 @@
 				$query 			= isset($data['query'])?$data['query']:'';
 				$sort 			= isset($data['sort'])?$data['sort']:'DESC';
 				$order 			= isset($data['order'])?$data['order']:'';
-				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+				$cat_id 		= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id']:0;
 				$start_date 	= isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
 				$end_date 		= isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : time();
-				$vendor_id 		= isset($data['vendor_id'])?$data['vendor_id']:'';
+				$vendor_id 		= isset($data['vendor_id'])?(int)$data['vendor_id']:0;
 				$loc1 			= isset($data['loc1'])?$data['loc1']:'';
-				$district_id 	= isset($data['district_id'])?$data['district_id']:'';
+				$district_id 	= isset($data['district_id'])?(int)$data['district_id']:0;
 				$workorder_id 	= isset($data['workorder_id']) && $data['workorder_id'] ? $data['workorder_id']:0;
 				$b_account_class = isset($data['b_account_class'])?$data['b_account_class']:'';
 				$b_account		= isset($data['b_account']) ? $data['b_account'] : '';
@@ -475,7 +494,7 @@
 
 			if ($workorder_id)
 			{
-				$filtermethod.= " $where pmwrkord_code = $workorder_id";
+				$filtermethod.= " $where pmwrkord_code = '{$workorder_id}'";
 				$where= 'AND';
 			}
 
