@@ -1435,9 +1435,66 @@
 			$myColumnDefs[1] = array
 				(
 					'name'		=> "1",
-					'values'	=>	json_encode(array(	array(key => file_name,label=>lang('Filename'),sortable=>false,resizeable=>true),
-					array(key => delete_file,label=>lang('Delete file'),sortable=>false,resizeable=>true)))
+					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true)))
 				);
+
+			$invoices = array();
+			if ($id)
+			{
+				$active_invoices = execMethod('property.soinvoice.read_invoice_sub', array('order_id' => $id));
+				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub', array('order_id' => $id, 'paid' => true));
+				$invoices = array_merge($active_invoices,$historical_invoices);
+			}
+
+			$content_invoice = array();
+			foreach($invoices as $entry)
+			{
+				$content_invoice[] = array
+				(
+					'voucher_id'			=> $entry['transfer_time'] ? -1*$entry['voucher_id'] : $entry['voucher_id'],
+					'status'				=> $entry['status'],
+					'invoice_id'			=> $entry['invoice_id'],					
+					'budget_account'		=> $entry['budget_account'],
+					'dima'					=> $entry['dima'],
+					'dimb'					=> $entry['dimb'],
+					'dimd'					=> $entry['dimd'],
+					'amount'				=> $entry['amount'],
+					'vendor'				=> $entry['vendor'],
+					'paid_percent'			=> $entry['paid_percent'],
+					'project_group'			=> $entry['project_id'],
+					'currency'				=> $entry['currency'],
+					'budget_responsible'	=> $entry['budget_responsible'],
+					'budsjettsigndato'		=> $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
+				);	
+			}
+
+			$datavalues[2] = array
+				(
+					'name'					=> "2",
+					'values' 				=> json_encode($content_invoice),
+					'total_records'			=> count($content_invoice),
+					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
+					'is_paginator'			=> 1,
+					'footer'				=> 0
+				);
+
+
+			$myColumnDefs[2] = array
+				(
+					'name'		=> "2",
+					'values'	=>	json_encode(array(	array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
+														))
+				);
+
+
 
 
 			$link_claim = '';

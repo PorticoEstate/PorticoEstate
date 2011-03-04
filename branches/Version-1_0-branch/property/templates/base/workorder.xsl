@@ -528,10 +528,8 @@
 									<input type="hidden" name="values[origin_id]" value="{value_origin_id}"></input>
 
 									<input type="text" name="values[title]" value="{value_title}" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_title_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 								</td>
@@ -542,10 +540,8 @@
 								</td>
 								<td>
 									<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_descr_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 										<xsl:value-of select="value_descr"/>
 									</textarea>
@@ -567,10 +563,8 @@
 										</td>
 										<td>
 											<input type="checkbox" name="values[confirm_status]" value="True"  onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
+												<xsl:attribute name="title">
 													<xsl:value-of select="lang_confirm_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
 												</xsl:attribute>
 											</input>
 										</td>
@@ -615,10 +609,8 @@
 								</td>
 								<td>
 									<textarea cols="60" rows="6" name="values[remark]" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_remark_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 										<xsl:value-of select="value_remark"/>
 									</textarea>
@@ -637,10 +629,8 @@
 								</td>
 								<td>
 									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_start_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 
@@ -653,10 +643,8 @@
 								</td>
 								<td>
 									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly" onMouseout="window.status='';return true;" >
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_end_date_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 									<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
@@ -719,10 +707,8 @@
 				</td>
 				<td>
 					<input type="text" name="values[budget]" value="{value_budget}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_budget_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
@@ -734,10 +720,8 @@
 				</td>
 				<td>
 					<input type="text" name="values[addition_rs]" value="{value_addition_rs}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_addition_rs_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
@@ -749,10 +733,8 @@
 				</td>
 				<td>
 					<input type="text" name="values[addition_percentage]" value="{value_addition_percentage}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_addition_percentage_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 					<xsl:text> </xsl:text> [ % ]
@@ -823,7 +805,14 @@
 					</input>
 				</td>
 			</tr>
+			<tr>
+				<td colspan='2'>
+					<div id="paging_2"> </div>
+					<div id="datatable-container_2"></div>
+				</td>
+			</tr>
 		</table>
+
 	</div>
 
 	<xsl:choose>
@@ -897,29 +886,6 @@
 	</div>
 	<div id="history">
 
-		<!--  
-		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<table cellpadding="2" cellspacing="2" width="80%" align="center">
-			<xsl:choose>
-				<xsl:when test="record_history=''">
-					<tr>
-						<td class="th_text" align="center">
-							<xsl:value-of select="lang_no_history"/>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
-					<tr>
-						<td class="th_text" align="left">
-							<xsl:value-of select="lang_history"/>
-						</td>
-					</tr>
-					<xsl:apply-templates select="table_header_history"/>
-					<xsl:apply-templates select="record_history"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</table>
-		-->
 		<div id="paging_0"> </div>
 		<div id="datatable-container_0"></div>	
 
@@ -931,11 +897,11 @@
 			<xsl:for-each select="datatable">
 				datatable[<xsl:value-of select="name"/>] = [
 				{
-				values			:	<xsl:value-of select="values"/>,
-				total_records	: 	<xsl:value-of select="total_records"/>,
-				edit_action		:  	<xsl:value-of select="edit_action"/>,
-				is_paginator	:  	<xsl:value-of select="is_paginator"/>,
-				footer			:	<xsl:value-of select="footer"/>
+					values			:	<xsl:value-of select="values"/>,
+					total_records	: 	<xsl:value-of select="total_records"/>,
+					edit_action		:  	<xsl:value-of select="edit_action"/>,
+					is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+					footer			:	<xsl:value-of select="footer"/>
 				}
 				]
 			</xsl:for-each>
@@ -953,10 +919,8 @@
 		<td>
 			<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
 			<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-				<xsl:attribute name="onMouseover">
-					<xsl:text>window.status='</xsl:text>
+				<xsl:attribute name="title">
 					<xsl:value-of select="lang_save_statustext"/>
-					<xsl:text>'; return true;</xsl:text>
 				</xsl:attribute>
 			</input>
 		</td>
@@ -970,10 +934,8 @@
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
 						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
 					</form>
