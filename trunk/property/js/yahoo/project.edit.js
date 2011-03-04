@@ -1,11 +1,28 @@
 var  myPaginator_0, myDataTable_0
 var  myPaginator_1, myDataTable_1;
+var  myPaginator_2, myDataTable_2;
 
 /********************************************************************************/
 	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
 	{
 	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oData + "</a>";
 	};
+
+
+	YAHOO.widget.DataTable.formatLink_voucher = function(elCell, oRecord, oColumn, oData)
+	{
+	  	if(oData > 0)
+	  	{
+	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&query="+oData+"&voucher_id="+oData+"&user_lid=all>" + oData + "</a>";
+	  	}
+	  	else
+	  	{
+	  		oData = -1*oData;
+	  		elCell.innerHTML = "<a href="+datatable[2][0]["edit_action"]+"&voucher_id="+oData+"&user_lid=all&paid=true>" + oData + "</a>";	  	
+	  	}
+	};
+
+
 /********************************************************************************/	
 	var FormatterRight = function(elCell, oRecord, oColumn, oData)
 	{

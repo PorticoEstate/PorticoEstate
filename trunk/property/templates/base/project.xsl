@@ -109,7 +109,7 @@
 
 <!-- add / edit -->
 
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<script type="text/javascript">
 			self.name="first_Window";
 			<xsl:value-of select="lookup_functions"/>
@@ -540,27 +540,31 @@
 						<!-- DataTable -->
 						<div id="paging_0"> </div>
 						<div id="datatable-container_0"></div>
-
-						<!-- table width="100%" cellpadding="2" cellspacing="2" align="center">
-						<xsl:apply-templates select="table_header_workorder_budget"/>
-						<xsl:apply-templates select="workorder_budget"/>
-						<tr class="th">
-							<td class="th_text" width="5%" align="right">
-								<xsl:value-of select="lang_sum"/>
-							</td>
-							<td class="th_text" width="5%" align="right">
-								<xsl:value-of select="sum_workorder_budget"/>
-							</td>
-							<td class="th_text" width="5%" align="right">
-								<xsl:value-of select="sum_workorder_calculation"/>
-							</td>
-							<td>
-							</td>
-							<td>
-							</td>
-						</tr>
-					</table> -->
-
+					</td>
+				</xsl:otherwise>
+			</xsl:choose>
+		</tr>
+			<tr>
+				<td valign = "top" class="th_text">
+					<xsl:value-of select="php:function('lang', 'invoice')" />
+				</td>
+				<td >
+					<div id="paging_2"> </div>
+					<div id="datatable-container_2"></div>
+				</td>
+			</tr>
+<!--
+	<tr>
+		<td valign="top">
+			<xsl:value-of select="php:function('lang', 'actual cost')" />
+		</td>
+		<td>
+			<xsl:value-of select="sum_workorder_actual_cost"/>
+			<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+		</td>
+	</tr>
+-->
+</table>
 					<!--  DATATABLE DEFINITIONS-->
 					<script type="text/javascript">
 						var property_js = <xsl:value-of select="property_js" />;
@@ -584,20 +588,6 @@
 						</xsl:for-each>
 					</script>
 
-				</td>
-			</xsl:otherwise>
-		</xsl:choose>
-	</tr>
-	<tr>
-		<td valign="top">
-			<xsl:value-of select="lang_actual_cost"/>
-		</td>
-		<td>
-			<xsl:value-of select="sum_workorder_actual_cost"/>
-			<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-		</td>
-	</tr>
-</table>
 </div>
 
 <xsl:choose>
