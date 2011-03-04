@@ -232,7 +232,7 @@
 			if( phpgw::get_var('phpgw_return_as') == 'json' && is_array($values) && isset($values))
 			{
 				$values["save"]="Save";
-				//			 	_debug_array($values);
+//			 	_debug_array($values);
 				$receipt = $this->bo->update_invoice($values);
 
 			}
@@ -279,6 +279,7 @@
 					."paid:'{$paid}',"
 					."vendor_id:'{$vendor_id}',"
 					."workorder_id:'{$workorder_id}',"
+					."voucher_id:'{$voucher_id}',"
 					."start_date:'{$start_date}',"
 					."end_date:'{$end_date}',"
 					."filter:'{$this->filter}',"

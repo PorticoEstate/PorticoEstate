@@ -233,6 +233,7 @@ budget code is missing from sub invoice in :	property	no	Budsjett konto mangler 
 budget cost	property	no	Budsjett-beløp
 budget_cost	property	no	Budsjett-beløp
 budget responsible	property	no	Anviser
+budsjettsigndato	property	no	Anvist dato
 building	property	no	Bygning
 building common	property	no	Bygnings felles
 building has been edited	property	no	Bygning er endret
@@ -1702,6 +1703,7 @@ total cost	property	no	Total
 total sum	property	no	Total sum
 tracking helpdesk	property	no	Sporing helpdesk hovedliste
 transfer	property	no	Overfør
+transfer time	property	no	Overført
 true	property	no	True
 tts	property	no	melding
 type	property	no	type
