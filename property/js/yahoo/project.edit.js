@@ -42,6 +42,7 @@ var  myPaginator_2, myDataTable_2;
   		tmp_sum1 = getSumPerPage('budget',2,paginator,datatable);
   		tmp_sum2 = getSumPerPage('calculation',2,paginator,datatable);
   		tmp_sum3 = getSumPerPage('actual_cost',2,paginator,datatable);
+  		tmp_sum4 = getSumPerPage('contract_sum',2,paginator,datatable);
 
   		if(typeof(tableYUI)=='undefined')
   		{
@@ -58,6 +59,7 @@ var  myPaginator_2, myDataTable_2;
 
 		td_sum('Sum');
 		td_empty(2);
+		td_sum(tmp_sum4);
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
 		td_sum(tmp_sum3);

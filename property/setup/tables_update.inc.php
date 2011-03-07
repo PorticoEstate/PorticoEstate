@@ -5088,6 +5088,28 @@
 	}
 
 	/**
+	* Update property version from 0.9.17.611 to 0.9.17.612
+	* Add contract sum to orders
+	* 
+	*/
+
+	$test[] = '0.9.17.611';
+	function property_upgrade0_9_17_611()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder','contract_sum',array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.612';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 

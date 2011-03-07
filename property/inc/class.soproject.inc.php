@@ -644,7 +644,7 @@
 		{
 			$project_id = (int) $project_id;
 			$budget = array();
-			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,"
+			$this->db->query("SELECT fm_workorder.title, act_mtrl_cost, act_vendor_cost, budget, fm_workorder.id as workorder_id,contract_sum,"
 				." vendor_id, calculation,rig_addition,addition,deviation,charge_tenant,fm_workorder_status.descr as status, fm_workorder.account_id as b_account_id"
 				." FROM fm_workorder $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE project_id={$project_id}");
 			while ($this->db->next_record())
@@ -661,6 +661,7 @@
 					'charge_tenant'		=> $this->db->f('charge_tenant'),
 					'status'			=> $this->db->f('status'),
 					'b_account_id'		=> $this->db->f('b_account_id'),
+					'contract_sum'		=> (int)$this->db->f('contract_sum'),
 				);
 			}
 			return $budget;
