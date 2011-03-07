@@ -1,0 +1,188 @@
+/**
+* @version $Id: login.css 14401 2010-01-26 14:10:00Z louis $
+* @copyright Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
+* @license GNU/GPL, see LICENSE.php
+* Joomla! is free software. This version may have been modified pursuant
+* to the GNU General Public License, and as distributed it includes or
+* is derivative of works licensed under the GNU General Public License or
+* other free or open source software licenses.
+* See COPYRIGHT.php for copyright notices and details.
+*/
+
+/**
+ * Adopted from the Joomla! 1.5 Admin template main css file
+ *
+ * @author		Andy Miller <andy.miller@joomla.org>
+ * @package		Joomla
+ * @since		1.5
+ * @version    1.0
+ */
+
+/* -- Imported styles ----------------------------- */
+
+@import url("joomla_general.css");
+
+/* -- Specific styles ----------------------------- */
+
+form  			{ margin: 0px; padding: 0px; }
+form .inputbox  { width: 120px; margin-left: 10px; }
+form br 	    { display: none; }
+.login          { margin: 0 auto; width: 500px; margin-bottom: 100px; }
+
+h1 {
+  margin: 15px 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+#lock  {
+	background: url(../images/j_login_lock.jpg) 50% 0 no-repeat;
+	width: 150px;
+	height: 137px;
+}
+
+#content-box .m {
+  padding: 10px;
+}
+
+#content-box .padding {
+  padding: 30px 0;
+}
+
+#section-box  { float: right; width: 320px; margin-left: 10px;}
+
+#section-box .m {
+  padding: 5px;
+}
+#section-box .padding {
+	background: none; padding: 0;
+}
+
+.button { text-align: right; }
+
+.login-form    { text-align: left; width: 60%; }
+.login-form h1 { display: none; }
+.login-form p  { padding: 0 1em 0 1em; }
+
+.login-text { text-align: left; width: 40%; float: left; }
+
+#form-login label {
+	display: block;
+	float: left;
+	width: 120px;
+	text-align: right;
+	padding: 4px;
+	color: #666;
+	font-weight: bold;
+}
+
+#form-login .button_holder {
+	float: left;
+	padding-left: 180px;
+}
+
+#form-login div.button1{
+ 	float: left;
+}
+
+#form-login div.button1 div.next {
+	float: left;
+}
+
+#jflanguageselection
+{
+    float: right;
+	margin: 15px 0px 10px 5px;    
+}
+
+/* language lists with UL (names & images) */
+#jflanguageselection ul.jflanguageselection
+{
+	list-style: none;
+	padding: 0;
+	margin-top: 3px;
+	font-weight: normal;
+}
+
+#jflanguageselection ul.jflanguageselection li
+{
+	background-image: none;
+	padding-left: 0px;
+	padding-right: 0px;
+	float: left;
+	margin: 1px 1px 1px 1px;
+	white-space: nowrap;
+	border: none;
+	font-size: 0.9em;
+}
+
+#jflanguageselection ul.jflanguageselection li#active_language
+{
+ 	font-weight: bold;
+	font-size: 1.0em;
+}
+
+#jflanguageselection ul.jflanguageselection li a
+{
+	display: block;
+}
+
+#jflanguageselection ul.jflanguageselection img
+{
+	border: none;
+}
+
+div#jflanguageselection img.langImg {
+	float: left;
+	border: none;
+	margin-top: 3px;
+}
+div#jflanguageselection li img.langImg {
+	float: left;
+	border: none;
+	margin: 0px 1px 0px 1px;
+}
+
+/** Styles for the drop down list */
+
+#jflanguageselection select.jflanguageselection
+{
+	border: 1px solid #cccccc;
+}
+
+#jflanguageselection label.jflanguageselection
+{
+	position:absolute;
+	left:-1000px;
+}
+
+/** Controls Raw Display of Images **/
+
+.rawimages {
+	text-align: right;
+	margin-top: 3px;
+}
+.rawimages img {
+	border: none;
+	margin:2px;
+}
+.rawimages span#active_language img
+{
+	margin:2px;
+	border: none;
+}
+
+div#jflanguageselection img.langImg{ float: left; border: none; margin-top: 3px; }
+div#jflanguageselection li img.langImg{ float: left; border: none; margin: 1px 3px 0px 0px; }
+
+#jflanguageselection .opaque{
+	filter:alpha(opacity=30);
+}
+#jflanguageselection option.opaque{
+	color:graytext;
+}
+
