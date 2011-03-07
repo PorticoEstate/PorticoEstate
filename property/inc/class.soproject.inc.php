@@ -150,7 +150,7 @@
 				$uicols['datatype'][]		= '';
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= 'rightClasss';
-				$uicols['sortable'][]		= true;
+				$uicols['sortable'][]		= '';
 
 				$cols .= ", fm_project_status.descr as status";
 				$cols_return[] 				= 'status';

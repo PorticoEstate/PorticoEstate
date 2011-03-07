@@ -116,7 +116,6 @@
 			$uicols['descr'][]			= lang('id');
 			$uicols['datatype'][]		= $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
 			$uicols['sortable'][]		= true;
-			$uicols['formatter'][]		= '';
 
 			foreach($this->location_info['fields'] as $field)
 			{
@@ -125,7 +124,6 @@
 				$uicols['descr'][]			= $field['descr'];
 				$uicols['datatype'][]		= 'V';
 				$uicols['sortable'][]		= isset($field['sortable']) && $field['sortable'] ? true : false;
-				$uicols['formatter'][]		= $field['type'] == 'int' ? 'FormatterRight' : '';
 			}
 
 			$custom_fields = false;
@@ -156,7 +154,6 @@
 					$uicols['statustext'][]		= $this->_db->f('statustext');
 					$uicols['datatype'][$i]		= $this->_db->f('datatype');
 					$uicols['attib_id'][$i]		= $this->_db->f('id');
-					$uicols['formatter'][$i]	= $this->_db->f('datatype') == 'I' ? 'FormatterRight' : '';
 					$cols_return_extra[]= array(
 						'name'	=> $this->_db->f('column_name'),
 						'datatype'	=> $this->_db->f('datatype'),
@@ -401,12 +398,6 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
-							),
-							array
-							(
-								'name' => 'budget',
-								'descr' => lang('budget'),
-								'type' => 'int'
 							)
 						),
 						'edit_msg'	=> lang('edit'),

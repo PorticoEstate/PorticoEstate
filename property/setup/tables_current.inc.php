@@ -1318,8 +1318,7 @@
 		'fm_project_group' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False),
-				'budget' => array('type' => 'int','precision' => '4','nullable' => True),
+				'descr' => array('type' => 'varchar','precision' => '255','nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

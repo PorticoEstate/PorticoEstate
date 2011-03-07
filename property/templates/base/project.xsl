@@ -235,6 +235,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 
+							<xsl:call-template name="project_group_form"/>
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_name"/>
@@ -441,8 +442,6 @@
 				<img id="values_end_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 			</td>
 		</tr>
-
-		<xsl:call-template name="project_group_form"/>
 
 		<xsl:choose>
 			<xsl:when test="ecodimb_data!=''">

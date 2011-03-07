@@ -12,13 +12,6 @@
 	{order:0, name:'btn_search', funct:"onSearchClick"}
 	]
 
-/********************************************************************************/	
-	var FormatterRight = function(elCell, oRecord, oColumn, oData)
-	{
-		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
-	}	
-	
-
 	// define Text buttons
 	var textImput = [
 	{order:0, name:'query',	id:'txt_query'}

@@ -28,13 +28,6 @@
 		date_search : 0, //if search has link "Data search"
 		particular_done : "admin.uimainscreen.mainscreen"
 	}
-
-/********************************************************************************/	
-	var FormatterRight = function(elCell, oRecord, oColumn, oData)
-	{
-		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
-	}	
-
 /****************************************************************************************/
 	this.particular_setting = function()
 	{

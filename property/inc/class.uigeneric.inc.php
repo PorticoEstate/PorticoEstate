@@ -621,14 +621,6 @@
 								$receipt['error'][]=array('msg'=>lang('missing value for %1', $field_info['descr']));									
 							}
 						}
-
-						if ($field_info['type'] == 'int')
-						{
-							if( $values[$field_info['name']] && !ctype_digit($values[$field_info['name']]) )
-							{
-								$receipt['error'][]=array('msg'=> "{$field_info['descr']}: " . lang('Please enter an integer !'));
-							}
-						}
 					}
 
 					if($values['id'] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values['id']))
