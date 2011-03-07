@@ -4,7 +4,7 @@
 		<xsl:apply-templates select="project_group_data"/>
 	</xsl:template>
 
-	<xsl:template match="project_group_data">
+	<xsl:template match="project_group_data" xmlns:php="http://php.net/xsl">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function project_group_lookup()
@@ -29,7 +29,28 @@
 						<xsl:value-of select="lang_select_project_group_help"/>
 					</xsl:attribute>
 				</input>
+				<xsl:choose>
+					<xsl:when test="value_project_group_budget != ''">
+						<xsl:value-of select="php:function('lang', 'budget')" />
+						<xsl:text>: </xsl:text>
+						<xsl:value-of select="value_project_group_budget"/>
+					</xsl:when>
+				</xsl:choose>
 			</td>
 		</tr>
-
+<!--
+		<xsl:choose>
+			<xsl:when test="value_project_group_budget != ''">
+				<tr>
+					<td>
+					</td>
+					<td valign="top">
+						<xsl:value-of select="php:function('lang', 'budget')" />
+						<xsl:text>: </xsl:text>
+						<xsl:value-of select="value_project_group_budget"/>
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
+-->
 	</xsl:template>
