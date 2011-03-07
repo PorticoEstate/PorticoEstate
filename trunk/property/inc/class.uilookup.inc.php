@@ -2526,10 +2526,10 @@ JS;
 			}
 
 			$uicols = array (
-				'input_type'	=>	array('text','text'),
-				'name'			=>	array('id','descr'),
-				'formatter'		=>	array('',''),
-				'descr'			=>	array(lang('ID'),lang('Name'))
+				'input_type'	=>	array('text','text','text'),
+				'name'			=>	array('id','descr','budget'),
+				'formatter'		=>	array('','','FormatterRight'),
+				'descr'			=>	array(lang('ID'),lang('Name'),lang('budget'))
 			);
 
 			$project_group_list = array();
