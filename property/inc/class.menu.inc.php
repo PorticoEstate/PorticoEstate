@@ -653,6 +653,24 @@
 
 			if ( $acl->check('.project', PHPGW_ACL_READ, 'property') )
 			{
+
+				$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.project');
+				$cats->supress_info	= true;
+
+				$project_cats = $cats->formatted_xslt_list(array('format'=>'filter','globals' => True));
+//_debug_array($project_cats);die();
+				$project_children = array();
+				foreach($project_cats['cat_list'] as $dummy => $project_cat)
+				{
+					$project_children[$project_cat['cat_id']] = array
+					(
+						'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index', 'cat_id' => $project_cat['cat_id'])),
+						'text'		=> $project_cat['name'],
+						'image'		=> array('property', 'project'),
+					
+					);	
+				}
+
 				$menus['navigation']['project'] = array
 					(
 						'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
@@ -664,7 +682,8 @@
 							(
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
 								'text'	=> lang('Project'),
-								'image'		=> array('property', 'project')
+								'image'		=> array('property', 'project'),
+								'children'	=> $project_children
 							),
 							'workorder'	=> array
 							(
