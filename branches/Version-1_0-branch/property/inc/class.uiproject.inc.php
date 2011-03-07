@@ -167,6 +167,11 @@
 		function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::project';
+			if($this->cat_id)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";			
+			}
+
 			if(!$this->acl_read)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiproject.stop', 'perm'=>1,'acl_location'=> $this->acl_location));
