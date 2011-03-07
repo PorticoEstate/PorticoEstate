@@ -747,8 +747,8 @@
 				$project_group_object->get_location_info('project_group',false);
 				$project_group_data					= $project_group_object->read_single(array('id'=> $data['project_group']));
 				$project_group['value_project_group_descr']	= $project_group_data['descr'];
+				$project_group['value_project_group_budget']	= $project_group_data['budget'];
 			}
-
 			return $project_group;
 		}
 
