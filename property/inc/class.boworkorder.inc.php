@@ -212,6 +212,12 @@
 					'name'=> lang('billable hours'),
 					'sortable'	=> true
 				);
+			$columns['contract_sum'] = array
+				(
+					'id' => 'contract_sum',
+					'name'=> lang('contract sum'),
+					'sortable'	=> true
+				);
 
 			return $columns;
 		}

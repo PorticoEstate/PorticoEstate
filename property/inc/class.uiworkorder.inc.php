@@ -1595,6 +1595,8 @@
 					'lang_calculation'						=> lang('Calculation'),
 					'value_calculation'						=> (isset($values['calculation'])?$values['calculation']:''),
 					'value_sum_estimated_cost'				=> $sum_estimated_cost,
+					
+					'value_contract_sum'					=> $values['contract_sum'],
 
 					'actual_cost'							=> (isset($values['actual_cost'])?$values['actual_cost']:''),
 					'lang_actual_cost'						=> lang('Actual cost'),

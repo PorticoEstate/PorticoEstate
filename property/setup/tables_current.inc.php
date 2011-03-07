@@ -519,7 +519,8 @@
 				'contact_phone' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'paid_percent' => array('type' => 'int','precision' => 4,'nullable' => True,'default' => 0),
 				'event_id' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True)
+				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
+				'contract_sum' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True,'default' => '0.00'),
  			),
 			'pk' => array('id'),
 			'fk' => array(),

@@ -197,7 +197,8 @@
 				$cols_return[] 				= 'end_date';
 				$cols.= ",fm_workorder.ecodimb";
 				$cols_return[] 				= 'ecodimb';
-
+				$cols.= ",fm_workorder.contract_sum";
+				$cols_return[] 				= 'contract_sum';
 /*
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'entry_date';
@@ -675,6 +676,7 @@
 						'cat_id'				=> $this->db->f('category'),
 						'grants'				=> (int)$this->grants[$this->db->f('user_id')],
 						'billable_hours'		=> $this->db->f('billable_hours'),
+						'contract_sum'			=> $this->db->f('contract_sum'),
 					);
 			}
 
@@ -923,13 +925,14 @@
 					$this->account,
 					$workorder['ecodimb'],
 					$workorder['cat_id'],
-					$workorder['billable_hours']
+					$workorder['billable_hours'],
+					$workorder['contract_sum']
 				);
 
 			$values	= $this->bocommon->validate_db_insert($values);
 
 			$this->db->query("INSERT INTO fm_workorder (id,num,project_id,title,access,entry_date,start_date,end_date,status,"
-				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours $cols) "
+				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,user_id,ecodimb,category,billable_hours,contract_sum $cols) "
 				. "VALUES ( $values $vals)",__LINE__,__FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -1039,7 +1042,8 @@
 					'vendor_id'		=> $workorder['vendor_id'],
 					'ecodimb'		=> $workorder['ecodimb'],
 					'category'		=> $workorder['cat_id'],
-					'billable_hours'=> $workorder['billable_hours']
+					'billable_hours'=> $workorder['billable_hours'],
+					'contract_sum'	=> $workorder['contract_sum'],
 				);
 
 			if($workorder['status'] == 'closed')
