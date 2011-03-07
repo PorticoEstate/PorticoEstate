@@ -477,6 +477,7 @@
 
 				$values['workorder_budget'][$i]['title']=$workorder_data[$i]['title'];
 				$values['workorder_budget'][$i]['workorder_id']=$workorder_data[$i]['workorder_id'];
+				$values['workorder_budget'][$i]['contract_sum']=number_format($workorder_data[$i]['contract_sum'], 2, ',', '');
 				$values['workorder_budget'][$i]['budget']=number_format($workorder_data[$i]['budget'], 2, ',', '');
 				$values['workorder_budget'][$i]['calculation']=number_format($workorder_data[$i]['calculation']*$tax, 2, ',', '');
 				$values['workorder_budget'][$i]['charge_tenant'] = $workorder_data[$i]['charge_tenant'];
