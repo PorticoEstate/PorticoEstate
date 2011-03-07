@@ -703,6 +703,16 @@
 
 			<tr>
 				<td valign="top">
+					<xsl:value-of select="php:function('lang', 'contract sum')" />
+				</td>
+				<td>
+					<input type="text" name="values[contract_sum]" value="{value_contract_sum}" >
+					</input>
+					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
 					<xsl:value-of select="lang_budget"/>
 				</td>
 				<td>
