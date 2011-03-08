@@ -182,7 +182,7 @@
 						if(isset($price_items_only))
 						{
 							//export contract price items
-							$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true'));
+							$result_objects_pi = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $result->get_id(),'export'=>'true','include_billed'=>'true'));
 							foreach ($result_objects_pi as $result_pi) {
 								if(isset($result_pi))
 								{

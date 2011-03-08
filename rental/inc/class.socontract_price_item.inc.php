@@ -74,6 +74,10 @@ class rental_socontract_price_item extends rental_socommon
 		if(isset($filters['one_time'])){
 			$filter_clauses[] = "is_one_time";
 		}
+		else if($filters['include_billed'])
+		{
+			// Do not add filter on showing only price items that has not yet been billed
+		}
 		else{
 			$filter_clauses[] = "NOT is_billed";
 		}
@@ -102,6 +106,7 @@ class rental_socontract_price_item extends rental_socommon
 		$tables = "rental_contract_price_item";
 		$joins = "";
 
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
