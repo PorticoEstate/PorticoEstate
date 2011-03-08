@@ -90,8 +90,20 @@ class frontend_uidocumentupload extends frontend_uifrontend
 				return;
 			}
 		}
+
+		$mime_magic = createObject('phpgwapi.mime_magic');
 		
-		$file_path = $path."/{$file['name']}";
+		$mime       = $mime_magic->filename2mime($file['name']);
+
+		if( $mime != 'application/pdf' )
+		{
+			$message ='Only PDF is supported for this one';
+			phpgwapi_cache::message_set($message, 'error');
+			return $message;		
+		}
+
+		$file_path = "{$path}/helpdesk.index.pdf";
+
 		$result = $vfs->write
 		(
 			array
@@ -101,24 +113,14 @@ class frontend_uidocumentupload extends frontend_uifrontend
 				'content' => file_get_contents($file['tmp_name'])
 			)
 		);
+
 		if($result)
 		{
-			return "Stored in vfs";
+			$message ='Stored in vfs';
+			phpgwapi_cache::message_set($message, 'message');
+			return $message;
 		}
 		return "something failed...";
-
-/*		
-		if (file_exists("/u01/filer/bkb_data/frontend/upload/" . $file['name']))
-		{
-			return $file["name"] . " already exists. ";
-		}
-		else
-		{
-			move_uploaded_file($file["tmp_name"],"/u01/filer/bkb_data/frontend/upload/" . $file["name"]);
-			return "Stored in: " . "/u01/filer/bkb_data/frontend/upload/" . $file["name"] . ' (temp: '. $file['tmp_name']. ')';
-		}
-		//return "file stored";
-*/
 	}
 	
 	public function get_id_field_name($extended_info = false)
@@ -236,7 +238,6 @@ class frontend_uidocumentupload extends frontend_uifrontend
 	
 	public function read_helpfile_from_vfs()
 	{
-		
 		$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 		$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -246,13 +247,14 @@ class frontend_uidocumentupload extends frontend_uifrontend
 		$vfs = CreateObject('phpgwapi.vfs');
 		$vfs->override_acl = 1;
 
+		$file = "{$directory}/helpdesk.index.pdf";
 		$ls_array = $vfs->ls(array(
-			'string' => $directory,
-			'relatives' => array(RELATIVE_NONE)
+			'string'		=>  $file,
+			'relatives' 	=> array(RELATIVE_NONE),
+			'checksubdirs'	=> false,
+			'nofiles'		=> true
 		));
 
-		//$file = isset($ls_array[0]['directory']['name']) ? "{$ls_array[0]['directory']}/{$ls_array[0]['name']}" : '';
-		$file="{$ls_array[0]['directory']}/helpdesk.index.pdf";
 
 		$document = $vfs->read(array(
 			'string'	=> $file,
@@ -270,30 +272,6 @@ class frontend_uidocumentupload extends frontend_uifrontend
 		$browser = CreateObject('phpgwapi.browser');
 		$browser->content_header($ls_array[0]['name'],$ls_array[0]['mime_type'],$ls_array[0]['size']);
 		echo $document;
-		
-/*		$vfs = CreateObject('phpgwapi.vfs');
-		$vfs->override_acl = 1;
-		$filename = 'helpdesk.index.pdf';
-		
-		$path = $this->get_document_path($filename);
-		//$pdffile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.pdf";
-		//$full_filename = "/opt/portico/pe". $path;
-		$document = $vfs->read
-		(
-			array
-			(
-				'string' => $path,
-				RELATIVE_NONE
-			)
-		); 
-		
-		
-		$browser = CreateObject('phpgwapi.browser');
-		$browser->content_header($filename, '', filesize($document));
-	    ob_clean();
-	    flush();
-		readfile($document);
-*/
 	}
 	
 	public function delete_document_from_vfs(string $filename)
