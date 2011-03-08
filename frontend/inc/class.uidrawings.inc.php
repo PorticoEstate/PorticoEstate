@@ -45,6 +45,7 @@
 			phpgwapi_cache::session_set('frontend','tab',$GLOBALS['phpgw']->locations->get_id('frontend','.drawings'));
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
+//			$this->location_code = '1102-01';
 		}
 
 		public function index()
@@ -55,14 +56,12 @@
 
 			$document_list = $sodocument->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'location_code' => $this->location_code,'doc_type' => $doc_type, 'allrows' => $allrows));
-			$this->total_records = $this->so->total_records;
-_debug_array($document_list);
-_debug_array($this->location_code);
+			$total_records = $sodocument->total_records;
 
 			//----------------------------------------------datatable settings--------
 
 			$content = array();
-			foreach($invoices as $entry)
+			foreach($document_list as $entry)
 			{
 				$content[] = array
 				(
@@ -89,8 +88,8 @@ _debug_array($this->location_code);
 			$myColumnDefs[0] = array
 			(
 				'name'		=> "0",
-				'values'	=>	json_encode(array(	array('key' => 'document_name','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'document_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+				'values'	=>	json_encode(array(	array('key' => 'document_name','label'=>lang('name'),'sortable'=>true,'hidden' => true,'resizeable'=>true),
+													array('key' => 'document_id','label'=>lang('name'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
 													array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
 													array('key' => 'doc_type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'document_date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true)
@@ -100,21 +99,31 @@ _debug_array($this->location_code);
 			//----------------------------------------------datatable settings--------
 
 
-
-
-			$data = array
+			$datatable = array
 			(
 				'property_js'			=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'				=> $datavalues,
-				'myColumnDefs'			=> $myColumnDefs,
-				'header'				=>$this->header_state,
+				'myColumnDefs'			=> $myColumnDefs
+			);
+
+			$data = array
+			(
+				'header'				=> $this->header_state,
 				'tabs'					=> $this->tabs,
-				'drawings'				=> lang('not_implemented')
+				'drawings' 				=> array('datatable' => $datatable),
 			);
 			
 	      	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('app_data' => $data));
         	$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','drawings'));
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.edit', 'frontend' );
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'drawing.list', 'frontend' );
 
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('paginator');
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 		}
     }
