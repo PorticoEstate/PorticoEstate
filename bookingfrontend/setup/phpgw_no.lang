@@ -299,7 +299,7 @@ Overlaps other organizations allocation	bookingfrontend	no	Overlapper med en ann
 The booking uses resources not in the containing allocation	bookingfrontend	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
 CONFIRMED	bookingfrontend	no	BEKREFTET
 Pending	bookingfrontend	no	Under behandling
-This booking is not connected to a season	bookingfrontend	no	Denne bookingen er ikke koblet mote en sesong
+This booking is not connected to a season	bookingfrontend	no	Denne bookingen er ikke koblet mot en sesong
 The user has accepted the document under point 8.	bookingfrontend	no	Brukeren har akseptert dokumentene under punkt 8.
 Organization shortname	bookingfrontend	no	Kortnavn
 Group shortname	bookingfrontend	no	Kortnavn

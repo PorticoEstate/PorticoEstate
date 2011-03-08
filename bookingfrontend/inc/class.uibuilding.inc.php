@@ -51,7 +51,6 @@
 			{
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
-//			echo "<pre>";print_r($building);exit;
 			self::render_template('building', array("building" => $building));
 		}
 		

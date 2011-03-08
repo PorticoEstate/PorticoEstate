@@ -380,6 +380,11 @@
 										<td>
 										</td>
 									</tr>
+									<xsl:choose>
+										<xsl:when test="table_send !=''">
+											<tr><td><xsl:apply-templates select="table_send"/></td></tr>
+										</xsl:when>
+									</xsl:choose>
 
 									<xsl:choose>
 										<xsl:when test="email_list !=''">

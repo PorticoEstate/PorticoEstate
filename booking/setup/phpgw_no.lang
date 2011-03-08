@@ -439,7 +439,7 @@ Event created, Overlaps with existing allocation, Remember to send a notificatio
 Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel
 Print as PDF	booking	no	Skriv ut som PDF
 Pending	booking	no	UNDER BEHANDLING
-This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mote en sesong
+This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mot en sesong
 Message from Bergen county - AktivBy	booking	no	Melding fra Bergen kommune - AktivBy
 Organization shortname	booking	no	Kortnavn
 Group shortname	booking	no	Kortnavn
