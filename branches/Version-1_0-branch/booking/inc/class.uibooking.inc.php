@@ -185,8 +185,9 @@
 			$allocation_id = phpgw::get_var('allocation_id', 'int', 'GET');
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
-			$booking['from_'] = phpgw::get_var('from_', 'str', 'GET');
-			$booking['to_'] = phpgw::get_var('to_', 'str', 'GET');
+            #The string replace is a workaround for a problem at Bergen Kommune 
+            $booking['from_'] = str_replace('%3A',':',phpgw::get_var('from_', 'str', 'GET'));
+            $booking['to_'] = str_replace('%3A',':',phpgw::get_var('to_', 'str', 'GET'));
 			$time_from = split(" ",phpgw::get_var('from_', 'str', 'GET'));
 			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
 			$step = phpgw::get_var('step', 'str', 'POST');
@@ -194,7 +195,7 @@
 			$invalid_dates = array();
 			$valid_dates = array();
 
-			if($allocation_id)
+			if(isset($allocation_id))
 			{
 				$allocation = $this->allocation_bo->read_single($allocation_id);
 				$season = $this->season_bo->read_single($allocation['season_id']);
@@ -205,25 +206,15 @@
 				array_set_default($booking, 'resources', array(get_var('resource', int, 'GET')));
 				$booking['organization_id'] = $allocation['organization_id'];
 				$booking['organization_name'] = $allocation['organization_name'];
-			}
-
-            //start Debug code for testing problem on production server. to be removed ASAP!
-            if (phpgw::get_var('DEBUG', 'str', 'GET') == 'yes') {
-                echo "<pre>\n";
-                echo mb_detect_encoding(phpgw::get_var('from_', 'str', 'GET'), "auto");echo "\n";
-                print_r($allocation_id);echo "\n";
-                print_r($booking['from_']);echo "\n";
-                print_r($booking['to_']);echo "\n";
-                print_r($time_from);echo "\n";
-                print_r($time_to);echo "\n";
-                print_r($booking);echo "\n";
-                exit;
+			} else {
+				$season = $this->season_bo->read_single($_POST['season_id']);
             }
-            //end
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
+                
 				if(strlen($_POST['from_']) < 6) 
 				{
 					$date_from = array($time_from[0], $_POST['from_']);
@@ -256,7 +247,7 @@
 #						$errors['booking'] = lang('Can not create a booking in the past');
 #					}
 #				} 
-				if (!$allocation_id &&  $_POST['outseason'] == 'on')
+				if (!$booking['season_id'] &&  $_POST['outseason'] == 'on')
 				{
 					$errors['booking'] = lang('This booking is not connected to a season');
 				}	
@@ -338,22 +329,6 @@
 			{
 				$res_names[] = array('id' => $res['id'],'name' => $res['name']);
 			}
-
-            //start Debug code for testing problem on production server. to be removed ASAP!
-            if (phpgw::get_var('DEBUG', 'str', 'GET') == 'end') {
-                echo "<pre>\n";
-                echo "encoding: ";echo mb_detect_encoding(phpgw::get_var('from_', 'str', 'GET'), "auto");echo "\n";
-                echo "encoding array: ";echo mb_detect_encoding($booking['from_'], "auto");echo "\n";
-                echo "allocation_id: ";print_r($allocation_id);echo "\n";
-                echo "booking from: ";print_r($booking['from_']);echo "\n";
-                echo "booking to: ";print_r($booking['to_']);echo "\n";
-                echo "time from: ";print_r($time_from);echo "\n";
-                echo "time to:";print_r($time_to);echo "\n";
-                echo "booking:\n";print_r($booking);echo "\n";
-                exit;
-            }
-            //end
-
 			if ($step < 2) 
 			{
 				self::render_template('booking_new', array('booking' => $booking, 
