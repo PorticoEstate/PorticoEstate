@@ -54,8 +54,13 @@
 			$allrows = true;
 			$sodocument	= CreateObject('property.sodocument');
 
-			$document_list = $sodocument->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'filter' => $this->filter,'location_code' => $this->location_code,'doc_type' => $doc_type, 'allrows' => $allrows));
+			$document_list = array();
+			if( $this->location_code )
+			{
+				$document_list = $sodocument->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+					'filter' => $this->filter,'location_code' => $this->location_code,'doc_type' => $doc_type, 'allrows' => $allrows));
+			}
+
 			$total_records = $sodocument->total_records;
 
 			//----------------------------------------------datatable settings--------
