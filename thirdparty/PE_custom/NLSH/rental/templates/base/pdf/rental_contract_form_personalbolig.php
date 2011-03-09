@@ -52,6 +52,10 @@ if(isset($_POST['checkb_remarks2'])){?><input type="hidden" name="checkb_remarks
 if(isset($_POST['checkb_remarks3'])){?><input type="hidden" name="checkb_remarks3_hidden"  /><?php }
 if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks4_hidden"  /><?php }
 
+$termin_name = str_replace("lig", "", $contract->get_term_id_title());
+$termin_name = str_replace("vis", "", $termin_name);
+
+
 ?>
 
 
@@ -196,9 +200,9 @@ else
 <?php
 foreach ($price_items as $item)
 {
-	if($item->get_title()=="Leie"){
+	if($item->get_title()=="Utleie"){
 		?>
-<p>Leien er ved kontraktsinngåelse fastsatt til kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</p>
+<p>Leien er ved kontraktsinngåelse fastsatt til kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format(($item->get_total_price()/12)*$months,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. <?php echo  strtolower($termin_name);?></p>
 		<?php
 	}
 }?>
@@ -219,13 +223,13 @@ foreach ($price_items as $item)
 			$on_account = true;
 			?>
 	<dt><input type="checkbox" disabled="disabled" checked="checked" /></dt>
-	<dd><?php echo $item->get_title();?>: kr  <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
+	<dd><?php echo $item->get_title();?>: kr  <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format(($item->get_total_price()/12)*$months,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. <?php echo  strtolower($termin_name);?></dd>
 	<?php
 		}
 	}
 	if(!$on_account){
 		?>
-		<dt><input type="checkbox" name="checkb_electricity" <?php echo $disabled; if(isset($_POST['checkb_electricity']) || isset($_POST['checkb_electricity_hidden'])) {echo 'checked="checked"';}?> /></dt>
+		<dt><input type="checkbox" name="checkb_electricity" <?php  if(isset($_POST['checkb_electricity']) || isset($_POST['checkb_electricity_hidden'])) {echo 'checked="checked"';}?> /></dt>
 	<dd>Leier tegner eget strømabonnement</dd>
 		<?php
 	}
@@ -234,18 +238,36 @@ foreach ($price_items as $item)
 </dl>
 
 <dl class="section_header">
-	<dt>9.</dt>
-	<dd>Andre tillegg</dd>
+	<dt>9 a)</dt>
+	<dd>Andre tillegg - Fastbeløp pr. <?php echo  strtolower($termin_name);?></dd>
 </dl>
 
 <dl class="checkbox_list">
 <?php
-foreach ($price_items as $item)
+foreach ($termin_price_items as $item)
 {
-	if(!($item->get_title()=="Leie" || $item->get_title()=="Strøm")){
+	if(!($item->get_title()=="Utleie" || $item->get_title()=="Strøm")){
 		?>
 	<dt><input type="checkbox" disabled="disabled" checked="checked"/></dt>
-	<dd><?php echo $item->get_title();?>: kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. måned.</dd>
+	<dd><?php echo $item->get_title();?>: kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format(($item->get_total_price()/12)*$months,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> pr. <?php echo  strtolower($termin_name);?></dd>
+	<?php
+	}
+}?>
+</dl>
+
+<dl class="section_header">
+	<dt>9 b)</dt>
+	<dd>Andre tillegg - Engangsbeløp</dd>
+</dl>
+
+<dl class="checkbox_list">
+<?php
+foreach ($one_time_price_items as $item)
+{
+	if(!($item->get_title()=="Utleie" || $item->get_title()=="Strøm")){
+		?>
+	<dt><input type="checkbox" disabled="disabled" checked="checked"/></dt>
+	<dd><?php echo $item->get_title();?>: kr <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price(),2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?></dd>
 	<?php
 	}
 }?>

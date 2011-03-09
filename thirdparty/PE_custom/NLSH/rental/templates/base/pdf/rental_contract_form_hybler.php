@@ -38,6 +38,11 @@ if(isset($_POST['checkb_phone'])){?><input type="hidden" name="checkb_phone_hidd
 if(isset($_POST['checkb_HR'])){?><input type="hidden" name="checkb_HR_hidden"  /><?php }
 if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_payroll_office_hidden"  /><?php }
 
+$termin_name = str_replace("lig", "", $contract->get_term_id_title());
+$termin_name = str_replace("vis", "", $termin_name);
+
+
+
 ?>
 
 <div class="two_column">
@@ -89,18 +94,48 @@ if(isset($_POST['checkb_payroll_office'])){?><input type="hidden" name="checkb_p
 </dl>
 </div>
 
+<?php if(sizeof($one_time_price_items)>0){ ?>
 <div class="one_column">
 
-<table>
+<table border="0">
+<tr><td><strong>Engangsbeløp</strong></td></tr>
 <?php
-foreach ($price_items as $item)
+foreach ($one_time_price_items as $item)
 {
 	?>
 	<tr>
-		<td width="70%"><?php echo $item->get_title();?></td>
-		<td>Kr.:</td>
-		<td align="right" width="15%"><?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price()/12,2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?></td>
-		<td>Pr.mnd.</td>
+		<td><?php echo $item->get_title();?>: <?php echo $item->get_count();?> stk. &aacute  kr. <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_price(),2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?> </td>
+		
+		
+		<td align="right">Kr.: <?php  echo $valuta_prefix; ?> &nbsp; <?php echo number_format($item->get_total_price(),2,',',' '); ?> &nbsp; <?php  echo $valuta_suffix; ?></td>
+	</tr>
+
+	<?php	
+}
+?>
+</table>
+</div>
+<?php }
+
+?>
+
+
+<?php if(sizeof($termin_price_items)>0){ ?>
+<div class="one_column">
+
+<table border="0">
+<tr><td><strong>Fastbeløp pr. <?php echo  strtolower($termin_name);?> </strong></td></tr>
+<?php
+
+foreach ($termin_price_items as $item)
+
+{
+	?>
+	<tr>
+		<td ><?php echo $item->get_title();?></td>
+		
+		<td align="right"> Kr.:<?php  echo $valuta_prefix; ?>&nbsp;<?php echo number_format(($item->get_total_price()/12)*$months,2,',',' '); ?>&nbsp;<?php  echo $valuta_suffix; ?>&nbsp;Pr.&nbsp;<?php echo strtolower($termin_name)?></td>
+		
 	</tr>
 
 	<?php
@@ -108,7 +143,7 @@ foreach ($price_items as $item)
 ?>
 </table>
 </div>
-
+<?php }?>
 
 <div class="one_column">
 <p>Merknader: <strong>Boligen (hybelen) skal ved flytting være ryddet og rengjort.</strong></p>
