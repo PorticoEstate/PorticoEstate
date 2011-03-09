@@ -73,23 +73,31 @@
 				}
 			}
 			
-
 			//----------------------------------------------datatable settings--------
 
-			$content = array();
-			foreach($document_list as $entry)
-			{
-				$content[] = array
-				(
-					'document_id'			=> $entry['document_id'],
-					'document_name'			=> $entry['document_name'],
-					'link'					=> $entry['link'],
-					'title'					=> $entry['title'],
-					'doc_type'				=> $entry['doc_type'],
-					'document_date'			=> $GLOBALS['phpgw']->common->show_date($entry['document_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-				);	
-			}
+			$valid_types = isset($config->config_data['document_valid_types']) && $config->config_data['document_valid_types'] ? str_replace ( ',' , '|' , $config->config_data['document_valid_types'] ) : '';
 
+			$content = array();
+			if($valid_types)
+			{
+				foreach($document_list as $entry)
+				{
+					if ( !preg_match("/({$valid_types})$/i", $entry['document_name']) )
+					{
+						continue;
+					}
+
+					$content[] = array
+					(
+						'document_id'			=> $entry['document_id'],
+						'document_name'			=> $entry['document_name'],
+						'link'					=> $entry['link'],
+							'title'					=> $entry['title'],
+						'doc_type'				=> $entry['doc_type'],
+					'document_date'			=> $GLOBALS['phpgw']->common->show_date($entry['document_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					);	
+				}
+			}
 			$datavalues[0] = array
 			(
 				'name'					=> "0",
