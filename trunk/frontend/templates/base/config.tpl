@@ -81,6 +81,10 @@
 			 </table>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_document_valid_types}(comma separated list of valid filetypes):</td>
+			<td><input name="newsettings[document_valid_types]" value="{value_document_valid_types}"></td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_delegate_limit}:</td>
 			<td><input name="newsettings[delegate_limit]" value="{value_delegate_limit}"></td>
