@@ -110,7 +110,7 @@
 		{
 			$this->db->query("SELECT descr FROM fm_tts_category  WHERE id='$cat_id' ");
 			$this->db->next_record();
-			return stripslashes($this->db->f('descr'));
+			return $this->db->f('descr',true);
 		}
 
 		function read($data)

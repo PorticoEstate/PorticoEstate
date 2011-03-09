@@ -282,6 +282,11 @@
 				$location_code	= isset($data['location_code'])?$data['location_code']:'';
 			}
 
+			if( !$location_code )
+			{
+				return array();
+			}
+
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
 			if ($order)
