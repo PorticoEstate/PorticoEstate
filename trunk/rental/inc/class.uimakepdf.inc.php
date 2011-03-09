@@ -344,15 +344,32 @@
 					
 					
 					$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $contract->get_id()));
-
+					$months = rental_socontract::get_instance()->get_months_in_term($contract->get_term_id());
+					
+					
+					
+					$one_time_price_items = array();
+					$termin_price_items = array();
+					
+					foreach ($price_items as $item){
+						if($item->is_one_time()){
+							array_push($one_time_price_items, $item);
+						}else{
+							array_push($termin_price_items, $item);
+						}
+					}
+					
 					$data = array
 					(
 						'contract' 	=> $contract,
+						'months' => $months,
 						'contract_party' => $party,
 						'contract_dates' => $contract_dates,
 						'composite' => $composite,
 						'units' => $units,
 						'price_items' =>$price_items,
+						'one_time_price_items' => $one_time_price_items,
+						'termin_price_items' => $termin_price_items,
 						'notification' => $notification,
 						'editable' => $editable,
 						'message' => isset($message) ? $message : phpgw::get_var('message'),
@@ -362,7 +379,9 @@
 						
 					);
 					$contract->check_consistency();
-
+					
+					
+					
 					$this->get_pdf_templates();
 					$template_file = 'pdf/'.$this->pdf_templates[$_GET[pdf_template]][1];
 					$this->render($template_file, $data);
