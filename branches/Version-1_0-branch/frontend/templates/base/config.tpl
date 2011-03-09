@@ -72,6 +72,16 @@
 			</td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_document_frontend_category}:</td>
+			<td>
+	    	<!--to be able to blank the setting - need an empty value-->
+	    	<input type = 'hidden' name="newsettings[document_frontend_cat][]" value="">
+		     <table>
+{hook_document_frontend_cat}
+			 </table>
+			</td>
+		</tr>
+		<tr class="row_off">
 			<td>{lang_delegate_limit}:</td>
 			<td><input name="newsettings[delegate_limit]" value="{value_delegate_limit}"></td>
 		</tr>
