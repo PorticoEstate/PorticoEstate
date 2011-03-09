@@ -191,3 +191,30 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	* Get HTML checkbox with categories that are candidates for frontend documents cat
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function document_frontend_cat($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.document');
+		$cats->supress_info = true;
+		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+		$tts_frontend_cat_selected = isset($config['document_frontend_cat']) ? $config['document_frontend_cat'] : array();
+		$out = '';
+		foreach ( $values as $entry)
+		{
+			$checked = '';
+			if ( in_array($entry['id'], $tts_frontend_cat_selected))
+			{
+				$checked = ' checked';
+			}
+			$out .=  <<<HTML
+				<tr><td><input type="checkbox" name="newsettings[document_frontend_cat][]" value="{$entry['id']}" {$checked}><label>{$entry['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}

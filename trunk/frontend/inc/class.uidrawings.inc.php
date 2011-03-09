@@ -50,18 +50,29 @@
 
 		public function index()
 		{
-			$doc_type = 17;
+			$config	= CreateObject('phpgwapi.config','frontend');
+			$config->read();
+			$doc_types = isset($config->config_data['document_frontend_cat']) && $config->config_data['document_frontend_cat'] ? $config->config_data['document_frontend_cat'] : array();	
+
 			$allrows = true;
 			$sodocument	= CreateObject('property.sodocument');
 
 			$document_list = array();
+			$total_records = 0;
 			if( $this->location_code )
 			{
-				$document_list = $sodocument->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-					'filter' => $this->filter,'location_code' => $this->location_code,'doc_type' => $doc_type, 'allrows' => $allrows));
-			}
+				foreach ($doc_types as $doc_type)
+				{
+					if($doc_type)
+					{
+						$document_list = array_merge($document_list, $sodocument->read_at_location(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+							'filter' => $this->filter,'location_code' => $this->location_code,'doc_type' => $doc_type, 'allrows' => $allrows)));
+					}
 
-			$total_records = $sodocument->total_records;
+					$total_records = $total_records + $sodocument->total_records;
+				}
+			}
+			
 
 			//----------------------------------------------datatable settings--------
 
@@ -93,10 +104,10 @@
 			$myColumnDefs[0] = array
 			(
 				'name'		=> "0",
-				'values'	=>	json_encode(array(	array('key' => 'document_name','label'=>lang('name'),'sortable'=>true,'hidden' => true,'resizeable'=>true),
-													array('key' => 'document_id','label'=>lang('name'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
-													array('key' => 'title','label'=>lang('title'),'sortable'=>false,'resizeable'=>true),
-													array('key' => 'doc_type','label'=>lang('type'),'sortable'=>true,'resizeable'=>true),
+				'values'	=>	json_encode(array(	array('key' => 'document_name','label'=>lang('filename'),'sortable'=>true,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink'),
+													array('key' => 'document_id','label'=>lang('filename'),'sortable'=>false,'hidden' => true),
+													array('key' => 'title','label'=>lang('name'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'doc_type','label'=>'Type','sortable'=>true,'resizeable'=>true),
 													array('key' => 'document_date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true)
 													))
 			);

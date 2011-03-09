@@ -3,8 +3,8 @@ var  myPaginator_0, myDataTable_0
 /********************************************************************************/
 	YAHOO.widget.DataTable.formatLink = function(elCell, oRecord, oColumn, oData)
 	{
-//		console.log(oRecord._oData.document_name);
-	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oData+">" + oRecord._oData.document_name + "</a>";
+//		console.log(oRecord._oData.document_id);
+	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&id="+oRecord._oData.document_id+">" + oData + "</a>";
 	};
 
 
