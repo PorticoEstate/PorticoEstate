@@ -1112,15 +1112,18 @@
 
 			$session = $this->read_session($sessionid);
 
-			$timeout = time() - $GLOBALS['phpgw_info']['server']['sessions_timeout'];
-			if ( !isset($session['session_dla'])
-				|| $session['session_dla'] <= $timeout )
+			if ($GLOBALS['phpgw_info']['server']['auth_type'] != 'ntlm') //Timeout make no sense for SSO
 			{
-				if(isset($session['session_dla']))
+				$timeout = time() - $GLOBALS['phpgw_info']['server']['sessions_timeout'];
+				if ( !isset($session['session_dla'])
+					|| $session['session_dla'] <= $timeout )
 				{
-					$this->cd_reason = 10;
+					if(isset($session['session_dla']))
+					{
+						$this->cd_reason = 10;
+					}
+					return false;
 				}
-				return false;
 			}
 
 			$this->_session_flags = $session['session_flags'];

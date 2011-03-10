@@ -77,6 +77,13 @@
 								<xsl:value-of select="value"/>
 								<img id="values_attribute_{counter}-trigger"/>
 							</xsl:when>
+							<xsl:when test="datatype='link'">
+								<xsl:choose>
+									<xsl:when test="value!=''">
+										<br/><a href="{value}" target="_blank"><xsl:value-of select="value"/></a>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="value"/>
 							</xsl:otherwise>
