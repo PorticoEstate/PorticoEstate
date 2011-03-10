@@ -468,7 +468,8 @@
 						'entry_date'			=> $this->db->f('entry_date'),
 						'closed_date'			=> $this->db->f('closed_date'),
 						'in_progress_date'		=> $this->db->f('in_progress_date'),
-						'delivered_date'		=> $this->db->f('delivered_date')
+						'delivered_date'		=> $this->db->f('delivered_date'),
+						'regulations' 			=> explode(',', $this->db->f('regulations'))
 					);
 
 				if ( isset($values['attributes']) && is_array($values['attributes']) )
@@ -585,6 +586,7 @@
 			$value_set['building_part']			= $request['building_part'];
 			$value_set['start_date']			= $request['start_date'];
 			$value_set['end_date']				= $request['end_date'];
+			$value_set['regulations']			= $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : '';
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->bocommon->validate_db_insert(array_values($value_set));
@@ -688,20 +690,21 @@
 			}
 
 			$value_set = array
-				(
-					'title' 				=> $this->db->db_addslashes($request['title']),
-					'status'				=> $request['status'],
-					'category'				=> $request['cat_id'],
-					'start_date'			=> $request['start_date'],
-					'end_date'				=> $request['end_date'],
-					'coordinator'			=> $request['coordinator'],
-					'descr'					=> $this->db->db_addslashes($request['descr']),
-					'budget'				=> (int)$request['budget'],
-					'location_code'			=> $request['location_code'],
-					'address'				=> $address,
-					'authorities_demands'	=> $request['authorities_demands'],
-					'building_part'			=> $request['building_part'],
-				);
+			(
+				'title' 				=> $this->db->db_addslashes($request['title']),
+				'status'				=> $request['status'],
+				'category'				=> $request['cat_id'],
+				'start_date'			=> $request['start_date'],
+				'end_date'				=> $request['end_date'],
+				'coordinator'			=> $request['coordinator'],
+				'descr'					=> $this->db->db_addslashes($request['descr']),
+				'budget'				=> (int)$request['budget'],
+				'location_code'			=> $request['location_code'],
+				'address'				=> $address,
+				'authorities_demands'	=> $request['authorities_demands'],
+				'building_part'			=> $request['building_part'],
+				'regulations'			=> $request['regulations'] ? ',' . implode(',',$request['regulations']) . ',' : ''
+			);
 
 			while (is_array($request['location']) && list($input_name,$value) = each($request['location']))
 			{

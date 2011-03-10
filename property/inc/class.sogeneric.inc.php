@@ -2085,6 +2085,9 @@
 
 			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}");
 
+			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
+			
+			$i = 0;
 			while ($this->_db->next_record())
 			{
 				$_extra = $this->_db->f($id_in_name);
@@ -2099,11 +2102,18 @@
 					$name = "{$_extra} - {$name}";
 				}
 
-				$values[] = array
-					(
-						'id'	=> $id,
-						'name'	=> $name
-					);
+				$values[$i] = array
+				(
+					'id'	=> $id,
+					'name'	=> $name
+				);
+
+				foreach ($return_fields as $return_field)
+				{
+					$values[$i][$return_field] = $this->_db->f($return_field, true);
+				}
+
+				$i++;
 			}
 			return $values;
 		}
