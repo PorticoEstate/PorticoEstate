@@ -405,6 +405,11 @@
 							'text'	=> lang('authorities demands'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'authorities_demands') )
 						),
+						'regulations'	=> array
+						(
+							'text'	=> lang('regulations'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'regulations') )
+						),
 						'request_attribs'	=> array
 						(
 							'text'	=> lang('request Attributes'),

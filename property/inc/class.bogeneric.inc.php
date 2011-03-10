@@ -199,9 +199,19 @@
 		public function get_list($data)
 		{
 			$values = $this->so->get_list($data);
-			foreach ($values as &$entry)
+			if(isset($data['selected']) && is_array($data['selected']))
 			{
-				$entry['selected'] = isset($data['selected']) && trim($data['selected']) == trim($entry['id']) ? 1 : 0;
+				foreach ($values as &$entry)
+				{
+					$entry['selected'] = in_array($entry['id'],$data['selected']);
+				}
+			}
+			else
+			{
+				foreach ($values as &$entry)
+				{
+					$entry['selected'] = isset($data['selected']) && trim($data['selected']) == trim($entry['id']) ? 1 : 0;
+				}
 			}
 			return $values;
 		}

@@ -1408,6 +1408,7 @@
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
 					'authorities_demands'				=> array('options' => execMethod('property.bogeneric.get_list',array('type' => 'authorities_demands', 'selected' => $values['authorities_demands']))),
+					'regulations'						=> execMethod('property.bogeneric.get_list',array('type' => 'regulations', 'selected' => $values['regulations'])),
 
 					'condition_list'					=> $this->bo->select_conditions($id),
 					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),

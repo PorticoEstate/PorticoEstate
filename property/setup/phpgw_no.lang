@@ -750,6 +750,7 @@ export contacts	property	no	Eksporter kontakter
 export date	property	no	Eksport dato
 export invoice	property	no	Overfør
 export to file	property	no	Eksport til fil
+external ref	property	no	Ekstern referanse
 extra	property	no	Ekstra
 extra mail address	property	no	Ekstra adresse
 f	property	no	F
@@ -1264,6 +1265,7 @@ re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 receipt date	property	no	Kvitteringsdato
 record	property	no	Post
+regulations	property	no	Forskrifter
 related	property	no	Relatert
 related info	property	no	Relatert info
 remark	property	no	Merknad

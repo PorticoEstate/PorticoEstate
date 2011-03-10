@@ -360,6 +360,7 @@
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['name'] 		= $uicols['name'][$k];
 							$datatable['rows']['row'][$j]['column'][$k]['value']		= $entry[$uicols['name'][$k]];
+							$datatable['rows']['row'][$j]['column'][$k]['format']		= $uicols['datatype'][$k];
 						}
 					}
 					$j++;
@@ -501,13 +502,17 @@
 					$json_row = array();
 					foreach( $row['column'] as $column)
 					{
-						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						if(isset($column['format']) && $column['format']== 'link' && $column['java_link']==true)
 						{
-							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
 						}
-						else if(isset($column['format']) && $column['format']== "link")
+						else if(isset($column['format']) && $column['format']== 'link')
 						{
-							$json_row[$column['name']] = "<a href='".$column['link']."'>" .$column['value']."</a>";
+							$json_row[$column['name']] = "<a href='{$column['value']}' target='_blank'>" .lang('link') . '</a>';
+						}
+						else if(isset($column['format']) && $column['format']== 'text')
+						{
+							$json_row[$column['name']] = nl2br($column['value']);
 						}
 						else
 						{
