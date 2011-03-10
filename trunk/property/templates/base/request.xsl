@@ -460,6 +460,56 @@
 												</select>			
 											</td>
 										</tr>
+
+										<tr>
+											<td valign='top' align="left">
+												<xsl:value-of select="php:function('lang', 'regulations')" />
+											</td>
+											<td colspan='3'>
+												<table cellpadding="2" cellspacing="2" width="50%" align="left">
+													<xsl:for-each select="regulations" >
+														<tr>
+															<xsl:attribute name="class">
+																<xsl:choose>
+																	<xsl:when test="@class">
+																		<xsl:value-of select="@class"/>
+																	</xsl:when>
+																	<xsl:when test="position() mod 2 = 0">
+																		<xsl:text>row_off</xsl:text>
+																	</xsl:when>
+																		<xsl:otherwise>
+																			<xsl:text>row_on</xsl:text>
+																		</xsl:otherwise>
+																	</xsl:choose>
+																</xsl:attribute>
+															<td align="left" title='{descr}'>
+																<xsl:text> </xsl:text>
+																<xsl:choose>
+																	<xsl:when test="external_ref!=''">
+																		<a href="{external_ref}" target="_blank"><xsl:value-of select="name"/></a>
+																	</xsl:when>
+																	<xsl:otherwise>
+																		<xsl:value-of select="name"/>
+																	</xsl:otherwise>
+																</xsl:choose>
+															</td>
+															<td align="left">
+																<input type="checkbox" name="values[regulations][]" value="{id}">
+																	<xsl:if test="selected = '1'">
+																		<xsl:attribute name="checked">
+																			<xsl:text>checked</xsl:text>
+																		</xsl:attribute>
+																	</xsl:if>
+																	<xsl:attribute name="title">
+																		<xsl:value-of select="descr"/>
+																	</xsl:attribute>
+																</input>
+															</td>
+														</tr>
+													</xsl:for-each>
+												</table>
+											</td>
+										</tr>
 										<xsl:call-template name="attributes"/>
 										<tr>
 											<td align="left">
