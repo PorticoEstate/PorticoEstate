@@ -298,6 +298,22 @@
 										</xsl:choose>
 									</input>
 								</xsl:when>
+								<xsl:when test="datatype='link'">
+									<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+									</input>
+									<xsl:choose>
+										<xsl:when test="value!=''">
+											<br/><a href="{value}" target="_blank"><xsl:value-of select="value"/></a>
+										</xsl:when>
+									</xsl:choose>
+								</xsl:when>
 								<xsl:when test="datatype='event'">
 									<xsl:choose>
 										<xsl:when test="warning!=''">
