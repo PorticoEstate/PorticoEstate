@@ -123,7 +123,7 @@
 				$uicols['input_type'][]		= isset($field['hidden']) && $field['hidden'] ? 'hidden' : 'text';
 				$uicols['name'][]			= $field['name'];
 				$uicols['descr'][]			= $field['descr'];
-				$uicols['datatype'][]		= 'V';
+				$uicols['datatype'][]		= $field['type'];
 				$uicols['sortable'][]		= isset($field['sortable']) && $field['sortable'] ? true : false;
 				$uicols['formatter'][]		= $field['type'] == 'int' ? 'FormatterRight' : '';
 			}
@@ -1560,6 +1560,48 @@
 						'acl_app' 			=> 'property',
 						'acl_location' 		=> '.admin',
 						'menu_selection'	=> 'admin::property::ticket_status'
+					);
+				break;
+
+
+			case 'regulations':
+				$info = array
+					(
+						'table' 			=> 'fm_regulations',
+						'id'				=> array('name' => 'id', 'type' => 'auto'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text'
+							),
+							array
+							(
+								'name' => 'external_ref',
+								'descr' => lang('external ref'),
+								'type' => 'link'
+							)
+						),
+						'edit_msg'			=> lang('edit'),
+						'add_msg'			=> lang('add'),
+						'name'				=> lang('regulations'),
+						'acl_app' 			=> 'property',
+						'acl_location' 		=> '.admin',
+						'menu_selection'	=> 'admin::property::regulations',
+						'default'			=> array
+						(
+							'user_id' 		=> array('add'	=> '$this->account'),
+							'entry_date'	=> array('add'	=> 'time()'),
+							'modified_date'	=> array('edit'	=> 'time()'),
+						)
 					);
 				break;
 //START HELPDESK - APP
