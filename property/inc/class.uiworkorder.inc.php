@@ -209,6 +209,7 @@
 				$this->district_id		= $default_district;
 			}
 
+			$this->save_sessiondata();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -227,7 +228,7 @@
 						'cat_id'			=> $this->cat_id,
 						'status_id'			=> $this->status_id,
 						'filter'			=> $this->filter,
-						'query'				=> $this->query,
+			//			'query'				=> $this->query,
 						'start_date'		=> $start_date,
 						'end_date'			=> $end_date,
 						'wo_hour_cat_id'	=> $this->wo_hour_cat_id,
@@ -240,7 +241,6 @@
 				$datatable['config']['allow_allrows'] = false;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiworkorder.index',"
-
 					."query:'{$this->query}',"
 					."lookup:'{$lookup}',"
 					."district_id: '{$this->district_id}',"
@@ -423,7 +423,7 @@
 								( // TEXT IMPUT
 									'name'     => 'query',
 									'id'     => 'txt_query',
-									'value'    => '',//$query,
+									'value'    => $this->query,
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 18,
@@ -821,9 +821,6 @@
 
 			// Prepare YUI Library
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.index', 'property' );
-
-			$this->save_sessiondata();
-
 		}
 
 		function edit()

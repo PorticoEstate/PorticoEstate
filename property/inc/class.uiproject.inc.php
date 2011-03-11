@@ -192,6 +192,7 @@
 				$this->district_id		= $default_district;
 			}
 
+			$this->save_sessiondata();
 			$datatable = array();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -200,19 +201,19 @@
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'			=> 'property.uiproject.index',
-						'query'            		=> $this->query,
-						'district_id'        	=> $this->district_id,
-						'part_of_town_id'    	=> $this->part_of_town_id,
+				//		'query'            		=> $this->query,
+				//		'district_id'        	=> $this->district_id,
+				//		'part_of_town_id'    	=> $this->part_of_town_id,
 						'lookup'        		=> $lookup,
-						'cat_id'        		=> $this->cat_id,
-						'status_id'        		=> $this->status_id,
-						'wo_hour_cat_id'		=> $this->wo_hour_cat_id,
-						'user_id'				=> $this->user_id,
-						'criteria_id'			=> $this->criteria_id
+				//		'cat_id'        		=> $this->cat_id,
+				//		'status_id'        		=> $this->status_id,
+				//		'wo_hour_cat_id'		=> $this->wo_hour_cat_id,
+				//		'user_id'				=> $this->user_id,
+				//		'criteria_id'			=> $this->criteria_id
 					));
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.index',"
-					."query:'{$this->query}',"
+				//	."query:'{$this->query}',"
 					."district_id: '{$this->district_id}',"
 					."part_of_town_id:'{$this->part_of_town_id}',"
 					."lookup:'{$lookup}',"
@@ -877,7 +878,6 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'project.index', 'property' );
-			$this->save_sessiondata();
 		}
 
 		function date_search()

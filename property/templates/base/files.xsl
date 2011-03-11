@@ -10,7 +10,14 @@
 						<xsl:value-of select="php:function('lang', 'filename')" />
 					</td>
 					<td class="th_text" width="15%" align="center">
-						<xsl:value-of select="php:function('lang', 'Delete file')" />
+						<xsl:choose>
+							<xsl:when test="//lang_file_action!=''">
+								<xsl:value-of select="lang_file_action"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="php:function('lang', 'Delete file')" />
+							</xsl:otherwise>
+						</xsl:choose>
 					</td>
 				</tr>
 				<xsl:for-each select="files" >
@@ -45,7 +52,14 @@
 						<td align="center">
 							<input type="checkbox" name="values[file_action][]" value="{name}">
 								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'Check to delete file')" />
+									<xsl:choose>
+										<xsl:when test="//lang_file_action!=''">
+											<xsl:value-of select="//lang_file_action"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="php:function('lang', 'Check to delete file')" />
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:attribute>
 							</input>
 						</td>
