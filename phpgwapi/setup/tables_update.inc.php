@@ -2864,3 +2864,37 @@
 		}
 	}
 
+	$test[] = '0.9.17.532';
+	/**
+	* Add mod-info to acl
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_532()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','modified_on',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl','modified_by',array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => True,
+			'default' 	=> -1
+		));
+
+		$now = time();
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_acl SET modified_on = {$now}, modified_by = -1");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.533';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
