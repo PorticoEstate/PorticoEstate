@@ -79,16 +79,47 @@
 			$criteria_id			= phpgw::get_var('criteria_id', 'int');
 
 			$this->start			= $start ? $start : 0;
-			$this->query			= isset($query) ? $query : $this->query;
-			$this->sort				= isset($sort) && $sort ? $sort : '';
-			$this->order			= isset($order) && $order ? $order : '';
-			$this->filter			= isset($filter) && $filter ? $filter : '';
-			$this->cat_id			= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->status_id		= isset($status_id) && $status_id ? $status_id : '';
-			$this->user_id			= isset($user_id) && $user_id ? $user_id : '';
-			$this->wo_hour_cat_id	= isset($wo_hour_cat_id) && $wo_hour_cat_id ? $wo_hour_cat_id : '';
-			$this->district_id		= isset($district_id) && $district_id ? $district_id : '';
-			$this->criteria_id		= isset($criteria_id) && $criteria_id ? $criteria_id : '';
+
+			if(isset($_POST['query']) || isset($_GET['query']))
+			{
+				$this->query = $query;
+			}
+			if(isset($_POST['sort']) || isset($_GET['sort']))
+			{
+				$this->sort = $sort;
+			}
+			if(isset($_POST['order']) || isset($_GET['order']))
+			{
+				$this->order = $order;
+			}
+			if(isset($_POST['filter']) || isset($_GET['filter']))
+			{
+				$this->filter = $filter;
+			}
+			if(isset($_POST['cat_id']) || isset($_GET['cat_id']))
+			{
+				$this->cat_id = $cat_id;
+			}
+			if(isset($_POST['status_id']) || isset($_GET['status_id']))
+			{
+				$this->status_id = $status_id;
+			}
+			if(isset($_POST['user_id']) || isset($_GET['user_id']))
+			{
+				$this->user_id = $user_id;
+			}
+			if(isset($_POST['wo_hour_cat_id']) || isset($_GET['wo_hour_cat_id']))
+			{
+				$this->wo_hour_cat_id = $wo_hour_cat_id;
+			}
+			if(isset($_POST['district_id']) || isset($_GET['district_id']))
+			{
+				$this->district_id = $district_id;
+			}
+			if(isset($_POST['criteria_id']) || isset($_GET['criteria_id']))
+			{
+				$this->criteria_id = $criteria_id;
+			}
 		}
 
 		function save_sessiondata($data)
