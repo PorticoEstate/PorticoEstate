@@ -265,7 +265,7 @@
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function limit_query($Query_String, $offset = -1, $line = '', $file = '', $num_rows = 0)
+		public function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0)
 		{
 			if ( (int) $num_rows <= 0 )
 			{
