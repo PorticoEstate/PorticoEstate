@@ -265,7 +265,7 @@
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
 		* @return integer current query id if sucesful and null if fails
 		*/
-		public function limit_query($Query_String, $offset = -1, $line = '', $file = '', $num_rows = -1)
+		public function limit_query($Query_String, $offset = -1, $line = '', $file = '', $num_rows = 0)
 		{
 			if ( (int) $num_rows <= 0 )
 			{
@@ -607,7 +607,7 @@
 		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
 		* @return array Table meta data
 		*/  
-		public function MetaForeignKeys($table = '', $owner=false, $upper=false)
+		public function MetaForeignKeys($table, $owner=false, $upper=false)
 		{
 			if(!$this->adodb->IsConnected())
 			{
