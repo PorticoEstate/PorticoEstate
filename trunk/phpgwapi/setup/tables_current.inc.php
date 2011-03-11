@@ -42,6 +42,8 @@
 				'acl_grantor' => array('type' => 'int', 'precision' => 4, 'nullable' => true, 'default' => '-1'),
 				'acl_type' => array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => '0'),
 				'location_id' => array('type' => 'int', 'precision' => 4),
+				'modified_on' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'modified_by' => array('type' => 'int','precision' => 4,'nullable' => False, 'default' => '-1')
 			),
 			'pk' => array(),
 			'ix' => array('location_id','acl_account'),

@@ -480,8 +480,12 @@
 			}
 
 			// using stored prosedures
-			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
-							. ' VALUES(?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, modified_on, modified_by)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
+
+			$now 			= time();
+			$mod_account	= $GLOBALS['phpgw_info']['user']['account_id'] ? $GLOBALS['phpgw_info']['user']['account_id'] : -1;
+
 			$valueset=array();
 
 			foreach ( $new_data as $loc_id => $grants )
@@ -516,7 +520,17 @@
 							(
 								'value'	=> $loc_id,
 								'type'	=> PDO::PARAM_INT
-							),								
+							),
+							6	=> array
+							(
+								'value'	=> $now,
+								'type'	=> PDO::PARAM_INT
+							),
+							7	=> array
+							(
+								'value'	=> $mod_account,
+								'type'	=> PDO::PARAM_INT
+							)
 						);
 					}
 				}
@@ -529,7 +543,7 @@
 
 			/*remove duplicates*/
 
-			$sql = "SELECT * FROM phpgw_acl WHERE acl_account = {$acct_id}"
+			$sql = "SELECT acl_account, acl_rights, acl_grantor, acl_type, location_id FROM phpgw_acl WHERE acl_account = {$acct_id}"
 			. ' GROUP BY acl_account, acl_rights, acl_grantor, acl_type, location_id';
 			$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -572,7 +586,17 @@
 						(
 							'value'	=> $_location_id,
 							'type'	=> PDO::PARAM_INT
-						),								
+						),
+						6	=> array
+						(
+							'value'	=> $now,
+							'type'	=> PDO::PARAM_INT
+						),
+						7	=> array
+						(
+							'value'	=> $mod_account,
+							'type'	=> PDO::PARAM_INT
+						)
 					);
 				}
 		//		$test[$_acl_account][$_acl_grantor][$_acl_type][$_location_id] = true;
@@ -582,8 +606,8 @@
 					. " WHERE acl_account = {$acct_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
-							. ' VALUES(?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, modified_on, modified_by)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 
 			$this->_db->insert($sql, $unique_data, __LINE__, __FILE__);
 			unset($unique_data);
@@ -647,6 +671,9 @@
 			. ' GROUP BY acl_account, acl_rights, acl_grantor, acl_type, location_id';
 			$this->_db->query($sql,__LINE__,__FILE__);
 
+			$now 			= time();
+			$mod_account	= $GLOBALS['phpgw_info']['user']['account_id'] ? $GLOBALS['phpgw_info']['user']['account_id'] : -1;
+
 			$cache_info = array();
 			while($this->_db->next_record())
 			{
@@ -678,15 +705,25 @@
 					(
 						'value'	=> $this->_db->f('location_id'),
 						'type'	=> PDO::PARAM_INT
-					),								
+					),
+					6	=> array
+					(
+						'value'	=> $now,
+						'type'	=> PDO::PARAM_INT
+					),
+					7	=> array
+					(
+						'value'	=> $mod_account,
+						'type'	=> PDO::PARAM_INT
+					)
 				);
 			}
 
 			$sql = "DELETE FROM phpgw_acl {$condition}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id)'
-							. ' VALUES(?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, modified_on, modified_by)'
+							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 
 			$this->_db->insert($sql, $unique_data, __LINE__, __FILE__);
 			unset($unique_data);
@@ -964,10 +1001,13 @@
 				$inherit_location[] = $this->_db->f('location_id');
 			}
 
+			$now 			= time();
+			$mod_account	= $GLOBALS['phpgw_info']['user']['account_id'] ? $GLOBALS['phpgw_info']['user']['account_id'] : -1;
+
 			foreach ( $inherit_location as $acl_location )
 			{
-				$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type)'
-					. " VALUES ('{$acl_location}', {$account_id}, {$rights}, -1 , 0)";
+				$sql = 'INSERT INTO phpgw_acl (location_id, acl_account, acl_rights, acl_grantor, acl_type, modified_on, modified_by)'
+					. " VALUES ('{$acl_location}', {$account_id}, {$rights}, -1 , 0, {$now}, {$mod_account})";
 				$this->_db->query($sql, __LINE__, __FILE__);
 			}
 
