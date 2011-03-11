@@ -524,7 +524,8 @@
 
 			$start_date = mktime(1, 1, 1, 1, 1, $year);
 			$end_date = mktime  (23, 59, 59, 12, 31, $year);
-			$filtermethod .= " AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+//			$filtermethod .= " AND fm_workorder.start_date >= $start_date AND fm_workorder.start_date <= $end_date";
+			$filtermethod .= " AND fm_workorder_status.closed IS NULL AND fm_workorder.start_date <= $end_date";
 
 			$where = 'AND';
 
@@ -569,10 +570,12 @@
 
 			$sql = "SELECT sum(combined_cost) as combined_cost, count(fm_workorder.id) as hits, fm_b_account.{$b_account_field} as {$b_account_field}, district_id, fm_workorder.ecodimb"
 				. " FROM fm_workorder"
-				. " $this->join fm_b_account ON fm_workorder.account_id =fm_b_account.id "
-				. " $this->join fm_project ON  fm_workorder.project_id =fm_project.id "
-				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1 "
-				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_workorder.ecodimb";
+				. " $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " $this->join fm_b_account ON fm_workorder.account_id = fm_b_account.id"
+				. " $this->join fm_project ON  fm_workorder.project_id = fm_project.id"
+				. " $this->join fm_location1 ON fm_project.loc1 = fm_location1.loc1"
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id"
+				. " $filtermethod $querymethod GROUP BY fm_b_account.{$b_account_field},district_id,fm_workorder.ecodimb";
 
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
