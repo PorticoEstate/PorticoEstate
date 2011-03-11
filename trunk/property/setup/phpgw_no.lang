@@ -185,7 +185,7 @@ asynchronous timed services	property	no	Planlagte oppgaver
 async method	property	no	async metode
 async method has been saved	property	no	async metode er lagret
 async services	property	no	Planlagte oppgaver
-attach file	property	no	legg til vedlegg
+attach file	property	no	Legg til som vedlegg
 attachments	property	no	Vedlegg
 attribute	property	no	Verdier
 attribute has been edited	property	no	Attributt er rettet
