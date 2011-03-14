@@ -487,3 +487,4 @@ Can not repeat from a date in the past	booking	no	Du kan ikke repetere fra en da
 Can not create a booking in the past	booking	no	Du kan ikke opprette en booking i fortiden.
 Allocations  with existing allocations or bookings (%1)	booking	no	Tildeinger med eksisterende tildelinger eller bookinger (%1)
 Contact information name is to long. max 50 characters	booking	no	Navn i kontakt informasjon er for langt. Maks 50 tegn
+Show in portal	booking	no	Vis i portal

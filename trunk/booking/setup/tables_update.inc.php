@@ -2455,4 +2455,27 @@
 		}
 	}
 
+	$test[] = '0.2.04';
+	/**
+	* Update booking version from 0.2.02 to 0.2.03
+	* Add custom fields to request
+	* 
+	*/
+	function booking_upgrade0_2_04()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_organization ADD COLUMN show_in_portal int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_organization SET show_in_portal = 0");
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_group ADD COLUMN show_in_portal int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_group SET show_in_portal = 0");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.05';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 
