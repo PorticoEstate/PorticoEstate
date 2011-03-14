@@ -87,6 +87,7 @@
 				'customer_ssn' => array('type' => 'varchar',  'precision' => '12', 'nullable' => True),
 				'customer_internal' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'shortname' => array('type' => 'varchar','precision' => '11', 'nullable' => True),			
+				'show_in_portal' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 		),
 			'pk' => array('id'),
 			'fk' => array(
@@ -121,6 +122,7 @@
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'shortname' => array('type' => 'varchar','precision' => '11', 'nullable' => True),			
+				'show_in_portal' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 		),
 			'pk' => array('id'),
 			'fk' => array(

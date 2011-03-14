@@ -77,6 +77,23 @@
 					</select>
 				</dd>
 			</xsl:if>
+			<dt><label for="field_show_in_portal"><xsl:value-of select="php:function('lang', 'Show in portal')"/></label></dt>
+			<dd>
+			   <select id="field_show_in_portal" name="show_in_portal">
+			       <option value="0">
+			       	<xsl:if test="group/show_in_portal=0">
+			       		<xsl:attribute name="selected">checked</xsl:attribute>
+			       	</xsl:if>
+			           <xsl:value-of select="php:function('lang', 'No')"/>
+			       </option>
+			       <option value="1">
+			       	<xsl:if test="group/show_in_portal=1">
+			       		<xsl:attribute name="selected">checked</xsl:attribute>
+			       	</xsl:if>
+			           <xsl:value-of select="php:function('lang', 'Yes')"/>
+			       </option>
+			   </select>
+			</dd>
 		</dl>
 		
 		<div style='clear:left; padding:0; margin:0'/>
