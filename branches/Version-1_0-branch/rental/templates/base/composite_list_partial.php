@@ -5,7 +5,7 @@ function checkAvailabitily()
 	if(document.forms[0].availability_date_to.value == '')
 	{
 		document.forms[0].availability_date_to.value = document.forms[0].availability_date_from.value;
-		document.forms[0].availability_date_to.value_hidden = document.forms[0].availability_date_from_hidden.value
+		document.forms[0].availability_date_to_hidden.value = document.forms[0].availability_date_from_hidden.value
 	} 
 	return true;
 }
