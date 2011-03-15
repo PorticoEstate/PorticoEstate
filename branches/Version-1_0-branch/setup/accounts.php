@@ -129,14 +129,21 @@
 		phpgw::import_class('phpgwapi.globally_denied');
 		$errors = array();
 
-		if ( $passwd == '' || $passwd2 == '' )
-		{
-			$errors[] = lang('Password can not be empty');
-		}
-		
 		if ( $passwd != $passwd2 )
 		{
 			$errors[] = lang('Passwords did not match, please re-enter');
+		}
+		else
+		{
+			$account	= new phpgwapi_user();
+			try
+			{
+				$account->validate_password($passwd);
+			}
+			catch(Exception $e)
+			{
+				$errors[] = $e->getMessage();
+			}
 		}
 
 		if ( !$username )

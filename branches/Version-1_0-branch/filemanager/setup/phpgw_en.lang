@@ -86,7 +86,7 @@ owner	filemanager	en	Owner
 performed by	filemanager	en	Performed by
 preview %1	filemanager	en	Preview %1
 preview of %1	filemanager	en	Preview of %1
-préférences	preferences	en	Préférences
+preferences	filemanager	en	Preferences
 refresh	filemanager	en	Refresh
 rename	filemanager	en	Rename
 renamed %1 to %2	filemanager	en	Renamed %1 to %2

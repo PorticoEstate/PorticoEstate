@@ -861,7 +861,8 @@
 			$vals = explode(',', $config['set_quota']);
 			foreach ( $vals as $val )
 			{
-				if ( $quota == $val * 1024 ) // compare kb to kb
+		//		if ( $quota == $val * 1024 ) // compare kb to kb
+				if ( $quota == $val )
 				{
 					return true;
 				}

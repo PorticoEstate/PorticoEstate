@@ -327,13 +327,15 @@
 				$this->access_add = true;
 			}
 
-			if ( $GLOBALS['phpgw']->accounts->data['quota'] == -1 )
+			$account = $GLOBALS['phpgw']->accounts->get($this->userinfo['account_id']);
+
+			if ( $account->quota == -1 )
 			{
 				$this->quota = -1;
 			}
 			else
 			{
-				$this->quota = $GLOBALS['phpgw']->accounts->data['quota'] * 1024 * 1024;
+				$this->quota = $account->quota * 1024 * 1024;
 			}
 		}
 
@@ -1262,11 +1264,11 @@
 			return $size;
 		}
 
-		function check_quota($file)
+		function check_quota($file,$size = 0)
 		{
 			$size_homedir	= $this->get_size($this->homedir, True);
-			$size_file	= $this->get_size(array('directory' => $this->path, 'name' => $file),False);
-
+			$size_file	= $size ? (int)$size : $this->get_size(array('directory' => $this->path, 'name' => $file),False);
+_debug_Array($this->quota);
 			if($this->quota == -1)
 			{
 				return true;

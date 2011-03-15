@@ -33,7 +33,7 @@
 								  'street', 'zip_code', 'city', 'district', 
 								  'description', 'contacts', 'active', 
 								  'organization_number', 'activity_id',
-								  'customer_number', 'customer_internal');
+								  'customer_number', 'customer_internal', 'show_in_portal');
 								
 			
 		}
