@@ -204,13 +204,13 @@ authorities demands	property	no	Myndighetskrav
 auto tax	property	no	Auto MVA
 b_account	property	no	Budsjett konto
 back to admin	property	no	Tilbake til Admin
-back to calculation	property	no	Tilbake til kalkulsajon
+back to calculation	property	no	Tilbake til kalkulasjon
 back to entity	property	no	Returner til entitet
 back to investment list	property	no	Tilbake til liste over investeringer
 back to list	property	no	Tilbake til liste
 back to the list	property	no	Tilbake til liste
-back to the ticket list	property	no	Tilbake til meldings liste uten å lagre
-back to the workorder list	property	no	Tilbake til bestilling liste
+back to the ticket list	property	no	Tilbake til meldingsliste uten å lagre
+back to the workorder list	property	no	Tilbake til bestillingsliste
 base	property	no	Grunnlag
 base description	property	no	Beskrivelse av grunnlag
 basis	property	no	Basis
