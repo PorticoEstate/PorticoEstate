@@ -499,37 +499,37 @@
 							1	=> array
 							(
 								'value'	=> $acct_id,
-								'type'	=> PDO::PARAM_INT
+								'type'	=> 1 //PDO::PARAM_INT
 							),
 							2	=> array
 							(
 								'value'	=> $rights,
-								'type'	=>	PDO::PARAM_INT
+								'type'	=>	1 //PDO::PARAM_INT
 							),
 							3	=> array
 							(
 								'value'	=> $grantor,
-								'type'	=> PDO::PARAM_INT
+								'type'	=> 1 //PDO::PARAM_INT
 							),
 							4	=> array
 							(
 								'value'	=> $mask,
-								'type'	=>	PDO::PARAM_INT
+								'type'	=>	1 //PDO::PARAM_INT
 							),
 							5	=> array
 							(
 								'value'	=> $loc_id,
-								'type'	=> PDO::PARAM_INT
+								'type'	=> 1 //PDO::PARAM_INT
 							),
 							6	=> array
 							(
 								'value'	=> $now,
-								'type'	=> PDO::PARAM_INT
+								'type'	=> 1 //PDO::PARAM_INT
 							),
 							7	=> array
 							(
 								'value'	=> $mod_account,
-								'type'	=> PDO::PARAM_INT
+								'type'	=> 1 //PDO::PARAM_INT
 							)
 						);
 					}
@@ -565,37 +565,37 @@
 						1	=> array
 						(
 							'value'	=> $_acl_account,
-							'type'	=> PDO::PARAM_INT
+							'type'	=> 1 //PDO::PARAM_INT
 						),
 						2	=> array
 						(
 							'value'	=> $_acl_rights,
-							'type'	=>	PDO::PARAM_INT
+							'type'	=>	1 //PDO::PARAM_INT
 						),
 						3	=> array
 						(
 							'value'	=> $_acl_grantor,
-							'type'	=> PDO::PARAM_INT
+							'type'	=> 1 //PDO::PARAM_INT
 						),
 						4	=> array
 						(
 							'value'	=> $_acl_type,
-							'type'	=>	PDO::PARAM_INT
+							'type'	=>	1 //PDO::PARAM_INT
 						),
 						5	=> array
 						(
 							'value'	=> $_location_id,
-							'type'	=> PDO::PARAM_INT
+							'type'	=> 1 //PDO::PARAM_INT
 						),
 						6	=> array
 						(
 							'value'	=> $now,
-							'type'	=> PDO::PARAM_INT
+							'type'	=> 1 //PDO::PARAM_INT
 						),
 						7	=> array
 						(
 							'value'	=> $mod_account,
-							'type'	=> PDO::PARAM_INT
+							'type'	=> 1 //PDO::PARAM_INT
 						)
 					);
 				}
@@ -684,37 +684,37 @@
 					1	=> array
 					(
 						'value'	=> $this->_db->f('acl_account'),
-						'type'	=> PDO::PARAM_INT
+						'type'	=> 1 //PDO::PARAM_INT
 					),
 					2	=> array
 					(
 						'value'	=> $this->_db->f('acl_rights'),
-						'type'	=>	PDO::PARAM_INT
+						'type'	=>	1 //PDO::PARAM_INT
 					),
 					3	=> array
 					(
 						'value'	=> $this->_db->f('acl_grantor'),
-						'type'	=> PDO::PARAM_INT
+						'type'	=> 1 //PDO::PARAM_INT
 					),
 					4	=> array
 					(
 						'value'	=> (int) $this->_db->f('acl_type'),
-						'type'	=>	PDO::PARAM_INT
+						'type'	=>	1 //PDO::PARAM_INT
 					),
 					5	=> array
 					(
 						'value'	=> $this->_db->f('location_id'),
-						'type'	=> PDO::PARAM_INT
+						'type'	=> 1 //PDO::PARAM_INT
 					),
 					6	=> array
 					(
 						'value'	=> $now,
-						'type'	=> PDO::PARAM_INT
+						'type'	=> 1 //PDO::PARAM_INT
 					),
 					7	=> array
 					(
 						'value'	=> $mod_account,
-						'type'	=> PDO::PARAM_INT
+						'type'	=> 1 //PDO::PARAM_INT
 					)
 				);
 			}

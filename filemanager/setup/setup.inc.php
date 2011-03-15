@@ -25,10 +25,11 @@
 		'hooks'				=> array
 		(
 			'add_def_pref',
-			'admin',
+//			'admin',
 			'deleteaccount',
-			'preferences',
-			'sidebox_menu'
+//			'preferences',
+//			'sidebox_menu'
+			'menu'	=> 'filemanager.menu.get_menu'
 		));
 
 	/* Dependencies for this app to work */
