@@ -585,7 +585,7 @@
 					'nofiles'	=> True
 				)
 			);
-		
+
 			if ($ls_array[0]['mime_type'])
 			{
 				$mime_type = $ls_array[0]['mime_type'];
@@ -595,7 +595,10 @@
 				$mime_type = 'text/plain';
 			}
 		
-			header('Content-type: ' . $mime_type);
+//			header('Content-type: ' . $mime_type);
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($ls_array[0]['name'],$mime_type,$ls_array[0]['size']);
+
 			echo $this->read (array (
 					'string'	=>  $data['string'],
 					'relatives'	=> $data['relatives']
