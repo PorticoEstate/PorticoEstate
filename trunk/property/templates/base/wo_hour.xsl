@@ -382,7 +382,20 @@
 									</tr>
 									<xsl:choose>
 										<xsl:when test="table_send !=''">
-											<tr><td><xsl:apply-templates select="table_send"/></td></tr>
+											<tr>
+												<td colspan='2'>
+													<input type="submit" name="send_order" value="{table_send/lang_send_order}">
+														<xsl:attribute name="title">
+															<xsl:value-of select="table_send/lang_send_order_statustext"/>
+														</xsl:attribute>
+													</input>
+													<input type="submit" name="done" value="{table_done/lang_done}">
+														<xsl:attribute name="title">
+															<xsl:value-of select="table_done/lang_done_statustext"/>
+														</xsl:attribute>
+													</input>
+												</td>
+											</tr>
 										</xsl:when>
 									</xsl:choose>
 
@@ -545,16 +558,24 @@
 	</tr>
 	<xsl:choose>
 		<xsl:when test="table_send !=''">
-			<tr><td><xsl:apply-templates select="table_send"/></td></tr>
+			<tr>
+				<td colspan='2'>
+					<input type="submit" name="send_order" value="{table_send/lang_send_order}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="table_send/lang_send_order_statustext"/>
+						</xsl:attribute>
+					</input>
+					<input type="submit" name="done" value="{table_done/lang_done}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="table_done/lang_done_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
 		</xsl:when>
 	</xsl:choose>
 </form>
-<xsl:choose>
-	<xsl:when test="table_send !=''">
-		<tr><td><xsl:apply-templates select="table_done"/></td></tr>
-	</xsl:when>
-</xsl:choose>
-		</table>
+</table>
 
 		<script type="text/javascript">
 			var property_js = <xsl:value-of select="property_js" />;
@@ -1913,11 +1934,9 @@
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
 					</form>

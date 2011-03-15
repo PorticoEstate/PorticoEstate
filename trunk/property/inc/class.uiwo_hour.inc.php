@@ -1180,11 +1180,16 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop', 'perm'=>1, 'acl_location'=> $this->acl_location));
 			}
 
+			$workorder_id	= phpgw::get_var('workorder_id'); // in case of bigint
+			if( phpgw::get_var('done', 'bool') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiwo_hour.index', 'workorder_id'=> $workorder_id));
+			}
+			
 			$GLOBALS['phpgw']->xslttpl->add_file(array('wo_hour', 'files'));
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
 			$show_details	= true;//phpgw::get_var('show_details', 'bool');
-			$workorder_id	= phpgw::get_var('workorder_id'); // in case of bigint
 			$to_email 		= phpgw::get_var('to_email', 'email');
 			$update_email	= phpgw::get_var('update_email', 'bool');
 			$send_order		= phpgw::get_var('send_order', 'bool');
