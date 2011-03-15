@@ -41,7 +41,9 @@
 
 			//_debug_array($this->bofilemanager->help_info);
 
-			$key = $this->bofilemanager->help_name;
+			//$key = $this->bofilemanager->help_name;
+			$key = urldecode(phpgw::get_var('help_name', 'string'));
+
 			if($this->bofilemanager->help_info[$key])
 			{
 				$msg = $this->bofilemanager->help_info[$key];
