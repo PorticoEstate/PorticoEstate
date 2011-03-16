@@ -792,6 +792,26 @@
 
 						$field['valueset'] = execMethod($field['values_def']['method'],$method_input);
 					}
+
+					if(isset($values['id']) && $values['id'] && isset($field['role']) && $field['role'] == 'parent')
+					{
+						$exclude = array($values['id']);
+						$children = $this->bo->get_children2($values['id'], 0,true);
+
+						foreach($children as $child)
+						{
+							$exclude[] = $child['id']; 
+						}
+
+						$k = count($field['valueset']);
+						for ($i=0; $i<$k; $i++)
+						{
+							if (in_array($field['valueset'][$i]['id'],$exclude))
+							{
+								unset($field['valueset'][$i]);
+							}
+						}
+					}
 				}
 			}
 
