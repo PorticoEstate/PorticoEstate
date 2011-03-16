@@ -198,7 +198,16 @@
 
 		public function get_list($data)
 		{
-			$values = $this->so->get_list($data);
+
+			if(isset($data['role']) && $data['role'] == 'parent')
+			{
+				$values = $this->so->get_tree2($data);
+			}
+			else
+			{
+				$values = $this->so->get_list($data);
+			}
+
 			if(isset($data['selected']) && is_array($data['selected']))
 			{
 				foreach ($values as &$entry)
@@ -219,5 +228,10 @@
 		public function delete($id)
 		{
 			$this->so->delete($id);
+		}
+
+		public function get_children2($id, $level, $reset = false)
+		{
+			return $this->so->get_children2($id, $level, $reset);
 		}
 	}
