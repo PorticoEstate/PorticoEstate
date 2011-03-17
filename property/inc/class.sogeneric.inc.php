@@ -1578,6 +1578,7 @@
 								'name'			=> 'parent_id',
 								'descr'			=> lang('parent'),
 								'type'			=> 'select',
+								'sortable'		=> true,
 								'nullable'		=> true,
 								'filter'		=> false,
 								'role'			=> 'parent',
@@ -1592,7 +1593,8 @@
 							(
 								'name' => 'name',
 								'descr' => lang('name'),
-								'type' => 'varchar'
+								'type' => 'varchar',
+								'sortable'	=> true,
 							),
 							array
 							(
@@ -2286,6 +2288,8 @@
 				$value_set = array_merge($value_set, $data_attribute['value_set']);
 			}
 
+			$has_to_move = array();
+
 			foreach($this->location_info['fields'] as $field)
 			{
 				if (isset($field['filter']) && $field['filter'])
@@ -2297,11 +2301,24 @@
 				}
 				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
 
+				// keep hierarchy in order
 				if(isset($field['role']) && $field['role'] == 'parent')
 				{
 					//FIXME				
+					$this->_db->query("SELECT parent_id FROM $table WHERE {$this->location_info['id']['name']}='{$data['id']}'",__LINE__,__FILE__);
+					$this->_db->next_record();
+					$orig_parent_id = $this->_db->f('parent_id');
+					
+					if($orig_parent_id && (int)$orig_parent_id != (int)$data['parent_id'])
+					{
 
+						$this->_db->query("SELECT {$this->location_info['id']['name']} as id FROM $table WHERE parent_id ='{$data['id']}'",__LINE__,__FILE__);
 
+						while($this->_db->next_record())
+						{
+							$has_to_move[] = $this->_db->f('id');
+						}
+					}
 				}
 			}
 
@@ -2318,7 +2335,14 @@
 
 			$value_set	= $this->_db->validate_update($value_set);
 			$this->_db->transaction_begin();
-			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']}='" . $data['id']. "'",__LINE__,__FILE__);
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'",__LINE__,__FILE__);
+
+			// keep hierarchy in order
+			foreach($has_to_move as $id)
+			{
+				$value_set	= $this->_db->validate_update(array('parent_id' => $orig_parent_id));
+				$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$id}'",__LINE__,__FILE__);
+			}
 
 /*			//FIXME
 			if (isset($data_attribute['history_set']) && is_array($data_attribute['history_set']))
@@ -2344,7 +2368,39 @@
 			{
 				return false;
 			}
+
+			$has_to_move = array();
+
+			$this->_db->transaction_begin();
+
+			foreach($this->location_info['fields'] as $field)
+			{
+				// keep hierarchy in order
+				if(isset($field['role']) && $field['role'] == 'parent')
+				{
+					$this->_db->query("SELECT parent_id FROM $table WHERE {$this->location_info['id']['name']}='{$id}'",__LINE__,__FILE__);
+					$this->_db->next_record();
+					$orig_parent_id = $this->_db->f('parent_id');
+					
+					$this->_db->query("SELECT {$this->location_info['id']['name']} as id FROM $table WHERE parent_id ='{$id}'",__LINE__,__FILE__);
+
+					while($this->_db->next_record())
+					{
+						$has_to_move[] = $this->_db->f('id');
+					}
+				}
+			}
+
 			$this->_db->query("DELETE FROM $table WHERE {$this->location_info['id']['name']}='{$id}'",__LINE__,__FILE__);
+
+			// keep hierarchy in order
+			foreach($has_to_move as $id)
+			{
+				$value_set	= $this->_db->validate_update(array('parent_id' => $orig_parent_id));
+				$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$id}'",__LINE__,__FILE__);
+			}
+
+			$this->_db->transaction_commit();
 		}
 
 
