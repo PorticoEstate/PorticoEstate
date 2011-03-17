@@ -18,12 +18,14 @@
 
 	class hrm_sojob
 	{
+		var $total_records = 0;
+		
 		/**
 		* @var array $move_child the children to be moved
 		* @internal I don't think this is really needed - skwashd nov07
 		*/
 		private $move_child = array();
-
+		
 		public function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -138,23 +140,12 @@
 
 			}
 
-			if (!$allrows)
+			if(!$allrows)
 			{
-				$max = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$max = $max + $start;
-
-				$sjobs = array();
-				foreach ( $jobs as $job )
-				{
-					if ( isset($job) && is_array($job) )
-					{
-						$sjobs[] = $job;
-					}
-				}
-				if ( count($sjobs) )
-				{
-					$jobs = $sjobs;
-				}
+				$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])?intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']):15;
+				$page = ceil( ( $start / $this->total_records ) * ($this->total_records/ $num_rows) );
+				$out = array_chunk($jobs, $num_rows);
+				$jobs = $out[$page];
 			}
 
 			$sql = "SELECT count(*) as quali_count,job_id FROM phpgw_hrm_quali GROUP BY job_id";
@@ -177,8 +168,8 @@
 			{
 				foreach ( $jobs as &$job )
 				{
-					$job['quali_count'] = (int) isset($quali[$job['id']]) ? $quali[$job['id']] : null;
-					$job['task_count']  = (int) isset($task[$job['id']]) ? $task[$job['id']] : null;
+					$job['quali_count'] =  isset($quali[$job['id']]) ? $quali[$job['id']] : 0;
+					$job['task_count']  =  isset($task[$job['id']]) ? $task[$job['id']] : 0;
 				}
 
 			}

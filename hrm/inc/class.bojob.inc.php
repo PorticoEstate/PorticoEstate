@@ -18,7 +18,7 @@
 
 	class hrm_bojob
 	{
-		var $start;
+		var $start = 0;
 		var $query;
 		var $filter;
 		var $sort;
@@ -70,7 +70,7 @@
 				$this->use_session = true;
 			}
 
-			$this->start	= phpgw::get_var('start', 'int');
+			$this->start	= (int)phpgw::get_var('start', 'int');
 			$this->query	= phpgw::get_var('query');
 			$this->sort		= phpgw::get_var('sort');
 			$this->order	= phpgw::get_var('order');
