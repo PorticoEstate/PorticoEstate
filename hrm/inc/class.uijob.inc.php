@@ -70,7 +70,7 @@
 
 			$this->start				= $this->bo->start;
 			$this->query				= $this->bo->query;
-			$this->sort				= $this->bo->sort;
+			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'hrm::job';

@@ -2221,6 +2221,7 @@
 		'fm_regulations' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'parent_id' => array('type' => 'int','precision' => 4,'nullable' => True),
 				'name' =>  array('type' => 'varchar','precision' => 255,'nullable' => False),
 				'descr' => array('type' => 'text','nullable' => True),
 				'external_ref' =>  array('type' => 'varchar','precision' => 255,'nullable' => True),

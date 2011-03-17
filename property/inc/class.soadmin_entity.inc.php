@@ -352,7 +352,7 @@
 		}
 
 		/**
-		 * used for retrive the pathe for a particular node from a hierarchy
+		 * used for retrive the path for a particular node from a hierarchy
 		 *
 		 * @param integer $entity_id Entity id
 		 * @param integer $node is the id of the node we want the path of

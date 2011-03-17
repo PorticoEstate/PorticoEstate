@@ -37,6 +37,8 @@
 		var $type;
 		var $type_id;
 		var $location_info = array();
+		var $tree = array();
+		protected $table;
 
 		function __construct()
 		{
@@ -1573,9 +1575,26 @@
 						(
 							array
 							(
+								'name'			=> 'parent_id',
+								'descr'			=> lang('parent'),
+								'type'			=> 'select',
+								'sortable'		=> true,
+								'nullable'		=> true,
+								'filter'		=> false,
+								'role'			=> 'parent',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'regulations', 'role' => 'parent', 'selected' => '##parent_id##')
+								)
+							),
+							array
+							(
 								'name' => 'name',
 								'descr' => lang('name'),
-								'type' => 'varchar'
+								'type' => 'varchar',
+								'sortable'	=> true,
 							),
 							array
 							(
@@ -2268,6 +2287,9 @@
 			{
 				$value_set = array_merge($value_set, $data_attribute['value_set']);
 			}
+
+			$has_to_move = array();
+
 			foreach($this->location_info['fields'] as $field)
 			{
 				if (isset($field['filter']) && $field['filter'])
@@ -2278,6 +2300,26 @@
 					}
 				}
 				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
+
+				// keep hierarchy in order
+				if(isset($field['role']) && $field['role'] == 'parent')
+				{
+					//FIXME				
+					$this->_db->query("SELECT parent_id FROM $table WHERE {$this->location_info['id']['name']}='{$data['id']}'",__LINE__,__FILE__);
+					$this->_db->next_record();
+					$orig_parent_id = $this->_db->f('parent_id');
+					
+					if($orig_parent_id && (int)$orig_parent_id != (int)$data['parent_id'])
+					{
+
+						$this->_db->query("SELECT {$this->location_info['id']['name']} as id FROM $table WHERE parent_id ='{$data['id']}'",__LINE__,__FILE__);
+
+						while($this->_db->next_record())
+						{
+							$has_to_move[] = $this->_db->f('id');
+						}
+					}
+				}
 			}
 
 			if(isset($this->location_info['default']) && is_array($this->location_info['default']))
@@ -2293,7 +2335,14 @@
 
 			$value_set	= $this->_db->validate_update($value_set);
 			$this->_db->transaction_begin();
-			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']}='" . $data['id']. "'",__LINE__,__FILE__);
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'",__LINE__,__FILE__);
+
+			// keep hierarchy in order
+			foreach($has_to_move as $id)
+			{
+				$value_set	= $this->_db->validate_update(array('parent_id' => $orig_parent_id));
+				$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$id}'",__LINE__,__FILE__);
+			}
 
 /*			//FIXME
 			if (isset($data_attribute['history_set']) && is_array($data_attribute['history_set']))
@@ -2319,7 +2368,206 @@
 			{
 				return false;
 			}
+
+			$has_to_move = array();
+
+			$this->_db->transaction_begin();
+
+			foreach($this->location_info['fields'] as $field)
+			{
+				// keep hierarchy in order
+				if(isset($field['role']) && $field['role'] == 'parent')
+				{
+					$this->_db->query("SELECT parent_id FROM $table WHERE {$this->location_info['id']['name']}='{$id}'",__LINE__,__FILE__);
+					$this->_db->next_record();
+					$orig_parent_id = $this->_db->f('parent_id');
+					
+					$this->_db->query("SELECT {$this->location_info['id']['name']} as id FROM $table WHERE parent_id ='{$id}'",__LINE__,__FILE__);
+
+					while($this->_db->next_record())
+					{
+						$has_to_move[] = $this->_db->f('id');
+					}
+				}
+			}
+
 			$this->_db->query("DELETE FROM $table WHERE {$this->location_info['id']['name']}='{$id}'",__LINE__,__FILE__);
+
+			// keep hierarchy in order
+			foreach($has_to_move as $id)
+			{
+				$value_set	= $this->_db->validate_update(array('parent_id' => $orig_parent_id));
+				$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$id}'",__LINE__,__FILE__);
+			}
+
+			$this->_db->transaction_commit();
+		}
+
+
+		public function get_tree2($data)
+		{
+			$values = array();
+
+			$this->get_location_info($data['type'], $data['type_id']);
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
+			{
+				return $values;
+			}
+			$this->table = $table;
+
+			$filtermthod = 'WHERE (parent_id = 0 OR parent_id IS NULL)';
+
+			if (isset($data['filter']) && is_array($data['filter']))
+			{
+				$_filter = array();
+				foreach ($data['filter'] as $_field => $_value)
+				{
+					$_filter[] = "{$_field} = '{$_value}'";
+				}
+				if($_filter)
+				{
+					$filtermthod .= implode(' AND ', $_filter);
+				}
+			}
+
+			$order		= isset($data['order']) && $data['order'] ? $data['order'] :'';
+
+			if ($order)
+			{
+				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
+			}
+			else
+			{
+				$ordermethod = " ORDER BY {$table}.{$this->location_info['id']['name']} ASC";
+			}
+
+			foreach ($this->location_info['fields'] as $field)
+			{
+				$fields[] = $field['name'];
+			}
+
+			// Add extra info to name
+			if(isset($data['id_in_name']) && $data['id_in_name'])
+			{
+				$id_in_name = 'id';	
+				if (in_array($data['id_in_name'], $fields))
+				{
+					$id_in_name = $data['id_in_name'];
+				}
+			}
+
+			$fields = implode(',', $fields);
+
+			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}",__LINE__,__FILE__);
+
+			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
+//-----------
+
+
+			$values = array();
+			$i = 0;
+			while ($this->_db->next_record())
+			{
+				$_extra = $this->_db->f($id_in_name);
+				$id		= $this->_db->f('id');
+				if(!$name = $this->_db->f('name', true))
+				{
+					$name	= $this->_db->f('descr', true);
+				}
+
+				if($_extra)
+				{
+					$name = "{$_extra} - {$name}";
+				}
+
+				$values[$i] = array
+				(
+					'id'		=> $id,
+					'name'		=> $name,
+					'parent_id'	=> 0
+				);
+
+				foreach ($return_fields as $return_field)
+				{
+					$values[$i][$return_field] = $this->_db->f($return_field, true);
+				}
+
+				$i++;
+			}
+
+
+			$this->tree = array();
+
+			foreach($values as $value)
+			{
+				$this->tree[] = $value;
+				$this->get_children2($value['id'], 1);
+			}
+			return $this->tree;
+		}
+
+		public function get_children2($parent, $level, $reset = false)
+		{
+			if($reset)
+			{
+				$this->tree = array();
+			}
+			$db = clone($this->_db);
+			if(!$table = $this->table)
+			{
+				return $this->tree;
+			}
+			$sql = "SELECT * FROM {$table} WHERE parent_id = {$parent} ORDER BY name ASC";
+			$db->query($sql,__LINE__,__FILE__);
+
+			while ($db->next_record())
+			{
+				$id	= $db->f('id');
+				$this->tree[] = array
+				(
+					'id'		=> $id,
+					'name'		=> str_repeat('..',$level) . $db->f('name',true),
+					'parent_id'	=> $db->f('parent_id')
+				);
+				$this->get_children2($id, $level+1);
+			}
+			return $this->tree;
+		} 
+
+		/**
+		 * used for retrive the path for a particular node from a hierarchy
+		 *
+		 * @param integer $node is the id of the node we want the path of
+		 * @return array $path Path
+		 */
+
+		public function get_path($data)
+		{
+			$this->get_location_info($data['type'], $data['type_id']);
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
+			{
+				return array();
+			}
+			$this->table = $table;
+
+			$sql = "SELECT name, parent_id FROM {$table} WHERE id = '{$data['id']}'";
+
+			$this->_db->query($sql,__LINE__,__FILE__);
+			$this->_db->next_record();
+
+			$parent_id = $this->_db->f('parent_id');
+
+			$name = $this->_db->f('name', true);
+
+			$path = array($name);
+
+			if ($parent_id)
+			{
+				$path = array_merge($this->get_path(array('type' => $data['type'], 'id' => $parent_id)), $path);
+			}
+			return $path;
 		}
 	}
 
