@@ -795,6 +795,7 @@
 
 					if(isset($values['id']) && $values['id'] && isset($field['role']) && $field['role'] == 'parent')
 					{
+						// can not select it self as parent.
 						$exclude = array($values['id']);
 						$children = $this->bo->get_children2($values['id'], 0,true);
 
