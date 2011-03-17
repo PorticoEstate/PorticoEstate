@@ -926,12 +926,11 @@
 				}
 			}
 
-			$s_agreement = $this->bo->read_single(array('s_agreement_id'=>$id));
 
 			/* Preserve attribute values from post */
 			if(isset($receipt['error']) && (isset( $values_attribute) && is_array( $values_attribute)))
 			{
-				$s_agreement = $this->bocommon->preserve_attribute_values($s_agreement,$values_attribute);
+				$values = $this->bocommon->preserve_attribute_values($values,$values_attribute);
 			}
 
 			$jscal = CreateObject('phpgwapi.jscalendar');
@@ -939,10 +938,13 @@
 			$jscal->add_listener('values_end_date');
 			$jscal->add_listener('values_termination_date');
 
+			$this->member_id = $values['member_of'] ? $values['member_of'] : $this->member_id;
+
 			if ($id)
 			{
-				$this->cat_id = ($s_agreement['cat_id']?$s_agreement['cat_id']:$this->cat_id);
-				$this->member_id = ($s_agreement['member_of']?$s_agreement['member_of']:$this->member_id);
+				$values = $this->bo->read_single(array('s_agreement_id'=>$id));
+				$this->cat_id = ($values['cat_id']?$values['cat_id']:$this->cat_id);
+				$this->member_id = $values['member_of'] ? $values['member_of'] : $this->member_id;
 				$list = $this->bo->read_details($id);
 
 				$uicols		= $this->bo->uicols;
@@ -961,11 +963,11 @@
 					$table_update[] = array
 						(
 							'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
-							'lang_datetitle'		=> lang('Select date'),
-							'lang_new_index'		=> lang('New index'),
+							'lang_datetitle'			=> lang('Select date'),
+							'lang_new_index'			=> lang('New index'),
 							'lang_new_index_statustext'	=> lang('Enter a new index'),
 							'lang_date_statustext'		=> lang('Select the date for the update'),
-							'lang_update'			=> lang('Update'),
+							'lang_update'				=> lang('Update'),
 							'lang_update_statustext'	=> lang('update selected investments')
 						);
 				}
@@ -981,18 +983,18 @@
 
 			$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array
 				(
-					'vendor_id'	=> $s_agreement['vendor_id'],
-					'vendor_name'	=> $s_agreement['vendor_name']));
+					'vendor_id'	=> $values['vendor_id'],
+					'vendor_name'	=> $values['vendor_name']));
 
 			$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array
 				(
-					'b_account_id'		=> $s_agreement['b_account_id'],
-					'b_account_name'	=> $s_agreement['b_account_name']));
+					'b_account_id'		=> $values['b_account_id'],
+					'b_account_name'	=> $values['b_account_name']));
 
 			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array
 				(
-					'ecodimb'			=> $s_agreement['ecodimb'],
-					'ecodimb_descr'		=> $s_agreement['ecodimb_descr']));
+					'ecodimb'			=> $values['ecodimb'],
+					'ecodimb_descr'		=> $values['ecodimb_descr']));
 
 			$alarm_data=$this->bocommon->initiate_ui_alarm(array
 				(
@@ -1028,10 +1030,10 @@
 			$config->read();
 			$link_to_files = $config->config_data['files_url'];
 
-			$j	= count($s_agreement['files']);
+			$j	= count($values['files']);
 			for ($i=0;$i<$j;$i++)
 			{
-				$s_agreement['files'][$i]['file_name']=urlencode($s_agreement['files'][$i]['name']);
+				$values['files'][$i]['file_name']=urlencode($values['files'][$i]['name']);
 			}
 
 			$link_download = array
@@ -1045,7 +1047,7 @@
 
 			$tabs = array();
 
-			if (isset($s_agreement['attributes']) && is_array($s_agreement['attributes']))
+			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
 
 		/*		foreach ($values['attributes'] as & $attribute)
@@ -1069,7 +1071,7 @@
 				$tabs['general']	= array('label' => lang('general'), 'link' => '#general');
 
 				$location = $this->acl_location;
-				$attributes_groups = $this->bo->get_attribute_groups($location, $s_agreement['attributes']);
+				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
 				$attributes = array();
 				foreach ($attributes_groups as $group)
@@ -1080,7 +1082,7 @@
 					}
 				}
 				unset($attributes_groups);
-				unset($s_agreement['attributes']);
+				unset($values['attributes']);
 
 				$tabs['items']	= array('label' => lang('items'), 'link' => '#items');
 			}
@@ -1311,7 +1313,7 @@
 			$myButtons[1] = array
 				(
 					'name'   => "1",
-					'values'  => json_encode(array( array(id =>'values[time][days]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+					'values'  => json_encode(array( array('id' =>'values[time][days]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
 													array('id' =>'values[time][hours]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
 													array('id' =>'values[time][mins]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
 													array('id' =>'values[user_id]',  'type'=>'menu',  'value'=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), 'label'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),'classname'=> 'actionsFilter', 'value_hidden'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
@@ -1319,7 +1321,14 @@
 				))
 			);
 
-
+/*
+_debug_array(array( array('id' =>'values[time][days]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['day_list'],"1_0",'values[time][days]' ), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+													array('id' =>'values[time][hours]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['hour_list'],"1_1",'values[time][hours]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+													array('id' =>'values[time][mins]', 'type'=>'menu',  'value'=>$this->bocommon->make_menu_date($alarm_data['add_alarm']['minute_list'],"1_2",'values[time][mins]'), 'label'=>"0", 'classname'=> 'actionsFilter', 'value_hidden'=>"0"),
+													array('id' =>'values[user_id]',  'type'=>'menu',  'value'=>$this->bocommon->make_menu_user($alarm_data['add_alarm']['user_list'],"1_3",'values[user_id]'), 'label'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"name"),'classname'=> 'actionsFilter', 'value_hidden'=>$this->bocommon->choose_select($alarm_data['add_alarm']['user_list'],"id")),
+													array('id' =>'values[add_alarm]',  'type'=>'buttons', 'value'=>'Add',  'label'=>$alarm_data['add_alarm']['lang_add'],   'funct'=> 'onAddClick' , 'classname'=> 'actionButton', 'value_hidden'=>"")));
+die();
+*/
 			//---------items------------------------------------
 			$datavalues[1] = array
 				(
@@ -1371,22 +1380,24 @@
 				(
 					'name'			=> "2",
 					'values'		=>	json_encode(array(	array('type'=>'text', 'label'=>' New index:', 'classname'=> 'index-opt'),
-															array('id' =>'values[new_index]', 'type'=>'inputText', size=>12, 'classname'=> 'index-opt'),
-															array('id' =>'values[update]','type'=>'buttons',	'value'=>'Update',	'label'=>'Update',	funct=> onUpdateClick , 'classname'=> '')
+															array('id' =>'values[new_index]', 'type'=>'inputText', 'size'=>12, 'classname'=> 'index-opt'),
+															array('id' =>'values[update]','type'=>'buttons',	'value'=>'Update',	'label'=>'Update',	'funct'=> 'onUpdateClick' , 'classname'=> '')
 				))
 			);
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
 
-			for($z=0; $z<count($s_agreement['files']); $z++)
+			for($z=0; $z<count($values['files']); $z++)
 			{
-				if ($link_to_files != '') {
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$s_agreement['files'][$z]['directory'].'/'.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+				if ($link_to_files != '')
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
 				}
-				else {
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+				else
+				{
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
 				}
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$s_agreement['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
 			}
 
 			$datavalues[2] = array
@@ -1461,7 +1472,7 @@
 					'fileupload'						=> true,
 					'link_view_file'					=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
 					'link_to_files'						=> $link_to_files,
-					'files'								=> $s_agreement['files'],
+					'files'								=> $values['files'],
 					'lang_files'						=> lang('files'),
 					'lang_filename'						=> lang('Filename'),
 					'lang_file_action'					=> lang('Delete file'),
@@ -1478,7 +1489,7 @@
 					'lang_save'							=> lang('save'),
 					'lang_cancel'						=> lang('cancel'),
 					'lang_apply'						=> lang('apply'),
-					'value_cat'							=> $s_agreement['cat'],
+					'value_cat'							=> $values['cat'],
 					'lang_apply_statustext'				=> lang('Apply the values'),
 					'lang_cancel_statustext'			=> lang('Leave the service agreement untouched and return back to the list'),
 					'lang_save_statustext'				=> lang('Save the service agreement and return back to the list'),
@@ -1492,7 +1503,7 @@
 					'member_of_list'					=> $member_of_data['cat_list'],
 
 					'attributes_group'					=> $attributes,
-					'lookup_functions'					=> $s_agreement['lookup_functions'],
+					'lookup_functions'					=> $values['lookup_functions'],
 					'dateformat'						=> $dateformat,
 
 					'img_cal'							=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
@@ -1500,39 +1511,39 @@
 
 					'lang_start_date_statustext'		=> lang('Select the estimated end date for the Project'),
 					'lang_start_date'					=> lang('start date'),
-					'value_start_date'					=> $s_agreement['start_date'],
+					'value_start_date'					=> $values['start_date'],
 
 					'lang_end_date_statustext'			=> lang('Select the estimated end date for the Project'),
 					'lang_end_date'						=> lang('end date'),
-					'value_end_date'					=> $s_agreement['end_date'],
+					'value_end_date'					=> $values['end_date'],
 
 					'lang_termination_date_statustext'	=> lang('Select the estimated termination date'),
 					'lang_termination_date'				=> lang('termination date'),
-					'value_termination_date'			=> $s_agreement['termination_date'],
+					'value_termination_date'			=> $values['termination_date'],
 
 					'vendor_data'						=> $vendor_data,
 
 					'lang_budget'						=> lang('Budget'),
 					'lang_budget_statustext'			=> lang('Budget for selected year'),
-					'value_budget'						=> $s_agreement['budget'],
+					'value_budget'						=> $values['budget'],
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 
 					'lang_year'							=> lang('year'),
 					'lang_year_statustext'				=> lang('Budget year'),
-					'year'								=> $this->bocommon->select_list($s_agreement['year'],$this->bo->get_year_list($id)),
+					'year'								=> $this->bocommon->select_list($values['year'],$this->bo->get_year_list($id)),
 
 					'b_account_data'					=> $b_account_data,
 					'ecodimb_data'						=> $ecodimb_data,
 					'lang_category'						=> lang('category'),
 					'lang_no_cat'						=> lang('Select category'),
-					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[order_category]','selected' => $s_agreement['order_category'])),
+					'cat_select'						=> $this->cats->formatted_xslt_list(array('select_name' => 'values[order_category]','selected' => $values['order_category'])),
 
 					'lang_name'							=> lang('name'),
 					'lang_name_statustext'				=> lang('name'),
-					'value_name'						=> $s_agreement['name'],
+					'value_name'						=> $values['name'],
 					'lang_descr'						=> lang('descr'),
 					'lang_descr_statustext'				=> lang('descr'),
-					'value_descr'						=> $s_agreement['descr'],
+					'value_descr'						=> $values['descr'],
 					'table_add'							=> $table_add,
 					'values'							=> $content,
 					'table_header'						=> $table_header,
