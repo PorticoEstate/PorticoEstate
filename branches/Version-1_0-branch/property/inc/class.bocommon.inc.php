@@ -2041,7 +2041,7 @@
 			$split_values = array ();			
 			foreach ($array as $value)
 			{
-				array_push($split_values,array ('text' => $value['id'], 'value' => $value['id'], 'onclick' => array('fn' => 'onDateClick', 'obj' => array ('id_button'=>$id_buttons, 'opt'=>$value['id'], 'hidden_name'=>$name_hidden))));
+				array_push($split_values,array ('text' => "{$value['id']}", 'value' => $value['id'], 'onclick' => array('fn' => 'onDateClick', 'obj' => array ('id_button'=>$id_buttons, 'opt'=>$value['id'], 'hidden_name'=>$name_hidden))));
 			}	
 			return 	$split_values;	
 		}
