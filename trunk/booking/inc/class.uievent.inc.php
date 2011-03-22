@@ -71,9 +71,13 @@
 					'source' => self::link(array('menuaction' => 'booking.uievent.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'formatter' => 'YAHOO.booking.formatLink'
+						),
+						array(
 							'key' => 'description',
 							'label' => lang('Event'),
-							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
 							'key' => 'activity_name',
@@ -372,6 +376,9 @@
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret'], 'warnings'=>$errors));
 				}
 			}
+            if ($errors['event']) {
+                $errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.'); 
+            }
 			$default_dates = array_map(array(self, '_combine_dates'), '','');
 			array_set_default($event, 'dates', $default_dates);
 

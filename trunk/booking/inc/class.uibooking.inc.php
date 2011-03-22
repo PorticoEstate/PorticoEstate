@@ -192,8 +192,10 @@
 			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
 			$step = phpgw::get_var('step', 'str', 'POST');
 			if (! isset($step)) $step = 1;
+			if (! isset($noallocation)) $noallocation = 1;
 			$invalid_dates = array();
 			$valid_dates = array();
+
 
 			if(isset($allocation_id))
 			{
@@ -207,7 +209,10 @@
 				$booking['organization_id'] = $allocation['organization_id'];
 				$booking['organization_name'] = $allocation['organization_name'];
 			} else {
-				$season = $this->season_bo->read_single($_POST['season_id']);
+  				$season = $this->season_bo->read_single($_POST['season_id']);
+				$booking['organization_id'] = $_POST['organization_id'];
+				$booking['organization_name'] = $_POST['organization_name'];
+                $noallocation = 1;
             }
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -235,7 +240,6 @@
 
 				$errors = $this->bo->validate($booking);
 
-
 #				if (strtotime($_POST['from_']) < $today[0])
 #				{
 #					if($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')
@@ -252,17 +256,37 @@
 					$errors['booking'] = lang('This booking is not connected to a season');
 				}	
 
-				if (!$errors)
+				if (!$errors['booking'] && !$errors['season_boundary'])
 				{
 					$step++;
 				}
 
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
 				{
-					$receipt = $this->bo->add($booking);
+                    if( isset($noallocation)) {
+                        $allocation['resources'] = $booking['resources'];
+                        $allocation['cost'] = $booking['cost'];
+                        $allocation['building_id'] = $booking['building_id'];
+                        $allocation['building_name'] = $booking['building_name'];
+                        $allocation['season_id'] = $booking['season_id'];
+                        $allocation['organization_id'] = $booking['organization_id'];
+                        $allocation['organization_name'] = $booking['organization_name'];
+                        $allocation['from_'] = $booking['from_'];
+                        $allocation['to_'] = $booking['to_'];
+           				$allocation['active'] = '1';
+           				$allocation['completed'] = '0';
+                        $receipt = $this->allocation_bo->add($allocation);
+                        $booking['allocation_id'] = $receipt['id'];
+                        $booking['secret'] = $this->generate_secret();
+                        $receipt = $this->bo->add($booking);
+                    } else {
+                        $booking['secret'] = $this->generate_secret();
+                        $receipt = $this->bo->add($booking);
+                    }
+
 					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
 				}
-				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors && $step > 1)
+				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors['booking'] && !$errors['season_boundary'] && $step > 1)
 				{
 					if ($_POST['recurring'] == 'on') {
 						$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
@@ -284,7 +308,9 @@
 						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
 						$booking['from_'] = $fromdate;
 						$booking['to_'] = $todate;
+
 						$err = $this->bo->validate($booking);
+
 						if ($err) 
 						{
 							$invalid_dates[$i]['from_'] = $fromdate;
@@ -296,8 +322,27 @@
 							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
-								$booking['secret'] = $this->generate_secret();
-								$receipt = $this->bo->add($booking);
+                                if( isset($noallocation)) {
+                                    $allocation['resources'] = $booking['resources'];
+                                    $allocation['cost'] = $booking['cost'];
+                                    $allocation['building_id'] = $booking['building_id'];
+                                    $allocation['building_name'] = $booking['building_name'];
+                                    $allocation['season_id'] = $booking['season_id'];
+                                    $allocation['organization_id'] = $booking['organization_id'];
+                                    $allocation['organization_name'] = $booking['organization_name'];
+                                    $allocation['from_'] = $booking['from_'];
+                                    $allocation['to_'] = $booking['to_'];
+                       				$allocation['active'] = '1';
+                    				$allocation['completed'] = '0';
+                                    $receipt = $this->allocation_bo->add($allocation);
+                                    $booking['allocation_id'] = $receipt['id'];
+    								$booking['secret'] = $this->generate_secret();
+    								$receipt = $this->bo->add($booking);
+                                    $booking['allocation_id'] = '';
+                                } else {
+    								$booking['secret'] = $this->generate_secret();
+    								$receipt = $this->bo->add($booking);
+                                }
 							}
 						}
 						$i++;
@@ -324,11 +369,7 @@
 			$groups = $groups['results'];
 
 			$resouces_full = $this->resource_bo->so->read(array('filters'=>array('id'=>$booking['resources']), 'sort'=>'name'));
-			$res_names = array();
-			foreach($resouces_full['results'] as $res)
-			{
-				$res_names[] = array('id' => $res['id'],'name' => $res['name']);
-			}
+
 			if ($step < 2) 
 			{
 				self::render_template('booking_new', array('booking' => $booking, 
@@ -343,7 +384,7 @@
 					'outseason' => $_POST['outseason'],
 					'date_from' => $time_from[0],
 					'date_to' => $time_to[0],
-					'res_names' => $res_names)
+                    'noallocation' => $noallocation)
 				);
 			} 
 			else if ($step == 2) 
@@ -361,7 +402,8 @@
 					'to_date' => $_POST['to_'],
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
-					'groups' => $groups)
+					'groups' => $groups,
+                    'noallocation' => $noallocation)
 				);
 			}
 		}
