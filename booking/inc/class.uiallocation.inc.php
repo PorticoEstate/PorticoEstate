@@ -151,7 +151,7 @@
 
 				$errors = $this->bo->validate($allocation);
 
-				if (!$errors)
+				if (!$errors['booking'] && !$errors['season_boundary'])
 				{
 					$step++;
 				}
@@ -164,7 +164,7 @@
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
-				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
+				else if ($_POST['outseason'] == 'on' && !$errors['booking'] && !$errors['season_boundary'] && $step > 1)
 				{
 
 					$repeat_until = strtotime($season['to_'])+60*60*24; 
@@ -228,7 +228,7 @@
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
-		
+
 			if ($step < 2) 
 			{
 				if($_SERVER['REQUEST_METHOD'] == 'POST' && $errors) {				
