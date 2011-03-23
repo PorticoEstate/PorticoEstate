@@ -1,4 +1,4 @@
-<?php
+				<?php
 	/**
 	* Rental - configuration hook
 	*
@@ -32,7 +32,7 @@
 		$group_assigned = isset($config['create_user_based_on_email_group']) ? $config['create_user_based_on_email_group'] : '';
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-
+	
 		foreach ( $groups as $group => $label)
 		{
 			$selected = '';
@@ -44,6 +44,100 @@
 			$out .=  <<<HTML
 				<option value="{$group}"{$selected}>{$label}</option>
 HTML;
+		}
+		return $out;
+	}
+	
+	function entity_config_move_in_out($config)
+	{
+		$entity			= CreateObject('property.soadmin_entity');
+		$entities 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
+		$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		if ( is_array($entities) && count($entities) )
+		{
+			foreach($entities as $entry)
+			{
+				
+				$id = $entry['id'];
+				$selected = '';
+				if ( $selected_entity == $id )
+				{
+					$selected = ' selected';
+				}
+	
+				$out .=  <<<HTML
+					<option value="{$id}"{$selected}>{$entry['name']}</option>
+			
+HTML;
+			}
+		}
+		return $out;
+	}
+	
+	function category_config_move_in($config)
+	{
+		$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
+		$selected_category = isset($config['category_config_move_in']) ? $config['category_config_move_in'] : '';
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		
+		if(isset($selected_entity) && $selected_entity != '')
+		{
+			$entity			= CreateObject('property.soadmin_entity');
+			$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$selected_entity, 'type' => 'catch'));
+					
+		
+			if (is_array($cat_list) && count($cat_list) )
+			{
+			
+				foreach($cat_list as $entry)
+				{
+					$id = $entry['id'];
+					if ( $selected_category == $id )
+					{
+						$selected = ' selected';
+					}
+		
+					$out .=  <<<HTML
+						<option value="{$id}"{$selected}>{$entry['name']}</option>
+				
+HTML;
+	
+				}
+			}
+		}
+		return $out;
+	}
+	
+	function category_config_move_out($config)
+	{
+		$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
+		$selected_category = isset($config['category_config_move_out']) ? $config['category_config_move_out'] : '';
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		
+		if(isset($selected_entity) && $selected_entity != '')
+		{
+			$entity			= CreateObject('property.soadmin_entity');
+			$cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$selected_entity, 'type' => 'catch'));
+					
+			if (is_array($cat_list) && count($cat_list) )
+			{
+			
+				foreach($cat_list as $entry)
+				{
+					$id = $entry['id'];
+					if ( $selected_category == $id )
+					{
+						$selected = ' selected';
+					}
+		
+					$out .=  <<<HTML
+						<option value="{$id}"{$selected}>{$entry['name']}</option>
+				
+HTML;
+	
+				}
+			}
 		}
 		return $out;
 	}
