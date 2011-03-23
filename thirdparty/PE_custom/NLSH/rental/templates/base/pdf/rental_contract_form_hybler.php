@@ -1,5 +1,5 @@
 <?php 
-
+//
 $template_name = "Korttidskontrakt";
 
 
