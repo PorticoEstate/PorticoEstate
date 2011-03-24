@@ -200,10 +200,19 @@ class rental_socomposite extends rental_socommon
 			$composite->set_custom_postcode($this->unmarshal($this->db->f('postcode', true), 'string'));
 			$composite->set_custom_place($this->unmarshal($this->db->f('place', true), 'string'));
 			$composite->set_area($this->unmarshal($this->db->f('area', true), 'float'));
-			$composite->set_status($this->unmarshal($this->db->f('status', true), 'string'));
 		}
 		// Location code
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
+		
+		//Status
+		$database_status = $this->unmarshal($this->db->f('status', true), 'string');
+		$composite_status = $composite->get_status();
+				
+		if($composite_status != 'Ikke ledig')
+		{
+			$composite->set_status($database_status);
+		}
+		
 		if(!$composite->contains_unit($location_code))
 		{
 			//composite inneholder ikke unit -> legg den til

@@ -339,6 +339,7 @@ common costs	property	no	Fellsekostnader
 communication descriptions manager	property	no	Kommunikasjons beskrivelse
 communication types manager	property	no	Type kommunikasjon
 composites	property	no	Leieobjekter
+condition	property	no	Tilstand
 condidtion degree	property	no	Tilstandsgrad
 config	property	no	Konfigurer
 configuration	property	no	Konfigurasjon

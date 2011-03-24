@@ -82,6 +82,8 @@ calculate_price_per_area	rental	no	Pris regnes ut fra areal
 calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 cancel	rental	no	Avbryt
+category config move in	rental	no	Kategori for innflyttingsmeldinger
+category config move out	rental	no	Kategori for utflyttingsmeldinger
 close	rental	no	Lukk
 clear	rental	no	Nullstill
 closing_due_date	rental	no	Nær opsjonsfrist
@@ -194,6 +196,7 @@ email	rental	no	E-post
 email_create_user_based_on_email_title	rental	no	Tilgang til Portico Estate
 email_create_user_based_on_email_message	rental	no	Hei %1 %2:<br/>Det er opprettet en tilgang for deg i Portico Estate<br/><br/>Brukernavnet er e-posten din<br/>Passordet er %3<br/><br/>Systemet kan nås på adressen %4
 ended	rental	no	Avsluttet
+entity config move in out	rental	no	Entitet for inn- og utflytting
 error_create_user_based_on_email	rental 	no	En feil oppstod under opprettelse av bruker
 error_create_user_based_on_email_account_exist	rental	no	En konto med denne e-posten som brukernavn eksisterer allerede
 error_create_user_based_on_email_not_valid_address	rental	no	Kan ikke opprette kontoen pga av e-postadressen ikke er gyldig
@@ -494,6 +497,9 @@ service_exist	rental	no	Eksisterer
 set_payer	rental	no	Sett som fakturamottaker
 shortcuts	rental	no	Snarveier
 show_affected_contracts	rental	no	Vis kontrakter relatert til reguleringen
+show_move_in_reports	rental	no	Vis jasperreport for innflyttingsmelding
+show_move_out_reports	rental	no	Vis jasperreport for utflyttingsmelding
+show_in_out_move_reports	rental	no	Vis jasperreports for inn- og utflyttingsmeldinger
 showing_composite	rental	no	Leieobjekt
 showing_contract	rental	no	Kontrakt
 showing	rental	no	Viser priselement
