@@ -13,7 +13,10 @@
 			<input type="hidden" name="season_id" value="{booking/season_id}"/>
 			<input type="hidden" name="building_id" value="{booking/building_id}"/>
 			<input type="hidden" name="building_name" value="{booking/building_name}"/>
+			<input type="hidden" name="organization_id" value="{booking/organization_id}"/>
+			<input type="hidden" name="organization_name" value="{booking/organization_name}"/>
 			<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
+			<input type="hidden" name="noallocation" value="{noallocation}" />
 			<input type="hidden" name="step" value="{step}" />
 			<input type="hidden" name="from_" value="{from_date}" />
 			<input type="hidden" name="to_" value="{to_date}" />

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="0.9090909090909091"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="478"/>
+	<property name="ireport.y" value="384"/>
 	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
 	<property name="net.sf.jasperreports.export.pdf.tag.language" value="EN-US"/>
 	<style name="table">
@@ -20,11 +20,11 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="headers" isDefault="false" forecolor="#808080" fontName="Serif" fontSize="14"/>
+	<style name="headers" forecolor="#808080" fontName="Serif" fontSize="14"/>
 	<style name="Sans_Normal" isDefault="true" fontName="Serif" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Sans_Bold" isDefault="false" fontName="Serif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Sans_Italic" isDefault="false" fontName="Serif" fontSize="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Sans_Bold_Italic" isDefault="false" fontName="Serif" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold" fontName="Serif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Italic" fontName="Serif" fontSize="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Sans_Bold_Italic" fontName="Serif" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
 	<subDataset name="resources">
 		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
 		<queryString>
@@ -53,7 +53,7 @@
 		<parameter name="APPLICATION_ID" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT
-     to_char(time,'DD/MM/YYYY HH24:MI') AS date, author, comment FROM "bb_application_comment" bb_application_comment WHERE bb_application_comment.application_id = $P!{APPLICATION_ID} AND bb_application_comment.type = 'comment']]>
+     to_char(time,'DD/MM/YYYY HH24:MI') AS date, author, comment FROM "bb_application_comment" bb_application_comment WHERE bb_application_comment.application_id = $P!{APPLICATION_ID} AND bb_application_comment.type = 'comment' OFFSET 1]]>
 		</queryString>
 		<field name="date" class="java.lang.String"/>
 		<field name="author" class="java.lang.String"/>
@@ -212,7 +212,7 @@
 				<textElement>
 					<font pdfFontName="Helvetica" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Status: " + ( $F{application_status} == "CONFIRMED" ? "Bekreftet" : $F{application_status} )]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Status: " + ( $F{application_status} == "ACCEPTED" ? "Bekreftet" : $F{application_status} )]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="84" y="326" width="455" height="13"/>
@@ -322,11 +322,6 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<textField>
-				<reportElement style="Sans_Normal" x="244" y="79" width="197" height="13"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA["E-post: " + $F{contact_email}]]></textFieldExpression>
-			</textField>
 		</band>
 		<band height="306">
 			<elementGroup>
