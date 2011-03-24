@@ -1413,7 +1413,7 @@
 					'condition_list'					=> $this->bo->select_conditions($id),
 					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 				);
-//_debug_array($data['regulations']);die();
+//_debug_array($data);die();
 			phpgwapi_yui::load_widget('dragdrop');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('menu');
@@ -1504,7 +1504,7 @@
 			$tabs = array
 				(
 					'general'		=> array('label' => lang('general'), 'link' => '#general'),
-					'location'		=> array('label' => lang('importance'), 'link' => '#importance'),
+					'condition'		=> array('label' => lang('condition'), 'link' => '#condition'),
 					'budget'		=> array('label' => lang('documents'), 'link' => '#documents'),
 					'history'		=> array('label' => lang('history'), 'link' => '#history')
 				);

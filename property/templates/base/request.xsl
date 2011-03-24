@@ -438,7 +438,7 @@
 							</tr>
 						</table>
 					</div>
-					<div id="importance">
+					<div id="condition">
 						<table>
 							<tr>
 								<td>
