@@ -703,9 +703,10 @@
 
 				$cat_list[] = array
 				(
-					'cat_id'	=> $cat['id'],
-					'name'		=> $name,
-					'selected'	=> $sel_cat
+					'cat_id'		=> $cat['id'],
+					'name'			=> $name,
+					'description'	=> $cat['description'],
+					'selected'		=> $sel_cat
 				);
 			}
 
