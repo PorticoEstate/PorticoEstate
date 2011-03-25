@@ -92,7 +92,8 @@
 					</xsl:when>
 				</xsl:choose>
 				<xsl:choose>
-					<xsl:when test="value_request_id!=''">
+					<xsl:when test="value_request_id!='' and acl_add_project='1'">
+						<tr>
 						<td valign="top" align="center">
 							<xsl:variable name="generate_project_action"><xsl:value-of select="generate_project_action"/></xsl:variable>
 							<xsl:variable name="lang_generate_project"><xsl:value-of select="lang_generate_project"/></xsl:variable>
@@ -113,6 +114,7 @@
 								</input>
 							</form>
 						</td>
+						</tr>
 					</xsl:when>
 				</xsl:choose>
 			</table>
