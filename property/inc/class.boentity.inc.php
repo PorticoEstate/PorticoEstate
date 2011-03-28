@@ -61,24 +61,33 @@
 		var $type_app = array();
 		var $type;
 
-		function property_boentity($session=false)
+		function property_boentity($session=false, $type = '', $entity_id = 0, $cat_id = 0)
 		{
 			$this->solocation 				= CreateObject('property.solocation');
 			$this->bocommon 				= CreateObject('property.bocommon');
 
+			if(!$type)
+			{
+				$type						= phpgw::get_var('type');
+			}
+			if(!$entity_id)
+			{
+				$entity_id					= phpgw::get_var('entity_id', 'int');
+			}
+			if(!$cat_id)
+			{
+				$cat_id						= phpgw::get_var('cat_id', 'int');
+			}
 			$start							= phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query							= phpgw::get_var('query');
 			$sort							= phpgw::get_var('sort');
 			$order							= phpgw::get_var('order');
 			$filter							= phpgw::get_var('filter', 'int');
-			$cat_id							= phpgw::get_var('cat_id', 'int');
 			$district_id					= phpgw::get_var('district_id', 'int');
-			$entity_id						= phpgw::get_var('entity_id', 'int');
 			$status							= phpgw::get_var('status');
 			$start_date						= phpgw::get_var('start_date');
 			$end_date						= phpgw::get_var('end_date');
 			$allrows						= phpgw::get_var('allrows', 'bool');
-			$type							= phpgw::get_var('type');
 			$criteria_id					= phpgw::get_var('criteria_id');
 
 			$this->criteria_id				= isset($criteria_id) && $criteria_id ? $criteria_id : '';
@@ -96,8 +105,8 @@
 			$this->soadmin_entity->type_app	= $this->type_app;
 			$this->so->type					= $this->type;
 
-
 			$this->category_dir = "{$this->type}_{$entity_id}_{$cat_id}";
+
 			if ($session)
 			{
 				$this->read_sessiondata();
@@ -129,7 +138,7 @@
 			{
 				$this->order = $order;
 			}
-			if(isset($_POST['cat_id']) || isset($_GET['cat_id']))
+			if($cat_id || isset($_POST['cat_id']) || isset($_GET['cat_id']))
 			{
 				$this->cat_id = $cat_id;
 			}
@@ -340,7 +349,7 @@
 			}
 			$values = $this->custom->prepare($values, $this->type_app[$this->type],".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['view']);
 
-			//		$soadmin_entity	= CreateObject('property.soadmin_entity');
+	//		$soadmin_entity	= CreateObject('property.soadmin_entity');
 
 			if($values['location_code'])
 			{
