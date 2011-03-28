@@ -1681,7 +1681,8 @@
 
 			//------------------- start ticket from other location
 			$bypass 		= phpgw::get_var('bypass', 'bool');
-			if(isset($_POST) && $_POST && isset($bypass) && $bypass)
+//			if(isset($_POST) && $_POST && isset($bypass) && $bypass)
+			if($bypass)
 			{
 				$boadmin_entity		= CreateObject('property.boadmin_entity');
 				$location_code 		= phpgw::get_var('location_code');

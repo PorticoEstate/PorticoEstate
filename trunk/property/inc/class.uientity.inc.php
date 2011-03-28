@@ -763,6 +763,28 @@
 					)
 				);
 
+			$parameters2 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'location_code',
+							'source'	=> 'location_code'
+						),
+						array
+						(
+							'name'		=> 'origin_id',
+							'source'	=> 'id'
+						),
+						array
+						(
+							'name'		=> 'p_num',
+							'source'	=> 'id'
+						),
+					)
+				);
+
 			if($this->acl_read)
 			{
 				$datatable['rowactions']['action'][] = array
@@ -823,6 +845,28 @@
 						'parameters'			=> $parameters
 					);
 			}
+
+			if(	$category['start_ticket'])
+			{
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'edit',
+						'text'	 		=> lang('start ticket'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'property.uitts.add',
+							'p_entity_id'	=> $this->entity_id,
+							'p_cat_id'		=> $this->cat_id,
+							'type'			=> $this->type,
+							'target'		=> '_blank',
+							'bypass'		=> true,
+							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
+
+						)),
+						'parameters'			=> $parameters2
+					);
+			}
+
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location)));
 
 			foreach ($jasper as $report)
@@ -1476,6 +1520,20 @@
 					'origin_id'			=> $id
 				);
 
+			$add_to_project_link_data = array
+			(
+					'menuaction'		=> 'property.uiproject.index',
+					'from'				=> 'workorder',
+					'lookup'			=> true,
+					'query'				=> isset($values['location_data']['loc1']) ? $values['location_data']['loc1'] : '',
+			//		'p_num'				=> $id,
+			//		'p_entity_id'		=> $this->entity_id,
+			//		'p_cat_id'			=> $this->cat_id,
+					'tenant_id'			=> $values['tenant_id'],
+					'origin'			=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",
+					'origin_id'			=> $id
+			);
+
 			$ticket_link_data = array
 				(
 					'menuaction'		=> 'property.uitts.add',
@@ -1846,6 +1904,7 @@
 					'start_project'					=> $category['start_project'],
 					'lang_start_project'			=> lang('start project'),
 					'project_link'					=> $GLOBALS['phpgw']->link('/index.php',$project_link_data),
+					'add_to_project_link'			=> $GLOBALS['phpgw']->link('/index.php',$add_to_project_link_data),
 					'start_ticket'					=> $category['start_ticket'],
 					'lang_start_ticket'				=> lang('start ticket'),
 					'ticket_link'					=> $GLOBALS['phpgw']->link('/index.php',$ticket_link_data),
