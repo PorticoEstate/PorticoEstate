@@ -867,6 +867,17 @@
 				$values['location_data'] = $ticket['location_data'];
 			}
 
+			if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
+			{
+				$_origin = explode('.', $origin);
+				$_boentity= CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
+				$_entity = $_boentity->read_single(array('entity_id'=> $_origin[2],'cat_id'=>$_origin[3],'id'=>$origin_id, 'view' => true));
+				$values['location_data'] = $_entity['location_data'];
+				unset($_origin);
+				unset($_boentity);
+				unset($_entity);
+			}
+
 			if(isset($values['origin']) && $values['origin'])
 			{
 				$origin		= $values['origin'];
@@ -1182,6 +1193,7 @@
 			$table_header_workorder_budget[] = array
 				(
 					'lang_workorder_id'	=> lang('Workorder'),
+
 					'lang_sum'		=> lang('Sum')
 				);
 

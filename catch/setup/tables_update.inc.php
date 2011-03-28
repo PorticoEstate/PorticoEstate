@@ -266,7 +266,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.507 to 0.9.17.508
+	* Update catch version from 0.9.17.507 to 0.9.17.508
 	* Add optional hierarchy on entities
 	* 
 	*/
@@ -286,7 +286,7 @@
 		}
 	}
 	/**
-	* Update property version from 0.9.17.508 to 0.9.17.509
+	* Update catch version from 0.9.17.508 to 0.9.17.509
 	* Rename reserved fieldname to allow MySQL
 	* 
 	*/
@@ -301,6 +301,26 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.509';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+
+	/**
+	* Update catch version from 0.9.17.509 to 0.9.17.510
+	* Add location_link_level
+	* 
+	*/
+
+	$test[] = '0.9.17.509';
+	function catch_upgrade0_9_17_509()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','location_link_level', array('type' => 'int','precision' => '4','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.510';
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
