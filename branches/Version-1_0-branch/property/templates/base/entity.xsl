@@ -316,26 +316,9 @@
 			<xsl:choose>
 				<xsl:when test="value_id!=''">
 					<table cellpadding="2" cellspacing="2" width="80%" align="center">
-						<xsl:choose>
-							<xsl:when test="start_project!=''">
-								<tr>
-									<td valign="top">
-										<xsl:variable name="project_link"><xsl:value-of select="project_link"/></xsl:variable>
-										<form method="post" action="{$project_link}">
-											<xsl:variable name="lang_start_project"><xsl:value-of select="lang_start_project"/></xsl:variable>
-											<input type="submit" name="location" value="{$lang_start_project}">
-												<xsl:attribute name="title">
-													<xsl:value-of select="lang_start_project_statustext"/>
-												</xsl:attribute>
-											</input>
-										</form>
-									</td>
-								</tr>
-							</xsl:when>
-						</xsl:choose>
-						<xsl:choose>
-							<xsl:when test="start_ticket!=''">
-								<tr>
+						<tr>
+							<xsl:choose>
+								<xsl:when test="start_ticket!=''">
 									<td valign="top">
 										<xsl:variable name="ticket_link"><xsl:value-of select="ticket_link"/></xsl:variable>
 										<form method="post" action="{$ticket_link}">
@@ -347,9 +330,35 @@
 											</input>
 										</form>
 									</td>
-								</tr>
-							</xsl:when>
-						</xsl:choose>
+								</xsl:when>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="start_project!=''">
+									<td valign="top">
+										<xsl:variable name="project_link"><xsl:value-of select="project_link"/></xsl:variable>
+										<form method="post" action="{$project_link}">
+										<xsl:variable name="lang_start_project"><xsl:value-of select="php:function('lang', 'generate new project')" /></xsl:variable>
+											<input type="submit" name="location" value="{$lang_start_project}">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')" />
+												</xsl:attribute>
+											</input>
+										</form>
+									</td>
+									<td valign="top">
+										<xsl:variable name="add_to_project_link"><xsl:value-of select="add_to_project_link"/></xsl:variable>
+										<form method="post" action="{$add_to_project_link}">
+											<xsl:variable name="lang_add_to_project"><xsl:value-of select="php:function('lang', 'add to project')" /></xsl:variable>
+											<input type="submit" name="location" value="{$lang_add_to_project}" onMouseout="window.status='';return true;">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')" />
+												</xsl:attribute>
+											</input>
+										</form>
+									</td>
+								</xsl:when>
+							</xsl:choose>
+						</tr>
 					</table>
 				</xsl:when>
 			</xsl:choose>
