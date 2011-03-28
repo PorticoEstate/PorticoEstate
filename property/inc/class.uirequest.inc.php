@@ -1310,6 +1310,7 @@
 
 					'generate_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
 					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $id)),
+					'acl_add_project'					=> $this->acl->check('.project', PHPGW_ACL_ADD, 'property'),
 					'lang_generate_project'				=> lang('Generate project'),
 					'lang_generate_project_statustext'	=> lang('Generate a project from this request'),
 					'location_code'						=> $values['location_code'],
