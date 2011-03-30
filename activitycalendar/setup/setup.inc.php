@@ -22,18 +22,24 @@
 	/* Dependencies for this app to work */
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'phpgwapi',
-		'versions' => Array('0.9.17', '0.9.18')
+		'versions' => array('0.9.17', '0.9.18')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'booking',
-		'versions' => Array('0.2.00', '0.2.01','0.2.02','0.2.03','0.2.04','0.2.05')
+		'versions' => array('0.2.05')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'property',
-		'versions' => Array('0.9.17')
+		'versions' => array('0.9.17')
 	);
+
+	$setup_info['activitycalendar']['tables'] = array(
+		'activity_activity',
+		'activity_arena'
+	);
+
 
 	/* The hooks this app includes, needed for hooks registration */
 /*	$setup_info['activitycalendar']['hooks'] = array
@@ -41,4 +47,3 @@
 		'menu'	=> 'activitycalendar.menu.get_menu',
 		'config'
 	);*/
-?>
