@@ -402,6 +402,43 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
+
+							<tr>
+								<td valign="top">
+										<xsl:value-of select="php:function('lang', 'consume date')" />
+								</td>
+								<td>
+									<input type="text" id="values_consume_date" name="values[consume_date]" size="10" value="" readonly="readonly" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'consume date')" />
+										</xsl:attribute>
+									</input>
+									<img id="values_consume_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+										<xsl:value-of select="php:function('lang', 'consume value')" />
+								</td>
+								<td>
+									<input type="text" id="values_consume_value" name="values[consume_value]" size="10" value="{value_consume}" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'consume value')" />
+										</xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+
+									<tr>
+										<td width="19%" align="left" valign="top">
+											<xsl:value-of select="php:function('lang', 'consume history')" />
+										</td>
+										<td>
+											<div id="datatable-container_2"></div>
+										</td>
+									</tr>
+
 <!--
 							<tr>
 								<td valign="top">
@@ -448,6 +485,12 @@
 										<xsl:apply-templates select="table_header_importance"/>
 										<xsl:apply-templates select="condition_list"/>
 										<tr>
+											<td>
+												<br/>
+											</td>
+										</tr>
+
+										<tr>
 											<td align="left">
 												<xsl:value-of select="php:function('lang', 'Authorities Demands')" />
 											</td>
@@ -462,7 +505,11 @@
 												</select>			
 											</td>
 										</tr>
-
+										<tr>
+											<td>
+												<br/>
+											</td>
+										</tr>
 										<tr>
 											<td valign='top' align="left">
 												<xsl:value-of select="php:function('lang', 'regulations')" />
@@ -513,6 +560,11 @@
 											</td>
 										</tr>
 										<xsl:call-template name="attributes"/>
+										<tr>
+											<td>
+												<br/>
+											</td>
+										</tr>
 										<tr>
 											<td align="left">
 												<xsl:value-of select="lang_score"/>
