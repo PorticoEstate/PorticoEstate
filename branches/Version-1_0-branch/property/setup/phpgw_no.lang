@@ -348,6 +348,10 @@ confirm status to the history	property	no	Bekreft status til historikk
 consequence	property	no	Konsekvens
 consequential damage	property	no	Følgeskader
 consume	property	no	forbruk
+consume date	property	no	Dato historisk forbruk
+consume value	property	no	Beløp historisk forbruk
+consume history	property	no	Historisk forbruk
+check to delete	property	no	Merk for å slette
 contact	property	no	Kontakt
 contact email	property	no	Epost
 contact phone	property	no	kontakt telefon

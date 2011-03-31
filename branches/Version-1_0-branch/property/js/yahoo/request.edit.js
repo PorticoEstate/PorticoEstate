@@ -42,6 +42,11 @@ var  myDataTable_0,myDataTable_1,myDataTable_2;
 		elCell.innerHTML = "<center>"+oData+"</center>";
 	}
 	
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+YAHOO.util.Number.format(oData, {thousandsSeparator:" "})+"</div>";
+	}
+
 /********************************************************************************/
 YAHOO.util.Event.addListener(window, "load", function()
 {
