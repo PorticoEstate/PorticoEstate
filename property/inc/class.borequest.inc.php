@@ -393,6 +393,18 @@
 				$values['location_data'] =$this->solocation->read_single($values['location_code']);
 			}
 
+			if(isset($values['consume']) && $values['consume'])
+			{
+				foreach ($values['consume'] as &$consume)
+				{
+					$consume['date'] = $GLOBALS['phpgw']->common->show_date($consume['date'],'Y');
+				}
+			}
+			else
+			{
+				$values['consume'] = array();
+			}
+
 			if($values['tenant_id']>0)
 			{
 				$tenant_data=$this->bocommon->read_single_tenant($values['tenant_id']);
@@ -529,6 +541,7 @@
 			$request['location_code']	= implode("-", $location);
 			$request['start_date']		= phpgwapi_datetime::date_to_timestamp($request['start_date']);
 			$request['end_date']		= phpgwapi_datetime::date_to_timestamp($request['end_date']);
+			$request['consume_date']	= phpgwapi_datetime::date_to_timestamp($request['consume_date']);
 
 			if(is_array($values_attribute))
 			{

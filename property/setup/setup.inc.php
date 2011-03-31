@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.614';
+	$setup_info['property']['version']		= '0.9.17.615';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -116,6 +116,7 @@
 		'fm_request_condition',
 		'fm_request_status',
 		'fm_request_history',
+		'fm_request_consume',
 		'fm_template',
 		'fm_template_hours',
 		'fm_chapter',

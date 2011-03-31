@@ -962,6 +962,12 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
 				}
 
+				if($values['consume_value'] && !$values['consume_date'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
+				}
+
+
 				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
 				{
 					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
@@ -1181,13 +1187,14 @@
 			}
 
 			$show_dates = isset($this->config->config_data['request_show_dates']) && $this->config->config_data['request_show_dates'] ? 1 : '';
+			$jscal = CreateObject('phpgwapi.jscalendar');
 			if($show_dates)
 			{
-				$jscal = CreateObject('phpgwapi.jscalendar');
 				$jscal->add_listener('values_start_date');
 				$jscal->add_listener('values_end_date');
 			}
 
+			$jscal->add_listener('values_consume_date');
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$link_file_data = array
@@ -1256,6 +1263,38 @@
 					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
 				);
+
+
+
+			if($this->acl_edit)
+			{
+				$lang_delete_consume = lang('Check to delete');
+				foreach($values['consume'] as & $consume)
+				{
+					$consume['delete'] = "<input type='checkbox' name='values[delete_consume][]' value='{$consume['id']}' title='{$lang_delete_consume}'>";
+				}
+			}
+			
+			$datavalues[2] = array
+				(
+					'name'					=> "2",
+					'values' 				=> json_encode($values['consume']),
+					'total_records'			=> count($values['consume']),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+
+
+			$myColumnDefs[2] = array
+				(
+					'name'		=> "2",
+					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
+														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
+				);
+
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1413,6 +1452,7 @@
 
 					'condition_list'					=> $this->bo->select_conditions($id),
 					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : ''
 				);
 //_debug_array($data);die();
 			phpgwapi_yui::load_widget('dragdrop');

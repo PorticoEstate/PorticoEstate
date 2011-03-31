@@ -483,6 +483,21 @@
 
 				$location_code = $this->db->f('location_code');
 				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
+
+				$sql = "SELECT * FROM fm_request_consume WHERE request_id={$request_id} ORDER BY date ASC";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while($this->db->next_record())
+				{
+					$request['consume'][] = array
+					(
+						'id'			=> $this->db->f('id'),
+						'amount'		=> $this->db->f('amount'),
+						'date'			=> $this->db->f('date'),
+						'user_id'		=> $this->db->f('user_id'),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'descr'			=> $this->db->f('descr',true)
+					);
+				}
 			}
 
 			return $request;
@@ -657,6 +672,17 @@
 				$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$id}'",__LINE__,__FILE__);
 			}
 
+			if($request['consume_value'] && $request['consume_date'])
+			{
+				$this->db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ('"
+					. $id . "','"
+					. (int)$request['consume_value'] . "',"
+					. (int)$request['consume_date']. ","
+					. $this->account . ","
+					. time() . ")",__LINE__,__FILE__);
+			}
+
 			if($this->db->transaction_commit())
 			{
 				$this->increment_request_id();
@@ -782,6 +808,25 @@
 				$this->soproject->update_power_meter($request['power_meter'],$request['location_code'],$address);
 			}
 
+			if($request['consume_value'] && $request['consume_date'])
+			{
+				$this->db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ('"
+					. $request['id']. "','"
+					. (int)$request['consume_value'] . "',"
+					. (int)$request['consume_date']. ","
+					. $this->account . ","
+					. time() . ")",__LINE__,__FILE__);
+			}
+
+			if(isset($request['delete_consume']) && is_array($request['delete_consume']))
+			{
+				foreach ($request['delete_consume'] as $delete_consume)
+				{
+					$this->db->query("DELETE FROM fm_request_consume WHERE id =" . (int)$delete_consume,__LINE__,__FILE__);				
+				}
+			}
+
 			if($this->db->transaction_commit())
 			{
 				if ($old_status != $request['status'])
@@ -812,9 +857,10 @@
 		{
 			$request_id = (int) $request_id;
 			$this->db->transaction_begin();
-			$this->db->query("DELETE FROM fm_request WHERE id = {$request_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_request_consume WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_condition WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_history  WHERE  history_record_id = {$request_id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM fm_request WHERE id = {$request_id}",__LINE__,__FILE__);
 		//	$this->db->query("DELETE FROM fm_origin WHERE destination = 'request' AND destination_id='" . $request_id . "'",__LINE__,__FILE__);
 			$this->interlink->delete_at_target('property', '.project.request', $request_id, $this->db);
 			$this->db->transaction_commit();
