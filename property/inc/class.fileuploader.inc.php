@@ -53,127 +53,121 @@
 			$upload_target 	= phpgw::get_var('upload_target');
 			$id			 	= phpgw::get_var('id');
 
-			$oArgs = "{menuaction:'$upload_target',"
-				."id:'$id',"
-				."last_loginid:'". phpgw::get_var('last_loginid')."',"
-				."last_domain:'" . phpgw::get_var('last_domain')."',"
-				."sessionphpgwsessid:'" . phpgw::get_var('sessionphpgwsessid')."',"
-				."domain:'" . phpgw::get_var('domain')."'";
+			$oArgs = "{'menuaction':'$upload_target',"
+				."'id':'$id',"
+				."'last_loginid':'". phpgw::get_var('last_loginid')."',"
+				."'last_domain':'" . phpgw::get_var('last_domain')."',"
+				."'sessionphpgwsessid':'" . phpgw::get_var('sessionphpgwsessid')."',"
+				."'domain':'" . phpgw::get_var('domain')."'";
 
 			foreach ($_GET as $varname => $value)
 			{
 				if(strpos($varname, '_')===0)
 				{
-					$oArgs .= ',' . substr($varname,1,strlen($varname)-1) . ":'{$value}'";
+					$oArgs .= ",'" . substr($varname,1,strlen($varname)-1) . "':'{$value}'";
 				}
 			}
 			$oArgs .= '}';
 
-			$js_code = self::get_js($oArgs);
-
-			$title = lang('fileuploader');
-			$lang_cancel = lang('cancel');
-			$html = <<<HTML
-			<!DOCTYPE html>
-			<html>
-				<head>
-					<title>{$title}</title>
-					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/default.css" rel="stylesheet" type="text/css" />
-					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
-					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/swfupload.js"></script>
-					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/swfupload.queue.js"></script>
-					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/fileprogress.js"></script>
-					<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/handlers.js"></script>
-					$js_code
-				</head>
-				<body>
-
-				<div id="content">
-					<h2>{$title}</h2>
-					<form id="form1" action="index.php" method="post" enctype="multipart/form-data">
-
-							<div class="fieldset flash" id="fsUploadProgress">
-							<span class="legend">Upload Queue</span>
-							</div>
-						<div id="divStatus">0 Files Uploaded</div>
-							<div>
-								<span id="spanButtonPlaceHolder"></span>
-								<input id="btnCancel" type="button" value="{$lang_cancel}" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
-							</div>
-					</form>
-				</div>
-			</body>
-		</html>
-HTML;
-			echo $html;
-		}
-
-
-		static function get_js($oArgs = '')
-		{
-			$button_text = lang('Select');
+/*
 			$str_base_url = 'http';
 			$str_base_url .= phpgw::get_var('HTTPS', 'bool', 'SERVER') ? 's' : '' ;
 			$str_base_url .= '://';
 			$str_base_url .= phpgw::get_var('HTTP_HOST', 'string', 'SERVER');
 
 			$str_base_url .= $GLOBALS['phpgw']->link('/', array(), true);
-			$image_url = $GLOBALS['phpgw']->common->image('property', 'TestImageNoText_65x29');
-			$js_code = <<<JS
-<script type="text/javascript">
-		var swfu;
-		var strBaseURL = '$str_base_url';
+*/
+			$title = lang('fileuploader');
+			$html = <<<HTML
+				<!DOCTYPE html>
+				<html>
+					<head>
+						<title>{$title}</title>
+						<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery-1.4.2.min.js"></script>
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/swfobject.js"></script>
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+						<script type="text/javascript">
 
-		var sUrl = phpGWLink('index.php', $oArgs);
+							$(document).ready(function()
+							{
+								$('#custom_file_upload').uploadify({
+					
+									'uploader'       : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify.swf',
+									'script'         : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
+							//		'checkScript'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
+									'cancelImg'      : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
+							//		'folder'         : '/tmp/uploads',
+									'method'         : 'GET',
+									'multi'		     : true,
+									'auto'           : true,
+									'fileExt'        : '*.jpg;*.gif;*.png',
+									'fileDesc'       : 'Image Files (.JPG, .GIF, .PNG)',
+									'queueID'        : 'custom-queue',
+									'queueSizeLimit' : 50,
+									'simUploadLimit' : 50,
+									'scriptData'     : $oArgs,
+									'removeCompleted': false,
+									'onError'        : function (event,ID,fileObj,errorObj) {
+										alert(errorObj.type + ' Error: ' + errorObj.info);
+									  },
+									'onSelectOnce'   : function(event,data) {
+									    $('#status-message').text(data.filesSelected + ' files have been added to the queue.');
+									  },
+									'onAllComplete'  : function(event,data) {
+									    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
+						//				try
+										{
+						//					parent.refresh_files();
+										}
+						//				catch (ex)
+										{
+											alert('you need to manually refresh the file list');
+										}
 
-		window.onload = function() {
-			var settings = {
-				flash_url : "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/swfupload.swf",
-				flash9_url : "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/swfupload/swfupload_fp9.swf",
-				upload_url: sUrl,
-//				post_params: {"PHPSESSID" : "<?php echo session_id(); ?>"},
-				file_size_limit : "100 MB",
-				file_types : "*.*",
-				file_types_description : "All Files",
-				file_upload_limit : 100,
-				file_queue_limit : 0,
-				custom_settings : {
-					progressTarget : "fsUploadProgress",
-					cancelButtonId : "btnCancel"
-				},
-				debug: false,
+									  }
+								});
+							});
+						</script>
+				
+					</head>
+					<body>
+						<div id="content" align = 'center'>
+							<h2>{$title}</h2>
+							<div id="status-message">Select some files to upload:</div>
+							<div id="custom-queue"></div>
+							<input id="custom_file_upload" type="file" name="Filedata" />
+						</div>
+					</body>
+				</html>
+HTML;
 
-				// Button settings
-				button_image_url: "{$image_url}",
-				button_width: "65",
-				button_height: "29",
-				button_placeholder_id: "spanButtonPlaceHolder",
-				button_text: '<span class="theFont">{$button_text}</span>',
-				button_text_style: ".theFont { font-size: 16; }",
-				button_text_left_padding: 12,
-				button_text_top_padding: 3,
-
-				// The event handler functions are defined in handlers.js
-				swfupload_preload_handler : preLoad,
-				swfupload_load_failed_handler : loadFailed,
-				file_queued_handler : fileQueued,
-				file_queue_error_handler : fileQueueError,
-				file_dialog_complete_handler : fileDialogComplete,
-				upload_start_handler : uploadStart,
-				upload_progress_handler : uploadProgress,
-				upload_error_handler : uploadError,
-				upload_success_handler : uploadSuccess,
-				upload_complete_handler : uploadComplete,
-				queue_complete_handler : queueComplete	// Queue plugin event
-			};
-
-			swfu = new SWFUpload(settings);
-		 };
-	</script>
-JS;
-			return $js_code;
+			echo $html;
 		}
 
+
+		public function check($bofiles, $save_path = '')
+		{
+			$fileArray = array();
+			foreach ($_POST as $key => $value)
+			{
+				if ($key != 'folder')
+				{
+					$to_file	= "{$save_path}/{$value}";
+
+					if ($bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+					{
+						$fileArray[$key] = $value;
+					}
+				}
+			}
+			echo json_encode($fileArray);
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
 
 /*
 This is an upload script for SWFUpload that attempts to properly handle uploaded files
@@ -390,6 +384,7 @@ Notes:
 		will have to check for any error messages and react as needed. */
 		function HandleError($message)
 		{
+			header("HTTP/1.1 500 Internal Server Error");
 			echo $message;
 		}
 	}
