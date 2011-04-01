@@ -175,9 +175,13 @@
 			$test = false;//true;
 			if ($test)
 			{
-				foreach ($_FILES as $fieldName => $file)
+				if (!empty($_FILES))
 				{
-					move_uploaded_file($file['tmp_name'], "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . strip_tags(basename($file['name'])));
+					$tempFile = $_FILES['Filedata']['tmp_name'];
+					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
+					$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
+					move_uploaded_file($tempFile,$targetFile);
+					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'],'',$targetFile);
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -190,9 +194,7 @@
 				$loc1 = 'dummy';
 			}
 
-			$bofiles	= CreateObject('property.bofiles');
-
-			$fileuploader->upload($bofiles, "{$bofiles->fakebase}/{$this->category_dir}/{$loc1}/{$id}");
+			$fileuploader->upload("{$this->category_dir}/{$loc1}/{$id}");
 		}
 
 		function get_files()
