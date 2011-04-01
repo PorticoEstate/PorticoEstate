@@ -40,9 +40,16 @@
 
 	$invalid_data = false;
 	// This is the preliminary menuaction driver for the new multi-layered design
-	if (isset($_GET['menuaction']))
+	if (isset($_GET['menuaction']) || isset($_POST['menuaction']))
 	{
-		list($app,$class,$method) = explode('.',$_GET['menuaction']);
+		if(isset($_GET['menuaction']))
+		{
+			list($app,$class,$method) = explode('.',$_GET['menuaction']);
+		}
+		else
+		{
+			list($app,$class,$method) = explode('.',$_POST['menuaction']);
+		}
 		if (! $app || ! $class || ! $method)
 		{
 			$invalid_data = true;
