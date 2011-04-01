@@ -1143,6 +1143,7 @@
 			$acl_add 		= $acl->check('.ticket', PHPGW_ACL_ADD, 'property');
 			$acl_edit 		= $acl->check('.ticket', PHPGW_ACL_EDIT, 'property');
 			$id				= phpgw::get_var('id', 'int');
+			$check			= phpgw::get_var('check', 'bool');
 			$fileuploader	= CreateObject('property.fileuploader');
 
 			if(!$acl_add && !$acl_edit)
@@ -1155,18 +1156,29 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$test = false;//true;
+			$test = false;
 			if ($test)
 			{
-				foreach ($_FILES as $fieldName => $file)
+				if (!empty($_FILES))
 				{
-					move_uploaded_file($file['tmp_name'], "{$GLOBALS['phpgw_info']['server']['temp_dir']}/" . strip_tags(basename($file['name'])));
+					$tempFile = $_FILES['Filedata']['tmp_name'];
+					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
+					$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
+					move_uploaded_file($tempFile,$targetFile);
+					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'],'',$targetFile);
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
 			$bofiles	= CreateObject('property.bofiles');
-
-			$fileuploader->upload($bofiles, "{$bofiles->fakebase}/fmticket/{$id}");
+			
+	//		if($check)
+			{
+	//			$fileuploader->check($bofiles, "{$bofiles->fakebase}/fmticket/{$id}");
+			}
+	//		else
+			{
+				$fileuploader->upload($bofiles, "{$bofiles->fakebase}/fmticket/{$id}");
+			}
 		}
 	}
