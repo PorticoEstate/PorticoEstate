@@ -1170,15 +1170,14 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$bofiles	= CreateObject('property.bofiles');
 			
 	//		if($check)
 			{
-	//			$fileuploader->check($bofiles, "{$bofiles->fakebase}/fmticket/{$id}");
+	//			$fileuploader->check($bofiles, "fmticket/{$id}");
 			}
 	//		else
 			{
-				$fileuploader->upload($bofiles, "{$bofiles->fakebase}/fmticket/{$id}");
+				$fileuploader->upload("fmticket/{$id}");
 			}
 		}
 	}

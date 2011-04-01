@@ -207,8 +207,9 @@ Notes:
 
  */
 
-		function upload($bofiles, $save_path = '')
+		function upload($save_path = '')
 		{
+			$bofiles	= CreateObject('property.bofiles');
 			$use_vfs = true;
 			// Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
 			$POST_MAX_SIZE = ini_get('post_max_size');
@@ -294,7 +295,7 @@ Notes:
 			}
 
 
-			$to_file	= "{$save_path}/{$file_name}";
+			$to_file	= "{$bofiles->fakebase}/{$save_path}/{$file_name}";
 
 			// Validate that we won't over-write an existing file
 			if ($bofiles->vfs->file_exists(array(
@@ -360,7 +361,7 @@ Notes:
 			$bofiles->vfs->override_acl = 1;
 			if(!$bofiles->vfs->cp (array (
 				'from'	=> $_FILES[$upload_name]["tmp_name"],
-				'to'	=> "{$save_path}/{$file_name}",
+				'to'	=> "{$bofiles->fakebase}/{$save_path}/{$file_name}",
 				'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
 			{
 				$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
@@ -371,7 +372,7 @@ Notes:
 			$bofiles->vfs->override_acl = 0;
 
 /*
-			if (!@move_uploaded_file($_FILES[$upload_name]["tmp_name"], "{$save_path}/{$file_name}"))
+			if (!@move_uploaded_file($_FILES[$upload_name]["tmp_name"], "{$bofiles->fakebase}/{$save_path}/{$file_name}"))
 			{
 				$this->HandleError("File could not be saved.");
 				exit(0);
