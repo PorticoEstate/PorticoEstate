@@ -48,6 +48,8 @@
 		
 		public function populate_result_units(array $unit_ids)
 		{
+			$this->log(__class__, __function__);
+
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 	        $table = "V_ORG_ENHET";
 	        	
@@ -82,6 +84,8 @@
          */
         public function get_result_units($username)
         {
+			$this->log(__class__, __function__);
+
         	/* 1. Get all organizational units this user has access to
              * 2. Check level for each unit and traverse if necessary
              * 3. Build an array of result units this user has access to
@@ -175,6 +179,8 @@
          */
         public function get_organisational_unit_name($number) 
         {
+ 			$this->log(__class__, __function__);
+
         	if(isset($number) && is_numeric($number))
         	{
 	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET WHERE V_ORG_ENHET.RESULTATENHET = $number";
@@ -195,6 +201,8 @@
         
         public function get_organisational_unit_info($number) 
         {
+			$this->log(__class__, __function__);
+
         	if(isset($number) && is_numeric($number))
         	{
 	        	$sql = "SELECT V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET FROM V_ORG_ENHET WHERE V_ORG_ENHET.ORG_ENHET_ID = $number";
@@ -222,6 +230,8 @@
          */
         public function get_user(string $username)
         {
+			$this->log(__class__, __function__);
+
         	$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = '{$username}'";
         	$db = $this->get_db();
         	$db->query($sql,__LINE__,__FILE__);
@@ -240,4 +250,20 @@
         		return false;
         	}		
         }
+
+		protected function log($class, $function)
+		{
+			if(isset($GLOBALS['phpgw_info']['server']['log_levels']['module']['frontend']) && $GLOBALS['phpgw_info']['server']['log_levels']['module']['frontend'])
+			{
+				$bt = debug_backtrace();
+				$GLOBALS['phpgw']->log->debug(array(
+						'text' => "{$class}::{$function} called from file: {$bt[1]['file']} line: {$bt[1]['line']}",
+						'p1'   => '',
+						'p2'	 => '',
+						'line' => __LINE__,
+						'file' => __FILE__
+				));
+				unset($bt);
+			}
+		}
     }

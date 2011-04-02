@@ -260,7 +260,7 @@
 			}
 				
 			$this->template->set_var($var);
-			return $this->template->fp('select', 'log_level_select', True);	
+			return $this->template->fp('select', 'log_level_select');	
 		}
 		
 		private function update_level($level_type, $level_key, $new_level)

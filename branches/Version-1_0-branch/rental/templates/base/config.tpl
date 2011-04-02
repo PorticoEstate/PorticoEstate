@@ -55,9 +55,7 @@
 		<tr class="row_off">
 			<td>{lang_entity_config_move_in_out}:</td>
 			<td>
-			 <select name="newsettings[entity_config_move_in_out]">
 {hook_entity_config_move_in_out}
-			 </select>
 			</td>
 		</tr>
 		<tr class="row_on">

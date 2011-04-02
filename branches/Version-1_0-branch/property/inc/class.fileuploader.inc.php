@@ -165,6 +165,7 @@ HTML;
 								//	'checkExisting'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
 									'cancelImage'	 : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
 									'uploaderType'   : 'flash', // 'html5'|'flash'
+									'requeueErrors'	 : false
 									'debug'			 : true,
 									'method'         : 'GET',
 									'multi'		     : true,
