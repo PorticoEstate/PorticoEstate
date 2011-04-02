@@ -49,6 +49,8 @@
 		
 		public function responsibility_id_exist($responsibility_id)
 		{
+			$this->log(__class__, __function__);
+
 			if(isset($responsibility_id))
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
@@ -72,6 +74,8 @@
 		
   		public function result_unit_exist($result_unit, $level)
 		{
+			$this->log(__class__, __function__);
+
 			if(isset($result_unit) && is_numeric($result_unit))
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
@@ -93,6 +97,8 @@
 		
 		public function org_unit_exist($org_unit_id, $level)
 		{
+			$this->log(__class__, __function__);
+
 			if(isset($org_unit_id) && is_numeric($org_unit_id))
 			{
 				$column = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
@@ -114,6 +120,8 @@
 		
 		public function get_result_unit($org_unit_id)
 		{   
+			$this->log(__class__, __function__);
+
 	        //Must traverse down u hierarchy
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NIVAA, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.ENHET_ID, V_ORG_ENHET.RESULTATENHET";
 			$tables = "V_ORG_ENHET";
@@ -138,7 +146,8 @@
 		
 		public function get_result_units()
 		{
-			
+			$this->log(__class__, __function__);			
+
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.RESULTATENHET";
 			$tables = "V_ORG_ENHET";
 			$sql = "SELECT $columns FROM $tables WHERE V_ORG_ENHET.ORG_NIVAA = 4 ORDER BY V_ORG_ENHET.RESULTATENHET ASC";
@@ -159,6 +168,8 @@
 		
 		public function get_result_unit_with_leader($org_unit_id)
 		{
+			$this->log(__class__, __function__);
+
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_PERSON.FORNAVN, V_ORG_PERSON.ETTERNAVN, V_ORG_PERSON.BRUKERNAVN";
 			$tables = "V_ORG_ENHET";
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
@@ -184,7 +195,8 @@
 		
 		public function get_result_units_with_leader($start_index, $num_of_objects, $sort_field, $sort_ascending,$search_for, $search_type)
 		{
-			
+			$this->log(__class__, __function__);			
+
 			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_PERSON.FORNAVN, V_ORG_PERSON.ETTERNAVN, V_ORG_PERSON.BRUKERNAVN";
 			$tables = "V_ORG_ENHET";
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
@@ -254,7 +266,10 @@
 			return $result_units;
 		}
 		
-		public function get_result_units_count($search_for, $search_type){
+		public function get_result_units_count($search_for, $search_type)
+		{
+			$this->log(__class__, __function__);
+
 			$columns = "count(*)";
 			$tables = "V_ORG_ENHET";
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
@@ -293,14 +308,28 @@
 			}
 			return 0;
 		}
-		
-		
-		
+
+		protected function log($class, $function)
+		{
+			if(isset($GLOBALS['phpgw_info']['server']['log_levels']['module']['rental']) && $GLOBALS['phpgw_info']['server']['log_levels']['module']['rental'])
+			{
+				$bt = debug_backtrace();
+				$GLOBALS['phpgw']->log->debug(array(
+						'text' => "{$class}::{$function} called from file: {$bt[1]['file']} line: {$bt[1]['line']}",
+						'p1'   => '',
+						'p2'	 => '',
+						'line' => __LINE__,
+						'file' => __FILE__
+				));
+				unset($bt);
+			}
+		}		
+
 		public function is_connected()
 		{
 			return $this->connected;
 		}
-		
+
 		public function get_status()
 		{
 			return $this->status;
