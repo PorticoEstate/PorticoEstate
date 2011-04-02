@@ -50,27 +50,35 @@ HTML;
 	
 	function entity_config_move_in_out($config)
 	{
-		$entity			= CreateObject('property.soadmin_entity');
-		$entities 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
-		$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
-		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		if ( is_array($entities) && count($entities) )
+		if(isset($GLOBALS['phpgw_info']['apps']['catch']))
 		{
-			foreach($entities as $entry)
+			$entity			= CreateObject('property.soadmin_entity');
+			$entities 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
+			$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
+			$out = '<select name="newsettings[entity_config_move_in_out]">' . "\n";
+			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
+			if ( is_array($entities) && count($entities) )
 			{
-				
-				$id = $entry['id'];
-				$selected = '';
-				if ( $selected_entity == $id )
+				foreach($entities as $entry)
 				{
-					$selected = ' selected';
-				}
-	
-				$out .=  <<<HTML
-					<option value="{$id}"{$selected}>{$entry['name']}</option>
-			
+					
+					$id = $entry['id'];
+					$selected = '';
+					if ( $selected_entity == $id )
+					{
+						$selected = ' selected';
+					}
+		
+					$out .=  <<<HTML
+						<option value="{$id}"{$selected}>{$entry['name']}</option>			
 HTML;
+				}
 			}
+			$out .= ' </select>' . "\n";
+		}
+		else
+		{
+			$out = '<b>The catch-module is not installed</b>' . "\n";
 		}
 		return $out;
 	}
