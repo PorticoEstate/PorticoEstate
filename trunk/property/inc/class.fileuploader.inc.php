@@ -98,7 +98,6 @@
 									'script'         : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
 							//		'checkScript'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
 									'cancelImg'      : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
-							//		'folder'         : '/tmp/uploads',
 									'method'         : 'GET',
 									'multi'		     : true,
 									'auto'           : true,
@@ -123,9 +122,9 @@
 										}
 						//				catch (ex)
 										{
-											alert('you need to manually refresh the file list');
+											alert('Du må laste siden på nytt for å vise resultatet');
 										}
-
+										parent.lightbox.hide();
 									  }
 								});
 							});
@@ -146,6 +145,60 @@ HTML;
 			echo $html;
 		}
 
+/*
+// might be usefull for the upcoming version 3
+						<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify_v3.css" type="text/css" rel="stylesheet" />
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/swfobject.js"></script>
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery-1.4.2.min.js"></script>
+						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery.uploadify_v3.js"></script>
+
+
+						<script type="text/javascript">
+
+							$(document).ready(function()
+							{
+								$('#file_upload').uploadify({
+					
+									'swf'       : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify_v3.swf',
+									'uploader'         : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
+								//	'checkExisting'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
+									'cancelImage'	 : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
+									'uploaderType'   : 'flash', // 'html5'|'flash'
+									'debug'			 : true,
+									'method'         : 'GET',
+									'multi'		     : true,
+									'auto'           : true,
+									'fileTypeExts'   : '*.jpg;*.gif;*.png',
+									'fileTypeDesc'   : 'Image Files (.JPG, .GIF, .PNG)',
+									'queueID'        : 'queue',
+									'queueSizeLimit' : 50,
+									'simUploadLimit' : 50,
+									'postData'       : $oArgs,
+									'removeCompleted': false,
+
+									'onUploadError'        : function (file,errorCode,errorMsg,errorString) {
+										alert(file.name + ' Error: ' + errorString);
+									  },
+									'onSelect'   : function(event,data) {
+									    $('#status-message').text(data.filesSelected + ' files have been added to the queue.');
+									  },
+									'onUploadComplete'  : function(event,data) {
+									    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
+										try
+										{
+											parent.refresh_files();
+										}
+										catch (ex)
+										{
+											alert('you need to manually refresh the file list');
+										}
+
+									  }
+								});
+							});
+						</script>
+*/
 
 		public function check($bofiles, $save_path = '')
 		{
@@ -359,10 +412,14 @@ Notes:
 			 */
 
 			$bofiles->vfs->override_acl = 1;
-			if(!$bofiles->vfs->cp (array (
+			if($bofiles->vfs->cp (array (
 				'from'	=> $_FILES[$upload_name]["tmp_name"],
 				'to'	=> "{$bofiles->fakebase}/{$save_path}/{$file_name}",
 				'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
+			{
+				echo $file_name;
+			}
+			else
 			{
 				$receipt['error'][]=array('msg'=>lang('Failed to upload file !'));
 				$this->HandleError("File could not be saved.");
