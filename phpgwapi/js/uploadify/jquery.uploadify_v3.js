@@ -370,7 +370,6 @@ if(jQuery)(
 					
 					// Triggered when a file upload returns an error
 					function onUploadError(file,errorCode,errorMsg) {
-						uploadifyCancel(file.id);
 						var errorString = 'Error';
 						if (errorCode != SWFUpload.UPLOAD_ERROR.FILE_CANCELLED && errorCode != SWFUpload.UPLOAD_ERROR.UPLOAD_STOPPED) {
 							jQuery('#' + file.id).addClass('uploadifyError');
