@@ -31,7 +31,8 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 
 	this.refresh_files = function()
 	{
-		execute_async(myDataTable_2);
+		base_java_url['action'] = 'get_files';
+		execute_async(myDataTable_0);
 	}
 
 
