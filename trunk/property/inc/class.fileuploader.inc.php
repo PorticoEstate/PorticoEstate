@@ -67,7 +67,7 @@
 					$oArgs .= ",'" . substr($varname,1,strlen($varname)-1) . "':'{$value}'";
 				}
 			}
-			$oArgs .= '}';
+//			$oArgs .= '}';
 
 /*
 			$str_base_url = 'http';
@@ -77,149 +77,182 @@
 
 			$str_base_url .= $GLOBALS['phpgw']->link('/', array(), true);
 */
-			$title = lang('fileuploader');
-			$html = <<<HTML
-				<!DOCTYPE html>
-				<html>
-					<head>
-						<title>{$title}</title>
-						<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery-1.4.2.min.js"></script>
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/swfobject.js"></script>
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
-						<script type="text/javascript">
 
-							$(document).ready(function()
-							{
-								$('#custom_file_upload').uploadify({
-					
-									'uploader'       : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify.swf',
-									'script'         : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
-							//		'checkScript'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
-									'cancelImg'      : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
-									'method'         : 'GET',
-									'multi'		     : true,
-									'auto'           : true,
-									'fileExt'        : '*.jpg;*.gif;*.png',
-									'fileDesc'       : 'Image Files (.JPG, .GIF, .PNG)',
-									'queueID'        : 'custom-queue',
-									'queueSizeLimit' : 50,
-									'simUploadLimit' : 50,
-									'scriptData'     : $oArgs,
-									'removeCompleted': false,
-									'onError'        : function (event,ID,fileObj,errorObj) {
-										alert(errorObj.type + ' Error: ' + errorObj.info);
-									  },
-									'onSelectOnce'   : function(event,data) {
-									    $('#status-message').text(data.filesSelected + ' files have been added to the queue.');
-									  },
-									'onAllComplete'  : function(event,data) {
-									    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
-						//				try
-										{
-						//					parent.refresh_files();
-										}
-						//				catch (ex)
-										{
-											alert('Du må laste siden på nytt for å vise resultatet');
-										}
-										parent.lightbox.hide();
-									  }
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$ntlm_alternative_host = isset($config->config_data['ntlm_alternative_host']) ? $config->config_data['ntlm_alternative_host'] : '';
+			$scriptAccess = $ntlm_alternative_host ? 'always' : 'sameDomain';
+			
+			$title = lang('fileuploader');
+			$version = 2;			
+			if($version == 2)
+			{
+				$oArgs .= '}';
+				$html = <<<HTML
+					<!DOCTYPE html>
+					<html>
+						<head>
+							<title>{$title}</title>
+							<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery-1.4.2.min.js"></script>
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/swfobject.js"></script>
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+							<script type="text/javascript">
+	
+								$(document).ready(function()
+								{
+									$('#file_upload').uploadify({
+						
+										'uploader'       : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify.swf',
+										'script'         : '{$ntlm_alternative_host}{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
+								//		'checkScript'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
+										'cancelImg'      : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
+										'method'         : 'GET',
+								//		'scriptAccess'   : '{$scriptAccess}',//'sameDomain'|'always' Set to "always" to allow script access across domains
+										'multi'		     : true,
+										'auto'           : true,
+										'fileExt'        : '*.jpg;*.gif;*.png',
+										'fileDesc'       : 'Image Files (.JPG, .GIF, .PNG)',
+										'queueID'        : 'queue',
+										'queueSizeLimit' : 50,
+										'simUploadLimit' : 50,
+										'scriptData'     : $oArgs,
+										'removeCompleted': false,
+										'onError'        : function (event,ID,fileObj,errorObj) {
+											alert(errorObj.type + ' Error: ' + fileObj.name + ' failed');
+										  },
+										'onSelectOnce'   : function(event,data) {
+										    $('#status-message').text(data.filesSelected + ' files have been added to the queue.');
+										  },
+										'onAllComplete'  : function(event,data) {
+										    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
+											try
+											{
+												parent.refresh_files();
+											}
+											catch (ex)
+											{
+												alert('Du må laste siden på nytt for å vise resultatet');
+											}
+											parent.lightbox.hide();
+										  }
+									});
 								});
-							});
-						</script>
-				
-					</head>
+							</script>	
+						</head>
 					<body>
 						<div id="content" align = 'center'>
 							<h2>{$title}</h2>
 							<div id="status-message">Select some files to upload:</div>
-							<div id="custom-queue"></div>
-							<input id="custom_file_upload" type="file" name="Filedata" />
+							<div id="queue"></div>
+							<input id="file_upload" type="file" name="Filedata" />
 						</div>
 					</body>
 				</html>
 HTML;
+			}
+			else
+			{
+				$str_base_url = $ntlm_alternative_host . $GLOBALS['phpgw']->link('/', array(), true);
+				$oArgs_check = "{$oArgs},check:1}";
+				
+				$oArgs .= '}';
 
+				$html = <<<HTML
+					<!DOCTYPE html>
+					<html>
+						<head>
+							<title>{$title}</title>
+							<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify_v3.css" type="text/css" rel="stylesheet" />
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/swfobject.js"></script>
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery-1.4.2.min.js"></script>
+							<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery.uploadify_v3.js"></script>
+
+							<script type="text/javascript">
+
+								var strBaseURL = '{$str_base_url}';
+								var sUrl = phpGWLink('index.php', $oArgs_check);
+							//	alert(sUrl);
+
+								$(document).ready(function()
+								{
+									$('#file_upload').uploadify({
+										'swf'              : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify_v3.swf',
+										'uploader'         : '{$ntlm_alternative_host}{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
+										'checkExisting'    : sUrl,
+										'cancelImage'	   : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
+										'uploaderType'     : 'flash', // 'html5'|'flash'
+										'requeueErrors'	   : false,
+										'allowScriptAccess': '{$scriptAccess}',//'sameDomain'|'always' Set to "always" to allow script access across domains
+										'debug'			   : false,
+										'method'           : 'GET',
+										'multi'		       : true,
+										'auto'             : true,
+										'fileTypeExts'     : '*.jpg;*.gif;*.png',
+										'fileTypeDesc'     : 'Image Files (.JPG, .GIF, .PNG)',
+										'queueID'          : 'queue',
+										'queueSizeLimit'   : 50,
+										'simUploadLimit'   : 50,
+										'postData'         : $oArgs,
+										'removeCompleted'  : false,
+										'onUploadError'        : function (file,errorCode,errorMsg,errorString) {
+											alert(file.name + ' Error: ' + errorString);
+										  },
+										'onSelect'   : function(file) {
+										    $('#status-message').text(file.name + ' files have been added to the queue.');
+									  	},
+										'onUploadComplete'  : function(event,data) {
+										    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
+											try
+											{
+												parent.refresh_files();
+											}
+											catch (ex)
+											{
+												alert('you need to manually refresh the file list');
+											}
+											parent.lightbox.hide();
+										  }
+									});
+								});
+							</script>
+						</head>
+					<body>
+						<div id="content" align = 'center'>
+							<h2>{$title}</h2>
+							<div id="status-message">Select some files to upload:</div>
+							<div id="queue"></div>
+							<input id="file_upload" type="file" name="Filedata" />
+						</div>
+
+					</body>
+				</html>
+HTML;
+			}
 			echo $html;
 		}
 
-/*
-// might be usefull for the upcoming version 3
-						<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify_v3.css" type="text/css" rel="stylesheet" />
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/core/base.js"></script>
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/swfobject.js"></script>
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery-1.4.2.min.js"></script>
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/jquery.uploadify_v3.js"></script>
 
 
-						<script type="text/javascript">
-
-							$(document).ready(function()
-							{
-								$('#file_upload').uploadify({
-					
-									'swf'       : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/uploadify_v3.swf',
-									'uploader'         : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php',
-								//	'checkExisting'    : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/index.php?check=1',
-									'cancelImage'	 : '{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/uploadify/cancel.png',
-									'uploaderType'   : 'flash', // 'html5'|'flash'
-									'requeueErrors'	 : false
-									'debug'			 : true,
-									'method'         : 'GET',
-									'multi'		     : true,
-									'auto'           : true,
-									'fileTypeExts'   : '*.jpg;*.gif;*.png',
-									'fileTypeDesc'   : 'Image Files (.JPG, .GIF, .PNG)',
-									'queueID'        : 'queue',
-									'queueSizeLimit' : 50,
-									'simUploadLimit' : 50,
-									'postData'       : $oArgs,
-									'removeCompleted': false,
-
-									'onUploadError'        : function (file,errorCode,errorMsg,errorString) {
-										alert(file.name + ' Error: ' + errorString);
-									  },
-									'onSelect'   : function(event,data) {
-									    $('#status-message').text(data.filesSelected + ' files have been added to the queue.');
-									  },
-									'onUploadComplete'  : function(event,data) {
-									    $('#status-message').text(data.filesUploaded + ' files uploaded, ' + data.errors + ' errors.');
-										try
-										{
-											parent.refresh_files();
-										}
-										catch (ex)
-										{
-											alert('you need to manually refresh the file list');
-										}
-
-									  }
-								});
-							});
-						</script>
-*/
-
-		public function check($bofiles, $save_path = '')
+		public function check($save_path = '')
 		{
-			$fileArray = array();
-			foreach ($_POST as $key => $value)
-			{
-				if ($key != 'folder')
-				{
-					$to_file	= "{$save_path}/{$value}";
+			$bofiles	= CreateObject('property.bofiles');
 
-					if ($bofiles->vfs->file_exists(array(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
-					)))
-					{
-						$fileArray[$key] = $value;
-					}
-				}
+			$to_file	= "{$bofiles->fakebase}/{$save_path}/{$_POST['filename']}";
+			//Return true if the file exists
+
+			if ($bofiles->vfs->file_exists(array(
+				'string' => $to_file,
+				'relatives' => Array(RELATIVE_NONE))))
+			{
+				echo 1;
 			}
-			echo json_encode($fileArray);
+			else
+			{
+				echo 0;
+			}
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
