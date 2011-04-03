@@ -1169,13 +1169,12 @@
 				}
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
-
-			
-	//		if($check)
+	
+			if($check)
 			{
-	//			$fileuploader->check($bofiles, "fmticket/{$id}");
+				$fileuploader->check("fmticket/{$id}");
 			}
-	//		else
+			else
 			{
 				$fileuploader->upload("fmticket/{$id}");
 			}

@@ -465,6 +465,12 @@
 				</table>
 			</td>
 		</tr>
+
+		<tr class="row_off">
+			<td>{lang_ntlm_alternative_host}:</td>
+			<td><input name="newsettings[ntlm_alternative_host]" value="{value_ntlm_alternative_host}"></td>
+		</tr>
+
 		<!--
 		groupnotification
 		-->
