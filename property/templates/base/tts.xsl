@@ -1067,8 +1067,7 @@
 			</tr>
 
 			<xsl:choose>
-				<xsl:when test="files!=''">
-					<!-- <xsl:call-template name="file_list"/> -->						
+				<xsl:when test="fileupload = 1">
 					<tr>
 						<td width="19%" align="left" valign="top">
 							<xsl:value-of select="php:function('lang', 'files')" />

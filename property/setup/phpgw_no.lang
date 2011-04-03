@@ -399,7 +399,7 @@ day	property	no	dag
 day of week (0-6, 0=sun)	property	no	Ukedag (0-6, 0=søndag)
 days	property	no	Dager
 deadline	property	no	Frist
-debug	common	no	kontroller
+debug	common	no	Debug
 debug output in browser	property	no	Kontroller data før  import
 decimal	property	no	desimal
 default	property	no	Standard
