@@ -87,6 +87,7 @@
 			}
 			else
 			{
+				$request = array();
 				$this->db->query("SELECT id FROM fm_request",__LINE__,__FILE__);
 
 				while ($this->db->next_record())
@@ -95,19 +96,18 @@
 				}
 			}
 
-			while (is_array($request) && list(,$id) = each($request))
+			foreach ($request as $id)
 			{
-
 				if($GLOBALS['phpgw_info']['server']['db_type']=='pgsql' || $GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 				{
-					$sql = "UPDATE fm_request SET score = (SELECT sum(priority_key * ( degree * probability * ( consequence +1 )))  FROM fm_request_condition"
+					$sql = "UPDATE fm_request SET score = (SELECT sum(priority_key * ( degree * probability * ( consequence )))  FROM fm_request_condition"
 						. " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id) WHERE fm_request.id = $id";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 				}
 				else
 				{
-					$sql = "SELECT sum(priority_key * ( degree * probability * ( consequence +1 ))) AS score FROM fm_request_condition"
+					$sql = "SELECT sum(priority_key * ( degree * probability * ( consequence ))) AS score FROM fm_request_condition"
 						. " $this->join  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = $id";
 
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -139,26 +139,30 @@
 
 		function select_condition_type_list()
 		{
-			$this->db->query("SELECT id, descr FROM fm_request_condition_type ORDER BY id ");
+			$this->db->query("SELECT id, descr, priority_key FROM fm_request_condition_type ORDER BY id ");
 
-			$i = 0;
+			$values = array();
 			while ($this->db->next_record())
 			{
-				$condition_type_list[$i]['id']		= $this->db->f('id');
-				$condition_type_list[$i]['name']	= stripslashes($this->db->f('descr'));
-				$i++;
+				$values[] = array
+				(
+					'id'		=> $this->db->f('id'),
+					'name'		=> $this->db->f('descr',true),
+					'weight'	=> $this->db->f('priority_key'),					
+				);
 			}
-			return $condition_type_list;
+			return $values;
 		}
 
 		function select_conditions($request_id='',$condition_type_list='')
 		{
+			$conditions = array();
 			for ($i=0;$i<count($condition_type_list);$i++)
 			{
-				$this->db->query("SELECT degree,probability,consequence FROM fm_request_condition WHERE request_id=$request_id AND condition_type =" . $condition_type_list[$i]['id']);
+				$this->db->query("SELECT degree,probability,consequence FROM fm_request_condition WHERE request_id=$request_id AND condition_type =" . (int)$condition_type_list[$i]['id']);
 				$this->db->next_record();
 				$conditions[$i]['request_id']		= $request_id;
-				$conditions[$i]['degree']		= $this->db->f('degree');
+				$conditions[$i]['degree']			= $this->db->f('degree');
 				$conditions[$i]['probability']		= $this->db->f('probability');
 				$conditions[$i]['consequence']		= $this->db->f('consequence');
 			}
