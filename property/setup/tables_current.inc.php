@@ -1262,7 +1262,7 @@
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '50','nullable' => False),
-				'priority_key' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True)
+				'priority_key' => array('type' => 'int','precision' => '4','default' => '1','nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

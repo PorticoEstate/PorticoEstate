@@ -480,10 +480,13 @@
 					<div id="condition">
 						<table>
 							<tr>
-								<td>
-									<table width="100%" cellpadding="2" cellspacing="2" align="center">
+								<td colspan='2'>
+									<table border="1" width="100%" cellpadding="2" cellspacing="2" align="center">
 										<xsl:apply-templates select="table_header_importance"/>
 										<xsl:apply-templates select="condition_list"/>
+									</table>
+								</td>
+							</tr>
 										<tr>
 											<td>
 												<br/>
@@ -573,9 +576,6 @@
 												<xsl:value-of select="value_score"/>
 											</td>
 										</tr>
-									</table>
-								</td>
-							</tr>
 						</table>
 					</div>
 
@@ -730,6 +730,15 @@
 					<xsl:apply-templates select="consequence/options"/>
 				</select>
 			</td>
+			<td class="small_text" align="right">
+				<xsl:value-of select="weight"/>
+			</td>
+			<td class="small_text" align="right">
+				<xsl:value-of select="risk"/>
+			</td>
+			<td class="small_text" align="right">
+				<xsl:value-of select="score"/>
+			</td>
 		</tr>
 	</xsl:template>
 
@@ -825,18 +834,28 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="table_header_importance">
-		<tr class="th">
-			<td class="th_text" width="10%" align="left">
-			</td>
-			<td class="th_text" width="10%" align="left">
+	<xsl:template match="table_header_importance" xmlns:php="http://php.net/xsl">
+		<tr>
+			<th width="20%" align="left">
+				<xsl:value-of select="php:function('lang', 'request condition_type')" />
+			</th>
+			<th width="20%" align="center">
 				<xsl:value-of select="lang_condition_degree"/>
-			</td>
-			<td class="th_text" width="10%" align="left">
+			</th>
+			<th width="20%" align="center">
 				<xsl:value-of select="lang_prob_worsening"/>
-			</td>
-			<td class="th_text" width="10%" align="left">
+			</th>
+			<th width="20%" align="center">
 				<xsl:value-of select="lang_consequence"/>
-			</td>
+			</th>
+			<th width="5%" align="center">
+				<xsl:value-of select="php:function('lang', 'weight')" />
+			</th>
+			<th width="5%" align="center">
+				<xsl:value-of select="php:function('lang', 'risk')" />
+			</th>
+			<th width="5%" align="center">
+				<xsl:value-of select="php:function('lang', 'score')" />
+			</th>
 		</tr>
 	</xsl:template>
