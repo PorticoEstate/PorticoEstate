@@ -470,6 +470,10 @@
 			<td>{lang_ntlm_alternative_host}:</td>
 			<td><input name="newsettings[ntlm_alternative_host]" value="{value_ntlm_alternative_host}"></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_uploader_filetypes}: jpg,gif,png</td>
+			<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
+		</tr>
 
 		<!--
 		groupnotification
