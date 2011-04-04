@@ -257,7 +257,7 @@
 			{
 				$bt = debug_backtrace();
 				$GLOBALS['phpgw']->log->debug(array(
-						'text' => "{$class}::{$function} called from file: {$bt[1]['file']} line: {$bt[1]['line']}",
+						'text' => "{$class}::{$function}() called from file: {$bt[1]['file']} line: {$bt[1]['line']}",
 						'p1'   => '',
 						'p2'	 => '',
 						'line' => __LINE__,
