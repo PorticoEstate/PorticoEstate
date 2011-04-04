@@ -1862,3 +1862,12 @@ internal	common	no	Intern
 in progress date	property	no	Påbegynt dato
 delivered date	property	no	Utført dato
 closed date	property	no	Avsluttet dato
+no symptoms	property	no	Ingen Symptomer
+minor symptoms	property	no	Svake Symptomer
+medium symptoms	property	no	Middels Symptomer
+serious symptoms	property	no	Kraftige Symptomer
+low probability	property	no	Liten sannsynlighet
+medium probability	property	no	Middels sannsynlighet
+high probability	property	no	Stor sannsynlighet
+weight	property	no	Vekt
+risk	property	no	Risiko
