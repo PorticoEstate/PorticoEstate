@@ -83,6 +83,19 @@
 			$ntlm_alternative_host = isset($config->config_data['ntlm_alternative_host']) ? $config->config_data['ntlm_alternative_host'] : '';
 			$scriptAccess = $ntlm_alternative_host ? 'always' : 'sameDomain';
 			
+			$uploader_filetypes = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
+			$uploader_filetypes_arr = explode(',', $uploader_filetypes);
+			
+
+			$filetypes = array();
+			foreach( $uploader_filetypes_arr as $filetype)
+			{
+				$filetypes[] = "*.{$filetype}";
+			}
+
+			$fileExt = implode(';',$filetypes);
+			$fileDesc = strtoupper(implode(', ',$filetypes));
+			
 			$title = lang('fileuploader');
 			$version = 2;			
 			if($version == 2)
@@ -112,8 +125,8 @@
 								//		'scriptAccess'   : '{$scriptAccess}',//'sameDomain'|'always' Set to "always" to allow script access across domains
 										'multi'		     : true,
 										'auto'           : true,
-										'fileExt'        : '*.jpg;*.gif;*.png',
-										'fileDesc'       : 'Image Files (.JPG, .GIF, .PNG)',
+										'fileExt'        : '{$fileExt}',
+										'fileDesc'       : 'Files ({$fileDesc})',
 										'queueID'        : 'queue',
 										'queueSizeLimit' : 50,
 										'simUploadLimit' : 50,
@@ -190,8 +203,8 @@ HTML;
 										'method'           : 'GET',
 										'multi'		       : true,
 										'auto'             : true,
-										'fileTypeExts'     : '*.jpg;*.gif;*.png',
-										'fileTypeDesc'     : 'Image Files (.JPG, .GIF, .PNG)',
+										'fileTypeExts'     : '{$fileExt}',
+										'fileTypeDesc'     : 'Files ({$fileDesc})',
 										'queueID'          : 'queue',
 										'queueSizeLimit'   : 50,
 										'simUploadLimit'   : 50,
