@@ -198,18 +198,15 @@
 				$selected=$GLOBALS['phpgw_info']['user']['preferences']['property'][$degreedefault_type];
 			}
 
-			$degree_comment[0]=' - '.lang('None');
-			$degree_comment[1]=' - '.lang('Minor');
-			$degree_comment[2]=' - '.lang('Medium');
-			$degree_comment[3]=' - '.lang('Serious');
+			$degree_comment[0]=' - '.lang('no symptoms');
+			$degree_comment[1]=' - '.lang('minor symptoms');
+			$degree_comment[2]=' - '.lang('medium symptoms');
+			$degree_comment[3]=' - '.lang('serious symptoms');
 			for ($i=0; $i<=3; $i++)
 			{
 				$degree_list[$i]['id'] = $i;
 				$degree_list[$i]['name'] = $i . $degree_comment[$i];
-				if ($i==$selected)
-				{
-					$degree_list[$i]['selected']= 'selected';
-				}
+				$degree_list[$i]['selected'] = $i==$selected ? 1 : 0;
 			}
 
 			return $degree_list;
@@ -219,17 +216,14 @@
 		{
 			$selected=$probability_value;
 
-			$probability_comment[1]=' - '.lang('Small');
-			$probability_comment[2]=' - '.lang('Medium');
-			$probability_comment[3]=' - '.lang('Large');
+			$probability_comment[1]=' - '.lang('low probability');
+			$probability_comment[2]=' - '.lang('medium probability');
+			$probability_comment[3]=' - '.lang('high probability');
 			for ($i=1; $i<=3; $i++)
 			{
 				$probability_list[$i]['id'] = $i;
 				$probability_list[$i]['name'] = $i . $probability_comment[$i];
-				if ($i==$selected)
-				{
-					$probability_list[$i]['selected']= 'selected';
-				}
+				$probability_list[$i]['selected'] = $i==$selected ? 1 : 0;
 			}
 
 			return $probability_list;
@@ -237,7 +231,7 @@
 
 		function select_conditions($request_id='')
 		{
-			$conditions = array();
+			$values = array();
 			$condition_type_list = $this->so->select_condition_type_list();
 
 			if($request_id)
@@ -247,14 +241,17 @@
 
 			for ($i=0;$i<count($condition_type_list);$i++)
 			{
-				$conditions[$i]['degree'] 				= array('options' => $this->select_degree_list($conditions[$i]['degree']));
-				$conditions[$i]['probability'] 			= array('options' => $this->select_probability_list($conditions[$i]['probability']));
-				$conditions[$i]['consequence'] 			= array('options' => $this->select_consequence_list($conditions[$i]['consequence']));
-				$conditions[$i]['condition_type']		= $condition_type_list[$i]['id'];
-				$conditions[$i]['condition_type_name']	= $condition_type_list[$i]['name'];
+				$values[$i]['degree'] 				= array('options' => $this->select_degree_list($conditions[$i]['degree']));
+				$values[$i]['probability'] 			= array('options' => $this->select_probability_list($conditions[$i]['probability']));
+				$values[$i]['consequence'] 			= array('options' => $this->select_consequence_list($conditions[$i]['consequence']));
+				$values[$i]['condition_type']		= $condition_type_list[$i]['id'];
+				$values[$i]['condition_type_name']	= $condition_type_list[$i]['name'];
+				$values[$i]['weight']				= $condition_type_list[$i]['weight'];
+				$values[$i]['risk']					= (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'];
+				$values[$i]['score']				= $values[$i]['risk'] * (int)$conditions[$i]['degree'];
 			}
 
-			return $conditions;
+			return $values;
 		}
 
 		function select_consequence_list($consequence_value='',$consequencedefault_type='')
@@ -276,10 +273,7 @@
 			{
 				$consequence_list[$i][id] = $i;
 				$consequence_list[$i]['name'] = $i . $consequence_comment[$i];
-				if ($i==$selected)
-				{
-					$consequence_list[$i]['selected']= 'selected';
-				}
+				$consequence_list[$i]['selected'] = $i==$selected ? 1 : 0;
 			}
 
 			return $consequence_list;
