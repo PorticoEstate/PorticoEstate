@@ -38,7 +38,7 @@
 
 		public function __construct()
 		{
-			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->db           = clone($GLOBALS['phpgw']->db);
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
