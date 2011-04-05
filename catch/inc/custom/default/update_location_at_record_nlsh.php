@@ -26,7 +26,7 @@
 			$this->db->query("SELECT * FROM $target_table WHERE id = {$_id}",__LINE__,__FILE__);
 			$this->db->next_record();
 		
-			if($location_id = $this->db->f('location_id') && $target_id = (int)$this->db->f('target_id')
+			if($location_id = $this->db->f('location_id') && $target_id = (int)$this->db->f('target_id'))
 			{
 				$origin = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$origin_table =  $GLOBALS['phpgw']->locations->get_attrib_table($origin['appname'], $origin['location']);
