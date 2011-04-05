@@ -14,7 +14,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="priority_form">
+	<xsl:template match="priority_form" xmlns:php="http://php.net/xsl">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 		<form method="post" action="{$form_action}">
 			<div align="left">
@@ -29,6 +29,18 @@
 						</xsl:when>
 					</xsl:choose>
 					<xsl:apply-templates select="priority_key"/>
+					<tr>
+						<td class="small_text" align="left">
+							<xsl:value-of select="php:function('lang', 'Authorities Demands')" />
+						</td>
+						<td class="small_text" align="left">
+							<input type="text" size="5" name="values[authorities_demands]" value="{value_authorities_demands}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Authorities Demands')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
 					<tr height="50">
 						<td>
 							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
@@ -502,10 +514,12 @@
 												<select name="values[authorities_demands]" class="forms">
 													<xsl:attribute name="title">
 														<xsl:value-of select="php:function('lang', 'Is there a demand from the authorities to correct this condition?')" />
+														<xsl:text> + </xsl:text>
+														<xsl:value-of select="value_authorities_demands"/>
 													</xsl:attribute>
 													<option value="0"><xsl:value-of select="php:function('lang', 'no authorities demands')" /></option>
 													<xsl:apply-templates select="authorities_demands/options"/>
-												</select>			
+												</select>
 											</td>
 										</tr>
 										<tr>

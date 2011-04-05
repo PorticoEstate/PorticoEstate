@@ -79,11 +79,11 @@
 		}
 
 
-		function update_score($request_id='')
+		function update_score($request_id = 0)
 		{
 			if($request_id)
 			{
-				$request[] = $request_id;
+				$request[] = (int)$request_id;
 			}
 			else
 			{
@@ -95,6 +95,10 @@
 					$request[] = $this->db->f('id');
 				}
 			}
+
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$authorities_demands = isset( $config->config_data['authorities_demands']) &&  $config->config_data['authorities_demands'] ? $config->config_data['authorities_demands'] : 0;
 
 			foreach ($request as $id)
 			{
@@ -117,7 +121,7 @@
 					$this->db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
 				}
 
-				$this->db->query("UPDATE fm_request SET score = score +10000 WHERE id = $id AND authorities_demands = 1",__LINE__,__FILE__);
+				$this->db->query("UPDATE fm_request SET score = score + {$authorities_demands} WHERE id = $id AND authorities_demands = 1",__LINE__,__FILE__);
 			}
 		}
 
