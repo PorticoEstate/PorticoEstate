@@ -98,7 +98,7 @@
 
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read();
-			$authorities_demands = isset( $config->config_data['authorities_demands']) &&  $config->config_data['authorities_demands'] ? $config->config_data['authorities_demands'] : 0;
+			$authorities_demands = isset( $config->config_data['authorities_demands']) &&  $config->config_data['authorities_demands'] ? (int)$config->config_data['authorities_demands'] : 0;
 
 			foreach ($request as $id)
 			{
