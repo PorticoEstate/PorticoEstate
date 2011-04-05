@@ -49,7 +49,7 @@ var FormatterCenter = function(elCell, oRecord, oColumn, oData)
 							{
 								window.alert('failure - try again - once')
 							},
-							timeout: 1000
+							timeout: 5000
 						};
 
 		var oArgs = {menuaction:'property.bocommon.confirm_session'};
