@@ -791,9 +791,15 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$values 	= phpgw::get_var('values');
 
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$values['authorities_demands'] = $values['authorities_demands'] ? $values['authorities_demands'] : $config->config_data['authorities_demands'];
+
 			if($values['update'])
 			{
 				$receipt = $this->bo->update_priority_key($values);
+				$config->config_data['authorities_demands'] = (int) $values['authorities_demands'];
+				$config->save_repository();
 			}
 
 			$function_msg	= lang('Edit priority key');
@@ -813,13 +819,14 @@
 
 			$data = array
 				(
-					'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'function_msg'				=> $function_msg,
-					'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+					'function_msg'						=> $function_msg,
+					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'lang_priority_key_statustext'		=> lang('Weight for prioritising'),
-					'lang_save'				=> lang('save'),
-					'priority_key'				=> $priority_key,
-					'exchange_values'  		=> $function_exchange_values
+					'lang_save'							=> lang('save'),
+					'priority_key'						=> $priority_key,
+					'exchange_values'  					=> $function_exchange_values,
+					'value_authorities_demands'			=> $values['authorities_demands']
 				);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('priority_form' => $data));
@@ -1315,10 +1322,10 @@
 				}
 			}
 
-			
 			$data = array
 				(
 					'mode'								=> $mode,
+					'value_authorities_demands' 		=> isset($this->config->config_data['authorities_demands']) &&  $this->config->config_data['authorities_demands'] ? $this->config->config_data['authorities_demands'] : 0,
 					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
 					'show_dates'						=> $show_dates,
 					'attributes'						=> $values['attributes'],
