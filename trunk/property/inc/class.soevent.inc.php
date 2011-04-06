@@ -45,7 +45,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->_db 			= & $GLOBALS['phpgw']->db;
 			$this->_join		= & $this->_db->join;
-			$this->_left_join		= & $this->_db->left_join;
+			$this->_left_join	= & $this->_db->left_join;
 			$this->_like		= & $this->_db->like;
 		}
 
@@ -81,22 +81,31 @@
 				$ordermethod = ' ORDER BY schedule_time ASC';
 			}
 
+			$where= 'WHERE';
+			$filtermethod = '';
+			if($user_id)
+			{
+				$user = $GLOBALS['phpgw']->accounts->get($user_id);
+				$filtermethod = " WHERE fm_event.responsible_id =" . (int)$user->person_id ;
+				$where= 'AND';
+			}
 
-			$filtermethod = "WHERE location_id = {$location_id}";
+			$filtermethod .= "$where location_id = {$location_id}";
 
 			if($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 
-				$querymethod = " AND fm_event.descr {$this->_like} '%{$query}%'";
+				$querymethod = " $where fm_event.descr {$this->_like} '%{$query}%'";
 			}
 
 			$sql = "SELECT fm_event.id, fm_event.descr, schedule_time, exception_time, location_id, location_item_id,"
-				." attrib_id, responsible_id, enabled, responsible_id, fm_event.user_id, fm_event_receipt.entry_date as receipt_date"
+				." attrib_id, responsible_id, enabled, fm_event.user_id, fm_event_receipt.entry_date as receipt_date,account_lid"
 				." FROM  fm_event"
 				." {$this->_join} fm_event_schedule ON (fm_event.id = fm_event_schedule.event_id)"
 				." {$this->_left_join} fm_event_exception ON (fm_event_schedule.event_id = fm_event_exception.event_id AND fm_event_schedule.schedule_time = fm_event_exception.exception_time)"
 				." {$this->_left_join} fm_event_receipt ON (fm_event_schedule.event_id = fm_event_receipt.event_id AND fm_event_schedule.schedule_time = fm_event_receipt.receipt_time)"
+				." {$this->_left_join} phpgw_accounts ON (fm_event.responsible_id = phpgw_accounts.person_id)"
 				." {$filtermethod} {$querymethod}";
 			//_debug_array($sql . $ordermethod);
 			$this->_db->query($sql,__LINE__,__FILE__);
@@ -128,7 +137,7 @@
 							'enabled'			=> $this->_db->f('enabled'),
 							'exception'			=> $this->_db->f('exception_time') ? 'X' :'',
 							'receipt_date'		=> $this->_db->f('receipt_date'),
-							'responsible_id'	=> $this->_db->f('responsible_id'),
+							'account_lid'		=> $this->_db->f('account_lid'),
 							'user_id'			=> $this->_db->f('user_id')
 						);
 				}
@@ -284,7 +293,7 @@
 						'id'				=> $this->_db->f('id'),
 						'descr'				=> $this->_db->f('descr', true),
 						'start_date'		=> $start_date,
-						'responsible'		=> $this->_db->f('responsible_id'),
+						'responsible_id'	=> $this->_db->f('responsible_id'),
 						'action'			=> $this->_db->f('action_id'),
 						'end_date'			=> $end_date,
 						'repeat_type'		=> $this->_db->f('repeat_type'),
@@ -366,7 +375,7 @@
 					$data['attrib_id'],
 					$data['descr'],				
 					$data['start_date'],
-					$data['responsible'],
+					$data['responsible_id'],
 					$data['action'],
 					$data['end_date'],
 					$data['repeat_type'],				
@@ -418,7 +427,7 @@
 				(
 					'descr' 			=> $this->_db->db_addslashes($data['descr']),
 					'start_date'		=> $data['start_date'],
-					'responsible_id'	=> $data['responsible'],
+					'responsible_id'	=> $data['responsible_id'],
 					'action_id'			=> $data['action'],
 					'end_date'			=> $data['end_date'],
 					'repeat_type'		=> $data['repeat_type'],
