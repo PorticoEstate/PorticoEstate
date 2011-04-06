@@ -321,6 +321,14 @@
 			$uicols['formatter'][]	= '';
 			$uicols['input_type'][]	= '';
 
+			$uicols['name'][]		= 'account_lid';
+			$uicols['descr'][]		= lang('account');
+			$uicols['sortable'][]	= true;
+			$uicols['sort_field'][]	= 'account_lid';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= '';
+
 			$uicols['name'][]		= 'descr';
 			$uicols['descr'][]		= lang('Descr');
 			$uicols['sortable'][]	= false;
@@ -612,12 +620,12 @@
 				return;
 			}
 
-			$location	= phpgw::get_var('location');
-			$attrib_id	= phpgw::get_var('attrib_id');
-			$item_id	= phpgw::get_var('item_id');//might be bigint
-			$id			= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
-
+			$location					= phpgw::get_var('location');
+			$attrib_id					= phpgw::get_var('attrib_id');
+			$item_id					= phpgw::get_var('item_id');//might be bigint
+			$id							= phpgw::get_var('id', 'int');
+			$values						= phpgw::get_var('values');
+			$values['responsible_id']	= phpgw::get_var('contact', 'int', 'POST');
 
 			//			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $type;
 
@@ -638,9 +646,9 @@
 					{
 						$receipt['error'][]=array('msg'=>lang('Please enter a description'));									
 					}
-					if(!isset($values['responsible']) || !$values['responsible'])
+					if(!isset($values['responsible_id']) || !$values['responsible_id'])
 					{
-		//				$receipt['error'][]=array('msg'=>lang('Please select a responsible'));									
+						$receipt['error'][]=array('msg'=>lang('Please select a responsible'));									
 					}
 					if(!isset($values['action']) || !$values['action'])
 					{
@@ -694,7 +702,7 @@
 						unset($id);
 					}
 				}
-				else
+				else if ((isset($values['cancel']) && $values['cancel']))
 				{
 					$GLOBALS['phpgw']->js->add_event('load', "window.close();");
 				}
@@ -749,8 +757,14 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
+				'contact_id'		=> $values['responsible_id'],
+				'field'				=> 'contact',
+				'type'				=> 'form'));
+
 			$data = array
 				(
+					'contact_data'					=> $contact_data,
 					'link_schedule'					=> $GLOBALS['phpgw']->link('/index.php',$link_schedule_data),
 					'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 					'lang_datetitle'			=> lang('Select date'),
