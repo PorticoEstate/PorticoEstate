@@ -227,7 +227,7 @@
   	{
 		//Create ROW
 		newTR = document.createElement('tr');
-		td_empty(11);
+		td_empty(12);
 		//RowChecked
 		CreateRowChecked("mychecks");
 
