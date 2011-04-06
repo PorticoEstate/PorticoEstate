@@ -19,24 +19,25 @@
 		{
 			$ids[] = $this->db->f('id');
 		}
-		
+
 		foreach ($ids as $_id)
 		{
 			$value_set = array();
 			$this->db->query("SELECT * FROM $target_table WHERE id = {$_id}",__LINE__,__FILE__);
 			$this->db->next_record();
-		
-			if($location_id = $this->db->f('location_id') && $target_id = (int)$this->db->f('target_id'))
+
+			$location_id = $this->db->f('location_id');
+			$target_id = $this->db->f('target_id');
+			if($location_id  && $target_id)
 			{
 				$origin = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$origin_table =  $GLOBALS['phpgw']->locations->get_attrib_table($origin['appname'], $origin['location']);
 				$origin_arr = explode('_', $origin_table);
 				$p_entity_id = $origin_arr[2];
 				$p_cat_id = $origin_arr[3];
-
 				if($origin_table)
 				{
-					$this->db2->query("SELECT location_code FROM {$origin_table} WHERE id = $target_id",__LINE__,__FILE__);
+					$this->db2->query("SELECT location_code FROM {$origin_table} WHERE num = '{$target_id}'",__LINE__,__FILE__);
 					$this->db2->next_record();
 					$origin_location_code 		= $this->db2->f('location_code');
 					$value_set['location_code'] = $origin_location_code;
@@ -44,12 +45,16 @@
 					$value_set['p_entity_id']	= $p_entity_id;
 					$value_set['p_cat_id']		= $p_cat_id;
 					$origin_location_code_arr 	= explode('-',$origin_location_code);
-					if(isset($origin_location_code_arr[4]))
+					if($origin_location_code_arr)
 					{
-						$value_set['loc5']			= $origin_location_code_arr[4];
+						$j=1;
+						foreach($origin_location_code_arr as $_loc)
+						{
+							$value_set["loc{$j}"]	= $_loc;
+							$j++;
+						}
 					}
 				}
-
 			}
 			else
 			{
