@@ -48,6 +48,8 @@
 									</textarea>
 								</td>
 							</tr>
+							<xsl:call-template name="contact_form"/>
+<!--
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_responsible"/>
@@ -56,6 +58,7 @@
 									<xsl:value-of disable-output-escaping="yes" select="responsible"/>
 								</td>
 							</tr>
+-->
 							<tr>
 								<td valign="top">
 									<xsl:value-of select="lang_action"/>

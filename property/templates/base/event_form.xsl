@@ -51,6 +51,13 @@
 								<xsl:when test="next!=''">
 									<tr>
 										<td>
+											<xsl:value-of select="php:function('lang', 'responsible')" />
+											<xsl:text>: </xsl:text>
+											<xsl:value-of select="responsible"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
 											<xsl:value-of select="lang_next_run"/>
 											<xsl:text>: </xsl:text>
 											<xsl:value-of select="next"/>

@@ -670,10 +670,10 @@
 		public function get_contact_user_id($person_id)
 		{
 			$person_id = (int) $person_id;
-			$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id ={$person_id} AND person_id > 0";
+			$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id ={$person_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			return $this->db->f('account_id');
+			return (int)$this->db->f('account_id');
 		}
 
 		/**
