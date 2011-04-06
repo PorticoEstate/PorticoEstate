@@ -847,6 +847,7 @@
 				$boevent	= CreateObject('property.boevent');
 				$boevent->find_scedules($criteria);
 				$schedules =  $boevent->cached_events;
+//_debug_array($schedules);die();
 				foreach($schedules as $day => $set)
 				{
 					foreach ($set as $entry)
@@ -856,6 +857,20 @@
 							$event['count']++;
 						}
 					}
+					$event['responsible_id'] = $entry['responsible_id'];
+				}
+				if($event['responsible_id'])
+				{
+					$c = CreateObject('phpgwapi.contacts');
+					$qfields = array
+					(
+						'contact_id' => 'contact_id',
+						'per_full_name'  => 'per_full_name',
+					);
+
+					$criteria = array('contact_id' => $event['responsible_id']);
+					$contacts = $c->get_persons($qfields, 15, 0, '', '', $criteria);
+					$event['responsible'] = $contacts[0]['per_full_name'];
 				}
 
 				unset($event_info);
