@@ -44,5 +44,5 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['activitycalendar']['hooks'] = array
 	(
-		'menu'	=> 'activitycalendar.menu.get_menu'	
+		'menu'	=> 'activitycalendar.menu.get_menu'
 	);
