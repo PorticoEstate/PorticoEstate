@@ -1,10 +1,9 @@
 <?php
-
 phpgw::import_class('activitycalendar.socommon');
 
-include_class('activitycalendar', 'organization', 'inc/model/');
+include_class('activitycalendar', 'activity', 'inc/model/');
 
-class activitycalendar_soorganization extends activitycalendar_socommon
+class activitycalendar_soactivity extends activitycalendar_socommon
 {
 	protected static $so;
 
@@ -16,11 +15,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	public static function get_instance()
 	{
 		if (self::$so == null) {
-			self::$so = CreateObject('activitycalendar.soorganization');
+			self::$so = CreateObject('activitycalendar.soactivity');
 		}
 		return self::$so;
 	}
-
+	
 	/**
 	 * Generate SQL query
 	 *
@@ -94,7 +93,6 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		}
 
 		$filter_clauses = array();
-		$filter_clauses[] = "show_in_portal=1";
 /*
 		// All parties with contracts of type X
 		if(isset($filters['party_type']))
@@ -116,35 +114,26 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(org.id)) AS count';
+			$cols = 'COUNT(DISTINCT(activity.id)) AS count';
 		}
 		else
 		{
-			$columns[] = 'org.id';
-			$columns[] = 'org.name';
-			$columns[] = 'org.homepage';
-			$columns[] = 'org.phone';
-			$columns[] = 'org.email';
-			$columns[] = 'org.description';
-			$columns[] = 'org.active';
-			$columns[] = 'org.street';
-			$columns[] = 'org.zip_code';
-			$columns[] = 'org.city';
-			$columns[] = 'org.district';
-			$columns[] = 'org.organization_number';
-			$columns[] = 'org.activity_id';
-			$columns[] = 'org.customer_number';
-			$columns[] = 'org.customer_identifier_type';
-			$columns[] = 'org.customer_organization_number';
-			$columns[] = 'org.customer_ssn';
-			$columns[] = 'org.customer_internal';
-			$columns[] = 'org.shortname';
-			$columns[] = 'org.show_in_portal';
+			$columns[] = 'activity.id';
+			$columns[] = 'activity.organization_id';
+			$columns[] = 'activity.group_id';
+			$columns[] = 'activity.district';
+			$columns[] = 'activity.category';
+			$columns[] = 'activity.description';
+			$columns[] = 'activity.arena';
+			$columns[] = 'activity.date_start';
+			$columns[] = 'activity.date_end';
+			$columns[] = 'activity.contact_person_1';
+			$columns[] = 'activity.contact_person_2';
 			
 			$cols = implode(',',$columns);
 		}
 
-		$tables = "bb_organization org";
+		$tables = "activity_activity activity";
 
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
@@ -156,25 +145,56 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 
 	/**
-	 * Function for adding a new party to the database. Updates the party object.
+	 * Function for adding a new activity to the database. Updates the activity object.
 	 *
-	 * @param rental_party $party the party to be added
+	 * @param activitycalendar_activity $activity the party to be added
 	 * @return bool true if successful, false otherwise
 	 */
-	function add(&$organization)
+	function add(&$activity)
 	{
-		return false;
+		// Insert a new activity
+		$q ="INSERT INTO activity_activity (organization_id) VALUES (1)";
+		$result = $this->db->query($q);
+
+		if(isset($result)) {
+			// Set the new party ID
+			$activity->set_id($this->db->get_last_insert_id('activity_activity', 'id'));
+			// Forward this request to the update method
+			return $this->update($activity);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
-	 * Update the database values for an existing party object.
+	 * Update the database values for an existing activity object.
 	 *
-	 * @param $party the party to be updated
+	 * @param $activity the activity to be updated
 	 * @return boolean true if successful, false otherwise
 	 */
-	function update($party)
+	function update($activity)
 	{
-		return false;
+		$id = intval($activity->get_id());
+			
+		$values = array(
+			'organization_id = '. $this->marshal($activity->get_organization_id(), 'string'),
+			'group_id = '     . $this->marshal($activity->get_group_id(), 'string'),
+			'district =  '     . $this->marshal($activity->get_district(), 'string'),
+			'category = '          . $this->marshal($activity->get_category(), 'string'),
+			'target = '   . $this->marshal($activity->get_target(), 'string'),
+			'description = '     . $this->marshal($activity->get_description(), 'string'),
+			'arena = '      . $this->marshal($activity->get_arena(), 'string'),
+			'date_start = '      . $this->marshal($activity->get_date_start(), 'string'),
+			'date_end = '    . $this->marshal($activity->get_date_end(), 'string'),
+			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'string'),
+			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'string')
+		);
+		
+		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			
+		return isset($result);
 	}
 
 	public function get_id_field_name($extended_info = false)
@@ -187,7 +207,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		{
 			$ret = array
 			(
-				'table'			=> 'organization', // alias
+				'table'			=> 'activity', // alias
 				'field'			=> 'id',
 				'translated'	=> 'id'
 			);
@@ -195,19 +215,23 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		return $ret;
 	}
 
-	protected function populate(int $org_id, &$organization)
+	protected function populate(int $activity_id, &$activity)
 	{
 
-		if($organization == null) {
-			$organization = new activitycalendar_organization((int) $org_id);
+		if($activity == null) {
+			$activity = new activitycalendar_activity((int) $activity_id);
 
-			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
-			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
-			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
-			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
-			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
+			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+			$activity->set_district($this->unmarshal($this->db->f('district'), 'string'));
+			$activity->set_category($this->unmarshal($this->db->f('category'), 'string'));
+			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
+			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
+			$activity->set_date_start($this->unmarshal($this->db->f('date_start'), 'int'));
+			$activity->set_date_end($this->unmarshal($this->db->f('date_end'), 'int'));
+			$activity->set_contact_person_1($this->unmarshal($this->db->f('contact_person_1'), 'int'));
+			$activity->set_contact_person_2($this->unmarshal($this->db->f('contact_person_2'), 'int'));
 		}
-		return $organization;
+		return $activity;
 	}
 }
-?>

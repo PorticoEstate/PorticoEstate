@@ -53,7 +53,7 @@
 		
 		public function __construct()
 		{
-			self::set_active_menu('booking');
+			self::set_active_menu('activitycalendar');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');

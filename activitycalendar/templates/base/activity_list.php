@@ -1,5 +1,36 @@
 <?php
+	include("common.php");
 ?>
+
+<script type="text/javascript">
+
+	YAHOO.util.Event.addListener(
+		'ctrl_add_activitycalendar_activity',
+		'click',
+		function(e)
+		{
+            YAHOO.util.Event.stopEvent(e);
+            window.location = 'index.php?menuaction=activitycalendar.uiactivities.add';
+        }
+   );
+</script>
+
+<h1><img src="<?php echo ACTIVITYCALENDAR_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('activities') ?></h1>
+
+<fieldset>
+	<input type="submit" name="ctrl_add_activitycalendar_activity" id="ctrl_add_activitycalendar_activity" value="<?php echo lang('f_new_activity') ?>" />
+</fieldset>
+
+
+<?php
+	$list_form = true;
+	$list_id = 'all_activities';
+	$url_add_on = '&amp;type=all_activities';
+	include('activity_list_partial.php');
+?>
+
+<hr/>
+<hr/>
 <table>
 	<tr>
 		<th>Navn</th><th>bydel</th><th>kategori</th><th>målgruppe</th><th>arena</th><th>kontor</th><th>epost</th><th>dato oppdatert</th>
