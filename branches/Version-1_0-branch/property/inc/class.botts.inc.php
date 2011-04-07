@@ -161,6 +161,12 @@
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = array();
+
+			$columns[] = array
+				(
+					'id' => 'vendor',
+					'name'=> lang('vendor')
+				);
 			$columns[] = array
 				(
 					'id' => 'billable_hours',

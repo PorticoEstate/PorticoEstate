@@ -2,25 +2,25 @@
 
 phpgw::import_class('activitycalendar.socommon');
 
-include_class('activitycalendar', 'organization', 'inc/model/');
+include_class('activitycalendar', 'arena', 'inc/model/');
 
-class activitycalendar_soorganization extends activitycalendar_socommon
+class activitycalendar_soarena extends activitycalendar_socommon
 {
 	protected static $so;
 
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 *
-	 * @return rental_soparty the storage object
+	 * @return activitycalendar_soparty the storage object
 	 */
 	public static function get_instance()
 	{
 		if (self::$so == null) {
-			self::$so = CreateObject('activitycalendar.soorganization');
+			self::$so = CreateObject('activitycalendar.soarena');
 		}
 		return self::$so;
 	}
-
+	
 	/**
 	 * Generate SQL query
 	 *
@@ -44,9 +44,13 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		if($sort_field != null) {
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = "ORDER BY id $dir";
+			if($sort_field == 'arena_id')
+			{
+				$sort_field='id';
+			}
+			$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
 		}
-		if($search_for)
+/*		if($search_for)
 		{
 			$query = $this->marshal($search_for,'string');
 			$like_pattern = "'%".$search_for."%'";
@@ -91,10 +95,16 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			{
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
-		}
+		}*/
 
 		$filter_clauses = array();
-		$filter_clauses[] = "show_in_portal=1";
+		
+		if(isset($filters[$this->get_id_field_name()])){
+			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			$filter_clauses[] = "arena.id = {$id}";
+		}
+		
+		//$filter_clauses[] = "show_in_portal";
 /*
 		// All parties with contracts of type X
 		if(isset($filters['party_type']))
@@ -116,65 +126,84 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		if($return_count) // We should only return a count
 		{
-			$cols = 'COUNT(DISTINCT(org.id)) AS count';
+			$cols = 'COUNT(DISTINCT(arena.id)) AS count';
 		}
 		else
 		{
-			$columns[] = 'org.id';
-			$columns[] = 'org.name';
-			$columns[] = 'org.homepage';
-			$columns[] = 'org.phone';
-			$columns[] = 'org.email';
-			$columns[] = 'org.description';
-			$columns[] = 'org.active';
-			$columns[] = 'org.street';
-			$columns[] = 'org.zip_code';
-			$columns[] = 'org.city';
-			$columns[] = 'org.district';
-			$columns[] = 'org.organization_number';
-			$columns[] = 'org.activity_id';
-			$columns[] = 'org.customer_number';
-			$columns[] = 'org.customer_identifier_type';
-			$columns[] = 'org.customer_organization_number';
-			$columns[] = 'org.customer_ssn';
-			$columns[] = 'org.customer_internal';
-			$columns[] = 'org.shortname';
-			$columns[] = 'org.show_in_portal';
+			$columns[] = 'arena.id';
+			$columns[] = 'arena.arena_name';
+			$columns[] = 'arena.address';
+			$columns[] = 'arena.internal_arena_id';
 			
 			$cols = implode(',',$columns);
 		}
 
-		$tables = "bb_organization org";
+		$tables = "activity_arena arena";
 
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
-		
-		//var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
-		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+
+		$joins = $join_contracts;
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
+	
+	protected function populate(int $arena_id, &$arena)
+	{
 
+		if($arena == null) {
+			$arena = new activitycalendar_arena((int) $arena_id);
 
-
+			$arena->set_arena_name($this->unmarshal($this->db->f('arena_name'), 'string'));
+			$arena->set_address($this->unmarshal($this->db->f('address'), 'string'));
+			$arena->set_internal_arena_id($this->unmarshal($this->db->f('internal_arena_id'), 'int'));
+		}
+		return $arena;
+	}
+	
 	/**
-	 * Function for adding a new party to the database. Updates the party object.
+	 * Function for adding a new arena to the database. Updates the arena object.
 	 *
-	 * @param rental_party $party the party to be added
+	 * @param activitycalendar_arena $arena the party to be added
 	 * @return bool true if successful, false otherwise
 	 */
-	function add(&$organization)
+	function add(&$arena)
 	{
-		return false;
+		// Insert a new arena
+		$q ="INSERT INTO activity_arena (arena_name) VALUES ('test')";
+		$result = $this->db->query($q);
+
+		if(isset($result)) {
+			// Set the new party ID
+			$arena->set_id($this->db->get_last_insert_id('activity_arena', 'id'));
+			// Forward this request to the update method
+			return $this->update($arena);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
-	 * Update the database values for an existing party object.
+	 * Update the database values for an existing arena object.
 	 *
-	 * @param $party the party to be updated
+	 * @param $arena the party to be updated
 	 * @return boolean true if successful, false otherwise
 	 */
-	function update($party)
+	function update($arena)
 	{
-		return false;
+		$id = intval($arena->get_id());
+		
+		$values = array(
+			'arena_name = '		. $this->marshal($arena->get_arena_name(), 'string'),
+			'address = '     . $this->marshal($arena->get_address(), 'string'),
+			'internal_arena_id =  '     . $this->marshal($arena->get_internal_arena_id(), 'int')
+		);
+		
+		$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+			
+		return isset($result);
 	}
 
 	public function get_id_field_name($extended_info = false)
@@ -187,27 +216,12 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		{
 			$ret = array
 			(
-				'table'			=> 'organization', // alias
+				'table'			=> 'arena', // alias
 				'field'			=> 'id',
 				'translated'	=> 'id'
 			);
 		}
 		return $ret;
-	}
-
-	protected function populate(int $org_id, &$organization)
-	{
-
-		if($organization == null) {
-			$organization = new activitycalendar_organization((int) $org_id);
-
-			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
-			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
-			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
-			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
-			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
-		}
-		return $organization;
 	}
 }
 ?>
