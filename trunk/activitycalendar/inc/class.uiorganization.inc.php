@@ -1,7 +1,10 @@
 <?php
 phpgw::import_class('activitycalendar.uicommon');
+phpgw::import_class('activitycalendar.soorganization');
 
-class activitycalendar_uiorganizationlist extends activitycalendar_uicommon
+//include_class('activitycalendar', 'organization', 'inc/model/');
+
+class activitycalendar_uiorganization extends activitycalendar_uicommon
 {
 	public $public_functions = array
 	(
@@ -19,7 +22,7 @@ class activitycalendar_uiorganizationlist extends activitycalendar_uicommon
 	
 	public function index()
 	{
-		$this->render('organization_list.php', $data);
+		$this->render('organization_list.php');
 	}
 	
 
@@ -61,7 +64,7 @@ class activitycalendar_uiorganizationlist extends activitycalendar_uicommon
 		//Retrieve the type of query and perform type specific logic
 		$type = phpgw::get_var('type');
 
-		$config	= CreateObject('phpgwapi.config','activitycalendar');
+		/*$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
 		switch($type)
 		{
@@ -84,19 +87,18 @@ class activitycalendar_uiorganizationlist extends activitycalendar_uicommon
 			default: // ... get all parties of a given type
 				//$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				break;
-		}
+		}*/
 		
 		$result_objects = activitycalendar_soorganization::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 		$result_count = activitycalendar_soorganization::get_instance()->get_count($search_for, $search_type, $filters);
 		
-		var_dump($result_objects);
+		//var_dump($result_objects);
 		// Create an empty row set
 		$rows = array();
-		foreach ($result_objects as $organization) {
-			if(isset($organization))
+		foreach ($result_objects as $result) {
+			if(isset($result))
 			{
-				//$serialized = $party->serialize($contract);
-				$rows[] = $organization;
+				$rows[] = $result->serialize();
 			}
 		}
 		// ... add result data
@@ -106,14 +108,10 @@ class activitycalendar_uiorganizationlist extends activitycalendar_uicommon
 
 		if(!$export){
 			array_walk(
-				$party_data['results'], 
+				$organization_data['results'], 
 				array($this, 'add_actions'), 
 				array(													// Parameters (non-object pointers)
-					$contract_id,										// [1] The contract id
-					$type,												// [2] The type of query
-					//isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
-					$editable,											// [4] Editable flag
-					$this->type_of_user									// [5] User role			
+					$type												// [2] The type of query		
 				)
 			);
 		}
@@ -163,5 +161,31 @@ class activitycalendar_uiorganizationlist extends activitycalendar_uicommon
 		$browser->content_header('export.txt','text/plain');
 		print rental_soparty::get_instance()->get_export_data();
 	}
+	
+	/**
+	 * Add action links and labels for the context menu of the list items
+	 *
+	 * @param $value pointer to
+	 * @param $key ?
+	 * @param $params [composite_id, type of query, editable]
+	 */
+	public function add_actions(&$value, $key, $params)
+	{
+		//Defining new columns
+		$value['ajax'] = array();
+		$value['actions'] = array();
+		$value['labels'] = array();
+
+		$query_type = $params[0];
+		
+		switch($query_type)
+		{
+			case 'all_organizations':
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $value['id'])));
+				$value['labels'][] = lang('show');
+				break;
+		}
+    }
 }
 ?>

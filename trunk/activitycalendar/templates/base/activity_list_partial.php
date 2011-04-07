@@ -6,29 +6,29 @@
 		function(e)
 		{
   		YAHOO.util.Event.stopEvent(e);
-     	window.location = 'index.php?menuaction=activitycalendar.uiorganization.index';
+     	window.location = 'index.php?menuaction=activitycalendar.uiactivities.index';
  		}
  	);
 
 	// Defining columns for datatable
 	var columnDefs = [{
-		key: "organization_number",
-		label: "<?php echo lang('organization_number') ?>",
+		key: "id",
+		label: "<?php echo lang('id') ?>",
 	    sortable: true
 	},
 	{
-		key: "name",
+		key: "arena_name",
 		label: "<?php echo lang('name') ?>",
 	    sortable: true
 	},
 	{
-		key: "district",
-		label: "<?php echo lang('district') ?>",
+		key: "internal_arena_id",
+		label: "<?php echo lang('internal_arena_id') ?>",
 	    sortable: true
 	},
 	{
-		key: "description",
-		label: "<?php echo lang('description') ?>",
+		key: "address",
+		label: "<?php echo lang('address') ?>",
 	    sortable: true
 	},
 	{
@@ -61,7 +61,7 @@
 
 	// Initiating the data source
 	setDataSource(
-		'index.php?menuaction=activitycalendar.uiorganization.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
+		'index.php?menuaction=activitycalendar.uiactivities.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
 		['<?php echo $list_id ?>_ctrl_search_query'],
@@ -77,6 +77,23 @@
 		?>)
 	);
 
+    function activity_export(ptype) {
+
+        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+        <?php
+        /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
+         * even though the search only affects one of the data tables.
+         * F.ex on /index.php?menuaction=rental.uicontract.edit&id=1 -> Parties
+         */
+        ?>
+        
+        window.location = 'index.php?menuaction=activitycalendar.uiactivities.download'+
+            '<?php echo $url_add_on; ?>'+
+            '&amp;query='+query+
+            '&amp;search_option='+sOption+
+        	'&amp;export=true';
+    }
+
 </script>
 <?php
 	if($list_form)
@@ -91,6 +108,18 @@
 		<input type="submit" id="ctrl_search_button" value="<?php echo lang('search') ?>" />
 		<input type="button" id="ctrl_reset_button" value="<?php echo lang('reset') ?>" />
 	</fieldset>
+
+	<fieldset>
+		<!-- Filters -->
+		<label class="toolbar_element_label" for="ctrl_toggle_activity_type"><?php echo lang('activity_type') ?></label>
+		<select name="activity_type" id="<?php echo $list_id ?>_ctrl_toggle_activity_type">
+			<option value="all"><?php echo lang('all') ?></option>
+			<option value="1"><?php echo lang('internal') ?></option>
+			<option value="2" ><?php echo lang('not_internal') ?></option>
+		</select>
+	</fieldset>
+	
+	
 </form>
 <?php
 	}
