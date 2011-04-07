@@ -2898,3 +2898,38 @@
 		}
 	}
 
+	$test[] = '0.9.17.533';
+	/**
+	* Add index to acl
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_533()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
+		{
+			$create_index = true;
+			$metadata = $GLOBALS['phpgw']->db->metaindexes('phpgw_acl');
+
+			foreach($metadata as $index_name => $index)
+			{
+				if(preg_match('/^location_id/i', $index_name))
+				{
+					$create_index = false;
+				}
+			}
+
+			if($create_index)
+			{
+				$GLOBALS['phpgw_setup']->oProc->query("CREATE INDEX location_id_phpgw_acl_idx ON phpgw_acl USING btree (location_id)");
+				$GLOBALS['phpgw_setup']->oProc->query("REINDEX TABLE phpgw_acl");
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.534';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
