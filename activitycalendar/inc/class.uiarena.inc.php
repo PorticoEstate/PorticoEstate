@@ -1,5 +1,8 @@
 <?php
 phpgw::import_class('activitycalendar.uicommon');
+phpgw::import_class('activitycalendar.soarena');
+
+include_class('activitycalendar', 'arena', 'inc/model/');
 
 class activitycalendar_uiarena extends activitycalendar_uicommon
 {
@@ -8,18 +11,24 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		'index'     		=> true,
 		'query'			    => true,
 		'view'			    => true,
-		'delete'			=> true,
-		'commit'			=> true,
-		'download'			=> true,
-		'download_export'	=> true
+		'add'				=> true,
+		'edit'				=> true
 	);
 	
 	public function __construct()
 	{
 		parent::__construct();
-		self::set_active_menu('booking::activities::arena');
+		self::set_active_menu('activitycalendar::arena');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
+	}
+	
+	/**
+	 * Public method. Forwards the user to edit mode.
+	 */
+	public function add()
+	{
+		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.edit'));
 	}
 	
 	public function index()
@@ -30,152 +39,88 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		$infoMsgs = array();
 
 		
+		$data = array();
+		$this->render('arena_list.php');
+	}
+	
+	/**
+	 * Displays info about one single arena.
+	 */
+	public function view()
+	{
+
+		$errorMsgs = array();
+		$infoMsgs = array();
+		$arena = activitycalendar_soarena::get_instance()->get_single((int)phpgw::get_var('id'));
+		
+		if($arena == null) // Not found
+		{
+			$errorMsgs[] = lang('Could not find specified arena.');
+		}
 		$data = array
 		(
-			'contract_type' => phpgw::get_var('contract_type'),
-			'billing_term' => phpgw::get_var('billing_term'),
-			'year' => phpgw::get_var('year'),
-			'month' => phpgw::get_var('month'),
+			'arena' => $arena,
 			'errorMsgs' => $errorMsgs,
-			'warningMsgs' => $warningMsgs,
 			'infoMsgs' => $infoMsgs
 		);
 		$this->render('arena.php', $data);
 	}
 	
-	/**
-	 * Displays info about one single billing job.
-	 */
-	public function view()
+	public function edit()
 	{
-		if(!$this->isExecutiveOfficer())
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
+		// Get the contract part id
+		$arena_id = (int)phpgw::get_var('id');
+		
+		
+		// Retrieve the arena object or create a new one
+		if(isset($arena_id) && $arena_id > 0)
+		{	
+			$arena = activitycalendar_soarena::get_instance()->get_single($arena_id); 
+		}
+		else
 		{
-			$this->render('permission_denied.php');
-			return;
+			$arena = new activitycalendar_arena();
 		}
 
-		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('invoice_run');
-
-		$errorMsgs = array();
-		$infoMsgs = array();
-		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-		$billing_info_array = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
-		
-		if($billing_job == null) // Not found
+		if(isset($_POST['save_arena'])) // The user has pressed the save button
 		{
-			$errorMsgs[] = lang('Could not find specified billing job.');
-		}
-		else if(phpgw::get_var('generate_export') != null) // User wants to generate export
-		{
-		
-			$open_and_exported = rental_soinvoice::get_instance()->number_of_open_and_exported_rental_billings($billing_job->get_location_id());
-			
-			if($open_and_exported == 0)
+			if(isset($arena)) // If a arena object is created
 			{
-				//Loop through  billing info array to find the first month
-				$month = 12;
-				foreach($billing_info_array as $billing_info)
-				{
-					$year = $billing_info->get_year();
-					if($month > $billing_info->get_month())
-					{
-						$month = $billing_info->get_month();
-					}
-				}
+				// ... set all parameters
+				$arena->set_internal_arena_id(phpgw::get_var('internal_arena_id'));
+				$arena->set_arena_name(phpgw::get_var('arena_name'));
+				$arena->set_address(phpgw::get_var('address'));
 				
-				$billing_job->set_year($year);
-				$billing_job->set_month($month);
-				
-				if(rental_sobilling::get_instance()->generate_export($billing_job))
+				if(activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object
 				{
-					$infoMsgs[] = lang('Export generated.');
-					$billing_job->set_generated_export(true); // The template need to know that we've genereated the export
+					$message = lang('messages_saved_form');	
 				}
 				else
 				{
-					$errorMsgs = lang('Export failed.');
+					$error = lang('messages_form_error');
 				}
 			}
-			else
-			{
-				$errorMsgs[] = lang('open_and_exported_exist');
-			}
 		}
-		else if(phpgw::get_var('commit') != null) // User wants to commit/close billing so that it cannot be deleted
-		{
-			$billing_job->set_timestamp_commit(time());
-			rental_sobilling::get_instance()->store($billing_job);
-		}
-		$data = array
-		(
-			'billing_job' => $billing_job,
-			'billing_info_array' => $billing_info_array,
-			'errorMsgs' => $errorMsgs,
-			'infoMsgs' => $infoMsgs,
-			'back_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.index'))),
-			'download_link' => html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.download_export', 'id' => (($billing_job != null) ? $billing_job->get_id() : ''), 'date' => $billing_job->get_timestamp_stop(), 'export_format' => $billing_job->get_export_format())))
+
+		return $this->render('arena.php', array
+			(
+				'arena' 	=> $arena,
+				'editable' => true,
+				'message' => isset($message) ? $message : phpgw::get_var('message'),
+				'error' => isset($error) ? $error : phpgw::get_var('error')
+			)	
 		);
-		$this->render('billing.php', $data);
-	}
-	
-	/**
-	 * Deletes an uncommited billing job.
-	 */
-	public function delete()
-	{
-		if(!$this->isExecutiveOfficer())
-		{
-			$this->render('permission_denied.php');
-			return;
-		}
-		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-		$billing_job->set_deleted(true);
-		rental_sobilling::get_instance()->store($billing_job);
-		
-		//set deleted=true on billing_info
-		$billing_infos = rental_sobilling_info::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
-		foreach($billing_infos as $billing_info){
-			$billing_info->set_deleted(true);
-			rental_sobilling_info::get_instance()->store($billing_info);
-		}
-		
-		//set is_billed on invoice price items to false
-		$billing_job_invoices = rental_soinvoice::get_instance()->get(null, null, null, null, null, null, array('billing_id' => phpgw::get_var('id')));
-		foreach($billing_job_invoices as $invoice){
-			$price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array('contract_id' => $invoice->get_contract_id(), 'one_time' => true));
-			foreach($price_items as $price_item){
-				if($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()){
-					$price_item->set_is_billed(false);
-					rental_socontract_price_item::get_instance()->store($price_item);
-				}
-			}
-			$invoice->set_serial_number(null);
-			rental_soinvoice::get_instance()->store($invoice);
-		}
-	}
-	
-	/**
-	 * Commits a billing job. After it's commited it cannot be deleted.
-	 */
-	public function commit()
-	{
-		if(!$this->isExecutiveOfficer())
-		{
-			$this->render('permission_denied.php');
-			return;
-		}			
-		$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-		$billing_job->set_timestamp_commit(time());
-		rental_sobilling::get_instance()->store($billing_job);
 	}
 	
 	public function query()
 	{
-		if(!$this->isExecutiveOfficer())
+/*		if(!$this->isExecutiveOfficer())
 		{
 			$this->render('permission_denied.php');
 			return;
 		}
+*/
 		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 		{
 			$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -204,36 +149,24 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 			$num_of_objects = null;
 		}
 		
+		//var_dump($query_type);
+		
 		switch($query_type)
 		{
-			case 'all_billings':
+			case 'all_arenas':
 				$filters = array();
-				if($sort_field == 'responsibility_title'){
-					$sort_field = 'location_id';
-				}
-				$result_objects = rental_sobilling::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-				$object_count = rental_sobilling::get_instance()->get_count($search_for, $search_type, $filters);
-				break;
-			case 'invoices':
-				if($sort_field == 'term_label'){
-					$sort_field = 'term_id';
-				}
-				$filters = array('billing_id' => phpgw::get_var('billing_id'));
-				$result_objects = rental_soinvoice::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-				$object_count = rental_soinvoice::get_instance()->get_count($search_for, $search_type, $filters);
+				$result_objects = activitycalendar_soarena::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = activitycalendar_soarena::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
 		}
-		
+		//var_dump($result_objects);
 		//Create an empty row set
 		$rows = array();
 		foreach($result_objects as $result) {
 			if(isset($result))
 			{
-				if($result->has_permission(PHPGW_ACL_READ))
-				{
 					// ... add a serialized result
 					$rows[] = $result->serialize();
-				}
 			}
 		}
 		
@@ -266,26 +199,12 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		
 		switch($query_type)
 		{
-			case 'all_billings':
+			case 'all_arenas':
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');
-				if($value['timestamp_commit'] == null || $value['timestamp_commit'] == '')
-				{
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.delete', 'id' => $value['id'])));
-					$value['labels'][] = lang('delete');
-					$value['ajax'][] = true;
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.commit', 'id' => $value['id'])));
-					$value['labels'][] = lang('commit');
-				}
-				break;
-			case 'invoices':
-				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['contract_id']))) . '#price';
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['contract_id']))) . '#price';
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.edit', 'id' => $value['id'])));
 				$value['labels'][] = lang('edit');
 				break;
 		}

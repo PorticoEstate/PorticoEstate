@@ -906,8 +906,8 @@
 			{
 				$uicols['name'][] = 'order_id';
 				$uicols['descr'][]	= lang('order id');
-				$uicols['name'][] = 'vendor';
-				$uicols['descr'][]	= lang('vendor');
+//				$uicols['name'][] = 'vendor';
+//				$uicols['descr'][]	= lang('vendor');
 			}
 
 			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') )
@@ -947,7 +947,7 @@
 			{
 	//			$uicols['input_type'][]	= 'text';
 				$uicols['name'][]		= $col;
-	//			$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
+				$uicols['descr'][]		= lang(str_replace('_', ' ', $col));
 	//			$uicols['statustext'][]	= $col;
 			}
 

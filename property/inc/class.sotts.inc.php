@@ -432,7 +432,22 @@
 				}
 			}
 
-			$sql = "SELECT DISTINCT fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field},fm_district.descr as district  FROM fm_tts_tickets"
+			$return_fields = "fm_tts_tickets.id,fm_tts_tickets.assignedto,fm_tts_tickets.status,fm_tts_tickets.user_id,"
+			. "fm_tts_tickets.subject,fm_tts_tickets.address,fm_tts_tickets.location_code,fm_tts_tickets.priority,fm_tts_tickets.cat_id,fm_tts_tickets.group_id,"
+			. "fm_tts_tickets.entry_date,fm_tts_tickets.finnish_date,fm_tts_tickets.finnish_date2,fm_tts_tickets.order_id,fm_tts_tickets.vendor_id,fm_tts_tickets.actual_cost,"
+			. "fm_tts_tickets.budget,fm_tts_tickets.billable_hours,fm_district.descr as district,fm_tts_views.id as view,fm_location1.loc1_name {$result_order_field}";
+			
+			//fm_tts_tickets.* ,fm_location1.loc1_name, fm_tts_views.id as view {$result_order_field},fm_district.descr as district
+			$sql = "SELECT DISTINCT {$return_fields}  FROM fm_tts_tickets"
+				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
+				. " {$this->join} fm_district ON fm_district.id = fm_part_of_town.district_id"
+				. " {$order_join}"
+				. " LEFT OUTER JOIN fm_tts_views ON (fm_tts_tickets.id = fm_tts_views.id AND fm_tts_views.account_id='{$this->account}')"
+				. " {$filtermethod} {$querymethod}";
+
+
+			$sql_cnt = "SELECT DISTINCT fm_tts_tickets.budget ,fm_tts_tickets.actual_cost, fm_tts_tickets.id FROM fm_tts_tickets"
 				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.part_of_town_id"
 				. " $this->join fm_district ON fm_district.id = fm_part_of_town.district_id"
@@ -442,7 +457,7 @@
 
 //_debug_array($sql);
 
-			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql}) as t";
+			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt}) as t";
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records	= $this->db->f('cnt');
