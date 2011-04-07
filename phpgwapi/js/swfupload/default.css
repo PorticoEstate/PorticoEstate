@@ -128,14 +128,14 @@ code {
 
 
 #header {
-	background: #313131 url(../images/header-bg.jpg) repeat-x top left;
+/*	background: #313131 url(../images/header-bg.jpg) repeat-x top left;*/
 	height: 125px;
 	position: relative;
 }
 	#logo { 
 		padding: 0;
 		margin: 0;
-		background: url(../images/logo.gif) no-repeat 20px 20px;
+/*		background: url(../images/logo.gif) no-repeat 20px 20px;*/
 		height: 106px;
 		width: 272px;
 		text-indent: -5000px;
@@ -317,7 +317,7 @@ a.progressCancel {
 	display: block;
 	height: 14px;
 	width: 14px;
-	background-image: url(../images/cancelbutton.gif);
+/*	background-image: url(../images/cancelbutton.gif); */
 	background-repeat: no-repeat;
 	background-position: -14px 0px;
 	float: right;
