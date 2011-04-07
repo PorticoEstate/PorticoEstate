@@ -22,7 +22,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	public function __construct()
 	{
 		parent::__construct();
-		self::set_active_menu('booking::activities');
+		self::set_active_menu('activitycalendar::activities');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
 	}

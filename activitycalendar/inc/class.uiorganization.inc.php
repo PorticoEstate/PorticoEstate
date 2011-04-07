@@ -15,7 +15,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	public function __construct()
 	{
 		parent::__construct();
-		self::set_active_menu('booking::activities::organizationList');
+		self::set_active_menu('activitycalendar::organizationList');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
 	}

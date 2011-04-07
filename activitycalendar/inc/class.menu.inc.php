@@ -26,21 +26,18 @@
 					'text'	=> lang('Activities'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiactivities.index') ),
                     'image'	=> array('property', 'location_tenant'),
-					'children' => array
-					(
-						'arena' => array
-						(
-							'text'	=> lang('Arena'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiarena.index') ),
-		                    'image'	=> array('property', 'location_1'),
-						),
-						'organizationList' => array
-						(
-							'text'	=> lang('OrganizationList'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiorganization.index') ),
-		                    'image'	=> array('property', 'location_tenant'),
-						)
-					)
+				),
+				'arena' => array
+				(
+					'text'	=> lang('Arena'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiarena.index') ),
+		                  'image'	=> array('property', 'location_1'),
+				),
+				'organizationList' => array
+				(
+					'text'	=> lang('OrganizationList'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiorganization.index') ),
+		            'image'	=> array('property', 'location_tenant'),
 				)      
 			);
 			
