@@ -73,6 +73,9 @@
 				{
 					if($this->db->f($loc))
 					{
+
+// 8.April 11: 'romid' is now loc5
+/*
 						if($loc == 'romid')
 						{
 							$this->db2->query("SELECT loc5 FROM fm_location5 WHERE rom_nr_id = '" . $this->db->f($loc) . "' AND location_code {$this->like} '" . implode('-', $location) . "%'",__LINE__,__FILE__);
@@ -85,6 +88,7 @@
 							}
 						}
 						else
+*/
 						{
 							$location[] = $this->db->f($loc);
 							$value_set["loc{$j}"] = $this->db->f($loc);
