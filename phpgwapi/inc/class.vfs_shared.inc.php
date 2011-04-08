@@ -125,7 +125,7 @@
 	* @package phpgwapi
 	* @subpackage vfs
 	*/
-	class vfs_shared
+	class phpgwapi_vfs_shared
 	{
 		/*
 		 * All VFS classes must have some form of 'linked directories'.
@@ -210,7 +210,7 @@
 		 *  * All derived classes should call this function in their
 		 *		constructor ($this->vfs_shared())
 		  */
-		function vfs_shared ()
+		function __construct()
 		{
 			$this->basedir = $GLOBALS['phpgw_info']['server']['files_dir'];
 			$this->working_id = $GLOBALS['phpgw_info']['user']['account_id'];

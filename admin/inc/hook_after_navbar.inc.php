@@ -78,13 +78,13 @@
 			}
 			if(!isset($_current[$GLOBALS['phpgw_info']['flags']['currentapp']]))
 			{
-				$app_str  = '<br>' . lang('This application requires an upgrade') . ':' . "\n";
+				$app_str  = '<br>' . lang('This application requires an upgrade') . ": {$GLOBALS['phpgw_info']['flags']['currentapp']}\n";
 				$app_str .= '<br>' . lang('Please run setup to become current') . '.' . "\n";
 				$require_upgrade = true;
 			}
 			else
 			{
-				$app_str  =  '<br>' . lang('This application is current') . "\n";
+	//			$app_str  =  '<br>' . lang('This application is current') . "\n";
 			}
 		
 			if($require_upgrade)

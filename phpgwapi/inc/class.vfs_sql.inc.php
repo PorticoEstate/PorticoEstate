@@ -35,7 +35,7 @@
 	* @subpackage vfs
 	* @ignore
 	*/
-	class vfs extends vfs_shared
+	class phpgwapi_vfs extends phpgwapi_vfs_shared
 	{
 		var $file_actions;
 
@@ -43,9 +43,9 @@
 		 * constructor, sets up variables
 		*
 		 */
-		function vfs ()
+		function __construct()
 		{
-			parent::vfs_shared();
+			parent::__construct();
 			/*
 			   File/dir attributes, each corresponding to a database field.  Useful for use in loops
 			   If an attribute was added to the table, add it here and possibly add it to
