@@ -89,6 +89,8 @@
 
 	$GLOBALS['phpgw_info']['user']['apps']['admin'] = true;
 	$GLOBALS['phpgw_info']['user']['domain'] = $_GET['domain'];
+	$GLOBALS['phpgw_info']['user']['account_id'] = -1;
+	$GLOBALS['phpgw_info']['user']['account_lid'] = 'cron_job';
 
 	$num = ExecMethod('property.custom_functions.index',$data);
 	// echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";

@@ -29,6 +29,7 @@
 
 	/**
 	 * Description
+	 * example cron : /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default catch_ppc
 	 * @package property
 	 */
 
@@ -43,7 +44,7 @@
 			$this->like			= & $this->db->like;
 		}
 
-		function pre_run($data='')
+		function pre_run($data = array())
 		{
 			phpgwapi_cache::session_set('catch', 'data', $data);
 
@@ -116,7 +117,6 @@
 
 		function execute($cron='')
 		{
-
 			try
 			{
 				$this->import_ppc();
@@ -149,6 +149,7 @@
 
 		function import_ppc()
 		{
+
 			//do the actual import
  			$config = CreateObject('catch.soconfig');
  			$config->read_repository();
@@ -179,6 +180,7 @@
 				$xmlparse->setEncoding('UTF-8');
 
 				$file_list = $this->get_files();
+
  				$i = 0;
 				foreach ($file_list as $file)
 				{
