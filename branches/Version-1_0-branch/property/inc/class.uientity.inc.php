@@ -85,6 +85,7 @@
 			$this->district_id			= $this->bo->district_id;
 			$this->status				= $this->bo->status;
 			$this->location_code		= $this->bo->location_code;
+			$this->p_num				= $this->bo->p_num;
 			$this->category_dir			= $this->bo->category_dir;
 			$GLOBALS['phpgw']->session->appsession('entity_id','property',$this->entity_id);
 			$this->start_date			= $this->bo->start_date;
@@ -387,7 +388,8 @@
 						'entity_id'        		=> $this->entity_id,
 						'cat_id'            	=> $this->cat_id,
 						'type'					=> $this->type,
-						'district_id'			=> $this->district_id
+						'district_id'			=> $this->district_id,
+						'p_num'					=> $this->p_num
 					));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -396,7 +398,8 @@
 					"entity_id:'{$this->entity_id}',".
 					"cat_id:'{$this->cat_id}',".
 					"type:'{$this->type}',".
-					"district_id:'{$this->district_id}'";
+					"district_id:'{$this->district_id}',".
+					"p_num:'{$this->p_num}'";
 
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
