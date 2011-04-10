@@ -89,6 +89,7 @@
 			$end_date						= phpgw::get_var('end_date');
 			$allrows						= phpgw::get_var('allrows', 'bool');
 			$criteria_id					= phpgw::get_var('criteria_id');
+			$p_num							= phpgw::get_var('p_num');
 
 			$this->criteria_id				= isset($criteria_id) && $criteria_id ? $criteria_id : '';
 
@@ -165,6 +166,10 @@
 			if(isset($_POST['end_date']) || isset($_GET['end_date']))
 			{
 				$this->end_date = $end_date;
+			}
+			if(isset($_POST['p_num']) || isset($_GET['p_num']))
+			{
+				$this->p_num = $p_num;
 			}
 			if($allrows)
 			{
@@ -307,7 +312,7 @@
 				'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
 				'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
 				'dry_run'=>$data['dry_run'], 'type'=>$data['type'], 'location_code' => $this->location_code,
-				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter));
+				'criteria_id' => $this->criteria_id, 'attrib_filter' => $attrib_filter, 'p_num' => $this->p_num));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
@@ -366,7 +371,11 @@
 
 			if($values['p_num'])
 			{
-				$category = $this->soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+				$soadmin_entity 			= CreateObject('property.soadmin_entity');
+				$soadmin_entity->type		= 'entity';
+				$soadmin_entity->type_app	= 'property';
+				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
+//				$category = $this->soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
 				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
 				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
 				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
