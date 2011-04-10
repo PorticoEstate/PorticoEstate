@@ -37,9 +37,10 @@
 				$p_cat_id = $origin_arr[3];
 				if($origin_table)
 				{
-					$this->db2->query("SELECT location_code FROM {$origin_table} WHERE num = '{$target_id}'",__LINE__,__FILE__);
+					$this->db2->query("SELECT location_code, address FROM {$origin_table} WHERE num = '{$target_id}'",__LINE__,__FILE__);
 					$this->db2->next_record();
 					$origin_location_code 		= $this->db2->f('location_code');
+					$origin_address 			= $this->db2->f('address');
 					$value_set['location_code'] = $origin_location_code;
 					$value_set['p_num'] 		= $target_id;
 					$value_set['p_entity_id']	= $p_entity_id;
@@ -54,6 +55,7 @@
 							$j++;
 						}
 					}
+					$value_set['address']	= $origin_address;
 				}
 			}
 			else
