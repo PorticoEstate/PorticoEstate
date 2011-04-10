@@ -495,16 +495,38 @@
 				}
 			}
 
+
+			if(!isset($data['lookup_entity']) || !$data['lookup_entity'])
+			{
+				if(is_array($data['entity_data']))
+				{
+					$soadmin_entity 			= CreateObject('property.soadmin_entity');
+					$soadmin_entity->type		= 'entity';
+					$soadmin_entity->type_app	= 'property';
+
+					foreach($data['entity_data'] as $_entity_id => $_entity_info)				
+					{
+						$entity_lookup = $soadmin_entity->read_single($_entity_id);
+						$data['lookup_entity'][] = array
+						(
+							'id'		=> $_entity_id,
+							'name'		=> $entity_lookup['name']
+						);
+					}
+				}
+			}
+//_debug_array($data['lookup_entity']);die();
 			if (isset($data['lookup_entity']) && is_array($data['lookup_entity']))
 			{
 				foreach($data['lookup_entity'] as $entity)
 				{
 					$m++;
 
+					$p_cat_id = isset($data['entity_data'][$entity['id']]['p_cat_id']) ? $data['entity_data'][$entity['id']]['p_cat_id'] : '';
 					$lookup_functions[] = array
 						(
 							'name'		=> 'lookup_entity_' . $entity['id'] .'()',
-							'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},location_code:'{$filter_location}',block_query:'{$block_query}'",
+							'link'		=> "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
 							'action'	=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 						);
 

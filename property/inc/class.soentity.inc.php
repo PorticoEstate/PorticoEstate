@@ -119,6 +119,7 @@
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
 			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
 			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -400,6 +401,11 @@
 				$where= 'AND';			
 			}
 
+			if ($p_num)
+			{
+				$filtermethod .= " $where $entity_table.p_num='$p_num'";
+				$where= 'AND';
+			}
 
 			$_querymethod = array();
 			$__querymethod = array();
@@ -1017,7 +1023,7 @@
 							(
 								'entity_link'	=> $GLOBALS['phpgw']->link('/index.php',array
 								(
-									'menuaction'	=> "property.ui{$type}.index",
+									'menuaction'	=> "property.uientity.index",
 									'entity_id'		=> $entry['entity_id'],
 									'cat_id'		=> $entry['cat_id'],
 									'p_entity_id'	=> $entity_id,
