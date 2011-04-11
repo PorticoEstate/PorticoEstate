@@ -212,7 +212,7 @@
 				<textElement>
 					<font pdfFontName="Helvetica" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Status: " + ( $F{application_status} == "ACCEPTED" ? "Bekreftet" : $F{application_status} )]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Status: " + ( $F{application_status} == "ACCEPTED" ? "AKSEPTERT" : $F{application_status} )]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="84" y="326" width="455" height="13"/>

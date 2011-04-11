@@ -38,10 +38,26 @@
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+            $build_id = phpgw::get_var('buildings', 'int', 'REQUEST', null);
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
+							array('type' => 'filter', 
+								'name' => 'buildings',
+                                'text' => lang('Building').':',
+                                'list' => $this->bo->so->get_buildings(),
+							),
+							array('type' => 'filter', 
+								'name' => 'organizations',
+                                'text' => lang('Organization').':',
+                                'list' => $this->bo->so->get_organizations(),
+							),
+#							array('type' => 'filter', 
+#								'name' => 'seasons',
+#                                'text' => lang('Season').':',
+#                                'list' => $this->bo->so->get_seasons($build_id),
+#							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -102,13 +118,48 @@
 					'href' => self::link(array('menuaction' => 'booking.uiallocation.add'))
 				));
 			}
-			
+		
 			self::render_template('datatable', $data);
 		}
 
 		public function index_json()
 		{
-			$allocations = $this->bo->read();
+			if(isset($_SESSION['showall']))
+			{
+        		unset($filters['building_name']);
+                unset($filters['organization_id']);
+                unset($filters['season_id']);
+			} else {
+                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('organizations', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['organization_id'] = $this->bo->so->get_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['organization_id']);
+                }
+                $testdata3 =  phpgw::get_var('seasons', 'int', 'REQUEST', null);
+                if ($testdata3 != 0) {
+                    $filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('seasons', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['season_id']);                
+                }
+            }
+            
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+			$allocations = $this->bo->so->read($params);
 			array_walk($allocations["results"], array($this, "_add_links"), "booking.uiallocation.show");
 
 			foreach($allocations['results'] as &$allocation)
@@ -116,6 +167,7 @@
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
 			}
+
 			return $this->yui_results($allocations);
 		}
 
@@ -159,6 +211,7 @@
 				{
 					try {
 						$receipt = $this->bo->add($allocation);
+                        $this->bo->so->update_id_string();
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
 					} catch (booking_unauthorized_exception $e) {
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
@@ -204,6 +257,7 @@
 					}
 					if ($step == 3) 
 					{
+                        $this->bo->so->update_id_string();
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$receipt['id']));
 					}
 				}

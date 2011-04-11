@@ -101,9 +101,16 @@
 			if ($building_id = phpgw::get_var('filter_building_id', 'int', 'GET', false)) {
 				$where_clauses[] = "(%%table%%.id IN (SELECT DISTINCT a.id FROM bb_application a, bb_application_resource ar, bb_resource r WHERE ar.application_id = a.id AND ar.resource_id = r.id AND r.building_id = ".intval($building_id)."))";
 			}
-			
+#			if ($type = phpgw::get_var('type') != 'not') {
+#                    $params['filters']['type'] = phpgw::get_var('type');       
+#            }
+
+			if ($status = phpgw::get_var('status') != 'not') {
+                    $params['filters']['status'] = phpgw::get_var('status');       
+            }
+
 			$params['filters']['where'] = $where_clauses;
-			
+
 			return $this->so->read($params);
 		}
 
