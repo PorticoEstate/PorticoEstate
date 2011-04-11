@@ -81,22 +81,19 @@
 				$ordermethod = ' ORDER BY schedule_time ASC';
 			}
 
-			$where= 'WHERE';
-			$filtermethod = '';
+			$filtermethod = " WHERE location_id = {$location_id}";
+
 			if($user_id)
 			{
 				$user = $GLOBALS['phpgw']->accounts->get($user_id);
-				$filtermethod = " WHERE fm_event.responsible_id =" . (int)$user->person_id ;
-				$where= 'AND';
+				$filtermethod .= " AND fm_event.responsible_id =" . (int)$user->person_id ;
 			}
-
-			$filtermethod .= "$where location_id = {$location_id}";
 
 			if($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 
-				$querymethod = " $where fm_event.descr {$this->_like} '%{$query}%'";
+				$querymethod = " AND fm_event.descr {$this->_like} '%{$query}%'";
 			}
 
 			$sql = "SELECT fm_event.id, fm_event.descr, schedule_time, exception_time, location_id, location_item_id,"
