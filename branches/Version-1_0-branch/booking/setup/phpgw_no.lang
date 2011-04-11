@@ -458,7 +458,7 @@ Back	booking	no	Tilbake
 Close	booking	no	Lukk
 CLOSED	booking	no	LUKKET
 Show all applications	booking	no	Vis alle søknader
-Show all messages	booking	no	Vis all beskjeder
+Show all messages	booking	no	Vis alle beskjeder
 Show only messages assigned to me	booking	no	Vis bare mine beskjeder
 E-mail address	booking	no	E-postadresse
 Confirm e-mail address	booking	no	Bekreft e-postadressen
@@ -488,4 +488,6 @@ Can not create a booking in the past	booking	no	Du kan ikke opprette en booking 
 Allocations  with existing allocations or bookings (%1)	booking	no	Tildeinger med eksisterende tildelinger eller bookinger (%1)
 Contact information name is to long. max 50 characters	booking	no	Navn i kontakt informasjon er for langt. Maks 50 tegn
 Show in portal	booking	no	Vis i portal
-NB! No data will be saved, if you navigate away you will loose all.	booking	no	NB! Ingen data er lagret, viss du navigerer vekk så mister du alt.
+NB! No data will be saved, if you navigate away you will loose all.	booking	no	NB! Ingen data er lagret.
+Activity	booking	no	Aktiviteter
+Not selected	booking	no	Ikke valgt

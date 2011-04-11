@@ -68,10 +68,61 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
+							array('type' => 'filter', 
+								'name' => 'status',
+                                'text' => lang('Status').':',
+                                'list' => array(
+                                    array(
+                                        'id' => 'not',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
+                                        'id' => 'NEW',
+                                        'name' => lang('NEW')
+                                    ), 
+                                    array(
+                                        'id' => 'PENDING',
+                                        'name' =>  lang('PENDING')
+                                    ), 
+                                    array(
+                                        'id' => 'REJECTED',
+                                        'name' => lang('REJECTED')
+                                    ), 
+                                    array(
+                                        'id' => 'ACCEPTED',
+                                        'name' => lang('ACCEPTED')
+                                    ),
+                                    array(
+                                        'id' => 'CLOSED',
+                                        'name' => lang('CLOSED')
+                                    )
+                                )
+                            ),
+#							array('type' => 'filter', 
+#								'name' => 'type',
+#                                'text' => lang('Type').':',
+#                                'list' => array(
+#                                    array(
+#                                        'id' => 'not',
+#                                        'name' => lang('Not selected')
+#                                    ), 
+#                                    array(
+#                                        'id' => 'application',
+#                                        'name' => lang('Application')
+#                                    ), 
+#                                    array(
+#                                        'id' => 'message',
+#                                        'name' => lang('Message')
+#                                    ), 
+#                                )
+#                            ),
 							array('type' => 'autocomplete', 
 								'name' => 'building',
 								'ui' => 'building',
 								'text' => lang('Building').':',
+							),
+							array('type' => 'text', 
+								'name' => 'query'
 							),
 							array(
 								'type' => 'submit',

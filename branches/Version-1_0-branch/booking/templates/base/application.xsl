@@ -148,8 +148,10 @@
 					</xsl:if>
 					
 					<option><xsl:value-of select="php:function('lang', '- Actions -')" /></option>
+<!--
 					<option><xsl:value-of select="php:function('lang', 'Create allocation')" /></option>
 					<option><xsl:value-of select="php:function('lang', 'Create booking')" /></option>
+-->
 					<option><xsl:value-of select="php:function('lang', 'Create event')" /></option>
 				</select>
 				</xsl:if>

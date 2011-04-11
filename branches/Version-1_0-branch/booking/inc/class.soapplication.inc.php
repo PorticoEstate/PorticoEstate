@@ -8,6 +8,7 @@
 			parent::__construct('bb_application', 
 				array(
 					'id'		=> array('type' => 'int'),
+                    'id_string' => array('type' => 'string', 'required' => false, 'default' => '0', 'query' => true),
 					'active'	=> array('type' => 'int'),
 					'display_in_dashboard' => array('type' => 'int'),
 					'type'		=> array('type' => 'string'),
@@ -113,6 +114,63 @@
 			return array('id' => $this->db->f('id', false),
 						 'name' => $this->db->f('name', false));
 		}
+
+		function get_building($id)
+		{
+			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('name', false);
+		}
+
+		function get_buildings()
+		{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id, name FROM bb_building WHERE active != 0 ORDER BY name ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+		}
+
+        function get_activities_main_level()
+        {
+		    $results = array();
+			$results[]  = array('id' =>0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id,name FROM bb_activity WHERE parent_id is NULL", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', false));
+			}
+			return $results;
+
+        }
+        function get_activities($id)
+        {
+			$results = array();
+			$this->db->query("select id from bb_activity where id = ($id) or  parent_id = ($id) or parent_id in (select id from bb_activity where parent_id = ($id))", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
+			}
+			return $results;
+
+        }
+
+		public function update_id_string() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
+			$db->query($sql, __LINE__, __FILE__);
+		}
+             
+
+
 		
 		/**
 		 * Check if a given timespan is available for bookings or allocations
