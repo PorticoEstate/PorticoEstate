@@ -51,6 +51,16 @@
 								'value' => lang('New event'),
 								'href' => self::link(array('menuaction' => 'booking.uievent.add'))
 							),
+							array('type' => 'filter', 
+								'name' => 'buildings',
+                                'text' => lang('Building').':',
+                                'list' => $this->bo->so->get_buildings(),
+							),
+							array('type' => 'filter', 
+								'name' => 'activities',
+                                'text' => lang('Activity').':',
+                                'list' => $this->bo->so->get_activities_main_level(),
+							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -110,8 +120,36 @@
 		}
 
 		public function index_json()
+
 		{
-			$events = $this->bo->read();
+			if(isset($_SESSION['showall']))
+			{
+        		unset($filters['building_name']);
+                unset($filters['activity_id']);
+			} else {
+                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['activity_id']);                
+                }
+            }
+            
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+			$events = $this->bo->so->read($params);
 
 			foreach($events['results'] as &$event)
 			{
@@ -366,12 +404,14 @@
 						if ($allids) 
 						{ 
 							$this->bo->so->update_comment($allids);
+                            $this->bo->so->update_id_string();
 						}
 					}
 					else
 					{
 						$this->add_comment($event, lang('Event was created'));
 						$receipt = $this->bo->add($event);
+                        $this->bo->so->update_id_string();
 					}
 					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$receipt['id'], 'secret'=>$event['secret'], 'warnings'=>$errors));
 				}

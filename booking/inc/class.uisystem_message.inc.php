@@ -140,6 +140,7 @@
 				$date = new DateTime(phpgw::get_var('date'));
 				$system_message = array();
 				$system_message['building_id'] = intval(phpgw::get_var('building_id', 'GET'));
+				$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 				$system_message['created'] =  $date->format('Y-m-d  H:m');
 				$system_message['cancel_link'] = self::link(array('menuaction' => 'booking.uisystem_message.index'));
 			}

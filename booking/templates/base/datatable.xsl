@@ -109,6 +109,17 @@
 						</script>
 					</td>
 				</xsl:when>
+				<xsl:when test="type = 'filter'">
+					<td valign="top">
+                    <xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+                	<select name="{$name}" onMouseout="window.status='';return true;">
+                        <xsl:for-each select="list">
+                    		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+		                    <option value="{$id}"><xsl:value-of select="name"/></option>
+                        </xsl:for-each>
+                	</select>
+                    </td>
+				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">
 					<input id="innertoolbar">
@@ -165,7 +176,6 @@
 		</div>
 	</form>
 </xsl:template>
-
 <xsl:template match="form">
 	<form id="queryForm">
 		<xsl:attribute name="method">

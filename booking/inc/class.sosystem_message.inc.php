@@ -12,14 +12,25 @@
 					'title' => array('type' => 'string', 'query' => true, 'required' => true),
 					'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 					'building_id' => array('type' => 'int', 'precision' => '4'),
-					'name' => array('type' => 'string','nullable' => False),
+					'building_name' => array('type' => 'string','nullable' => False, 'query' => true,),
+					'name' => array('type' => 'string','nullable' => False, 'query' => true,),
 					'phone' => array('type' => 'string','nullable' => False, 'default'=>''),
 					'email' => array('type' => 'string','nullable' => False, 'default'=>''),
 					'message' => array('type' => 'string', 'required' => true),
-					'type' => array('type' => 'string', 'default' => 'message'),
-					'status' => array('type' => 'string', 'default' => 'NEW')
+					'type' => array('type' => 'string', 'default' => 'message', 'query' => true),
+					'status' => array('type' => 'string', 'default' => 'NEW', 'query' => true)
 				)
 			);
+		}
+
+		function get_building($id)
+		{
+			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('name', false);
 		}
 		
 	}

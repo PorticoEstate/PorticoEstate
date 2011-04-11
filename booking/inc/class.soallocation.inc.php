@@ -18,6 +18,7 @@
 			parent::__construct('bb_allocation', 
 				array(
 					'id'			=> array('type' => 'int'),
+                    'id_string' => array('type' => 'string', 'required' => false, 'default' => '0', 'query' => true),
 					'active'		=> array('type' => 'int', 'required' => true),
 					'application_id'	=> array('type' => 'int', 'required' => false),
 					'organization_id'		=> array('type' => 'int', 'required' => true),
@@ -145,7 +146,88 @@
 				$errors['season_boundary'] = lang("This booking is not within the selected season");
 			}
 		}
-		
+
+		function get_building($id)
+		{
+			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('name', false);
+		}
+
+		function get_buildings()
+		{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id, name FROM bb_building WHERE active != 0 ORDER BY name ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+		}
+
+		function get_organization($id)
+		{
+			$this->db->limit_query("SELECT id FROM bb_organization where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+		}
+
+		function get_organizations()
+		{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id, name FROM bb_organization WHERE active = 1 ORDER BY name ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+		}
+
+		function get_season($id)
+		{
+			$this->db->limit_query("SELECT id FROM bb_season where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+		}
+
+		function get_seasons($build_id)
+		{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+            if (isset($build_id)) {
+    			$this->db->query("SELECT id, name FROM bb_season WHERE status NOT IN ('ARCHIVED') AND building_id = ($build_id) ORDER BY name ASC", __LINE__, __FILE__);
+            } else {
+		    	$this->db->query("SELECT id, name FROM bb_season WHERE status NOT IN ('ARCHIVED') ORDER BY name ASC", __LINE__, __FILE__);
+            }
+
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+		}
+
+		public function update_id_string() {
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
+			$db->query($sql, __LINE__, __FILE__);
+		}
+	
 		public function find_expired() {
 			$table_name = $this->table_name;
 			$db = $this->db;

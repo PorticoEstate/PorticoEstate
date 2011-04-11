@@ -19,13 +19,38 @@
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 			$messages =  array(); 
-			
-			if (!is_null($for_case_officer_id)) {
-				$sql = "SELECT id, type, status, title, name, created, building_id FROM bb_system_message WHERE status ='NEW' ORDER BY id DESC";
-			}
-			else {
-				$sql = "SELECT id, type, status, title, name, created, building_id FROM bb_system_message ORDER BY id DESC";
-			}
+
+#			if ($type = phpgw::get_var('type', 'string', 'GET', false) != 'not') {
+#                    $params['filters']['type'] = phpgw::get_var('type');       
+#            }
+
+#			if ($status = phpgw::get_var('status', 'string', 'GET', false) != 'not') {
+#                    $params['filters']['status'] = phpgw::get_var('status');       
+#            }
+
+#            if (is_set($params['filters']['type'])) {
+#                $filter = " WHERE type = ".$params['filters']['type']." ";
+#                if (is_set($params['filters']['status'])) {
+#                    $filter = $filter." AND ".$params['filters']['status']." ";
+#                }
+#            } elseif  (is_set($params['filters']['status'])) {
+#            if  (is_set($params['filters']['status'])) {
+#                $filter = " WHERE status = '".$params['filters']['status']."' ";
+#            } else {
+               $filter = "";
+#            }
+            
+
+			$sql = "SELECT id, type, status, title, name, created, building_id FROM bb_system_message ".$filter." ORDER BY id DESC";
+
+   			ob_start();
+			$myFile = "/tmp/debug2.txt";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			echo "<pre>\ntestdata:\n";print_r($sql);
+			$op = ob_get_contents();
+			fwrite($fh, $op);
+			fclose($fh);
+			ob_end_clean();
 
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$this->db->query($sql);

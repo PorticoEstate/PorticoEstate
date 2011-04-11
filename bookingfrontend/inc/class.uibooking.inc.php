@@ -137,7 +137,7 @@
 #						$errors['booking'] = lang('Can not create a booking in the past');
 #					}
 #				} 
-				if (!$season_id &&  $_POST['outseason'] == 'on')
+				if (!$season['id'] &&  $_POST['outseason'] == 'on')
 				{
 					$errors['booking'] = lang('This booking is not connected to a season');
 				}	
