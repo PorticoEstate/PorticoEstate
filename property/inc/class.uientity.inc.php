@@ -1174,9 +1174,13 @@
 				$values['descr']	= phpgw::get_var('descr');
 				$p_entity_id		= phpgw::get_var('p_entity_id', 'int');
 				$p_cat_id			= phpgw::get_var('p_cat_id', 'int');
-				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
-				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']			= phpgw::get_var('p_num');
+
+				if($p_entity_id)
+				{
+					$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+					$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+					$values['p'][$p_entity_id]['p_num']			= phpgw::get_var('p_num');
+				}
 
 
 				$origin		= phpgw::get_var('origin');
