@@ -168,6 +168,7 @@
 		'bb_application' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'id_string' => array('type' => 'varchar', 'nullable' => False, 'default' => '0'),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
 				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'status' => array('type' => 'text', 'nullable'=> False),
@@ -200,6 +201,7 @@
 		'bb_allocation' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
+				'id_string' => array('type' => 'varchar', 'nullable' => False, 'default' => '0'),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
 				'building_name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'application_id' => array('type' => 'int','precision' => '4','nullable' => True),
@@ -514,6 +516,7 @@
 		'bb_event' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','nullable' => False),
+				'id_string' => array('type' => 'varchar', 'nullable' => False, 'default' => '0'),
 				'active' => array('type' => 'int', 'precision' => 4,'nullable' => False,'default' => '1'),
 				'activity_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'description' => array('type' => 'text','nullable' => False),
@@ -753,6 +756,7 @@
 				'created' => array('type' => 'timestamp', 'nullable' => False,'default' => 'current_timestamp'),
 				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'building_id' => array('type' => 'int', 'precision' => '4'),
+				'building_name' => array('type' => 'varchar', 'precision' => '50','nullable' => False),
 				'name' => array('type' => 'varchar','precision' => '50','nullable' => False),
 				'phone' => array('type' => 'varchar','precision' => '50','nullable' => true),
 				'email' => array('type' => 'varchar','precision' => '50','nullable' => true),

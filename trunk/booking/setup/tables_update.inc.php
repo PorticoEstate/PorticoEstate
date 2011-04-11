@@ -2457,7 +2457,7 @@
 
 	$test[] = '0.2.04';
 	/**
-	* Update booking version from 0.2.02 to 0.2.03
+	* Update booking version from 0.2.03 to 0.2.04
 	* Add custom fields to request
 	* 
 	*/
@@ -2475,6 +2475,36 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.05';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	$test[] = '0.2.05';
+	/**
+	* Update booking version from 0.2.04 to 0.2.05
+	* Add custom fields to request
+	* 
+	*/
+	function booking_upgrade0_2_05()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_event ADD COLUMN id_string varchar(20) NOT NULL DEFAULT '0'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_event SET id_string = cast(id AS varchar)");
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_allocation ADD COLUMN id_string varchar(20) NOT NULL DEFAULT '0'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_allocation SET id_string = cast(id AS varchar)");
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_application ADD COLUMN id_string varchar(20) NOT NULL DEFAULT '0'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_application SET id_string = cast(id AS varchar)");
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_system_message ADD COLUMN building_name varchar(50) NOT NULL DEFAULT 'changeme'");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_system_message SET building_name = b2.name FROM bb_building b2 WHERE EXISTS (SELECT 1 FROM bb_building b, bb_system_message a WHERE a.building_id = b.id AND b2.id=b.id AND bb_system_message.id=a.id)");
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.06';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

@@ -139,6 +139,7 @@
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+
 			$data = array(
 				'form' => array(
 					'toolbar' => array(
@@ -147,6 +148,38 @@
 								'type' => 'link',
 								'value' => lang('New application'),
 								'href' => self::link(array('menuaction' => 'booking.uiapplication.add'))
+							),
+							array('type' => 'filter', 
+								'name' => 'status',
+                                'text' => lang('Status').':',
+                                'list' => array(
+                                    array(
+                                        'id' => 'NEW',
+                                        'name' => lang('NEW')
+                                    ), 
+                                    array(
+                                        'id' => 'PENDING',
+                                        'name' =>  lang('PENDING')
+                                    ), 
+                                    array(
+                                        'id' => 'REJECTED',
+                                        'name' => lang('REJECTED')
+                                    ), 
+                                    array(
+                                        'id' => 'ACCEPTED',
+                                        'name' => lang('ACCEPTED')
+                                    )
+                                )
+                            ),
+							array('type' => 'filter', 
+								'name' => 'buildings',
+                                'text' => lang('Building').':',
+                                'list' => $this->bo->so->get_buildings(),
+							),
+							array('type' => 'filter', 
+								'name' => 'activities',
+                                'text' => lang('Activity').':',
+                                'list' => $this->bo->so->get_activities_main_level(),
 							),
 							array('type' => 'text', 
 								'name' => 'query'
@@ -161,7 +194,7 @@
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
-						)
+						),
 					),
 				),
 				'datatable' => array(
@@ -205,8 +238,9 @@
 							'hidden' => true
 						)
 					)
-				)
+				),
 			);
+
 			self::render_template('datatable', $data);
 		}
 
@@ -223,7 +257,34 @@
 			if(isset($_SESSION['showall']))
 			{
 				$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED');
-			}
+                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['activity_id']);                
+                }
+                
+			} else {
+                $filters['status'] = phpgw::get_var('status');
+                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['activity_id']);                
+                }
+            }
 
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
@@ -235,6 +296,7 @@
 			);
 
 			$applications = $this->bo->so->read($params);
+
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);
@@ -254,6 +316,7 @@
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
+
 			return $this->yui_results($applications);
 		}
 		
@@ -377,6 +440,7 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 					$this->bo->send_notification($application, true);
+                    $this->bo->so->update_id_string();
 					$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
 								 lang("A Case officer will review your application as soon as possible."));
 					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id'=>$receipt['id'], 'secret'=>$application['secret']));
