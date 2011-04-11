@@ -495,7 +495,6 @@
 				}
 			}
 
-
 			if(!isset($data['lookup_entity']) || !$data['lookup_entity'])
 			{
 				if(is_array($data['entity_data']))
@@ -515,7 +514,7 @@
 					}
 				}
 			}
-//_debug_array($data['lookup_entity']);die();
+
 			if (isset($data['lookup_entity']) && is_array($data['lookup_entity']))
 			{
 				foreach($data['lookup_entity'] as $entity)
