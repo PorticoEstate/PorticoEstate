@@ -92,7 +92,7 @@ class calendar_socalendar_ extends calendar_socalendar__
 			$this->delete_event( (int) $this->stream->f('cal_id'));
 		}
 //		$this->stream->lock(array('phpgw_cal_user'));
-		if ( $this->stream->Transaction )
+		if ( $this->stream->get_transaction() )
 		{
 			$this->global_lock = true;
 		}
@@ -507,7 +507,7 @@ class calendar_socalendar_ extends calendar_socalendar__
 		);
 		$this->stream->lock($locks);
 */
-		if ( $this->stream->Transaction )
+		if ( $this->stream->get_transaction() )
 		{
 			$this->global_lock = true;
 		}

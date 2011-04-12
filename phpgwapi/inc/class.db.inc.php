@@ -106,7 +106,7 @@
 		
 		var $fetchmode = 'ASSOC';//'BOTH';
 
-		var $Transaction  = false;
+		protected $Transaction  = false;
 
 		var $persistent = false;
 		/**
@@ -668,5 +668,10 @@
 			$this->next_record();
 			$next_id = $this->f('maximum')+1;
 			return $next_id;
+		}
+
+		public function get_transaction()
+		{
+			return $this->Transaction;
 		}
 	}

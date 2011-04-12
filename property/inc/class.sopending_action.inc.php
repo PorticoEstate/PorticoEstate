@@ -114,7 +114,7 @@
 
 			$reminder = 1;
 
-			if( $this->db->Transaction )
+			if( $this->db->get_transaction() )
 			{
 				$this->global_transaction = true;
 			}

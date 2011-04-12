@@ -377,9 +377,21 @@
 		*/
 		public function transaction_abort()
 		{
+			$ret = false;
 			$this->Transaction = false;
-			$this->adodb->FailTrans();
-			return $this->adodb->HasFailedTrans();
+			try
+			{
+				$this->adodb->FailTrans();
+				$ret = $this->adodb->HasFailedTrans();
+			}
+			catch(Exception $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+			return $ret;
 		}
 
 		/**
