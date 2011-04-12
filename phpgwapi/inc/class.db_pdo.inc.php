@@ -360,6 +360,7 @@
 			{
 				if ( $e && $this->Halt_On_Error == 'yes' )
 				{
+					$this->transaction_abort();
 					if($file)
 					{
 						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
@@ -368,7 +369,6 @@
 					{
 						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
 					}
-					$this->transaction_abort();
 					exit;
 				}
 				else if($this->Exception_On_Error)
@@ -445,6 +445,7 @@
 			{
 				if ( $e && $this->Halt_On_Error == 'yes' )
 				{
+					$this->transaction_abort();
 					if($file)
 					{
 						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
@@ -453,7 +454,6 @@
 					{
 						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
 					}
-					$this->transaction_abort();
 					exit;
 				}
 				else if($this->Exception_On_Error)
