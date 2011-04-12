@@ -458,7 +458,7 @@
 			else
 			{
 				$receipt['error'][] = array('msg' => lang('table could not be added'));
-				if($this->db->Transaction)
+				if( $this->db->get_transaction() )
 				{
 					$this->db->transaction_abort();
 				}

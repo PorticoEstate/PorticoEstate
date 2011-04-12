@@ -320,7 +320,7 @@
 
 			unset($attrib);
 
-			if ( $this->_db->Transaction )
+			if ( $this->_db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}
