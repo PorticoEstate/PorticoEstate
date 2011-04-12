@@ -100,7 +100,7 @@
 		 */
 		public function create_group_account($account)
 		{
-			if ( $this->db->Transaction )
+			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}
@@ -154,7 +154,7 @@
 		 */
 		public function create_user_account($account)
 		{
-			if ( $this->db->Transaction )
+			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}

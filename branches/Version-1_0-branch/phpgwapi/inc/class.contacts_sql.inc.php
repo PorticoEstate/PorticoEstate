@@ -2391,7 +2391,7 @@
 				$principal['preferred_address'] = '';
 			}
 
-			if ( $this->db->Transaction )
+			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}
@@ -2478,7 +2478,7 @@
 			$this->org = createObject('phpgwapi.contact_org');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->get_transaction() )
 				{
 					$this->global_lock = true;
 				}
@@ -2511,7 +2511,7 @@
 			$this->person = createObject('phpgwapi.contact_person');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->get_transaction() )
 				{
 					$this->global_lock = true;
 				}
@@ -2569,7 +2569,7 @@
 
 				if ($action == PHPGW_SQL_RUN_SQL)
 				{
-					if ( $this->db->Transaction )
+					if ( $this->db->get_transaction() )
 					{
 						$this->global_lock = true;
 					}
@@ -2616,7 +2616,7 @@
 					$data['my_creatby'] = $this->get_user_id();
 					if ($action == PHPGW_SQL_RUN_SQL)
 					{
-						if ( $this->db->Transaction )
+						if ( $this->db->get_transaction() )
 						{
 							$this->global_lock = true;
 						}
@@ -2646,7 +2646,7 @@
 			$this->location = createObject('phpgwapi.contact_addr');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->get_transaction() )
 				{
 					$this->global_lock = true;
 				}
@@ -2686,7 +2686,7 @@
 			$this->comm = createObject('phpgwapi.contact_comm');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction && !$this->local_lock)
+				if ( $this->db->get_transaction() && !$this->local_lock)
 				{
 					$this->global_lock = true;
 				}
@@ -2719,7 +2719,7 @@
 			$this->note = createObject('phpgwapi.contact_note');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->get_transaction() )
 				{
 					$this->global_lock = true;
 				}
@@ -2752,7 +2752,7 @@
 			$this->others = createObject('phpgwapi.contact_others');
 			if ($action == PHPGW_SQL_RUN_SQL)
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->get_transaction() )
 				{
 					$this->global_lock = true;
 				}
@@ -2927,7 +2927,7 @@
 		function delete_org_person_relation($org_id, $person_id, $action=PHPGW_SQL_RUN_SQL)
 		{
 			$relations = createObject('phpgwapi.contact_org_person');
-			if ( $this->db->Transaction )
+			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}
@@ -3933,7 +3933,7 @@
 				foreach($records as $data)
 				{
 					$this->relations = createObject('phpgwapi.contact_org_person');
-					if ( $this->db->Transaction )
+					if ( $this->db->get_transaction() )
 					{
 						$this->global_lock = true;
 					}
@@ -3967,7 +3967,7 @@
 					if(!$this->exist_org_person_relation($new_organization_id, $data['my_person_id']))
 					{
 						$this->relations = createObject('phpgwapi.contact_org_person');
-						if ( $this->db->Transaction )
+						if ( $this->db->get_transaction() )
 						{
 							$this->global_lock = true;
 						}
@@ -4100,7 +4100,7 @@
 		*/
 		function unlock_table()
 		{
-			if(!$this->global_lock && $this->db->Transaction)
+			if( !$this->global_lock && $this->db->get_transaction() )
 			{
 				$this->db->transaction_commit();				
 				$this->locked = NULL;

@@ -1415,7 +1415,7 @@
 
 		function update_location()
 		{
-			if ( $this->db->Transaction )
+			if ( $this->db->get_transaction() )
 			{
 				$this->global_lock = true;
 			}
