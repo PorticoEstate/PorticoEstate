@@ -608,7 +608,7 @@
 
 			if (! $GLOBALS['phpgw']->acl->check('session_only_preferences',1,'preferences'))
 			{
-				if ( $this->db->Transaction )
+				if ( $this->db->get_transaction() )
 				{
 					$this->global_lock = true;
 				}

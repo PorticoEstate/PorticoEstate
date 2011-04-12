@@ -361,6 +361,7 @@
 				if ( $e && $this->Halt_On_Error == 'yes' )
 				{
 					$this->transaction_abort();
+
 					if($file)
 					{
 						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
@@ -446,6 +447,7 @@
 				if ( $e && $this->Halt_On_Error == 'yes' )
 				{
 					$this->transaction_abort();
+
 					if($file)
 					{
 						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
@@ -561,8 +563,21 @@
 		*/
 		public function transaction_abort()
 		{
+			$ret = false;
 			$this->Transaction = false;
-			return $this->db->rollBack();
+			try
+			{
+				$ret = $this->db->rollBack();
+			}
+			catch(PDOException $e)
+			{
+				if ( $e )
+				{
+					trigger_error('Error: ' . $e->getMessage(), E_USER_ERROR);
+	//				throw $e;
+				}
+			}
+			return $ret;
 		}
 
 		/**

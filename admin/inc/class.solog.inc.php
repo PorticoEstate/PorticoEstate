@@ -25,7 +25,7 @@
 			$account_id = (int) $account_id;
 			if ($account_id > 0)
 			{
-				return " WHEEE log_account_id = $account_id";
+				return " WHERE log_account_id = $account_id";
 			}
 		}
 

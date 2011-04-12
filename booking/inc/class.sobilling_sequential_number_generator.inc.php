@@ -92,7 +92,7 @@
 				throw new LogicException("Cannot be reused over multiple transactions");
 			}
 			
-			if ($this->get_db()->Transaction === false) {
+			if ($this->get_db()->get_transaction() === false) {
 				throw new LogicException("Must only be called within a transaction");
 			}
 			
@@ -133,7 +133,7 @@
 		}
 		
 		function get_current() {
-			if ($this->used || ($this->get_db()->Transaction === false && $this->locked)) {
+			if ($this->used || ($this->get_db()->get_transaction() === false && $this->locked)) {
 				$this->set_used();
 				throw new LogicException("Cannot be reused over multiple transactions");
 			}

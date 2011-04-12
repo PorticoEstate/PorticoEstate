@@ -28,7 +28,7 @@
 		var $Error        = '';
 		var $Auto_Free    = 0;     ## set this to 1 to automatically free results
 		var $Debug        = false;
-		var $Transaction  = false;
+		protected $Transaction  = false;
 
 		function connect()
 		{
@@ -379,5 +379,11 @@
 			$return = array();
 			return $return;
 		}
+
+		public function get_transaction()
+		{
+			return $this->Transaction;
+		}
+
 	}
 
