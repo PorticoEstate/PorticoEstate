@@ -5221,6 +5221,27 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.616 to 0.9.17.617
+	* rename field, add customized url-target
+	* 
+	*/
+
+	$test[] = '0.9.17.616';
+	function property_upgrade0_9_17_616()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_custom_menu_items','name','text');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_custom_menu_items','target', array('type' => 'varchar','precision' => '15','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.617';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608

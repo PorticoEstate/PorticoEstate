@@ -225,6 +225,11 @@ HTML;
 		{
 			$target = "target = '{$item['target']}'";
 		}
+		if(isset($item['local_files']) && $item['local_files'])
+		{
+			$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
+		}
+
 		return <<<HTML
 $out
 					<a href="{$item['url']}"{$link_class}{$icon_style} id="{$id}" {$target}>
