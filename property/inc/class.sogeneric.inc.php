@@ -45,6 +45,7 @@
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->custom 	= createObject('property.custom_fields');
 			$this->_db		= & $GLOBALS['phpgw']->db;
+			$this->_db2		= clone($this->_db);
 			$this->_like	= & $this->_db->like;
 			$this->_join	= & $this->_db->join;
 		}
@@ -1874,6 +1875,22 @@
 						(
 							array
 							(
+								'name'			=> 'parent_id',
+								'descr'			=> lang('parent'),
+								'type'			=> 'select',
+								'sortable'		=> true,
+								'nullable'		=> true,
+								'filter'		=> false,
+								'role'			=> 'parent',
+								'values_def'	=> array
+								(
+									'valueset'		=> false,
+									'method'		=> 'property.bogeneric.get_list',
+									'method_input'	=> array('type' => 'custom_menu_items', 'role' => 'parent', 'selected' => '##parent_id##')
+								)
+							),
+							array
+							(
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar'
@@ -2534,6 +2551,123 @@
 			}
 			return $this->tree;
 		} 
+
+
+		/**
+		 * used for retrive a child-node from a hierarchy
+		 *
+		 * @param integer $entity_id Entity id
+		 * @param integer $parent is the parent of the children we want to see
+		 * @param integer $level is increased when we go deeper into the tree,
+		 * @return array $child Children
+		 */
+
+		protected function get_children($data, $parent, $level)
+		{	
+			$children = array();
+
+			$this->get_location_info($data['type'], $data['type_id']);
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
+			{
+				return $children;
+			}
+			$this->table = $table;
+
+			$filtermthod = 'WHERE parent_id = ' . (int)$parent;
+
+			$sql = "SELECT * FROM {$table} {$filtermthod} ORDER BY name ASC";
+			$this->_db2->query($sql,__LINE__,__FILE__);
+
+			$fields = array(0 => 'id');
+			foreach ($this->location_info['fields'] as $field)
+			{
+				$fields[] = $field['name'];
+			}
+
+			while ($this->_db2->next_record())
+			{
+				$id	= $this->_db2->f('id');
+				foreach($fields as $field)
+				{
+					$children[$id][$field] = $this->_db2->f($field,true);
+				}
+			}
+
+			foreach($children as &$child)
+			{
+				$_children = $this->get_children($data, $child['id'], $level+1);
+				if($_children)
+				{
+					$child['children'] = $_children;
+				}
+			}
+			return $children;
+		} 
+
+
+		public function read_tree($data)
+		{
+			$tree = array();
+
+			$this->get_location_info($data['type'], $data['type_id']);
+
+			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
+			{
+				return $tree;
+			}
+			$this->table = $table;
+
+			$filtermthod = 'WHERE (parent_id = 0 OR parent_id IS NULL)';
+
+			if (isset($data['filter']) && is_array($data['filter']))
+			{
+				$_filter = array();
+				foreach ($data['filter'] as $_field => $_value)
+				{
+					$_filter[] = "{$_field} = '{$_value}'";
+				}
+				if($_filter)
+				{
+					$filtermthod .= ' AND ' . implode(' AND ', $_filter);
+				}
+			}
+
+			$sql = "SELECT * FROM {$table} {$filtermthod}";
+
+			$this->_db2->query($sql,__LINE__,__FILE__);
+			$this->total_records = $this->_db2->num_rows();
+
+			$fields = array(0 => 'id');
+			foreach ($this->location_info['fields'] as $field)
+			{
+				$fields[] = $field['name'];
+			}
+			$node = array();
+			while ($this->_db2->next_record())
+			{
+				$id	= $this->_db2->f('id');
+				
+				foreach($fields as $field)
+				{
+					$tree[$id][$field] = $this->_db2->f($field,true);
+				}
+			}
+
+			foreach($tree as &$node)
+			{
+				$children = $this->get_children($data, $node['id'], 0);
+				if ($children)
+				{
+					$node['children'] = $children;
+				}
+			}
+if($tree)
+{
+//	_debug_array($tree);die();
+}
+			return $tree;
+		}
 
 		/**
 		 * used for retrive the path for a particular node from a hierarchy
