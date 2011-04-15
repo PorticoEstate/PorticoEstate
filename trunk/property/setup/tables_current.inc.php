@@ -2220,6 +2220,7 @@
 		'fm_custom_menu_items' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
 				'url' => array('type' => 'text','nullable' => True),
 				'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
