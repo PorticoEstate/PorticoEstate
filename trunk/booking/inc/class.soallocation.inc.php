@@ -220,8 +220,51 @@
 			}
 			return $results;
 		}
+		function get_allocation_id($allocation)
+		{
 
-		public function update_id_string() {
+            $from = "'".$allocation['from_']."'";
+            $to = "'".$allocation['to_']."'";
+            $org_id = $allocation['organization_id'];
+            $season_id = $allocation['season_id'];
+            $resources = implode(",", $allocation['resources']);
+
+            $sql = "SELECT id FROM bb_allocation ba2 WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = ($org_id) AND ba2.season_id = ($season_id) AND EXISTS ( SELECT 1 FROM bb_allocation  a,bb_allocation_resource b WHERE a.id = b.allocation_id AND b.resource_id IN ($resources))";
+
+			$this->db->limit_query($sql, 0,__LINE__, __FILE__,1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+        }
+
+		function check_for_booking($id)
+        {
+            $sql = "SELECT id FROM bb_booking  WHERE allocation_id = ($id)";
+
+			$this->db->limit_query($sql, 0,__LINE__, __FILE__,1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+            
+        }
+
+		public function delete_allocation($id)
+        {
+			$db = $this->db;
+			$table_name = $this->table_name.'_resource';
+			$sql = "DELETE FROM $table_name WHERE allocation_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name;
+			$sql = "DELETE FROM $table_name WHERE id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		public function update_id_string() 
+        {
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
