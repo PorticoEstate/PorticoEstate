@@ -2220,8 +2220,10 @@
 		'fm_custom_menu_items' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+				'parent_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'text' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
 				'url' => array('type' => 'text','nullable' => True),
+				'target' =>  array('type' => 'varchar','precision' => '15','nullable' => True),
 				'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
 				'local_files' => array('type' => 'int', 'precision' => 2,'nullable' => true),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
