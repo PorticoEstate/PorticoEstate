@@ -528,7 +528,7 @@
 			}
 
 			$status_text = $this->get_status_text();
-_debug_array($status_text);
+
 			$ticket['status_name'] = $status_text[$ticket['status']];
 			$ticket['user_lid']=$GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			$ticket['category_name']=ucfirst($this->get_category_name($ticket['cat_id']));
