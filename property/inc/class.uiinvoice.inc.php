@@ -206,7 +206,7 @@
 			$vendor_id 		= phpgw::get_var('vendor_id', 'int');
 			$workorder_id 	= phpgw::get_var('workorder_id', 'int');
 			$loc1 			= phpgw::get_var('loc1');
-			$voucher_id 	= phpgw::get_var('voucher_id', 'int');
+			$voucher_id 	= $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id', 'int');
 			$b_account_class= phpgw::get_var('b_account_class', 'int');
 
 			//-- ubica focus del menu derecho

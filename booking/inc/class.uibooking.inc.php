@@ -192,7 +192,7 @@
 			$time_to = 	split(" ",phpgw::get_var('to_', 'str', 'GET'));
 			$step = phpgw::get_var('step', 'str', 'POST');
 			if (! isset($step)) $step = 1;
-			if (! isset($noallocation)) $noallocation = 1;
+			if (! isset($allocation_id)) $noallocation = 1;
 			$invalid_dates = array();
 			$valid_dates = array();
 
@@ -283,7 +283,6 @@
                         $booking['secret'] = $this->generate_secret();
                         $receipt = $this->bo->add($booking);
                     }
-
 					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
 				}
 				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors['booking'] && !$errors['season_boundary'] && $step > 1)
