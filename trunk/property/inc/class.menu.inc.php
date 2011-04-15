@@ -932,15 +932,12 @@
 				$custom_menu_items= $custom_menus->read(array('type' => 'custom_menu_items' , 'filter' => array('location' => '.document')));
 				foreach($custom_menu_items as $item)
 				{
-					if($item['local_files'])
-					{
-						$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
-					}
 					$menus['navigation']['documentation']['children'][] = array
 						(
-							'url'	=> $item['url'],
-							'text'	=> $item['name'],
-							'target'=> '_blank'
+							'url'			=> $item['url'],
+							'text'			=> $item['text'],
+							'target'		=> $item['target'] ? $item['target']: '_blank',
+							'local_files'	=> $item['local_files']
 						);
 				}
 			}
@@ -973,14 +970,14 @@
 							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'],'property.uientity.index', PHPGW_ACL_READ);
 						}
 
-/*
+
 						$custom_menu_items= $custom_menus->read_tree(array('type' => 'custom_menu_items' , 'filter' => array('location' => ".entity.{$entry['id']}")));
 
 						if($custom_menu_items)
 						{
-							$menus['navigation']["entity_{$entry['id']}"]['children'][] = $custom_menu_items;
+							$menus['navigation']["entity_{$entry['id']}"]['children'] =  array_merge($menus['navigation']["entity_{$entry['id']}"]['children'], $custom_menu_items);
 						}
-*/
+
 /*
 						foreach($custom_menu_items as $item)
 						{

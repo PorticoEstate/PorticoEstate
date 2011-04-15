@@ -1891,7 +1891,7 @@
 							),
 							array
 							(
-								'name' => 'name',
+								'name' => 'text',
 								'descr' => lang('name'),
 								'type' => 'varchar'
 							),
@@ -1900,6 +1900,17 @@
 								'name' => 'url',
 								'descr' => lang('url'),
 								'type' => 'text'
+							),
+							array
+							(
+								'name'			=> 'target',
+								'descr'			=> lang('target'),
+								'type'			=> 'select',
+								'filter'		=> false,
+								'values_def'	=> array
+								(
+									'valueset'		=> array( array('id' => '_blank', 'name' => '_blank'),array('id' => '_parent', 'name' => '_parent') ),
+								)
 							),
 							array
 							(
@@ -2535,7 +2546,7 @@
 			{
 				return $this->tree;
 			}
-			$sql = "SELECT * FROM {$table} WHERE parent_id = {$parent} ORDER BY name ASC";
+			$sql = "SELECT * FROM {$table} WHERE parent_id = {$parent}";
 			$db->query($sql,__LINE__,__FILE__);
 
 			while ($db->next_record())
@@ -2576,7 +2587,7 @@
 
 			$filtermthod = 'WHERE parent_id = ' . (int)$parent;
 
-			$sql = "SELECT * FROM {$table} {$filtermthod} ORDER BY name ASC";
+			$sql = "SELECT * FROM {$table} {$filtermthod}";
 			$this->_db2->query($sql,__LINE__,__FILE__);
 
 			$fields = array(0 => 'id');

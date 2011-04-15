@@ -772,10 +772,13 @@
 				$field['value'] = 	isset($values[$field['name']]) ? $values[$field['name']] : '';
 				if(isset($field['values_def']))
 				{
-					if($field['values_def']['valueset'])
+					if($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
 					{
 						$field['valueset'] = $field['values_def']['valueset'];
-						// TODO find selected value
+						foreach($field['valueset'] as &$_entry)
+						{
+							$_entry['selected'] = $_entry['id'] == $field['value'] ? 1 : 0;
+						}
 					}
 					else if(isset($field['values_def']['method']))
 					{
