@@ -248,7 +248,7 @@
 			$status_text = array(
 				'R' => lang('Re-opened'),
 				'X' => lang('Closed'),
-				'O' => lang('Opened'),
+				'O' => isset($this->config->config_data['tts_lang_open']) && $this->config->config_data['tts_lang_open'] ? $this->config->config_data['tts_lang_open'] : lang('Open'),
 				'A' => lang('Re-assigned'),
 				'G' => lang('Re-assigned group'),
 				'P' => lang('Priority changed'),

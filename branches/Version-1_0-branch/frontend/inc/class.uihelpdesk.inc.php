@@ -179,7 +179,7 @@
 
 				$status['O'] = array
 				(
-					'status'			=> isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
+					'status'			=> isset($bo->config->config_data['tts_lang_open']) && $bo->config->config_data['tts_lang_open'] ? $bo->config->config_data['tts_lang_open'] : lang('Open'),
 				);
 
 				$custom_status	= $bo->get_custom_status();
@@ -395,7 +395,8 @@
 
 		public function view()
 		{
-			$bo	= CreateObject('property.botts',true);
+			$GLOBALS['phpgw']->translation->add_app('property');
+			$bo	= CreateObject('property.botts');
 			$ticketid = phpgw::get_var('id');
 			$ticket = $bo->read_single($ticketid);
 
