@@ -10,6 +10,7 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'delete'			=>	true,
 			'info'			=>	true,
 			'toggle_show_inactive'	=>	true,
 		);
@@ -373,11 +374,115 @@
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
 			self::render_template('allocation_edit', array('allocation' => $allocation));
 		}
+
+		public function delete()
+		{
+			$id = intval(phpgw::get_var('allocation_id', 'GET'));
+			$allocation = $this->bo->read_single($id);
+    		$season = $this->season_bo->read_single($allocation['season_id']);
+			$step = phpgw::get_var('step', 'str', 'POST');
+        	if (! isset($step)) $step = 1;
+            $errors = array();
+			$invalid_dates = array();
+			$valid_dates = array();
+
+
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$from_date = $_POST['from_'];
+				$to_date = $_POST['to_'];
+                $step++;
+
+  				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
+                {
+                    $err  = $this->bo->so->check_for_booking($id);
+                    if ($err)
+                    {
+                	    $errors['booking'] = lang('Could not delete allocation due to a booking still use it');
+                    }
+                    else
+                    {
+                        $err = $this->bo->so->delete_allocation($id);
+                        $this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$allocation['building_id']));
+                    }
+                } 
+                else
+                { 
+					if ($_POST['recurring'] == 'on') {
+						$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
+					} 
+					else
+					{
+						$repeat_until = strtotime($season['to_'])+60*60*24; 
+						$_POST['repeat_until'] = $season['to_'];
+					} 
+
+					$max_dato = strtotime($_POST['to_']); // highest date from input
+					$interval = $_POST['field_interval']*60*60*24*7; // weeks in seconds
+					$i = 0;
+					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
+					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
+					while (($max_dato+($interval*$i)) <= $repeat_until)
+					{
+						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval*$i));
+						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
+						$allocation['from_'] = $fromdate;
+						$allocation['to_'] = $todate;
+
+                        $id = $this->bo->so->get_allocation_id($allocation);                
+                        $err  = $this->bo->so->check_for_booking($id);
+                		if ($err) 
+						{
+							$invalid_dates[$i]['from_'] = $fromdate;
+							$invalid_dates[$i]['to_'] = $todate;
+						} 
+						else 
+						{
+							$valid_dates[$i]['from_'] = $fromdate;
+							$valid_dates[$i]['to_'] = $todate;
+							if ($step == 3)
+							{
+                                $stat = $this->bo->so->delete_allocation($id);                            }                            
+                        }
+						$i++;
+                    }
+					if ($step == 3) 
+					{
+						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$allocation['building_id']));
+					}
+                }
+			}
+			$this->flash_form_errors($errors);
+			self::add_javascript('booking', 'booking', 'allocation.js');
+			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
+			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
+			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show', 'id' => $allocation['application_id']));
+
+			if ($step < 2) 
+            {
+    			self::render_template('allocation_delete', array('allocation' => $allocation));
+            }
+			elseif ($step == 2) 
+            {
+				self::render_template('allocation_delete_preview', array('allocation' => $allocation,
+					'step' => $step,
+					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
+					'interval' => $_POST['field_interval'],
+					'repeat_until' => $_POST['repeat_until'],
+					'from_date' => $from_date,
+					'to_date' => $to_date,
+					'valid_dates' => $valid_dates,
+					'invalid_dates' => $invalid_dates
+				));
+            }                
+		}
 		
 		public function show()
 		{
 			$allocation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$allocation['allocations_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
+			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
 			$allocation['edit_link'] = self::link(array('menuaction' => 'booking.uiallocation.edit', 'id' => $allocation['id']));
 			$resource_ids = '';
 			foreach($allocation['resources'] as $res)
@@ -401,6 +506,7 @@
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $allocation['resources'][0]['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $allocation['organization_id']));
+			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
 			$allocation['add_link'] = self::link(array('menuaction' => 'booking.uibooking.add', 'allocation_id'=>$allocation['id'], 'from_'=>$allocation['from_'], 'to_'=>$allocation['to_'], 'resource'=>$allocation['resource']));
 			$allocation['when'] = pretty_timestamp($allocation['from_']).' - '.pretty_timestamp($allocation['to_']);
 			self::render_template('allocation_info', array('allocation'=>$allocation));

@@ -491,3 +491,9 @@ Show in portal	booking	no	Vis i portal
 NB! No data will be saved, if you navigate away you will loose all.	booking	no	NB! Ingen data er lagret.
 Activity	booking	no	Aktiviteter
 Not selected	booking	no	Ikke valgt
+Delete until	booking	no	Slett til
+Recurring allocation deletion	booking	no	Slettings intervall
+Delete allocation	booking	no	Slett tildeling
+Delete allocations	booking	no	Slett tildelinger
+Allocations that will be deleted	booking	no	Tildelinger som vil bli slettet
+Allocations  with existing bookings (%1)	booking	no	Tildeinger med eksisterende bookinger (%1)

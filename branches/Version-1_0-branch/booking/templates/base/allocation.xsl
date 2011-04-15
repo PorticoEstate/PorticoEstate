@@ -36,6 +36,10 @@
 		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/edit_link"/>"</xsl:attribute>
 		            <xsl:value-of select="php:function('lang', 'Edit')" />
 		        </button>
+		        <button>
+		            <xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/delete_link"/>"</xsl:attribute>
+		            <xsl:value-of select="php:function('lang', 'Delete')" />
+		        </button>
 			</xsl:if>
 		</div>
     </div>
