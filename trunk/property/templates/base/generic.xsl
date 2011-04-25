@@ -41,7 +41,7 @@
 													<xsl:value-of select="value_id"/>
 												</xsl:when>
 												<xsl:otherwise>
-													<input type="text" name="values[{id_name}]" value="{value_id}" onMouseout="window.status='';return true;">
+													<input type="text" name="values[{id_name}]" value="{value_id}">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
 														</xsl:attribute>
@@ -52,7 +52,6 @@
 									</tr>
 								</xsl:when>
 								<xsl:otherwise>
-
 									<xsl:choose>
 										<xsl:when test="value_id != ''">
 											<tr>
@@ -67,6 +66,12 @@
 									</xsl:choose>	
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="value_id != ''">
+									<input type="hidden" name="{id_name}" value="{value_id}">
+									</input>
+								</xsl:when>
+							</xsl:choose>	
 
 							<xsl:for-each select="fields" >
 								<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
