@@ -51,6 +51,8 @@ if(isset($_POST['checkb_remarks1'])){?><input type="hidden" name="checkb_remarks
 if(isset($_POST['checkb_remarks2'])){?><input type="hidden" name="checkb_remarks2_hidden"  /><?php }
 if(isset($_POST['checkb_remarks3'])){?><input type="hidden" name="checkb_remarks3_hidden"  /><?php }
 if(isset($_POST['checkb_remarks4'])){?><input type="hidden" name="checkb_remarks4_hidden"  /><?php }
+if(isset($_POST['checkb_pay1'])){?><input type="hidden" name="checkb_pay1_hidden"  /><?php }
+if(isset($_POST['checkb_pay2'])){?><input type="hidden" name="checkb_pay2_hidden"  /><?php }
 
 $termin_name = str_replace("lig", "", $contract->get_term_id_title());
 $termin_name = str_replace("vis", "", $termin_name);
@@ -79,9 +81,43 @@ $termin_name = str_replace("vis", "", $termin_name);
 		<td bgcolor="#C0C0C0">Arbeidssted:</td>
 		<td><?php echo $contract_party->get_department();?></td>
 	</tr>
+	<tr>
+		<td></td>
+		<td bgcolor="#C0C0C0">Adresse:</td>
+		<td>
+			<?php 
+				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){ 
+					echo $_POST['address']?>
+					<input type="hidden" name="address" value="<?php echo $_POST['address']?>" /> 
+			<?php
+				}else{
+			?> 
+					<input type="text" name="address" value="<?php echo $contract_party->get_address_1().", ".$contract_party->get_address_2();?>" /> 
+			<?php
+				}
+			?>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td bgcolor="#C0C0C0">Postnr/Sted:</td>
+		<td>
+			<?php 
+				if (isset($_POST['preview']) || isset($_POST['make_PDF'])){ 
+					echo $_POST['postal_code']?>
+					<input type="hidden" name="postal_code" value="<?php echo $_POST['postal_code']?>" /> 
+			<?php
+				}else{
+			?> 
+					<input type="text" name="postal_code" value="<?php echo $contract_party->get_postal_code()." ".$contract_party->get_place();?>" /> 
+			<?php
+				}
+			?>
+		</td>
+	</tr>
 </table>
 
-
+<div class="section">
 <dl class="section_header">
 	<dt>3.</dt>
 	<dd>Eiendom</dd>
@@ -101,7 +137,9 @@ $termin_name = str_replace("vis", "", $termin_name);
 	<dd>G.nr. <?php echo $gb[0];?>  B.nr.  <?php echo $gb[2];?>  i Bodø kommune.</dd>
 <?php }}?>
 </dl>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>4.</dt>
 	<dd>Leieobjekt: <?php echo $composite->get_name();?></dd>
@@ -144,6 +182,9 @@ $termin_name = str_replace("vis", "", $termin_name);
 ?>
 	</dd>
 </dl>
+</div>
+
+<div class="section">
 <dl class="section_header">
 	<dt>5.</dt>
 	<dd>Begrensning</dd>
@@ -166,7 +207,8 @@ else
 	</dd>
 
 </dl>
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>6.</dt>
 	<dd>Kontrakten art og varighet</dd>
@@ -191,8 +233,8 @@ else
 
 </dl>
 </div>
-
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>7.</dt>
 	<dd>Leiesum</dd>
@@ -207,6 +249,9 @@ foreach ($price_items as $item)
 	}
 }?>
 
+</div>
+
+<div class="section">
 
 <dl class="section_header">
 	<dt>8.</dt>
@@ -236,7 +281,8 @@ foreach ($price_items as $item)
 	
 	?>
 </dl>
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>9 a)</dt>
 	<dd>Andre tillegg - Fastbeløp pr. <?php echo  strtolower($termin_name);?></dd>
@@ -272,17 +318,32 @@ foreach ($one_time_price_items as $item)
 	}
 }?>
 </dl>
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>10.</dt>
 	<dd>Leiebetaling</dd>
 </dl>
-<p>Husleien betales forskuddsvis og forfallsdato er sammenfallende med lønningsdato. Ved første forfall betales for 2 - to - måneders husleie.</p>
+<dl class="checkbox_list">
+	<dt><input type="checkbox" name="checkb_pay1" <?php echo $disabled; if(isset($_POST['checkb_pay1']) || isset($_POST['checkb_pay1_hidden'])) {echo 'checked="checked"';}?>  /></dt>
+	<dd>Husleien betales forskuddsvis og forfallsdato er sammenfallende med lønningsdato. Ved første forfall betales for 2 - to - måneders husleie.</dd>
+</dl>
+
+
+
 <div class="one_column">
 <p align="center">Leier/arbeidstaker samtykker i at utleier/arbeidsgiver trekker husleie, og <br />
 eventuelt misligholdt husleie, direkte av lønningen, jfr Arbeidsmiljølovens § 55 nr 3 c.</p>
 </div>
+
 <p>Manglende dekning, eller for lite trekkgrunnlag, på lønningen er å anse som et vesentlig mislighold av leieavtalen, jfr avtalens pkt 21 a).</p>
+<br />
+<dl class="checkbox_list">
+	<dt><input type="checkbox" name="checkb_pay2" <?php echo $disabled; if(isset($_POST['checkb_pay2']) || isset($_POST['checkb_pay2_hidden'])) {echo 'checked="checked"';}?>  /></dt>
+	<dd>Faktura sendes fakturaadresse oppgitt på kontrakt.</dd>
+</dl>
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>11 a)</dt>
 	<dd>Regulering av leie i takt med endringene i konsumprisindeksen</dd>
@@ -295,13 +356,15 @@ etter at siste leiefastsetting ble satt i verk. Utgangspunktet for reguleringen 
 </dl>
 <p>Dersom leieforholdet har vart i minst to år og seks måneder uten annen leieregulering enn etter konsumprisindeksen, kan begge parter, uten oppsigelse, men med seks måneders skriftlig varsel,
 kreve at leien blir satt til gjengs leie ved utleie av liknende bolig på liknende avtalevilkår.</p>
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>12</dt>
 	<dd>Sikkerhet</dd>
 </dl>
 <p>Innbetalt forskuddsleie for èn måned tilbakeføres til leieren når leieforholdet er opphørt, og boligen er besiktet og godtatt av utleier, jfr pkt 23.</p>
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>13</dt>
 	<dd>Utleiers plikter</dd>
@@ -312,6 +375,9 @@ og brukelige låser med nøkler til alle utvendige dører. I leietiden plikter u
 <p>Melding om at boligen ikke er i den stand som følger av avtalen eller husleieloven, må leier gi til utleier innen rimelig tid etter at leier burde oppdaget forholdet. I motsatt fall mister
 leier retten til å påberope manglene. Dette gjelder likevel ikke dersom utleier har opptrådt grovt uaktsomt eller i strid med redelighet og god tro.</p>
 
+</div>
+
+<div class="section">
 <dl class="section_header">
 	<dt>14</dt>
 	<dd>Utleier og leiers vedlikeholdsplikt</dd>
@@ -322,8 +388,9 @@ forbruksmateriell. Ved innbrudd i boligen har leier plikt til å reparere/skifte
 egenandel.</p>
 <p>Leier skal vedlikeholde alle installasjoner, utstyr og gjenstander som boligen er utleid med. Dersom vedlikehold ikke er regnings svarende, påhviler utskifting utleier.</p>
 <p>Leier kan ikke uten utleiers samtykke foreta forandringer i husrommet eller på eiendommen for øvrig, jfr husleielovens § 5-4 annet ledd.</p>
+</div>
 
-
+<div class="section">
 <dl class="section_header">
 	<dt>15</dt>
 	<dd>Leiers øvrige plikter</dd>
@@ -340,7 +407,9 @@ følge av skade som nevnt over. Er leier selv ikke skyld i skaden, kan forsvarli
 <p>Leier plikter å gi utleier eller dennes representant adgang til boligen for tilsyn. Videre plikter leier å gi utleier eller andre adgang til boligen i den utstrekning det er nødvendig for å
 utføre pliktig vedlikehold, lovlige forandringer eller andre arbeider for å forhindre skade på boligen eller eiendommen for øvrig. Utleier disponerer egen nøkkel som om nødvendig kan brukes i slike
 tilfeller. Leier skal varsles i rimelig tid før de foretas tilsyn eller vedlikeholdsarbeider.</p>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>16</dt>
 	<dd>Forsikring av innbo m.v.</dd>
@@ -349,7 +418,9 @@ tilfeller. Leier skal varsles i rimelig tid før de foretas tilsyn eller vedlike
 forsikring benyttes så langt den dekker, inkludert mulig egenandel, før utleiers forsikring benyttes.</p>
 <p>Utleier har ikke ansvar for skader eller tap som måtte som måtte oppstå ved innbrudd, brann, vannskade mv. utover det som dekkes av de forsikringer utleier har som huseier. Dette gjelder
 likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>17</dt>
 	<dd>Framleie</dd>
@@ -370,7 +441,9 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dt></dt>
 	<dd><i>Vilkår for avtalt framleie / husstandsfellesskap, skal påføres kontraktens pkt 25.</i></dd>
 </dl>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>18</dt>
 	<dd>Dyrehold</dd>
@@ -392,7 +465,8 @@ likevel ikke skader eller tap som skyldes utleiers mislighold.</p>
 	<dd><i>Leier kan holde dyr dersom gode grunner taler for det, og dyreholdet ikke er til ulempe for utleier eller andre brukere av eiendommen. Utleiers skriftlige samtykke, og eventuelle
 	vilkår for avtalt dyrehold, skal påføres denne kontrakten, jfr pkt 25.</i></dd>
 </dl>
-
+</div>
+<div class="section">
 <dl class="section_header">
 	<dt>19</dt>
 	<dd>Oppsigelse</dd>
@@ -402,23 +476,21 @@ måned etter at oppsigelsen er mottatt. Oppsigelsen skal dessuten opplyse om at 
 husleieloven, jfr dens § 9-8 første ledd annet punktum, og at utleier i så fall kan begjære tvangsfravikelse etter tvangsfullbyrdelsesloven § 13-2 tredje ledd bokstav c.</p>
 <p>En leieavtale som er inngått for bestemt tid, opphører uten oppsigelse ved utløpet av den avtalte leietid. Det kan avtales at en tidsbestemt leieavtale skal kunne sies opp i leietiden, jfr
 husleielovens § 9-2 første og annet ledd.</p>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>20</dt>
 	<dd>Flyttingsoppfordring</dd>
 </dl>
 <p>Dersom kontrakten er inngått for en bestemt tid (tidsbestemt), må utleier innen tre måneder <strong>etter</strong> kontraktens utløpsdato sende skriftlig oppfordring om at leier må fraflytte
 leieobjektet. I motsatt fall vil kontrakten gå over til å være tidsubestemt.</p>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>21</dt>
 	<dd>Leiers avtalebrudd, utkastelsesklausul</dd>
-</dl>
-<p></p>
-
-<dl class="section_header">
-	<dt>22</dt>
-	<dd>Fraflytting</dd>
 </dl>
 <dl class="checkbox_list">
 	<dt>a)</dt>
@@ -430,7 +502,17 @@ leieobjektet. I motsatt fall vil kontrakten gå over til å være tidsubestemt.<
 	<dt>c)</dt>
 	<dd>Ved vesentlig brudd på leieavtalen, kan utleier heve leieavtalen, jfr husleieloven § 9-9. Leier plikter da å fraflytte boligen.</dd>
 </dl>
+<p>En leier som blir kastet ut eller flytter etter krav fra utleier pga. mislighold eller fraviker som følge av konkurs, plikter å betale leie for den tid som måtte være igjen av leietiden.  Betalingsplikten opphører idet utleier får leid ut boligen på ny, til samme eller høyere pris.  Leier må også betale deomkostninger som utkastelse, søksmål og rydding/rengjøring av boligen fører med seg, samt utgifter til ny utleie.  I tilfelle fraflytting pga. mislighold får pkt. 23 tilsvarende anvendelse.</p>
+</div>
+<div class="section">
+<dl class="section_header">
+	<dt>22</dt>
+	<dd>Fraflytting</dd>
+</dl>
+<p>I de siste 2 –to– måneder av leieforholdet plikter leier å gi leiesøkende og/eller mulige kjøpere av eiendommen adgang til å se boligen hver virkedag (og lørdag) fra kl 09 til kl 20.</p>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>23</dt>
 	<dd>Leieforholdets opphør</dd>
@@ -452,12 +534,17 @@ er nevnt direkte av leierens lønn og feriepenger, jfr Arbeidsmiljølovens § 55
 kreve en rimelig godtgjørelse for dette. Utleier skal så vidt mulig skriftlig oppfordre leier til å hente løsøre. Utleier kan holde løsøret tilbake inntil kostnadene med oppbevaringen dekkes eller
 betryggende sikkerhet stilles. Utleier kan selge løsøre for leiers regning dersom kostnadene eller ulempene med oppbevaringen blir urimelige, eller dersom leier venter urimelig lenge med å betale
 kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen ikke vil dekke salgskostnadene, kan utleier i stedet rå over tingen på annen hensiktsmessig måte.</p>
+</div>
+
+<div class="section">
 <dl class="section_header">
 	<dt>24</dt>
 	<dd>Tinglysing</dd>
 </dl>
 <p>Kontrakten kan ikke tinglyses uten utleiers samtykke.</p>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>25</dt>
 	<dd>Særlige bestemmelser</dd>
@@ -497,15 +584,23 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 	<dt><input type="checkbox" name="checkb_remarks4" <?php echo $disabled; if(isset($_POST['checkb_remarks4']) || isset($_POST['checkb_remarks4_hidden'])) {echo 'checked="checked"';}?>  /></dt>
 	<dd>Ettersom Nordlandssykehuset står foran salg av personalboliger må det presiseres at sykehuset ikke står ansvarlig for å skaffe deg ny bolig dersom salg skulle skje innen botidens utløp <?php echo date($date_format, $contract_dates->get_end_date());?>.</dd>
 </dl>
+</div>
 
+<div class="section">
 <dl class="section_header">
 	<dt>26</dt>
 	<dd>Boligens stand</dd>
 </dl>
 <p>Leier er oppfordret til på forhånd å undersøke boligen. Boligen leies ut i den stand den er ved overtakelsen.</p>
 
-
 <table>
+	<tr>
+		<td colspan="2" align="center"><i>Underskrevne utleier og leier er kjent med og vedtar alle punkter i denne avtalen,
+som er utferdiget i 2 - to -  eksemplarer hvorav utleier og leier har hvert sitt.</i></td>
+	</tr>
+	<tr>
+		<td colspan="2" ><br /></td>
+	</tr>
 	<tr>
 		<td colspan="2" align="center"><i>Bodø den  <?php echo date($date_format, time());?></i></td>
 	</tr>
@@ -527,7 +622,7 @@ kostnadene eller med å overta løsøre. Er det grunn til å tro at salgssummen 
 		</td>
 	</tr>
 </table>
-
+</div>
 <?php if (isset($_POST['preview'])  ){ 
 $HtmlCode= ob_get_contents();
 ob_end_flush();

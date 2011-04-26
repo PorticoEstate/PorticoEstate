@@ -14,6 +14,7 @@ h2 {
 p {
 	font-family: "Arial";
 	font-size: 12px;
+	page-break-inside: avoid;
 }
 
 p.sign {
@@ -29,6 +30,7 @@ dl {
 	font-family: "Arial";
 	font-size: 12px;
 	width: 100%;
+	page-break-inside: avoid;
 }
 
 dl.left_column {
@@ -154,4 +156,14 @@ input[type=submit] {
 	float: left;
 	margin: 30px 10px 10px 0 ;
 	
+}
+
+.section{
+page-break-inside: avoid;
+}
+
+@page :left {
+  @bottom-left {
+    content: counter(page);
+  }
 }
