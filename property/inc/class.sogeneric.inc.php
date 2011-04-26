@@ -1886,7 +1886,7 @@
 								(
 									'valueset'		=> false,
 									'method'		=> 'property.bogeneric.get_list',
-									'method_input'	=> array('type' => 'custom_menu_items', 'role' => 'parent', 'selected' => '##parent_id##')
+									'method_input'	=> array('type' => 'custom_menu_items', 'role' => 'parent', 'selected' => '##parent_id##', 'mapping' => array('name' => 'text'))
 								)
 							),
 							array
@@ -2491,7 +2491,15 @@
 
 			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
 //-----------
-
+			$mapping = array();
+			if(isset($data['mapping']) && $data['mapping'])
+			{
+				$mapping = $data['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
 
 			$values = array();
 			$i = 0;
@@ -2499,10 +2507,7 @@
 			{
 				$_extra = $this->_db->f($id_in_name);
 				$id		= $this->_db->f('id');
-				if(!$name = $this->_db->f('name', true))
-				{
-					$name	= $this->_db->f('descr', true);
-				}
+				$name	= $this->_db->f($mapping['name'], true);
 
 				if($_extra)
 				{
@@ -2530,13 +2535,23 @@
 			foreach($values as $value)
 			{
 				$this->tree[] = $value;
-				$this->get_children2($value['id'], 1);
+				$this->get_children2($data, $value['id'], 1);
 			}
 			return $this->tree;
 		}
 
-		public function get_children2($parent, $level, $reset = false)
+		public function get_children2($data, $parent, $level, $reset = false)
 		{
+			$mapping = array();
+			if(isset($data['mapping']) && $data['mapping'])
+			{
+				$mapping = $data['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
+
 			if($reset)
 			{
 				$this->tree = array();
@@ -2555,7 +2570,7 @@
 				$this->tree[] = array
 				(
 					'id'		=> $id,
-					'name'		=> str_repeat('..',$level) . $db->f('name',true),
+					'name'		=> str_repeat('..',$level) . $db->f($mapping['name'],true),
 					'parent_id'	=> $db->f('parent_id')
 				);
 				$this->get_children2($id, $level+1);
