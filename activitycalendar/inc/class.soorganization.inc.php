@@ -53,36 +53,14 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$like_clauses = array();
 			switch($search_type){
 				case "name":
-					$like_clauses[] = "party.first_name $this->like $like_pattern";
-					$like_clauses[] = "party.last_name $this->like $like_pattern";
-					$like_clauses[] = "party.company_name $this->like $like_pattern";
+					$like_clauses[] = "org.name $this->like $like_pattern";
+					$like_clauses[] = "org.shortname $this->like $like_pattern";
 					break;
-				case "address":
-					$like_clauses[] = "party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "party.place $this->like $like_pattern";
+				case "org_id":
+					$like_clauses[] = "org.organization_number $this->like $like_pattern";
 					break;
-				case "identifier":
-					$like_clauses[] = "party.identifier $this->like $like_pattern";
-					break;
-				case "reskontro":
-					$like_clauses[] = "party.reskontro $this->like $like_pattern";
-					break;
-				case "result_unit_number":
-					$like_clauses[] = "party.result_unit_number $this->like $like_pattern";
-					break;
-				case "all":
-					$like_clauses[] = "party.first_name $this->like $like_pattern";
-					$like_clauses[] = "party.last_name $this->like $like_pattern";
-					$like_clauses[] = "party.company_name $this->like $like_pattern";
-					$like_clauses[] = "party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "party.place $this->like $like_pattern";
-					$like_clauses[] = "party.identifier $this->like $like_pattern";
-					$like_clauses[] = "party.comment $this->like $like_pattern";
-					$like_clauses[] = "party.reskontro $this->like $like_pattern";
+				case "district":
+					$like_clauses[] = "org.district $this->like $like_pattern";
 					break;
 			}
 
@@ -95,6 +73,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		$filter_clauses = array();
 		$filter_clauses[] = "show_in_portal=1";
+
 /*
 		// All parties with contracts of type X
 		if(isset($filters['party_type']))
@@ -153,7 +132,19 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 
-
+	function get_organization_name($org_id)
+	{
+		$result = "Ingen";
+    	if(isset($org_id)){
+	    	$q1="SELECT name FROM bb_organization WHERE id={$org_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		
+		return $result;
+	}
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.
