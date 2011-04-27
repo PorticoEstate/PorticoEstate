@@ -22,12 +22,12 @@
 	/* Dependencies for this app to work */
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'phpgwapi',
-		'versions' => array('0.9.17', '0.9.18')
+		'versions' => array('0.9.17', '0.9.18','0.9.19')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(
 		'appname' => 'booking',
-		'versions' => array('0.2.05')
+		'versions' => array('0.2.05','0.2.06','0.2.07')
 	);
 
 	$setup_info['activitycalendar']['depends'][] = array(

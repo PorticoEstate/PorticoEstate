@@ -1,12 +1,9 @@
 <?php
 phpgw::import_class('activitycalendar.socommon');
-phpgw::import_class('activitycalendar.soorganization');
-phpgw::import_class('activitycalendar.sogroup');
-//phpgw::import_class('activitycalendar.socontactperson');
 
-include_class('activitycalendar', 'activity', 'inc/model/');
+include_class('activitycalendar', 'contact_person', 'inc/model/');
 
-class activitycalendar_soactivity extends activitycalendar_socommon
+class activitycalendar_socontactperson extends activitycalendar_socommon
 {
 	protected static $so;
 
@@ -18,7 +15,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	public static function get_instance()
 	{
 		if (self::$so == null) {
-			self::$so = CreateObject('activitycalendar.soactivity');
+			self::$so = CreateObject('activitycalendar.socontactperson');
 		}
 		return self::$so;
 	}
@@ -40,14 +37,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		$clauses = array('1=1');
+		$table = "";
 
 		//Add columns to this array to include them in the query
 		$columns = array();
 
-		if($sort_field != null) {
+/*		if($sort_field != null) {
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = "ORDER BY id $dir";
 		}
+		*/
 		if($search_for)
 		{
 			$query = $this->marshal($search_for,'string');
@@ -94,12 +93,29 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
 		}
-
-		$filter_clauses = array();
 		
-		if(isset($filters[$this->get_id_field_name()])){
-			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
-			$filter_clauses[] = "activity.id = {$id}";
+		$filter_clauses = array();
+		$contact_person_id = $this->marshal($filters['id'],'int');
+		if(isset($filters['org_id']))
+		{
+			$org_id = $this->marshal($filters['org_id'],'int');
+			if(isset($org_id) && $org_id > 0)
+			{
+				$filter_clauses[] = "organization_contact.organization_id = {$org_id}";
+				$filter_clauses[] = "organization_contact.id = {$contact_person_id}";
+				$table = "bb_organization_contact organization_contact";
+				
+			}
+		}
+		else if(isset($filters['group_id']))
+		{
+			$group_id = $this->marshal($filters['group_id'],'int');
+			if(isset($group_id) && $group_id > 0)
+			{
+				$filter_clauses[] = "group_contact.group_id = {$group_id}";
+				$filter_clauses[] = "group_contact.id = {$contact_person_id}";
+				$table = "bb_group_contact group_contact";
+			}
 		}
 /*
 		// All parties with contracts of type X
@@ -120,39 +136,78 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		$condition =  join(' AND ', $clauses);
 
-		if($return_count) // We should only return a count
+		if($table == "bb_organization_contact")
 		{
-			$cols = 'COUNT(DISTINCT(activity.id)) AS count';
+			if($return_count) // We should only return a count
+			{
+				$cols = 'COUNT(DISTINCT(organization_contact.id)) AS count';
+			}
+			else
+			{
+				$columns[] = 'organization_contact.id';
+				$columns[] = 'organization_contact.name';
+				$columns[] = 'organization_contact.ssn';
+				$columns[] = 'organization_contact.phone';
+				$columns[] = 'organization_contact.email';
+				$columns[] = 'organization_contact.organization_id';
+				
+				$cols = implode(',',$columns);
+			}
 		}
 		else
 		{
-			$columns[] = 'activity.id';
-			$columns[] = 'activity.organization_id';
-			$columns[] = 'activity.group_id';
-			$columns[] = 'activity.district';
-			$columns[] = 'activity.category';
-			$columns[] = 'activity.description';
-			$columns[] = 'activity.arena';
-			$columns[] = 'activity.date_start';
-			$columns[] = 'activity.date_end';
-			$columns[] = 'activity.create_date';
-			$columns[] = 'activity.last_change_date';
-			$columns[] = 'activity.contact_person_1';
-			$columns[] = 'activity.contact_person_2';
-			
-			$cols = implode(',',$columns);
+			if($return_count) // We should only return a count
+			{
+				$cols = 'COUNT(DISTINCT(group_contact.id)) AS count';
+			}
+			else
+			{
+				$columns[] = 'group_contact.id';
+				$columns[] = 'group_contact.name';
+				$columns[] = 'group_contact.phone';
+				$columns[] = 'group_contact.email';
+				$columns[] = 'group_contact.group_id';
+				
+				$cols = implode(',',$columns);
+			}
 		}
 
-		$tables = "activity_activity activity";
+		$tables = $table;
 
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 		
-		var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
+		//var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 
 
+	function get_group_contact_name($id)
+	{
+		$result = "Ingen";
+    	if(isset($id)){
+	    	$q1="SELECT name FROM bb_group_contact WHERE id={$id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_org_contact_name($id)
+	{
+		$result = "Ingen";
+    	if(isset($id)){
+	    	$q1="SELECT name FROM bb_organization_contact WHERE id={$id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		return $result;
+	}
+	
 
 	/**
 	 * Function for adding a new activity to the database. Updates the activity object.
@@ -160,23 +215,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	 * @param activitycalendar_activity $activity the party to be added
 	 * @return bool true if successful, false otherwise
 	 */
-	function add(&$activity)
+	function add(&$contact_person)
 	{
-		// Insert a new activity
-		$ts_now = strtotime('now');
-		$q ="INSERT INTO activity_activity (organization_id, create_date) VALUES (1, $ts_now)";
-		$result = $this->db->query($q);
-
-		if(isset($result)) {
-			// Set the new party ID
-			$activity->set_id($this->db->get_last_insert_id('activity_activity', 'id'));
-			// Forward this request to the update method
-			return $this->update($activity);
-		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -185,29 +226,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	 * @param $activity the activity to be updated
 	 * @return boolean true if successful, false otherwise
 	 */
-	function update($activity)
+	function update($contact_person)
 	{
-		$id = intval($activity->get_id());
-		$ts_now = strtotime('now');
-			
-		$values = array(
-			'organization_id = '. $this->marshal($activity->get_organization_id(), 'int'),
-			'group_id = '     . $this->marshal($activity->get_group_id(), 'int'),
-			'district =  '     . $this->marshal($activity->get_district(), 'int'),
-			'category = '          . $this->marshal($activity->get_category(), 'int'),
-			//'target = '   . $this->marshal($activity->get_target(), 'string'),
-			'description = '     . $this->marshal($activity->get_description(), 'string'),
-			'arena = '      . $this->marshal($activity->get_arena(), 'int'),
-			'date_start = '      . $this->marshal($activity->get_date_start(), 'int'),
-			'date_end = '    . $this->marshal($activity->get_date_end(), 'int'),
-			'last_change_date = '    . $this->marshal($ts_now, 'int'),
-			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'int'),
-			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int')
-		);
-		
-		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
-			
-		return isset($result);
+		return false;
 	}
 
 	public function get_id_field_name($extended_info = false)
@@ -228,23 +249,19 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return $ret;
 	}
 
-	protected function populate(int $activity_id, &$activity)
+	protected function populate(int $contact_person_id, &$contact_person)
 	{
 
-		if($activity == null) {
-			$activity = new activitycalendar_activity((int) $activity_id);
+		if($contact_person == null) {
+			$contact_person = new activitycalendar_contact_person((int) $contact_person_id);
 
-			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
-			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
-			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
-			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
-			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
-			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
-			$activity->set_date_start($this->unmarshal($this->db->f('date_start'), 'int'));
-			$activity->set_date_end($this->unmarshal($this->db->f('date_end'), 'int'));
-			$activity->set_contact_person_1($this->unmarshal($this->db->f('contact_person_1'), 'int'));
-			$activity->set_contact_person_2($this->unmarshal($this->db->f('contact_person_2'), 'int'));
+			$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+			$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+			$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+			$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+			$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+			$contact_person->set_ssn($this->unmarshal($this->db->f('ssn'), 'string'));
 		}
-		return $activity;
+		return $contact_person;
 	}
 }
