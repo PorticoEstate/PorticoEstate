@@ -46,57 +46,33 @@ then retrieve data only when needed for nodes that aren't visible when the
 control is first loaded.  This example shows you how to do that.</p>
 
 <p>In the TreeView instance below, we've loaded all "top-level" nodes into the
-page as soon as the page loads; these nodes contain the names of many Indian
-states.  When a node is expanded, we use <a
+page as soon as the page loads; these nodes contain the names of several popular
+music groups.  When a node is expanded, we use <a
 href="http://developer.yahoo.com/yui/connection/">Connection Manager</a> to
 access <a
-href="http://developer.yahoo.com/search/web/V1/relatedSuggestion.html">a Yahoo!
-Search web service that will return a list of "related suggestions."</a>  So
+href="http://developer.yahoo.com/music/">a Yahoo!
+Music web service that will return a list of tracks from the group that you can
+listen to.</a>  So
 when the page loads, we know nothing about our top-level nodes' children.  And
 while the resulting TreeView instance could grow quite large through user
 interaction, we need only load a very light set of nodes to begin with.
 </p>
 
-<p>This example also shows the two label styles for childless nodes.  The first
-(default) style maintains the expand/collapse icon style even when the node has
-no children; the second style shows childless nodes as leaf nodes with no
-expand/collapse icon.  Note: this is for dynamically loaded nodes after the
-dynamic load process has produced zero children.  You can also force the leaf
-node presentation for any node by setting the isLeaf property to true (this
-also disables dynamic loading).</p>
-			
 </div>
 
 <!--BEGIN SOURCE CODE FOR EXAMPLE =============================== -->
 
-<h3>Childless Node Style:</h3>
-<dd><label for="mode0"><input type="radio" id="mode0" name="mode" value ="0" checked />
-    Expand/Collapse</label>
-</dd>
-<dd><label for="mode1"><input type="radio" id="mode1" name="mode" value ="1" /> Leaf Node</label></dd> 
-
 <div id="treeDiv1"></div>
-    
 <script type="text/javascript">
+(function() {
 
-YAHOO.example.treeExample = function() {
-
-    var tree, currentIconMode;
-
-    function changeIconMode() {
-        var newVal = parseInt(this.value);
-        if (newVal != currentIconMode) {
-            currentIconMode = newVal;
-        }
-        buildTree();
-    }
+    var tree;
     
         function loadNodeData(node, fnLoadComplete)  {
-            
             //We'll load node data based on what we get back when we
             //use Connection Manager topass the text label of the 
             //expanding node to the Yahoo!
-            //Search "related suggestions" API.  Here, we're at the 
+        //Music track search API.  Here, we're at the
             //first part of the request -- we'll make the request to the
             //server.  In our success handler, we'll build our new children
             //and then return fnLoadComplete back to the tree.
@@ -117,15 +93,32 @@ YAHOO.example.treeExample = function() {
                     YAHOO.log("XHR transaction was successful.", "info", "example");
                     //YAHOO.log(oResponse.responseText);
                     var oResults = eval("(" + oResponse.responseText + ")");
-                    if((oResults.ResultSet.Result) && (oResults.ResultSet.Result.length)) {
-                        //Result is an array if more than one result, string otherwise
-                        if(YAHOO.lang.isArray(oResults.ResultSet.Result)) {
-                            for (var i=0, j=oResults.ResultSet.Result.length; i<j; i++) {
-                                var tempNode = new YAHOO.widget.TextNode(oResults.ResultSet.Result[i], node, false);
-                            }
-                        } else {
-                            //there is only one result; comes as string:
-                            var tempNode = new YAHOO.widget.TextNode(oResults.ResultSet.Result, node, false)
+
+                var query = oResults.query,
+                    results = query && query.results,
+                    tracks = results && results.Track,
+                    title, url, titles, tempNode;
+
+                if (YAHOO.lang.isArray(tracks)) {
+                    titles = {};
+                    for (var i = 0, len = tracks.length; i < len; i++) {
+                        title = tracks[i].title;
+                        url = tracks[i].url;
+
+                        // prevent duplicate track titles by creating a hash of titles
+                        if (!titles[title]) {
+                            titles[title] = true;
+                            tempNode = new YAHOO.widget.TextNode(title, node, false);
+
+                            // we can tell the tree node that this is a leaf node so
+                            // that it doesn't try to dynamically load children.
+                            tempNode.isLeaf = true;
+
+                            // Define a href so that a click on the node will navigate
+                            // to the page that has the track that you may be able
+                            // to listen to.
+                            tempNode.href = url;
+                        }
                         }
                     }
                     
@@ -163,53 +156,32 @@ YAHOO.example.treeExample = function() {
             YAHOO.util.Connect.asyncRequest('GET', sUrl, callback);
         }
 
-        function buildTree() {
+    function init() {
            //create a new tree:
            tree = new YAHOO.widget.TreeView("treeDiv1");
            
            //turn dynamic loading on for entire tree:
-           tree.setDynamicLoad(loadNodeData, currentIconMode);
+       tree.setDynamicLoad(loadNodeData);
            
            //get root node for tree:
            var root = tree.getRoot();
            
-           //add child nodes for tree; our top level nodes are
-           //all the states in India:
-           var aStates = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka"/* we're only using the first half of this list, to keep the tree smaller,"Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Orissa","Punjab","Rajasthan","Sikkim","Tamil Nadu","Tripura","Uttaranchal","Uttar","Pradesh","West Bengal"*/];
+       //add child nodes for tree; our top level nodes are bands
+       var bands = ["Radiohead","Phoenix","Bon Iver","Born Ruffians","LCD Soundsystem","Blind Pilot","The Black Keys"];
            
-           for (var i=0, j=aStates.length; i<j; i++) {
-                var tempNode = new YAHOO.widget.TextNode(aStates[i], root, false);
+       for (var i=0, j=bands.length; i<j; i++) {
+            var tempNode = new YAHOO.widget.TextNode(bands[i], root, false);
            }
 
-           // Use the isLeaf property to force the leaf node presentation for a given node.
-           // This disables dynamic loading for the node.
-           var tempNode = new YAHOO.widget.TextNode('This is a leaf node', root, false);
-           tempNode.isLeaf = true;
-           
            //render tree with these toplevel nodes; all descendants of these nodes
            //will be generated as needed by the dynamic loader.
            tree.draw();
         }
 
+    //once the DOM has loaded, we can go ahead and set up our tree:
+    YAHOO.util.Event.onDOMReady(init);
+}());
 
-    return {
-        init: function() {
-            YAHOO.util.Event.on(["mode0", "mode1"], "click", changeIconMode);
-            var el = document.getElementById("mode1");
-            if (el && el.checked) {
-                currentIconMode = parseInt(el.value);
-            } else {
-                currentIconMode = 0;
-            }
-
-            buildTree();
-        }
-
-    }
-} ();
-
-//once the DOM has loaded, we can go ahead and set up our tree:
-YAHOO.util.Event.onDOMReady(YAHOO.example.treeExample.init, YAHOO.example.treeExample,true)
 
 </script>
 

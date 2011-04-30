@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 /**
  * The YAHOO object is the single global object used by YUI Library.  It
@@ -121,14 +121,15 @@ YAHOO.namespace = function() {
 /**
  * Uses YAHOO.widget.Logger to output a log message, if the widget is
  * available.
+ * Note: LogReader adds the message, category, and source to the DOM as HTML.
  *
  * @method log
  * @static
- * @param  {String}  msg  The message to log.
- * @param  {String}  cat  The log category for the message.  Default
+ * @param  {HTML}  msg  The message to log.
+ * @param  {HTML}  cat  The log category for the message.  Default
  *                        categories are "info", "warn", "error", time".
  *                        Custom categories can be used as well. (opt)
- * @param  {String}  src  The source of the the message (opt)
+ * @param  {HTML}  src  The source of the the message (opt)
  * @return {Boolean}      True if the log operation was successful.
  */
 YAHOO.log = function(msg, cat, src) {
@@ -249,9 +250,17 @@ YAHOO.env.getVersion = function(name) {
  * @class YAHOO.env.ua
  * @static
  */
-YAHOO.env.ua = function() {
 
-        var numberfy = function(s) {
+/**
+ * parses a user agent string (or looks for one in navigator to parse if
+ * not supplied).
+ * @method parseUA
+ * @since 2.9.0
+ * @static
+ */
+YAHOO.env.parseUA = function(agent) {
+
+        var numberify = function(s) {
             var c = 0;
             return parseFloat(s.replace(/\./g, function() {
                 return (c++ == 1) ? '' : '.';
@@ -266,6 +275,7 @@ YAHOO.env.ua = function() {
          * Internet Explorer version number or 0.  Example: 6
          * @property ie
          * @type float
+         * @static
          */
         ie: 0,
 
@@ -273,6 +283,7 @@ YAHOO.env.ua = function() {
          * Opera version number or 0.  Example: 9.2
          * @property opera
          * @type float
+         * @static
          */
         opera: 0,
 
@@ -282,18 +293,20 @@ YAHOO.env.ua = function() {
          * will be 0.  Example: 1.8
          * <pre>
          * Firefox 1.0.0.4: 1.7.8   <-- Reports 1.7
-         * Firefox 1.5.0.9: 1.8.0.9 <-- Reports 1.8
-         * Firefox 2.0.0.3: 1.8.1.3 <-- Reports 1.8
-         * Firefox 3 alpha: 1.9a4   <-- Reports 1.9
+         * Firefox 1.5.0.9: 1.8.0.9 <-- 1.8
+         * Firefox 2.0.0.3: 1.8.1.3 <-- 1.81
+         * Firefox 3.0   <-- 1.9
+         * Firefox 3.5   <-- 1.91
          * </pre>
          * @property gecko
          * @type float
+         * @static
          */
         gecko: 0,
 
         /**
          * AppleWebKit version.  KHTML browsers that are not WebKit browsers 
-         * will evaluate to 1, other browsers 0.  Example: 418.9.1
+         * will evaluate to 1, other browsers 0.  Example: 418.9
          * <pre>
          * Safari 1.3.2 (312.6): 312.8.1 <-- Reports 312.8 -- currently the 
          *                                   latest available for Mac OSX 10.3.
@@ -304,22 +317,28 @@ YAHOO.env.ua = function() {
          * Safari 2.0.4 (419.3): 419     <-- Tiger installations that have been
          *                                   updated, but not updated
          *                                   to the latest patch.
-         * Webkit 212 nightly:   522+    <-- Safari 3.0 precursor (with native SVG
-         *                                   and many major issues fixed).  
-         * 3.x yahoo.com, flickr:422     <-- Safari 3.x hacks the user agent
-         *                                   string when hitting yahoo.com and 
-         *                                   flickr.com.
-         * Safari 3.0.4 (523.12):523.12  <-- First Tiger release - automatic update
-         *                                   from 2.x via the 10.4.11 OS patch
+         * Webkit 212 nightly:   522+    <-- Safari 3.0 precursor (with native
+         * SVG and many major issues fixed).
+         * Safari 3.0.4 (523.12) 523.12  <-- First Tiger release - automatic
+         * update from 2.x via the 10.4.11 OS patch.
          * Webkit nightly 1/2008:525+    <-- Supports DOMContentLoaded event.
          *                                   yahoo.com user agent hack removed.
-         *                                   
          * </pre>
-         * http://developer.apple.com/internet/safari/uamatrix.html
+         * http://en.wikipedia.org/wiki/Safari_version_history
          * @property webkit
          * @type float
+         * @static
          */
         webkit: 0,
+
+        /**
+         * Chrome will be detected as webkit, but this property will also
+         * be populated with the Chrome version number
+         * @property chrome
+         * @type float
+         * @static
+         */
+        chrome: 0,
 
         /**
          * The mobile property will be set to a string containing any relevant
@@ -328,6 +347,7 @@ YAHOO.env.ua = function() {
          * devices with the WebKit-based browser, and Opera Mini.  
          * @property mobile 
          * @type string
+         * @static
          */
         mobile: null,
 
@@ -338,13 +358,55 @@ YAHOO.env.ua = function() {
          * @type float
          */
         air: 0,
+        /**
+         * Detects Apple iPad's OS version
+         * @property ipad
+         * @type float
+         * @static
+         */
+        ipad: 0,
+        /**
+         * Detects Apple iPhone's OS version
+         * @property iphone
+         * @type float
+         * @static
+         */
+        iphone: 0,
+        /**
+         * Detects Apples iPod's OS version
+         * @property ipod
+         * @type float
+         * @static
+         */
+        ipod: 0,
+        /**
+         * General truthy check for iPad, iPhone or iPod
+         * @property ios
+         * @type float
+         * @static
+         */
+        ios: null,
+        /**
+         * Detects Googles Android OS version
+         * @property android
+         * @type float
+         * @static
+         */
+        android: 0,
+        /**
+         * Detects Palms WebOS version
+         * @property webos
+         * @type float
+         * @static
+         */
+        webos: 0,
 
         /**
          * Google Caja version number or 0.
          * @property caja
          * @type float
          */
-        caja: nav.cajaVersion,
+        caja: nav && nav.cajaVersion,
 
         /**
          * Set to true if the page appears to be in SSL
@@ -364,7 +426,7 @@ YAHOO.env.ua = function() {
 
     },
 
-    ua = navigator && navigator.userAgent, 
+    ua = agent || (navigator && navigator.userAgent),
     
     loc = window && window.location,
 
@@ -380,55 +442,92 @@ YAHOO.env.ua = function() {
             o.os = 'windows';
         } else if ((/macintosh/i).test(ua)) {
             o.os = 'macintosh';
+        } else if ((/rhino/i).test(ua)) {
+            o.os = 'rhino';
         }
     
         // Modern KHTML browsers should qualify as Safari X-Grade
         if ((/KHTML/).test(ua)) {
-            o.webkit=1;
+            o.webkit = 1;
         }
-
         // Modern WebKit browsers are at least X-Grade
-        m=ua.match(/AppleWebKit\/([^\s]*)/);
-        if (m&&m[1]) {
-            o.webkit=numberfy(m[1]);
+        m = ua.match(/AppleWebKit\/([^\s]*)/);
+        if (m && m[1]) {
+            o.webkit = numberify(m[1]);
 
             // Mobile browser check
             if (/ Mobile\//.test(ua)) {
-                o.mobile = "Apple"; // iPhone or iPod Touch
+                o.mobile = 'Apple'; // iPhone or iPod Touch
+
+                m = ua.match(/OS ([^\s]*)/);
+                if (m && m[1]) {
+                    m = numberify(m[1].replace('_', '.'));
+                }
+                o.ios = m;
+                o.ipad = o.ipod = o.iphone = 0;
+
+                m = ua.match(/iPad|iPod|iPhone/);
+                if (m && m[0]) {
+                    o[m[0].toLowerCase()] = o.ios;
+                }
             } else {
-                m=ua.match(/NokiaN[^\/]*/);
+                m = ua.match(/NokiaN[^\/]*|Android \d\.\d|webOS\/\d\.\d/);
                 if (m) {
-                    o.mobile = m[0]; // Nokia N-series, ex: NokiaN95
+                    // Nokia N-series, Android, webOS, ex: NokiaN95
+                    o.mobile = m[0];
+                }
+                if (/webOS/.test(ua)) {
+                    o.mobile = 'WebOS';
+                    m = ua.match(/webOS\/([^\s]*);/);
+                    if (m && m[1]) {
+                        o.webos = numberify(m[1]);
+                    }
+                }
+                if (/ Android/.test(ua)) {
+                    o.mobile = 'Android';
+                    m = ua.match(/Android ([^\s]*);/);
+                    if (m && m[1]) {
+                        o.android = numberify(m[1]);
+                    }
+
                 }
             }
 
-            m=ua.match(/AdobeAIR\/([^\s]*)/);
+            m = ua.match(/Chrome\/([^\s]*)/);
+            if (m && m[1]) {
+                o.chrome = numberify(m[1]); // Chrome
+            } else {
+                m = ua.match(/AdobeAIR\/([^\s]*)/);
             if (m) {
                 o.air = m[0]; // Adobe AIR 1.0 or better
             }
-
+            }
         }
 
         if (!o.webkit) { // not webkit
-            // @todo check Opera/8.01 (J2ME/MIDP; Opera Mini/2.0.4509/1316; fi; U; ssr)
-            m=ua.match(/Opera[\s\/]([^\s]*)/);
-            if (m&&m[1]) {
-                o.opera=numberfy(m[1]);
-                m=ua.match(/Opera Mini[^;]*/);
+// @todo check Opera/8.01 (J2ME/MIDP; Opera Mini/2.0.4509/1316; fi; U; ssr)
+            m = ua.match(/Opera[\s\/]([^\s]*)/);
+            if (m && m[1]) {
+                o.opera = numberify(m[1]);
+                m = ua.match(/Version\/([^\s]*)/);
+                if (m && m[1]) {
+                    o.opera = numberify(m[1]); // opera 10+
+                }
+                m = ua.match(/Opera Mini[^;]*/);
                 if (m) {
                     o.mobile = m[0]; // ex: Opera Mini/2.0.4509/1316
                 }
             } else { // not opera or webkit
-                m=ua.match(/MSIE\s([^;]*)/);
-                if (m&&m[1]) {
-                    o.ie=numberfy(m[1]);
+                m = ua.match(/MSIE\s([^;]*)/);
+                if (m && m[1]) {
+                    o.ie = numberify(m[1]);
                 } else { // not opera, webkit, or ie
-                    m=ua.match(/Gecko\/([^\s]*)/);
+                    m = ua.match(/Gecko\/([^\s]*)/);
                     if (m) {
-                        o.gecko=1; // Gecko detected, look for revision
-                        m=ua.match(/rv:([^\s\)]*)/);
-                        if (m&&m[1]) {
-                            o.gecko=numberfy(m[1]);
+                        o.gecko = 1; // Gecko detected, look for revision
+                        m = ua.match(/rv:([^\s\)]*)/);
+                        if (m && m[1]) {
+                            o.gecko = numberify(m[1]);
                         }
                     }
                 }
@@ -437,7 +536,9 @@ YAHOO.env.ua = function() {
     }
 
     return o;
-}();
+};
+
+YAHOO.env.ua = YAHOO.env.parseUA();
 
 /*
  * Initializes the global by creating the default namespaces and applying
@@ -485,6 +586,16 @@ var L = YAHOO.lang,
     FUNCTION_TOSTRING = '[object Function]',
     OBJECT_TOSTRING = '[object Object]',
     NOTHING = [],
+
+    HTML_CHARS = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;',
+        '/': '&#x2F;',
+        '`': '&#x60;'
+    },
 
     // ADD = ["toString", "valueOf", "hasOwnProperty"],
     ADD = ["toString", "valueOf"],
@@ -608,6 +719,35 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
     } : function(){},
        
     /**
+     * <p>
+     * Returns a copy of the specified string with special HTML characters
+     * escaped. The following characters will be converted to their
+     * corresponding character entities:
+     * <code>&amp; &lt; &gt; &quot; &#x27; &#x2F; &#x60;</code>
+     * </p>
+     *
+     * <p>
+     * This implementation is based on the
+     * <a href="http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet">OWASP
+     * HTML escaping recommendations</a>. In addition to the characters
+     * in the OWASP recommendation, we also escape the <code>&#x60;</code>
+     * character, since IE interprets it as an attribute delimiter when used in
+     * innerHTML.
+     * </p>
+     *
+     * @method escapeHTML
+     * @param {String} html String to escape.
+     * @return {String} Escaped string.
+     * @static
+     * @since 2.9.0
+     */
+    escapeHTML: function (html) {
+        return html.replace(/[&<>"'\/`]/g, function (match) {
+            return HTML_CHARS[match];
+        });
+    },
+
+    /**
      * Utility to set up the prototype, constructor and superclass properties to
      * support an inheritance strategy that can chain constructors and methods.
      * Static members will not be inherited.
@@ -686,6 +826,8 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
             
             L._IEEnumFix(r, s);
         }
+
+        return r;
     },
  
     /**
@@ -712,6 +854,8 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
             a.push(arguments[i]);
         }
         L.augmentObject.apply(this, a);
+
+        return r;
     },
 
       
@@ -796,6 +940,12 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
      * value is an object, it uses the Object's toString() if this has
      * been overridden, otherwise it does a shallow dump of the key/value
      * pairs.
+     *
+     * By specifying the recurse option, the string is rescanned after
+     * every replacement, allowing for nested template substitutions.
+     * The side effect of this option is that curly braces in the
+     * replacement content must be encoded.
+     *
      * @method substitute
      * @since 2.3.0
      * @param s {String} The string that will be modified.
@@ -804,21 +954,22 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
      *                     process each match.  It receives the key,
      *                     value, and any extra metadata included with
      *                     the key inside of the braces.
+     * @param recurse {boolean} default true - if not false, the replaced
+     * string will be rescanned so that nested substitutions are possible.
      * @return {String} the substituted string
      */
-    substitute: function (s, o, f) {
-        var i, j, k, key, v, meta, saved=[], token, 
+    substitute: function (s, o, f, recurse) {
+        var i, j, k, key, v, meta, saved=[], token, lidx=s.length,
             DUMP='dump', SPACE=' ', LBRACE='{', RBRACE='}',
             dump, objstr;
 
-
         for (;;) {
-            i = s.lastIndexOf(LBRACE);
+            i = s.lastIndexOf(LBRACE, lidx);
             if (i < 0) {
                 break;
             }
             j = s.indexOf(RBRACE, i);
-            if (i + 1 >= j) {
+            if (i + 1 > j) {
                 break;
             }
 
@@ -872,6 +1023,9 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
 
             s = s.substring(0, i) + v + s.substring(j + 1);
 
+            if (recurse === false) {
+                lidx = i-1;
+            }
 
         }
 
@@ -951,7 +1105,7 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
             throw new TypeError("method undefined");
         }
 
-        if (d && !L.isArray(d)) {
+        if (!L.isUndefined(data) && !L.isArray(d)) {
             d = [data];
         }
 
@@ -1012,7 +1166,7 @@ return (L.isObject(o) || L.isString(o) || L.isNumber(o) || L.isBoolean(o));
  */
 L.hasOwnProperty = (OP.hasOwnProperty) ?
     function(o, prop) {
-        return o && o.hasOwnProperty(prop);
+        return o && o.hasOwnProperty && o.hasOwnProperty(prop);
     } : function(o, prop) {
         return !L.isUndefined(o[prop]) && 
                 o.constructor.prototype[prop] !== o[prop];
@@ -1072,4 +1226,4 @@ YAHOO.augment = L.augmentProto;
 YAHOO.extend = L.extend;
 
 })();
-YAHOO.register("yahoo", YAHOO, {version: "2.8.2r1", build: "7"});
+YAHOO.register("yahoo", YAHOO, {version: "2.9.0", build: "2800"});

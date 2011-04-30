@@ -3,6 +3,7 @@ phpgw::import_class('activitycalendar.uicommon');
 phpgw::import_class('activitycalendar.soactivity');
 phpgw::import_class('activitycalendar.soarena');
 phpgw::import_class('activitycalendar.soorganization');
+phpgw::import_class('activitycalendar.sogroup');
 
 include_class('activitycalendar', 'activity', 'inc/model/');
 
@@ -21,7 +22,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	
 	public function __construct()
 	{
-		parent::__construct();
+		//parent::__construct();
 		self::set_active_menu('activitycalendar::activities');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
@@ -39,65 +40,6 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	{
 		$this->render('activity_list.php');
 	}
-		/*public function index()
-		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->index_json();
-			}
-			//$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
-			//self::add_javascript('booking', 'booking', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-			$data = array(
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'booking.uidashboard.index', 'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'formatter' => 'YAHOO.booking.formatLink'
-						),
-						array(
-							'key' => 'status',
-							'label' => lang('Status')
-						),
-						array(
-							'key' => 'type',
-							'label' => lang('Type')
-						),
-						array(
-							'key' => 'created',
-							'label' => lang('Created')
-						),
-						array(
-							'key' => 'modified',
-							'label' => lang('Last modified')
-						),
-						array(
-							'key' => 'what',
-							'label' => lang('What')
-						),
-						array(
-							'key' => 'activity_name',
-							'label' => lang('Activity')
-						),
-						array(
-							'key' => 'contact_name',
-							'label' => lang('Contact')
-						),
-						array(
-							'key' => 'case_officer_name',
-							'label' => lang('Case Officer')
-						),
-						array(
-							'key' => 'link',
-							'hidden' => true
-						)
-					)
-				)
-			);
-			self::render_template('datatable', $data);
-		}*/
 	
 	/**
 	 * Displays info about one single billing job.
@@ -127,12 +69,13 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		// Get the contract part id
 		$activity_id = (int)phpgw::get_var('id');
+		//var_dump($activity_id);
 		
 		
 		// Retrieve the arena object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
 		{	
-			$arena = activitycalendar_soactivity::get_instance()->get_single($activity_id); 
+			$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id); 
 		}
 		else
 		{
@@ -141,15 +84,23 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		$arenas = activitycalendar_soarena::get_instance()->get(null, null, null, null, null, null, null);
 		$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
+		$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 
 		if(isset($_POST['save_activity'])) // The user has pressed the save button
 		{
 			if(isset($activity)) // If a arena object is created
 			{
 				// ... set all parameters
-				$activity->set_internal_arena_id(phpgw::get_var('internal_arena_id'));
-				$activity->set_arena_name(phpgw::get_var('arena_name'));
-				$activity->set_address(phpgw::get_var('address'));
+				$activity->set_organization_id(phpgw::get_var('organization_id'));
+				$activity->set_group_id(phpgw::get_var('group_id'));
+				$activity->set_arena(phpgw::get_var('arena_id'));
+				$activity->set_district(phpgw::get_var('district'));
+				$activity->set_category(phpgw::get_var('category'));
+				$activity->set_description(phpgw::get_var('description'));
+				$activity->set_date_start(phpgw::get_var('date_start_hidden'));
+				$activity->set_date_end(phpgw::get_var('date_end_hidden'));
+				$activity->set_contact_person_1(phpgw::get_var('contact_person_1'));
+				$activity->set_contact_person_2(phpgw::get_var('contact_person_2'));
 				
 				if(activitycalendar_soactivity::get_instance()->store($activity)) // ... and then try to store the object
 				{
@@ -166,6 +117,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			(
 				'activity' 	=> $activity,
 				'organizations' => $organizations,
+				'groups' => $groups,
 				'arenas' => $arenas,
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
@@ -176,11 +128,6 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	
 	public function query()
 	{
-		if(!$this->isExecutiveOfficer())
-		{
-			$this->render('permission_denied.php');
-			return;
-		}
 		if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 		{
 			$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -211,34 +158,21 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		switch($query_type)
 		{
-			case 'all_billings':
+			case 'all_activities':
 				$filters = array();
-				if($sort_field == 'responsibility_title'){
-					$sort_field = 'location_id';
-				}
-				$result_objects = rental_sobilling::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-				$object_count = rental_sobilling::get_instance()->get_count($search_for, $search_type, $filters);
-				break;
-			case 'invoices':
-				if($sort_field == 'term_label'){
-					$sort_field = 'term_id';
-				}
-				$filters = array('billing_id' => phpgw::get_var('billing_id'));
-				$result_objects = rental_soinvoice::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-				$object_count = rental_soinvoice::get_instance()->get_count($search_for, $search_type, $filters);
+				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
 		}
 		
 		//Create an empty row set
 		$rows = array();
 		foreach($result_objects as $result) {
+			//var_dump($result);
 			if(isset($result))
 			{
-				if($result->has_permission(PHPGW_ACL_READ))
-				{
-					// ... add a serialized result
-					$rows[] = $result->serialize();
-				}
+				// ... add a serialized result
+				$rows[] = $result->serialize();
 			}
 		}
 		
@@ -281,61 +215,5 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				break;
 		}
     }
-    
-    public function download_export()
-    {
-		if(!$this->isExecutiveOfficer())
-		{
-			$this->render('permission_denied.php');
-			return;
-		}
-    	//$browser = CreateObject('phpgwapi.browser');
-		//$browser->content_header('export.txt','text/plain');
-		
-		$stop = phpgw::get_var('date');
-		
-		$cs15 = phpgw::get_var('generate_cs15');
-		if($cs15 == null){
-			$export_format = explode('_',phpgw::get_var('export_format'));
-			$file_ending = $export_format[1];
-			if($file_ending == 'gl07')
-			{
-				$type = 'intern';
-			}
-			else if($file_ending == 'lg04')
-			{
-				$type = 'faktura';
-			}
-			$date = date('Ymd', $stop);
-			header('Content-type: text/plain');
-			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
-			
-			$id = phpgw::get_var('id');
-			$path = "/rental/billings/{$id}";
-			
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
-			
-			print $vfs->read
-			(
-				array
-				(
-					'string' => $path,
-					RELATIVE_NONE
-				)
-			);
-			
-			//print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
-		}
-		else{
-			$file_ending = 'cs15';
-			$type = 'kundefil';
-			$date = date('Ymd', $stop);
-			header('Content-type: text/plain');
-			header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
-			print rental_sobilling::get_instance()->generate_customer_export((int)phpgw::get_var('id'));
-		}
-    }
-
 }
 ?>

@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 /**
  * The Connection Manager provides a simplified interface to the XMLHttpRequest
@@ -20,7 +20,7 @@ version: 2.8.2r1
  * The Connection Manager singleton provides methods for creating and managing
  * asynchronous transactions.
  *
- * @class Connect
+ * @class YAHOO.util.Connect
  */
 
 YAHOO.util.Connect =
@@ -119,6 +119,16 @@ YAHOO.util.Connect =
   * @type boolean
   */
     _has_default_headers:true,
+
+ /**
+   * @description Property modified by setForm() to determine if the data
+   * should be submitted as an HTML form.
+   * @property _isFormSubmit
+   * @private
+   * @static
+   * @type boolean
+   */
+	_isFormSubmit:false,
 
  /**
   * @description Determines if custom, default headers
@@ -261,6 +271,8 @@ YAHOO.util.Connect =
 	{
 		if(typeof b == 'string'){
 			this._default_post_header = b;
+			this._use_default_post_header = true;
+
 			YAHOO.log('Default POST header set to  ' + b, 'info', 'Connection');
 		}
 		else if(typeof b == 'boolean'){
@@ -394,12 +406,14 @@ YAHOO.util.Connect =
    */
 	asyncRequest:function(method, uri, callback, postData)
 	{
-		var o,t,args = (callback && callback.argument)?callback.argument:null;
+        var args = callback&&callback.argument?callback.argument:null,
+            YCM = this,
+            o, t;
 
 		if(this._isFileUpload){
 			t = 'upload';
 		}
-		else if(callback.xdr){
+        else if(callback && callback.xdr){
 			t = 'xdr';
 		}
 
@@ -417,7 +431,7 @@ YAHOO.util.Connect =
 
 			if(this._isFormSubmit){
 				if(this._isFileUpload){
-					this.uploadFile(o, callback, uri, postData);
+                    window.setTimeout(function(){YCM.uploadFile(o, callback, uri, postData);}, 10);
 					return o;
 				}
 
@@ -977,4 +991,4 @@ YAHOO.util.Connect =
 	}
 };
 
-YAHOO.register("connection_core", YAHOO.util.Connect, {version: "2.8.2r1", build: "7"});
+YAHOO.register("connection_core", YAHOO.util.Connect, {version: "2.9.0", build: "2800"});
