@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 
 
@@ -326,7 +326,7 @@ version: 2.8.2r1
 							//	appears to have focus.  The following call to 
 							//	"setActive" fixes this bug.
 
-							if (UA.ie && oTarget.focus) {
+                            if (UA.ie && oTarget.focus && (UA.ie < 9)) {
 								oTarget.setActive();
 							}
         
@@ -998,16 +998,12 @@ version: 2.8.2r1
 YAHOO.widget.Menu = function (p_oElement, p_oConfig) {
 
     if (p_oConfig) {
-
         this.parent = p_oConfig.parent;
         this.lazyLoad = p_oConfig.lazyLoad || p_oConfig.lazyload;
         this.itemData = p_oConfig.itemData || p_oConfig.itemdata;
-
     }
 
-
     YAHOO.widget.Menu.superclass.constructor.call(this, p_oElement, p_oConfig);
-
 };
 
 
@@ -1620,12 +1616,9 @@ init: function (p_oElement, p_oConfig) {
 
 
     if (this.element) {
-
         Dom.addClass(this.element, this.CSS_CLASS_NAME);
 
-
         // Subscribe to Custom Events
-
         this.initEvent.subscribe(this._onInit);
         this.beforeRenderEvent.subscribe(this._onBeforeRender);
         this.renderEvent.subscribe(this._onRender);
@@ -1640,39 +1633,28 @@ init: function (p_oElement, p_oConfig) {
         this.keyPressEvent.subscribe(this._onKeyPress);
         this.blurEvent.subscribe(this._onBlur);
 
-
 		if (!bFocusListenerInitialized) {
 			Event.onFocus(document, onDocFocus);
 			bFocusListenerInitialized = true;
 		}
 
-
 		//	Fixes an issue in Firefox 2 and Webkit where Dom's "getX" and "getY" 
 		//	methods return values that don't take scrollTop into consideration 
 
-        if ((UA.gecko && UA.gecko < 1.9) || UA.webkit) {
-
+        if ((UA.gecko && UA.gecko < 1.9) || (UA.webkit && UA.webkit < 523)) {
             this.cfg.subscribeToConfigEvent(_Y, this._onYChange);
-
         }
 
 
         if (p_oConfig) {
-    
             this.cfg.applyConfig(p_oConfig, true);
-    
         }
 
-
         // Register the Menu instance with the MenuManager
-
         MenuManager.addMenu(this);
 
-
         this.initEvent.fire(Menu);
-
     }
-
 },
 
 
@@ -1904,8 +1886,8 @@ _getFirstEnabledItem: function () {
 * item belongs.
 * @param {YAHOO.widget.MenuItem} p_oItem Object reference for the MenuItem 
 * instance to be added to the menu.
-* @param {String} p_oItem String specifying the text of the item to be added 
-* to the menu.
+* @param {HTML} p_oItem String or markup specifying the content of the item to be added 
+* to the menu. The item is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {Object} p_oItem Object literal containing a set of menu item 
 * configuration properties.
 * @param {Number} p_nItemIndex Optional. Number indicating the index at 
@@ -2128,10 +2110,8 @@ _removeItemFromGroupByIndex: function (p_nGroupIndex, p_nItemIndex) {
     
                 oUL = this._aListElements[nGroupIndex];
     
-                if (this.body && oUL) {
-    
-                    this.body.removeChild(oUL);
-    
+                if (oUL && oUL.parentNode) {
+                    oUL.parentNode.removeChild(oUL);
                 }
     
                 // Remove the group from the array of items
@@ -2443,24 +2423,16 @@ _execHideDelay: function () {
 	oRoot._hideDelayTimer = Lang.later(oRoot.cfg.getProperty(_HIDE_DELAY), this, function () {
     
         if (oRoot.activeItem) {
-
 			if (oRoot.hasFocus()) {
-
 				oRoot.activeItem.focus();
-			
 			}
-			
             oRoot.clearActiveItem();
-
         }
 
         if (oRoot == this && !(this instanceof YAHOO.widget.MenuBar) && 
             this.cfg.getProperty(_POSITION) == _DYNAMIC) {
-
             this.hide();
-        
         }
-    
     });
 
 },
@@ -2472,22 +2444,17 @@ _execHideDelay: function () {
 * @private
 */
 _cancelShowDelay: function () {
-
     var oTimer = this.getRoot()._showDelayTimer;
-
     if (oTimer) {
-
         oTimer.cancel();
-
     }
-
 },
 
 
 /**
 * @method _execSubmenuHideDelay
 * @description Hides a submenu after the number of milliseconds specified by 
-* the "submenuhidedelay" configuration property have ellapsed.
+* the "submenuhidedelay" configuration property have elapsed.
 * @private
 * @param {YAHOO.widget.Menu} p_oSubmenu Object specifying the submenu that  
 * should be hidden.
@@ -2769,6 +2736,8 @@ _onMouseOut: function (p_sType, p_aArgs) {
         nShowDelay;
 
 
+    YAHOO.log("onMouseout: this == " + this);
+
     if (!this._bStopMouseEventHandlers) {
     
 		if (oItem && !oItem.cfg.getProperty(_DISABLED)) {
@@ -2777,61 +2746,38 @@ _onMouseOut: function (p_sType, p_aArgs) {
 			oSubmenu = oItemCfg.getProperty(_SUBMENU);
 	
 	
-			if (oSubmenu && (oRelatedTarget == oSubmenu.element ||
-					Dom.isAncestor(oSubmenu.element, oRelatedTarget))) {
-	
+            if (oSubmenu && (oRelatedTarget == oSubmenu.element || Dom.isAncestor(oSubmenu.element, oRelatedTarget))) {
 				bMovingToSubmenu = true;
-	
 			}
 	
-	
-			if (!oItem.handledMouseOutEvent && ((oRelatedTarget != oItem.element &&  
-				!Dom.isAncestor(oItem.element, oRelatedTarget)) || bMovingToSubmenu)) {
-	
-				// Menu Item mouseout logic
-	
+            if (!oItem.handledMouseOutEvent && ((oRelatedTarget != oItem.element && !Dom.isAncestor(oItem.element, oRelatedTarget)) || bMovingToSubmenu)) {
 				if (!bMovingToSubmenu) {
-	
 					oItem.cfg.setProperty(_SELECTED, false);
-	
-	
 					if (oSubmenu) {
 	
 						nSubmenuHideDelay = this.cfg.getProperty(_SUBMENU_HIDE_DELAY);
-	
 						nShowDelay = this.cfg.getProperty(_SHOW_DELAY);
-	
-						if (!(this instanceof YAHOO.widget.MenuBar) && nSubmenuHideDelay > 0 && 
-							nShowDelay >= nSubmenuHideDelay) {
-	
-							this._execSubmenuHideDelay(oSubmenu, Event.getPageX(oEvent),
-									nSubmenuHideDelay);
-	
-						}
-						else {
-	
+                        if (!(this instanceof YAHOO.widget.MenuBar) && nSubmenuHideDelay > 0 && nSubmenuHideDelay >= nShowDelay) {
+                            this._execSubmenuHideDelay(oSubmenu, Event.getPageX(oEvent), nSubmenuHideDelay);
+                        } else {
 							oSubmenu.hide();
-	
 						}
-	
 					}
-	
 				}
-	
 	
 				oItem.handledMouseOutEvent = true;
 				oItem.handledMouseOverEvent = false;
-		
 			}
-	
 		}
 
+        YAHOO.log("onMouseout: oRelatedTarget = " + oRelatedTarget.className);
+        YAHOO.log("onMouseout: this.element = " + this.element.id);
+        YAHOO.log("onMouseout: Ancestorthis.element = " + Dom.isAncestor(this.element, oRelatedTarget));
+        YAHOO.log("onMouseout: canHide = " + this._didMouseLeave(oRelatedTarget));        
 
-		if (!this._bHandledMouseOutEvent && ((oRelatedTarget != this.element &&  
-			!Dom.isAncestor(this.element, oRelatedTarget)) || bMovingToSubmenu)) {
-	
+        if (!this._bHandledMouseOutEvent) {
+            if (this._didMouseLeave(oRelatedTarget) || bMovingToSubmenu) {
 			// Menu mouseout logic
-
 	        if (this._useHideDelay) {
 	        	this._execHideDelay();
 	        }
@@ -2842,13 +2788,25 @@ _onMouseOut: function (p_sType, p_aArgs) {
 	
 			this._bHandledMouseOutEvent = true;
 			this._bHandledMouseOverEvent = false;
-	
 		}
-    
+        }
     }
 
 },
 
+/**
+ * Utilility method to determine if we really moused out of the menu based on the related target
+ * @method _didMouseLeave
+ * @protected
+ * @param {HTMLElement} oRelatedTarget The related target based on which we're making the decision
+ * @return {boolean} true if it's OK to hide based on the related target.
+ */
+_didMouseLeave : function(oRelatedTarget) {
+    // Hide if we're not moving back to the element from somewhere inside the element, or we're moving to an element inside the menu.
+    // The shadow is treated as an edge case, inside inside the menu, but we get no further mouseouts, because it overflows the element,
+    // so we need to close when moving to the menu. 
+    return (oRelatedTarget === this._shadow || (oRelatedTarget != this.element && !Dom.isAncestor(this.element, oRelatedTarget)));
+},
 
 /**
 * @method _onMouseMove
@@ -3003,6 +2961,29 @@ _onClick: function (p_sType, p_aArgs) {
 
 },
 
+/*
+    This function is called to prevent a bug in Firefox.  In Firefox,
+    moving a DOM element into a stationary mouse pointer will cause the 
+    browser to fire mouse events.  This can result in the menu mouse
+    event handlers being called uncessarily, especially when menus are 
+    moved into a stationary mouse pointer as a result of a 
+    key event handler.
+*/
+/**
+ * Utility method to stop mouseevents from being fired if the DOM
+ * changes under a stationary mouse pointer (as opposed to the mouse moving
+ * over a DOM element).
+ * 
+ * @method _stopMouseEventHandlers
+ * @private
+ */
+_stopMouseEventHandlers: function() {
+    this._bStopMouseEventHandlers = true;
+
+    Lang.later(10, this, function () {
+        this._bStopMouseEventHandlers = false;
+    });
+},
 
 /**
 * @method _onKeyDown
@@ -3036,28 +3017,6 @@ _onKeyDown: function (p_sType, p_aArgs) {
 		this._cancelHideDelay();
 	}
 
-
-    /*
-        This function is called to prevent a bug in Firefox.  In Firefox,
-        moving a DOM element into a stationary mouse pointer will cause the 
-        browser to fire mouse events.  This can result in the menu mouse
-        event handlers being called uncessarily, especially when menus are 
-        moved into a stationary mouse pointer as a result of a 
-        key event handler.
-    */
-    function stopMouseEventHandlers() {
-
-        this._bStopMouseEventHandlers = true;
-        
-        Lang.later(10, this, function () {
-
-            this._bStopMouseEventHandlers = false;
-        
-        });
-
-    }
-
-
     if (oItem && !oItem.cfg.getProperty(_DISABLED)) {
 
         oItemCfg = oItem.cfg;
@@ -3079,8 +3038,7 @@ _onKeyDown: function (p_sType, p_aArgs) {
                     oNextItem.cfg.setProperty(_SELECTED, true);
                     oNextItem.focus();
 
-
-                    if (this.cfg.getProperty(_MAX_HEIGHT) > 0) {
+                    if (this.cfg.getProperty(_MAX_HEIGHT) > 0 || Dom.hasClass(this.body, _YUI_MENU_BODY_SCROLLED)) {
 
                         oBody = this.body;
                         nBodyScrollTop = oBody.scrollTop;
@@ -3163,7 +3121,7 @@ _onKeyDown: function (p_sType, p_aArgs) {
     
                 Event.preventDefault(oEvent);
 
-                stopMouseEventHandlers();
+                this._stopMouseEventHandlers();
     
             break;
             
@@ -3222,7 +3180,7 @@ _onKeyDown: function (p_sType, p_aArgs) {
     
                 Event.preventDefault(oEvent);
 
-                stopMouseEventHandlers();
+                this._stopMouseEventHandlers();
 
             break;
     
@@ -3273,7 +3231,7 @@ _onKeyDown: function (p_sType, p_aArgs) {
     
                 Event.preventDefault(oEvent);
 
-                stopMouseEventHandlers();
+                this._stopMouseEventHandlers();
 
             break;        
     
@@ -4595,13 +4553,10 @@ configPosition: function (p_sType, p_aArgs, p_oMenu) {
 
   	 
      if (sCSSPosition == _ABSOLUTE) { 	 
-  	 
          nZIndex = oCfg.getProperty(_ZINDEX);
   	 
          if (!nZIndex || nZIndex === 0) { 	 
-  	 
              oCfg.setProperty(_ZINDEX, 1); 	 
-  	 
          } 	 
   	 
      }
@@ -4690,6 +4645,35 @@ _clearSetWidthFlag: function () {
 
 },
 
+/**
+ * @method _subscribeScrollHandlers
+ * @param {HTMLElement} oHeader The scroll header element
+ * @param {HTMLElement} oFooter The scroll footer element
+ */
+_subscribeScrollHandlers : function(oHeader, oFooter) {
+    var fnMouseOver = this._onScrollTargetMouseOver;
+    var fnMouseOut = this._onScrollTargetMouseOut;
+
+    Event.on(oHeader, _MOUSEOVER, fnMouseOver, this, true);
+    Event.on(oHeader, _MOUSEOUT, fnMouseOut, this, true);
+    Event.on(oFooter, _MOUSEOVER, fnMouseOver, this, true);
+    Event.on(oFooter, _MOUSEOUT, fnMouseOut, this, true);
+},
+
+/**
+ * @method _unsubscribeScrollHandlers 
+ * @param {HTMLElement} oHeader The scroll header element
+ * @param {HTMLElement} oFooter The scroll footer element
+ */
+_unsubscribeScrollHandlers : function(oHeader, oFooter) {
+    var fnMouseOver = this._onScrollTargetMouseOver;
+    var fnMouseOut = this._onScrollTargetMouseOut;
+    
+    Event.removeListener(oHeader, _MOUSEOVER, fnMouseOver);
+    Event.removeListener(oHeader, _MOUSEOUT, fnMouseOut);
+    Event.removeListener(oFooter, _MOUSEOVER, fnMouseOver);
+    Event.removeListener(oFooter, _MOUSEOUT, fnMouseOut);
+},
 
 /**
 * @method _setScrollHeight
@@ -4706,13 +4690,10 @@ _setScrollHeight: function (p_nScrollHeight) {
         oBody,
         oHeader,
         oFooter,
-        fnMouseOver,
-        fnMouseOut,
         nMinScrollHeight,
         nHeight,
         nOffsetWidth,
         sWidth;
-
 
 	if (this.getItems().length > 0) {
 	
@@ -4720,22 +4701,15 @@ _setScrollHeight: function (p_nScrollHeight) {
         oBody = this.body;
         oHeader = this.header;
         oFooter = this.footer;
-        fnMouseOver = this._onScrollTargetMouseOver;
-        fnMouseOut = this._onScrollTargetMouseOut;
         nMinScrollHeight = this.cfg.getProperty(_MIN_SCROLL_HEIGHT);
 
-
 		if (nScrollHeight > 0 && nScrollHeight < nMinScrollHeight) {
-		
 			nScrollHeight = nMinScrollHeight;
-		
 		}
-
 
 		Dom.setStyle(oBody, _HEIGHT, _EMPTY_STRING);
 		Dom.removeClass(oBody, _YUI_MENU_BODY_SCROLLED);
 		oBody.scrollTop = 0;
-
 
 		//	Need to set a width for the Menu to fix the following problems in 
 		//	Firefox 2 and IE:
@@ -4812,9 +4786,7 @@ _setScrollHeight: function (p_nScrollHeight) {
 		
 		}
 	
-	
 		nHeight = nScrollHeight;
-	
 	
 		if (oHeader && oFooter) {
 			nHeight = (nHeight - (oHeader.offsetHeight + oFooter.offsetHeight));
@@ -4830,14 +4802,8 @@ _setScrollHeight: function (p_nScrollHeight) {
 			Dom.setStyle(oBody, _HEIGHT, (nHeight + _PX));
 
 			if (!this._hasScrollEventHandlers) {
-	
-				Event.on(oHeader, _MOUSEOVER, fnMouseOver, this, true);
-				Event.on(oHeader, _MOUSEOUT, fnMouseOut, this, true);
-				Event.on(oFooter, _MOUSEOVER, fnMouseOver, this, true);
-				Event.on(oFooter, _MOUSEOUT, fnMouseOut, this, true);
-	
+                this._subscribeScrollHandlers(oHeader, oFooter);
 				this._hasScrollEventHandlers = true;
-	
 			}
 	
 			this._disableScrollHeader();
@@ -4873,14 +4839,8 @@ _setScrollHeight: function (p_nScrollHeight) {
 			this._enableScrollFooter();
 	
 			if (this._hasScrollEventHandlers) {
-	
-				Event.removeListener(oHeader, _MOUSEOVER, fnMouseOver);
-				Event.removeListener(oHeader, _MOUSEOUT, fnMouseOut);
-				Event.removeListener(oFooter, _MOUSEOVER, fnMouseOver);
-				Event.removeListener(oFooter, _MOUSEOUT, fnMouseOut);
-
+                this._unsubscribeScrollHandlers(oHeader, oFooter);    
 				this._hasScrollEventHandlers = false;
-	
 			}
 
 			oElement.removeChild(oHeader);
@@ -5053,6 +5013,163 @@ configDisabled: function (p_sType, p_aArgs, p_oMenu) {
 
 },
 
+/**
+ * Resizes the shadow to match the container bounding element
+ * 
+ * @method _sizeShadow
+ * @protected
+ */
+_sizeShadow : function () {
+
+        var oElement = this.element,
+            oShadow = this._shadow;
+    
+        if (oShadow && oElement) {
+			// Clear the previous width
+			if (oShadow.style.width && oShadow.style.height) {
+				oShadow.style.width = _EMPTY_STRING;
+				oShadow.style.height = _EMPTY_STRING;
+			}
+
+            oShadow.style.width = (oElement.offsetWidth + 6) + _PX;
+            oShadow.style.height = (oElement.offsetHeight + 1) + _PX;
+        }
+},
+    
+/**
+ * Replaces the shadow element in the DOM with the current shadow element (this._shadow)
+ * 
+ * @method _replaceShadow
+ * @protected 
+ */
+_replaceShadow : function () {
+        this.element.appendChild(this._shadow);
+},
+
+/**
+ * Adds the classname marker for a visible shadow, to the shadow element
+ * 
+ * @method _addShadowVisibleClass
+ * @protected
+ */
+_addShadowVisibleClass : function () {
+    Dom.addClass(this._shadow, _YUI_MENU_SHADOW_VISIBLE);
+},
+
+/**
+ * Removes the classname marker for a visible shadow, from the shadow element
+ * 
+ * @method _removeShadowVisibleClass
+ * @protected
+ */
+_removeShadowVisibleClass : function () {
+    Dom.removeClass(this._shadow, _YUI_MENU_SHADOW_VISIBLE);
+},
+    
+/**
+ * Removes the shadow element from the DOM, and unsubscribes all the listeners used to keep it in sync. Used
+ * to handle setting the shadow to false.
+ * 
+ * @method _removeShadow
+ * @protected
+ */
+_removeShadow : function() {
+    
+    var p = (this._shadow && this._shadow.parentNode);
+    
+    if (p) {
+        p.removeChild(this._shadow);
+    }
+
+    this.beforeShowEvent.unsubscribe(this._addShadowVisibleClass);
+    this.beforeHideEvent.unsubscribe(this._removeShadowVisibleClass);
+
+    this.cfg.unsubscribeFromConfigEvent(_WIDTH, this._sizeShadow);
+    this.cfg.unsubscribeFromConfigEvent(_HEIGHT, this._sizeShadow);
+    this.cfg.unsubscribeFromConfigEvent(_MAX_HEIGHT, this._sizeShadow);
+    this.cfg.unsubscribeFromConfigEvent(_MAX_HEIGHT, this._replaceShadow);
+    
+    this.changeContentEvent.unsubscribe(this._sizeShadow);
+
+    Module.textResizeEvent.unsubscribe(this._sizeShadow);
+},
+
+/**
+ * Used to create the shadow element, add it to the DOM, and subscribe listeners to keep it in sync.
+ *
+ * @method _createShadow
+ * @protected
+ */
+_createShadow : function () {
+
+        var oShadow = this._shadow,
+            oElement;
+
+        if (!oShadow) {
+            oElement = this.element;
+
+            if (!m_oShadowTemplate) {
+                m_oShadowTemplate = document.createElement(_DIV_LOWERCASE);
+                m_oShadowTemplate.className = _YUI_MENU_SHADOW_YUI_MENU_SHADOW_VISIBLE;
+            }
+
+            oShadow = m_oShadowTemplate.cloneNode(false);
+
+            oElement.appendChild(oShadow);
+            
+            this._shadow = oShadow;
+
+        this.beforeShowEvent.subscribe(this._addShadowVisibleClass);
+        this.beforeHideEvent.subscribe(this._removeShadowVisibleClass);
+
+            if (UA.ie) {
+                /*
+                     Need to call sizeShadow & syncIframe via setTimeout for 
+                     IE 7 Quirks Mode and IE 6 Standards Mode and Quirks Mode 
+                     or the shadow and iframe shim will not be sized and 
+                     positioned properly.
+                */
+				Lang.later(0, this, function () {
+                this._sizeShadow(); 
+                    this.syncIframe();
+				});
+
+            this.cfg.subscribeToConfigEvent(_WIDTH, this._sizeShadow);
+            this.cfg.subscribeToConfigEvent(_HEIGHT, this._sizeShadow);
+            this.cfg.subscribeToConfigEvent(_MAX_HEIGHT, this._sizeShadow);
+            this.changeContentEvent.subscribe(this._sizeShadow);
+
+            Module.textResizeEvent.subscribe(this._sizeShadow, this, true);
+                
+                this.destroyEvent.subscribe(function () {
+                Module.textResizeEvent.unsubscribe(this._sizeShadow, this);
+                });
+            }
+
+        this.cfg.subscribeToConfigEvent(_MAX_HEIGHT, this._replaceShadow);
+        }
+},
+
+/**
+ * The beforeShow event handler used to set up the shadow lazily when the menu is made visible.
+ * @method _shadowBeforeShow
+ * @protected 
+ */
+_shadowBeforeShow : function () {
+    	if (this._shadow) {
+
+			// If called because the "shadow" event was refired - just append again and resize
+        this._replaceShadow();
+			
+			if (UA.ie) {
+            this._sizeShadow();
+			}
+    } else {
+        this._createShadow();
+        }
+
+    this.beforeShowEvent.unsubscribe(this._shadowBeforeShow);
+},
 
 /**
 * @method configShadow
@@ -5064,178 +5181,30 @@ configDisabled: function (p_sType, p_aArgs, p_oMenu) {
 */
 configShadow: function (p_sType, p_aArgs, p_oMenu) {
 
-    var sizeShadow = function () {
-
-        var oElement = this.element,
-            oShadow = this._shadow;
-    
-        if (oShadow && oElement) {
-
-			// Clear the previous width
-
-			if (oShadow.style.width && oShadow.style.height) {
-			
-				oShadow.style.width = _EMPTY_STRING;
-				oShadow.style.height = _EMPTY_STRING;
-			
-			}
-
-            oShadow.style.width = (oElement.offsetWidth + 6) + _PX;
-            oShadow.style.height = (oElement.offsetHeight + 1) + _PX;
-            
-        }
-    
-    };
-
-
-    var replaceShadow = function () {
-
-        this.element.appendChild(this._shadow);
-
-    };
-
-
-    var addShadowVisibleClass = function () {
-    
-        Dom.addClass(this._shadow, _YUI_MENU_SHADOW_VISIBLE);
-    
-    };
-    
-
-    var removeShadowVisibleClass = function () {
-
-        Dom.removeClass(this._shadow, _YUI_MENU_SHADOW_VISIBLE);
-    
-    };
-
-
-    var createShadow = function () {
-
-        var oShadow = this._shadow,
-            oElement;
-
-        if (!oShadow) {
-
-            oElement = this.element;
-
-
-            if (!m_oShadowTemplate) {
-
-                m_oShadowTemplate = document.createElement(_DIV_LOWERCASE);
-                m_oShadowTemplate.className = _YUI_MENU_SHADOW_YUI_MENU_SHADOW_VISIBLE;
-            
-            }
-
-            oShadow = m_oShadowTemplate.cloneNode(false);
-
-            oElement.appendChild(oShadow);
-            
-            this._shadow = oShadow;
-
-            this.beforeShowEvent.subscribe(addShadowVisibleClass);
-            this.beforeHideEvent.subscribe(removeShadowVisibleClass);
-
-
-            if (UA.ie) {
-        
-                /*
-                     Need to call sizeShadow & syncIframe via setTimeout for 
-                     IE 7 Quirks Mode and IE 6 Standards Mode and Quirks Mode 
-                     or the shadow and iframe shim will not be sized and 
-                     positioned properly.
-                */
-        
-				Lang.later(0, this, function () {
-
-                    sizeShadow.call(this); 
-                    this.syncIframe();
-				
-				});
-
-
-                this.cfg.subscribeToConfigEvent(_WIDTH, sizeShadow);
-                this.cfg.subscribeToConfigEvent(_HEIGHT, sizeShadow);
-                this.cfg.subscribeToConfigEvent(_MAX_HEIGHT, sizeShadow);
-                this.changeContentEvent.subscribe(sizeShadow);
-
-                Module.textResizeEvent.subscribe(sizeShadow, this, true);
-                
-                this.destroyEvent.subscribe(function () {
-                
-                    Module.textResizeEvent.unsubscribe(sizeShadow, this);
-                
-                });
-        
-            }
-
-            this.cfg.subscribeToConfigEvent(_MAX_HEIGHT, replaceShadow);
-
-        }
-
-    };
-
-
-    var onBeforeShow = function () {
-
-    	if (this._shadow) {
-
-			// If called because the "shadow" event was refired - just append again and resize
-			
-			replaceShadow.call(this);
-			
-			if (UA.ie) {
-				sizeShadow.call(this);
-			}
-    	
-    	}
-    	else {
-    
-        	createShadow.call(this);
-        
-        }
-
-        this.beforeShowEvent.unsubscribe(onBeforeShow);
-    
-    };
-
-
 	var bShadow = p_aArgs[0];
 
-
     if (bShadow && this.cfg.getProperty(_POSITION) == _DYNAMIC) {
-
         if (this.cfg.getProperty(_VISIBLE)) {
-
 			if (this._shadow) {
-
 				// If the "shadow" event was refired - just append again and resize
-				
-				replaceShadow.call(this);
+                this._replaceShadow();
 				
 				if (UA.ie) {
-					sizeShadow.call(this);
+                    this._sizeShadow();
 				}
-				
+            } else {
+                this._createShadow();
 			} 
-			else {
-            	createShadow.call(this);
+        } else {
+            this.beforeShowEvent.subscribe(this._shadowBeforeShow);
             }
-        
+    } else if (!bShadow) {
+        this.beforeShowEvent.unsubscribe(this._shadowBeforeShow);
+        this._removeShadow();
         }
-        else {
-
-            this.beforeShowEvent.subscribe(onBeforeShow);
-        
-        }
-    
-    }
-    
 },
 
-
-
 // Public methods
-
 
 /**
 * @method initEvents
@@ -5344,7 +5313,7 @@ toString: function () {
 /**
 * @method setItemGroupTitle
 * @description Sets the title of a group of menu items.
-* @param {String} p_sGroupTitle String specifying the title of the group.
+* @param {HTML} p_sGroupTitle String or markup specifying the title of the group. The title is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {Number} p_nGroupIndex Optional. Number specifying the group to which
 * the title belongs.
 */
@@ -5413,8 +5382,8 @@ setItemGroupTitle: function (p_sGroupTitle, p_nGroupIndex) {
 * @description Appends an item to the menu.
 * @param {YAHOO.widget.MenuItem} p_oItem Object reference for the MenuItem 
 * instance to be added to the menu.
-* @param {String} p_oItem String specifying the text of the item to be added 
-* to the menu.
+* @param {HTML} p_oItem String or markup specifying content of the item to be added 
+* to the menu. The item text is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {Object} p_oItem Object literal containing a set of menu item 
 * configuration properties.
 * @param {Number} p_nGroupIndex Optional. Number indicating the group to
@@ -5432,9 +5401,9 @@ addItem: function (p_oItem, p_nGroupIndex) {
 * @method addItems
 * @description Adds an array of items to the menu.
 * @param {Array} p_aItems Array of items to be added to the menu.  The array 
-* can contain strings specifying the text for each item to be created, object
+* can contain strings specifying the markup for the content of each item to be created, object
 * literals specifying each of the menu item configuration properties, 
-* or MenuItem instances.
+* or MenuItem instances. The item content if provided as a string is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {Number} p_nGroupIndex Optional. Number specifying the group to 
 * which the items belongs.
 * @return {Array}
@@ -5762,8 +5731,11 @@ clearContent: function () {
 * @method destroy
 * @description Removes the menu's <code>&#60;div&#62;</code> element 
 * (and accompanying child nodes) from the document.
+* @param {boolean} shallowPurge If true, only the parent element's DOM event listeners are purged. If false, or not provided, all children are also purged of DOM event listeners. 
+* NOTE: The flag is a "shallowPurge" flag, as opposed to what may be a more intuitive "purgeChildren" flag to maintain backwards compatibility with behavior prior to 2.9.0.
+* 
 */
-destroy: function () {
+destroy: function (shallowPurge) {
 
     // Remove all items
 
@@ -5776,7 +5748,7 @@ destroy: function () {
 
     // Continue with the superclass implementation of this method
 
-    Menu.superclass.destroy.call(this);
+    Menu.superclass.destroy.call(this, shallowPurge);
     
     YAHOO.log("Destroyed.", "info", this.toString());
 
@@ -6516,7 +6488,7 @@ initDefaultConfig: function () {
 /**
 * Creates an item for a menu.
 * 
-* @param {String} p_oObject String specifying the text of the menu item.
+* @param {HTML} p_oObject Markup for the menu item content. The markup is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {<a href="http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-
 * one-html.html#ID-74680021">HTMLLIElement</a>} p_oObject Object specifying 
 * the <code>&#60;li&#62;</code> element of the menu item.
@@ -7064,7 +7036,7 @@ MenuItem.prototype = {
     * automatically called by the constructor, and sets up all DOM references 
     * for pre-existing markup, and creates required markup if it is not 
     * already present.
-    * @param {String} p_oObject String specifying the text of the menu item.
+    * @param {HTML} p_oObject Markup for the menu item content. The markup is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
     * @param {<a href="http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-
     * one-html.html#ID-74680021">HTMLLIElement</a>} p_oObject Object specifying 
     * the <code>&#60;li&#62;</code> element of the menu item.
@@ -7948,11 +7920,9 @@ MenuItem.prototype = {
 	_dispatchClickEvent: function () {
 
 		var oMenuItem = this,
-			oAnchor,
-			oEvent;
+            oAnchor;
 
 		if (!oMenuItem.cfg.getProperty(_DISABLED)) {
-
 			oAnchor = Dom.getFirstChild(oMenuItem.element);
 
 			//	Dispatch a "click" event to the MenuItem's anchor so that its
@@ -7960,33 +7930,34 @@ MenuItem.prototype = {
 			//	pressing the keyboard shortcut defined by the "keylistener"
 			//	configuration property.
 
-			if (UA.ie) {
-				oAnchor.fireEvent(_ONCLICK);
+            this._dispatchDOMClick(oAnchor);
 			}
-			else {
+    },
 
+    /**
+     * Utility method to dispatch a DOM click event on the HTMLElement passed in
+     *
+     * @method _dispatchDOMClick
+     * @protected
+     * @param {HTMLElement} el
+     */    
+    _dispatchDOMClick : function(el) {
+        var oEvent;
+
+        // Choose the standards path for IE9
+        if (UA.ie && UA.ie < 9) {
+            el.fireEvent(_ONCLICK);
+        } else {
 				if ((UA.gecko && UA.gecko >= 1.9) || UA.opera || UA.webkit) {
-
 					oEvent = document.createEvent("HTMLEvents");
 					oEvent.initEvent(_CLICK, true, true);
-
-				}
-				else {
-
+            } else {
 					oEvent = document.createEvent("MouseEvents");
-					oEvent.initMouseEvent(_CLICK, true, true, window, 0, 0, 0, 
-						0, 0, false, false, false, false, 0, null);
-
+                oEvent.initMouseEvent(_CLICK, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 				}
-
-				oAnchor.dispatchEvent(oEvent);
-
+            el.dispatchEvent(oEvent);
 			}
-
-		}
-
 	},
-
 
     /**
     * @method _createKeyListener
@@ -8100,11 +8071,11 @@ MenuItem.prototype = {
 
         /**
         * @config text
-        * @description String specifying the text label for the menu item.  
+        * @description String or markup specifying the text label for the menu item.  
         * When building a menu from existing HTML the value of this property
-        * will be interpreted from the menu's markup.
+        * will be interpreted from the menu's markup. The text is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
         * @default ""
-        * @type String
+        * @type HTML
         */
         oConfig.addProperty(
             TEXT_CONFIG.key, 
@@ -8119,13 +8090,13 @@ MenuItem.prototype = {
 
         /**
         * @config helptext
-        * @description String specifying additional instructional text to 
-        * accompany the text for the menu item.
+        * @description String or markup specifying additional instructional text to 
+        * accompany the text for the menu item. The helptext is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
         * @deprecated Use "text" configuration property to add help text markup.  
         * For example: <code>oMenuItem.cfg.setProperty("text", "Copy &#60;em 
         * class=\"helptext\"&#62;Ctrl + C&#60;/em&#62;");</code>
         * @default null
-        * @type String|<a href="http://www.w3.org/TR/
+        * @type HTML|<a href="http://www.w3.org/TR/
         * 2000/WD-DOM-Level-1-20000929/level-one-html.html#ID-58190037">
         * HTMLElement</a>
         */
@@ -8143,7 +8114,7 @@ MenuItem.prototype = {
         * @config url
         * @description String specifying the URL for the menu item's anchor's 
         * "href" attribute.  When building a menu from existing HTML the value 
-        * of this property will be interpreted from the menu's markup.
+        * of this property will be interpreted from the menu's markup. Markup for the menu item content. The url is inserted into the DOM as an attribute value, and should be escaped by the implementor if coming from an external source.
         * @default "#"
         * @type String
         */        
@@ -8164,7 +8135,7 @@ MenuItem.prototype = {
         * require the user to click directly on the menu item's anchor node in
         * order to cause the browser to navigate to the specified URL.</strong> 
         * When building a menu from existing HTML the value of this property 
-        * will be interpreted from the menu's markup.
+        * will be interpreted from the menu's markup. The target is inserted into the DOM as an attribute value, and should be escaped by the implementor if coming from an external source.
         * @default null
         * @type String
         */        
@@ -8684,9 +8655,7 @@ Lang.augmentProto(MenuItem, YAHOO.util.EventProvider);
 * @namespace YAHOO.widget
 */
 YAHOO.widget.ContextMenu = function(p_oElement, p_oConfig) {
-
     YAHOO.widget.ContextMenu.superclass.constructor.call(this, p_oElement, p_oConfig);
-
 };
 
 
@@ -8735,11 +8704,8 @@ var Event = YAHOO.util.Event,
 * @param {Array} p_aPos Array representing the xy position for the context menu.
 */
 function position(p_sType, p_aArgs, p_aPos) {
-
     this.cfg.setProperty(_XY, p_aPos);
-    
     this.beforeShowEvent.unsubscribe(position, p_aPos);
-
 }
 
 
@@ -8795,6 +8761,9 @@ contextEventTarget: null,
 
 /**
 * @event triggerContextMenuEvent
+* @param type {String} The name of the event, "triggerContextMenu"
+* @param args {Array} The array of event arguments. For this event, the underlying
+* DOM event is the only argument, available from args[0].
 * @description Custom Event wrapper for the "contextmenu" DOM event 
 * ("mousedown" for Opera) fired by the element(s) that trigger the display of 
 * the context menu.
@@ -8831,18 +8800,13 @@ init: function(p_oElement, p_oConfig) {
 
     ContextMenu.superclass.init.call(this, p_oElement);
 
-
     this.beforeInitEvent.fire(ContextMenu);
 
-
     if (p_oConfig) {
-
         this.cfg.applyConfig(p_oConfig, true);
-
     }
     
     this.initEvent.fire(ContextMenu);
-    
 },
 
 
@@ -8851,29 +8815,20 @@ init: function(p_oElement, p_oConfig) {
 * @description Initializes the custom events for the context menu.
 */
 initEvents: function() {
-
 	ContextMenu.superclass.initEvents.call(this);
 
     // Create custom events
-
     this.triggerContextMenuEvent = this.createEvent(EVENT_TYPES.TRIGGER_CONTEXT_MENU);
-
     this.triggerContextMenuEvent.signature = YAHOO.util.CustomEvent.LIST;
-
 },
-
 
 /**
 * @method cancel
 * @description Cancels the display of the context menu.
 */
 cancel: function() {
-
     this._bCancelled = true;
-
 },
-
-
 
 // Private methods
 
@@ -8889,28 +8844,18 @@ _removeEventHandlers: function() {
 
     var oTrigger = this._oTrigger;
 
-
     // Remove the event handlers from the trigger(s)
-
     if (oTrigger) {
-
         Event.removeListener(oTrigger, EVENT_TYPES.CONTEXT_MENU, this._onTriggerContextMenu);    
         
         if (UA.opera) {
-        
             Event.removeListener(oTrigger, EVENT_TYPES.CLICK, this._onTriggerClick);
-    
         }
-
     }
 
 },
 
-
-
 // Private event handlers
-
-
 
 /**
 * @method _onTriggerClick
@@ -8925,9 +8870,7 @@ _removeEventHandlers: function() {
 _onTriggerClick: function(p_oEvent, p_oMenu) {
 
     if (p_oEvent.ctrlKey) {
-    
         Event.stopEvent(p_oEvent);
-
     }
     
 },
@@ -9057,8 +9000,10 @@ initDefaultConfig: function() {
 * @method destroy
 * @description Removes the context menu's <code>&#60;div&#62;</code> element 
 * (and accompanying child nodes) from the document.
+* @param {boolean} shallowPurge If true, only the parent element's DOM event listeners are purged. If false, or not provided, all children are also purged of DOM event listeners. 
+* NOTE: The flag is a "shallowPurge" flag, as opposed to what may be a more intuitive "purgeChildren" flag to maintain backwards compatibility with behavior prior to 2.9.0.
 */
-destroy: function() {
+destroy: function(shallowPurge) {
 
     // Remove the DOM event handlers from the current trigger(s)
 
@@ -9067,7 +9012,7 @@ destroy: function() {
 
     // Continue with the superclass implementation of this method
 
-    ContextMenu.superclass.destroy.call(this);
+    ContextMenu.superclass.destroy.call(this, shallowPurge);
 
 },
 
@@ -9739,7 +9684,7 @@ initDefaultConfig: function() {
 /**
 * Creates an item for a menu bar.
 * 
-* @param {String} p_oObject String specifying the text of the menu bar item.
+* @param {HTML} p_oObject Markup for the menu item content. The markup is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {<a href="http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-
 * one-html.html#ID-74680021">HTMLLIElement</a>} p_oObject Object specifying the 
 * <code>&#60;li&#62;</code> element of the menu bar item.
@@ -9771,7 +9716,7 @@ YAHOO.lang.extend(YAHOO.widget.MenuBarItem, YAHOO.widget.MenuItem, {
 * @description The MenuBarItem class's initialization method. This method is 
 * automatically called by the constructor, and sets up all DOM references for 
 * pre-existing markup, and creates required markup if it is not already present.
-* @param {String} p_oObject String specifying the text of the menu bar item.
+* @param {HTML} p_oObject Markup for the menu item content. The markup is inserted into the DOM as HTML, and should be escaped by the implementor if coming from an external source.
 * @param {<a href="http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-
 * one-html.html#ID-74680021">HTMLLIElement</a>} p_oObject Object specifying the 
 * <code>&#60;li&#62;</code> element of the menu bar item.
@@ -9867,4 +9812,4 @@ toString: function() {
 }
     
 }); // END YAHOO.lang.extend
-YAHOO.register("menu", YAHOO.widget.Menu, {version: "2.8.2r1", build: "7"});
+YAHOO.register("menu", YAHOO.widget.Menu, {version: "2.9.0", build: "2800"});

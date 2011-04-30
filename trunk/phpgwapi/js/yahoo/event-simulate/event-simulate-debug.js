@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 
 /**
@@ -282,6 +282,8 @@ YAHOO.util.UserAction = {
             throw new Error("simulateMouseEvent(): Invalid target.");
         }
         
+        relatedTarget = relatedTarget || null;
+
         //check event type
         if (YAHOO.lang.isString(type)){
             type = type.toLowerCase();
@@ -619,4 +621,4 @@ YAHOO.util.UserAction = {
     
 
 };
-YAHOO.register("event-simulate", YAHOO.util.UserAction, {version: "2.8.2r1", build: "7"});
+YAHOO.register("event-simulate", YAHOO.util.UserAction, {version: "2.9.0", build: "2800"});

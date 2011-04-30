@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 (function () {
     var Dom = YAHOO.util.Dom,
@@ -395,7 +395,6 @@ TV.prototype = {
         this.createEvent("highlightEvent",this);
      
 
-
         this._nodes = [];
 
         // store a global reference
@@ -669,6 +668,11 @@ TV.prototype = {
             this.logger.log("onLabelClick " + node.label);
             this.fireEvent('labelClick',node);
         }
+        // http://yuilibrary.com/projects/yui2/ticket/2528946
+        // Ensures that any open editor is closed.
+        // Since the editor is in a separate source which might not be included,
+        // we first need to ensure we have the _closeEditor method available
+        if (this._closeEditor) { this._closeEditor(false); }
         
         //  If it is a toggle cell, toggle
         if (/\bygtv[tl][mp]h?h?/.test(td.className)) {
@@ -848,6 +852,7 @@ TV.prototype = {
                 // this.logger.log('PAGE_DOWN');
                 // break;
             case 107:  // plus key
+            case 187:  // plus key
                 if (ev.shiftKey) {
                     this.logger.log('Shift-PLUS');
                     node.parent.expandAll();
@@ -857,6 +862,7 @@ TV.prototype = {
                 }
                 break;
             case 109: // minus key
+            case 189: // minus key
                 if (ev.shiftKey) {
                     this.logger.log('Shift-MINUS');
                     node.parent.collapseAll();
@@ -1407,7 +1413,6 @@ TV.FOCUS_CLASS_NAME = 'ygtvfocus';
 
 
 })();
-
 (function () {
     var Dom = YAHOO.util.Dom,
         Lang = YAHOO.lang,
@@ -2144,6 +2149,14 @@ YAHOO.widget.Node.prototype = {
                 el.className = el.className.replace(/\bygtv(([tl][pmn]h?)|(loading))\b/gi,this.getStyle());
             }
         }
+        el = Dom.get('ygtvtableel' + this.index);
+        if (el) {
+            if (this.expanded) {
+                Dom.replaceClass(el,'ygtv-collapsed','ygtv-expanded');
+            } else {
+                Dom.replaceClass(el,'ygtv-expanded','ygtv-collapsed');
+            }
+        }
     },
 
     /**
@@ -2505,6 +2518,7 @@ YAHOO.widget.Node.prototype = {
         var sb = [];
 
         sb[sb.length] = '<table id="ygtvtableel' + this.index + '" border="0" cellpadding="0" cellspacing="0" class="ygtvtable ygtvdepth' + this.depth;
+        sb[sb.length] = ' ygtv-' + (this.expanded?'expanded':'collapsed');
         if (this.enableHighlight) {
             sb[sb.length] = ' ygtv-highlight' + this.highlightState;
         }
@@ -2649,7 +2663,6 @@ YAHOO.widget.Node.prototype = {
                         aEl.focus();
                         self._focusedItem = aEl;
                         Event.on(aEl,'blur',function () {
-                            //console.log('f1');
                             self.tree.fireEvent('focusChanged',{oldNode:self.tree.currentFocus,newNode:null});
                             self.tree.currentFocus = null;
                             self._removeFocus();
@@ -2661,11 +2674,9 @@ YAHOO.widget.Node.prototype = {
             }
         );
         if (focused) { 
-                            //console.log('f2');
             this.tree.fireEvent('focusChanged',{oldNode:this.tree.currentFocus,newNode:this});
             this.tree.currentFocus = this;
         } else {
-                            //console.log('f3');
             this.tree.fireEvent('focusChanged',{oldNode:self.tree.currentFocus,newNode:null});
             this.tree.currentFocus = null;
             this._removeFocus(); 
@@ -2702,12 +2713,12 @@ YAHOO.widget.Node.prototype = {
 
         if (this.expanded) {defs.expanded = this.expanded; }
         if (!this.multiExpand) { defs.multiExpand = this.multiExpand; }
-        if (!this.renderHidden) { defs.renderHidden = this.renderHidden; }
+        if (this.renderHidden) { defs.renderHidden = this.renderHidden; }
         if (!this.hasIcon) { defs.hasIcon = this.hasIcon; }
         if (this.nowrap) { defs.nowrap = this.nowrap; }
         if (this.className) { defs.className = this.className; }
         if (this.editable) { defs.editable = this.editable; }
-        if (this.enableHighlight) { defs.enableHighlight = this.enableHighlight; }
+        if (!this.enableHighlight) { defs.enableHighlight = this.enableHighlight; }
         if (this.highlightState) { defs.highlightState = this.highlightState; }
         if (this.propagateHighlightUp) { defs.propagateHighlightUp = this.propagateHighlightUp; }
         if (this.propagateHighlightDown) { defs.propagateHighlightDown = this.propagateHighlightDown; }
@@ -2886,7 +2897,6 @@ YAHOO.widget.Node.prototype = {
 
 YAHOO.augment(YAHOO.widget.Node, YAHOO.util.EventProvider);
 })();
-
 /**
  * A custom YAHOO.widget.Node that handles the unique nature of 
  * the virtual, presentationless root node.
@@ -2971,7 +2981,6 @@ YAHOO.extend(YAHOO.widget.RootNode, YAHOO.widget.Node, {
     focus: function () {}
 
 });
-
 (function () {
     var Dom = YAHOO.util.Dom,
         Lang = YAHOO.lang,
@@ -3105,18 +3114,18 @@ YAHOO.extend(YAHOO.widget.TextNode, YAHOO.widget.Node, {
     // overrides YAHOO.widget.Node
     getContentHtml: function() { 
         var sb = [];
-        sb[sb.length] = this.href?'<a':'<span';
-        sb[sb.length] = ' id="' + this.labelElId + '"';
-        sb[sb.length] = ' class="' + this.labelStyle  + '"';
+        sb[sb.length] = this.href ? '<a' : '<span';
+        sb[sb.length] = ' id="' + Lang.escapeHTML(this.labelElId) + '"';
+        sb[sb.length] = ' class="' + Lang.escapeHTML(this.labelStyle)  + '"';
         if (this.href) {
-            sb[sb.length] = ' href="' + this.href + '"';
-            sb[sb.length] = ' target="' + this.target + '"';
+            sb[sb.length] = ' href="' + Lang.escapeHTML(this.href) + '"';
+            sb[sb.length] = ' target="' + Lang.escapeHTML(this.target) + '"';
         } 
         if (this.title) {
-            sb[sb.length] = ' title="' + this.title + '"';
+            sb[sb.length] = ' title="' + Lang.escapeHTML(this.title) + '"';
         }
         sb[sb.length] = ' >';
-        sb[sb.length] = this.label;
+        sb[sb.length] = Lang.escapeHTML(this.label);
         sb[sb.length] = this.href?'</a>':'</span>';
         return sb.join("");
     },
@@ -3168,7 +3177,6 @@ YAHOO.extend(YAHOO.widget.TextNode, YAHOO.widget.Node, {
     
 });
 })();
-
 /**
  * A menu-specific implementation that differs from TextNode in that only 
  * one sibling can be expanded at a time.
@@ -3208,7 +3216,6 @@ YAHOO.extend(YAHOO.widget.MenuNode, YAHOO.widget.TextNode, {
     _type: "MenuNode"
 
 });
-
 (function () {
     var Dom = YAHOO.util.Dom,
         Lang = YAHOO.lang,
@@ -3235,20 +3242,22 @@ YAHOO.extend(YAHOO.widget.MenuNode, YAHOO.widget.TextNode, {
  * @param oParent {YAHOO.widget.Node} this node's parent node
  * @param expanded {boolean} the initial expanded/collapsed state (deprecated; use oData.expanded) 
  * @param hasIcon {boolean} specifies whether or not leaf nodes should
- * be rendered with or without a horizontal line line and/or toggle icon. If the icon
+ * be rendered with or without a horizontal line and/or toggle icon. If the icon
  * is not displayed, the content fills the space it would have occupied.
  * This option operates independently of the leaf node presentation logic
  * for dynamic nodes.
  * (deprecated; use oData.hasIcon) 
  */
-YAHOO.widget.HTMLNode = function(oData, oParent, expanded, hasIcon) {
+var HN =  function(oData, oParent, expanded, hasIcon) {
     if (oData) { 
         this.init(oData, oParent, expanded);
         this.initContent(oData, hasIcon);
     }
 };
 
-YAHOO.extend(YAHOO.widget.HTMLNode, YAHOO.widget.Node, {
+
+YAHOO.widget.HTMLNode = HN;
+YAHOO.extend(HN, YAHOO.widget.Node, {
 
     /**
      * The CSS class for the html content container.  Defaults to ygtvhtml, but 
@@ -3277,7 +3286,7 @@ YAHOO.extend(YAHOO.widget.HTMLNode, YAHOO.widget.Node, {
 
     /**
      * Sets up the node label
-     * @property initContent
+     * @method initContent
      * @param oData {object} An html string or object containing an html property
      * @param hasIcon {boolean} determines if the node will be rendered with an
      * icon or not
@@ -3292,23 +3301,43 @@ YAHOO.extend(YAHOO.widget.HTMLNode, YAHOO.widget.Node, {
 
     /**
      * Synchronizes the node.html, and the node's content
-     * @property setHtml
-     * @param o {object} An html string or object containing an html property
+     * @method setHtml
+     * @param o {object |string | HTMLElement } An html string, an object containing an html property or an HTML element
      */
     setHtml: function(o) {
-
-        this.html = (typeof o === "string") ? o : o.html;
+        this.html = (Lang.isObject(o) && 'html' in o) ? o.html : o;
 
         var el = this.getContentEl();
         if (el) {
+            if (o.nodeType && o.nodeType == 1 && o.tagName) {
+                el.innerHTML = "";
+            } else {
             el.innerHTML = this.html;
+        }
         }
 
     },
 
     // overrides YAHOO.widget.Node
+    // If property html is a string, it sets the innerHTML for the node
+    // If it is an HTMLElement, it defers appending it to the tree until the HTML basic structure is built
     getContentHtml: function() { 
+        if (typeof this.html === "string") {
         return this.html;
+        } else {
+
+            HN._deferredNodes.push(this);
+            if (!HN._timer) {
+                HN._timer = window.setTimeout(function () {
+                    var n;
+                    while((n = HN._deferredNodes.pop())) {
+                        n.getContentEl().appendChild(n.html);
+                    }
+                    HN._timer = null;
+                },0);
+            }
+            return "";
+        }
     },
     
       /**
@@ -3319,15 +3348,34 @@ YAHOO.extend(YAHOO.widget.HTMLNode, YAHOO.widget.Node, {
      * @return {Object | false}  definition of the tree or false if any node is defined as dynamic
      */
     getNodeDefinition: function() {
-        var def = YAHOO.widget.HTMLNode.superclass.getNodeDefinition.call(this);
+        var def = HN.superclass.getNodeDefinition.call(this);
         if (def === false) { return false; }
         def.html = this.html;
         return def;
     
     }
 });
-})();
 
+    /**
+    * An array of HTMLNodes created with HTML Elements that had their rendering
+    * deferred until the basic tree structure is rendered.
+    * @property _deferredNodes
+    * @type YAHOO.widget.HTMLNode[]
+    * @default []
+    * @private
+    * @static
+    */
+HN._deferredNodes = [];
+    /**
+    * A system timer value used to mark whether a deferred operation is pending.
+    * @property _timer
+    * @type System Timer
+    * @default null
+    * @private
+    * @static
+    */
+HN._timer = null;
+})();
 (function () {
     var Dom = YAHOO.util.Dom,
         Lang = YAHOO.lang,
@@ -3449,7 +3497,8 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
     * Finally displays the newly entered date in the tree.
     * Overrides Node.displayEditedValue.
     * @method displayEditedValue
-     *  @param value {string} date to be displayed and stored in the node
+     * @param value {HTML} date to be displayed and stored in the node.
+     * This data is added to the node unescaped via the innerHTML property.
      * @param editorData {YAHOO.widget.TreeView.editorData}  a shortcut to the static object holding editing information
      */
 	displayEditedValue: function (value,editorData) {
@@ -3457,6 +3506,7 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
 		node.label = value;
 		node.getLabelEl().innerHTML = value;
 	},
+
   /**
      * Returns an object which could be used to build a tree out of this node and its children.
      * It can be passed to the tree constructor to reproduce this node as a tree.
@@ -3474,7 +3524,6 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
 
 });
 })();
-
 (function () {
     var Dom = YAHOO.util.Dom,
         Lang = YAHOO.lang, 
@@ -3575,8 +3624,10 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
             editorData.active = true;
             editorData.whoHasIt = this;
             if (!editorData.nodeType) {
-                editorData.editorPanel = ed = document.body.appendChild(document.createElement('div'));
+                // Fixes: http://yuilibrary.com/projects/yui2/ticket/2528945
+                editorData.editorPanel = ed = this.getEl().appendChild(document.createElement('div'));
                 Dom.addClass(ed,'ygtv-label-editor');
+                ed.tabIndex = 0;
 
                 buttons = editorData.buttonsContainer = ed.appendChild(document.createElement('div'));
                 Dom.addClass(buttons,'ygtv-button-container');
@@ -3587,42 +3638,45 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
                 Dom.addClass(button,'ygtvcancel');
                 button.innerHTML = ' ';
                 Event.on(buttons, 'click', function (ev) {
-                    this.logger.log('click on editor');
-                    var target = Event.getTarget(ev);
-                    var node = TV.editorData.node;
+                    var target = Event.getTarget(ev),
+                        editorData = TV.editorData,
+                        node = editorData.node,
+                        self = editorData.whoHasIt;
+                    self.logger.log('click on editor');
                     if (Dom.hasClass(target,'ygtvok')) {
                         node.logger.log('ygtvok');
                         Event.stopEvent(ev);
-                        this._closeEditor(true);
+                        self._closeEditor(true);
                     }
                     if (Dom.hasClass(target,'ygtvcancel')) {
                         node.logger.log('ygtvcancel');
                         Event.stopEvent(ev);
-                        this._closeEditor(false);
+                        self._closeEditor(false);
                     }
-                }, this, true);
+                });
 
                 editorData.inputContainer = ed.appendChild(document.createElement('div'));
                 Dom.addClass(editorData.inputContainer,'ygtv-input');
                 
                 Event.on(ed,'keydown',function (ev) {
                     var editorData = TV.editorData,
-                        KEY = YAHOO.util.KeyListener.KEY;
+                        KEY = YAHOO.util.KeyListener.KEY,
+                        self = editorData.whoHasIt;
                     switch (ev.keyCode) {
                         case KEY.ENTER:
-                            this.logger.log('ENTER');
+                            self.logger.log('ENTER');
                             Event.stopEvent(ev);
                             if (editorData.saveOnEnter) { 
-                                this._closeEditor(true);
+                                self._closeEditor(true);
                             }
                             break;
                         case KEY.ESCAPE:
-                            this.logger.log('ESC');
+                            self.logger.log('ESC');
                             Event.stopEvent(ev);
-                            this._closeEditor(false);
+                            self._closeEditor(false);
                             break;
                     }
-                },this,true);
+                });
 
 
                 
@@ -3634,10 +3688,10 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
                 Dom.removeClass(ed,'ygtv-edit-' + editorData.nodeType);
             }
             Dom.addClass(ed,' ygtv-edit-' + node._type);
-            topLeft = Dom.getXY(node.getContentEl());
-            Dom.setStyle(ed,'left',topLeft[0] + 'px');
-            Dom.setStyle(ed,'top',topLeft[1] + 'px');
+            // Fixes: http://yuilibrary.com/projects/yui2/ticket/2528945
             Dom.setStyle(ed,'display','block');
+            Dom.setXY(ed,Dom.getXY(node.getContentEl()));
+            // up to here
             ed.focus();
             node.fillEditorContainer(editorData);
 
@@ -3659,6 +3713,7 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
         } else if (oArgs.node instanceof YAHOO.widget.Node) {
             oArgs.node.editNode();
         }
+        return false;
     };
     
     /**
@@ -3673,6 +3728,10 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
         var ed = TV.editorData, 
             node = ed.node,
             close = true;
+        // http://yuilibrary.com/projects/yui2/ticket/2528946
+        // _closeEditor might now be called at any time, even when there is no label editor open
+        // so we need to ensure there is one.
+        if (!node || !ed.active) { return; }
         if (save) { 
             close = ed.node.saveEditorValue(ed) !== false; 
         } else {
@@ -3725,8 +3784,6 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
     };
     
     
-
-
     /** Placeholder for a function that should provide the inline node label editor.
      *   Leaving it set to null will indicate that this node type is not editable.
      * It should be overridden by nodes that provide inline editing.
@@ -3801,7 +3858,8 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
     * Finally displays the newly edited value(s) in the tree.
     * Should be overridden by each node type.
     * @method displayEditedValue
-     *  @param value {any} value to be displayed and stored in the node
+     * @param value {HTML} value to be displayed and stored in the node
+     * This data is added to the node unescaped via the innerHTML property.
      * @param editorData {YAHOO.widget.TreeView.editorData}  a shortcut to the static object holding editing information
      * @for YAHOO.widget.Node
      */
@@ -3879,7 +3937,6 @@ YAHOO.extend(YAHOO.widget.DateNode, YAHOO.widget.TextNode, {
         editorData.inputContainer.innerHTML = '';
     };
 })();
-
 /**
  * A static factory class for tree view expand/collapse animations
  * @class TVAnim
@@ -3932,7 +3989,6 @@ YAHOO.widget.TVAnim = function() {
         }
     };
 } ();
-
 /**
  * A 1/2 second fade-in animation.
  * @class TVFadeIn
@@ -3994,7 +4050,6 @@ YAHOO.widget.TVFadeIn.prototype = {
         return "TVFadeIn";
     }
 };
-
 /**
  * A 1/2 second fade out animation.
  * @class TVFadeOut
@@ -4054,5 +4109,4 @@ YAHOO.widget.TVFadeOut.prototype = {
         return "TVFadeOut";
     }
 };
-
-YAHOO.register("treeview", YAHOO.widget.TreeView, {version: "2.8.2r1", build: "7"});
+YAHOO.register("treeview", YAHOO.widget.TreeView, {version: "2.9.0", build: "2800"});

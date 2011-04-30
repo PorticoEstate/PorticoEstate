@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 /**
  * Augments the Event Utility with support for the mouseenter and mouseleave 
@@ -108,17 +108,16 @@ version: 2.8.2r1
 			        }
 
 					//	The default args passed back to a mouseenter or 
-					//	mouseleave listener are: the event, the element 
-					//	to which the listener is bound, and any object the  
-					//	user passed when subscribing
+                    // mouseleave listener are: the event, and any object
+                    // the user passed when subscribing
 
-					args = [event, el, obj];
+                    args = [event, obj];
 
-					//	Add the delegation container as an argument when 
-					//	delegating mouseenter and mouseleave
+                    // Add the element and delegation container as arguments
+                    // when delegating mouseenter and mouseleave
 
 					if (container) {
-						args.splice(2, 0, container);
+                        args.splice(1, 0, el, container);
 					}
 
 					return fn.apply(context, args);
@@ -216,4 +215,4 @@ version: 2.8.2r1
 	Event.on = Event.addListener;
 
 }());
-YAHOO.register("event-mouseenter", YAHOO.util.Event, {version: "2.8.2r1", build: "7"});
+YAHOO.register("event-mouseenter", YAHOO.util.Event, {version: "2.9.0", build: "2800"});

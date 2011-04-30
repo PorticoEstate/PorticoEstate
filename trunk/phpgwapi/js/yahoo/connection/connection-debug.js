@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 /**
  * The Connection Manager provides a simplified interface to the XMLHttpRequest
@@ -20,7 +20,7 @@ version: 2.8.2r1
  * The Connection Manager singleton provides methods for creating and managing
  * asynchronous transactions.
  *
- * @class Connect
+ * @class YAHOO.util.Connect
  */
 
 YAHOO.util.Connect =
@@ -119,6 +119,16 @@ YAHOO.util.Connect =
   * @type boolean
   */
     _has_default_headers:true,
+
+ /**
+   * @description Property modified by setForm() to determine if the data
+   * should be submitted as an HTML form.
+   * @property _isFormSubmit
+   * @private
+   * @static
+   * @type boolean
+   */
+	_isFormSubmit:false,
 
  /**
   * @description Determines if custom, default headers
@@ -261,6 +271,8 @@ YAHOO.util.Connect =
 	{
 		if(typeof b == 'string'){
 			this._default_post_header = b;
+			this._use_default_post_header = true;
+
 			YAHOO.log('Default POST header set to  ' + b, 'info', 'Connection');
 		}
 		else if(typeof b == 'boolean'){
@@ -394,12 +406,14 @@ YAHOO.util.Connect =
    */
 	asyncRequest:function(method, uri, callback, postData)
 	{
-		var o,t,args = (callback && callback.argument)?callback.argument:null;
+        var args = callback&&callback.argument?callback.argument:null,
+            YCM = this,
+            o, t;
 
 		if(this._isFileUpload){
 			t = 'upload';
 		}
-		else if(callback.xdr){
+        else if(callback && callback.xdr){
 			t = 'xdr';
 		}
 
@@ -417,7 +431,7 @@ YAHOO.util.Connect =
 
 			if(this._isFormSubmit){
 				if(this._isFileUpload){
-					this.uploadFile(o, callback, uri, postData);
+                    window.setTimeout(function(){YCM.uploadFile(o, callback, uri, postData);}, 10);
 					return o;
 				}
 
@@ -978,7 +992,7 @@ YAHOO.util.Connect =
 };
 
 /**
-  * @for Connect
+  * @for YAHOO.util.Connect
   */
 (function() {
 	var YCM = YAHOO.util.Connect, _fn = {};
@@ -1106,20 +1120,12 @@ YAHOO.util.Connect =
 })();
 
 /**
-  * @for Connect
+  * @for YAHOO.util.Connect
   */
 (function(){
 	var YCM = YAHOO.util.Connect,
-		YE = YAHOO.util.Event;
-   /**
-	* @description Property modified by setForm() to determine if the data
-	* should be submitted as an HTML form.
-	* @property _isFormSubmit
-	* @private
-	* @static
-	* @type boolean
-	*/
-	YCM._isFormSubmit = false;
+		YE = YAHOO.util.Event,
+		dM = document.documentMode ? document.documentMode : false;
 
    /**
 	* @description Property modified by setForm() to determine if a file(s)
@@ -1169,7 +1175,7 @@ YAHOO.util.Connect =
     * @static
     * @type CustomEvent
     */
-	YCM.uploadEvent = new YAHOO.util.CustomEvent('upload'),
+	YCM.uploadEvent = new YAHOO.util.CustomEvent('upload');
 
    /**
 	* @description Determines whether YAHOO.util.Event is available and returns true or false.
@@ -1361,8 +1367,10 @@ YAHOO.util.Connect =
 		// properties via createElement().  A different iframe creation
 		// pattern is required for IE.
 		var frameId = 'yuiIO' + this._transaction_id,
+			ie9 = (dM === 9) ? true : false,
 			io;
-		if(YAHOO.env.ua.ie){
+
+		if(YAHOO.env.ua.ie && !ie9){
 			io = document.createElement('<iframe id="' + frameId + '" name="' + frameId + '" />');
 
 			// IE will throw a security exception in an SSL environment if the
@@ -1431,7 +1439,7 @@ YAHOO.util.Connect =
 		var frameId = 'yuiIO' + o.tId,
 		    uploadEncoding = 'multipart/form-data',
 		    io = document.getElementById(frameId),
-		    ie8 = (document.documentMode && document.documentMode === 8) ? true : false,
+		    ie8 = (dM >= 8) ? true : false,
 		    oConn = this,
 			args = (callback && callback.argument)?callback.argument:null,
             oElements,i,prop,obj, rawFormAttributes, uploadCallback;
@@ -1506,6 +1514,8 @@ YAHOO.util.Connect =
 		// receives the load event.  Subsequently, the event handler is detached
 		// and the iframe removed from the document.
 		uploadCallback = function() {
+			var body, pre, text;
+
 			if(callback && callback.timeout){
 				window.clearTimeout(oConn._timeOut[o.tId]);
 				delete oConn._timeOut[o.tId];
@@ -1521,14 +1531,25 @@ YAHOO.util.Connect =
 
 			obj = {
 			    tId : o.tId,
-			    argument : callback.argument
+			    argument : args
             };
 
 			try
 			{
+				body = io.contentWindow.document.getElementsByTagName('body')[0];
+				pre = io.contentWindow.document.getElementsByTagName('pre')[0];
+
+				if (body) {
+					if (pre) {
+						text = pre.textContent?pre.textContent:pre.innerText;
+					}
+					else {
+						text = body.textContent?body.textContent:body.innerText;
+					}
+				}
+				obj.responseText = text;
 				// responseText and responseXML will be populated with the same data from the iframe.
 				// Since the HTTP headers cannot be read from the iframe
-				obj.responseText = io.contentWindow.document.body?io.contentWindow.document.body.innerHTML:io.contentWindow.document.documentElement.textContent;
 				obj.responseXML = io.contentWindow.document.XMLDocument?io.contentWindow.document.XMLDocument:io.contentWindow.document;
 			}
 			catch(e){}
@@ -1573,4 +1594,4 @@ YAHOO.util.Connect =
 	YCM.uploadFile = _uploadFile;
 })();
 
-YAHOO.register("connection", YAHOO.util.Connect, {version: "2.8.2r1", build: "7"});
+YAHOO.register("connection", YAHOO.util.Connect, {version: "2.9.0", build: "2800"});
