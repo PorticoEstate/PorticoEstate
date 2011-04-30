@@ -17,18 +17,53 @@
 	    sortable: true
 	},
 	{
-		key: "arena_name",
-		label: "<?php echo lang('name') ?>",
+		key: "organization_id",
+		label: "<?php echo lang('organization') ?>",
 	    sortable: true
 	},
 	{
-		key: "internal_arena_id",
-		label: "<?php echo lang('internal_arena_id') ?>",
+		key: "group_id",
+		label: "<?php echo lang('group') ?>",
 	    sortable: true
 	},
 	{
-		key: "address",
-		label: "<?php echo lang('address') ?>",
+		key: "district",
+		label: "<?php echo lang('district') ?>",
+	    sortable: true
+	},
+	{
+		key: "category",
+		label: "<?php echo lang('category') ?>",
+	    sortable: true
+	},
+	{
+		key: "description",
+		label: "<?php echo lang('description') ?>",
+	    sortable: true
+	},
+	{
+		key: "arena",
+		label: "<?php echo lang('arena') ?>",
+	    sortable: true
+	},
+	{
+		key: "date_start",
+		label: "<?php echo lang('date_start') ?>",
+	    sortable: true
+	},
+	{
+		key: "date_end",
+		label: "<?php echo lang('date_end') ?>",
+	    sortable: true
+	},
+	{
+		key: "contact_person_1",
+		label: "<?php echo lang('contact_person_1') ?>",
+	    sortable: true
+	},
+	{
+		key: "contact_person_2",
+		label: "<?php echo lang('contact_person_2') ?>",
 	    sortable: true
 	},
 	{
@@ -116,6 +151,15 @@
 			<option value="all"><?php echo lang('all') ?></option>
 			<option value="1"><?php echo lang('internal') ?></option>
 			<option value="2" ><?php echo lang('not_internal') ?></option>
+		</select>
+		<label class="toolbar_element_label" for="ctrl_toggle_activity_state"><?php echo lang('activity_state') ?></label>
+		<select name="activity_state" id="<?php echo $list_id ?>_ctrl_toggle_activity_state">
+			<option value="all"><?php echo lang('all') ?></option>
+			<option value="1"><?php echo lang('new') ?></option>
+			<option value="2" ><?php echo lang('change') ?></option>
+			<option value="3" ><?php echo lang('accepted') ?></option>
+			<option value="4" ><?php echo lang('processed') ?></option>
+			<option value="5" ><?php echo lang('rejected') ?></option>
 		</select>
 	</fieldset>
 	

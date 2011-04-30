@@ -324,3 +324,33 @@ Go back to calendar	activitycalendar	no	Tilbake til kalender
 Agegroups kan not be larger than 9999 peoples	activitycalendar	no	Estimert antall deltakere kan ikke være større en 9999 personer
 Contact information name is to long. max 50 characters	activitycalendar	no	Navn i kontakt informasjon er for langt. Maks 50 tegn
 Unable to fill report	activitycalendar	no	Greide ikke å fylle ut rapport
+arena	activitycalendar	no	Arena
+description	activitycalendar	no	Beskrivelse
+date_start	activitycalendar	no	Startdato
+date_end	activitycalendar	no	Sluttdato
+contact_person_1	activitycalendar	no	Kontaktperson 1
+contact_person_2	activitycalendar	no	Kontaktperson 2
+Activities	activitycalendar	no	Aktiviteter
+activities	activitycalendar	no	Aktiviteter
+Arena	activitycalendar	no	Arena
+arenas	activitycalendar	no	Arena
+OrganizationList	activitycalendar	no	Organisasjoner/Grupper
+f_new_activity	activitycalendar	no	Ny aktivitet
+f_new_arena	activitycalendar	no	Ny arena
+search_for	activitycalendar	no	Søk etter
+activity_type	activitycalendar	no	Aktivitetstype
+all	activitycalendar	no	Alle
+not_internal	activitycalendar	no	Ikke intern
+organization_id	activitycalendar	no	Organisasjon ID
+arena_type	activitycalendar	no	Arenatype
+internal_arena_id	activitycalendar	no	Intern arena ID
+reset	activitycalendar	no	Nullstill
+organization_number	activitycalendar	no	Organisasjonsnummer
+elements_pr_page	activitycalendar	no	elementer per side
+shows_from	activitycalendar	no	Viser fra
+of_total	activitycalendar	no	av totalt
+DATATABLE_MSG_EMPTY	activitycalendar	no	Ingen elementer
+export_to	activitycalendar	no	Eksporter til
+activity_state	activitycalendar	no	Status
+processed	activitycalendar	no	Behandlet
+show	activitycalendar	no	Vis

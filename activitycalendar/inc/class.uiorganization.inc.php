@@ -1,8 +1,9 @@
 <?php
 phpgw::import_class('activitycalendar.uicommon');
 phpgw::import_class('activitycalendar.soorganization');
+phpgw::import_class('activitycalendar.sogroup');
 
-//include_class('activitycalendar', 'organization', 'inc/model/');
+include_class('activitycalendar', 'organization', 'inc/model/');
 
 class activitycalendar_uiorganization extends activitycalendar_uicommon
 {
@@ -64,30 +65,15 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		//Retrieve the type of query and perform type specific logic
 		$type = phpgw::get_var('type');
 
-		/*$config	= CreateObject('phpgwapi.config','activitycalendar');
-		$config->read();
 		switch($type)
 		{
-			case 'included_parties': // ... get all parties incolved in the contract
-				$filters = array('contract_id' => $contract_id);
-				break;
-			case 'not_included_parties': // ... get all parties not included in the contract
-				$filters = array('not_contract_id' => $contract_id, 'party_type' => phpgw::get_var('party_type'));
-				break;
-			case 'sync_parties':
-			case 'sync_parties_res_unit':
-			case 'sync_parties_identifier':
 			case 'sync_parties_org_unit':
-				$filters = array('sync' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
-				if($use_fellesdata)
-				{
-					$bofelles = rental_bofellesdata::get_instance();
-				}
+				//$filters = array('sync' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				break;
 			default: // ... get all parties of a given type
 				//$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				break;
-		}*/
+		}
 		
 		$result_objects = activitycalendar_soorganization::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 		$result_count = activitycalendar_soorganization::get_instance()->get_count($search_for, $search_type, $filters);
@@ -98,7 +84,19 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		foreach ($result_objects as $result) {
 			if(isset($result))
 			{
-				$rows[] = $result->serialize();
+				$res = $result->serialize();
+				$org_id = $result->get_id();
+				//$rows[] = $result->serialize();
+				$rows[] = $res;
+				$filter_group = array('org_id' => $org_id);
+				$result_groups = activitycalendar_sogroup::get_instance()->get(null, null, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
+				foreach ($result_groups as $result_group) {
+					if(isset($result_group))
+					{
+						$res_g = $result_group->serialize();
+						$rows[] = $res_g;
+					}
+				}
 			}
 		}
 		// ... add result data
@@ -182,7 +180,13 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		{
 			case 'all_organizations':
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $value['id'])));
+				if($value['organization_id'] != '' && $value['organization_id'] != null){
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uigroup.show', 'id' => $value['id'])));
+				}
+				else
+				{
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $value['id'])));
+				}
 				$value['labels'][] = lang('show');
 				break;
 		}

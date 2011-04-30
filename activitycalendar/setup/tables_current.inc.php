@@ -8,10 +8,13 @@
 				'district' => array('type' => 'varchar','precision' => '255'),
 				'category' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'target' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'state' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'description' => array('type' => 'varchar','precision' => '255'),
 				'arena' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'date_start' => array('type' => 'int', 'precision' => 4, 'precision' => '8', 'nullable' => true),
 				'date_end' => array('type' => 'int', 'precision' => 4, 'precision' => '8', 'nullable' => true),
+				'create_date' => array('type' => 'int', 'precision' => 4, 'precision' => '8', 'nullable' => false),
+				'last_change_date' => array('type' => 'int', 'precision' => 4, 'precision' => '8', 'nullable' => true),
 				'contact_person_1' => array('type' => 'varchar','precision' => '255'),
 				'contact_person_2' => array('type' => 'varchar','precision' => '255')
 			),

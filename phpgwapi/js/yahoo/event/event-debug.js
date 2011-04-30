@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 
 /**
@@ -177,9 +177,12 @@ YAHOO.util.CustomEvent.prototype = {
      * Subscribes the caller to this event
      * @method subscribe
      * @param {Function} fn        The function to execute
-     * @param {Object}   obj       An object to be passed along when the event fires.
-     * overrideContext <boolean|Object> If true, the obj passed in becomes the execution 
-     * context of the listener. If an object, that object becomes the execution context.
+     * @param {Object}   obj       An object to be passed along when the event
+     * fires.
+     * @param {boolean|Object} overrideContext If true, the obj passed in
+     * becomes the execution.
+     * context of the listener. If an object, that object becomes the execution
+     * context.
      */
     subscribe: function(fn, obj, overrideContext) {
 
@@ -285,7 +288,7 @@ throw new Error("Invalid callback for subscriber to '" + this.type + "'");
 
         for (i=0; i<len; ++i) {
             var s = subs[i];
-            if (!s) {
+            if (!s || !s.fn) {
                 rebuild=true;
             } else {
 
@@ -1278,6 +1281,15 @@ if (!YAHOO.util.Event) {
              * In some cases, some browsers will return a text node inside
              * the actual element that was targeted.  This normalizes the
              * return value for getTarget and getRelatedTarget.
+             *
+             * If accessing a property of the node throws an error, this is
+             * probably the anonymous div wrapper Gecko adds inside text
+             * nodes.  This likely will only occur when attempting to access
+             * the relatedTarget.  In this case, we now return null because
+             * the anonymous div is completely useless and we do not know
+             * what the related target was because we can't even get to
+             * the element's parent node.
+             *
              * @method resolveTextNode
              * @param {HTMLElement} node node to resolve
              * @return {HTMLElement} the normized node
@@ -1288,7 +1300,9 @@ if (!YAHOO.util.Event) {
                     if (n && 3 == n.nodeType) {
                         return n.parentNode;
                     }
-                } catch(e) { }
+                } catch(e) {
+                    return null;
+                }
 
                 return n;
             },
@@ -1834,6 +1848,7 @@ if (!YAHOO.util.Event) {
                 for (i=0, len=unloadListeners.length; i<len; ++i) {
                     l = ul[i];
                     if (l) {
+                        try {
                         context = window;
                         if (l[EU.ADJ_SCOPE]) {
                             if (l[EU.ADJ_SCOPE] === true) {
@@ -1843,6 +1858,7 @@ if (!YAHOO.util.Event) {
                             }
                         }
                         l[EU.FN].call(context, EU.getEvent(e, l[EU.EL]), l[EU.UNLOAD_OBJ] );
+                        } catch(e1) {}
                         ul[i] = null;
                     }
                 }
@@ -1860,13 +1876,18 @@ if (!YAHOO.util.Event) {
                     for (j=listeners.length-1; j>-1; j--) {
                         l = listeners[j];
                         if (l) {
+                            try {
                             EU.removeListener(l[EU.EL], l[EU.TYPE], l[EU.FN], j);
+                            } catch(e2) {}
                         } 
                     }
                     l=null;
                 }
 
+                try {
                 EU._simpleRemove(window, "unload", EU._unload);
+                    EU._simpleRemove(window, "load", EU._load);
+                } catch(e3) {}
 
             },
 
@@ -1975,9 +1996,25 @@ if (!YAHOO.util.Event) {
         var EU = YAHOO.util.Event;
 
         /**
-         * YAHOO.util.Event.on is an alias for addListener
+         * Appends an event handler.  This is an alias for <code>addListener</code>
+         *
          * @method on
-         * @see addListener
+         *
+         * @param {String|HTMLElement|Array|NodeList} el An id, an element
+         *  reference, or a collection of ids and/or elements to assign the
+         *  listener to.
+         * @param {String}   sType     The type of event to append
+         * @param {Function} fn        The method the event invokes
+         * @param {Object}   obj    An arbitrary object that will be
+         *                             passed as a parameter to the handler
+         * @param {Boolean|object}  overrideContext  If true, the obj passed in becomes
+         *                             the execution context of the listener. If an
+         *                             object, this object becomes the execution
+         *                             context.
+         * @return {Boolean} True if the action was successful or defered,
+         *                        false if one or more of the elements
+         *                        could not have the listener attached,
+         *                        or if the operation throws an exception.
          * @static
          */
         EU.on = EU.addListener;
@@ -2521,4 +2558,4 @@ KeyListener.KEY = {
 };
 
 })();
-YAHOO.register("event", YAHOO.util.Event, {version: "2.8.2r1", build: "7"});
+YAHOO.register("event", YAHOO.util.Event, {version: "2.9.0", build: "2800"});

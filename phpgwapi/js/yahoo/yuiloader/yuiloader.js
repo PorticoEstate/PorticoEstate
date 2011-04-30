@@ -1,8 +1,8 @@
 /*
-Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 2.8.2r1
+version: 2.9.0
 */
 /**
  * The YAHOO object is the single global object used by YUI Library.  It
@@ -121,14 +121,15 @@ YAHOO.namespace = function() {
 /**
  * Uses YAHOO.widget.Logger to output a log message, if the widget is
  * available.
+ * Note: LogReader adds the message, category, and source to the DOM as HTML.
  *
  * @method log
  * @static
- * @param  {String}  msg  The message to log.
- * @param  {String}  cat  The log category for the message.  Default
+ * @param  {HTML}  msg  The message to log.
+ * @param  {HTML}  cat  The log category for the message.  Default
  *                        categories are "info", "warn", "error", time".
  *                        Custom categories can be used as well. (opt)
- * @param  {String}  src  The source of the the message (opt)
+ * @param  {HTML}  src  The source of the the message (opt)
  * @return {Boolean}      True if the log operation was successful.
  */
 YAHOO.log = function(msg, cat, src) {
@@ -249,9 +250,17 @@ YAHOO.env.getVersion = function(name) {
  * @class YAHOO.env.ua
  * @static
  */
-YAHOO.env.ua = function() {
 
-        var numberfy = function(s) {
+/**
+ * parses a user agent string (or looks for one in navigator to parse if
+ * not supplied).
+ * @method parseUA
+ * @since 2.9.0
+ * @static
+ */
+YAHOO.env.parseUA = function(agent) {
+
+        var numberify = function(s) {
             var c = 0;
             return parseFloat(s.replace(/\./g, function() {
                 return (c++ == 1) ? '' : '.';
@@ -266,6 +275,7 @@ YAHOO.env.ua = function() {
          * Internet Explorer version number or 0.  Example: 6
          * @property ie
          * @type float
+         * @static
          */
         ie: 0,
 
@@ -273,6 +283,7 @@ YAHOO.env.ua = function() {
          * Opera version number or 0.  Example: 9.2
          * @property opera
          * @type float
+         * @static
          */
         opera: 0,
 
@@ -282,18 +293,20 @@ YAHOO.env.ua = function() {
          * will be 0.  Example: 1.8
          * <pre>
          * Firefox 1.0.0.4: 1.7.8   <-- Reports 1.7
-         * Firefox 1.5.0.9: 1.8.0.9 <-- Reports 1.8
-         * Firefox 2.0.0.3: 1.8.1.3 <-- Reports 1.8
-         * Firefox 3 alpha: 1.9a4   <-- Reports 1.9
+         * Firefox 1.5.0.9: 1.8.0.9 <-- 1.8
+         * Firefox 2.0.0.3: 1.8.1.3 <-- 1.81
+         * Firefox 3.0   <-- 1.9
+         * Firefox 3.5   <-- 1.91
          * </pre>
          * @property gecko
          * @type float
+         * @static
          */
         gecko: 0,
 
         /**
          * AppleWebKit version.  KHTML browsers that are not WebKit browsers 
-         * will evaluate to 1, other browsers 0.  Example: 418.9.1
+         * will evaluate to 1, other browsers 0.  Example: 418.9
          * <pre>
          * Safari 1.3.2 (312.6): 312.8.1 <-- Reports 312.8 -- currently the 
          *                                   latest available for Mac OSX 10.3.
@@ -304,22 +317,28 @@ YAHOO.env.ua = function() {
          * Safari 2.0.4 (419.3): 419     <-- Tiger installations that have been
          *                                   updated, but not updated
          *                                   to the latest patch.
-         * Webkit 212 nightly:   522+    <-- Safari 3.0 precursor (with native SVG
-         *                                   and many major issues fixed).  
-         * 3.x yahoo.com, flickr:422     <-- Safari 3.x hacks the user agent
-         *                                   string when hitting yahoo.com and 
-         *                                   flickr.com.
-         * Safari 3.0.4 (523.12):523.12  <-- First Tiger release - automatic update
-         *                                   from 2.x via the 10.4.11 OS patch
+         * Webkit 212 nightly:   522+    <-- Safari 3.0 precursor (with native
+         * SVG and many major issues fixed).
+         * Safari 3.0.4 (523.12) 523.12  <-- First Tiger release - automatic
+         * update from 2.x via the 10.4.11 OS patch.
          * Webkit nightly 1/2008:525+    <-- Supports DOMContentLoaded event.
          *                                   yahoo.com user agent hack removed.
-         *                                   
          * </pre>
-         * http://developer.apple.com/internet/safari/uamatrix.html
+         * http://en.wikipedia.org/wiki/Safari_version_history
          * @property webkit
          * @type float
+         * @static
          */
         webkit: 0,
+
+        /**
+         * Chrome will be detected as webkit, but this property will also
+         * be populated with the Chrome version number
+         * @property chrome
+         * @type float
+         * @static
+         */
+        chrome: 0,
 
         /**
          * The mobile property will be set to a string containing any relevant
@@ -328,6 +347,7 @@ YAHOO.env.ua = function() {
          * devices with the WebKit-based browser, and Opera Mini.  
          * @property mobile 
          * @type string
+         * @static
          */
         mobile: null,
 
@@ -338,13 +358,55 @@ YAHOO.env.ua = function() {
          * @type float
          */
         air: 0,
+        /**
+         * Detects Apple iPad's OS version
+         * @property ipad
+         * @type float
+         * @static
+         */
+        ipad: 0,
+        /**
+         * Detects Apple iPhone's OS version
+         * @property iphone
+         * @type float
+         * @static
+         */
+        iphone: 0,
+        /**
+         * Detects Apples iPod's OS version
+         * @property ipod
+         * @type float
+         * @static
+         */
+        ipod: 0,
+        /**
+         * General truthy check for iPad, iPhone or iPod
+         * @property ios
+         * @type float
+         * @static
+         */
+        ios: null,
+        /**
+         * Detects Googles Android OS version
+         * @property android
+         * @type float
+         * @static
+         */
+        android: 0,
+        /**
+         * Detects Palms WebOS version
+         * @property webos
+         * @type float
+         * @static
+         */
+        webos: 0,
 
         /**
          * Google Caja version number or 0.
          * @property caja
          * @type float
          */
-        caja: nav.cajaVersion,
+        caja: nav && nav.cajaVersion,
 
         /**
          * Set to true if the page appears to be in SSL
@@ -364,7 +426,7 @@ YAHOO.env.ua = function() {
 
     },
 
-    ua = navigator && navigator.userAgent, 
+    ua = agent || (navigator && navigator.userAgent),
     
     loc = window && window.location,
 
@@ -380,55 +442,92 @@ YAHOO.env.ua = function() {
             o.os = 'windows';
         } else if ((/macintosh/i).test(ua)) {
             o.os = 'macintosh';
+        } else if ((/rhino/i).test(ua)) {
+            o.os = 'rhino';
         }
     
         // Modern KHTML browsers should qualify as Safari X-Grade
         if ((/KHTML/).test(ua)) {
-            o.webkit=1;
+            o.webkit = 1;
         }
-
         // Modern WebKit browsers are at least X-Grade
-        m=ua.match(/AppleWebKit\/([^\s]*)/);
-        if (m&&m[1]) {
-            o.webkit=numberfy(m[1]);
+        m = ua.match(/AppleWebKit\/([^\s]*)/);
+        if (m && m[1]) {
+            o.webkit = numberify(m[1]);
 
             // Mobile browser check
             if (/ Mobile\//.test(ua)) {
-                o.mobile = "Apple"; // iPhone or iPod Touch
+                o.mobile = 'Apple'; // iPhone or iPod Touch
+
+                m = ua.match(/OS ([^\s]*)/);
+                if (m && m[1]) {
+                    m = numberify(m[1].replace('_', '.'));
+                }
+                o.ios = m;
+                o.ipad = o.ipod = o.iphone = 0;
+
+                m = ua.match(/iPad|iPod|iPhone/);
+                if (m && m[0]) {
+                    o[m[0].toLowerCase()] = o.ios;
+                }
             } else {
-                m=ua.match(/NokiaN[^\/]*/);
+                m = ua.match(/NokiaN[^\/]*|Android \d\.\d|webOS\/\d\.\d/);
                 if (m) {
-                    o.mobile = m[0]; // Nokia N-series, ex: NokiaN95
+                    // Nokia N-series, Android, webOS, ex: NokiaN95
+                    o.mobile = m[0];
+                }
+                if (/webOS/.test(ua)) {
+                    o.mobile = 'WebOS';
+                    m = ua.match(/webOS\/([^\s]*);/);
+                    if (m && m[1]) {
+                        o.webos = numberify(m[1]);
+                }
+            }
+                if (/ Android/.test(ua)) {
+                    o.mobile = 'Android';
+                    m = ua.match(/Android ([^\s]*);/);
+                    if (m && m[1]) {
+                        o.android = numberify(m[1]);
+                    }
+
                 }
             }
 
-            m=ua.match(/AdobeAIR\/([^\s]*)/);
+            m = ua.match(/Chrome\/([^\s]*)/);
+            if (m && m[1]) {
+                o.chrome = numberify(m[1]); // Chrome
+            } else {
+                m = ua.match(/AdobeAIR\/([^\s]*)/);
             if (m) {
                 o.air = m[0]; // Adobe AIR 1.0 or better
             }
-
+            }
         }
 
         if (!o.webkit) { // not webkit
-            // @todo check Opera/8.01 (J2ME/MIDP; Opera Mini/2.0.4509/1316; fi; U; ssr)
-            m=ua.match(/Opera[\s\/]([^\s]*)/);
-            if (m&&m[1]) {
-                o.opera=numberfy(m[1]);
-                m=ua.match(/Opera Mini[^;]*/);
+// @todo check Opera/8.01 (J2ME/MIDP; Opera Mini/2.0.4509/1316; fi; U; ssr)
+            m = ua.match(/Opera[\s\/]([^\s]*)/);
+            if (m && m[1]) {
+                o.opera = numberify(m[1]);
+                m = ua.match(/Version\/([^\s]*)/);
+                if (m && m[1]) {
+                    o.opera = numberify(m[1]); // opera 10+
+                }
+                m = ua.match(/Opera Mini[^;]*/);
                 if (m) {
                     o.mobile = m[0]; // ex: Opera Mini/2.0.4509/1316
                 }
             } else { // not opera or webkit
-                m=ua.match(/MSIE\s([^;]*)/);
-                if (m&&m[1]) {
-                    o.ie=numberfy(m[1]);
+                m = ua.match(/MSIE\s([^;]*)/);
+                if (m && m[1]) {
+                    o.ie = numberify(m[1]);
                 } else { // not opera, webkit, or ie
-                    m=ua.match(/Gecko\/([^\s]*)/);
+                    m = ua.match(/Gecko\/([^\s]*)/);
                     if (m) {
-                        o.gecko=1; // Gecko detected, look for revision
-                        m=ua.match(/rv:([^\s\)]*)/);
-                        if (m&&m[1]) {
-                            o.gecko=numberfy(m[1]);
+                        o.gecko = 1; // Gecko detected, look for revision
+                        m = ua.match(/rv:([^\s\)]*)/);
+                        if (m && m[1]) {
+                            o.gecko = numberify(m[1]);
                         }
                     }
                 }
@@ -437,7 +536,9 @@ YAHOO.env.ua = function() {
     }
 
     return o;
-}();
+};
+
+YAHOO.env.ua = YAHOO.env.parseUA();
 
 /*
  * Initializes the global by creating the default namespaces and applying
@@ -485,6 +586,16 @@ var L = YAHOO.lang,
     FUNCTION_TOSTRING = '[object Function]',
     OBJECT_TOSTRING = '[object Object]',
     NOTHING = [],
+
+    HTML_CHARS = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;',
+        '/': '&#x2F;',
+        '`': '&#x60;'
+    },
 
     // ADD = ["toString", "valueOf", "hasOwnProperty"],
     ADD = ["toString", "valueOf"],
@@ -608,6 +719,35 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
     } : function(){},
        
     /**
+     * <p>
+     * Returns a copy of the specified string with special HTML characters
+     * escaped. The following characters will be converted to their
+     * corresponding character entities:
+     * <code>&amp; &lt; &gt; &quot; &#x27; &#x2F; &#x60;</code>
+     * </p>
+     *
+     * <p>
+     * This implementation is based on the
+     * <a href="http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet">OWASP
+     * HTML escaping recommendations</a>. In addition to the characters
+     * in the OWASP recommendation, we also escape the <code>&#x60;</code>
+     * character, since IE interprets it as an attribute delimiter when used in
+     * innerHTML.
+     * </p>
+     *
+     * @method escapeHTML
+     * @param {String} html String to escape.
+     * @return {String} Escaped string.
+     * @static
+     * @since 2.9.0
+     */
+    escapeHTML: function (html) {
+        return html.replace(/[&<>"'\/`]/g, function (match) {
+            return HTML_CHARS[match];
+        });
+    },
+
+    /**
      * Utility to set up the prototype, constructor and superclass properties to
      * support an inheritance strategy that can chain constructors and methods.
      * Static members will not be inherited.
@@ -686,6 +826,8 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
             
             L._IEEnumFix(r, s);
         }
+
+        return r;
     },
  
     /**
@@ -712,6 +854,8 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
             a.push(arguments[i]);
         }
         L.augmentObject.apply(this, a);
+
+        return r;
     },
 
       
@@ -796,6 +940,12 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
      * value is an object, it uses the Object's toString() if this has
      * been overridden, otherwise it does a shallow dump of the key/value
      * pairs.
+     *
+     * By specifying the recurse option, the string is rescanned after
+     * every replacement, allowing for nested template substitutions.
+     * The side effect of this option is that curly braces in the
+     * replacement content must be encoded.
+     *
      * @method substitute
      * @since 2.3.0
      * @param s {String} The string that will be modified.
@@ -804,21 +954,22 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
      *                     process each match.  It receives the key,
      *                     value, and any extra metadata included with
      *                     the key inside of the braces.
+     * @param recurse {boolean} default true - if not false, the replaced
+     * string will be rescanned so that nested substitutions are possible.
      * @return {String} the substituted string
      */
-    substitute: function (s, o, f) {
-        var i, j, k, key, v, meta, saved=[], token, 
+    substitute: function (s, o, f, recurse) {
+        var i, j, k, key, v, meta, saved=[], token, lidx=s.length,
             DUMP='dump', SPACE=' ', LBRACE='{', RBRACE='}',
             dump, objstr;
 
-
         for (;;) {
-            i = s.lastIndexOf(LBRACE);
+            i = s.lastIndexOf(LBRACE, lidx);
             if (i < 0) {
                 break;
             }
             j = s.indexOf(RBRACE, i);
-            if (i + 1 >= j) {
+            if (i + 1 > j) {
                 break;
             }
 
@@ -872,6 +1023,9 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
 
             s = s.substring(0, i) + v + s.substring(j + 1);
 
+            if (recurse === false) {
+                lidx = i-1;
+            }
 
         }
 
@@ -951,7 +1105,7 @@ return (o && (typeof o === 'object' || L.isFunction(o))) || false;
             throw new TypeError("method undefined");
         }
 
-        if (d && !L.isArray(d)) {
+        if (!L.isUndefined(data) && !L.isArray(d)) {
             d = [data];
         }
 
@@ -1012,7 +1166,7 @@ return (L.isObject(o) || L.isString(o) || L.isNumber(o) || L.isBoolean(o));
  */
 L.hasOwnProperty = (OP.hasOwnProperty) ?
     function(o, prop) {
-        return o && o.hasOwnProperty(prop);
+        return o && o.hasOwnProperty && o.hasOwnProperty(prop);
     } : function(o, prop) {
         return !L.isUndefined(o[prop]) && 
                 o.constructor.prototype[prop] !== o[prop];
@@ -1072,16 +1226,32 @@ YAHOO.augment = L.augmentProto;
 YAHOO.extend = L.extend;
 
 })();
-YAHOO.register("yahoo", YAHOO, {version: "2.8.2r1", build: "7"});
+YAHOO.register("yahoo", YAHOO, {version: "2.9.0", build: "2800"});
 /**
  * Provides a mechanism to fetch remote resources and
  * insert them into a document
+ * This utility can fetch JavaScript and CSS files, inserting script
+ * tags for script and link tags for CSS.  Note, this
+ * is done via the normal browser mechanisms for inserting
+ * these resources and making the content available to
+ * code that would access it.  Be careful when retreiving
+ * remote resources.  Only use this utility to fetch
+ * files from sites you trust.
+ *
  * @module get
  * @requires yahoo
  */
 
 /**
- * Fetches and inserts one or more script or link nodes into the document 
+ * Fetches and inserts one or more script or link nodes into the document.
+ * This utility can fetch JavaScript and CSS files, inserting script
+ * tags for script and link tags for CSS.  Note, this
+ * is done via the normal browser mechanisms for inserting
+ * these resources and making the content available to
+ * code that would access it.  Be careful when retreiving
+ * remote resources.  Only use this utility to fetch
+ * files from sites you trust.
+ *
  * @namespace YAHOO.util
  * @class YAHOO.util.Get
  */
@@ -1110,10 +1280,6 @@ YAHOO.util.Get = function() {
      */
         nidx=0, 
 
-        // ridx=0,
-
-        // sandboxFrame=null,
-
     /**
      * interal property used to prevent multiple simultaneous purge 
      * processes
@@ -1121,11 +1287,15 @@ YAHOO.util.Get = function() {
      * @type boolean
      * @private
      */
-        purging=false,
+        _purging=false,
 
         ua=YAHOO.env.ua, 
         
-        lang=YAHOO.lang;
+        lang=YAHOO.lang,
+
+    _fail,
+    _purge,
+    _track,
     
     /** 
      * Generates an HTML element, this is not appended to a document
@@ -1136,17 +1306,17 @@ YAHOO.util.Get = function() {
      * @return {HTMLElement} the generated node
      * @private
      */
-    var _node = function(type, attr, win) {
-        var w = win || window, d=w.document, n=d.createElement(type);
+    _node = function(type, attr, win) {
+        var w = win || window, d=w.document, n=d.createElement(type), i;
 
-        for (var i in attr) {
-            if (attr[i] && YAHOO.lang.hasOwnProperty(attr, i)) {
+        for (i in attr) {
+            if (attr.hasOwnProperty(i)) {
                 n.setAttribute(i, attr[i]);
             }
         }
 
         return n;
-    };
+    },
 
     /**
      * Generates a link node
@@ -1156,7 +1326,7 @@ YAHOO.util.Get = function() {
      * @return {HTMLElement} the generated node
      * @private
      */
-    var _linkNode = function(url, win, attributes) {
+    _linkNode = function(url, win, attributes) {
 
         var o = {
             id:   "yui__dyn_" + (nidx++),
@@ -1170,7 +1340,7 @@ YAHOO.util.Get = function() {
         }
 
         return _node("link", o, win);
-    };
+    },
 
     /**
      * Generates a script node
@@ -1180,7 +1350,7 @@ YAHOO.util.Get = function() {
      * @return {HTMLElement} the generated node
      * @private
      */
-    var _scriptNode = function(url, win, attributes) {
+    _scriptNode = function(url, win, attributes) {
         var o = {
             id:   "yui__dyn_" + (nidx++),
             type: "text/javascript",
@@ -1192,14 +1362,14 @@ YAHOO.util.Get = function() {
         }
 
         return _node("script", o, win);
-    };
+    },
 
     /**
      * Returns the data payload for callback functions
      * @method _returnData
      * @private
      */
-    var _returnData = function(q, msg) {
+    _returnData = function(q, msg) {
         return {
                 tId: q.tId,
                 win: q.win,
@@ -1210,9 +1380,9 @@ YAHOO.util.Get = function() {
                     _purge(this.tId);
                 }
             };
-    };
+    },
 
-    var _get = function(nId, tId) {
+    _get = function(nId, tId) {
         var q = queues[tId],
             n = (lang.isString(nId)) ? q.win.document.getElementById(nId) : nId;
         if (!n) {
@@ -1220,24 +1390,8 @@ YAHOO.util.Get = function() {
         }
 
         return n;
-    };
+    },
 
-    /*
-     * The request failed, execute fail handler with whatever
-     * was accomplished.  There isn't a failure case at the
-     * moment unless you count aborted transactions
-     * @method _fail
-     * @param id {string} the id of the request
-     * @private
-     */
-    var _fail = function(id, msg) {
-        var q = queues[id];
-        // execute failure callback
-        if (q.onFailure) {
-            var sc=q.scope || q.win;
-            q.onFailure.call(sc, _returnData(q, msg));
-        }
-    };
 
     /**
      * The request is complete, so executing the requester's callback
@@ -1245,22 +1399,23 @@ YAHOO.util.Get = function() {
      * @param id {string} the id of the request
      * @private
      */
-    var _finish = function(id) {
-        var q = queues[id];
+    _finish = function(id) {
+        YAHOO.log("Finishing transaction " + id);
+        var q = queues[id], msg, context;
         q.finished = true;
 
         if (q.aborted) {
-            var msg = "transaction " + id + " was aborted";
+            msg = "transaction " + id + " was aborted";
             _fail(id, msg);
             return;
         }
 
         // execute success callback
         if (q.onSuccess) {
-            var sc=q.scope || q.win;
-            q.onSuccess.call(sc, _returnData(q));
+            context = q.scope || q.win;
+            q.onSuccess.call(context, _returnData(q));
         }
-    };
+    },
 
     /**
      * Timeout detected
@@ -1268,13 +1423,14 @@ YAHOO.util.Get = function() {
      * @param id {string} the id of the request
      * @private
      */
-    var _timeout = function(id) {
-        var q = queues[id];
+    _timeout = function(id) {
+        YAHOO.log("Timeout " + id, "info", "get");
+        var q = queues[id], context;
         if (q.onTimeout) {
-            var sc=q.scope || q;
-            q.onTimeout.call(sc, _returnData(q));
+            context = q.scope || q;
+            q.onTimeout.call(context, _returnData(q));
         }
-    };
+    },
 
     /**
      * Loads the next item for a given request
@@ -1283,8 +1439,12 @@ YAHOO.util.Get = function() {
      * @param loaded {string} the url that was just loaded, if any
      * @private
      */
-    var _next = function(id, loaded) {
-        var q = queues[id];
+    _next = function(id, loaded) {
+
+        YAHOO.log("_next: " + id + ", loaded: " + loaded, "info", "Get");
+
+        var q = queues[id], w=q.win, d=w.document, h=d.getElementsByTagName("head")[0],
+            n, msg, url, s, extra;
 
         if (q.timer) {
             // Y.log('cancel timer');
@@ -1292,7 +1452,7 @@ YAHOO.util.Get = function() {
         }
 
         if (q.aborted) {
-            var msg = "transaction " + id + " was aborted";
+            msg = "transaction " + id + " was aborted";
             _fail(id, msg);
             return;
         }
@@ -1310,7 +1470,6 @@ YAHOO.util.Get = function() {
             }
         }
 
-        var w=q.win, d=w.document, h=d.getElementsByTagName("head")[0], n;
 
         if (q.url.length === 0) {
             // Safari 2.x workaround - There is no way to know when 
@@ -1326,7 +1485,7 @@ YAHOO.util.Get = function() {
                 // arbitrary timeout.  It is possible that the browser does
                 // block subsequent script execution in this case for a limited
                 // time.
-                var extra = _scriptNode(null, q.win, q.attributes);
+                extra = _scriptNode(null, q.win, q.attributes);
                 extra.innerHTML='YAHOO.util.Get._finalize("' + id + '");';
                 q.nodes.push(extra); h.appendChild(extra);
 
@@ -1338,14 +1497,16 @@ YAHOO.util.Get = function() {
         } 
 
 
-        var url = q.url[0];
+        url = q.url[0];
 
         // if the url is undefined, this is probably a trailing comma problem in IE
         if (!url) {
             q.url.shift(); 
+            YAHOO.log('skipping empty url');
             return _next(id);
         }
 
+        YAHOO.log("attempting to load " + url, "info", "Get");
 
         if (q.timeout) {
             // Y.log('create timer');
@@ -1366,7 +1527,7 @@ YAHOO.util.Get = function() {
 
         // add it to the head or insert it before 'insertBefore'
         if (q.insertBefore) {
-            var s = _get(q.insertBefore, id);
+            s = _get(q.insertBefore, id);
             if (s) {
                 s.parentNode.insertBefore(n, s);
             }
@@ -1374,6 +1535,7 @@ YAHOO.util.Get = function() {
             h.appendChild(n);
         }
         
+        YAHOO.log("Appending node: " + url, "info", "Get");
 
         // FireFox does not support the onload event for link nodes, so there is
         // no way to make the css requests synchronous. This means that the css 
@@ -1382,69 +1544,35 @@ YAHOO.util.Get = function() {
         if ((ua.webkit || ua.gecko) && q.type === "css") {
             _next(id, url);
         }
-    };
+    },
 
     /**
      * Removes processed queues and corresponding nodes
      * @method _autoPurge
      * @private
      */
-    var _autoPurge = function() {
+    _autoPurge = function() {
 
-        if (purging) {
+        if (_purging) {
             return;
         }
 
-        purging = true;
-        for (var i in queues) {
-            var q = queues[i];
+        _purging = true;
+
+        var i, q;
+
+        for (i in queues) {
+            if (queues.hasOwnProperty(i)) {
+                q = queues[i];
             if (q.autopurge && q.finished) {
                 _purge(q.tId);
                 delete queues[i];
             }
         }
-
-        purging = false;
-    };
-
-    /**
-     * Removes the nodes for the specified queue
-     * @method _purge
-     * @private
-     */
-    var _purge = function(tId) {
-        if (queues[tId]) {
-
-            var q     = queues[tId],
-                nodes = q.nodes, 
-                l     = nodes.length, 
-                d     = q.win.document, 
-                h     = d.getElementsByTagName("head")[0],
-                sib, i, node, attr;
-
-            if (q.insertBefore) {
-                sib = _get(q.insertBefore, tId);
-                if (sib) {
-                    h = sib.parentNode;
-                }
             }
 
-            for (i=0; i<l; i=i+1) {
-                node = nodes[i];
-                if (node.clearAttributes) {
-                    node.clearAttributes();
-                } else {
-                    for (attr in node) {
-                        delete node[attr];
-                    }
-                }
-
-                h.removeChild(node);
-            }
-
-            q.nodes = [];
-        }
-    };
+        _purging = false;
+    },
 
     /**
      * Saves the state for the request and begins loading
@@ -1455,9 +1583,9 @@ YAHOO.util.Get = function() {
      * @param opts the hash of options for this request
      * @private
      */
-    var _queue = function(type, url, opts) {
+    _queue = function(type, url, opts) {
 
-        var id = "q" + (qidx++);
+        var id = "q" + (qidx++), q;
         opts = opts || {};
 
         if (qidx % YAHOO.util.Get.PURGE_THRESH === 0) {
@@ -1473,16 +1601,14 @@ YAHOO.util.Get = function() {
             nodes: []
         });
 
-        var q = queues[id];
+        q = queues[id];
         q.win = q.win || window;
         q.scope = q.scope || q.win;
         q.autopurge = ("autopurge" in q) ? q.autopurge : 
                       (type === "script") ? true : false;
 
-        if (opts.charset) {
             q.attributes = q.attributes || {};
-            q.attributes.charset = opts.charset;
-        }
+        q.attributes.charset = opts.charset || q.attributes.charset || 'utf-8';
 
         lang.later(0, q, _next, id);
 
@@ -1507,14 +1633,15 @@ YAHOO.util.Get = function() {
      * the default is _next
      * @private
      */
-    var _track = function(type, n, id, url, win, qlength, trackfn) {
-        var f = trackfn || _next;
+    _track = function(type, n, id, url, win, qlength, trackfn) {
+        var f = trackfn || _next, rs, q, a, freq, w, l, i, msg;
 
         // IE supports the readystatechange event for script and css nodes
         if (ua.ie) {
             n.onreadystatechange = function() {
-                var rs = this.readyState;
+                rs = this.readyState;
                 if ("loaded" === rs || "complete" === rs) {
+                    YAHOO.log(id + " onload " + url, "info", "Get");
                     n.onreadystatechange = null;
                     f(id, url);
                 }
@@ -1529,6 +1656,7 @@ YAHOO.util.Get = function() {
                 if (ua.webkit >= 420) {
 
                     n.addEventListener("load", function() {
+                        YAHOO.log(id + " DOM2 onload " + url, "info", "Get");
                         f(id, url);
                     });
 
@@ -1543,29 +1671,34 @@ YAHOO.util.Get = function() {
                 } else {
                     // Poll for the existence of the named variable, if it
                     // was supplied.
-                    var q = queues[id];
+                    q = queues[id];
                     if (q.varName) {
-                        var freq=YAHOO.util.Get.POLL_FREQ;
+                        freq = YAHOO.util.Get.POLL_FREQ;
+                        YAHOO.log("Polling for " + q.varName[0]);
                         q.maxattempts = YAHOO.util.Get.TIMEOUT/freq;
                         q.attempts = 0;
                         q._cache = q.varName[0].split(".");
                         q.timer = lang.later(freq, q, function(o) {
-                            var a=this._cache, l=a.length, w=this.win, i;
+                            a = this._cache;
+                            l = a.length;
+                            w = this.win;
                             for (i=0; i<l; i=i+1) {
                                 w = w[a[i]];
                                 if (!w) {
                                     // if we have exausted our attempts, give up
                                     this.attempts++;
                                     if (this.attempts++ > this.maxattempts) {
-                                        var msg = "Over retry limit, giving up";
+                                        msg = "Over retry limit, giving up";
                                         q.timer.cancel();
                                         _fail(id, msg);
                                     } else {
+                                        YAHOO.log(a[i] + " failed, retrying");
                                     }
                                     return;
                                 }
                             }
                             
+                            YAHOO.log("Safari poll complete");
 
                             q.timer.cancel();
                             f(id, url);
@@ -1582,10 +1715,71 @@ YAHOO.util.Get = function() {
         // nodes.
         } else { 
             n.onload = function() {
+                YAHOO.log(id + " onload " + url, "info", "Get");
                 f(id, url);
             };
         }
     };
+
+    /*
+     * The request failed, execute fail handler with whatever
+     * was accomplished.  There isn't a failure case at the
+     * moment unless you count aborted transactions
+     * @method _fail
+     * @param id {string} the id of the request
+     * @private
+     */
+    _fail = function(id, msg) {
+        YAHOO.log("get failure: " + msg, "warn", "Get");
+        var q = queues[id], context;
+        // execute failure callback
+        if (q.onFailure) {
+            context = q.scope || q.win;
+            q.onFailure.call(context, _returnData(q, msg));
+        }
+    };
+
+    /**
+     * Removes the nodes for the specified queue
+     * @method _purge
+     * @private
+     */
+    _purge = function(tId) {
+        if (queues[tId]) {
+
+            var q     = queues[tId],
+                nodes = q.nodes,
+                l     = nodes.length,
+                d     = q.win.document,
+                h     = d.getElementsByTagName("head")[0],
+                sib, i, node, attr;
+
+            if (q.insertBefore) {
+                sib = _get(q.insertBefore, tId);
+                if (sib) {
+                    h = sib.parentNode;
+                }
+            }
+
+            for (i=0; i<l; i=i+1) {
+                node = nodes[i];
+                if (node.clearAttributes) {
+                    node.clearAttributes();
+                } else {
+                    for (attr in node) {
+                        if (node.hasOwnProperty(attr)) {
+                            delete node[attr];
+                        }
+                    }
+                }
+
+                h.removeChild(node);
+            }
+
+            q.nodes = [];
+        }
+    };
+
 
     return {
 
@@ -1624,6 +1818,7 @@ YAHOO.util.Get = function() {
          * @private
          */
         _finalize: function(id) {
+            YAHOO.log(id + " finalized ", "info", "Get");
             lang.later(0, null, _finish, id);
         },
 
@@ -1634,9 +1829,10 @@ YAHOO.util.Get = function() {
          * script() or css()
          */
         abort: function(o) {
-            var id = (lang.isString(o)) ? o : o.tId;
-            var q = queues[id];
+            var id = (lang.isString(o)) ? o : o.tId,
+                q = queues[id];
             if (q) {
+                YAHOO.log("Aborting " + id, "info", "Get");
                 q.aborted = true;
             }
         }, 
@@ -1746,12 +1942,14 @@ YAHOO.util.Get = function() {
          * &nbsp;&nbsp;["http://yui.yahooapis.com/2.7.0/build/dragdrop/dragdrop-min.js",
          * &nbsp;&nbsp;&nbsp;"http://yui.yahooapis.com/2.7.0/build/animation/animation-min.js"], &#123;
          * &nbsp;&nbsp;&nbsp;&nbsp;onSuccess: function(o) &#123;
+         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YAHOO.log(o.data); // foo
          * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new YAHOO.util.DDProxy("dd1"); // also new o.reference("dd1"); would work
          * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.log("won't cause error because YAHOO is the scope");
          * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.log(o.nodes.length === 2) // true
          * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// o.purge(); // optionally remove the script nodes immediately
          * &nbsp;&nbsp;&nbsp;&nbsp;&#125;,
          * &nbsp;&nbsp;&nbsp;&nbsp;onFailure: function(o) &#123;
+         * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YAHOO.log("transaction failed");
          * &nbsp;&nbsp;&nbsp;&nbsp;&#125;,
          * &nbsp;&nbsp;&nbsp;&nbsp;data: "foo",
          * &nbsp;&nbsp;&nbsp;&nbsp;timeout: 10000, // 10 second timeout
@@ -1812,6 +2010,7 @@ YAHOO.util.Get = function() {
          * </pre>
          * <pre>
          *      YAHOO.util.Get.css(["http://yui.yahooapis.com/2.7.0/build/menu/assets/skins/sam/menu.css",
+         *                          "http://yui.yahooapis.com/2.7.0/build/logger/assets/skins/sam/logger.css"]);
          * </pre>
          * @return {tId: string} an object containing info about the transaction
          */
@@ -1821,7 +2020,9 @@ YAHOO.util.Get = function() {
     };
 }();
 
-YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
+YAHOO.register("get", YAHOO.util.Get, {version: "2.9.0", build: "2800"});
+/*jslint evil: true, strict: false, regexp: false*/
+
 /**
  * Provides dynamic loading for the YUI library.  It includes the dependency
  * info for the library, and will automatically pull in dependencies for
@@ -1842,9 +2043,20 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
  */
 (function() {
 
-    var Y=YAHOO, util=Y.util, lang=Y.lang, env=Y.env,
-        PROV = "_provides", SUPER = "_supersedes",
-        REQ = "expanded", AFTER = "_after";
+    var Y = YAHOO,
+        util = Y.util,
+        lang = Y.lang,
+        env = Y.env,
+        PROV = "_provides",
+        SUPER = "_supersedes",
+        REQ = "expanded",
+        AFTER = "_after",
+        VERSION = "2.9.0";
+
+    // version hack for cdn testing
+    // if (/VERSION/.test(VERSION)) {
+        // VERSION = "2.8.2";
+    // }
  
     var YUI = {
 
@@ -1861,8 +2073,8 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
     // 'root': '2.5.2/build/',
     // 'base': 'http://yui.yahooapis.com/2.5.2/build/',
 
-    'root': '2.8.2r1/build/',
-    'base': 'http://yui.yahooapis.com/2.8.2r1/build/',
+    'root': VERSION + '/build/',
+    'base': 'http://yui.yahooapis.com/' + VERSION + '/build/',
 
     'comboBase': 'http://yui.yahooapis.com/combo?',
 
@@ -1910,7 +2122,7 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
             'type': 'js',
             'path': 'calendar/calendar-min.js',
             'requires': ['event', 'dom'],
-            supersedes: ['datemeth'],
+            supersedes: ['datemath'],
             'skinnable': true
         },
 
@@ -2294,9 +2506,7 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
             'skinnable': true
         }
     }
-}
- , 
-
+},
         ObjectUtil: {
             appendArray: function(o, a) {
                 if (a) {
@@ -2825,21 +3035,6 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
                 d.push(r[i]);
                 m = info[r[i]];
                 YUI.ArrayUtil.appendArray(d, this.getRequires(m));
-
-                // add existing skins for skinnable modules as well.  The only
-                // way to do this is go through the list of required items (this
-                // assumes that _skin is called before getRequires is called on
-                // the module.
-                // if (m.skinnable) {
-                //     var req=this.required, l=req.length;
-                //     for (var j=0; j<l; j=j+1) {
-                //         // YAHOO.log('checking ' + r[j]);
-                //         if (req[j].indexOf(r[j]) > -1) {
-                //             // YAHOO.log('adding ' + r[j]);
-                //             d.push(req[j]);
-                //         }
-                //     }
-                // }
             }
 
             if (o && this.loadOptional) {
@@ -2923,7 +3118,6 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
                 this._config(o);
                 this._setup();
                 this._explode();
-                // this._skin(); // deprecated
                 if (this.allowRollup) {
                     this._rollup();
                 }
@@ -2963,8 +3157,10 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
                             smod = this._addSkin(this.skin.defaultSkin, name);
                         }
 
+                        if (YUI.ArrayUtil.indexOf(m.requires, smod) == -1) {
                         m.requires.push(smod);
                     }
+                }
                 }
 
             }
@@ -3032,17 +3228,12 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
             }
         },
 
-        /**
-         * Sets up the requirements for the skin assets if any of the
-         * requested modules are skinnable
+        /*
          * @method _skin
          * @private
-         * @deprecated skin modules are generated for all skinnable
-         *             components during _setup(), and the components
-         *             are configured to require the skin.
+         * @deprecated
          */
         _skin: function() {
-
         },
 
         /**
@@ -3314,15 +3505,6 @@ YAHOO.register("get", YAHOO.util.Get, {version: "2.8.2r1", build: "7"});
                     }
                 }
 
-                // var ss=me.getProvides(bb, true);
-                // if (ss) {
-                //     for (ii in ss) {
-                //         if (requires(aa, ii)) {
-                //             return true;
-                //         }
-                //     }
-                // }
-
                 // external css files should be sorted below yui css
                 if (mm.ext && mm.type == 'css' && !other.ext && other.type == 'css') {
                     return true;
@@ -3471,6 +3653,8 @@ YAHOO.log('Attempting to combine: ' + this._combining, "info", "loader");
                                 timeout: self.timeout,
                                 scope: self 
                             });
+                        } else {
+                            this.loadNext();
                         }
                     };
 
@@ -3566,23 +3750,78 @@ YAHOO.log('Attempting to combine: ' + this._combining, "info", "loader");
                 // YAHOO.log("sandbox: " + this.toString() + ", " + type);
             // }
 
-            this._config(o);
+            var self = this,
+                success = function(o) {
 
-            if (!this.onSuccess) {
+                    var idx=o.argument[0], name=o.argument[2];
+
+                    // store the response in the position it was requested
+                    self._scriptText[idx] = o.responseText;
+
+                    // YAHOO.log("received: " + o.responseText.substr(0, 100) + ", " + idx);
+
+                    if (self.onProgress) {
+                        self.onProgress.call(self.scope, {
+                                    name: name,
+                                    scriptText: o.responseText,
+                                    xhrResponse: o,
+                                    data: self.data
+                                });
+                    }
+
+                    // only generate the sandbox once everything is loaded
+                    self._loadCount++;
+
+                    if (self._loadCount >= self._stopCount) {
+
+                        // the variable to find
+                        var v = self.varName || "YAHOO";
+
+                        // wrap the contents of the requested modules in an anonymous function
+                        var t = "(function() {\n";
+
+                        // return the locally scoped reference.
+                        var b = "\nreturn " + v + ";\n})();";
+
+                        var ref = eval(t + self._scriptText.join("\n") + b);
+
+                        self._pushEvents(ref);
+
+                        if (ref) {
+                            self.onSuccess.call(self.scope, {
+                                    reference: ref,
+                                    data: self.data
+                                });
+                        } else {
+                            self._onFailure.call(self.varName + " reference failure");
+                        }
+                    }
+                },
+
+                failure = function(o) {
+                    self.onFailure.call(self.scope, {
+                            msg: "XHR failure",
+                            xhrResponse: o,
+                            data: self.data
+                        });
+                };
+
+            self._config(o);
+
+            if (!self.onSuccess) {
 throw new Error("You must supply an onSuccess handler for your sandbox");
             }
 
-            this._sandbox = true;
+            self._sandbox = true;
 
-            var self = this;
 
             // take care of any css first (this can't be sandboxed)
             if (!type || type !== "js") {
-                this._internalCallback = function() {
+                self._internalCallback = function() {
                             self._internalCallback = null;
                             self.sandbox(null, "js");
                         };
-                this.insert(null, "css");
+                self.insert(null, "css");
                 return;
             }
 
@@ -3591,116 +3830,60 @@ throw new Error("You must supply an onSuccess handler for your sandbox");
                 // get a new loader instance to load connection.
                 var ld = new YAHOO.util.YUILoader();
                 ld.insert({
-                    base: this.base,
-                    filter: this.filter,
+                    base: self.base,
+                    filter: self.filter,
                     require: "connection",
-                    insertBefore: this.insertBefore,
-                    charset: this.charset,
+                    insertBefore: self.insertBefore,
+                    charset: self.charset,
                     onSuccess: function() {
-                        this.sandbox(null, "js");
+                        self.sandbox(null, "js");
                     },
-                    scope: this
+                    scope: self
                 }, "js");
                 return;
             }
 
-            this._scriptText = [];
-            this._loadCount = 0;
-            this._stopCount = this.sorted.length;
-            this._xhr = [];
+            self._scriptText = [];
+            self._loadCount = 0;
+            self._stopCount = self.sorted.length;
+            self._xhr = [];
 
-            this.calculate();
+            self.calculate();
 
-            var s=this.sorted, l=s.length, i, m, url;
+            var s=self.sorted, l=s.length, i, m, url;
 
             for (i=0; i<l; i=i+1) {
-                m = this.moduleInfo[s[i]];
+                m = self.moduleInfo[s[i]];
 
                 // undefined modules cause a failure
                 if (!m) {
-                    this._onFailure("undefined module " + m);
-                    for (var j=0;j<this._xhr.length;j=j+1) {
-                        this._xhr[j].abort();
+                    self._onFailure("undefined module " + m);
+                    for (var j=0;j<self._xhr.length;j=j+1) {
+                        self._xhr[j].abort();
                     }
                     return;
                 }
 
                 // css files should be done
                 if (m.type !== "js") {
-                    this._loadCount++;
+                    self._loadCount++;
                     continue;
                 }
 
                 url = m.fullpath;
-                url = (url) ? this._filter(url) : this._url(m.path);
+                url = (url) ? self._filter(url) : self._url(m.path);
 
                 // YAHOO.log("xhr request: " + url + ", " + i);
 
                 var xhrData = {
-
-                    success: function(o) {
-                        
-                        var idx=o.argument[0], name=o.argument[2];
-
-                        // store the response in the position it was requested
-                        this._scriptText[idx] = o.responseText; 
-                        
-                        // YAHOO.log("received: " + o.responseText.substr(0, 100) + ", " + idx);
-                    
-                        if (this.onProgress) {
-                            this.onProgress.call(this.scope, {
-                                        name: name,
-                                        scriptText: o.responseText,
-                                        xhrResponse: o,
-                                        data: this.data
-                                    });
-                        }
-
-                        // only generate the sandbox once everything is loaded
-                        this._loadCount++;
-
-                        if (this._loadCount >= this._stopCount) {
-
-                            // the variable to find
-                            var v = this.varName || "YAHOO";
-
-                            // wrap the contents of the requested modules in an anonymous function
-                            var t = "(function() {\n";
-                        
-                            // return the locally scoped reference.
-                            var b = "\nreturn " + v + ";\n})();";
-
-                            var ref = eval(t + this._scriptText.join("\n") + b);
-
-                            this._pushEvents(ref);
-
-                            if (ref) {
-                                this.onSuccess.call(this.scope, {
-                                        reference: ref,
-                                        data: this.data
-                                    });
-                            } else {
-                                this._onFailure.call(this.varName + " reference failure");
-                            }
-                        }
-                    },
-
-                    failure: function(o) {
-                        this.onFailure.call(this.scope, {
-                                msg: "XHR failure",
-                                xhrResponse: o,
-                                data: this.data
-                            });
-                    },
-
-                    scope: this,
-
-                    // module index, module name, sandbox name
+                    success: success,
+                    failure: failure,
+                    scope: self,
+                    // [module index, module name, sandbox name]
                     argument: [i, url, s[i]]
-
                 };
 
-                this._xhr.push(util.Connect.asyncRequest('GET', url, xhrData));
+                self._xhr.push(util.Connect.asyncRequest('GET', url, xhrData));
             }
         },
 
@@ -3722,6 +3905,11 @@ throw new Error("You must supply an onSuccess handler for your sandbox");
             if (!this._loading) {
                 return;
             }
+
+            var self = this,
+                donext = function(o) {
+                    self.loadNext(o.data);
+                }, successfn, s = this.sorted, len=s.length, i, fn, m, url;
 
 
             if (mname) {
@@ -3749,7 +3937,7 @@ throw new Error("You must supply an onSuccess handler for your sandbox");
                 //this.inserted = lang.merge(this.inserted, o);
             }
 
-            var s=this.sorted, len=s.length, i, m;
+
 
             for (i=0; i<len; i=i+1) {
 
@@ -3782,16 +3970,14 @@ throw new Error("You must supply an onSuccess handler for your sandbox");
                 // The load type is stored to offer the possibility to load
                 // the css separately from the script.
                 if (!this.loadType || this.loadType === m.type) {
+
+                    successfn = donext;
+
                     this._loading = s[i];
                     //YAHOO.log("attempting to load " + s[i] + ", " + this.base);
 
-                    var fn=(m.type === "css") ? util.Get.css : util.Get.script,
-                        url = m.fullpath,
-                        self=this, 
-                        c=function(o) {
-                            self.loadNext(o.data);
-                        };
-
+                    fn = (m.type === "css") ? util.Get.css : util.Get.script;
+                    url = m.fullpath;
                         url = (url) ? this._filter(url) : this._url(m.path);
 
                     // safari 2.x or lower, script, and part of YUI
@@ -3799,13 +3985,13 @@ throw new Error("You must supply an onSuccess handler for your sandbox");
                           !m.varName) {
                           //YUI.info.moduleInfo[s[i]]) {
                           //YAHOO.log("using YAHOO env " + s[i] + ", " + m.varName);
-                        c = null;
+                        successfn = null;
                         this._useYahooListener = true;
                     }
 
                     fn(url, {
                         data: s[i],
-                        onSuccess: c,
+                        onSuccess: successfn,
                         onFailure: this._onFailure,
                         onTimeout: this._onTimeout,
                         insertBefore: this.insertBefore,
@@ -3876,4 +4062,4 @@ throw new Error("You must supply an onSuccess handler for your sandbox");
 
 })();
 
-YAHOO.register("yuiloader", YAHOO.util.YUILoader, {version: "2.8.2r1", build: "7"});
+YAHOO.register("yuiloader", YAHOO.util.YUILoader, {version: "2.9.0", build: "2800"});

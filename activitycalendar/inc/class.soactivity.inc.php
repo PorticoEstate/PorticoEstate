@@ -1,5 +1,8 @@
 <?php
 phpgw::import_class('activitycalendar.socommon');
+phpgw::import_class('activitycalendar.soorganization');
+phpgw::import_class('activitycalendar.sogroup');
+//phpgw::import_class('activitycalendar.socontactperson');
 
 include_class('activitycalendar', 'activity', 'inc/model/');
 
@@ -93,6 +96,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 
 		$filter_clauses = array();
+		
+		if(isset($filters[$this->get_id_field_name()])){
+			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			$filter_clauses[] = "activity.id = {$id}";
+		}
 /*
 		// All parties with contracts of type X
 		if(isset($filters['party_type']))
@@ -127,6 +135,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.arena';
 			$columns[] = 'activity.date_start';
 			$columns[] = 'activity.date_end';
+			$columns[] = 'activity.create_date';
+			$columns[] = 'activity.last_change_date';
 			$columns[] = 'activity.contact_person_1';
 			$columns[] = 'activity.contact_person_2';
 			
@@ -138,7 +148,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 		
-		//var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
+		var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 
@@ -153,7 +163,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function add(&$activity)
 	{
 		// Insert a new activity
-		$q ="INSERT INTO activity_activity (organization_id) VALUES (1)";
+		$ts_now = strtotime('now');
+		$q ="INSERT INTO activity_activity (organization_id, create_date) VALUES (1, $ts_now)";
 		$result = $this->db->query($q);
 
 		if(isset($result)) {
@@ -177,19 +188,21 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function update($activity)
 	{
 		$id = intval($activity->get_id());
+		$ts_now = strtotime('now');
 			
 		$values = array(
-			'organization_id = '. $this->marshal($activity->get_organization_id(), 'string'),
-			'group_id = '     . $this->marshal($activity->get_group_id(), 'string'),
-			'district =  '     . $this->marshal($activity->get_district(), 'string'),
-			'category = '          . $this->marshal($activity->get_category(), 'string'),
-			'target = '   . $this->marshal($activity->get_target(), 'string'),
+			'organization_id = '. $this->marshal($activity->get_organization_id(), 'int'),
+			'group_id = '     . $this->marshal($activity->get_group_id(), 'int'),
+			'district =  '     . $this->marshal($activity->get_district(), 'int'),
+			'category = '          . $this->marshal($activity->get_category(), 'int'),
+			//'target = '   . $this->marshal($activity->get_target(), 'string'),
 			'description = '     . $this->marshal($activity->get_description(), 'string'),
-			'arena = '      . $this->marshal($activity->get_arena(), 'string'),
-			'date_start = '      . $this->marshal($activity->get_date_start(), 'string'),
-			'date_end = '    . $this->marshal($activity->get_date_end(), 'string'),
-			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'string'),
-			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'string')
+			'arena = '      . $this->marshal($activity->get_arena(), 'int'),
+			'date_start = '      . $this->marshal($activity->get_date_start(), 'int'),
+			'date_end = '    . $this->marshal($activity->get_date_end(), 'int'),
+			'last_change_date = '    . $this->marshal($ts_now, 'int'),
+			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'int'),
+			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int')
 		);
 		
 		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -223,8 +236,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
 			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
-			$activity->set_district($this->unmarshal($this->db->f('district'), 'string'));
-			$activity->set_category($this->unmarshal($this->db->f('category'), 'string'));
+			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
+			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
 			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
 			$activity->set_date_start($this->unmarshal($this->db->f('date_start'), 'int'));
