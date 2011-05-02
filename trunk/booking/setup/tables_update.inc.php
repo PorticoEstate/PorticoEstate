@@ -2509,3 +2509,76 @@
 		}
 	}
 
+	$test[] = '0.2.06';
+	/**
+	* Update booking version from 0.2.06 to 0.2.07
+	* Add office and office/user relation (User is added as a custom value)
+	* 
+	*/
+
+	function booking_upgrade0_2_06()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_office', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_office_user', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4,'nullable' => False),
+					'office' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+					'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				),
+				'pk' => array('id'),
+				'fk' => array('bb_office' => array('office' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw']->locations->add('.office', 'office', 'booking');
+		$GLOBALS['phpgw']->locations->add('.office.user', 'office/user relation', 'booking', false, 'bb_office_user');
+		$GLOBALS['phpgw']->db = clone($GLOBALS['phpgw_setup']->oProc->m_odb);
+
+		$attrib = array
+		(
+			'appname'		=> 'booking',
+			'location'		=> '.office.user',
+			'column_name'	=> 'account_id',
+			'input_text'	=> 'User',
+			'statustext'	=> 'System user',
+			'search'		=> true,
+			'list'			=> true,
+			'column_info'	=> array
+			(
+				'type'			=> 'user',
+				'nullable'		=> 'False',
+				'custom'		=> 1
+			)
+		);
+
+		$GLOBALS['phpgw']->custom_fields->add($attrib, 'bb_office_user');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.07';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
