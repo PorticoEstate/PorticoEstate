@@ -145,6 +145,21 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		
 		return $result;
 	}
+	
+	function get_contacts($organization_id)
+	{
+		$contacts = array();
+    	if(isset($organization_id)){
+	    	$q1="SELECT id FROM bb_organization_contact WHERE organization_id={$organization_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$cont_id = $this->db->f('id');
+				$contacts[] = $cont_id;
+			}
+			//$result=$contacts;
+    	}
+		return $contacts;
+	}
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.

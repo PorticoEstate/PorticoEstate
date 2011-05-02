@@ -1,6 +1,6 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.2.06';
+	$setup_info['booking']['version'] = '0.2.07';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
@@ -52,7 +52,9 @@
 		'bb_account_code_set',
 		'bb_completed_reservation_export_configuration',
 		'bb_billing_sequential_number_generator',
-		'bb_system_message'
+		'bb_system_message',
+		'bb_office',
+		'bb_office_user'
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';

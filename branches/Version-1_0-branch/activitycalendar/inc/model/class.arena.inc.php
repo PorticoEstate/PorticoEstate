@@ -1,5 +1,5 @@
 <?php
-
+	phpgw::import_class('activitycalendar.soarena');
 	include_class('activitycalendar', 'model', 'inc/model/');
 
 	class activitycalendar_arena extends activitycalendar_model
@@ -77,7 +77,7 @@
 			return array(
 				'id' => $this->get_id(),
 				'arena_name' => $this->get_arena_name(),
-				'internal_arena_id' => $this->get_internal_arena_id(),
+				'internal_arena_id' => activitycalendar_soarena::get_instance()->get_building_name($this->get_internal_arena_id()),
 				'address' => $this->get_address()
 			);
 		}

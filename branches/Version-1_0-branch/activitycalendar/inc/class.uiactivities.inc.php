@@ -22,7 +22,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	
 	public function __construct()
 	{
-		//parent::__construct();
+		parent::__construct();
 		self::set_active_menu('activitycalendar::activities');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
@@ -71,7 +71,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$activity_id = (int)phpgw::get_var('id');
 		//var_dump($activity_id);
 		
-		
+		$categories = activitycalendar_soactivity::get_instance()->get_categories();
+		$targets = activitycalendar_soactivity::get_instance()->get_targets();
+				
 		// Retrieve the arena object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
 		{	
@@ -81,14 +83,23 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		{
 			$activity = new activitycalendar_activity();
 		}
-		
+		$g_id = phpgw::get_var('group_id');
+		$o_id = phpgw::get_var('organization_id');
+		if(isset($g_id) && $g_id > 0)
+		{
+			$persons = activitycalendar_sogroup::get_instance()->get_contacts($g_id);
+		}
+		else if(isset($o_id) && $o_id > 0)
+		{
+			$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
+		}
 		$arenas = activitycalendar_soarena::get_instance()->get(null, null, null, null, null, null, null);
 		$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
 		$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 
 		if(isset($_POST['save_activity'])) // The user has pressed the save button
 		{
-			if(isset($activity)) // If a arena object is created
+			if(isset($activity)) // If a activity object is created
 			{
 				// ... set all parameters
 				$activity->set_organization_id(phpgw::get_var('organization_id'));
@@ -96,11 +107,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_arena(phpgw::get_var('arena_id'));
 				$activity->set_district(phpgw::get_var('district'));
 				$activity->set_category(phpgw::get_var('category'));
+				$activity->set_target(phpgw::get_var('target'));
 				$activity->set_description(phpgw::get_var('description'));
 				$activity->set_date_start(phpgw::get_var('date_start_hidden'));
 				$activity->set_date_end(phpgw::get_var('date_end_hidden'));
-				$activity->set_contact_person_1(phpgw::get_var('contact_person_1'));
-				$activity->set_contact_person_2(phpgw::get_var('contact_person_2'));
+				$activity->set_contact_persons($persons);
+				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				
 				if(activitycalendar_soactivity::get_instance()->store($activity)) // ... and then try to store the object
 				{
@@ -119,6 +131,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'organizations' => $organizations,
 				'groups' => $groups,
 				'arenas' => $arenas,
+				'categories' => $categories,
+				'targets' => $targets,
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')

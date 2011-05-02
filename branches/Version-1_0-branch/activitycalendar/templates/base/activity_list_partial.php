@@ -67,6 +67,11 @@
 	    sortable: true
 	},
 	{
+		key: "last_change_date",
+		label: "<?php echo lang('last_change_date') ?>",
+	    sortable: true
+	},
+	{
 		key: "actions",
 		hidden: true
 	},
