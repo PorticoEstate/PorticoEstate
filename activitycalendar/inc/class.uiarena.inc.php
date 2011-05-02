@@ -72,6 +72,8 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		// Get the contract part id
 		$arena_id = (int)phpgw::get_var('id');
 		
+		$buildings = activitycalendar_soarena::get_instance()->get_buildings();
+		//var_dump($buildings);
 		
 		// Retrieve the arena object or create a new one
 		if(isset($arena_id) && $arena_id > 0)
@@ -82,7 +84,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		{
 			$arena = new activitycalendar_arena();
 		}
-
+		
 		if(isset($_POST['save_arena'])) // The user has pressed the save button
 		{
 			if(isset($arena)) // If a arena object is created
@@ -106,6 +108,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		return $this->render('arena.php', array
 			(
 				'arena' 	=> $arena,
+				'buildings' => $buildings,
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')

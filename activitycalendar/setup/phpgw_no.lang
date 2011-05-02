@@ -354,3 +354,7 @@ export_to	activitycalendar	no	Eksporter til
 activity_state	activitycalendar	no	Status
 processed	activitycalendar	no	Behandlet
 show	activitycalendar	no	Vis
+last_change_date	activitycalendar	no	Sist endret
+first	activitycalendar	no	Første
+last	activitycalendar	no	Siste
+previous	activitycalendar	no	Forrige

@@ -3,6 +3,7 @@
 phpgw::import_class('activitycalendar.socommon');
 
 include_class('activitycalendar', 'arena', 'inc/model/');
+include_class('activitycalendar', 'building', 'inc/model/');
 
 class activitycalendar_soarena extends activitycalendar_socommon
 {
@@ -175,6 +176,31 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_buildings()
+	{
+		$buildings = array();
+    	$q_buildings="SELECT id, name FROM bb_building WHERE active=1 ORDER BY id";
+    	var_dump($q_buildings);
+		$this->db->query($q_buildings, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$id = $this->db->f('id');
+			$buildings[$id] = $this->db->f('name');
+		}
+		return $buildings;
+	}
+	
+	function get_building_name($building_id){
+		if(isset($building_id))
+		{
+			$q1="SELECT name FROM bb_building WHERE id={$building_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+		}
+		return $result;
+	}
+	
 	
 	/**
 	 * Function for adding a new arena to the database. Updates the arena object.
@@ -203,7 +229,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	/**
 	 * Update the database values for an existing arena object.
 	 *
-	 * @param $arena the party to be updated
+	 * @param $arena the arena to be updated
 	 * @return boolean true if successful, false otherwise
 	 */
 	function update($arena)

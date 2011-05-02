@@ -98,6 +98,34 @@
 					?>
 				</dd>
 				<dt>
+					<?php if($activity->get_category() || $editable) { ?>
+					<label for="category"><?php echo lang('category') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					$current_category_id = $activity->get_category();
+					if ($editable)
+					{
+						?>
+						<select name="category">
+							<option value="0">Ingen kategori valgt</option>
+							<?php
+							foreach($categories as $category)
+							{
+								echo "<option ".($current_category_id == $category->get_id() ? 'selected="selected"' : "")." value=\"{$category->get_id()}\">".$category->get_name()."</option>";
+							}
+							?>
+						</select>
+						<?php
+					}
+					else
+					{
+						echo $activity->get_category();
+					}
+					?>
+				</dd>
+				<dt>
 					<?php if($activity->get_district() || $editable) { ?>
 					<label for="district"><?php echo lang('district') ?></label>
 					<?php  } ?>
@@ -113,25 +141,6 @@
 					else
 					{
 						echo $activity->get_district();
-					}
-					?>
-				</dd>
-				<dt>
-					<?php if($activity->get_category() || $editable) { ?>
-					<label for="category"><?php echo lang('category') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
-					<?php
-					if ($editable)
-					{
-					?>
-						<input type="text" name="category" id="category" value="<?php echo $activity->get_category() ?>" />
-					<?php
-					}
-					else
-					{
-						echo $activity->get_category();
 					}
 					?>
 				</dd>
@@ -226,6 +235,12 @@
 						echo $activity->get_contact_person_2();
 					}
 					?>
+				</dd>
+			    <dt>
+					<label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
+				</dt>
+				<dd>
+					<input type="checkbox" name="special_adaptation" id="special_adaptation"<?php echo $activity->get_special_adaptation() ? ' checked="checked"' : '' ?> <?php echo !$editable ? ' disabled="disabled"' : '' ?>/>
 				</dd>
 			</dl>
 			<div class="form-buttons">
