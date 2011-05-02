@@ -36,20 +36,29 @@
 				</dd>
 				<dt>
 					<?php if($arena->get_internal_arena_id() || $editable) { ?>
-					<label for="internal_arena_id"><?php echo lang('internal_arena_id') ?></label>
+					<label for="internal_arena_id"><?php echo lang('internal_arena') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
 					<?php
+					$current_building_id = $arena->get_internal_arena_id();
 					if ($editable)
 					{
-					?>
-						<input type="text" name="internal_arena_id" id="internal_arena_id" value="<?php echo $arena->get_internal_arena_id() ?>" />
-					<?php
+						?>
+						<select name="internal_arena_id">
+							<option value="0">Ingen arena valgt</option>
+							<?php
+							foreach($buildings as $building_id => $building_name)
+							{
+								echo "<option ".($current_building_id == $building_id? 'selected="selected"' : "")." value=\"{$building_id}\">".$building_name."</option>";
+							}
+							?>
+						</select>
+						<?php
 					}
 					else
 					{
-						echo $arena->get_internal_arena_id();
+						echo activitycalendar_soarena::get_instance()->get_building_name($arena->get_internal_arena_id());
 					}
 					?>
 				</dd>

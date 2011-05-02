@@ -98,7 +98,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('rental.socontract');
+				self::$so = CreateObject('rental.socontactperson');
 			}
 			
 			return self::$so;

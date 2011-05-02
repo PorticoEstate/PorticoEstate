@@ -251,6 +251,19 @@
 								'text'	=> lang('Asynchronous Tasks'),
 								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
 							),
+							'office'	=> array
+							(
+								'text'	=> lang('office'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'bb_office') ),
+								'children' => array
+								(
+									'office_user'	=> array
+									(
+										'text'	=> lang('office user'),
+										'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'bb_office_user') )
+									)
+								)
+							),
 						)
 					);
 			}
@@ -269,6 +282,11 @@
 					(
 						'text'	=> lang('Root Permissions'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index', 'appname' => 'booking') )
+					),
+					'acl'	=> array
+					(
+						'text'	=> lang('Configure Access Permissions'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'booking') )
 					),
 					'activity'	=> array
 					(
