@@ -155,7 +155,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 	function get_group_name($group_id)
 	{
 		$result = "Ingen";
-    	if(isset($org_id)){
+    	if(isset($group_id)){
 	    	$q1="SELECT name FROM bb_group WHERE id={$group_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
@@ -164,6 +164,21 @@ class activitycalendar_sogroup extends activitycalendar_socommon
     	}
 		
 		return $result;
+	}
+	
+	function get_contacts($group_id)
+	{
+		$contacts = array();
+    	if(isset($group_id)){
+	    	$q1="SELECT id FROM bb_group_contact WHERE group_id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contacts[] = $this->db->f('id');
+			}
+			//$result = $contacts;
+    	}
+		
+		return $contacts;
 	}
 
 	protected function populate(int $group_id, &$group)

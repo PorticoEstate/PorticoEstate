@@ -5,6 +5,8 @@ phpgw::import_class('activitycalendar.sogroup');
 //phpgw::import_class('activitycalendar.socontactperson');
 
 include_class('activitycalendar', 'activity', 'inc/model/');
+include_class('activitycalendar', 'target', 'inc/model/');
+include_class('activitycalendar', 'category', 'inc/model/');
 
 class activitycalendar_soactivity extends activitycalendar_socommon
 {
@@ -148,7 +150,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 		
-		var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
+		//var_dump("SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 
@@ -164,7 +166,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		// Insert a new activity
 		$ts_now = strtotime('now');
-		$q ="INSERT INTO activity_activity (organization_id, create_date) VALUES (1, $ts_now)";
+		$q ="INSERT INTO activity_activity (organization_id, state, create_date) VALUES (1, 1, $ts_now)";
 		$result = $this->db->query($q);
 
 		if(isset($result)) {
@@ -202,11 +204,12 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'date_end = '    . $this->marshal($activity->get_date_end(), 'int'),
 			'last_change_date = '    . $this->marshal($ts_now, 'int'),
 			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'int'),
-			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int')
+			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int'),
+			'special_adaptation = '			.($activity->get_special_adaptation() ? "true" : "false")
 		);
 		
 		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
-			
+
 		return isset($result);
 	}
 
@@ -244,7 +247,66 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_date_end($this->unmarshal($this->db->f('date_end'), 'int'));
 			$activity->set_contact_person_1($this->unmarshal($this->db->f('contact_person_1'), 'int'));
 			$activity->set_contact_person_2($this->unmarshal($this->db->f('contact_person_2'), 'int'));
+			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
+			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
 		}
 		return $activity;
 	}
+	
+	function get_category_name($category_id)
+	{
+		$result = "Ingen";
+		if($category_id != null)
+		{
+			$sql = "SELECT name FROM bb_activity where id=$category_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_categories()
+	{
+		$categories = array();
+		$sql = "SELECT * FROM bb_activity where active=1 and parent_id=1";
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$category = new activitycalendar_category($this->db->f('id'));
+			$category->set_parent_id($this->db->f('parent_id'));
+			$category->set_name($this->db->f('name'));
+			$categories[] = $category;
+		}
+		return $categories;
+	}
+	
+	function get_target_name($target_id)
+	{
+		$result = "Ingen";
+		if($target_id != null)
+		{
+			$sql = "SELECT name FROM bb_agegroup where id=$target_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_targets()
+	{
+		$targets = array();
+		$sql = "SELECT * FROM bb_agegroup where active=1";
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$target = new activitycalendar_target($this->db->f('id'));
+			$target->set_description($this->db->f('description'));
+			$target->set_name($this->db->f('name'));
+			$targets[] = $target;
+		}
+		return $targets;
+	}
+	
 }

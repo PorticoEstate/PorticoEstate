@@ -14,6 +14,7 @@
 		protected $group_id;
 		protected $district;
 		protected $category;
+		protected $target;
 		protected $description;
 		protected $arena;
 		protected $date_start;
@@ -22,6 +23,7 @@
 		protected $last_change_date;
 		protected $contact_person_1;
 		protected $contact_person_2;
+		protected $special_adaptation;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -61,6 +63,13 @@
 		}
 		
 		public function get_district() { return $this->district; }
+		
+		public function set_target($target)
+		{
+			$this->target = $target;
+		}
+		
+		public function get_target() { return $this->target; }
 		
 		public function set_category($category)
 		{
@@ -118,6 +127,23 @@
 			$this->last_change_date = $last_change_date;
 		}
 		
+		public function set_contact_persons($persons)
+		{
+			$count=0;
+			foreach($persons as $person)
+			{
+				if($count == 0)
+				{
+					$this->set_contact_person_1($persons[0]);
+				}
+				else
+				{
+					$this->set_contact_person_2($persons[1]);
+				}
+				$count++;
+			}
+		}
+		
 		public function set_contact_person_1($contact_person_1)
 		{
 			$this->contact_person_1 = $contact_person_1;
@@ -131,6 +157,13 @@
 		}
 		
 		public function get_contact_person_2() { return $this->contact_person_2; }
+		
+		public function set_special_adaptation($special_adaptation)
+		{
+			$this->special_adaptation = $special_adaptation;
+		}
+		
+		public function get_special_adaptation() { return $this->special_adaptation; }
 		
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -148,7 +181,8 @@
 		
 		public function serialize()
 		{
-			/*if(isset($this->organization_id) && $this->get_organization_id() > 0)
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			if(isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
 				$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_1());
 				$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2());
@@ -159,23 +193,25 @@
 				$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2());
 			}
 			else
-			{*/
+			{
 				$contact_1 = "";
 				$contact_2 = "";
-			//}
+			}
 			return array(
 				'id' => $this->get_id(),
 				'organization_id' => activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id()),
 				'group_id' => activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id()),
 				'district' => $this->get_district(),
-				'category' => $this->get_category(),
+				'category' => $this->get_so()->get_category_name($this->get_category()),
 				'description' => $this->get_description(),
 				'state' => $this->get_state(),
 				'arena' => activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena()),
-				'date_start' => $this->get_date_start(),
-				'date_end' => $this->get_date_end(),
+				'date_start' => $this->get_date_start()!=NULL?date($date_format,$this->get_date_start()):'' ,
+				'date_end' => $this->get_date_end()!=NULL?date($date_format,$this->get_date_end()):'' ,
 				'contact_person_1' => $contact_1,
-				'contact_person_2' => $contact_2
+				'contact_person_2' => $contact_2,
+				'special_adaptation' => $this->get_special_adaptation(),
+				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):''
 			);
 		}
 	}
