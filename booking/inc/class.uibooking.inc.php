@@ -10,6 +10,7 @@
 			'add'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'delete'			=>	true,
 			'info'			=>	true,
 			'building_schedule' =>  true,
 			'resource_schedule' =>  true,
@@ -255,8 +256,7 @@
 				{
 					$errors['booking'] = lang('This booking is not connected to a season');
 				}	
-
-				if (!$errors['booking'] && !$errors['season_boundary'])
+				if (!$errors['activity_id'] && !$errors['booking'] && !$errors['season_boundary'])
 				{
 					$step++;
 				}
@@ -321,7 +321,8 @@
 							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
-                                if( isset($noallocation)) {
+                                $gotnoallocation = $this->bo->so->got_no_allocation($booking); 
+                                if( isset($noallocation) || $gotnoallocation) {
                                     $allocation['resources'] = $booking['resources'];
                                     $allocation['cost'] = $booking['cost'];
                                     $allocation['building_id'] = $booking['building_id'];
@@ -338,6 +339,7 @@
     								$booking['secret'] = $this->generate_secret();
     								$receipt = $this->bo->add($booking);
                                     $booking['allocation_id'] = '';
+                                    $this->allocation_bo->so->update_id_string();
                                 } else {
     								$booking['secret'] = $this->generate_secret();
     								$receipt = $this->bo->add($booking);
@@ -477,12 +479,150 @@
 			$activities = $activities['results'];
 			self::render_template('booking_edit', array('booking' => $booking, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 		}
+
+		public function delete()
+		{
+			$id = intval(phpgw::get_var('id', 'GET'));
+			$booking = $this->bo->read_single($id);
+            $allocation = $this->allocation_bo->read_single($booking['allocation_id']);
+            $season = $this->season_bo->read_single($booking['season_id']);
+			$step = phpgw::get_var('step', 'str', 'POST');
+        	if (! isset($step)) $step = 1;
+            $errors = array();
+			$invalid_dates = array();
+			$valid_dates = array();
+            $allocation_delete = array();
+            $allocation_keep = array();
+
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$from_date = $_POST['from_'];
+				$to_date = $_POST['to_'];
+
+  				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
+                {
+                    if ($_POST['allocation_delete'] != 'on') {
+                        $this->bo->so->delete_booking($id);
+                        $this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
+                    }
+                    else
+                    {
+                        $allocation_id = $booking['allocation_id'];
+                        $this->bo->so->delete_booking($id);
+                        $err  = $this->allocation_bo->so->check_for_booking($allocation_id);
+                        if ($err)
+                        {
+                    	    $errors['booking'] = lang('Could not delete allocation due to a booking still use it');
+                        }
+                        else
+                        {
+                            $err = $this->allocation_bo->so->delete_allocation($allocation_id);
+                            $this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
+                        }
+                    }
+                } 
+                else
+                { 
+                    $step++;
+					if ($_POST['recurring'] == 'on') {
+						$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
+					} 
+					else
+					{
+						$repeat_until = strtotime($season['to_'])+60*60*24; 
+						$_POST['repeat_until'] = $season['to_'];
+					} 
+
+					$max_dato = strtotime($_POST['to_']); // highest date from input
+					$interval = $_POST['field_interval']*60*60*24*7; // weeks in seconds
+					$i = 0;
+					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
+					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
+
+					while (($max_dato+($interval*$i)) <= $repeat_until)
+					{
+						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval*$i));
+						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval*$i));
+						$booking['from_'] = $fromdate;
+						$booking['to_'] = $todate;
+
+                        $id = $this->bo->so->get_booking_id($booking);                
+                        if($id) {
+                            $aid = $this->bo->so->check_allocation($id);
+                        } else {
+                            $aid = $this->bo->so->check_for_booking($booking);    
+                        }
+                            
+                		if ($id) 
+						{
+							$valid_dates[$i]['from_'] = $fromdate;
+							$valid_dates[$i]['to_'] = $todate;
+							if ($step == 3)
+							{
+                                $stat = $this->bo->so->delete_booking($id);                            
+                            }                            
+                        }
+                        if ($_POST['delete_allocation'] == 'on')                         {
+    						if (!$aid) 
+    						{
+    							$allocation_keep[$i]['from_'] = $fromdate;
+    							$allocation_keep[$i]['to_'] = $todate;
+    						} 
+    						else 
+    						{
+    							$allocation_delete[$i]['from_'] = $fromdate;
+    							$allocation_delete[$i]['to_'] = $todate;
+    							if ($step == 3)
+    							{
+                                   $stat = $this->bo->so->delete_allocation($aid);                            
+                                }                            
+                            }
+                        }
+						$i++;
+                    }
+					if ($step == 3) 
+					{
+						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$allocation['building_id']));
+					}
+                }
+			}
+
+			$this->flash_form_errors($errors);
+			self::add_javascript('booking', 'booking', 'booking.js');
+			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+			$booking['booking_link'] = self::link(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+
+			if ($step < 2) 
+            {
+    			self::render_template('booking_delete', array('booking' => $booking
+                ));
+            }
+			elseif ($step == 2) 
+            {
+				self::render_template('booking_delete_preview', array('booking' => $booking,
+					'step' => $step,
+					'recurring' => $_POST['recurring'],
+					'outseason' => $_POST['outseason'],
+					'interval' => $_POST['field_interval'],
+					'repeat_until' => $_POST['repeat_until'],
+					'from_date' => $from_date,
+					'to_date' => $to_date,
+                    'delete_allocation' => $_POST['delete_allocation'],
+					'allocation_keep' => $allocation_keep,
+					'allocation_delete' => $allocation_delete,
+					'valid_dates' => $valid_dates,
+					'invalid_dates' => $invalid_dates
+				));
+            }                
+		}
 		
 		public function show()
 		{
 			$booking = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$booking['bookings_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit', 'id' => $booking['id']));
+			$booking['delete_link'] = self::link(array('menuaction' => 'booking.uibooking.delete', 'id' => $booking['id']));
 			$resource_ids = '';
 			foreach($booking['resources'] as $res)
 			{
@@ -507,7 +647,7 @@
 			$booking['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $booking['resources'][0]['building_id']));
 			$booking['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $booking['group']['organization_id']));
 			$booking['group_link'] = self::link(array('menuaction' => 'booking.uigroup.show', 'id' => $booking['group']['id']));
-			
+			$booking['delete_link'] = self::link(array('menuaction' => 'booking.uibooking.delete', 'id' => $booking['id']));
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit', 'id' => $booking['id']));
 				
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);

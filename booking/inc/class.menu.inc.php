@@ -27,6 +27,12 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uidashboard.index') ),
 					'image'	=> array('property', 'location'),
 				),
+				'messages' => array
+				(
+					'text'	=> lang('Messages'),
+				 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uisystem_message.index') ),
+				                        'image'	=> array('property', 'location'),
+				),
 				// 'applications' => array
 				// (
 				// 	'text'	=> lang('Applications'),
