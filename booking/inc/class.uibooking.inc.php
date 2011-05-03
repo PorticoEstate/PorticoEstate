@@ -483,6 +483,11 @@
 		public function delete()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
+			$outseason = phpgw::get_var('outseason', 'GET');
+			$recurring = phpgw::get_var('recurring', 'GET');
+			$repeat_untild = phpgw::get_var('repeat_until', 'GET');
+			$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
+			$delete_allocation = phpgw::get_var('delete_allocation', 'GET');
 			$booking = $this->bo->read_single($id);
             $allocation = $this->allocation_bo->read_single($booking['allocation_id']);
             $season = $this->season_bo->read_single($booking['season_id']);
@@ -595,7 +600,12 @@
 
 			if ($step < 2) 
             {
-    			self::render_template('booking_delete', array('booking' => $booking
+    			self::render_template('booking_delete', array('booking' => $booking,
+					'recurring' => $recurring,
+					'outseason' => $outseason,
+					'interval' => $field_interval,
+					'repeat_until' => $repeat_until,
+                    'delete_allocation' => $delete_allocation,
                 ));
             }
 			elseif ($step == 2) 
