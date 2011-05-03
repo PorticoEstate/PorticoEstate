@@ -10,6 +10,25 @@
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
 				<dt>
+					<?php if($activity->get_title() || $editable) { ?>
+					<label for="title"><?php echo lang('title') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					if ($editable)
+					{
+					?>
+						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" />
+					<?php
+					}
+					else
+					{
+						echo $activity->get_title();
+					}
+					?>
+				</dd>
+				<dt>
 					<?php if($activity->get_organization_id() || $editable) { ?>
 					<label for="organization_id"><?php echo lang('organization') ?></label>
 					<?php } ?>
@@ -126,6 +145,34 @@
 					?>
 				</dd>
 				<dt>
+					<?php if($activity->get_target() || $editable) { ?>
+					<label for="target"><?php echo lang('target') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					$current_target_id = $activity->get_target();
+					if ($editable)
+					{
+						?>
+						<select name="target">
+							<option value="0">Ingen målgruppe valgt</option>
+							<?php
+							foreach($targets as $target)
+							{
+								echo "<option ".($current_target_id == $target->get_id() ? 'selected="selected"' : "")." value=\"{$target->get_id()}\">".$target->get_name()."</option>";
+							}
+							?>
+						</select>
+						<?php
+					}
+					else
+					{
+						echo $activity->get_target();
+					}
+					?>
+				</dd>
+				<dt>
 					<?php if($activity->get_district() || $editable) { ?>
 					<label for="district"><?php echo lang('district') ?></label>
 					<?php  } ?>
@@ -134,8 +181,17 @@
 					<?php
 					if ($editable)
 					{
+						$selected_district = $activity->get_district();
 					?>
-						<input type="text" name="district" id="district" value="<?php echo $activity->get_district() ?>" />
+						<select name="district">
+							<option value="0">Ingen bydel valgt</option>
+							<?php
+							foreach($districts as $district)
+							{
+								echo "<option ".($selected_district == $district['id'] ? 'selected="selected"' : "")." value=\"{$district['id']}\">".$district['name']."</option>";
+							}
+							?>
+						</select>
 					<?php
 					}
 					else
@@ -154,7 +210,7 @@
 					if ($editable)
 					{
 					?>
-						<input type="text" name="description" id="description" value="<?php echo $activity->get_description() ?>" />
+						<textarea cols="100" rows="5" name="description" id="description"><?php echo $activity->get_description() ?></textarea>
 					<?php
 					}
 					else
@@ -164,39 +220,23 @@
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_date_start() || $editable) { ?>
-					<label for="start_date"><?php echo lang('date_start') ?></label>
+					<?php if($activity->get_time() || $editable) { ?>
+					<label for="time"><?php echo lang('time') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
 					<?php
-						$start_date = $activity->get_date_start() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $activity->get_date_start()) : '-';
-						$start_date_yui = $activity->get_date_start() ? date('Y-m-d', $activity->get_date_start()) : '';
-						$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('start_date', $start_date);?>
-					<?php if ($editable) {
-							echo $GLOBALS['phpgw']->yuical->add_listener('start_date', $start_date);
-						} else {
-							echo $start_date;
-						}
+					if ($editable)
+					{
 					?>
-				</dd>
-				<dt>
-					<?php if($activity->get_date_end() || $editable) { ?>
-					<label for="end_date"><?php echo lang('date_end') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
+						<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" />
 					<?php
-						$end_date = $activity->get_date_end() ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $activity->get_date_end()) : '-';
-						$end_date_yui = $activity->get_date_end() ? date('Y-m-d', $activity->get_date_end()) : '';
-						$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('end_date', $end_date);
+					}
+					else
+					{
+						echo $activity->get_time();
+					}
 					?>
-					<?php if ($editable) {
-							echo $GLOBALS['phpgw']->yuical->add_listener('end_date', $end_date);
-						} else {
-							echo $end_date;
-					 }?>
-					<br/>
 				</dd>
 				<dt>
 					<?php if($activity->get_contact_person_1() || $editable) { ?>
@@ -208,7 +248,7 @@
 					if ($editable)
 					{
 					?>
-						<input type="text" name="contact_person_1" id="contact_person_1" value="<?php echo $activity->get_contact_person_1() ?>" />
+						<input type="text" name="contact_person_1" id="contact_person_1" value="<?php echo $activity->get_contact_person_1() ?>" readonly="true"/>
 					<?php
 					}
 					else
@@ -227,7 +267,7 @@
 					if ($editable)
 					{
 					?>
-						<input type="text" name="contact_person_2" id="contact_person_2" value="<?php echo $activity->get_contact_person_2() ?>" />
+						<input type="text" name="contact_person_2" id="contact_person_2" value="<?php echo $activity->get_contact_person_2() ?>" readonly="true"/>
 					<?php
 					}
 					else

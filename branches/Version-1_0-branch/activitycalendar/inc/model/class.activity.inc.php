@@ -10,6 +10,7 @@
 		public static $so;
 		
 		protected $id;
+		protected $title;
 		protected $organization_id;
 		protected $group_id;
 		protected $district;
@@ -17,8 +18,7 @@
 		protected $target;
 		protected $description;
 		protected $arena;
-		protected $date_start;
-		protected $date_end;
+		protected $time;
 		protected $create_date;
 		protected $last_change_date;
 		protected $contact_person_1;
@@ -42,6 +42,13 @@
 		}
 		
 		public function get_id() { return $this->id; }
+		
+		public function set_title($title)
+		{
+			$this->title = $title;
+		}
+		
+		public function get_title() { return $this->title; }
 		
 		public function set_organization_id($organization_id)
 		{
@@ -99,19 +106,19 @@
 		
 		public function get_arena() { return $this->arena; }
 		
-		public function set_date_start($date_start)
+		public function set_time($time)
 		{
-			$this->date_start = $date_start;
+			$this->time = $time;
 		}
 		
-		public function get_date_start() { return $this->date_start; }
+		public function get_time() { return $this->time; }
 		
-		public function set_date_end($date_end)
+/*		public function set_date_end($date_end)
 		{
 			$this->date_end = $date_end;
 		}
 		
-		public function get_date_end() { return $this->date_end; }
+		public function get_date_end() { return $this->date_end; }*/
 		
 		public function set_create_date($create_date)
 		{
@@ -199,15 +206,15 @@
 			}
 			return array(
 				'id' => $this->get_id(),
+				'title' => $this->get_title(),
 				'organization_id' => activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id()),
 				'group_id' => activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id()),
-				'district' => $this->get_district(),
+				'district' => activitycalendar_soactivity::get_instance()->get_district_name($this->get_district()),
 				'category' => $this->get_so()->get_category_name($this->get_category()),
 				'description' => $this->get_description(),
 				'state' => $this->get_state(),
 				'arena' => activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena()),
-				'date_start' => $this->get_date_start()!=NULL?date($date_format,$this->get_date_start()):'' ,
-				'date_end' => $this->get_date_end()!=NULL?date($date_format,$this->get_date_end()):'' ,
+				'time' => $this->get_time(),
 				'contact_person_1' => $contact_1,
 				'contact_person_2' => $contact_2,
 				'special_adaptation' => $this->get_special_adaptation(),
