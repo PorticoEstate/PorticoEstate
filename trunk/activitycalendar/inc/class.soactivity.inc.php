@@ -129,18 +129,19 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		else
 		{
 			$columns[] = 'activity.id';
+			$columns[] = 'activity.title';
 			$columns[] = 'activity.organization_id';
 			$columns[] = 'activity.group_id';
 			$columns[] = 'activity.district';
 			$columns[] = 'activity.category';
 			$columns[] = 'activity.description';
 			$columns[] = 'activity.arena';
-			$columns[] = 'activity.date_start';
-			$columns[] = 'activity.date_end';
+			$columns[] = 'activity.time';
 			$columns[] = 'activity.create_date';
 			$columns[] = 'activity.last_change_date';
 			$columns[] = 'activity.contact_person_1';
 			$columns[] = 'activity.contact_person_2';
+			$columns[] = 'activity.special_adaptation';
 			
 			$cols = implode(',',$columns);
 		}
@@ -166,8 +167,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		// Insert a new activity
 		$ts_now = strtotime('now');
-		$q ="INSERT INTO activity_activity (organization_id, state, create_date) VALUES (1, 1, $ts_now)";
-		$result = $this->db->query($q);
+		$q ="INSERT INTO activity_activity (title, create_date) VALUES ('tmptitle', $ts_now)";
+		$result = $this->db->query($q, __LINE__,__FILE__);
 
 		if(isset($result)) {
 			// Set the new party ID
@@ -193,15 +194,15 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$ts_now = strtotime('now');
 			
 		$values = array(
+			'title = '     . $this->marshal($activity->get_title(), 'string'),
 			'organization_id = '. $this->marshal($activity->get_organization_id(), 'int'),
 			'group_id = '     . $this->marshal($activity->get_group_id(), 'int'),
 			'district =  '     . $this->marshal($activity->get_district(), 'int'),
 			'category = '          . $this->marshal($activity->get_category(), 'int'),
-			//'target = '   . $this->marshal($activity->get_target(), 'string'),
+			'target = '   . $this->marshal($activity->get_target(), 'string'),
 			'description = '     . $this->marshal($activity->get_description(), 'string'),
 			'arena = '      . $this->marshal($activity->get_arena(), 'int'),
-			'date_start = '      . $this->marshal($activity->get_date_start(), 'int'),
-			'date_end = '    . $this->marshal($activity->get_date_end(), 'int'),
+			'time = '      . $this->marshal($activity->get_time(), 'string'),
 			'last_change_date = '    . $this->marshal($ts_now, 'int'),
 			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'int'),
 			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int'),
@@ -237,14 +238,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		if($activity == null) {
 			$activity = new activitycalendar_activity((int) $activity_id);
 
+			$activity->set_title($this->unmarshal($this->db->f('title'), 'string'));
 			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
 			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
 			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
 			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
 			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
-			$activity->set_date_start($this->unmarshal($this->db->f('date_start'), 'int'));
-			$activity->set_date_end($this->unmarshal($this->db->f('date_end'), 'int'));
+			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
 			$activity->set_contact_person_1($this->unmarshal($this->db->f('contact_person_1'), 'int'));
 			$activity->set_contact_person_2($this->unmarshal($this->db->f('contact_person_2'), 'int'));
 			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
@@ -280,6 +281,36 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $categories;
 	}
+	
+	function select_district_list()
+	{
+		$this->db->query("SELECT id, descr FROM fm_district where id >'0' ORDER BY id ", __LINE__, __FILE__);
+
+		$i = 0;
+		while ($this->db->next_record())
+		{
+			$district[$i]['id'] = $this->db->f('id');
+			$district[$i]['name'] = stripslashes($this->db->f('descr'));
+			$i++;
+		}
+
+		return $district;
+	}
+	
+	function get_district_name($district_id)
+	{
+		$result = "Ingen";
+		if($district_id != null)
+		{
+			$sql = "SELECT descr FROM fm_district where id=$district_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('descr');
+			}
+    	}
+		return $result;
+	}
+	
 	
 	function get_target_name($target_id)
 	{

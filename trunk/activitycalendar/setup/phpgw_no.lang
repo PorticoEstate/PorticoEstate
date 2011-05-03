@@ -325,9 +325,13 @@ Agegroups kan not be larger than 9999 peoples	activitycalendar	no	Estimert antal
 Contact information name is to long. max 50 characters	activitycalendar	no	Navn i kontakt informasjon er for langt. Maks 50 tegn
 Unable to fill report	activitycalendar	no	Greide ikke å fylle ut rapport
 arena	activitycalendar	no	Arena
+activitycalendar	common	no	aktivitetsoversikt
+Activitycalendar	common	no	Aktivitetsoversikt
 description	activitycalendar	no	Beskrivelse
 date_start	activitycalendar	no	Startdato
 date_end	activitycalendar	no	Sluttdato
+special_adaptation	activitycalendar	no	Tilpasset funksjonshemmede
+target	activitycalendar	no	Målgruppe
 contact_person_1	activitycalendar	no	Kontaktperson 1
 contact_person_2	activitycalendar	no	Kontaktperson 2
 Activities	activitycalendar	no	Aktiviteter
