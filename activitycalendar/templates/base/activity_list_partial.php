@@ -22,6 +22,16 @@
 	    sortable: true
 	},
 	{
+		key: "title",
+		label: "<?php echo lang('title') ?>",
+	    sortable: true
+	},
+//	{
+//		key: "status",
+//		label: "<?php echo lang('status') ?>",
+//	    sortable: true
+//	},
+	{
 		key: "group_id",
 		label: "<?php echo lang('group') ?>",
 	    sortable: true
@@ -47,13 +57,8 @@
 	    sortable: true
 	},
 	{
-		key: "date_start",
-		label: "<?php echo lang('date_start') ?>",
-	    sortable: true
-	},
-	{
-		key: "date_end",
-		label: "<?php echo lang('date_end') ?>",
+		key: "time",
+		label: "<?php echo lang('time') ?>",
 	    sortable: true
 	},
 	{

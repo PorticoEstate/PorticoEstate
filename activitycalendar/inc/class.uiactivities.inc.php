@@ -73,6 +73,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		$categories = activitycalendar_soactivity::get_instance()->get_categories();
 		$targets = activitycalendar_soactivity::get_instance()->get_targets();
+		$districts = activitycalendar_soactivity::get_instance()->select_district_list();
 				
 		// Retrieve the arena object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
@@ -102,6 +103,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			if(isset($activity)) // If a activity object is created
 			{
 				// ... set all parameters
+				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id(phpgw::get_var('organization_id'));
 				$activity->set_group_id(phpgw::get_var('group_id'));
 				$activity->set_arena(phpgw::get_var('arena_id'));
@@ -109,8 +111,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_category(phpgw::get_var('category'));
 				$activity->set_target(phpgw::get_var('target'));
 				$activity->set_description(phpgw::get_var('description'));
-				$activity->set_date_start(phpgw::get_var('date_start_hidden'));
-				$activity->set_date_end(phpgw::get_var('date_end_hidden'));
+				$activity->set_time(phpgw::get_var('time'));
 				$activity->set_contact_persons($persons);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				
@@ -133,6 +134,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'arenas' => $arenas,
 				'categories' => $categories,
 				'targets' => $targets,
+				'districts' => $districts,
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')
