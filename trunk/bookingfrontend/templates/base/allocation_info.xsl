@@ -17,6 +17,7 @@
 	<xsl:if test="allocation/add_link">
 		<div class="actions">
 			<button onclick="location.href='{allocation/add_link}'"><xsl:value-of select="php:function('lang', 'Create new booking')"/></button>
+			<button onclick="location.href='{allocation/cancel_link}'"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></button>
 		</div>
 	</xsl:if>
 </xsl:template>

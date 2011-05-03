@@ -32,7 +32,20 @@
 			}
 			return $this->db->f('name', false);
 		}
-		
+
 	}
+	class booking_sosystem_message_association extends booking_socommon
+	{
+		function __construct()
+		{
+			parent::__construct('bb_system_message_association', 
+				array(
+					'id'					=> array('type' => 'int'),
+					'building_id'		=> array('type' => 'int'),
+					'type'	=> array('type' => 'string', 'required' => true),
+					'status'	=> array('type' => 'string', 'required' => true),
+					));
+		}
+	}		
 
 

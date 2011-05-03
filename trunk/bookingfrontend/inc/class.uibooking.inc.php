@@ -13,6 +13,7 @@
 			'edit' =>				true,
 			'report_numbers' =>		true,
 			'massupdate' =>			true,
+			'cancel' =>		    	true,
 		);
 
 		public function __construct()
@@ -23,6 +24,7 @@
 			$this->allocation_bo = CreateObject('booking.boallocation');
 			$this->season_bo = CreateObject('booking.boseason');
 			$this->building_bo = CreateObject('booking.bobuilding');
+			$this->system_message_bo = CreateObject('booking.bosystem_message');
 		}
 
 		private function item_link(&$item, $key)
@@ -560,6 +562,50 @@
 					);
 		}
 
+		public function cancel()
+		{
+        	$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
+
+   			$errors = array();
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+            
+                $from = $_POST['from_'];
+                $to =  $_POST['to_'];
+                $organization_id = $_POST['organization_id'];
+                $outseason = $_POST['outseason'];
+                $recurring = $_POST['recurring'];
+                $repeat_until = $_POST['repeat_until'];
+                $field_interval = $_POST['field_interval'];
+                $delete_allocation = $_POST['delete_allocation'];
+
+				date_default_timezone_set("Europe/Oslo");
+				$date = new DateTime(phpgw::get_var('date'));
+				$system_message = array();
+				$system_message['building_id'] = intval($booking['building_id']);
+				$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
+				$system_message['created'] =  $date->format('Y-m-d  H:m');
+				$system_message = array_merge($system_message, extract_values($_POST, array('message')));
+                $system_message['type'] = 'cancelation';
+				$system_message['status'] = 'NEW';
+				$system_message['name'] = ' ';
+				$system_message['phone'] = ' ';
+				$system_message['email'] = ' ';
+				$system_message['title'] = lang('Cancelation of booking from')." ".$booking['group_name'];
+                 
+                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel booking use this link')." - <a href='".self::link(array('menuaction' => 'booking.uibooking.delete','id' => $boooking['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval, 'delete_allocation' => $delete_allocation))."'>".lang('Delete')."</a>";
+
+				$receipt = $this->system_message_bo->add($system_message);
+				$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
+
+            }
+            $this->flash_form_errors($errors);
+			$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $allocation['building_id']));
+
+			$this->use_yui_editor();
+			self::render_template('booking_cancel', array('booking'=>$booking));
+        }		
+
 		public function info()
 		{
 			$booking = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
@@ -578,8 +624,10 @@
 			
 			$bouser = CreateObject('bookingfrontend.bouser');
 			if($bouser->is_group_admin($booking['group_id']))
+            {
 				$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit', 'id' => $booking['id']));
-				
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel', 'id' => $booking['id']));
+            }
 			$booking['when'] = pretty_timestamp($booking['from_']).' - '.pretty_timestamp($booking['to_']);
 			self::render_template('booking_info', array('booking'=>$booking));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
