@@ -50,7 +50,7 @@
 			$this->_join	= & $this->_db->join;
 		}
 
-		function read($data, $filter)
+		function read($data, $filter = array())
 		{
 			$start		= isset($data['start']) && $data['start'] ? $data['start']:0;
 			$query		= isset($data['query'])?$data['query']:'';
@@ -2670,14 +2670,16 @@
 				$fields[] = $field['name'];
 			}
 			$node = array();
+			$i = 0;
 			while ($this->_db2->next_record())
 			{
 				$id	= $this->_db2->f('id');
 				
 				foreach($fields as $field)
 				{
-					$tree[$id][$field] = $this->_db2->f($field,true);
+					$tree[$i][$field] = $this->_db2->f($field,true);
 				}
+				$i++;
 			}
 
 			foreach($tree as &$node)

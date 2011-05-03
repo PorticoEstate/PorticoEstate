@@ -929,7 +929,7 @@
 						'text'	=> lang('gallery')
 					);
 
-				$custom_menu_items= $custom_menus->read(array('type' => 'custom_menu_items' , 'filter' => array('location' => '.document')));
+				$custom_menu_items= $custom_menus->read(array('type' => 'custom_menu_items'), array('location' => '.document'));
 				foreach($custom_menu_items as $item)
 				{
 					$menus['navigation']['documentation']['children'][] = array
@@ -970,12 +970,14 @@
 							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'],'property.uientity.index', PHPGW_ACL_READ);
 						}
 
-
 						$custom_menu_items= $custom_menus->read_tree(array('type' => 'custom_menu_items' , 'filter' => array('location' => ".entity.{$entry['id']}")));
 
 						if($custom_menu_items)
 						{
-							$menus['navigation']["entity_{$entry['id']}"]['children'] =  array_merge($menus['navigation']["entity_{$entry['id']}"]['children'], $custom_menu_items);
+							foreach ($custom_menu_items as $item)
+							{
+								$menus['navigation']["entity_{$entry['id']}"]['children'][] =  $item;
+							}
 						}
 
 /*
