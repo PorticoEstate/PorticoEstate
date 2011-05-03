@@ -8,25 +8,45 @@
 			'index'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
+			'toggle_show_all_dashboard_messages' => true,
 			'toggle_show_inactive'	=>	true,
 		);
+
+		const SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY = "show_all_dashboard_messages";
 
         protected $module;
 		public function __construct()
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bosystem_message');
-			self::set_active_menu('booking::system_message');
-
-            $this->module = "booking";
+			$this->allocation_bo = CreateObject('booking.boallocation');
+			self::set_active_menu('booking::messages');
+			$this->url_prefix = 'booking.uisystem_message';
+            $this->module = 'booking';
 		}
 
+		public function toggle_show_all_dashboard_messages()
+		{
+			if($this->show_all_dashboard_messages())
+			{
+				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
+			} else {
+				$_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY] = true;
+			}
+			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
+		}
+		
+		public function show_all_dashboard_messages() {
+			return array_key_exists(self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY, $_SESSION);
+		}
 		
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
+
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -34,13 +54,48 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'hidden' => true,
-								'value' => lang('New message'),
-								'href' => self::link(array('menuaction' => 'booking.uisystem_message.edit'))
+#							array('type' => 'filter', 
+#								'name' => 'status',
+#                                'text' => lang('Status').':',
+#                                'list' => array(
+#                                    array(
+#                                        'id' => 'not',
+#                                        'name' => lang('Not selected')
+#                                    ), 
+#                                    array(
+#                                        'id' => 'NEW',
+#                                        'name' => lang('NEW')
+#                                    ), 
+#                                    array(
+#                                        'id' => 'CLOSED',
+#                                        'name' => lang('CLOSED')
+#                                    )
+#                                )
+#                            ),
+#							array('type' => 'filter', 
+#								'name' => 'type',
+#                                'text' => lang('Type').':',
+#                                'list' => array(
+#                                    array(
+#                                        'id' => 'not',
+#                                        'name' => lang('Not selected')
+#                                    ), 
+#                                    array(
+#                                        'id' => 'message',
+#                                        'name' => lang('Message')
+#                                    ), 
+#                                    array(
+#                                        'id' => 'cancelation',
+#                                        'name' => lang('Cancelation')
+#                                    ), 
+#                                )
+#                            ),
+							array('type' => 'autocomplete', 
+								'name' => 'building',
+								'ui' => 'building',
+								'text' => lang('Building').':',
 							),
-							array('type' => 'text', 
+					        array('type' => 'text', 
 								'name' => 'query'
 							),
 							array(
@@ -50,8 +105,13 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+								'value' => lang('Show applications') ,
+								'href' => self::link(array('menuaction' => 'booking.uidashboard.index'))
+							),
+							array(
+								'type' => 'link',
+								'value' => $this->show_all_dashboard_messages() ? lang('Show only messages assigned to me') : lang('Show all messages'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_all_dashboard_messages'))
 							),
 						)
 					),
@@ -60,25 +120,41 @@
 					'source' => self::link(array('menuaction' => 'booking.uisystem_message.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
-							'key' => 'title',
-							'label' => lang('Title'),
+							'key' => 'id',
+							'label' => lang('ID'),
 							'formatter' => 'YAHOO.booking.formatLink'
 						),
 						array(
-							'key' => 'created',
-							'label' => lang('Created')
-						),
-						array(
-							'key' => 'building_id',
-							'label' => lang('Building')
+							'key' => 'status',
+							'label' => lang('Status')
 						),
 						array(
 							'key' => 'type',
 							'label' => lang('Type')
 						),
 						array(
-							'key' => 'status',
-							'label' => lang('Status')
+							'key' => 'created',
+							'label' => lang('Created')
+						),
+						array(
+							'key' => 'modified',
+							'label' => lang('Last modified')
+						),
+						array(
+							'key' => 'what',
+							'label' => lang('What')
+						),
+						array(
+							'key' => 'activity_name',
+							'label' => lang('Activity')
+						),
+						array(
+							'key' => 'contact_name',
+							'label' => lang('Contact')
+						),
+						array(
+							'key' => 'case_officer_name',
+							'label' => lang('Case Officer')
 						),
 						array(
 							'key' => 'link',
@@ -92,6 +168,8 @@
 
 		public function index_json()
 		{
+			$this->db = $GLOBALS['phpgw']->db;
+
 			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
 			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) )
 			{
@@ -118,7 +196,12 @@
 				$system_message['type'] = lang($system_message['type']);
 				$system_message['status'] = lang($system_message['status']);
 			}
-			array_walk($system_messages["results"], array($this, "_add_links"), $this->module.".uisystem_message.show");
+			array_walk($system_messages['results'], array($this, '_add_links'), $this->module.'.uisystem_message.show');
+
+            $messages = $this->bo->read_message_data($this->show_all_dashboard_messages() ? null : $this->current_account_id());
+
+    		$system_messages['results'] = $messages;
+
 			$results = $this->yui_results($system_messages);
 			
 			return $results;
@@ -183,7 +266,7 @@
 			$system_message = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$system_message['system_messages_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));
 			$system_message['system_message_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.show', 'id' => $system_message['system_message_id']));
-			$system_message['back_link'] = self::link(array('menuaction' => $this->module . '.uidashboard.index'));
+			$system_message['back_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));
 
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
