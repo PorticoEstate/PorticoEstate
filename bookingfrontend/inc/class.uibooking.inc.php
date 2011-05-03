@@ -592,9 +592,10 @@
 				$system_message['phone'] = ' ';
 				$system_message['email'] = ' ';
 				$system_message['title'] = lang('Cancelation of booking from')." ".$booking['group_name'];
-                 
-                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel booking use this link')." - <a href='".self::link(array('menuaction' => 'booking.uibooking.delete','id' => $booking['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval, 'delete_allocation' => $delete_allocation))."'>".lang('Delete')."</a>";
 
+                $link = self::link(array('menuaction' => 'booking.uibooking.delete','id' => $booking['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval, 'delete_allocation' => $delete_allocation));
+                $link = mb_strcut($link,16,strlen($link));
+                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel booking use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
 				$receipt = $this->system_message_bo->add($system_message);
 				$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
 
