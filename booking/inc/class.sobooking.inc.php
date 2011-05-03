@@ -332,7 +332,117 @@
 			}
 			return $results;
 		}
-		
+
+		public function get_booking_id($booking)
+        {
+			$table_name = $this->table_name;
+			$db = $this->db;
+
+            $from = "'".$booking['from_']."'";
+            $to = "'".$booking['to_']."'";
+            $gid = $booking['group_id'];
+            $season_id = $booking['season_id'];
+            $resources = implode(",", $booking['resources']);
+
+			$sql = "SELECT bb.id,bbr.resource_id FROM bb_booking bb,bb_booking_resource bbr WHERE bb.from_ = ($from) AND bb.to_ = ($to) AND bb.group_id = ($gid) AND bb.season_id = ($season_id) AND bb.id = bbr.booking_id AND EXISTS (SELECT 1 FROM bb_booking_resource bbr2 WHERE  bbr2.resource_id IN ($resources) AND bbr2.resource_id = bbr.resource_id)";
+
+			$this->db->limit_query($sql, 0,__LINE__, __FILE__,1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			} 
+            return $this->db->f('id', false);
+        }
+
+        public function check_allocation($id)
+        {
+			$table_name = $this->table_name;
+			$db = $this->db;
+
+            $sql = "SELECT allocation_id as aid FROM bb_booking WHERE allocation_id = ( SELECT allocation_id FROM bb_booking WHERE id = ($id) ) GROUP BY allocation_id HAVING count(id) < 2";
+
+			$this->db->limit_query($sql, 0,__LINE__, __FILE__,1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			} 
+            return $this->db->f('aid', false);
+        }
+		function check_for_booking($booking)
+        {
+            $from = "'".$booking['from_']."'";
+            $to = "'".$booking['to_']."'";
+            $gid = $booking['group_id'];
+            $season_id = $booking['season_id'];
+            $resources = implode(",", $booking['resources']);
+
+			$sql = "SELECT id FROM bb_allocation ba2 WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = (SELECT organization_id FROM bb_group WHERE id = ($gid)) AND ba2.season_id = ($season_id) AND EXISTS ( SELECT 1 FROM bb_allocation  a,bb_allocation_resource b WHERE a.id = b.allocation_id AND b.resource_id IN ($resources)) AND NOT EXISTS (SELECT 1 FROM bb_booking bb WHERE ba2.id = bb.allocation_id)";
+
+			$this->db->limit_query($sql, 0,__LINE__, __FILE__,1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+            
+        }
+
+		public function delete_booking($id)
+        {
+			$db = $this->db;
+			$table_name = $this->table_name.'_resource';
+			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name.'_targetaudience';
+			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name.'_agegroup';
+			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$table_name = $this->table_name;
+			$sql = "DELETE FROM $table_name WHERE id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		public function delete_allocation($id)
+        {
+			$db = $this->db;
+			$sql = "DELETE FROM bb_allocation_resource WHERE allocation_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+			$sql = "DELETE FROM bb_allocation WHERE id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		public function got_no_allocation($booking) {
+			$table_name = $this->table_name;
+			$db = $this->db;
+
+            $from = "'".$booking['from_']."'";
+            $to = "'".$booking['to_']."'";
+            $org_id = $booking['organization_id'];
+            $season_id = $booking['season_id'];
+            $resources = implode(",", $booking['resources']);
+
+			$sql = "SELECT id FROM bb_allocation ba2 WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = ($org_id) AND ba2.season_id = ($season_id) AND EXISTS ( SELECT 1 FROM bb_allocation  a,bb_allocation_resource b WHERE a.id = b.allocation_id AND b.resource_id IN ($resources))";
+			$this->db->limit_query($sql, 0,__LINE__, __FILE__,1);
+			if(!$this->db->next_record())
+			{
+				return True;
+			} else {
+				return False;
+            }
+		}
+
+		function get_building($id)
+		{
+			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('name', false);
+		}
+
 		public function find_expired() {
 			$table_name = $this->table_name;
 			$db = $this->db;

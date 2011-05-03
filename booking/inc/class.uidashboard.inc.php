@@ -98,24 +98,6 @@
                                     )
                                 )
                             ),
-#							array('type' => 'filter', 
-#								'name' => 'type',
-#                                'text' => lang('Type').':',
-#                                'list' => array(
-#                                    array(
-#                                        'id' => 'not',
-#                                        'name' => lang('Not selected')
-#                                    ), 
-#                                    array(
-#                                        'id' => 'application',
-#                                        'name' => lang('Application')
-#                                    ), 
-#                                    array(
-#                                        'id' => 'message',
-#                                        'name' => lang('Message')
-#                                    ), 
-#                                )
-#                            ),
 							array('type' => 'autocomplete', 
 								'name' => 'building',
 								'ui' => 'building',
@@ -136,8 +118,8 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => $this->show_all_dashboard_messages() ? lang('Show only messages assigned to me') : lang('Show all messages'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_all_dashboard_messages'))
+								'value' => lang('Show messages'),
+								'href' => self::link(array('menuaction' => 'booking.uisystem_message.index'))
 							),
 						)
 					),
@@ -223,19 +205,19 @@
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 
-			$messages = $this->system_message_bo->read_message_data($this->show_all_dashboard_messages() ? null : $this->current_account_id());
+#			$messages = $this->system_message_bo->read_message_data($this->show_all_dashboard_messages() ? null : $this->current_account_id());
 
-			if ($this->show_all_dashboard_messages() || $this->show_all_dashboard_applications())
-			{
-				if ($this->show_all_dashboard_messages()) {
-					$applications['results'] = $messages;
-				}
-			} else {
-				foreach($messages as $message)
-				{
-					$applications['results'][] = $message;		
-				} 
-			}
+#			if ($this->show_all_dashboard_messages() || $this->show_all_dashboard_applications())
+#			{
+#				if ($this->show_all_dashboard_messages()) {
+#					$applications['results'] = $messages;
+#				}
+#			} else {
+#				foreach($messages as $message)
+#				{
+#					$applications['results'][] = $message;		
+#				} 
+#			}
 			return $this->yui_results($applications);
 		}
 

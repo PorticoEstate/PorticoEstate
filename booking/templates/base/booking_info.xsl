@@ -20,6 +20,7 @@
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
 			<button onclick="location.href='{booking/edit_link}'"><xsl:value-of select="php:function('lang', 'Edit booking')"/></button>
+			<button onclick="location.href='{booking/delete_link}'"><xsl:value-of select="php:function('lang', 'Delete booking')"/></button>
 		</div>
 	</xsl:if>
 </xsl:template>

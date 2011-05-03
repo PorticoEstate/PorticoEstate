@@ -495,7 +495,19 @@ Delete until	booking	no	Slett til
 Recurring allocation deletion	booking	no	Slettings intervall
 Delete allocation	booking	no	Slett tildeling
 Delete allocations	booking	no	Slett tildelinger
+Delete booking	booking	no	Slett booking
+Delete bookings	booking	no	Slett bookinger
 Allocations that will be deleted	booking	no	Tildelinger som vil bli slettet
 Allocations  with existing bookings (%1)	booking	no	Tildeinger med eksisterende bookinger (%1)
-office	booking	no	Kontor
-office user	booking	no	Bruker koplet til kontor
+Delete allocation also	booking	no	Slett underliggende tildelinger
+Bookings to be deleted	booking	no	Booking for sletting
+Allocations that is going to be deleted	booking	no	Tildelinger for sletting
+Allocations with still existing bookings (%1)	booking	no	Tildelinger som ikke blir slettet på grunn av eksisterende bookinger (%1)
+Messages	booking	no	Beskjeder
+cancelation	booking	no	Avbestilling
+Cancelation of allocation from	booking	no	Avbestilling av tildeling fra
+Cancelation of booking from	booking	no	Avbestilling av booking fra
+To cancel booking use this link	booking no	For å slette bookingen bruk lenken
+To cancel allocation use this link	booking	no	For å slette tildelingen bruk lenken
+Show applications	booking	no	Vis søknader
+Show messages	booking	no	Vis beskjeder
