@@ -507,7 +507,7 @@ Messages	booking	no	Beskjeder
 cancelation	booking	no	Avbestilling
 Cancelation of allocation from	booking	no	Avbestilling av tildeling fra
 Cancelation of booking from	booking	no	Avbestilling av booking fra
-To cancel booking use this link	booking no	For å slette bookingen bruk lenken
-To cancel allocation use this link	booking	no	For å slette tildelingen bruk lenken
+To cancel booking use this link booking no	For å slette bookingen bruk lenken
+To cancel allocation use this link  booking	no	For å slette tildelingen bruk lenken
 Show applications	booking	no	Vis søknader
 Show messages	booking	no	Vis beskjeder
