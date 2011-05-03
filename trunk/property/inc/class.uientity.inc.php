@@ -376,6 +376,11 @@
 			$datatable = array();
 			$values_combo_box = array();
 
+			if($this->cat_id)
+			{
+				$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+			}
+
 			// 	enters the first time
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -420,7 +425,6 @@
 				//// ---- DISTRICT filter----------------------
 				if($this->cat_id)
 				{
-					$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
 					//this validation comes to previous versions
 					if (isset($category['location_level']) && $category['location_level']>0)
 					{
