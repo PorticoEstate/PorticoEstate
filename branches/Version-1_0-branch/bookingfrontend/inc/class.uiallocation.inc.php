@@ -46,8 +46,9 @@
 				$system_message['phone'] = ' ';
 				$system_message['email'] = ' ';
 				$system_message['title'] = lang('Cancelation of allocation from')." ".$allocation['organization_name'];
-                 
-                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel allocation use this link')." - <a href='".self::link(array('menuaction' => 'booking.uiallocation.delete','allocation_id' => $allocation['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval))."'>".lang('Delete')."</a>";
+                $link = self::link(array('menuaction' => 'booking.uiallocation.delete','allocation_id' => $allocation['id'], 'outseason' => $outseason, 'recurring' => $recurring, 'repeat_until' => $repeat_until, 'field_interval' => $field_interval));
+                $link = mb_strcut($link,16,strlen($link));
+                $system_message['message'] = $system_message['message']."\n\n".lang('To cancel allocation use this link')." - <a href='".$link."'>".lang('Delete')."</a>";
 
 				$receipt = $this->system_message_bo->add($system_message);
 				$this->redirect(array('menuaction' =>  'bookingfrontend.uibuilding.schedule', 'id' => $system_message['building_id']));
