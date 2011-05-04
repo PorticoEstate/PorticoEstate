@@ -1,11 +1,13 @@
 <?php
 	//include common logic for all templates
 	include("common.php");
+	$act_so = activitycalendar_soactivity::get_instance();
+	$contpers_so = activitycalendar_socontactperson::get_instance();
 ?>
 
 <div class="yui-content">
 	<div id="details">
-		<h1><img src="<?php echo ACTIVITYCALENDAR_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
+		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
@@ -54,7 +56,9 @@
 					}
 					else
 					{
-						echo $activity->get_organization_id();
+						if($activity->get_organization_id()){
+							echo activitycalendar_soorganization::get_instance()->get_organization_name($activity->get_organization_id());
+						}
 					}
 					?>
 				</dd>
@@ -84,7 +88,9 @@
 					}
 					else
 					{
-						echo $activity->get_group_id();
+						if($activity->get_group_id()){
+							echo activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
+						}
 					}
 					?>
 				</dd>
@@ -112,7 +118,38 @@
 					}
 					else
 					{
-						echo $activity->get_arena();
+						if($activity->get_arena()){
+							echo activitycalendar_soarena::get_instance()->get_arena_name($activity->get_arena());
+						}
+					}
+					?>
+				</dd>
+				<dt>
+					<?php if($activity->get_state() || $editable) { ?>
+					<label for="state"><?php echo lang('state') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					if ($editable)
+					{
+						$selected_state = $activity->get_state();
+					?>
+						<select name="state">
+							<option value="0" <?php echo ($selected_state == 0 ? 'selected="selected"' : "")?>>Ingen status valgt</option>
+							<option value="1" <?php echo ($selected_state == 1 ? 'selected="selected"' : "")?>><?php echo lang('new') ?></option>
+							<option value="2" <?php echo ($selected_state == 2 ? 'selected="selected"' : "")?>><?php echo lang('change') ?></option>
+							<option value="3" <?php echo ($selected_state == 3 ? 'selected="selected"' : "")?>><?php echo lang('accepted') ?></option>
+							<option value="4" <?php echo ($selected_state == 4 ? 'selected="selected"' : "")?>><?php echo lang('processed') ?></option>
+							<option value="5" <?php echo ($selected_state == 5 ? 'selected="selected"' : "")?>><?php echo lang('rejected') ?></option>
+						</select>
+					<?php
+					}
+					else
+					{
+						if($activity->get_state() && $activity->get_state() > 0){
+							echo lang('state_'.$activity->get_state());
+						}
 					}
 					?>
 				</dd>
@@ -140,7 +177,9 @@
 					}
 					else
 					{
-						echo $activity->get_category();
+						if($activity->get_category()){
+							echo $act_so->get_category_name($activity->get_category());
+						}
 					}
 					?>
 				</dd>
@@ -168,7 +207,9 @@
 					}
 					else
 					{
-						echo $activity->get_target();
+						if($activity->get_target()){
+							echo $act_so->get_target_name($activity->get_target());
+						}
 					}
 					?>
 				</dd>
@@ -196,7 +237,9 @@
 					}
 					else
 					{
-						echo $activity->get_district();
+						if($activity->get_district()){
+							echo $act_so->get_district_name($activity->get_district());
+						}
 					}
 					?>
 				</dd>
@@ -253,7 +296,15 @@
 					}
 					else
 					{
-						echo $activity->get_contact_person_1();
+						if($activity->get_group_id())
+						{
+							echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+						}
+						else if($activity->get_organization_id())
+						{
+							echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+						}
+						//echo $activity->get_contact_person_1();
 					}
 					?>
 				</dd>
@@ -272,7 +323,15 @@
 					}
 					else
 					{
-						echo $activity->get_contact_person_2();
+						if($activity->get_group_id())
+						{
+							echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+						}
+						else if($activity->get_organization_id())
+						{
+							echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
+						}
+						//echo $activity->get_contact_person_2();
 					}
 					?>
 				</dd>
