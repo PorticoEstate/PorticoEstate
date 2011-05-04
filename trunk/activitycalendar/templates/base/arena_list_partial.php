@@ -117,12 +117,13 @@
 			<option value="1"><?php echo lang('internal') ?></option>
 			<option value="2" ><?php echo lang('not_internal') ?></option>
 		</select>
-		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('marked_as') ?></label>
-		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
-			<option value="all"><?php echo lang('not_available_nor_hidden') ?></option>
-			<option value="active"><?php echo lang('available_for_pick') ?></option>
-			<option value="inactive"><?php echo lang('hidden_for_pick') ?></option>
+<!--		<label class="toolbar_element_label" for="<?php //echo $list_id ?>_ctrl_toggle_active"><?php //echo lang('marked_as') ?></label>
+ 		<select name="active" id="<?php //echo $list_id ?>_ctrl_toggle_active">
+			<option value="all"><?php //echo lang('not_available_nor_hidden') ?></option>
+			<option value="active"><?php //echo lang('available_for_pick') ?></option>
+			<option value="inactive"><?php //echo lang('hidden_for_pick') ?></option>
 		</select>
+ -->
 	</fieldset>
 	
 	
