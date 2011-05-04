@@ -15,7 +15,7 @@
    );
 </script>
 
-<h1><img src="<?php echo ACTIVITYCALENDAR_TEMPLATE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('arenas') ?></h1>
+<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/x-office-address-book.png" /> <?php echo lang('arenas') ?></h1>
 
 <fieldset>
 	<input type="submit" name="ctrl_add_activitycalendar_arena" id="ctrl_add_activitycalendar_arena" value="<?php echo lang('f_new_arena') ?>" />

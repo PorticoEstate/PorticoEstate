@@ -4,7 +4,7 @@
 ?>
 
 <div class="identifier-header">
-	<h1><img src="<?php echo ACTIVITYCALENDAR_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('arena') ?></h1>
+	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('arena') ?></h1>
 	<div>
 		<label><?php echo lang('name'); ?></label>
 		 <?php if($arena->get_arena_name()){ echo $arena->get_arena_name(); } else { echo lang('no_value'); }?>

@@ -330,7 +330,7 @@ Activitycalendar	common	no	Aktivitetsoversikt
 description	activitycalendar	no	Beskrivelse
 date_start	activitycalendar	no	Startdato
 date_end	activitycalendar	no	Sluttdato
-special_adaptation	activitycalendar	no	Tilpasset funksjonshemmede
+special_adaptation	activitycalendar	no	Spesialtilpasset for utviklingshemmede
 target	activitycalendar	no	Målgruppe
 contact_person_1	activitycalendar	no	Kontaktperson 1
 contact_person_2	activitycalendar	no	Kontaktperson 2
@@ -362,3 +362,10 @@ last_change_date	activitycalendar	no	Sist endret
 first	activitycalendar	no	Første
 last	activitycalendar	no	Siste
 previous	activitycalendar	no	Forrige
+state	activitycalendar	no	Status
+state_0	activitycalendar	no	Ingen
+state_1	activitycalendar	no	Ny
+state_2	activitycalendar	no	Endring
+state_3	activitycalendar	no	Akseptert
+state_4	activitycalendar	no	Behandlet
+state_5	activitycalendar	no	Avvist
