@@ -108,6 +108,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_group_id(phpgw::get_var('group_id'));
 				$activity->set_arena(phpgw::get_var('arena_id'));
 				$activity->set_district(phpgw::get_var('district'));
+				$activity->set_state(phpgw::get_var('state'));
 				$activity->set_category(phpgw::get_var('category'));
 				$activity->set_target(phpgw::get_var('target'));
 				$activity->set_description(phpgw::get_var('description'));
@@ -175,7 +176,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		switch($query_type)
 		{
 			case 'all_activities':
-				$filters = array();
+			default:
+				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_district' => phpgw::get_var('activity_district'));
 				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 				break;

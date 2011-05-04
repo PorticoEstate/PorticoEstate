@@ -50,6 +50,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = "ORDER BY id $dir";
 		}
+		//var_dump($search_type);
+		//var_dump($search_for);
 		if($search_for)
 		{
 			$query = $this->marshal($search_for,'string');
@@ -77,16 +79,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 					$like_clauses[] = "party.result_unit_number $this->like $like_pattern";
 					break;
 				case "all":
-					$like_clauses[] = "party.first_name $this->like $like_pattern";
-					$like_clauses[] = "party.last_name $this->like $like_pattern";
-					$like_clauses[] = "party.company_name $this->like $like_pattern";
-					$like_clauses[] = "party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "party.place $this->like $like_pattern";
-					$like_clauses[] = "party.identifier $this->like $like_pattern";
-					$like_clauses[] = "party.comment $this->like $like_pattern";
-					$like_clauses[] = "party.reskontro $this->like $like_pattern";
+				default:
+					$like_clauses[] = "activity.title $this->like $like_pattern";
 					break;
 			}
 
@@ -102,6 +96,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "activity.id = {$id}";
+		}
+		if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
+			$activity_state = $this->marshal($filters['activity_state'],'int');
+			$filter_clauses[] = "activity.state = {$activity_state}";
+		}
+		if(isset($filters['activity_district']) && $filters['activity_district'] != 'all'){
+			$activity_district = $this->marshal($filters['activity_district'],'int');
+			$filter_clauses[] = "activity.district = '{$activity_district}'";
 		}
 /*
 		// All parties with contracts of type X
@@ -133,6 +135,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.organization_id';
 			$columns[] = 'activity.group_id';
 			$columns[] = 'activity.district';
+			$columns[] = 'activity.state';
 			$columns[] = 'activity.category';
 			$columns[] = 'activity.description';
 			$columns[] = 'activity.arena';
@@ -199,6 +202,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'group_id = '     . $this->marshal($activity->get_group_id(), 'int'),
 			'district =  '     . $this->marshal($activity->get_district(), 'int'),
 			'category = '          . $this->marshal($activity->get_category(), 'int'),
+			'state = '          . $this->marshal($activity->get_state(), 'int'),
 			'target = '   . $this->marshal($activity->get_target(), 'string'),
 			'description = '     . $this->marshal($activity->get_description(), 'string'),
 			'arena = '      . $this->marshal($activity->get_arena(), 'int'),
@@ -243,6 +247,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
 			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
 			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
+			$activity->set_state($this->unmarshal($this->db->f('state'), 'int'));
 			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
 			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
