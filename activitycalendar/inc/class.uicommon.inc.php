@@ -2,6 +2,7 @@
 	phpgw::import_class('phpgwapi.yui');
 
 	define("ACTIVITYCALENDAR_TEMPLATE_PATH", "activitycalendar/templates/base/");
+	define("ACTIVITYCALENDAR_IMAGE_PATH", "rental/templates/base/");
 	
 	
 	/**

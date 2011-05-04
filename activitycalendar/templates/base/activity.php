@@ -1,11 +1,12 @@
 <?php
 	//include common logic for all templates
 	include("common.php");
+	$act_so = activitycalendar_soactivity::get_instance();
 ?>
 
 <div class="yui-content">
 	<div id="details">
-		<h1><img src="<?php echo ACTIVITYCALENDAR_TEMPLATE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
+		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
@@ -139,7 +140,7 @@
 					}
 					else
 					{
-						echo $activity->get_state();
+						echo lang('state_'.$activity->get_state());
 					}
 					?>
 				</dd>
@@ -167,7 +168,7 @@
 					}
 					else
 					{
-						echo $activity->get_category();
+						echo $act_so->get_category_name($activity->get_category());
 					}
 					?>
 				</dd>
@@ -195,7 +196,7 @@
 					}
 					else
 					{
-						echo $activity->get_target();
+						echo $act_so->get_target_name($activity->get_target());
 					}
 					?>
 				</dd>
@@ -223,7 +224,7 @@
 					}
 					else
 					{
-						echo $activity->get_district();
+						echo $act_so->get_district_name($activity->get_district());
 					}
 					?>
 				</dd>

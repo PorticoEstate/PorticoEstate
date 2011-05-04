@@ -137,6 +137,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.district';
 			$columns[] = 'activity.state';
 			$columns[] = 'activity.category';
+			$columns[] = 'activity.target';
 			$columns[] = 'activity.description';
 			$columns[] = 'activity.arena';
 			$columns[] = 'activity.time';
@@ -203,7 +204,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'district =  '     . $this->marshal($activity->get_district(), 'int'),
 			'category = '          . $this->marshal($activity->get_category(), 'int'),
 			'state = '          . $this->marshal($activity->get_state(), 'int'),
-			'target = '   . $this->marshal($activity->get_target(), 'string'),
+			'target = '   . $this->marshal($activity->get_target(), 'int'),
 			'description = '     . $this->marshal($activity->get_description(), 'string'),
 			'arena = '      . $this->marshal($activity->get_arena(), 'int'),
 			'time = '      . $this->marshal($activity->get_time(), 'string'),
@@ -248,6 +249,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
 			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
 			$activity->set_state($this->unmarshal($this->db->f('state'), 'int'));
+			$activity->set_target($this->unmarshal($this->db->f('target'), 'int'));
 			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
 			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
