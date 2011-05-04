@@ -2,6 +2,7 @@
 	//include common logic for all templates
 	include("common.php");
 	$act_so = activitycalendar_soactivity::get_instance();
+	$contpers_so = activitycalendar_socontactperson::get_instance();
 ?>
 
 <div class="yui-content">
@@ -55,7 +56,9 @@
 					}
 					else
 					{
-						echo $activity->get_organization_id();
+						if($activity->get_organization_id()){
+							echo activitycalendar_soorganization::get_instance()->get_organization_name($activity->get_organization_id());
+						}
 					}
 					?>
 				</dd>
@@ -85,7 +88,9 @@
 					}
 					else
 					{
-						echo $activity->get_group_id();
+						if($activity->get_group_id()){
+							echo activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
+						}
 					}
 					?>
 				</dd>
@@ -113,7 +118,9 @@
 					}
 					else
 					{
-						echo $activity->get_arena();
+						if($activity->get_arena()){
+							echo activitycalendar_soarena::get_instance()->get_arena_name($activity->get_arena());
+						}
 					}
 					?>
 				</dd>
@@ -140,7 +147,9 @@
 					}
 					else
 					{
-						echo lang('state_'.$activity->get_state());
+						if($activity->get_state() && $activity->get_state() > 0){
+							echo lang('state_'.$activity->get_state());
+						}
 					}
 					?>
 				</dd>
@@ -168,7 +177,9 @@
 					}
 					else
 					{
-						echo $act_so->get_category_name($activity->get_category());
+						if($activity->get_category()){
+							echo $act_so->get_category_name($activity->get_category());
+						}
 					}
 					?>
 				</dd>
@@ -196,7 +207,9 @@
 					}
 					else
 					{
-						echo $act_so->get_target_name($activity->get_target());
+						if($activity->get_target()){
+							echo $act_so->get_target_name($activity->get_target());
+						}
 					}
 					?>
 				</dd>
@@ -224,7 +237,9 @@
 					}
 					else
 					{
-						echo $act_so->get_district_name($activity->get_district());
+						if($activity->get_district()){
+							echo $act_so->get_district_name($activity->get_district());
+						}
 					}
 					?>
 				</dd>
@@ -281,7 +296,15 @@
 					}
 					else
 					{
-						echo $activity->get_contact_person_1();
+						if($activity->get_group_id())
+						{
+							echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+						}
+						else if($activity->get_organization_id())
+						{
+							echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+						}
+						//echo $activity->get_contact_person_1();
 					}
 					?>
 				</dd>
@@ -300,7 +323,15 @@
 					}
 					else
 					{
-						echo $activity->get_contact_person_2();
+						if($activity->get_group_id())
+						{
+							echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+						}
+						else if($activity->get_organization_id())
+						{
+							echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
+						}
+						//echo $activity->get_contact_person_2();
 					}
 					?>
 				</dd>
