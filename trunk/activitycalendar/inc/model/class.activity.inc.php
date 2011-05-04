@@ -15,6 +15,7 @@
 		protected $group_id;
 		protected $district;
 		protected $category;
+		protected $state;
 		protected $target;
 		protected $description;
 		protected $arena;
@@ -211,8 +212,8 @@
 				'group_id' => activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id()),
 				'district' => activitycalendar_soactivity::get_instance()->get_district_name($this->get_district()),
 				'category' => $this->get_so()->get_category_name($this->get_category()),
+				'state' => lang('state_'.$this->get_state()),
 				'description' => $this->get_description(),
-				'state' => $this->get_state(),
 				'arena' => activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena()),
 				'time' => $this->get_time(),
 				'contact_person_1' => $contact_1,

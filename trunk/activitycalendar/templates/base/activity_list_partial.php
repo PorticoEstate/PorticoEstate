@@ -17,20 +17,20 @@
 	    sortable: true
 	},
 	{
-		key: "organization_id",
-		label: "<?php echo lang('organization') ?>",
-	    sortable: true
-	},
-	{
 		key: "title",
 		label: "<?php echo lang('title') ?>",
 	    sortable: true
 	},
-//	{
-//		key: "status",
-//		label: "<?php echo lang('status') ?>",
-//	    sortable: true
-//	},
+	{
+		key: "state",
+		label: "<?php echo lang('status') ?>",
+	    sortable: true
+	},
+	{
+		key: "organization_id",
+		label: "<?php echo lang('organization') ?>",
+	    sortable: true
+	},
 	{
 		key: "group_id",
 		label: "<?php echo lang('group') ?>",
@@ -109,7 +109,7 @@
 		'index.php?menuaction=activitycalendar.uiactivities.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -156,12 +156,12 @@
 
 	<fieldset>
 		<!-- Filters -->
-		<label class="toolbar_element_label" for="ctrl_toggle_activity_type"><?php echo lang('activity_type') ?></label>
-		<select name="activity_type" id="<?php echo $list_id ?>_ctrl_toggle_activity_type">
-			<option value="all"><?php echo lang('all') ?></option>
-			<option value="1"><?php echo lang('internal') ?></option>
-			<option value="2" ><?php echo lang('not_internal') ?></option>
-		</select>
+<!--  	<label class="toolbar_element_label" for="ctrl_toggle_activity_type"><?php //echo lang('activity_type') ?></label>
+		<select name="activity_type" id="<?php //echo $list_id ?>_ctrl_toggle_activity_type">
+			<option value="all"><?php //echo lang('all') ?></option>
+			<option value="1"><?php //echo lang('internal') ?></option>
+			<option value="2" ><?php //echo lang('not_internal') ?></option>
+		</select> -->
 		<label class="toolbar_element_label" for="ctrl_toggle_activity_state"><?php echo lang('activity_state') ?></label>
 		<select name="activity_state" id="<?php echo $list_id ?>_ctrl_toggle_activity_state">
 			<option value="all"><?php echo lang('all') ?></option>
@@ -170,6 +170,19 @@
 			<option value="3" ><?php echo lang('accepted') ?></option>
 			<option value="4" ><?php echo lang('processed') ?></option>
 			<option value="5" ><?php echo lang('rejected') ?></option>
+		</select>
+		<label class="toolbar_element_label" for="ctrl_toggle_activity_district"><?php echo lang('district') ?></label>
+		<?php
+			$districts = activitycalendar_soactivity::get_instance()->select_district_list(); 
+		?>
+		<select name="activity_district" id="<?php echo $list_id ?>_ctrl_toggle_activity_district">
+			<option value="all"><?php echo lang('all') ?></option>
+			<?php
+			foreach($districts as $district)
+			{
+				echo "<option value=\"{$district['id']}\">".$district['name']."</option>";
+			}
+			?>
 		</select>
 	</fieldset>
 	

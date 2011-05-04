@@ -117,6 +117,33 @@
 					?>
 				</dd>
 				<dt>
+					<?php if($activity->get_state() || $editable) { ?>
+					<label for="state"><?php echo lang('state') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					if ($editable)
+					{
+						$selected_state = $activity->get_state();
+					?>
+						<select name="state">
+							<option value="0" <?php echo ($selected_state == 0 ? 'selected="selected"' : "")?>>Ingen status valgt</option>
+							<option value="1" <?php echo ($selected_state == 1 ? 'selected="selected"' : "")?>><?php echo lang('new') ?></option>
+							<option value="2" <?php echo ($selected_state == 2 ? 'selected="selected"' : "")?>><?php echo lang('change') ?></option>
+							<option value="3" <?php echo ($selected_state == 3 ? 'selected="selected"' : "")?>><?php echo lang('accepted') ?></option>
+							<option value="4" <?php echo ($selected_state == 4 ? 'selected="selected"' : "")?>><?php echo lang('processed') ?></option>
+							<option value="5" <?php echo ($selected_state == 5 ? 'selected="selected"' : "")?>><?php echo lang('rejected') ?></option>
+						</select>
+					<?php
+					}
+					else
+					{
+						echo $activity->get_state();
+					}
+					?>
+				</dd>
+				<dt>
 					<?php if($activity->get_category() || $editable) { ?>
 					<label for="category"><?php echo lang('category') ?></label>
 					<?php  } ?>

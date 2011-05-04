@@ -362,3 +362,9 @@ last_change_date	activitycalendar	no	Sist endret
 first	activitycalendar	no	Første
 last	activitycalendar	no	Siste
 previous	activitycalendar	no	Forrige
+state_0	activitycalendar	no	Ingen
+state_1	activitycalendar	no	Ny
+state_2	activitycalendar	no	Endring
+state_3	activitycalendar	no	Akseptert
+state_4	activitycalendar	no	Behandlet
+state_5	activitycalendar	no	Avvist
