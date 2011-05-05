@@ -200,8 +200,8 @@
 				// happy about empty values if a custom parser is set, so we use the YUI built
 				// in "date" parser which requires a format like: 2009/07/30 to work. 
 				// EHL: Removed 2009-10-27, due to change to int datatype. 
-				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):'',  
-				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):''
+				'date_start' => $this->get_date_start()!=NULL?date($date_format, $this->get_date_start()):null,  
+				'date_end' => $this->get_date_end()!=NULL?date($date_format, $this->get_date_end()):null
 			);
 		}
 		
