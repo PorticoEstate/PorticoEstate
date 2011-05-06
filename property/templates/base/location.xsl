@@ -557,38 +557,35 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-
-					<table cellpadding="2" cellspacing="2" width="80%" align="center">
-
-						<tr height="50">
-							<xsl:choose>
-								<xsl:when test="edit != ''">
-									<td>
-										<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-										<input type="submit" name="save" value="{$lang_save}">
-											<xsl:attribute name="title">
-												<xsl:value-of select="lang_save_statustext"/>
-											</xsl:attribute>
-										</input>
-									</td>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:choose>
-								<xsl:when test="check_history != ''">
-									<td>
-										<xsl:variable name="lang_history"><xsl:value-of select="lang_history"/></xsl:variable>
-										<input type="submit" name="get_history" value="{$lang_history}">
-											<xsl:attribute name="title">
-												<xsl:value-of select="lang_history_statustext"/>
-											</xsl:attribute>
-										</input>
-									</td>
-								</xsl:when>
-							</xsl:choose>
-						</tr>
-					</table>
 				</div>
-
+				<table cellpadding="2" cellspacing="2" width="80%" align="center">
+					<tr height="50">
+						<xsl:choose>
+							<xsl:when test="edit != ''">
+								<td>
+									<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+									<input type="submit" name="save" value="{$lang_save}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_save_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:choose>
+							<xsl:when test="check_history != ''">
+								<td>
+									<xsl:variable name="lang_history"><xsl:value-of select="lang_history"/></xsl:variable>
+									<input type="submit" name="get_history" value="{$lang_history}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_history_statustext"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</xsl:when>
+						</xsl:choose>
+					</tr>
+				</table>
 			</form>
 			<table>
 				<tr>
