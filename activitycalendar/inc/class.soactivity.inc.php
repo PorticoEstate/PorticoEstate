@@ -48,8 +48,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		if($sort_field != null) {
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = "ORDER BY id $dir";
+			//$order = "ORDER BY id $dir";
+			$order = "ORDER BY $sort_field $dir";
 		}
+		/*else
+		{
+			$dir = $ascending ? 'ASC' : 'DESC';
+			$order = "ORDER BY id $dir";
+		}*/
 		//var_dump($search_type);
 		//var_dump($search_for);
 		if($search_for)
