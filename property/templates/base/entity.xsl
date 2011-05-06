@@ -299,19 +299,18 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-
-					<xsl:choose>
-						<xsl:when test="mode = 'edit'">
-							<table cellpadding="2" cellspacing="2" width="80%" align="center">
-								<tr height="50">
-									<td colspan="2" align = "center">
-										<xsl:apply-templates select="table_apply"/>
-									</td>
-								</tr>
-							</table>
-						</xsl:when>
-					</xsl:choose>
 				</div>
+				<xsl:choose>
+					<xsl:when test="mode = 'edit'">
+						<table cellpadding="2" cellspacing="2" width="80%" align="center">
+							<tr height="50">
+								<td colspan="2" align = "center">
+									<xsl:apply-templates select="table_apply"/>
+								</td>
+							</tr>
+						</table>
+					</xsl:when>
+				</xsl:choose>
 			</form>
 			<xsl:choose>
 				<xsl:when test="value_id!=''">

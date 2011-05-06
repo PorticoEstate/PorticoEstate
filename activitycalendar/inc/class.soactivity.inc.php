@@ -48,8 +48,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		if($sort_field != null) {
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = "ORDER BY id $dir";
+			//$order = "ORDER BY id $dir";
+			$order = "ORDER BY $sort_field $dir";
 		}
+		/*else
+		{
+			$dir = $ascending ? 'ASC' : 'DESC';
+			$order = "ORDER BY id $dir";
+		}*/
 		//var_dump($search_type);
 		//var_dump($search_for);
 		if($search_for)
@@ -345,6 +351,45 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$targets[] = $target;
 		}
 		return $targets;
+	}
+	
+	function get_category_from_name($name)
+	{
+    	if($name != null)
+    	{
+			$sql = "select id from bb_activity where name like '%{$name}%'";
+    		$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('id');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_target_from_sort_id($id)
+	{
+    	if($id != null && is_numeric($id))
+    	{
+			$sql = "select id from bb_agegroup where sort={$id} and active=1";
+    		$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('id');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_orgid_from_orgno($orgno)
+	{
+    	if($orgno != null)
+    	{
+			$sql = "select id from bb_organization where organization_number='{$orgno}'";
+    		$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('id');
+			}
+    	}
+		return $result;
 	}
 	
 }
