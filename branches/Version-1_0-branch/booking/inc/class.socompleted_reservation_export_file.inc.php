@@ -9,7 +9,7 @@
 			$so_completed_reservation_export;
 		
 		protected static $export_type_to_file_type_map = array(
-			'internal' => 'csv',
+   			'internal' => 'csv',
 			'external' => 'txt',
 		);
 		
@@ -34,9 +34,26 @@
 		}
 		
 		protected function file_type_for_export_type($export_type) {
-			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
-				self::$export_type_to_file_type_map[$export_type] :
-				'txt';
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
+            if ($export_type === 'internal') {
+                if ($config->config_data['internal_format'] == 'CSV')
+                {
+                    return 'csv';
+                }
+                elseif ($config->config_data['internal_format'] == 'AGGRESSO')
+                {
+    			    return 'txt';
+                }
+            } elseif ($export_type === 'external'){
+                return 'txt';    
+            } else {
+                return 'txt';    
+            }
+#			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
+#				self::$export_type_to_file_type_map[$export_type] :
+#				'txt';
 		}
 		
 		protected function get_available_export_types() {

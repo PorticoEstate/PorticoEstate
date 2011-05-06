@@ -1360,32 +1360,22 @@
 	<div id="paging_1"></div>
 	<div id="datatable-container_1"></div>	
 </div>
-<table cellpadding="2" cellspacing="2" width="80%" align="center">
-	<tr height="50">
-		<td>
-			<input type="hidden" id="save" name="values[save]" value=""></input>
-			<input type="button" name="save" onClick="confirm_session('save');">
-				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'save')" />
-				</xsl:attribute>
-				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'save the ticket')" />
-				</xsl:attribute>
-			</input>
-		</td>
-<!--
-				<td>
-					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'save the ticket')" />
-						</xsl:attribute>
-					</input>
-				</td>
--->
-			</tr>
-		</table>
-	</div>
+</div>
+	<table cellpadding="2" cellspacing="2" width="80%" align="center">
+		<tr height="50">
+			<td>
+				<input type="hidden" id="save" name="values[save]" value=""></input>
+				<input type="button" name="save" onClick="confirm_session('save');">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'save')" />
+					</xsl:attribute>
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'save the ticket')" />
+					</xsl:attribute>
+				</input>
+			</td>
+		</tr>
+	</table>
 </div>
 			</form>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">

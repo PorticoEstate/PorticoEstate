@@ -25,7 +25,22 @@
 			if ($from_entity_customer_identifier = $this->get_current_identifier_type($from_entity))
 			{
 				$to_entity[$this->identifier_type_field] = $from_entity_customer_identifier;
-				$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $this->get_current_identifier_value($from_entity);
+                if(intval($from_entity['customer_internal']) == 1)
+                {
+                    if (strlen($from_entity['customer_number']) == 5)    			
+                    {
+                    	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $from_entity['customer_number'];
+                    }
+                    else
+                    {
+                       	$to_entity[$this->field_prefix.$from_entity_customer_identifier] = '';
+                    }
+                } 
+                else 
+                {
+    				$to_entity[$this->field_prefix.$from_entity_customer_identifier] = $this->get_current_identifier_value($from_entity);
+                }
+                
 			}
 		}
 		
@@ -95,7 +110,7 @@
 
 			$identifier_field = $this->field_prefix.$identifier_field;
 			$identifier_value = isset($data[$identifier_field]) ? trim($data[$identifier_field]) : null;
-			
+
 			return (empty($identifier_value) ? null : $identifier_value);
 		}
 		
