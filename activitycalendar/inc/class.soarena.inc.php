@@ -165,7 +165,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	function get_arena_name($arena_id)
 	{
 		$result = "Ingen";
-    	if(isset($arena_id)){
+    	if(isset($arena_id) && $arena_id != ''){
 	    	$q1="SELECT arena_name FROM activity_arena WHERE id={$arena_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
