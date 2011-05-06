@@ -186,8 +186,8 @@ phpgw::import_class('booking.uicommon');
 				)
             );
             }
-    			$data['filters'] = extract_values($_GET, array("filter_to"));
-			
+    		$data['filters'] = extract_values($_GET, array("filter_to"));
+
 			$this->render_template('datatable', $data);
 		}
 		
@@ -236,8 +236,9 @@ phpgw::import_class('booking.uicommon');
 			$this->db = $GLOBALS['phpgw']->db;
 			$exports = $this->bo->read();
 			array_walk($exports["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export.show");
+
 			foreach($exports["results"] as &$export) {
-				$export = $this->bo->initialize_entity($export);
+				$export = $this->bo->so->initialize_entity($export);
 				$this->add_default_display_data($export);
 
 				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export['created_by_name']."'";
@@ -246,7 +247,6 @@ phpgw::import_class('booking.uicommon');
 					$export['created_by_name'] = $record['account_firstname']." ".$record['account_lastname'];
 				}
 			}
-			
 			$results = $this->yui_results($exports);
 			return $results;
 		}
