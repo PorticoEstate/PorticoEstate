@@ -140,10 +140,10 @@
 			}
 			
 			$entity = array(
-				'reservation_type' 	=> $type, 
+				'reservation_type' 	    => $type, 
 				'reservation_id' 		=> $reservation['id'],
 				'cost' 					=> $reservation['cost'],
-				'from_' 					=> $reservation['from_'],
+				'from_' 				=> $reservation['from_'],
 				'to_' 					=> $reservation['to_'],
 				'customer_type' 		=> 'external',
 				'resources' 			=> $reservation['resources'],
@@ -262,7 +262,15 @@
 		
 		protected function set_organization(&$entity, &$organization) {
 			$entity['organization_id'] = $organization['id'];
-			$entity['customer_organization_number'] = $organization['organization_number'];
+            if (intval($organization['customer_internal']) == 1) {
+                if (strlen($organization['customer_number']) == 5) {
+                    $entity['customer_organization_number'] = $organization['customer_number'];
+                } else {
+                    $entity['customer_organization_number'] = '';
+                }
+            } else {
+                $entity['customer_organization_number'] = $organization['organization_number'];
+            }
 		}
 		
 		protected function initialize_completed_booking(&$booking, &$entity) {
@@ -279,10 +287,10 @@
 				$org = $soorg->read_single($group['organization_id']);
 				$cache[$booking['group_id']] = $org;
 			}
-
+        
 			$this->set_organization($entity, $org);
-			$this->set_customer_type($entity, $org);
-			$this->copy_customer_identifier($org, $entity);
+        	$this->set_customer_type($entity, $org);
+        	$this->copy_customer_identifier($org, $entity);
 		}
 		
 		protected function initialize_completed_allocation(&$allocation, &$entity) {

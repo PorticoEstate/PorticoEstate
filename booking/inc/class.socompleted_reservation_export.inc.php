@@ -98,7 +98,15 @@
 		 * Normalizes data on entity.
 		 */
 		public function initialize_entity(&$entity) {
-			if (isset($entity['__initialized__']) && $entity['__initialized__'] === true) { return $entity; }
+			ob_start();
+			$myFile = "/tmp/debug2.txt";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			echo '<pre>';print_r($entity);
+			$op = ob_get_contents();
+			fwrite($fh, $op);
+			fclose($fh);
+			ob_end_clean();
+        	if (isset($entity['__initialized__']) && $entity['__initialized__'] === true) { return $entity; }
 			
 			$entity['__initialized__'] = true;
 			//re-index export configurations on their types
@@ -278,7 +286,7 @@
 						$export_format,
 						count(array_filter($external_reservations, array($this, 'not_free'))),
 						$this->calculate_total_cost($external_reservations),
-						$this->format_agresso($external_reservations, $account_codes, $number_generator)
+						$this->format_agresso($external_reservations, $account_codes, $number_generator,'external')
 					);
 				}
 			}
@@ -289,7 +297,17 @@
 		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
 		 */
 		public function export_internal(array &$reservations, array $account_codes) {
-			$export_format = 'csv';
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
+            if ($config->config_data['internal_format'] == 'CSV')
+            {
+                $export_format = 'csv';
+            }
+            elseif ($config->config_data['internal_format'] == 'AGGRESSO')
+            {
+    			$export_format = 'agresso';
+            } 
 			
 			if (is_array($reservations)) {
 				if (count($internal_reservations = array_filter($reservations, array($this, 'select_internal'))) > 0) {
@@ -297,12 +315,24 @@
 					if (!($number_generator = $this->sequential_number_generator_so->get_generator_instance('internal'))) {
 						throw new UnexpectedValueException("Unable to find sequential number generator for internal export");
 					}
-					return $this->build_export_result(
-						$export_format,
-						count(array_filter($internal_reservations, array($this, 'not_free'))),
-						$this->calculate_total_cost($internal_reservations),
-						$this->format_csv($internal_reservations, $account_codes, $number_generator)
-					);
+                        if ($config->config_data['internal_format'] == 'CSV')
+                        {
+        					return $this->build_export_result(
+    						$export_format,
+    						count(array_filter($internal_reservations, array($this, 'not_free'))),
+    						$this->calculate_total_cost($internal_reservations),
+    						$this->format_csv($internal_reservations, $account_codes, $number_generator)
+        					);
+                        }
+                        elseif ($config->config_data['internal_format'] == 'AGGRESSO')
+                        {
+        					return $this->build_export_result(
+    						$export_format,
+    						count(array_filter($internal_reservations, array($this, 'not_free'))),
+    						$this->calculate_total_cost($internal_reservations),
+    						$this->format_agresso($internal_reservations, $account_codes, $number_generator,'internal')
+        					);
+                        }
 				}
 			}
 			return $this->build_export_result($export_format, 0, 0.0);
@@ -558,7 +588,7 @@
 			}
 		}
 		
-		public function format_agresso(array &$reservations, array $account_codes, $sequential_number_generator) {
+		public function format_agresso(array &$reservations, array $account_codes, $sequential_number_generator,$type) {
 			//$orders = array();
 			$export_info = array();
 			$output = array();
@@ -603,6 +633,8 @@
 			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
 			$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
 			
+//			echo "<pre>";print_r($reservations);exit;	
+			
 			foreach($reservations as &$reservation) {
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
@@ -642,7 +674,12 @@
 				}
 				
 				//Nøkkelfelt, kundens personnr/orgnr.
-				$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+                if ($type == 'internal') {
+    				$header['tekst2'] = str_pad(substr($config->config_data['organization_value'], 0, 12), 12, ' ');
+    				$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
+                } else {
+    				$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+                }
 				$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 				
 				//Topptekst til faktura, knyttet mot fagavdeling
