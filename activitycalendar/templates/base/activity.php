@@ -190,16 +190,19 @@
 				</dt>
 				<dd>
 					<?php
-					$current_target_id = $activity->get_target();
+					$current_target_ids = $activity->get_target();
+					$current_target_id_array=explode(",", $current_target_ids);
+					//echo $current_target_id_array[0]."*".$current_target_id_array[1];
 					if ($editable)
 					{
 						?>
-						<select name="target">
+						<select name="target[]" size="<?php echo count($targets)?>" multiple="multiple">
 							<option value="0">Ingen målgruppe valgt</option>
 							<?php
-							foreach($targets as $target)
+							foreach($targets as $t)
 							{
-								echo "<option ".($current_target_id == $target->get_id() ? 'selected="selected"' : "")." value=\"{$target->get_id()}\">".$target->get_name()."</option>";
+								//echo in_array($target->get_id(), $current_target_id_array);
+								echo "<option value=\"{$t->get_id()}\" ".(in_array($t->get_id(), $current_target_id_array) ? 'selected' : "").">".$t->get_name()."</option>";
 							}
 							?>
 						</select>
