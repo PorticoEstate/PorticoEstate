@@ -8,7 +8,7 @@
 				'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'district' => array('type' => 'varchar','precision' => '255'),
 				'category' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'target' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'target' => array('type' => 'varchar', 'precision' => '255'),
 				'office' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'state' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'description' => array('type' => 'varchar','precision' => '255'),
