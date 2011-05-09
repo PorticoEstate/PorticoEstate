@@ -5244,6 +5244,45 @@
 
 
 	/**
+	* Update property version from 0.9.17.616 to 0.9.17.617
+	* Sync fm_locations with fm_locationX
+	* 
+	*/
+
+	$test[] = '0.9.17.617';
+	function property_upgrade0_9_17_617()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT max(level) as level FROM fm_locations",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$level = $GLOBALS['phpgw_setup']->oProc->f('level');
+		$ids = array();
+		for($i=1;$i<($level+1);$i++)
+		{
+			$sql = "SELECT id FROM fm_locations LEFT JOIN fm_location{$i} ON fm_locations.location_code = fm_location{$i}.location_code"
+					. " WHERE fm_location{$i}.location_code IS NULL AND LEVEL = {$i}";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+			while($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$ids[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+			}
+		}
+
+		if($ids)
+		{
+			$sql = 'DELETE FROM fm_locations WHERE id IN(' . implode(',', $ids) . ')';
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.618';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 
