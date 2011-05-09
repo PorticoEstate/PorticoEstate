@@ -369,3 +369,4 @@ state_2	activitycalendar	no	Endring
 state_3	activitycalendar	no	Akseptert
 state_4	activitycalendar	no	Behandlet
 state_5	activitycalendar	no	Avvist
+activity_import	activitycalendar	no	Importer aktiviteter
