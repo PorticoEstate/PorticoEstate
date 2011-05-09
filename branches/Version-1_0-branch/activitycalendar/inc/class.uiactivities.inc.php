@@ -110,7 +110,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_district(phpgw::get_var('district'));
 				$activity->set_state(phpgw::get_var('state'));
 				$activity->set_category(phpgw::get_var('category'));
-				$activity->set_target(phpgw::get_var('target'));
+				$target_array = phpgw::get_var('target');
+				$activity->set_target(implode(",", $target_array));
 				$activity->set_description(phpgw::get_var('description'));
 				$activity->set_time(phpgw::get_var('time'));
 				$activity->set_contact_persons($persons);
