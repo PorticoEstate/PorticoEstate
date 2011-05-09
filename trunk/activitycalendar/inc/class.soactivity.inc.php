@@ -352,7 +352,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function get_targets()
 	{
 		$targets = array();
-		$sql = "SELECT * FROM bb_agegroup where active=1";
+		$sql = "SELECT * FROM bb_agegroup where active=1 ORDER BY sort";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
 			$target = new activitycalendar_target($this->db->f('id'));
