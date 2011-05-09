@@ -243,11 +243,17 @@
 					}
 				}
 				$activity_target = $this->decode($data[6]);
+				//var_dump($activity_target);
 				if($activity_target)
 				{
 					$act_target_array = explode(",", $activity_target);
-					$activity_target = $soactivity->get_target_from_sort_id($act_target_array[0]);
+					foreach($act_target_array as $at)
+					{
+						$act_targets[] = $soactivity->get_target_from_sort_id($at);
+					}
+					$activity_target = implode(",", $act_targets);
 				}
+				unset($act_targets);
 				$activity_day = $this->decode($data[9]);
 				$activity_time = $this->decode($data[10]);
 				$activity_update_date = $this->decode($data[20]);

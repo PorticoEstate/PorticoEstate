@@ -211,7 +211,12 @@
 					else
 					{
 						if($activity->get_target()){
-							echo $act_so->get_target_name($activity->get_target());
+							$current_target_ids = $activity->get_target();
+							$current_target_id_array=explode(",", $current_target_ids);
+							foreach($current_target_id_array as $curr_target)
+							{
+								echo $act_so->get_target_name($curr_target).'<br/>';
+							}
 						}
 					}
 					?>
