@@ -164,8 +164,8 @@
 			if (phpgw::get_var("importsubmit")) 
 			{
 				// Get the path for user input or use a default path
-				$this->path = phpgw::get_var("facilit_path") ? phpgw::get_var("facilit_path") : '/home/notroot/FacilitExport';
-				phpgwapi_cache::session_set('rental', 'import_path', $this->path);
+				$this->path = phpgw::get_var("import_path") ? phpgw::get_var("import_path") : '/home/notroot/FacilitExport';
+				phpgwapi_cache::session_set('activitycalendar', 'import_path', $this->path);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiimport.index', 'importstep' => 'true'));
 			} 
 			else if(phpgw::get_var("importstep"))
@@ -177,7 +177,7 @@
 				$this->path = '/home/notroot/FacilitExport/aktiviteter';
 				
 				$result = $this->import(); // Do import step, result determines if finished for this area
-				echo '<li class="info">Internleie: finished step ' .$result. '</li>';
+				echo '<li class="info">Aktiviteter: finished step ' .$result. '</li>';
 				while($result != '1')
 				{
 					$result = $this->import();
@@ -217,13 +217,12 @@
 			}
 			else
 			{
-				$this->render('facilit_import.php', array(
+				$this->render('activity_import.php', array(
 				'messages' => $this->messages,
 				'warnings' => $this->warnings,
 				'errors' => $this->errors, 
 				'button_label' => $this->import_button_label,
-				'facilit_path' => $path,
-				'location_id' => $this->location_id)
+				'import_path' => $path)
 			);
 			}
 		}
@@ -337,7 +336,7 @@
 			return '1';
 		}
 		
-		protected function import_arenas()
+		protected function import_arenas($office)
 		{
 			$start_time = time();
 			
@@ -405,13 +404,24 @@
 				$activity_target = $this->decode($data[6]);
 				if($activity_target)
 				{
-					$act_target = split(',',$activity_target);
-					//var_dump($activity_target);
-					//var_dump($act_target[0]);
-					$activity_target = $soactivity->get_target_from_sort_id($act_target[0]);
+					$act_target_array = explode(",", $activity_target);
+					$activity_target = $soactivity->get_target_from_sort_id($act_target_array[0]);
 				}
 				$activity_day = $this->decode($data[9]);
 				$activity_time = $this->decode($data[10]);
+				$activity_update_date = $this->decode($data[20]);
+				if($activity_update_date)
+				{
+					$act_update_array = explode(".", $activity_update_date);
+					if(count($act_update_array) == 3)
+					{
+						$y = $act_update_array[2];
+						$m = $act_update_array[1];
+						$d = $act_update_array[0];
+						$activity_updated_date = strtotime($y."-".$m."-".$d);
+					}
+				}
+				$activity_district = $this->decode($data[21]);
 				
 				if($activity_title){
 					$activity->set_title($activity_title);
@@ -425,6 +435,8 @@
 					{
 						$activity->set_special_adaptation(true);
 					}
+					$activity->set_district($activity_district);
+					$activity->set_last_change_date($activity_updated_date);
 					//var_dump($activity);
 					// All is good, store activity
 					if ($soactivity->store($activity)) {
