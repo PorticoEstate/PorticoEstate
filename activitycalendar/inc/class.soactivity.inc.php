@@ -12,6 +12,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 {
 	protected static $so;
 
+	public $xmlrpc_methods = array
+	(
+		array
+		(
+			'name'       => 'get_activities',
+			'decription' => 'Get list of activities'
+		)
+	);
+
+	
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 *
@@ -390,6 +400,32 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			}
     	}
 		return $result;
+	}
+	
+	function get_activities()
+	{
+		$sql = "SELECT * FROM activity_activity";
+		$this->db->query($sql, __LINE__, __FILE__);
+		while ($this->db->next_record())
+		{			
+			$activities[]= array
+			(
+					'id'				=> (int) $this->db->f('id'),
+					'title'				=> $this->db->f('title',true),
+					'organization_id'	=> $this->db->f('organization_id',true),
+					'group_id'			=> $this->db->f('group_id'),
+					'district'			=> $this->db->f('district',true),
+					'category'			=> $this->db->f('category'),
+					'state'				=> $this->db->f('state',true),
+					'target'			=> $this->db->f('target'),
+					'description'		=> $this->db->f('description'),
+					'time'				=> $this->db->f('time'),
+					'contact_person_1'	=> $this->db->f('contact_person_1'),
+					'contact_person_2'	=> $this->db->f('contact_person_2'),
+					'special_adaptation'=> $this->db->f('special_adaptation'),
+			);
+		}
+		return $activities;
 	}
 	
 }
