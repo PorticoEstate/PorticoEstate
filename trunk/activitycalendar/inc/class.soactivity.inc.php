@@ -325,8 +325,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_district_from_name($name)
 	{
-		$this->db->query("SELECT district_id FROM fm_part_of_town where name like UPPER('{$name}') ", __LINE__, __FILE__);
-		$this->db->query($sql, __LINE__, __FILE__);
+		$this->db->query("SELECT district_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
 		while($this->db->next_record()){
 			$result = $this->db->f('district_id');
 		}	
