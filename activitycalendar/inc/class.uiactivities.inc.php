@@ -73,6 +73,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		$categories = activitycalendar_soactivity::get_instance()->get_categories();
 		$targets = activitycalendar_soactivity::get_instance()->get_targets();
+		$offices = activitycalendar_soactivity::get_instance()->select_district_list();
 		$districts = activitycalendar_soactivity::get_instance()->select_district_list();
 				
 		// Retrieve the arena object or create a new one
@@ -108,6 +109,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_group_id(phpgw::get_var('group_id'));
 				$activity->set_arena(phpgw::get_var('arena_id'));
 				$activity->set_district(phpgw::get_var('district'));
+				$activity->set_office(phpgw::get_var('office'));
 				$activity->set_state(phpgw::get_var('state'));
 				$activity->set_category(phpgw::get_var('category'));
 				$target_array = phpgw::get_var('target');
@@ -137,6 +139,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'categories' => $categories,
 				'targets' => $targets,
 				'districts' => $districts,
+				'offices' => $offices,
 				'editable' => true,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')

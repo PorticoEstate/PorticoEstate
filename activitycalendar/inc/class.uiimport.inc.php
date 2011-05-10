@@ -65,9 +65,9 @@
 			{
 				// Get the path for user input or use a default path
 				$this->path = phpgw::get_var("import_path") ? phpgw::get_var("import_path") : '/home/notroot/FacilitExport';
-				$this->district = phpgw::get_var("district") ? phpgw::get_var("district") : '1';
+				$this->office = phpgw::get_var("district") ? phpgw::get_var("district") : '1';
 				phpgwapi_cache::session_set('activitycalendar', 'import_path', $this->path);
-				phpgwapi_cache::session_set('activitycalendar', 'import_district', $this->district);
+				phpgwapi_cache::session_set('activitycalendar', 'import_district', $this->office);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiimport.index', 'importstep' => 'true'));
 			} 
 			else if(phpgw::get_var("importstep"))
@@ -77,7 +77,7 @@
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 				$this->path = phpgwapi_cache::session_get('activitycalendar', 'import_path') . '/aktiviteter';
-				$this->district = phpgwapi_cache::session_get('activitycalendar', 'import_district');
+				$this->office = phpgwapi_cache::session_get('activitycalendar', 'import_district');
 				//$this->path = '/home/notroot/FacilitExport/aktiviteter';
 				
 				$result = $this->import(); // Do import step, result determines if finished for this area
@@ -175,7 +175,7 @@
 			return '1';
 		}
 		
-		protected function import_arenas($office)
+		protected function import_arenas()
 		{
 			$start_time = time();
 			
@@ -268,7 +268,11 @@
 						$activity_updated_date = strtotime($y."-".$m."-".$d);
 					}
 				}
-				//$activity_district = $this->decode($data[21]);
+				$activity_district = $this->decode($data[21]);
+				if($activity_district)
+				{
+					$activity_district = $soactivity->get_district_from_name($activity_district);
+				}
 				
 				if($activity_title){
 					$activity->set_title($activity_title);
@@ -282,7 +286,8 @@
 					{
 						$activity->set_special_adaptation(true);
 					}
-					$activity->set_district($this->district);
+					$activity->set_office($this->office);
+					$activity->set_district($activity_district);
 					$activity->set_last_change_date($activity_updated_date);
 					//var_dump($activity);
 					// All is good, store activity
