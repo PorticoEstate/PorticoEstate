@@ -265,6 +265,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
 			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
 			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
+			$activity->set_office($this->unmarshal($this->db->f('office'), 'int'));
 			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
 			$activity->set_state($this->unmarshal($this->db->f('state'), 'int'));
 			$activity->set_target($this->unmarshal($this->db->f('target'), 'string'));
