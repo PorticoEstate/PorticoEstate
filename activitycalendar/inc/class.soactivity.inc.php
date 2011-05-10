@@ -337,10 +337,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$result = "Ingen";
 		if($district_id != null)
 		{
-			$sql = "SELECT descr FROM fm_district where id=$district_id";
+			$sql = "SELECT name FROM fm_part_of_town where district_id=$district_id";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = $this->db->f('descr');
+				$result = $this->db->f('name');
 			}
     	}
 		return $result;
