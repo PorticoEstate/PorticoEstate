@@ -222,22 +222,22 @@
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_district() || $editable) { ?>
-					<label for="district"><?php echo lang('district') ?></label>
+					<?php if($activity->get_office() || $editable) { ?>
+					<label for="office"><?php echo lang('office') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
 					<?php
 					if ($editable)
 					{
-						$selected_district = $activity->get_district();
+						$selected_office = $activity->get_office();
 					?>
-						<select name="district">
-							<option value="0">Ingen bydel valgt</option>
+						<select name="office">
+							<option value="0">Ingen kontor valgt</option>
 							<?php
-							foreach($districts as $district)
+							foreach($offices as $office)
 							{
-								echo "<option ".($selected_district == $district['id'] ? 'selected="selected"' : "")." value=\"{$district['id']}\">".$district['name']."</option>";
+								echo "<option ".($selected_office == $office['id'] ? 'selected="selected"' : "")." value=\"{$office['id']}\">".$office['name']."</option>";
 							}
 							?>
 						</select>
