@@ -268,7 +268,11 @@
 						$activity_updated_date = strtotime($y."-".$m."-".$d);
 					}
 				}
-				//$activity_district = $this->decode($data[21]);
+				$activity_district = $this->decode($data[21]);
+				if($activity_district)
+				{
+					$activity_district = $soactivity->get_district_from_name($activity_district);
+				}
 				
 				if($activity_title){
 					$activity->set_title($activity_title);
@@ -283,6 +287,7 @@
 						$activity->set_special_adaptation(true);
 					}
 					$activity->set_office($this->office);
+					$activity->set_district($activity_district);
 					$activity->set_last_change_date($activity_updated_date);
 					//var_dump($activity);
 					// All is good, store activity
