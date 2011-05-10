@@ -151,6 +151,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.organization_id';
 			$columns[] = 'activity.group_id';
 			$columns[] = 'activity.district';
+			$columns[] = 'activity.office';
 			$columns[] = 'activity.state';
 			$columns[] = 'activity.category';
 			$columns[] = 'activity.target';
@@ -218,6 +219,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'organization_id = '. $this->marshal($activity->get_organization_id(), 'int'),
 			'group_id = '     . $this->marshal($activity->get_group_id(), 'int'),
 			'district =  '     . $this->marshal($activity->get_district(), 'int'),
+			'office =  '     . $this->marshal($activity->get_office(), 'int'),
 			'category = '          . $this->marshal($activity->get_category(), 'int'),
 			'state = '          . $this->marshal($activity->get_state(), 'int'),
 			'target = '   . $this->marshal($activity->get_target(), 'string'),
@@ -263,6 +265,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
 			$activity->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
 			$activity->set_district($this->unmarshal($this->db->f('district'), 'int'));
+			$activity->set_office($this->unmarshal($this->db->f('office'), 'int'));
 			$activity->set_category($this->unmarshal($this->db->f('category'), 'int'));
 			$activity->set_state($this->unmarshal($this->db->f('state'), 'int'));
 			$activity->set_target($this->unmarshal($this->db->f('target'), 'string'));
@@ -320,7 +323,30 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return $district;
 	}
 	
+	function get_district_from_name($name)
+	{
+		$this->db->query("SELECT district_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$result = $this->db->f('district_id');
+		}	
+		return $result;
+	}
+	
 	function get_district_name($district_id)
+	{
+		$result = "Ingen";
+		if($district_id != null)
+		{
+			$sql = "SELECT descr FROM fm_district where id=$district_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('descr');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_office_name($district_id)
 	{
 		$result = "Ingen";
 		if($district_id != null)

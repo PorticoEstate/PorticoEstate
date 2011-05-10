@@ -14,6 +14,7 @@
 		protected $organization_id;
 		protected $group_id;
 		protected $district;
+		protected $office;
 		protected $category;
 		protected $state;
 		protected $target;
@@ -71,6 +72,13 @@
 		}
 		
 		public function get_district() { return $this->district; }
+		
+		public function set_office($office)
+		{
+			$this->office = $office;
+		}
+		
+		public function get_office() { return $this->office; }
 		
 		public function set_target($target)
 		{
@@ -211,6 +219,7 @@
 				'organization_id' => activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id()),
 				'group_id' => activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id()),
 				'district' => activitycalendar_soactivity::get_instance()->get_district_name($this->get_district()),
+				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
 				'category' => $this->get_so()->get_category_name($this->get_category()),
 				'state' => lang('state_'.$this->get_state()),
 				'description' => $this->get_description(),
