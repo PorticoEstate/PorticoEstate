@@ -195,18 +195,12 @@
 					//echo $current_target_id_array[0]."*".$current_target_id_array[1];
 					if ($editable)
 					{
+						foreach($targets as $t)
+						{
 						?>
-						<select name="target[]" size="<?php echo count($targets)?>" multiple="multiple">
-							<option value="0">Ingen målgruppe valgt</option>
-							<?php
-							foreach($targets as $t)
-							{
-								//echo in_array($target->get_id(), $current_target_id_array);
-								echo "<option value=\"{$t->get_id()}\" ".(in_array($t->get_id(), $current_target_id_array) ? 'selected' : "").">".$t->get_name()."</option>";
-							}
-							?>
-						</select>
+							<input name="target[]" type="checkbox" value="<?php echo $t->get_id()?>" <?php echo (in_array($t->get_id(), $current_target_id_array) ? 'checked' : "")?>/><?php echo $t->get_name()?><br/>
 						<?php
+						}
 					}
 					else
 					{
@@ -221,6 +215,7 @@
 					}
 					?>
 				</dd>
+				
 				<dt>
 					<?php if($activity->get_office() || $editable) { ?>
 					<label for="office"><?php echo lang('office') ?></label>
