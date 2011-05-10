@@ -2130,7 +2130,7 @@
 
 			$fields = implode(',', $fields);
 
-			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}");
+			$this->_db->query("SELECT {$this->location_info['id']['name']} as id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}");
 
 			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
 			
