@@ -252,16 +252,18 @@
 #						$errors['booking'] = lang('Can not create a booking in the past');
 #					}
 #				} 
+		
 				if (!$booking['season_id'] &&  $_POST['outseason'] == 'on')
 				{
 					$errors['booking'] = lang('This booking is not connected to a season');
 				}	
-				if (!$errors['activity_id'] && !$errors['booking'] && !$errors['season_boundary'])
+				
+				if (!$errors)
 				{
 					$step++;
 				}
 
-				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
+				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
                     if( isset($noallocation)) {
                         $allocation['resources'] = $booking['resources'];
@@ -285,7 +287,7 @@
                     }
 					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
 				}
-				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors['booking'] && !$errors['season_boundary'] && $step > 1)
+				else if ( ($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')  && !$errors && $step > 1)
 				{
 					if ($_POST['recurring'] == 'on') {
 						$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 

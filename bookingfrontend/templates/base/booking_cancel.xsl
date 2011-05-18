@@ -2,7 +2,7 @@
     <div id="content">
 
 	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Cancel Booking')"/></dt>
+    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Cancel bookings')"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
@@ -34,7 +34,7 @@
                     <xsl:value-of select="booking/to_"/>
                 </div>
             </dd>
-			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label></dt>
+			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring allocation cancelation')" /></label></dt>
 			<dd>
 				<label>
 					<input type="checkbox" name="outseason" id="outseason">
@@ -52,7 +52,7 @@
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>
-					<xsl:value-of select="php:function('lang', 'Delete until')" />
+					<xsl:value-of select="php:function('lang', 'Cancel until')" />
 				</label>
 			</dd>
 			<dd class="date-picker">
@@ -100,7 +100,16 @@
             <dd>
                         <xsl:value-of select="booking/season_name"/>
             </dd>
-			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Delete allocation also')" /></label></dt>
+			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Cancel allocation also')" /></label></dt>
+			<dd>
+				<label>
+					<input type="checkbox" name="delete_booking" id="delete_booking">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+					</input>
+					<xsl:value-of select="php:function('lang', 'Cancel bookings')" />
+				</label>
+			</dd>
 			<dd>
 				<label>
 					<input type="checkbox" name="delete_allocation" id="delete_allocation">
@@ -108,7 +117,7 @@
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>
-					<xsl:value-of select="php:function('lang', 'Delete allocations')" />
+					<xsl:value-of select="php:function('lang', 'Cancel allocations')" />
 				</label>
 			</dd>
         </dl>
@@ -137,7 +146,7 @@
         YAHOO.booking.group_id = '<xsl:value-of select="booking/group_id"/>';
         <![CDATA[
         var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
-            height: '300px',
+            height: '150px',
             width: '522px',
             dompath: true,
             animate: true,

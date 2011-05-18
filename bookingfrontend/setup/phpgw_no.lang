@@ -324,8 +324,12 @@ Go back to calendar	bookingfrontend	no	Tilbake til kalender
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	no	Estimert antall deltakere kan ikke være større en 9999 personer
 Contact information name is to long. max 50 characters	bookingfrontend	no	Navn i kontakt informasjon er for langt. Maks 50 tegn
 Unable to fill report	bookingfrontend	no	Greide ikke å fylle ut rapport
-Cancel booking	bookingfrontend	no	Avbestill booking
-Cancel allocation	bookingfrontend	no	Avbestill tildeling
+Cancel until	bookingfrontend	no	Avbestill til
+Cancel booking	bookingfrontend	no	Avbestill
+Cancel bookings	bookingfrontend	no	Avbestill bookinger
+Cancel allocation also	bookingfrontend	no	Avbestill følgende 
+Recurring allocation cancelation	bookingfrontend	no	Avbestill i intervall
+Cancel allocations	bookingfrontend	no	Avbestill tildelinger
 Cancelation of allocation from	bookingfrontend	no	Avbestilling av tildeling fra
 Cancelation of booking from	bookingfrontend	no	Avbestilling av booking fra
 To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk lenken

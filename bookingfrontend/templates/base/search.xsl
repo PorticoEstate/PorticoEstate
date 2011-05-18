@@ -34,18 +34,12 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-			<div>Velkommen til Bergen kommune og <strong style="font-size: 120%">AktivBy</strong>.</div>
-			<div>Her finner du informasjon om bygg, anlegg</div>
-			<div>som leies ut av <strong>Idrett, Kultur</strong> og <strong>Grønn</strong> etat.</div>
-			<div>Bruk <strong>søkefeltet</strong> til å finne det du ønsker informasjon om.</div>
-			<div>Det enkelte bygg, anlegg har en <strong>kalender</strong> hvor du får</div>
-			<div>oversikt over aktiviteter og hvilke tider som er <strong>ledige</strong> for leie/bruk.</div>
-			<div>Ønsker du å søke om leie/bruk gjør du det fra kalenderen.</div>
+		<div>Velkommen til Bergen kommune og AktivBy.<br />
+			Her finner du informasjon om bygg, anlegg<br />
+			som leies ut av Idrett, Kultur og Grønn etat.</div>
 		
-			<div>Du kan også finne <strong>informasjon</strong> om aktiviteter,</div>
-			<div>åpen hall, <strong>publikumstid</strong> i svømmehaller og <strong>kulturarrangementer</strong>.</div>
-		
-		</div>
+		</div><div style="text-align:center;"><img alt="" src="/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg" /></div>	
+
 	</xsl:if>
 	
 	<xsl:if test="search">	
