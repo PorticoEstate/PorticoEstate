@@ -492,7 +492,7 @@ NB! No data will be saved, if you navigate away you will loose all.	booking	no	N
 Activity	booking	no	Aktiviteter
 Not selected	booking	no	Ikke valgt
 Delete until	booking	no	Slett til
-Recurring allocation deletion	booking	no	Slettings intervall
+Recurring allocation deletion	booking	no	Slett i intervall
 Delete allocation	booking	no	Slett tildeling
 Delete allocations	booking	no	Slett tildelinger
 Delete booking	booking	no	Slett booking
@@ -513,4 +513,5 @@ Show applications	booking	no	Vis søknader
 Show messages	booking	no	Vis beskjeder
 Internal account	booking	no	Intern kontering
 Internal customer output format	booking	no	Intern kunde eksport format
-Internal_account_helptext	booking	no	Data som brukes for faktura eksport av interne kunder 
+Internal_account_helptext	booking	no	Data som brukes for faktura eksport av interne kunder
+searchfield	booking	no	Fritekstsøk

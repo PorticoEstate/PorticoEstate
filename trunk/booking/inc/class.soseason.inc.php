@@ -145,6 +145,12 @@
 			
 			return false;
 		}
+    	public function update_id_string() 
+        {
+			$db = $this->db;
+			$sql = "UPDATE bb_allocation SET id_string = cast(id AS varchar)";
+			$db->query($sql, __LINE__, __FILE__);
+		}
 	}
 
 	class booking_soseason_boundary extends booking_socommon
@@ -268,6 +274,7 @@ EOT;
 				array_unshift($result_set, $record);
 			}
 		}
+
 	}
 
 	class booking_sowtemplate_alloc extends booking_socommon

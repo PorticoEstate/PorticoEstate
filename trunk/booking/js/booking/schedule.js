@@ -37,12 +37,12 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
 		if (booking.is_public == 0) {
-			elCell.innerHTML = YAHOO.booking.shorten('Privat arr.', 12);
+			elCell.innerHTML = YAHOO.booking.shorten('Privat arr.', 9);
 		} else {
 			if (booking.shortname)
-				elCell.innerHTML = YAHOO.booking.shorten(booking.shortname, 12);
+				elCell.innerHTML = YAHOO.booking.shorten(booking.shortname, 9);
 			else	
-				elCell.innerHTML = YAHOO.booking.shorten(booking.name, 12);
+				elCell.innerHTML = YAHOO.booking.shorten(booking.name, 9);
 		}
 		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
 	}
@@ -84,9 +84,9 @@ YAHOO.booking.bookingToHtml = function(booking) {
 		var link = null;
 	}
 	if (booking.shortname)
-		var html = YAHOO.booking.link(booking.shortname, link, 12);
+		var html = YAHOO.booking.link(booking.shortname, link, 9);
 	else 
-		var html = YAHOO.booking.link(booking.name, link, 12);
+		var html = YAHOO.booking.link(booking.name, link, 9);
 
 	if(booking.type == 'event' && booking.conflicts) {
 		for(var i=0; i<booking.conflicts.length;i++) {
@@ -119,9 +119,9 @@ YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, bookin
 		var color = colorMap[booking.name];
 		YAHOO.util.Dom.addClass(elCell, color);
 		if (booking.shortname)
-			elCell.innerHTML = YAHOO.booking.link(booking.shortname, null, 12);
+			elCell.innerHTML = YAHOO.booking.link(booking.shortname, null, 9);
 		else
-			elCell.innerHTML = YAHOO.booking.link(booking.name, null, 12);
+			elCell.innerHTML = YAHOO.booking.link(booking.name, null, 9);
 	}
 	else {
 		elCell.innerHTML = '...';

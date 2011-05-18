@@ -154,6 +154,10 @@
                                 'text' => lang('Status').':',
                                 'list' => array(
                                     array(
+                                        'id' => 'none',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
                                         'id' => 'NEW',
                                         'name' => lang('NEW')
                                     ), 
@@ -182,6 +186,7 @@
                                 'list' => $this->bo->so->get_activities_main_level(),
 							),
 							array('type' => 'text', 
+                                'text' => lang('searchfield'),
 								'name' => 'query'
 							),
 							array(
@@ -271,7 +276,14 @@
                 }
                 
 			} else {
+				if (phpgw::get_var('status') == 'none')
+				{
+					$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED');
+				} 
+				else
+				{
                 $filters['status'] = phpgw::get_var('status');
+				}
                 $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
                     $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
@@ -421,7 +433,10 @@
 				if ($_POST['contact_email'] != $_POST['contact_email2']) {
 					$errors['email'] = lang('The e-mail addresses you entered do not match');
 					$application['contact_email2'] = $_POST['contact_email2'];
+				} else {
+					$application['contact_email2'] = $_POST['contact_email2'];
 				}
+
 				foreach($application['agegroups'] as $ag)
 				{
 					if($ag['male'] > 9999 || $ag['female'] > 9999) {
@@ -491,7 +506,15 @@
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
+			foreach ($audience['results'] as &$type) {
+				if (in_array($type['id'],$_POST['audience'])) {
+				$type['checked'] = 'checked';
+				} else {
+				$type['checked'] = '';
+				}
+			}
 			$application['audience_json'] = json_encode($audience['results']);
+
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
 			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
