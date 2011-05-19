@@ -506,14 +506,7 @@
 			$agegroups = $this->agegroup_bo->fetch_age_groups();
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience();
-			foreach ($audience['results'] as &$type) {
-				if (in_array($type['id'],$_POST['audience'])) {
-				$type['checked'] = 'checked';
-				} else {
-				$type['checked'] = '';
-				}
-			}
-			$application['audience_json'] = json_encode($audience['results']);
+			$application['audience_json'] = json_encode(array_map('intval',$application['audience']));
 
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
