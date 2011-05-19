@@ -218,7 +218,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'title = '     . $this->marshal($activity->get_title(), 'string'),
 			'organization_id = '. $this->marshal($activity->get_organization_id(), 'int'),
 			'group_id = '     . $this->marshal($activity->get_group_id(), 'int'),
-			'district =  '     . $this->marshal($activity->get_district(), 'int'),
+			'district =  '     . $this->marshal($activity->get_district(), 'string'),
 			'office =  '     . $this->marshal($activity->get_office(), 'int'),
 			'category = '          . $this->marshal($activity->get_category(), 'int'),
 			'state = '          . $this->marshal($activity->get_state(), 'int'),
@@ -325,9 +325,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_district_from_name($name)
 	{
-		$this->db->query("SELECT district_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
+		$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
 		while($this->db->next_record()){
-			$result = $this->db->f('district_id');
+			$result = $this->db->f('part_of_town_id');
 		}	
 		return $result;
 	}
@@ -337,13 +337,28 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$result = "Ingen";
 		if($district_id != null)
 		{
-			$sql = "SELECT name FROM fm_part_of_town where district_id=$district_id";
+			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id=$district_id";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = $this->db->f('name');
 			}
     	}
 		return $result;
+	}
+	
+	function get_districts()
+	{
+		$this->db->query("SELECT part_of_town_id, name FROM fm_part_of_town district_id ", __LINE__, __FILE__);
+
+		$i = 0;
+		while ($this->db->next_record())
+		{
+			$district[$i]['part_of_town_id'] = $this->db->f('part_of_town_id');
+			$district[$i]['name'] = stripslashes($this->db->f('name'));
+			$i++;
+		}
+
+		return $district;
 	}
 	
 	function get_office_name($district_id)
@@ -439,9 +454,13 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 					'id'				=> (int) $this->db->f('id'),
 					'title'				=> $this->db->f('title',true),
 					'organization_id'	=> $this->db->f('organization_id',true),
+					'organization_name' => activitycalendar_soorganization::get_instance()->get_organization_name($this->db->f('organization_id',true)),
 					'group_id'			=> $this->db->f('group_id'),
+					'group_name'		=> activitycalendar_sogroup::get_instance()->get_group_name($this->db->f('group_id')),
 					'district'			=> $this->db->f('district',true),
+					'district_name'		=> activitycalendar_soactivity::get_instance()->get_district_name($this->db->f('district', true)),
 					'category'			=> $this->db->f('category'),
+					'category_name'		=> $this->get_category_name($this->db->f('category')),
 					'state'				=> $this->db->f('state',true),
 					'target'			=> $this->db->f('target'),
 					'description'		=> $this->db->f('description'),
