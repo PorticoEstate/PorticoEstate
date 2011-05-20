@@ -490,12 +490,12 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_statuscodes()
 	{
-		$statuscodes[] = array(0,'Ingen');
-		$statuscodes[] = array(1,'Ny');
-		$statuscodes[] = array(2,'Endring');
-		$statuscodes[] = array(3,'Akseptert');
-		$statuscodes[] = array(4,'Behandlet');
-		$statuscodes[] = array(5,'Avvist');
+		$statuscodes[] = array('0' => 'Ingen');
+		$statuscodes[] = array('1' => 'Ny');
+		$statuscodes[] = array('2' => 'Endring');
+		$statuscodes[] = array('3' => 'Akseptert');
+		$statuscodes[] = array('4' => 'Behandlet');
+		$statuscodes[] = array('5' => 'Avvist');
 
 		return $statuscodes;
 	}
