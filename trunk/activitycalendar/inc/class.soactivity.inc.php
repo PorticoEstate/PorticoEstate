@@ -18,6 +18,21 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		(
 			'name'       => 'get_activities',
 			'decription' => 'Get list of activities'
+		),
+		array
+		(
+			'name'       => 'get_targetgroups',
+			'decription' => 'Get list of targetgroups'
+		),
+		array
+		(
+			'name'       => 'get_statuscodes',
+			'decription' => 'Get list of statuscodes'
+		),
+		array
+		(
+			'name'       => 'get_category_list',
+			'decription' => 'Get list of categories'
 		)
 	);
 
@@ -471,6 +486,44 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			);
 		}
 		return $activities;
+	}
+	
+	function get_statuscodes()
+	{
+		$statuscodes[] = array(0,'Ingen');
+		$statuscodes[] = array(1,'Ny');
+		$statuscodes[] = array(2,'Endring');
+		$statuscodes[] = array(3,'Akseptert');
+		$statuscodes[] = array(4,'Behandlet');
+		$statuscodes[] = array(5,'Avvist');
+
+		return $statuscodes;
+	}
+	
+	function get_targetgroups()
+	{
+		$sql = "SELECT * FROM bb_agegroup where active=1 ORDER BY sort";
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$targets[] = array(
+					'id'				=> (int) $this->db->f('id'),
+					'name'				=> $this->db->f('name',true),
+			);
+		}
+		return $targets;
+	}
+	
+	function get_category_list()
+	{
+		$sql = "SELECT * FROM bb_activity where active=1 and parent_id=1";
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$categories[] = array(
+					'id'				=> (int) $this->db->f('id'),
+					'name'				=> $this->db->f('name',true),
+			);
+		}
+		return $categories;
 	}
 	
 }
