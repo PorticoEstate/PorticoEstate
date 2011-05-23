@@ -47,11 +47,13 @@ class rental_uibilling extends rental_uicommon
 				$existing_billing = 0;
 			}
 			$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
+			
 			$contract_ids_override = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
 			$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
 			if(($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 			{
 				$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $contract_ids_override, phpgw::get_var('export_format'));
+				
 				if($missing_billing_info == null || count($missing_billing_info) == 0)
 				{
 					$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), phpgw::get_var('title'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $contract_ids_override, phpgw::get_var('export_format'), $existing_billing, $contract_bill_only_one_time);
@@ -176,16 +178,17 @@ class rental_uibilling extends rental_uicommon
 				$title = $billing_tmp->get_title();
 			}
 			
+					
 			//Check to see if the period har been billed before
 			if(rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
-			{
+			{	
 				// We only give a warning and let the user go to step 2
 				$warningMsgs[] = lang('the period has been billed before.');
 			}
 			else
 			{
 				//... and if not start retrieving contracts for billing
-				
+			
 				$socontract_price_item = rental_socontract_price_item::get_instance();
 				
 				//... 1. Contracts following regular billing cycle
@@ -213,7 +216,7 @@ class rental_uibilling extends rental_uicommon
 					}
 				}
 		
-				
+			
 				// Get the number of months in selected term for contract
 				$months = rental_socontract::get_instance()->get_months_in_term($billing_term);
 				
@@ -225,13 +228,24 @@ class rental_uibilling extends rental_uicommon
 				{	
 					if(isset($contract))
 					{
-						
 						$total_price = $socontract_price_item->get_total_price_invoice($contract->get_id(), $billing_term, $month, $year);
 						$type_id = $contract->get_contract_type_id();
+						$responsible_type_id = $contract->get_location_id();
+						
+						// Gets location title from table rental_contract_responsibility
+						$location_title = rental_socontract::get_instance()->get_responsibility_title($responsible_type_id);
 						
 						if($type_id == 4) // Remove contract of a specific type (KF)
 						{
 							$warningMsgs[] = lang('billing_removed_KF_contract') . " " . $contract->get_old_contract_id();
+							unset($contracts[$id]);
+							$removed_contracts[$contract->get_id()] = $contract;
+						}
+						// A contract with responibility type contract_type_eksternleie must have a rental_contract_type 
+						else if( ($type_id == 0 && strcmp($location_title, "contract_type_eksternleie") == 0) || (empty($type_id) && strcmp($location_title, "contract_type_eksternleie") == 0 )) 
+						{
+							$contract->set_total_price($total_price);
+							$warningMsgs[] = lang('billing_removed_contract_part_1') . " " . $contract->get_old_contract_id() . " " . lang('billing_removed_external_contract');
 							unset($contracts[$id]);
 							$removed_contracts[$contract->get_id()] = $contract;
 						} 
