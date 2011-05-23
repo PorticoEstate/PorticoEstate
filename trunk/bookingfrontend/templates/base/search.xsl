@@ -38,7 +38,14 @@
 			Her finner du informasjon om bygg, anlegg<br />
 			som leies ut av Idrett, Kultur og Grønn etat.</div>
 		
-		</div><div style="text-align:center;"><img alt="" src="/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg" /></div>	
+		</div>
+		<div style="text-align:center;">
+			<img alt="" >
+				<xsl:attribute name="src">
+					<xsl:value-of select="frontimage"/> 
+				</xsl:attribute>
+			</img>
+		</div>	
 
 	</xsl:if>
 	
