@@ -12,6 +12,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	public $public_functions = array
 	(
 		'index'     		=> true,
+		'index_json'   		=> true,
 		'query'			    => true,
 		'view'			    => true,
 		'add'				=> true,
@@ -23,6 +24,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	public function __construct()
 	{
 		parent::__construct();
+		$this->bo_org = CreateObject('booking.boorganization');
+		$this->bo_group = CreateObject('booking.bogroup');
 		self::set_active_menu('activitycalendar::activities');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
@@ -39,7 +42,28 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	public function index()
 	{
 		$this->render('activity_list.php');
+		
 	}
+	
+/*	public function index_json()
+	{
+		$organizations = $this->bo_org->read();
+		//array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+
+		foreach($organizations["results"] as &$organization) {
+			$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
+
+			if ($contact) {
+				$organization += array(
+							"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
+							"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
+							"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+				);
+			}
+		}
+
+		return $this->yui_results($organizations);
+	}*/
 	
 	/**
 	 * Displays info about one single billing job.
@@ -74,9 +98,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$categories = activitycalendar_soactivity::get_instance()->get_categories();
 		$targets = activitycalendar_soactivity::get_instance()->get_targets();
 		$offices = activitycalendar_soactivity::get_instance()->select_district_list();
-		$districts = activitycalendar_soactivity::get_instance()->select_district_list();
+		$districts = activitycalendar_soactivity::get_instance()->get_districts();
 				
-		// Retrieve the arena object or create a new one
+		// Retrieve the activity object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
 		{	
 			$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id); 
@@ -101,14 +125,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 
 		if(isset($_POST['save_activity'])) // The user has pressed the save button
 		{
-			if(isset($activity)) // If a activity object is created
+			if(isset($activity)) // If an activity object is created
 			{
 				// ... set all parameters
 				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id(phpgw::get_var('organization_id'));
 				$activity->set_group_id(phpgw::get_var('group_id'));
 				$activity->set_arena(phpgw::get_var('arena_id'));
-				$activity->set_district(phpgw::get_var('district'));
+				$district_array = phpgw::get_var('district');
+				$activity->set_district(implode(",", $district_array));
 				$activity->set_office(phpgw::get_var('office'));
 				$activity->set_state(phpgw::get_var('state'));
 				$activity->set_category(phpgw::get_var('category'));
