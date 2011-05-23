@@ -64,7 +64,7 @@
 		'index.php?menuaction=activitycalendar.uiarena.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_search_query','<?php echo $list_id ?>_ctrl_toggle_arena_type','<?php echo $list_id ?>_ctrl_toggle_active'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -114,16 +114,15 @@
 		<label class="toolbar_element_label" for="ctrl_toggle_arena_type"><?php echo lang('arena_type') ?></label>
 		<select name="arena_type" id="<?php echo $list_id ?>_ctrl_toggle_arena_type">
 			<option value="all"><?php echo lang('all') ?></option>
-			<option value="1"><?php echo lang('internal') ?></option>
-			<option value="2" ><?php echo lang('not_internal') ?></option>
+			<option value="internal"><?php echo lang('internal') ?></option>
+			<option value="not_internal" ><?php echo lang('not_internal') ?></option>
 		</select>
-<!--		<label class="toolbar_element_label" for="<?php //echo $list_id ?>_ctrl_toggle_active"><?php //echo lang('marked_as') ?></label>
- 		<select name="active" id="<?php //echo $list_id ?>_ctrl_toggle_active">
-			<option value="all"><?php //echo lang('not_available_nor_hidden') ?></option>
-			<option value="active"><?php //echo lang('available_for_pick') ?></option>
-			<option value="inactive"><?php //echo lang('hidden_for_pick') ?></option>
+		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('marked_as') ?></label>
+		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
+			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
+			<option value="active" <?php echo ($status == 'active') ? 'selected' : ''?>><?php echo lang('active') ?></option>
+			<option value="inactive" <?php echo ($status == 'inactive') ? 'selected' : ''?>><?php echo lang('inactive') ?></option>
 		</select>
- -->
 	</fieldset>
 	
 	

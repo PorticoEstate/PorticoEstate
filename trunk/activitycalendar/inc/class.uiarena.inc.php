@@ -157,7 +157,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		switch($query_type)
 		{
 			case 'all_arenas':
-				$filters = array();
+				$filters = array('arena_type' => phpgw::get_var('arena_type'), 'active' => phpgw::get_var('active'));
 				$result_objects = activitycalendar_soarena::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = activitycalendar_soarena::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
