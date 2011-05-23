@@ -12,6 +12,7 @@ import no.bimconverter.ifc.v2x3.object.Project;
 import no.bimconverter.ifc.v2x3.object.Site;
 import no.bimconverter.ifc.v2x3.object.Space;
 import no.bimconverter.ifc.v2x3.object.Zone;
+import no.bimconverter.ifc.v2x3.object.element.BuildingServiceElement;
 import no.bimconverter.ifc.v2x3.object.element.Covering;
 import no.bimconverter.ifc.v2x3.object.element.Door;
 import no.bimconverter.ifc.v2x3.object.element.Furnishing;
@@ -32,6 +33,7 @@ public class WholeModelOutput {
 	private List<Door> doors = null;
 	private List<Furnishing> furnishingElements = null;
 	private List<Zone> zones = null;
+	private List<BuildingServiceElement> buildingServiceElements = null;
 	
 	public WholeModelOutput() {
 	}
@@ -47,6 +49,7 @@ public class WholeModelOutput {
 		this.doors = model.getDoors();
 		this.furnishingElements = model.getFurnishing();
 		this.zones = model.getZones();
+		this.buildingServiceElements = model.getBuildingServiceElement();
 		
 	}
 	public ModelInformation getModelInformation() {
@@ -131,6 +134,15 @@ public class WholeModelOutput {
 	}
 	public void setZones(List<Zone> zones) {
 		this.zones = zones;
+	}
+	@XmlElementWrapper(name="buildingServiceElements")
+	@XmlElement(name="buildingServiceElement") 
+	public List<BuildingServiceElement> getBuildingServiceElements() {
+		return buildingServiceElements;
+	}
+	public void setBuildingServiceElements(
+			List<BuildingServiceElement> buildingServiceElements) {
+		this.buildingServiceElements = buildingServiceElements;
 	}
 
 }

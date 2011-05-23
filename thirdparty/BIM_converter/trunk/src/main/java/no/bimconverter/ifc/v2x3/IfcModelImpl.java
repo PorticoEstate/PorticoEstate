@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jsdai.SIfc2x3.EIfcdistributionelement;
 import jsdai.SIfc2x3.EIfcdoor;
 import jsdai.SIfc2x3.EIfcfurnishingelement;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
@@ -42,6 +43,7 @@ import no.bimconverter.ifc.v2x3.object.Project;
 import no.bimconverter.ifc.v2x3.object.Site;
 import no.bimconverter.ifc.v2x3.object.Space;
 import no.bimconverter.ifc.v2x3.object.Zone;
+import no.bimconverter.ifc.v2x3.object.element.BuildingServiceElement;
 import no.bimconverter.ifc.v2x3.object.element.Covering;
 import no.bimconverter.ifc.v2x3.object.element.Door;
 import no.bimconverter.ifc.v2x3.object.element.Furnishing;
@@ -67,6 +69,8 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 	private List<Door> doors = null;
 	private List<Furnishing> furnishingElements = null;
 	private List<Zone> zones = null;
+	private List<BuildingServiceElement> buildingServiceElements = null;
+	
 	public IfcModelImpl() {
 		super();
 	}
@@ -403,6 +407,27 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 				return this.zones;
 			} catch (IfcSdaiException e) {
 				logger.info("No zones found");
+				return null;
+			}
+		} catch (SdaiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			super.closeSdaiSession();
+		}
+		
+		return null;
+	}
+	public List<BuildingServiceElement> getBuildingServiceElement() {
+		super.openSdaiSession();
+		try {
+			makeModelAvailable();
+			
+			try {
+				this.buildingServiceElements = (List<BuildingServiceElement>) (new CommonLoader()).load(model, EIfcdistributionelement.class, BuildingServiceElement.class);
+				return this.buildingServiceElements;
+			} catch (IfcSdaiException e) {
+				logger.info("No buildingServiceElements found");
 				return null;
 			}
 		} catch (SdaiException e) {
