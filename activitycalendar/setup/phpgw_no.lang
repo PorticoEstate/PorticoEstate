@@ -330,7 +330,7 @@ Activitycalendar	common	no	Aktivitetsoversikt
 description	activitycalendar	no	Beskrivelse
 date_start	activitycalendar	no	Startdato
 date_end	activitycalendar	no	Sluttdato
-special_adaptation	activitycalendar	no	Spesialtilpasset for utviklingshemmede
+special_adaptation	activitycalendar	no	Spesielt tilpasset for utviklingshemmede
 target	activitycalendar	no	Målgruppe
 contact_person_1	activitycalendar	no	Kontaktperson 1
 contact_person_2	activitycalendar	no	Kontaktperson 2
@@ -371,3 +371,4 @@ state_4	activitycalendar	no	Behandlet
 state_5	activitycalendar	no	Avvist
 activity_import	activitycalendar	no	Importer aktiviteter
 office	activitycalendar	no	Kontor
+activity_helptext	activitycalendar	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.

@@ -30,7 +30,8 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'internal_arena_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'arena_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'address' => array('type' => 'varchar','precision' => '255','nullable' => True)
+				'address' => array('type' => 'varchar','precision' => '255','nullable' => True),
+				'active' => array('type' => 'bool','nullable' => true,'default' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

@@ -15,4 +15,16 @@
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.1';
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
+	
+	$test[] = '0.1.1';
+	function activitycalendar_upgrade0_1_1()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_arena','active',array(
+			'type' => 'bool',
+			'default' => 'true'
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.2';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
 ?>

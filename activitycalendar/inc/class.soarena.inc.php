@@ -51,43 +51,16 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			}
 			$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
 		}
-/*		if($search_for)
+		if($search_for)
 		{
 			$query = $this->marshal($search_for,'string');
 			$like_pattern = "'%".$search_for."%'";
 			$like_clauses = array();
 			switch($search_type){
-				case "name":
-					$like_clauses[] = "party.first_name $this->like $like_pattern";
-					$like_clauses[] = "party.last_name $this->like $like_pattern";
-					$like_clauses[] = "party.company_name $this->like $like_pattern";
-					break;
-				case "address":
-					$like_clauses[] = "party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "party.place $this->like $like_pattern";
-					break;
-				case "identifier":
-					$like_clauses[] = "party.identifier $this->like $like_pattern";
-					break;
-				case "reskontro":
-					$like_clauses[] = "party.reskontro $this->like $like_pattern";
-					break;
-				case "result_unit_number":
-					$like_clauses[] = "party.result_unit_number $this->like $like_pattern";
-					break;
 				case "all":
-					$like_clauses[] = "party.first_name $this->like $like_pattern";
-					$like_clauses[] = "party.last_name $this->like $like_pattern";
-					$like_clauses[] = "party.company_name $this->like $like_pattern";
-					$like_clauses[] = "party.address_1 $this->like $like_pattern";
-					$like_clauses[] = "party.address_2 $this->like $like_pattern";
-					$like_clauses[] = "party.postal_code $this->like $like_pattern";
-					$like_clauses[] = "party.place $this->like $like_pattern";
-					$like_clauses[] = "party.identifier $this->like $like_pattern";
-					$like_clauses[] = "party.comment $this->like $like_pattern";
-					$like_clauses[] = "party.reskontro $this->like $like_pattern";
+				default:
+					$like_clauses[] = "arena.arena_name $this->like $like_pattern";
+					$like_clauses[] = "arena.address $this->like $like_pattern";
 					break;
 			}
 
@@ -96,7 +69,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			{
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
-		}*/
+		}
 
 		$filter_clauses = array();
 		
@@ -105,18 +78,29 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$filter_clauses[] = "arena.id = {$id}";
 		}
 		
-		//$filter_clauses[] = "show_in_portal";
-/*
-		// All parties with contracts of type X
-		if(isset($filters['party_type']))
+		if(isset($filters['active']))
 		{
-			$party_type = $this->marshal($filters['party_type'],'int');
-			if(isset($party_type) && $party_type > 0)
+			if($filters['active'] == 'active')
 			{
-				$filter_clauses[] = "contract.location_id = {$party_type}";
+				$filter_clauses[] = "arena.active = TRUE";
+			} 
+			else if($filters['active'] == 'inactive')
+			{
+				$filter_clauses[] = "NOT arena.active";
+			} 
+		}
+		
+		if(isset($filters['arena_type']))
+		{
+			if($filters['arena_type'] == 'internal')
+			{
+				$filter_clauses[] = "NOT arena.internal_arena_id IS NULL";
+			}
+			else if($filters['arena_type'] == 'not_internal')
+			{
+				$filter_clauses[] = "arena.internal_arena_id IS NULL";
 			}
 		}
-*/		
 		
 		if(count($filter_clauses))
 		{
@@ -124,6 +108,9 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		}
 
 		$condition =  join(' AND ', $clauses);
+		//var_dump($filters);
+		//var_dump($filter_clauses);
+		//var_dump($condition);
 
 		if($return_count) // We should only return a count
 		{
@@ -135,6 +122,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$columns[] = 'arena.arena_name';
 			$columns[] = 'arena.address';
 			$columns[] = 'arena.internal_arena_id';
+			$columns[] = 'arena.active';
 			
 			$cols = implode(',',$columns);
 		}
@@ -158,6 +146,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$arena->set_arena_name($this->unmarshal($this->db->f('arena_name'), 'string'));
 			$arena->set_address($this->unmarshal($this->db->f('address'), 'string'));
 			$arena->set_internal_arena_id($this->unmarshal($this->db->f('internal_arena_id'), 'int'));
+			$arena->set_active($this->unmarshal($this->db->f('active'), 'bool'));
 		}
 		return $arena;
 	}
