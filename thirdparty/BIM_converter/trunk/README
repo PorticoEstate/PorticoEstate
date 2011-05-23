@@ -5,3 +5,20 @@ make "war" by issuing the command:
 mvn package -Djava.awt.headless=true
 
 The 'bimconverter.war' will be fount at target/
+
+
+Change owner of basedir (to enable creation of repoDir):
+sudo chown tomcat6.tomcat6 /var/lib/tomcat6
+
+
+Eclipse: Plugins:
+1) subclipse
+2) m2eclipse (maven integration)
+
+JDK: Java 6
+
+update 'jsdai_runtime.jar' from upstream (http://...jsdai...)
+generate and compile IFC_2x3.jar from either:
+
+1) express compiler + IFC schema from Building Smart
+2) jsdai-express eclipse plugin (project , import/copy schema, kompile/generate -> javaclass)

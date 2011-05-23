@@ -3,37 +3,17 @@ package no.bimconverter.ifc.v2x3.object;
 
 import static junit.framework.Assert.assertNotNull;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
-import jsdai.lang.EEntity;
 import jsdai.lang.SdaiException;
-import jsdai.lang.SdaiModel;
-import jsdai.lang.SdaiRepository;
-import jsdai.lang.SdaiSession;
-import jsdai.lang.SdaiTransaction;
-
-
-
 import no.bimconverter.ifc.IfcTestMethods;
-import no.bimconverter.ifc.Repositories;
-import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.jaxb.Attributes;
 import no.bimconverter.ifc.jaxb.Decomposition;
 import no.bimconverter.ifc.jaxb.PropertyList;
 import no.bimconverter.ifc.jaxb.owner.Address;
-import no.bimconverter.ifc.v2x3.IfcModelImpl;
-
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SiteTest extends IfcTestMethods{
