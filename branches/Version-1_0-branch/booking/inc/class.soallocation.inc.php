@@ -265,8 +265,8 @@
 
 		public function update_id_string() 
         {
-			$table_name = $this->table_name;
 			$db = $this->db;
+			$table_name = $this->table_name;
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
 			$db->query($sql, __LINE__, __FILE__);
 		}

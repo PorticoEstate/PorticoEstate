@@ -204,7 +204,7 @@
 
 				$errors = $this->bo->validate($allocation);
 
-				if (!$errors['booking'] && !$errors['season_boundary'])
+				if (!$errors)
 				{
 					$step++;
 				}
@@ -218,7 +218,7 @@
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
-				else if ($_POST['outseason'] == 'on' && !$errors['booking'] && !$errors['season_boundary'] && $step > 1)
+				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
 				{
 
 					$repeat_until = strtotime($season['to_'])+60*60*24; 
@@ -360,6 +360,7 @@
 				{
 					try {
 						$receipt = $this->bo->update($allocation);
+                        $this->bo->so->update_id_string();
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id'=>$allocation['id']));
 					} catch (booking_unauthorized_exception $e) {

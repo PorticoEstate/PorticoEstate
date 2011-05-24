@@ -381,6 +381,7 @@
 															 $interval,
 															 $step == 3);
 				}
+                $this->bo->so->update_id_string();
 			}
 			$this->flash_form_errors($errors);
 			self::render_template('season_generate', array('season' => $season, 
