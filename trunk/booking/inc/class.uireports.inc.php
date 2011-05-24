@@ -146,13 +146,13 @@ class booking_uireports extends booking_uicommon
 		$sql = "select distinct al.id, al.from_, al.to_, EXTRACT(DOW FROM al.to_) as day_of_week, bu.id as building_id, bu.name as building_name, br.id as resource_id, br.name as resource_name
 				from bb_allocation al
 				inner join bb_allocation_resource ar on ar.allocation_id = al.id
-				inner join bb_resource br on br.id = ar.resource_id
+				inner join bb_resource br on br.id = ar.resource_id and br.active = 1
 				inner join bb_building bu on bu.id = br.building_id
 				left join bb_booking bb on bb.allocation_id = al.id
 				where bb.id is null 
 				and al.from_ >= '".$from." 00:00:00'
 				and al.to_ <= '".$to." 23:59:59' ";
-		
+
 		if ($buildings)
 			$sql .= "and building_id in (".$buildings.") ";
 

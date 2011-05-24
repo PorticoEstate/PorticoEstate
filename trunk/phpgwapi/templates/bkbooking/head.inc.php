@@ -117,10 +117,10 @@ JS;
 	$app = lang($app);
 	$tpl_vars = array
 	(
-		'manual_text' 	=> lang('manual'),
-		'manual_url' 	=> 'logout.php',
-		'help_text' 	=> lang('help'),
-		'help_url' 		=> 'logout.php',
+#		'manual_text' 	=> lang('manual'),
+#		'manual_url' 	=> '#',
+#		'help_text' 	=> lang('help'),
+#		'help_url' 		=> '#',
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
