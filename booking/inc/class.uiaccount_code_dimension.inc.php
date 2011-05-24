@@ -34,7 +34,6 @@
 				}
 				$config->save_repository();
 			}
-			//echo '<pre>'; print_r($config->config_data); exit;
 			
 			self::render_template('account_code_dimension', array('config_data' =>$config->config_data));
 		}
