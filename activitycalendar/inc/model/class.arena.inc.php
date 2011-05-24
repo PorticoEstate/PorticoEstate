@@ -11,6 +11,7 @@
 		protected $internal_arena_id;
 		protected $address;
 		protected $reference;
+		protected $active;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -48,6 +49,16 @@
 			return $this->arena_name;
 		}
 		
+		public function set_active(bool $active)
+		{
+			$this->active = (bool)$active;
+		}
+	
+		public function is_active()
+		{
+			return $this->active;
+		}
+		
 		public function set_address($address)
 		{
 			$this->address = $address;
@@ -78,7 +89,8 @@
 				'id' => $this->get_id(),
 				'arena_name' => $this->get_arena_name(),
 				'internal_arena_id' => activitycalendar_soarena::get_instance()->get_building_name($this->get_internal_arena_id()),
-				'address' => $this->get_address()
+				'address' => $this->get_address(),
+				'active' => $this->is_active()
 			);
 		}
 	}

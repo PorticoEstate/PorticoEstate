@@ -8,6 +8,7 @@
 <div class="yui-content">
 	<div id="details">
 		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
+		<h4><?php if($editable){echo lang('activity_helptext');}?></h4>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
@@ -195,18 +196,12 @@
 					//echo $current_target_id_array[0]."*".$current_target_id_array[1];
 					if ($editable)
 					{
+						foreach($targets as $t)
+						{
 						?>
-						<select name="target[]" size="<?php echo count($targets)?>" multiple="multiple">
-							<option value="0">Ingen målgruppe valgt</option>
-							<?php
-							foreach($targets as $t)
-							{
-								//echo in_array($target->get_id(), $current_target_id_array);
-								echo "<option value=\"{$t->get_id()}\" ".(in_array($t->get_id(), $current_target_id_array) ? 'selected' : "").">".$t->get_name()."</option>";
-							}
-							?>
-						</select>
+							<input name="target[]" type="checkbox" value="<?php echo $t->get_id()?>" <?php echo (in_array($t->get_id(), $current_target_id_array) ? 'checked' : "")?>/><?php echo $t->get_name()?><br/>
 						<?php
+						}
 					}
 					else
 					{
@@ -247,6 +242,38 @@
 					{
 						if($activity->get_district()){
 							echo $act_so->get_district_name($activity->get_district());
+						}
+					}
+					?>
+				</dd>
+				<dt>
+					<?php if($activity->get_district() || $editable) { ?>
+					<label for="district"><?php echo lang('district') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					$current_district_ids = $activity->get_district();
+					$current_district_id_array=explode(",", $current_district_ids);
+					//echo $current_target_id_array[0]."*".$current_target_id_array[1];
+					if ($editable)
+					{
+						foreach($districts as $d)
+						{
+						?>
+							<input name="district[]" type="checkbox" value="<?php echo $d['part_of_town_id']?>" <?php echo (in_array($d['part_of_town_id'], $current_district_id_array) ? 'checked' : "")?>/><?php echo $d['name']?><br/>
+						<?php
+						}
+					}
+					else
+					{
+						if($activity->get_district()){
+							$current_district_ids = $activity->get_district();
+							$current_district_id_array=explode(",", $current_district_ids);
+							foreach($current_district_id_array as $curr_district)
+							{
+								echo $act_so->get_district_name($curr_district).'<br/>';
+							}
 						}
 					}
 					?>
@@ -296,14 +323,6 @@
 				</dt>
 				<dd>
 					<?php
-					if ($editable)
-					{
-					?>
-						<input type="text" name="contact_person_1" id="contact_person_1" value="<?php echo $activity->get_contact_person_1() ?>" readonly="true"/>
-					<?php
-					}
-					else
-					{
 						if($activity->get_group_id())
 						{
 							echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
@@ -312,8 +331,6 @@
 						{
 							echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
 						}
-						//echo $activity->get_contact_person_1();
-					}
 					?>
 				</dd>
 				<dt>
@@ -323,14 +340,6 @@
 				</dt>
 				<dd>
 					<?php
-					if ($editable)
-					{
-					?>
-						<input type="text" name="contact_person_2" id="contact_person_2" value="<?php echo $activity->get_contact_person_2() ?>" readonly="true"/>
-					<?php
-					}
-					else
-					{
 						if($activity->get_group_id())
 						{
 							echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
@@ -339,8 +348,6 @@
 						{
 							echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
 						}
-						//echo $activity->get_contact_person_2();
-					}
 					?>
 				</dd>
 			    <dt>
