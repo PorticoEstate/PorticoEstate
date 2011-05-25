@@ -9,11 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jsdai.SIfc2x3.EIfcdistributionelement;
-import jsdai.SIfc2x3.EIfcdoor;
-import jsdai.SIfc2x3.EIfcfurnishingelement;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
-import jsdai.SIfc2x3.EIfczone;
 import jsdai.lang.AEntity;
 import jsdai.lang.ASdaiRepository;
 import jsdai.lang.EEntity;
@@ -24,10 +20,8 @@ import jsdai.lang.SdaiRepository;
 import no.bimconverter.ifc.IfcModel;
 import no.bimconverter.ifc.IfcSdaiException;
 import no.bimconverter.ifc.RepositoriesImpl;
-import no.bimconverter.ifc.loader.BuildingLoader;
 import no.bimconverter.ifc.loader.CommonLoader;
 import no.bimconverter.ifc.loader.SiteLoader;
-import no.bimconverter.ifc.loader.WindowLoader;
 import no.bimconverter.ifc.v2x3.object.Building;
 import no.bimconverter.ifc.v2x3.object.BuildingStorey;
 import no.bimconverter.ifc.v2x3.object.Project;
@@ -268,7 +262,6 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		super.openSdaiSession();
 		try {
 			makeModelAvailable();
-			BuildingLoader buildingLoader = new BuildingLoader();
 			//this.buildings = buildingLoader.loadBuildings(model);
 			this.buildings = (List<Building>) (new CommonLoader()).load(model, (new Building()));
 			return this.buildings;
@@ -348,9 +341,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		super.openSdaiSession();
 		try {
 			makeModelAvailable();
-			WindowLoader coveringLoader = new WindowLoader();
 			try {
-				this.windows = (List<Window>) coveringLoader.load(model);
 				this.windows = (List<Window>) (new CommonLoader()).load(model, new Window());
 				return this.windows;
 			} catch (IfcSdaiException e) {
