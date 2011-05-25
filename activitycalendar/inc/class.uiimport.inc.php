@@ -226,21 +226,27 @@
 				if($activity_org)
 				{
 					$activity_org = $soactivity->get_orgid_from_orgno($activity_org);
+					if($activity_org)
+					{
+						$soactivity->set_org_active($activity_org);
+						$activity_description = $this->decode($data[5]);
+						if($activity_description)
+						{
+							//update description on organization
+							$soactivity->update_org_description($activity_org, $activity_description);
+							//var_dump(strlen($activity_description));
+							//if(strlen($activity_description) > 255)
+							//{
+								//$activity_description = substr($activity_description,0,254);
+							//}
+						}
+					}
 				}
 				$activity_adapted = $this->decode($data[3]);
 				$activity_category = $this->decode($data[4]);
 				if($activity_category)
 				{
 					$activity_category = $soactivity->get_category_from_name($activity_category);
-				}
-				$activity_description = $this->decode($data[5]);
-				if($activity_description)
-				{
-					//var_dump(strlen($activity_description));
-					if(strlen($activity_description) > 255)
-					{
-						$activity_description = substr($activity_description,0,254);
-					}
 				}
 				$activity_target = $this->decode($data[6]);
 				//var_dump($activity_target);

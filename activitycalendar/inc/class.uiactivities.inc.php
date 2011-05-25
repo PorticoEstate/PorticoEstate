@@ -114,10 +114,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		if(isset($g_id) && $g_id > 0)
 		{
 			$persons = activitycalendar_sogroup::get_instance()->get_contacts($g_id);
+			$desc = activitycalendar_sogroup::get_instance()->get_description($g_id);
 		}
 		else if(isset($o_id) && $o_id > 0)
 		{
 			$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
+			$desc = activitycalendar_soorganization::get_instance()->get_description($o_id);
 		}
 		$arenas = activitycalendar_soarena::get_instance()->get(null, null, null, null, null, null, null);
 		$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
@@ -139,7 +141,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_category(phpgw::get_var('category'));
 				$target_array = phpgw::get_var('target');
 				$activity->set_target(implode(",", $target_array));
-				$activity->set_description(phpgw::get_var('description'));
+				$activity->set_description($desc);
 				$activity->set_time(phpgw::get_var('time'));
 				$activity->set_contact_persons($persons);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
