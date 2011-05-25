@@ -33,6 +33,7 @@ import jsdai.SIfc2x3.EIfcproject;
 import jsdai.SIfc2x3.EIfcrelaggregates;
 import jsdai.SIfc2x3.EIfcsite;
 import jsdai.SIfc2x3.EIfcsiunitname;
+import jsdai.SIfc2x3.EIfcspace;
 import jsdai.SIfc2x3.EIfcunitassignment;
 import jsdai.SIfc2x3.EIfcunitenum;
 import jsdai.lang.AEntity;
@@ -45,47 +46,14 @@ import jsdai.util.LangUtils;
  * there has to be exactly one project object in the exchange file
  */
 @XmlRootElement
-public class Project extends CommonObjectImpl{
-	
-	
-	/*final public static String ATTRIBUTE_KEY_PHASE = "Phase";
-	final public static String ATTRIBUTE_KEY_LONGNAME = "Long name";*/
-	
-	
-	
-	
-	//private Map<String, String> units = new HashMap<String, String>();
+public class Project extends CommonObjectImpl implements FacilityManagementEntity{
+	final private Class<EIfcproject> ifcEntityType = EIfcproject.class;
 	private Units units = new Units();
 	private Decomposition decomposition = new Decomposition();
 	private EIfcnamedunit unit;
 	
-	
-	
 	public Project() {
 	}
-	
-	
-	/*
-	public void loadModel(SdaiModel model) {
-		List<EEntity> projectList = super.loadModel(model, EIfcproject.class);
-		int projectListSize = projectList.size();
-		if(projectListSize == 0) {
-			throw new IfcSdaiException("No projects found!");
-		} else if (projectListSize > 1) {
-			throw new IfcSdaiException("Too many projects found!");
-		} else {
-			EIfcproject theProject = (EIfcproject) projectList.get(0);
-			try {
-				this.loadAttributes(theProject);
-				this.loadUnits(theProject);
-				this.loadDecomposition(theProject);
-				//this.loadOwnerHistory(theProject);
-			} catch (SdaiException e) {
-				throw new IfcSdaiException("Sdai error!", e);
-			}
-		}
-	}
-	*/
 	
 	@Override
 	public void load(EIfcobjectdefinition object) {
@@ -98,6 +66,11 @@ public class Project extends CommonObjectImpl{
 		} catch (SdaiException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
 	}
 	
 	/*

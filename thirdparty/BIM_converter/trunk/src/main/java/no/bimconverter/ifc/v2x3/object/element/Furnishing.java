@@ -2,10 +2,12 @@ package no.bimconverter.ifc.v2x3.object.element;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import no.bimconverter.ifc.v2x3.object.FacilityManagementEntity;
 import no.bimconverter.ifc.v2x3.object.element.type.FurnishingType;
 
 
 import jsdai.SIfc2x3.EIfcbuildingstorey;
+import jsdai.SIfc2x3.EIfcdoor;
 import jsdai.SIfc2x3.EIfcelement;
 import jsdai.SIfc2x3.EIfcfurnishingelement;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
@@ -14,12 +16,17 @@ import jsdai.SIfc2x3.EIfctypeobject;
 import jsdai.SIfc2x3.EIfcwindowstyle;
 import jsdai.lang.SdaiException;
 @XmlRootElement
-public class Furnishing  extends CommonElement{
+public class Furnishing  extends CommonElement implements FacilityManagementEntity{
+	final static private Class<EIfcfurnishingelement> ifcEntityType = EIfcfurnishingelement.class;
 	private FurnishingType furnishingType = null;
 	
 	public Furnishing() {
 		super();
 		
+	}
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
 	}
 	@Override
 	public void load(EIfcobjectdefinition object) {

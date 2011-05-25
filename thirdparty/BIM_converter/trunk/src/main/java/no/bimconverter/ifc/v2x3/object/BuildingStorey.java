@@ -11,19 +11,26 @@ import no.bimconverter.ifc.IfcSdaiException;
 import jsdai.SIfc2x3.EIfcbuildingstorey;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfcroot;
+import jsdai.SIfc2x3.EIfczone;
 import jsdai.lang.EEntity;
 import jsdai.lang.SdaiException;
 
 @XmlRootElement
-public class BuildingStorey  extends SpatialStructure {
+public class BuildingStorey  extends SpatialStructure  implements FacilityManagementEntity{
+	final static private Class<EIfcbuildingstorey> ifcEntityType = EIfcbuildingstorey.class;
 	final private static String commonPropertyName = "Pset_BuildingStoreyCommon";
 	public BuildingStorey() {
 		super();
-		
 	}
 	
-	public void load(EIfcbuildingstorey buildingStoreyEntity) {
-		super.load(buildingStoreyEntity);
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
+	}
+	@Override
+	public void load(EIfcobjectdefinition objectEntity) {
+		super.load(objectEntity);
+		EIfcbuildingstorey buildingStoreyEntity = (EIfcbuildingstorey)objectEntity;
 		try {
 			this.loadAttributes(buildingStoreyEntity);
 			this.loadBaseQuantities(buildingStoreyEntity);

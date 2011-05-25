@@ -58,7 +58,7 @@ public class BuildingStoreyTest extends IfcTestMethods{
 	public void testFirstStorey() throws JAXBException {
 		
 		//this.testFirstStoreyAttributes();
-		//super.outputXmlToSystemOut(buildingStorey1);
+		super.outputXmlToSystemOut(buildingStorey1);
 	}
 	@Test
 	public void testSecondStorey() throws JAXBException {

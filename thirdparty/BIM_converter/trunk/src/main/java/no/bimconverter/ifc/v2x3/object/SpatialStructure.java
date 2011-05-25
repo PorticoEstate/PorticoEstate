@@ -23,7 +23,6 @@ public class SpatialStructure extends CommonObjectImpl {
 	@Override
 	public void load(EIfcobjectdefinition object) {
 		super.load(object);
-		
 		try {
 			
 			this.loadAttributes((EIfcspatialstructureelement)object);

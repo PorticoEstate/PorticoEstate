@@ -1,9 +1,6 @@
 package no.bimconverter.ifc.v2x3.object;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import no.bimconverter.ifc.IfcSdaiException;
@@ -11,6 +8,7 @@ import no.bimconverter.ifc.jaxb.owner.Address;
 
 
 import jsdai.SIfc2x3.EIfcbuilding;
+import jsdai.SIfc2x3.EIfcbuildingstorey;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfcpostaladdress;
 import jsdai.SIfc2x3.EIfcroot;
@@ -18,17 +16,24 @@ import jsdai.lang.EEntity;
 import jsdai.lang.SdaiException;
 
 @XmlRootElement
-public class Building extends SpatialStructure {
+public class Building extends SpatialStructure implements FacilityManagementEntity{
 	final private static String commonPropertyName = "Pset_BuildingCommon";
 	private Address address;
+	final private Class<EIfcbuilding> ifcEntityType = EIfcbuilding.class;
 	
 	public Building() {
 		super();
 		
 	}
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
+	}
 	
-	public void load(EIfcbuilding buildingEntity) {
-		super.load(buildingEntity);
+	@Override
+	public void load(EIfcobjectdefinition objectEntity) {
+		super.load(objectEntity);
+		EIfcbuilding buildingEntity = (EIfcbuilding)objectEntity;
 		try {
 			this.loadAttributes(buildingEntity);
 			this.loadAddress(buildingEntity);
@@ -42,7 +47,6 @@ public class Building extends SpatialStructure {
 	}
 	
 	private void loadSpatialDecomposition(EIfcbuilding building) throws SdaiException {
-		
 		
 		List<EIfcobjectdefinition> siteIsDecomposedBy = this.getIsDecomposedBy(building);
 		super.insertDecomposingIds(siteIsDecomposedBy, Building.SpatialDecomposition.STOREY.key);

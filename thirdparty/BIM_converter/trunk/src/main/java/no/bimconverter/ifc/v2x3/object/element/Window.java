@@ -2,9 +2,11 @@ package no.bimconverter.ifc.v2x3.object.element;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import no.bimconverter.ifc.v2x3.object.FacilityManagementEntity;
 import no.bimconverter.ifc.v2x3.object.element.type.WindowStyle;
 
 import jsdai.SIfc2x3.EIfcbuildingstorey;
+import jsdai.SIfc2x3.EIfccovering;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfctypeobject;
 import jsdai.SIfc2x3.EIfcwindow;
@@ -12,7 +14,8 @@ import jsdai.SIfc2x3.EIfcwindowstyle;
 import jsdai.lang.SdaiException;
 
 @XmlRootElement
-public class Window extends CommonElement{
+public class Window extends CommonElement implements FacilityManagementEntity{
+	final static private Class<EIfcwindow> ifcEntityType = EIfcwindow.class;
 	final public static String commonPropertyName = "Pset_WindowCommon";
 	private WindowStyle windowStyle = null;
 	
@@ -29,6 +32,10 @@ public class Window extends CommonElement{
 		} catch (SdaiException e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
 	}
 
 	private void loadSpatialContainer(EIfcwindow entity) throws SdaiException {

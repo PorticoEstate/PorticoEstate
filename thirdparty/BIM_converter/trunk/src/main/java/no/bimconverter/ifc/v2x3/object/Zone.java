@@ -15,9 +15,14 @@ import jsdai.SIfc2x3.EIfczone;
 import jsdai.lang.SdaiException;
 import jsdai.lang.SdaiIterator;
 @XmlRootElement
-public class Zone extends CommonObjectImpl{
+public class Zone extends CommonObjectImpl implements FacilityManagementEntity{
+	final static private Class<EIfczone> ifcEntityType = EIfczone.class;
 	private ZoneAssignment zoneAssignment = new ZoneAssignment();
 	public Zone() {
+	}
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
 	}
 	
 	@Override

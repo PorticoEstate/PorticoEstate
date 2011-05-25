@@ -2,6 +2,8 @@ package no.bimconverter.ifc.v2x3.object.element;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import no.bimconverter.ifc.jaxb.BaseQuantities;
+import no.bimconverter.ifc.v2x3.object.FacilityManagementEntity;
 import no.bimconverter.ifc.v2x3.object.element.type.CoveringType;
 
 
@@ -11,11 +13,13 @@ import jsdai.SIfc2x3.EIfccoveringtype;
 import jsdai.SIfc2x3.EIfccoveringtypeenum;
 import jsdai.SIfc2x3.EIfcobject;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
+import jsdai.SIfc2x3.EIfcproject;
 import jsdai.SIfc2x3.EIfcspace;
 import jsdai.SIfc2x3.EIfctypeobject;
 import jsdai.lang.SdaiException;
 @XmlRootElement
-public class Covering extends CommonElement {
+public class Covering extends CommonElement implements FacilityManagementEntity{
+	final static private Class<EIfccovering> ifcEntityType = EIfccovering.class;
 	final public static String commonPropertyName = "Pset_CoveringCommon";
 	private CoveringType coveringType = null;
 	public Covering() {
@@ -32,6 +36,10 @@ public class Covering extends CommonElement {
 		} catch (SdaiException e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return Covering.ifcEntityType;
 	}
 //	public void load(EIfccovering entity) {
 //		try {

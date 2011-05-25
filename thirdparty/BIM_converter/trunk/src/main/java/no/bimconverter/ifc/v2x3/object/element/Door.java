@@ -2,24 +2,27 @@ package no.bimconverter.ifc.v2x3.object.element;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import no.bimconverter.ifc.v2x3.object.FacilityManagementEntity;
 import no.bimconverter.ifc.v2x3.object.element.type.DoorStyle;
 
 
-import jsdai.SIfc2x3.EIfcbuildingstorey;
 import jsdai.SIfc2x3.EIfcdoor;
 import jsdai.SIfc2x3.EIfcdoorstyle;
-import jsdai.SIfc2x3.EIfcobject;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfcspace;
 import jsdai.SIfc2x3.EIfctypeobject;
-import jsdai.SIfc2x3.EIfcwindowstyle;
 import jsdai.lang.SdaiException;
 @XmlRootElement
-public class Door extends CommonElement{
+public class Door extends CommonElement implements FacilityManagementEntity{
+	final static private Class<EIfcdoor> ifcEntityType = EIfcdoor.class;
 	private DoorStyle doorStyle = null;
 	
 	public DoorStyle getDoorStyle() {
 		return doorStyle;
+	}
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
 	}
 
 	public void setDoorStyle(DoorStyle doorStyle) {

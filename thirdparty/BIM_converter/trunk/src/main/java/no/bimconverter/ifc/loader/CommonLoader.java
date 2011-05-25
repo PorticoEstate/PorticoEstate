@@ -5,6 +5,7 @@ import java.util.List;
 
 import no.bimconverter.ifc.IfcSdaiException;
 import no.bimconverter.ifc.v2x3.object.CommonObject;
+import no.bimconverter.ifc.v2x3.object.FacilityManagementEntity;
 
 import jsdai.SIfc2x3.EIfcobject;
 import jsdai.lang.AEntity;
@@ -41,6 +42,10 @@ public class CommonLoader {
 		}
 		
 	}
+	public List<? extends CommonObject> load(SdaiModel model, FacilityManagementEntity facilityManagementEntity) {
+		return this.load(model, facilityManagementEntity.getIfcEntityType(), facilityManagementEntity.getClass());
+	}
+	@Deprecated
 	public List<? extends CommonObject> load(SdaiModel model, Class<? extends EEntity> IfcObjectType, Class<? extends CommonObject> objectClass) {
 		List<EEntity> entityList = getEntitiesOfType(model, IfcObjectType);
 		if(entityList.size() == 0) {

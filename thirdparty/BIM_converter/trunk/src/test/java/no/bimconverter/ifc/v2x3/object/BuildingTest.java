@@ -75,8 +75,9 @@ public class BuildingTest extends IfcTestMethods{
 	@Test
 	public void testSpatialDecomposition() {
 		Decomposition spatialComposition = building.getSpatialDecomposition();
+		assertNotNull(spatialComposition);
 		//String[] project = spatialComposition.get(BuildingStorey.SpatialDecomposition.PROJECT.key);
-		assertNotNull(spatialComposition.getProject());
+		assertNotNull(spatialComposition.toString(),spatialComposition.getProject());
 		assertEquals("3KFKb0sfrDJwSHalGIQFZT", spatialComposition.getProject() );
 		//String[] site = spatialComposition.get(BuildingStorey.SpatialDecomposition.SITE.key);
 		assertNotNull(spatialComposition.getSite());

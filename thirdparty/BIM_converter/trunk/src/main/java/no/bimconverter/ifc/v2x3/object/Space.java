@@ -13,6 +13,7 @@ import no.bimconverter.ifc.jaxb.SpatialContainerItem;
 import jsdai.SIfc2x3.AIfcproduct;
 import jsdai.SIfc2x3.AIfcrelcontainedinspatialstructure;
 import jsdai.SIfc2x3.AIfcrelspaceboundary;
+import jsdai.SIfc2x3.EIfcbuilding;
 import jsdai.SIfc2x3.EIfccovering;
 import jsdai.SIfc2x3.EIfcdoor;
 import jsdai.SIfc2x3.EIfcelement;
@@ -29,10 +30,15 @@ import jsdai.lang.SdaiException;
 import jsdai.lang.SdaiIterator;
 
 @XmlRootElement
-public class Space extends SpatialStructure{
+public class Space extends SpatialStructure implements FacilityManagementEntity{
 	final private static String commonPropertyName = "Pset_SpaceCommon";
 	private SpaceSpatialContainer spatialContainer = null;
+	final private Class<EIfcspace> ifcEntityType = EIfcspace.class;
 	
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
+	}
 	@Override
 	public void load(EIfcobjectdefinition objectEntity) {
 		super.load(objectEntity);

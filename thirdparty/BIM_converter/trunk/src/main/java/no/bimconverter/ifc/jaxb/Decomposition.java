@@ -64,11 +64,27 @@ public class Decomposition {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("Project:\t"+this.project+"\n");
 		sb.append("site:\t"+String.valueOf(this.site)+"\n");
-		sb.append("Buildings:\n");
-		for(String buildingId : this.buildings) {
-			sb.append("\t"+buildingId+"\n");
+		if(this.buildings != null) {
+			sb.append("Buildings:\n");
+			for(String buildingId : this.buildings) {
+				sb.append("\t"+buildingId+"\n");
+			}
 		}
+		if(this.buildingStoreys != null) {
+			sb.append("Building Stories:\n");
+			for(String buildingStoryId : this.buildingStoreys) {
+				sb.append("\t"+buildingStoryId+"\n");
+			}
+		}
+		if(this.spaces != null) {
+			sb.append("Spaces:\n");
+			for(String spaceId : this.spaces) {
+				sb.append("\t"+spaceId+"\n");
+			}
+		}
+		
 		return sb.toString();
 	}
 

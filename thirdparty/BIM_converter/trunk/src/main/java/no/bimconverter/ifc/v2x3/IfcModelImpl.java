@@ -13,11 +13,6 @@ import jsdai.SIfc2x3.EIfcdistributionelement;
 import jsdai.SIfc2x3.EIfcdoor;
 import jsdai.SIfc2x3.EIfcfurnishingelement;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
-import jsdai.SIfc2x3.EIfcownerhistory;
-import jsdai.SIfc2x3.EIfcproject;
-import jsdai.SIfc2x3.EIfcrelaggregates;
-import jsdai.SIfc2x3.EIfcsite;
-import jsdai.SIfc2x3.EIfcspace;
 import jsdai.SIfc2x3.EIfczone;
 import jsdai.lang.AEntity;
 import jsdai.lang.ASdaiRepository;
@@ -26,15 +21,11 @@ import jsdai.lang.SdaiException;
 import jsdai.lang.SdaiIterator;
 import jsdai.lang.SdaiModel;
 import jsdai.lang.SdaiRepository;
-import jsdai.util.LangUtils;
-
 import no.bimconverter.ifc.IfcModel;
 import no.bimconverter.ifc.IfcSdaiException;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.loader.BuildingLoader;
-import no.bimconverter.ifc.loader.BuildingStoreyLoader;
 import no.bimconverter.ifc.loader.CommonLoader;
-import no.bimconverter.ifc.loader.CoveringLoader;
 import no.bimconverter.ifc.loader.SiteLoader;
 import no.bimconverter.ifc.loader.WindowLoader;
 import no.bimconverter.ifc.v2x3.object.Building;
@@ -227,7 +218,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		try {
 			makeModelAvailable();
 			//this.project.loadModel(model);
-			List<Project> pl = (List<Project>) (new CommonLoader()).load(model, EIfcproject.class, Project.class);
+			List<Project> pl = (List<Project>) (new CommonLoader()).load(model, new Project());
 			
 			this.project = pl.get(0);
 			return this.project;
@@ -278,7 +269,8 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		try {
 			makeModelAvailable();
 			BuildingLoader buildingLoader = new BuildingLoader();
-			this.buildings = buildingLoader.loadBuildings(model);
+			//this.buildings = buildingLoader.loadBuildings(model);
+			this.buildings = (List<Building>) (new CommonLoader()).load(model, (new Building()));
 			return this.buildings;
 		} catch (SdaiException e) {
 			// TODO Auto-generated catch block
@@ -294,11 +286,11 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		super.openSdaiSession();
 		try {
 			makeModelAvailable();
-			BuildingStoreyLoader buildingStoreyLoader = new BuildingStoreyLoader();
+			
 			
 			try {
-				this.buildingStoreys = buildingStoreyLoader.loadBuildingStoreys(model);
-				//this.buildingStoreys = (List<BuildingStorey>)(new CommonLoader())
+				//this.buildingStoreys = buildingStoreyLoader.loadBuildingStoreys(model);
+				this.buildingStoreys =  (List<BuildingStorey>) (new CommonLoader()).load(model, (new BuildingStorey()));
 				return this.buildingStoreys;
 			} catch ( IfcSdaiException e) {
 				return null;
@@ -317,7 +309,8 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		try {
 			makeModelAvailable();
 			try {
-				this.spaces = (List<Space>) (new CommonLoader()).load(model, EIfcspace.class, Space.class);
+				//this.spaces = (List<Space>) (new CommonLoader()).load(model, EIfcspace.class, Space.class);
+				this.spaces = (List<Space>) (new CommonLoader()).load(model, (new Space()));
 				return this.spaces;
 			} catch ( IfcSdaiException e) {
 				return null;
@@ -335,9 +328,8 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		super.openSdaiSession();
 		try {
 			makeModelAvailable();
-			CoveringLoader coveringLoader = new CoveringLoader();
 			try {
-				this.covering = coveringLoader.loadCoverings(model);
+				this.covering = (List<Covering>) (new CommonLoader()).load(model, new Covering());
 				return this.covering;
 			} catch (IfcSdaiException e) {
 				
@@ -359,6 +351,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 			WindowLoader coveringLoader = new WindowLoader();
 			try {
 				this.windows = (List<Window>) coveringLoader.load(model);
+				this.windows = (List<Window>) (new CommonLoader()).load(model, new Window());
 				return this.windows;
 			} catch (IfcSdaiException e) {
 				logger.info("No windows found");
@@ -382,7 +375,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 			makeModelAvailable();
 			
 			try {
-				this.doors = (List<Door>) (new CommonLoader()).load(model, EIfcdoor.class, Door.class);
+				this.doors = (List<Door>) (new CommonLoader()).load(model, new Door());
 				return this.doors;
 			} catch (IfcSdaiException e) {
 				logger.info("No doors found");
@@ -403,7 +396,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 			makeModelAvailable();
 			
 			try {
-				this.zones = (List<Zone>) (new CommonLoader()).load(model, EIfczone.class, Zone.class);
+				this.zones = (List<Zone>) (new CommonLoader()).load(model, new Zone());
 				return this.zones;
 			} catch (IfcSdaiException e) {
 				logger.info("No zones found");
@@ -424,7 +417,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 			makeModelAvailable();
 			
 			try {
-				this.buildingServiceElements = (List<BuildingServiceElement>) (new CommonLoader()).load(model, EIfcdistributionelement.class, BuildingServiceElement.class);
+				this.buildingServiceElements = (List<BuildingServiceElement>) (new CommonLoader()).load(model, new BuildingServiceElement());
 				return this.buildingServiceElements;
 			} catch (IfcSdaiException e) {
 				logger.info("No buildingServiceElements found");
@@ -452,7 +445,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		try {
 			makeModelAvailable();
 			try {
-				this.furnishingElements = (List<Furnishing>) (new CommonLoader()).load(model, EIfcfurnishingelement.class, Furnishing.class);
+				this.furnishingElements = (List<Furnishing>) (new CommonLoader()).load(model, new Furnishing());
 				return this.furnishingElements;
 			} catch (IfcSdaiException e) {
 				logger.info("No furnishing found");
