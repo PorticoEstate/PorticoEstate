@@ -208,6 +208,10 @@
 			foreach ($datalines as $data) {
 				$arenaOK = true;
 				$activityOK = true;
+				unset($act_targets);
+				unset($activity_persons);
+				unset($activity_description);
+				
 				$arena = new activitycalendar_arena();
 				//8: sted, 9:adresse
 				$arena_name = $this->decode($data[7]);
@@ -274,7 +278,7 @@
 					}
 					$activity_target = implode(",", $act_targets);
 				}
-				unset($act_targets);
+
 				$activity_day = $this->decode($data[9]);
 				$activity_time = $this->decode($data[10]);
 				$activity_update_date = $this->decode($data[20]);
