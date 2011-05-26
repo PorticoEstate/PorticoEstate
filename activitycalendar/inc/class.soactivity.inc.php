@@ -571,22 +571,22 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_contact_person($org_id, $group_id, $cont_pers)
 	{
-		if(isset($group_id))
+		if(isset($group_id) && isset($cont_pers))
 		{
-			$group_id = (int)$group_id;
+			$cont_pers = (int)$cont_pers;
 	//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
-			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$group_id}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array($this->db->f('name'),$this->db->f('phone'),$this->db->f('email'));
+				$result = array('name' => $this->db->f('name'),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
-		else if(isset($org_id))
+		else if(isset($org_id) && isset($cont_pers))
 		{
-			$org_id = (int)$org_id;
+			$cont_pers = (int)$cont_pers;
 	//		$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
-			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$org_id}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array($this->db->f('name'),$this->db->f('phone'),$this->db->f('email'));
+				$result = array('name' => $this->db->f('name'),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
 		return $result;
@@ -599,7 +599,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$org_id = (int)$org_id;
 			$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array($this->db->f('name'),$this->db->f('shortname'),$this->db->f('homepage'),$this->db->f('phone'),$this->db->f('email'));
+				$result = array('name' => $this->db->f('name'),'shortname' => $this->db->f('shortname'),'description' => $this->db->f('description'),'homepage' => $this->db->f('homepage'),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
 	}
@@ -611,7 +611,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$group_id = (int)$group_id;
 			$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array($this->db->f('name'),$this->db->f('shortname'),$this->db->f('description'),$this->db->f('organization_id'));
+				$result = array('name' => $this->db->f('name'),'shortname' => $this->db->f('shortname'),'description' => $this->db->f('description'),'organization_id' => $this->db->f('organization_id'));
 			}
 		}
 	}
@@ -623,7 +623,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$arena_id = (int)$arena_id;
 			$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = array($this->db->f('arena_name'),$this->db->f('address'));
+				$result = array('arena_name' => $this->db->f('arena_name'),'address' => $this->db->f('address'));
 			}
 		}
 	}
