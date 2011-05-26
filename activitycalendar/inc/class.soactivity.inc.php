@@ -553,12 +553,12 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		foreach ($activities as &$activity)
 		{
-				$activity['organization_info']	= activitycalendar_soactivity::get_instance()->get_org_info($activity['organization_id']),
-				$activity['group_info']			= activitycalendar_soactivity::get_instance()->get_group_info($activity['group_id']),
-				$activity['district_name']		= activitycalendar_soactivity::get_instance()->get_district_name($activity['district']),
-				$activity['category_name']		= $this->get_category_name($activity['category')),
-				$activity['arena_info']			= activitycalendar_soactivity::get_instance()->get_arena_info($activity['arena']),
-				$activity['contact_person']		= activitycalendar_soactivity::get_instance()->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']),
+				$activity['organization_info']	= activitycalendar_soactivity::get_instance()->get_org_info($activity['organization_id']);
+				$activity['group_info']			= activitycalendar_soactivity::get_instance()->get_group_info($activity['group_id']);
+				$activity['district_name']		= activitycalendar_soactivity::get_instance()->get_district_name($activity['district']);
+				$activity['category_name']		= $this->get_category_name($activity['category'));
+				$activity['arena_info']			= activitycalendar_soactivity::get_instance()->get_arena_info($activity['arena']);
+				$activity['contact_person']		= activitycalendar_soactivity::get_instance()->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
 
 		return $activities;
