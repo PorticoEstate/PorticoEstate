@@ -537,9 +537,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 					'id'				=> (int) $this->db->f('id'),
 					'title'				=> $this->db->f('title',true),
 					'organization_id'	=> $this->db->f('organization_id',true),
-					'organization_name' => activitycalendar_soorganization::get_instance()->get_organization_name($this->db->f('organization_id',true)),
+					'organization_info' => activitycalendar_soactivity::get_instance()->get_org_info($this->db->f('organization_id',true)),
 					'group_id'			=> $this->db->f('group_id'),
-					'group_name'		=> activitycalendar_sogroup::get_instance()->get_group_name($this->db->f('group_id')),
+					'group_info'		=> activitycalendar_soactivity::get_instance()->get_group_info($this->db->f('group_id')),
 					'district'			=> $this->db->f('district',true),
 					'district_name'		=> activitycalendar_soactivity::get_instance()->get_district_name($this->db->f('district', true)),
 					'category'			=> $this->db->f('category'),
@@ -547,13 +547,67 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 					'state'				=> $this->db->f('state',true),
 					'target'			=> $this->db->f('target'),
 					'description'		=> $this->db->f('description'),
+					'arena'				=> $this->db->f('arena'),
+					'arena_info'		=> activitycalendar_soactivity::get_instance()->get_arena_info($this->db->f('arena')),
 					'time'				=> $this->db->f('time'),
-					'contact_person_1'	=> $this->db->f('contact_person_1'),
+					'contact_person'	=> activitycalendar_soactivity::get_instance()->get_contact_person($this->db->f('organization_id'),$this->db->f('group_id'),$this->db->f('contact_person_1')),
 					'contact_person_2'	=> $this->db->f('contact_person_2'),
 					'special_adaptation'=> $this->db->f('special_adaptation'),
 			);
 		}
 		return $activities;
+	}
+	
+	function get_contact_person($org_id, $group_id, $cont_pers)
+	{
+		if(isset($group_id))
+		{
+			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$id}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array($this->db->f('name'),$this->db->f('phone'),$this->db->f('email'));
+			}
+		}
+		else if(isset($org_id))
+		{
+			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$id}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array($this->db->f('name'),$this->db->f('phone'),$this->db->f('email'));
+			}
+		}
+		return $result;
+	}
+	
+	function get_org_info($org_id)
+	{
+		if(isset($org_id))
+		{
+			$this->db->query("SELECT * FROM bb_organization WHERE id={$id}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array($this->db->f('name'),$this->db->f('shortname'),$this->db->f('homepage'),$this->db->f('phone'),$this->db->f('email'));
+			}
+		}
+	}
+	
+	function get_group_info($group_id)
+	{
+		if(isset($group_id))
+		{
+			$this->db->query("SELECT * FROM bb_group WHERE id={$id}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array($this->db->f('name'),$this->db->f('shortname'),$this->db->f('description'),$this->db->f('organization_id'));
+			}
+		}
+	}
+	
+	function get_arena_info($arena_id)
+	{
+		if(isset($arena_id))
+		{
+			$this->db->query("SELECT * FROM activity_arena WHERE id={$id}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array($this->db->f('arena_name'),$this->db->f('address'));
+			}
+		}
 	}
 	
 	function get_statuscodes()
