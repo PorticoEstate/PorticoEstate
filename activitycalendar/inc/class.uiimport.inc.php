@@ -2,6 +2,7 @@
 	phpgw::import_class('activitycalendar.uicommon');
 	phpgw::import_class('activitycalendar.soarena');
 	phpgw::import_class('activitycalendar.soactivity');
+	phpgw::import_class('activitycalendar.soorganization');
 	
 	include_class('activitycalendar', 'arena', 'inc/model/');
 	include_class('activitycalendar', 'activity', 'inc/model/');
@@ -17,8 +18,9 @@
 		protected $errors;
 		
 		// File system path to import folder on server
-		protected $path;
+		protected $file;
 		protected $district;
+		protected $csvdata;
 		
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -66,7 +68,13 @@
 				// Get the path for user input or use a default path
 				$this->path = phpgw::get_var("import_path") ? phpgw::get_var("import_path") : '/home/notroot/FacilitExport';
 				$this->office = phpgw::get_var("district") ? phpgw::get_var("district") : '1';
-				phpgwapi_cache::session_set('activitycalendar', 'import_path', $this->path);
+				$this->file = $_FILES['file']['tmp_name'];
+				$this->csvdata = $this->getcsvdata($_FILES['file']['tmp_name']);
+				//var_dump($this->office);
+				//var_dump($_FILES['file']['name']);
+				//var_dump($_FILES['file']['tmp_name']);
+				phpgwapi_cache::session_set('activitycalendar', 'file', $this->file);
+				phpgwapi_cache::session_set('activitycalendar', 'csvdata', $this->csvdata);
 				phpgwapi_cache::session_set('activitycalendar', 'import_district', $this->office);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiimport.index', 'importstep' => 'true'));
 			} 
@@ -76,7 +84,8 @@
 				$start = date("G:i:s",$start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
-				$this->path = phpgwapi_cache::session_get('activitycalendar', 'import_path') . '/aktiviteter';
+				$this->file = phpgwapi_cache::session_get('activitycalendar', 'file');
+				$this->csvdata = phpgwapi_cache::session_get('activitycalendar', 'csvdata');
 				$this->office = phpgwapi_cache::session_get('activitycalendar', 'import_district');
 				//$this->path = '/home/notroot/FacilitExport/aktiviteter';
 				
@@ -182,19 +191,17 @@
 			$soarena = activitycalendar_soarena::get_instance();
 			$soactivity = activitycalendar_soactivity::get_instance();
 			
-			$datalines = $this->getcsvdata($this->path . "/import_all.csv");
+			//var_dump($_FILES['file']['name']);
+			//var_dump($this->file);
+			//$datalines = $this->getcsvdata($_FILES['file']['tmp_name']);;
+			$datalines = $this->csvdata;
+			//$datalines = $this->getcsvdata($this->file);
 			//$activity_district = $this->district;
-			//var_dump($this->district);
 			
 			$this->messages[] = "Read 'import_all.csv' file in " . (time() - $start_time) . " seconds";
 			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
 			
-			foreach ($datalines as $data) {
-/*				if(count($data) <= 8)
-				{
-					continue;
-				}
-*/				
+			foreach ($datalines as $data) {				
 				$arena = new activitycalendar_arena();
 				//8: sted, 9:adresse
 				$arena_name = $this->decode($data[7]);
@@ -240,6 +247,7 @@
 								//$activity_description = substr($activity_description,0,254);
 							//}
 						}
+						$activity_persons = activitycalendar_soorganization::get_instance()->get_contacts($activity_org);
 					}
 				}
 				$activity_adapted = $this->decode($data[3]);
@@ -272,6 +280,7 @@
 						$m = $act_update_array[1];
 						$d = $act_update_array[0];
 						$activity_updated_date = strtotime($y."-".$m."-".$d);
+						//var_dump($activity_updated_date);
 					}
 				}
 				$activity_district = $this->decode($data[21]);
@@ -295,9 +304,14 @@
 					$activity->set_office($this->office);
 					$activity->set_district($activity_district);
 					$activity->set_last_change_date($activity_updated_date);
+					if($activity_persons)
+					{
+						//set contact persons
+						$activity->set_contact_persons($activity_persons);
+					}
 					//var_dump($activity);
 					// All is good, store activity
-					if ($soactivity->store($activity)) {
+					if ($soactivity->import_activity($activity)) {
 						$this->messages[] = "Successfully imported activity: Title ({$this->decode($data[1])})";
 					} else {
 						$this->errors[] = "Error importing activity: Title ({$this->decode($data[1])})";
@@ -378,8 +392,8 @@
          * Do end-of-import clean up
          */
         protected function clean_up() {
-            $socontract = rental_socontract::get_instance();
-            $socontract->clear_last_edited_table();
+            //$socontract = rental_socontract::get_instance();
+            //$socontract->clear_last_edited_table();
         }
 
         private function log_messages($step) {
