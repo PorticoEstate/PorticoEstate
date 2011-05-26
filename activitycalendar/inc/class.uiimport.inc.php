@@ -201,7 +201,16 @@
 			$this->messages[] = "Read 'import_all.csv' file in " . (time() - $start_time) . " seconds";
 			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
 			
-			foreach ($datalines as $data) {				
+			//$so_arena = rental_socontract::get_instance();
+			$db_arena = $soarena->get_db();
+			$db_arena->transaction_begin();
+			
+			$db_activity = $soactivity->get_db();
+			$db_activity->transaction_begin();
+			
+			foreach ($datalines as $data) {
+				$arenaOK = true;
+				$activityOK = true;
 				$arena = new activitycalendar_arena();
 				//8: sted, 9:adresse
 				$arena_name = $this->decode($data[7]);
@@ -219,11 +228,12 @@
 					} else {
 						$this->errors[] = "Error importing arena: Name ({$this->decode($data[7])})";
 						$curr_arena_id = 0;
+						$arenaOK = false;
 					}
 				}
 				else
 				{
-					$this->errors[] = "Error importing arena: Name ({$this->decode($data[7])})";
+					$this->errors[] = "Error importing arena: Name not supplied";
 					$curr_arena_id = 0;
 				}
 				
@@ -315,12 +325,36 @@
 						$this->messages[] = "Successfully imported activity: Title ({$this->decode($data[1])})";
 					} else {
 						$this->errors[] = "Error importing activity: Title ({$this->decode($data[1])})";
+						$activityOK = false;
 					}
 				}
 			}
 			
-			$this->messages[] = "Imported activities. (" . (time() - $start_time) . " seconds)";
-			return true;
+			if($arenaOK && $activityOK)
+			{
+				$this->messages[] = "Imported activities. (" . (time() - $start_time) . " seconds)";
+				$db_arena->transaction_commit();
+				$db_activity->transaction_commit();
+				return true;
+			}
+			else
+			{
+				if(!$arenaOK)
+				{
+					$this->messages[] = "Import of arenas failed. (" . (time() - $start_time) . " seconds)";
+				}
+				else if(!$activityOK)
+				{
+					$this->messages[] = "Import of activities failed. (" . (time() - $start_time) . " seconds)";
+				}
+				else
+				{
+					$this->messages[] = "Import of activities/arenas failed. (" . (time() - $start_time) . " seconds)";
+				}
+				$db_arena->transaction_abort();
+				$db_activity->transaction_abort();
+				return false;
+			}
 		}
 		
 		protected function getcsvdata($path, $skipfirstline = true)
