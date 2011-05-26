@@ -202,9 +202,6 @@
 			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
 			
 			//$so_arena = rental_socontract::get_instance();
-			$db_arena = $soarena->get_db();
-			$db_arena->transaction_begin();
-			
 			$db_activity = $soactivity->get_db();
 			$db_activity->transaction_begin();
 			
@@ -333,7 +330,6 @@
 			if($arenaOK && $activityOK)
 			{
 				$this->messages[] = "Imported activities. (" . (time() - $start_time) . " seconds)";
-				$db_arena->transaction_commit();
 				$db_activity->transaction_commit();
 				return true;
 			}
@@ -351,7 +347,6 @@
 				{
 					$this->messages[] = "Import of activities/arenas failed. (" . (time() - $start_time) . " seconds)";
 				}
-				$db_arena->transaction_abort();
 				$db_activity->transaction_abort();
 				return false;
 			}
