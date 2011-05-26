@@ -534,27 +534,33 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		{			
 			$activities[]= array
 			(
-					'id'				=> (int) $this->db->f('id'),
-					'title'				=> $this->db->f('title',true),
-					'organization_id'	=> $this->db->f('organization_id',true),
-					'organization_info' => activitycalendar_soactivity::get_instance()->get_org_info($this->db->f('organization_id',true)),
-					'group_id'			=> $this->db->f('group_id'),
-					'group_info'		=> activitycalendar_soactivity::get_instance()->get_group_info($this->db->f('group_id')),
-					'district'			=> $this->db->f('district',true),
-					'district_name'		=> activitycalendar_soactivity::get_instance()->get_district_name($this->db->f('district', true)),
-					'category'			=> $this->db->f('category'),
-					'category_name'		=> $this->get_category_name($this->db->f('category')),
-					'state'				=> $this->db->f('state',true),
-					'target'			=> $this->db->f('target'),
-					'description'		=> $this->db->f('description'),
-					'arena'				=> $this->db->f('arena'),
-					'arena_info'		=> activitycalendar_soactivity::get_instance()->get_arena_info($this->db->f('arena')),
-					'time'				=> $this->db->f('time'),
-					'contact_person'	=> activitycalendar_soactivity::get_instance()->get_contact_person($this->db->f('organization_id'),$this->db->f('group_id'),$this->db->f('contact_person_1')),
-					'contact_person_2'	=> $this->db->f('contact_person_2'),
-					'special_adaptation'=> $this->db->f('special_adaptation'),
+				'id'				=> (int) $this->db->f('id'),
+				'title'				=> $this->db->f('title',true),
+				'organization_id'	=> $this->db->f('organization_id',true),
+				'group_id'			=> $this->db->f('group_id'),
+				'district'			=> $this->db->f('district',true),
+				'category'			=> $this->db->f('category'),
+				'state'				=> $this->db->f('state',true),
+				'target'			=> $this->db->f('target'),
+				'description'		=> $this->db->f('description'),
+				'arena'				=> $this->db->f('arena'),
+				'time'				=> $this->db->f('time'),
+				'contact_person_1'	=> $this->db->f('contact_person_1'),
+				'contact_person_2'	=> $this->db->f('contact_person_2'),
+				'special_adaptation'=> $this->db->f('special_adaptation'),
 			);
 		}
+
+		foreach ($activities as &$activity)
+		{
+				$activity['organization_info']	= activitycalendar_soactivity::get_instance()->get_org_info($activity['organization_id']),
+				$activity['group_info']			= activitycalendar_soactivity::get_instance()->get_group_info($activity['group_id']),
+				$activity['district_name']		= activitycalendar_soactivity::get_instance()->get_district_name($activity['district']),
+				$activity['category_name']		= $this->get_category_name($activity['category')),
+				$activity['arena_info']			= activitycalendar_soactivity::get_instance()->get_arena_info($activity['arena']),
+				$activity['contact_person']		= activitycalendar_soactivity::get_instance()->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']),
+		}
+
 		return $activities;
 	}
 	
