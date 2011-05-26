@@ -251,6 +251,54 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		return isset($result);
 	}
+	
+	function import_activity($activity)
+	{
+		$id = intval($activity->get_id());
+		$ts_now = strtotime('now');
+		
+		$columns = array(
+			'title',
+			'organization_id',
+			'group_id',
+			'district',
+			'office',
+			'category',
+			'state',
+			'target',
+			'description',
+			'arena',
+			'time',
+			'last_change_date',
+			'create_date',
+			'contact_person_1',
+			'contact_person_2',
+			'special_adaptation'
+		);
+			
+		$values = array(
+			$this->marshal($activity->get_title(), 'string'),
+			$this->marshal($activity->get_organization_id(), 'int'),
+			$this->marshal($activity->get_group_id(), 'int'),
+			$this->marshal($activity->get_district(), 'string'),
+			$this->marshal($activity->get_office(), 'int'),
+			$this->marshal($activity->get_category(), 'int'),
+			$this->marshal($activity->get_state(), 'int'),
+			$this->marshal($activity->get_target(), 'string'),
+			$this->marshal($activity->get_description(), 'string'),
+			$this->marshal($activity->get_arena(), 'int'),
+			$this->marshal($activity->get_time(), 'string'),
+			$this->marshal($activity->get_last_change_date(), 'int'),
+			$this->marshal($ts_now, 'int'),
+			$this->marshal($activity->get_contact_person_1(), 'int'),
+			$this->marshal($activity->get_contact_person_2(), 'int'),
+			($activity->get_special_adaptation() ? "true" : "false")
+		);
+		
+		$result = $this->db->query('INSERT INTO activity_activity (' . join(',', $columns) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+
+		return isset($result);
+	}
 
 	public function get_id_field_name($extended_info = false)
 	{
@@ -456,6 +504,26 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			}
     	}
 		return $result;
+	}
+	
+	function update_org_description($org_id, $description)
+	{
+    	if($org_id != null)
+    	{
+			$sql = "update bb_organization set description='{$description}' where id={$org_id}";
+    		$result = $this->db->query($sql, __LINE__, __FILE__);
+    	}
+		return isset($result);
+	}
+	
+	function set_org_active($org_id)
+	{
+		if($org_id != null)
+		{
+			$sql = "update bb_organization set show_in_portal=1 where id={$org_id}";
+    		$result = $this->db->query($sql, __LINE__, __FILE__);
+		}
+		return isset($result);
 	}
 	
 	function get_activities()
