@@ -36,6 +36,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		)
 	);
 
+	var $public_functions = array
+		(
+			'get_activities'  		=> true,
+		);
 	
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -528,6 +532,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_activities()
 	{
+		$activities = array();
 		$sql = "SELECT * FROM activity_activity";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
@@ -553,14 +558,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		foreach ($activities as &$activity)
 		{
-				$activity['organization_info']	= activitycalendar_soactivity::get_instance()->get_org_info($activity['organization_id']);
-				$activity['group_info']			= activitycalendar_soactivity::get_instance()->get_group_info($activity['group_id']);
-				$activity['district_name']		= activitycalendar_soactivity::get_instance()->get_district_name($activity['district']);
+				$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
+				$activity['group_info']			= $this->get_group_info($activity['group_id']);
+				$activity['district_name']		= $this->get_district_name($activity['district']);
 				$activity['category_name']		= $this->get_category_name($activity['category']);
-				$activity['arena_info']			= activitycalendar_soactivity::get_instance()->get_arena_info($activity['arena']);
-				$activity['contact_person']		= activitycalendar_soactivity::get_instance()->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
+				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
+				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
-
+//	_debug_array($activities);
 		return $activities;
 	}
 	
@@ -568,14 +573,18 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		if(isset($group_id))
 		{
-			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$group_id = (int)$group_id;
+	//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$group_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array($this->db->f('name'),$this->db->f('phone'),$this->db->f('email'));
 			}
 		}
 		else if(isset($org_id))
 		{
-			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$org_id = (int)$org_id;
+	//		$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$org_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array($this->db->f('name'),$this->db->f('phone'),$this->db->f('email'));
 			}
@@ -587,6 +596,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		if(isset($org_id))
 		{
+			$org_id = (int)$org_id;
 			$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array($this->db->f('name'),$this->db->f('shortname'),$this->db->f('homepage'),$this->db->f('phone'),$this->db->f('email'));
@@ -598,6 +608,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		if(isset($group_id))
 		{
+			$group_id = (int)$group_id;
 			$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array($this->db->f('name'),$this->db->f('shortname'),$this->db->f('description'),$this->db->f('organization_id'));
@@ -609,6 +620,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		if(isset($arena_id))
 		{
+			$arena_id = (int)$arena_id;
 			$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array($this->db->f('arena_name'),$this->db->f('address'));
