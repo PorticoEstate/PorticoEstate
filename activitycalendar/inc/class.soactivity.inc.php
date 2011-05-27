@@ -401,15 +401,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_district_name($district_id)
 	{
-		$result = "Ingen";
+		//$result = "Ingen";
 		if($district_id != null)
 		{
-			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id=$district_id";
+			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id in ($district_id)";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = $this->db->f('name');
+				$result[] = $this->db->f('name');
 			}
     	}
+    	$result = implode(",",$result);
 		return $result;
 	}
 	
@@ -565,13 +566,13 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$activity['arena_info']			= utf8_decode($this->get_arena_info($activity['arena']));
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
-//	_debug_array($activities);
+	_debug_array($activities);
 		return $activities;
 	}
 	
 	function get_contact_person($org_id, $group_id, $cont_pers)
 	{
-		if(isset($group_id) && isset($cont_pers))
+		if($group_id && $cont_pers)
 		{
 			$cont_pers = (int)$cont_pers;
 	//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
@@ -580,7 +581,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
 			}
 		}
-		else if(isset($org_id) && isset($cont_pers))
+		else if($org_id && $cont_pers)
 		{
 			$cont_pers = (int)$cont_pers;
 	//		$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
