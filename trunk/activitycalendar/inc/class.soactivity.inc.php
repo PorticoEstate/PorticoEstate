@@ -653,12 +653,12 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_statuscodes()
 	{
-		$statuscodes[] = array('id' => '0', 'name' => 'Ingen');
-		$statuscodes[] = array('id' => '1', 'name' => 'Ny');
-		$statuscodes[] = array('id' => '2', 'name' => 'Endring');
-		$statuscodes[] = array('id' => '3', 'name' => 'Akseptert');
-		$statuscodes[] = array('id' => '4', 'name' => 'Behandlet');
-		$statuscodes[] = array('id' => '5', 'name' => 'Avvist');
+		$statuscodes[] = array('id' => '0', 'name' => utf8_decode('Ingen'));
+		$statuscodes[] = array('id' => '1', 'name' => utf8_decode('Ny'));
+		$statuscodes[] = array('id' => '2', 'name' => utf8_decode('Endring'));
+		$statuscodes[] = array('id' => '3', 'name' => utf8_decode('Akseptert'));
+		$statuscodes[] = array('id' => '4', 'name' => utf8_decode('Behandlet'));
+		$statuscodes[] = array('id' => '5', 'name' => utf8_decode('Avvist'));
 
 		return $statuscodes;
 	}
@@ -670,7 +670,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		while($this->db->next_record()){
 			$targets[] = array(
 					'id'				=> (int) $this->db->f('id'),
-					'name'				=> $this->db->f('name',true),
+					'name'				=> utf8_decode($this->db->f('name',true)),
 			);
 		}
 		return $targets;
@@ -683,7 +683,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		while($this->db->next_record()){
 			$categories[] = array(
 					'id'				=> (int) $this->db->f('id'),
-					'name'				=> $this->db->f('name',true),
+					'name'				=> utf8_decode($this->db->f('name',true)),
 			);
 		}
 		return $categories;
