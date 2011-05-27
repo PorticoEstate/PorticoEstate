@@ -246,6 +246,15 @@
 						</xsl:when>
 					</xsl:choose>
 
+					<xsl:for-each select="integration">
+						<div id="{section}">
+							<iframe id = "{section}_content" width="100%" height="500">
+								<p>Your browser does not support iframes.</p>
+							</iframe>
+						</div>
+					</xsl:for-each>
+
+			<!--
 					<xsl:choose>
 						<xsl:when test="integration!=''">
 							<div id="integration">
@@ -253,13 +262,14 @@
 									<p>Your browser does not support iframes.</p>
 								</iframe>
 							</div>
+
 							<div id="test" >
-								<div class="hd" style="background-color:#000000;color:#FFFFFF; border:0; text-align:center"> Integration </div>
+								<div class="hd" style="background-color:#000000;color:#FFFFFF; border:0; text-align:center"> Kart </div>
 								<div class="bd" style="text-align:center;"> </div>
 							</div>
 						</xsl:when>
 					</xsl:choose>
-
+			-->
 					<xsl:choose>
 						<xsl:when test="documents != ''">
 							<div id="document">
