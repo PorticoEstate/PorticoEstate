@@ -33,12 +33,24 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		(
 			'name'       => 'get_category_list',
 			'decription' => 'Get list of categories'
+		),
+		array
+		(
+			'name'       => 'get_organizations',
+			'decription' => 'Get list of organizations'
+		),
+		array
+		(
+			'name'       => 'get_groups',
+			'decription' => 'Get list of groups'
 		)
 	);
 
 	var $public_functions = array
 		(
 			'get_activities'  		=> true,
+			'get_organizations'  	=> true,
+			'get_groups'  			=> true,
 		);
 	
 	/**
@@ -560,8 +572,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		foreach ($activities as &$activity)
 		{
-				$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
-				$activity['group_info']			= $this->get_group_info($activity['group_id']);
+				//$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
+				//$activity['group_info']			= $this->get_group_info($activity['group_id']);
 				$activity['district_name']		= utf8_decode($this->get_district_name($activity['district']));
 				$activity['category_name']		= utf8_decode($this->get_category_name($activity['category']));
 				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
@@ -592,6 +604,27 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $result;
 	}
+
+	function get_organizations()
+	{
+		$organizations = array();
+		$this->db->query("SELECT * FROM bb_organization WHERE show_in_portal=1", __LINE__, __FILE__);
+		while($this->db->next_record())
+		{
+			$organizations[] = array
+			(
+				'id'			=> (int) $this->db->f('id'),
+				'name'			=> utf8_decode($this->db->f('name')),
+				'shortname'		=> utf8_decode($this->db->f('shortname')),
+				'description'	=> utf8_decode($this->db->f('description')),
+				'homepage'		=> $this->db->f('homepage'),
+				'phone'			=> $this->db->f('phone'),
+				'email'			=> $this->db->f('email')
+			);
+		}
+	_debug_array($organizations);
+		return $organizations;
+	}
 	
 	function get_org_info($org_id)
 	{
@@ -612,6 +645,25 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			);
 		}
 		return $result;
+	}
+	
+	function get_groups()
+	{
+		$groups = array();
+		$this->db->query("SELECT * FROM bb_group WHERE show_in_portal=1", __LINE__, __FILE__);
+		while($this->db->next_record())
+		{
+			$groups[] = array
+			(
+				'id'				=> (int) $this->db->f('id'),
+				'name'				=> utf8_decode($this->db->f('name')),
+				'shortname'			=> utf8_decode($this->db->f('shortname')),
+				'description'		=> utf8_decode($this->db->f('description')),
+				'organization_id'	=> $this->db->f('organization_id')
+			);
+		}
+	_debug_array($groups);
+		return $groups;
 	}
 	
 	function get_group_info($group_id)
