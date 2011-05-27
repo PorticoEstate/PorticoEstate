@@ -402,15 +402,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function get_district_name($district_id)
 	{
 		//$result = "Ingen";
+		$values = array();
 		if($district_id != null)
 		{
 			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id in ($district_id)";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result[] = $this->db->f('name');
+				$values[] = $this->db->f('name');
 			}
     	}
-    	$result = implode(",",$result);
+    	$result = implode(",",$values);
 		return $result;
 	}
 	
@@ -559,11 +560,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 
 		foreach ($activities as &$activity)
 		{
-				$activity['organization_info']	= utf8_decode($this->get_org_info($activity['organization_id']));
-				$activity['group_info']			= utf8_decode($this->get_group_info($activity['group_id']));
+				$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
+				$activity['group_info']			= $this->get_group_info($activity['group_id']);
 				$activity['district_name']		= utf8_decode($this->get_district_name($activity['district']));
 				$activity['category_name']		= utf8_decode($this->get_category_name($activity['category']));
-				$activity['arena_info']			= utf8_decode($this->get_arena_info($activity['arena']));
+				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
 				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
 		}
 //	_debug_array($activities);
@@ -584,7 +585,6 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		else if($org_id && $cont_pers)
 		{
 			$cont_pers = (int)$cont_pers;
-	//		$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
 			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
@@ -595,38 +595,60 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_org_info($org_id)
 	{
-		if(isset($org_id))
+		$result = array();
+		if($org_id)
 		{
 			$org_id = (int)$org_id;
 			$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
-			while($this->db->next_record()){
-				$result = array('name' => $this->db->f('name'),'shortname' => $this->db->f('shortname'),'description' => $this->db->f('description'),'homepage' => $this->db->f('homepage'),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
-			}
+			$this->db->next_record();
+			$result = array
+			(
+				'name'			=> utf8_decode($this->db->f('name')),
+				'shortname'		=> utf8_decode($this->db->f('shortname')),
+				'description'	=> utf8_decode($this->db->f('description')),
+				'homepage'		=> $this->db->f('homepage'),
+				'phone'			=> $this->db->f('phone'),
+				'email'			=> $this->db->f('email')
+			);
 		}
+		return $result;
 	}
 	
 	function get_group_info($group_id)
 	{
-		if(isset($group_id))
+		$result = array();
+		if($group_id)
 		{
 			$group_id = (int)$group_id;
 			$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
-			while($this->db->next_record()){
-				$result = array('name' => $this->db->f('name'),'shortname' => $this->db->f('shortname'),'description' => $this->db->f('description'),'organization_id' => $this->db->f('organization_id'));
-			}
+			$this->db->next_record();
+			$result = array
+			(
+				'name'				=> utf8_decode($this->db->f('name')),
+				'shortname'			=> utf8_decode($this->db->f('shortname')),
+				'description'		=> utf8_decode($this->db->f('description')),
+				'organization_id'	=> $this->db->f('organization_id')
+			);
+
 		}
+		return $result;
 	}
 	
 	function get_arena_info($arena_id)
 	{
-		if(isset($arena_id))
+		$result = array();
+		if($arena_id)
 		{
 			$arena_id = (int)$arena_id;
 			$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
-			while($this->db->next_record()){
-				$result = array('arena_name' => $this->db->f('arena_name'),'address' => $this->db->f('address'));
-			}
+			$this->db->next_record();
+			$result = array
+			(
+				'arena_name' => utf8_decode($this->db->f('arena_name')),
+				'address' => utf8_decode($this->db->f('address'))
+			);
 		}
+		return $result;
 	}
 	
 	function get_statuscodes()
@@ -666,5 +688,4 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		return $categories;
 	}
-	
 }
