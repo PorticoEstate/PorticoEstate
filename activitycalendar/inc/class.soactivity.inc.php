@@ -622,7 +622,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				'email'			=> $this->db->f('email')
 			);
 		}
-	_debug_array($organizations);
+//	_debug_array($organizations);
 		return $organizations;
 	}
 	
@@ -662,7 +662,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 				'organization_id'	=> $this->db->f('organization_id')
 			);
 		}
-	_debug_array($groups);
+//	_debug_array($groups);
 		return $groups;
 	}
 	
