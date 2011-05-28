@@ -21,9 +21,10 @@ import no.bimconverter.ifc.IfcModel;
 import no.bimconverter.ifc.IfcSdaiException;
 import no.bimconverter.ifc.RepositoriesImpl;
 import no.bimconverter.ifc.loader.CommonLoader;
-import no.bimconverter.ifc.loader.SiteLoader;
 import no.bimconverter.ifc.v2x3.object.Building;
 import no.bimconverter.ifc.v2x3.object.BuildingStorey;
+import no.bimconverter.ifc.v2x3.object.CommonObject;
+import no.bimconverter.ifc.v2x3.object.FacilityManagementEntity;
 import no.bimconverter.ifc.v2x3.object.Project;
 import no.bimconverter.ifc.v2x3.object.Site;
 import no.bimconverter.ifc.v2x3.object.Space;
@@ -46,16 +47,6 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 	private SdaiRepository repository;
 	private Project project = new Project();
 	private Site site = new Site();
-	private List<Building> buildings = null;
-	private List<BuildingStorey> buildingStoreys = null;
-	private List<Space> spaces = null;
-	private List<Covering> covering = null;
-	private List<Window> windows = null;
-	private List<Door> doors = null;
-	private List<Furnishing> furnishingElements = null;
-	private List<Zone> zones = null;
-	private List<BuildingServiceElement> buildingServiceElements = null;
-	
 	public IfcModelImpl() {
 		super();
 	}
@@ -207,24 +198,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		makeModelReadable();
 	}
 
-	public Project getProject() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			//this.project.loadModel(model);
-			List<Project> pl = (List<Project>) (new CommonLoader()).load(model, new Project());
-			
-			this.project = pl.get(0);
-			return this.project;
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
+	
 	public ModelInformation getExchangeFileProperties() {
 		super.openSdaiSession();
 		try {
@@ -241,188 +215,21 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		return null;
 		
 	}
-
-	public Site getSite() {
+	
+	public List<? extends CommonObject> getFacilityManagementEntity(FacilityManagementEntity facilityManagementEntity) {
 		super.openSdaiSession();
 		try {
 			makeModelAvailable();
-			SiteLoader siteLoader = new SiteLoader();
-			this.site = siteLoader.loadModel(model);
-			return this.site;
+			List<CommonObject> output = (List<CommonObject>) (new CommonLoader()).load(model, facilityManagementEntity);
+			return output;
 		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new RuntimeException("Error loading entity:"+facilityManagementEntity);
 		} finally {
 			super.closeSdaiSession();
 		}
-		
-		return null;
-	}
-	public List<Building> getBuildings() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			//this.buildings = buildingLoader.loadBuildings(model);
-			this.buildings = (List<Building>) (new CommonLoader()).load(model, (new Building()));
-			return this.buildings;
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
 	}
 	
-	public List<BuildingStorey> getBuildingStoreys() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			
-			
-			try {
-				//this.buildingStoreys = buildingStoreyLoader.loadBuildingStoreys(model);
-				this.buildingStoreys =  (List<BuildingStorey>) (new CommonLoader()).load(model, (new BuildingStorey()));
-				return this.buildingStoreys;
-			} catch ( IfcSdaiException e) {
-				return null;
-			}
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
-	public List<Space> getSpaces() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			try {
-				//this.spaces = (List<Space>) (new CommonLoader()).load(model, EIfcspace.class, Space.class);
-				this.spaces = (List<Space>) (new CommonLoader()).load(model, (new Space()));
-				return this.spaces;
-			} catch ( IfcSdaiException e) {
-				return null;
-			}
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
-	public List<Covering> getCoverings() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			try {
-				this.covering = (List<Covering>) (new CommonLoader()).load(model, new Covering());
-				return this.covering;
-			} catch (IfcSdaiException e) {
-				
-				return null;
-			}
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
-	public List<Window> getWindows() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			try {
-				this.windows = (List<Window>) (new CommonLoader()).load(model, new Window());
-				return this.windows;
-			} catch (IfcSdaiException e) {
-				logger.info("No windows found");
-				return null;
-			}
-			
-			
-			
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
-	public List<Door> getDoors() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			
-			try {
-				this.doors = (List<Door>) (new CommonLoader()).load(model, new Door());
-				return this.doors;
-			} catch (IfcSdaiException e) {
-				logger.info("No doors found");
-				return null;
-			}
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
-	public List<Zone> getZones() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			
-			try {
-				this.zones = (List<Zone>) (new CommonLoader()).load(model, new Zone());
-				return this.zones;
-			} catch (IfcSdaiException e) {
-				logger.info("No zones found");
-				return null;
-			}
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
-	public List<BuildingServiceElement> getBuildingServiceElement() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			
-			try {
-				this.buildingServiceElements = (List<BuildingServiceElement>) (new CommonLoader()).load(model, new BuildingServiceElement());
-				return this.buildingServiceElements;
-			} catch (IfcSdaiException e) {
-				logger.info("No buildingServiceElements found");
-				return null;
-			}
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		
-		return null;
-	}
 	public SdaiModel getModel() {
 		return model;
 	}
@@ -431,26 +238,7 @@ public class IfcModelImpl extends RepositoriesImpl implements IfcModel{
 		this.model = model;
 	}
 
-	public List<Furnishing> getFurnishing() {
-		super.openSdaiSession();
-		try {
-			makeModelAvailable();
-			try {
-				this.furnishingElements = (List<Furnishing>) (new CommonLoader()).load(model, new Furnishing());
-				return this.furnishingElements;
-			} catch (IfcSdaiException e) {
-				logger.info("No furnishing found");
-				return null;
-			}
-			
-		} catch (SdaiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			super.closeSdaiSession();
-		}
-		return null;
-	}
+	
 
 }
 

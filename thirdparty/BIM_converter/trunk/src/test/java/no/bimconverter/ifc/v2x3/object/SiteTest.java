@@ -29,10 +29,16 @@ public class SiteTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		site = model.getSite();
+		site = ((List<Site>) model.getFacilityManagementEntity(new Site())).get(0);
+		
 	}
 	@After
 	public void tearDown() {
+	}
+	
+	@Test
+	public void checkSite() {
+		assertNotNull(site);
 	}
 	@Test
 	public void outputNewModel() throws SdaiException {

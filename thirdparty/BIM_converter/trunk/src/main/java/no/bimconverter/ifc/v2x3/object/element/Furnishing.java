@@ -10,6 +10,7 @@ import jsdai.SIfc2x3.EIfcbuildingstorey;
 import jsdai.SIfc2x3.EIfcdoor;
 import jsdai.SIfc2x3.EIfcelement;
 import jsdai.SIfc2x3.EIfcfurnishingelement;
+import jsdai.SIfc2x3.EIfcfurnituretype;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfcspace;
 import jsdai.SIfc2x3.EIfctypeobject;
@@ -48,9 +49,9 @@ public class Furnishing  extends CommonElement implements FacilityManagementEnti
 	}
 	private void loadFurnishingType(EIfcfurnishingelement entity) throws SdaiException {
 		EIfctypeobject typeObject = super.getTypeObject(entity);
-		if(typeObject != null && typeObject.isKindOf(EIfcwindowstyle.class)) {
+		if(typeObject != null && typeObject.isKindOf(EIfcfurnituretype.class)) {
 			this.furnishingType = new FurnishingType();
-			this.furnishingType.load((EIfcwindowstyle) typeObject);
+			this.furnishingType.load((EIfcfurnituretype) typeObject);
 			
 		}
 	}

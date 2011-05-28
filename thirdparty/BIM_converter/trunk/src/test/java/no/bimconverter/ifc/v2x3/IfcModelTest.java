@@ -66,7 +66,7 @@ public class IfcModelTest extends IfcTestMethods {
 	
 	@Test
 	public void testCreateAndIntializeProjectObject() throws JAXBException {
-		Project project = model.getProject();
+		Project project = ((List<Project>) model.getFacilityManagementEntity(new Project())).get(0);
 		assertNotNull(project);
 		this.testGetProjectUnits(project);
 		this.testGetProjectAttributes(project);

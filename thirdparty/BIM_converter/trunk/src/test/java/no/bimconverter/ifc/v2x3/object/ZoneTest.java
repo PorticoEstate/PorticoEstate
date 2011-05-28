@@ -23,7 +23,7 @@ public class ZoneTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		zoneList = model.getZones();
+		zoneList = (List<Zone>) model.getFacilityManagementEntity(new Zone());
 		zone1 = zoneList.get(0);
 		
 	}

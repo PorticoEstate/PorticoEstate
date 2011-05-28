@@ -60,7 +60,8 @@ public class WindowTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		windows = model.getWindows();
+		//windows = model.getWindows();
+		windows =(List<Window>) model.getFacilityManagementEntity(new Window());
 		window1 = windows.get(0);
 		window2 = windows.get(1);
 		window3 = windows.get(2);

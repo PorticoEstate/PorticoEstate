@@ -70,7 +70,7 @@ public class DoorTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		doors = model.getDoors();
+		doors = (List<Door>) model.getFacilityManagementEntity(new Door());
 		door1 = doors.get(0);
 		door2 = doors.get(1);
 		door3 = doors.get(2);

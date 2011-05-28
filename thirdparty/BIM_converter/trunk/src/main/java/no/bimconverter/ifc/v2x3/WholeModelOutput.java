@@ -39,17 +39,17 @@ public class WholeModelOutput {
 	}
 	public void load(IfcModelImpl model) {
 		this.modelInformation = model.getExchangeFileProperties();
-		this.project = model.getProject();
-		this.site = model.getSite();
-		this.buildings = model.getBuildings();
-		this.buildingStoreys = model.getBuildingStoreys();
-		this.spaces = model.getSpaces();
-		this.covering = model.getCoverings();
-		this.windows = model.getWindows();
-		this.doors = model.getDoors();
-		this.furnishingElements = model.getFurnishing();
-		this.zones = model.getZones();
-		this.buildingServiceElements = model.getBuildingServiceElement();
+		this.project = ((List<Project>) model.getFacilityManagementEntity(new Project())).get(0);
+		this.site = ((List<Site>) model.getFacilityManagementEntity(new Site())).get(0);
+		this.buildings = (List<Building>) model.getFacilityManagementEntity(new Building());
+		this.buildingStoreys = (List<BuildingStorey>) model.getFacilityManagementEntity(new BuildingStorey());
+		this.spaces = (List<Space>) model.getFacilityManagementEntity(new Space());
+		this.covering = (List<Covering>) model.getFacilityManagementEntity(new Covering());
+		this.windows = (List<Window>) model.getFacilityManagementEntity(new Window());
+		this.doors = (List<Door>) model.getFacilityManagementEntity(new Door());
+		this.furnishingElements = (List<Furnishing>) model.getFacilityManagementEntity(new Furnishing());
+		this.zones = (List<Zone>) model.getFacilityManagementEntity(new Zone());
+		this.buildingServiceElements = (List<BuildingServiceElement>) model.getFacilityManagementEntity(new BuildingServiceElement());
 		
 	}
 	public ModelInformation getModelInformation() {

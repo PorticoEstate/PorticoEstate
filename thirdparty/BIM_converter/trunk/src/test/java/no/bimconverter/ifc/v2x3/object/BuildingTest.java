@@ -42,7 +42,7 @@ public class BuildingTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		buildingsList = model.getBuildings();
+		buildingsList = (List<Building>) model.getFacilityManagementEntity(new Building());
 		building = buildingsList.get(0);
 	}
 	@After

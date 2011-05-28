@@ -39,7 +39,7 @@ public class BuildingStoreyTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		buildingStoreyList = model.getBuildingStoreys();
+		buildingStoreyList =  (List<BuildingStorey>) model.getFacilityManagementEntity(new BuildingStorey());
 		buildingStorey1 = buildingStoreyList.get(0);
 		buildingStorey2 = buildingStoreyList.get(1);
 		buildingStorey3 = buildingStoreyList.get(2);

@@ -56,7 +56,7 @@ public class FurnishingTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		furnishings = model.getFurnishing();
+		furnishings = (List<Furnishing>) model.getFacilityManagementEntity(new Furnishing());
 		furnishing1 = furnishings.get(0);
 		furnishing2 = furnishings.get(1);
 		furnishing3 = furnishings.get(2);

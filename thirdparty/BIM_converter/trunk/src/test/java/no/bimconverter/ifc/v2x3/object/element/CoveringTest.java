@@ -46,7 +46,7 @@ public class CoveringTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		coverings = model.getCoverings();
+		coverings = (List<Covering>) model.getFacilityManagementEntity(new Covering());
 		
 		covering1 = coverings.get(0);
 		covering2 = coverings.get(1);

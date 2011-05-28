@@ -38,7 +38,7 @@ public class ProjectTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		project = model.getProject();
+		project = ((List<Project>) model.getFacilityManagementEntity(new Project())).get(0);
 	}
 	@After
 	public void tearDown() {

@@ -51,7 +51,7 @@ public class SpaceTest extends IfcTestMethods{
 	@Before
 	public void setUp() {
 		super.createTestRepo();
-		spaceList = model.getSpaces();
+		spaceList = (List<Space>) model.getFacilityManagementEntity(new Space());
 		space1 = spaceList.get(0);
 		space2 = spaceList.get(1);
 		space3 = spaceList.get(2);

@@ -15,17 +15,22 @@ import jsdai.SIfc2x3.EIfcobjectdefinition;
 import jsdai.SIfc2x3.EIfcpostaladdress;
 import jsdai.SIfc2x3.EIfcroot;
 import jsdai.SIfc2x3.EIfcsite;
+import jsdai.SIfc2x3.EIfcspace;
 import jsdai.lang.EEntity;
 import jsdai.lang.SdaiException;
 import jsdai.lang.SdaiIterator;
 
 
 @XmlRootElement
-public class Site extends SpatialStructure{
+public class Site extends SpatialStructure implements FacilityManagementEntity{
+	final static private Class<EIfcsite> ifcEntityType = EIfcsite.class;
 	final private static String commonPropertyName = "Pset_SiteCommon";
 
 	
-	
+	@Override
+	public Class<? extends EIfcobjectdefinition> getIfcEntityType() {
+		return ifcEntityType;
+	}
 	
 	
 	private  Address address;
