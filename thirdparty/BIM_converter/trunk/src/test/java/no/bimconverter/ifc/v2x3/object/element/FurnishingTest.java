@@ -74,7 +74,7 @@ public class FurnishingTest extends IfcTestMethods{
 	
 	public void testDisplayFurnishing(Furnishing theFurnishing) throws JAXBException {
 		assertNotNull(theFurnishing);
-		//super.outputXmlToSystemOut(theFurnishing);
+		super.outputXmlToSystemOut(theFurnishing);
 	}
 	@Test
 	public void testDisplayFurnishings() throws JAXBException {
