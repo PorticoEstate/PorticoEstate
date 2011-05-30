@@ -59,11 +59,11 @@ public class CommonLoader {
 		}
 	}
 	private CommonObject loadObject(EEntity entity, Class<? extends CommonObject> myObject) {
-		CommonObject window;
+		CommonObject commonObject;
 		try {
-			window = myObject.newInstance();
-			window.load((EIfcobject)entity);
-			return window;
+			commonObject = myObject.newInstance();
+			commonObject.load((EIfcobject)entity);
+			return commonObject;
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

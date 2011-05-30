@@ -11,6 +11,7 @@ import no.bimconverter.ifc.v2x3.object.BuildingStorey;
 import no.bimconverter.ifc.v2x3.object.Project;
 import no.bimconverter.ifc.v2x3.object.Site;
 import no.bimconverter.ifc.v2x3.object.Space;
+import no.bimconverter.ifc.v2x3.object.SystemObject;
 import no.bimconverter.ifc.v2x3.object.Zone;
 import no.bimconverter.ifc.v2x3.object.element.BuildingServiceElement;
 import no.bimconverter.ifc.v2x3.object.element.Covering;
@@ -34,6 +35,7 @@ public class WholeModelOutput {
 	private List<Furnishing> furnishingElements = null;
 	private List<Zone> zones = null;
 	private List<BuildingServiceElement> buildingServiceElements = null;
+	private List<SystemObject> systems = null;
 	
 	public WholeModelOutput() {
 	}
@@ -50,7 +52,7 @@ public class WholeModelOutput {
 		this.furnishingElements = (List<Furnishing>) model.getFacilityManagementEntity(new Furnishing());
 		this.zones = (List<Zone>) model.getFacilityManagementEntity(new Zone());
 		this.buildingServiceElements = (List<BuildingServiceElement>) model.getFacilityManagementEntity(new BuildingServiceElement());
-		
+		this.systems = (List<SystemObject>) model.getFacilityManagementEntity(new SystemObject());
 	}
 	public ModelInformation getModelInformation() {
 		return modelInformation;
@@ -143,6 +145,14 @@ public class WholeModelOutput {
 	public void setBuildingServiceElements(
 			List<BuildingServiceElement> buildingServiceElements) {
 		this.buildingServiceElements = buildingServiceElements;
+	}
+	@XmlElementWrapper(name="systems")
+	@XmlElement(name="system") 
+	public List<SystemObject> getSystems() {
+		return systems;
+	}
+	public void setSystems(List<SystemObject> systems) {
+		this.systems = systems;
 	}
 
 }

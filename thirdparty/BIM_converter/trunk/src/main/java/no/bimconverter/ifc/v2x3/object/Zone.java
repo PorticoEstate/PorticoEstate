@@ -1,25 +1,18 @@
 package no.bimconverter.ifc.v2x3.object;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import no.bimconverter.ifc.jaxb.ZoneAssignment;
 
-import jsdai.SIfc2x3.AIfcobjectdefinition;
-import jsdai.SIfc2x3.AIfcrelassignstogroup;
-import jsdai.SIfc2x3.EIfcgroup;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
-import jsdai.SIfc2x3.EIfcrelassignstogroup;
 import jsdai.SIfc2x3.EIfcspace;
 import jsdai.SIfc2x3.EIfcsystem;
 import jsdai.SIfc2x3.EIfczone;
-import jsdai.lang.EEntity;
 import jsdai.lang.SdaiException;
-import jsdai.lang.SdaiIterator;
 @XmlRootElement
-public class Zone extends SystemObject implements FacilityManagementEntity{
+public class Zone extends GroupObject implements FacilityManagementEntity{
 	final static private Class<EIfczone> ifcEntityType = EIfczone.class;
 	private ZoneAssignment zoneAssignment = new ZoneAssignment();
 	public Zone() {

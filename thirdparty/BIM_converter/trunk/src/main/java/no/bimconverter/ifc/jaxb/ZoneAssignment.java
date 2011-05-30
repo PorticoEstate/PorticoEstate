@@ -1,6 +1,5 @@
 package no.bimconverter.ifc.jaxb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -8,9 +7,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ZoneAssignment {
+public class ZoneAssignment extends Assignment{
 	private List<String> spaces;
 	private List<String> subZones;
+	
 	public ZoneAssignment() {
 	}
 	
@@ -24,13 +24,7 @@ public class ZoneAssignment {
 		this.subZones.add(id);
 	}
 	
-	private List<String> checkAndInitializeArrayList(List<String> list) {
-		if(list == null) {
-			return new ArrayList<String>();
-		} else {
-			return list;
-		}
-	}
+	
 	
 	@XmlElementWrapper(name="spaces")
 	@XmlElement(name="guid")

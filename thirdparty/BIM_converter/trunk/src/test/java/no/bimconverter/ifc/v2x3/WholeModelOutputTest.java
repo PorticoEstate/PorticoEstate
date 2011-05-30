@@ -37,7 +37,6 @@ public class WholeModelOutputTest extends IfcTestMethods{
 		assertNotNull(wholeModel);
 	}
 	@Test
-	@Ignore
 	public void testDisplayCovering1() throws JAXBException {
 		JAXBContext jc = JAXBContext.newInstance(WholeModelOutput.class);
 		Marshaller m = jc.createMarshaller();

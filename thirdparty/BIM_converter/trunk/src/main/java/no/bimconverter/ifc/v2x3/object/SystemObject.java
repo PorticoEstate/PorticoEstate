@@ -3,23 +3,30 @@ package no.bimconverter.ifc.v2x3.object;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import jsdai.SIfc2x3.AIfcobjectdefinition;
-import jsdai.SIfc2x3.AIfcrelassignstogroup;
-import jsdai.SIfc2x3.EIfcgroup;
+import no.bimconverter.ifc.jaxb.ComponentSystemAssignment;
+import no.bimconverter.ifc.jaxb.SpatialContainerItem;
+
+import jsdai.SIfc2x3.AIfcrelservicesbuildings;
+import jsdai.SIfc2x3.AIfcspatialstructureelement;
+import jsdai.SIfc2x3.EIfcdistributionelement;
 import jsdai.SIfc2x3.EIfcobjectdefinition;
-import jsdai.SIfc2x3.EIfcrelassignstogroup;
-import jsdai.SIfc2x3.EIfcspace;
+import jsdai.SIfc2x3.EIfcrelservicesbuildings;
+import jsdai.SIfc2x3.EIfcspatialstructureelement;
 import jsdai.SIfc2x3.EIfcsystem;
-import jsdai.SIfc2x3.EIfczone;
-import jsdai.lang.EEntity;
 import jsdai.lang.SdaiException;
 import jsdai.lang.SdaiIterator;
-@XmlRootElement
-public class SystemObject extends CommonObjectImpl implements FacilityManagementEntity{
+@XmlRootElement(name="system")
+public class SystemObject extends GroupObject implements FacilityManagementEntity{
 	final static private Class<EIfcsystem> ifcEntityType = EIfcsystem.class;
+	private ComponentSystemAssignment componentSystemAssignment = new ComponentSystemAssignment();
+	private List<SpatialContainerItem> servicesBuildings;
 	
+	
+
 	public SystemObject() {
 	}
 	
@@ -35,42 +42,60 @@ public class SystemObject extends CommonObjectImpl implements FacilityManagement
 		try {
 			this.loadClassification(entity);
 			this.loadProperties(entity);
-			
+			this.loadAssignment(entity);
+			this.loadServicesBuildings(entity);
 		} catch (SdaiException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void loadAssignment(EIfczone entity) throws SdaiException {
-		List<String> spaceIds = this.loadAssignments(entity, EIfczone.class, EIfcspace.class);
-		for ( String spaceId : spaceIds) {
-			this.zoneAssignment.addSpaceId(spaceId);
+	private void loadAssignment(EIfcsystem entity) throws SdaiException {
+		List<String> componentIds = this.loadAssignments(entity, EIfcsystem.class, EIfcdistributionelement.class);
+		for ( String componentId : componentIds) {
+			this.componentSystemAssignment.addComponentGuid(componentId);
 		}
-		List<String> zoneIds = this.loadAssignments(entity, EIfcsystem.class, EIfczone.class);
-		for ( String spaceId : zoneIds) {
-			this.zoneAssignment.addZoneId(spaceId);
+		List<String> subSystemIds = this.loadAssignments(entity, EIfcsystem.class, EIfcsystem.class);
+		for ( String subSystemId : subSystemIds) {
+			this.componentSystemAssignment.addSubSystemId(subSystemId);
 		}
 		
 	}
 	
-	protected List<String> loadAssignments(EIfcgroup entity, Class<? extends EEntity> relatingGroupClass, Class<? extends EEntity> relatedObjectClass) throws SdaiException {
-		List<String> guidList = new ArrayList<String>();
-		AIfcrelassignstogroup groupAgg = entity.getIsgroupedby(null, null);
-		SdaiIterator groupIterator = groupAgg.createIterator();
-		while(groupIterator.next()) {
-			EIfcrelassignstogroup now = groupAgg.getCurrentMember(groupIterator);
-			EIfcgroup group = now.getRelatinggroup(null);
-			if(group.isKindOf(relatingGroupClass)) {
-				AIfcobjectdefinition relatedObjects = now.getRelatedobjects(null);
-				SdaiIterator objectIterator = relatedObjects.createIterator();
-				while(objectIterator.next()) {
-					EIfcobjectdefinition objDef = relatedObjects.getCurrentMember(objectIterator);
-					if(objDef.isKindOf(relatedObjectClass)) {
-						guidList.add(objDef.getGlobalid(null));
-					}
+	private void loadServicesBuildings(EIfcsystem entity) throws SdaiException {
+		AIfcrelservicesbuildings serviceBuildingsAggregate = entity.getServicesbuildings(null, null);
+		SdaiIterator serviceBuildingsIterator = serviceBuildingsAggregate.createIterator();
+		while(serviceBuildingsIterator.next()) {
+			EIfcrelservicesbuildings servicesBuildings = serviceBuildingsAggregate.getCurrentMember(serviceBuildingsIterator);
+			AIfcspatialstructureelement spatialStructureAggregation = servicesBuildings.getRelatedbuildings(null);
+			SdaiIterator spatialStructureIterator = spatialStructureAggregation.createIterator();
+			while(spatialStructureIterator.next()) {
+				EIfcspatialstructureelement spatialStructure = spatialStructureAggregation.getCurrentMember(spatialStructureIterator);
+				if(this.servicesBuildings == null) {
+					this.servicesBuildings = new ArrayList<SpatialContainerItem>();
 				}
+				this.servicesBuildings.add(new SpatialContainerItem(spatialStructure.getGlobalid(null), spatialStructure.getInstanceType().getName(null), null, null));
 			}
 		}
-		return guidList;
 	}
+	 
+	@XmlElement(name="component-system-assignment")
+	public ComponentSystemAssignment getComponentSystemAssignment() {
+		return componentSystemAssignment;
+	}
+
+	public void setComponentSystemAssignment(
+			ComponentSystemAssignment componentSystemAssignment) {
+		this.componentSystemAssignment = componentSystemAssignment;
+	}
+	
+	@XmlElementWrapper(name="services-buildings")
+	@XmlElement(name="structure")
+	public List<SpatialContainerItem> getServicesBuildings() {
+		return servicesBuildings;
+	}
+
+	public void setServicesBuildings(List<SpatialContainerItem> servicesBuildings) {
+		this.servicesBuildings = servicesBuildings;
+	}
+	
 }
