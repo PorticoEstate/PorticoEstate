@@ -22,6 +22,7 @@ class rental_uiparty extends rental_uicommon
 			'sync'				=> true,
 			'update_all_org_enhet_id'	=> true,
 			'syncronize_party'	=> true,
+			'syncronize_party_name'	=> true,
 			'create_user_based_on_email' => true
 	);
 
@@ -244,6 +245,85 @@ class rental_uiparty extends rental_uicommon
 			echo "Number of parties that have been updated {$count}<br />";
 		}
  	}
+ 	
+ 	/**
+ 	 * Synchronization job to update company name on contract parties which are connected to Fellesdata.
+ 	 * 
+ 	 * Uses property org_enhet_id on party to link party with unit from Fellesdata.
+ 	 * To be run as a scheduled job
+ 	 */
+ 	function syncronize_party_name()
+ 	{
+ 		$config	= CreateObject('phpgwapi.config','rental');
+		$config->read();
+
+		$use_fellesdata = $config->config_data['use_fellesdata'];	
+		if(!$use_fellesdata){
+			return;
+		}
+		$bofelles = rental_bofellesdata::get_instance();
+		
+		$parties = rental_soparty::get_instance()->get();
+		$result_count = rental_soparty::get_instance()->get_count();
+		$updated_parties;
+		
+		$updated_parties[] = "Total number of parties: {$result_count}";
+		
+		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			$count = 0;
+			$count_result_unit_number = 0;
+			$count_identifier = 0;
+			$count_responsibility = 0;
+
+			foreach ($parties as $party) {
+				$unit_found = false;
+				$fellesdata = NULL;
+
+				if(isset($party)) {
+					$sync_data = $party->get_sync_data();
+
+					$fellesdata = $bofelles->result_unit_exist($sync_data['result_unit_number'],4);
+					if ($fellesdata) {
+						$updated_parties[] = "Unit id found {$fellesdata['UNIT_ID']} by result unit number check. The unit name is {$fellesdata['UNIT_NAME']}<br />";
+						$count_result_unit_number++;
+					}
+
+					if ($fellesdata && isset($fellesdata['UNIT_ID']) && is_numeric($fellesdata['UNIT_ID'])) {
+						// We found a match, so store the new connection
+						$party->set_org_enhet_id($fellesdata['UNIT_ID']);
+						$old_party_name = $party->get_company_name();
+						$party->set_company_name($fellesdata['UNIT_NAME']);
+						$updated_parties[] = "Updated company name on party {$party->get_id()} with unit ID {$party->get_org_enhet_id} from {$old_party_name} to {$party->get_company_name()}";
+						$count++;
+					} else {
+						// No match was found. Do nothing
+						//$party->set_org_enhet_id(NULL);
+					}
+					rental_soparty::get_instance()->store($party);
+				}
+			}
+
+			$updated_parties[] = "Number of parties found through result unit number {$count_result_unit_number}";
+			$updated_parties[] = "Number of parties that have been updated {$count}";
+			log_sync_messages($updated_parties);
+		}
+ 	}
+ 	
+        private function log_sync_messages($messages) {
+        	
+            $msgs = array_merge(
+            	array('---------------Messages-------------------'),
+            	$messages
+            );
+            
+            //use PHPGW tmp-catalog to store log-file
+            $path = $GLOBALS['phpgw_info']['server']['temp_dir'];
+            
+            //Write to the log-file
+            $date_now = date('Y-m-d');
+            file_put_contents("{$path}/FD_name_sync_{$date_now}.log", implode(PHP_EOL, $msgs));
+        }
 	
 
 	/**
@@ -497,10 +577,13 @@ class rental_uiparty extends rental_uicommon
 		{
 			$party_id = phpgw::get_var('party_id');
 			$org_unit_id = phpgw::get_var('org_unit_id');
+			$org_unit_name = phpgw::get_var('org_unit_id');
 			if(isset($party_id) && $party_id > 0 && isset($org_unit_id) && $org_unit_id > 0)
 			{	
 				$party = rental_soparty::get_instance()->get_single($party_id);
 				$party->set_org_enhet_id($org_unit_id);
+				$patry->set_company_name($org_unit_name);
+				// add log-statement for synchronization
 				rental_soparty::get_instance()->store($party);
 			}
 		}
