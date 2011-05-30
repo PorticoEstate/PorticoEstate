@@ -354,16 +354,13 @@
 		 * @param $contract_id the id of the contract to show
 		 */
 		public function viewedit($editable, $contract_id, $contract = null, $location_id = null, $notification = null, string $message = null, string $error = null)
-		{
-			
-					
+		{				
 			$cancel_link = self::link(array('menuaction' => 'rental.uicontract.index', 'populate_form' => 'yes'));
 			$adjustment_id = (int)phpgw::get_var('adjustment_id');
 			if($adjustment_id){
 				$cancel_link = self::link(array('menuaction' => 'rental.uiadjustment.show_affected_contracts','id' => $adjustment_id));
 				$cancel_text = 'contract_regulation_back';
 			}
-			
 			
 			if (isset($contract_id) && $contract_id > 0) {
 				if($contract == null){
@@ -451,12 +448,22 @@
 			$message = null;
 			$error = null;
 			$add_default_price_items = false;
-
+			
 			if(isset($_POST['save_contract']))
 			{
 				if(isset($contract_id) && $contract_id > 0)
 				{
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
+					
+					// Gets responsibility area from db (ex: eksternleie, internleie)
+					$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
+					
+					// Redirect with error message if responsibility area is eksternleie and contract type not set
+					if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) ){
+						$error = lang('billing_removed_external_contract');
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));	
+					}
+					
 					if(!$contract->has_permission(PHPGW_ACL_EDIT))
 					{
 						unset($contract);
@@ -465,6 +472,16 @@
 				}
 				else
 				{
+					// Gets responsibility area from db (ex: eksternleie, internleie) 
+					$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($location_id);
+					
+					// Redirect with error message if responsibility area is eksternleie and contract type not set
+					if( !is_numeric( phpgw::get_var('contract_type') ) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0) ){
+						$error = lang('billing_removed_external_contract');
+						
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'location_id' => $location_id, 'message' => $message, 'error' => $error));
+					}
+				
 					if(isset($location_id) && ($this->isExecutiveOfficer() || $this->isAdministrator())){
 						$contract = new rental_contract();
 						$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -477,7 +494,7 @@
 				$date_start =  strtotime(phpgw::get_var('date_start_hidden'));
 				$date_end =  strtotime(phpgw::get_var('date_end_hidden'));
 				
-				if(isset($contract)){
+				if(isset($contract)){ 
 					$contract->set_contract_date(new rental_contract_date($date_start, $date_end));
 					$contract->set_security_type(phpgw::get_var('security_type'));
 					$contract->set_security_amount(phpgw::get_var('security_amount'));
@@ -585,7 +602,8 @@
 						return $this->viewedit(true, $contract_id, $contract, $location_id,$notification, $message, $error);
 					}
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));		
 			}
 			else if(isset($_POST['add_notification']))
 			{
