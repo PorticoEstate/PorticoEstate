@@ -208,6 +208,30 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_mailaddress_for_group_contact($contact_person_id)
+	{
+		if(isset($contact_person_id)){
+	    	$q1="SELECT email FROM bb_group_contact WHERE id={$contact_person_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('email');
+			}
+    	}
+		return $result;
+	}
+	
+	function get_mailaddress_for_org_contact($contact_person_id)
+	{
+		if(isset($contact_person_id)){
+	    	$q1="SELECT email FROM bb_group_contact WHERE id={$contact_person_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('email');
+			}
+    	}
+		return $result;
+	}
+	
 
 	/**
 	 * Function for adding a new activity to the database. Updates the activity object.

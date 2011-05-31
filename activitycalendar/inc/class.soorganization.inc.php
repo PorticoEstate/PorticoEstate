@@ -160,6 +160,18 @@ class activitycalendar_soorganization extends activitycalendar_socommon
     	}
 		return $contacts;
 	}
+	
+	function get_description($organization_id)
+	{
+    	if(isset($organization_id)){
+	    	$q1="SELECT description FROM bb_organization WHERE id={$organization_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$desc = $this->db->f('description');
+			}
+    	}
+		return $desc;
+	}
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.

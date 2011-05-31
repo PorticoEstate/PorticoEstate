@@ -18,7 +18,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		'add'				=> true,
 		'edit'				=> true,
 		'download'			=> true,
-		'download_export'	=> true
+		'send_mail'			=> true
 	);
 	
 	public function __construct()
@@ -114,10 +114,12 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		if(isset($g_id) && $g_id > 0)
 		{
 			$persons = activitycalendar_sogroup::get_instance()->get_contacts($g_id);
+			$desc = activitycalendar_sogroup::get_instance()->get_description($g_id);
 		}
 		else if(isset($o_id) && $o_id > 0)
 		{
 			$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
+			$desc = activitycalendar_soorganization::get_instance()->get_description($o_id);
 		}
 		$arenas = activitycalendar_soarena::get_instance()->get(null, null, null, null, null, null, null);
 		$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
@@ -127,6 +129,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		{
 			if(isset($activity)) // If an activity object is created
 			{
+				$old_state = $activity->get_state();
+				$new_state = phpgw::get_var('state');
+
 				// ... set all parameters
 				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id(phpgw::get_var('organization_id'));
@@ -135,11 +140,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$district_array = phpgw::get_var('district');
 				$activity->set_district(implode(",", $district_array));
 				$activity->set_office(phpgw::get_var('office'));
-				$activity->set_state(phpgw::get_var('state'));
+				$activity->set_state($new_state);
 				$activity->set_category(phpgw::get_var('category'));
 				$target_array = phpgw::get_var('target');
 				$activity->set_target(implode(",", $target_array));
-				$activity->set_description(phpgw::get_var('description'));
+				$activity->set_description($desc);
 				$activity->set_time(phpgw::get_var('time'));
 				$activity->set_contact_persons($persons);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
@@ -151,6 +156,22 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				else
 				{
 					$error = lang('messages_form_error');
+				}
+
+				if($new_state == 3 || $new_state == 4 || $new_state == 5 )
+				{
+					$kontor = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+					$subject = "Melding fra AktivBy";
+					$body = lang('mail_body_state_' . $new_state, $kontor);
+					
+					if(isset($g_id) && $g_id > 0)
+					{
+						activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+					}
+					else if (isset($o_id) && $o_id > 0)
+					{
+						activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+					}
 				}
 			}
 		}
@@ -259,8 +280,109 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.edit', 'id' => $value['id'])));
 				$value['labels'][] = lang('edit');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.send_mail', 'activity_id' => $value['id'],'message_type' => 'update')));
+				$value['labels'][] = lang('send_mail');
 				break;
 		}
     }
+    
+    public function send_mail()
+    {
+    	$activity_id = (int)phpgw::get_var('activity_id');
+    	$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
+    	
+    	$message_type = phpgw::get_var('message_type');
+    	if($message_type)
+    	{
+    		//$subject = lang('mail_subject_update', $avtivity->get_id() . '-' . $activity->get_title(), $activity->get_link());
+    		$subject = lang('mail_subject_update');
+    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title());
+    	}
+    	else
+    	{
+    		$subject = "dette er en test";
+    		$body = "testmelding fra Aktivitetsoversikt";
+    	}
+    	
+    	//var_dump($subject);
+    	//var_dump($body);
+    	
+    	
+    	if($activity->get_group_id())
+    	{
+    		activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
+    	}
+    	else if($activity->get_organization_id())
+    	{
+    		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
+    	}
+    	
+    }
+    
+	function send_mailnotification_to_organization($contact_person_id, $subject, $body)
+	{
+		
+		//var_dump($contact_person_id . ',' . $subject . ',' . $body);
+		if (!is_object($GLOBALS['phpgw']->send))
+		{
+			$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+		}
+
+		$config	= CreateObject('phpgwapi.config','booking');
+		$config->read();
+		$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+		//$from = "erik.holm-larsen@bouvet.no";
+
+		if (strlen(trim($body)) == 0) 
+		{
+			return false;
+		}
+		
+		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_org_contact($contact_person_id);
+		//$mailtoAddress = "erik.holm-larsen@bouvet.no";
+
+		if (strlen($mailtoAddress) > 0) 
+		{
+			try
+			{
+				//var_dump('inne i try');
+				$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'plain');
+			}
+			catch (phpmailerException $e)
+			{
+				//var_dump($e);
+			}
+		}
+	}
+    
+	function send_mailnotification_to_group($contact_person_id, $subject, $body)
+	{
+		$send = CreateObject('phpgwapi.send');
+
+		$config	= CreateObject('phpgwapi.config','booking');
+		$config->read();
+		$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+		//$from = "tester@bouvet.no";
+
+		if (strlen(trim($body)) == 0) 
+		{
+			return false;
+		}
+		
+		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person_id);
+		//$mailtoaddress = "erik.holm-larsen@bouvet.no";
+
+		if (strlen($mailtoAddress) > 0) 
+		{
+			try
+			{
+				$send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'plain');
+			}
+			catch (phpmailerException $e)
+			{
+			}
+		}
+	}
 }
 ?>

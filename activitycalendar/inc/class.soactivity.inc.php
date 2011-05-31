@@ -33,9 +33,25 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		(
 			'name'       => 'get_category_list',
 			'decription' => 'Get list of categories'
+		),
+		array
+		(
+			'name'       => 'get_organizations',
+			'decription' => 'Get list of organizations'
+		),
+		array
+		(
+			'name'       => 'get_groups',
+			'decription' => 'Get list of groups'
 		)
 	);
 
+	var $public_functions = array
+		(
+			'get_activities'  		=> true,
+			'get_organizations'  	=> true,
+			'get_groups'  			=> true,
+		);
 	
 	/**
 	 * Get a static reference to the storage object associated with this model object
@@ -203,7 +219,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		// Insert a new activity
 		$ts_now = strtotime('now');
-		$q ="INSERT INTO activity_activity (title, create_date) VALUES ('tmptitle', $ts_now)";
+		$secret = $this->generate_secret();
+		$q ="INSERT INTO activity_activity (title, create_date,secret) VALUES ('tmptitle', $ts_now, '{$secret}')";
 		$result = $this->db->query($q, __LINE__,__FILE__);
 
 		if(isset($result)) {
@@ -248,6 +265,56 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		);
 		
 		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+
+		return isset($result);
+	}
+	
+	function import_activity($activity)
+	{
+		$id = intval($activity->get_id());
+		$ts_now = strtotime('now');
+		
+		$columns = array(
+			'title',
+			'organization_id',
+			'group_id',
+			'district',
+			'office',
+			'category',
+			'state',
+			'target',
+			'description',
+			'arena',
+			'time',
+			'last_change_date',
+			'create_date',
+			'contact_person_1',
+			'contact_person_2',
+			'secret',
+			'special_adaptation'
+		);
+			
+		$values = array(
+			$this->marshal($activity->get_title(), 'string'),
+			$this->marshal($activity->get_organization_id(), 'int'),
+			$this->marshal($activity->get_group_id(), 'int'),
+			$this->marshal($activity->get_district(), 'string'),
+			$this->marshal($activity->get_office(), 'int'),
+			$this->marshal($activity->get_category(), 'int'),
+			$this->marshal($activity->get_state(), 'int'),
+			$this->marshal($activity->get_target(), 'string'),
+			$this->marshal($activity->get_description(), 'string'),
+			$this->marshal($activity->get_arena(), 'int'),
+			$this->marshal($activity->get_time(), 'string'),
+			$this->marshal($activity->get_last_change_date(), 'int'),
+			$this->marshal($ts_now, 'int'),
+			$this->marshal($activity->get_contact_person_1(), 'int'),
+			$this->marshal($activity->get_contact_person_2(), 'int'),
+			$this->marshal($this->generate_secret(),'string'),
+			($activity->get_special_adaptation() ? "true" : "false")
+		);
+		
+		$result = $this->db->query('INSERT INTO activity_activity (' . join(',', $columns) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 
 		return isset($result);
 	}
@@ -349,15 +416,17 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_district_name($district_id)
 	{
-		$result = "Ingen";
+		//$result = "Ingen";
+		$values = array();
 		if($district_id != null)
 		{
-			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id=$district_id";
+			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id in ($district_id)";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = $this->db->f('name');
+				$values[] = $this->db->f('name');
 			}
     	}
+    	$result = implode(",",$values);
 		return $result;
 	}
 	
@@ -458,44 +527,193 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function update_org_description($org_id, $description)
+	{
+    	if($org_id != null)
+    	{
+			$sql = "update bb_organization set description='{$description}' where id={$org_id}";
+    		$result = $this->db->query($sql, __LINE__, __FILE__);
+    	}
+		return isset($result);
+	}
+	
+	function set_org_active($org_id)
+	{
+		if($org_id != null)
+		{
+			$sql = "update bb_organization set show_in_portal=1 where id={$org_id}";
+    		$result = $this->db->query($sql, __LINE__, __FILE__);
+		}
+		return isset($result);
+	}
+	
 	function get_activities()
 	{
+		$activities = array();
 		$sql = "SELECT * FROM activity_activity";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
 			$activities[]= array
 			(
-					'id'				=> (int) $this->db->f('id'),
-					'title'				=> $this->db->f('title',true),
-					'organization_id'	=> $this->db->f('organization_id',true),
-					'organization_name' => activitycalendar_soorganization::get_instance()->get_organization_name($this->db->f('organization_id',true)),
-					'group_id'			=> $this->db->f('group_id'),
-					'group_name'		=> activitycalendar_sogroup::get_instance()->get_group_name($this->db->f('group_id')),
-					'district'			=> $this->db->f('district',true),
-					'district_name'		=> activitycalendar_soactivity::get_instance()->get_district_name($this->db->f('district', true)),
-					'category'			=> $this->db->f('category'),
-					'category_name'		=> $this->get_category_name($this->db->f('category')),
-					'state'				=> $this->db->f('state',true),
-					'target'			=> $this->db->f('target'),
-					'description'		=> $this->db->f('description'),
-					'time'				=> $this->db->f('time'),
-					'contact_person_1'	=> $this->db->f('contact_person_1'),
-					'contact_person_2'	=> $this->db->f('contact_person_2'),
-					'special_adaptation'=> $this->db->f('special_adaptation'),
+				'id'				=> (int) $this->db->f('id'),
+				'title'				=> utf8_decode($this->db->f('title',true)),
+				'organization_id'	=> $this->db->f('organization_id',true),
+				'group_id'			=> $this->db->f('group_id'),
+				'district'			=> $this->db->f('district',true),
+				'category'			=> $this->db->f('category'),
+				'state'				=> $this->db->f('state',true),
+				'target'			=> $this->db->f('target'),
+				'description'		=> utf8_decode($this->db->f('description')),
+				'arena'				=> $this->db->f('arena'),
+				'time'				=> utf8_decode($this->db->f('time')),
+				'contact_person_1'	=> $this->db->f('contact_person_1'),
+				'contact_person_2'	=> $this->db->f('contact_person_2'),
+				'special_adaptation'=> $this->db->f('special_adaptation'),
 			);
 		}
+
+		foreach ($activities as &$activity)
+		{
+				//$activity['organization_info']	= $this->get_org_info($activity['organization_id']);
+				//$activity['group_info']			= $this->get_group_info($activity['group_id']);
+				$activity['district_name']		= utf8_decode($this->get_district_name($activity['district']));
+				$activity['category_name']		= utf8_decode($this->get_category_name($activity['category']));
+				$activity['arena_info']			= $this->get_arena_info($activity['arena']);
+				$activity['contact_person']		= $this->get_contact_person($activity['organization_id'],$activity['group_id'],$activity['contact_person_1']);
+		}
+//	_debug_array($activities);
 		return $activities;
+	}
+	
+	function get_contact_person($org_id, $group_id, $cont_pers)
+	{
+		if($group_id && $cont_pers)
+		{
+			$cont_pers = (int)$cont_pers;
+	//		$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_group_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
+			}
+		}
+		else if($org_id && $cont_pers)
+		{
+			$cont_pers = (int)$cont_pers;
+			$this->db->query("SELECT * FROM bb_organization_contact WHERE id={$cont_pers}", __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = array('name' => utf8_decode($this->db->f('name')),'phone' => $this->db->f('phone'),'email' => $this->db->f('email'));
+			}
+		}
+		return $result;
+	}
+
+	function get_organizations()
+	{
+		$organizations = array();
+		$this->db->query("SELECT * FROM bb_organization WHERE show_in_portal=1", __LINE__, __FILE__);
+		while($this->db->next_record())
+		{
+			$organizations[] = array
+			(
+				'id'			=> (int) $this->db->f('id'),
+				'name'			=> utf8_decode($this->db->f('name')),
+				'shortname'		=> utf8_decode($this->db->f('shortname')),
+				'description'	=> utf8_decode($this->db->f('description')),
+				'homepage'		=> $this->db->f('homepage'),
+				'phone'			=> $this->db->f('phone'),
+				'email'			=> $this->db->f('email')
+			);
+		}
+//	_debug_array($organizations);
+		return $organizations;
+	}
+	
+	function get_org_info($org_id)
+	{
+		$result = array();
+		if($org_id)
+		{
+			$org_id = (int)$org_id;
+			$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$result = array
+			(
+				'name'			=> utf8_decode($this->db->f('name')),
+				'shortname'		=> utf8_decode($this->db->f('shortname')),
+				'description'	=> utf8_decode($this->db->f('description')),
+				'homepage'		=> $this->db->f('homepage'),
+				'phone'			=> $this->db->f('phone'),
+				'email'			=> $this->db->f('email')
+			);
+		}
+		return $result;
+	}
+	
+	function get_groups()
+	{
+		$groups = array();
+		$this->db->query("SELECT * FROM bb_group WHERE show_in_portal=1", __LINE__, __FILE__);
+		while($this->db->next_record())
+		{
+			$groups[] = array
+			(
+				'id'				=> (int) $this->db->f('id'),
+				'name'				=> utf8_decode($this->db->f('name')),
+				'shortname'			=> utf8_decode($this->db->f('shortname')),
+				'description'		=> utf8_decode($this->db->f('description')),
+				'organization_id'	=> $this->db->f('organization_id')
+			);
+		}
+//	_debug_array($groups);
+		return $groups;
+	}
+	
+	function get_group_info($group_id)
+	{
+		$result = array();
+		if($group_id)
+		{
+			$group_id = (int)$group_id;
+			$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$result = array
+			(
+				'name'				=> utf8_decode($this->db->f('name')),
+				'shortname'			=> utf8_decode($this->db->f('shortname')),
+				'description'		=> utf8_decode($this->db->f('description')),
+				'organization_id'	=> $this->db->f('organization_id')
+			);
+
+		}
+		return $result;
+	}
+	
+	function get_arena_info($arena_id)
+	{
+		$result = array();
+		if($arena_id)
+		{
+			$arena_id = (int)$arena_id;
+			$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$result = array
+			(
+				'arena_name' => utf8_decode($this->db->f('arena_name')),
+				'address' => utf8_decode($this->db->f('address'))
+			);
+		}
+		return $result;
 	}
 	
 	function get_statuscodes()
 	{
-		$statuscodes[] = array('0' => 'Ingen');
-		$statuscodes[] = array('1' => 'Ny');
-		$statuscodes[] = array('2' => 'Endring');
-		$statuscodes[] = array('3' => 'Akseptert');
-		$statuscodes[] = array('4' => 'Behandlet');
-		$statuscodes[] = array('5' => 'Avvist');
+		$statuscodes[] = array('id' => '0', 'name' => utf8_decode('Ingen'));
+		$statuscodes[] = array('id' => '1', 'name' => utf8_decode('Ny'));
+		$statuscodes[] = array('id' => '2', 'name' => utf8_decode('Endring'));
+		$statuscodes[] = array('id' => '3', 'name' => utf8_decode('Akseptert'));
+		$statuscodes[] = array('id' => '4', 'name' => utf8_decode('Behandlet'));
+		$statuscodes[] = array('id' => '5', 'name' => utf8_decode('Avvist'));
 
 		return $statuscodes;
 	}
@@ -507,7 +725,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		while($this->db->next_record()){
 			$targets[] = array(
 					'id'				=> (int) $this->db->f('id'),
-					'name'				=> $this->db->f('name',true),
+					'name'				=> utf8_decode($this->db->f('name',true)),
 			);
 		}
 		return $targets;
@@ -520,10 +738,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		while($this->db->next_record()){
 			$categories[] = array(
 					'id'				=> (int) $this->db->f('id'),
-					'name'				=> $this->db->f('name',true),
+					'name'				=> utf8_decode($this->db->f('name',true)),
 			);
 		}
 		return $categories;
 	}
-	
 }

@@ -27,4 +27,18 @@
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.2';
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
+	
+	$test[] = '0.1.2';
+	function activitycalendar_upgrade0_1_2()
+	{
+		$def_val = substr(base64_encode(rand(1000000000,9999999999)),0, 10);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','secret',array(
+			'type' => 'text',
+			'default' => $def_val,
+			'nullable' => 'False'
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.3';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
 ?>

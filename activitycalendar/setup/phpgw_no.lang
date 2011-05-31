@@ -372,3 +372,9 @@ state_5	activitycalendar	no	Avvist
 activity_import	activitycalendar	no	Importer aktiviteter
 office	activitycalendar	no	Kontor
 activity_helptext	activitycalendar	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.
+mail_subject_update	activitycalendar	no	Melding om oppdatering av aktivitet
+mail_body_update	activitycalendar	no	Du må oppdatere informasjonen som er registrert på aktivitet %1 . Bruk følgende lenke for å gå inn på aktiviteten: %2
+mail_body_state_3	activitycalendar	no	Ditt tips er publisert i kommuneportalen. Mvh %1 kulturkontor
+mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i kommuneportalen. Mvh %1 kulturkontor
+mail_body_state_5	activitycalendar	no	Ditt tips er behandlet, men vil ikke bli publisert i kommuneportalen. Mvh %1 kulturkontor
+send_mail	activitycalendar	no	Send e-post
