@@ -219,7 +219,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	{
 		// Insert a new activity
 		$ts_now = strtotime('now');
-		$q ="INSERT INTO activity_activity (title, create_date) VALUES ('tmptitle', $ts_now)";
+		$secret = $this->generate_secret();
+		$q ="INSERT INTO activity_activity (title, create_date,secret) VALUES ('tmptitle', $ts_now, '{$secret}')";
 		$result = $this->db->query($q, __LINE__,__FILE__);
 
 		if(isset($result)) {
@@ -289,6 +290,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'create_date',
 			'contact_person_1',
 			'contact_person_2',
+			'secret',
 			'special_adaptation'
 		);
 			
@@ -308,6 +310,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$this->marshal($ts_now, 'int'),
 			$this->marshal($activity->get_contact_person_1(), 'int'),
 			$this->marshal($activity->get_contact_person_2(), 'int'),
+			$this->marshal($this->generate_secret(),'string'),
 			($activity->get_special_adaptation() ? "true" : "false")
 		);
 		
