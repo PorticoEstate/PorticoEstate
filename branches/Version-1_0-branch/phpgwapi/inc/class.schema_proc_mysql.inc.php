@@ -139,21 +139,25 @@
 
 		function TranslateDefault($sDefault)
 		{
-			switch ($sDefault)
+
+			// Need Strict comparisons for true/false in case of datatype bolean
+			if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
 			{
-				case 'current_date':
-				case 'current_timestamp':
-					return 'now()';
-					break;
-				case 'true':
-				case 'True':
-					return 1;
-					break;
-				case 'false':
-				case 'False':
-					return 0;
+				$ret= 1;
 			}
-			return "'" . $sDefault . "'";
+			else if ($sDefault === false || $sDefault === 'false' || $sDefault === 'False')
+			{
+				$ret= 0;
+			}
+			else if ($sDefault == 'current_date' || $sDefault == 'current_timestamp')
+			{
+				$ret= 'now()';
+			}
+			else
+			{
+				$ret= "'" . $sDefault . "'";			
+			}
+			return $ret;
 		}
 
 		/* Inverse of above, convert sql column types to array info */

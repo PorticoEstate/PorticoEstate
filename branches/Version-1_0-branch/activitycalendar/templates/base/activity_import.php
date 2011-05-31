@@ -11,9 +11,9 @@
 
 <div id="messageHolder"></div>
 
-<form action="index.php?menuaction=activitycalendar.uiimport.index" method="post">
+<form action="index.php?menuaction=activitycalendar.uiimport.index" method="post" enctype="multipart/form-data">
 	<fieldset>
-		<label for="path">Path to activities file:</label> <input type="text" name="import_path" id="import_path" value="<?php echo $import_path ?>" size="60"/>
+		<label for="file">Choose activities file:</label> <input type="file" name="file" id="file" />
 		<label for="district">Location for the imported activities:</label>
 		<select name="district" id="district">
 			<?php

@@ -25,8 +25,6 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	/**
 	 * Generate SQL query
 	 *
-	 * @todo Add support for filter "party_type", meaning what type of contracts
-	 * the party is involved in.
 	 *
 	 * @param string $sort_field
 	 * @param boolean $ascending
@@ -51,6 +49,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			}
 			$order = "ORDER BY {$this->marshal($sort_field,'field')} $dir";
 		}
+		
 		if($search_for)
 		{
 			$query = $this->marshal($search_for,'string');
@@ -78,6 +77,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			$filter_clauses[] = "arena.id = {$id}";
 		}
 		
+		//filter on active/non-active
 		if(isset($filters['active']))
 		{
 			if($filters['active'] == 'active')
@@ -90,6 +90,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 			} 
 		}
 		
+		//filter on internal/not internal arena
 		if(isset($filters['arena_type']))
 		{
 			if($filters['arena_type'] == 'internal')
@@ -137,6 +138,13 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
+	/**
+	 * Populates an arena-object
+	 * 
+	 *  @param int $arena_id
+	 *  @param activitycalendar_arena $arena
+	 *  @return activitycalendar_arena $arena
+	 */
 	protected function populate(int $arena_id, &$arena)
 	{
 
@@ -151,6 +159,12 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		return $arena;
 	}
 	
+	/**
+	 * Get arena name
+	 *
+	 * @param int $arena_id
+	 * @return string arena name
+	 */
 	function get_arena_name($arena_id)
 	{
 		$result = "Ingen";
@@ -165,6 +179,11 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		return $result;
 	}
 	
+	/**
+	 * Get registered buildings from property
+	 *
+	 * @return array buildings, [id => name]
+	 */
 	function get_buildings()
 	{
 		$buildings = array();
@@ -178,6 +197,12 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		return $buildings;
 	}
 	
+	/**
+	 * Get building name from property
+	 *
+	 * @param int $building_id
+	 * @return string building name
+	 */
 	function get_building_name($building_id){
 		if(isset($building_id))
 		{

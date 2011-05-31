@@ -161,7 +161,7 @@ class rental_socomposite extends rental_socommon
 			{
 				$cols = "rental_composite.id AS composite_id,";
 			}
-			$cols .= "rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, ";
+			$cols .= "rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, rental_composite.description, ";
 			$cols .= "
 			CASE WHEN 
 			(
@@ -177,6 +177,7 @@ class rental_socomposite extends rental_socommon
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
 	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+	    
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	

@@ -279,8 +279,14 @@ function loadDatatables(currTab){
 						{
 							?>
 							<select name="contract_type">
-								<option>Ingen type</option>
-								<?php
+								<!-- Adds option Ingen type if the contract is not assigned responsibility area eksternleie  -->
+								<?php  
+								$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());			
+								
+								if( strcmp($responsibility_area, "contract_type_eksternleie") != 0 ){ 
+									echo "<option>Ingen type</option>";
+								}
+								
 								foreach(rental_socontract::get_instance()->get_contract_types($contract->get_location_id()) as $contract_type_id => $contract_type_label)
 								{
 									echo "<option ".($current_contract_type_id == $contract_type_id ? 'selected="selected"' : "")." value=\"{$contract_type_id}\">".lang($contract_type_label)."</option>";

@@ -18,6 +18,7 @@
 				'last_change_date' => array('type' => 'int', 'precision' => 4, 'precision' => '8', 'nullable' => true),
 				'contact_person_1' => array('type' => 'varchar','precision' => '255'),
 				'contact_person_2' => array('type' => 'varchar','precision' => '255'),
+				'secret' => array('type' => 'text','nullable' => False),
 				'special_adaptation' => array('type' => 'bool','nullable' => true,'default' => 'false')
 			),
 			'pk' => array('id'),
@@ -31,7 +32,7 @@
 				'internal_arena_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'arena_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'address' => array('type' => 'varchar','precision' => '255','nullable' => True),
-				'active' => array('type' => 'bool','nullable' => true,'default' => True)
+				'active' => array('type' => 'bool','nullable' => true,'default' => 'true')
 			),
 			'pk' => array('id'),
 			'fk' => array(),

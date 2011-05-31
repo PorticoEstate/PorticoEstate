@@ -276,6 +276,7 @@ dl.contactinfo dd {
 	border: none !important;
 }
 
+/* CSS for newlayout */
 body{
 color: #575757;
 margin:0;
@@ -327,7 +328,7 @@ width: 172px !important;
 height: 108px !important;
 background: url(../images/newlayout/aktivby_logo.jpg) no-repeat !important;
 background-position: bottom center !important;
-padding: 22px 0px 0px 150px !important;
+padding: 22px 0px 0px 400px !important;
 }
 
 #header-search{

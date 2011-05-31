@@ -231,87 +231,96 @@
 			$datatable = array();
 			$values_combo_box = array();
 
-			$integrationurl = '';
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$custom_config	= CreateObject('admin.soconfig',$location_id);
-			$_integration_config = isset($custom_config->config_data['integration']) ? $custom_config->config_data['integration'] : array();
+			$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
 
-			if(isset($_integration_config['url']))
+			$_integration_set = array();
+			foreach ($_config as $_config_section => $_config_section_data)
 			{
-				if(isset($_integration_config['auth_hash_name']) && $_integration_config['auth_hash_name'] && isset($_integration_config['auth_url']) && $_integration_config['auth_url'])
+				$integrationurl = '';
+				if(isset($_config_section_data['url']))
 				{
-					//get session key from remote system
-
-					$arguments = array($_integration_config['auth_hash_name'] => $_integration_config['auth_hash_value']);
-					$query = http_build_query($arguments);
-					$auth_url = $_integration_config['auth_url'];
-					$request = "{$auth_url}?{$query}";
-
-					$aContext = array
-						(
-							'http' => array
-							(
-								'request_fulluri' => true,
-							),
-						);
-
-					if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+					if(isset($_config_section_data['auth_hash_name']) && $_config_section_data['auth_hash_name'] && isset($_config_section_data['auth_url']) && $_config_section_data['auth_url'])
 					{
-						$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+						//get session key from remote system
+
+						$arguments = array($_config_section_data['auth_hash_name'] => $_config_section_data['auth_hash_value']);
+						$query = http_build_query($arguments);
+						$auth_url = $_config_section_data['auth_url'];
+						$request = "{$auth_url}?{$query}";
+
+						$aContext = array
+							(
+								'http' => array
+								(
+									'request_fulluri' => true,
+								),
+							);
+
+						if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+						{
+							$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+						}
+
+						$cxContext = stream_context_create($aContext);
+						$response = trim(file_get_contents($request, False, $cxContext));
 					}
 
 
-					$cxContext = stream_context_create($aContext);
-					$response = trim(file_get_contents($request, False, $cxContext));
-				}
+					$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
+					$_config_section_data['parametres']= htmlspecialchars_decode($_config_section_data['parametres']);
+					$integration_name = isset($_config_section_data['name']) && $_config_section_data['name'] ? $_config_section_data['name'] : lang('integration');
 
+					parse_str($_config_section_data['parametres'], $output);
 
-				$_integration_config['url']		= htmlspecialchars_decode($_integration_config['url']);
-				$_integration_config['parametres']= htmlspecialchars_decode($_integration_config['parametres']);
-				$integration_name = isset($_integration_config['name']) && $_integration_config['name'] ? $_integration_config['name'] : lang('integration');
-
-				parse_str($_integration_config['parametres'], $output);
-
-				foreach ($output as $_dummy => $_substitute)
-				{
-					$_keys[] = $_substitute;
-					$__substitute = trim($_substitute, '_');
-					$_values[] = $this->$__substitute;
-				}
-				unset($output);
-
-				$_sep = '?';
-				if (stripos($_integration_config['url'],'?'))
-				{
-					$_sep = '&';
-				}
-				$_param = str_replace($_keys, $_values, $_integration_config['parametres']);
-
-				$integrationurl = "{$_integration_config['url']}{$_sep}{$_param}";
-				$integrationurl .= "&{$_integration_config['auth_key_name']}={$response}";
-
-				$_integration_config['location_data']= htmlspecialchars_decode($_integration_config['location_data']);
-
-				$parameters_integration = array();
-				if($_integration_config['location_data'])
-				{
-					parse_str($_integration_config['location_data'], $output);
-
-					foreach ($output as $_name => $_substitute)
+					foreach ($output as $_dummy => $_substitute)
 					{
-						if($_substitute == '__loc1__') // This one is a link...
-						{
-							$_substitute = '__location_code__';
-						}
+						$_keys[] = $_substitute;
+						$__substitute = trim($_substitute, '_');
+						$_values[] = $this->$__substitute;
+					}
+					unset($output);
 
-						$parameters_integration['parameter'][] = array
+					$_sep = '?';
+					if (stripos($_config_section_data['url'],'?'))
+					{
+						$_sep = '&';
+					}
+					$_param = str_replace($_keys, $_values, $_config_section_data['parametres']);
+
+					$integrationurl = "{$_config_section_data['url']}{$_sep}{$_param}";
+					$integrationurl .= "&{$_config_section_data['auth_key_name']}={$response}";
+
+					$_config_section_data['location_data']= htmlspecialchars_decode($_config_section_data['location_data']);
+
+					$parameters_integration = array();
+					if($_config_section_data['location_data'])
+					{
+						parse_str($_config_section_data['location_data'], $output);
+
+						foreach ($output as $_name => $_substitute)
+						{
+							if($_substitute == '__loc1__') // This one is a link...
+							{
+								$_substitute = '__location_code__';
+							}
+
+							$parameters_integration['parameter'][] = array
 							(
 								'name'		=> $_name,
 								'source'	=> trim($_substitute, '_'),
 							);
+						}
 					}
+					
+					$_integration_set[] = array
+					(
+						'name'			=> $integration_name,
+						'parameters'	=> $parameters_integration,
+						'url'			=> $integrationurl
+					);
 				}
-
 			}
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
@@ -494,17 +503,41 @@
 					)
 				);
 
-				if($integrationurl)
+				$button_def[] = "oNormalButton_0";
+				$button_def[] = "oNormalButton_1";
+				$button_def[] = "oNormalButton_2";
+				$code_inner[] = "{order:0, name:'btn_search',funct:'onSearchClick'}";
+				$code_inner[] = "{order:1, name:'btn_new',	funct:'onNewClick'}";
+				$code_inner[] = "{order:2, name:'btn_export',funct:'onDownloadClick'}";
+				$_js_functions = '';
+
+				foreach ($_integration_set as $i => $_integration)
 				{	
+
+					$button_def[] = 'oNormalButton_' . ($i + 3); 
+					$code_inner[] = "{order:" . ($i + 3)  .", name:'btn_integration_{$i}',funct:'onIntegrationClick_{$i}'}";
+
 					$datatable['actions']['form'][0]['fields']['field'][] =  array
-						(
-							'type'	=> 'button',
-							'id'	=> 'btn_integration',
-							'value'	=> $integration_name,
-							'tab_index' => 10
-						);
+					(
+						'type'	=> 'button',
+						'id'	=> "btn_integration_{$i}",
+						'value'	=> $_integration['name'],
+						'tab_index' => 10 + $i
+					);
+
+					$_js_functions .= <<<JS
+						this.onIntegrationClick_{$i} = function()
+						{
+							window.open(values_ds.integrationurl_{$i},'window');
+						}
+JS;
 				}
 
+				$code = 'var ' . implode(',', $button_def)  . ";\n";
+				$code .= 'var normalButtons = [' . "\n" . implode(",\n",$code_inner) . "\n];";
+				$code .= $_js_functions;
+
+				$GLOBALS['phpgw']->js->add_code('', $code);
 
 				if(!$block_query)
 				{	
@@ -756,16 +789,15 @@
 						);
 				}
 
-
-				if($integrationurl)
-				{	
+				foreach ($_integration_set as $_integration )
+				{
 					$datatable['rowactions']['action'][] = array
-						(
-							'my_name'		=> 'integration',
-							'text'	 		=> $integration_name,
-							'action'		=> $integrationurl.'&target=_blank',
-							'parameters'	=> $parameters_integration
-						);
+					(
+						'my_name'		=> 'integration',
+						'text'	 		=> $_integration['name'],
+						'action'		=> $_integration['url'].'&target=_blank',
+						'parameters'	=> $_integration['parameters']
+					);
 				}
 
 				if($this->acl_delete)
@@ -954,7 +986,10 @@
 					'records'			=> array()
 				);
 
-			$json['integrationurl']	= $integrationurl;
+				foreach ($_integration_set as $i => $_integration)
+				{	
+					$json["integrationurl_{$i}"]	= $_integration['url'];
+				}
 
 			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
@@ -1536,7 +1571,6 @@
 					'headers'			=> $uicols
 				);
 
-			$json['integrationurl']	= $integrationurl;
 
 			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
@@ -2214,11 +2248,140 @@
 						}
 					}
 				}
+
+
+// ---- START INTEGRATION -------------------------
+
+				$custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', $this->acl_location));
+				$_config = isset($custom_config->config_data) && $custom_config->config_data ? $custom_config->config_data : array();
+//_debug_array($custom_config->config_data);die();
+			// required settings:
+/*
+				integration_tab
+				integration_url
+				integration_parametres
+				integration_action
+				integration_action_view
+				integration_action_edit
+				integration_auth_key_name
+				integration_auth_url
+				integration_auth_hash_name
+				integration_auth_hash_value
+				integration_location_data
+ */
+				$integration = array();
+				foreach ($_config as $_config_section => $_config_section_data)
+				{
+					if(isset($_config_section_data['tab']))
+					{
+						if(!isset($_config_section_data['url']))
+						{
+							phpgwapi_cache::message_set("'url' is a required setting for integrations, '{$_config_section}' is disabled", 'error');
+							break;
+						}
+
+						//get session key from remote system
+						$arguments = array($_config_section_data['auth_hash_name'] => $_config_section_data['auth_hash_value']);
+						$query = http_build_query($arguments);
+						$auth_url = $_config_section_data['auth_url'];
+						$request = "{$auth_url}?{$query}";
+
+						$aContext = array
+						(
+							'http' => array
+							(
+								'request_fulluri' => true,
+							),
+						);
+	
+						if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+						{
+							$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+						}
+	
+						$cxContext = stream_context_create($aContext);
+						$response = trim(file_get_contents($request, False, $cxContext));
+
+						$integration[]	= array('section' => $_config_section);
+						$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
+						$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
+
+						parse_str($_config_section_data['parametres'], $output);
+
+						foreach ($output as $_dummy => $_substitute)
+						{
+							$_keys[] = $_substitute;
+	
+							$__value = false;
+							if(!$__value = urlencode($values[trim($_substitute, '_')]))
+							{
+								foreach ($values['attributes'] as $_attribute)
+								{
+									if(trim($_substitute, '_') == $_attribute['name'])
+									{
+										$__value = urlencode($_attribute['value']);
+										break;
+									}
+								}
+							}
+
+							if($__value)
+							{
+								$_values[] = $__value;
+							}
+						}
+
+						//_debug_array($_config_section_data['parametres']);
+						//_debug_array($_values);
+						unset($output);
+						unset($__value);
+						$_sep = '?';
+						if (stripos($_config_section_data['url'],'?'))
+						{
+							$_sep = '&';
+						}
+						$_param = str_replace($_keys, $_values, $_config_section_data['parametres']);
+						unset($_keys);
+						unset($_values);
+		//				$integration_src = phpgw::safe_redirect("{$_config_section_data['url']}{$_sep}{$_param}");
+						$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
+						if($_config_section_data['action'])
+						{
+							$_sep = '?';
+							if (stripos($integration_src,'?'))
+							{
+								$_sep = '&';
+							}
+							$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
+						}
+
+						$arguments = array($_config_section_data['auth_key_name'] => $response);
+
+						if(isset($_config_section_data['location_data']) && $_config_section_data['location_data'])
+						{
+							$_config_section_data['location_data']	= htmlspecialchars_decode($_config_section_data['location_data']);
+							parse_str($_config_section_data['location_data'], $output);
+							foreach ($output as $_dummy => $_substitute)
+							{
+								$_keys[] = $_substitute;
+								$_values[] = urlencode($values['location_data'][trim($_substitute, '_')]);
+							}
+							$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
+						}
+
+						$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
+						//_debug_array($values);
+						//_debug_array($integration_src);die();
+						$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}", 'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
+					}
+				}
+// ---- END INTEGRATION -------------------------
 			}
 
 
 			$data = array
 			(
+				'integration'					=> $integration,
 				'roles'							=> $roles,
 				'edit'							=> $view ? '' : true,
 				'lang_change_type'				=> lang('Change type'),

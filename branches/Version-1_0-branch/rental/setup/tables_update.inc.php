@@ -226,4 +226,19 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 	
+	$test[] = '0.1.0.12';
+	function rental_upgrade0_1_0_12()
+	{
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->set_timer(
+			array('day' => "*/1"),
+			'rental_sync_party_name',
+			'rental.uiparty.syncronize_party_name',
+			null
+			);
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.13';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
+	
 ?>

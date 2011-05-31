@@ -279,23 +279,12 @@
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_description() || $editable) { ?>
+					<?php if($activity->get_description()) { ?>
 					<label for="description"><?php echo lang('description') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
-					<?php
-					if ($editable)
-					{
-					?>
-						<textarea cols="100" rows="5" name="description" id="description"><?php echo $activity->get_description() ?></textarea>
-					<?php
-					}
-					else
-					{
-						echo $activity->get_description();
-					}
-					?>
+					<?php echo $activity->get_description(); ?>
 				</dd>
 				<dt>
 					<?php if($activity->get_time() || $editable) { ?>

@@ -180,6 +180,18 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		
 		return $contacts;
 	}
+	
+	function get_description($group_id)
+	{
+    	if(isset($group_id)){
+	    	$q1="SELECT description FROM bb_group WHERE id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$desc = $this->db->f('description');
+			}
+    	}
+		return $desc;
+	}
 
 	protected function populate(int $group_id, &$group)
 	{
