@@ -18,7 +18,7 @@
 		
 
 		public function index()
-		{		
+		{	
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];	
@@ -141,7 +141,7 @@
 				}
 			}
 			else if(isset($_POST['remove']))
-			{
+			{ 
 				$account_id = phpgw::get_var('account_id'); 
 				$result = frontend_bofrontend::remove_delegate($account_id,null,null);
 				if($result)
@@ -168,10 +168,10 @@
 					$msglog['error'][] = array('msg' => lang('remove_delegate_error'));	
 				}
 			}
-			
+
 			$form_action = $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uidelegates.index'));
 			$delegates_per_org_unit = frontend_bofrontend::get_delegates($this->header_state['selected_org_unit']);
-			$delegates_per_user = frontend_bofrontend::get_delegates(null);
+			$delegates_per_user = frontend_bofrontend::get_delegates(null, true);
 			
 			$number_of_delegates = count($delegates_per_org_unit);
 			$number_of_user_delegates = count($delegates_per_user);
