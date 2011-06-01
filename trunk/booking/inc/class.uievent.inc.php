@@ -554,21 +554,34 @@
 							}
 							if(phpgw::get_var('sendtocollision', 'POST'))
 							{
+								
+								$mail_sendt_to = '';
+								$mail_message = lang('There are changes to your reservations').": \n";
 								foreach (array_keys($maildata) as $mail)
 								{
 									$comment_text_log = lang('There are changes to your reservations').": \n";
+									$mail_sendt_to = $mail_sendt_to.' '.$mail;
 									foreach($maildata[$mail] as $data)
 									{
 										$comment_text_log .= $data['date'].', '.$data['building'].', '.$data['resource'].', Kl. '.$data['start'].' - '.$data['end']." \n";
+										$mail_message .= $comment_text_log;
 									}
 									$comment_text_log .= phpgw::get_var('mail', 'POST');
 									$this->send_mailnotification($mail, lang('Event changed'), $comment_text_log);
+								}
+								if (strpos($mail_sendt_to,'@') !== False)				
+								{
+									$comment = $mail_message."\n".phpgw::get_var('mail', 'POST').".\n Denne er sendt til ".$mail_sendt_to;
+									$this->add_comment($event,$comment);			
 								}
 							}
 							if(phpgw::get_var('sendtocontact', 'POST'))
 							{
 								$comment_text_log = phpgw::get_var('mail', 'POST');
 								$this->send_mailnotification($event['contact_email'], lang('Event changed'), $comment_text_log);
+								$comment = $comment_text_log.' Denne er sendt til '.$event['contact_email'];
+								$this->add_comment($event,$comment);			
+		
 							}
 							if(phpgw::get_var('sendtorbuilding', 'POST'))
 							{
@@ -581,22 +594,32 @@
 								$comment_text_log = $comment_text_log.' har fått innvilget et arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_'])).".\nFor mer opplysinger slå opp i AktivBy.";
 //								$comment_text_log = phpgw::get_var('mail', 'POST');
 								$sendt = 0;
+								$mail_sendt_to = '';
 								if($building_info['email']) {
 									$sendt++;
+									$mail_sendt_to = $mail_sendt_to.' '.$building_info['email'];
 									$this->send_mailnotification($building_info['email'], lang('Message about new event'), $comment_text_log);
 								} 
 								if ($_POST['sendtorbuilding_email1']) {
 									$sendt++;
+									$mail_sendt_to = $mail_sendt_to.' '.$_POST['sendtorbuilding_email1'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email1'], lang('Message about new event'), $comment_text_log);
 		
 								} 
 								if ($_POST['sendtorbuilding_email2']) {
 									$sendt++;
+									$mail_sendt_to = $mail_sendt_to.' '.$_POST['sendtorbuilding_email2'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email2'], lang('Message about new event'), $comment_text_log);
 								}
 								if ($sendt > 0) {
 									$errors['mailtobuilding'] = lang('Unable to send warning, No mailadresses found');
+								} 
+								else 
+								{
+									$comment = $comment_text_log.' Denne er sendt til '.$mail_sendt_to;
+									$this->add_comment($event,$comment);			
 								}
+								
 							}
 						}				
 						else 
