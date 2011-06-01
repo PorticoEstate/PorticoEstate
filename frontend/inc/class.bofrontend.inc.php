@@ -86,11 +86,11 @@
 		}
 		
 		public static function get_delegations(int $account_id)
-		{
+		{ 	
 			if(isset($account_id))
-			{
+			{ 
 				//$sql = "SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
-				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
+				$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');
 				$sql = "SELECT data FROM phpgw_account_delegates WHERE account_id = {$account_id} AND location_id = {$location_id}";
 				
 				$db = clone $GLOBALS['phpgw']->db;
@@ -198,26 +198,32 @@
 		}
 		
 		/**
-		 * Get delegates based on either the organisational unit, the delagations given by this user
+		 * Get delegates based on a organisational unit, all units and distinct delegates 
+		 * when all units is requested. The delagations given by this user
 		 * 
 		 * @param int $owner_id	the person who has given the delegation
 		 * @param unknown_type $org_unit_id	the target organisational unit
 		 */
-		public static function get_delegates($org_unit_id)
+		public static function get_delegates($org_unit_id, $distinct = false)
 		{
 			// The location
 			$location_id = $GLOBALS['phpgw']->locations->get_id( 'frontend' , '.');;
 			$owner_id = isset($owner_id) ? $owner_id : $GLOBALS['phpgw_info']['user']['account_id'];
-			
-			
+	
 			// If a specific organisational unit is chosen
-			if(!isset($org_unit_id))
+			if(!isset($org_unit_id) && !$distinct)
 			{
-				$sql = 	"SELECT pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+				$sql = "SELECT pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname 
+				FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
 			}
-			else if($org_unit_id != 'all')
+			else if(!isset($org_unit_id) && $distinct)
 			{
-				$sql = 	"SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname 
+				$sql = "SELECT DISTINCT ON (pad.account_id) pad.account_id, pad.owner_id, pad.data, pa.account_lid, pa.account_firstname, pa.account_lastname 
+				     FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.account_id) WHERE owner_id = {$owner_id}";
+			}
+			else if($org_unit_id != 'all' && !$distinct)
+			{
+				$sql = "SELECT pad.account_id, pa.account_lid, pa.account_firstname, pa.account_lastname 
 				FROM phpgw_account_delegates pad 
 				LEFT JOIN phpgw_accounts pa 
 				ON (pa.account_id = pad.account_id) WHERE data = '{$org_unit_id}' AND location_id = {$location_id}";
@@ -226,10 +232,8 @@
 				return array();
 			}
 			
-			
 			$db = clone $GLOBALS['phpgw']->db;
 			$db->query($sql,__LINE__,__FILE__);
-			
 			
 			$delegates = array();
         	while($db->next_record())
@@ -242,6 +246,7 @@
         			'account_lastname'	=>	$db->f('account_lastname', true)
         		);
         	} 
+        	    	
 			return $delegates;
 		}
 		

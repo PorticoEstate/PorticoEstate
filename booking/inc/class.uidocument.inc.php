@@ -295,7 +295,9 @@
 				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
+					echo "<pre>";print_r($document);print_r($errors);exit;
 					try {
+
 						$receipt = $this->bo->add($document);
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_owner_typed_link_params('index'));

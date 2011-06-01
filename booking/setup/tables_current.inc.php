@@ -768,6 +768,18 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'bb_documentation' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+				'description' => array('type' => 'text', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 	);

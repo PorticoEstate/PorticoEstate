@@ -114,11 +114,14 @@ JS;
 	$config->read();
 	$logofile_frontend = isset($config->config_data['logopath_frontend']) && $config->config_data['logopath_frontend'] ? $config->config_data['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
 
+	$bodoc = CreateObject('booking.bodocumentation');
+	
+	$test  =  $bodoc->so->getFrontendDoc();	
 	$app = lang($app);
 	$tpl_vars = array
 	(
-#		'manual_text' 	=> lang('manual'),
-#		'manual_url' 	=> '#',
+		'manual_text' 	=> lang('manual'),
+		'manual_url' 	=> $test,
 #		'help_text' 	=> lang('help'),
 #		'help_url' 		=> '#',
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),

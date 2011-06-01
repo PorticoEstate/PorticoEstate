@@ -2582,3 +2582,38 @@
 		}
 	}
 
+	$test[] = '0.2.07';
+	/**
+	* Update booking version from 0.2.07 to 0.2.08
+	* Add custom fields to request
+	* 
+	*/
+	function booking_upgrade0_2_07()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_documentation', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+					'description' => array('type' => 'text', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+	
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.08';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+

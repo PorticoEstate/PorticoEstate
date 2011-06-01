@@ -381,7 +381,7 @@
 			$id = intval(phpgw::get_var('allocation_id', 'GET'));
 			$outseason = phpgw::get_var('outseason', 'GET');
 			$recurring = phpgw::get_var('recurring', 'GET');
-			$repeat_untild = phpgw::get_var('repeat_until', 'GET');
+			$repeat_until = phpgw::get_var('repeat_until', 'GET');
 			$field_interval = intval(phpgw::get_var('field_interval', 'GET'));
 			$allocation = $this->bo->read_single($id);
     		$season = $this->season_bo->read_single($allocation['season_id']);
