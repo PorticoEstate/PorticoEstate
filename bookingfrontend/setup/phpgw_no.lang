@@ -334,3 +334,5 @@ Cancelation of allocation from	bookingfrontend	no	Avbestilling av tildeling fra
 Cancelation of booking from	bookingfrontend	no	Avbestilling av booking fra
 To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk lenken
 To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen bruk lenken
+manual	common	no	Veiledning lag og organisasjoner
+
