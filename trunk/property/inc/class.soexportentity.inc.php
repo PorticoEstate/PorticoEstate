@@ -163,36 +163,55 @@
 
 			$criteria = array
 			(
-				'start'			=> isset($data['start']) && $data['start'] ? (int)$data['start'] : 0,
-				'query'			=> isset($data['query']) ? $data['query'] : '',
-				'sort'			=> isset($data['sort']) ? $data['sort'] : '',
-				'order'			=> isset($data['order']) ? $data['order'] : '',
-				'filter'		=> isset($data['filter']) ? $data['filter'] : '',
-				'cat_id'		=> $this->cat_id,
-				'district_id'	=> isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0,
-				'lookup'		=> isset($data['lookup'])?$data['lookup']:'',
-				'allrows'		=> isset($data['allrows'])?$data['allrows']:'',
-				'entity_id'		=> (int)$this->entity_id,
-				'cat_id'		=> (int)$this->cat_id,
-				'status'		=> isset($data['status']) ? $data['status'] : '',
-				'start_date'	=> phpgwapi_datetime::date_to_timestamp($data['start_date']),
-				'end_date'		=> phpgwapi_datetime::date_to_timestamp($data['end_date']),
-				'dry_run'		=> $data['dry_run'],
-				'type'			=> $data['type'],
-				'location_code' => isset($data['location_code']) ? $data['location_code'] : '',
-				'criteria_id' 	=> $data['criteria_id'],
-				'attrib_filter' => $attrib_filter,
-				'p_num'			=> $this->p_num
+				'start'				=> isset($data['start']) && $data['start'] ? (int)$data['start'] : 0,
+				'query'				=> isset($data['query']) ? $data['query'] : '',
+				'sort'				=> isset($data['sort']) ? $data['sort'] : '',
+				'order'				=> isset($data['order']) ? $data['order'] : '',
+				'filter'			=> isset($data['filter']) ? $data['filter'] : '',
+				'cat_id'			=> $this->cat_id,
+				'district_id'		=> isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0,
+				'lookup'			=> isset($data['lookup'])?$data['lookup']:'',
+				'allrows'			=> isset($data['allrows'])?$data['allrows']:'',
+				'entity_id'			=> (int)$this->entity_id,
+				'cat_id'			=> (int)$this->cat_id,
+				'status'			=> isset($data['status']) ? $data['status'] : '',
+				'start_date'		=> phpgwapi_datetime::date_to_timestamp($data['start_date']),
+				'end_date'			=> phpgwapi_datetime::date_to_timestamp($data['end_date']),
+				'dry_run'			=> $data['dry_run'],
+				'type'				=> $data['type'],
+				'location_code' 	=> isset($data['location_code']) ? $data['location_code'] : '',
+				'criteria_id' 		=> $data['criteria_id'],
+				'attrib_filter' 	=> $attrib_filter,
+				'p_num'				=> $this->p_num,
+				'custom_condition'	=> $data['custom_condition']
 			);
 
 			$values = $soentity->read($criteria);
-//_debug_array($values);				
-			foreach($values as &$entry)
+
+			$solocation 	= CreateObject('property.solocation');
+			$custom 		= createObject('property.custom_fields');
+
+			$_values['attributes'] = $custom->find('property','.location.1', 0, '', 'ASC', 'attrib_sort', true, true);
+
+			if( isset($data['get_location_info']) && $data['get_location_info'])
 			{
-				$entry['address'] = utf8_decode($entry['address']);
-				$entry['user_id'] = utf8_decode($entry['user_id']);
+				foreach($values as &$entry)
+				{
+	//				$entry['address'] = utf8_decode($entry['address']);
+	//				$entry['user'] = utf8_decode($entry['user_id']);
+					$__values = $solocation->read_single($entry['loc1'],$_values);
+	//				$entry['location_data'] = $solocation->read_single($entry['loc1'],$_values);
+					$entry['location_data'] = $custom->prepare($__values, 'property',".location.1", true);
+				}
 			}
 
-			return $values;
+			$resultset = array
+			(
+				'total_records' => $soentity->total_records,
+				'values'		=> $values
+			);
+
+//_debug_array($resultset);
+			return $resultset;
 		}
 	}
