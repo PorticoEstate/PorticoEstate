@@ -482,28 +482,41 @@
 			{
 				if($bNullable == False)
 				{
-					//$sBufNullable = ' NOT NULL';
-					$sFieldSQL .= ' NOT NULL';
+					$sBufNullable = ' NOT NULL';
+					//$sFieldSQL .= ' NOT NULL';
 				}
 				else
 				{
-					$sFieldSQL .= ' NULL';
+					$sBufNullable = ' NULL';
+					//$sFieldSQL .= ' NULL';
 				}
 				
 				if($sDefault === '0' || $sDefault === 0)
 				{
-					$sFieldSQL .= ' DEFAULT 0';
+					$sBufDefault = ' DEFAULT 0';
+					//$sFieldSQL .= ' DEFAULT 0';
 				}								
 				elseif(!is_numeric($sDefault) && $sDefault != '')
 				{
 					if($DEBUG) { echo '<br>_GetFieldSQL(): Calling TranslateDefault for "' . $sDefault . '"'; }
 					// Get default DDL - useful for differences in date defaults (eg, now() vs. getdate())
 					$sTranslatedDefault = $this->m_oTranslator->TranslateDefault($sDefault);
-					$sFieldSQL .= " DEFAULT $sTranslatedDefault";
+					$sBufDefault = " DEFAULT $sTranslatedDefault";
+					//$sFieldSQL .= " DEFAULT $sTranslatedDefault";
 				}
 				elseif($sDefault)
 				{
-					$sFieldSQL .= " DEFAULT $sDefault";
+					$sBufDefault .= " DEFAULT $sDefault";
+					//$sFieldSQL .= " DEFAULT $sDefault";
+				}
+				
+				if($this->dbms == 'oracle')
+				{
+					$sFieldSQL .= "{$sBufDefault}{$sBufNullable}";
+				}
+				else
+				{
+					$sFieldSQL .= "{$sBufNullable}{$sBufDefault}";
 				}
 				if($DEBUG) { echo '<br>_GetFieldSQL(): Outgoing SQL:   ' . $sFieldSQL; }
 				return true;

@@ -308,7 +308,7 @@
 		*/
 		public function query($sql, $line = '', $file = '', $exec = false, $fetch_single = false)
 		{
-
+//_Debug_Array($sql);
 			$this->_get_fetchmode();
 			$this->fetch_single = $fetch_single;
 
@@ -319,7 +319,7 @@
 
 			if(!$exec)
 			{
-				if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE TABLE|^DROP TABLE|^ALTER TABLE|^UPDATE)/i', $sql)) // need it for MySQL
+				if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE)/i', $sql)) // need it for MySQL and Oracle
 				{
 					$exec = true;
 				}
@@ -564,17 +564,21 @@
 		public function transaction_abort()
 		{
 			$ret = false;
-			$this->Transaction = false;
-			try
+
+			if($this->Transaction)
 			{
-				$ret = $this->db->rollBack();
-			}
-			catch(PDOException $e)
-			{
-				if ( $e )
+				$this->Transaction = false;
+				try
 				{
-					trigger_error('Error: ' . $e->getMessage(), E_USER_ERROR);
-	//				throw $e;
+					$ret = $this->db->rollBack();
+				}
+				catch(PDOException $e)
+				{
+					if ( $e )
+					{
+						trigger_error('Error: ' . $e->getMessage(), E_USER_ERROR);
+	//					throw $e;
+					}
 				}
 			}
 			return $ret;
