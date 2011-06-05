@@ -118,7 +118,7 @@
 		*/
 		public function get_script_links()
 		{
-			$combine = true;
+			$combine = false;
 			if(ini_get('suhosin.get.max_value_length') && ini_get('suhosin.get.max_value_length') < 2000)
 			{
 				$combine = false;
