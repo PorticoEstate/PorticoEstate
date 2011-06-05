@@ -23,6 +23,6 @@
 		<label for="file">Choose an IFC file to upload: </label>
 		<input  id="file" name="file" type="file" /><br />
 		<input type="submit" value="Upload File" />
-	</form>asdf
+	</form>
 </body>
 </html>

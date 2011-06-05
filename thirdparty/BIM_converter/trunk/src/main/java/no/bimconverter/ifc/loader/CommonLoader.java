@@ -49,7 +49,8 @@ public class CommonLoader {
 	public List<? extends CommonObject> load(SdaiModel model, Class<? extends EEntity> IfcObjectType, Class<? extends CommonObject> objectClass) {
 		List<EEntity> entityList = getEntitiesOfType(model, IfcObjectType);
 		if(entityList.size() == 0) {
-			throw new IfcSdaiException("Error: No elements found!");
+			//throw new IfcSdaiException("Error: No elements found!");
+			return null;
 		} else {
 			List<CommonObject> spaces = new ArrayList<CommonObject>();
 			for(EEntity currentEntity: entityList) {
