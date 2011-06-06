@@ -194,6 +194,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.contact_person_1';
 			$columns[] = 'activity.contact_person_2';
 			$columns[] = 'activity.special_adaptation';
+			$columns[] = 'activity.secret';
 			
 			$cols = implode(',',$columns);
 		}
@@ -358,6 +359,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_contact_person_2($this->unmarshal($this->db->f('contact_person_2'), 'int'));
 			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
 			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
+			$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
 		}
 		return $activity;
 	}
