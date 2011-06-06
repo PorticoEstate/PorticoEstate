@@ -117,6 +117,7 @@ JS;
 	$bodoc = CreateObject('booking.bodocumentation');
 	
 	$manual  =  $bodoc->so->getFrontendDoc();	
+
 	$app = lang($app);
 	$tpl_vars = array
 	(
@@ -135,7 +136,7 @@ JS;
 	if ($manual !== null) 
 	{
 		$tpl_vars['manual_text'] = lang('manual');
-		$tpl_vars['manual_url'] = $test;
+		$tpl_vars['manual_url'] = $manual;
 #		$tpl_vars['help_text'] = lang('help');
 #		$tpl_vars['help_url'] = => '#';
 	}
