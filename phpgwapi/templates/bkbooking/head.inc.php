@@ -116,14 +116,10 @@ JS;
 
 	$bodoc = CreateObject('booking.bodocumentation');
 	
-	$test  =  $bodoc->so->getFrontendDoc();	
+	$manual  =  $bodoc->so->getFrontendDoc();	
 	$app = lang($app);
 	$tpl_vars = array
 	(
-		'manual_text' 	=> lang('manual'),
-		'manual_url' 	=> $test,
-#		'help_text' 	=> lang('help'),
-#		'help_url' 		=> '#',
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
@@ -136,6 +132,13 @@ JS;
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> (isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
+	if ($manual !== null) 
+	{
+		$tpl_vars['manual_text'] = lang('manual');
+		$tpl_vars['manual_url'] = $test;
+#		$tpl_vars['help_text'] = lang('help');
+#		$tpl_vars['help_url'] = => '#';
+	}
 	$bouser = CreateObject('bookingfrontend.bouser');
 	if($bouser->is_logged_in())
 	{
