@@ -120,6 +120,7 @@
 			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
 			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
 
 			if(!$entity_id || !$cat_id)
 			{
@@ -398,6 +399,12 @@
 			if ($attrib_filter)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $attrib_filter);
+				$where= 'AND';			
+			}
+
+			if ($custom_condition)
+			{
+				$filtermethod .= " {$where} {$custom_condition}";
 				$where= 'AND';			
 			}
 

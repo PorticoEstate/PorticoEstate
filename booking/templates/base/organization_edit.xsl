@@ -81,21 +81,6 @@
                     <input name="customer_number" type="text" id="field_customer_number" readonly="true" value="{organization/customer_number}"/>
                 </xsl:if>
             </dd>
-			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
-			<dd>
-				<select name="activity_id" id="field_activity">
-					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
-					<xsl:for-each select="activities">
-						<option>
-							<xsl:if test="../organization/activity_id = id">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-							<xsl:value-of select="name"/>
-						</option>
-					</xsl:for-each>
-				</select>
-			</dd>
 			<dt><label for="field_homepage"><xsl:value-of select="php:function('lang', 'Homepage')" /></label></dt>
 			<dd>
 			    <input id="field_homepage" name="homepage" type="text">
@@ -113,6 +98,21 @@
 			    <input id="field_email" name="email" type="text">
 			        <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>
 			    </input>
+			</dd>
+			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+			<dd>
+				<select name="activity_id" id="field_activity">
+					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
+					<xsl:for-each select="activities">
+						<option>
+							<xsl:if test="../organization/activity_id = id">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
+							<xsl:value-of select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
 			</dd>
 
 
@@ -169,6 +169,7 @@
 			   </select>
 			</dd>
 			</xsl:if>
+			<xsl:if test="not(new_form) and (currentapp = 'booking')">
 			<dt><label for="field_show_in_portal"><xsl:value-of select="php:function('lang', 'Show in portal')"/></label></dt>
 			<dd>
 			   <select id="field_show_in_portal" name="show_in_portal">
@@ -186,6 +187,7 @@
 			       </option>
 			   </select>
 			</dd>
+			</xsl:if>
 		</dl>
 
 		<div style='clear:left; padding:0; margin:0'/>

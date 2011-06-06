@@ -93,17 +93,18 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		// Get the contract part id
 		$activity_id = (int)phpgw::get_var('id');
+		$so_activity = activitycalendar_soactivity::get_instance();
 		//var_dump($activity_id);
 		
-		$categories = activitycalendar_soactivity::get_instance()->get_categories();
-		$targets = activitycalendar_soactivity::get_instance()->get_targets();
-		$offices = activitycalendar_soactivity::get_instance()->select_district_list();
-		$districts = activitycalendar_soactivity::get_instance()->get_districts();
+		$categories = $so_activity->get_categories();
+		$targets = $so_activity->get_targets();
+		$offices = $so_activity->select_district_list();
+		$districts = $so_activity->get_districts();
 				
 		// Retrieve the activity object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
 		{	
-			$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id); 
+			$activity = $so_activity->get_single($activity_id); 
 		}
 		else
 		{
@@ -149,7 +150,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_contact_persons($persons);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				
-				if(activitycalendar_soactivity::get_instance()->store($activity)) // ... and then try to store the object
+				if($so_activity->store($activity)) // ... and then try to store the object
 				{
 					$message = lang('messages_saved_form');	
 				}
@@ -160,7 +161,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 
 				if($new_state == 3 || $new_state == 4 || $new_state == 5 )
 				{
-					$kontor = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+					$kontor = $so_activity->get_office_name($activity->get_office());
 					$subject = "Melding fra AktivBy";
 					$body = lang('mail_body_state_' . $new_state, $kontor);
 					
@@ -347,7 +348,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			try
 			{
 				//var_dump('inne i try');
-				$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'plain');
+				$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
 			}
 			catch (phpmailerException $e)
 			{
@@ -377,7 +378,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		{
 			try
 			{
-				$send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'plain');
+				$send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
 			}
 			catch (phpmailerException $e)
 			{
