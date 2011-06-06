@@ -131,7 +131,7 @@ JS;
 		'navbar_config' => $_navbar_config,
 		'lbl_search'   	=> lang('Search'),
 		'logofile'		=> $logofile_frontend,
-		'header_search_class'	=> (isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 	if ($manual !== null) 
 	{
