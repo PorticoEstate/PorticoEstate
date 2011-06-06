@@ -3,6 +3,9 @@
 	{
 		function get_menu()
 		{
+			$bodoc = CreateObject('booking.bodocumentation');
+			$manual  =  $bodoc->so->getBackendDoc();	
+
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'booking';
 			$menus = array();
@@ -17,7 +20,7 @@
 					'order'	=> 10,
 					'group'	=> 'office'
 				)
-			);
+		);
 
 			$menus['navigation'] =  array
 			(
@@ -277,6 +280,15 @@
 							),
 						)
 					);
+					if ($manual !== null)
+					{
+						$menus['navigation']['documentation'] = array
+						(
+							'text'	=> lang('Documentation'),
+							'url'	=> $manual,
+							'image' => array('property', 'documentation'),
+						);
+					}
 			}
 
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
@@ -321,6 +333,8 @@
 					),
 				);
 			}
+
+			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;

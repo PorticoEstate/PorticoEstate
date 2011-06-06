@@ -579,7 +579,7 @@
 							{
 								$comment_text_log = phpgw::get_var('mail', 'POST');
 								$this->send_mailnotification($event['contact_email'], lang('Event changed'), $comment_text_log);
-								$comment = $comment_text_log.' Denne er sendt til '.$event['contact_email'];
+								$comment = $comment_text_log.'. Denne er sendt til '.$event['contact_email'];
 								$this->add_comment($event,$comment);			
 		
 							}
@@ -616,7 +616,7 @@
 								} 
 								else 
 								{
-									$comment = $comment_text_log.' Denne er sendt til '.$mail_sendt_to;
+									$comment = $comment_text_log.'. Denne er sendt til '.$mail_sendt_to;
 									$this->add_comment($event,$comment);			
 								}
 								

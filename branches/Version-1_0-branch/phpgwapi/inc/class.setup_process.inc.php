@@ -259,6 +259,7 @@
 			}
 			$GLOBALS['phpgw_setup']->oProc->m_bDeltaOnly = False;
 
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 			if ( !is_array($setup_info) )
 			{
 				$setup_info = array();
@@ -329,7 +330,7 @@
 				}
 				if($DEBUG) { echo '<br>process->current(): Outgoing status: ' . $appname . ',status: '. $setup_info[$key]['status']; }
 			}
-
+			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
 			/* Done, return current status */
 			return ($setup_info);
 		}

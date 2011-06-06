@@ -26,6 +26,7 @@
 		protected $contact_person_1;
 		protected $contact_person_2;
 		protected $special_adaptation;
+		protected $secret;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -180,6 +181,13 @@
 		}
 		
 		public function get_special_adaptation() { return $this->special_adaptation; }
+		
+		public function set_secret($secret)
+		{
+			$this->secret = $secret;
+		}
+		
+		public function get_secret() { return $this->secret; }
 		
 		/**
 		 * Get a static reference to the storage object associated with this model object
