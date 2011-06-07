@@ -759,8 +759,11 @@
 									'onchange'=> 'onChangeSelect("building_part");',
 									'tab_index' => 15
 						);
-						$datatable['actions']['form'][0]['fields']['field'][] = array
-						(
+
+						if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1)
+						{
+							$datatable['actions']['form'][0]['fields']['field'][] = array
+							(
 									'id' => 'sel_branch_id', // testing traditional listbox for long list
 									'name' => 'branch_id',
 									'value'	=> lang('branch'),
@@ -769,7 +772,9 @@
 									'values' => $this->bo->get_branch($this->branch_id),
 									'onchange'=> 'onChangeSelect("branch_id");',
 									'tab_index' => 16
-						);
+							);
+						}
+
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
 									'id' => 'sel_order_dim1', // testing traditional listbox for long list
