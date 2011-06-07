@@ -759,8 +759,11 @@
 									'onchange'=> 'onChangeSelect("building_part");',
 									'tab_index' => 15
 						);
-						$datatable['actions']['form'][0]['fields']['field'][] = array
-						(
+
+						if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1)
+						{
+							$datatable['actions']['form'][0]['fields']['field'][] = array
+							(
 									'id' => 'sel_branch_id', // testing traditional listbox for long list
 									'name' => 'branch_id',
 									'value'	=> lang('branch'),
@@ -769,7 +772,9 @@
 									'values' => $this->bo->get_branch($this->branch_id),
 									'onchange'=> 'onChangeSelect("branch_id");',
 									'tab_index' => 16
-						);
+							);
+						}
+
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
 									'id' => 'sel_order_dim1', // testing traditional listbox for long list
@@ -2541,11 +2546,18 @@
 
 			// -------- start order section
 
-			if($access_order)
+			if($order_read || $access_order)
 			{
 				$vendor_data=$this->bocommon->initiate_ui_vendorlookup(array(
 					'vendor_id'			=> $ticket['vendor_id'],
-					'vendor_name'		=> $ticket['vendor_name']));
+					'vendor_name'		=> $ticket['vendor_name'],
+					'type'				=> $order_read && !$access_order ? 'view' : 'form'
+					));
+	
+			}
+			
+			if($access_order)
+			{
 
 				$b_account_data=$this->bocommon->initiate_ui_budget_account_lookup(array
 					(
@@ -3092,7 +3104,7 @@
 					'order_cat_list'				=> $order_catetory,
 					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
 					'order_dim1_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
-					'branch_list'					=> array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])),
+					'branch_list'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1 ? array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) :'',
 				);
 
 			//---datatable settings--------------------

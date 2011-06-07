@@ -53,17 +53,24 @@
 			</td>
 		</tr>
 		<tr class="row_off">
-			<td>{lang_entity_config_move_in_out}:</td>
+			<td>{lang_entity_config_move_in}:</td>
 			<td>
-{hook_entity_config_move_in_out}
+{hook_entity_config_move_in}
 			</td>
 		</tr>
+
 		<tr class="row_on">
 			<td>{lang_category_config_move_in}:</td>
 			<td>
 			 <select name="newsettings[category_config_move_in]">
 {hook_category_config_move_in}
 			 </select>
+			</td>
+		</tr>
+				<tr class="row_off">
+			<td>{lang_entity_config_move_out}:</td>
+			<td>
+{hook_entity_config_move_out}
 			</td>
 		</tr>
 		<tr class="row_off">
