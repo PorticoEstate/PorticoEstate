@@ -197,7 +197,8 @@ email	rental	no	E-post
 email_create_user_based_on_email_title	rental	no	Tilgang til Portico Estate
 email_create_user_based_on_email_message	rental	no	Hei %1 %2:<br/>Det er opprettet en tilgang for deg i Portico Estate<br/><br/>Brukernavnet er e-posten din<br/>Passordet er %3<br/><br/>Systemet kan nås på adressen %4
 ended	rental	no	Avsluttet
-entity config move in out	rental	no	Entitet for inn- og utflytting
+entity config move out	rental	no	Entitet for utflytting
+entity config move in	rental	no	Entitet for innflytting
 error_create_user_based_on_email	rental 	no	En feil oppstod under opprettelse av bruker
 error_create_user_based_on_email_account_exist	rental	no	En konto med denne e-posten som brukernavn eksisterer allerede
 error_create_user_based_on_email_not_valid_address	rental	no	Kan ikke opprette kontoen pga av e-postadressen ikke er gyldig
