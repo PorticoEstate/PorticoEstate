@@ -1207,22 +1207,26 @@
 									</select>
 								</td>
 							</tr>
-							<tr>
-								<td>
-									<xsl:value-of select="php:function('lang', 'branch')" />
-								</td>
-								<td>
-									<select name="values[branch_id]" >
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'select branch')" />
-										</xsl:attribute>
-										<option value="0">
-											<xsl:value-of select="php:function('lang', 'select branch')" />
-										</option>
-										<xsl:apply-templates select="branch_list/options"/>
-									</select>
-								</td>
-							</tr>
+							<xsl:choose>
+								<xsl:when test="branch_list!=''">
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('lang', 'branch')" />
+										</td>
+										<td>
+											<select name="values[branch_id]" >
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'select branch')" />
+												</xsl:attribute>
+												<option value="0">
+													<xsl:value-of select="php:function('lang', 'select branch')" />
+												</option>
+												<xsl:apply-templates select="branch_list/options"/>
+											</select>
+										</td>
+									</tr>
+								</xsl:when>
+							</xsl:choose>
 							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'order_dim1')" />
@@ -1353,6 +1357,21 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="value_order_id!=''">
+						<tr class="th">
+							<td class="th_text">
+								<xsl:value-of select="php:function('lang', 'order id')" />
+							</td>
+							<td>
+								<xsl:value-of select="value_order_id"/>
+							</td>
+						</tr>
+						<xsl:call-template name="vendor_view"/>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:otherwise>
 		</xsl:choose>
 	</table>
 </div>
