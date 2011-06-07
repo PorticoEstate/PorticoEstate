@@ -29,6 +29,7 @@
 		var $tables;
 		var $updateincluded = array();
 		var $translation;
+		protected $global_lock = false;
 
  		function __construct()
 		{
@@ -259,7 +260,15 @@
 			}
 			$GLOBALS['phpgw_setup']->oProc->m_bDeltaOnly = False;
 
-			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+			if ( $GLOBALS['phpgw_setup']->oProc->m_odb->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+			}
+
 			if ( !is_array($setup_info) )
 			{
 				$setup_info = array();
@@ -330,7 +339,12 @@
 				}
 				if($DEBUG) { echo '<br>process->current(): Outgoing status: ' . $appname . ',status: '. $setup_info[$key]['status']; }
 			}
-			$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
+
+			if ( !$this->global_lock )
+			{
+				$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit();
+			}
+
 			/* Done, return current status */
 			return ($setup_info);
 		}
