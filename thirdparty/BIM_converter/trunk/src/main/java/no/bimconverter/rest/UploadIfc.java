@@ -51,7 +51,15 @@ public class UploadIfc {
 	@Produces(MediaType.APPLICATION_XML)
 	public String uploadFile(@FormDataParam("file") File file, @FormDataParam("file") FormDataContentDisposition fcdsFile,  @FormDataParam("file") InputStream attachmentFile) {
 		logger.debug("UploadFile initiated");
-		RepositoriesImpl repo = new RepositoriesImpl();
+		RepositoriesImpl repo = null;
+		try {
+			repo =  new RepositoriesImpl();
+		} catch (RepositoryExceptionUc e) {
+			logger.error("Error opening repository");
+			e.printStackTrace();
+			return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error><type>general</type><message>"+e.getMessage()+"</message></error>";
+		}
+		
 		
 		try {
 			if(repo.checkIfRepositoryExists(this.repositoryName)) {

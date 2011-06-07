@@ -60,8 +60,8 @@ public class IfcSdaiRepresentationImpl implements IfcSdaiRepresentation{
 			
 			
 		} catch (SdaiException e) {
-			
 			e.printStackTrace();
+			throw new RepositoryExceptionUc("Could not create session, reason:"+e.getMessage(), e);
 		}
 	}
 	protected void closeSdaiSession() {
