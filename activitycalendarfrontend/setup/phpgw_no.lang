@@ -46,3 +46,4 @@ state_4	activitycalendarfrontend	no	Behandlet
 state_5	activitycalendarfrontend	no	Avvist
 district	activitycalendarfrontend	no	Bydel
 title	activitycalendarfrontend	no	Tittel
+activity_helptext	activitycalendarfrontend	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.

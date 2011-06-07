@@ -278,6 +278,8 @@
 		}
 	}
 
+	
+	create_select_box('branch TTS','tts_branch_list',$yes_and_no,'enable branch in TTS-orders');
 	create_select_box('Default vendor type','default_vendor_category',$_categories_vendor,'which agreement');
 	create_input_box('With of textarea','textareacols','With of textarea in forms');
 	create_input_box('Height of textarea','textarearows','Height of textarea in forms');

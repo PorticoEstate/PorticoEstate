@@ -48,14 +48,49 @@ HTML;
 		return $out;
 	}
 	
-	function entity_config_move_in_out($config)
+	function entity_config_move_in($config)
 	{
 		if(isset($GLOBALS['phpgw_info']['apps']['catch']))
 		{
 			$entity			= CreateObject('property.soadmin_entity');
 			$entities 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
-			$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
-			$out = '<select name="newsettings[entity_config_move_in_out]">' . "\n";
+			$selected_entity = isset($config['entity_config_move_in']) ? $config['entity_config_move_in'] : '';
+			$out = '<select name="newsettings[entity_config_move_in]">' . "\n";
+			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
+			if ( is_array($entities) && count($entities) )
+			{
+				foreach($entities as $entry)
+				{
+					
+					$id = $entry['id'];
+					$selected = '';
+					if ( $selected_entity == $id )
+					{
+						$selected = ' selected';
+					}
+		
+					$out .=  <<<HTML
+						<option value="{$id}"{$selected}>{$entry['name']}</option>			
+HTML;
+				}
+			}
+			$out .= ' </select>' . "\n";
+		}
+		else
+		{
+			$out = '<b>The catch-module is not installed</b>' . "\n";
+		}
+		return $out;
+	}
+	
+	function entity_config_move_out($config)
+	{
+		if(isset($GLOBALS['phpgw_info']['apps']['catch']))
+		{
+			$entity			= CreateObject('property.soadmin_entity');
+			$entities 	= $entity->read(array('allrows' => true, 'type' => 'catch'));
+			$selected_entity = isset($config['entity_config_move_out']) ? $config['entity_config_move_out'] : '';
+			$out = '<select name="newsettings[entity_config_move_out]">' . "\n";
 			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
 			if ( is_array($entities) && count($entities) )
 			{
@@ -85,7 +120,7 @@ HTML;
 	
 	function category_config_move_in($config)
 	{
-		$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
+		$selected_entity = isset($config['entity_config_move_in']) ? $config['entity_config_move_in'] : '';
 		$selected_category = isset($config['category_config_move_in']) ? $config['category_config_move_in'] : '';
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		
@@ -119,7 +154,7 @@ HTML;
 	
 	function category_config_move_out($config)
 	{
-		$selected_entity = isset($config['entity_config_move_in_out']) ? $config['entity_config_move_in_out'] : '';
+		$selected_entity = isset($config['entity_config_move_out']) ? $config['entity_config_move_out'] : '';
 		$selected_category = isset($config['category_config_move_out']) ? $config['category_config_move_out'] : '';
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		

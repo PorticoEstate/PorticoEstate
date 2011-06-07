@@ -258,8 +258,6 @@
 						
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/bkbooking/css/frontend.css');
-			
 			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 		}

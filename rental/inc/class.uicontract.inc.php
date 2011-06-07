@@ -211,12 +211,13 @@
 				if($access)
 				{
 					$config->read();
-					$entity_id = $config->config_data['entity_config_move_in_out'];
+					$entity_id_in = $config->config_data['entity_config_move_in'];
+					$entity_id_out = $config->config_data['entity_config_move_out'];
 					$category_id_in = $config->config_data['category_config_move_in'];	
 					$category_id_out = $config->config_data['category_config_move_out'];		
 				}
 				
-				array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id,$entity_id,$category_id_in,$category_id_out));
+				array_walk($rows, array($this, 'add_actions'), array($type,$ids,$adjustment_id,$entity_id_in,$entity_id_out,$category_id_in,$category_id_out));
 			}
 			//var_dump("Usage " .memory_get_usage() . " bytes after menu");
 			
@@ -242,9 +243,10 @@
 			$type = $params[0];
 			$ids = $params[1];
 			$adjustment_id = $params[2];
-			$entity_id = $params[3];
-			$category_id_in = $params[4];
-			$category_id_out = $params[5];
+			$entity_id_in = $params[3];
+			$entity_id_out = $params[4];
+			$category_id_in = $params[5];
+			$category_id_out = $params[6];
 			
 			
 			switch($type)
@@ -313,17 +315,17 @@
 						$temlate_counter++;
 					}
 					//http://portico/pe/index.php?menuaction=property.uientity.index&second_display=1&entity_id=3&cat_id=1&type=catch&district_id=0&query=Tes&start_date=&end_date=&click_history=06014d0abc7293bfb52ff5d1c04f3cb8&phpgw_return_as=json
-					if(isset($entity_id) && $entity_id != '' && isset($category_id_in) && $category_id_in != '')
+					if(isset($entity_id_in) && $entity_id_in != '' && isset($category_id_in) && $category_id_in != '')
 					{
 						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id, 'cat_id' => $category_id_in,'query' => $value['old_contract_id'], 'type' => 'catch')));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_in, 'cat_id' => $category_id_in,'query' => $value['old_contract_id'], 'type' => 'catch')));
 						$value['labels'][] = lang('show_move_in_reports');
 					}
 
-					if(isset($entity_id) && $entity_id != '' && isset($category_id_out) && $category_id_out != '')
+					if(isset($entity_id_out) && $entity_id_out != '' && isset($category_id_out) && $category_id_out != '')
 					{
 						$value['ajax'][] = false;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id, 'cat_id' => $category_id_out,'query' => $value['old_contract_id'], 'type' => 'catch')));
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_out, 'cat_id' => $category_id_out,'query' => $value['old_contract_id'], 'type' => 'catch')));
 						$value['labels'][] = lang('show_move_out_reports');
 					}
 				}
