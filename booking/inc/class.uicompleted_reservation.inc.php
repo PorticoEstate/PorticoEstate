@@ -152,6 +152,7 @@ phpgw::import_class('booking.sopermission');
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
+					'sorted_by' => array('key' => 'id', 'dir' => 'desc'),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -380,7 +381,9 @@ phpgw::import_class('booking.sopermission');
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
 			$show_edit_button = false;
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			$building_role = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+
+			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) || in_array($reservation['building_id'],$building_role))
 			{
 				$show_edit_button = true;
 			}
@@ -423,11 +426,13 @@ phpgw::import_class('booking.sopermission');
 		public function edit() {
 			//TODO: Display hint to user about primary type of customer identifier
 			
-			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+			$building_role = $this->bo->accessable_buildings($GLOBALS['phpgw_info']['user']['id']);
+			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+
+			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !in_array($reservation['building_id'],$building_role))
 			{
     			$this->redirect_to('show', array('id' => phpgw::get_var('id', 'GET')));
 			}
-			$reservation = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			
 			if (((int)$reservation['exported']) !== 0) {
 				//Cannot edit already exported reservation
