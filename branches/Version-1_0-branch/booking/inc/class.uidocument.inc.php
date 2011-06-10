@@ -295,7 +295,6 @@
 				$errors = $this->bo->validate($document);
 				if(!$errors)
 				{
-					echo "<pre>";print_r($document);print_r($errors);exit;
 					try {
 
 						$receipt = $this->bo->add($document);
