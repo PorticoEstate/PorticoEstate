@@ -36,6 +36,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
+			self::add_javascript('booking', 'booking', 'allocation_list.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -44,10 +45,18 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter', 
-								'name' => 'buildings',
-                                'text' => lang('Building').':',
-                                'list' => $this->bo->so->get_buildings(),
+							array('type' => 'autocomplete', 
+								'name' => 'building',
+								'ui' => 'building',
+								'text' => lang('Building').':',
+								'onItemSelect' => 'updateBuildingFilter',
+								'onClearSelection' => 'clearBuildingFilter'
+							),
+							array('type' => 'autocomplete', 
+								'name' => 'season',
+								'ui' => 'season',
+								'text' => lang('Season').':',
+								'requestGenerator' => 'requestWithBuildingFilter',
 							),
 							array('type' => 'filter', 
 								'name' => 'organizations',
@@ -55,9 +64,17 @@
                                 'list' => $this->bo->so->get_organizations(),
 							),
 #							array('type' => 'filter', 
+#								'name' => 'buildings',
+#                                'text' => lang('Building').':',
+#                                'list' => $this->bo->so->get_buildings(),
+#								'onItemSelect' => 'updateBuildingFilter',
+#								'onClearSelection' => 'clearBuildingFilter'
+#							),
+#							array('type' => 'filter', 
 #								'name' => 'seasons',
 #                                'text' => lang('Season').':',
 #                                'list' => $this->bo->so->get_seasons($build_id),
+#								'requestGenerator' => 'requestWithBuildingFilter',
 #							),
 							array('type' => 'text', 
 								'name' => 'query'
@@ -119,7 +136,7 @@
 					'href' => self::link(array('menuaction' => 'booking.uiallocation.add'))
 				));
 			}
-		
+			$data['filters'] = $this->export_filters;
 			self::render_template('datatable', $data);
 		}
 
@@ -131,9 +148,9 @@
                 unset($filters['organization_id']);
                 unset($filters['season_id']);
 			} else {
-                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
+                $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
                 if ($testdata != 0) {
-                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
                 } else {
                     unset($filters['building_name']);                
                 }
@@ -143,9 +160,9 @@
                 } else {
                     unset($filters['organization_id']);
                 }
-                $testdata3 =  phpgw::get_var('seasons', 'int', 'REQUEST', null);
+                $testdata3 =  phpgw::get_var('filter_season_id', 'int', 'REQUEST', null);
                 if ($testdata3 != 0) {
-                    $filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('seasons', 'int', 'REQUEST', null));        
+                    $filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('filter_season_id', 'int', 'REQUEST', null));        
                 } else {
                     unset($filters['season_id']);                
                 }
