@@ -114,7 +114,7 @@
 
 		function read_outbox($data)
 		{
-			$query			= isset($data['start']) && $data['start'] ? (int)$data['start']:0;
+			$start			= isset($data['start']) && $data['start'] ? (int)$data['start']:0;
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort'])?$data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
