@@ -1391,13 +1391,13 @@ die();
 			{
 				if ($link_to_files != '')
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$values['files'][$z]['directory'].'/'.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
 				}
 				else
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$values['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$values['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';
 				}
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'" style="cursor:help">';
+				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
 			}
 
 			$datavalues[2] = array
@@ -2452,22 +2452,33 @@ die();
 					'footer'				=> 0
 				);
 
+			$td_count = 0;
+			$ColumnDefs_data = array();
+			if(isset($uicols['input_type']) && $uicols['input_type'])
+			{
+				foreach($uicols['input_type'] as $key => $input_type)
+				{
+					if($input_type != 'hidden')
+					{
+						$ColumnDefs_data[] = array
+							(
+								'key'			=> $uicols['name'][$key],
+								'label'			=> $uicols['descr'][$key],
+								'sortable'		=> true,
+								'resizeable'	=> true
+							);
+						$td_count ++;
+					}
+				}
+			}
+
 			$myColumnDefs[1] = array
 				(
 					'name'		=> "1",
-					'values'	=>	json_encode(array(	array('key' => 'item_id','label'=>lang('ID'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'location_code','label'=>lang('Location'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'address','label'=>lang('Address'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'p_entity_id','label'=>lang('entity_id'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'p_cat_id','label'=>lang('cat_id'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'p_num','label'=>lang('entity_num'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'cost','label'=>lang('Cost'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'this_index','label'=>lang('index'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'index_count','label'=>lang('index_count'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'index_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'enhet','label'=>lang('Enhet'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'quantity','label'=>lang('mengde'),'sortable'=>true,'resizeable'=>true)))
+					'values'	=>	json_encode($ColumnDefs_data)
 				);
+			unset($ColumnDefs_data);
+
 
 			//---datatable2 settings---------------------------------------------------
 
@@ -2477,11 +2488,11 @@ die();
 			{
 				if ($link_to_files != '')
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$s_agreement['files'][$z]['directory'].'/'.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_to_files.'/'.$s_agreement['files'][$z]['directory'].'/'.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$s_agreement['files'][$z]['name'].'</a>';
 				}
 				else
 				{
-					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'" style="cursor:help">'.$s_agreement['files'][$z]['name'].'</a>';
+					$content_files[$z]['file_name'] = '<a href="'.$link_view_file.'&amp;file_name='.$s_agreement['files'][$z]['file_name'].'" target="_blank" title="'.lang('click to view file').'">'.$s_agreement['files'][$z]['name'].'</a>';
 				}
 			}
 
