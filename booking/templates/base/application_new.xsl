@@ -16,7 +16,12 @@
 			<div class="heading">1. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
 			<dt>
 				<label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
-				<p>Velg en aktivitet fra listsen. Finner du ikke eksakt din aktivitet, velger du hovedaktivitet, for eksempel idrett eller kultur.</p>
+				<p>Informasjon om aktiviteten/arrangementet
+				Gi en kort beskrivelse av arrangementet /aktiviteten. 
+				For åpne arrangement, aktiviteter og trening i regi av 
+				organisasjoner og klubber vises denne informasjonen på internett. 
+				For faste aktiviteter oppgi intervall og til dato, 
+				f.eks. torsdager kl.19-20 frem til 23/6.</p>
 			</dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
@@ -92,7 +97,7 @@
 		</dl>
 		<dl class="form-col">
 			<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
-			<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Dato velges fra kalender. Klokkeslett angis med timer:minutter. Du kan søke om flere tider ved å velge Legg til dato.</p>
+			<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Dato velges fra kalender. Klokkeslett angis med 				timer:minutter. Du kan søke om flere tider ved å velge Legg til dato. For søknad om fast tid i en gitt periode legg inn startdato og 				klokkeslett for den første gangen her og oppgi intervall og sluttdato i felt 1: "Informasjon om aktiviteten"</p>
 			<div id="dates-container">
 				<xsl:for-each select="application/dates">
 					<div class="date-container">

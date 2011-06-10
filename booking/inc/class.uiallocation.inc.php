@@ -413,10 +413,10 @@
 			{
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
-                $step++;
 
   				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
                 {
+					echo"<pre>single:";print_r($step);echo"\n";print_r($from_date);echo"\n";print_r($allocation);exit;
                     $err  = $this->bo->so->check_for_booking($id);
                     if ($err)
                     {
@@ -430,6 +430,7 @@
                 } 
                 else
                 { 
+	                $step++;
 					if ($_POST['recurring'] == 'on') {
 						$repeat_until = strtotime($_POST['repeat_until'])+60*60*24; 
 					} 
@@ -444,6 +445,7 @@
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
+
 					while (($max_dato+($interval*$i)) <= $repeat_until)
 					{
 						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval*$i));
@@ -452,7 +454,15 @@
 						$allocation['to_'] = $todate;
 
                         $id = $this->bo->so->get_allocation_id($allocation);                
-                        $err  = $this->bo->so->check_for_booking($id);
+						if ($id) 
+						{
+						   $err  = $this->bo->so->check_for_booking($id);
+						}
+						else 
+						{
+						   $err = true;
+						}
+
                 		if ($err) 
 						{
 							$invalid_dates[$i]['from_'] = $fromdate;
@@ -464,7 +474,8 @@
 							$valid_dates[$i]['to_'] = $todate;
 							if ($step == 3)
 							{
-                                $stat = $this->bo->so->delete_allocation($id);                            }                            
+                                $stat = $this->bo->so->delete_allocation($id);
+                            }                            
                         }
 						$i++;
                     }
