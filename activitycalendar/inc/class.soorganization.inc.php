@@ -205,7 +205,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		{
 			$ret = array
 			(
-				'table'			=> 'organization', // alias
+				'table'			=> 'org', // alias
 				'field'			=> 'id',
 				'translated'	=> 'id'
 			);
