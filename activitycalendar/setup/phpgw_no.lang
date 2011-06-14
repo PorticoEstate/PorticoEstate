@@ -344,7 +344,7 @@ f_new_arena	activitycalendar	no	Ny arena
 search_for	activitycalendar	no	Søk etter
 activity_type	activitycalendar	no	Aktivitetstype
 all	activitycalendar	no	Alle
-not_internal	activitycalendar	no	Ikke intern
+not_internal	activitycalendar	no	Ekstern
 organization_id	activitycalendar	no	Organisasjon ID
 arena_type	activitycalendar	no	Arenatype
 internal_arena_id	activitycalendar	no	Intern arena ID
@@ -378,3 +378,4 @@ mail_body_state_3	activitycalendar	no	Ditt tips er publisert i kommuneportalen. 
 mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i kommuneportalen. Mvh %1 kulturkontor
 mail_body_state_5	activitycalendar	no	Ditt tips er behandlet, men vil ikke bli publisert i kommuneportalen. Mvh %1 kulturkontor
 send_mail	activitycalendar	no	Send e-post
+marked_as	activitycalendar	no	Status
