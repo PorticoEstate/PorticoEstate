@@ -42,6 +42,11 @@
 	    sortable: true
 	},
 	{
+		key: "office",
+		label: "<?php echo lang('office') ?>",
+	    sortable: true
+	},
+	{
 		key: "category",
 		label: "<?php echo lang('category') ?>",
 	    sortable: true
@@ -171,7 +176,7 @@
 			<option value="4" ><?php echo lang('processed') ?></option>
 			<option value="5" ><?php echo lang('rejected') ?></option>
 		</select>
-		<label class="toolbar_element_label" for="ctrl_toggle_activity_district"><?php echo lang('district') ?></label>
+		<label class="toolbar_element_label" for="ctrl_toggle_activity_district"><?php echo lang('office') ?></label>
 		<?php
 			$districts = activitycalendar_soactivity::get_instance()->select_district_list(); 
 		?>
