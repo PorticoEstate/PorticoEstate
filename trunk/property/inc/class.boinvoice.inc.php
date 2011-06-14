@@ -135,7 +135,7 @@
 
 						if($order_type == 's_agreement')
 						{
-							$s_agreement = $sos_agreement->read_single(array('s_agreement_id'=>$entry['order_id']));
+							$s_agreement = $sos_agreement->read_single($entry['order_id']);
 
 							if($s_agreement['vendor_id'] && ($s_agreement['vendor_id'] != $entry['vendor_id']))
 							{
