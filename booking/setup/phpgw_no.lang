@@ -476,7 +476,7 @@ Create new booking	booking	no	Lag ny booking
 Recurring booking	booking	no	Gjenta booking
 Repeat until	booking	no	Gjenta til
 Bookings that can be created	booking	no	Bookinger som kan lages
-Bookings and allocations	booking	no	Bookinger og tildelinger
+Bookings and allocations	booking	no	Kalender-ukeplan
 Send warning to building responsible	booking	no	Send e-post til ansvarlig på bygget
 Optional e-mail adress	booking	no	Valgfri e-post adresse 
 Message about new event	booking	no	Melding om nytt arrangement
@@ -518,3 +518,4 @@ searchfield	booking	no	Fritekstsøk
 Backend	booking	no	Backend
 Documentation	booking	no	Dokumentasjon
 Upload manual	booking	no	Last opp dokumentasjon
+Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
