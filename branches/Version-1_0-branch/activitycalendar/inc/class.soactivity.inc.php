@@ -150,19 +150,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		if(isset($filters['activity_district']) && $filters['activity_district'] != 'all'){
 			$activity_district = $this->marshal($filters['activity_district'],'int');
-			$filter_clauses[] = "activity.district = '{$activity_district}'";
+			$filter_clauses[] = "activity.office = '{$activity_district}'";
 		}
-/*
-		// All parties with contracts of type X
-		if(isset($filters['party_type']))
-		{
-			$party_type = $this->marshal($filters['party_type'],'int');
-			if(isset($party_type) && $party_type > 0)
-			{
-				$filter_clauses[] = "contract.location_id = {$party_type}";
-			}
-		}
-*/		
 		
 		if(count($filter_clauses))
 		{
