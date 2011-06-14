@@ -274,7 +274,7 @@
 					<dt>
 						<form method="POST">
 							<input type="hidden" name="status" value="REJECTED"/>
-							<input type="submit" value="{php:function('lang', 'Reject application')}">
+							<input onclick="return confirm('{php:function('lang', 'Are you sure you want to delete?')}')" type="submit" value="{php:function('lang', 'Reject application')}">
 								<xsl:if test="not(application/case_officer)">
 									<xsl:attribute name="disabled">disabled</xsl:attribute>
 								</xsl:if>
