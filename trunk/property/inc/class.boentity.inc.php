@@ -550,7 +550,7 @@
 			$attrib_data = $this->custom->get($this->type_app[$this->type], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
 			$history_type = $this->get_history_type_for_location($data['acl_location']);
 			$historylog = CreateObject('property.historylog',$history_type);
-			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','ASC',$data['id'],$data['attrib_id'], $data['detail_id']);
+			$history_values = $historylog->return_array(array(),array('SO'),'history_timestamp','DESC',$data['id'],$data['attrib_id'], $data['detail_id']);
 
 			if($attrib_data['column_info']['type'] == 'LB')
 			{
