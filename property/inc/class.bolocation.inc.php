@@ -89,6 +89,11 @@
 			$allrows				= phpgw::get_var('allrows', 'bool');
 			$location_code			= phpgw::get_var('location_code');
 
+			if($location_code && !$type_id)
+			{
+				$type_id = count(explode('-',$location_code));
+			}
+
 			$this->start			= $start ? $start : 0;
 			$this->query			= isset($query) && $query ? $query : '';
 			$this->filter			= isset($filter) && $filter ? $filter : '';
