@@ -557,15 +557,14 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-				</div>
-
-				<xsl:for-each select="integration">
-					<div id="{section}">
-						<iframe id = "{section}_content" width="100%" height="500">
-							<p>Your browser does not support iframes.</p>
-						</iframe>
-					</div>
+					<xsl:for-each select="integration">
+						<div id="{section}">
+							<iframe id = "{section}_content" width="100%" height="500">
+								<p>Your browser does not support iframes.</p>
+							</iframe>
+						</div>
 				</xsl:for-each>
+				</div>
 
 				<table cellpadding="2" cellspacing="2" width="80%" align="center">
 					<tr height="50">

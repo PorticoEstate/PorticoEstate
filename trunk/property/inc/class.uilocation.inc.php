@@ -2302,7 +2302,9 @@ JS;
 						$cxContext = stream_context_create($aContext);
 						$response = trim(file_get_contents($request, False, $cxContext));
 
-						$integration[]	= array('section' => $_config_section);
+						
+						$_config_section_name = str_replace(' ', '_',$_config_section);
+						$integration[]	= array('section' => $_config_section_name);
 						$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
 						$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
 
@@ -2364,7 +2366,7 @@ JS;
 							foreach ($output as $_dummy => $_substitute)
 							{
 								$_keys[] = $_substitute;
-								$_values[] = urlencode($values['location_data'][trim($_substitute, '_')]);
+								$_values[] = urlencode($values[trim($_substitute, '_')]);
 							}
 							$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
 						}
@@ -2372,12 +2374,12 @@ JS;
 						$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
 						//_debug_array($values);
 						//_debug_array($integration_src);die();
-						$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section}", 'function' => "document.getElementById('{$_config_section}_content').src = '{$integration_src}';");
+
+						$tabs[$_config_section]	= array('label' => $_config_section_data['tab'], 'link' => "#{$_config_section_name}", 'function' => "document.getElementById('{$_config_section_name}_content').src = '{$integration_src}';");
 					}
 				}
 // ---- END INTEGRATION -------------------------
 			}
-
 
 			$data = array
 			(
