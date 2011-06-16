@@ -5,6 +5,40 @@
 	$contpers_so = activitycalendar_socontactperson::get_instance();
 ?>
 
+<script type="text/javascript">
+
+function get_available_groups()
+{
+	var org_id = document.getElementById('organization_id').value;
+	var group_select = document.getElementById('group_id');
+	//alert(group_select);
+<?php if($activity->get_group_id()){?>
+	url = "index.php?menuaction=activitycalendar.uiorganization.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id + "&amp;groupid=" + <?php echo $activity->get_group_id();?>;
+<?php }else{?>
+	url = "index.php?menuaction=activitycalendar.uiorganization.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
+<?php }?>
+	
+/*	$.ajax({url: url, 
+		success:  function(response) {
+			$("#group_id").innerHTML = response;
+		}
+	});
+*/
+	var callback = {
+		success: function(response){
+					//alert("det funker");
+					group_select.innerHTML = response.responseText;
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
+
+</script>
+
 <div class="yui-content">
 	<div id="details">
 		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
@@ -42,7 +76,7 @@
 					if ($editable)
 					{
 						?>
-						<select name="organization_id">
+						<select name="organization_id" id="organization_id" onchange="javascript:get_available_groups();">
 							<option value="">Ingen organisasjon valgt</option>
 							<?php
 							foreach($organizations as $organization)
@@ -74,14 +108,8 @@
 					if ($editable)
 					{
 						?>
-						<select name="group_id">
+						<select name="group_id" id="group_id">
 							<option value="0">Ingen gruppe valgt</option>
-							<?php
-							foreach($groups as $group)
-							{
-								echo "<option ".($current_group_id == $group->get_id() ? 'selected="selected"' : "")." value=\"{$group->get_id()}\">".$group->get_name()."</option>";
-							}
-							?>
 						</select>
 						<?php
 					?>
