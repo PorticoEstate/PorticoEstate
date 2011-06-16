@@ -169,7 +169,7 @@
 			   </select>
 			</dd>
 			</xsl:if>
-			<xsl:if test="not(new_form) and (currentapp = 'booking')">
+			<!--<xsl:if test="not(new_form) and (currentapp = 'booking')">-->
 			<dt><label for="field_show_in_portal"><xsl:value-of select="php:function('lang', 'Show in portal')"/></label></dt>
 			<dd>
 			   <select id="field_show_in_portal" name="show_in_portal">
@@ -187,7 +187,7 @@
 			       </option>
 			   </select>
 			</dd>
-			</xsl:if>
+			<!--</xsl:if>-->
 		</dl>
 
 		<div style='clear:left; padding:0; margin:0'/>
