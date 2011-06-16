@@ -179,6 +179,7 @@
 		
 		function index()
 		{
-			var_dump("inni index");
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.add'));
+			//var_dump("inni index");
 		}
 	}
