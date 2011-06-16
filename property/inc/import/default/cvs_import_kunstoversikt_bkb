@@ -1,0 +1,122 @@
+<?php
+	class import_conversion
+	{
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
+		}
+
+		public function add($data)
+		{
+//			$debug = true;
+			$error = false;
+			$table = 'fm_entity_4_1';
+			$byggid = $this->decode($data[0]);
+			$location_code = substr($byggid,0,4) . '-0' . substr($byggid,-1);
+//_debug_array($location_code);
+			$location_data = execMethod('property.solocation.read_single', $location_code );
+_debug_array($data);
+//_debug_array($location_data);die();
+			if(!$location_data)
+			{
+				$this->errors[] = "Error importing location: {$location_code}";
+				$error = true;
+				return false;
+			}
+
+			if($location_data['street_name'])
+			{
+				$address[]= $location_data['street_name'];
+				$address[]= $location_data['street_number'];
+				$address	= $this->db->db_addslashes(implode(" ", $address));
+			}
+
+			if(!$address)
+			{
+				$address = $this->db->db_addslashes($location_data['loc1_name']);
+			}
+
+			$id = (int)$data[2];
+
+			$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
+			$entry_date = time();
+
+_debug_array($entry_date_info);
+_debug_array($entry_date);
+			$value_set = array();
+
+			$value_set['id'] 					= $id;
+			$value_set['num'] 					= sprintf('%04s',$id);
+    		$value_set['loc1']					= $location_data['loc1'];
+    		$value_set['loc2']					= $location_data['loc2'];
+			$value_set['user_id']				= $this->account;
+			$value_set['location_code']			= $location_code;
+			$value_set['address']				= $address;
+			$value_set['entry_date']			= $entry_date;
+			$value_set['museumsnr']				= $this->db->db_addslashes($data[1]);
+			$value_set['betegnelse']			= $this->db->db_addslashes($data[3]);
+			$value_set['beskrivelse']			= $this->db->db_addslashes($data[4]);
+			$value_set['tilstand']				= $this->db->db_addslashes($data[5]);
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
+
+			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+
+			if($debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			if(!$error)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$this->decode($data[1])})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$this->decode($data[1])})";
+				$ok = false;
+			}
+			return $ok;
+		}
+
+		/**
+		 * Convert from the locale encoding to UTF-8 encoding and escape single quotes
+		 * 
+		 * @param string $value The value to convert
+		 * @return string
+		 */
+		protected function decode($value)
+		{
+			$converted = mb_convert_encoding($value, 'UTF-8');
+			if ($this->is_null(trim($converted)))
+			{
+				return null;
+			}
+			return stripslashes($converted);
+		}
+		
+		/**
+		 * Test a value for null according to several formats that can exist in the export.
+		 * Returns true if the value is null according to these rules, false otherwise.
+		 * 
+		 * @param string $value The value to test
+		 * @return bool
+		 */
+		protected function is_null($value)
+		{
+			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
+		}
+	}
