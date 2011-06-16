@@ -42,6 +42,7 @@
 			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$this->render('activity.php', $data);
+			//self::render_template('activity_tmp', array('activity' => $activity, 'frontend'=>'true'));
 		}
 
 		function edit()
