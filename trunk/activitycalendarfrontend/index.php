@@ -147,12 +147,11 @@ HTML;
 	}
 	else
 	{
-		$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'activitycalendarfrontend.uiactivity.add'));
-		//$app = 'activitycalendarfrontend';
-		//$class = 'uiactivity';
-		//$method = 'add';
+	//	$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'activitycalendarfrontend.uiactivity.add'));
+		$app = 'activitycalendarfrontend';
+		$class = 'uiactivity';
+		$method = 'add';
 	}
-
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
 	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
