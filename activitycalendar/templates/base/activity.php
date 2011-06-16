@@ -27,7 +27,7 @@ function get_available_groups()
 	var callback = {
 		success: function(response){
 					//alert("det funker");
-					group_select.innerHTML = response.responseText;
+					group_select.innerHTML = JSON.parse(response.responseText);
 				},
 		failure: function(o) {
 					 alert("AJAX doesn't work"); //FAILURE
@@ -36,6 +36,11 @@ function get_available_groups()
 	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 	
 }
+
+YAHOO.util.Event.onDOMReady(function()
+{
+	get_available_groups();
+});
 
 </script>
 

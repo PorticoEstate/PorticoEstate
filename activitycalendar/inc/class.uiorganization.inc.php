@@ -148,6 +148,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	
 	public function get_organization_groups()
 	{
+		$GLOBALS['phpgw_info']['flags']['noheader'] = true; 
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+		
 		$org_id = phpgw::get_var('orgid');
 		$group_id = phpgw::get_var('groupid');
 		$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
@@ -162,9 +166,9 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					if($group_id && $group_id > 0)
 					{
 						$gr_id = (int)$group_id; 
-						if($gr_id == $group->get_id())
+						if($gr_id == (int)$group->get_id())
 						{
-							$selected = "selected";
+							$selected_group = " selected";
 						}
 					}
 					$group_html[] = "<option value='" . $group->get_id() . "'". $selected_group . ">" . $group->get_name() . "</option>";
