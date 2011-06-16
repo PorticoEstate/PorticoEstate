@@ -19,7 +19,7 @@
 		 */
 		public function add()
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.edit', 'action' => 'new_activity'));
+			$GLOBALS['phpgw']->redirect_link('/activitycalendarfrontend/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.edit', 'action' => 'new_activity'));
 		}
 		
 		function view()
@@ -42,6 +42,7 @@
 			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$this->render('activity.php', $data);
+			//self::render_template('activity_tmp', array('activity' => $activity, 'frontend'=>'true'));
 		}
 
 		function edit()
@@ -178,6 +179,7 @@
 		
 		function index()
 		{
-			var_dump("inni index");
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.add'));
+			//var_dump("inni index");
 		}
 	}
