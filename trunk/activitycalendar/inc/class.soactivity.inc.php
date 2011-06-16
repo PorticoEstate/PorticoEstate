@@ -344,11 +344,21 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
 			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
-			$activity->set_contact_person_1($this->unmarshal($this->db->f('contact_person_1'), 'int'));
-			$activity->set_contact_person_2($this->unmarshal($this->db->f('contact_person_2'), 'int'));
 			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
 			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
 			$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
+			
+			if($activity->get_group_id() && $activity->get_group_id() > 0)
+			{
+				$contacts = activitycalendar_sogroup::get_instance()->get_contacts($activity->get_group_id());
+				$activity->set_contact_persons($contacts);
+			}
+			else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
+			{
+				$contacts = activitycalendar_soorganization::get_instance()->get_contacts($activity->get_organization_id());
+				$activity->set_contact_persons($contacts);
+			}
+			
 		}
 		return $activity;
 	}
@@ -733,5 +743,221 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			);
 		}
 		return $categories;
+	}
+	function update_organization($org_info)
+	{
+		$name = $org_info['name'];
+		$orgid = (int)$org_info['orgid'];
+		$homepage = $org_info['homepage'];
+		$phone = $org_info['phone'];
+		$email = $org_info['email'];
+		$description = $org_info['description'];
+		$street = $org_info['street'];
+		$zip = $org_info['zip'];
+		if($zip && strlen($zip) > 5)
+		{
+			$zip_code = substr($zip,0,4);
+			$city = substr($zip, 5);
+		}
+		else
+		{
+			$zip_code = '';
+			$city = '';
+		}
+		$district = $org_info['district'];
+		$activity_id = $org_info['activity_id'];
+		$show_in_portal = 1; 
+		
+		$values = array(
+			'name = ' . $this->marshal($name, 'string'),
+			'homepage = ' . $this->marshal($homepage, 'string'),
+			'phone = ' . $this->marshal($phone, 'string'),
+			'email = ' . $this->marshal($email, 'string'),
+			'description = ' . $this->marshal($description, 'string'),
+			'street = ' . $this->marshal($street, 'string'),
+			'zip_code = ' . $this->marshal($zip_code, 'string'),
+			'city = ' . $this->marshal($city, 'string'),
+			'district = ' . $this->marshal($district),
+			'activity_id = ' . $this->marshal($activity_id, 'int'),
+			'show_in_portal = 1'
+		);
+		
+		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
+	}
+	function add_organization($org_info)
+	{
+		$name = $org_info['name'];
+		$orgnr = $org_info['orgnr'];
+		$homepage = $org_info['homepage'];
+		$phone = $org_info['phone'];
+		$email = $org_info['email'];
+		$description = $org_info['description'];
+		$street = $org_info['street'];
+		$zip = $org_info['zip'];
+		if($zip && strlen($zip) > 5)
+		{
+			$zip_code = substr($zip,0,4);
+			$city = substr($zip, 5);
+		}
+		else
+		{
+			$zip_code = '';
+			$city = '';
+		}
+		$district = $org_info['district'];
+		$activity_id = $org_info['activity_id'];
+		$show_in_portal = 1; 
+		
+		$columns[] = 'name';
+		$columns[] = 'homepage';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'description';
+		$columns[] = 'street';
+		$columns[] = 'zip_code';
+		$columns[] = 'city';
+		$columns[] = 'district';
+		$columns[] = 'organization_number';
+		$columns[] = 'activity_id';
+		$columns[] = 'show_in_portal';
+		$cols = implode(',',$columns);
+		
+		$values[] = "{$name}";
+		$values[] = "{$homepage}";
+		$values[] = "{$phone}";
+		$values[] = "{$email}";
+		$values[] = "{$description}";
+		$values[] = "{$street}";
+		$values[] = "{$zip_code}";
+		$values[] = "{$city}";
+		$values[] = "{$orgnr}";
+		$values[] = "{$district}";
+		$values[] = $activity_id;
+		$values[] = $show_in_portal;
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO bb_organization ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return $this->db->get_last_insert_id('bb_organization', 'id');
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	function add_group($group_info)
+	{
+		$name = $org_info['name'];
+		$orgid = $org_info['organization_id'];
+		$description = $org_info['description'];
+		$activity_id = $org_info['activity_id'];
+		$show_in_portal = 1; 
+		
+		$columns[] = 'name';
+		$columns[] = 'description';
+		$columns[] = 'organization_id';
+		$columns[] = 'activity_id';
+		$columns[] = 'show_in_portal';
+		$cols = implode(',',$columns);
+		
+		$values[] = "{$name}";
+		$values[] = "{$description}";
+		$values[] = "{$orgid}";
+		$values[] = $activity_id;
+		$values[] = $show_in_portal;
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO bb_group ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return $this->db->get_last_insert_id('bb_group', 'id');
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	function delete_contact_persons($org_id)
+	{
+		if($org_id)
+		{
+			$org = (int)$org_id;
+			$sql = "DELETE FROM bb_organization_contact WHERE organization_id={$org}";
+			$result = $this->db->query($sql, __LINE__, __FILE__);
+			return isset($result);
+		}
+/*		else if($group_id)
+		{
+			$group = (int)$group_id;
+			$sql = "DELETE FROM bb_group_contact WHERE group_id={$group}";
+			$result = $this->db->query($sql, __LINE__, __FILE__);
+			return isset($result);
+		}*/
+	}
+	
+	function add_contact_person_org($contact)
+	{
+		$name = $contact2['name'];
+		$phone = $contact2['phone'];
+		$mail = $contact2['mail'];
+		$org_id = $contact2['org_id'];
+		$ssn = '';
+		
+		$columns[] = 'name';
+		$columns[] = 'ssn';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'organization_id';
+		$cols = implode(',',$columns);
+		
+		$values[] = "{$name}";
+		$values[] = "{$ssn}";
+		$values[] = "{$phone}";
+		$values[] = "{$mail}";
+		$values[] = $org_id;
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO bb_organization_contact ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		return isset($result);
+	}
+	
+	function update_contact_person_org($contact)
+	{
+		
+	}
+	
+	function add_contact_person_group($contact)
+	{
+		$name = $contact2['name'];
+		$phone = $contact2['phone'];
+		$mail = $contact2['mail'];
+		$org_id = $contact2['group_id'];
+		
+		$columns[] = 'name';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'group_id';
+		$cols = implode(',',$columns);
+		
+		$values[] = "{$name}";
+		$values[] = "{$phone}";
+		$values[] = "{$mail}";
+		$values[] = $org_id;
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO bb_group_contact ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		return isset($result);
+	}
+	
+	function update_contact_person_group($contact)
+	{
+		
 	}
 }

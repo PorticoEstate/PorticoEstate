@@ -186,10 +186,10 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	{
 		$result = "Ingen";
     	if(isset($id)){
-	    	$q1="SELECT name FROM bb_group_contact WHERE id={$id}";
+	    	$q1="SELECT name, phone, email FROM bb_group_contact WHERE id={$id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = $this->db->f('name');
+				$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
     	}
 		return $result;
@@ -199,10 +199,10 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	{
 		$result = "Ingen";
     	if(isset($id)){
-	    	$q1="SELECT name FROM bb_organization_contact WHERE id={$id}";
+	    	$q1="SELECT name, phone, email FROM bb_organization_contact WHERE id={$id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$result = $this->db->f('name');
+				$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
 			}
     	}
 		return $result;
@@ -210,7 +210,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	
 	function get_mailaddress_for_group_contact($contact_person_id)
 	{
-		if(isset($contact_person_id)){
+		if($contact_person_id){
 	    	$q1="SELECT email FROM bb_group_contact WHERE id={$contact_person_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
@@ -222,8 +222,8 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 	
 	function get_mailaddress_for_org_contact($contact_person_id)
 	{
-		if(isset($contact_person_id)){
-	    	$q1="SELECT email FROM bb_group_contact WHERE id={$contact_person_id}";
+		if($contact_person_id){
+	    	$q1="SELECT email FROM bb_organization_contact WHERE id={$contact_person_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = $this->db->f('email');
