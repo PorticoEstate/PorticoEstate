@@ -19,6 +19,16 @@
 			$error = false;
 			$table = 'fm_entity_4_1';
 			$byggid = $this->decode($data[0]);
+			if(!$byggid)
+			{
+				$this->errors[] = "Mangler objekt, hopper over: {$data[1]}";
+				return true;
+			}
+			if(substr($byggid,0,1) == 'B')
+			{
+				$this->warnings[] = "BBB-objekt, hopper over: {$byggid}";
+				return true;
+			}
 			$location_code = substr($byggid,0,4) . '-0' . substr($byggid,-1);
 //_debug_array($location_code);
 			$location_data = execMethod('property.solocation.read_single', $location_code );
@@ -44,12 +54,19 @@ _debug_array($data);
 			}
 
 			$id = (int)$data[2];
+			
+			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}",__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$this->errors[] = "ID finnes fra før: {$id}";
+				return true;
+			}
 
 			$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
 			$entry_date = time();
 
-_debug_array($entry_date_info);
-_debug_array($entry_date);
+//_debug_array($entry_date_info);
+//_debug_array($entry_date);
 			$value_set = array();
 
 			$value_set['id'] 					= $id;
