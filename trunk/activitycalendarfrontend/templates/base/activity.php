@@ -5,7 +5,6 @@
 	$contpers_so = activitycalendar_socontactperson::get_instance();
 ?>
 
-<script src="phpgwapi/js/yui3/json/json-min.js" charset="utf-8"></script>
 <script type="text/javascript">
 
 function get_available_groups()
@@ -23,6 +22,7 @@ function get_available_groups()
 		success: function(response){
 					//alert("det funker");
 					group_select.innerHTML = JSON.parse(response.responseText);
+					//group_select.innerHTML = group_select.innerHTML;
 				},
 		failure: function(o) {
 					 alert("AJAX doesn't work"); //FAILURE
@@ -76,7 +76,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
-						<select name="organization_id">
+						<select name="organization_id" id="organization_id" onchange="javascript:get_available_groups();">
 							<option value="">Ingen organisasjon valgt</option>
 							<?php
 							foreach($organizations as $organization)
@@ -108,14 +108,8 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
-						<select name="group_id">
+						<select name="group_id" id="group_id">
 							<option value="0">Ingen gruppe valgt</option>
-							<?php
-							foreach($groups as $group)
-							{
-								echo "<option ".($current_group_id == $group->get_id() ? 'selected="selected"' : "")." value=\"{$group->get_id()}\">".$group->get_name()."</option>";
-							}
-							?>
 						</select>
 						<?php
 					?>

@@ -4,6 +4,7 @@
 	phpgw::import_class('activitycalendar.sogroup');
 	
 	include_class('activitycalendar', 'activity', 'inc/model/');
+	include_class('activitycalendar', 'group', 'inc/model/');
 
 	class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities
 	{
