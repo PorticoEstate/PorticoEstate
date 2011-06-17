@@ -1476,7 +1476,10 @@
 			{
 				$_no_link = (int)$category['location_link_level'] + 2;
 			}
-			if($entity['location_form'] )
+
+			$location_data = array();
+
+			if($entity['location_form'] && $category['location_level'] > 0)
 			{
 				$location_data=$bolocation->initiate_ui_location(array
 					(
@@ -1615,10 +1618,11 @@
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
+				$attributes_general = array();
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
-					if(isset($group['attributes']))
+					if(isset($group['attributes']) && (isset($group['group_sort']) || !$location_data))
 					{
 						$_tab_name = str_replace(' ', '_', $group['name']);
 						$active_tab = $active_tab ? $active_tab : $_tab_name;
@@ -1626,6 +1630,10 @@
 						$group['link'] = $_tab_name;
 						$attributes[] = $group;
 						unset($_tab_name);
+					}
+					else if(isset($group['attributes']) && !isset($group['group_sort']) && $location_data)
+					{
+						$attributes_general = array_merge($attributes_general,$group['attributes']);
 					}
 				}
 				unset($attributes_groups);
@@ -1961,6 +1969,7 @@
 					'category_name'					=> $category['name'],
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'attributes_group'				=> $attributes,
+					'attributes_general'			=> array('attributes' => $attributes_general),
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'lang_none'						=> lang('None'),
 					'location_data'					=> $location_data,

@@ -212,6 +212,7 @@
 											<xsl:call-template name="location_view"/>
 										</xsl:otherwise>
 									</xsl:choose>
+									<xsl:apply-templates select="attributes_general/attributes"/>
 								</table>
 							</div>
 						</xsl:when>
