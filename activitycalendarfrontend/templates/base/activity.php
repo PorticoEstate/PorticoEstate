@@ -5,9 +5,43 @@
 	$contpers_so = activitycalendar_socontactperson::get_instance();
 ?>
 
+<script src="phpgwapi/js/yui3/json/json-min.js" charset="utf-8"></script>
+<script type="text/javascript">
+
+function get_available_groups()
+{
+	var org_id = document.getElementById('organization_id').value;
+	var group_select = document.getElementById('group_id');
+	//alert(group_select);
+<?php if($activity->get_group_id()){?>
+	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id + "&amp;groupid=" + <?php echo $activity->get_group_id();?>;
+<?php }else{?>
+	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
+<?php }?>
+	
+	var callback = {
+		success: function(response){
+					//alert("det funker");
+					group_select.innerHTML = JSON.parse(response.responseText);
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
+
+YAHOO.util.Event.onDOMReady(function()
+{
+	get_available_groups();
+});
+
+</script>
+
 <div class="yui-content">
 	<div id="details">
-		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
+		<h1><?php echo lang('activity') ?></h1>
 		<h4><?php if($editable){echo lang('activity_helptext');}?></h4>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
