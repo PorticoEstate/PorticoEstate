@@ -49,6 +49,8 @@
 
 		function edit()
 		{
+			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
+
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$action = phpgw::get_var('action', 'GET');
 			//var_dump($id);
