@@ -559,12 +559,19 @@
 					}
 				}
 
-				$children['tenant'] = array
+				$config	= CreateObject('phpgwapi.config','property');
+				$config->read();
+				
+				if(!isset($config->config_data['suppress_tenant']) || !$config->config_data['suppress_tenant'])
+				{
+					$children['tenant'] = array
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilocation.index', 'lookup_tenant' => 1, 'type_id' => $soadmin_location->read_config_single('tenant_id'))),
 						'text'	=> lang('Tenant'),
 						'image'	=> array('property', 'location_tenant')
 					);
+				}
+				
 				$children['gabnr'] = array
 					(
 						'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uigab.index')),
