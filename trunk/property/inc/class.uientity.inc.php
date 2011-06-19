@@ -332,13 +332,18 @@
 		function index()
 		{
 			//redirect. If selected the title of module.
-			if($this->entity_id == 1 && !$this->cat_id)
+			if($this->entity_id && !$this->cat_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>1, 'cat_id'=> 1, 'type' => $this->type));
-			}
-			elseif($this->entity_id == 2 && !$this->cat_id)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>2, 'cat_id'=> 1, 'type' => $this->type));
+				$categories = $this->soadmin_entity->read_category(array('entity_id' => $this->entity_id));
+				foreach($categories as $category)
+				{
+					if($this->acl->check(".{$this->type}.$this->entity_id.{$category['id']}", PHPGW_ACL_READ, $this->type_app[$this->type]))
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>$this->entity_id, 'cat_id'=> $category['id'], 'type' => $this->type));
+					}
+				}
+				unset($categories);
+				unset($category);
 			}
 
 			//redirect if no rights
@@ -945,6 +950,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];;
+					$datatable['headers']['header'][$i]['sort_field']		= $uicols['name'][$i];
 					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					//according to stable bruch this columns is not SORTABLE'
 					$denied = array('merknad');//$denied = array('merknad','account_lid');
@@ -952,12 +958,10 @@
 					if(in_array ($uicols['name'][$i], $denied))
 					{
 						$datatable['headers']['header'][$i]['sortable']		= false;
-						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 					else if(isset($uicols['cols_return_extra'][$i]) && ($uicols['cols_return_extra'][$i]!='T' || $uicols['cols_return_extra'][$i]!='CH'))
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 
 				}
@@ -966,7 +970,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		 = false;
+					$datatable['headers']['header'][$i]['sortable']		 	= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
