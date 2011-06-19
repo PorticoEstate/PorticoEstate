@@ -77,7 +77,7 @@
 			$this->header_state['logo_path'] = $logo_path;
 			
 			// Get navigation parameters
-			$param_selected_location = '1102';//phpgw::get_var('location'); 			// New location selected from locations list
+			$param_selected_location = phpgw::get_var('location'); 			// New location selected from locations list
 			$param_selected_org_unit = phpgw::get_var('org_unit_id'); 			// New organisational unit selected from organisational units list
 			$param_only_org_unit = phpgw::get_var('org_enhet_id'); 	// Frontend access from rental module regarding specific organisational unit
 			
