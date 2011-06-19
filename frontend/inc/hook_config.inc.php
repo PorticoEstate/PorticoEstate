@@ -218,3 +218,37 @@ HTML;
 		}
 		return $out;
 	}
+	/**
+	* Get HTML checkbox with categories that are candidates for frontend documents cat
+	*
+	* @param $config
+	* @return string options for selectbox
+	*/
+	function entity_frontend($config)
+	{
+		$entity			= CreateObject('property.soadmin_entity');
+		$entity_list 	= $entity->read(array('allrows' => true));
+		$entity_frontend_selected = isset($config['entity_frontend']) ? $config['entity_frontend'] : array();
+		$out = '';
+		foreach($entity_list as $entry)
+		{
+			$out .=  <<<HTML
+				<tr><td><input type="checkbox" disabled ="disabled" name="entity_{$entry['id']}" value="entity_{$entry['id']}" {$checked}><label><b>{$entry['name']}</b></label></td></tr>
+HTML;
+			$categories = $entity->read_category_tree2($entry['id']);
+			
+			foreach ($categories as $category)
+			{
+				$checked = '';
+				if ( in_array(".entity.{$entry['id']}.{$category['id']}", $entity_frontend_selected))
+				{
+					$checked = ' checked';
+				}
+
+				$out .=  <<<HTML
+					<tr><td><input type="checkbox" name="newsettings[entity_frontend][]" value=".entity.{$entry['id']}.{$category['id']}" {$checked}><label>{$category['name']}</label></td></tr>
+HTML;
+			}
+		}
+		return $out;
+	}

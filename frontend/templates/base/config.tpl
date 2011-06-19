@@ -82,6 +82,16 @@
 			</td>
 		</tr>
 		<tr class="row_on">
+			<td>{lang_entity_frontend}:</td>
+			<td>
+	    	<!--to be able to blank the setting - need an empty value-->
+	    	<input type = 'hidden' name="newsettings[entity_frontend][]" value="">
+		     <table>
+{hook_entity_frontend}
+			 </table>
+			</td>
+		</tr>
+		<tr class="row_on">
 			<td>{lang_document_valid_types}(comma separated list of valid filetypes):</td>
 			<td><input name="newsettings[document_valid_types]" value="{value_document_valid_types}"></td>
 		</tr>
