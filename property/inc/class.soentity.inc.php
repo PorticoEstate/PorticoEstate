@@ -342,15 +342,18 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
-			$GLOBALS['phpgw']->config->read();
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location'])
-				&& $GLOBALS['phpgw']->config->config_data['acl_at_location']
+			$_config	= CreateObject('phpgwapi.config','property');
+			$_config->read();
+			if(isset($_config->config_data['acl_at_location'])
+				&& $_config->config_data['acl_at_location']
 				&& $category['location_level'] > 0)
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE {$entity_table}.loc1 in ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
 			}
+
+			unset($_config);
 
 			if ($filter=='all')
 			{
