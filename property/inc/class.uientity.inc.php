@@ -1118,7 +1118,7 @@
 		{
 			$id 	= phpgw::get_var('id', 'int');
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array
 					(
@@ -1797,7 +1797,14 @@
 			for($z=0; $z<count($values['files']); $z++)
 			{
 				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
+				if($mode == 'edit')
+				{
+					$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
+				}
+				else
+				{
+					$content_files[$z]['delete_file'] = '';
+				}
 			}									
 
 			$datavalues[0] = array

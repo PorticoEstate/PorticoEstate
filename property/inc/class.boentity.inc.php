@@ -52,10 +52,10 @@
 		var $public_functions = array
 			(
 				'read'			=> true,
-				'read_single'		=> true,
+				'read_single'	=> true,
 				'save'			=> true,
 				'delete'		=> true,
-				'check_perms'		=> true
+				'check_perms'	=> true
 			);
 
 		var $type_app = array();
@@ -211,8 +211,30 @@
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$columns = $this->custom->find($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}", 0, '','','',true, false, $filter);
+			$columns = array_merge( $columns, $this->get_column_list() );
 			$column_list=$this->bocommon->select_multi_list($selected,$columns);
 			return $column_list;
+		}
+
+		function get_column_list()
+		{
+			$columns = array();
+			$columns['user_id'] = array
+			(
+				'id'			=> 'user_id',
+				'input_type'	=> 'text',
+				'name'			=> 'user_id',
+				'descr'			=> lang('User'),
+				'statustext'	=> lang('User'),
+				'align' 		=> '',
+				'datatype'		=> 'user',
+				'sortable'		=> false,
+				'exchange'		=> false,
+				'formatter'		=> '',
+				'classname'		=> ''
+			);
+
+			return $columns;
 		}
 
 		function select_category_list($format='',$selected='', $required = '')
@@ -316,10 +338,28 @@
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
+
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]:array();
+			$custom_cols = $this->get_column_list();
+//_debug_array($user_columns);
+//_debug_array($column_list);
+/*
+			foreach ($custom_cols as $col_id => $col_info)
+			{
+				if( in_array( $col_id, $user_columns ) )
+				{
+					$cols_extra[] = array
+					(
+						'name'		=> $col_id,
+						'datatype'	=> $column_list[$col_id]['datatype']
+					);
+				}
+			}
+*/
 			$cols_extra		= $this->so->cols_extra;
 			$cols_return_lookup		= $this->so->cols_return_lookup;
 			//_debug_array($entity);
-			//_debug_array($cols_extra);
+//			_debug_array($cols_extra);
 			//_debug_array($cols_return_lookup);
 
 //			if(isset($data['lookup']) && $data['lookup'])
