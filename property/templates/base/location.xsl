@@ -459,7 +459,7 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
-
+							<xsl:apply-templates select="attributes_general/attributes"/>
 						</table>
 					</div>
 

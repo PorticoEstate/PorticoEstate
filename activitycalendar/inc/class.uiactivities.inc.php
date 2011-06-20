@@ -41,6 +41,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	
 	public function index()
 	{
+		//$message = phpgw::get_var('message');
 		$this->render('activity_list.php');
 		
 	}
@@ -308,16 +309,20 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     	
     	//var_dump($subject);
     	//var_dump($body);
+    	//var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
     	
-    	
-    	if($activity->get_group_id())
+    	if($activity->get_group_id() && $activity->get_group_id() > 0)
     	{
+    		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
     		activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
     	}
-    	else if($activity->get_organization_id())
+    	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
     	{
+    		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_oup_contact2($activity>get_group_id());
     		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
     	}
+    	
+    	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
     	
     }
     
@@ -342,6 +347,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_org_contact($contact_person_id);
 		//$mailtoAddress = "erik.holm-larsen@bouvet.no";
+		
+		//var_dump($mailtoAddress);
 
 		if (strlen($mailtoAddress) > 0) 
 		{

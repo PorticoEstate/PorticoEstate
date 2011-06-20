@@ -1,8 +1,10 @@
 <?php
 	phpgw::import_class('activitycalendar.uiactivities');
 	phpgw::import_class('activitycalendar.soactivity');
+	phpgw::import_class('activitycalendar.sogroup');
 	
 	include_class('activitycalendar', 'activity', 'inc/model/');
+	include_class('activitycalendar', 'group', 'inc/model/');
 
 	class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities
 	{
@@ -11,7 +13,8 @@
 			'add'			=>	true,
 			'edit'			=>	true,
 			'view'			=>	true,
-			'index'			=>	true
+			'index'			=>	true,
+			'get_organization_groups'	=>	true
 		);
 		
 		/**
@@ -47,6 +50,8 @@
 
 		function edit()
 		{
+			$GLOBALS['phpgw']->js->validate_file( 'json', 'json', 'phpgwapi' );
+
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$action = phpgw::get_var('action', 'GET');
 			//var_dump($id);
@@ -122,7 +127,15 @@
 					$district_array = phpgw::get_var('district');
 					$activity->set_district(implode(",", $district_array));
 					$activity->set_office(phpgw::get_var('office'));
-					$activity->set_state($new_state);
+					if($action == 'new_activity')
+					{
+						$activity->set_state(1);
+						//$new_state=1;
+					}
+					else
+					{
+						$activity->set_state($new_state);
+					}
 					$activity->set_category(phpgw::get_var('category'));
 					$target_array = phpgw::get_var('target');
 					$activity->set_target(implode(",", $target_array));
@@ -181,5 +194,42 @@
 		{
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendarfrontend.uiactivity.add'));
 			//var_dump("inni index");
+		}
+		
+		public function get_organization_groups()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true; 
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			
+			$org_id = phpgw::get_var('orgid');
+			$group_id = phpgw::get_var('groupid');
+			$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
+			if($org_id)
+			{
+				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array('org_id' => $org_id));
+				foreach ($groups as $group) {
+					if(isset($group))
+					{
+						//$res_g = $group->serialize();
+						$selected = "";
+						if($group_id && $group_id > 0)
+						{
+							$gr_id = (int)$group_id; 
+							if($gr_id == (int)$group->get_id())
+							{
+								$selected_group = " selected";
+							}
+						}
+						$group_html[] = "<option value='" . $group->get_id() . "'". $selected_group . ">" . $group->get_name() . "</option>";
+					}
+				}
+			    $html = implode(' ' , $group_html);
+			    $returnHTML = $returnHTML . ' ' . $html;
+			}
+			
+			
+			return $returnHTML;
+			//return "<option>Ingen gruppe valgt</option>";
 		}
 	}

@@ -44,6 +44,12 @@ state_2	activitycalendarfrontend	no	Endring
 state_3	activitycalendarfrontend	no	Akseptert
 state_4	activitycalendarfrontend	no	Behandlet
 state_5	activitycalendarfrontend	no	Avvist
+new	activitycalendarfrontend	no	Ny
+accepted	activitycalendarfrontend	no	Akseptert
+rejected	activitycalendarfrontend	no	Avvist
+activity	activitycalendarfrontend	no	Aktivitet
+organization	activitycalendarfrontend	no	Organisasjon
+group	activitycalendarfrontend	no	Gruppe
 district	activitycalendarfrontend	no	Bydel
 title	activitycalendarfrontend	no	Tittel
 activity_helptext	activitycalendarfrontend	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.

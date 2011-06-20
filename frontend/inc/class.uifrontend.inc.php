@@ -54,10 +54,10 @@
 			// This module uses XSLT templates
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			
-			$config	= CreateObject('phpgwapi.config','frontend');
-			$config->read();
-			$use_fellesdata = $config->config_data['use_fellesdata'];
-			$logo_path = $config->config_data['logo_path'];
+			$this->config	= CreateObject('phpgwapi.config','frontend');
+			$this->config->read();
+			$use_fellesdata = $this->config->config_data['use_fellesdata'];
+			$logo_path = $this->config->config_data['logo_path'];
 
 			// Get the mode: in frame or full screen
 			$mode = phpgwapi_cache::session_get('frontend', 'noframework');
@@ -281,8 +281,33 @@
 						'link'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.ui{$name}.index", 'type'=>$location_id, 'noframework' => $noframework))
 					);
 				}
+				unset($location);
 			}
 			
+
+			// this one is for generic entitysupport from the app 'property'
+			$entity_frontend = isset($this->config->config_data['entity_frontend']) && $this->config->config_data['entity_frontend'] ? $this->config->config_data['entity_frontend'] : array();
+
+			if($entity_frontend)
+			{
+				$entity			= CreateObject('property.soadmin_entity');
+			}
+
+			foreach ($entity_frontend as $location)
+			{
+				if ( $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, 'property') )
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id('property', $location);
+					$location_arr = explode('.', $location);
+					
+					$category = $entity->read_single_category($location_arr[2], $location_arr[3]);
+					$tabs[$location_id] = array(
+						'label' => $category['name'],
+						'link'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.uientity.index", 'location_id' => $location_id, 'noframework' => $noframework))
+					);
+				}
+			}
+
 			$extra_tabs = phpgwapi_cache::session_get('frontend', 'extra_tabs');
 			
 			if(isset($extra_tabs))
@@ -446,9 +471,7 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			$config = CreateObject('phpgwapi.config','frontend');
-			$config->read();
-			$doc_type = $config->config_data['picture_building_cat'] ? $config->config_data['picture_building_cat'] : 'profilbilder';
+			$doc_type = $this->config->config_data['picture_building_cat'] ? $this->config->config_data['picture_building_cat'] : 'profilbilder';
 
 			// Get object id from params or use 'dummy'
 			$location_code = phpgw::get_var('loc_code') ? phpgw::get_var('loc_code') : 'dummy';

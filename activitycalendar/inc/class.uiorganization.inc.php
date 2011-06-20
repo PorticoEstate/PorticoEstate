@@ -4,13 +4,15 @@ phpgw::import_class('activitycalendar.soorganization');
 phpgw::import_class('activitycalendar.sogroup');
 
 include_class('activitycalendar', 'organization', 'inc/model/');
+include_class('activitycalendar', 'group', 'inc/model/');
 
 class activitycalendar_uiorganization extends activitycalendar_uicommon
 {
 	public $public_functions = array
 	(
 		'index'				=> true,
-		'query'				=> true
+		'query'				=> true,
+		'get_organization_groups' => true
 	);
 	
 	public function __construct()
@@ -23,8 +25,34 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	
 	public function index()
 	{
+		if(phpgw::get_var('phpgw_return_as') == 'json') {
+			return $this->index_json();
+		}
+			
 		$this->render('organization_list.php');
 	}
+	
+	public function index_json()
+	{
+		$organizations = activitycalendar_soorganization::get_instance()->get(); //get organizations
+		array_walk($organizations["results"], array($this, "_add_links"), "booking.uiorganization.show");
+
+		foreach($organizations["results"] as &$organization) {
+
+			$contact = (isset($organization['contacts']) && isset($organization['contacts'][0])) ? $organization['contacts'][0] : null;
+
+			if ($contact) {
+				$organization += array(
+							"primary_contact_name"  => ($contact["name"])  ? $contact["name"] : '',
+							"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
+							"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
+				);
+			}
+		}
+
+		return $this->yui_results($organizations);
+	}
+	
 	
 
 	/**
@@ -116,6 +144,43 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		
 		
 		return $this->yui_results($organization_data, 'total_records', 'results');
+	}
+	
+	public function get_organization_groups()
+	{
+		$GLOBALS['phpgw_info']['flags']['noheader'] = true; 
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+		
+		$org_id = phpgw::get_var('orgid');
+		$group_id = phpgw::get_var('groupid');
+		$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
+		if($org_id)
+		{
+			$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array('org_id' => $org_id));
+			foreach ($groups as $group) {
+				if(isset($group))
+				{
+					//$res_g = $group->serialize();
+					$selected = "";
+					if($group_id && $group_id > 0)
+					{
+						$gr_id = (int)$group_id; 
+						if($gr_id == (int)$group->get_id())
+						{
+							$selected_group = " selected";
+						}
+					}
+					$group_html[] = "<option value='" . $group->get_id() . "'". $selected_group . ">" . $group->get_name() . "</option>";
+				}
+			}
+		    $html = implode(' ' , $group_html);
+		    $returnHTML = $returnHTML . ' ' . $html;
+		}
+		
+		
+		return $returnHTML;
+		//return "<option>Ingen gruppe valgt</option>";
 	}
 
 	/**
