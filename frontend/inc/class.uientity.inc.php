@@ -197,48 +197,9 @@
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
 
-				//// ---- DISTRICT filter----------------------
-				if($this->cat_id)
-				{
-					//this validation comes to previous versions
-					if (isset($category['location_level']) && $category['location_level']>0)
-					{
-						$values_combo_box[1]	= $this->bocommon->select_district_list($group_filters,$this->district_id);
-						if(count($values_combo_box[1]))
-						{
-							$default_value = array ('id'=>'','name'=>lang('no district'));
-							array_unshift ($values_combo_box[1],$default_value);
-							$arr_filter_hide[1] = 0;
-						}
-						else
-						{
-							$arr_filter_hide[1] = 1;
-						}
-					}
-					else
-					{
-						$values_combo_box[1] = array();
-						$arr_filter_hide[1] = 1;
-					}
-				}
-
-				//// ---- USER filter----------------------
-				$values_combo_box[2]  = $this->bocommon->get_user_list_right2($group_filters,4,$this->filter,$this->acl_location,array('all'),$default='all');
-
-				if(count($values_combo_box[2]))
-				{
-					$default_value = array ('id'=>'','name'=>lang('no user'));
-					array_unshift ($values_combo_box[2],$default_value);
-					$arr_filter_hide[2] = 0;
-				}
-				else
-				{
-					$arr_filter_hide[2] = 1;
-				}
-
-				$values_combo_box[3]  = $this->bo->get_criteria_list($this->criteria_id);
+				$values_combo_box[0]  = $this->bo->get_criteria_list($this->criteria_id);
 				$default_value = array ('id'=>'','name'=>lang('no criteria'));
-				array_unshift ($values_combo_box[3],$default_value);
+				array_unshift ($values_combo_box[0],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -258,33 +219,6 @@
 							(
 								'field' => array
 								(
-							/*		array
-									( //boton 	CATEGORY
-													'id'   => 'btn_cat_id',
-													'name' => 'cat_id',
-													'value'=> lang('Category'),
-													'type' => 'button',
-													'style' => 'filter',
-													'tab_index' => 1
-										),
-									array
-									( //boton 	DISTINT
-										'id'   => 'btn_district_id',
-										'name' => 'district_id',
-										'value'=> lang('District'),
-										'type' => 'button',
-										'style' => 'filter',
-										'tab_index' => 2
-									),
-									array
-									( //boton 	USER
-										'id'   => 'btn_user_id',
-										'name' => 'user_id',
-										'value'=> lang('User'),
-										'type' => 'button',
-										'style' => 'filter',
-										'tab_index' => 3
-									),*/
 									array
 									( //boton 	search criteria
 										'id' => 'btn_criteria_id',
@@ -376,22 +310,7 @@
 									(
 										'id'   => 'values_combo_box_0',
 										'value'=> $this->bocommon->select2String($values_combo_box[0])
-									),
-									array
-									(
-										'id'	=> 'values_combo_box_1',
-										'value' => $this->bocommon->select2String($values_combo_box[1])
-									),
-									array
-									(
-										'id' => 'values_combo_box_2',
-										'value'	=> $this->bocommon->select2String($values_combo_box[2])
-									),
-									array
-									(
-										'id' => 'values_combo_box_3',
-										'value'	=> $this->bocommon->select2String($values_combo_box[3])
-									),
+									)
 								)
 							)));
 
@@ -399,18 +318,12 @@
 				$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
 
 				$button_def[] = "oMenuButton_0";
-		//		$button_def[] = "oMenuButton_1";
-		//		$button_def[] = "oMenuButton_2";
-				$button_def[] = "oMenuButton_3";
-				$code_inner[] = "{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'genericbutton',dependiente:[]}";
-		//		$code_inner[] = "{order:1, var_URL:'district_id',name:'btn_district_id',style:'genericbutton',dependiente:[]}";
-		//		$code_inner[] = "{order:2, var_URL:'filter',name:'btn_user_id',style:'genericbutton',dependiente:[]}";
-				$code_inner[] = "{order:3, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
+				$code_inner[] = "{order:0, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
 
 
 				if($attrib_data)
 				{
-					$i = 4;
+					$i = 1;
 					foreach ( $attrib_data as $attrib )
 					{
 						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
