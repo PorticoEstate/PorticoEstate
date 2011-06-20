@@ -1658,7 +1658,7 @@
 				(
 					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
 					'suppresscoordination'				=> $suppresscoordination,
-					'attributes'						=> $values['attributes'],
+					'custom_attributes'					=> array('attributes' => $values['attributes']),
 					'lookup_functions'					=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'b_account_data'					=> $b_account_data,
 					'ecodimb_data'						=> $ecodimb_data,
@@ -1830,7 +1830,7 @@
 
 			$template_vars = array();
 			$template_vars['datatable'] = $datatable;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 
 			$GLOBALS['phpgw']->css->validate_file('datatable');
@@ -1902,7 +1902,7 @@
 
 			$id	= phpgw::get_var('id', 'int');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('project'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('project','attributes_form'));
 
 			$values	= $this->bo->read_single($id);
 
@@ -1985,8 +1985,7 @@
 
 					'project_group_data'				=> $project_group_data,
 					'value_origin'						=> $values['origin'],
-					//	'value_origin_type'					=> $origin,
-					//	'value_origin_id'					=> $origin_id,
+					'custom_attributes'					=> array('attributes' => $values['attributes']),
 
 					'table_header_workorder_budget'		=> $table_header_workorder_budget,
 					'lang_no_workorders'				=> lang('No workorder budget'),
