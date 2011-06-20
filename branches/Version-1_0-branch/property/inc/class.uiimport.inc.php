@@ -32,6 +32,7 @@
 		{
 			set_time_limit(10000); //Set the time limit for this request oto 3000 seconds
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
 		}
 		
 
@@ -225,8 +226,7 @@ HTML;
 			$this->messages[] = "Read 'import_all.csv' file in " . (time() - $start_time) . " seconds";
 			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
 			
-			$this->db           = & $GLOBALS['phpgw']->db;
-	
+
 			$ok = true;
 			$_ok = false;
 			$this->db->transaction_begin();

@@ -342,15 +342,18 @@
 			$where= 'WHERE';
 			$filtermethod = '';
 
-			$GLOBALS['phpgw']->config->read();
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location'])
-				&& $GLOBALS['phpgw']->config->config_data['acl_at_location']
+			$_config	= CreateObject('phpgwapi.config','property');
+			$_config->read();
+			if(isset($_config->config_data['acl_at_location'])
+				&& $_config->config_data['acl_at_location']
 				&& $category['location_level'] > 0)
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE {$entity_table}.loc1 in ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
 			}
+
+			unset($_config);
 
 			if ($filter=='all')
 			{
@@ -595,8 +598,8 @@
 
 		function read_single($data,$values = array())
 		{
-			$entity_id	= (int)$data['entity_id'];
-			$cat_id		= (int)$data['cat_id'];
+			$entity_id	= isset($data['entity_id']) && $data['entity_id'] ? (int)$data['entity_id'] : $this->entity_id;
+			$cat_id		= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : $this->cat_id;
 			$id			= (int)$data['id'];
 			$num		= isset($data['num']) && $data['num'] ? $data['num'] : '';
 			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";

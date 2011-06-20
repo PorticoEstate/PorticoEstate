@@ -8,14 +8,13 @@
 		<xsl:for-each select="attributes_group" >
 			<div id="{link}">
 				<table cellpadding="2" cellspacing="2" width="100%" align="center" border="0">
-					<xsl:call-template name="attributes"/>
+					<xsl:apply-templates select="attributes"/>
 				</table>
 			</div>
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template name="attributes">
-		<xsl:for-each select="attributes" >
+	<xsl:template match="attributes">
 			<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 			<tr>
 				<td align="left" width="19%" valign="top" title="{$statustext}">
@@ -387,7 +386,6 @@
 					</xsl:choose>
 				</td>
 			</tr>
-		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="choice">

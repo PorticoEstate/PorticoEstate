@@ -332,13 +332,18 @@
 		function index()
 		{
 			//redirect. If selected the title of module.
-			if($this->entity_id == 1 && !$this->cat_id)
+			if($this->entity_id && !$this->cat_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>1, 'cat_id'=> 1, 'type' => $this->type));
-			}
-			elseif($this->entity_id == 2 && !$this->cat_id)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>2, 'cat_id'=> 1, 'type' => $this->type));
+				$categories = $this->soadmin_entity->read_category(array('entity_id' => $this->entity_id));
+				foreach($categories as $category)
+				{
+					if($this->acl->check(".{$this->type}.$this->entity_id.{$category['id']}", PHPGW_ACL_READ, $this->type_app[$this->type]))
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uientity.index', 'entity_id'=>$this->entity_id, 'cat_id'=> $category['id'], 'type' => $this->type));
+					}
+				}
+				unset($categories);
+				unset($category);
 			}
 
 			//redirect if no rights
@@ -945,6 +950,7 @@
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['format'] 			= $this->bocommon->translate_datatype_format($uicols['datatype'][$i]);
 					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];;
+					$datatable['headers']['header'][$i]['sort_field']		= $uicols['name'][$i];
 					//$datatable['headers']['header'][$i]['formatter']		= $uicols['formatter'][$i];
 					//according to stable bruch this columns is not SORTABLE'
 					$denied = array('merknad');//$denied = array('merknad','account_lid');
@@ -952,12 +958,10 @@
 					if(in_array ($uicols['name'][$i], $denied))
 					{
 						$datatable['headers']['header'][$i]['sortable']		= false;
-						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 					else if(isset($uicols['cols_return_extra'][$i]) && ($uicols['cols_return_extra'][$i]!='T' || $uicols['cols_return_extra'][$i]!='CH'))
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
-						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
 
 				}
@@ -966,7 +970,7 @@
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= false;
-					$datatable['headers']['header'][$i]['sortable']		 = false;
+					$datatable['headers']['header'][$i]['sortable']		 	= false;
 					$datatable['headers']['header'][$i]['format'] 			= 'hidden';
 				}
 			}
@@ -1476,7 +1480,10 @@
 			{
 				$_no_link = (int)$category['location_link_level'] + 2;
 			}
-			if($entity['location_form'] )
+
+			$location_data = array();
+
+			if($entity['location_form'] && $category['location_level'] > 0)
 			{
 				$location_data=$bolocation->initiate_ui_location(array
 					(
@@ -1615,10 +1622,11 @@
 				$location = ".{$this->type}.{$this->entity_id}.{$this->cat_id}";
 				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
+				$attributes_general = array();
 				$attributes = array();
 				foreach ($attributes_groups as $group)
 				{
-					if(isset($group['attributes']))
+					if(isset($group['attributes']) && (isset($group['group_sort']) || !$location_data))
 					{
 						$_tab_name = str_replace(' ', '_', $group['name']);
 						$active_tab = $active_tab ? $active_tab : $_tab_name;
@@ -1626,6 +1634,10 @@
 						$group['link'] = $_tab_name;
 						$attributes[] = $group;
 						unset($_tab_name);
+					}
+					else if(isset($group['attributes']) && !isset($group['group_sort']) && $location_data)
+					{
+						$attributes_general = array_merge($attributes_general,$group['attributes']);
 					}
 				}
 				unset($attributes_groups);
@@ -1961,6 +1973,7 @@
 					'category_name'					=> $category['name'],
 					'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'attributes_group'				=> $attributes,
+					'attributes_general'			=> array('attributes' => $attributes_general),
 					'lookup_functions'				=> isset($values['lookup_functions'])?$values['lookup_functions']:'',
 					'lang_none'						=> lang('None'),
 					'location_data'					=> $location_data,
