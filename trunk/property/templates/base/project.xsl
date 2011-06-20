@@ -372,7 +372,7 @@
 				</textarea>
 			</td>
 		</tr>
-		<xsl:call-template name="attributes"/>
+		<xsl:apply-templates select="custom_attributes/attributes"/>
 	</table>
 </div>
 
@@ -969,6 +969,7 @@
 								</xsl:choose>
 							</xsl:for-each>
 						</tr>
+						<xsl:apply-templates select="custom_attributes/attributes"/>
 					</table>
 				</div>
 

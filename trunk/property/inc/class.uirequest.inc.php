@@ -1328,7 +1328,7 @@
 					'value_authorities_demands' 		=> isset($this->config->config_data['authorities_demands']) &&  $this->config->config_data['authorities_demands'] ? $this->config->config_data['authorities_demands'] : 0,
 					'suppressmeter'						=> isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
 					'show_dates'						=> $show_dates,
-					'attributes'						=> $values['attributes'],
+					'custom_attributes'					=> array('attributes' => $values['attributes']),
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
