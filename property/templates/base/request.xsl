@@ -576,7 +576,7 @@
 												</table>
 											</td>
 										</tr>
-										<xsl:call-template name="attributes"/>
+										<xsl:apply-templates select="custom_attributes/attributes"/>
 										<tr>
 											<td>
 												<br/>
