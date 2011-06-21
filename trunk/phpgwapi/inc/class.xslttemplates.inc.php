@@ -395,6 +395,7 @@ XSLT;
 
 			if (!$html || $html == '<?xml version="1.0"?>')
 			{
+				_debug_array(libxml_get_last_error());
 				echo "<h2>xml-data</h2>";
 				$this->list_lineno($this->xmldata, true);
 
