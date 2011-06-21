@@ -276,6 +276,10 @@
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
 					$uicols['sortable'][$i]		= true;
+					$uicols['exchange'][$i]		= false;
+					$uicols['formatter'][$i]	= '';
+					$uicols['classname'][$i]	= '';
+
 					$uicols['cols_return_extra'][$i] = array
 						(
 							'name'	=> $this->db->f('column_name'),
@@ -299,6 +303,10 @@
 				$uicols['statustext'][]		= lang('entry date' );
 				$uicols['datatype'][]		= 'timestamp';
 				$uicols['sortable'][]		= true;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]	= '';
+				$uicols['classname'][]	= '';
+
 				$uicols['cols_return_extra'][$i] = array
 					(
 						'name'		=> 'entry_date',

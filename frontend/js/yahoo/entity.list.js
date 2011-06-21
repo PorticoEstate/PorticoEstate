@@ -117,9 +117,9 @@
 	{
 		if(oRecord.getData('img_id'))
 		{
-			var oArgs = {menuaction:'property.uigallery.view_file', file:oRecord.getData('directory') + '/' + oRecord.getData('name')};
+			var oArgs = {menuaction:'property.uigallery.view_file', file:oRecord.getData('directory') + '/' + oRecord.getData('file_name')};
 			var sUrl = phpGWLink('index.php', oArgs);
-			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&thumb=1\" alt=\""+oRecord.getData('name')+"\" /></a>";
+			elCell.innerHTML =  "<a href=\""+sUrl+"\" title=\""+oRecord.getData('file_name')+"\" id=\""+oRecord.getData('img_id')+"\" rel=\"colorbox\" target=\"_blank\"><img src=\""+sUrl+"&thumb=1\" alt=\""+oRecord.getData('file_name')+"\" /></a>";
 		}
 	}
 
