@@ -239,7 +239,7 @@
 			foreach ($_config as $_config_section => $_config_section_data)
 			{
 				$integrationurl = '';
-				if(isset($_config_section_data['url']))
+				if(isset($_config_section_data['url']) && !isset($_config_section_data['tab']))
 				{
 					if(isset($_config_section_data['auth_hash_name']) && $_config_section_data['auth_hash_name'] && isset($_config_section_data['auth_url']) && $_config_section_data['auth_url'])
 					{
