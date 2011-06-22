@@ -55,12 +55,6 @@ _debug_array($data);
 
 			$id = (int)$data[2];
 			
-			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}",__LINE__,__FILE__);
-			if($this->db->next_record())
-			{
-				$this->errors[] = "ID finnes fra før: {$id}";
-				return true;
-			}
 
 			$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
 			$entry_date = time();
@@ -69,7 +63,7 @@ _debug_array($data);
 //_debug_array($entry_date);
 			$value_set = array();
 
-			$value_set['id'] 					= $id;
+
 			$value_set['num'] 					= sprintf('%04s',$id);
     		$value_set['loc1']					= $location_data['loc1'];
     		$value_set['loc2']					= $location_data['loc2'];
@@ -82,10 +76,21 @@ _debug_array($data);
 			$value_set['beskrivelse']			= $this->db->db_addslashes($data[4]);
 			$value_set['tilstand']				= $this->db->db_addslashes($data[5]);
 
-			$cols = implode(',', array_keys($value_set));
-			$values	= $this->db->validate_insert(array_values($value_set));
+			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}",__LINE__,__FILE__);
+			if($this->db->next_record())
+			{
+				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
+				$value_set	= $this->db->validate_update($value_set);
+				$sql = "UPDATE {$table} SET {$value_set} WHERE id = {$id}";
+			}
+			else
+			{
+				$value_set['id'] = $id;
+				$cols = implode(',', array_keys($value_set));
+				$values	= $this->db->validate_insert(array_values($value_set));
 
-			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+				$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+			}
 
 			if($debug)
 			{
