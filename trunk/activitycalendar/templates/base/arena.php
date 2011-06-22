@@ -3,15 +3,29 @@
 	include("common.php");
 ?>
 
-<script xmlns:php="http://php.net/xsl" type="text/javascript">
-var endpoint = 'activitycalendar';
+<script type="text/javascript">
 
-YAHOO.activitycalendar.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiarena.get_address&address=true&phpgw_return_as=json&',
-    'field_address_txt',
-    'field_address_hidden',
-    'address_container',
-    'descr'
-);
+function get_address_search()
+{
+	var address = document.getElementById('address_txt').value;
+	var div_address = document.getElementById('address_container');
+
+	url = "index.php?menuaction=activitycalendar.uiarena.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+
+var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
+var divcontent_end = "</select>";
+	
+	var callback = {
+		success: function(response){
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
 </script>
 
 <div class="identifier-header">
@@ -83,10 +97,9 @@ YAHOO.activitycalendar.autocompleteHelper('index.php?menuaction=' + endpoint + '
 					if ($editable)
 					{
 					?>
-						<input type="text" name="address" id="address" value="<?php echo $arena->get_address() ?>" />
-						<div class="autocomplete">
-						<input id="field_address_hidden" name="address_hidden" type="hidden" value=""><input name="address_txt" type="text" id="field_address_txt" value=""><div id="address_container"></div>
-						</div>
+					 	<input type="text" name="address" id="address_txt" value="<?php echo $arena->get_address() ?>" onkeyup="javascript:get_address_search()"/>
+					 	<div id="address_container"></div>
+					 	<label for="address_number"><?php echo lang('address_number') ?></label><input type="text" name="address_no" id="address_no"/>
 					<?php
 					}
 					else
