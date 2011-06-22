@@ -850,10 +850,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function add_group($group_info)
 	{
-		$name = $org_info['name'];
-		$orgid = $org_info['organization_id'];
-		$description = $org_info['description'];
-		$activity_id = $org_info['activity_id'];
+		$name = $group_info['name'];
+		$orgid = $group_info['organization_id'];
+		$description = $group_info['description'];
+		$activity_id = $group_info['activity_id'];
 		$show_in_portal = 1; 
 		
 		$columns[] = 'name';
@@ -863,9 +863,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'show_in_portal';
 		$cols = implode(',',$columns);
 		
-		$values[] = "{$name}";
-		$values[] = "{$description}";
-		$values[] = "{$orgid}";
+		$values[] = "'{$name}'";
+		$values[] = "'{$description}'";
+		$values[] = "'{$orgid}'";
 		$values[] = $activity_id;
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
@@ -902,10 +902,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function add_contact_person_org($contact)
 	{
-		$name = $contact2['name'];
-		$phone = $contact2['phone'];
-		$mail = $contact2['mail'];
-		$org_id = $contact2['org_id'];
+		$name = $contact['name'];
+		$phone = $contact['phone'];
+		$mail = $contact['mail'];
+		$org_id = $contact['org_id'];
 		$ssn = '';
 		
 		$columns[] = 'name';
@@ -915,10 +915,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'organization_id';
 		$cols = implode(',',$columns);
 		
-		$values[] = "{$name}";
-		$values[] = "{$ssn}";
-		$values[] = "{$phone}";
-		$values[] = "{$mail}";
+		$values[] = "'{$name}'";
+		$values[] = "'{$ssn}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$mail}'";
 		$values[] = $org_id;
 		$vals = implode(',',$values);
 		
@@ -934,10 +934,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function add_contact_person_group($contact)
 	{
-		$name = $contact2['name'];
-		$phone = $contact2['phone'];
-		$mail = $contact2['mail'];
-		$org_id = $contact2['group_id'];
+		$name = $contact['name'];
+		$phone = $contact['phone'];
+		$mail = $contact['mail'];
+		$org_id = $contact['group_id'];
 		
 		$columns[] = 'name';
 		$columns[] = 'phone';
@@ -945,9 +945,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'group_id';
 		$cols = implode(',',$columns);
 		
-		$values[] = "{$name}";
-		$values[] = "{$phone}";
-		$values[] = "{$mail}";
+		$values[] = "'{$name}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$mail}'";
 		$values[] = $org_id;
 		$vals = implode(',',$values);
 		

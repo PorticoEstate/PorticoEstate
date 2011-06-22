@@ -12,7 +12,8 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		'query'			    => true,
 		'view'			    => true,
 		'add'				=> true,
-		'edit'				=> true
+		'edit'				=> true,
+		'get_address_search'	=> true
 	);
 	
 	public function __construct()
@@ -29,6 +30,16 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 	public function add()
 	{
 		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.edit'));
+	}
+	
+	/**
+	 * Public method.
+	 */
+	public function get_address_search()
+	{
+		$search_string = phpgw::get_var('address_txt');
+		var_dump($search_string);
+		return activitycalendar_soarena::get_instance()->get_address($search_string);
 	}
 	
 	public function index()

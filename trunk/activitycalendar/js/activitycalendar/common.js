@@ -258,7 +258,7 @@ var showIfNotEmpty = function(event, fieldname) {
     }
 }
 
-/*
+
 YAHOO.activitycalendar.autocompleteHelper = function(url, field, hidden, container, label_attr) {
 	label_attr = label_attr || 'name';
 	var myDataSource = new YAHOO.util.DataSource(url);
@@ -269,20 +269,19 @@ YAHOO.activitycalendar.autocompleteHelper = function(url, field, hidden, contain
 		fields: [label_attr, 'id']
 	};
 	myDataSource.maxCacheEntries = 5; 
-	console.log(myDataSource);
-	console.log(field);
-	console.log(container);
-	console.log(YAHOO.widget.AutoComplete);
+	//console.log(myDataSource);
+	//console.log(field);
+	//console.log(container);
+	//console.log(YAHOO.widget.AutoComplete);
 	var ac = new YAHOO.widget.AutoComplete(field, container, myDataSource);
 	ac.queryQuestionMark = false;
 	ac.resultTypeList = false;
 	ac.forceSelection = true;
-	console.log(ac);
+	//console.log(ac);
 	
 	ac.itemSelectEvent.subscribe(function(sType, aArgs) {
-		console.log(aArgs[2]);
+		//console.log(aArgs[2]);
 		YAHOO.util.Dom.get(hidden).value = aArgs[2].id;
 	});
 	return ac;
 };
-*/
