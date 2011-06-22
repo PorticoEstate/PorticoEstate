@@ -585,13 +585,20 @@
 						'text'	 		=> lang('start ticket'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'		=> 'frontend.uihelpdesk.add_ticket',
-							'noframework'		=> 1,
-							'target'			=> '_lightbox'
+							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+							'noframework'	=> 1,
+							'target'		=> '_lightbox',
+							'p_entity_id'	=> $this->entity_id,
+							'p_cat_id'		=> $this->cat_id,
+							'type'			=> $this->type,
+							'target'		=> '_blank',
+							'bypass'		=> true,
+							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",							
 						)),
 						'parameters'			=> $parameters2
 					);
 			}
+
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location)));
 
