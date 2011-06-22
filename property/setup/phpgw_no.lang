@@ -166,6 +166,8 @@ apartment has been saved	property	no	leilighet er lagret
 apartment id	property	no	leilighet ID
 applications	property	no	Applikasjoner
 apply the values	property	no	Bruke verdier
+apply	property	no	Mellomlagre
+save and stay in form	property	no	Lagre og bli stående i skjemaet
 approval	property	no	Godkjenning
 approvals	property	no	Godkjenninger
 approvals request	property	no	Anmodninger om godkjenning
@@ -1355,6 +1357,7 @@ save the ticket	property	no	Lagre melding og bli stående i skjema
 save the voucher	property	no	lagre bilag
 save the workorder	property	no	lagre bestilling
 save this workorder as a template for later use	property	no	lagre denne bestillingen som mal for senere bruk
+save values and exit	property	no	Lagre verdier og gå til liste
 scale	property	no	Scale
 schedule	property	no	planlegge (tid)
 scheduled events	property	no	Planlagte oppgaver
