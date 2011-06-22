@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- $Id -->
+<!-- found by 2z69xks7bpy001@sneakemail.com, amongst others
+ covers what happens when there's character data after </string>
+ and before </value> -->
+<methodResponse>
+<params>
+<param>
+<value>
+<struct>
+<member> 
+<name>success</name>
+<value>
+<boolean>1</boolean>
+</value>
+</member>
+<member>
+<name>sessionID</name>
+<value>
+<string>S300510007I</string>
+</value>
+</member>
+</struct>
+</value>
+</param>
+</params>
+</methodResponse>

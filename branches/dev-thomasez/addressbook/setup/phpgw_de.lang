@@ -1,0 +1,205 @@
+%1 of %2 Organizations	calendar	de	1% von %2 Organisationen
+%1 records imported	addressbook	de	%1 Datensätze importiert
+%1 records read (not yet imported, you may go %2back%3 and uncheck test import)	addressbook	de	%1 Datensätze gelesen (noch nicht importiert, sie können %2zurück%3 gehen und Test-Import auschalten)
+%1 - %2 of %3 Persons	common	de	%1 - %2 von %3 Personen
+<b>no conversion type &lt;none&gt; could be located.</b>  please choose a conversion type from the list	addressbook	de	<b>Kein Übersetzungstyp &lt;none&gt; konnte gefunden werden.</b> Bitte wählen Sie einen Übersetzungstype aus der Liste
+@-eval() is only availible to admins!!!	addressbook	de	@-eval() ist nur verfügbar für Administratoren!!!
+active company	addressbook	de	Aktive Unternehmen
+add a single entry by passing the fields.	addressbook	de	Hinzufügen eines einzelnen Eintrags durch Übergeben der Felder.
+add custom field	addressbook	de	Benutzerdefiniertes Feld hinzufügen
+add vcard	addressbook	de	VCard hinzufügen
+address	addressbook	de	Adresse
+address 1	addressbook	de	1. Adresse
+address 2	addressbook	de	2. Adresse
+address book	common	de	Adressbuch
+address book - vcard in	addressbook	de	Adressbuch - VCard in
+address book - view	addressbook	de	Adressbuch - Anzeigen
+Address Data for	common	de	Adressdaten für
+address line 2	addressbook	de	Adreßzeile 2
+address line 3	addressbook	de	Adreßzeile 3
+address type	addressbook	de	Adreßtyp
+addressbook	common	de	Adressbuch
+addressbook preferences	addressbook	de	Adressbuch Einstellungen
+addressbook-fieldname	addressbook	de	Adressbuch Feldname
+addvcard	addressbook	de	VCard hinzufügen
+All Persons	addressbook	de	Alle Personen
+All Org.	addressbook	de	Allg. Org.
+All Categories	addressbook	de	Allg. Kategorien
+alt. csv import	addressbook	de	Alt. CSV Import
+are you sure you want to delete this field?	addressbook	de	Sind Sie sicher, dass sie dieses Feld löschen wollen?
+bbs phone	addressbook	de	BBS
+birthday	common	de	Geburtstag
+birthdays	common	de	Geburtstage
+blank	addressbook	de	Leer
+business	common	de	Geschäftlich
+business address type	addressbook	de	Typ der geschäflt. Adresse
+business city	addressbook	de	geschäftl. Stadt
+business country	addressbook	de	geschäftl. Staat
+business email	addressbook	de	geschäftl. EMail
+business email type	addressbook	de	Typ der geschäftl. EMail
+business fax	addressbook	de	Fax geschäftl.
+business phone	addressbook	de	Tel. geschäftl.
+business state	addressbook	de	geschäftl. Land
+business street	addressbook	de	geschäftl. Straße
+business zip code	addressbook	de	geschäftl. PLZ
+car phone	addressbook	de	Autotelefon
+categorize	addressbook	de	Kategorisieren
+Categorize Persons	addressbook	de	Personen kategorisieren
+cell phone	addressbook	de	Mobilfunk
+city	common	de	Stadt
+communications	addressbook	de	Kommunikationen
+Communications Data	addressbook	de	Kommunikations Daten
+Communication Data for	common	de	Kommunikations Daten für 
+common	addressbook	de	Allgemein
+company	common	de	Firma
+company name	common	de	Firmenname
+contact	common	de	Kontakt
+contact application	admin	de	Kontakt Anwendung
+contact settings	admin	de	Kontakt Einstellungen
+copied by %1, from record #%2.	addressbook	de	Kopiert von %1, vom Datensatz Nr. %2.
+country	common	de	Land
+csv-fieldname	addressbook	de	CSV-Feldname
+csv-filename	addressbook	de	CSV-Dateiname
+Categories Data for	addressbook	de	Kategorien Daten für
+Current Categories	addressbook	de	Aktuelle Kategorien
+Current Org.	addressbook	de	Aktuelle Org.
+Current Persons	addressbook	de	Aktuelle Person
+custom	addressbook	de	Benutzerdefiniert
+custom fields	addressbook	de	Benutzerdefinierte Felder
+Data for	addressbook	de	Daten für
+debug output in browser	addressbook	de	Debugausgaben in Browser
+default filter	addressbook	de	Standardfilter
+Defaul Org.:	common	de	Vorgabe Org.:
+delete a single entry by passing the id.	addressbook	de	Löscht einen einzelnen Eintrag durch Übergabe seiner Id.
+department	common	de	Abteilung
+domestic	addressbook	de	Wohnung
+download	addressbook	de	Herunterladen
+edit custom field	addressbook	de	Benutzerdefiniertes Feld bearbeiten
+edit custom fields	admin	de	Benutzerdefinierte Felder bearbeiten
+export contacts	addressbook	de	Kontakte exportieren
+export file name	addressbook	de	Dateiname zum Exportieren
+export from addressbook	addressbook	de	Export vom Addressbuch
+extra	addressbook	de	Extra
+fax	addressbook	de	Telefax
+fax number	common	de	Telefaxnummer
+field %1 has been added !	addressbook	de	Feld %1 wurde hinzugefügt !
+field %1 has been updated !	addressbook	de	Feld %1 wurde aktualisiert !
+field name	addressbook	de	Feldname
+fields	addressbook	de	Felder
+fields to show in address list	addressbook	de	Felder, die in der Adressliste angezeigt werden sollen
+fieldseparator	addressbook	de	Feldtrenner
+full name	addressbook	de	vollständiger Name
+geo	addressbook	de	GEO
+General Data	addressbook	de	Generelle Daten
+grant addressbook access	common	de	Berechtigungen
+home address type	addressbook	de	Typ der Privatadresse
+home city	addressbook	de	Stadt (priv)
+home country	addressbook	de	Staat (priv)
+home email	addressbook	de	private EMail
+home email type	addressbook	de	Typ der privaten EMail
+home phone	addressbook	de	Tel privat
+home state	addressbook	de	Bundesland (priv)
+home street	addressbook	de	Straße (priv)
+home zip code	addressbook	de	PLZ (priv)
+import	addressbook	de	Import
+import contacts	addressbook	de	Kontakte importieren
+Import CSV	addressbook	de	CSV importieren
+import csv-file into addressbook	addressbook	de	Import CSV-Datei ins Addressbuch
+import file	addressbook	de	Datei importieren
+import from ldif, csv, or vcard	addressbook	de	Import von LDIF, CSV oder VCard
+import from outlook	addressbook	de	Aus Outlook importieren
+Initials	addressbook	de	Initialen
+international	addressbook	de	International
+isdn phone	addressbook	de	ISDN Tel.
+Kategorien Data for	common	de	Kategorien Daten für
+label	addressbook	de	Adreßetikett
+ldap context for contacts	admin	de	LDAP Kontext für Kontakte
+ldap host for contacts	admin	de	LDAP Host für Kontakte
+ldap root dn for contacts	admin	de	LDAP rootdn für Kontakte
+ldap root pw for contacts	admin	de	LDAP Paswort für Kontakte
+ldif	addressbook	de	LDIF
+line 2	addressbook	de	Zeile 2
+Locations Data	addressbook	de	Ortsangaben
+message phone	addressbook	de	Anrufbeantworter
+middle name	addressbook	de	Zweiter Vorname
+mobile	addressbook	de	Mobil
+mobile phone	addressbook	de	Mobil-Telefon
+modem phone	addressbook	de	Modem
+more data	addressbook	de	Mehr Daten
+new org	addressbook	de	Neue Organisation
+new person	addressbook	de	Neue Person
+no vcard	addressbook	de	Keine VCard
+number of records to read (<=200)	addressbook	de	Nummer der einzulesenden Datensätze (<= 200)
+on	addressbook	de	an
+Org	addressbook	de	Org.
+Organizations	addressbook	de	Organisation
+Organizations Data	common	de	Organisations Daten
+Org Data	addressbook	de	Org. Daten
+Org. Data for	addressbook	de	Org. Daten für
+Orgs	addressbook	de	Org.
+other	addressbook	de	Andere
+Others	addressbook	de	Andere
+Other Data	addressbook	de	Sonstige Daten
+Other Data for	addressbook	de	Andere Daten für
+Others	addressbook	de	Andere
+other number	addressbook	de	andere Nr.
+other phone	addressbook	de	Anderes Telefon
+pager	common	de	Pager
+parcel	addressbook	de	Lieferadresse
+parent organization	addressbook	de	Mutterorganisation
+personal	addressbook	de	Persönlich
+Person Data	addressbook	de	Persönliche Daten
+Person extra fields for	addressbook	de	Persönliche extra Felder für
+Personen Data for	addressbook	de	Persönliche Daten für
+Persons	common	de	Personen
+phone	addressbook	de	Telefon
+phone number	common	de	Telefon
+phone numbers	common	de	Telefonnummern
+please enter a name for that field !	addressbook	de	Bitte geben sie einen Namen für das Feld an !
+please select	addressbook	de	Bitte auswählen
+postal	common	de	Postanschrift
+Postal Code	common	de	Postleitzahl
+pref	addressbook	de	pref
+Preferred	addressbook	de	bevorzugt
+prefix	addressbook	de	Prefix
+public key	addressbook	de	öffentlicher Schlüssel
+read a list of entries.	addressbook	de	Liest eine Liste von Einträgen.
+read a single entry by passing the id and fieldlist.	addressbook	de	Liest einen einzelnen Eintrag über seine Id und Feldliste.
+read this list of methods.	addressbook	de	Liest diese Liste der Methoden.
+record access	addressbook	de	Zugriffsrechte
+record owner	addressbook	de	Datensatz Eigentümer
+retrieve contacts	admin	de	Kontakte laden
+select	addressbook	de	Auswählen
+select where you want to store	admin	de	Auswählen wo Sie speichern wollen
+show birthday reminders on main screen	addressbook	de	Geburtstags-Mahner auf der Startseite anzeigen
+Sound	addressbook	de	Sound
+startrecord	addressbook	de	Startdatensatz
+state	common	de	Bundesland
+street	common	de	Straße
+street first	addressbook	de	1.Strasse
+street second	addressbook	de	2.Strasse
+successfully imported %1 records into your addressbook.	addressbook	de	%1 Kontakte wurden erfolgreich in ihr Adressbuch importiert
+suffix	addressbook	de	Zusatz
+test import (show importable records <u>only</u> in browser)	addressbook	de	Test-Import (zeigt importierbare Datensätze <u>nur</u> im Browser an)
+that field name has been used already !	addressbook	de	Dieser Feldname wird bereits benutzt !
+this person's first name was not in the address book.	addressbook	de	Der Vorname dieser Person ist nicht im Adressbuch.
+this person's last name was not in the address book.	addressbook	de	Der Nachname dieser Person ist nicht im Adressbuch.
+today is %1's birthday!	common	de	Heute ist der Geburtstag von %1!
+tomorrow is %1's birthday.	common	de	Morgen ist der Geburtstag von %1.
+translation	addressbook	de	Übersetzung
+Type	addressbook	de	Type
+update a single entry by passing the fields.	addressbook	de	Aktualisiert einen einzelnen Eintrag durch Übergabe seiner Felder.
+use country list	addressbook	de	Länderliste benutzen
+Value	common	de	Wert
+vcard	common	de	VCard
+vcards require a first name entry.	addressbook	de	VCards benötigen einen Vornamen.
+vcards require a last name entry.	addressbook	de	VCards benötigen einen Nachnamen.
+video phone	addressbook	de	Bildtelefon
+voice phone	addressbook	de	Telefon
+warning!! ldap is valid only if you are not using contacts for accounts storage!	admin	de	WARNUNG!! LDAP darf nur verwendet werden, wenn sie die Benutzerkonten nicht im Adressbuch speichern!
+work email	addressbook	de	Email geschäftl.
+work phone	addressbook	de	Tel dienstl.
+you appear to be running	addressbook	de	Sie benutzen gerade einen
+you must select a vcard. (*.vcf)	addressbook	de	Sie müssen eine VCard auswählen (*.vcf)
+you must select at least 1 column to display	addressbook	de	Sie müssen mindestens eine Spalte zum Anzeigen auswählen
+zip code	common	de	PLZ

@@ -1,0 +1,21 @@
+PlaySMS gateway module for carrot
+
+Need a config-section named 'carrot' with values:
+
+array
+(
+	'wsdl'			=> // using SOAP
+	'send_url'		=> // using GET
+	'service_url'	=> // using SOAP
+	'login'			=>
+	'password'		=>
+	'proxy_host'	=>
+	'proxy_port'	=>
+	'originator'	=>
+	'originatortype'=>
+	'serviceid'		=>
+	'differentiator'=>
+	'type'			=> SOAP / GET
+);
+
+
