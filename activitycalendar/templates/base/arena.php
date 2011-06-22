@@ -3,6 +3,17 @@
 	include("common.php");
 ?>
 
+<script xmlns:php="http://php.net/xsl" type="text/javascript">
+var endpoint = 'activitycalendar';
+
+YAHOO.activitycalendar.autocompleteHelper('index.php?menuaction=' + endpoint + '.uiarena.get_address&address=true&phpgw_return_as=json&',
+    'field_address_txt',
+    'field_address_hidden',
+    'address_container',
+    'descr'
+);
+</script>
+
 <div class="identifier-header">
 	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('arena') ?></h1>
 	<div>
@@ -73,6 +84,9 @@
 					{
 					?>
 						<input type="text" name="address" id="address" value="<?php echo $arena->get_address() ?>" />
+						<div class="autocomplete">
+						<input id="field_address_hidden" name="address_hidden" type="hidden" value=""><input name="address_txt" type="text" id="field_address_txt" value=""><div id="address_container"></div>
+						</div>
 					<?php
 					}
 					else
