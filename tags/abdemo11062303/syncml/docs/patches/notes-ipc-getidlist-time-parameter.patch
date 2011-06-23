@@ -1,0 +1,53 @@
+Index: inc/class.bonotes.inc.php
+===================================================================
+RCS file: /sources/phpgroupware/notes/inc/class.bonotes.inc.php,v
+retrieving revision 1.28
+diff -u -r1.28 class.bonotes.inc.php
+--- inc/class.bonotes.inc.php	18 Jul 2007 14:54:35 -0000	1.28
++++ inc/class.bonotes.inc.php	19 Aug 2007 16:07:43 -0000
+@@ -213,8 +213,17 @@
+ 
+ 		function read()
+ 		{
+-			$notes = $this->sonotes->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+-											'filter' => $this->filter,'cat_id' => $this->cat_id,'limit' => $this->limit));
++			$notes = $this->sonotes->read(array
++			(
++				'start' => $this->start,
++				'query' => $this->query,
++				'sort' => $this->sort,
++				'order' => $this->order,
++				'filter' => $this->filter,
++				'cat_id' => $this->cat_id,
++				'limit' => $this->limit
++			));
++			
+ 			$this->total_records = $this->sonotes->total_records;
+ 
+ 			for ($i=0; $i<count($notes); $i++)
+Index: inc/class.ipc_notes.inc.php
+===================================================================
+RCS file: /sources/phpgroupware/notes/inc/class.ipc_notes.inc.php,v
+retrieving revision 1.3
+diff -u -r1.3 class.ipc_notes.inc.php
+--- inc/class.ipc_notes.inc.php	18 Jul 2007 14:54:35 -0000	1.3
++++ inc/class.ipc_notes.inc.php	19 Aug 2007 16:07:43 -0000
+@@ -107,13 +107,16 @@
+ 	*/
+ 	function getIdList($time=-1)
+ 	{
+-		$all_notes = $this->bonotes->read();
++		$all_notes = $this->bonotes->sonotes->read(array());
+ 		$note_count = count($all_notes);
+ 		$all_note_ids = array();
+ 		
+ 		for($i = 0; $i < $note_count; $i++)
+ 		{
+-			$all_note_ids[] = intval($all_notes[$i]['note_id']);
++			if($all_notes[$i]['date'] > $time)
++			{
++				$all_note_ids[] = intval($all_notes[$i]['note_id']);
++			}
+ 		}
+ 		
+ 		return $all_note_ids;

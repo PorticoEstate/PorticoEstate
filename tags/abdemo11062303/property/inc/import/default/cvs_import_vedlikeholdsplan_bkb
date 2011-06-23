@@ -1,0 +1,345 @@
+<?php
+	class import_conversion
+	{
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request oto 3000 seconds
+			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db           = & $GLOBALS['phpgw']->db;
+		}
+
+		public function add($data)
+		{
+
+			$debug = true;
+			$error = false;
+			$type = $this->decode($data[0]);
+			$location_code = $this->decode($data[1]);
+
+			$location_data = execMethod('property.solocation.read_single', $location_code );
+_debug_array($data);
+//_debug_array($location_data);die();
+			if(!$location_data)
+			{
+				$this->errors[] = "Error importing location: {$location_code}";
+				$error = true;
+				return false;
+			}
+
+			$value_set = array();
+
+    		$value_set['loc1'] = $location_data['loc1'];
+    		$value_set['loc2'] = $location_data['loc2'];
+
+
+			if($location_data['street_name'])
+			{
+				$address[]= $location_data['street_name'];
+				$address[]= $location_data['street_number'];
+				$address	= $this->db->db_addslashes(implode(" ", $address));
+			}
+
+			if(!$address)
+			{
+				$address = $this->db->db_addslashes($location_data['loc1_name']);
+			}
+
+
+			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'request'");
+			$this->db->next_record();
+			$id = $this->db->f('value')+1;
+
+			if($data[4])
+			{
+				$entry_date_info = explode('/',$data[4]);
+			}
+			else if($data[5])
+			{
+				$entry_date_info = explode('/',$data[5]);
+			}
+			//YYYY/MM/DD
+			
+			if(isset($entry_date_info[0]) && ctype_digit($entry_date_info[0]))
+			{
+				$entry_date = strtotime("{$entry_date_info[0]}/06/24");
+			}
+			else
+			{
+				$this->messages[] = "Dagens dato er lagt inn som registreringsdato for {$id}  (mangler info)";
+				$entry_date = time();
+			}
+
+//$category = ????;
+//$authorities_demands
+//$building_part
+//$coordinator
+_debug_array($entry_date_info);
+_debug_array($entry_date);
+
+			$value_set['id'] 					= $id;
+			$value_set['title']					= $this->db->db_addslashes("{$data[7]}: {$data[10]}");
+			$value_set['owner']					= $this->account;
+			$value_set['category']				= $category;
+			$value_set['descr']					= $this->db->db_addslashes("{$type}\n{$data[7]}: {$data[10]}");
+			$value_set['location_code']			= $location_code;
+			$value_set['address']				= $address;
+			$value_set['entry_date']			= $entry_date;
+			$value_set['budget']				= (int)str_replace(',', '', $data[12]);
+			$value_set['status']				= $data['status'];
+	//		$value_set['branch_id']				= $data['branch_id'];
+	//		$value_set['coordinator']			= $coordinator;
+			$value_set['authorities_demands']	= $authorities_demands;
+			$value_set['building_part']			= $building_part;
+	//		$value_set['start_date']			= $data['start_date'];
+	//		$value_set['end_date']				= $data['end_date'];
+	//		$value_set['regulations']			= $data['regulations'] ? ',' . implode(',',$data['regulations']) . ',' : '';
+
+			$cols = implode(',', array_keys($value_set));
+			$values	= $this->db->validate_insert(array_values($value_set));
+
+			$sql = "INSERT INTO fm_request ({$cols}) VALUES ({$values})";
+
+			if($debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+//				$request_ok = $this->db->query($sql,__LINE__,__FILE__);
+			}
+
+			$condition = array();
+			
+			if($data[8] || $data[9])
+			{
+				$condition[1] = array
+				(
+					'degree'		=> (int)$data[8],
+					'probability'	=>	2,
+					'consequence'	=>	(int)$data[9]
+				);
+			}
+			
+			
+			foreach ($condition as $condition_type => $value_type)
+			{
+				$sql = "INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
+					. "VALUES ("
+					. $id. ","
+					. $condition_type . ","
+					. $value_type['degree']. ","
+					. $value_type['probability']. ","
+					. $value_type['consequence']. ","
+					. $this->account . ","
+					. time() . ")";
+
+				if($debug)
+				{
+					_debug_array($sql);
+				}
+				else
+				{
+//					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+
+/*
+			$value_set['in_progress_date']	= time();
+			$value_set['closed_date']		= time();
+			$value_set['delivered_date']	= time();
+*/
+
+			for ($i=13; $i<27; $i++)
+			{
+				$data[$i] = str_replace(',', '', $data[$i]);
+			}
+
+			$consume_data = array();
+			if($data[13] && ctype_digit($data[13]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[13],
+					 'date' => strtotime("2012/06/24")
+				);
+			}
+
+			if($data[14] && ctype_digit($data[14]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[14],
+					 'date' => strtotime("2011/06/24")
+				);
+			}
+			if($data[15] && ctype_digit($data[15]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[15],
+					 'date' => strtotime("2010/06/24")
+				);
+			}
+			if($data[16] && ctype_digit($data[16]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[16],
+					 'date' => strtotime("2009/06/24")
+				);
+			}
+			if($data[17] && ctype_digit($data[17]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[17],
+					 'date' => strtotime("2008/06/24")
+				);
+			}
+
+			if($data[18] && ctype_digit($data[18]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[18],
+					 'date' => strtotime("2007/06/24")
+				);
+			}
+			if($data[19] && ctype_digit($data[19]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[19],
+					 'date' => strtotime("2006/06/24")
+				);
+			}
+			if($data[20] && ctype_digit($data[20]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[20],
+					 'date' => strtotime("2005/06/24")
+				);
+			}
+			if($data[21] && ctype_digit($data[21]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[21],
+					 'date' => strtotime("2004/06/24")
+				);
+			}
+
+			if($data[22] && ctype_digit($data[22]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[22],
+					 'date' => strtotime("2003/06/24")
+				);
+			}
+			if($data[23] && ctype_digit($data[23]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[23],
+					 'date' => strtotime("2002/06/24")
+				);
+			}
+			if($data[24] && ctype_digit($data[24]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[24],
+					 'date' => strtotime("2001/06/24")
+				);
+			}
+
+			if($data[25] && ctype_digit($data[25]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[25],
+					 'date' => strtotime("2000/06/24")
+				);
+			}
+
+			if($data[26] && ctype_digit($data[26]))
+			{
+				$consume_data[] = array
+				(
+					 'value' => (int)$data[26],
+					 'date' => strtotime("1999/06/24")
+				);
+			}
+
+
+			foreach ($consume_data as $consume)
+			{
+				$sql = "INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ("
+					. $id . ","
+					. (int)$consume['value'] . ","
+					. (int)$consume['date'] . ","
+					. $this->account . ","
+					. time() . ")";
+				if($debug)
+				{
+					_debug_array($sql);
+				}
+				else
+				{
+//					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+
+
+//			$this->db->query("UPDATE fm_idgenerator set value = value + 1 where name = 'request'");
+
+
+			if(!$error)
+			{
+				$this->messages[] = "Successfully imported location: Title ({$this->decode($data[1])})";
+				$ok = true;
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: Title ({$this->decode($data[1])})";
+				$ok = false;
+			}
+			return $ok;
+		}
+
+		/**
+		 * Convert from the locale encoding to UTF-8 encoding and escape single quotes
+		 * 
+		 * @param string $value The value to convert
+		 * @return string
+		 */
+		protected function decode($value)
+		{
+			$converted = mb_convert_encoding($value, 'UTF-8');
+			if ($this->is_null(trim($converted)))
+			{
+				return null;
+			}
+			return stripslashes($converted);
+		}
+		
+		/**
+		 * Test a value for null according to several formats that can exist in the export.
+		 * Returns true if the value is null according to these rules, false otherwise.
+		 * 
+		 * @param string $value The value to test
+		 * @return bool
+		 */
+		protected function is_null($value)
+		{
+			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
+		}
+	}

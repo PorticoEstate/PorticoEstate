@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Tips to increase phpgw response time</h2>
+				<p>
+					This section is based on user tips for how to increase your server's speed 
+					for serving up phpgw pages.
+				</p>
+				<p>
+					This will start out kind of general since phpGroupWare can run on so many 
+					hardware platforms with so many combinations of web servers and databases 
+					but hopefully people will add more specific tips as time goes by.
+				</p>
+				<p>
+					To add your tip/s please email the 
+					<a href="mailto:phpgroupware-docteam@gnu.org">phpGroupWare Documentation Team</a>.
+				</p>
+				<ul>
+					<li>add more RAM or reduce the amount of other software running on the 
+						same machine (X windows on GNU/Linux machines is exceptionally 
+						good at using all your RAM). This will likely give you the 
+						biggest bang for the effort/cost. By adding more RAM, you can:
+						<ul>
+							<li>reduce or prevent any memory swaps to the hard drive 
+								(a killer for any kind of server)</li>
+							<li>increase the cache size so more info is stored in RAM
+								<ul>
+									<li>php.ini (usually /etc/php.ini on GNU/Linux
+										systems) has cache settings</li>
+									<li>use a php accelerator (this 
+										basically holds php code in a cache 
+										so the web server doesn't have to 
+										load it each time), the best open source
+										php cache is 
+										<a href="http://turck-mmcache.sf.net">
+										turck</a></li>
+									<li>increase database cache size and look ahead
+										<ul>
+											<li>mysql</li>
+											<li>postgresql .. look for the 
+												file postgresql.conf</li>
+										</ul>
+									</li>
+									<li>turn off IP address lookups and turn 
+										on use cookies and php session 
+										management in phpgoupware 
+										setup, config</li>
+								</ul>
+							</li>
+						</ul>
+					<li>look for network traffic bottlenecks and handle those with hardware. 
+						This is usually only a problem on LANs with a larger user base 
+						but would be applicable with a small user base on a 10MB LANs. 
+						A relatively small number of concurrent users (20 or so) can eat 
+						up a 1.5MB DSL internet connection (additional users could be 
+						connected from the LAN at the same time without affecting the 
+						internet network connection) so you would want to get a faster 
+						connection.</li>
+				</ul>
+				<h3>User Contributions</h3>
+				<p>
+					<b>From:</b> Bob Crandell
+				</p>
+				<p>
+    					This is what I found to be the miminum list of modules that need 
+					to be loaded in http.conf for phpGroupWare to run.  Here is the list
+					in entry order:
+				</p>
+				<ul>
+					<li>define_module</li>
+					<li>config_log_module</li>
+					<li>mime_module</li>
+					<li>status_module</li>
+					<li>includes_module</li>
+					<li>cgi_module # I'm running SQL-Ledger</li>
+					<li>alias_module</li>
+					<li>access_module</li>
+					<li>php4_module</li>
+				</ul>
+				<p>
+					<b>Editors Note:</b> mod_rewrite is needed for sitemgr,
+					mod_dav is needed to use the webdav version of the VFS.
+				</p>
+				<p>
+					This didn't seem to make much difference in page load times. 
+					Maybe because there is 1Gb of RAM in the server.
+				</p>
+				<hr />
+				<p>
+					<b>From: </b>Alex Borges
+				</p>
+				<p>
+					Where I've found the most impact is in using apache 1.3.26 with 
+					<a href="http://www.iagora.com/about/software/lingerd/">lingerd</a>. It
+					requires you to patch a vanilla apache thus recompiling php will also be
+					a must, as will be putting some new up/down scripts for lingerd. But its
+					well worth the trouble, ive seen amazing increases in performance with
+					this thing.
+				</p>
+				<p>
+					Of all the tuning options this is the hardest, but with the least 
+					cost (does not require more memmory)
+				</p>
+				<p>
+					Another thing that can have a lot of impact is php cache. Most are incorregible 
+					leakers, but ive ran into one called turck that seems to be the smartest in 
+					memmory management issues. It will up your perfomance. Anyhow, you should 
+					have plenty extra ram for this to show.
+				</p>
+				<p>
+					Finally, db tunning will also affect the performance. Make sure also
+					that you have enough ram and dig into the query cache and indexing
+					features of whatever database youre using. Mysql seams the most
+					configurable, postgres the least, but it does include a configurable
+					query cache size variable somwhere.
+				</p>
+				<p>
+					The more you can get on RAM, the fastest it will all go. Phpgroupware is
+					a hungry app, you do need some good tunning or serious iron to run it
+					for a larger number of users (300 and up, on less ive seen it can cope
+					with it on a 'normal' box -dual 400mhz PII-PRo, scsi 2Gb ram box).
+				</p>
+				<hr />
+				<p>
+					<b>From: </b>Unknown
+				</p>
+				<p>
+					Here are some server examples:
+				</p>
+					How can you tell if more RAM would help in GNU/Linux? Run the command line 
+					program "top" and look at the memory stats in the upper section. Here's 
+					some examples of servers I run:
+				</p>
+				<ul>
+					<li><b>Server1 - production phpgw/web server:</b><br />
+						Mem: 515900K av, 355568K used, 160332K free, 0K shrd, 129264K buff<br />
+						Swap: 248968K av, 3492K used, 245476K free 111896K cached<br />
+						Not using much swap, plenty of free RAM, good cache and buffer use. 
+						This server was started recently and is under a fairly light load.</li>
+					<li><b>Server2 - production phpgw/webserver, being phased out and replaced 
+						by server1 because it's too slow:</b><br />
+						Mem: 261728K av, 252256K used, 9472K free, 0K shrd, 8756K buff<br />
+						Swap: 128484K av, 13712K used, 114772K free 84836K cached<br />
+						Not too much swap, buffer usage a bit low, very little free 
+						RAM (GNU/Linux most always leaves 3-4 meg at all times). This 
+						one could do with a more RAM but is holding up OK for now. </li>
+					<li><b>Server3 - very light usage phpgw server (2-3 users) and squid server, 
+						made of spare parts and no one cares it's slow:</b>
+						Mem: 94944K av, 89076K used, 5868K free, 0K shrd, 152K buff<br />
+						Swap: 248968K av, 95708K used, 153260K free 18812K cached<br />
+						massive swap usage, very very little free mem, almost no buffer usage 
+						and very low cached. This server is in pain. You can probably hear 
+						it screaming and crying from where you are. This server desperatly 
+						needs more RAM (and a faster CPU but that's for another book).</li>
+					<li><b>Server 4 - runs everything under the sun including a thin client</b><br />
+						CPU states: 0.3% user 0.5% system 0.0% nice 0.0% iowait 99.0% idle<br />
+						Mem: 1548224k av, 1528908k used, 19316k free, 0k shrd, 82684k buff
+						12k active, 1401180k inactive<br />
+						Swap: 500464k av, 32468k used, 467996k free 1203664k cached<br />
+						Athlon 2.4 GHz with 1.5 GB of DDR RAM<br />
+						15 users with average load of about 5 concurrent<br />
+						nice and fast with cranked up cache on phpgw subsystems 
+						(apache, php, and postgresql)</li>
+				</ul>
+			<hr />
+			<p>
+				<b>From: </b>Tomasz Spyrczak
+			</p>
+			<p>
+				Here are some tips:
+			</p>
+			<ol>
+				<li>Install it on a dedicated server. It is rarely a problem to do that 
+				when you use it on a LAN only.</li>
+				<li>Stop unused daemons - like sound, samba, cups, telnet or any other
+					thing that comes preinstalled in every major GNU/Linux distro lately.</li>
+				<li>Reduce the number of Apache instances kept in the server memory.
+					The default setting in most distros is 10 Apache instances - way too much
+					if you have a dedicated phpGW server with up to 50 users. It is rare
+					when more than 2 instances are needed. Also take care about the
+					number of mgetty instances - who needs more than 1 virtual console,
+					when one always uses ssh?</li>
+			</ul>
+			<p>
+				So by meeting these guidelines I've managed to set up a Pentium 150MHz with 
+				64MB (yeah - sixty four) with apache 1.3, php4, postgresql (mandrake 9 distro) 
+				and APC. And it was a perfecty usable phpGW install. The funny thing is that 
+				with several users the average swap file usage was about 0 (zero). You know how 
+				they say: 640 kb ought to be enough for everyone ;-) Of course it was an 
+				experiement, but one should know it is doable and fully usable :-)
+			</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>
+
+

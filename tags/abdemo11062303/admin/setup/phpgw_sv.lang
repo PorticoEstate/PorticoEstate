@@ -1,0 +1,352 @@
+%1 - %2 of %3 user accounts	admin	sv	%1 - %2 av %3 användarkonton
+%1 not found or not executable !!!	admin	sv	%1 hittades inte eller är inte körbar !!!
+(stored password will not be shown here)	admin	sv	(Tidigare sparade lösenord visas inte)
+(to install new applications use<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)	admin	sv	(För att installera nya moduler<br><a href="setup/" target="setup">Setup</a> [Manage Applications] !!!)
+accesslog and bruteforce defense	admin	sv	AccessLog och BruteForce skydd
+account active	admin	sv	Konto aktivt
+account has been created	common	sv	Kontot har skapats
+account has been deleted	common	sv	Kontot har raderats
+account has been updated	common	sv	Kontot har uppdaterats
+account list	admin	sv	Konto-lista
+account permissions	admin	sv	Behörigheter för konto
+account preferences	admin	sv	Inställningar för konto
+account_permissions	admin	sv	Applikations rättigheter
+acl manager	admin	sv	ACL Intsällningar
+acl rights	admin	sv	ACL Behörigheter
+action	admin	sv	Händelse
+active	admin	sv	Aktiv
+add a new account.	admin	sv	Lägg till ett nytt konto.
+add account	admin	sv	Lägg till konto
+add application	admin	sv	Lägg till modul
+add auto-created users to this group ('default' will be attempted if this is empty.)	admin	sv	Lägg till auto-skapade användare i denna grupp ('Default' kommer att användas om fältet är tomt.)
+add global category	admin	sv	Lägg till en global kategori
+add global category for %1	admin	sv	Lägg till en global kategori för %1
+add group	admin	sv	Lägg till grupp
+add new account	admin	sv	Lägg till nytt konto
+add new application	admin	sv	Lägg till ny modul
+add peer server	admin	sv	Lägg till server
+add sub-category	admin	sv	Lägg till underkategori
+add to addressbook	admin	sv	Lägg till i adressbok
+addressbook entry	admin	sv	Adressboksinlägg
+admin email	admin	sv	Admin E-post
+admin email addresses (comma-separated) to be notified about the blocking (empty for no notify)	admin	sv	Admin epost-adresser (komma-separerade) för meddelanden om blockering (lämna tomt om inga meddelanden ska skickas)
+admin name	admin	sv	Admin namn
+administration	admin	sv	Administration
+admins	admin	sv	Admins
+after how many unsuccessful attempts to login, an account should be blocked (default 3) ?	admin	sv	Hur många misslyckade inloggningsförsök innan kontot blockeras (default 3) ?
+after how many unsuccessful attempts to login, an ip should be blocked (default 3) ?	admin	sv	Hur många misslyckade försök att logga in innan IP blockeras (default 3) ?
+all records and account information will be lost!	admin	sv	Alla poster och användarinformation kommer att försvinna!
+all users	admin	sv	Alla användare
+allow anonymous access to this app	admin	sv	Tillåt anonyma användare av denna modul
+anonymous user	admin	sv	Anonym användare
+anonymous user (not shown in list sessions)	admin	sv	Anonym användare (inte visade i sessionslista)
+appearance	admin	sv	Utseende
+application	admin	sv	Modul
+application name	admin	sv	Modulens namn
+application title	admin	sv	Modulens rubrik
+applications	admin	sv	Moduler
+applications list	admin	sv	Modul-lista
+are you sure you want to delete the application %1 ?	admin	sv	Ska du verkligen radera modulen %1 ?
+are you sure you want to delete this account ?	admin	sv	Är du säker på att du vill ta bort detta konto?
+are you sure you want to delete this application ?	admin	sv	Är det säkert du vill ta bort denna applikation ?
+are you sure you want to delete this category ?	common	sv	Är du säker på att du vill ta bort denna kategori ?
+are you sure you want to delete this group ?	admin	sv	Är du säker på att du vill ta bort denna grupp?
+are you sure you want to delete this server?	admin	sv	Är du säker på att du vill ta bort denna server ?
+are you sure you want to kill this session ?	admin	sv	Är du säker på att du vill avsluta denna session?
+async services last executed	admin	sv	Async tjänsten kördes senast
+asynchronous timed services	admin	sv	Asynchronous tidsinställda tjänster
+asyncservices not yet installed or other error (%1) !!!	admin	sv	asyncservices är inte installerade ännu eller annat fel (%1) !!!
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	admin	sv	Försöker använda korrekt typ av mime för FTP istället för default 'application/octet-stream'
+authentication / accounts	admin	sv	Godkännande / Konton
+auto create account records for authenticated users	admin	sv	Skapa konto-poster automatiskt för godkända användare
+bi-dir passthrough	admin	sv	två-vägs genomföring
+bi-directional	admin	sv	två-vägs
+bottom	admin	sv	botten
+calculate next run	admin	sv	Kalkylera nästa körning
+can change password	admin	sv	Kan ändra lösenord
+cancel testjob!	admin	sv	avboka TestJobb!
+categories list	admin	sv	Kategorier-lista
+category list	admin	sv	Kategori-lista
+change acl rights	admin	sv	ändra ACL rättigheter
+change config settings	admin	sv	Ändra konfigurationsinställningarna
+change main screen message	admin	sv	Ändra meddelande på huvudsidan
+check ip address of all sessions	admin	sv	kolla ip-adress i alla sessioner
+check items to <b>%1</b> to %2 for %3	admin	sv	Kolla jobb för <b>%1</b>till %2 för %3
+country selection	admin	sv	Välj land
+create group	admin	sv	Skapa Grupp
+crontab only (recomended)	admin	sv	crontab endast (rekommenderas)
+data	admin	sv	Data
+day	admin	sv	Dag
+day of week<br>(0-6, 0=sun)	admin	sv	Veckodag<br>(0-6, 0=Sön)
+debug	admin	sv	debug
+default	admin	sv	Standardvärde
+default file system space per user	admin	sv	Standardvärde filutrymme per användare
+default file system space per user/group ?	admin	sv	Standardvärde filutrymme per användare/grupp ?
+delete account	admin	sv	Radera konto
+delete all log records	admin	sv	Radera alla loggposter
+delete all log records for	admin	sv	Radera alla loggposter för
+delete all records	admin	sv	Radera alla poster
+delete application	admin	sv	Radera modul
+delete category	admin	sv	Radera kategori
+delete group	admin	sv	Radera grupp
+delete peer server	admin	sv	Radera server
+deny access to access log	admin	sv	Neka tillträde till acesslog
+deny access to application registery	admin	sv	Neka tillträde till modulregister
+deny access to applications	admin	sv	Neka tillträde till alla moduler
+deny access to asynchronous timed services	admin	sv	Neka tillträde till asynkrona tidsinställda tjänster
+deny access to current sessions	admin	sv	Neka tillträde till pågående sessioner
+deny access to error log	admin	sv	Neka tillträde till fellog
+deny access to global categories	admin	sv	Neka tillträde till kategorier
+deny access to groups	admin	sv	Neka tillträde till grupper
+deny access to mainscreen message	admin	sv	Neka tillträde till huvudsidans meddelande
+deny access to peer servers	admin	sv	Neka tillträde till server
+deny access to phpinfo	admin	sv	Neka tillträde till phpinfo
+deny access to site configuration	admin	sv	Neka tillträde till site-konfiguration
+deny access to user accounts	admin	sv	Neka tillträde till användarkonton
+deny all users access to grant other users access to their entries ?	admin	sv	Neka tillträde till att tillåta andra användares tillgång till deras konton ?
+description can not exceed 255 characters in length !	admin	sv	Beskrivningen får inte överstiga 255 tecken !
+disable "auto completion" of the login form	admin	sv	Avaktivera automatisk komplettering på login-sidan
+disabled	admin	sv	Deaktivera
+disabled (not recomended)	admin	sv	Avaktiverad (inte rekommenderat)
+display	admin	sv	Visa
+do you also want to delete all global subcategories ?	admin	sv	Vill du även radera alla globala underkategorier ?
+edit account	admin	sv	Ändra konto
+edit application	admin	sv	Ändra modul
+edit entry	admin	sv	Ändra inlägg
+edit global category	admin	sv	Ändra global kategori
+edit global category for %1	admin	sv	Ändra global kategori för %1
+edit group	admin	sv	Ändra Grupp
+edit login screen message	admin	sv	Ändra login-sidans meddelande
+edit main screen message	admin	sv	Ändra huvudsidans meddelande
+edit peer server	admin	sv	Ändra (Peer) server
+edit table format	admin	sv	Ändra tabell-format
+edit user account	admin	sv	Ändra användarkonto
+enable debug-messages	admin	sv	Aktivera debug-meddelanden
+enabled	admin	sv	Aktiv
+enabled - hidden from navbar	admin	sv	Aktiv - Gömd på navbar
+enter some random text for app_session <br>encryption (requires mcrypt)	admin	sv	Skriv in slumpmässig text för app_session <br>kryptering (kräver mcrypt)
+enter the background color for the login page	admin	sv	Välj bakgrundsfärg för login-sidan
+enter the background color for the site title	admin	sv	Välj bakgrundsfärg för site-rubriken
+enter the file name of your logo	admin	sv	Fyll i filnamn för din logo
+enter the full path for temporary files.<br>examples: /tmp, c:\temp	admin	sv	Skriv in full sökväg för dina temporära filer.<br>Exempel: /tmp, C:\TEMP
+enter the full path for users and group files.<br>examples: /files, e:\files	admin	sv	Skriv in full sökväg för användares och gruppers filer.<br>Exempel: /files, E:\FILES
+enter the hostname of the machine on which this server is running	admin	sv	Skriv in datornamn(hostname) på den maskin som webservern finns på
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	admin	sv	Skriv in URL för phpGroupWare.<br>Exempel: http://www.domän.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>Inget snedstreck på slutet</b>
+enter the site password for peer servers	admin	sv	Skriv in site-lösenord för (peer)servrar
+enter the site username for peer servers	admin	sv	Skriv in site-användarnamn för (peer)servrar
+enter the title for your site	admin	sv	Skriv in rubrik för din site
+enter the title of your logo	admin	sv	Skriv in rubrik för din logo
+enter the url where your logo should link to	admin	sv	Skriv in url till vart din logo ska länka till
+enter your default ftp server	admin	sv	Skriv in default FTP-server
+enter your http proxy server	admin	sv	Skriv in din HTTP proxy server
+enter your http proxy server port	admin	sv	Skriv in din HTTP proxy server port
+error canceling timer, maybe there's none set !!!	admin	sv	Gick ej stänga timer, den är kanske inte påslagen !!
+error setting timer, wrong syntax or maybe there's one already running !!!	admin	sv	Gick ej att ställa in timer, fel syntax eller den kanske redan är igång !!!
+error: %1 not found or other error !!!	admin	sv	Fel: %1 finns inte eller annat fel !!!
+expires	admin	sv	Sluttid
+fallback (after each pageview)	admin	sv	tillbaka (efter varje sida)
+fatal	admin	sv	fatalt
+file	admin	sv	Fil
+file space	admin	sv	Filutrymme
+file space must be an integer	admin	sv	Filutrymme måste vara integer
+find and register all application hooks	admin	sv	Sök och registrera alla modul-hooks
+for	admin	sv	för
+for the times above	admin	sv	för tiderna ovan
+for the times below (empty values count as '*', all empty = every minute)	admin	sv	för tiderna nedan (tomma fält räknas som '*', alla tomma = varje minut)
+force selectbox	admin	sv	Tvinga flervalsbox
+global categories	admin	sv	Gobala kategorier
+group ?	admin	sv	grupp ?
+group has been added	common	sv	Grupp har sparats
+group has been deleted	common	sv	Grupp har raderats
+group has been updated	common	sv	Grupp har uppdaterats
+group list	admin	sv	Grupplista
+group manager	admin	sv	Gruppinställningar
+group name	admin	sv	Gruppnamn
+hide php information	admin	sv	göm php information
+home directory	admin	sv	Hemkatalog
+host information	admin	sv	Värd information
+hour<br>(0-23)	admin	sv	Timmar<br>(0-23)
+how many days should entries stay in the access log, before they get deleted (default 90) ?	admin	sv	Hur många dagar ska informationen i accessloggen sparas innan den raderas (default 90) ?
+how many minutes should an account or ip be blocked (default 30) ?	admin	sv	Hur många minuter ska ett konto eller IP blockeras (default 30) ?
+idle	admin	sv	inaktiv
+if no acl records for user or any group the user is a member of	admin	sv	Om det inte finns någon ACL post eller grupp användaren är medlem i
+if using ldap, do you want to manage homedirectory and loginshell attributes?	admin	sv	Om du använder LDAP, vill du kunna ändra hemkatalog och inloggningskal ?
+inbound	admin	sv	intern
+info	admin	sv	info
+install crontab	admin	sv	Installera crontab
+installed applications	common	sv	Installerade moduler
+installed crontab	admin	sv	Installerade crontab
+interface	admin	sv	Gränssnitt
+ip	admin	sv	IP
+jobs	admin	sv	Jobb
+kill	admin	sv	Avsluta
+kill session	admin	sv	Avsluta session
+last %1 logins	admin	sv	Senaste %1 inloggningarna
+last %1 logins for %2	admin	sv	Senaste %1 inloggningarna för %2
+last login	admin	sv	Senaste inloggningen
+last login from	admin	sv	Senaste inloggningen från
+last time read	admin	sv	Läst senast
+ldap accounts context	admin	sv	LDAP konto info
+ldap default homedirectory prefix (e.g. /home for /home/username)	admin	sv	LDAP default hemkatalog prefix (ex: /home för /home/användarnamn)
+ldap default shell (e.g. /bin/bash)	admin	sv	LDAP default inloggningsskal (ex: /bin/bash)
+ldap encryption type	admin	sv	LDAP krypteringstyp
+ldap groups context	admin	sv	LDAP grupp info
+ldap host	admin	sv	LDAP värd
+ldap root password	admin	sv	LDAP root lösenord
+ldap rootdn	admin	sv	LDAP rootdn
+line	admin	sv	Linje
+list config settings	admin	sv	Lista konfigurationsinställningarna
+list current sessions	admin	sv	Lista pågående sessioner
+list of current users	admin	sv	lista över nuvarande användare
+log message	admin	sv	Loggmeddelande
+login history	admin	sv	Inloggningshistorik
+login message	admin	sv	Inloggningsmeddelande
+login screen	admin	sv	Inloggningsskärm
+login shell	admin	sv	Inloggningsskal
+login time	admin	sv	Inloggningstid
+loginid	admin	sv	LoginID
+main screen message	admin	sv	Huvudsidans meddelande
+manager	admin	sv	Manager
+maximum account id (e.g. 65535 or 1000000)	admin	sv	Max konto id (ex: 65535 eller 1000000)
+maximum entries in click path history	admin	sv	Max minne för historik för bakåt
+message has been updated	admin	sv	meddelandet har uppdaterats
+method	admin	sv	Metod
+minimum account id (e.g. 500 or 100, etc.)	admin	sv	Min konto id (ex: 500 eller 100, etc)
+minute	admin	sv	Minut
+mode	admin	sv	Mode
+module	admin	sv	Modul
+month	admin	sv	Månad
+new group name	admin	sv	Nytt gruppnamn
+new password [ leave blank for no change	admin	sv	Nytt lösenord [ Låt fältet vara tomt för att inte ändra ]
+new password [ leave blank for no change ]	admin	sv	Nytt lösenord [ Låt fältet vara tomt för att inte ändra ]
+next run	admin	sv	Nästa körning
+no algorithms available	admin	sv	inga algoritmer tillgängliga
+no error log records exist for this user	admin	sv	Inga fel loggade finns för denna användare
+no jobs in the database !!!	admin	sv	Inga jobb i databasen !!!
+no login history exists for this user	admin	sv	Det existerar ingen inloggningshistorik för denna användare
+no matches found	admin	sv	Inga poster funna
+no modes available	admin	sv	inga moden tillgängliga
+note: ssl available only if php is compiled with curl support	admin	sv	OBS: SSL finns bara tillgängligt om PHP kompilerades med support för curl
+outbound	admin	sv	externt
+passthrough	admin	sv	passthrough
+path information	admin	sv	Sökvägsinformation
+peer server list	admin	sv	Peer server lista
+peer servers	admin	sv	Peer servrar
+percent of users that logged out	admin	sv	Procent av användare som loggat ut
+percent this user has logged out	admin	sv	Procent som denna användare loggat ut
+permissions	admin	sv	Rättigheter
+permissions this group has	admin	sv	Tillåtna moduler för denna grupp
+phpinfo	admin	sv	PHP information
+please enter a name	admin	sv	Fyll i namn
+please enter a name for that server !	admin	sv	Fyll i namn för den servern !
+please run setup to become current	admin	sv	Kör setup för att uppdatera
+please select	admin	sv	Välj
+preferences	admin	sv	Förinställningar
+re-enter password	admin	sv	Skriv in lösenord igen
+read this list of methods.	admin	sv	Visa lista på metoder
+register application hooks	admin	sv	Registrera moduler
+remove	admin	sv	radera
+remove all users from this group	admin	sv	Ta bort alla användare från denna grupp
+return to view account	admin	sv	Gå tillbaka till konto-informationen
+run asynchronous services	admin	sv	Kör Asynchronous tjänsten
+search accounts	admin	sv	Sök konton
+search categories	admin	sv	Sök kategorier
+search groups	admin	sv	Sök grupper
+search peer servers	admin	sv	Sök peer servrar
+security	admin	sv	Säkerhet
+select group managers	admin	sv	Välj gruppinställningar
+select permissions this group will have	admin	sv	Välj rättigheter för denna grupp
+select users for inclusion	admin	sv	Välj gruppmedlemmar
+select where you want to store/retrieve filesystem information	admin	sv	Välj var du vill spara/hämta information om filsystem
+select where you want to store/retrieve user accounts	admin	sv	Välj var du vill spara/hämta användarkonton
+select which location this app should appear on the navbar, lowest (left) to highest (right)	admin	sv	Välj var på navigationslisten denna modul ska visas, lägst(vänster) till högst(höger)
+selectbox	admin	sv	Flervalsbox
+server %1 has been updated	admin	sv	Server %1 har uppdaterats
+server list	admin	sv	Serverlista
+server password	admin	sv	Server lösenord
+server type(mode)	admin	sv	Servertyp(mode)
+server url	admin	sv	Server URL
+server username	admin	sv	Server användarnamn
+set preference values.	admin	sv	Ställ in förinställningsvärden.
+severity	admin	sv	Svårighet
+show 'powered by' logo on	admin	sv	Visa 'powered by' logo på
+show access log	admin	sv	Visa accesslogg
+show current action	admin	sv	Visa pågående händelse
+show error log	admin	sv	Visa fellogg
+show phpinfo()	admin	sv	Visa phpinfo()
+show session ip address	admin	sv	Visa sessionens IP-address
+site	admin	sv	Site
+site configuration	admin	sv	Site konfiguration
+soap	admin	sv	SOAP
+sorry, that group name has already been taken.	admin	sv	Detta gruppnamn finns redan.
+sorry, that group name has already been taking.	admin	sv	Ursäkta, men gruppnamnet är upptaget
+sorry, the above users are still a member of the group %1	admin	sv	Användarna ovan är fortfarande medlemmar av gruppen %1
+sorry, the follow users are still a member of the group %1	admin	sv	Ursäkta men följande användare är medlem av grupp %1
+ssl	admin	sv	ssl
+standard	admin	sv	standard
+start testjob!	admin	sv	Starta TestJobb!
+status	admin	sv	Status
+submit changes	admin	sv	Verkställ ändring
+template selection	admin	sv	Välj mall
+text entry	admin	sv	Text
+that application name already exists.	admin	sv	Det modulnamnet finns redan.
+that application order must be a number.	admin	sv	Modulens ordningsnummer måste vara en siffra.
+that loginid has already been taken	admin	sv	Det loginID är upptaget
+that name has been used already	admin	sv	Det namnet finns redan
+that server name has been used already !	admin	sv	Det servernamnet finns redan !
+the api is current	admin	sv	API är uppgraderat
+the api requires an upgrade	admin	sv	API behöver uppgraderas
+the login and password can not be the same	admin	sv	Användarnamn och lösenord kan inte vara lika
+the loginid can not be more then 8 characters	admin	sv	Användarnamnet kan inte ha mer än 8 tecken
+the testjob sends you a mail everytime it is called.	admin	sv	Testjobbet sänder dig ett brev varje gång det körs.
+the two passwords are not the same	admin	sv	Lösenorden är inte identiska
+they must be removed before you can continue	admin	sv	De måste tas bort innan du kan fortsätta
+this account have not contact	admin	sv	Detta konto har inte någon kontakt
+this application is current	admin	sv	Den här modulen är uppgraderad
+this application requires an upgrade	admin	sv	Modulen måste uppgraderas
+this category is currently being used by applications as a parent category	admin	sv	Denna kategori används av modulerna som en överkategori.
+time	admin	sv	Tid
+timeout for application session data in seconds (default 86400 = 1 day)	admin	sv	Tidsgräns för modulens sessionsdata i sekunder (default 86400 = 1 dag)
+timeout for sessions in seconds (default 14400 = 4 hours)	admin	sv	Tidsgräns för sessioner i sekunder (default 14400 = 4 timmar)
+times	admin	sv	Tider
+title	admin	sv	Titel
+top	admin	sv	topp
+total records	admin	sv	Fullständig förteckning
+trust level	admin	sv	Behörighetsnivå
+trust relationship	admin	sv	Behörighet samarbete
+under windows you can only use the fallback mode at the moment. fallback means the jobs get only checked after each page-view !!!	admin	sv	I Windows kan du bara använda fallback-mode för tillfället. Med fallback menas att jobben kollas bara efter varje gång man varit på sidan!!!
+use cookies to pass sessionid	admin	sv	Använd cookies för sessionsid
+use pure html compliant code (not fully working yet)	admin	sv	Använd ren HTML-kod (fungerar inte helt ännu)
+use theme	admin	sv	Använd tema
+user accounts	admin	sv	Användarkonton
+user data	admin	sv	Användarinformation
+user groups	admin	sv	Användargrupper
+userdata	admin	sv	användarinformation
+users choice	admin	sv	Användarens val
+view access log	admin	sv	Visa Accesslogg
+view account	admin	sv	Visa konto
+view category	admin	sv	Visa kategori
+view error log	admin	sv	Visa fellogg
+view sessions	admin	sv	Visa sessioner
+view user account	admin	sv	Visa användarkonto
+warn	admin	sv	varna
+who would you like to transfer all records owned by the deleted user to?	admin	sv	Vem vill du skicka ALLA poster ägd av den raderade användaren till ?
+would you like phpgroupware to cache the phpgw info array ?	admin	sv	Vill du att phpGroupWare ska spara phpgw info array i cache-minnet ?
+would you like phpgroupware to check for a new version<br>when admins login ?	admin	sv	Vill du att phpGroupWare ska kolla efter nya versioner<br>när admins loggar in ?
+would you like to automaticaly load new langfiles (at login-time) ?	admin	sv	Vill du att nya språkfiler ska laddas in automatiskt (vid inloggningen) ?
+would you like to show each application's upgrade status ?	admin	sv	Vill du visa varje moduls uppgraderingsstatus ?
+xml-rpc	admin	sv	XML-RPC
+you have entered an invalid expiration date	admin	sv	Du har fyllt i ett felakitgt utgångsdatum
+you have not edit access to addressmaster records	admin	sv	Du har inte rättighet att ändra åtkomst till adressmaster-posterna
+you have not the addressmaster record	admin	sv	Du har inte adressmaster-posten
+you must add at least 1 permission or group to this account	admin	sv	Du måste lägga till åtminstone en behörighet eller grupp till detta konto
+you must add at least 1 permission to this account	admin	sv	Du måste ge minst 1 rättighet till detta konto
+you must enter a group name.	admin	sv	Du måste fylla i ett gruppnamn
+you must enter a loginid	admin	sv	Du måste fylla i ett användarnamn
+you must enter a password	admin	sv	Du måste skriva in ett lösenord
+you must enter an application name and title.	admin	sv	Du måste skriva in namn och rubrik för modulen
+you must enter an application name.	admin	sv	Du måste fylla i modulens namn
+you must enter an application title.	admin	sv	Du måste fylla i en rubrik för modulen
+you must select a file type	admin	sv	Du måste välja en filtyp
+you will need to remove the subcategories before you can delete this category	admin	sv	Du måste ta bort underkategorin innan du kan radera denna kategori !
+
