@@ -1,0 +1,37 @@
+account password retrieval	registration	en	Account password retrieval
+account registration	registration	en	Account registration
+address	registration	en	Address
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	en	After you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.
+change password for user	registration	en	Change password for user
+checkbox	registration	en	Checkbox
+current fields:	registration	en	Current fields:
+dropdown	registration	en	Dropdown
+enter your new password	registration	en	Enter your new password
+gender	registration	en	Gender
+i have read the terms and conditions and agree by them.	registration	en	I have read the terms and conditions and agree by them.
+name (blank unless text, textarea, dropdown, checkbox; else alphanumeric only)	registration	en	Name (blank unless Text, Textarea, Dropdown, Checkbox; else alphanumeric only)
+order	registration	en	Order
+phone	registration	en	Phone
+phpgroupware - account registration	registration	en	phpGroupWare - Account registration
+re-enter password	registration	en	Re-enter password
+re-enter your password	registration	en	Re-enter your password
+registration	common	en	Registration
+remove	registration	en	Remove
+report all problems and abuse to	registration	en	Report all problems and abuse to
+required	registration	en	Required
+sorry, that username does not exist.	registration	en	Sorry, that username does not exist.
+sorry, that username is already taken.	registration	en	Sorry, that username is already taken.
+textarea	registration	en	Textarea
+the passwords you entered don't match	registration	en	The passwords you entered don't match
+the two passwords are not the same	registration	en	The two passwords are not the same
+type	registration	en	Type
+update/add	registration	en	Update/Add
+values (for dropdown only; comma separated)	registration	en	Values (For Dropdown only; comma separated)
+wrong session	registration	en	Wrong session
+you have entered an invalid birthday	registration	en	You have entered an invalid birthday
+you have entered an invalid email address	registration	en	You have entered an invalid email address
+you must enter a password	registration	en	You must enter a password
+you must enter a username	registration	en	You must enter a username
+you must fill in all of the required fields	registration	en	You must fill in all of the required fields
+you specified a value for 	registration	en	You specified a value for 
+zip/postal	registration	en	ZIP/Postal
