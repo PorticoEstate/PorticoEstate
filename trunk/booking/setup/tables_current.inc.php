@@ -19,9 +19,6 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 1),
-				'deactive_calendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
-				'deactive_application' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
-				'deactive_sendmessage' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_calendar' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_application' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
 				'deactivate_sendmessage' => array('type' => 'int', 'nullable' => False,'precision' => '4', 'default' => 0),
