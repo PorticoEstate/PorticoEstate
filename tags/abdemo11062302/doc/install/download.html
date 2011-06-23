@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="../styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print" />
+		<title>phpGroupWare - Installation &amp; Security HOWTO</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="../pics/logo.png" alt="phpGW logo" />
+				Installation &amp; Security HOWTO
+			</div>
+			<div id="top">
+				<img src="../pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="index.html">Installation &amp; Security HOWTO</a></div>
+			</div>
+			<div id="content">
+				<h2>Download and unpack</h2>
+				<p>
+					There are a few ways to get phpgw, the released tarball from
+					<a href="http://download.phpgroupware.org/now">download.phpgroupware.org/now</a> 
+					home page, CVS StableBranch and HEAD branches, and most GNU/Linux distros come 
+					with a package. It is not recommended to use a distro package because it is 
+					almost always out of date and will have bugs due to phpgw still being a 
+					BETA project. We will cover installation of a release tarball of 0.9.16.001 
+					and a cvs update to get all the latest patches committed to the stable cvs 
+					tree. The cvs update is optional but to do it you only need the cvs client 
+					installed, most GNU/Linux distributions come with one, and internet access 
+					from the server.
+				</p>
+				<p>
+					Grab your preferred packaged format (tar.gz, tar.bz2, or zip) 
+					from <a href="http://download.phpgroupware.org/now">download.phpgroupware.org/now</a>
+					and save it to a temporary directory. Next extract the archive, I use tar.gz:
+				</p>
+				<pre>$ tar -zxf phpGroupWare-0.9.16.001.tar.gz</pre>
+				<p>
+					This will give you a "phpgroupware" directory with lots of directories 
+					under it. The phpgw layout is as follows:
+				</p>
+				<dl>
+					<dd><tt>phpgroupware\ </tt></dd>
+					<dd><tt>|-- App 1\ </tt> (this is the root of an application)</dd>
+					<dd><tt>| |-- inc\ </tt> (the applications classes and core files go here)</dd>
+					<dd><tt>| |-- setup\ </tt> (the files needed to "install" the app go here)</dd>
+					<dd><tt>| |-- templates\ </tt> (the app specific template and theme files go here)</dd>
+					<dd><tt>|-- App 2\ </tt> </dd>
+					<dd><tt>| |-- inc\ </tt> </dd>
+					<dd><tt>| |-- setup\ </tt> </dd>
+					<dd><tt>| |-- templates\ </tt> </dd>
+					<dd><tt>.</tt></dd>
+					<dd><tt>.</tt></dd>
+					<dd><tt>.</tt></dd>
+					<dd>and so on</dd>
+				</dl>
+				<p>
+					Next move the phpgroupware directory into your web root. There is no formula 
+					for where to put it, typically you would put it directly in /var/www/html/ or 
+					/home/httpd/html/ or where ever your apache DocumentRoot is.   Alternatively 
+					you can install phpGroupWare using a virtual host.  For this HOWTO 
+					I will be using my users home directory in /home/chris/htdocs/ and not doing 
+					any phpgw config as root. The only requirement is that every directory in the 
+					file system up to the directory you install in MUST have modes a+rx or 755 
+					so that the anonymous web user can view the html and run the php scripts. 
+					The php files do not have to be executable unless you are using the php CGI,
+					which is not recommended for a php application of this size and complexity.
+				</p>
+				<p>
+					Before we start installing, we'll get the latest patches from the phpgroupware 
+					stable CVS tree. The package you downloaded will already have the CVS directories 
+					in it to tell the cvs client what to do. This step is optional but highly 
+					recommended. Run the following command anytime you want to get the latest 
+					patches from the stable cvs tree.
+				</p>
+				<pre>
+			$ export CVS_RSH=ssh
+			$ cd phpgroupware
+			$ cvs -z6 update -dP > cvs.log
+				</pre>
+				<p>
+					You may get a warning about a missing .cvspass file, this is harmless. 
+					You will then see cvs go through every directory looking for files to 
+					update. This will also create a cvs.log file showing you what files 
+					updated. It is recommended you review this log to check for errors after 
+					each update.
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15575 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 21:46:22 +1100 (Thu, 30 Dec 2004) $ by $Name$
+			</div>
+		</div>
+	</body>
+</html>

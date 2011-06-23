@@ -1,0 +1,62 @@
+access changed	todo	cs	Přístup změněn
+access type	todo	cs	Druh přístupu
+add main project	todo	cs	Nový hlavní úkol
+adds or edits a todo item	todo	cs	Přidá nebo opraví úkol
+add sub project	todo	cs	Přidej dílčí úkol
+add sub	todo	cs	Přidej dílčí
+add	todo	cs	Nový
+are you sure you want to delete this entry	todo	cs	Opravdu chcete vymazat tento záznam?
+assigned to	todo	cs	Přiřazeno k
+category changed	todo	cs	Kategorie změněna
+clear form	todo	cs	Vymaž formulář
+completed	todo	cs	dokončeno
+created by	todo	cs	Zadal
+date due	todo	cs	Požadované datum splnění
+deletes a todo item	todo	cs	Smaže úkol
+delete	todo	cs	Smaž
+description can not exceed 8000 characters in length	todo	cs	Popis nesmí přesáhnout 8000 znaků!
+description changed	todo	cs	Popis byl změněn
+do you also want to delete all sub projects ?	todo	cs	Mám smazat také všechny dílčí úkoly?
+edit main project	todo	cs	Oprav hlavní úkol
+edit sub project	todo	cs	Oprav dílčí úkol
+edit	todo	cs	Oprav
+end date changed	todo	cs	Koncové datum změněno
+end date	todo	cs	koncové datum
+ending date can not be before start date	todo	cs	Koncové datum nesmí předcházet počáteční datum!
+entry added	todo	cs	Záznam přidán
+group	todo	cs	Skupina
+high	todo	cs	Vysoká
+last updated	todo	cs	Naposledy upraveno
+low	todo	cs	Nízká
+normal	todo	cs	Normální
+or: days from startdate:	todo	cs	nebo: dnů od počátku
+or: select for today:	todo	cs	nebo: vyber pro dnešek
+parent changed	todo	cs	Rodič změněn
+parent project	todo	cs	Rodičovský úkol
+please enter a title	todo	cs	Prosím zadejte název !
+read this list of methods.	todo	cs	Načte seznam těchto metod.
+returns an array of todo items	todo	cs	Vrací pole úkolů
+returns a the total number of records in the database, must call list_todos first	todo	cs	Vrací celkový počet záznamů v databázi, musí nejprve volat list_todos
+show todo items on main screen	todo	cs	Zobrazuj úkoly na hlavní straně
+start date changed	todo	cs	Počáteční datum změněno
+start date	todo	cs	počáteční datum
+status changed	todo	cs	Stav změněn
+status	todo	cs	Stav
+title changed	todo	cs	Název změněn
+title	todo	cs	název
+todo	common	cs	úkoly
+todo list - add	todo	cs	Úkoly - přidej
+to do list	common	cs	Úkoly
+todo list	common	cs	Úkoly
+todo list - edit	todo	cs	Úkoly - uprav
+todo preferences	todo	cs	Volby pro úkoly
+urgency changed	todo	cs	Naléhavost změněna
+urgency	todo	cs	Naléhavost
+view matrix of actual month	todo	cs	Ukaž tabulku pro aktuální měsíc
+view	todo	cs	Ukaž
+view todo item	todo	cs	Ukaž úkol
+which groups	todo	cs	Které skupiny
+you can only enter numbers for days from now	todo	cs	Jako počet dnů musí být zadáno číslo!
+you have entered an ending invalid date	todo	cs	Bylo zadáno nesprávné koncové datum!
+you have entered an invalid date	todo	cs	vložili jste nesprávné datum
+you have entered an starting invalid date	todo	cs	Bylo zadáno nesprávné počáteční datum!

@@ -1,0 +1,378 @@
+%1 - %2 of %3	email	sv	%1 - %2 av %3
+%1 messages have been deleted	email	sv	%1 meddelande har raderats
+1 message has been deleted	email	sv	1 meddelande har raderats
+1 message has been moved to	email	sv	1 meddelande har flyttats till
+<b>*apply*</b> this filter	email	sv	<b>*ANVÄND*</b> Detta filter
+<b>apply all</b> filters	email	sv	<b>ANVÄND ALLA</b> Filter
+a scrips tag block of code, javascript or otherwise, is in an inline html message. not necessarily bad, but user may want to know. this is script ... code ... script blocks, not the "onmouseover"  stuff.	email	sv	ett script, javascript eller nåt sånt finns inbäddat i html-koden. Detta behöver inte nödvändigtvis vara något farligt, men användaren bör informeras.
+account	email	sv	konto
+account name	email	sv	Kontonamn
+account user name	email	sv	Konto användarnamn
+accounts	email	sv	Konton
+accounts:	email	sv	Konton:
+add to address book	email	sv	Lägg till i adressboken
+add to addressbook	email	sv	Lägg till i adressbok
+address book	email	sv	Adressbok
+after	email	sv	Efter
+all messages	email	sv	Alla meddelanden
+and	email	sv	och
+and stop filtering	email	sv	och stoppa filtrering
+answered	email	sv	besvarat
+apply	email	sv	använd
+apply filters report:	email	sv	Använda filter rapport:
+apr	email	sv	apr
+aqua fusion	email	sv	Aqua Fusion
+arrival date	email	sv	Ankomstdatum
+as	email	sv	som
+attach file	email	sv	Bifogad fil
+attach signature	email	sv	Bifogad signatur
+attachment	email	sv	Bilaga
+aug	email	sv	aug
+bcc	email	sv	bcc
+bcc address	email	sv	Bcc adress
+before	email	sv	Före
+big	email	sv	Stor
+bigger	email	sv	Större
+biggest	email	sv	Störst
+body	email	sv	Kropp
+both	email	sv	Båda
+button type	email	sv	Knapptyp
+cache server data whenever possible	email	sv	spara serverdata i cache när det är möjligt
+cc	email	sv	CC
+cc address	email	sv	CC adress
+change font size in your e-mail pages	email	sv	Ändra fontstorlek på dina epost-sidor
+check flags for type of mails	email	sv	Markera flaggor för typ av meddelanden
+choose for rename	email	sv	Välj för att ändra namn
+choose to rename	email	sv	välj för att ändra namn
+click here for more info in a new window	email	sv	klicka här för mer information i ett nytt fönster
+click here to continue	email	sv	Klicka här för att fortsätta
+click here to edit the settings for this email account.	email	sv	klicka här för att ändra inställningar för det här epostkontot.
+click here to return to your home page.	email	sv	klicka här för att återvända till din hemsida.
+company	email	sv	Företag
+compose	email	sv	Skriv
+compose message	email	sv	skriv meddelande
+compose new	common	sv	Skriv nytt
+contains	email	sv	Innehåller
+could not open this mailbox	email	sv	Kunde inte öppna denna brevlåda
+create (expert)	email	sv	skapa (expert)
+create a folder	email	sv	Skapa en mapp
+current attachments (%1)	email	sv	Aktuella bilagor (%1)
+custom e-mail preferences	email	sv	Egna epostinställningar
+custom e-mail settings	email	sv	Egna epostinställningar
+date	email	sv	Datum
+debugging page	email	sv	Debug-sida
+dec	email	sv	dec
+default sorting order	email	sv	Normal sorteringsordning
+default:	common	sv	normal:
+delete	email	sv	Ta bort
+delete (expert)	email	sv	Radera (expert)
+delete a folder	email	sv	Radera en mapp
+delete account	common	sv	Radera konto
+deleted	email	sv	raderad
+deleted messages (trash) folder	email	sv	Raderade meddelanden (Skräp) mapp
+deleted messages folder name	email	sv	Raderade meddelanden mappnamn
+deleted messages go to trash	email	sv	Raderade meddelanden förs till Skräp
+deleted messages saved to folder:	email	sv	Raderade meddelanden sparade i mappen:
+discard	email	sv	Ignorera
+does not contain	email	sv	Innehåller inte
+draft	email	sv	mall
+e-mail extra account	email	sv	Epost extra konto
+e-mail extra accounts	email	sv	Epost extra konton
+e-mail extra accounts list	email	sv	Epost extra konton lista
+e-mail filters	common	sv	Epostfilter
+e-mail folders	common	sv	Epostmappar
+e-mail inbox filters list	email	sv	Epost INKORG filterlista
+e-mail preferences	common	sv	Epost intällningar
+each user has a summary page which can display a variety of information. this option will show a small list of email messages in the inbox of the users default email account on the users summary home page.	email	sv	Varje användare har en översiktssida som kan visa en hel del information. Denna valmöjlighet visar en liten lista på epost-meddelanden i INKORG från användarens ordinarie konto på användarens översiktssida.
+edit filters	email	sv	Ändra filter
+email	email	sv	E-Post
+email account name	email	sv	Epost kontonamn
+email address	email	sv	Epost adress
+email date	email	sv	Epost datum
+email filters	email	sv	Epost filter
+email password	email	sv	Epost lösenord
+email preferences	email	sv	Epost Inställningar
+email signature	email	sv	Epost signatur
+email type	common	sv	Epost typ
+enable this email account	common	sv	Aktivera detta epostkonto
+enable utf-7 encoded folder names	email	sv	Aktivera utf-7 kodade mappnamn
+enter the search string in the text boxes	email	sv	Skriv in söksträng i textrutorna
+enter your default mail domain ( from: user@domain )	admin	sv	Skriv in din ordinarie brevdomän (Från: användare@domän)
+enter your pop	admin	sv	Ange din POP
+enter your smtp server hostname or ip address	admin	sv	Ange din SMTP-servers värdnamn eller IP-adress
+enter your smtp server port	admin	sv	Ange din SMTP-servers port
+error moving messages to	email	sv	Fel uppstod när meddelanden flyttades till
+error text not provided	email	sv	fel, ingen text insatt
+error: unknown message data	email	sv	Fel: Okänt meddelande-data
+evolution style	email	sv	Evolutionsstil
+extra accounts	email	sv	Extra konton
+extra e-mail account	common	sv	Extra epostkonto
+extra e-mail accounts	common	sv	Extra epostkonton
+extra e-mail preferences number %1	email	sv	Extra epostkonton inställning nummer %1
+feb	email	sv	feb
+fewer actions	email	sv	Färre aktiviteter
+fewer choices	email	sv	Färre val
+file	email	sv	Fil
+file attachment	email	sv	Fil bilaga
+file into	email	sv	Fil till
+files	email	sv	Filer
+fill in as much as you can	email	sv	fyll i så mycket du kan
+filter [number] and name	email	sv	Filter [nummer] och namn
+filter inbox for accounts	email	sv	Filtrera INKORG för konton
+filter name	email	sv	Filternamn
+filter name:	email	sv	filternamn:
+filter number	email	sv	Filternummer
+filters	email	sv	Filter
+filters list	email	sv	Filterlista
+flag as important	email	sv	Markera som viktigt
+flagged	email	sv	markerad
+folder	email	sv	Mapp
+folder maintenance	email	sv	Mappunderhåll
+folder name	email	sv	Mappnamn
+folder size	email	sv	Mappstorlek
+folders	email	sv	Mappar
+for the file to actually upload	email	sv	för att filen verkligen ska laddas upp
+for these items, fill only what is different from you default e-mail preferences	common	sv	För dessa fält, fyll bara i vad som skiljer sig från dina ordinarie epost-inställningar
+forward	email	sv	Vidarebefodra
+from	email	sv	Från
+from address	email	sv	Från adress
+get size	email	sv	hämta storlek
+go	email	sv	kör
+go back	email	sv	Gå tillbaka
+go back to	email	sv	Gå tillbaka till
+header field	email	sv	Huvudfält
+hidden	email	sv	gömd
+hide help	email	sv	Göm Hjälp
+html messages with the iframe  tag may be klez or other worm emails.	email	sv	html-meddelanden med IFRAME kan vara KLEZ eller något annat maskvirus-meddelande.
+icon size	email	sv	Ikonstorlek
+icon theme	email	sv	Ikontema
+if &quot; deleted messages go to trash &quot; is checked, deleted message will be sent to the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is &quot;trash&quot;. this will be your &quot;trash&quot; folder, but it does not have to actually be called &quot;trash&quot;, you can name it anything. only works with imap servers, pop servers do not have folders.	email	sv	Om &quot; Raderade meddelanden går till Skräp &quot; är markerad, så kommer Raderade meddelanden att skickas till det mappnamn du fyller i den ruta. Om denna mapp inte finns kommer den att skapas automatiskt. Normalinställning är &quot;Skräp&quot;. Detta blir din &quot;Skräp&quot; mapp, men den behöver inte heta &quot;Skräp&quot;, du kan kalla den vad du vill. Fungerar endast med IMAP-servrar, POP-servrar använder inte mappar.
+if &quot; sent messages folder &quot; is checked, a copy of your sent mail will be stored in the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is &quot;sent&quot;. this will be your &quot;sent&quot; folder, but it does not have to actually be called &quot;sent&quot;, you can name it anything. only works with imap servers, pop servers do not have folders.	email	sv	Om &quot;Skickade meddelanden&quot;-mappen är markerad kommer en kopia av ditt skickade meddelande att sparas i den mapp vars namn du fyller i denna ruta. Om mappen inte existerar så kommer den att skapas automatiskt. Normalinställning är &quot;Skickat&quot;. Detta blir din &quot;Skickat&quot;-mapp men den behöver inte heta &quot;Skickat&quot; du kan kalla den vad du vill. Fungerar endast med IMAP-servrar, POP-servrar använder inte mappar.
+if applicable	email	sv	Om Tillämpligt
+if checked, a copy of your sent mail will be stored in the &quot;sent&quot; folder name which you specify in the box for &quot;sent messages folder &quot;. only works with imap servers, pop servers do not have folders.	email	sv	Om den här är markerad kommer sända meddelanden att sparas i &quot;Skickat&quot;-mappen vars namn du angav i rutan för &quot;Skickat&quot;-mappens namn. Fungerar endast med IMAP-servrar, POP-servrar använder inte mappar.
+if checked, a copy of your sent mail will be stored in the &quot;sent&quot; folder name which you specify in the box for &quot;sent messages folder&quot;. only works with imap servers, pop servers do not have folders.	email	sv	Om den här är markerad kommer skickade meddelanden att sparas i &quot;Skickat&quot;-mappen vars namn du angav i rutan för &quot;Skickat&quot;-mappens namn. Fungerar endast med IMAP-servrar, POP-servrar använder inte mappar.
+if checked, deleted message will be sent to the &quot;trash&quot; folder name which you specify in the box for &quot; deleted messages (trash) folder &quot;. only works with imap servers, pop servers do not have folders.	email	sv	Om den här är markerad kommer raderade meddelanden att skickas till &quot;Skräp&quot;-mappen vars namn du angav i rutan för &quot;Skräp&quot;. Fungerar endast med IMAP-servrar, POP-servrar använder inte mappar.
+if fileto then select destination folder	email	sv	om fil-till så välj destinationsmapp
+if messages match	email	sv	Om meddelanden matchar
+if there is no obvious error, check your username and password first.	email	sv	om det inte är något uppenbart fel, kolla upp ditt användarnamn och lösenord först.
+if using an imap server, what kind is it, most often this option can safely be set to &quot;cyrus or courier&quot;. technically, this means the server uses a dot between the different parts of the folder names, such as &quot;inbox.sent&quot;. the other major kind of imap server is the university of washington &quot;uwash&quot; imap server. it uses slashes instead of the dots the other servers use, and although it has a folder called &quot;inbox&quot;, it is not considered the &quot;namespace&quot; for the other folder names. the &quot;uw-maildir&quot; is a rare combination of the two above types. this is the least used kind of imap server. if you are unsure, ask your it administrator. only applies to imap servers.	email	sv	Om man använder en IMAP-server kan denna oftast sättas till &quot;Cyrus or Courier&quot;. Tekniskt sett så använder servern en punkt mellan olika delar av mappnamnen, som &quot;INKORG.Skickat&quot;. Den andra mycket använda typen av IMAP-server är University of Washington &quot;UWash&quot; IMAP-server. Den använder snedstreck istället för punkter för mappnamnen. &quot;UW-Maildir&quot; är en ovanlig kombination av de två ovannämnda typerna. Detta är den minst använda typen av IMAP-server. Om du är osäker, fråga din IT-administratör. Detta gäller endast IMAP-servrar.
+image	email	sv	Bild
+imap mail server hostname or ip address	admin	sv	IMAP-serverns värdnamn eller IP-adress
+imap server type	common	sv	IMAP-server typ
+important	email	sv	viktigt
+in the email index page, the page which lists all the mails in a folder, mail may be sorted by date, author, size, or subject, however all of these need to be ordered from first to last, this options controlls what is first and last. for example, if sorting by date, the newest to oldest displays the most recent emails first, in decending order down to the oldest emails last.	email	sv	På indexsidan, sidan som listar alla brev i en mapp, kan sorteras efter datum, avsändare, storlek eller rubrik. Men alla dessa måste sorteras fallande eller stigande, här anger du vilken som är först och vilken som är sist. Till exempel om man sorterar på datum från det nyaste till det äldsta visas de nyaste först och de äldsta sist.
+inbox	email	sv	Inkorg
+input error	email	sv	Inmatningsfel
+input error:	email	sv	Inmatningsfel:
+it is not rfc standard to base64 encode a part of a message that is not an attachment. note this check is currently done after the message is already being viewed, it should probably stop the message from being automatically displayed, i.e. give a "show this" button instead.	email	sv	Det är inte RFC-standard att base64-koda en del av ett meddelande som inte är en bilaga. OBS denna koll gör för närvarande efter att meddelandet har visats, det kommer antagligen att hindra meddelandet från att bli automatiskt visat, det blir en "Visa denna"-knapp istället.
+jan	email	sv	jan
+javascript	email	sv	Javaskript
+jul	email	sv	jul
+jun	email	sv	jun
+keep	email	sv	Behåll
+keyword	email	sv	nyckelord
+keywords	email	sv	Nyckelord
+layout 1	common	sv	Layout 1
+layout 2	common	sv	Layout 2
+lines	email	sv	Linjer
+list messages	email	sv	lista meddelanden
+long names	email	sv	långa namn
+mail folder(uw-maildir)	email	sv	Brevmapp(uw-maildir)
+mail server	email	sv	Epost-server
+mail server login type	admin	sv	Epost-server inloggningstyp
+mail server type	email	sv	Epost-server typ
+mail settings	admin	sv	Epost-inställningar
+mail you send will use this address as the &quot;from&quot; address. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. when the recipient clicks reply, this address will be used. you can leave this box blank and the default value will be used.	email	sv	Ett brev som du skickar iväg kommer att använda denna adress som &quot;Från&quot;adress. Dena kan vara samma som ditt inloggningsnamn i phpGroupWare, eller det som administratören har valt åt dig. När mottagaren klickar på besvara är det denna adress som används. Du kan lämna rutan tom om du vill att den ordinarie adressen ska användas.
+manage accounts	email	sv	Hantera konton
+manage folders	email	sv	Hantera mappar
+mar	email	sv	mar
+message	email	sv	Meddelande
+message has an attachment that is some kind of script or exe file that windows users should be warned not to click on it. these are filenames like attachments the end with the usual "bad stuff", such as bat, inf, pif, com, exe, reg, vbs, and scr	email	sv	Meddelandet har en bilaga som är någon slags script eller exe-fil som Windows-användare bör varnas för att inte klicka på. Det är filnamn med ändelser som bat, inf, pif, com, exe, reg, vbs och scr
+message list layout	common	sv	Layout meddelandelista
+messages	email	sv	Meddelanden
+messages found in folder	email	sv	Meddelanden funna i mapp
+messages have been moved to	email	sv	meddelanden har flyttats till
+monitor	email	sv	Kontrollera
+more actions	email	sv	Fler aktiviteter
+more choices	email	sv	Fler val
+most us and european users do not need to enable this. if this option is checked then your email server can handle folder names with non us-ascii charactors in them/ default is disabled, not checked. only use if you are really sure you need it. only works with imap servers, pop servers do not have folders.	email	sv	De flesta amerikanska och europeiska användare behöver inte aktivera den här. Om den markeras så kan servern hantera mappar med icke-US-ASCII tecken. Normalinställning är inaktiverad. Använd detta endast om du är säker på att du behöver det. Fungerar bara med IMAP-servrar, POP-servrar använder inte mappar.
+move down	email	sv	Flytta ner
+move selected messages into	email	sv	Flytta valda meddelande till
+move this message into	email	sv	Flytta detta meddelande till
+move up	email	sv	Flytta upp
+mozilla modern style	email	sv	Mozilla Modern stil
+name of the mail server you want to access. should be a name like &quot;mail.example.com&quot;. if you leave this box blank then the default value will be used.	email	sv	Namnet på den epost-server som du vill ansluta till. Ska vara som &quot;mail.example.com&quot;. Om du lämnar denna ruta tom så används normalinställningen.
+new	email	sv	Nytt
+new account	email	sv	Nytt konto
+new filter	email	sv	Nytt filter
+new message	email	sv	Nytt meddelande
+new messages	email	sv	Nya meddelanden
+newest	common	sv	nyaste
+next	email	sv	Nästa
+next message	email	sv	Nästa meddelande
+no change	email	sv	ingen ändring
+no error returned from server	email	sv	Inget fel rapporterades från servern
+no message found in folder '%1'	email	sv	Inget meddelande funnet i mappen '%1'
+no next message	email	sv	finns inget nästa meddelande
+no previous message	email	sv	finns inget föregående meddelande
+no subject	email	sv	Inget Subjekt
+noia &#64; carlitus style	email	sv	Noia &#64; Carlitus stil
+non-standard	email	sv	inte standard
+not used	email	sv	inte använd
+notify on delivery	email	sv	Kvittera vid mottaget
+nov	email	sv	nov
+number	common	sv	Antal
+number of matches:	email	sv	antal träffar:
+oct	email	sv	okt
+old	email	sv	Gammal
+oldest	common	sv	äldst
+on	email	sv	På
+only needed with the university of washington &quot;uwash&quot; imap server. the default value is &quot;mail&quot; which means your mail folders, other then inbox, are located in a directory called &quot;mail&quot; directly under your &quot;home&quot; directory. this box may be left empty, which means your mail folders are located in your &quot;home&quot; directory, not a subdirectory. if your mail folders are located in a subdirectory of &quot;home&quot; then put the name of that subdirectory here. generally, it is not necessary to use any special slashes or tildes, &quot;home&quot; is always considered the base directory, and the slash bewteen &quot;home&quot; and the subdirectory will be added for you automatically, do not put the slash in this box.	email	sv	Behövs endast med University of Washington &quot;UWash&quot; IMAP-server. Normalinställning är &quot;mail&quot; vilket då är dina epost-mappar som förutom INKORG, ligger i mappen &quot;mail&quot; direkt under din hemmapp. Denna ruta kan lämnas tom och då ligger dina epost-mappar din hemmapp inte i någon undermapp. Om dina epost-mappar ligger i en undermapp till hemmappen, fyll då i namnet på den undermappen här. Normalt är det inte nödvändigt att använda några special-snedstreck eller tilde-tecken, hemmappen är alltid satt som bas-mapp och ett snedstreck mellan hemmappen och undermappen kommer att läggas till automatiskt, så sätt inga snedstreck i denna ruta.
+or	common	sv	eller
+or enter text	email	sv	eller fyll i text
+organization	email	sv	Organisation
+persistent email server session	email	sv	ständig session med epostserver
+phone	email	sv	Telefon
+please fill in everything you need	email	sv	Fyll i allt du behöver
+please select a folder to rename	email	sv	Välj en mapp att döpa om
+please select a message first	email	sv	Välj ett meddelande först
+please submit a filename to attach	email	sv	Fyll i ett filnamn att bifoga
+please type a folder name in the text box	email	sv	Fyll i ett mappnamn i textrutan
+previous	email	sv	Föregående
+previous message	email	sv	Föregående meddelande
+printable	email	sv	utskriftsvänlig
+raw message	email	sv	raw meddelande
+read mail	email	sv	Läs meddelande
+received headers	email	sv	Mottagna brevhuvuden
+recent	email	sv	Nyligt
+recipient	email	sv	Mottagare
+redirect	email	sv	Dirigera om
+reject	email	sv	Neka
+rename (expert)	email	sv	Byt namn (expert)
+rename a folder	email	sv	Byt mappnamn
+reply	email	sv	Svara
+reply all	email	sv	Svara alla
+replyto	email	sv	SvaraTill
+request delivery notification	email	sv	Begär mottagarkvitto
+requested filter action:	email	sv	begärd filteraktivitet:
+required	email	sv	begärt
+reset	email	sv	Nollställ
+result	email	sv	resultat
+return mails during this time period	email	sv	Returnerade brev under denna tidsperiod
+save deleted messages in folder named below	email	sv	spara Raderade meddelanden i mappen som anges nedan
+save sent messages in folder named below	email	sv	spara Sända meddelanden i mappen som anges nedan
+search for mails in these folders	email	sv	Sök efter meddelanden i dessa mappar
+search this folder	email	sv	sök i denna mapp
+section	email	sv	Sektion
+seen	email	sv	Läst
+select home email address	email	sv	Välj hem epostadress
+select this box if you want the text body of the message you are forwarding to appear inline in the body of your sent message	email	sv	Markera denna ruta om du vill att texten från meddelandet du vidarebefordrar ska visas inuti brevet du skickar
+select work email address	email	sv	Välj arbetets epostadress
+select your mail server type	admin	sv	Välj din epostservertyp
+select your screensize for propper showing of the javascript addressbook	email	sv	Välj skärmstorlek för att visa Javaskript-adressboken bäst
+select your style for the addressbook. the traditional, simple style. or the new javascript enabled complex addressbook	email	sv	Välj vilken stil du vill ha på adressboken. Den traditionella enkla stilen eller den nya javaskript-baserade mer avancerade adressboken
+send	email	sv	Skicka
+send deleted messages to the trash	email	sv	Skicka borttagna meddelanden till papperskorgen
+send forwarded mail as quoted attachment	email	sv	Skicka vidarebefordrade brev som bilagor
+sender	email	sv	Avsändare
+sent	email	sv	skickat
+sent folder	email	sv	skickat mapp
+sent messages folder	common	sv	Skickade meddelanden-mapp
+sent messages folder name	email	sv	Skickade meddelanden-mappnamn
+sent messages saved in &quot;sent&quot; folder	common	sv	Skickade meddelanden sparas i &quot;skickat&quot;mappen
+sent messages saved to folder:	email	sv	Skickade meddelanden sparas i mappen:
+sep	email	sv	sep
+settings	email	sv	Inställningar
+short names	email	sv	korta namn
+show help	email	sv	Visa Hjälp
+show long names	email	sv	Visa långa namn
+show message	email	sv	visa meddelande
+show new messages in combobox	email	sv	Visa nya meddelanden i ComboBox
+show new messages on main screen	email	sv	Visa nya meddelande på huvudskärmen
+show sender's email address with name	email	sv	Visa avsändarens epostadress med namn
+show short names	email	sv	Visa korta namn
+show total folder size by default	email	sv	Visa totalstorlek på mappar
+simple	email	sv	Enkel
+size	email	sv	Storlek
+size larger than	email	sv	Storleken större än
+size smaller than	email	sv	Storleken mindre än
+small	email	sv	Liten
+smaller	email	sv	Mindre
+smallest	email	sv	Minst
+somebody	email	sv	någon
+sort by	email	sv	Sortera efter
+spell check	email	sv	Rättstavning
+standard e-mail preferences	email	sv	Standardinställning epost
+stop if matched	email	sv	Stoppa vid träff
+subject	email	sv	Subjekt
+switch accounts	email	sv	Byt konton
+switch current folder to	common	sv	Skifta nuvarande mapp till
+test all filters	email	sv	Testa alla filter
+test or apply all filters	email	sv	testa eller använd ALLA filter
+test run this filter	email	sv	Testkör detta filter
+text	email	sv	Text
+the email application offers 2 different layouts for the index page, that is the page that lists the emails in a folder. this page may be the page the user looks at the most and so different layouts, or looks, are offered.	email	sv	Epostmodulen kan ha två olika utseenden för index-sidan, alltså sidan där epost-meddelanden listas. Denna sida är kanske den användaren mest tittar på så därför finns olika utseenden.
+the email application offers different button displays, these buttons can be text, images, or both.	email	sv	Epostmodulen kan visa olika utseenden på knapparna, det kan vara text, bilder eller båda.
+the email application offers different icon image themes, groups of images of a similar style which are used in this email application. currently the available themes are images based on evolution by ximian and the netscape7, mozilla browser buttons. additional themes are anticipated and welcome.	email	sv	Epostmodulen kan ha olika ikonbildsteman. För närvarande finns det ikonbilder baserade på Evolution från Ximian och Netscape7:s Mozilla knappar. Fler teman mottages gärna.
+the email application offers different icon image themes, these icons can be big or small.	email	sv	Epostmodulen kan ha olika ikonteman, dessa ikoner kan vara stora eller små.
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you clear this box, then it goes back to the default value. if you only need some custom settings but want this one to be the default value, then leave this box blank, the default value will be used, and you will see that default value in this box the next time you come to this preferences page.	email	sv	Inloggningsnamnet som används när man kollar sin post för detta epostkonto. Det kan vara samma som din phpGroupWare-inloggning eller så kan administratören ha valt ett åt dig. Om du har flera konton måste du fylla i dessa. Om du bara har ett konto kan du förmodligen lämna denna tom. Om du raderar innehållet i rutan så går det tillbaka till normalinställningen. Om du bara vill ha några egna inställningar men vill att just den här ska vara din ordinarie, lämna då denna ruta tom. Normalinställningen används då och du kommer att se den inställningen nästa gång du går in på inställningar.
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the &quot;use custom settings&quot; option.	email	sv	Inloggningsnamnet som används när man kollar sin post för detta epostkonto. Det kan vara samma som din phpGroupWare-inloggning eller så kan administratören ha valt ett åt dig. Om du har flera konton måste du fylla i dessa. Om du bara har ett konto kan du förmodligen lämna denna tom. Om du skriver in ett eget lösenord kommer denna ruta att vara tom nästa gång du går in på inställningar. Detta är för att vara säker på att inte lösenordet sänds till den webläsare du för tillfället befinner dig på. För att ändra lösenordet skriv bara in ett nytt lösenord i rutan. Extra epostkonton kräver att du anger detta. För ditt ordinarie konto kan du rensa bort ditt egna lösenord genom att avmarkera &quot;Använd egna inställningar&quot;.
+the password to use when checking mail for this email account. this may be the same as your phpgroupware password, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the &quot;use custom settings&quot; option.	email	sv	Lösenordet du använder för att kolla din epost. Det kan vara samma som i till phpGroupWare-inloggningen eller så kan administratören ha valt ett åt dig. Om du har flera konton konfigurerade måste du fylla i det här. Om du bara har ett konto så kan du förmodligen lämna det här utan åtgärd. Om du använder ett eget lösenord kommer denna ruta att vara tom nästa gång du går in på inställningar. Detta är för att vara säker på att inte lösenordet sänds till den webläsare du för tillfället befinner dig på. För att ändra lösenordet skriv bara in ett nytt lösenord i rutan. Extra epostkonton kräver att du anger detta. För ditt ordinarie konto kan du rensa bort ditt egna lösenord genom att avmarkera &quot;Använd egna inställningar&quot;.
+the type of mail server you want to access. imap mail servers have folders, such as the sent and trash folders. pop servers do not have folders. pop, pop-3, and pop3 are the same thing. you can have the server connection encrypted by using imaps or pops, only if the mailserver supports it and if your phpgroupware installation has a &quot;ssl&quot; capabable version of php.	email	sv	Den typ av epostserver du ska ansluta till. IMAP-servrar har mappar, som Skickat och Skräp-mappar. POP-servrar använder inte mappar. POP, POP-3 är samma sak. Du kan kryptera din anslutning genom att använda IMAPS eller POPS, men bara om servern stöder det och din phpGroupWare-installation har SSL-kompatibel version av PHP.
+then do this	email	sv	Gör då detta
+then take this actions	email	sv	Använd då dessa åtgärder
+there is no text or other part of the email to display to the user, all part(s) are attachments.	email	sv	Det finns ingen text eller annat att visa för användaren, alla delar är bilagor.
+there was an error trying to connect to your imap server.<br />please contact your admin to check the servername, username or password.	email	sv	Ett fel uppstod vid anslutningen till din IMAP-server.<br />Kontakta din admin för att kontrollera servernamn, användarnamn eller lösenord.
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	sv	Ett fel uppstod vid anslutningen till din epostserver.<br />Kontrollera ditt användarnamn och lösenord eller kontakta admin.
+there was an error trying to connect to your pop3 server.<br />please contact your admin to check the servername, username or password.	email	sv	Det uppstod ett fel i anslutningen till din POP3-server.<br />Kontakta din admin för att kontrollera servernamn, användarnamn eller lösenord.
+this confusing and often misunderstood option is left over from this email apps origins as aeromail by mark cushman. when viewing a list of emails in a folder, the from column may show you a) the senders name only, if a name was provided, b) the senders from email address, in addition to the senders name, or c) the senders reply to address if it is different from the senders from address, in addition to the senders name if it was provided. typically users set this to none, which will show only the senders name. if no name was supplied by the sender, then the senders from email address will be shown, whether a seperate reply to address is provided has no effect on this, the from address is always used if the senders name is not provided.	email	sv	Denna förbryllande och ofta missförstådda funktion är en kvarleva från denna epostmoduls original Aeromail av Mark Cushman. När man visar listan på epost i en mapp så kan FRÅN-kolumnen visa a) avsändarens namn endast, om namnet var angivet, b) avsändarens Från epostadress som tillägg till avsändarens namn eller c) avsändarens svara till-adress om den är annorlunda än avsändarens från-adress som tillägg till avsändarens namn om det var angivet. Vanligtvis sätts den till ingen(none), som kommer att bara visa avsändarens namn. Om inget namn angivits av avsändaren så kommer avsändarens FRÅN adress att visas, vare sig det finns en annan svara till-adress eller inte.
+this data not supplied.	email	sv	Dessa data är inte tillagda
+this folder is empty	email	sv	Denna mapp är tom
+this is really a visual template conflict issue. the phpgw template already has it own css, and style sheets are cascading, subsequent css can be inherited by the page and totally b0rk the look of the template theme. or maybe not, only certain css tags are really capable of this such as the css body property, or the a (href) properties.	email	sv	Det här är egentligen en synlig mall konflikt. phpGW-mallen har redan sin egen CSS och style sheets läggs på varandra, underordnade CSS kan ärvas av sidan och totalt ställa till visningen av mall-temat. Eller kanske inte, bara vissa CSS-taggar är kapabla att göra detta, som CSS BODY-egenskaper eller A (href) egenskaper.
+this is the name that appears in the account combobox. if for leave this blank, your accounts will be given a standard name like account[1]: jane doe, where jane doe is the name you give below as your full name. if you want to give an account a special name you can fill this in. no matter what, this is for your use, your emails will still use your full name as your from name for email messages. note that your full name for your email account 0 is the name you gave in the phpgroupware setup.	email	sv	Detta är namnet som syns i kontots combobox. Om man lämnar detta tomt kommer ett givet standardnamn som Konto[1]: Nisse Hult, där Nisse Hult är namnet som du anger nedan som Ditt hela namn. Om du vill ge ett konto ett speciellt namn så kan du fylla i det här. I vilket fall som helst, detta är ditt val, dina brev kommer fortfarande att använda Ditt hela namn som FRÅN namn i epostmeddelanden. OBS Ditt hela namn för ditt konto 0 är det namn som angavs i phpgroupwares setup.
+this is the name that appears in the users from address. the default mail account gets this value automatically from the phpgwapi. additional accounts are created with the phpgwapi supplied fullname you can specify a different fullname for each extra email account.	email	sv	Detta är det namn som syns i användarens FRÅN adress. Det ordinarie epostkontot får det automatiskt från phpgwapi. Ytterligare konton skapas med phpgwapi-tilldelade fullnamn, du kan ange ett annat fullnamn för varje extra epostkonto.
+this pref currently does nothing users may have more than one email account. in the future it is anticipated that automatic actions may be performed on these accounts, such as automatic new mail checks,auto filtering, etc... perhaps the user may want to disable an account so that these automatic actions do not occur for that account. this is one possible use. also, an admin may want to disable accounts from time to time.	email	sv	DEN HÄR INSTÄLLNINGEN GÖR FÖR NÄRVARANDE INGENTING. Användare kan ha mer än ett epostkonto. I framtiden kan man tänka sig att använda automatiska funktioner för dessa konton, som automatiska kontroller efter nya brev, automatisk filtrering m m Kanske användaren vill kunna avaktivera ett konto så att de automatiska funktionerna inte används för det kontot. Det är en möjlig funktion. En admin kan också vilja avaktivera ett konto då och då.
+this specifies whether or not to show the number of new message in the folders combo box on the index screen.	email	sv	Detta anger om antalet nya meddelanden i mapparna ksa visas i comboboxen på indexsidan.
+this specifies whether or not to show the total size of folders by default. if this is not checked, you will be presented with a button allowing you to display folder size..	email	sv	Detta anger om den totala storleken på mapparna ska visas eller inte. Om den inte är markerad så kommer en knapp att visas om du vill se storleken eller inte...
+this text will be appended to the bottom of the users emails for this email account. currently, html tags are not supported. also, forwarded email will not get this email sig appended to it for reasons such as it clutters the email, the forwarded part probably has its own email sig from the original author, which is really the information that matters the most.	email	sv	Denna text läggs till längst ner på användarens brev för detta konto. För närvarande stöds inte html. Vidarebefordrade brev kommer inte att få denna signatur tillagd p g a att det blir kluttriga brev eftersom original-avsändaren förmodligen har sin egen signatur och det är ju den informationen som är viktig.
+to	email	sv	Till
+to address	email	sv	Till adress
+total messages	email	sv	Totalt meddelanden
+trash	email	sv	skräp
+trash folder	email	sv	skräpmapp
+u-wash mail folder	email	sv	U-Wash brevmapp
+unable to get source folder name	email	sv	Kunde ej läsa källmappens namn
+unable to get target folder name	email	sv	Kunde ej läsa destinationsmappens namn
+unanswered	email	sv	Obesvarat
+undeleted	email	sv	Ej raderad
+undisclosed recipients	email	sv	Okänd mottagare
+undisclosed sender	email	sv	Okänd avsändare
+unflagged	email	sv	Omarkerad
+unknown action	email	sv	Okänd aktivitet
+unknown error	email	sv	Okänt fel
+unknown translation	email	sv	okänd översättning
+unseen	email	sv	Oläst
+use custom settings	email	sv	Använd egna inställningar
+view as html	email	sv	Visa som HTML
+view formatted	email	sv	Visa formatterad
+view headers	email	sv	Visa huvud
+view unformatted	email	sv	Visa oformatterat
+warn_attachment_name_dangerous	email	sv	warn_attachment_name_DANGEROUS
+warn_attachment_only_mail	email	sv	warn_attachment_only_mail
+warn_b64_encoded_displayable	email	sv	warn_b64_encoded_displayable
+warn_has_iframe_maybe_klez	email	sv	warn_has_iframe_maybe_klez
+warn_script_tags	email	sv	warn_script_tags
+warn_style_sheet	email	sv	warn_style_sheet
+we have recently added this new addressbook so that users can choose to have a more complex addressbook that features a) easy, point and click searching, b) best suited for organizations with large central addressbooks with many categories. you can choose here which addressbook do you prefer.	email	sv	Vi har nyligen lagt till denna nya adressbok så att användare kan välja att ha en mer avancerad adressbok som innehåller a) Enkel peka och klicka-sökning b) Mer anpassad för stora centrala adressböcker med många kategorier. Du kan välja här vilken adressbok du föredrar.
+we have three sizes that tell us how to better render the addressbook for you: 800x600 (addressbook will popout in a 700 pixel wide box), 1024x768 (it will be a 800 box), 1200x1600 (will be a 900 box). the fonts for all html stuff will be, respectively set to xx-small, x-small and normal (no font setting).	email	sv	Vi har tre storlekar som kan anpassa adressboken bättre för din skärmstorlek: 800x600 (adressboken visas i 700 pixlars bredd), 1024x768(blir en 800-ruta), 1200x1600(blir en 900-ruta). Fonterna för html blir motsvarande xx-liten, x-liten och normal(ingen fontinställning)
+wrote	email	sv	skrev
+you have %1 new messages!	common	sv	Du har %1 nya meddelanden!
+you have 1 new message!	common	sv	Du har %1 nytt meddelande!
+you have messages!	common	sv	Du har meddelanden!
+you have no new messages	common	sv	Du har inga nya meddelanden!
+you must click	email	sv	Du måste klicka
+you must click %1 for the file to actually upload	email	sv	Du måste klicka %1 för att filen ska laddas upp
+your full name	common	sv	Ditt hela namn
+your message has been sent	common	sv	Ditt meddelande har skickats!
+your server administrator will set the default values for the following options. you may never need to change any of them. if you do need to use settings that are different from the defaults for the options below here, then check this box. default is disabled, not checked. if you fill in some of the options, but later decide to go back to the default values, unchecking this box will erase your custom values and put back the default values. all of the following options start out with the default value, so you may see some settings below even if you have never filled them in. this checkbox only shows up for the default email account. if you are setting up additional email accounts, you will be required to fill in the following options and this checkbox will not be displayed, it will be checked for all extra email accounts.	email	sv	Din serveradministratör ställer in normalvärden för de följande valen. Du behöver kanske inte ändra någon av dem. Om du behöver använda andra inställningar än de förinställda värdena nedan, markera då detta val. Förinställningen är avaktiverad, alltså omarkerad. Om du fyller i några av inställningarna men vill gå tillbaka till de förinställda värdena, markera då av denna, då återgår det till det förinställda. Alla följande val utgår från de förinställda värdena så du kan se några av inställningarna fast du inte har fyllt i några själv. Denna markering syns bara i det ordinarie epostkontot. Om du lägger till flera konton måste du fylla i de följande rutorna och denna markering kommer inte att visas, den kommer att vara markerad för alla extra epostkonton.
+

@@ -1,0 +1,94 @@
+%1 already exists as a file	filemanager	pl	%1 już istnieje jako plik
+application	filemanager	pl	Aplikacja
+back to file manager	filemanager	pl	Powrót do managera plików
+cannot create directory because it begins or ends in a space	filemanager	pl	
+cannot replace %1 because it is a directory	filemanager	pl	
+command sucessfully run	filemanager	pl	Pomyślnie wykonano polecenie
+comment	filemanager	pl	Komentarz
+comments cannot contain "%1"	filemanager	pl	Komentarz nie zawiera "%1"
+copied %1 to %2	filemanager	pl	Skopiowano %1 do %2
+copy to	filemanager	pl	Kopiuj do
+copy to:	filemanager	pl	Kopiuj do
+could not copy %1 to %2	filemanager	pl	Nie można skopiować %1 do %2
+could not create directory %1	filemanager	pl	Nie można utworzyć katalogu %1
+could not create %1	filemanager	pl	Nie można utworzyć %1
+could not delete %1	filemanager	pl	Nie można usunąć %1
+could not move %1 to %2	filemanager	pl	Nie można przenieść %1
+could not rename %1 to %2	filemanager	pl	Nie można zmienić nazwy %1
+could not save %1	filemanager	pl	Nie można zapisać %1
+create file	filemanager	pl	Utwórz plik
+create folder	filemanager	pl	Utwórz katalog
+created	filemanager	pl	Utworzony
+created by	filemanager	pl	Utworzony przez
+created directory %1	filemanager	pl	Utworzono katalog %1
+created %1	filemanager	pl	Utworzono %1
+date	filemanager	pl	Data
+default number of upload fields to show	filemanager	pl	
+delete	filemanager	pl	Usuń
+deleted x	filemanager	pl	Usunięto 51
+directory	filemanager	pl	Katalog
+directory names cannot contain "%1"	filemanager	pl	Nazwa katalogu zawiera "%1"
+directory %1 already exists	filemanager	pl	Katalog %1 już istnieje
+directory %1 does not exist	filemanager	pl	Katalog %1 nie istnieje
+display attributes	filemanager	pl	Wyświetlane atrybuty
+download	filemanager	pl	Pobierz
+edit	filemanager	pl	Edycja
+edit comments	filemanager	pl	Edycja komentarza
+error running command	filemanager	pl	Błąd wykonania polecenia
+execute	filemanager	pl	Wykonaj
+failed to create directory	filemanager	pl	
+file	filemanager	pl	Plik
+file name	filemanager	pl	Nazwa pliku
+file names cannot contain "%1"	filemanager	pl	Plik nie zawiera "%1"
+file names cannot contain \ or /	filemanager	pl	Nazwa pliku nie może zawierac \ lub /
+file %1 already exists. please edit it or delete it first.	filemanager	pl	Plik %1 już istnieje. proszę edytować go lub usunąć
+file %1 could not be created.	filemanager	pl	Plik %1 nie może być utworzony
+filename	filemanager	pl	Nazwa pliku
+files	filemanager	pl	Plików
+folder	filemanager	pl	Katalog
+go to	filemanager	pl	Idź do
+go to %1	filemanager	pl	Idź do %1
+go to your home directory	filemanager	pl	
+go to:	filemanager	pl	Idź do
+home	filemanager	pl	
+locked	filemanager	pl	
+mime type	filemanager	pl	Typ mime
+modified	filemanager	pl	Zmodyfikowany
+modified by	filemanager	pl	Zmodyfikowany przez
+move to	filemanager	pl	Przenieś do
+move to:	filemanager	pl	Przenieś do
+moved %1 to %2	filemanager	pl	Przeniesiono %1 do %2
+no version history for this file/directory	filemanager	pl	
+operation	filemanager	pl	
+owner	filemanager	pl	Właściciel
+filemanager preferences	filemanager	pl	Preferencje filemanager
+preview of %1	filemanager	pl	
+preview %1	filemanager	pl	
+rename	filemanager	pl	Zmiana nazwy
+renamed %1 to %2	filemanager	pl	Zmieniono nazwę %1 na %2
+replaced %1	filemanager	pl	Zastapiono %1
+save all	filemanager	pl	Zapisz wszystko
+save %1	filemanager	pl	Zapisz %1
+saved %1	filemanager	pl	Zapisano %1
+show	filemanager	pl	Wyświetl
+show ..	filemanager	pl	Wyświetlaj ..
+show .files	filemanager	pl	Wyświetlaj .pliki
+show command line (experimental. dangerous.)	filemanager	pl	
+show help	filemanager	pl	Wyświetlaj pomoc
+size	filemanager	pl	Wielkość
+sort by:	filemanager	pl	Sortuj wg
+total files	filemanager	pl	Wszystkich plików
+unknown mime-type defaults to text/plain when viewing	filemanager	pl	
+unused space	filemanager	pl	Wolne miejsce
+up	filemanager	pl	W górę
+update	filemanager	pl	Aktualizuj
+updated comment for %1	filemanager	pl	Zaktualizowano komentarz do %1
+upload fields	filemanager	pl	wczytywanych plików
+upload files	filemanager	pl	Wczytaj pliki
+used space	filemanager	pl	Wykorzystane miejsce
+users	filemanager	pl	Użytkownicy
+version	filemanager	pl	Wersja
+view documents in new window	filemanager	pl	Wyświetlaj dokumenty w nowym oknie
+view documents on server (if available)	filemanager	pl	Pokaż dokumenty na serwerze (jeśli są dostępne)
+who	filemanager	pl	Kto
+you do not have access to %1	filemanager	pl	Nie masz praw do %1
