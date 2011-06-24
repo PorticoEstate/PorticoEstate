@@ -16,10 +16,6 @@
 
 		public function add($data)
 		{
-
-			$debug = true;
-			$ok = true;
-
 			$location_code = $this->decode($data[0]);
 			if(!$location_code)
 			{
@@ -31,7 +27,7 @@
 			$_test_floor = "{$location_arr[0]}-{$location_arr[1]}-{$location_arr[2]}";
 			$_test_zone = "{$location_arr[0]}-{$location_arr[1]}-{$location_arr[2]}-{$location_arr[3]}";
 
-			$_ok = false;
+			$ok = true;
 			if(!$this->solocation->check_location($_test_floor))
 			{
 				$_ok = $this->add_location(array('location_code' => $_test_floor, 'name' => "etasje {{$location_arr[2]}}", 'area' => 0));
@@ -46,16 +42,16 @@
 
 			if(!$this->solocation->check_location($location_code))
 			{
-_debug_array($location_code);
 				$_ok = $this->add_location(array('location_code' => $location_code, 'name' => $this->decode($data[6]), 'area' => $this->decode($data[7])));
 				$ok = $_ok && $ok ? $_ok : false;
 			}
+
 			return $ok;
 		}
 
 		protected function add_location($data)
 		{
-			$debug = true;
+			$debug = false;
 			$error = false;
 			$ok = true;
 			$value_set = array();
@@ -76,7 +72,7 @@ _debug_array($location_code);
     		foreach ($location_arr as $_key => $_loc)
     		{
     			$i = $_key +1;
-    			$value_set["loc1{$i}"]			= sprintf($formatting[$_key],$location_arr[$_key]);
+    			$value_set["loc{$i}"]			= sprintf($formatting[$_key],$location_arr[$_key]);
     		}
 
 			$value_set["loc{$type_id}_name"]	= $this->db->db_addslashes($data['name']);
