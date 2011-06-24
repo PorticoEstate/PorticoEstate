@@ -91,11 +91,11 @@
 				}
 
 				$result = $this->import(); // Do import step, result determines if finished for this area
-				echo '<li class="info">Aktiviteter: finished step ' .$result. '</li>';
+				echo '<li class="info">Import: finished step ' .$result. '</li>';
 				while($result != '1')
 				{
 					$result = $this->import();
-					echo '<li class="info">Aktiviteter: finished step ' .$result. '</li>';
+					echo '<li class="info">Import: finished step ' .$result. '</li>';
 					flush();
 				}
 
