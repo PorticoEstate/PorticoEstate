@@ -34,49 +34,34 @@ return;
 		}
 
 
-		function check_for_new_mail()
+		function gw_set_incoming_action()
 		{
 			if(!isset($this->pswin_param['email_user']) || ! $this->pswin_param['email_user'])
 			{
 			    throw new Exception('Email user not defined');			
 			}
 
-			$account_id = $GLOBALS['phpgw']->accounts->name2id($this->pswin_param['email_user']);
+				require_once 'SMSReceive.php';
 
-			$GLOBALS['phpgw_info']['user']['account_id'] = $account_id;
-			$GLOBALS['phpgw']->preferences->account_id = $account_id;
-			$pref = $GLOBALS['phpgw']->preferences->read();
-			$GLOBALS['phpgw_info']['user']['preferences']['felamimail'] = isset($pref['felamimail']) ? $pref['felamimail'] : '';
+				$options=array();
+				$options['soap_version'] = SOAP_1_1;
+				$options['location'] = $this->pswin_param['receive_url'];
+				$options['uri']		= "http://sms.pswin.com/SOAP/SMS.asmx";
+				$options['trace']		= 1;
+				$options['proxy_host']	= $this->pswin_param['proxy_host'];
+				$options['proxy_port']	= $this->pswin_param['proxy_port'];
+				$options['encoding']	= 'iso-8859-1';//'UTF-8';
 
-			$boPreferences  = CreateObject('felamimail.bopreferences');
-			$boPreferences->setProfileActive(true,2); //2 for selected user
-			$bofelamimail	= CreateObject('felamimail.bofelamimail');
+				$receive = new SMSReceive('', $options);
 
-			$connectionStatus = $bofelamimail->openConnection();
-			$headers = $bofelamimail->getHeaders('INBOX', 1, $maxMessages = 15, $sort = 0, $_reverse = 1, $_filter = array('string' => '', 'type' => 'quick', 'status' => 'unseen'));
+				$ReceiveSMSMessage = new ReceiveSMSMessage();
+				
+				$ReturnValue = $receive->ReceiveSMSMessage($ReceiveSMSMessage);
+
+				$result = $ReturnValue->ReceiveSMSMessageResult;
+
 
 			$sms = array();
-			$j = 0;
-			if (isset($headers['header']) && is_array($headers['header']))
-			{
-				foreach ($headers['header'] as $header)
-				{
-					if(!$header['seen'])
-					{
-						$sms[$j]['uid'] = $header['uid'];
-						$sms[$j]['message'] = utf8_encode($header['subject']);
-						$bodyParts = $bofelamimail->getMessageBody($header['uid']);
-						$sms[$j]['message'] .= "\n";
-						for($i=0; $i<count($bodyParts); $i++ )
-						{
-							$sms[$j]['message'] .= utf8_encode($bodyParts[$i]['body']) . "\n";
-						}
-
-						$sms[$j]['message'] = substr($sms[$j]['message'],0,160);
-						$j++;
-					}
-				}
-			}
 
 			foreach($sms as $entry)
 			{
@@ -95,43 +80,5 @@ return;
 			{
 				$bofelamimail->closeConnection();
 			}
-		}
-
-
-		function gw_set_incoming_action()
-		{
-			$this->check_for_new_mail();
-			
-return;
-		    $handle = @opendir($this->pswin_param[path] . "/cache/smsd");
-		    while ($sms_in_file = @readdir($handle))
-		    {
-				if (preg_match("/^ERR.in/i",$sms_in_file) && !preg_match("/^[.]/",$sms_in_file))
-				{
-				    $fn = $this->pswin_param[path] . "/cache/smsd/$sms_in_file";
-				    $tobe_deleted = $fn;
-				    $lines = @file ($fn);
-				    $sms_datetime = trim($lines[0]);
-				    $sms_sender = trim($lines[1]);
-				    $message = "";
-				    for ($lc=2;$lc<count($lines);$lc++)
-				    {
-					$message .= trim($lines[$lc]);
-				    }
-				    $array_target_code = explode(" ",$message);
-				    $target_code = strtoupper(trim($array_target_code[0]));
-				    $message = $array_target_code[1];
-				    for ($i=2;$i<count($array_target_code);$i++)
-				    {
-						$message .= " ".$array_target_code[$i];
-				    }
-				    // collected:
-				    // $sms_datetime, $sms_sender, $target_code, $message
-				    if ($this->setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message))
-				    {
-						@unlink($tobe_deleted);
-				    }
-				}
-		    }
 		}
 	}
