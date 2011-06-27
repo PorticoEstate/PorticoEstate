@@ -210,16 +210,6 @@
 
 				$cols .= ", {$entity_table}.user_id";
 				$cols_return[] 				= 'user_id';
-				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			= 'user_id';
-				$uicols['descr'][]			= lang('User');
-				$uicols['statustext'][]		= lang('User');
-				$uicols['align'][] 			= '';
-				$uicols['datatype'][]		= 'user';
-				$uicols['sortable'][]		= false;
-				$uicols['exchange'][]		= false;
-				$uicols['formatter'][]		= '';
-				$uicols['classname'][]		= '';
 
 				$cols_return_extra[]= array
 				(
@@ -259,11 +249,20 @@
 			{
 				//-------------------
 
-				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:'';
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id])?$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]['entity_columns_'.$entity_id.'_'.$cat_id]:array();
+				
+				$_user_columns = array();
+				foreach ($user_columns as $user_column_id)
+				{
+					if(ctype_digit($user_column_id))
+					{
+						$_user_columns[] = $user_column_id;
+					}
+				}
 				$user_column_filter = '';
 				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
 				{
-					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$user_columns) .'))';
+					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
 				}
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY group_id, attrib_sort ASC");
@@ -277,6 +276,10 @@
 					$uicols['statustext'][]		= $this->db->f('statustext');
 					$uicols['datatype'][$i]		= $this->db->f('datatype');
 					$uicols['sortable'][$i]		= true;
+					$uicols['exchange'][$i]		= false;
+					$uicols['formatter'][$i]	= '';
+					$uicols['classname'][$i]	= '';
+
 					$uicols['cols_return_extra'][$i] = array
 						(
 							'name'	=> $this->db->f('column_name'),
@@ -300,6 +303,10 @@
 				$uicols['statustext'][]		= lang('entry date' );
 				$uicols['datatype'][]		= 'timestamp';
 				$uicols['sortable'][]		= true;
+				$uicols['exchange'][]		= false;
+				$uicols['formatter'][]	= '';
+				$uicols['classname'][]	= '';
+
 				$uicols['cols_return_extra'][$i] = array
 					(
 						'name'		=> 'entry_date',

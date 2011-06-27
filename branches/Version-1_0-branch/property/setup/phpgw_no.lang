@@ -166,6 +166,8 @@ apartment has been saved	property	no	leilighet er lagret
 apartment id	property	no	leilighet ID
 applications	property	no	Applikasjoner
 apply the values	property	no	Bruke verdier
+apply	property	no	Mellomlagre
+save and stay in form	property	no	Lagre og bli stående i skjemaet
 approval	property	no	Godkjenning
 approvals	property	no	Godkjenninger
 approvals request	property	no	Anmodninger om godkjenning
@@ -289,7 +291,7 @@ choice	property	no	Valg
 choose a category	property	no	Velg en kategori
 choose an id	property	no	Velg en ID
 choose charge tenant if the tenant i to pay for this project	property	no	Kryss av for å belaste leietaker dersom leietakeren skal betale for arbeidene
-choose columns	property	no	Velg kolonner
+choose columns	common	no	Velg kolonner
 choose copy hour to copy this hour to a new hour	property	no	Kryss av for å kopiere denne posten til en ny post
 choose copy project to copy this project to a new project	property	no	Kryss av for å kopiere dette prosjektet til et nytt prosjekt
 choose copy request to copy this request to a new request	property	no	Kryss av for å kopiere denne anmodningen til en ny anmodning
@@ -333,7 +335,7 @@ column could not be added	property	no	Kolonne kunne ikke legges til
 column description	property	no	Beskrivelse av kolonne
 column name	property	no	Kolonnenavn
 column name not entered!	property	no	Manglende kolonnenavn
-columns	property	no	kolonner
+columns	common	no	kolonner
 columns is updated	property	no	Kolonner er oppdatert
 common costs	property	no	Fellsekostnader
 communication descriptions manager	property	no	Kommunikasjons beskrivelse
@@ -527,8 +529,8 @@ domain name for mail-address, eg. %1	property	no	Domenenavn for e-post adresser
 do not add this invoice	property	no	Ikke legg til denne fakturaen
 do not import this invoice	property	no	Ikke importer dette bilaget
 down	property	no	Ned
-download	property	no	Last ned
-download table to your browser	property	no	Last ned tabell til din nettleser
+download	common	no	Last ned
+download table to your browser	common	no	Last ned tabell til din nettleser
 do you really want to change the status to %1	property	no	Vil du virkelig endre status til %1
 do you really want to delete this entry	property	no	Vil du virkelig slette denne posten
 do you really want to update the categories	property	no	vil du virkelig oppdatere kategoriene
@@ -735,8 +737,8 @@ entrance	property	no	inngang
 entrance has been edited	property	no	inngang er rettet
 entrance has been saved	property	no	inngang er lagret
 entrance id	property	no	inngang ID
-entry date	property	no	Registrert dato
-entry_date	property	no	Registrert dato
+entry date	common	no	Registrert dato
+entry_date	common	no	Registrert dato
 equipment	property	no	Utstyr
 equipment %1 has been edited	property	no	utstyr %1 er rettet
 equipment %1 has been saved	property	no	utstyr %1 er lagret
@@ -1355,6 +1357,7 @@ save the ticket	property	no	Lagre melding og bli stående i skjema
 save the voucher	property	no	lagre bilag
 save the workorder	property	no	lagre bestilling
 save this workorder as a template for later use	property	no	lagre denne bestillingen som mal for senere bruk
+save values and exit	property	no	Lagre verdier og gå til liste
 scale	property	no	Scale
 schedule	property	no	planlegge (tid)
 scheduled events	property	no	Planlagte oppgaver
@@ -1563,6 +1566,7 @@ set the status of the ticket	property	no	sett status for meldingen
 shared use	property	no	Delt bruk
 shift down	property	no	Skift ned
 shift up	property	no	Skift opp
+show all entities	common	no	Vis alle poster
 show calculated cost	property	no	Vis sum
 show calculated cost on the printview	property	no	Vis sum på utskrift
 show details	property	no	Vis detaljer

@@ -10,19 +10,20 @@
 function get_available_groups()
 {
 	var org_id = document.getElementById('organization_id').value;
-	var group_select = document.getElementById('group_id');
-	//alert(group_select);
+	var div_select = document.getElementById('group_select');
+
 <?php if($activity->get_group_id()){?>
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id + "&amp;groupid=" + <?php echo $activity->get_group_id();?>;
 <?php }else{?>
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
 <?php }?>
+
+var divcontent_start = "<select name=\"group_id\" id=\"group_id\">";
+var divcontent_end = "</select>";
 	
 	var callback = {
 		success: function(response){
-					//alert("det funker");
-					group_select.innerHTML = JSON.parse(response.responseText);
-					//group_select.innerHTML = group_select.innerHTML;
+					div_select.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
 				},
 		failure: function(o) {
 					 alert("AJAX doesn't work"); //FAILURE
@@ -108,9 +109,11 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
-						<select name="group_id" id="group_id">
-							<option value="0">Ingen gruppe valgt</option>
-						</select>
+						<div id="group_select">
+							<select name="group_id" id="group_id">
+								<option value="0">Ingen gruppe valgt</option>
+							</select>
+						</div>
 						<?php
 					?>
 					<?php

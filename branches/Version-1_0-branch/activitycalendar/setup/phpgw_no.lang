@@ -379,3 +379,4 @@ mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i komm
 mail_body_state_5	activitycalendar	no	Ditt tips er behandlet, men vil ikke bli publisert i kommuneportalen. Mvh %1 kulturkontor
 send_mail	activitycalendar	no	Send e-post
 marked_as	activitycalendar	no	Status
+address_number	activitycalendar	no	Nummer

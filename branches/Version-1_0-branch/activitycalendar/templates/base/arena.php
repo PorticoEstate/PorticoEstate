@@ -3,6 +3,31 @@
 	include("common.php");
 ?>
 
+<script type="text/javascript">
+
+function get_address_search()
+{
+	var address = document.getElementById('address_txt').value;
+	var div_address = document.getElementById('address_container');
+
+	url = "index.php?menuaction=activitycalendar.uiarena.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+
+var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
+var divcontent_end = "</select>";
+	
+	var callback = {
+		success: function(response){
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
+</script>
+
 <div class="identifier-header">
 	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('arena') ?></h1>
 	<div>
@@ -72,7 +97,9 @@
 					if ($editable)
 					{
 					?>
-						<input type="text" name="address" id="address" value="<?php echo $arena->get_address() ?>" />
+					 	<input type="text" name="address" id="address_txt" value="<?php echo $arena->get_address() ?>" onkeyup="javascript:get_address_search()"/>
+					 	<div id="address_container"></div>
+					 	<label for="address_number"><?php echo lang('address_number') ?></label><input type="text" name="address_no" id="address_no"/>
 					<?php
 					}
 					else

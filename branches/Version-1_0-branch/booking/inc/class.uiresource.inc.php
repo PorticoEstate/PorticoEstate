@@ -118,6 +118,8 @@
 		public function add()
 		{
 			$errors = array();
+			$resource = array();
+			$resource['sort'] = '0';
 			
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

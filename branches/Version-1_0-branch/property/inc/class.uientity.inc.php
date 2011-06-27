@@ -1118,7 +1118,7 @@
 		{
 			$id 	= phpgw::get_var('id', 'int');
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php',array
 					(
@@ -1572,13 +1572,6 @@
 
 			//			$GLOBALS['phpgw']->js->validate_file('overlib','overlib','property');
 
-			$table_apply[] = array
-				(
-					'lang_save'						=> lang('save'),
-					'lang_cancel'					=> lang('cancel'),
-					'lang_apply'					=> lang('apply'),
-				);
-
 			$pdf_data = array
 				(
 					'menuaction'	=> 'property.uientity.print_pdf',
@@ -1797,7 +1790,14 @@
 			for($z=0; $z<count($values['files']); $z++)
 			{
 				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
+				if($mode == 'edit')
+				{
+					$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
+				}
+				else
+				{
+					$content_files[$z]['delete_file'] = '';
+				}
 			}									
 
 			$datavalues[0] = array
@@ -1985,14 +1985,11 @@
 					'value_id'						=> $values['id'],
 					'value_num'						=> $values['num'],
 					'error_flag'					=> isset($error_id)?$error_id:'',
-					'lang_done_statustext'			=> lang('Back to the list'),
-					'lang_save_statustext'			=> lang('Save the entity'),
 					'lang_history'					=> lang('history'),
 					'lang_history_help'				=> lang('history of this attribute'),
 
 					'lang_history_date_statustext'	=> lang('Enter the date for this reading'),
 					'lang_date'						=> lang('date'),
-					'table_apply' 					=> $table_apply,
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'tabs'							=> phpgwapi_yui::tabview_generate($tabs, $active_tab),
