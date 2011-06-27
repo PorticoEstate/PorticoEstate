@@ -89,11 +89,12 @@
 			$this->status				= $this->bo->status;
 //			$this->location_code		= $this->bo->location_code;
 			$this->p_num				= $this->bo->p_num;
-			$this->category_dir			= $this->bo->category_dir;
 			$GLOBALS['phpgw']->session->appsession('entity_id','property',$this->entity_id);
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
 			$this->allrows				= $this->bo->allrows;
+			$this->category_dir			= "{$this->type}_{$this->entity_id}_{$this->cat_id}";
+			$this->bo->category_dir			= $this->category_dir;
 
 	
 			phpgwapi_cache::session_set('frontend','tab',$this->location_id);
@@ -197,48 +198,9 @@
 				// this array "$arr_filter_hide" indicate what filters are hidden or not
 				$arr_filter_hide = array();
 
-				//// ---- DISTRICT filter----------------------
-				if($this->cat_id)
-				{
-					//this validation comes to previous versions
-					if (isset($category['location_level']) && $category['location_level']>0)
-					{
-						$values_combo_box[1]	= $this->bocommon->select_district_list($group_filters,$this->district_id);
-						if(count($values_combo_box[1]))
-						{
-							$default_value = array ('id'=>'','name'=>lang('no district'));
-							array_unshift ($values_combo_box[1],$default_value);
-							$arr_filter_hide[1] = 0;
-						}
-						else
-						{
-							$arr_filter_hide[1] = 1;
-						}
-					}
-					else
-					{
-						$values_combo_box[1] = array();
-						$arr_filter_hide[1] = 1;
-					}
-				}
-
-				//// ---- USER filter----------------------
-				$values_combo_box[2]  = $this->bocommon->get_user_list_right2($group_filters,4,$this->filter,$this->acl_location,array('all'),$default='all');
-
-				if(count($values_combo_box[2]))
-				{
-					$default_value = array ('id'=>'','name'=>lang('no user'));
-					array_unshift ($values_combo_box[2],$default_value);
-					$arr_filter_hide[2] = 0;
-				}
-				else
-				{
-					$arr_filter_hide[2] = 1;
-				}
-
-				$values_combo_box[3]  = $this->bo->get_criteria_list($this->criteria_id);
+				$values_combo_box[0]  = $this->bo->get_criteria_list($this->criteria_id);
 				$default_value = array ('id'=>'','name'=>lang('no criteria'));
-				array_unshift ($values_combo_box[3],$default_value);
+				array_unshift ($values_combo_box[0],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -258,34 +220,7 @@
 							(
 								'field' => array
 								(
-							/*		array
-									( //boton 	CATEGORY
-													'id'   => 'btn_cat_id',
-													'name' => 'cat_id',
-													'value'=> lang('Category'),
-													'type' => 'button',
-													'style' => 'filter',
-													'tab_index' => 1
-										),
-									array
-									( //boton 	DISTINT
-										'id'   => 'btn_district_id',
-										'name' => 'district_id',
-										'value'=> lang('District'),
-										'type' => 'button',
-										'style' => 'filter',
-										'tab_index' => 2
-									),
-									array
-									( //boton 	USER
-										'id'   => 'btn_user_id',
-										'name' => 'user_id',
-										'value'=> lang('User'),
-										'type' => 'button',
-										'style' => 'filter',
-										'tab_index' => 3
-									),*/
-									array
+								/*	array
 									( //boton 	search criteria
 										'id' => 'btn_criteria_id',
 										'name' => 'criteria_id',
@@ -293,7 +228,7 @@
 										'type' => 'button',
 										'style' => 'filter',
 										'tab_index' => 4
-									),
+									),*/
 									array
 									(//for link "columns", next to Export button
 										'type'=> 'link',
@@ -358,8 +293,8 @@
 										'id'	=> 'start_date',
 										'name'	=> 'start_date',
 										'value'	=> $start_date
-									),
-									array
+									)),
+							/*		array
 									(//for link "Date search",
 										'type'=> 'link',
 										'id'  => 'btn_data_search',
@@ -369,48 +304,27 @@
 											'menuaction' => 'property.uiproject.date_search'))."','link','width=350,height=250')",
 											'value' => lang('Date search'),
 											'tab_index' => 6
-										)),
-								'hidden_value' => array
+										)),*/
+							/*	'hidden_value' => array
 								(
 									array
 									(
 										'id'   => 'values_combo_box_0',
 										'value'=> $this->bocommon->select2String($values_combo_box[0])
-									),
-									array
-									(
-										'id'	=> 'values_combo_box_1',
-										'value' => $this->bocommon->select2String($values_combo_box[1])
-									),
-									array
-									(
-										'id' => 'values_combo_box_2',
-										'value'	=> $this->bocommon->select2String($values_combo_box[2])
-									),
-									array
-									(
-										'id' => 'values_combo_box_3',
-										'value'	=> $this->bocommon->select2String($values_combo_box[3])
-									),
-								)
+									)
+								)*/
 							)));
 
 				$custom	= createObject('phpgwapi.custom_fields');
 				$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
-
+/*
 				$button_def[] = "oMenuButton_0";
-		//		$button_def[] = "oMenuButton_1";
-		//		$button_def[] = "oMenuButton_2";
-				$button_def[] = "oMenuButton_3";
-				$code_inner[] = "{order:0, var_URL:'cat_id',name:'btn_cat_id',style:'genericbutton',dependiente:[]}";
-		//		$code_inner[] = "{order:1, var_URL:'district_id',name:'btn_district_id',style:'genericbutton',dependiente:[]}";
-		//		$code_inner[] = "{order:2, var_URL:'filter',name:'btn_user_id',style:'genericbutton',dependiente:[]}";
-				$code_inner[] = "{order:3, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
-
+				$code_inner[] = "{order:0, var_URL:'criteria_id',name:'btn_criteria_id',style:'genericbutton',dependiente:[]}";
+*/
 
 				if($attrib_data)
 				{
-					$i = 4;
+					$i = 0;
 					foreach ( $attrib_data as $attrib )
 					{
 						if($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
@@ -486,12 +400,72 @@
 
 			$uicols = $this->bo->uicols;
 
-			$content = array();
+			$uicols['name'][]		= 'img_id';
+			$uicols['descr'][]		= 'dummy';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]		= 'directory';
+			$uicols['descr'][]		= 'directory';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]		= 'file_name';
+			$uicols['descr'][]		= lang('name');
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= '';
+			$uicols['input_type'][]	= 'hidden';
+
+			$uicols['name'][]		= 'picture';
+			$uicols['descr'][]		= '';
+			$uicols['sortable'][]	= false;
+			$uicols['sort_field'][]	= '';
+			$uicols['format'][]		= '';
+			$uicols['formatter'][]	= 'show_picture';
+			$uicols['input_type'][]	= '';
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$j	= count($ticket['files']);
+			for ($i=0;$i<$j;$i++)
+			{
+				$ticket['files'][$i]['file_name']=urlencode($ticket['files'][$i]['name']);
+			}
+
+			$img_types = array
+			(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
 			$j=0;
 			if (isset($entity_list) && is_array($entity_list))
 			{
-				foreach($entity_list as $entity_entry)
+				foreach($entity_list as &$entity_entry)
 				{
+					$_loc1 = isset($entity_entry['loc1']) && $entity_entry['loc1'] ? $entity_entry['loc1'] : 'dummy';
+
+					$_files = $vfs->ls(array(
+						'string' => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+						'relatives' => array(RELATIVE_NONE)));
+	
+					if(isset($_files[0]) && $_files[0] && in_array($_files[0]['mime_type'], $img_types))
+					{
+						$entity_entry['file_name']	= urlencode($_files[0]['name']);
+						$entity_entry['directory']	= urlencode($_files[0]['directory']);
+						$entity_entry['img_id']		= $_files[0]['file_id'];
+					}
+					
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
 						if($uicols['input_type'][$i]!='hidden')
@@ -534,7 +508,7 @@
 					$j++;
 				}
 			}
-
+			$vfs->override_acl = 0;
 			//indica que de la fila seleccionada escogera de la columna "id" el valor "id". Para agregarlo al URL
 			$parameters = array
 				(
@@ -611,13 +585,20 @@
 						'text'	 		=> lang('start ticket'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'		=> 'frontend.uihelpdesk.add_ticket',
-							'noframework'		=> 1,
-							'target'			=> '_lightbox'
+							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+							'noframework'	=> 1,
+							'target'		=> '_lightbox',
+							'p_entity_id'	=> $this->entity_id,
+							'p_cat_id'		=> $this->cat_id,
+							'type'			=> $this->type,
+							'target'		=> '_blank',
+							'bypass'		=> true,
+							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",							
 						)),
 						'parameters'			=> $parameters2
 					);
 			}
+
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location)));
 
@@ -875,107 +856,87 @@
 		}
 
 
-
-		private function cmp($a, $b)
-		{
-			$timea = explode('/', $a['date']);
-			$timeb = explode('/', $b['date']);
-			$year_and_maybe_time_a = explode(' - ', $timea[2]);
-			$year_and_maybe_time_b = explode(' - ', $timeb[2]);
-			$time_of_day_a = explode(':', $year_and_maybe_time_a[1]);
-			$time_of_day_b = explode(':', $year_and_maybe_time_b[1]);
-
-			$timestamp_a = mktime($time_of_day_a[0], $time_of_day_a[1], 0, $timea[1], $timea[0], $year_and_maybe_time_a[0]);
-			$timestamp_b = mktime($time_of_day_b[0], $time_of_day_b[1], 0, $timeb[1], $timeb[0], $year_and_maybe_time_b[0]);
-
-			if($timestamp_a < $timestamp_b)
-			{
-				return 1;
-			}
-
-			return -1;
-		}
-
-
 		public function view()
 		{
 			$GLOBALS['phpgw']->translation->add_app('property');
-			$bo	= CreateObject('property.botts');
-			$entityid = phpgw::get_var('id');
-			$entity = $bo->read_single($entityid);
+			$bo	= & $this->bo;
+			$id = phpgw::get_var('id');
+			$values = $bo->read_single(array('id' => $id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'view' => true));
 
-			$assignedto = $entity['assignedto'];
-			if(isset($assignedto) && $assignedto != '')
-			{
-				$assignedto_account = $GLOBALS['phpgw']->accounts->get($assignedto);
-				//var_dump($assignedto_account);
-				if($assignedto_account)
-				{
-					$entity['assigned_to_name'] = $assignedto_account->__toString();
-				}
-			}
+//_debug_array($values);
+
+			$entity = $this->soadmin_entity->read_single($this->entity_id);
+			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+			$location_data = array();
 			
-			$contact_id = $entity['contact_id'];
-			if(isset($contact_id) && $contact_id != '')
+			if($entity['location_form'] && $category['location_level'] > 0)
 			{
-				$contacts							= CreateObject('phpgwapi.contacts');
-				$contact_data						= $contacts->read_single_entry($contact_id, array('fn','tel_work','email'));
-				$entity['value_contact_name']		= $contact_data[0]['fn'];
-				$entity['value_contact_email']		= $contact_data[0]['email'];
-				$entity['value_contact_tel']		= $contact_data[0]['tel_work'];
-			}	
-				
-			$vendor_id = $entity['vendor_id'];
-			if(isset($vendor_id) && $vendor_id != '')
+				$bolocation	= CreateObject('property.bolocation');
+				$location_data=$bolocation->initiate_ui_location(array
+					(
+						'values'	=> $values['location_data'],
+						'type_id'	=> (int)$category['location_level'],
+						'no_link'	=> $_no_link, // disable lookup links for location type less than type_id
+						'lookup_type'	=> $lookup_type,
+						'tenant'	=> $lookup_tenant,
+						'lookup_entity'	=> $lookup_entity,
+						'entity_data'	=> isset($values['p'])?$values['p']:''
+					));
+			}
+
+			
+			$link_file_data = array
+				(
+					'menuaction'	=> 'property.uientity.view_file',
+					'loc1'			=> $values['location_data']['loc1'],
+					'id'			=> $id,
+					'cat_id'		=> $this->cat_id,
+					'entity_id'		=> $this->entity_id,
+					'type'			=> $this->type
+				);
+
+			$img_types = array
+			(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$content_files = array();
+
+			for($z=0; $z<count($values['files']); $z++)
 			{
-				$contacts	= CreateObject('property.sogeneric');
-				$contacts->get_location_info('vendor',false);
+				$content_files[$z]['url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
+				$content_files[$z]['file_name'] = $values['files'][$z]['name'];			
 
-				$custom 		= createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->find('property','.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-
-				$vendor_data	= $contacts->read_single(array('id' => $vendor_id),$vendor_data);
-
-				if(is_array($vendor_data))
+				if(in_array($values['files'][$z]['mime_type'], $img_types))
 				{
-					foreach($vendor_data['attributes'] as $attribute)
-					{
-						if($attribute['name']=='org_name')
-						{
-							$entity['value_vendor_name']=$attribute['value'];
-							break;
-						}
-					}
+					$content_files[$z]['file_name']	= urlencode($values['files'][$z]['name']);
+					$content_files[$z]['directory']	= urlencode($values['files'][$z]['directory']);
+					$content_files[$z]['img_id']	= $values['files'][$z]['file_id'];
 				}
-			}
+			}									
 
-			$notes = $bo->read_additional_notes($entityid);
-			//$history = $bo->read_record_history($entityid);
+			$datavalues[0] = array
+				(
+					'name'					=> "0",
+					'values' 				=> json_encode($content_files),
+					'total_records'			=> count($content_files),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
 
-			$entityhistory = array();
+			$myColumnDefs[0] = array
+				(
+					'name'		=> "0",
+					'values'	=>	json_encode(array(	array('key' => 'url','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'file_name','hidden'=>true),
+														array('key' => 'img_id','hidden'=>true),
+														array('key' => 'directory','hidden'=>true),
+														array('key' => 'picture','label'=>'picture','sortable'=>false,'resizeable'=>false,'visible'=>true,'formatter'=>'show_picture')))
+				);
 
-			foreach($notes as $note)
-			{
-				if($note['value_publish'])
-				{
-					$entityhistory[] = array(
-						'date' => $note['value_date'],
-						'user' => $note['value_user'],
-						'note' => $note['value_note']
-					);
-				}
-			}
-
-
-			usort($entityhistory, array($this, "cmp"));
-
-
-			$i=0;
-			foreach($entityhistory as $foo)
-			{
-				$entityhistory2['record'.$i] = $foo;
-				$i++;
-			}
 
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
@@ -984,175 +945,41 @@
 				'header' 		=> $this->header_state,
 				'msgbox_data'   => isset($msglog) ? $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)) : array(),
 				'tabs'			=> $this->tabs,
-				'entityinfo'	=> array(
-					'entitylist'	=> $GLOBALS['phpgw']->link('/index.php',
+				'entityinfo'	=> array
+					(
+						'entitylist'	=> $GLOBALS['phpgw']->link('/index.php',
 									array
 									(
 										'menuaction'		=> 'frontend.uientity.index',
 										'location_id'		=> $this->location_id
 									)),
 
-					'entity'        => $entity,
-					'entityhistory'	=> $entityhistory2)
+						'entity'        => $entity,
+						'entityhistory'	=> $entityhistory2,
+						'custom_attributes'	=> array('attributes' => $values['attributes']),
+						'location_data'		=> $location_data,
+						'files'				=> isset($values['files'])?$values['files']:'',
+						'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+						'base_java_url'		=>	"{menuaction:'property.uientity.get_files',".
+												"id:'{$id}',".
+												"entity_id:'{$this->entity_id}',".
+												"cat_id:'{$this->cat_id}',".
+												"type:'{$this->type}'}",
+						'datatable'			=> $datavalues,
+						'myColumnDefs'		=> $myColumnDefs,	
+					)
 			);
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('animation');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.view', 'frontend' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview'));
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('location_view', 'files'), PHPGW_SERVER_ROOT . '/property/templates/base');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('app_data' => $data));
 		}
-
-
-		public function add_ticket()
-		{
-			$bo	= CreateObject('property.botts',true);
-			$boloc	= CreateObject('property.bolocation',true);
-
-			$location_details = $boloc->read_single($this->location_code, array('noattrib' => true));
-
-			$values         = phpgw::get_var('values');
-			$missingfields  = false;
-			$msglog         = array();
-
-			// Read default assign-to-group from config
-			$config = CreateObject('phpgwapi.config', 'frontend');
-			$config->read();
-			$default_cat = $config->config_data['tts_default_cat'] ? $config->config_data['tts_default_cat'] : 0;
-					
-			if(!$default_cat)
-			{
-				throw new Exception('Default category is not set in config');
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
-			if(isset($values['save']))
-			{
-				foreach($values as $key => $value)
-				{
-					if(empty($value) && $key !== 'file')
-					{
-						$missingfields = true;
-					}
-				}
-
-				if(!$missingfields && !phpgw::get_var('added'))
-				{
-					$location  = array
-					(
-						'loc1'  => $location_details['loc1'],
-						'loc2'  => $location_details['loc2']
-					);
-
-					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $default_cat));
-
-					if(!$assignedto)
-					{
-						$default_group = $config->config_data['tts_default_group'];
-					}
-					else
-					{
-						$default_group = 0;
-					}
-
-					$ticket = array(
-						'origin'    => null,
-						'origin_id' => null,
-						'cat_id'    => $values['cat_id'],
-						'group_id'  => ($default_group ? $default_group : null),
-						'assignedto'=> $assignedto,
-						'priority'  => 3,
-						'status'    => 'O', // O = Open
-						'subject'   => $values['title'],
-						'details'   => $values['locationdesc'].":\n\n".$values['description'],
-						'apply'     => lang('Apply'),
-						'contact_id'=> 0,
-						'location'  => $location,
-						'street_name'   => $location_details['street_name'],
-						'street_number' => $location_details['street_number'],
-						'location_name' => $location_details['loc1_name'],
-						//'locationdesc'  => $values['locationdesc']
-					);
-
-					$result = $bo->add($ticket);
-					if($result['message'][0]['msg'] != null && $result['id'] > 0)
-					{
-						$msglog['message'][] = array('msg' => lang('Ticket added'));
-						$noform = true;
-
-
-						// Files
-						$values['file_name'] = @str_replace(' ','_',$_FILES['file']['name']);
-						if($values['file_name'] && $msglog['id'])
-						{
-							$bofiles = CreateObject('property.bofiles');
-							$to_file = $bofiles->fakebase . '/fmticket/' . $msglog['id'] . '/' . $values['file_name'];
-
-							if($bofiles->vfs->file_exists(array(
-								'string' => $to_file,
-								'relatives' => array(RELATIVE_NONE)
-							)))
-							{
-								$msglog['error'][] = array('msg'=>lang('This file already exists !'));
-							}
-							else
-							{
-								$bofiles->create_document_dir("fmticket/{$result['id']}");
-								$bofiles->vfs->override_acl = 1;
-
-								if(!$bofiles->vfs->cp(array (
-								'from'	=> $_FILES['file']['tmp_name'],
-								'to'	=> $to_file,
-								'relatives'	=> array (RELATIVE_NONE|VFS_REAL, RELATIVE_ALL))))
-								{
-									$msglog['error'][] = array('msg' => lang('Failed to upload file!'));
-								}
-								$bofiles->vfs->override_acl = 0;
-							}
-						}
-
-						$redirect = true;
-						phpgwapi_cache::session_set('frontend', 'msgbox', $msglog);
-						// /Files
-					}
-				}
-				else
-				{
-					$msglog['error'][] = array('msg'=>lang('Missing field(s)'));
-				}
-			}
-
-
-			$tts_frontend_cat_selected = $config->config_data['tts_frontend_cat'] ? $config->config_data['tts_frontend_cat'] : array();
-
-			$cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
-			$cats->supress_info = true;
-			$categories = $cats->return_sorted_array(0, false, '', '', '', true, '', false);
-
-			$category_list = array();
-			foreach ( $categories as $category)
-			{
-				if ( in_array($category['id'], $tts_frontend_cat_selected))
-				{
-					$category_list[] = array
-					(
-						'id'		=> $category['id'],
-						'name'		=> $category['name'],
-						'selected'	=> $category['id'] == $default_cat ? 1 : 0
-					); 
-				}
-			}
-
-			$data = array(
-				'redirect'			=> isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uientity.index')) : null,
-				'msgbox_data'   	=> $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog)),
-				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'frontend.uientity.add_ticket', 'noframework' => '1')),
-				'title'         	=> $values['title'],
-				'locationdesc'  	=> $values['locationdesc'],
-				'description'   	=> $values['description'],
-				'noform'        	=> $noform,
-				'category_list'		=> $category_list
-			);
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend','helpdesk'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
-		}
-
 	}

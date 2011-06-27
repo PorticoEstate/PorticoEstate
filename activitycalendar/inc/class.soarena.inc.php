@@ -278,5 +278,22 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		}
 		return $ret;
 	}
+	
+	public function get_address($search)
+	{
+		$result_arr = array();
+		$result_arr[] = "<option>Ingen</option>"; 
+		if($search)
+		{
+			$sql = "select * from fm_streetaddress where UPPER(descr) like UPPER('{$search}%')";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				//$result_arr = $this->db->f('name');
+				$result_arr[] = "<option value='" . $this->db->f('descr') . "'>" . $this->db->f('descr') . "</option>";
+			}
+		}
+		$result = implode(' ' , $result_arr);
+		return $result;
+	}
 }
 ?>

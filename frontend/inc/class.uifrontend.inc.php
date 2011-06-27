@@ -65,9 +65,9 @@
 			
 			/* Get the tabs and check to see whether the user has specified a tab or has a selected tab on session */
 			$tabs = $this->get_tabs();
-			$type = phpgw::get_var('type', 'int', 'REQUEST');
-			$tab = isset($type) ? $type : phpgwapi_cache::session_get('frontend','tab');
-			$selected = isset($tab) ? $tab : array_shift(array_keys($tabs));
+			$location_id = phpgw::get_var('location_id', 'int', 'REQUEST');
+			$tab = isset($location_id) ? $location_id : phpgwapi_cache::session_get('frontend','tab');
+			$selected = isset($tab) && $tab ? $tab : array_shift(array_keys($tabs));
 			$this->tabs = $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			phpgwapi_cache::session_set('frontend','tab',$selected);
 			
@@ -278,7 +278,7 @@
 					$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', $location);
 					$tabs[$location_id] = array(
 						'label' => lang($name),
-						'link'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.ui{$name}.index", 'type'=>$location_id, 'noframework' => $noframework))
+						'link'  => $GLOBALS['phpgw']->link('/',array('menuaction' => "frontend.ui{$name}.index", 'location_id'=>$location_id, 'noframework' => $noframework))
 					);
 				}
 				unset($location);
@@ -461,7 +461,7 @@
 		{
 			//Forward to helpdesk
 			$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', '.ticket');
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'type' => $location_id));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index', 'location_id' => $location_id));
 		}
 
 

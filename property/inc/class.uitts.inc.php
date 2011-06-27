@@ -1836,7 +1836,7 @@
 					}
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+				//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 
 					if ((isset($values['save']) && $values['save']))
 					{
@@ -2059,7 +2059,7 @@
 				{
 					$receipt = $this->bo->add($values);
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+				//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 				}
 				else

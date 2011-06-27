@@ -248,16 +248,15 @@
 			return $owners;
 		}
 
-		function check_location($location_code='',$type_id='')
+		function check_location($location_code, $type_id = 0)
 		{
-			$this->db->query("SELECT count(*) AS cnt FROM fm_location$type_id where location_code='$location_code'");
-
-			$this->db->next_record();
-
-			if ( $this->db->f('cnt'))
+			if(!$type_id)
 			{
-				return true;
+				$type_id = count(explode('-',$location_code));
 			}
+			$this->db->query("SELECT location_code FROM fm_location{$type_id} WHERE location_code='{$location_code}'");
+
+			return $this->db->next_record();
 		}
 
 		function read($data)

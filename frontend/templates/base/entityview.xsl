@@ -1,5 +1,28 @@
 <xsl:template match="entityinfo" xmlns:php="http://php.net/xsl">
 	
+	<script type="text/javascript">
+		var property_js = <xsl:value-of select="property_js" />;
+		var base_java_url = <xsl:value-of select="base_java_url" />;
+		var datatable = new Array();
+		var myColumnDefs = new Array();
+
+		<xsl:for-each select="datatable">
+			datatable[<xsl:value-of select="name"/>] = [
+			{
+			values			:	<xsl:value-of select="values"/>,
+			total_records	: 	<xsl:value-of select="total_records"/>,
+			edit_action		:  	<xsl:value-of select="edit_action"/>,
+			is_paginator	:  	<xsl:value-of select="is_paginator"/>,
+			footer			:	<xsl:value-of select="footer"/>
+			}
+			]
+		</xsl:for-each>
+
+		<xsl:for-each select="myColumnDefs">
+			myColumnDefs[<xsl:value-of select="name"/>] = <xsl:value-of select="values"/>
+		</xsl:for-each>
+	</script>
+
     <table cellpadding="2" cellspacing="2" width="95%" align="center">
         <xsl:choose>
             <xsl:when test="msgbox_data != ''">
@@ -17,64 +40,33 @@
         	<div id="entityinfo">
         		<ul style="margin: 2em;">
         			<li style="margin-bottom: 1em;">
-        				<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show_all_entities')"/></a>
+        				<a href="{entitylist}"> &lt;&lt; <xsl:value-of select="php:function('lang', 'show all entities')"/></a>
         			</li>
         			<li>
-        				<ul>
-        					<li style="margin-bottom: 5px;">
-        						<img src="frontend/templates/base/images/16x16/comment.png" class="list_image"/> <strong><xsl:value-of select="entity/subject"/></strong>
-        					</li>
-        					<li class="entity_detail">
-        						<img src="frontend/templates/base/images/16x16/clock_edit.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'entry_date')"/> <xsl:value-of select="entity/entry_date"/><xsl:value-of select="php:function('lang', 'of')"/><xsl:value-of select="entity/user_name"/>
-        					</li>
-     						<li class="entity_detail">
-     							<img src="frontend/templates/base/images/16x16/timeline_marker.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'status')"/>: <xsl:value-of select="entity/status_name"/>
-     						</li>
-     						<xsl:choose>
-     							<xsl:when test="entity/value_vendor_name">
-		     						<li class="entity_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_suit.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'vendor')"/>: <xsl:value-of select="entity/value_vendor_name"/>
-		     						</li>
-		     					</xsl:when>
-     						</xsl:choose>
-     						<xsl:choose>
-     							<xsl:when test="entity/assigned_to_name">
-		     						<li class="entity_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_red.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'assigned_to')"/>: <xsl:value-of select="entity/assigned_to_name"/>
-		     						</li>
-		     					</xsl:when>
-     						</xsl:choose>
-     						<xsl:choose>
-     							<xsl:when test="entity/value_contact_name">
-		     						<li class="entity_detail">
-		     							<img src="frontend/templates/base/images/16x16/user_green.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'contact')"/>: <xsl:value-of select="entity/value_contact_name"/>
-		     							Telefon: <xsl:value-of select="entity/value_contact_tel"/> 
-		     							E-post: <xsl:value-of select="entity/value_contact_email"/>
-		     						</li>
-		     					</xsl:when>
-     						</xsl:choose>
-     						<xsl:choose>
-     							<xsl:when test="entity/publish_note = 1">
-		     						<li class="entity_detail">
-		     							<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/><xsl:value-of select="php:function('lang', 'message')"/>: <xsl:value-of select="entity/details"/>
-		     						</li>
-		     					</xsl:when>
-     						</xsl:choose>
-     						<li class="entity_detail">
-     							<img src="frontend/templates/base/images/16x16/comments.png" class="list_image"/> <xsl:value-of select="php:function('lang', 'comments')"/>:<br/>
-     							<hr/>
-     							<ul>
-		        					<xsl:for-each select="entityhistory/*[starts-with(name(), 'record')]">
-						                <li  class="entity_detail">
-						                	<img src="frontend/templates/base/images/16x16/page_white_edit.png" class="list_image"/> <xsl:value-of select="date"/> - 
-						                	<img src="frontend/templates/base/images/16x16/user_gray.png" class="list_image"/> <xsl:value-of select="user"/><br/>
-						                	<p style="padding: 10px;"><xsl:value-of select="note"/></p>
-						                </li>
-						            </xsl:for-each>
-				            	</ul>
-     						</li>
-     					</ul>
+						<xsl:choose>
+							<xsl:when test="location_data!=''">
+								<li>
+									<b><xsl:value-of select="php:function('lang', 'location')"/></b>
+								</li>
+								<div id="location">
+									<table>
+										<xsl:call-template name="location_view"/>
+									</table>
+								</div>
+							</xsl:when>
+						</xsl:choose>
+					</li>
+					<li>
+						<xsl:apply-templates select="custom_attributes/attributes"/>
+						<hr/>
         			</li>
+					<xsl:choose>
+						<xsl:when test="files!=''">
+							<li>
+								<div id="datatable-container_0"></div>
+							</li>
+						</xsl:when>
+					</xsl:choose>
         		</ul>
         	</div>
         </div>

@@ -12,7 +12,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	(
 		'index'				=> true,
 		'query'				=> true,
-		'get_organization_groups' => true
+		'changed_organizations'	=>	true,
+		'get_organization_groups' => true,
+		'show'	=>	true,
+		'edit'	=>	true
 	);
 	
 	public function __construct()
@@ -30,6 +33,11 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		}
 			
 		$this->render('organization_list.php');
+	}
+	
+	public function changed_organizations()
+	{			
+		$this->render('organization_list_changed.php');
 	}
 	
 	public function index_json()
@@ -51,6 +59,58 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		}
 
 		return $this->yui_results($organizations);
+	}
+	
+	public function edit()
+	{
+		$id = (int)phpgw::get_var('id');
+		$type = phpgw::get_var('type');
+		if($type)
+		{
+			//var_dump($type);
+			$so = activitycalendar_sogroup::get_instance();
+		}
+		else
+		{
+			//var_dump('org');
+			$so = activitycalendar_soorganization::get_instance();
+		}
+	}
+	
+	public function show()
+	{
+		$id = (int)phpgw::get_var('id');
+		$type = phpgw::get_var('type');
+		if($type)
+		{
+			//var_dump($type);
+			$so = activitycalendar_sogroup::get_instance();
+			$group = $so->get(null, null, null, null, null, null, array('id' => $id));
+			
+			return $this->render('group.php', array
+				(
+					'group' 	=> $group,
+					'editable' => true,
+					'message' => isset($message) ? $message : phpgw::get_var('message'),
+					'error' => isset($error) ? $error : phpgw::get_var('error')
+				)
+			);
+		}
+		else
+		{
+			//var_dump('org');
+			$so = activitycalendar_soorganization::get_instance();
+			$org = $so->get(null, null, null, null, null, null, array('id' => $id));
+			
+			return $this->render('organization.php', array
+				(
+					'organization' 	=> $org,
+					'editable' => true,
+					'message' => isset($message) ? $message : phpgw::get_var('message'),
+					'error' => isset($error) ? $error : phpgw::get_var('error')
+				)
+			);
+		}
 	}
 	
 	
@@ -253,6 +313,27 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'booking.uiorganization.show', 'id' => $value['id'])));
 				}
 				$value['labels'][] = lang('show');
+				break;
+				
+			case 'changed_organizations':
+				$value['ajax'][] = false;
+				if($value['organization_id'] != '' && $value['organization_id'] != null){
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'], 'type' => 'group')));
+				}
+				else
+				{
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'])));
+				}
+				$value['labels'][] = lang('show');
+				$value['ajax'][] = false;
+				if($value['organization_id'] != '' && $value['organization_id'] != null){
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'], 'type' => 'group')));
+				}
+				else
+				{
+					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'])));
+				}
+				$value['labels'][] = lang('edit');
 				break;
 		}
     }

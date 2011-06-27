@@ -239,7 +239,7 @@
 			foreach ($_config as $_config_section => $_config_section_data)
 			{
 				$integrationurl = '';
-				if(isset($_config_section_data['url']))
+				if(isset($_config_section_data['url']) && !isset($_config_section_data['tab']))
 				{
 					if(isset($_config_section_data['auth_hash_name']) && $_config_section_data['auth_hash_name'] && isset($_config_section_data['auth_url']) && $_config_section_data['auth_url'])
 					{
@@ -2157,6 +2157,7 @@ JS;
 
 			$documents = array();
 			$file_tree = array();
+			$integration = array();
 			if($location_code)
 			{
 				$_role_criteria = array
@@ -2279,7 +2280,6 @@ JS;
 				integration_auth_hash_value
 				integration_location_data
  */
-				$integration = array();
 				foreach ($_config as $_config_section => $_config_section_data)
 				{
 					if(isset($_config_section_data['tab']))
