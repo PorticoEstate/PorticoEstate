@@ -87,7 +87,7 @@
 			$value_set['user_id']				= $this->account;
 			$value_set['entry_date']			= time();
 			$value_set['area_net']				= $data['area'] ? str_replace(',','.',$data['area']) : 0;
-			$value_set['merknader']				= 'Opprettet fra tegning';
+			$value_set['merknader']				= 'Opprettet fra tegning: ' . date('d/m/Y');
 
 			$cols = implode(',', array_keys($value_set));
 			$values	= $this->db->validate_insert(array_values($value_set));
@@ -129,11 +129,22 @@
 
 			$location_arr = explode('-',$data['location_code']);
 			$type_id = count($location_arr);
+			$table = "fm_location{$type_id}";
  
 			$value_set["loc{$type_id}_name"]	= $this->db->db_addslashes($data['name']);
 			$value_set['area_net']				= $data['area'] ? str_replace(',','.',$data['area']) : 0;
 
-			$table = "fm_location{$type_id}";
+			$this->db->query("SELECT merknader FROM {$table} WHERE location_code = '{$data['location_code']}'",__LINE__,__FILE__);
+			$this->db->next_record();
+
+			$merknader = $this->db->f('merknader',true);
+
+			$value_set['merknader'] = '';
+			if($merknader)
+			{
+				$value_set['merknader'] = "{$merknader}\n";
+			}
+			$value_set['merknader']				.= "Oppdatert fra tegning: " . date('d/m/Y');
 
 			$value_set	= $this->db->validate_update($value_set);
 			$sql = "UPDATE {$table} SET {$value_set} WHERE location_code = '{$data['location_code']}'";
