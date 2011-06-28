@@ -5282,6 +5282,34 @@
 		}
 	}
 
+
+	/**
+	* Update property version from 0.9.17.618 to 0.9.17.619
+	*/
+
+	$test[] = '0.9.17.618';
+	function property_upgrade0_9_17_618()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location_type','list_documents', array('type' => 'int','precision' => '2','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type SET list_documents = 1");
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt') +1;
+		for ($level = 5; $level < $locations; $level++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->AlterColumn("fm_location{$level}", "loc{$level}_name",array('type' => 'varchar','precision' => '50','nullable' => True));
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.619';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets

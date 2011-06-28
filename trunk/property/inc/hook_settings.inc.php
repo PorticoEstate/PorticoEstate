@@ -185,6 +185,8 @@
 	create_select_box('Send e-mail from TTS','tts_user_mailnotification',$yes_and_no,'Send e-mail from TTS as default');
 	create_input_box('Refresh TTS every (seconds)','refreshinterval','The intervall for Helpdesk refresh - cheking for new tickets');
 
+	create_select_box('Set myself as contact when adding a ticket','tts_me_as_contact',$yes_and_no,'');
+
 	create_select_box('Default Degree Request safety','default_safety',$degree,'The degree of seriousness');
 	create_select_box('Default Degree Request aesthetics','default_aesthetics',$degree);
 	create_select_box('Default Degree Request indoor climate','default_climate',$degree);
