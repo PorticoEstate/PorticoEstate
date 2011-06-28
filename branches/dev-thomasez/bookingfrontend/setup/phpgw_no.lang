@@ -1,7 +1,7 @@
 current activities	bookingfrontend	no	Aktiviteter
 -- select an activity --	bookingfrontend	no	Velg en aktivitet
 why?	bookingfrontend	no	Hvorfor?
-where?	bookingfrontend	no	Hvor?
+where?	bookingfrontend	no	Hva?
 when?	bookingfrontend	no	Når?
 who?	bookingfrontend	no	Hvem?
 how many?	bookingfrontend	no	Hvor mange?
@@ -41,11 +41,11 @@ booking district	bookingfrontend	no	Bydel
 booking name	bookingfrontend	no	Navn på booking
 bookings	bookingfrontend	no	Bookinger
 boundaries	bookingfrontend	no	Rammetid
-building	bookingfrontend	no	Bygg/anlegg
-building name	bookingfrontend	no	Bygg/anlegg
+building	bookingfrontend	no	Objektgruppe
+building name	bookingfrontend	no	Objektgruppe
 building schedule	bookingfrontend	no	Kalender
-buildings	bookingfrontend	no	Bygg/anlegg
-bygning	bookingfrontend	no	Bygg/anlegg
+buildings	bookingfrontend	no	Objektgruppe
+bygning	bookingfrontend	no	Objektgruppe
 cancel	bookingfrontend	no	Avbryt
 cancelled	bookingfrontend	no	Avbestilt
 case officer	bookingfrontend	no	Saksbehandler
@@ -125,8 +125,8 @@ new application	bookingfrontend	no	Ny søknad
 new audience group	bookingfrontend	no	Ny målgruppe
 new booking	bookingfrontend	no	Ny booking
 new booking application	bookingfrontend	no	Ny søknad
-new building	bookingfrontend	no	Nytt bygg/anlegg
-new building permission	bookingfrontend	no	Nye rettigheter bygg/anlegg
+new building	bookingfrontend	no	Ny objektgruppe
+new building permission	bookingfrontend	no	Nye rettigheter objektgruppe
 new contact	bookingfrontend	no	Ny kontakt
 new document	bookingfrontend	no	Nye dokumenter
 new equipment	bookingfrontend	no	Nytt utstyr
@@ -183,7 +183,7 @@ season	bookingfrontend	no	Sesong
 season name	bookingfrontend	no	Sesong
 seasons	bookingfrontend	no	Sesonger
 secondary admin	bookingfrontend	no	Kontaktperson 2
-select a building first	bookingfrontend	no	Velg bygg/anlegg først
+select a building first	bookingfrontend	no	Velg objektgruppe først
 select a grooup	bookingfrontend	no	Velg en Gruppe
 select category...	bookingfrontend	no	Velg en kategori...
 select role...	bookingfrontend	no	Velg rolle...
@@ -211,13 +211,13 @@ we	bookingfrontend	no	on.
 week	bookingfrontend	no	Uke
 week day	bookingfrontend	no	Ukedag
 week template	bookingfrontend	no	Ukeplan
-when	bookingfrontend	no	Når
+when	bookingfrontend	no	Når?
 when?	bookingfrontend	no	Når?
-where	bookingfrontend	no	Hvor
-where?	bookingfrontend	no	Hvor?
-who	bookingfrontend	no	Hvem
+where	bookingfrontend	no	Hva?
+where?	bookingfrontend	no	Hva?
+who	bookingfrontend	no	Hvem?
 who?	bookingfrontend	no	Hvem?
-why	bookingfrontend	no	Hvorfor
+why	bookingfrontend	no	Hvorfor?
 why?	bookingfrontend	no	Hvorfor?
 zip code	bookingfrontend	no	Postnummer
 postal city	bookingfrontend	no	Poststed
@@ -237,7 +237,7 @@ Account Codes	bookingfrontend	no	Konteringsstrenger
 Account Codes	bookingfrontend	no	Konteringsstreng
 Field %1 is required	bookingfrontend	no	Feltet '%1' må fylles ut
 Field %1: Invalid format	bookingfrontend	no	Feltet '%1': ugyldig format
-Building users	bookingfrontend	no	Brukere av bygg/anlegg
+Building users	bookingfrontend	no	Brukere av objektgrupper
 Ssn	bookingfrontend	no	Fødselsnummer (11 siffer)
 Date of birth or SSN	bookingfrontend	no	Fødselsdato eller fødselsnummer
 Interval	bookingfrontend	no	Interval
@@ -265,7 +265,7 @@ A Case officer will review your application as soon as possible.	bookingfrontend
 Loading...	bookingfrontend	no	Laster...
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer er ugyldig
-Used buildings	bookingfrontend	no	Bygg/anlegg som brukes
+Used buildings	bookingfrontend	no	Objektgrupper som brukes
 Add group	bookingfrontend	no	Ny gruppe
 Internal Customer	bookingfrontend	no	Intern kunde
 Customer number	bookingfrontend	no	Ressursnummer
