@@ -150,7 +150,6 @@
 				$new_filename = $filename;
 			}
 
-//				echo 'Rootdir: '.$rootdir.'<br>'."\n".'Filename: '.$filename.'<br>'."\n".'New Filename: '.$new_filename.'<br>'."\n";
 			if (!file_exists($new_filename.'.xsl'))
 			{
 				switch($time)
