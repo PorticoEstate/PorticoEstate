@@ -435,8 +435,6 @@
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			$vfs->override_acl = 0;
-
 			$j	= count($ticket['files']);
 			for ($i=0;$i<$j;$i++)
 			{
@@ -467,9 +465,18 @@
 						$entity_entry['directory']	= urlencode($_files[0]['directory']);
 						$entity_entry['img_id']		= $_files[0]['file_id'];
 					}
-					
+				
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
+						switch ($uicols['name'][$i])
+						{
+							case 'num':
+							case 'loc1':
+							case 'loc1_name':
+								$uicols['input_type'][$i] = 'hidden';
+								break;
+						}
+						
 						if($uicols['input_type'][$i]!='hidden')
 						{
 							if(isset($entity_entry['query_location'][$uicols['name'][$i]]))
@@ -510,7 +517,7 @@
 					$j++;
 				}
 			}
-
+			$vfs->override_acl = 0;
 			//indica que de la fila seleccionada escogera de la columna "id" el valor "id". Para agregarlo al URL
 			$parameters = array
 				(
@@ -587,13 +594,20 @@
 						'text'	 		=> lang('start ticket'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'		=> 'frontend.uihelpdesk.add_ticket',
-							'noframework'		=> 1,
-							'target'			=> '_lightbox'
+							'menuaction'	=> 'frontend.uihelpdesk.add_ticket',
+							'noframework'	=> 1,
+							'target'		=> '_lightbox',
+							'p_entity_id'	=> $this->entity_id,
+							'p_cat_id'		=> $this->cat_id,
+							'type'			=> $this->type,
+							'target'		=> '_blank',
+							'bypass'		=> true,
+							'origin'		=> ".{$this->type}.{$this->entity_id}.{$this->cat_id}",							
 						)),
 						'parameters'			=> $parameters2
 					);
 			}
+
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location)));
 
@@ -890,17 +904,25 @@
 					'type'			=> $this->type
 				);
 
+			$img_types = array
+			(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
 			$content_files = array();
+
 			for($z=0; $z<count($values['files']); $z++)
 			{
-				$content_files[$z]['file_name'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
-				if($mode == 'edit')
+				$content_files[$z]['url'] = '<a href="'.$GLOBALS['phpgw']->link('/index.php',$link_file_data).'&amp;file_name='.$values['files'][$z]['name'].'" target="_blank" title="'.lang('click to view file').'">'.$values['files'][$z]['name'].'</a>';			
+				$content_files[$z]['file_name'] = $values['files'][$z]['name'];			
+
+				if(in_array($values['files'][$z]['mime_type'], $img_types))
 				{
-					$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="'.$values['files'][$z]['name'].'" title="'.lang('Check to delete file').'">';
-				}
-				else
-				{
-					$content_files[$z]['delete_file'] = '';
+					$content_files[$z]['file_name']	= urlencode($values['files'][$z]['name']);
+					$content_files[$z]['directory']	= urlencode($values['files'][$z]['directory']);
+					$content_files[$z]['img_id']	= $values['files'][$z]['file_id'];
 				}
 			}									
 
@@ -917,9 +939,13 @@
 			$myColumnDefs[0] = array
 				(
 					'name'		=> "0",
-					'values'	=>	json_encode(array(	array('key' => 'file_name','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
-					array('key' => 'delete_file','label'=>lang('Delete file'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterCenter')))
+					'values'	=>	json_encode(array(	array('key' => 'url','label'=>lang('Filename'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'file_name','hidden'=>true),
+														array('key' => 'img_id','hidden'=>true),
+														array('key' => 'directory','hidden'=>true),
+														array('key' => 'picture','label'=>'picture','sortable'=>false,'resizeable'=>false,'visible'=>true,'formatter'=>'show_picture')))
 				);
+
 
 			$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend','msgbox');
@@ -943,10 +969,22 @@
 						'location_data'		=> $location_data,
 						'files'				=> isset($values['files'])?$values['files']:'',
 						'property_js'		=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+						'base_java_url'		=>	"{menuaction:'property.uientity.get_files',".
+												"id:'{$id}',".
+												"entity_id:'{$this->entity_id}',".
+												"cat_id:'{$this->cat_id}',".
+												"type:'{$this->type}'}",
 						'datatable'			=> $datavalues,
 						'myColumnDefs'		=> $myColumnDefs,	
 					)
 			);
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('animation');
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'entity.view', 'frontend' );
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
 
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'entityview','attributes_view'));

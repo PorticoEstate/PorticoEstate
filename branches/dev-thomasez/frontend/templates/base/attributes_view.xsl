@@ -26,7 +26,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="input_text"/>
+							<b><xsl:value-of select="input_text"/></b>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:choose>
@@ -48,12 +48,6 @@
 				<li>
 					<xsl:choose>
 						<xsl:when test="name!=''">
-							<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"></input>
-							<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"></input>
-							<input type="hidden" name="values_attribute[{counter}][history]" value="{history}"></input>
-							<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{id}"></input>
-							<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"></input>
-							<input type="hidden" name="values_attribute[{counter}][input_text]" value="{input_text}"></input>
 							<xsl:choose>
 								<xsl:when test="datatype='R'">
 									<xsl:call-template name="choice"/>
@@ -62,61 +56,22 @@
 									<xsl:call-template name="choice"/>
 								</xsl:when>
 								<xsl:when test="datatype='LB'">
-									<select name="values_attribute[{counter}][value]" class="forms">
-										<xsl:choose>
-											<xsl:when test="disabled!=''">
-												<xsl:attribute name="disabled">
-													<xsl:text> disabled</xsl:text>
-												</xsl:attribute>
-											</xsl:when>
-										</xsl:choose>
-										<option value=""><xsl:value-of select="//lang_none"/></option>
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
 										<xsl:for-each select="choice">
-											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 											<xsl:choose>
 												<xsl:when test="checked='checked'">
-													<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
+													<xsl:value-of disable-output-escaping="yes" select="value"/>
 												</xsl:when>
-												<xsl:otherwise>
-													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="value"/></option>
-												</xsl:otherwise>
 											</xsl:choose>
 										</xsl:for-each>
-									</select>
 								</xsl:when>
 								<xsl:when test="datatype='AB'">
 									<table>
 										<ul>
 											<li>
-												<xsl:variable name="contact_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
-												<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
-												<xsl:variable name="clear_function"><xsl:text>clear_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
-												<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="5">
-													<xsl:choose>
-														<xsl:when test="disabled!=''">
-															<xsl:attribute name="disabled">
-																<xsl:text> disabled</xsl:text>
-															</xsl:attribute>
-														</xsl:when>
-													</xsl:choose>
-												</input>
-												<input  size="30" type="text" name="{$contact_name}" value="{contact_name}"  onClick="{$lookup_function}" readonly="readonly"> 
-													<xsl:choose>
-														<xsl:when test="disabled!=''">
-															<xsl:attribute name="disabled">
-																<xsl:text> disabled</xsl:text>
-															</xsl:attribute>
-														</xsl:when>
-													</xsl:choose>
-												</input>
-												<input type="checkbox" name="clear_{name}_box"  onClick="{$clear_function}" >
-													<xsl:attribute name="title">
-														<xsl:value-of select="php:function('lang', 'delete')" />
-													</xsl:attribute>
-													<xsl:attribute name="readonly">
-														<xsl:text>readonly</xsl:text>
-													</xsl:attribute>
-												</input>
+													<xsl:value-of select="contact_name"/>
 											</li>
 										</ul>
 										<xsl:choose>
@@ -245,16 +200,7 @@
 									<img id="values_attribute_{counter}-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
 								</xsl:when>
 								<xsl:when test="datatype='T'">
-									<textarea cols="{//textareacols}" rows="{//textarearows}" name="values_attribute[{counter}][value]" >
-										<xsl:choose>
-											<xsl:when test="disabled!=''">
-												<xsl:attribute name="disabled">
-													<xsl:text> disabled</xsl:text>
-												</xsl:attribute>
-											</xsl:when>
-										</xsl:choose>
-										<xsl:value-of select="value"/>
-									</textarea>
+									<xsl:value-of select="value"/>
 								</xsl:when>
 								<xsl:when test="datatype='pwd'">
 									<table>
@@ -359,15 +305,7 @@
 									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
-										<xsl:choose>
-											<xsl:when test="disabled!=''">
-												<xsl:attribute name="disabled">
-													<xsl:text> disabled</xsl:text>
-												</xsl:attribute>
-											</xsl:when>
-										</xsl:choose>
-									</input>
+									<xsl:value-of select="value"/>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>

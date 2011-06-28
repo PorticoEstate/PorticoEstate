@@ -452,9 +452,12 @@
 				else
 				{
 					$values['files'][] = array
-						(
-							'name' 		=> $file['name']
-						);
+					(
+						'name' 		=> $file['name'],
+						'directory'	=> $file['directory'],
+						'file_id'	=> $file['file_id'],
+						'mime_type'	=> $file['mime_type']
+					);
 				}
 			}
 

@@ -1836,7 +1836,7 @@
 					}
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+				//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 
 					if ((isset($values['save']) && $values['save']))
 					{
@@ -1875,8 +1875,10 @@
 				'entity_data'	=> (isset($values['p'])?$values['p']:'')
 			));
 
-			
-//			$ticket['contact_id'] = $GLOBALS['phpgw']->accounts->get($this->account)->person_id;
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_me_as_contact']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_me_as_contact']==1)
+			{
+				$ticket['contact_id'] = $GLOBALS['phpgw']->accounts->get($this->account)->person_id;
+			}
 			$contact_data=$this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id'		=> $ticket['contact_id'],
 				'field'				=> 'contact',
@@ -2059,7 +2061,7 @@
 				{
 					$receipt = $this->bo->add($values);
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-					$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+				//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uitts.index'));
 				}
 				else

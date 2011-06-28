@@ -183,7 +183,8 @@
 						'name'			=> $this->db->f('name'),
 						'descr'			=> $this->db->f('descr'),
 						'list_info'		=> $this->db->f('list_info',true),
-						'list_address'	=> $this->db->f('list_address')
+						'list_address'	=> $this->db->f('list_address'),
+						'list_documents'=> $this->db->f('list_documents')
 					);
 			}
 			return $standard;
@@ -363,7 +364,7 @@
 				$fd['part_of_town_id'] = array('type' => 'int', 'precision' => 2, 'nullable' => true);
 			}
 
-			$fd['loc' .$standard['id'] . '_name'] = array('type' => 'varchar', 'precision' => 25, 'nullable' => true);
+			$fd['loc' .$standard['id'] . '_name'] = array('type' => 'varchar', 'precision' => 50, 'nullable' => true);
 			$fd['entry_date'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['category'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
@@ -499,7 +500,8 @@
 				'descr'			=> $this->db->db_addslashes($values['descr']),
 				'list_info'		=> (isset($values['list_info'])?serialize($values['list_info']):''),
 				'list_address'	=> (isset($values['list_address'])?$values['list_address']:''),
-			);
+				'list_documents'=> (isset($values['list_documents'])?$values['list_documents']:''),
+				);
 
 			$value_set	= $this->db->validate_update($value_set);
 
@@ -668,7 +670,8 @@
 					'name'			=> stripslashes($this->db->f('name')),
 					'descr'			=> stripslashes($this->db->f('descr')),
 					'list_info'		=> unserialize($this->db->f('list_info')),
-					'list_address'	=> $this->db->f('list_address')
+					'list_address'	=> $this->db->f('list_address'),
+					'list_documents'=> $this->db->f('list_documents')
 				);
 			}
 			//_debug_array($location_type);

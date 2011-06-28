@@ -534,10 +534,9 @@
 					'lang_select'					=> lang('select'),
 					'value_list_info'				=> $this->bo->get_list_info((isset($id)?$id:''),$values['list_info']),
 					'lang_location'					=> lang('location'),
-					'lang_list_address'				=> lang('list address'),
 					'lang_list_info_statustext'		=> lang('Names of levels to list at this level'),
-					'lang_list_address_statustext'	=> lang('List address at this level'),
-					'value_list_address'			=> (isset($values['list_address'])?$values['list_address']:'')
+					'value_list_address'			=> isset($values['list_address'])?$values['list_address']:'',
+					'value_list_documents'			=> isset($values['list_documents'])?$values['list_documents']:''
 				);
 
 			$appname	= lang('location');

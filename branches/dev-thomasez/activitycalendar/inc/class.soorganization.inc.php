@@ -62,6 +62,9 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				case "district":
 					$like_clauses[] = "org.district $this->like $like_pattern";
 					break;
+				default:
+					$like_clauses[] = "org.name $this->like $like_pattern";
+					break;
 			}
 
 
@@ -73,6 +76,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		$filter_clauses = array();
 		$filter_clauses[] = "show_in_portal=1";
+		
+		if(isset($filters[$this->get_id_field_name()])){
+			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			$filter_clauses[] = "org.id = {$id}";
+		}
 
 /*
 		// All parties with contracts of type X

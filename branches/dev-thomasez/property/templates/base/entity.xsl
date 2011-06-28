@@ -76,7 +76,7 @@
 						<xsl:when test="mode = 'edit'">
 							<tr>
 								<td colspan = "2" align = "center">
-									<xsl:apply-templates select="table_apply"/>
+									<xsl:call-template name="table_apply"/>
 								</td>
 							</tr>
 						</xsl:when>
@@ -316,7 +316,7 @@
 						<table cellpadding="2" cellspacing="2" width="80%" align="center">
 							<tr height="50">
 								<td colspan="2" align = "center">
-									<xsl:apply-templates select="table_apply"/>
+									<xsl:call-template name="table_apply"/>
 								</td>
 							</tr>
 						</table>
@@ -383,30 +383,31 @@
 	</xsl:template>
 
 
-	<xsl:template match="table_apply">
+	<xsl:template name="table_apply" xmlns:php="http://php.net/xsl">
 		<table>
 			<tr>
 				<td valign="bottom">
-					<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
+					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 					<input type="submit" name="values[save]" value="{$lang_save}">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_save_statustext"/>
+							<xsl:value-of select="php:function('lang', 'save values and exit')" />
 						</xsl:attribute>
 					</input>
 				</td>
+
 				<td valign="bottom">
-					<xsl:variable name="lang_apply"><xsl:value-of select="lang_apply"/></xsl:variable>
+					<xsl:variable name="lang_apply"><xsl:value-of select="php:function('lang', 'apply')" /></xsl:variable>
 					<input type="submit" name="values[apply]" value="{$lang_apply}">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_apply_statustext"/>
+							<xsl:value-of select="php:function('lang', 'save and stay in form')" />
 						</xsl:attribute>
 					</input>
 				</td>
 				<td align="right" valign="bottom">
-					<xsl:variable name="lang_cancel"><xsl:value-of select="lang_cancel"/></xsl:variable>
+					<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 					<input type="submit" name="values[cancel]" value="{$lang_cancel}">
 						<xsl:attribute name="title">
-							<xsl:value-of select="lang_cancel_statustext"/>
+							<xsl:value-of select="php:function('lang', 'Back to the list')" />
 						</xsl:attribute>
 					</input>
 				</td>

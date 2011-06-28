@@ -18,7 +18,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		'add'				=> true,
 		'edit'				=> true,
 		'download'			=> true,
-		'send_mail'			=> true
+		'send_mail'			=> true,
+		'get_organization_groups'	=> true
 	);
 	
 	public function __construct()
@@ -391,6 +392,42 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			{
 			}
 		}
+	}
+	
+	public function get_organization_groups()
+	{
+		$GLOBALS['phpgw_info']['flags']['noheader'] = true; 
+		$GLOBALS['phpgw_info']['flags']['nofooter'] = true; 
+		$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+		
+		$org_id = phpgw::get_var('orgid');
+		$group_id = phpgw::get_var('groupid');
+		$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
+		if($org_id)
+		{
+			$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array('org_id' => $org_id));
+			foreach ($groups as $group) {
+				if(isset($group))
+				{
+					//$res_g = $group->serialize();
+					$selected = "";
+					if($group_id && $group_id > 0)
+					{
+						$gr_id = (int)$group_id; 
+						if($gr_id == (int)$group->get_id())
+						{
+							$selected_group = " selected";
+						}
+					}
+					$group_html[] = "<option value='" . $group->get_id() . "'". $selected_group . ">" . $group->get_name() . "</option>";
+				}
+			}
+		    $html = implode(' ' , $group_html);
+		    $returnHTML = $returnHTML . ' ' . $html;
+		}
+		
+		
+		return $returnHTML;
 	}
 }
 ?>

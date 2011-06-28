@@ -318,7 +318,7 @@
 	</xsl:template>
 
 <!-- add / edit  -->
-	<xsl:template match="edit">
+	<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 		<div align="left">
 
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -393,32 +393,38 @@
 									<xsl:call-template name="list_info"/>
 								</td>
 							</tr>
-
 							<tr>
-								<td valign="top">
-									<xsl:value-of select="lang_list_address"/>
-								</td>
 								<td align="left">
-									<xsl:choose>
-										<xsl:when test="value_list_address='1'">
-											<input type="checkbox" name="values[list_address]" value="1"  checked="checked" onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="//lang_list_address_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</xsl:when>
-										<xsl:otherwise>
-											<input type="checkbox" name="values[list_address]" value="1"  onMouseout="window.status='';return true;">
-												<xsl:attribute name="onMouseover">
-													<xsl:text>window.status='</xsl:text>
-													<xsl:value-of select="//lang_list_address_statustext"/>
-													<xsl:text>'; return true;</xsl:text>
-												</xsl:attribute>
-											</input>
-										</xsl:otherwise>
-									</xsl:choose>
+									<xsl:value-of select="php:function('lang', 'list address')" />							
+								</td>
+								<td>
+									<input type="checkbox" name="values[list_address]" value="1" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'list address at this level')" />
+										</xsl:attribute>
+										<xsl:if test="value_list_address = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td align="left">
+									<xsl:value-of select="php:function('lang', 'list documents')" />							
+								</td>
+								<td>
+									<input type="checkbox" name="values[list_documents]" value="1" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'list documents at level')" />
+										</xsl:attribute>
+										<xsl:if test="value_list_documents = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
 								</td>
 							</tr>
 						</xsl:when>
