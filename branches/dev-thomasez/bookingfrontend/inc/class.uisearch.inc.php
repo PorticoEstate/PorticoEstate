@@ -12,9 +12,8 @@
 		{
 			$this->bo = CreateObject('bookingfrontend.bosearch');
 			parent::__construct();
-			$old_top = array_pop($this->tmpl_search_path);
+      array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/bookingfrontend/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
-			array_push($this->tmpl_search_path, $old_top);
 		}
 		
 		function index()
@@ -31,7 +30,10 @@
 				);
 			}
 			
-			$params = is_null($search) ? array('frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg") : array('search' => $search);
+      // Should of course be replaced with some config option for the image
+      // or using the tmpl_search_path. Need to work a little mor on this system
+      // to find the right option. - thomasez
+			$params = is_null($search) ? array('frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/images/newlayout/forsidebilde.jpg") : array('search' => $search);
 
 			self::render_template('search', $params);
 		}
