@@ -2189,8 +2189,13 @@ JS;
 				$related = $this->bo->read_entity_to_link($location_code);
 				$related_link = array();
 
-				$document = CreateObject('property.sodocument');
-				$documents = $document->get_files_at_location( array('location_code' => $location_code) );
+				$location_type_info =  $this->soadmin_location->read_single($type_id);
+				$documents = array();
+				if($location_type_info['list_documents'])
+				{
+					$document = CreateObject('property.sodocument');
+					$documents = $document->get_files_at_location( array('location_code' => $location_code) );
+				}
 
 				if($documents)
 				{

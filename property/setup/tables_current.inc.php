@@ -149,6 +149,7 @@
 				'uc' => array('type' => 'text','nullable' => True),
 				'list_info' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'list_address' => array('type' => 'int','precision' => '2','nullable' => True),
+				'list_documents' => array('type' => 'int','precision' => '2','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
