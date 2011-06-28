@@ -6,7 +6,7 @@
 		public $messages = array();
 		public $warnings = array();
 		public $errors = array();
-		protected $dir = '/opt/kunst/001';
+		protected $dir = '/u01/kunst/001';
 		protected $entity_id = 4;
 		protected $cat_id = 1;
 
