@@ -465,9 +465,18 @@
 						$entity_entry['directory']	= urlencode($_files[0]['directory']);
 						$entity_entry['img_id']		= $_files[0]['file_id'];
 					}
-					
+				
 					for ($i=0;$i<count($uicols['name']);$i++)
 					{
+						switch ($uicols['name'][$i])
+						{
+							case 'num':
+							case 'loc1':
+							case 'loc1_name':
+								$uicols['input_type'][$i] = 'hidden';
+								break;
+						}
+						
 						if($uicols['input_type'][$i]!='hidden')
 						{
 							if(isset($entity_entry['query_location'][$uicols['name'][$i]]))
