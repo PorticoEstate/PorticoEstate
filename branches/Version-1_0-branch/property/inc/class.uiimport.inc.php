@@ -30,7 +30,15 @@
 		
 		public function __construct()
 		{
-			set_time_limit(10000); //Set the time limit for this request oto 3000 seconds
+			if ( !$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+				&& !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+				execMethod('property.bocommon.no_access');
+			}
+
+			set_time_limit(10000);
+//			$GLOBALS['phpgw']->common->phpgw_header(true);
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
 		}
