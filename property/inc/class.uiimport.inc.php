@@ -60,7 +60,11 @@
 
 				if($GLOBALS['phpgw']->session->is_repost())
 				{
-					die('Hmm... looks like a repost!');
+					echo('Hmm... looks like a repost!');
+					$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
+					echo "<br><a href= '$action'>Start over</a>" ;
+					
+					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 
 				// Get the path for user input or use a default path
@@ -167,7 +171,7 @@ HTML;
 				}			
 				$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
 				$html = <<<HTML
-				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer</h1>
+				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
 				<div id="messageHolder"></div>
 				<form action="{$action}" method="post" enctype="multipart/form-data">
 					<fieldset>
