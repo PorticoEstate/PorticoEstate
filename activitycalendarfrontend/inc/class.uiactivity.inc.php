@@ -2,9 +2,11 @@
 	phpgw::import_class('activitycalendar.uiactivities');
 	phpgw::import_class('activitycalendar.soactivity');
 	phpgw::import_class('activitycalendar.sogroup');
+	phpgw::import_class('activitycalendar.soarena');
 	
 	include_class('activitycalendar', 'activity', 'inc/model/');
 	include_class('activitycalendar', 'group', 'inc/model/');
+	include_class('activitycalendar', 'organization', 'inc/model/');
 
 	class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities
 	{
@@ -14,7 +16,8 @@
 			'edit'			=>	true,
 			'view'			=>	true,
 			'index'			=>	true,
-			'get_organization_groups'	=>	true
+			'get_organization_groups'	=>	true,
+			'get_address_search'	=> true
 		);
 		
 		/**
@@ -56,6 +59,7 @@
 			$action = phpgw::get_var('action', 'GET');
 			//var_dump($id);
 			$so_activity = activitycalendar_soactivity::get_instance();
+			$so_arena = activitycalendar_soarena::get_instance();
 			//$activity = $so->get_single($id);
 			
 			//var_dump(phpgw::get_var('secret', 'GET'));
@@ -77,7 +81,8 @@
 			$targets = $so_activity->get_targets();
 			$offices = $so_activity->select_district_list();
 			$districts = $so_activity->get_districts();
-			$arenas = activitycalendar_soarena::get_instance()->get(null, null, null, null, null, null, null);
+			$buildings = $so_arena->get_buildings();
+			$arenas = $so_arena->get(null, null, null, null, null, null, null);
 			$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
 			$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 			
@@ -101,28 +106,107 @@
 			
 			$g_id = phpgw::get_var('group_id');
 			$o_id = phpgw::get_var('organization_id');
-			if(isset($g_id) && $g_id > 0)
+			if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 			{
-				$persons = activitycalendar_sogroup::get_instance()->get_contacts($g_id);
-				$desc = activitycalendar_sogroup::get_instance()->get_description($g_id);
+				/*if($g_id == "new_group")
+				{
+					//add new group to internal activitycalendar group register
+				}
+				else*/ 
+				//if(is_numeric($g_id) && $g_id > 0)
+				//{
+					$persons = activitycalendar_sogroup::get_instance()->get_contacts($g_id);
+					$desc = activitycalendar_sogroup::get_instance()->get_description($g_id);
+				//}
 			}
-			else if(isset($o_id) && $o_id > 0)
+			else if(isset($o_id))
 			{
-				$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
-				$desc = activitycalendar_soorganization::get_instance()->get_description($o_id);
+				if($o_id == "new_org")
+				{
+					//add new organization to internal activitycalendar organization register
+					$org_info['name'] = phpgw::get_var('orgname');
+					$org_info['orgnr'] = phpgw::get_var('orgno');
+					$org_info['homepage'] = phpgw::get_var('homepage');
+					$org_info['phone'] = phpgw::get_var('phone');
+					$org_info['email'] = phpgw::get_var('email');
+					$org_info['description'] = phpgw::get_var('org_description');
+					$org_info['street'] = phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
+					//$org_info['zip'] = phpgw::get_var('postaddress');
+					$org_info['district'] = phpgw::get_var('org_district'); 
+					$o_id = $so_activity->add_organization_local($org_info);
+					
+					//add contact persons
+					$contact1 = array();
+					$contact1['name'] = phpgw::get_var('contact1_name');
+					$contact1['phone'] = phpgw::get_var('contact1_phone');
+					$contact1['mail'] = phpgw::get_var('contact1_email');
+					$contact1['org_id'] = $o_id;
+					$contact1['group_id'] = 0;
+					$so_activity->add_contact_person_local($contact1);
+					
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('contact2_name');
+					$contact2['phone'] = phpgw::get_var('contact2_phone');
+					$contact2['mail'] = phpgw::get_var('contact2_email');
+					$contact2['org_id'] = $o_id;
+					$contact2['group_id'] = 0;
+					$so_activity->add_contact_person_local($contact2);
+					
+					$persons = activitycalendar_soorganization::get_instance()->get_contacts_local($o_id);
+					$desc = phpgw::get_var('org_description');
+
+				}
+				else if(is_numeric($o_id) && $o_id > 0)
+				{
+					if(isset($g_id) && $g_id == "new_group")
+					{
+						$group_info['name'] = phpgw::get_var('groupname');
+						$group_info['organization_id'] = $o_id;
+						$group_info['description'] = phpgw::get_var('group_description');
+						$g_id = $so_activity->add_group_local($group_info);
+						
+						//add contact persons
+						$contact1 = array();
+						$contact1['name'] = phpgw::get_var('contact1_name');
+						$contact1['phone'] = phpgw::get_var('contact1_phone');
+						$contact1['mail'] = phpgw::get_var('contact1_email');
+						$contact1['org_id'] = 0;
+						$contact1['group_id'] = $g_id;
+						$so_activity->add_contact_person_local($contact1);
+						
+						$contact2 = array();
+						$contact2['name'] = phpgw::get_var('contact2_name');
+						$contact2['phone'] = phpgw::get_var('contact2_phone');
+						$contact2['mail'] = phpgw::get_var('contact2_email');
+						$contact2['org_id'] = 0;
+						$contact2['group_id'] = $g_id;
+						$so_activity->add_contact_person_local($contact2);
+						
+						$activity_persons = activitycalendar_sogroup::get_instance()->get_contacts_local($g_id);
+						$desc = phpgw::get_var('group_description');
+					}
+					else
+					{
+						$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
+						$desc = activitycalendar_soorganization::get_instance()->get_description($o_id);
+					}
+				}
 			}
 			
 			if(isset($_POST['save_activity'])) // The user has pressed the save button
 			{
 				if(isset($activity)) // If an activity object is created
 				{
+					var_dump("lagre1");
 					$old_state = $activity->get_state();
 					$new_state = phpgw::get_var('state');
-	
+	var_dump("lagre2");
 					// ... set all parameters
 					$activity->set_title(phpgw::get_var('title'));
-					$activity->set_organization_id(phpgw::get_var('organization_id'));
-					$activity->set_group_id(phpgw::get_var('group_id'));
+					//$activity->set_organization_id(phpgw::get_var('organization_id'));
+					//$activity->set_group_id(phpgw::get_var('group_id'));
+					$activity->set_organization_id($o_id);
+					$activity->set_group_id($g_id);
 					$activity->set_arena(phpgw::get_var('arena_id'));
 					$district_array = phpgw::get_var('district');
 					$activity->set_district(implode(",", $district_array));
@@ -130,12 +214,13 @@
 					if($action == 'new_activity')
 					{
 						$activity->set_state(1);
-						//$new_state=1;
+						$new_state=1;
 					}
 					else
 					{
 						$activity->set_state($new_state);
 					}
+					var_dump("lagre3");
 					$activity->set_category(phpgw::get_var('category'));
 					$target_array = phpgw::get_var('target');
 					$activity->set_target(implode(",", $target_array));
@@ -143,6 +228,8 @@
 					$activity->set_time(phpgw::get_var('time'));
 					$activity->set_contact_persons($persons);
 					$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
+					
+					var_dump("storing"); 
 					
 					if($so_activity->store($activity)) // ... and then try to store the object
 					{
@@ -179,6 +266,7 @@
 							'organizations' => $organizations,
 							'groups' => $groups,
 							'arenas' => $arenas,
+							'buildings' => $buildings,
 							'categories' => $categories,
 							'targets' => $targets,
 							'districts' => $districts,
@@ -207,6 +295,7 @@
 			$returnHTML = "<option value='0'>Ingen gruppe valgt</option>";
 			if($org_id)
 			{
+				$group_html[] = "<option value='new_group'>Ny gruppe</option>";
 				$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, array('org_id' => $org_id));
 				foreach ($groups as $group) {
 					if(isset($group))
@@ -231,5 +320,15 @@
 			
 			return $returnHTML;
 			//return "<option>Ingen gruppe valgt</option>";
+		}
+		
+		/**
+		 * Public method.
+		 */
+		public function get_address_search()
+		{
+			$search_string = phpgw::get_var('search');
+			//var_dump($search_string);
+			return activitycalendar_soarena::get_instance()->get_address($search_string);
 		}
 	}
