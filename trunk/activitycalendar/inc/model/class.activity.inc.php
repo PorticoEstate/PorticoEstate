@@ -27,6 +27,7 @@
 		protected $contact_person_2;
 		protected $special_adaptation;
 		protected $secret;
+		protected $internal_arena;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -189,6 +190,13 @@
 		
 		public function get_secret() { return $this->secret; }
 		
+		public function set_internal_arena($internal_arena)
+		{
+			$this->internal_arena = $internal_arena;
+		}
+		
+		public function get_internal_arena() { return $this->internal_arena; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -223,6 +231,15 @@
 				$contact_1 = "";
 				$contact_2 = "";
 			}
+			
+			if($this->get_internal_arena() && $this->get_internal_arena() > 0)
+			{
+				$arena_name = activitycalendar_soarena::get_instance()->get_building_name($this->get_internal_arena());
+			}
+			else
+			{
+				$arena_name = activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena());
+			}
 			return array(
 				'id' => $this->get_id(),
 				'title' => $this->get_title(),
@@ -233,7 +250,7 @@
 				'category' => $this->get_so()->get_category_name($this->get_category()),
 				'state' => lang('state_'.$this->get_state()),
 				'description' => $desc,
-				'arena' => activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena()),
+				'arena' => $arena_name,
 				'time' => $this->get_time(),
 				'contact_person_1' => $contact_1,
 				'contact_person_2' => $contact_2,

@@ -126,6 +126,36 @@ YAHOO.util.Event.onDOMReady(function()
 					?>
 				</dd>
 				<dt>
+					<?php if($activity->get_internal_arena() || $editable) { ?>
+					<label for="arena"><?php echo lang('building') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					$current_internal_arena_id = $activity->get_internal_arena();
+					if ($editable)
+					{
+						?>
+						<select name="internal_arena_id">
+							<option value="0">Ingen kommunale bygg valgt</option>
+							<?php
+							foreach($buildings as $building_id => $building_name)
+							{
+								echo "<option ".($current_internal_arena_id == $building_id? 'selected="selected"' : "")." value=\"{$building_id}\">".$building_name."</option>";
+							}
+							?>
+						</select>
+						<?php
+					}
+					else
+					{
+						if($activity->get_internal_arena()){
+							echo activitycalendar_soarena::get_instance()->get_building_name($activity->get_internal_arena());
+						}
+					}
+					?>
+				</dd>
+				<dt>
 					<?php if($activity->get_arena() || $editable) { ?>
 					<label for="arena"><?php echo lang('arena') ?></label>
 					<?php  } ?>

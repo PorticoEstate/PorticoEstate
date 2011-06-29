@@ -11,6 +11,7 @@
 		protected $organization_id;
 		protected $show_in_portal;
 		protected $shortname;
+		protected $change_type;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
@@ -36,6 +37,13 @@
 		}
 		
 		public function get_name() { return $this->name; }
+		
+		public function set_change_type($change_type)
+		{
+			$this->change_type = $change_type;
+		}
+		
+		public function get_change_type() { return $this->change_type; }
 		
 		public function set_description($description)
 		{
@@ -73,7 +81,8 @@
 				'organization_id' => $this->get_organization_id(),
 				'shortname' => $this->get_shortname(),
 				'description' => $this->get_description(),
-				'show_in_portal' => $this->get_show_in_portal()
+				'show_in_portal' => $this->get_show_in_portal(),
+				'change_type' => $this->get_change_type()
 			);
 		}
 		

@@ -152,20 +152,33 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		
 		//Retrieve the type of query and perform type specific logic
 		$type = phpgw::get_var('type');
-
+		$changed_org = false;
+		$changed_group = false;
 		switch($type)
 		{
-			case 'sync_parties_org_unit':
-				//$filters = array('sync' => $type, 'party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
+			case 'changed_organizations':
+				$filters = array('changed_orgs' => 'true');
+				$changed_org = true;
+				break;
+			case 'changed_groups':
+				$filters = array('changed_groups' => 'true');
+				$changed_group = true;
 				break;
 			default: // ... get all parties of a given type
 				//$filters = array('party_type' => phpgw::get_var('party_type'), 'active' => phpgw::get_var('active'));
 				break;
 		}
-		
-		$result_objects = activitycalendar_soorganization::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-		$result_count = activitycalendar_soorganization::get_instance()->get_count($search_for, $search_type, $filters);
-		
+		if($changed_group)
+		{
+			$result_objects = activitycalendar_sogroup::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$result_count = activitycalendar_sogroup::get_instance()->get_count($search_for, $search_type, $filters);
+		}
+		else
+		{
+			$result_objects = activitycalendar_soorganization::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$result_count = activitycalendar_soorganization::get_instance()->get_count($search_for, $search_type, $filters);
+		}
+				
 		//var_dump($result_objects);
 		// Create an empty row set
 		$rows = array();
@@ -176,13 +189,16 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_id = $result->get_id();
 				//$rows[] = $result->serialize();
 				$rows[] = $res;
-				$filter_group = array('org_id' => $org_id);
-				$result_groups = activitycalendar_sogroup::get_instance()->get(null, null, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
-				foreach ($result_groups as $result_group) {
-					if(isset($result_group))
-					{
-						$res_g = $result_group->serialize();
-						$rows[] = $res_g;
+				if(!$changed_group && !$changed_org)
+				{
+					$filter_group = array('org_id' => $org_id);
+					$result_groups = activitycalendar_sogroup::get_instance()->get(null, null, $sort_field, $sort_ascending, $search_for, $search_type, $filter_group);
+					foreach ($result_groups as $result_group) {
+						if(isset($result_group))
+						{
+							$res_g = $result_group->serialize();
+							$rows[] = $res_g;
+						}
 					}
 				}
 			}
