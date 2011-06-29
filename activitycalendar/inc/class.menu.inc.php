@@ -38,6 +38,14 @@
 					'text'	=> lang('OrganizationList'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiorganization.index') ),
 		            'image'	=> array('property', 'location_tenant'),
+					'children'	=> array(
+								'changed_organizations' => array
+								(
+									'text'	=> lang('changed_org_group'),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.changed_organizations') ),
+									'image'	=> array('property', 'location_tenant')
+								)
+							)
 				)      
 			);
 			

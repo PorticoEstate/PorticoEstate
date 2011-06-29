@@ -77,9 +77,17 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$filter_clauses = array();
 		$filter_clauses[] = "show_in_portal=1";
 		
+		$use_local_org = false;
+		
 		if(isset($filters[$this->get_id_field_name()])){
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "org.id = {$id}";
+		}
+		if(isset($filters['changed_orgs'])){
+			$use_local_org = true;
+			//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			//$filter_clauses[] = "org.id = {$id}";
+			unset($filter_clauses);
 		}
 
 /*
@@ -100,38 +108,64 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		}
 
 		$condition =  join(' AND ', $clauses);
-
-		if($return_count) // We should only return a count
+		
+		if($use_local_org)
 		{
-			$cols = 'COUNT(DISTINCT(org.id)) AS count';
+			if($return_count) // We should only return a count
+			{
+				$cols = 'COUNT(DISTINCT(org.id)) AS count';
+			}
+			else
+			{
+				$columns[] = 'org.id';
+				$columns[] = 'org.name';
+				$columns[] = 'org.homepage';
+				$columns[] = 'org.phone';
+				$columns[] = 'org.email';
+				$columns[] = 'org.description';
+				$columns[] = 'org.address';
+				$columns[] = 'org.district';
+				$columns[] = 'org.orgno';
+				
+				$cols = implode(',',$columns);
+			}
+	
+			$tables = "activity_organization org";
 		}
 		else
 		{
-			$columns[] = 'org.id';
-			$columns[] = 'org.name';
-			$columns[] = 'org.homepage';
-			$columns[] = 'org.phone';
-			$columns[] = 'org.email';
-			$columns[] = 'org.description';
-			$columns[] = 'org.active';
-			$columns[] = 'org.street';
-			$columns[] = 'org.zip_code';
-			$columns[] = 'org.city';
-			$columns[] = 'org.district';
-			$columns[] = 'org.organization_number';
-			$columns[] = 'org.activity_id';
-			$columns[] = 'org.customer_number';
-			$columns[] = 'org.customer_identifier_type';
-			$columns[] = 'org.customer_organization_number';
-			$columns[] = 'org.customer_ssn';
-			$columns[] = 'org.customer_internal';
-			$columns[] = 'org.shortname';
-			$columns[] = 'org.show_in_portal';
-			
-			$cols = implode(',',$columns);
+			if($return_count) // We should only return a count
+			{
+				$cols = 'COUNT(DISTINCT(org.id)) AS count';
+			}
+			else
+			{
+				$columns[] = 'org.id';
+				$columns[] = 'org.name';
+				$columns[] = 'org.homepage';
+				$columns[] = 'org.phone';
+				$columns[] = 'org.email';
+				$columns[] = 'org.description';
+				$columns[] = 'org.active';
+				$columns[] = 'org.street';
+				$columns[] = 'org.zip_code';
+				$columns[] = 'org.city';
+				$columns[] = 'org.district';
+				$columns[] = 'org.organization_number';
+				$columns[] = 'org.activity_id';
+				$columns[] = 'org.customer_number';
+				$columns[] = 'org.customer_identifier_type';
+				$columns[] = 'org.customer_organization_number';
+				$columns[] = 'org.customer_ssn';
+				$columns[] = 'org.customer_internal';
+				$columns[] = 'org.shortname';
+				$columns[] = 'org.show_in_portal';
+				
+				$cols = implode(',',$columns);
+			}
+	
+			$tables = "bb_organization org";			
 		}
-
-		$tables = "bb_organization org";
 
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
@@ -159,6 +193,22 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$contacts = array();
     	if(isset($organization_id)){
 	    	$q1="SELECT id FROM bb_organization_contact WHERE organization_id={$organization_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$cont_id = $this->db->f('id');
+				$contacts[] = $cont_id;
+			}
+			//$result=$contacts;
+    	}
+		return $contacts;
+	}
+	
+	function get_contacts_local($organization_id)
+	{
+		$contacts = array();
+    	if(isset($organization_id)){
+	    	$q1="SELECT id FROM activity_contact_person WHERE organization_id='{$organization_id}'";
+	    	var_dump($q1);
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$cont_id = $this->db->f('id');

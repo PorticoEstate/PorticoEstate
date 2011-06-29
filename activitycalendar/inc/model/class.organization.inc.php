@@ -11,6 +11,11 @@
 		protected $organization_number;
 		protected $show_in_portal;
 		protected $district;
+		protected $homepage;
+		protected $email;
+		protected $phone;
+		protected $address;
+		protected $change_type;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
@@ -36,6 +41,41 @@
 		}
 		
 		public function get_name() { return $this->name; }
+		
+		public function set_homepage($homepage)
+		{
+			$this->homepage = $homepage;
+		}
+		
+		public function get_homepage() { return $this->homepage; }
+		
+		public function set_change_type($change_type)
+		{
+			$this->change_type = $change_type;
+		}
+		
+		public function get_change_type() { return $this->change_type; }
+		
+		public function set_email($email)
+		{
+			$this->email = $email;
+		}
+		
+		public function get_email() { return $this->email; }
+		
+		public function set_phone($phone)
+		{
+			$this->phone = $phone;
+		}
+		
+		public function get_phone() { return $this->phone; }
+		
+		public function set_address($address)
+		{
+			$this->address = $address;
+		}
+		
+		public function get_address() { return $this->address; }
 		
 		public function set_description($description)
 		{
@@ -73,7 +113,12 @@
 				'organization_number' => $this->get_organization_number(),
 				'district' => $this->get_district(),
 				'description' => $this->get_description(),
-				'show_in_portal' => $this->get_show_in_portal()
+				'homepage'	=>	$this->get_homepage(),
+				'email'	=>	$this->get_email(),
+				'phone'	=>	$this->get_phone(),
+				'address'	=>	$this->get_address(),
+				'show_in_portal' => $this->get_show_in_portal(),
+				'change_type' => $this->get_change_type()
 			);
 		}
 		

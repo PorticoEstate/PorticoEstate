@@ -41,4 +41,77 @@
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.3';
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
+	
+	$test[] = '0.1.3';
+	function activitycalendar_upgrade0_1_3()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','internal_arena',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => 'True'
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'activity_organization', array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'district' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'homepage' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'description' => array('type' => 'text','nullable' => false),
+				'email' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'phone' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'address' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'orgno' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'change_type' => array('type' => 'varchar','precision' => '255','default' => 'new','nullable' => false),
+				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'activity_group', array(
+				'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'organization_id' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'name' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'description' => array('type' => 'text','nullable' => false),
+				'change_type' => array('type' => 'varchar','precision' => '255','default' => 'new', 'nullable' => false),
+				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);
+		
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'activity_contact_person', array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'organization_id' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'group_id' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'name' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'phone' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'email' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'address' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'zipcode' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'city' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false')
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.4';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
 ?>
