@@ -5,7 +5,7 @@
 		public $messages = array();
 		public $warnings = array();
 		public $errors = array();
-		protected $debug = false;
+		protected $debug = true;
 
 		public function __construct()
 		{
