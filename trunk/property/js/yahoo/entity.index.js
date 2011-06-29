@@ -45,6 +45,7 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+
 			//category
 /*
 			index = locate_in_array_options(0,"value",path_values.cat_id);
@@ -54,33 +55,45 @@
 			}
 */
 			//district
-			index = locate_in_array_options(1,"value",path_values.district_id);
-			if(index)
+			
+			if(selectsButtons[1])
 			{
-				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+				index = locate_in_array_options(1,"value",path_values.district_id);
+				if(index)
+				{
+					oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
+				}
 			}
 
 			//status
-			index = locate_in_array_options(2,"value",path_values.status);
-			if(index)
+			if(selectsButtons[2])
 			{
-				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+				index = locate_in_array_options(2,"value",path_values.status);
+				if(index)
+				{
+					oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+				}
 			}
 
 			//filter
-			index = locate_in_array_options(3,"value",path_values.filter);
-			if(index)
+			if(selectsButtons[3])
 			{
-				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
+				index = locate_in_array_options(3,"value",path_values.filter);
+				if(index)
+				{
+					oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
+				}
 			}
 
 			//district
-			index = locate_in_array_options(4,"value",path_values.criteria_id);
-			if(index)
+			if(selectsButtons[4])
 			{
-				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+				index = locate_in_array_options(4,"value",path_values.criteria_id);
+				if(index)
+				{
+					oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
+				}
 			}
-
 			//eliminate "no category" option because is necesary have a category in the  PHP query
 	//		delete oMenuButton_0.getMenu().itemData[0];
 			//correcting it. now look for value 
