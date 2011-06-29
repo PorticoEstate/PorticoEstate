@@ -57,29 +57,33 @@
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
 			if (phpgw::get_var("importsubmit")) 
 			{
+
+				if($GLOBALS['phpgw']->session->is_repost())
+				{
+					die('Hmm... looks like a repost!');
+				}
+
 				// Get the path for user input or use a default path
 				
 				if($this->file = $_FILES['file']['tmp_name'])
 				{
-					$this->csvdata = $this->getcsvdata($this->file);
+					switch ($_FILES['file']['type'])
+					{
+						case 'application/vnd.ms-excel':
+							$this->csvdata = $this->getexceldata($this->file);
+							break;
+						case 'text/csv':
+							$this->csvdata = $this->getcsvdata($this->file);
+							break;
+					}
 				}
 
 				$this->conv_type 	= phpgw::get_var('conv_type');
-//_debug_array($this->csvdata);
-				phpgwapi_cache::session_set('property', 'file', $this->file);
-				phpgwapi_cache::session_set('property', 'csvdata', $this->csvdata);
-				phpgwapi_cache::session_set('property', 'conv_type', $this->conv_type);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.index', 'importstep' => 'true'));
-			} 
-			else if(phpgw::get_var("importstep"))
-			{
+
 				$start_time = time(); // Start time of import
 				$start = date("G:i:s",$start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
-				$this->file = phpgwapi_cache::session_get('property', 'file');
-				$this->csvdata = phpgwapi_cache::session_get('property', 'csvdata');
-				$this->conv_type = phpgwapi_cache::session_get('property', 'conv_type');
 
 				if($this->conv_type)
 				{
@@ -92,20 +96,14 @@
 	
 					if ( is_file($file) )
 					{
-//_debug_Array($file);die();
 						require_once $file;
 						$this->import_conversion = new import_conversion;
+						$this->import_conversion->debug	= phpgw::get_var('debug', 'bool');
 					}
 				}
 
 				$result = $this->import(); // Do import step, result determines if finished for this area
 				echo '<li class="info">Import: finished step ' .$result. '</li>';
-				while($result != '1')
-				{
-					$result = $this->import();
-					echo '<li class="info">Import: finished step ' .$result. '</li>';
-					flush();
-				}
 
 				echo "</ul>";
 				$end_time = time();
@@ -167,16 +165,19 @@
 					<option value='{$conv['id']}'{$selected}>{$conv['name']}</option>
 HTML;
 				}			
+				$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
 				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer</h1>
 				<div id="messageHolder"></div>
-				<form action="index.php?menuaction=property.uiimport.index" method="post" enctype="multipart/form-data">
+				<form action="{$action}" method="post" enctype="multipart/form-data">
 					<fieldset>
 						<label for="file">Choose file:</label> <input type="file" name="file" id="file" />
 						<label for="conv_type">Choose conversion:</label>
 						<select name="conv_type" id="conv_type">
 						{$conv_option}
 						</select>
+						<label for="debug">Debug:</label>
+						<input type="checkbox" name="debug" id="debug" value ='1' />
 						<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
 		 			</fieldset>
 				</form>
@@ -210,18 +211,9 @@ HTML;
 			$this->messages = array();
 			$this->warnings = array();
 			$this->errors = array();
-			
-			// Import data if not done before and put them on the users session
-			if (!phpgwapi_cache::session_get('property', 'data_import'))
-			{
-				phpgwapi_cache::session_set('property', 'data_import', $this->import_data()); 
-                $this->log_messages(1);
-				return '1';
-			}
 
-			// We're done with the import, so clear all session variables so we're ready for a new one
-			phpgwapi_cache::session_clear('property', 'data_import');
-			phpgwapi_cache::session_clear('property', 'conv_type');
+			$this->import_data();
+			$this->log_messages(1);
 			return '1';
 		}
 		
@@ -285,7 +277,30 @@ HTML;
 			
 			return $result;
 		}
-			
+
+		protected function getexceldata($path, $skipfirstline = true)
+		{
+			$data = CreateObject('phpgwapi.excelreader');
+			$data->setOutputEncoding('CP1251');
+			$data->read($path);
+			$result = array();
+
+			$start = $skipfirstline ? 2 : 1; // Read the first line to get the headers out of the way
+
+			$rows = $data->sheets[0]['numRows']+1;
+
+			for ($i=$start; $i<$rows; $i++ ) //First data entry on row 2
+			{
+				foreach($data->sheets[0]['cells'][$i] as &$value)
+				{
+					$value = utf8_encode(trim($value));
+				}
+				$result[] = array_values($data->sheets[0]['cells'][$i]);
+			}
+
+			return $result;
+		}
+
 		
 		/**
 		 * Read the next line from the given file handle and parse it to CSV according to the rules set up
