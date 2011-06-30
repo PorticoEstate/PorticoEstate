@@ -67,20 +67,6 @@
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 
-				// Get the path for user input or use a default path
-				
-				if($this->file = $_FILES['file']['tmp_name'])
-				{
-					switch ($_FILES['file']['type'])
-					{
-						case 'application/vnd.ms-excel':
-							$this->csvdata = $this->getexceldata($this->file);
-							break;
-						case 'text/csv':
-							$this->csvdata = $this->getcsvdata($this->file);
-							break;
-					}
-				}
 
 				$this->conv_type 	= phpgw::get_var('conv_type');
 
@@ -106,8 +92,48 @@
 					}
 				}
 
-				$result = $this->import(); // Do import step, result determines if finished for this area
-				echo '<li class="info">Import: finished step ' .$result. '</li>';
+
+				// Get the path for user input or use a default path
+
+				$files = array();
+				if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
+				{
+					$files[] = array
+					(
+						'name'	=> $_FILES['file']['tmp_name'],
+						'type'	=> $_FILES['file']['type']
+					);
+					
+				}
+				else
+				{
+					$path = phpgw::get_var('path', 'string');
+					$files = $this->get_files($path);
+				}
+
+				foreach ($files as $file)
+				{
+					$valid_type = false;
+					switch ($file['type'])
+					{
+						case 'application/vnd.ms-excel':
+							$this->csvdata = $this->getexceldata($this->file);
+							$valid_type = true;
+							break;
+						case 'text/csv':
+							$this->csvdata = $this->getcsvdata($this->file);
+							$valid_type = true;
+							break;
+					}
+					
+					if($valid_type)
+					{
+						$result = $this->import();
+						$this->csvdata = array();
+						echo '<li class="info">Import: finished step ' .$result. '</li>';
+					}
+				}
+
 
 				echo "</ul>";
 				$end_time = time();
@@ -175,7 +201,10 @@ HTML;
 				<div id="messageHolder"></div>
 				<form action="{$action}" method="post" enctype="multipart/form-data">
 					<fieldset>
-						<label for="file">Choose file:</label> <input type="file" name="file" id="file" />
+						<label for="file">Choose file:</label>
+						<input type="file" name="file" id="file" title = 'Single file'/>
+						<label for="path">Local path:</label>
+						<input type="text" name="path" id="path" title = 'Alle filer i katalogen'/>
 						<label for="conv_type">Choose conversion:</label>
 						<select name="conv_type" id="conv_type">
 						{$conv_option}
@@ -370,4 +399,44 @@ HTML;
 
 			return $conv_list;
 		}
+
+		protected function get_files($dirname)
+		{
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$mime_magic = createObject('phpgwapi.mime_magic');
+			
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable())
+//						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xls' ) != 0 )
+//						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'csv' ) != 0 ))
+ 					{
+						continue;
+					}
+
+					$file_name = $file->__toString();
+					$file_list[] = array
+					(
+						'name'	=> (string) "{$dirname}/{$file_name}",
+						'type'	=> $mime_magic->filename2mime($file_name)
+					);
+				}
+			}
+
+			return $file_list;
+		}
+
+
 	}
