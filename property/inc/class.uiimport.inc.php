@@ -22,6 +22,8 @@
 		protected $account;
 		protected $conv_type;
 		protected $import_conversion;
+		protected $steps = 0;
+		protected $fields = array();
 		
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -57,16 +59,15 @@
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
 			if (phpgw::get_var("importsubmit")) 
 			{
-
-				if($GLOBALS['phpgw']->session->is_repost())
+				if($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
 				{
 					echo('Hmm... looks like a repost!');
 					$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
 					echo "<br><a href= '$action'>Start over</a>" ;
 					
 					$GLOBALS['phpgw']->common->phpgw_exit();
-				}
 
+				}
 
 				$this->conv_type 	= phpgw::get_var('conv_type');
 
@@ -117,11 +118,12 @@
 					switch ($file['type'])
 					{
 						case 'application/vnd.ms-excel':
-							$this->csvdata = $this->getexceldata($this->file);
+							$this->csvdata = $this->getexceldata($file['name']);
 							$valid_type = true;
 							break;
 						case 'text/csv':
-							$this->csvdata = $this->getcsvdata($this->file);
+						case 'text/comma-separated-values':
+							$this->csvdata = $this->getcsvdata($file['name']);
 							$valid_type = true;
 							break;
 					}
@@ -129,6 +131,9 @@
 					if($valid_type)
 					{
 						$result = $this->import();
+						$this->messages = array_merge($this->messages,$this->import_conversion->messages);
+						$this->warnings = array_merge($this->warnings,$this->import_conversion->warnings);
+						$this->errors = array_merge($this->errors,$this->import_conversion->errors);
 						$this->csvdata = array();
 						echo '<li class="info">Import: finished step ' .$result. '</li>';
 					}
@@ -141,10 +146,6 @@
 				$end = date("G:i:s",$end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 				
-				$this->messages = array_merge($this->messages,$this->import_conversion->messages);
-				$this->warnings = array_merge($this->warnings,$this->import_conversion->warnings);
-				$this->errors = array_merge($this->errors,$this->import_conversion->errors);
-
 				if ($this->errors)
 				{ 
 					echo "<ul>";
@@ -230,7 +231,7 @@ HTML;
 		 */
 		public function import()
 		{
-			$steps = 1;
+			$this->steps++;
 			
 			/* Import logic:
 			 * 
@@ -240,26 +241,20 @@ HTML;
 			 * 4. Log messages for this step
 			 *  
 			 */
-			
-			$this->messages = array();
-			$this->warnings = array();
-			$this->errors = array();
 
 			$this->import_data();
-			$this->log_messages(1);
-			return '1';
+			$this->log_messages($this->steps);
+			return $this->steps;
 		}
 		
 		protected function import_data()
 		{
+			$this->import_conversion->fields = $this->fields;
+
 			$start_time = time();
 			
 			$datalines = $this->csvdata;
 			
-			$this->messages[] = "Read 'import_all.csv' file in " . (time() - $start_time) . " seconds";
-			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
-			
-
 			$ok = true;
 			$_ok = false;
 			$this->db->transaction_begin();
@@ -296,7 +291,7 @@ HTML;
 			if ($skipfirstline)
 			{
 				// Read the first line to get the headers out of the way
-				$this->getcsv($handle);
+				$this->fields = $this->getcsv($handle);
 			}
 			
 			$result = array();
@@ -308,6 +303,9 @@ HTML;
 			
 			fclose($handle);
 			
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
+
 			return $result;
 		}
 
@@ -320,6 +318,11 @@ HTML;
 
 			$start = $skipfirstline ? 2 : 1; // Read the first line to get the headers out of the way
 
+			if ($skipfirstline)
+			{
+				$this->fields = $data->sheets[0]['cells'][1];
+			}
+			
 			$rows = $data->sheets[0]['numRows']+1;
 
 			for ($i=$start; $i<$rows; $i++ ) //First data entry on row 2
@@ -330,6 +333,9 @@ HTML;
 				}
 				$result[] = array_values($data->sheets[0]['cells'][$i]);
 			}
+
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
 		}
@@ -437,6 +443,4 @@ HTML;
 
 			return $file_list;
 		}
-
-
 	}
