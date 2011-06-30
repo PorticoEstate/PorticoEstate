@@ -6,6 +6,7 @@
 		public $warnings = array();
 		public $errors = array();
 		public $debug = true;
+		public $fields = array();
 
 		public function __construct()
 		{
