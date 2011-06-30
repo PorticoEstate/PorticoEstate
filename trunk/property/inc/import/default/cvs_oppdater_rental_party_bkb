@@ -7,6 +7,8 @@
 		public $errors = array();
 		public $debug = true;
 		public $fields = array();
+		public $table;
+		public $metadata = array();
 
 		public function __construct()
 		{
@@ -18,43 +20,32 @@
 		public function add($data)
 		{
 			$error = false;
-			$table = 'rental_party';
-			$id = (int)$data[0];
+			$table = $this->table;
+			$fields =  $this->fields;
+
+			if(!$table)
+			{
+				throw new Exception("Tabell er ikke angitt");
+			}
+
+			if(!$fields)
+			{
+				throw new Exception("Felter er ikke definert");
+			}
+
+			$id = (int)$data[array_search('id', $fields)];
 			
-			$fields = array
-			(
-				'id',
-				'identifier',
-				'first_name',
-				'last_name',
-				'comment',
-				'is_inactive',
-				'title',
-				'company_name',
-				'department',
-				'address_1',
-				'address_2',
-				'postal_code',
-				'place',
-				'phone',
-				'mobile_phone',
-				'fax',
-				'email',
-				'url',
-				'account_number',
-				'reskontro',
-				'location_id',
-				'result_unit_number',
-				'org_enhet_id'
-			);
+			if(!$id)
+			{
+				throw new Exception("Fant ikke verdi for feltet 'id'");
+			}
 
 			$value_set = array();
 			foreach ($fields as $key => $field)
 			{
-				$value_set[$field] 		= $this->db->db_addslashes($data[$key]);
+				$value_set[$field] 	= $this->validate_value($data[$key], $field);
 			}
 			unset($value_set['id']);
-			unset($value_set['is_inactive']);
 		
 			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}",__LINE__,__FILE__);
 			if($this->db->next_record())
@@ -102,4 +93,25 @@
 		{
 			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
 		}
+
+		protected function validate_value($value,$field)
+		{
+			$datatype = $this->metadata[$field]->type;
+			switch ($datatype)
+			{
+				case 'char':
+				case 'varchar':
+				case 'text':
+					$ret = $this->db->db_addslashes($value);
+					break;
+				case 'bool':
+					$ret = $value ? 'True' : 'False';
+					break;
+				default:
+					$ret = $value;
+			}
+
+			return $ret;
+		}
+
 	}

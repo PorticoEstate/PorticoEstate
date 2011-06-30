@@ -24,6 +24,7 @@
 		protected $import_conversion;
 		protected $steps = 0;
 		protected $fields = array();
+		protected $table;
 		
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -43,6 +44,7 @@
 //			$GLOBALS['phpgw']->common->phpgw_header(true);
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->table 		= phpgw::get_var('table');
 		}
 		
 
@@ -61,13 +63,11 @@
 			{
 				if($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
 				{
-					echo('Hmm... looks like a repost!');
-					$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
-					echo "<br><a href= '$action'>Start over</a>" ;
-					
-					$GLOBALS['phpgw']->common->phpgw_exit();
-
+					phpgwapi_cache::session_set('property', 'import_message', 'Hmm... looks like a repost!');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
 				}
+
+				phpgwapi_cache::session_set('property', 'import_settings', $_POST);
 
 				$this->conv_type 	= phpgw::get_var('conv_type');
 
@@ -110,6 +110,12 @@
 				{
 					$path = phpgw::get_var('path', 'string');
 					$files = $this->get_files($path);
+				}
+
+				if(!$files)
+				{
+					phpgwapi_cache::session_set('property', 'import_message', 'Ingen filer er valgt');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
 				}
 
 				foreach ($files as $file)
@@ -177,11 +183,17 @@
 					}
 					echo "</ul>";
 				}
+				echo '<a href="'. $GLOBALS['phpgw']->link('/home.php') . '">Home</a>';
+				echo '</br><a href="'. $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index')) . '">Import</a>';
+
 			}
 			else
 			{
+				$import_settings	= phpgwapi_cache::session_get('property', 'import_settings');
+				$import_message		= phpgwapi_cache::session_get('property', 'import_message');
 
-				$conv_list = $this->get_import_conv($this->conv_type);
+				phpgwapi_cache::session_clear('property', 'import_message');
+				$conv_list			= $this->get_import_conv($import_settings['conv_type']);
 				
 				$conv_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
 				foreach ( $conv_list as $conv)
@@ -196,25 +208,60 @@
 					<option value='{$conv['id']}'{$selected}>{$conv['name']}</option>
 HTML;
 				}			
+
+				$tables = $this->db->table_names();
+				sort($tables);
+
+				$table_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
+				foreach ( $tables as $table)
+				{
+					$selected = $import_settings['table'] == $table ? 'selected =  "selected"' : '';
+					$table_option .=  <<<HTML
+					<option value='{$table}'{$selected}>{$table}</option>
+HTML;
+				}			
+
+
+				$home =  $GLOBALS['phpgw']->link('/home.php');
 				$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
+
+				$debug_checked = isset($import_settings['debug']) && $import_settings['debug'] ? 'checked =  "checked"' : '';
 				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
-				<div id="messageHolder"></div>
+				<div id="messageHolder">{$import_message}</div>
 				<form action="{$action}" method="post" enctype="multipart/form-data">
 					<fieldset>
-						<label for="file">Choose file:</label>
-						<input type="file" name="file" id="file" title = 'Single file'/>
-						<label for="path">Local path:</label>
-						<input type="text" name="path" id="path" title = 'Alle filer i katalogen'/>
-						<label for="conv_type">Choose conversion:</label>
-						<select name="conv_type" id="conv_type">
-						{$conv_option}
+						<p>
+							<label for="file">Choose file:</label>
+							<input type="file" name="file" id="file" title = 'Single file'/>
+						</p>
+						<p>
+							<label for="path">Local path:</label>
+							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
+						</p>
+						<p>
+							<label for="conv_type">Choose conversion:</label>
+							<select name="conv_type" id="conv_type">
+							{$conv_option}
 						</select>
-						<label for="debug">Debug:</label>
-						<input type="checkbox" name="debug" id="debug" value ='1' />
-						<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
+						</p>
+						<p>
+							<label for="table">Choose Table:</label>
+							<select name="table" id="table">
+							{$table_option}
+						</select>
+						</p>
+
+						<p>
+							<label for="debug">Debug:</label>
+							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
+						</p>
+						<p>
+							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
+						</p>
 		 			</fieldset>
 				</form>
+				<br><a href='$home'>Home</a>
 HTML;
 				echo $html;
 			}
@@ -249,7 +296,24 @@ HTML;
 		
 		protected function import_data()
 		{
+			$metadata = array();
+			if($this->table && $this->fields)
+			{
+				$metadata = $this->db->metadata($this->table);
+				
+				foreach($this->fields as $field)
+				{
+					if(!isset($metadata[$field]))
+					{
+						throw new Exception("Feltet '{$field}' finnes ikke i tabellen '{$this->table}'");
+					}
+				}
+//				_debug_array($metadata);die();
+			}
+			
+			$this->import_conversion->table = $this->table;
 			$this->import_conversion->fields = $this->fields;
+			$this->import_conversion->metadata = $metadata;
 
 			$start_time = time();
 			
@@ -320,7 +384,7 @@ HTML;
 
 			if ($skipfirstline)
 			{
-				$this->fields = $data->sheets[0]['cells'][1];
+				$this->fields = array_values($data->sheets[0]['cells'][1]);
 			}
 			
 			$rows = $data->sheets[0]['numRows']+1;
@@ -356,9 +420,9 @@ HTML;
 
 		private function log_messages($step)
         {
-        	sort($this->errors);
-        	sort($this->warnings);
-        	sort($this->messages);
+        //	sort($this->errors);
+        //	sort($this->warnings);
+        //	sort($this->messages);
         	
             $msgs = array_merge(
             	array('----------------Errors--------------------'),
