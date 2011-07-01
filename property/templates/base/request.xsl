@@ -710,22 +710,20 @@
 
 	<xsl:template match="condition_list">
 		<tr>
-			<xsl:attribute name="class">
+			<td class="small_text" align="left">
 				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
+					<xsl:when test="condition_type_list != ''">
+						<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
+						<select name="values[condition][{condition_type}][condition_type]" class="forms" title="{$lang_degree_statustext}">
+							<xsl:apply-templates select="condition_type_list/options"/>
+						</select>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
+						<xsl:value-of select="condition_type_name"/>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:attribute>
-			<td class="small_text" align="left">
-				<xsl:value-of select="condition_type_name"/>
 			</td>
+
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
 				<select name="values[condition][{condition_type}][degree]" class="forms" title="{$lang_degree_statustext}">

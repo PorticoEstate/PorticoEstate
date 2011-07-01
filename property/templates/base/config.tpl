@@ -455,6 +455,17 @@
 				</select>
 			</td>
 		</tr>
+
+		<tr class="row_off">
+			<td>{lang_disallow_multiple_condition_types_at_demands}.</td>
+			<td>
+				<select name="newsettings[disallow_multiple_condition_types]">
+					<option value="" {selected_disallow_multiple_condition_types_}>NO</option>
+					<option value="1" {selected_disallow_multiple_condition_types_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+
 		<tr class="row_on">
 			<td valign = 'top'>{lang_list_location_level}:</td>
 			<td>

@@ -239,16 +239,51 @@
 				$conditions = $this->so->select_conditions($request_id,$condition_type_list);
 			}
 
-			for ($i=0;$i<count($condition_type_list);$i++)
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read();
+			$disallow_multiple_condition_types = isset( $config->config_data['disallow_multiple_condition_types']) &&  $config->config_data['disallow_multiple_condition_types'] ? (int)$config->config_data['disallow_multiple_condition_types'] : 0;
+
+			if( !$disallow_multiple_condition_types )
 			{
-				$values[$i]['degree'] 				= array('options' => $this->select_degree_list($conditions[$i]['degree']));
-				$values[$i]['probability'] 			= array('options' => $this->select_probability_list($conditions[$i]['probability']));
-				$values[$i]['consequence'] 			= array('options' => $this->select_consequence_list($conditions[$i]['consequence']));
-				$values[$i]['condition_type']		= $condition_type_list[$i]['id'];
-				$values[$i]['condition_type_name']	= $condition_type_list[$i]['name'];
-				$values[$i]['weight']				= $condition_type_list[$i]['weight'];
-				$values[$i]['risk']					= (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'];
-				$values[$i]['score']				= $values[$i]['risk'] * (int)$conditions[$i]['degree'];
+				foreach($condition_type_list as $condition_type)
+				{
+					$i = $condition_type['id'];
+					$values[] = array
+					(
+						'degree' 				=> array('options' => $this->select_degree_list($conditions[$i]['degree'])),
+						'probability' 			=> array('options' => $this->select_probability_list($conditions[$i]['probability'])),
+						'consequence' 			=> array('options' => $this->select_consequence_list($conditions[$i]['consequence'])),
+						'condition_type'		=> $condition_type_list[$i]['id'],
+						'condition_type_name'	=> $condition_type_list[$i]['name'],
+						'weight'				=> $condition_type_list[$i]['weight'],
+						'risk'					=> (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'],
+						'score'					=> $values[$i]['risk'] * (int)$conditions[$i]['degree']
+					);
+				}
+			}
+			else
+			{
+				$i = 0;
+				foreach($conditions as $condition_type => $condition)
+				{
+					if($condition['condition_type'])
+					{
+						$i = $condition['condition_type'];
+						break;
+					}
+				}
+				$values[] = array
+				(
+					'condition_type_list'	=> array('options' => $this->bocommon->select_list($i, $condition_type_list)),
+					'degree' 				=> array('options' => $this->select_degree_list($conditions[$i]['degree'])),
+					'probability' 			=> array('options' => $this->select_probability_list($conditions[$i]['probability'])),
+					'consequence' 			=> array('options' => $this->select_consequence_list($conditions[$i]['consequence'])),
+					'condition_type'		=> $condition_type_list[$i]['id'],
+					'condition_type_name'	=> $condition_type_list[$i]['name'],
+					'weight'				=> $condition_type_list[$i]['weight'],
+					'risk'					=> (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'],
+					'score'					=> $values[$i]['risk'] * (int)$conditions[$i]['degree']
+				);
 			}
 
 			return $values;
