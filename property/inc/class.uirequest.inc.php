@@ -973,6 +973,10 @@
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
 				}
+				if($values['planning_value'] && !$values['planning_date'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
+				}
 
 
 				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
@@ -1202,6 +1206,7 @@
 			}
 
 			$jscal->add_listener('values_consume_date');
+			$jscal->add_listener('values_planning_date');
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$link_file_data = array
@@ -1275,18 +1280,23 @@
 
 			if($this->acl_edit)
 			{
-				$lang_delete_consume = lang('Check to delete');
+				$_lang_delete = lang('Check to delete');
 				foreach($values['consume'] as & $consume)
 				{
-					$consume['delete'] = "<input type='checkbox' name='values[delete_consume][]' value='{$consume['id']}' title='{$lang_delete_consume}'>";
+					$consume['delete'] = "<input type='checkbox' name='values[delete_consume][]' value='{$consume['id']}' title='{$_lang_delete}'>";
 				}
+				foreach($values['planning'] as & $planning)
+				{
+					$planning['delete'] = "<input type='checkbox' name='values[delete_planning][]' value='{$planning['id']}' title='{$_lang_delete}'>";
+				}
+
 			}
 			
 			$datavalues[2] = array
 				(
 					'name'					=> "2",
-					'values' 				=> json_encode($values['consume']),
-					'total_records'			=> count($values['consume']),
+					'values' 				=> json_encode($values['planning']),
+					'total_records'			=> count($values['planning']),
 					'edit_action'			=> "''",
 					'is_paginator'			=> 0,
 					'footer'				=> 0
@@ -1297,6 +1307,26 @@
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
+					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
+														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
+				);
+
+			$datavalues[3] = array
+				(
+					'name'					=> "3",
+					'values' 				=> json_encode($values['consume']),
+					'total_records'			=> count($values['consume']),
+					'edit_action'			=> "''",
+					'is_paginator'			=> 0,
+					'footer'				=> 0
+				);
+
+
+
+			$myColumnDefs[3] = array
+				(
+					'name'		=> "3",
 					'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
 														array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
