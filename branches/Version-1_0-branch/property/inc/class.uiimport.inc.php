@@ -22,6 +22,9 @@
 		protected $account;
 		protected $conv_type;
 		protected $import_conversion;
+		protected $steps = 0;
+		protected $fields = array();
+		protected $table;
 		
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
@@ -41,6 +44,7 @@
 //			$GLOBALS['phpgw']->common->phpgw_header(true);
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db           = & $GLOBALS['phpgw']->db;
+			$this->table 		= phpgw::get_var('table');
 		}
 		
 
@@ -57,29 +61,20 @@
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
 			if (phpgw::get_var("importsubmit")) 
 			{
-				// Get the path for user input or use a default path
-				
-				if($this->file = $_FILES['file']['tmp_name'])
+				if($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
 				{
-					$this->csvdata = $this->getcsvdata($this->file);
+					phpgwapi_cache::session_set('property', 'import_message', 'Hmm... looks like a repost!');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
 				}
 
+				phpgwapi_cache::session_set('property', 'import_settings', $_POST);
+
 				$this->conv_type 	= phpgw::get_var('conv_type');
-//_debug_array($this->csvdata);
-				phpgwapi_cache::session_set('property', 'file', $this->file);
-				phpgwapi_cache::session_set('property', 'csvdata', $this->csvdata);
-				phpgwapi_cache::session_set('property', 'conv_type', $this->conv_type);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.index', 'importstep' => 'true'));
-			} 
-			else if(phpgw::get_var("importstep"))
-			{
+
 				$start_time = time(); // Start time of import
 				$start = date("G:i:s",$start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
-				$this->file = phpgwapi_cache::session_get('property', 'file');
-				$this->csvdata = phpgwapi_cache::session_get('property', 'csvdata');
-				$this->conv_type = phpgwapi_cache::session_get('property', 'conv_type');
 
 				if($this->conv_type)
 				{
@@ -92,20 +87,64 @@
 	
 					if ( is_file($file) )
 					{
-//_debug_Array($file);die();
 						require_once $file;
 						$this->import_conversion = new import_conversion;
+						$this->import_conversion->debug	= phpgw::get_var('debug', 'bool');
 					}
 				}
 
-				$result = $this->import(); // Do import step, result determines if finished for this area
-				echo '<li class="info">Import: finished step ' .$result. '</li>';
-				while($result != '1')
+
+				// Get the path for user input or use a default path
+
+				$files = array();
+				if(isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
 				{
-					$result = $this->import();
-					echo '<li class="info">Import: finished step ' .$result. '</li>';
-					flush();
+					$files[] = array
+					(
+						'name'	=> $_FILES['file']['tmp_name'],
+						'type'	=> $_FILES['file']['type']
+					);
+					
 				}
+				else
+				{
+					$path = phpgw::get_var('path', 'string');
+					$files = $this->get_files($path);
+				}
+
+				if(!$files)
+				{
+					phpgwapi_cache::session_set('property', 'import_message', 'Ingen filer er valgt');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=>'property.uiimport.index'));
+				}
+
+				foreach ($files as $file)
+				{
+					$valid_type = false;
+					switch ($file['type'])
+					{
+						case 'application/vnd.ms-excel':
+							$this->csvdata = $this->getexceldata($file['name']);
+							$valid_type = true;
+							break;
+						case 'text/csv':
+						case 'text/comma-separated-values':
+							$this->csvdata = $this->getcsvdata($file['name']);
+							$valid_type = true;
+							break;
+					}
+					
+					if($valid_type)
+					{
+						$result = $this->import();
+						$this->messages = array_merge($this->messages,$this->import_conversion->messages);
+						$this->warnings = array_merge($this->warnings,$this->import_conversion->warnings);
+						$this->errors = array_merge($this->errors,$this->import_conversion->errors);
+						$this->csvdata = array();
+						echo '<li class="info">Import: finished step ' .$result. '</li>';
+					}
+				}
+
 
 				echo "</ul>";
 				$end_time = time();
@@ -113,10 +152,6 @@
 				$end = date("G:i:s",$end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 				
-				$this->messages = array_merge($this->messages,$this->import_conversion->messages);
-				$this->warnings = array_merge($this->warnings,$this->import_conversion->warnings);
-				$this->errors = array_merge($this->errors,$this->import_conversion->errors);
-
 				if ($this->errors)
 				{ 
 					echo "<ul>";
@@ -148,11 +183,17 @@
 					}
 					echo "</ul>";
 				}
+				echo '<a href="'. $GLOBALS['phpgw']->link('/home.php') . '">Home</a>';
+				echo '</br><a href="'. $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index')) . '">Import</a>';
+
 			}
 			else
 			{
+				$import_settings	= phpgwapi_cache::session_get('property', 'import_settings');
+				$import_message		= phpgwapi_cache::session_get('property', 'import_message');
 
-				$conv_list = $this->get_import_conv($this->conv_type);
+				phpgwapi_cache::session_clear('property', 'import_message');
+				$conv_list			= $this->get_import_conv($import_settings['conv_type']);
 				
 				$conv_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
 				foreach ( $conv_list as $conv)
@@ -167,19 +208,60 @@
 					<option value='{$conv['id']}'{$selected}>{$conv['name']}</option>
 HTML;
 				}			
+
+				$tables = $this->db->table_names();
+				sort($tables);
+
+				$table_option = '<option value="">' . lang('none selected') . '</option>' . "\n";
+				foreach ( $tables as $table)
+				{
+					$selected = $import_settings['table'] == $table ? 'selected =  "selected"' : '';
+					$table_option .=  <<<HTML
+					<option value='{$table}'{$selected}>{$table}</option>
+HTML;
+				}			
+
+
+				$home =  $GLOBALS['phpgw']->link('/home.php');
+				$action =  $GLOBALS['phpgw']->link('/index.php', array('menuaction'=>'property.uiimport.index'));
+
+				$debug_checked = isset($import_settings['debug']) && $import_settings['debug'] ? 'checked =  "checked"' : '';
 				$html = <<<HTML
-				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer</h1>
-				<div id="messageHolder"></div>
-				<form action="index.php?menuaction=property.uiimport.index" method="post" enctype="multipart/form-data">
+				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
+				<div id="messageHolder">{$import_message}</div>
+				<form action="{$action}" method="post" enctype="multipart/form-data">
 					<fieldset>
-						<label for="file">Choose file:</label> <input type="file" name="file" id="file" />
-						<label for="conv_type">Choose conversion:</label>
-						<select name="conv_type" id="conv_type">
-						{$conv_option}
+						<p>
+							<label for="file">Choose file:</label>
+							<input type="file" name="file" id="file" title = 'Single file'/>
+						</p>
+						<p>
+							<label for="path">Local path:</label>
+							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
+						</p>
+						<p>
+							<label for="conv_type">Choose conversion:</label>
+							<select name="conv_type" id="conv_type">
+							{$conv_option}
 						</select>
-						<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
+						</p>
+						<p>
+							<label for="table">Choose Table:</label>
+							<select name="table" id="table">
+							{$table_option}
+						</select>
+						</p>
+
+						<p>
+							<label for="debug">Debug:</label>
+							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
+						</p>
+						<p>
+							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
+						</p>
 		 			</fieldset>
 				</form>
+				<br><a href='$home'>Home</a>
 HTML;
 				echo $html;
 			}
@@ -196,7 +278,7 @@ HTML;
 		 */
 		public function import()
 		{
-			$steps = 1;
+			$this->steps++;
 			
 			/* Import logic:
 			 * 
@@ -206,35 +288,37 @@ HTML;
 			 * 4. Log messages for this step
 			 *  
 			 */
-			
-			$this->messages = array();
-			$this->warnings = array();
-			$this->errors = array();
-			
-			// Import data if not done before and put them on the users session
-			if (!phpgwapi_cache::session_get('property', 'data_import'))
-			{
-				phpgwapi_cache::session_set('property', 'data_import', $this->import_data()); 
-                $this->log_messages(1);
-				return '1';
-			}
 
-			// We're done with the import, so clear all session variables so we're ready for a new one
-			phpgwapi_cache::session_clear('property', 'data_import');
-			phpgwapi_cache::session_clear('property', 'conv_type');
-			return '1';
+			$this->import_data();
+			$this->log_messages($this->steps);
+			return $this->steps;
 		}
 		
 		protected function import_data()
 		{
+			$metadata = array();
+			if($this->table && $this->fields)
+			{
+				$metadata = $this->db->metadata($this->table);
+				
+				foreach($this->fields as $field)
+				{
+					if(!isset($metadata[$field]))
+					{
+						throw new Exception("Feltet '{$field}' finnes ikke i tabellen '{$this->table}'");
+					}
+				}
+//				_debug_array($metadata);die();
+			}
+			
+			$this->import_conversion->table = $this->table;
+			$this->import_conversion->fields = $this->fields;
+			$this->import_conversion->metadata = $metadata;
+
 			$start_time = time();
 			
 			$datalines = $this->csvdata;
 			
-			$this->messages[] = "Read 'import_all.csv' file in " . (time() - $start_time) . " seconds";
-			$this->messages[] = "'importfile.csv' contained " . count($datalines) . " lines";
-			
-
 			$ok = true;
 			$_ok = false;
 			$this->db->transaction_begin();
@@ -271,7 +355,7 @@ HTML;
 			if ($skipfirstline)
 			{
 				// Read the first line to get the headers out of the way
-				$this->getcsv($handle);
+				$this->fields = $this->getcsv($handle);
 			}
 			
 			$result = array();
@@ -283,9 +367,43 @@ HTML;
 			
 			fclose($handle);
 			
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
+
 			return $result;
 		}
+
+		protected function getexceldata($path, $skipfirstline = true)
+		{
+			$data = CreateObject('phpgwapi.excelreader');
+			$data->setOutputEncoding('CP1251');
+			$data->read($path);
+			$result = array();
+
+			$start = $skipfirstline ? 2 : 1; // Read the first line to get the headers out of the way
+
+			if ($skipfirstline)
+			{
+				$this->fields = array_values($data->sheets[0]['cells'][1]);
+			}
 			
+			$rows = $data->sheets[0]['numRows']+1;
+
+			for ($i=$start; $i<$rows; $i++ ) //First data entry on row 2
+			{
+				foreach($data->sheets[0]['cells'][$i] as &$value)
+				{
+					$value = utf8_encode(trim($value));
+				}
+				$result[] = array_values($data->sheets[0]['cells'][$i]);
+			}
+
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
+
+			return $result;
+		}
+
 		
 		/**
 		 * Read the next line from the given file handle and parse it to CSV according to the rules set up
@@ -302,9 +420,9 @@ HTML;
 
 		private function log_messages($step)
         {
-        	sort($this->errors);
-        	sort($this->warnings);
-        	sort($this->messages);
+        //	sort($this->errors);
+        //	sort($this->warnings);
+        //	sort($this->messages);
         	
             $msgs = array_merge(
             	array('----------------Errors--------------------'),
@@ -350,5 +468,43 @@ HTML;
 			}
 
 			return $conv_list;
+		}
+
+		protected function get_files($dirname)
+		{
+			// prevent path traversal
+			if ( preg_match('/\./', $dirname) 
+			 || !is_dir($dirname) )
+			{
+				return array();
+			}
+
+			$mime_magic = createObject('phpgwapi.mime_magic');
+			
+			$file_list = array();
+			$dir = new DirectoryIterator($dirname); 
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable())
+//						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'xls' ) != 0 )
+//						|| strcasecmp( end( explode( ".", $file->getPathname() ) ), 'csv' ) != 0 ))
+ 					{
+						continue;
+					}
+
+					$file_name = $file->__toString();
+					$file_list[] = array
+					(
+						'name'	=> (string) "{$dirname}/{$file_name}",
+						'type'	=> $mime_magic->filename2mime($file_name)
+					);
+				}
+			}
+
+			return $file_list;
 		}
 	}

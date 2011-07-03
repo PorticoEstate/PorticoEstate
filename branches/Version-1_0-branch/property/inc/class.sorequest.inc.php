@@ -143,35 +143,44 @@
 
 		function select_condition_type_list()
 		{
-			$this->db->query("SELECT id, descr, priority_key FROM fm_request_condition_type ORDER BY id ");
+			$this->db->query("SELECT id, descr, priority_key FROM fm_request_condition_type ORDER BY id",__LINE__,__FILE__);
 
 			$values = array();
 			while ($this->db->next_record())
 			{
-				$values[] = array
+				$id = $this->db->f('id');
+				$values[$id] = array
 				(
-					'id'		=> $this->db->f('id'),
+					'id'		=> $id,
 					'name'		=> $this->db->f('descr',true),
-					'weight'	=> $this->db->f('priority_key'),					
+					'weight'	=> $this->db->f('priority_key')					
 				);
 			}
 			return $values;
 		}
 
-		function select_conditions($request_id='',$condition_type_list='')
+		function select_conditions($request_id, $condition_type_list = array())
 		{
-			$conditions = array();
-			for ($i=0;$i<count($condition_type_list);$i++)
+			$request_id = (int)$request_id;
+			$values = array();
+			foreach($condition_type_list as $condition_type)
 			{
-				$this->db->query("SELECT degree,probability,consequence FROM fm_request_condition WHERE request_id=$request_id AND condition_type =" . (int)$condition_type_list[$i]['id']);
+				$i = (int)$condition_type['id'];
+				$this->db->query("SELECT * FROM fm_request_condition WHERE request_id={$request_id} AND condition_type = {$i}",__LINE__,__FILE__);
+
 				$this->db->next_record();
-				$conditions[$i]['request_id']		= $request_id;
-				$conditions[$i]['degree']			= $this->db->f('degree');
-				$conditions[$i]['probability']		= $this->db->f('probability');
-				$conditions[$i]['consequence']		= $this->db->f('consequence');
+
+				$values[$i] = array
+				(
+					'request_id'		=> $request_id,
+					'condition_type'	=> $this->db->f('condition_type'),
+					'degree'			=> $this->db->f('degree'),
+					'probability'		=> $this->db->f('probability'),
+					'consequence'		=> $this->db->f('consequence')
+				);
 			}
 
-			return $conditions;
+			return $values;
 		}
 
 
@@ -492,6 +501,21 @@
 				$location_code = $this->db->f('location_code');
 				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
 
+				$sql = "SELECT * FROM fm_request_planning WHERE request_id={$request_id} ORDER BY date ASC";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while($this->db->next_record())
+				{
+					$request['planning'][] = array
+					(
+						'id'			=> $this->db->f('id'),
+						'amount'		=> $this->db->f('amount'),
+						'date'			=> $this->db->f('date'),
+						'user_id'		=> $this->db->f('user_id'),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'descr'			=> $this->db->f('descr',true)
+					);
+				}
+
 				$sql = "SELECT * FROM fm_request_consume WHERE request_id={$request_id} ORDER BY date ASC";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
@@ -616,21 +640,24 @@
 
 			$this->db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
 
-			while (is_array($request['condition']) && list($condition_type,$value_type) = each($request['condition']))
+			if(isset($request['condition']) && is_array($request['condition']))
 			{
-				$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
-					. "VALUES ('"
-					. $id. "','"
-					. $condition_type . "',"
-					. $value_type['degree']. ","
-					. $value_type['probability']. ","
-					. $value_type['consequence']. ","
-					. $this->account . ","
-					. time() . ")",__LINE__,__FILE__);
+				foreach( $request['condition'] as $condition_type => $value_type )
+				{
+					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
+					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
+						. "VALUES ('"
+						. $request['id']. "','"
+						. $_condition_type . "',"
+						. $value_type['degree']. ","
+						. $value_type['probability']. ","
+						. $value_type['consequence']. ","
+						. $this->account . ","
+						. time() . ")",__LINE__,__FILE__);
+				}
 			}
 
 			$this->update_score($id);
-
 
 			if($request['extra']['contact_phone'] && $request['extra']['tenant_id'])
 			{
@@ -678,6 +705,17 @@
 			{
 				$value_set	= $this->db->validate_update($value_set);
 				$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$id}'",__LINE__,__FILE__);
+			}
+
+			if($request['planning_value'] && $request['planning_date'])
+			{
+				$this->db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ('"
+					. $id . "','"
+					. (int)$request['planning_value'] . "',"
+					. (int)$request['planning_date']. ","
+					. $this->account . ","
+					. time() . ")",__LINE__,__FILE__);
 			}
 
 			if($request['consume_value'] && $request['consume_date'])
@@ -791,17 +829,21 @@
 			$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$request['id']}'",__LINE__,__FILE__);
 
 			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='{$request['id']}'",__LINE__,__FILE__);
-			while (is_array($request['condition']) && list($condition_type,$value_type) = each($request['condition']))
+			if(isset($request['condition']) && is_array($request['condition']))
 			{
-				$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
-					. "VALUES ('"
-					. $request['id']. "','"
-					. $condition_type . "',"
-					. $value_type['degree']. ","
-					. $value_type['probability']. ","
-					. $value_type['consequence']. ","
-					. $this->account . ","
-					. time() . ")",__LINE__,__FILE__);
+				foreach( $request['condition'] as $condition_type => $value_type )
+				{
+					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
+					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
+						. "VALUES ('"
+						. $request['id']. "','"
+						. $_condition_type . "',"
+						. $value_type['degree']. ","
+							. $value_type['probability']. ","
+						. $value_type['consequence']. ","
+						. $this->account . ","
+						. time() . ")",__LINE__,__FILE__);
+				}
 			}
 
 			$this->update_score($request['id']);
@@ -814,6 +856,25 @@
 			if ($request['power_meter'] )
 			{
 				$this->soproject->update_power_meter($request['power_meter'],$request['location_code'],$address);
+			}
+
+			if($request['planning_value'] && $request['planning_date'])
+			{
+				$this->db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ('"
+					. $request['id']. "','"
+					. (int)$request['planning_value'] . "',"
+					. (int)$request['planning_date']. ","
+					. $this->account . ","
+					. time() . ")",__LINE__,__FILE__);
+			}
+
+			if(isset($request['delete_planning']) && is_array($request['delete_planning']))
+			{
+				foreach ($request['delete_planning'] as $delete_planning)
+				{
+					$this->db->query("DELETE FROM fm_request_planning WHERE id =" . (int)$delete_planning,__LINE__,__FILE__);				
+				}
 			}
 
 			if($request['consume_value'] && $request['consume_date'])
@@ -865,6 +926,7 @@
 		{
 			$request_id = (int) $request_id;
 			$this->db->transaction_begin();
+			$this->db->query("DELETE FROM fm_request_planning WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_consume WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_condition WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_history  WHERE  history_record_id = {$request_id}",__LINE__,__FILE__);

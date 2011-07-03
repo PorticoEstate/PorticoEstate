@@ -81,6 +81,8 @@
 <?php
 	if($list_form)
 	{
+		if(!$nosearch)
+		{
 ?>
 
 <form id="<?php echo $list_id ?>_form" method="GET">
@@ -93,6 +95,7 @@
 	</fieldset>
 </form>
 <?php
+		}
 	}
 ?>
 

@@ -65,6 +65,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			}
 		}
 
+		$use_local_group = false;
 		$filter_clauses = array();
 		$filter_clauses[] = "bb_group.show_in_portal=1"; 
 		if(isset($filters['org_id']))
@@ -74,7 +75,11 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			{
 				$filter_clauses[] = "bb_group.organization_id = {$group_org_id}";
 			}
-		}		
+		}
+		if(isset($filters['changed_groups'])){
+			$use_local_group = true;
+			unset($filter_clauses);
+		}
 		
 		if(count($filter_clauses))
 		{
@@ -83,26 +88,50 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 
 		$condition =  join(' AND ', $clauses);
 
-		if($return_count) // We should only return a count
+		if($use_local_group)
 		{
-			$cols = 'COUNT(DISTINCT(bb_group.id)) AS count';
+			if($return_count) // We should only return a count
+			{
+				$cols = 'COUNT(DISTINCT(activity_group.id)) AS count';
+			}
+			else
+			{
+				$columns[] = 'activity_group.id';
+				$columns[] = 'activity_group.name';
+				$columns[] = 'activity_group.description';
+				$columns[] = 'activity_group.organization_id';
+				
+				$dir = $ascending ? 'ASC' : 'DESC';
+				$order = "ORDER BY activity_group.id $dir";
+				
+				$cols = implode(',',$columns);
+			}
+	
+			$tables = "activity_group";
 		}
 		else
 		{
-			$columns[] = 'bb_group.id';
-			$columns[] = 'bb_group.name';
-			$columns[] = 'bb_group.description';
-			$columns[] = 'bb_group.organization_id';
-			$columns[] = 'bb_group.activity_id';
-			$columns[] = 'bb_group.active';
-			$columns[] = 'bb_group.shortname';
-			$columns[] = 'bb_group.show_in_portal';
-			
-			$cols = implode(',',$columns);
+			if($return_count) // We should only return a count
+			{
+				$cols = 'COUNT(DISTINCT(bb_group.id)) AS count';
+			}
+			else
+			{
+				$columns[] = 'bb_group.id';
+				$columns[] = 'bb_group.name';
+				$columns[] = 'bb_group.description';
+				$columns[] = 'bb_group.organization_id';
+				$columns[] = 'bb_group.activity_id';
+				$columns[] = 'bb_group.active';
+				$columns[] = 'bb_group.shortname';
+				$columns[] = 'bb_group.show_in_portal';
+				
+				$cols = implode(',',$columns);
+			}
+	
+			$tables = "bb_group";
 		}
-
-		$tables = "bb_group";
-
+		
 		//$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 		
@@ -171,6 +200,21 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		$contacts = array();
     	if(isset($group_id)){
 	    	$q1="SELECT id FROM bb_group_contact WHERE group_id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contacts[] = $this->db->f('id');
+			}
+			//$result = $contacts;
+    	}
+		
+		return $contacts;
+	}
+	
+	function get_contacts_local($group_id)
+	{
+		$contacts = array();
+    	if(isset($group_id)){
+	    	$q1="SELECT id FROM activity_contact_person WHERE group_id='{$group_id}'";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$contacts[] = $this->db->f('id');

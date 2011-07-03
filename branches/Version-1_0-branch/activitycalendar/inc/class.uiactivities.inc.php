@@ -96,12 +96,14 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		// Get the contract part id
 		$activity_id = (int)phpgw::get_var('id');
 		$so_activity = activitycalendar_soactivity::get_instance();
+		$so_arena = activitycalendar_soarena::get_instance();
 		//var_dump($activity_id);
 		
 		$categories = $so_activity->get_categories();
 		$targets = $so_activity->get_targets();
 		$offices = $so_activity->select_district_list();
 		$districts = $so_activity->get_districts();
+		$buildings = $so_arena->get_buildings();
 				
 		// Retrieve the activity object or create a new one
 		if(isset($activity_id) && $activity_id > 0)
@@ -124,7 +126,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
 			$desc = activitycalendar_soorganization::get_instance()->get_description($o_id);
 		}
-		$arenas = activitycalendar_soarena::get_instance()->get(null, null, null, null, null, null, null);
+		$arenas = $so_arena->get(null, null, null, null, null, null, null);
 		$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
 		$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 
@@ -134,12 +136,22 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			{
 				$old_state = $activity->get_state();
 				$new_state = phpgw::get_var('state');
-
+				
 				// ... set all parameters
 				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id(phpgw::get_var('organization_id'));
 				$activity->set_group_id(phpgw::get_var('group_id'));
-				$activity->set_arena(phpgw::get_var('arena_id'));
+				$internal_arena = phpgw::get_var('internal_arena_id');
+				if(isset($internal_arena) && $internal_arena > 0)
+				{
+					$activity->set_arena(0);
+					$activity->set_internal_arena($internal_arena);
+				}
+				else
+				{
+					$activity->set_arena(phpgw::get_var('arena_id'));
+					$activity->set_internal_arena(0);
+				}
 				$district_array = phpgw::get_var('district');
 				$activity->set_district(implode(",", $district_array));
 				$activity->set_office(phpgw::get_var('office'));
@@ -185,6 +197,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'organizations' => $organizations,
 				'groups' => $groups,
 				'arenas' => $arenas,
+				'buildings' => $buildings,
 				'categories' => $categories,
 				'targets' => $targets,
 				'districts' => $districts,

@@ -417,6 +417,42 @@
 
 							<tr>
 								<td valign="top">
+										<xsl:value-of select="php:function('lang', 'planning date')" />
+								</td>
+								<td>
+									<input type="text" id="values_planning_date" name="values[planning_date]" size="10" value="" readonly="readonly" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'planning date')" />
+										</xsl:attribute>
+									</input>
+									<img id="values_planning_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+										<xsl:value-of select="php:function('lang', 'planning value')" />
+								</td>
+								<td>
+									<input type="text" id="values_planning_value" name="values[planning_value]" size="10" value="{value_planning}" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'planning value')" />
+										</xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+
+							<tr>
+								<td width="19%" align="left" valign="top">
+									<xsl:value-of select="php:function('lang', 'planning serie')" />
+								</td>
+								<td>
+									<div id="datatable-container_2"></div>
+								</td>
+							</tr>
+
+							<tr>
+								<td valign="top">
 										<xsl:value-of select="php:function('lang', 'consume date')" />
 								</td>
 								<td>
@@ -442,14 +478,14 @@
 								</td>
 							</tr>
 
-									<tr>
-										<td width="19%" align="left" valign="top">
-											<xsl:value-of select="php:function('lang', 'consume history')" />
-										</td>
-										<td>
-											<div id="datatable-container_2"></div>
-										</td>
-									</tr>
+							<tr>
+								<td width="19%" align="left" valign="top">
+									<xsl:value-of select="php:function('lang', 'consume history')" />
+								</td>
+								<td>
+									<div id="datatable-container_3"></div>
+								</td>
+							</tr>
 
 <!--
 							<tr>
@@ -710,22 +746,20 @@
 
 	<xsl:template match="condition_list">
 		<tr>
-			<xsl:attribute name="class">
+			<td class="small_text" align="left">
 				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
+					<xsl:when test="condition_type_list != ''">
+						<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
+						<select name="values[condition][{condition_type}][condition_type]" class="forms" title="{$lang_degree_statustext}">
+							<xsl:apply-templates select="condition_type_list/options"/>
+						</select>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
+						<xsl:value-of select="condition_type_name"/>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:attribute>
-			<td class="small_text" align="left">
-				<xsl:value-of select="condition_type_name"/>
 			</td>
+
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
 				<select name="values[condition][{condition_type}][degree]" class="forms" title="{$lang_degree_statustext}">
