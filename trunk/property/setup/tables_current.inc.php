@@ -850,6 +850,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_request_planning' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','nullable' => False),
+				'request_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'amount' => array('type' => 'int','precision' => '4','nullable' => False),
+				'date' => array('type' => 'int','precision' => '4','nullable' => False),
+				'user_id' => array('type' => 'int','precision' => '4','nullable' => true),
+				'entry_date' => array('type' => 'int','precision' => '4','nullable' => true),
+				'descr' => array('type' => 'text','nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_request' => array('request_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_ns3420' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '20','nullable' => False),

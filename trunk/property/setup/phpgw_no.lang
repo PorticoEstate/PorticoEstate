@@ -353,6 +353,11 @@ consume	property	no	forbruk
 consume date	property	no	Dato historisk forbruk
 consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
+planning	property	no	Planlagt
+planning date	property	no	Dato planagt disponering
+planning value	property	no	Beløp planagt disponering
+planning serie	property	no	Planagt disponering
+
 check to delete	property	no	Merk for å slette
 contact	property	no	Kontakt
 contact email	property	no	Epost

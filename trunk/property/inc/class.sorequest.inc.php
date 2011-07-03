@@ -501,6 +501,21 @@
 				$location_code = $this->db->f('location_code');
 				$request['power_meter']		= $this->soproject->get_power_meter($location_code);
 
+				$sql = "SELECT * FROM fm_request_planning WHERE request_id={$request_id} ORDER BY date ASC";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while($this->db->next_record())
+				{
+					$request['planning'][] = array
+					(
+						'id'			=> $this->db->f('id'),
+						'amount'		=> $this->db->f('amount'),
+						'date'			=> $this->db->f('date'),
+						'user_id'		=> $this->db->f('user_id'),
+						'entry_date'	=> $this->db->f('entry_date'),
+						'descr'			=> $this->db->f('descr',true)
+					);
+				}
+
 				$sql = "SELECT * FROM fm_request_consume WHERE request_id={$request_id} ORDER BY date ASC";
 				$this->db->query($sql,__LINE__,__FILE__);
 				while($this->db->next_record())
@@ -692,6 +707,17 @@
 				$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$id}'",__LINE__,__FILE__);
 			}
 
+			if($request['planning_value'] && $request['planning_date'])
+			{
+				$this->db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ('"
+					. $id . "','"
+					. (int)$request['planning_value'] . "',"
+					. (int)$request['planning_date']. ","
+					. $this->account . ","
+					. time() . ")",__LINE__,__FILE__);
+			}
+
 			if($request['consume_value'] && $request['consume_date'])
 			{
 				$this->db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
@@ -832,6 +858,25 @@
 				$this->soproject->update_power_meter($request['power_meter'],$request['location_code'],$address);
 			}
 
+			if($request['planning_value'] && $request['planning_date'])
+			{
+				$this->db->query("INSERT INTO fm_request_planning (request_id,amount,date,user_id,entry_date) "
+					. "VALUES ('"
+					. $request['id']. "','"
+					. (int)$request['planning_value'] . "',"
+					. (int)$request['planning_date']. ","
+					. $this->account . ","
+					. time() . ")",__LINE__,__FILE__);
+			}
+
+			if(isset($request['delete_planning']) && is_array($request['delete_planning']))
+			{
+				foreach ($request['delete_planning'] as $delete_planning)
+				{
+					$this->db->query("DELETE FROM fm_request_planning WHERE id =" . (int)$delete_planning,__LINE__,__FILE__);				
+				}
+			}
+
 			if($request['consume_value'] && $request['consume_date'])
 			{
 				$this->db->query("INSERT INTO fm_request_consume (request_id,amount,date,user_id,entry_date) "
@@ -881,6 +926,7 @@
 		{
 			$request_id = (int) $request_id;
 			$this->db->transaction_begin();
+			$this->db->query("DELETE FROM fm_request_planning WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_consume WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_condition WHERE request_id = {$request_id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM fm_request_history  WHERE  history_record_id = {$request_id}",__LINE__,__FILE__);

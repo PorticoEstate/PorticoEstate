@@ -422,6 +422,17 @@
 				$values['location_data'] =$this->solocation->read_single($values['location_code']);
 			}
 
+			if(isset($values['planning']) && $values['planning'])
+			{
+				foreach ($values['planning'] as &$planning)
+				{
+					$planning['date'] = $GLOBALS['phpgw']->common->show_date($planning['date'],'Y');
+				}
+			}
+			else
+			{
+				$values['planning'] = array();
+			}
 			if(isset($values['consume']) && $values['consume'])
 			{
 				foreach ($values['consume'] as &$consume)
@@ -570,6 +581,7 @@
 			$request['location_code']	= implode("-", $location);
 			$request['start_date']		= phpgwapi_datetime::date_to_timestamp($request['start_date']);
 			$request['end_date']		= phpgwapi_datetime::date_to_timestamp($request['end_date']);
+			$request['planning_date']	= phpgwapi_datetime::date_to_timestamp($request['planning_date']);
 			$request['consume_date']	= phpgwapi_datetime::date_to_timestamp($request['consume_date']);
 
 			if(is_array($values_attribute))

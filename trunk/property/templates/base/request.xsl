@@ -417,6 +417,42 @@
 
 							<tr>
 								<td valign="top">
+										<xsl:value-of select="php:function('lang', 'planning date')" />
+								</td>
+								<td>
+									<input type="text" id="values_planning_date" name="values[planning_date]" size="10" value="" readonly="readonly" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'planning date')" />
+										</xsl:attribute>
+									</input>
+									<img id="values_planning_date-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+										<xsl:value-of select="php:function('lang', 'planning value')" />
+								</td>
+								<td>
+									<input type="text" id="values_planning_value" name="values[planning_value]" size="10" value="{value_planning}" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'planning value')" />
+										</xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+
+							<tr>
+								<td width="19%" align="left" valign="top">
+									<xsl:value-of select="php:function('lang', 'planning serie')" />
+								</td>
+								<td>
+									<div id="datatable-container_2"></div>
+								</td>
+							</tr>
+
+							<tr>
+								<td valign="top">
 										<xsl:value-of select="php:function('lang', 'consume date')" />
 								</td>
 								<td>
@@ -442,14 +478,14 @@
 								</td>
 							</tr>
 
-									<tr>
-										<td width="19%" align="left" valign="top">
-											<xsl:value-of select="php:function('lang', 'consume history')" />
-										</td>
-										<td>
-											<div id="datatable-container_2"></div>
-										</td>
-									</tr>
+							<tr>
+								<td width="19%" align="left" valign="top">
+									<xsl:value-of select="php:function('lang', 'consume history')" />
+								</td>
+								<td>
+									<div id="datatable-container_3"></div>
+								</td>
+							</tr>
 
 <!--
 							<tr>
