@@ -5309,6 +5309,41 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.619 to 0.9.17.620
+	* Add tentative planning to request
+	* 
+	*/
+
+	$test[] = '0.9.17.619';
+	function property_upgrade0_9_17_619()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_request_planning', array(
+				'fd' => array(
+					'id' => array('type' => 'auto','nullable' => False),
+					'request_id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'amount' => array('type' => 'int','precision' => '4','nullable' => False),
+					'date' => array('type' => 'int','precision' => '4','nullable' => False),
+					'user_id' => array('type' => 'int','precision' => '4','nullable' => true),
+					'entry_date' => array('type' => 'int','precision' => '4','nullable' => true),
+					'descr' => array('type' => 'text','nullable' => True)
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_request' => array('request_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.620';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608

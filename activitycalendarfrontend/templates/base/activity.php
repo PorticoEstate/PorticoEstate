@@ -18,12 +18,64 @@ function get_available_groups()
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
 <?php }?>
 
-var divcontent_start = "<select name=\"group_id\" id=\"group_id\">";
+	if(org_id != null && org_id == 'new_org')
+	{
+		//alert('new_org');
+		document.getElementById('new_org_group').style.display = "block";
+		document.getElementById('new_org_fields').style.display = "block";
+	}
+	else
+	{
+		document.getElementById('new_org_group').style.display = "none";
+		document.getElementById('new_org_fields').style.display = "none";
+		var divcontent_start = "<select name=\"group_id\" id=\"group_id\" onchange=\"javascript:checkNewGroup()\">";
+		var divcontent_end = "</select>";
+		
+		var callback = {
+			success: function(response){
+						div_select.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+					},
+			failure: function(o) {
+						 alert("AJAX doesn't work"); //FAILURE
+					 }
+		}
+		var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	}
+}
+
+YAHOO.util.Event.onDOMReady(function()
+{
+	get_available_groups();
+});
+
+function checkNewGroup()
+{
+	var group_selected = document.getElementById('group_id').value;
+	if(group_selected == 'new_group')
+	{
+		document.getElementById('new_org_group').style.display = "block";
+		document.getElementById('new_group_fields').style.display = "block";
+	}
+	else
+	{
+		document.getElementById('new_org_group').style.display = "none";
+		document.getElementById('new_group_fields').style.display = "none";
+	}
+}
+
+function get_address_search()
+{
+	var address = document.getElementById('address_txt').value;
+	var div_address = document.getElementById('address_container');
+
+	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+
+var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
 var divcontent_end = "</select>";
 	
 	var callback = {
 		success: function(response){
-					div_select.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
 				},
 		failure: function(o) {
 					 alert("AJAX doesn't work"); //FAILURE
@@ -33,17 +85,33 @@ var divcontent_end = "</select>";
 	
 }
 
-YAHOO.util.Event.onDOMReady(function()
+function get_address_search_cp2()
 {
-	get_available_groups();
-});
+	var address = document.getElementById('contact2_address_txt').value;
+	var div_address = document.getElementById('contact2_address_container');
+
+	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_address_search&amp;phpgw_return_as=json&amp;search=" + address;
+
+var divcontent_start = "<select name=\"contact2_address\" id=\"address_cp2\" size\"5\">";
+var divcontent_end = "</select>";
+	
+	var callback = {
+		success: function(response){
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+				},
+		failure: function(o) {
+					 alert("AJAX doesn't work"); //FAILURE
+				 }
+	}
+	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
+	
+}
 
 </script>
 
 <div class="yui-content">
 	<div id="details">
 		<h1><?php echo lang('activity') ?></h1>
-		<h4><?php if($editable){echo lang('activity_helptext');}?></h4>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
@@ -57,6 +125,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 					?>
+						<?php echo lang('title_helptext')?><br/>
 						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" />
 					<?php
 					}
@@ -77,8 +146,10 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
+						<?php echo lang('org_helptext')?><br/>
 						<select name="organization_id" id="organization_id" onchange="javascript:get_available_groups();">
 							<option value="">Ingen organisasjon valgt</option>
+							<option value="new_org">Ny organisasjon</option>
 							<?php
 							foreach($organizations as $organization)
 							{
@@ -109,6 +180,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
+						<?php echo lang('group_helptext')?><br/>
 						<div id="group_select">
 							<select name="group_id" id="group_id">
 								<option value="0">Ingen gruppe valgt</option>
@@ -126,6 +198,102 @@ YAHOO.util.Event.onDOMReady(function()
 					}
 					?>
 				</dd>
+				<div id="new_org_group" style="display: none;">
+					<hr/>
+					<div id="new_org_fields" style="display: none;">
+						<label for="orgname">Organisasjonsnavn</label>
+						<input type="text" name="orgname"/><br/>
+						<label for="orgno">Organisasjonsnummer</label>
+						<input type="text" name="orgno"/><br/>
+						<label for="district">Bydel</label>
+							<select name="org_district">
+								<option value="0">Ingen distrikt valgt</option>
+						<?php 
+						foreach($districts as $d)
+						{
+						?>
+							<option value="<?php echo $d['part_of_town_id']?>"><?php echo $d['name']?></option>
+						<?php
+						}?>
+							</select>
+						<label for="homepage">Hjemmeside</label>
+						<input type="text" name="homepage"/><br/>
+						<label for="email">E-post</label>
+						<input type="text" name="email"/><br/>
+						<label for="phone">Telefon</label>
+						<input type="text" name="phone"/><br/>
+						<label for="street">Gate</label>
+						<input type="text" name="address_txt" id="address_txt" onkeyup="javascript:get_address_search()"/>
+						<div id="address_container"></div><br/>
+						<label for="number">Nummer</label>
+						<input type="text" name="number"/><br/>
+						<label for="postaddress">Postnummer / Sted</label>
+						<input type="text" name="postaddress"/>
+						<label for="org_description">Beskrivelse</label>
+						<textarea rows="10" cols="100" name="org_description"></textarea>
+					</div>
+					<hr/>
+					<div id="new_group_fields" style="display: none;">
+						<label for="groupname">Gruppenavn</label>
+						<input type="text" name="groupname"/><br/>
+						<label for="group_description">Beskrivelse</label>
+						<textarea rows="10" cols="100" name="group_description"></textarea>
+					</div>
+					<hr/>
+					<b>Kontaktperson 1</b><br/>
+					<label for="contact1_name">Navn</label>
+					<input type="text" name="contact1_name"/><br/>
+					<label for="contact1_phone">Telefon</label>
+					<input type="text" name="contact1_phone"/><br/>
+					<label for="contact1_mail">E-post</label>
+					<input type="text" name="contact1_mail"/><br/>
+					<b>Kontaktperson 2</b><br/>
+					<label for="contact2_name">Navn</label>
+					<input type="text" name="contact2_name"/><br/>
+					<label for="contact2_phone">Telefon</label>
+					<input type="text" name="contact2_phone"/><br/>
+					<label for="contact2_mail">E-post</label>
+					<input type="text" name="contact2_mail"/><br/>
+					<label for="contact2_address">Adresse</label>
+					<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
+					<div id="contact2_address_container"></div><br/>
+					<label for="contact2_number">Nummer</label>
+					<input type="text" name="contact2_number"/><br/>
+					<label for="contact2_postaddress">Postnummer / Sted</label>
+					<input type="text" name="contact2_postaddress"/>
+					<hr/>
+				</div>
+				<dt>
+					<?php if($activity->get_internal_arena() || $editable) { ?>
+					<label for="arena"><?php echo lang('building') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					$current_internal_arena_id = $activity->get_internal_arena();
+					if ($editable)
+					{
+						?>
+						<?php echo lang('int_arena_helptext')?><br/>
+						<select name="internal_arena_id">
+							<option value="0">Ingen kommunale bygg valgt</option>
+							<?php
+							foreach($buildings as $building_id => $building_name)
+							{
+								echo "<option ".($current_internal_arena_id == $building_id? 'selected="selected"' : "")." value=\"{$building_id}\">".$building_name."</option>";
+							}
+							?>
+						</select>
+						<?php
+					}
+					else
+					{
+						if($activity->get_arena()){
+							echo activitycalendar_soarena::get_instance()->get_building_name($activity->get_internal_arena());
+						}
+					}
+					?>
+				</dd>
 				<dt>
 					<?php if($activity->get_arena() || $editable) { ?>
 					<label for="arena"><?php echo lang('arena') ?></label>
@@ -137,6 +305,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
+						<?php echo lang('arena_helptext')?><br/>
 						<select name="arena_id">
 							<option value="0">Ingen arena valgt</option>
 							<?php

@@ -188,7 +188,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	{
 		$buildings = array();
     	$q_buildings="SELECT id, name FROM bb_building WHERE active=1 ORDER BY id";
-    	var_dump($q_buildings);
+    	//var_dump($q_buildings);
 		$this->db->query($q_buildings, __LINE__, __FILE__);
 		while($this->db->next_record()){
 			$id = $this->db->f('id');
@@ -206,6 +206,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	function get_building_name($building_id){
 		if(isset($building_id))
 		{
+			$building_id = (int)$building_id;
 			$q1="SELECT name FROM bb_building WHERE id={$building_id}";
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
@@ -282,7 +283,6 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	public function get_address($search)
 	{
 		$result_arr = array();
-		$result_arr[] = "<option>Ingen</option>"; 
 		if($search)
 		{
 			$sql = "select * from fm_streetaddress where UPPER(descr) like UPPER('{$search}%')";

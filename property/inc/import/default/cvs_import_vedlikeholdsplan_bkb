@@ -5,7 +5,7 @@
 		public $messages = array();
 		public $warnings = array();
 		public $errors = array();
-
+		public $debug = true;
 		public function __construct()
 		{
 			set_time_limit(10000); //Set the time limit for this request oto 3000 seconds
@@ -16,10 +16,10 @@
 		public function add($data)
 		{
 
-			$debug = true;
+			$debug = $this->debug;
 			$error = false;
-			$type = $this->decode($data[0]);
-			$location_code = $this->decode($data[1]);
+			$type = $data[0];
+			$location_code = $data[1];
 
 			$location_data = execMethod('property.solocation.read_single', $location_code );
 _debug_array($data);
@@ -304,42 +304,14 @@ _debug_array($entry_date);
 
 			if(!$error)
 			{
-				$this->messages[] = "Successfully imported location: Title ({$this->decode($data[1])})";
+				$this->messages[] = "Successfully imported location: Title ({$data[1]})";
 				$ok = true;
 			}
 			else
 			{
-				$this->errors[] = "Error importing location: Title ({$this->decode($data[1])})";
+				$this->errors[] = "Error importing location: Title ({$data[1]})";
 				$ok = false;
 			}
 			return $ok;
-		}
-
-		/**
-		 * Convert from the locale encoding to UTF-8 encoding and escape single quotes
-		 * 
-		 * @param string $value The value to convert
-		 * @return string
-		 */
-		protected function decode($value)
-		{
-			$converted = mb_convert_encoding($value, 'UTF-8');
-			if ($this->is_null(trim($converted)))
-			{
-				return null;
-			}
-			return stripslashes($converted);
-		}
-		
-		/**
-		 * Test a value for null according to several formats that can exist in the export.
-		 * Returns true if the value is null according to these rules, false otherwise.
-		 * 
-		 * @param string $value The value to test
-		 * @return bool
-		 */
-		protected function is_null($value)
-		{
-			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
 		}
 	}

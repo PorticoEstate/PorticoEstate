@@ -177,6 +177,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.target';
 			$columns[] = 'activity.description';
 			$columns[] = 'activity.arena';
+			$columns[] = 'activity.internal_arena';
 			$columns[] = 'activity.time';
 			$columns[] = 'activity.create_date';
 			$columns[] = 'activity.last_change_date';
@@ -247,6 +248,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'target = '   . $this->marshal($activity->get_target(), 'string'),
 			'description = '     . $this->marshal($activity->get_description(), 'string'),
 			'arena = '      . $this->marshal($activity->get_arena(), 'int'),
+			'internal_arena = '      . $this->marshal($activity->get_internal_arena(), 'int'),
 			'time = '      . $this->marshal($activity->get_time(), 'string'),
 			'last_change_date = '    . $this->marshal($ts_now, 'int'),
 			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'int'),
@@ -254,6 +256,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'special_adaptation = '			.($activity->get_special_adaptation() ? "true" : "false")
 		);
 		
+		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
 		$result = $this->db->query('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 
 		return isset($result);
@@ -275,6 +278,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'target',
 			'description',
 			'arena',
+			'internal_arena',
 			'time',
 			'last_change_date',
 			'create_date',
@@ -295,6 +299,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$this->marshal($activity->get_target(), 'string'),
 			$this->marshal($activity->get_description(), 'string'),
 			$this->marshal($activity->get_arena(), 'int'),
+			$this->marshal($activity->get_internal_arena(), 'int'),
 			$this->marshal($activity->get_time(), 'string'),
 			$this->marshal($activity->get_last_change_date(), 'int'),
 			$this->marshal($ts_now, 'int'),
@@ -343,6 +348,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_target($this->unmarshal($this->db->f('target'), 'string'));
 			$activity->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$activity->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
+			$activity->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
 			$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
 			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
 			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
@@ -830,8 +836,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = "{$street}";
 		$values[] = "{$zip_code}";
 		$values[] = "{$city}";
-		$values[] = "{$orgnr}";
 		$values[] = "{$district}";
+		$values[] = "{$orgnr}";
 		$values[] = $activity_id;
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
@@ -841,6 +847,65 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		if(isset($result))
 		{
 			return $this->db->get_last_insert_id('bb_organization', 'id');
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	function add_organization_local($org_info)
+	{
+		$name = $org_info['name'];
+		$orgnr = $org_info['orgnr'];
+		$homepage = $org_info['homepage'];
+		$phone = $org_info['phone'];
+		$email = $org_info['email'];
+		$description = $org_info['description'];
+		$street = $org_info['street'];
+		$zip = $org_info['zip'];
+		if($zip && strlen($zip) > 5)
+		{
+			$zip_code = substr($zip,0,4);
+			$city = substr($zip, 5);
+		}
+		else
+		{
+			$zip_code = '';
+			$city = '';
+		}
+		$district = $org_info['district'];
+		
+		$columns[] = 'name';
+		$columns[] = 'homepage';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'description';
+		$columns[] = 'address';
+		//$columns[] = 'zip_code';
+		//$columns[] = 'city';
+		$columns[] = 'orgno';
+		$columns[] = 'district';
+		$cols = implode(',',$columns);
+		
+		$values[] = "'{$name}'";
+		$values[] = "'{$homepage}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$email}'";
+		$values[] = "'{$description}'";
+		$values[] = "'{$street}'";
+		//$values[] = "'{$zip_code}'";
+		//$values[] = "'{$city}'";
+		$values[] = "'{$orgnr}'";
+		$values[] = "'{$district}'";
+		$vals = implode(',',$values);
+		
+		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
+		$sql = "INSERT INTO activity_organization ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return $this->db->get_last_insert_id('activity_organization', 'id');
 		}
 		else
 		{
@@ -875,6 +940,34 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		if(isset($result))
 		{
 			return $this->db->get_last_insert_id('bb_group', 'id');
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	function add_group_local($group_info)
+	{
+		$name = $group_info['name'];
+		$orgid = $group_info['organization_id'];
+		$description = $group_info['description'];
+		
+		$columns[] = 'name';
+		$columns[] = 'description';
+		$columns[] = 'organization_id';
+		$cols = implode(',',$columns);
+		
+		$values[] = "'{$name}'";
+		$values[] = "'{$description}'";
+		$values[] = "'{$orgid}'";
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO activity_group ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return $this->db->get_last_insert_id('activity_group', 'id');
 		}
 		else
 		{
@@ -959,5 +1052,39 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function update_contact_person_group($contact)
 	{
 		
+	}
+	
+	function add_contact_person_local($contact)
+	{
+		$name = $contact['name'];
+		$phone = $contact['phone'];
+		$mail = $contact['mail'];
+		$org_id = $contact['org_id'];
+		$group_id = $contact['group_id'];
+		
+		$columns[] = 'name';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'organization_id';
+		$columns[] = 'group_id';
+		$columns[] = 'address';
+		$columns[] = 'zipcode'; 
+		$columns[] = 'city';
+		$cols = implode(',',$columns);
+		
+		$values[] = "'{$name}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$mail}'";
+		$values[] = $org_id;
+		$values[] = $group_id;
+		$values[] = "''";
+		$values[] = "''";
+		$values[] = "''";
+		$vals = implode(',',$values);
+		
+		//var_dump("INSERT INTO activity_contact_person ({$cols}) VALUES ({$vals})");
+		$sql = "INSERT INTO activity_contact_person ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		return isset($result);
 	}
 }
