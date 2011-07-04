@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 function checkAvailabitily()
-{
+{ 
 	if(document.forms[0].availability_date_to.value == '')
 	{
 		document.forms[0].availability_date_to.value = document.forms[0].availability_date_from.value;
@@ -54,6 +54,16 @@ function checkAvailabitily()
 		    sortable: true
 		},
 		{
+			key: "contracts",
+			label: "<?php echo lang('contract_future_info') ?>",
+		    sortable: false
+		},
+		{
+			key: "furnished_status",
+			label: "<?php echo lang('furnish_type') ?>",
+		    sortable: false
+		},
+		{
 			key: "actions",
 			hidden: true
 		},
@@ -71,7 +81,7 @@ function checkAvailabitily()
 		'index.php?menuaction=rental.uicomposite.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo isset($editable) && $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites','<?php echo $list_id ?>_ctrl_toggle_active_rental_composites','<?php echo $list_id ?>_ctrl_toggle_occupancy_of_rental_composites','<?php echo $list_id ?>_ctrl_toggle_has_contract_rental_composites','<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -95,6 +105,9 @@ function checkAvailabitily()
         var availabilityselect = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active_rental_composites');
         var availabilityoption = availabilityselect.options[availabilityselect.selectedIndex].value;
 
+        var furnished_select = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites');
+        var furnished_status_id = furnished_select.options[furnished_select.selectedIndex].value;
+
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
 
         var sSelect = document.getElementById('<?php echo $list_id ?>_ctrl_search_option');
@@ -102,6 +115,7 @@ function checkAvailabitily()
 
         window.location = 'index.php?menuaction=rental.uicomposite.download'+
             '<?php echo $url_add_on ?>'+
+            '&amp;furnished_status='+furnished_status_id+
             '&amp;is_active='+availabilityoption+
             '&amp;type='+compType+
             '&amp;query='+query+
@@ -149,6 +163,19 @@ function checkAvailabitily()
 	<fieldset>
 		<!-- Filters -->
 		<h3><?php echo lang('filters') ?></h3>
+		
+		<!-- Møbleringsstatus -->
+		<label for="furnished_status"><?php echo lang('furnish_type') ?></label>
+		<select name="furnished_status" id="<?php echo $list_id ?>_ctrl_toggle_furnished_status_rental_composites">
+			<?php
+				$furnish_types_arr = rental_composite::get_furnish_types();
+				 
+				echo "<option value='4'>Alle</option>";
+				foreach($furnish_types_arr as $id => $title){
+					echo "<option value='$id'>" . $title . "</option>";
+				}
+			?>
+		</select>
 		<label for="ctrl_toggle_active_rental_composites"><?php echo lang('availability') ?></label>
 		<select name="is_active" id="<?php echo $list_id ?>_ctrl_toggle_active_rental_composites">
 			<option value="both" <?php echo ($status == 'both') ? 'selected' : ''?>><?php echo lang('all') ?></option>
