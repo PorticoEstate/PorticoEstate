@@ -22,9 +22,12 @@
         protected $object_type_id;
         protected $area;
         protected $status;
+        protected $furnish_type_id;
 		
 		protected $units;
-	
+		protected $contracts;
+		protected static $furnish_types_arr;
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a composite is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -35,6 +38,8 @@
 		{
 			parent::__construct($id);
 			$this->units = array();
+			$this->contracts = array();
+			
 		}
 		
 		/**
@@ -49,6 +54,50 @@
 		}
 		
 		/**
+		 * Adds a contract to the contracts array sorted by end date. Note that this method is
+		 * meant for populating the object and will not fetch/insert anything from
+		 * the database.
+		 * @param $unit to add to object.
+		 */
+		public function add_contract($new_contract)
+		{
+			$temp_contracts = array();
+			$added = false; 
+			
+			foreach($this->contracts as $contract)
+			{	
+				if($added == false & $contract->get_contract_date()->get_end_date() == 0)
+				{
+					$temp_contracts[] = $new_contract;
+					$temp_contracts[] = $contract;
+					$added = true;
+				}else if($added == false & $new_contract->get_contract_date()->get_end_date() == 0)
+				{
+					$temp_contracts[] = $contract;
+					$temp_contracts[] = $new_contract;
+					$added = true;
+				}else if($added == false & $contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date())
+				{
+					$temp_contracts[] = $contract;
+				}else if($added == false & !$contract->get_contract_date()->get_end_date() < $new_contract->get_contract_date()->get_end_date()) 
+				{
+					$temp_contracts[] = $new_contract;
+					$temp_contracts[] = $contract;
+					$added = true;
+				}else if($added == true)
+				{
+					$temp_contracts[] = $contract;
+				}
+			}	
+			
+			if($added == false){
+				$temp_contracts[] = $new_contract;
+			}
+			
+			$this->contracts = &$temp_contracts;
+		}
+		
+		/**
 		 * Checks if a unit is already added to the composite.
 		 * 
 		 * @param $location_code string with location code.
@@ -59,6 +108,24 @@
 			foreach($this->units as $unit)
 			{
 				if($location_code == $unit->get_location_code())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		/**
+		 * Checks if a contract is already added to the composite.
+		 * 
+		 * @param $contract_id int with contract id.
+		 * @return boolean true if contract is added, false if not.
+		 */
+		public function contains_contract($contract_id)
+		{
+			foreach($this->contracts as $contract)
+			{
+				if($contract_id == $contract->get_id())
 				{
 					return true;
 				}
@@ -191,9 +258,36 @@
             $this->object_type_id = $obj_type;
         }
 
-        public function get_object_type_id() {
+		public function get_object_type_id() {
             return (int) $this->object_type_id;
         }
+        
+		public function set_furnish_type_id(int $furnish_type) {
+            $this->furnish_type_id = $furnish_type;
+        }
+        
+		public function get_furnish_type_id() {
+            return (int) $this->furnish_type_id;
+        }
+        
+		public function get_furnish_type() {
+			
+			$furnish_types = $this->get_furnish_types();
+			
+			return $furnish_types[$this->get_furnish_type_id()];
+        }
+        
+		public static function get_furnish_types() {
+			
+			self::$furnish_types_arr = array( 
+												0 => lang('furnish_type_not_specified'), 
+												1 => lang('furnish_type_furnished'), 
+												2 => lang('furnish_type_partly_furnished'), 
+												3 => lang('furnish_type_not_furnished') 
+								   			);
+			
+        	return self::$furnish_types_arr;
+    	}
 
         public function set_area($area) {
             $this->area = $area;
@@ -209,6 +303,14 @@
 
         public function get_status() {
             return $this->status;
+        }
+        
+		public function set_contracts($contracts) {
+            $this->contracts = $contracts;
+        }
+        
+        public function get_contracts() {
+            return $this->contracts;
         }
 		
 		/**
@@ -230,6 +332,7 @@
 			$addresses = '';
 			$location_codes = '';
 			$gab_ids = '';
+			$contract_dates = '';
 			foreach($this->get_units() as $unit) // Runs through all of the composites units
 			{
 				$location = $unit->get_location();
@@ -249,6 +352,25 @@
 					$gab_ids .= $location->get_gab_id() . "<br>\n";
 				}
 			}
+			
+			// Adds info about contracts to a string 
+			foreach($this->get_contracts() as $contract)
+			{
+				$start_date = $contract->get_contract_date()->get_start_date();
+				$end_date = $contract->get_contract_date()->get_end_date();
+
+				if($end_date == 0)
+					$contract_dates .= date("d-m-Y", $start_date) . " - løpende";	
+				else
+					$contract_dates .= date("d-m-Y", $start_date) . " - " . date("d-m-Y", $end_date);
+				
+				$contract_dates .= " (" . $contract->get_old_contract_id() . ")" . "<br/>\n";
+			}
+			
+			if( count( $this->get_contracts() ) == 0 ){
+				$contract_dates .= "Ingen<br/>\n";	
+			}
+			
 			if($this->has_custom_address())
 			{
 				$addresses = $this->get_custom_address_1() . ' ' . $this->get_custom_house_number();
@@ -263,7 +385,9 @@
 				'gab_id' => $gab_ids,
 				'area_gros' => $this->get_area_gros(),
 				'area_net' => $this->get_area_net(),
-				'status' => $this->get_status()
+				'status' => $this->get_status(),
+				'contracts' => $contract_dates,
+				'furnished_status' => $this->get_furnish_type()
 			);
 		}
 		
