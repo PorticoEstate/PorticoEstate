@@ -240,5 +240,17 @@
 		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.13';
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
-	
+		
+	$test[] = '0.1.0.13';
+	function rental_upgrade0_1_0_13()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite','furnish_type_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => 'True'
+		));
+		
+		$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.14';
+		return $GLOBALS['setup_info']['rental']['currentver'];
+	}
 ?>
