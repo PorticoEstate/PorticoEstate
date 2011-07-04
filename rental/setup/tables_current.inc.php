@@ -27,7 +27,8 @@
 					'place' =>				array('type' => 'varchar','precision' => '255'),
 					'has_custom_address' =>	array('type' => 'bool','nullable' => false,'default' => 'false'),
                     'object_type_id' =>     array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => null),
-                    'area' =>               array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true)
+                    'area' =>               array('type' => 'decimal', 'precision' => '20','scale' => '2', 'nullable' => true),
+					'furnish_type_id' => 	array('type' => 'int', 'precision' => 4, 'nullable' => true)
 				),
 				'pk' => array('id'),
 				'fk' => array(),
@@ -49,7 +50,6 @@
 					array('composite_id','location_code')
 				)
 		),
-		
 		'rental_contract_responsibility' => array(
 			'fd' => array(
 				'id'            => array('type' => 'auto', 'nullable' => false),
