@@ -248,6 +248,7 @@
 				foreach($condition_type_list as $condition_type)
 				{
 					$i = $condition_type['id'];
+					$risk	= (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'];
 					$values[] = array
 					(
 						'degree' 				=> array('options' => $this->select_degree_list($conditions[$i]['degree'])),
@@ -256,8 +257,8 @@
 						'condition_type'		=> $condition_type_list[$i]['id'],
 						'condition_type_name'	=> $condition_type_list[$i]['name'],
 						'weight'				=> $condition_type_list[$i]['weight'],
-						'risk'					=> (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'],
-						'score'					=> $values[$i]['risk'] * (int)$conditions[$i]['degree']
+						'risk'					=> $risk,
+					'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
 					);
 				}
 			}
@@ -272,6 +273,7 @@
 						break;
 					}
 				}
+				$risk	= (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'];
 				$values[] = array
 				(
 					'condition_type_list'	=> array('options' => $this->bocommon->select_list($i, $condition_type_list)),
@@ -281,8 +283,8 @@
 					'condition_type'		=> $condition_type_list[$i]['id'],
 					'condition_type_name'	=> $condition_type_list[$i]['name'],
 					'weight'				=> $condition_type_list[$i]['weight'],
-					'risk'					=> (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'],
-					'score'					=> $values[$i]['risk'] * (int)$conditions[$i]['degree']
+					'risk'					=> $risk,
+					'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
 				);
 			}
 

@@ -31,7 +31,7 @@
 		}
 		
 		public function query()
-		{
+		{ 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -85,7 +85,10 @@
 					phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
 					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
 					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
-					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from_hidden'), 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'));
+					phpgwapi_cache::session_set('rental', 'composite_furnished_status', phpgw::get_var('furnished_status'));
+					$filters = array('furnished_status' => phpgw::get_var('furnished_status'),'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'), 
+									 'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from_hidden'), 
+									 'availability_date_to' => phpgw::get_var('availability_date_to_hidden'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
@@ -116,6 +119,7 @@
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
 			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			
 			$create_types = array();
 			foreach($contract_types as $id => $label)
 			{
@@ -331,7 +335,8 @@
 					$composite->set_custom_place(phpgw::get_var('place'));
 					$composite->set_is_active(phpgw::get_var('is_active') == 'on' ? true : false);
 					$composite->set_description(phpgw::get_var('description'));
-					
+					$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
+
 					if(rental_socomposite::get_instance()->store($composite))
 					{
 						$message = lang('messages_saved_form');

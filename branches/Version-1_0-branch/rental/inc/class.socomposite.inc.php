@@ -8,17 +8,18 @@ include_class('rental', 'property_location', 'inc/model/');
 class rental_socomposite extends rental_socommon
 {
 	protected static $so;
-	
+		
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 * 
 	 * @return the storage object
 	 */
 	public static function get_instance()
-	{
-		if (self::$so == null) {
+	{								   	
+		if (self::$so == null) {		
 			self::$so = CreateObject('rental.socomposite');
 		}
+		
 		return self::$so;
 	}
 
@@ -116,6 +117,15 @@ class rental_socomposite extends rental_socommon
 			case "both":
 				break;
 		}
+		
+		// Furnished, partly furnished, not furnished, not specified
+		if(isset($filters['furnished_status']) & $filters['furnished_status'] < 4){
+			// Not specified
+			if($filters['furnished_status'] == 0)
+				$filter_clauses[] = "rental_composite.furnish_type_id IS NULL";
+			else 
+				$filter_clauses[] = "rental_composite.furnish_type_id=".$filters['furnished_status'];
+		}
 
 		if(isset($filters['not_in_contract'])){
 			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
@@ -161,7 +171,9 @@ class rental_socomposite extends rental_socommon
 			{
 				$cols = "rental_composite.id AS composite_id,";
 			}
-			$cols .= "rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, rental_composite.description, ";
+			$cols .= "rental_unit.id AS unit_id, rental_unit.location_code, rental_composite.name, rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number, 
+					  rental_composite.address_2, rental_composite.postcode, rental_composite.place, rental_composite.is_active, rental_composite.area, rental_composite.description, rental_composite.furnish_type_id, ";
+			$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
 			$cols .= "
 			CASE WHEN 
 			(
@@ -176,7 +188,7 @@ class rental_socomposite extends rental_socommon
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
-	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");    
 	    
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
@@ -193,6 +205,7 @@ class rental_socomposite extends rental_socommon
 			{
 				$composite_name = lang('no_name_composite', $composite_id);
 			}
+			
 			$composite->set_name($composite_name);
 			$composite->set_has_custom_address($this->unmarshal($this->db->f('has_custom_address', true), 'bool'));
 			$composite->set_custom_address_1($this->unmarshal($this->db->f('address_1', true), 'string'));
@@ -201,6 +214,7 @@ class rental_socomposite extends rental_socommon
 			$composite->set_custom_postcode($this->unmarshal($this->db->f('postcode', true), 'string'));
 			$composite->set_custom_place($this->unmarshal($this->db->f('place', true), 'string'));
 			$composite->set_area($this->unmarshal($this->db->f('area', true), 'float'));
+			$composite->set_furnish_type_id($this->unmarshal($this->db->f('furnish_type_id', true), 'int'));
 		}
 		// Location code
 		$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
@@ -212,6 +226,27 @@ class rental_socomposite extends rental_socommon
 		if($composite_status != 'Ikke ledig')
 		{
 			$composite->set_status($database_status);
+		}
+		
+		$contract_id = $this->unmarshal($this->db->f('contract_id', true), 'int'); 
+		
+		// Adds contract to array in composite object if it's not already added 
+		if($contract_id != 0 & !$composite->contains_contract($contract_id))
+		{
+			$contract = new rental_contract($contract_id);
+			
+			$start_date = $this->unmarshal($this->db->f('date_start', true), 'int');
+			$end_date = $this->unmarshal($this->db->f('date_end', true), 'int');
+			$old_contract_id = $this->unmarshal($this->db->f('old_contract_id', true), 'string');
+			
+			// Adds contract if end date is not specified or greater than todays date  
+			if($end_date == 0 || $end_date > time()){
+				$contract_date = new rental_contract_date($start_date, $end_date);
+				$contract->set_contract_date($contract_date);
+				$contract->set_old_contract_id($old_contract_id);
+				
+				$composite->add_contract($contract);	
+			}
 		}
 		
 		if(!$composite->contains_unit($location_code))
@@ -317,6 +352,7 @@ class rental_socomposite extends rental_socommon
 			'is_active = \'' . ($composite->is_active() ? 'true' : 'false') . '\'',
             'object_type_id = '.$composite->get_object_type_id(),
             'area = ' . $this->marshal($composite->get_area(), 'float'),
+			'furnish_type_id = '.$composite->get_furnish_type_id(),
 		);
 
 		$result = $this->db->query('UPDATE rental_composite SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -334,7 +370,7 @@ class rental_socomposite extends rental_socommon
 	public function add(&$composite)
 	{
 		// Build a db-friendly array of the composite object
-		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id', 'area');
+		$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2', 'house_number', 'postcode', 'place', 'object_type_id', 'area', 'furnish_type_id');
 		$values = array(
 			"'".$composite->get_name()."'",
 			"'".$composite->get_description()."'",
@@ -345,7 +381,8 @@ class rental_socomposite extends rental_socommon
 			"'".$composite->get_custom_postcode()."'",
 			"'".$composite->get_custom_place()."'",
             $composite->get_object_type_id(),
-            $this->marshal($composite->get_area(), 'float')
+            $this->marshal($composite->get_area(), 'float'),
+            $composite->get_furnish_type_id()
 		);
 
 		$query ="INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
@@ -391,6 +428,5 @@ class rental_socomposite extends rental_socommon
 
 		return null;
     }
-	
 }
 ?>

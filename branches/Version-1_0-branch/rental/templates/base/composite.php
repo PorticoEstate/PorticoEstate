@@ -72,7 +72,31 @@
 							}
 						?>
 					</dd>
+					<dt>
+						<!-- Furnish status  -->
+						<label for="furnish_type_id"><?php echo lang('furnish_type') ?></label>
+							<?php
+								$furnish_types_arr = $composite->get_furnish_types();
+								$cur_furnish_type_id = $composite->get_furnish_type_id();
 
+							// Edit composite
+							if ($editable) { ?>
+								<select name="furnish_type_id">
+								<?php 
+									foreach($furnish_types_arr as $id => $title){
+										if($cur_furnish_type_id == $id)
+											echo "<option selected='true' value='$id'>" . $title . "</option>";
+										else 
+											echo "<option value='$id'>" . $title . "</option>";
+									}
+								?>
+								</select>			
+							<?php 
+							// View composite
+							}else{ ?>
+								<input type="text" id="furnish_type_id" value='<?php echo $furnish_types_arr[$cur_furnish_type_id]; ?>' disabled="disabled" />
+							<?php } ?>
+					</dt>	
 					<?php if ($editable) { // Only show custom address fields if we're in edit mode ?>
 					<dt>
 						<label for="has_custom_address"><?php echo lang('has_custom_address') ?></label>
