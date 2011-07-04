@@ -791,15 +791,13 @@
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$values 	= phpgw::get_var('values');
 
-			$config	= CreateObject('phpgwapi.config','property');
-			$config->read();
-			$values['authorities_demands'] = $values['authorities_demands'] ? $values['authorities_demands'] : $config->config_data['authorities_demands'];
+			$values['authorities_demands'] = $values['authorities_demands'] ? $values['authorities_demands'] : $this->config->config_data['authorities_demands'];
 
 			if($values['update'])
 			{
 				$receipt = $this->bo->update_priority_key($values);
-				$config->config_data['authorities_demands'] = (int) $values['authorities_demands'];
-				$config->save_repository();
+				$this->config->config_data['authorities_demands'] = (int) $values['authorities_demands'];
+				$this->config->save_repository();
 			}
 
 			$function_msg	= lang('Edit priority key');
