@@ -146,6 +146,7 @@ contract_type_eksternleie_1	rental	no	Utført eksternleieregulering av kontrakte
 contract_type_eksternleie_2	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert annet år
 contract_type_eksternleie_10	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert tiende år
 contracts_closing_due_date	rental	no	Kontrakter nær opsjonsfrist
+contract_future_info	rental 	no	Fremtidig kontraktsinformasjon
 Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
 count decimal places	rental	no	Antall desimaler for opptelling
 count	rental	no	Antall
@@ -241,6 +242,11 @@ from email setting	rental	no	E-post adresse systemmeldinger (Fra)
 frontpage_was_reset	rental	no	Oppsettet på forsiden ble nullstilt
 frontpage_reset_setup	rental	no	Nullstill oppsett 
 f_select_columns	rental	no	Velg kolonner
+furnish_type	rental 	no	Møbleringsstatus
+furnish_type_not_specified	rental 	no	Ikke spesifisert
+furnish_type_furnished	rental 	no	Møblert
+furnish_type_partly_furnished	rental 	no	Delvis møblert
+furnish_type_not_furnished	rental 	no	Ikke møblert
 gab	rental	no	GAB
 gab_id	rental	no	GAB
 Generate export	rental	no	Generér eksport
