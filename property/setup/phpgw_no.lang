@@ -342,12 +342,13 @@ communication descriptions manager	property	no	Kommunikasjons beskrivelse
 communication types manager	property	no	Type kommunikasjon
 composites	property	no	Leieobjekter
 condition	property	no	Tilstand
-condidtion degree	property	no	Tilstandsgrad
+condition degree	property	no	Tilstandsgrad
 config	property	no	Konfigurer
 configuration	property	no	Konfigurasjon
 confirm status	property	no	Bekreft status
 confirm status to the history	property	no	Bekreft status til historikk
 consequence	property	no	Konsekvens
+consequence type	property	no	Konsekvenstype
 consequential damage	property	no	Følgeskader
 consume	property	no	forbruk
 consume date	property	no	Dato historisk forbruk
@@ -635,7 +636,7 @@ enter a description of the deviation	property	no	Angi en beskrivelse av avviket
 enter a description of the document	property	no	gi en beskrivelse av dokumentet
 enter a description of the equipment	property	no	gi en beskrivelse av utstyret
 enter a description of the project	property	no	gi en beskrivelse av prosjektet
-enter a description of the request	property	no	gi en beskrivelse av anmodningen
+enter a description of the request	property	no	Gi en beskrivelse av tiltaket
 enter a description of the standard	property	no	gi en beskrivelse av standarden
 enter a description of the status	property	no	Angi en beskrivelse av statusen
 enter a description the attribute	property	no	gi en beskrivelse av attributten
@@ -680,7 +681,7 @@ enter kid nr	property	no	Angi KID nr
 enter other branch if not found in the list	property	no	Angi andre fag om det ikke finnes i listen
 enter project name	property	no	Angi Prosjekt navn
 enter quantity of unit	property	no	angi mengde
-enter request title	property	no	angi tittel for anmodning
+enter request title	property	no	Angi beskrivende navn for tiltak
 enter the attribute id	property	no	angi attributt ID
 enter the attribute value for this entity	property	no	angi attributt verdi for denne posten
 enter the billable hour for the task	property	no	Angi egne timer for oppgaven
@@ -770,6 +771,7 @@ failed to copy file !	property	no	Kopiering av fil feilet!
 failed to create directory	property	no	klarte ikke å lage katalog
 failed to delete file	property	no	klarte ikke å slette fil
 failed to upload file !	property	no	Opplasting av fil feilet!
+failure	property	no	Svikt
 false	property	no	False
 feste nr	property	no	Feste nr
 fetch the history for this item	property	no	Hent historikk for dette elementet
@@ -1277,6 +1279,7 @@ re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 receipt date	property	no	Kvitteringsdato
 record	property	no	Post
+reference level	property	no	Referanse nivå
 regulations	property	no	Forskrifter
 related	property	no	Relatert
 related info	property	no	Relatert info
@@ -1297,7 +1300,6 @@ request	property	no	behov
 request %1 has been edited	property	no	anmodning %1 er oppdater
 request %1 has been saved	property	no	anmodning %1 er lagret
 request budget	property	no	Budsjett for tiltak
-request condition_type	property	no	Tema for tilstand
 request descr	property	no	Beskrivelse av tiltak
 request end date	property	no	anmodning frist
 request entry date	property	no	Registreringsdato for tiltak
@@ -1305,6 +1307,7 @@ request id	property	no	Anmodnings ID
 request start date	property	no	anmodning startdato
 request status	property	no	Status anmodning
 request title	property	no	Tiltak tittel
+request description	property	no	Tilstand beskrivelse
 requirement	property	no	Behov/pålegg
 resend workorder	property	no	Send ordre på nytt
 reserve	property	no	reserve

@@ -810,6 +810,7 @@
 			'fd' => array(
 				'request_id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'condition_type' => array('type' => 'int','precision' => '4','nullable' => False),
+				'reference' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
 				'degree' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
 				'probability' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
 				'consequence' => array('type' => 'int','precision' => '4','default' => '0','nullable' => True),
@@ -1277,7 +1278,8 @@
 		'fm_request_condition_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '255','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '50','nullable' => true),
 				'priority_key' => array('type' => 'int','precision' => '4','default' => '1','nullable' => True)
 			),
 			'pk' => array('id'),

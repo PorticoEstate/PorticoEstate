@@ -143,7 +143,7 @@
 
 		function select_condition_type_list()
 		{
-			$this->db->query("SELECT id, descr, priority_key FROM fm_request_condition_type ORDER BY id",__LINE__,__FILE__);
+			$this->db->query("SELECT * FROM fm_request_condition_type ORDER BY id",__LINE__,__FILE__);
 
 			$values = array();
 			while ($this->db->next_record())
@@ -152,7 +152,8 @@
 				$values[$id] = array
 				(
 					'id'		=> $id,
-					'name'		=> $this->db->f('descr',true),
+					'name'		=> $this->db->f('name',true),
+					'descr'		=> $this->db->f('descr',true),
 					'weight'	=> $this->db->f('priority_key')					
 				);
 			}
@@ -174,6 +175,7 @@
 				(
 					'request_id'		=> $request_id,
 					'condition_type'	=> $this->db->f('condition_type'),
+					'reference'			=> $this->db->f('reference'),
 					'degree'			=> $this->db->f('degree'),
 					'probability'		=> $this->db->f('probability'),
 					'consequence'		=> $this->db->f('consequence')
@@ -645,10 +647,11 @@
 				foreach( $request['condition'] as $condition_type => $value_type )
 				{
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
-					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
+					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
 						. "VALUES ('"
 						. $request['id']. "','"
 						. $_condition_type . "',"
+						. $value_type['reference']. ","
 						. $value_type['degree']. ","
 						. $value_type['probability']. ","
 						. $value_type['consequence']. ","
@@ -834,12 +837,13 @@
 				foreach( $request['condition'] as $condition_type => $value_type )
 				{
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
-					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
+					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
 						. "VALUES ('"
 						. $request['id']. "','"
 						. $_condition_type . "',"
+						. $value_type['reference']. ","
 						. $value_type['degree']. ","
-							. $value_type['probability']. ","
+						. $value_type['probability']. ","
 						. $value_type['consequence']. ","
 						. $this->account . ","
 						. time() . ")",__LINE__,__FILE__);
