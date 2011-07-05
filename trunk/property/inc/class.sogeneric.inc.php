@@ -919,6 +919,12 @@
 						(
 							array
 							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
