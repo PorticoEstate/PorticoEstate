@@ -527,6 +527,7 @@
 					</div>
 					<div id="condition">
 						<table>
+							<xsl:apply-templates select="custom_attributes/attributes"/>
 							<tr>
 								<td colspan='2'>
 									<table border="1" width="100%" cellpadding="2" cellspacing="2" align="center">
@@ -535,12 +536,14 @@
 									</table>
 								</td>
 							</tr>
-										<tr>
-											<td>
-												<br/>
-											</td>
-										</tr>
+							<tr>
+								<td>
+									<br/>
+								</td>
+							</tr>
 
+								<xsl:choose>
+									<xsl:when test="authorities_demands/options!=''">
 										<tr>
 											<td align="left">
 												<xsl:value-of select="php:function('lang', 'Authorities Demands')" />
@@ -563,6 +566,9 @@
 												<br/>
 											</td>
 										</tr>
+									</xsl:when>
+								</xsl:choose>
+<!--
 										<tr>
 											<td valign='top' align="left">
 												<xsl:value-of select="php:function('lang', 'regulations')" />
@@ -612,7 +618,7 @@
 												</table>
 											</td>
 										</tr>
-										<xsl:apply-templates select="custom_attributes/attributes"/>
+-->
 										<tr>
 											<td>
 												<br/>
