@@ -14,7 +14,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="attributes">
+	<xsl:template match="attributes" xmlns:php="http://php.net/xsl">
 			<xsl:variable name="statustext"><xsl:value-of select="statustext"/></xsl:variable>
 			<tr>
 				<td align="left" width="19%" valign="top" title="{$statustext}">
@@ -35,10 +35,10 @@
 							<xsl:text>[ </xsl:text>
 							<xsl:choose>
 								<xsl:when test="value!=''">
-									<xsl:value-of select="//lang_edit"/>
+									<xsl:value-of select="php:function('lang', 'edit')" />
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="//lang_add"/>
+									<xsl:value-of select="php:function('lang', 'add')" />
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:text> ]</xsl:text>
@@ -70,7 +70,9 @@
 												</xsl:attribute>
 											</xsl:when>
 										</xsl:choose>
-										<option value=""><xsl:value-of select="//lang_none"/></option>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select')" />
+										</option>
 										<xsl:for-each select="choice">
 											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 											<xsl:choose>
