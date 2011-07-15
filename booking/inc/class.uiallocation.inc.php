@@ -416,7 +416,7 @@
 
   				if ($_POST['recurring'] != 'on' && $_POST['outseason'] != 'on' )
                 {
-					echo"<pre>single:";print_r($step);echo"\n";print_r($from_date);echo"\n";print_r($allocation);exit;
+					//echo "<pre>single:";print_r($step);echo"\n";print_r($from_date);echo"\n";print_r($allocation);exit;
                     $err  = $this->bo->so->check_for_booking($id);
                     if ($err)
                     {
