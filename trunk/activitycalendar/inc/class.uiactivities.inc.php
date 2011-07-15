@@ -239,11 +239,19 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			$num_of_objects = null;
 		}
 		
+		$email_param = phpgw::get_var('email');
+		$email = false;
+		if(isset($email_param)){
+			$email=true;
+		}
+		
+		$uid = $GLOBALS['phpgw_info']['user']['account_id'];
+		
 		switch($query_type)
 		{
 			case 'all_activities':
 			default:
-				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_district' => phpgw::get_var('activity_district'));
+				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);
 				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
@@ -251,24 +259,32 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		//Create an empty row set
 		$rows = array();
+		$mail_rows = array();
 		foreach($result_objects as $result) {
 			//var_dump($result);
 			if(isset($result))
 			{
 				// ... add a serialized result
 				$rows[] = $result->serialize();
+				$mail_rows[] = $result;
 			}
 		}
 		
 		// ... add result data
 		$result_data = array('results' => $rows, 'total_records' => $object_count);
 		
-		if(!$export){
+		if(!$export && !$email){
 			//Add action column to each row in result table
 			array_walk($result_data['results'], array($this, 'add_actions'), array($query_type));
 		}
-
-		return $this->yui_results($result_data, 'total_records', 'results');
+		if($email)
+		{
+			$this->send_email_to_selection($mail_rows);	
+		}
+		else
+		{
+			return $this->yui_results($result_data, 'total_records', 'results');
+		}
 	}
 		
 	/**
@@ -301,6 +317,37 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$value['labels'][] = lang('send_mail');
 				break;
 		}
+    }
+    
+    private function send_email_to_selection($activities)
+    {
+    	foreach($activities as $activity)
+    	{
+	    	
+	    	//$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
+    		$subject = lang('mail_subject_update');
+    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title());
+	    	
+	    	//var_dump($subject);
+	    	//var_dump($body);
+	    	//var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
+	    	
+	    	if($activity->get_group_id() && $activity->get_group_id() > 0)
+	    	{
+	    		//var_dump("group!");
+	    		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_group_contact2($activity>get_group_id());
+	    		activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(), $subject, $body);
+	    	}
+	    	else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
+	    	{
+	    		//var_dump("org!");
+	    		//$contact_person2 = activitycalendar_socontactperson::get_instance()->get_oup_contact2($activity>get_group_id());
+	    		activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(), $subject, $body);
+	    	}
+	    }
+    	
+    	//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index', 'message' => 'E-post sendt'));
+    	
     }
     
     public function send_mail()

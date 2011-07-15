@@ -383,3 +383,6 @@ address_number	activitycalendar	no	Nummer
 changed_organizations_groups	activitycalendar	no	Endrede organisasjoner/grupper
 changed_org_group	activitycalendar	no	Endringer
 building	activitycalendar	no	Kommunale bygg
+Download as excel	activitycalendar	no	Last ned i Excel-format
+arena_name	activitycalendar	no	Navn
+Send mail to selection	activitycalendar	no	Send E-post til utvalg

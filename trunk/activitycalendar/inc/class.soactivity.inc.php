@@ -148,9 +148,20 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity_state = $this->marshal($filters['activity_state'],'int');
 			$filter_clauses[] = "activity.state = {$activity_state}";
 		}
-		if(isset($filters['activity_district']) && $filters['activity_district'] != 'all'){
-			$activity_district = $this->marshal($filters['activity_district'],'int');
-			$filter_clauses[] = "activity.office = '{$activity_district}'";
+		if(isset($filters['activity_district'])){
+			if($filters['activity_district'] != 'all')
+			{
+				$activity_district = $this->marshal($filters['activity_district'],'int');
+				$filter_clauses[] = "activity.office = '{$activity_district}'";
+			}
+		}
+		else
+		{
+			$activity_district = $this->get_office_from_user($filters['user_id']);
+			if($activity_district && $activity_district != '')
+			{
+				$filter_clauses[] = "activity.office = '{$activity_district}'";
+			}
 		}
 		
 		if(count($filter_clauses))
@@ -450,6 +461,22 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 
 		return $district;
+	}
+	
+	
+	function get_office_from_user($user_id)
+	{
+		if(user_id)
+		{
+			$user_id = (int)$user_id;
+			$q1="SELECT office FROM bb_office_user WHERE account_id={$user_id}";
+			//var_dump($q1);
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$office_id = $this->db->f('office');
+			}
+		}
+		return $office_id;
 	}
 	
 	function get_office_name($district_id)

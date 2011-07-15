@@ -80,6 +80,8 @@
     function arena_export(ptype) {
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+        var aType = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_arena_type').value;
+        var active = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active').value;
         <?php
         /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
          * even though the search only affects one of the data tables.
@@ -90,7 +92,8 @@
         window.location = 'index.php?menuaction=activitycalendar.uiarena.download'+
             '<?php echo $url_add_on; ?>'+
             '&amp;query='+query+
-            '&amp;search_option='+sOption+
+            '&amp;arena_type='+aType+
+            '&amp;active='+active+
         	'&amp;export=true';
     }
 
@@ -136,9 +139,7 @@
 	$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
 	?>
 	<div id="export">
-		<a href="javascript:arena_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as %1', $export_format) ?>"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>
-		&amp;nbsp;&amp;nbsp;
-		<a href="index.php?menuaction=rental.uiarena.download_agresso" title="<?php echo lang('Download Agresso import file') ?>"><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/16x16/mimetypes/x-office-document.png"/></a>
+		<a href="javascript:arena_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>
 	</div>
 </fieldset>
 

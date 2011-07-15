@@ -230,6 +230,30 @@ class activitycalendar_soorganization extends activitycalendar_socommon
     	}
 		return $desc;
 	}
+	
+	function get_district_from_name($name)
+	{
+		$this->db->query("SELECT part_of_town_id FROM fm_part_of_town where name like UPPER('%{$name}%') ", __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$result = $this->db->f('part_of_town_id');
+		}	
+		return $result;
+	}
+	
+	function get_office_from_district($district_id)
+	{
+		if($district_id)
+		{
+			$district_id = (int)$district_id;
+			$q1="SELECT fm_district.descr FROM fm_part_of_town,fm_district WHERE fm_part_of_town.part_of_town_id={$district_id} AND fm_district.id = fm_part_of_town.district_id";
+			//var_dump($q1);
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$office_name = $this->db->f('descr');
+			}
+		}
+		return $office_name;
+	}
 
 	/**
 	 * Function for adding a new party to the database. Updates the party object.
