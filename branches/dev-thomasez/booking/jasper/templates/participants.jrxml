@@ -108,7 +108,7 @@
 				<textElement>
 					<font size="10"/> 
 				</textElement>
-				<textFieldExpression>"Bygg/Anlegg: " + $F{building_name}</textFieldExpression>
+				<textFieldExpression>"Objekt: " + $F{building_name}</textFieldExpression>
 			</textField>
 			<crosstab isRepeatColumnHeaders="false">
 				<reportElement x="0" y="60" width="782" height="70"/>
