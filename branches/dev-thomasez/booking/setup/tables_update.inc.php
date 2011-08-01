@@ -2617,3 +2617,21 @@
 
 
 
+	/**
+	* Update booking version from 0.2.08 to 0.2.09
+	* Set bb_resource.sort to nullable.
+	* 
+	*/
+  $test[] = '0.2.08';
+	function booking_upgrade0_2_08()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ALTER COLUMN sort DROP NOT NULL");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.09';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

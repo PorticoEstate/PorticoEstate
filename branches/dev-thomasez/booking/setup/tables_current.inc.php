@@ -104,7 +104,7 @@
 				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'activity_id' => array('type' => 'int','precision' => '4','nullable' => False),
-				'sort' => array('type' => 'int','precision' => '4','nullable' => False,'default' => 0),
+				'sort' => array('type' => 'int','precision' => '4','nullable' => True,'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(
