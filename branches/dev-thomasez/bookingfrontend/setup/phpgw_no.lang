@@ -211,14 +211,13 @@ we	bookingfrontend	no	on.
 week	bookingfrontend	no	Uke
 week day	bookingfrontend	no	Ukedag
 week template	bookingfrontend	no	Ukeplan
-when	bookingfrontend	no	Når?
+when	bookingfrontend	no	Når
 when?	bookingfrontend	no	Når?
-where	bookingfrontend	no	Hva?
-where?	bookingfrontend	no	Hva?
-who	bookingfrontend	no	Hvem?
+where	bookingfrontend	no	Hvor
+where?	bookingfrontend	no	Hvor?
+who	bookingfrontend	no	Hvem
 who?	bookingfrontend	no	Hvem?
-why	bookingfrontend	no	Hvorfor?
-why?	bookingfrontend	no	Hvorfor?
+why	bookingfrontend	no	Hvorfor
 zip code	bookingfrontend	no	Postnummer
 postal city	bookingfrontend	no	Poststed
 team leaders	bookingfrontend	no	Ansvarlige gruppeledere
