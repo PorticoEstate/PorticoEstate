@@ -13,6 +13,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		'view'			    => true,
 		'add'				=> true,
 		'edit'				=> true,
+		'download'			=> true,
 		'get_address_search'	=> true
 	);
 	
@@ -215,11 +216,11 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		{
 			case 'all_arenas':
 				$value['ajax'][] = false;
-				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $value['id'])));
-				$value['labels'][] = lang('show');
-				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.edit', 'id' => $value['id'])));
 				$value['labels'][] = lang('edit');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $value['id'])));
+				$value['labels'][] = lang('show');
 				break;
 		}
     }

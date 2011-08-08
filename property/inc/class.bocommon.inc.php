@@ -190,32 +190,18 @@
 			return $output_list;
 		}
 
-		function select_list($selected='',$input_list='')
+		function select_list($selected='',$list=array())
 		{
-			$entry_list = array();
-			if (isset($input_list) AND is_array($input_list))
+			if (is_array($list))
 			{
-				foreach($input_list as $entry)
+				foreach($list as &$entry)
 				{
 					if ($entry['id']==$selected)
 					{
-						$entry_list[] = array
-							(
-								'id'		=> $entry['id'],
-								'name'		=> $entry['name'],
-								'selected'	=> 'selected'
-							);
-					}
-					else
-					{
-						$entry_list[] = array
-							(
-								'id'		=> $entry['id'],
-								'name'		=> $entry['name'],
-							);
+						$entry['selected'] = 'selected';
 					}
 				}
-				return $entry_list;
+				return $list;
 			}
 		}
 

@@ -919,6 +919,12 @@
 						(
 							array
 							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+							(
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
@@ -2252,14 +2258,14 @@
 
 			if($this->location_info['id']['type']!='auto')
 			{
-				$this->_db->query("SELECT id FROM {$table} WHERE {$this->location_info['id']['name']} = '{$data['id']}'",__LINE__,__FILE__);
+				$this->_db->query("SELECT {$this->location_info['id']['name']} AS id FROM {$table} WHERE {$this->location_info['id']['name']} = '{$data[$this->location_info['id']['name']]}'",__LINE__,__FILE__);
 				if($this->_db->next_record())
 				{
 					$receipt['error'][]=array('msg'=>lang('duplicate key value'));
 					$receipt['error'][]=array('msg'=>lang('record has not been saved'));
 					return $receipt;
 				}
-				$id = $data['id'];
+				$id = $data[$this->location_info['id']['name']];
 			}
 			else
 			{

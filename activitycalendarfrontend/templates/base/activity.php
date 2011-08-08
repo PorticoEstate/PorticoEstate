@@ -207,7 +207,7 @@ var divcontent_end = "</select>";
 						<input type="text" name="orgno"/><br/>
 						<label for="district">Bydel</label>
 							<select name="org_district">
-								<option value="0">Ingen distrikt valgt</option>
+								<option value="0">Ingen bydel valgt</option>
 						<?php 
 						foreach($districts as $d)
 						{

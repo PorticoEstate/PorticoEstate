@@ -229,6 +229,27 @@
 			return $probability_list;
 		}
 
+
+		function select_reference_list($reference_value = 0)
+		{
+			$selected = $reference_value ?  $reference_value : (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['request_reference_level'];
+
+			$reference_list = array();
+			$reference_comment = array();
+			$reference_comment[0]=' - '.lang('none');
+			$reference_comment[1]=' - '.lang('minor');
+			$reference_comment[2]=' - '.lang('medium');
+			$reference_comment[3]=' - '.lang('serious');
+			for ($i=0; $i<=3; $i++)
+			{
+				$reference_list[$i]['id'] = $i;
+				$reference_list[$i]['name'] = "{$i}{$reference_comment[$i]}";
+				$reference_list[$i]['selected'] = $i==$selected ? 1 : 0;
+			}
+
+			return $reference_list;
+		}
+
 		function select_conditions($request_id='')
 		{
 			$values = array();
@@ -251,14 +272,16 @@
 					$risk	= (int)$conditions[$i]['probability'] * (int)$conditions[$i]['consequence'];
 					$values[] = array
 					(
+						'reference'				=> array('options' => $this->select_reference_list($conditions[$i]['reference'])),
 						'degree' 				=> array('options' => $this->select_degree_list($conditions[$i]['degree'])),
 						'probability' 			=> array('options' => $this->select_probability_list($conditions[$i]['probability'])),
 						'consequence' 			=> array('options' => $this->select_consequence_list($conditions[$i]['consequence'])),
 						'condition_type'		=> $condition_type_list[$i]['id'],
 						'condition_type_name'	=> $condition_type_list[$i]['name'],
+						'failure'				=> (int)$conditions[$i]['reference'] - (int)$conditions[$i]['degree'] < 0 ? 'X' : '',
 						'weight'				=> $condition_type_list[$i]['weight'],
 						'risk'					=> $risk,
-					'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
+						'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
 					);
 				}
 			}
@@ -277,17 +300,20 @@
 				$values[] = array
 				(
 					'condition_type_list'	=> array('options' => $this->bocommon->select_list($i, $condition_type_list)),
+					'reference'				=> array('options' => $this->select_reference_list($conditions[$i]['reference'])),
 					'degree' 				=> array('options' => $this->select_degree_list($conditions[$i]['degree'])),
 					'probability' 			=> array('options' => $this->select_probability_list($conditions[$i]['probability'])),
 					'consequence' 			=> array('options' => $this->select_consequence_list($conditions[$i]['consequence'])),
 					'condition_type'		=> $condition_type_list[$i]['id'],
 					'condition_type_name'	=> $condition_type_list[$i]['name'],
+					'condition_type_descr'	=> $condition_type_list[$i]['descr'],
+					'failure'				=> (int)$conditions[$i]['reference'] - (int)$conditions[$i]['degree'] < 0 ? 'X' : '',
 					'weight'				=> $condition_type_list[$i]['weight'],
 					'risk'					=> $risk,
 					'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
 				);
 			}
-
+//_debug_array($values);die();
 			return $values;
 		}
 

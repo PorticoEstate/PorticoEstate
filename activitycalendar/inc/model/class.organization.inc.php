@@ -107,6 +107,7 @@
 		
 		public function serialize()
 		{
+			$so_org = activitycalendar_soorganization::get_instance();
 			return array(
 				'id' => $this->get_id(),
 				'name' => $this->get_name(),
@@ -118,7 +119,8 @@
 				'phone'	=>	$this->get_phone(),
 				'address'	=>	$this->get_address(),
 				'show_in_portal' => $this->get_show_in_portal(),
-				'change_type' => $this->get_change_type()
+				'change_type' => $this->get_change_type(),
+				'office' => $so_org->get_office_from_district($so_org->get_district_from_name($this->get_district()))
 			);
 		}
 		
