@@ -130,6 +130,8 @@
     function activity_export(ptype) {
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+        var office = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_state').value;
+        var state = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_district').value;
         <?php
         /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
          * even though the search only affects one of the data tables.
@@ -140,14 +142,37 @@
         window.location = 'index.php?menuaction=activitycalendar.uiactivities.download'+
             '<?php echo $url_add_on; ?>'+
             '&amp;query='+query+
-            '&amp;search_option='+sOption+
+            '&amp;activity_district='+office+
+            '&amp;activity_state='+state+
         	'&amp;export=true';
+    }
+
+    function activity_email(ptype) {
+
+        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+        var office = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_state').value;
+        var state = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_district').value;
+        <?php
+        /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
+         * even though the search only affects one of the data tables.
+         * F.ex on /index.php?menuaction=rental.uicontract.edit&id=1 -> Parties
+         */
+        ?>
+        
+        window.location = 'index.php?menuaction=activitycalendar.uiactivities.query'+
+            '<?php echo $url_add_on; ?>'+
+            '&amp;query='+query+
+            '&amp;activity_district='+office+
+            '&amp;activity_state='+state+
+        	'&amp;email=true';
     }
 
 </script>
 <?php
 	if($list_form)
 	{
+		$uid = $GLOBALS['phpgw_info']['user']['account_id'];
+		$user_office =  activitycalendar_soactivity::get_instance()->get_office_from_user($uid);
 ?>
 
 <form id="<?php echo $list_id ?>_form" method="GET">
@@ -161,12 +186,6 @@
 
 	<fieldset>
 		<!-- Filters -->
-<!--  	<label class="toolbar_element_label" for="ctrl_toggle_activity_type"><?php //echo lang('activity_type') ?></label>
-		<select name="activity_type" id="<?php //echo $list_id ?>_ctrl_toggle_activity_type">
-			<option value="all"><?php //echo lang('all') ?></option>
-			<option value="1"><?php //echo lang('internal') ?></option>
-			<option value="2" ><?php //echo lang('not_internal') ?></option>
-		</select> -->
 		<label class="toolbar_element_label" for="ctrl_toggle_activity_state"><?php echo lang('activity_state') ?></label>
 		<select name="activity_state" id="<?php echo $list_id ?>_ctrl_toggle_activity_state">
 			<option value="all"><?php echo lang('all') ?></option>
@@ -185,7 +204,7 @@
 			<?php
 			foreach($districts as $district)
 			{
-				echo "<option value=\"{$district['id']}\">".$district['name']."</option>";
+				echo "<option value=\"{$district['id']}\"". ($user_office == $district['id']? 'selected':'') . ">".$district['name']."</option>";
 			}
 			?>
 		</select>
@@ -196,6 +215,16 @@
 <?php
 	}
 ?>
+
+<fieldset>
+	<h3><?php echo lang('export_to') ?></h3>
+	<?php 
+	$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
+	?>
+	<div id="export">
+		<a href="javascript:activity_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>&nbsp;&nbsp;<a href="javascript:activity_email('<?php echo $list_id ?>')" title="<?php echo lang('Send email to selection') ?>"><button><?php echo lang('Send mail to selection') ?></button></a>
+	</div>
+</fieldset>
 
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

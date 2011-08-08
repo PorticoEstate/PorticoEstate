@@ -27,6 +27,11 @@
 	    sortable: true
 	},
 	{
+		key: "office",
+		label: "<?php echo lang('office') ?>",
+	    sortable: true
+	},
+	{
 		key: "description",
 		label: "<?php echo lang('description') ?>",
 	    sortable: true

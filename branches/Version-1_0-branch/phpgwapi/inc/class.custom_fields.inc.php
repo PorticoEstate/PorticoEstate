@@ -553,9 +553,15 @@
 						. " WHERE location_id = {$loc_id} AND attrib_sort > {$attrib_sort} AND group_id = {$group_id}";
 					$this->_db->query($sql, __LINE__, __FILE__);
 				}
+
+				$sql = "DELETE FROM phpgw_cust_choice"
+						. " WHERE location_id = {$loc_id} AND attrib_id = {$attrib_id}";
+				$this->_db->query($sql, __LINE__,__FILE__);
+
 				$sql = "DELETE FROM phpgw_cust_attribute"
 						. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
 				$this->_db->query($sql, __LINE__,__FILE__);
+
 			}	
 			return $this->_db->transaction_commit();
 		}

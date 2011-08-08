@@ -263,24 +263,24 @@
 
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_title"/>
+									<xsl:value-of select="php:function('lang', 'request title')" />
 								</td>
 								<td>
 									<input type="text" name="values[title]" value="{value_title}" size="60">
 										<xsl:attribute name="title">
-											<xsl:value-of select="lang_title_statustext"/>
+											<xsl:value-of select="php:function('lang', 'enter request title')" />
 										</xsl:attribute>
 									</input>
 								</td>
 							</tr>
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_descr"/>
+									<xsl:value-of select="php:function('lang', 'request description')" />
 								</td>
 								<td>
 									<textarea cols="60" rows="6" name="values[descr]">
 										<xsl:attribute name="title">
-											<xsl:value-of select="lang_descr_statustext"/>
+											<xsl:value-of select="php:function('lang', 'enter a description of the request')" />
 										</xsl:attribute>
 										<xsl:value-of select="value_descr"/>
 									</textarea>
@@ -527,20 +527,23 @@
 					</div>
 					<div id="condition">
 						<table>
+							<xsl:apply-templates select="custom_attributes/attributes"/>
 							<tr>
 								<td colspan='2'>
 									<table border="1" width="100%" cellpadding="2" cellspacing="2" align="center">
-										<xsl:apply-templates select="table_header_importance"/>
+										<xsl:call-template name="table_header_importance"/>
 										<xsl:apply-templates select="condition_list"/>
 									</table>
 								</td>
 							</tr>
-										<tr>
-											<td>
-												<br/>
-											</td>
-										</tr>
+							<tr>
+								<td>
+									<br/>
+								</td>
+							</tr>
 
+								<xsl:choose>
+									<xsl:when test="authorities_demands/options!=''">
 										<tr>
 											<td align="left">
 												<xsl:value-of select="php:function('lang', 'Authorities Demands')" />
@@ -563,6 +566,9 @@
 												<br/>
 											</td>
 										</tr>
+									</xsl:when>
+								</xsl:choose>
+<!--
 										<tr>
 											<td valign='top' align="left">
 												<xsl:value-of select="php:function('lang', 'regulations')" />
@@ -612,7 +618,7 @@
 												</table>
 											</td>
 										</tr>
-										<xsl:apply-templates select="custom_attributes/attributes"/>
+-->
 										<tr>
 											<td>
 												<br/>
@@ -749,8 +755,7 @@
 			<td class="small_text" align="left">
 				<xsl:choose>
 					<xsl:when test="condition_type_list != ''">
-						<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
-						<select name="values[condition][{condition_type}][condition_type]" class="forms" title="{$lang_degree_statustext}">
+						<select name="values[condition][{condition_type}][condition_type]" class="forms">
 							<xsl:apply-templates select="condition_type_list/options"/>
 						</select>
 					</xsl:when>
@@ -760,6 +765,12 @@
 				</xsl:choose>
 			</td>
 
+			<td class="small_text" align="center">
+				<xsl:variable name="lang_reference_statustext"><xsl:value-of select="//lang_reference_statustext"/></xsl:variable>
+				<select name="values[condition][{condition_type}][reference]" class="forms" title="{$lang_reference_statustext}">
+					<xsl:apply-templates select="reference/options"/>
+				</select>
+			</td>
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
 				<select name="values[condition][{condition_type}][degree]" class="forms" title="{$lang_degree_statustext}">
@@ -777,6 +788,9 @@
 				<select name="values[condition][{condition_type}][consequence]" class="forms" title="{$lang_consequence_statustext}">
 					<xsl:apply-templates select="consequence/options"/>
 				</select>
+			</td>
+			<td class="small_text" align="center">
+				<xsl:value-of select="failure"/>
 			</td>
 			<td class="small_text" align="right">
 				<xsl:value-of select="weight"/>
@@ -831,6 +845,11 @@
 			<xsl:if test="selected != 0">
 				<xsl:attribute name="selected" value="selected" />
 			</xsl:if>
+			<xsl:if test="descr != ''">
+				<xsl:attribute name="title">
+					<xsl:value-of disable-output-escaping="yes" select="descr"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</option>
 	</xsl:template>
@@ -882,19 +901,25 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="table_header_importance" xmlns:php="http://php.net/xsl">
+	<xsl:template name="table_header_importance" xmlns:php="http://php.net/xsl">
 		<tr>
 			<th width="20%" align="left">
-				<xsl:value-of select="php:function('lang', 'request condition_type')" />
+				<xsl:value-of select="php:function('lang', 'consequence type')" />
+			</th>
+			<th width="20%" align="left">
+				<xsl:value-of select="php:function('lang', 'reference level')" />
 			</th>
 			<th width="20%" align="center">
-				<xsl:value-of select="lang_condition_degree"/>
+				<xsl:value-of select="php:function('lang', 'condition degree')" />
 			</th>
 			<th width="20%" align="center">
-				<xsl:value-of select="lang_prob_worsening"/>
+				<xsl:value-of select="php:function('lang', 'Probability')" />
 			</th>
 			<th width="20%" align="center">
-				<xsl:value-of select="lang_consequence"/>
+				<xsl:value-of select="php:function('lang', 'Consequence')" />
+			</th>
+			<th width="5%" align="center">
+				<xsl:value-of select="php:function('lang', 'failure')" />
 			</th>
 			<th width="5%" align="center">
 				<xsl:value-of select="php:function('lang', 'weight')" />

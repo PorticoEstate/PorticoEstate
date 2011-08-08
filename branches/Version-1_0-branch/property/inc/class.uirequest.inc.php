@@ -1177,16 +1177,6 @@
 			}
 
 
-
-			$table_header_importance[] = array
-				(
-					'lang_subject'			=> lang('Subject'),
-					'lang_condition_degree'	=> lang('Condidtion degree'),
-					'lang_prob_worsening'	=> lang('Probability'),
-					'lang_consequence'		=> lang('Consequence')
-				);
-
-
 			if($values['project_id'])
 			{
 				$project_lookup_data = array
@@ -1394,7 +1384,7 @@
 					'tenant_id'							=> $values['tenant_id'],
 
 					'lang_importance'					=> lang('Importance'),
-					'table_header_importance'			=> $table_header_importance,
+
 					'importance_weight'					=> $importance_weight,
 
 					'lang_no_workorders'				=> lang('No workorder budget'),
@@ -1442,12 +1432,8 @@
 					'lang_request_id'					=> lang('request ID'),
 					'value_request_id'					=> $id,
 
-					'lang_title'						=> lang('Title'),
 					'value_title'						=> $values['title'],
-					'lang_title_statustext'				=> lang('Enter request Title'),
 
-					'lang_descr_statustext'				=> lang('Enter a description of the request'),
-					'lang_descr'						=> lang('Description'),
 					'value_descr'						=> $values['descr'],
 					'lang_score'						=> lang('Score'),
 					'value_score'						=> $values['score'],
