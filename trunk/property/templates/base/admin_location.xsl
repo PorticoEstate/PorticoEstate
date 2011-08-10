@@ -577,7 +577,7 @@
 
 <!-- add attribute / edit attribute -->
 
-	<xsl:template match="edit_attrib">
+	<xsl:template match="edit_attrib" xmlns:php="http://php.net/xsl">
 		<div align="left">
 
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -804,6 +804,24 @@
 							</xsl:choose>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="php:function('lang', 'include in search')" />
+						</td>
+						<td>
+							<input type="checkbox" name="values[search]" value="1">
+								<xsl:if test="value_search = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'check to show this attribute in location list')" />
+								</xsl:attribute>
+							</input>
+						</td>
+					</tr>
+
 					<xsl:choose>
 						<xsl:when test="multiple_choice != ''">
 							<tr>

@@ -1615,6 +1615,7 @@
 					'lang_datatype_statustext'		=> lang('Select a datatype'),
 					'lang_no_datatype'				=> lang('No datatype'),
 					'datatype_list'					=> $this->bocommon->select_datatype($values['column_info']['type']),
+					'value_search'					=> $values['search'],
 
 					'lang_group'					=> lang('group'),
 					'lang_group_statustext'			=> lang('Select a group'),
