@@ -1166,7 +1166,7 @@
 	</xsl:template>
 <!-- add attribute / edit attribute -->
 
-	<xsl:template match="edit_attrib">
+	<xsl:template match="edit_attrib" xmlns:php="http://php.net/xsl">
 		<div align="left">
 
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -1334,123 +1334,80 @@
 					</tr>
 					<tr>
 						<td>
-							<xsl:value-of select="lang_list"/>
+							<xsl:value-of select="php:function('lang', 'show in list')" />
 						</td>
 						<td>
-							<xsl:choose>
-								<xsl:when test="value_list = 1">
-									<input type="checkbox" name="values[list]" value="1" checked="checked" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_list_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:otherwise>
-									<input type="checkbox" name="values[list]" value="1" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_list_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:otherwise>
-							</xsl:choose>
+							<input type="checkbox" name="values[list]" value="1">
+								<xsl:if test="value_list = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'check to show this attribute in entity list')" />
+								</xsl:attribute>
+							</input>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<xsl:value-of select="lang_include_search"/>
+							<xsl:value-of select="php:function('lang', 'include in search')" />
 						</td>
 						<td>
-							<xsl:choose>
-								<xsl:when test="value_search = 1">
-									<input type="checkbox" name="values[search]" value="1" checked="checked" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_include_search_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:otherwise>
-									<input type="checkbox" name="values[search]" value="1" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_include_search_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:otherwise>
-							</xsl:choose>
+							<input type="checkbox" name="values[search]" value="1">
+								<xsl:if test="value_search = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'check to show this attribute in location list')" />
+								</xsl:attribute>
+							</input>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<xsl:value-of select="lang_history"/>
+							<xsl:value-of select="php:function('lang', 'history')" />
 						</td>
 						<td>
-							<xsl:choose>
-								<xsl:when test="value_history = 1">
-									<input type="checkbox" name="values[history]" value="1" checked="checked" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_history_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:otherwise>
-									<input type="checkbox" name="values[history]" value="1" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_history_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:otherwise>
-							</xsl:choose>
+							<input type="checkbox" name="values[history]" value="1">
+								<xsl:if test="value_history = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'enable history for this attribute')" />
+								</xsl:attribute>
+							</input>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<xsl:value-of select="lang_disabled"/>
+							<xsl:value-of select="php:function('lang', 'disabled')" />
 						</td>
 						<td>
-							<xsl:choose>
-								<xsl:when test="value_disabled = 1">
-									<input type="checkbox" name="values[disabled]" value="1" checked="checked" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_disabled_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:otherwise>
-									<input type="checkbox" name="values[disabled]" value="1" onMouseout="window.status='';return true;">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
-											<xsl:value-of select="lang_disabled_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
-										</xsl:attribute>
-									</input>
-								</xsl:otherwise>
-							</xsl:choose>
+							<input type="checkbox" name="values[disabled]" value="1">
+								<xsl:if test="value_disabled = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'this attribute turn up as disabled in the form')" />
+								</xsl:attribute>
+							</input>
 						</td>
 					</tr>
-
 					<tr>
 						<td valign="top">
-							<xsl:value-of select="lang_helpmsg"/>
+							<xsl:value-of select="php:function('lang', 'help message')" />
 						</td>
 						<td>
-							<textarea cols="60" rows="10" name="values[helpmsg]" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_helpmsg_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
+							<textarea cols="60" rows="10" name="values[helpmsg]">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'enables help message for this attribute')" />
 								</xsl:attribute>
 								<xsl:value-of select="value_helpmsg"/>		
 							</textarea>
