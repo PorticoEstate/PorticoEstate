@@ -249,7 +249,7 @@
 
 					<xsl:for-each select="integration">
 						<div id="{section}">
-							<iframe id = "{section}_content" width="100%" height="500">
+							<iframe id = "{section}_content" width="100%" height="{height}">
 								<p>Your browser does not support iframes.</p>
 							</iframe>
 						</div>

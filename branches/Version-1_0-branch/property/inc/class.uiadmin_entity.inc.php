@@ -2444,23 +2444,10 @@
 					'lang_lookup_form'					=> lang('show in lookup forms'),
 					'lang_lookup_form_statustext'		=> lang('check to show this attribue in lookup forms'),
 					'value_list'						=> $values['list'],
-					'lang_list'							=> lang('show in list'),
-					'lang_list_statustext'				=> lang('check to show this attribute in entity list'),
 					'value_search'						=> $values['search'],
-					'lang_include_search'				=> lang('Include in search'),
-					'lang_include_search_statustext'	=> lang('check to show this attribute in location list'),
-
 					'value_history'						=> $values['history'],
-					'lang_history'						=> lang('history'),
-					'lang_history_statustext'			=> lang('Enable history for this attribute'),
-
 					'value_disabled'					=> $values['disabled'],
-					'lang_disabled'						=> lang('disabled'),
-					'lang_disabled_statustext'			=> lang('This attribute turn up as disabled in the form'),
-
 					'value_helpmsg'						=> $values['helpmsg'],
-					'lang_helpmsg'						=> lang('help message'),
-					'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute'),
 				);
 			//_debug_array($values);
 

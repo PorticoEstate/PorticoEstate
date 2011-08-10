@@ -305,7 +305,7 @@ _debug_array($error_line);
 			case E_DEPRECATED:
 			case E_USER_DEPRECATED:
 				$log_args['severity'] = 'DP';
-				$log->deprecated_($log_args);
+				$log->deprecated($log_args);
 				echo '<p class="msg">' . lang('deprecated: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "</p>\n";
 				echo '<pre>' . phpgw_parse_backtrace($bt) . "</pre>\n";
 				break;
@@ -370,11 +370,11 @@ HTML;
 
 	 /* Load main class */
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
-
-	if(get_magic_quotes_runtime())
+	// get_magic_quotes_runtime() is deprecated in php 5.4.0
+	if( version_compare(PHP_VERSION, '5.3.7') <= 0 && get_magic_quotes_runtime())
 	{
-		echo '<center><b>The magic_quotes_runtime has to set to Off in php.ini</b></center>';
-		exit;
+			echo '<center><b>The magic_quotes_runtime has to set to Off in php.ini</b></center>';
+			exit;
 	}
 
 
