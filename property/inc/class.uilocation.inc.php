@@ -2274,6 +2274,7 @@ JS;
 			// required settings:
 /*
 				integration_tab
+				integration_height
 				integration_url
 				integration_parametres
 				integration_action
@@ -2319,7 +2320,11 @@ JS;
 
 						
 						$_config_section_name = str_replace(' ', '_',$_config_section);
-						$integration[]	= array('section' => $_config_section_name);
+						$integration[]	= array
+						(
+							'section' => $_config_section_name,
+							'height' => isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500
+						);
 						$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
 						$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
 
