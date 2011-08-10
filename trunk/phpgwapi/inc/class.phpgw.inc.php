@@ -393,8 +393,8 @@
 				// Trim whitespace so it doesn't trip us up
 				$value = trim($value);
 				
-				// This won't be needed in PHP6 as GPC magic quotes are being removed
-				if ( get_magic_quotes_gpc() )
+				// This won't be needed in PHP 5.4 and later as GPC magic quotes are being removed
+				if ( version_compare(PHP_VERSION, '5.3.7') <= 0 && get_magic_quotes_gpc() )
 				{
 						$value = stripslashes($value);
 				}
