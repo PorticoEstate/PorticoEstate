@@ -1654,6 +1654,7 @@
 			// required settings:
 /*
 			integration_tab
+			integration_height
 			integration_url
 			integration_parametres
 			integration_action
@@ -1698,7 +1699,12 @@
 					$cxContext = stream_context_create($aContext);
 					$response = trim(file_get_contents($request, False, $cxContext));
 
-					$integration[]	= array('section' => $_config_section);
+					$integration[]	= array
+					(
+						'section' => $_config_section,
+						'height' => isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500
+					);
+		
 					$_config_section_data['url']		= htmlspecialchars_decode($_config_section_data['url']);
 					$_config_section_data['parametres']	= htmlspecialchars_decode($_config_section_data['parametres']);
 
