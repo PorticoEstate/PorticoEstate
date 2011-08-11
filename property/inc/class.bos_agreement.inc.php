@@ -147,6 +147,12 @@
 			return $vendor_list;
 		}
 
+		//FIXME
+		function select_status_list($format='',$selected='')
+		{
+			return array();
+		}
+
 		function read()
 		{
 			$s_agreement = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
