@@ -65,20 +65,18 @@
 
 		function read($data)
 		{
-			if(is_array($data))
-			{
-				$start			= (isset($data['start'])?$data['start']:0);
-				$filter			= (isset($data['filter'])?$data['filter']:'none');
-				$query 			= (isset($data['query'])?$data['query']:'');
-				$sort 			= (isset($data['sort'])?$data['sort']:'DESC');
-				$order			= (isset($data['order'])?$data['order']:'');
-				$cat_id			= (isset($data['cat_id'])?$data['cat_id']:'');
-				$vendor_id		= (isset($data['vendor_id'])?$data['vendor_id']:'');
-				$allrows		= (isset($data['allrows'])?$data['allrows']:'');
-				$member_id		= (isset($data['member_id'])?$data['member_id']:0);
-				$agreement_id	= (isset($data['agreement_id'])?$data['agreement_id']:'');
-				$status 		= (isset($data['status'])?$data['status']:'');
-			}
+//_debug_array($data);die();
+			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
+			$query 			= isset($data['query']) ? $data['query'] : '';
+			$sort 			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) ? (int) $data['cat_id'] : '';
+			$vendor_id		= isset($data['vendor_id']) ? (int)$data['vendor_id']:'';
+			$allrows		= isset($data['allrows']) ? $data['allrows']:'';
+			$member_id		= isset($data['member_id']) ? (int)$data['member_id']:0;
+			$agreement_id	= isset($data['agreement_id'])? (int) $data['agreement_id']:'';
+			$status_id 		= isset($data['status_id']) ? $data['status_id'] : '';
 
 			$filtermethod = '';
 			$querymethod = '';
@@ -91,10 +89,11 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.agreement'); 
 			$attribute_filter = " location_id = {$location_id}";
 			$paranthesis ='(';
-			$joinmethod = " $this->join $category_table ON ( $entity_table.category =$category_table.id)";
-			$joinmethod .= " $this->join  fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id ))";
+			$joinmethod = " {$this->join} {$category_table} ON ( {$entity_table}.category = {$category_table}.id)";
+			$joinmethod .= " {$this->join}  fm_vendor ON ( {$entity_table}.vendor_id =fm_vendor.id )";
+			$joinmethod .= " {$this->join} fm_agreement_status ON ( {$entity_table}.status = fm_agreement_status.id))";
 
-			$cols = $entity_table . ".*,$category_table.descr as category, org_name";
+			$cols = "{$entity_table}.*,{$category_table}.descr as category, org_name, fm_agreement_status.descr as status";
 
 			$cols_return[] 				= 'id';
 			$uicols['input_type'][]		= 'text';
@@ -147,24 +146,25 @@
 
 			if ($order)
 			{
-				if ($order=='id')
+				switch ($order)
 				{
-					$ordermethod = " order by $entity_table.$order $sort";
-				}
-				else
-				{
-					$ordermethod = " order by $order $sort";
+					case 'id':
+					case 'status':
+						$ordermethod = " ORDER BY {$entity_table}.{$order} {$sort}";
+						break;
+					case 'category':
+						$ordermethod = " ORDER BY {$category_table}.descr {$sort}";					
+						break;
+					default:
+						$ordermethod = " ORDER BY {$order} {$sort}";
 				}
 			}
 			else
 			{
-				$ordermethod = " order by $entity_table.id DESC";
+				$ordermethod = " ORDER BY {$entity_table}.id DESC";
 			}
-
-
-			$from = " FROM $paranthesis $entity_table ";
-
-			$sql = "SELECT $cols $from $joinmethod";
+//_debug_array($ordermethod);
+			$sql = "SELECT {$cols} FROM {$paranthesis} {$entity_table} {$joinmethod}";
 
 			$i	= count($uicols['name']);
 
@@ -244,9 +244,9 @@
 				$where= 'AND';
 			}
 
-			if ($status)
+			if ($status_id)
 			{
-				$filtermethod .= " $where $entity_table.status='$status' ";
+				$filtermethod .= " {$where} {$entity_table}.status='{$status_id}' ";
 				$where= 'AND';
 			}
 
