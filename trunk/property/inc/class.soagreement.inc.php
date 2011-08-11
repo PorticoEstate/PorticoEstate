@@ -443,17 +443,31 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $entity_table.$order $sort";
+				switch($order)
+				{
+					case 'index_date':
+					case 'activity_id':
+					case 'index_count':
+					case 'total_cost':
+					case 'w_cost':
+					case 'm_cost':
+					case 'num':
+					case 'descr':
+					case 'unit':
+					case 'm_cost':
+						$ordermethod = "ORDER BY {$entity_table}.{$order} {$sort}";
+						break;
+					default:
+						$ordermethod = '';
+				}
+				
 			}
 			else
 			{
-				$ordermethod = " order by $entity_table.activity_id DESC";
+				$ordermethod = "ORDER BY {$entity_table}.activity_id DESC";
 			}
 
-
-			$from = " FROM $paranthesis $entity_table ";
-
-			$sql = "SELECT $cols $from $joinmethod";
+			$sql = "SELECT {$cols} FROM {$paranthesis} {$entity_table} {$joinmethod}";
 
 			$this->uicols	= $uicols;
 
