@@ -69,61 +69,38 @@
 				$this->use_session = true;
 			}
 
-			$start	= phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query	= phpgw::get_var('query');
-			$sort	= phpgw::get_var('sort');
-			$order	= phpgw::get_var('order');
-			$filter	= phpgw::get_var('filter', 'int');
-			$cat_id	= phpgw::get_var('cat_id', 'int');
+			$start		= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		= phpgw::get_var('query');
+			$sort		= phpgw::get_var('sort');
+			$order		= phpgw::get_var('order');
+			$filter		= phpgw::get_var('filter', 'int');
+			$cat_id		= phpgw::get_var('cat_id', 'int');
 			$vendor_id	= phpgw::get_var('vendor_id', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
-			$role	= phpgw::get_var('role');
+			$role		= phpgw::get_var('role');
 			$member_id	= phpgw::get_var('member_id', 'int');
-
+			$status_id	= phpgw::get_var('status_id');
 
 			$this->role	= $role;
 			$this->so->role	= $role;
 
-			if ($start)
-			{
-				$this->start=$start;
-			}
-			else
-			{
-				$this->start=0;
-			}
+			$this->status_id		= isset($_REQUEST['status_id'])	? $status_id	: $this->status_id;
+			$this->start			= isset($_REQUEST['start']) 	? $start		: $this->start;
+			$this->order			= isset($_REQUEST['order']) 	? $order		: $this->order;
+			$this->sort				= isset($_REQUEST['sort']) 		? $sort			: $this->sort;
+			$this->query			= isset($_REQUEST['query']) 	? $query		: $this->query;
+			$this->vendor_id		= isset($_REQUEST['vendor_id'])	? $vendor_id	: $this->vendor_id;
+			$this->member_id		= isset($_REQUEST['member_id']) ? $member_id	: $this->member_id;
+			$this->cat_id			= isset($_REQUEST['cat_id']) 	? $cat_id		: $this->cat_id;
 
-			if(isset($query))
-			{
-				$this->query = $query;
-			}
 			if(!empty($filter))
 			{
 				$this->filter = $filter;
 			}
-			if(isset($sort))
-			{
-				$this->sort = $sort;
-			}
 
-			$this->order	= isset($order) && $order ? $order : '';
-
-			if(isset($cat_id))
-			{
-				$this->cat_id = $cat_id;
-			}
-
-			if(isset($allrows))
+			if($allrows)
 			{
 				$this->allrows = $allrows;
-			}
-			if(isset($member_id))
-			{
-				$this->member_id = $member_id;
-			}
-			if(isset($vendor_id))
-			{
-				$this->vendor_id = $vendor_id;
 			}
 		}
 
@@ -139,7 +116,7 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','agreement');
 
-			//_debug_array($data);
+//			_debug_array($data);die();
 
 			$this->start	= $data['start'];
 			$this->query	= $data['query'];
@@ -149,7 +126,7 @@
 			$this->cat_id	= $data['cat_id'];
 			$this->vendor_id= $data['vendor_id'];
 			$this->member_id= $data['member_id'];
-			$this->allrows	= $data['allrows'];
+			$this->status_id= $data['status_id'];
 		}
 
 		function check_perms($has, $needed)
@@ -177,28 +154,25 @@
 
 		function read()
 		{
-			$agreement = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$agreements = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-				'vendor_id'=>$this->vendor_id));
+				'vendor_id'=>$this->vendor_id, 'status_id'=>$this->status_id));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
 
-			for ($i=0; $i<count($agreement); $i++)
+			foreach ($agreements as &$agreement)
 			{
-				if($agreement[$i]['start_date'])
+				if($agreement['start_date'])
 				{
-					$agreement[$i]['start_date']  = $GLOBALS['phpgw']->common->show_date($agreement[$i]['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$agreement['start_date']  = $GLOBALS['phpgw']->common->show_date($agreement['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
-				if($agreement[$i]['end_date'])
+				if($agreement['end_date'])
 				{
-					$agreement[$i]['end_date']  = $GLOBALS['phpgw']->common->show_date($agreement[$i]['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$agreement['end_date']  = $GLOBALS['phpgw']->common->show_date($agreement['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
-
-				$agreement[$i]['status']  = lang($agreement[$i]['status']);
-
 			}
-			return $agreement;
+			return $agreements;
 		}
 
 		function read_details($id)

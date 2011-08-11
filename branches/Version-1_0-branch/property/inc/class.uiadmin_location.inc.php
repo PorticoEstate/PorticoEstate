@@ -1611,39 +1611,18 @@
 					'type_id'						=> $values['type_id'],
 					'entity_list'					=> $this->bo->select_location_type($type_id),
 					'select_location_type'			=> 'values[type_id]',
-					'lang_datatype'					=> lang('Datatype'),
-					'lang_datatype_statustext'		=> lang('Select a datatype'),
-					'lang_no_datatype'				=> lang('No datatype'),
+
 					'datatype_list'					=> $this->bocommon->select_datatype($values['column_info']['type']),
 					'value_search'					=> $values['search'],
 
-					'lang_group'					=> lang('group'),
-					'lang_group_statustext'			=> lang('Select a group'),
-					'lang_no_group'					=> lang('no group'),
 					'attrib_group_list'				=> $this->bo->get_attrib_group_list($type_id, $values['group_id']),
 
-					'lang_precision'				=> lang('Precision'),
-					'lang_precision_statustext'		=> lang('enter the record length'),
 					'value_precision'				=> $values['column_info']['precision'],
-
-					'lang_scale'					=> lang('scale'),
-					'lang_scale_statustext'			=> lang('enter the scale if type is decimal'),
 					'value_scale'					=> $values['column_info']['scale'],
-
-					'lang_default'					=> lang('default'),
-					'lang_default_statustext'		=> lang('enter the default value'),
 					'value_default'					=> $values['column_info']['default'],
-
-					'lang_nullable'					=> lang('Nullable'),
-					'lang_nullable_statustext'		=> lang('Chose if this column is nullable'),
-					'lang_select_nullable'			=> lang('Select nullable'),
 					'nullable_list'					=> $this->bocommon->select_nullable($values['column_info']['nullable']),
 					'value_lookup_form'				=> $values['lookup_form'],
-					'lang_lookup_form'				=> lang('show in lookup forms'),
-					'lang_lookup_form_statustext'	=> lang('check to show this attribue in lookup forms'),
 					'value_list'					=> $values['list'],
-					'lang_list'						=> lang('show in list'),
-					'lang_list_statustext'			=> lang('check to show this attribute in location list')
 				);
 			//_debug_array($data);
 
