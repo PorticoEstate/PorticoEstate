@@ -167,6 +167,11 @@
 				{
 					$agreement['start_date']  = $GLOBALS['phpgw']->common->show_date($agreement['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
+				if($agreement['termination_date'])
+				{
+					$agreement['termination_date']  = $GLOBALS['phpgw']->common->show_date($agreement['termination_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				}
+
 				if($agreement['end_date'])
 				{
 					$agreement['end_date']  = $GLOBALS['phpgw']->common->show_date($agreement['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
