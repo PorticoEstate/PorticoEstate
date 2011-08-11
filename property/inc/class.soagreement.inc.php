@@ -130,6 +130,13 @@
 			$uicols['statustext'][]		= lang('start date');
 			$uicols['datatype'][]		= 'D';
 
+			$cols_return[] 				= 'termination_date';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'termination_date';
+			$uicols['descr'][]			= lang('termination date');
+			$uicols['statustext'][]		= lang('termination date');
+			$uicols['datatype'][]		= 'D';
+
 			$cols_return[] 				= 'end_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'end_date';
