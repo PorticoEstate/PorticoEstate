@@ -52,8 +52,8 @@
 				'edit_item'		=> true,
 				'view_item'		=> true,
 				'view_file'		=> true,
-				'download'			=> true,
-				'add_activity'		=> true
+				'download'		=> true,
+				'add_activity'	=> true
 			);
 
 		function property_uiagreement()
@@ -87,6 +87,7 @@
 			$this->vendor_id	= $this->bo->vendor_id;
 			$this->allrows		= $this->bo->allrows;
 			$this->member_id	= $this->bo->member_id;
+			$this->status_id	= $this->bo->status_id;
 		}
 
 		function save_sessiondata()
@@ -101,7 +102,8 @@
 					'cat_id'	=> $this->cat_id,
 					'vendor_id'	=> $this->vendor_id,
 					'allrows'	=> $this->allrows,
-					'member_id'	=> $this->member_id
+					'member_id'	=> $this->member_id,
+					'status_id'	=> $this->status_id
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -177,30 +179,26 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::agreement';
 
 			$datatable = array();
+			$this->save_sessiondata();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
 				$datatable['menu']					= $this->bocommon->get_menu();
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-					(
-						'menuaction'	=> 'property.uiagreement.index',
-						'sort'			=>$this->sort,
-						'order'			=>$this->order,
-						'cat_id'		=>$this->cat_id,
-						'filter'		=>$this->filter,
-						'query'			=>$this->query,
-						'role'			=> $this->role,
-						'member_id'		=> $this->member_id
-					));
+				(
+					'menuaction'	=> 'property.uiagreement.index',
+					'sort'			=>$this->sort,
+					'order'			=>$this->order,
+					'cat_id'		=>$this->cat_id,
+					'filter'		=>$this->filter,
+					'query'			=>$this->query,
+					'role'			=> $this->role,
+					'member_id'		=> $this->member_id,
+					'status_id'		=> $this->status_id
+				));
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiagreement.index',"
-					."sort:'{$this->sort}',"
-					."order:'{$this->order}',"
-					."cat_id: '{$this->cat_id}',"
-					."filter:'{$this->filter}',"
-					."query:'{$this->query}',"
-					."role:'{$this->role}',"
-					."member_id:'{$this->member_id}'";
+					."status_id:'{$this->status_id}'";
 
 				$datatable['config']['allow_allrows'] = true;
 
@@ -213,7 +211,8 @@
 						'filter'	=>$this->filter,
 						'query'		=>$this->query,
 						'role'		=> $this->role,
-						'member_id'	=> $this->member_id
+						'member_id'	=> $this->member_id,
+						'status_id'		=> $this->status_id
 					);
 
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('selected' => $this->member_id,'globals' => true,'link_data' =>$link_data));
@@ -228,6 +227,10 @@
 				$default_value = array ('id'=>'','name'=>lang('no vendor'));
 				array_unshift ($values_combo_box[2],$default_value);
 
+				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
+				$default_value = array ('id'=>'','name'=>lang('no status'));
+				array_unshift ($values_combo_box[3],$default_value);
+
 				//_debug_array($values_combo_box[0]);die;
 
 				$datatable['actions']['form'] = array(
@@ -241,12 +244,13 @@
 							'filter'		=> $this->filter,
 							'query'			=> $this->query,
 							'role'			=> $this->role,
-							'member_id'		=> $this->member_id
+							'member_id'		=> $this->member_id,
+							'status_id'		=> $this->status_id
 						)
 					),
 					'fields'	=> array(
 						'field' => array(
-							array( //boton 	CATEGORY
+							array( //boton 	member
 								'id' => 'btn_member_id',
 								'name' => 'member_id',
 								'value'	=> lang('Member'),
@@ -254,7 +258,7 @@
 								'style' => 'filter',
 								'tab_index' => 1
 							),
-							array( //boton 	STATUS
+							array( //boton 	CATEGORY
 								'id' => 'btn_cat_id',
 								'name' => 'category_id',
 								'value'	=> lang('Category'),
@@ -262,7 +266,7 @@
 								'style' => 'filter',
 								'tab_index' => 2
 							),
-							array( //boton 	HOUR CATEGORY
+							array( //boton 	vendor
 								'id' => 'btn_vendor_id',
 								'name' => 'vendor_id',
 								'value'	=> lang('Vendor'),
@@ -270,18 +274,26 @@
 								'style' => 'filter',
 								'tab_index' => 3
 							),
+							array( //boton 	STATUS
+								'id' => 'btn_status_id',
+								'name' => 'status_id',
+								'value'	=> lang('status'),
+								'type' => 'button',
+								'style' => 'filter',
+								'tab_index' => 4
+							),
 							array(
 								'type'	=> 'button',
 								'id'	=> 'btn_new',
 								'value'	=> lang('add'),
-								'tab_index' => 8
+								'tab_index' => 7
 							),
 							array( //boton     SEARCH
 								'id' => 'btn_search',
 								'name' => 'search',
 								'value'    => lang('search'),
 								'type' => 'button',
-								'tab_index' => 7
+								'tab_index' => 6
 							),
 							array( // TEXT INPUT
 								'name'     => 'query',
@@ -290,7 +302,7 @@
 								'type' => 'text',
 								'onkeypress' => 'return pulsar(event)',
 								'size'    => 28,
-								'tab_index' => 6
+								'tab_index' => 5
 							),
 							array(
 								'type' => 'link',
@@ -302,7 +314,14 @@
 									'role'		=> $this->role
 								))."','','width=300,height=600,scrollbars=1')",
 								'value' => lang('columns'),
-								'tab_index' => 9
+								'tab_index' => 8
+							),
+							array
+							(
+								'type'	=> 'button',
+								'id'	=> 'btn_export',
+								'value'	=> lang('download'),
+								'tab_index' => 10
 							)
 						),
 						'hidden_value' => array(
@@ -317,6 +336,10 @@
 							array( //div values  combo_box_2
 								'id' => 'values_combo_box_2',
 								'value'	=> $this->bocommon->select2String($values_combo_box[2])
+							),
+							array( //div values  combo_box_3
+								'id' => 'values_combo_box_3',
+								'value'	=> $this->bocommon->select2String($values_combo_box[3])
 							)
 						)
 					)
@@ -467,12 +490,13 @@
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
-
+/*
 					if($uicols['name'][$i]=='category')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'org_name';
 					}
+*/
 				}
 			}
 
@@ -1498,7 +1522,14 @@
 		function download()
 		{
 			$id	= phpgw::get_var('id', 'int');
-			$list = $this->bo->read_details($id);
+			if($id)
+			{
+				$list = $this->bo->read_details($id);
+			}
+			else
+			{
+				$list = $this->bo->read($id);
+			}
 			$uicols		= $this->bo->uicols;
 			$this->bocommon->download($list,$uicols['name'],$uicols['descr'],$uicols['input_type']);
 		}
