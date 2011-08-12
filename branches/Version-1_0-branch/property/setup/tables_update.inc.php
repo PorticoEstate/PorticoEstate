@@ -5368,6 +5368,44 @@
 	}
 
 
+
+	/**
+	* Update property version from 0.9.17.621 to 0.9.17.622
+	* Add locations missing from clean install
+	* 
+	*/
+
+	$test[] = '0.9.17.621';
+	function property_upgrade0_9_17_621()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
+		$GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
+
+		$locations = array
+		(
+			'property.ticket'	=> '.ticket',
+			'property.project'	=> '.project',
+			'property.document' => '.document',
+			'fm_vendor'			=> '.vendor',
+			'fm_tenant'			=> '.tenant',
+			'fm_owner'			=> '.owner'
+		);
+
+		foreach($locations as $dummy => $location)
+		{
+			$GLOBALS['phpgw']->locations->add("{$location}.category", 'Categories', 'property');
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.622';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
