@@ -71,6 +71,24 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name
 
 $GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 
+$GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
+$GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
+
+$locations = array
+(
+	'property.ticket'	=> '.ticket',
+	'property.project'	=> '.project',
+	'property.document' => '.document',
+	'fm_vendor'			=> '.vendor',
+	'fm_tenant'			=> '.tenant',
+	'fm_owner'			=> '.owner'
+);
+
+foreach($locations as $dummy => $location)
+{
+	$GLOBALS['phpgw']->locations->add("{$location}.category", 'Categories', 'property');
+}
+
 
 $GLOBALS['phpgw_setup']->oProc->query("DELETE from phpgw_config WHERE config_app='property'");
 $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('property','meter_table', 'fm_entity_1_1')");
@@ -196,12 +214,12 @@ $GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_status (id, descr)
 # fm_request_condition_type
 #
 
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, descr, priority_key) VALUES (1, 'safety', 10)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, descr, priority_key) VALUES (2, 'aesthetics', 2)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, descr, priority_key) VALUES (3, 'indoor climate', 5)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, descr, priority_key) VALUES (4, 'consequential damage', 5)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, descr, priority_key) VALUES (5, 'user gratification', 4)");
-$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, descr, priority_key) VALUES (6, 'residential environment', 6)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, name, priority_key) VALUES (1, 'safety', 10)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, name, priority_key) VALUES (2, 'aesthetics', 2)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, name, priority_key) VALUES (3, 'indoor climate', 5)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, name, priority_key) VALUES (4, 'consequential damage', 5)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, name, priority_key) VALUES (5, 'user gratification', 4)");
+$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition_type (id, name, priority_key) VALUES (6, 'residential environment', 6)");
 
 
 #
