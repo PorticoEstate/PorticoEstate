@@ -82,6 +82,7 @@
 				$s_agreement_id	= isset($data['s_agreement_id'])?$data['s_agreement_id']:'';
 				$detail			= isset($data['detail'])?$data['detail']:'';
 				$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+				$status_id		= isset($data['status_id']) && $data['status_id'] ? (int)$data['status_id']:0;
 			}
 
 			$choice_table = 'phpgw_cust_choice';
@@ -132,6 +133,13 @@
 				$uicols['name'][]			= 'start_date';
 				$uicols['descr'][]			= lang('start');
 				$uicols['statustext'][]		= lang('start date');
+
+				$cols_return[] 				= 'termination_date';
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			= 'termination_date';
+				$uicols['descr'][]			= lang('termination date');
+				$uicols['statustext'][]		= lang('termination date');
+	//			$uicols['datatype'][]		= 'D';
 
 				$cols_return[] 				= 'end_date';
 				$uicols['input_type'][]		= 'text';
@@ -274,22 +282,26 @@
 				return;
 			}
 
-			//_debug_array($cols_return_extra);
 			if ($order)
 			{
-				if ($order=='id')
+				switch ($order)
 				{
-					$ordermethod = " order by $entity_table.$order $sort";
-				}
-				else
-				{
-					$ordermethod = " order by $order $sort";
+					case 'id':
+					case 'status':
+						$ordermethod = " ORDER BY {$entity_table}.{$order} {$sort}";
+						break;
+					case 'category':
+						$ordermethod = " ORDER BY {$category_table}.descr {$sort}";					
+						break;
+					default:
+						$ordermethod = " ORDER BY {$order} {$sort}";
 				}
 			}
 			else
 			{
-				$ordermethod = " order by $entity_table.id DESC";
+				$ordermethod = " ORDER BY {$entity_table}.id DESC";
 			}
+
 
 			$filtermethod = '';
 			$where= 'WHERE';
@@ -340,12 +352,12 @@
 				$where= 'AND';
 			}
 
-/*			if ($status)
+			if (!$detail && $status_id)
 			{
-				$filtermethod .= " $where $entity_table.status='$status' ";
+				$filtermethod .= " $where $entity_table.status='$status_id' ";
 				$where= 'AND';
 			}
- */
+
 
 			$querymethod = '';
 			if($query)
@@ -405,6 +417,7 @@
 
 			$contacts			= CreateObject('phpgwapi.contacts');
 
+			$s_agreement_list = array();
 			while ($this->db->next_record())
 			{
 				for ($i=0;$i<$n;$i++)

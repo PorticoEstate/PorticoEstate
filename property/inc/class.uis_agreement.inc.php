@@ -179,6 +179,7 @@
 			$GLOBALS['phpgw']->session->appsession('session_data','s_agreement_receipt','');
 
 			$datatable = array();
+			$this->save_sessiondata();
 
 			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
@@ -516,17 +517,18 @@
 					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
 					$datatable['headers']['header'][$i]['visible'] 			= true;
 					$datatable['headers']['header'][$i]['sortable']			= false;
-					if($uicols['name'][$i]=='id' || $uicols['name'][$i]=='name' || $uicols['name'][$i]=='org_name' || $uicols['name'][$i]=='category' || $uicols['name'][$i]=='start_date' || $uicols['name'][$i]=='end_date' || $uicols['name'][$i]=='status')
+					if($uicols['name'][$i]=='id' || $uicols['name'][$i]=='name' || $uicols['name'][$i]=='org_name' || $uicols['name'][$i]=='category' || $uicols['name'][$i]=='start_date' || $uicols['name'][$i]=='end_date' || $uicols['name'][$i]=='status' || $uicols['name'][$i]=='termination_date')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= $uicols['name'][$i];
 					}
-
+/*
 					if($uicols['name'][$i]=='category')
 					{
 						$datatable['headers']['header'][$i]['sortable']		= true;
 						$datatable['headers']['header'][$i]['sort_field']	= 'org_name';
 					}
+*/
 				}
 			}
 

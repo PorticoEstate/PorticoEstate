@@ -82,21 +82,24 @@
 			$allrows			= phpgw::get_var('allrows', 'bool');
 			$role				= phpgw::get_var('role');
 			$member_id			= phpgw::get_var('member_id', 'int');
+			$status_id	= phpgw::get_var('status_id', 'int');
 
 			$this->p_num		= phpgw::get_var('p_num');
 
 			$this->role			= $role;
 			$this->so->role		= $role;
 
-			$this->start		= $start ? $start : 0;
-			$this->query		= isset($query) ? $query : $this->query;
-			$this->sort			= isset($sort) && $sort ? $sort : '';
-			$this->order		= isset($order) && $order ? $order : '';
-			$this->filter		= isset($filter) && $filter ? $filter : '';
-			$this->cat_id		= isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->member_id	= isset($member_id) && $member_id ? $member_id : '';
-			$this->vendor_id	= isset($vendor_id) && $vendor_id ? $vendor_id : '';
-			$this->allrows		= isset($allrows) && $allrows ? $allrows : '';
+			$this->status_id		= isset($_REQUEST['status_id'])	? $status_id	: $this->status_id;
+			$this->start			= isset($_REQUEST['start']) 	? $start		: $this->start;
+			$this->order			= isset($_REQUEST['order']) 	? $order		: $this->order;
+			$this->sort				= isset($_REQUEST['sort']) 		? $sort			: $this->sort;
+			$this->query			= isset($_REQUEST['query']) 	? $query		: $this->query;
+			$this->vendor_id		= isset($_REQUEST['vendor_id'])	? $vendor_id	: $this->vendor_id;
+			$this->member_id		= isset($_REQUEST['member_id']) ? $member_id	: $this->member_id;
+			$this->cat_id			= isset($_REQUEST['cat_id']) 	? $cat_id		: $this->cat_id;
+
+			$this->filter			= $filter ? $filter : '';
+			$this->allrows			= $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata($data)
@@ -121,7 +124,7 @@
 			$this->cat_id	= isset($data['cat_id']) ? $data['cat_id'] : '';
 			$this->vendor_id= isset($data['vendor_id']) ? $data['vendor_id'] : '';
 			$this->member_id= isset($data['member_id']) ? $data['member_id'] : '';
-			$this->allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$this->status_id= $data['status_id'];
 		}
 
 		function check_perms($has, $needed)
@@ -150,30 +153,51 @@
 		//FIXME
 		function select_status_list($format='',$selected='')
 		{
-			return array();
+			$status_list = array();
+			$attrib_data = $this->custom->find('property', '.s_agreement', 0, '', 'ASC', 'attrib_sort', true, true);
+			foreach ( $attrib_data as $attrib )
+			{
+				if($attrib['datatype'] == 'LB' && $attrib['column_name'] == 'status')
+				{
+					foreach($attrib['choice'] as $choice)
+					{
+						$status_list[]  = array
+						(
+							'id' 	=> $choice['id'],
+							'name'	=> htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+						);
+					}
+				}
+			}
+			return $status_list;
 		}
 
 		function read()
 		{
-			$s_agreement = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
+			$s_agreements = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows,'member_id'=>$this->member_id,
-				'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num));
+				'vendor_id'=>$this->vendor_id, 'p_num' => $this->p_num, 'status_id'=>$this->status_id));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;
 
-			for ($i=0; $i<count($s_agreement); $i++)
+			foreach ($s_agreements as &$s_agreement)
 			{
-				if($s_agreement[$i]['start_date'])
+				if($s_agreement['start_date'])
 				{
-					$s_agreement[$i]['start_date']  = $GLOBALS['phpgw']->common->show_date($s_agreement[$i]['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$s_agreement['start_date']  = $GLOBALS['phpgw']->common->show_date($s_agreement['start_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
-				if($s_agreement[$i]['end_date'])
+				if($s_agreement['termination_date'])
 				{
-					$s_agreement[$i]['end_date']  = $GLOBALS['phpgw']->common->show_date($s_agreement[$i]['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$s_agreement['termination_date']  = $GLOBALS['phpgw']->common->show_date($s_agreement['termination_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				}
+
+				if($s_agreement['end_date'])
+				{
+					$s_agreement['end_date']  = $GLOBALS['phpgw']->common->show_date($s_agreement['end_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
 			}
-			return $s_agreement;
+			return $s_agreements;
 		}
 
 		function read_details($id)
