@@ -184,6 +184,9 @@
 			$booking = array();
 			$booking['cost'] = 0;
 			$allocation_id = phpgw::get_var('allocation_id', 'int', 'GET');
+			if (isset($_POST['application_id'])) {
+				$application_id = phpgw::get_var('application_id', 'int', 'POST');
+			}	
 			$booking['building_id'] = phpgw::get_var('building_id', 'int', 'GET');
 			$booking['resources'] = phpgw::get_var('resources', 'int', 'GET');
             #The string replace is a workaround for a problem at Bergen Kommune 
@@ -196,8 +199,7 @@
 			if (! isset($allocation_id)) $noallocation = 1;
 			$invalid_dates = array();
 			$valid_dates = array();
-
-
+			
 			if(isset($allocation_id))
 			{
 				$allocation = $this->allocation_bo->read_single($allocation_id);
@@ -216,11 +218,12 @@
                 $noallocation = 1;
             }
 
+
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
-                
+
 				if(strlen($_POST['from_']) < 6) 
 				{
 					$date_from = array($time_from[0], $_POST['from_']);
@@ -265,7 +268,7 @@
 
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
-                    if( isset($noallocation)) {
+			        if( isset($noallocation)) {
                         $allocation['resources'] = $booking['resources'];
                         $allocation['cost'] = $booking['cost'];
                         $allocation['building_id'] = $booking['building_id'];
@@ -273,6 +276,9 @@
                         $allocation['season_id'] = $booking['season_id'];
                         $allocation['organization_id'] = $booking['organization_id'];
                         $allocation['organization_name'] = $booking['organization_name'];
+						if ($application_id != '0') {
+		                    $allocation['application_id'] = $application_id;
+						}
                         $allocation['from_'] = $booking['from_'];
                         $allocation['to_'] = $booking['to_'];
            				$allocation['active'] = '1';
@@ -332,17 +338,26 @@
                                     $allocation['season_id'] = $booking['season_id'];
                                     $allocation['organization_id'] = $booking['organization_id'];
                                     $allocation['organization_name'] = $booking['organization_name'];
+									if ($application_id != '0') {
+				                        $allocation['application_id'] = $application_id;
+									}
                                     $allocation['from_'] = $booking['from_'];
                                     $allocation['to_'] = $booking['to_'];
                        				$allocation['active'] = '1';
                     				$allocation['completed'] = '0';
                                     $receipt = $this->allocation_bo->add($allocation);
                                     $booking['allocation_id'] = $receipt['id'];
+									if ($application_id != '0') {
+										$booking['application_id'] = $application_id;
+									}
     								$booking['secret'] = $this->generate_secret();
     								$receipt = $this->bo->add($booking);
                                     $booking['allocation_id'] = '';
                                     $this->allocation_bo->so->update_id_string();
                                 } else {
+									if ($application_id != '0') {
+										$booking['application_id'] = $application_id;
+									}
     								$booking['secret'] = $this->generate_secret();
     								$receipt = $this->bo->add($booking);
                                 }
@@ -352,11 +367,15 @@
 					}
 					if ($step == 3) 
 					{
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
+						if ($application_id != '0') {
+							$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id'=>$application_id));
+				
+						} else {
+							$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id'=>$booking['building_id']));
+						}
 					}
 				}
 			}
-
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'booking', 'booking.js');
 			array_set_default($booking, 'resources', array());
@@ -387,7 +406,9 @@
 					'outseason' => $_POST['outseason'],
 					'date_from' => $time_from[0],
 					'date_to' => $time_to[0],
+					'application_id' => $application_id,
                     'noallocation' => $noallocation)
+					
 				);
 			} 
 			else if ($step == 2) 
@@ -406,6 +427,7 @@
 					'valid_dates' => $valid_dates,
 					'invalid_dates' => $invalid_dates,
 					'groups' => $groups,
+					'application_id' => $application_id,
                     'noallocation' => $noallocation)
 				);
 			}
