@@ -2,11 +2,11 @@
 // Declaration of event.index vars
 //--------------------------------------------------------
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1;//, oMenuButton_2, oMenuButton_3;
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2;//, oMenuButton_3;
  	var selectsButtons = [
 	{order:0, var_URL:'location_id',name:'btn_location_id',style:'locationbutton',dependiente:''},
-	{order:1, var_URL:'user_id', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
-//	{order:3, var_URL:'status_id',name:'btn_status_id',style:'partOFTownbutton',dependiente:''},
+	{order:1, var_URL:'user_id', name:'btn_user_id',style:'ownerIdbutton',dependiente:''},
+	{order:2, var_URL:'status_id',name:'btn_status_id',style:'statusIdbutton',dependiente:''}
 	];
 
 	// define buttons
@@ -114,18 +114,20 @@
 			{
 				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
 			}
+
+			//status
+			index = locate_in_array_options(2,"value",path_values.status_id);
+			if(index)
+			{
+				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
+			}
+
 /*
 			//district
 			index = locate_in_array_options(1,"value",path_values.district_id);
 			if(index)
 			{
 				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
-			}
-			//status
-			index = locate_in_array_options(2,"value",path_values.status_id);
-			if(index)
-			{
-				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
 			}
 			//user
 			index = locate_in_array_options(3,"value",path_values.user_id);
