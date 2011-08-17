@@ -194,6 +194,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.last_change_date';
 			$columns[] = 'activity.contact_person_1';
 			$columns[] = 'activity.contact_person_2';
+			$columns[] = 'activity.contact_person_2_address';
+			$columns[] = 'activity.contact_person_2_zip';
 			$columns[] = 'activity.special_adaptation';
 			$columns[] = 'activity.secret';
 			
@@ -264,6 +266,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'last_change_date = '    . $this->marshal($ts_now, 'int'),
 			'contact_person_1 = '          . $this->marshal($activity->get_contact_person_1(), 'int'),
 			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int'),
+			'contact_person_2_address = '          . $this->marshal($activity->get_contact_person_2_address(), 'string'),
+			'contact_person_2_zip = '          . $this->marshal($activity->get_contact_person_2_zip(), 'string'),
 			'special_adaptation = '			.($activity->get_special_adaptation() ? "true" : "false")
 		);
 		
@@ -295,6 +299,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'create_date',
 			'contact_person_1',
 			'contact_person_2',
+			'contact_person_2_address',
+			'contact_person_2_zip',
 			'secret',
 			'special_adaptation'
 		);
@@ -316,6 +322,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$this->marshal($ts_now, 'int'),
 			$this->marshal($activity->get_contact_person_1(), 'int'),
 			$this->marshal($activity->get_contact_person_2(), 'int'),
+			$this->marshal($activity->get_contact_person_2_address(), 'string'),
+			$this->marshal($activity->get_contact_person_2_zip(), 'string'),
 			$this->marshal($this->generate_secret(),'string'),
 			($activity->get_special_adaptation() ? "true" : "false")
 		);
@@ -364,11 +372,15 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
 			$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
 			$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
+			$activity->set_contact_person_2_address($this->unmarshal($this->db->f('contact_person_2_address'), 'string'));
+			$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
 			
 			if($activity->get_group_id() && $activity->get_group_id() > 0)
 			{
 				$contacts = activitycalendar_sogroup::get_instance()->get_contacts($activity->get_group_id());
 				$activity->set_contact_persons($contacts);
+				$org_tmp = activitycalendar_sogroup::get_instance()->get_orgid_from_group($activity->get_group_id());
+				$activity->set_organization_id($org_tmp);
 			}
 			else if($activity->get_organization_id() && $activity->get_organization_id() > 0)
 			{
@@ -782,10 +794,30 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$name = $org_info['name'];
 		$orgid = (int)$org_info['orgid'];
 		$homepage = $org_info['homepage'];
+		if(!$homepage)
+		{
+			$homepage = '';
+		}
 		$phone = $org_info['phone'];
+		if(!$phone)
+		{
+			$phone = '';
+		}
 		$email = $org_info['email'];
+		if(!$email)
+		{
+			$email = '';
+		}
 		$description = $org_info['description'];
+		if(!$description)
+		{
+			$description = '';
+		}
 		$street = $org_info['street'];
+		if(!$street)
+		{
+			$street = '';
+		}
 		$zip = $org_info['zip'];
 		if($zip && strlen($zip) > 5)
 		{
@@ -855,17 +887,17 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'show_in_portal';
 		$cols = implode(',',$columns);
 		
-		$values[] = "{$name}";
-		$values[] = "{$homepage}";
-		$values[] = "{$phone}";
-		$values[] = "{$email}";
-		$values[] = "{$description}";
-		$values[] = "{$street}";
-		$values[] = "{$zip_code}";
-		$values[] = "{$city}";
-		$values[] = "{$district}";
-		$values[] = "{$orgnr}";
-		$values[] = $activity_id;
+		$values[] = "'{$name}'";
+		$values[] = "'{$homepage}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$email}'";
+		$values[] = "'{$description}'";
+		$values[] = "'{$street}'";
+		$values[] = "'{$zip_code}'";
+		$values[] = "'{$city}'";
+		$values[] = "'{$district}'";
+		$values[] = "'{$orgnr}'";
+		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
 		
@@ -958,7 +990,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = "'{$name}'";
 		$values[] = "'{$description}'";
 		$values[] = "'{$orgid}'";
-		$values[] = $activity_id;
+		$values[] = $this->marshal($activity_id, 'int');
 		$values[] = $show_in_portal;
 		$vals = implode(',',$values);
 		

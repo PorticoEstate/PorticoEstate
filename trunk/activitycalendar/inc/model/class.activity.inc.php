@@ -25,6 +25,8 @@
 		protected $last_change_date;
 		protected $contact_person_1;
 		protected $contact_person_2;
+		protected $contact_person_2_address;
+		protected $contact_person_2_zip;
 		protected $special_adaptation;
 		protected $secret;
 		protected $internal_arena;
@@ -175,6 +177,20 @@
 		}
 		
 		public function get_contact_person_2() { return $this->contact_person_2; }
+		
+		public function set_contact_person_2_address($contact_person_2_address)
+		{
+			$this->contact_person_2_address = $contact_person_2_address;
+		}
+		
+		public function get_contact_person_2_address() { return $this->contact_person_2_address; }
+		
+		public function set_contact_person_2_zip($contact_person_2_zip)
+		{
+			$this->contact_person_2_zip = $contact_person_2_zip;
+		}
+		
+		public function get_contact_person_2_zip() { return $this->contact_person_2_zip; }
 		
 		public function set_special_adaptation($special_adaptation)
 		{

@@ -399,6 +399,44 @@ YAHOO.util.Event.onDOMReady(function()
 						}
 					?>
 				</dd>
+				<dt>
+					<?php if($activity->get_contact_person_2_address() || $editable) { ?>
+					<label for="contact_person_2_address"><?php echo lang('contact_person_2_address') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					if ($editable)
+					{
+					?>
+						<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="<?php echo $activity->get_contact_person_2_address() ?>" />
+					<?php
+					}
+					else
+					{
+						echo $activity->get_contact_person_2_address();
+					}
+					?>
+				</dd>
+				<dt>
+					<?php if($activity->get_contact_person_2_zip() || $editable) { ?>
+					<label for="contact_person_2_zip"><?php echo lang('contact_person_2_zip') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					if ($editable)
+					{
+					?>
+						<input type="text" name="contact_person_2_zip" id="contact_person_2_zip" value="<?php echo $activity->get_contact_person_2_zip() ?>" />
+					<?php
+					}
+					else
+					{
+						echo $activity->get_contact_person_2_zip();
+					}
+					?>
+				</dd>
 			    <dt>
 					<label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
 				</dt>

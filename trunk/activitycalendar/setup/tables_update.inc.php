@@ -114,4 +114,19 @@
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.4';
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
+	$test[] = '0.1.4';
+	function activitycalendar_upgrade0_1_4()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','contact_person_2_address',array(
+			'type' => 'varchar',
+			'precision' => '255'
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','contact_person_2_zip',array(
+			'type' => 'varchar',
+			'precision' => '255'
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.5';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
 ?>

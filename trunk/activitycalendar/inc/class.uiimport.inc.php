@@ -218,30 +218,40 @@
 				unset($contact3);
 				unset($contact4);
 				
-				$arena = new activitycalendar_arena();
-				//8: sted, 9:adresse
-				$arena_name = $this->decode($data[8]);
-				$arena_address = $this->decode($data[9]);
-				$curr_arena_id = 0;
-
-				if($arena_name){
-					$arena->set_arena_name($arena_name);
-					$arena->set_address($arena_address);
-	
-					// All is good, store notification
-					if ($soarena->store($arena)) {
-						$this->messages[] = "Successfully imported arena: Name ({$arena_name})";
-						$curr_arena_id = $arena->get_id();
-					} else {
-						$this->errors[] = "Error importing arena: Name ({$arena_name})";
-						$curr_arena_id = 0;
-						$arenaOK = false;
-					}
+				$internal_arena = $this->decode($data[9]);
+				if($internal_arena)
+				{
+					$internal_arena_id = $internal_arena;
+					$curr_arena_id = "";
 				}
 				else
-				{
-					$this->errors[] = "Error importing arena: Name not supplied";
+				{				
+					$arena = new activitycalendar_arena();
+					//8: sted, 10:adresse
+					$arena_name = $this->decode($data[8]);
+					$arena_address = $this->decode($data[10]);
 					$curr_arena_id = 0;
+					$internal_arena_id = "";
+	
+					if($arena_name){
+						$arena->set_arena_name($arena_name);
+						$arena->set_address($arena_address);
+		
+						// All is good, store notification
+						if ($soarena->store($arena)) {
+							$this->messages[] = "Successfully imported arena: Name ({$arena_name})";
+							$curr_arena_id = $arena->get_id();
+						} else {
+							$this->errors[] = "Error importing arena: Name ({$arena_name})";
+							$curr_arena_id = 0;
+							$arenaOK = false;
+						}
+					}
+					else
+					{
+						$this->errors[] = "Error importing arena: Name not supplied";
+						$curr_arena_id = 0;
+					}
 				}
 				
 				$activity = new activitycalendar_activity();
@@ -249,9 +259,50 @@
 				$activity_group = $this->decode($data[2]);
 				$activity_org = $this->decode($data[3]);
 				$activity_category = $this->decode($data[5]);
+				$org_name_tmp = $this->decode($data[1]);
+				if(strlen($org_name_tmp) > 50)
+				{
+					$org_name_tmp = substr($org_name_tmp,0,49);
+				}
+				$org_email = $this->decode($data[15]);
+				if(strlen($org_email) > 50)
+				{
+					$org_email = substr($org_email,0,49);
+				}
+				$org_phone = $this->decode($data[14]);
+				if(strlen($org_phone) > 50)
+				{
+					$org_phone = substr($org_phone,0,49);
+				}
+				$contact_mail_2 = $this->decode($data[21]);
+				if(strlen($contact_mail_2) > 50)
+				{
+					$contact_mail_2 = substr($contact_mail_2,0,49);
+				}
 				if($activity_category)
 				{
 					$activity_category = $soactivity->get_category_from_name($activity_category);
+				}
+				
+				$contact1_name = $this->decode($data[13]);
+				if(strlen($contact1_name) > 50)
+				{
+					$contact1_name = substr($contact1_name,0,49);
+				}
+				$contact1_phone = $this->decode($data[14]);
+				if(strlen($contact1_phone) > 50)
+				{
+					$contact1_phone = substr($contact1_phone,0,49);
+				}
+				$contact2_name = $this->decode($data[17]);
+				if(strlen($contact2_name) > 50)
+				{
+					$contact2_name = substr($contact2_name,0,49);
+				}
+				$contact2_phone = $this->decode($data[20]);
+				if(strlen($contact2_phone) > 50)
+				{
+					$contact2_phone = substr($contact2_phone,0,49);
 				}
 				
 				if($activity_org)
@@ -262,31 +313,31 @@
 						//update the organization found
 						$org_info = array();
 						$org_info['orgid'] = $activity_org;
-						$org_info['name'] = $this->decode($data[2]); //new
-						$org_info['homepage'] = $this->decode($data[15]);
-						$org_info['phone'] = $this->decode($data[13]);
-						$org_info['email'] = $this->decode($data[12]);
+						$org_info['name'] = $org_name_tmp; //new
+						$org_info['homepage'] = $this->decode($data[16]);
+						$org_info['phone'] = $org_phone;
+						$org_info['email'] = $org_email;
 						$org_info['description'] = $this->decode($data[6]);
-						$org_info['street'] = $this->decode($data[9]);
-						$org_info['zip'] = $this->decode($data[18]);
+						$org_info['street'] = $this->decode($data[10]);
+						$org_info['zip'] = $this->decode($data[19]);
 						$org_info['activity_id'] = $activity_category;
-						$org_info['district'] = $this->decode($data[22]); 
+						$org_info['district'] = $this->decode($data[23]); 
 						$soactivity->update_organization($org_info);
 						//$new_org_id = $activity_org;
 						
 						$soactivity->delete_contact_persons($activity_org);
 						
 						$contact1 = array();
-						$contact1['name'] = $this->decode($data[12]);
-						$contact1['phone'] = $this->decode($data[13]);
-						$contact1['mail'] = $this->decode($data[14]);
+						$contact1['name'] = $contact1_name;
+						$contact1['phone'] = $contact1_phone;
+						$contact1['mail'] = $org_email;
 						$contact1['org_id'] = $this->decode($activity_org);
 						$soactivity->add_contact_person_org($contact1);
 						
 						$contact2 = array();
-						$contact2['name'] = $this->decode($data[16]);
-						$contact2['phone'] = $this->decode($data[19]);
-						$contact2['mail'] = $this->decode($data[20]);
+						$contact2['name'] = $contact2_name;
+						$contact2['phone'] = $contact2_phone;
+						$contact2['mail'] = $contact_mail_2;
 						$contact2['org_id'] = $this->decode($activity_org);
 						$soactivity->add_contact_person_org($contact2);
 						
@@ -301,16 +352,16 @@
 							$new_group_id = $soactivity->add_group($group_info);
 							
 							$contact3 = array();
-							$contact3['name'] = $this->decode($data[12]);
-							$contact3['phone'] = $this->decode($data[13]);
-							$contact3['mail'] = $this->decode($data[14]);
+							$contact3['name'] = $contact1_name;
+							$contact3['phone'] = $contact1_phone;
+							$contact3['mail'] = $org_email;
 							$contact3['group_id'] = $this->decode($new_group_id);
 							$soactivity->add_contact_person_group($contact3);
 							
 							$contact4 = array();
-							$contact4['name'] = $this->decode($data[16]);
-							$contact4['phone'] = $this->decode($data[19]);
-							$contact4['mail'] = $this->decode($data[20]);
+							$contact4['name'] = $contact2_name;
+							$contact4['phone'] = $contact2_phone;
+							$contact4['mail'] = $contact_mail_2;
 							$contact4['group_id'] = $this->decode($new_group_id);
 							$soactivity->add_contact_person_group($contact4);
 							
@@ -351,29 +402,35 @@
 					else	//add org unit
 					{
 						$org_info = array();
-						$org_info['name'] = $this->decode($data[2]); //new
-						$org_info['orgnr'] = $this->decode($data[3]);
-						$org_info['homepage'] = $this->decode($data[15]);
-						$org_info['phone'] = $this->decode($data[13]);
-						$org_info['email'] = $this->decode($data[14]);
+						$org_info['name'] = $org_name_tmp; //new
+						$orgno_tmp = $this->decode($data[3]);
+						if(strlen($orgno_tmp) > 9)
+						{
+							$orgno_tmp = NULL;
+						}
+						$org_info['orgnr'] = $orgno_tmp; 
+						
+						$org_info['homepage'] = $this->decode($data[16]);
+						$org_info['phone'] = $org_phone;
+						$org_info['email'] = $org_email;
 						$org_info['description'] = $this->decode($data[6]);
-						$org_info['street'] = $this->decode($data[9]);
-						$org_info['zip'] = $this->decode($data[18]);
+						$org_info['street'] = $this->decode($data[10]);
+						$org_info['zip'] = $this->decode($data[19]);
 						$org_info['activity_id'] = $activity_category;
-						$org_info['district'] = $this->decode($data[22]); 
+						$org_info['district'] = $this->decode($data[23]); 
 						$new_org_id = $soactivity->add_organization($org_info);
 						
 						$contact1 = array();
-						$contact1['name'] = $this->decode($data[12]);
-						$contact1['phone'] = $this->decode($data[13]);
-						$contact1['mail'] = $this->decode($data[14]);
+						$contact1['name'] = $contact1_name;
+						$contact1['phone'] = $contact1_phone;
+						$contact1['mail'] = $org_email;
 						$contact1['org_id'] = $this->decode($new_org_id);
 						$soactivity->add_contact_person_org($contact1);
 						
 						$contact2 = array();
-						$contact2['name'] = $this->decode($data[16]);
-						$contact2['phone'] = $this->decode($data[19]);
-						$contact2['mail'] = $this->decode($data[20]);
+						$contact2['name'] = $contact2_name;
+						$contact2['phone'] = $contact2_phone;
+						$contact2['mail'] = $contact_mail_2;
 						$contact2['org_id'] = $this->decode($new_org_id);
 						$soactivity->add_contact_person_org($contact2);
 						
@@ -388,16 +445,16 @@
 							$new_group_id = $soactivity->add_group($group_info);
 							
 							$contact3 = array();
-							$contact3['name'] = $this->decode($data[12]);
-							$contact3['phone'] = $this->decode($data[13]);
-							$contact3['mail'] = $this->decode($data[14]);
+							$contact3['name'] = $contact1_name;
+							$contact3['phone'] = $contact1_phone;
+							$contact3['mail'] = $org_email;
 							$contact3['group_id'] = $this->decode($new_group_id);
 							$soactivity->add_contact_person_group($contact3);
 							
 							$contact4 = array();
-							$contact4['name'] = $this->decode($data[16]);
-							$contact4['phone'] = $this->decode($data[19]);
-							$contact4['mail'] = $this->decode($data[20]);
+							$contact4['name'] = $contact2_name;
+							$contact4['phone'] = $contact2_phone;
+							$contact4['mail'] = $contact_mail_2;
 							$contact4['group_id'] = $this->decode($new_group_id);
 							$soactivity->add_contact_person_group($contact4);
 							
@@ -418,31 +475,31 @@
 					}
 					else
 					{
-						$org_info['name'] = $this->decode($data[1]);
+						$org_info['name'] = $org_name_tmp;
 					}
 					 
 					//$org_info['orgnr'] = $this->decode($data[2]);
-					$org_info['homepage'] = $this->decode($data[15]);
-					$org_info['phone'] = $this->decode($data[13]);
-					$org_info['email'] = $this->decode($data[14]);
+					$org_info['homepage'] = $this->decode($data[16]);
+					$org_info['phone'] = $org_phone;
+					$org_info['email'] = $org_email;
 					$org_info['description'] = $this->decode($data[6]);
-					$org_info['street'] = $this->decode($data[9]);
-					$org_info['zip'] = $this->decode($data[18]);
+					$org_info['street'] = $this->decode($data[10]);
+					$org_info['zip'] = $this->decode($data[19]);
 					$org_info['activity_id'] = $activity_category;
-					$org_info['district'] = $this->decode($data[22]); 
+					$org_info['district'] = $this->decode($data[23]); 
 					$new_org_id = $soactivity->add_organization($org_info);
 						
 					$contact1 = array();
-					$contact1['name'] = $this->decode($data[12]);
-					$contact1['phone'] = $this->decode($data[13]);
-					$contact1['mail'] = $this->decode($data[14]);
+					$contact1['name'] = $contact1_name;
+					$contact1['phone'] = $contact1_phone;
+					$contact1['mail'] = $org_email;
 					$contact1['org_id'] = $this->decode($new_org_id);
 					$soactivity->add_contact_person_org($contact1);
 					
 					$contact2 = array();
-					$contact2['name'] = $this->decode($data[16]);
-					$contact2['phone'] = $this->decode($data[19]);
-					$contact2['mail'] = $this->decode($data[20]);
+					$contact2['name'] = $contact2_name;
+					$contact2['phone'] = $contact2_phone;
+					$contact2['mail'] = $contact_mail_2;
 					$contact2['org_id'] = $this->decode($new_org_id);
 					$soactivity->add_contact_person_org($contact2);
 					
@@ -450,23 +507,23 @@
 					if($activity_group)
 					{
 						$group_info = array();
-						$group_info['organization_id'] = $org_id;
+						$group_info['organization_id'] = $new_org_id;
 						$group_info['description'] = $this->decode($data[6]);
 						$group_info['name'] = $this->decode($data[1]);
 						$group_info['activity_id'] = $activity_category;
 						$new_group_id = $soactivity->add_group($group_info);
 						
 						$contact3 = array();
-						$contact3['name'] = $this->decode($data[12]);
-						$contact3['phone'] = $this->decode($data[13]);
-						$contact3['mail'] = $this->decode($data[14]);
+						$contact3['name'] = $contact1_name;
+						$contact3['phone'] = $contact1_phone;
+						$contact3['mail'] = $org_email;
 						$contact3['group_id'] = $this->decode($new_group_id);
 						$soactivity->add_contact_person_group($contact3);
 						
 						$contact4 = array();
-						$contact4['name'] = $this->decode($data[16]);
-						$contact4['phone'] = $this->decode($data[19]);
-						$contact4['mail'] = $this->decode($data[20]);
+						$contact4['name'] = $contact2_name;
+						$contact4['phone'] = $contact2_phone;
+						$contact4['mail'] = $contact_mail_2;
 						$contact4['group_id'] = $this->decode($new_group_id);
 						$soactivity->add_contact_person_group($contact4);
 						
@@ -491,9 +548,9 @@
 					$activity_target = implode(",", $act_targets);
 				}
 
-				$activity_day = $this->decode($data[10]);
-				$activity_time = $this->decode($data[11]);
-				$activity_update_date = $this->decode($data[21]);
+				$activity_day = $this->decode($data[11]);
+				$activity_time = $this->decode($data[12]);
+				$activity_update_date = $this->decode($data[22]);
 				if($activity_update_date)
 				{
 					$act_update_array = explode(".", $activity_update_date);
@@ -506,11 +563,14 @@
 						//var_dump($activity_updated_date);
 					}
 				}
-				$activity_district = $this->decode($data[22]);
+				$activity_district = $this->decode($data[23]);
 				if($activity_district)
 				{
 					$activity_district = $soactivity->get_district_from_name($activity_district);
 				}
+				
+				$activity_contact_person_2_address = $this->decode($data[18]);
+				$activity_contact_person_2_zip = $this->decode($data[19]);
 				
 				if($activity_title){
 					$activity->set_title($activity_title);
@@ -520,6 +580,7 @@
 					$activity->set_target($activity_target);
 					$activity->set_description($activity_description);
 					$activity->set_arena($curr_arena_id);
+					$activity->set_internal_arena($internal_arena_id);
 					$activity->set_state(3);
 					$activity->set_time($activity_day.' '.$activity_time);
 					if($activity_adapted)
@@ -528,6 +589,8 @@
 					}
 					$activity->set_office($this->office);
 					$activity->set_district($activity_district);
+					$activity->set_contact_person_2_address($activity_contact_person_2_address);
+					$activity->set_contact_person_2_zip($activity_contact_person_2_zip);
 					$activity->set_last_change_date($activity_updated_date);
 					if($activity_persons)
 					{
