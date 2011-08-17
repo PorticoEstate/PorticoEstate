@@ -386,3 +386,5 @@ building	activitycalendar	no	Kommunale bygg
 Download as excel	activitycalendar	no	Last ned i Excel-format
 arena_name	activitycalendar	no	Navn
 Send mail to selection	activitycalendar	no	Send E-post til utvalg
+contact_person_2_address	activitycalendar	no	Adresse for kulturkontoret
+contact_person_2_zip	activitycalendar	no	Poststed for kulturkontoret

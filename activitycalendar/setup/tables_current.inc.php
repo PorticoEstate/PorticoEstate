@@ -20,7 +20,9 @@
 				'contact_person_1' => array('type' => 'varchar','precision' => '255'),
 				'contact_person_2' => array('type' => 'varchar','precision' => '255'),
 				'secret' => array('type' => 'text','nullable' => False),
-				'special_adaptation' => array('type' => 'bool','nullable' => true,'default' => 'false')
+				'special_adaptation' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'contact_person_2_address' => array('type' => 'varchar','precision' => '255'),
+				'contact_person_2_zip' => array('type' => 'varchar','precision' => '255'),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
