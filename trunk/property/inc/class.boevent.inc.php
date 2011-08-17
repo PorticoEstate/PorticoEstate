@@ -105,6 +105,7 @@
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int');
 			$user_id			= phpgw::get_var('user_id', 'int');
+			$status_id			= phpgw::get_var('status_id');
 
 			$this->start		= $start ? $start : 0;
 			$this->query		= isset($_REQUEST['query']) ? $query : $this->query;
@@ -115,6 +116,7 @@
 			$this->location_id	= isset($_REQUEST['location_id'])  ? $location_id :  $this->location_id;
 			$this->user_id		= isset($_REQUEST['user_id'])  ? $user_id :  $this->user_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
+			$this->status_id	= isset($_REQUEST['status_id'])  ? $status_id :  $this->status_id;
 		}
 
 		public function save_sessiondata($data)
@@ -140,12 +142,14 @@
 			$this->allrows		= $data['allrows'];
 			$this->location_id	= $data['location_id'];
 			$this->user_id		= $data['user_id'];
+			$this->status_id	= $data['status_id'];
 		}
 
 		public function read($dry_run='')
 		{
 			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-				'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run));
+				'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id, 'dry_run'=>$dry_run,
+				'status_id' => $this->status_id));
 
 			static $locations = array();
 			static $urls = array();

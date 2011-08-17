@@ -59,6 +59,7 @@
 			$dry_run			= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$location_id		= isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : -1;
 			$user_id			= isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$status_id			= isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 
 			if ($order)
 			{
@@ -88,6 +89,23 @@
 				$user = $GLOBALS['phpgw']->accounts->get($user_id);
 				$filtermethod .= " AND fm_event.responsible_id =" . (int)$user->person_id ;
 			}
+
+			switch($status_id)
+			{
+				case 'all':
+					break;
+				case 'open':
+					$filtermethod .= " AND fm_event_receipt.event_id IS NULL AND fm_event_exception.event_id IS NULL";
+					break;
+				case 'closed':
+					$filtermethod .= " AND fm_event_receipt.event_id IS NOT NULL";
+					break;
+				case 'exception':
+					$filtermethod .= " AND fm_event_exception.event_id IS NOT NULL";
+					break;
+				default:
+			}
+
 
 			if($query)
 			{
