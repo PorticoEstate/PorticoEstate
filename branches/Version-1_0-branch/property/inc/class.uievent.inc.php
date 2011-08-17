@@ -81,6 +81,7 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->location_id			= $this->bo->location_id;
 			$this->user_id				= $this->bo->user_id;
+			$this->status_id			= $this->bo->status_id;
 		}
 
 		function save_sessiondata()
@@ -94,6 +95,7 @@
 					'allrows'		=> $this->allrows,
 					'location_id'	=> $this->location_id,
 					'user_id'		=> $this->user_id,
+					'status_id'		=> $this->status_id
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -140,7 +142,8 @@
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uievent.index',"
 					."location_id:'{$this->location_id}',"
-					."user_id:'{$this->user_id}'";
+					."user_id:'{$this->user_id}',"
+					."status_id:'{$this->status_id}'";					
 
 				$values_combo_box = array();
 
@@ -153,6 +156,12 @@
 				array_unshift ($values_combo_box[1],array('id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>lang('mine tasks')));
 				$default_value = array('id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2]  = array();
+				array_unshift ($values_combo_box[2],array ('id'=>'exception','name'=> lang('exception')));
+				array_unshift ($values_combo_box[2],array ('id'=>'closed','name'=> lang('closed')));
+				array_unshift ($values_combo_box[2],array ('id'=>'all','name'=> lang('all')));
+				array_unshift ($values_combo_box[2],array ('id'=>'open','name'=> lang('open')));
 
 				$datatable['config']['allow_allrows'] = true;
 
@@ -191,6 +200,15 @@
 									'tab_index' => 2
 								),
 								array
+								( //boton 	STATUS
+									'id' => 'btn_status_id',
+									'name' => 'status_id',
+									'value'	=> lang('Status'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 3
+								),
+								array
 								( // boton SAVE
 									'id'	=> 'btn_save',
 									//'name' => 'save',
@@ -224,7 +242,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 5
+									'tab_index' => 6
 								),
 								array
 								( //button     SEARCH
@@ -232,7 +250,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 4
+									'tab_index' => 5
 								),
 								array
 								( // TEXT INPUT
@@ -242,7 +260,7 @@
 									'type' => 'text',
 									'onkeypress' => 'return pulsar(event)',
 									'size'    => 28,
-									'tab_index' => 3
+									'tab_index' => 4
 								),
 								array
 								( //place holder for selected events
@@ -262,6 +280,11 @@
 								( //div values  combo_box_1
 									'id' => 'values_combo_box_1',
 									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								),
+								array
+								( //div values  combo_box_2
+									'id' => 'values_combo_box_2',
+									'value'	=> $this->bocommon->select2String($values_combo_box[2])
 								)
 							)
 						)

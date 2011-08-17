@@ -162,6 +162,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_description($desc);
 				$activity->set_time(phpgw::get_var('time'));
 				$activity->set_contact_persons($persons);
+				$activity->set_contact_person_2_address(phpgw::get_var('contact_person_2_address'));
+				$activity->set_contact_person_2_zip(phpgw::get_var('contact_person_2_zip'));
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				
 				if($so_activity->store($activity)) // ... and then try to store the object

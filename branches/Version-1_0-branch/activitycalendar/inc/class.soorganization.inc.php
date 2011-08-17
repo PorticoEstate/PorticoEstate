@@ -88,6 +88,10 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			//$filter_clauses[] = "org.id = {$id}";
 			unset($filter_clauses);
+			if(isset($filters[$this->get_id_field_name()])){
+				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+				$filter_clauses[] = "org.id = {$id}";
+			}
 		}
 
 /*
@@ -125,7 +129,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.description';
 				$columns[] = 'org.address';
 				$columns[] = 'org.district';
-				$columns[] = 'org.orgno';
+				$columns[] = 'org.orgno AS organization_number';
 				
 				$cols = implode(',',$columns);
 			}
@@ -303,6 +307,10 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
 			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
+			$organization->set_address($this->unmarshal($this->db->f('address'), 'string'));
+			$organization->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+			$organization->set_email($this->unmarshal($this->db->f('email'), 'string'));
+			$organization->set_homepage($this->unmarshal($this->db->f('homepage'), 'string'));
 			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
 			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));

@@ -2,6 +2,7 @@
 phpgw::import_class('activitycalendar.uicommon');
 phpgw::import_class('activitycalendar.soorganization');
 phpgw::import_class('activitycalendar.sogroup');
+phpgw::import_class('activitycalendar.soactivity');
 
 include_class('activitycalendar', 'organization', 'inc/model/');
 include_class('activitycalendar', 'group', 'inc/model/');
@@ -36,7 +37,8 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	}
 	
 	public function changed_organizations()
-	{			
+	{
+		self::set_active_menu('activitycalendar::organizationList::changed_organizations');
 		$this->render('organization_list_changed.php');
 	}
 	
@@ -63,53 +65,150 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	
 	public function edit()
 	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		$id = (int)phpgw::get_var('id');
 		$type = phpgw::get_var('type');
 		if($type)
 		{
 			//var_dump($type);
 			$so = activitycalendar_sogroup::get_instance();
+			$group = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
+			if(count($group_array) > 0){
+				$keys = array_keys($group_array);
+				$group = $group_array[$keys[0]];
+			}
+			if(isset($_POST['save_organization'])) // The user has pressed the save button
+			{
+				$orgno = phpgw::get_var('orgno');
+				$district = phpgw::get_var('org_district');
+				$homepage = phpgw::get_var('homepage');
+				$email = phpgw::get_var('email');
+				$phone = phpgw::get_var('phone');
+				$address = phpgw::get_var('address');
+				$desc = phpgw::get_var('org_description');
+			}
+			else if(isset($_POST['store_organization'])) // The user has pressed the store button
+			{
+				$orgno = phpgw::get_var('orgno');
+				$district = phpgw::get_var('org_district');
+				$homepage = phpgw::get_var('homepage');
+				$email = phpgw::get_var('email');
+				$phone = phpgw::get_var('phone');
+				$address = phpgw::get_var('address');
+				$desc = phpgw::get_var('org_description');
+			}
+			
+			$data = array
+			(
+				'group' 	=> $group,
+				'editable' => true,
+				'errorMsgs' => $errorMsgs,
+				'infoMsgs' => $infoMsgs
+			);
+			return $this->render('group.php', $data);
 		}
 		else
 		{
 			//var_dump('org');
 			$so = activitycalendar_soorganization::get_instance();
+			$so_activity = activitycalendar_soactivity::get_instance();
+			$org_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
+			if(count($org_array)>0){
+				$keys = array_keys($org_array);
+				$org = $org_array[$keys[0]];
+			}
+			//var_dump($org);
+			$districts = $so_activity->get_districts();
+			
+			if(isset($_POST['save_organization'])) // The user has pressed the save button
+			{
+				$org->set_organization_number(phpgw::get_var('orgno'));
+				$org->set_district(phpgw::get_var('org_district'));
+				$org->set_homepage(phpgw::get_var('homepage'));
+				$org->set_email(phpgw::get_var('email'));
+				$org->set_phone(phpgw::get_var('phone'));
+				$org->set_address(phpgw::get_var('address'));
+				$org->set_description(phpgw::get_var('org_description'));
+				
+				if($so->store($org))
+				{
+					$message = lang('messages_saved_form');	
+				}
+				else
+				{
+					$error = lang('messages_form_error');
+				}
+				
+				
+				
+			}
+			else if(isset($_POST['store_organization'])) // The user has pressed the store button
+			{
+				$orgno = phpgw::get_var('orgno');
+				$district = phpgw::get_var('org_district');
+				$homepage = phpgw::get_var('homepage');
+				$email = phpgw::get_var('email');
+				$phone = phpgw::get_var('phone');
+				$address = phpgw::get_var('address');
+				$desc = phpgw::get_var('org_description');
+			}
+			
+			$data = array
+			(
+				'organization' 	=> $org,
+				'districts'	=>	$districts,
+				'editable' => true,
+				'errorMsgs' => $errorMsgs,
+				'infoMsgs' => $infoMsgs
+			);
+			
+			return $this->render('organization.php', $data);
 		}
 	}
 	
 	public function show()
 	{
+		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
 		$id = (int)phpgw::get_var('id');
 		$type = phpgw::get_var('type');
 		if($type)
 		{
 			//var_dump($type);
 			$so = activitycalendar_sogroup::get_instance();
-			$group = $so->get(null, null, null, null, null, null, array('id' => $id));
+			$group_array = $so->get(null, null, null, null, null, null, array('id' => $id));
+			if(count($group_array) > 0){
+				$keys = array_keys($group_array);
+				$group = $group_array[$keys[0]];
+			}
 			
-			return $this->render('group.php', array
-				(
-					'group' 	=> $group,
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error')
-				)
+			$data = array
+			(
+				'group' 	=> $group,
+				'errorMsgs' => $errorMsgs,
+				'infoMsgs' => $infoMsgs
 			);
+			return $this->render('group.php', $data);
 		}
 		else
 		{
 			//var_dump('org');
 			$so = activitycalendar_soorganization::get_instance();
-			$org = $so->get(null, null, null, null, null, null, array('id' => $id));
+			$org_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
+			if(count($org_array)>0){
+				$keys = array_keys($org_array);
+				$org = $org_array[$keys[0]];
+			}
 			
-			return $this->render('organization.php', array
-				(
-					'organization' 	=> $org,
-					'editable' => true,
-					'message' => isset($message) ? $message : phpgw::get_var('message'),
-					'error' => isset($error) ? $error : phpgw::get_var('error')
-				)
+			var_dump($org);
+			
+			$data = array
+			(
+				'organization' 	=> $org,
+				'errorMsgs' => $errorMsgs,
+				'infoMsgs' => $infoMsgs
 			);
+			
+			return $this->render('organization.php', $data);
 		}
 	}
 	

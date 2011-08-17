@@ -79,6 +79,10 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		if(isset($filters['changed_groups'])){
 			$use_local_group = true;
 			unset($filter_clauses);
+			if(isset($filters[$this->get_id_field_name()])){
+				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+				$filter_clauses[] = "activity_group.id = {$id}";
+			}
 		}
 		
 		if(count($filter_clauses))
@@ -189,6 +193,20 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$result = $this->db->f('name');
+			}
+    	}
+		
+		return $result;
+	}
+	
+	function get_orgid_from_group($group_id)
+	{
+		$result = 0;
+    	if(isset($group_id)){
+	    	$q1="SELECT organization_id FROM bb_group WHERE id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('organization_id');
 			}
     	}
 		
