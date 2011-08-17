@@ -384,8 +384,7 @@
 
 		function import($import_data,$id)
 		{
-			$this->so->role = 'detail';
-			$custom_attributes = $this->so->read_attrib(array('allrows'=>true));
+			$custom_attributes = $this->custom->find('property', '.s_agreement.detail', 0, '', 'ASC', 'attrib_sort', true, true);
 
 			foreach($custom_attributes as $attrib)
 			{
@@ -407,6 +406,7 @@
 			unset($values['extra']['location_code']);
 			unset($values['extra']['address']);
 			unset($values['extra']['cost']);
+
 			return $this->so->add_item($values);
 		}
 
@@ -525,4 +525,3 @@
 		}
 
 	}
-
