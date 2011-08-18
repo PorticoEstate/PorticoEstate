@@ -19,10 +19,17 @@
 			$debug = $this->debug;
 			$error = false;
 			$type = $data[0];
-			$location_code = $data[1];
+			$location_arr = explode('-',$data[1]);
+			$location_code = $location_arr[0] . '-' . sprintf("%02d",$data[2]); 
 
 			$location_data = execMethod('property.solocation.read_single', $location_code );
-_debug_array($data);
+
+			if($debug)
+			{
+				_debug_array($data);
+			}
+
+
 //_debug_array($location_data);die();
 			if(!$location_data)
 			{
@@ -54,11 +61,11 @@ _debug_array($data);
 			$this->db->next_record();
 			$id = $this->db->f('value')+1;
 
-			if($data[4])
+			if($data[7])
 			{
 				$entry_date_info = explode('/',$data[4]);
 			}
-			else if($data[5])
+			else if($data[8])
 			{
 				$entry_date_info = explode('/',$data[5]);
 			}
@@ -81,20 +88,45 @@ _debug_array($data);
 _debug_array($entry_date_info);
 _debug_array($entry_date);
 
+			$status = 'registrert';
+			
+			if($data[3])//historikk
+			{
+				$status = 'avsluttet';
+			}
+
+			if($data[9])//Status - Utført
+			{
+				if($data[9] == 'Delvis')
+				{
+					$status = 'delvis';				
+				}
+				else if($data[9] == 'Utgått')
+				{
+					$status = 'kansellert';				
+				}
+				else
+				{
+					$status = 'avsluttet';				
+					$value_set['closed_date']		= strtotime("{$data[9]}/06/24");
+				}
+			}
+			
+			
 			$value_set['id'] 					= $id;
-			$value_set['title']					= $this->db->db_addslashes("{$data[7]}: {$data[10]}");
+			$value_set['title']					= $this->db->db_addslashes("{$data[0]}::{$data[6]}::{$data[20]}");
 			$value_set['owner']					= $this->account;
 			$value_set['category']				= $category;
-			$value_set['descr']					= $this->db->db_addslashes("{$type}\n{$data[7]}: {$data[10]}");
+			$value_set['descr']					= $this->db->db_addslashes("{$data[0]}\n{$data[6]}\n{$data[20]}");
 			$value_set['location_code']			= $location_code;
 			$value_set['address']				= $address;
 			$value_set['entry_date']			= $entry_date;
-			$value_set['budget']				= (int)str_replace(',', '', $data[12]);
-			$value_set['status']				= $data['status'];
+			$value_set['budget']				= (int)str_replace(',', '', $data[21]);
+			$value_set['status']				= $status;
 	//		$value_set['branch_id']				= $data['branch_id'];
 	//		$value_set['coordinator']			= $coordinator;
 			$value_set['authorities_demands']	= $authorities_demands;
-			$value_set['building_part']			= $building_part;
+			$value_set['building_part']			= $data[5];
 	//		$value_set['start_date']			= $data['start_date'];
 	//		$value_set['end_date']				= $data['end_date'];
 	//		$value_set['regulations']			= $data['regulations'] ? ',' . implode(',',$data['regulations']) . ',' : '';
