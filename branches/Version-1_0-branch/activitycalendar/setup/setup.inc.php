@@ -40,7 +40,10 @@
 
 	$setup_info['activitycalendar']['tables'] = array(
 		'activity_activity',
-		'activity_arena'
+		'activity_arena',
+		'activity_organization',
+		'activity_group',
+		'activity_contact_person'
 	);
 
 

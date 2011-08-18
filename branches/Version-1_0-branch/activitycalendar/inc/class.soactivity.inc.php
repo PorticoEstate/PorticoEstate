@@ -830,6 +830,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$city = '';
 		}
 		$district = $org_info['district'];
+		if(!$district)
+		{
+			$district = '';
+		}
 		$activity_id = $org_info['activity_id'];
 		$show_in_portal = 1; 
 		

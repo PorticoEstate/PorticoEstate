@@ -217,6 +217,7 @@
 				unset($contact2);
 				unset($contact3);
 				unset($contact4);
+				unset($new_group_id);
 				
 				$internal_arena = $this->decode($data[9]);
 				if($internal_arena)
