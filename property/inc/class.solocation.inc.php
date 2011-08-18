@@ -264,7 +264,7 @@
 			$start					= isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter					= isset($data['filter']) && $data['filter'] ? $data['filter'] : 0;
 			$query					= isset($data['query']) ? $data['query'] : '';
-			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$sort					= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
 			$order					= isset($data['order']) ? $data['order'] : '';
 			$cat_id					= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:'';
 			$type_id				= isset($data['type_id']) ? $data['type_id'] : '';
@@ -291,13 +291,13 @@
 
 			switch ($order)
 			{
-			case 'undefined':
-				$order = '';
-				break;
-			case 'loc1':
-				$order = 'fm_location1.loc1';
-				break;
-			default:
+				case 'undefined':
+					$order = '';
+					break;
+				case 'loc1':
+					$order = 'fm_location1.loc1';
+					break;
+				default:
 			}
 
 
@@ -638,17 +638,17 @@
 			$this->uicols = $uicols;
 
 
-			if ($order)
+			if ($order && !$order =='fm_location1.loc1')
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = ' order by fm_location' . ($type_id) .'.loc1 ASC';
+				$ordermethod = " ORDER BY fm_location{$type_id}.loc1 {$sort}";
 
 				if ($type_id > 1)
 				{
-					for ($i=1;$i<($type_id+1);$i++)
+					for ($i=2;$i<($type_id+1);$i++)
 					{
 						$ordermethod .= ",fm_location{$type_id}.loc{$i} ASC";
 					}
