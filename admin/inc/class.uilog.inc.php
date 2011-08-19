@@ -37,9 +37,9 @@
 			}
 			
 			$account_id		= phpgw::get_var('account_id', 'int');
-			$start			= phpgw::get_var('start', 'int', 'POST');
-			$sort			= phpgw::get_var('sort', 'int', 'POST');
-			$order			= phpgw::get_var('order', 'int', 'POST');
+			$start			= phpgw::get_var('start', 'int');
+			$sort			= phpgw::get_var('sort', 'int');
+			$order			= phpgw::get_var('order', 'int');
 			
 		
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('View error log');
