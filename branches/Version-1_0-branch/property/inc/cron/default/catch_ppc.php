@@ -39,7 +39,7 @@
 
 		public function __construct()
 		{
-			$this->db           = clone($GLOBALS['phpgw']->db);
+			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
 		}
@@ -316,7 +316,7 @@
 							$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 							if ( $entry['active'] && is_file($file) )
 							{
-								require_once $file;
+								require $file;
 							}
 						}
 						
