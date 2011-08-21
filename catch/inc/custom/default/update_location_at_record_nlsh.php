@@ -1,9 +1,8 @@
 <?php
 		if(!isset($this->db) || !is_object($this->db))
 		{
-			$this->db		= clone($GLOBALS['phpgw']->db);
-			$this->like		= & $this->db->like;
-			
+			$this->db		= & $GLOBALS['phpgw']->db;
+			$this->like		= & $this->db->like;		
 		}
 
 		$this->db2		= clone($this->db);
@@ -12,7 +11,7 @@
 		{
 			$target_table = "fm_{$this->type_app[$this->type]}_{$entity_id}_{$cat_id}";
 		}
-		
+
 		$ids = array();
 		$this->db->query("SELECT id FROM $target_table WHERE location_code is NULL",__LINE__,__FILE__);
 		while ($this->db->next_record())
@@ -107,10 +106,10 @@
 					$value_set['location_code'] = implode('-', $location);
 				}
 			}
-			
+
 			if($value_set)
 			{
 				$value_set	= $this->db->validate_update($value_set);
-				$this->db->query("UPDATE $target_table SET $value_set WHERE id= {$_id}",__LINE__,__FILE__);
+				$this->db->query("UPDATE $target_table SET $value_set WHERE id={$_id}",__LINE__,__FILE__);
 			}
 		}

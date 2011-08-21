@@ -54,8 +54,8 @@ APACHE="httpd-2.2.17"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.5.tar.bz2"
-PHP="php-5.3.5"
+PHPTAR="php-5.3.7.tar.bz2"
+PHP="php-5.3.7"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -160,7 +160,7 @@ if [ $svar = "yes" ];then
     IMAP_CONFIG="--with-imap=/opt/web/$IMAP --with-imap-ssl"
     echo $IMAP_CONFIG
     else
-    echo "Skipping Oracle"
+    echo "Skipping IMAP"
 fi
 
 # include the MSSQL/SYBASE-support in the install
