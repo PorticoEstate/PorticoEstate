@@ -50,13 +50,16 @@
 
 		function read_priority_key()
 		{
-			$this->db->query("SELECT * FROM fm_request_condition_type",__LINE__,__FILE__);
+			$this->db->query("SELECT * FROM fm_request_condition_type ORDER BY priority_key DESC, id ASC",__LINE__,__FILE__);
 
+			$priority_key = array();
 			while ($this->db->next_record())
 			{
-				$priority_key[] = array(
-					'id' 		=> $this->db->f('id'),
-					'descr' 	=> $this->db->f('descr'),
+				$priority_key[] = array
+				(
+					'id' 			=> $this->db->f('id'),
+					'name' 			=> $this->db->f('name',true),
+					'descr' 		=> $this->db->f('descr',true),
 					'priority_key' 	=> $this->db->f('priority_key')
 				);
 			}
@@ -120,9 +123,8 @@
 					$score = $this->db->f('score');
 					$this->db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
 				}
-
-				$this->db->query("UPDATE fm_request SET score = score + {$authorities_demands} WHERE id = $id AND authorities_demands = 1",__LINE__,__FILE__);
 			}
+			$this->db->query("UPDATE fm_request SET score = score + {$authorities_demands} WHERE authorities_demands = 1",__LINE__,__FILE__);
 		}
 
 		function select_status_list()
@@ -202,6 +204,9 @@
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
+			$attribute_table = 'phpgw_cust_attribute';
+			$attribute_filter = " location_id = {$location_id}";
 
 			$entity_table = 'fm_request';
 
@@ -324,6 +329,25 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
+
+			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter");
+			while ($this->db->next_record())
+			{
+				$cols .= ",{$entity_table}." . $this->db->f('column_name');
+
+				$cols_return[] 				=  $this->db->f('column_name');
+				$uicols['input_type'][]		= 'text';
+				$uicols['name'][]			=  $this->db->f('column_name');
+				$uicols['descr'][]			=  $this->db->f('input_text',true);
+				$uicols['statustext'][]		=  $this->db->f('statustext',true);
+				$uicols['exchange'][]		= '';
+				$uicols['align'][]			= '';
+				$uicols['datatype'][]		= $this->db->f('datatype');
+				$uicols['formatter'][]		= '';
+				$uicols['classname'][]		= '';
+				$uicols['sortable'][]		= false;
+
+			}
 
 			$paranthesis = '(';
 			$joinmethod = "{$this->left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
@@ -678,7 +702,7 @@
 					(
 						'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('property', $request['origin'][0]['location']),
 						'location1_item_id' => $request['origin'][0]['data'][0]['id'],
-						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),			
+						'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
 						'location2_item_id' => $id,
 						'account_id'		=> $this->account
 					);
