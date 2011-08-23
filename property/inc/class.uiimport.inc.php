@@ -391,11 +391,13 @@ HTML;
 
 			for ($i=$start; $i<$rows; $i++ ) //First data entry on row 2
 			{
-				foreach($data->sheets[0]['cells'][$i] as &$value)
+				$_result = array();
+				foreach($data->sheets[0]['cells'][$i] as $key => $value)
 				{
-					$value = utf8_encode(trim($value));
+					$_key = $key - 1;
+					$_result[$_key] = utf8_encode(trim($value));
 				}
-				$result[] = array_values($data->sheets[0]['cells'][$i]);
+				$result[] = $_result;
 			}
 
 			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";

@@ -427,6 +427,7 @@
 			$_querymethod = array();
 			$__querymethod = array();
 			$_joinmethod_datatype = array();
+			$_joinmethod_datatype_custom = array();
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -475,9 +476,10 @@
 							case 'LB':
 								if(!$criteria_id)
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_cust_choice ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_cust_choice.id"
-										." AND phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
-										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id') .')';
+									if(!$_joinmethod_datatype_custom)//only join once
+									{
+										$_joinmethod_datatype_custom[] = "{$this->join} phpgw_cust_choice ON phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id');
+									}
 	
 									$_querymethod[]= "(phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
 										." AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
@@ -525,6 +527,7 @@
 				}
 			}
 
+			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
 			foreach($_joinmethod_datatype as $_joinmethod)
 			{
 				$sql .= $_joinmethod;
@@ -541,7 +544,7 @@
 
 			$sql .= " $filtermethod $querymethod";
 
-//_debug_array($sql);
+_debug_array($sql);
 			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');

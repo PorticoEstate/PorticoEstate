@@ -344,8 +344,7 @@
 								( // TEXT IMPUT
 									'name'     => 'query',
 									'id'     => 'txt_query',
-									//'value'    => '',//$query,
-									'value'    => phpgw::get_var('query'),
+									'value'    => $this->query,
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
@@ -419,7 +418,7 @@
 			}
 
 			$request_list = array();
-			$request_list = $this->bo->read(array('project_id' => 1,'allrows'=>$this->allrows, 'dry_run' => $dry_run));
+			$request_list = $this->bo->read(array('project_id' => $project_id,'allrows'=>$this->allrows, 'dry_run' => $dry_run));
 			$uicols	= $this->bo->uicols;
 
 			$j=0;
@@ -801,9 +800,7 @@
 			}
 
 			$function_msg	= lang('Edit priority key');
-			$link_data = array
-				(
-					'menuaction' => 'property.uirequest.priority_key');
+			$link_data = array('menuaction' => 'property.uirequest.priority_key');
 
 			$priority_key = $this->bo->read_priority_key();
 

@@ -65,11 +65,11 @@
 
 			if($data[7])
 			{
-				$entry_date_info = explode('/',$data[4]);
+				$entry_date_info = explode('/',$data[7]);
 			}
 			else if($data[8])
 			{
-				$entry_date_info = explode('/',$data[5]);
+				$entry_date_info = explode('/',$data[8]);
 			}
 			//YYYY/MM/DD
 			
@@ -83,11 +83,9 @@
 				$entry_date = time();
 			}
 
-//$authorities_demands
-//$building_part
-//$coordinator
-_debug_array($entry_date_info);
-_debug_array($entry_date);
+
+//_debug_array($entry_date_info);
+//_debug_array($entry_date);
 
 			$status = 'registrert';
 			
@@ -140,10 +138,10 @@ _debug_array($entry_date);
 			}
 			
 			$value_set['id'] 					= $id;
-			$value_set['title']					= $this->db->db_addslashes("{$data[0]}::{$data[6]}::{$data[20]}");
+			$value_set['title']					= substr($this->db->db_addslashes("{$data[0]}::{$data[6]}::{$data[20]}"), 0 , 100);
 			$value_set['owner']					= $this->account;
 			$value_set['category']				= $category;
-			$value_set['descr']					= $this->db->db_addslashes("{$data[0]}\n{$data[6]}\n{$data[20]}");
+			$value_set['descr']					= $this->db->db_addslashes("{$data[6]}\n{$data[20]}");
 			$value_set['location_code']			= $location_code;
 			$value_set['address']				= $address;
 			$value_set['entry_date']			= $entry_date;
@@ -161,7 +159,7 @@ _debug_array($entry_date);
 				{
 					foreach($attrib['choice'] as $choice)
 					{
-						if(preg_match("/{$choice['value']}/i", $data[11]))
+						if(strpos($choice['value'], $data[11]) !== false)
 						{
 							$value_set['lovhjemmel']	= $choice['id'];
 							break 2;
@@ -177,7 +175,7 @@ _debug_array($entry_date);
 				{
 					foreach($attrib['choice'] as $choice)
 					{
-						if(preg_match("/{$choice['value']}/i", $data[12]))
+						if(strpos($choice['value'], $data[12]) !== false)
 						{
 							$value_set['forskriftshjemmel']	= $choice['id'];
 							break 2;
@@ -208,18 +206,15 @@ _debug_array($entry_date);
 
 			$condition = array();
 			$condition_type = (int) substr($data[14], 0, 1);
+//_debug_array($data);			
+			$condition[$condition_type] = array
+			(
+				'degree'		=> $data[13] ? (int)$data[13] : 1,
+				'probability'	=>	$data[16] ? (int)$data[16] : 1,
+				'consequence'	=>	$data[15] ? (int)$data[15] : 1,
+			);
 			
-			if($data[13] || $data[15])
-			{
-				$condition[$condition_type] = array
-				(
-					'degree'		=> (int)$data[13],
-					'probability'	=>	$data[16] ? (int)$data[16] : 1,
-					'consequence'	=>	(int)$data[15]
-				);
-			}
-			
-			
+//_debug_array($condition);			
 			foreach ($condition as $condition_type => $value_type)
 			{
 				$sql = "INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "

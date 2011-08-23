@@ -77,6 +77,8 @@
 				</xsl:choose>
 			</xsl:attribute>
 			<td class="small_text" align="left">
+				<xsl:value-of select="name"/>
+				<xsl:text>::</xsl:text>
 				<xsl:value-of select="descr"/>
 			</td>
 			<td class="small_text" align="left">
