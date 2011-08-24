@@ -486,6 +486,18 @@
 			<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
 		</tr>
 
+	<tr class="row_off">
+		<td>{lang_filter_buildingpart}:</td>
+		<td>
+				<!--to be able to blank the setting - need an empty value
+				<input type = 'hidden' name="newsettings[list_location_level][]" value="">-->
+				<table>
+					{hook_filter_buildingpart}
+				</table>
+		</td>
+	</tr>
+
+
 		<!--
 		groupnotification
 		-->

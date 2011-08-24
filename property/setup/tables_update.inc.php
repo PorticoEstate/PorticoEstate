@@ -5407,6 +5407,30 @@
 
 
 	/**
+	* Update property version from 0.9.17.622 to 0.9.17.623
+	* Allow filtering of buildingparts depending of type of use
+	* 
+	*/
+
+	$test[] = '0.9.17.622';
+	function property_upgrade0_9_17_622()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_building_part','id',array('type' => 'varchar','precision' => '5','nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_building_part','filter_1', array('type' => 'int','precision' => '2','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_building_part','filter_2', array('type' => 'int','precision' => '2','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_building_part','filter_3', array('type' => 'int','precision' => '2','nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_building_part','filter_4', array('type' => 'int','precision' => '2','nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.623';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 

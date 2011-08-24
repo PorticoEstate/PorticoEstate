@@ -1337,6 +1337,15 @@
 				}
 			}
 
+			$_filter_buildingpart = array();
+			$filter_buildingpart = isset($this->config->config_data['filter_buildingpart']) ? $this->config->config_data['filter_buildingpart'] : array();
+			
+			if($filter_key = array_search('.project.request', $filter_buildingpart))
+			{
+				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+			}
+
+
 			$data = array
 				(
 					'mode'								=> $mode,
@@ -1469,7 +1478,7 @@
 					'regulations'						=> execMethod('property.bogeneric.get_list',array('type' => 'regulations', 'selected' => $values['regulations'], 'fields' => array('descr', 'external_ref'))),
 
 					'condition_list'					=> $this->bo->select_conditions($id),
-					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'building_part_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
 					'value_consume'						=> isset($receipt['error']) ? $values['consume_value'] : ''
 				);
 //_debug_array($data);die();
