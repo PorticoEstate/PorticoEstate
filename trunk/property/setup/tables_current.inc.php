@@ -441,8 +441,12 @@
 
 		'fm_building_part' => array(
 			'fd' => array(
-				'id' => array('type' => 'varchar','precision' => '4','nullable' => False),
-				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True)
+				'id' => array('type' => 'varchar','precision' => '5','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '50','nullable' => True),
+				'filter_1' => array('type' => 'int','precision' => '2','nullable' => True),
+				'filter_2' => array('type' => 'int','precision' => '2','nullable' => True),
+				'filter_3' => array('type' => 'int','precision' => '2','nullable' => True),
+				'filter_4' => array('type' => 'int','precision' => '2','nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

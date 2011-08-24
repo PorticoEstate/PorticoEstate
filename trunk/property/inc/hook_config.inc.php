@@ -198,3 +198,55 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	* Get HTML checkbox with filter buildingpart
+	*
+	* @param $config
+	* @return string HTML listbox to be placed in a table
+	*/
+	function filter_buildingpart($config)
+	{
+		$filters = array
+		(
+			1 => 'Filter 1',
+			2 => 'Filter 2',
+			3 => 'Filter 3',
+//			4 => 'Filter 4'
+		);
+		
+		$locations = array
+		(
+			'.project' => $GLOBALS['phpgw']->translation->translate('project', array(), false, 'property'),
+			'.b_account' => $GLOBALS['phpgw']->translation->translate('accounting', array(), false, 'property'),
+			'.project.request' => $GLOBALS['phpgw']->translation->translate('request', array(), false, 'property'),
+		);
+
+		$filter_assigned = isset($config['filter_buildingpart']) ? $config['filter_buildingpart'] : array();
+
+		$out = '';
+		foreach ( $filters as $filter_key => $filter_name)
+		{
+			$out .=  <<<HTML
+			<tr><td><label>{$filter_name}</label></td><td><select name="newsettings[filter_buildingpart][{$filter_key}]">
+HTML;
+			$out .= '<option value="">' . lang('none selected') . '</option>' . "\n";
+			foreach ( $locations as $key => $name)
+			{
+				$selected = '';
+				if ( isset($filter_assigned[$filter_key]) && $filter_assigned[$filter_key] == $key)
+				{
+					$selected = 'selected =  "selected"';
+				}
+
+				$out .=  <<<HTML
+				<option value='{$key}'{$selected}>{$name}</option>
+HTML;
+			}
+
+			$out .=  <<<HTML
+			</select></td></tr>
+HTML;
+		}
+		return $out;
+	}

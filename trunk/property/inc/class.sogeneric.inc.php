@@ -1160,6 +1160,12 @@
 					);
 				break;
 			case 'building_part':
+
+				$config				= CreateObject('phpgwapi.config','property');
+				$config->read();
+			
+				$filter_buildingpart = isset($config->config_data['filter_buildingpart']) ? $config->config_data['filter_buildingpart'] : array();
+			
 				$info = array
 					(
 						'table' 			=> 'fm_building_part',
@@ -1171,7 +1177,56 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
-							)
+							),
+							array
+							(
+								'name' => 'filter_1',
+								'descr' => isset($filter_buildingpart[1]) &&  $filter_buildingpart[1] ? $filter_buildingpart[1] : 'Filter 1',
+								'type' => 'checkbox',
+								'filter'	=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> array(array('id' => 1, 'name' => lang('active'))),
+								)
+
+							),
+							array
+							(
+								'name' => 'filter_2',
+								'descr' => isset($filter_buildingpart[2]) &&  $filter_buildingpart[2] ? $filter_buildingpart[2] : 'Filter 2',
+								'type' => 'checkbox',
+								'filter'	=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> array(array('id' => 1, 'name' => lang('active'))),
+								)
+							),
+							array
+							(
+								'name' => 'filter_3',
+								'descr' => isset($filter_buildingpart[3]) &&  $filter_buildingpart[3] ? $filter_buildingpart[3] : 'Filter 3',
+								'type' => 'checkbox',
+								'filter'	=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> array(array('id' => 1, 'name' => lang('active'))),
+								)
+							),
+							array
+							(
+								'name' => 'filter_4',
+								'descr' => isset($filter_buildingpart[4]) &&  $filter_buildingpart[4] ? $filter_buildingpart[4] : 'Filter 4',
+								'type' => 'checkbox',
+								'filter'	=> true,
+								'sortable'	=> true,
+								'values_def'	=> array
+								(
+									'valueset'		=> array(array('id' => 1, 'name' => lang('active'))),
+								)
+							),
 						),
 						'edit_msg'			=> lang('edit'),
 						'add_msg'			=> lang('add'),
