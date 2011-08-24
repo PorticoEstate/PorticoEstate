@@ -119,11 +119,13 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','contact_person_2_address',array(
 			'type' => 'varchar',
-			'precision' => '255'
+			'precision' => '255',
+			'nullable' => true
 		));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','contact_person_2_zip',array(
 			'type' => 'varchar',
-			'precision' => '255'
+			'precision' => '255',
+			'nullable' => true
 		));
 		
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.5';
