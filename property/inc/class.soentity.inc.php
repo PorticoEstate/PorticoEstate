@@ -223,6 +223,7 @@
 
 				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
+				$sql = 	str_replace('SELECT', 'SELECT DISTINCT',$sql);
 
 				$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $sql);
 				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
@@ -545,9 +546,8 @@
 			$sql .= " $filtermethod $querymethod";
 
 //_debug_array($sql);
-			$this->db->query('SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->total_records = $this->db->f('cnt');
+			$this->db->query("SELECT DISTINCT {$entity_table}.id " . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
 
 			if($dry_run)
 			{
