@@ -334,13 +334,13 @@
 				$where= 'AND';
 			}
 
-			if ($cat_id)
+			if ($cat_id && !$detail)
 			{
 				$filtermethod .= " $where $entity_table.category='$cat_id' ";
 				$where= 'AND';
 			}
 
-			if ($vendor_id)
+			if ($vendor_id && !$detail)
 			{
 				$filtermethod .= " $where $entity_table.vendor_id='$vendor_id' ";
 				$where= 'AND';
