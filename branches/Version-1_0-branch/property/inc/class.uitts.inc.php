@@ -748,6 +748,16 @@
 									'onchange'=> 'onChangeSelect("b_account");',
 									'tab_index' => 14
 						);
+
+
+						$_filter_buildingpart = array();
+						$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
+			
+						if($filter_key = array_search('.b_account', $filter_buildingpart))
+						{
+							$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+						}
+
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
 									'id' => 'sel_building_part', // testing traditional listbox for long list
@@ -755,7 +765,8 @@
 									'value'	=> lang('building part'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $this->bo->get_building_part($this->building_part),
+									//'values' => $this->bo->get_building_part($this->building_part),
+									'values'	=> $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart)),
 									'onchange'=> 'onChangeSelect("building_part");',
 									'tab_index' => 15
 						);
@@ -2992,7 +3003,14 @@
 					'footer'				=> 0
 				);
 
-
+			$_filter_buildingpart = array();
+			$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
+			
+			if($filter_key = array_search('.b_account', $filter_buildingpart))
+			{
+				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+			}
+			
 			//----------------------------------------------datatable settings--------			
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select	= $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => $this->cat_id,'use_acl' => $this->_category_acl));
@@ -3104,7 +3122,7 @@
 					'textareacols'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
 					'textarearows'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
 					'order_cat_list'				=> $order_catetory,
-					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num' ))),
+					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$ticket['building_part'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
 					'order_dim1_list'				=> array('options' => $this->bocommon->select_category_list(array('type'=> 'order_dim1','selected' =>$ticket['order_dim1'], 'order' => 'id', 'id_in_name' => 'num' ))),
 					'branch_list'					=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']==1 ? array('options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) :'',
 				);

@@ -312,6 +312,8 @@
 					'risk'					=> $risk,
 					'score'					=> $risk * (int)$condition_type_list[$i]['weight'] * (int)$conditions[$i]['degree']
 				);
+
+				array_unshift($values[0]['condition_type_list']['options'], array ('id'=>'','name'=> lang('consequence type')));
 			}
 //_debug_array($values);die();
 			return $values;
