@@ -1964,7 +1964,7 @@
 
 <!-- add / edit -->
 
-	<xsl:template match="edit_hour">
+	<xsl:template match="edit_hour" xmlns:php="http://php.net/xsl">
 		<script type="text/javascript">
 			self.name="first_Window";
 			function ns3420_lookup()
@@ -2087,14 +2087,21 @@
 						</xsl:when>
 					</xsl:choose>
 					<tr>
-						<td valign="top">
-							<xsl:value-of select="lang_building_part"/>
+						<td>
+							<xsl:value-of select="php:function('lang', 'building part')" />
 						</td>
-						<td class="th_text" >
-							<xsl:call-template name="building_part_select"/>
+						<td>
+							<select name="values[building_part_id]" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'select building part')" />
+								</xsl:attribute>
+								<option value="0">
+									<xsl:value-of select="php:function('lang', 'select building part')" />
+								</option>
+								<xsl:apply-templates select="building_part_list/options"/>
+							</select>
 						</td>
 					</tr>
-
 					<xsl:choose>
 						<xsl:when test="value_activity_num !=''">
 							<tr>
@@ -2448,4 +2455,11 @@
 
 	</xsl:template>
 
-
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>

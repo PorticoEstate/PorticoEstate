@@ -3149,6 +3149,14 @@ HTML;
 					'from'			=> $from
 				);
 
+			$_filter_buildingpart = array();
+			$filter_buildingpart = isset($this->config->config_data['filter_buildingpart']) ? $this->config->config_data['filter_buildingpart'] : array();
+			
+			if($filter_key = array_search('.project', $filter_buildingpart))
+			{
+				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+			}
+
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
@@ -3232,12 +3240,7 @@ HTML;
 					'lang_new_grouping'				=> lang('New grouping'),
 					'lang_new_grouping_statustext'	=> lang('Enter a new grouping for this activity if not found in the list'),
 
-					'lang_building_part'			=> lang('building_part'),
-					'building_part_list'			=> $this->bo->get_building_part_list($values['building_part_id']),
-					'select_building_part'			=> 'values[building_part_id]',
-					'lang_no_building_part'			=> lang('Select building part'),
-					'lang_building_part_statustext'	=> lang('Select the building part for this activity.'),
-
+					'building_part_list'			=> array('options' => $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$values['building_part_id'], 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart))),
 
 					'ns3420_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uilookup.ns3420')),
 					'lang_ns3420'					=> lang('NS3420'),
