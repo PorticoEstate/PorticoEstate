@@ -748,6 +748,16 @@
 									'onchange'=> 'onChangeSelect("b_account");',
 									'tab_index' => 14
 						);
+
+
+						$_filter_buildingpart = array();
+						$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
+			
+						if($filter_key = array_search('.b_account', $filter_buildingpart))
+						{
+							$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+						}
+
 						$datatable['actions']['form'][0]['fields']['field'][] = array
 						(
 									'id' => 'sel_building_part', // testing traditional listbox for long list
@@ -755,7 +765,8 @@
 									'value'	=> lang('building part'),
 									'type' => 'select',
 									'style' => 'filter',
-									'values' => $this->bo->get_building_part($this->building_part),
+									//'values' => $this->bo->get_building_part($this->building_part),
+									'values'	=> $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart)),
 									'onchange'=> 'onChangeSelect("building_part");',
 									'tab_index' => 15
 						);
