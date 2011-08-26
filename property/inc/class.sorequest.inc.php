@@ -673,13 +673,13 @@
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
 					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
 						. "VALUES ('"
-						. $request['id']. "','"
-						. $_condition_type . "',"
-						. $value_type['reference']. ","
-						. $value_type['degree']. ","
-						. $value_type['probability']. ","
-						. $value_type['consequence']. ","
-						. $this->account . ","
+						. (int) $request['id']. "','"
+						. (int) $_condition_type . "',"
+						. (int) $value_type['reference']. ","
+						. (int) $value_type['degree']. ","
+						. (int) $value_type['probability']. ","
+						. (int) $value_type['consequence']. ","
+						. (int) $this->account . ","
 						. time() . ")",__LINE__,__FILE__);
 				}
 			}
@@ -863,13 +863,13 @@
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
 					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
 						. "VALUES ('"
-						. $request['id']. "','"
-						. $_condition_type . "',"
-						. $value_type['reference']. ","
-						. $value_type['degree']. ","
-						. $value_type['probability']. ","
-						. $value_type['consequence']. ","
-						. $this->account . ","
+						. (int)$request['id']. "','"
+						. (int)$_condition_type . "',"
+						. (int)$value_type['reference']. ","
+						. (int)$value_type['degree']. ","
+						. (int)$value_type['probability']. ","
+						. (int)$value_type['consequence']. ","
+						. (int)$this->account . ","
 						. time() . ")",__LINE__,__FILE__);
 				}
 			}
