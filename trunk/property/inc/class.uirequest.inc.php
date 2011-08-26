@@ -876,11 +876,14 @@
 				$location_code 	= phpgw::get_var('location_code');
 				$tenant_id 		= phpgw::get_var('tenant_id', 'int');
 
-				$p_entity_id	= phpgw::get_var('p_entity_id', 'int');
-				$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
-				$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
-				$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
-				$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+				if(phpgw::get_var('p_num'))
+				{
+					$p_entity_id	= phpgw::get_var('p_entity_id', 'int');
+					$p_cat_id		= phpgw::get_var('p_cat_id', 'int');
+					$values['p'][$p_entity_id]['p_entity_id']	= $p_entity_id;
+					$values['p'][$p_entity_id]['p_cat_id']		= $p_cat_id;
+					$values['p'][$p_entity_id]['p_num']		= phpgw::get_var('p_num');
+				}
 
 				$origin		= phpgw::get_var('origin');
 				$origin_id	= phpgw::get_var('origin_id', 'int');

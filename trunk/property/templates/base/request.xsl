@@ -754,25 +754,23 @@
 
 	<xsl:template match="condition_list">
 		<tr>
-			<td class="small_text" align="left">
-				<xsl:choose>
-					<xsl:when test="condition_type_list != ''">
-						<select name="values[condition][{condition_type}][condition_type]" class="forms">
-							<xsl:apply-templates select="condition_type_list/options"/>
-						</select>
-					</xsl:when>
-					<xsl:otherwise>
+			<xsl:choose>
+				<xsl:when test="condition_type_list != ''">
+				</xsl:when>
+				<xsl:otherwise>
+					<td class="small_text" align="left">
 						<xsl:value-of select="condition_type_name"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</td>
-
+					</td>
+				</xsl:otherwise>
+			</xsl:choose>
+		<!--
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_reference_statustext"><xsl:value-of select="//lang_reference_statustext"/></xsl:variable>
 				<select name="values[condition][{condition_type}][reference]" class="forms" title="{$lang_reference_statustext}">
 					<xsl:apply-templates select="reference/options"/>
 				</select>
 			</td>
+		-->
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
 				<select name="values[condition][{condition_type}][degree]" class="forms" title="{$lang_degree_statustext}">
@@ -785,15 +783,27 @@
 					<xsl:apply-templates select="probability/options"/>
 				</select>
 			</td>
+			<xsl:choose>
+				<xsl:when test="condition_type_list != ''">
+					<td class="small_text" align="left">
+						<select name="values[condition][{condition_type}][condition_type]" class="forms">
+							<xsl:apply-templates select="condition_type_list/options"/>
+						</select>
+					</td>
+				</xsl:when>
+			</xsl:choose>
+
 			<td class="small_text" align="center">
 				<xsl:variable name="lang_consequence_statustext"><xsl:value-of select="//lang_consequence_statustext"/></xsl:variable>
 				<select name="values[condition][{condition_type}][consequence]" class="forms" title="{$lang_consequence_statustext}">
 					<xsl:apply-templates select="consequence/options"/>
 				</select>
 			</td>
+		<!--
 			<td class="small_text" align="center">
 				<xsl:value-of select="failure"/>
 			</td>
+		-->
 			<td class="small_text" align="right">
 				<xsl:value-of select="weight"/>
 			</td>
@@ -905,24 +915,42 @@
 
 	<xsl:template name="table_header_importance" xmlns:php="http://php.net/xsl">
 		<tr>
-			<th width="20%" align="left">
-				<xsl:value-of select="php:function('lang', 'consequence type')" />
-			</th>
+			<xsl:choose>
+				<xsl:when test="//condition_type_list != ''">
+				</xsl:when>
+				<xsl:otherwise>
+					<th width="20%" align="left">
+						<xsl:value-of select="php:function('lang', 'consequence type')" />
+					</th>
+				</xsl:otherwise>
+			</xsl:choose>
+			<!--
 			<th width="20%" align="left">
 				<xsl:value-of select="php:function('lang', 'reference level')" />
 			</th>
+			-->
 			<th width="20%" align="center">
 				<xsl:value-of select="php:function('lang', 'condition degree')" />
 			</th>
 			<th width="20%" align="center">
 				<xsl:value-of select="php:function('lang', 'Probability')" />
 			</th>
+			<xsl:choose>
+				<xsl:when test="//condition_type_list != ''">
+					<th width="20%" align="left">
+						<xsl:value-of select="php:function('lang', 'consequence type')" />
+					</th>
+				</xsl:when>
+			</xsl:choose>
+
 			<th width="20%" align="center">
 				<xsl:value-of select="php:function('lang', 'Consequence')" />
 			</th>
+		<!--
 			<th width="5%" align="center">
 				<xsl:value-of select="php:function('lang', 'failure')" />
 			</th>
+		-->
 			<th width="5%" align="center">
 				<xsl:value-of select="php:function('lang', 'weight')" />
 			</th>
