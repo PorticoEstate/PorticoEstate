@@ -53,7 +53,7 @@
 						<div id="building_container"/>
 					</div>
 				</dd>
-				<dt><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
+				<dt style="margin-top: 45px;"><label for="field_type"><xsl:value-of select="php:function('lang', 'Resource Type')" /></label></dt>
 				<dd>
 					<select name='type' id='field_type'>
 						<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
