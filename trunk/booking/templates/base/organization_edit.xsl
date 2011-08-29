@@ -99,7 +99,7 @@
 			        <xsl:attribute name="value"><xsl:value-of select="organization/email"/></xsl:attribute>
 			    </input>
 			</dd>
-			<dt><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
+			<dt style="margin-top: 40px;"><label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label></dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
 					<option value=""><xsl:value-of select="php:function('lang', '-- select an activity --')" /></option>
@@ -114,8 +114,6 @@
 					</xsl:for-each>
 				</select>
 			</dd>
-
-
 			<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 			<dd class="yui-skin-sam">
 			    <textarea id="field-description" name="description" type="text"><xsl:value-of select="organization/description"/></textarea>
