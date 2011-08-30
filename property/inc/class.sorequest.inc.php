@@ -665,22 +665,26 @@
 			$values	= $this->bocommon->validate_db_insert(array_values($value_set));
 
 			$this->db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+_debug_array($request);die();
 
 			if(isset($request['condition']) && is_array($request['condition']))
 			{
 				foreach( $request['condition'] as $condition_type => $value_type )
 				{
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
-					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
-						. "VALUES ('"
-						. (int) $request['id']. "','"
-						. (int) $_condition_type . "',"
-						. (int) $value_type['reference']. ","
-						. (int) $value_type['degree']. ","
-						. (int) $value_type['probability']. ","
-						. (int) $value_type['consequence']. ","
-						. (int) $this->account . ","
-						. time() . ")",__LINE__,__FILE__);
+					if($_condition_type)
+					{
+						$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
+							. "VALUES ("
+							. (int) $id. ","
+							. (int) $_condition_type . ","
+							. (int) $value_type['reference']. ","
+							. (int) $value_type['degree']. ","
+							. (int) $value_type['probability']. ","
+							. (int) $value_type['consequence']. ","
+								. (int) $this->account . ","
+							. time() . ")",__LINE__,__FILE__);
+					}
 				}
 			}
 
@@ -856,15 +860,20 @@
 			$this->db->query("UPDATE fm_request SET $value_set WHERE id= '{$request['id']}'",__LINE__,__FILE__);
 
 			$this->db->query("DELETE FROM fm_request_condition WHERE request_id='{$request['id']}'",__LINE__,__FILE__);
+
 			if(isset($request['condition']) && is_array($request['condition']))
 			{
 				foreach( $request['condition'] as $condition_type => $value_type )
 				{
 					$_condition_type = isset($value_type['condition_type']) && $value_type['condition_type'] ? $value_type['condition_type'] : $condition_type;
+					if(isset($value_type['condition_type']) && !$value_type['condition_type'])
+					{
+						continue;
+					}
 					$this->db->query("INSERT INTO fm_request_condition (request_id,condition_type,reference,degree,probability,consequence,user_id,entry_date) "
-						. "VALUES ('"
-						. (int)$request['id']. "','"
-						. (int)$_condition_type . "',"
+						. "VALUES ("
+						. (int)$request['id']. ","
+						. (int)$_condition_type . ","
 						. (int)$value_type['reference']. ","
 						. (int)$value_type['degree']. ","
 						. (int)$value_type['probability']. ","
