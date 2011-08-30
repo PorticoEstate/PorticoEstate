@@ -55,7 +55,7 @@
             </dd>
         </dl>
         <dl class="form-col">
-            <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
+            <dt style="margin-top: 100px;"><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
             <dd>
 	            <xsl:value-of select="booking/organization_name"/>
             </dd>
