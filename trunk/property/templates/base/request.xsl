@@ -348,6 +348,15 @@
 								</td>
 							</tr>
 							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'at the disposal')" />
+								</td>
+								<td>
+									<xsl:value-of select="value_diff"/>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'building part')" />
 								</td>

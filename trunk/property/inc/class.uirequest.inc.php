@@ -977,10 +977,14 @@
 				}
 
 
-				if(isset($values['budget']) && $values['budget'] && !ctype_digit($values['budget']))
+				if(isset($values['budget']) && $values['budget'])
 				{
-					$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
-					$error_id=true;
+					$values['budget'] = str_replace(' ', '', $values['budget']);
+					if( !ctype_digit($values['budget']))
+					{
+						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
+						$error_id=true;
+					}
 				}
 
 				if(is_array($values_attribute))
@@ -1228,6 +1232,7 @@
 					'values'	=>	json_encode(array(	array('key' => 'value_date','label'=>lang('Date'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_user','label'=>lang('User'),'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_action','label'=>lang('Action'),'sortable'=>true,'resizeable'=>true),
+														array('key' => 'value_old_value','label' => lang('old value'), 'sortable'=>true,'resizeable'=>true),
 														array('key' => 'value_new_value','label'=>lang('New Value'),'sortable'=>true,'resizeable'=>true)))
 				);
 
@@ -1266,15 +1271,18 @@
 
 
 
+			$_predisposed = 0;
 			if($this->acl_edit)
 			{
 				$_lang_delete = lang('Check to delete');
 				foreach($values['consume'] as & $consume)
 				{
+					$_predisposed = $_predisposed + $consume['amount'];
 					$consume['delete'] = "<input type='checkbox' name='values[delete_consume][]' value='{$consume['id']}' title='{$_lang_delete}'>";
 				}
 				foreach($values['planning'] as & $planning)
 				{
+					$_predisposed = $_predisposed + $planning['amount'];
 					$planning['delete'] = "<input type='checkbox' name='values[delete_planning][]' value='{$planning['id']}' title='{$_lang_delete}'>";
 				}
 
@@ -1383,7 +1391,7 @@
 
 					'generate_project_action'			=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
 					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.edit', 'id'=> $id)),
-					'acl_add_project'					=> $this->acl->check('.project', PHPGW_ACL_ADD, 'property'),
+					'acl_add_project'					=> $mode == 'view' ? 0 : $this->acl->check('.project', PHPGW_ACL_ADD, 'property'),
 					'lang_generate_project'				=> lang('Generate project'),
 					'lang_generate_project_statustext'	=> lang('Generate a project from this request'),
 					'location_code'						=> $values['location_code'],
@@ -1427,8 +1435,9 @@
 					'value_power_meter'					=> $values['power_meter'],
 
 					'lang_budget'						=> lang('Budget'),
-					'value_budget'						=> $values['budget'],
+					'value_budget'						=> number_format($values['budget'], 0, ',', ' '),
 					'lang_budget_statustext'			=> lang('Enter the budget'),
+					'value_diff'						=> number_format(((int)$values['budget'] - $_predisposed), 0, ',', ' '),
 
 					'location_data'						=> $location_data,
 					'location_type'						=> 'form',
