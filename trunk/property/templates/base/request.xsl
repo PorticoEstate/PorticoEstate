@@ -336,7 +336,7 @@
 
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'cost estimate')" />
+									<xsl:value-of select="php:function('lang', 'total cost estimate')" />
 								</td>
 								<td>
 									<input type="text" name="values[budget]" value="{value_budget}">
@@ -752,7 +752,7 @@
 
 	</xsl:template>
 
-	<xsl:template match="condition_list">
+	<xsl:template match="condition_list" xmlns:php="http://php.net/xsl">
 		<tr>
 			<xsl:choose>
 				<xsl:when test="condition_type_list != ''">
@@ -765,28 +765,29 @@
 			</xsl:choose>
 		<!--
 			<td class="small_text" align="center">
-				<xsl:variable name="lang_reference_statustext"><xsl:value-of select="//lang_reference_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][reference]" class="forms" title="{$lang_reference_statustext}">
+				<select name="values[condition][{condition_type}][reference]" class="forms">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'select value')" />
+					</xsl:attribute>
 					<xsl:apply-templates select="reference/options"/>
 				</select>
 			</td>
 		-->
 			<td class="small_text" align="center">
-				<xsl:variable name="lang_degree_statustext"><xsl:value-of select="//lang_degree_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][degree]" class="forms" title="{$lang_degree_statustext}">
+				<select name="values[condition][{condition_type}][degree]" class="forms">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'select value')" />
+					</xsl:attribute>
 					<xsl:apply-templates select="degree/options"/>
-				</select>
-			</td>
-			<td class="small_text" align="center">
-				<xsl:variable name="lang_probability_statustext"><xsl:value-of select="//lang_probability_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][probability]" class="forms" title="{$lang_probability_statustext}">
-					<xsl:apply-templates select="probability/options"/>
 				</select>
 			</td>
 			<xsl:choose>
 				<xsl:when test="condition_type_list != ''">
 					<td class="small_text" align="left">
 						<select name="values[condition][{condition_type}][condition_type]" class="forms">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select value')" />
+							</xsl:attribute>
 							<xsl:apply-templates select="condition_type_list/options"/>
 						</select>
 					</td>
@@ -794,9 +795,19 @@
 			</xsl:choose>
 
 			<td class="small_text" align="center">
-				<xsl:variable name="lang_consequence_statustext"><xsl:value-of select="//lang_consequence_statustext"/></xsl:variable>
-				<select name="values[condition][{condition_type}][consequence]" class="forms" title="{$lang_consequence_statustext}">
+				<select name="values[condition][{condition_type}][consequence]" class="forms">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'select value')" />
+					</xsl:attribute>
 					<xsl:apply-templates select="consequence/options"/>
+				</select>
+			</td>
+			<td class="small_text" align="center">
+				<select name="values[condition][{condition_type}][probability]" class="forms">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'select value')" />
+					</xsl:attribute>
+					<xsl:apply-templates select="probability/options"/>
 				</select>
 			</td>
 		<!--
@@ -920,6 +931,9 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<th width="20%" align="left">
+						<xsl:attribute name="title">
+							<xsl:text>Konsekvenstype - tema for tilstand</xsl:text>
+						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'consequence type')" />
 					</th>
 				</xsl:otherwise>
@@ -930,34 +944,57 @@
 			</th>
 			-->
 			<th width="20%" align="center">
+				<xsl:attribute name="title">
+						<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
+				</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'condition degree')" />
-			</th>
-			<th width="20%" align="center">
-				<xsl:value-of select="php:function('lang', 'Probability')" />
 			</th>
 			<xsl:choose>
 				<xsl:when test="//condition_type_list != ''">
 					<th width="20%" align="left">
+						<xsl:attribute name="title">
+							<xsl:text>Konsekvenstype - tema for tilstand</xsl:text>
+						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'consequence type')" />
 					</th>
 				</xsl:when>
 			</xsl:choose>
 
 			<th width="20%" align="center">
+				<xsl:attribute name="title">
+						<xsl:text>Konsekvensgrad iht NS 3424</xsl:text>
+				</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'Consequence')" />
 			</th>
+			<th width="20%" align="center">
+				<xsl:attribute name="title">
+						<xsl:text>Sannsynlighet iht NS 3424</xsl:text>
+				</xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'Probability')" />
+			</th>
+
 		<!--
 			<th width="5%" align="center">
 				<xsl:value-of select="php:function('lang', 'failure')" />
 			</th>
 		-->
 			<th width="5%" align="center">
+					<xsl:attribute name="title">
+						<xsl:text>Vekt = konfigurerbar verdi for hjelpeberegning av viktighet</xsl:text>
+					</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'weight')" />
 			</th>
 			<th width="5%" align="center">
+					<xsl:attribute name="title">
+						<xsl:text>Risiko = Konsekvensgrad x Sannsynlighetsgrad</xsl:text>
+					</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'risk')" />
 			</th>
 			<th width="5%" align="center">
+					<xsl:attribute name="title">
+						<xsl:text>Verdi for hjelp til sortering av viktighet</xsl:text>
+					</xsl:attribute>
+
 				<xsl:value-of select="php:function('lang', 'score')" />
 			</th>
 		</tr>
