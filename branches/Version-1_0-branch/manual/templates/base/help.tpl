@@ -5,15 +5,16 @@
 	//]]>
 </script>
 
-<h2>{title}</h2>
-<table>
+<h2 align = 'left'>{title}</h2>
+<table align = 'left'>
 	<tr>
 		<td align = 'left'>
 			{help_msg}
 		</td>
 	</tr>
 </table>
-<p align="center"><a href="javascript:this.window.close()">{lang_close}</a></p>
+</br>
+<p align="left"><a href="javascript:this.window.close()">{lang_close}</a></p>
 
 </body>
 </html>

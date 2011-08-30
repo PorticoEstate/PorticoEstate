@@ -47,7 +47,7 @@
             </dd>
         </dl>
         <dl class="form-col">
-            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
+            <dt style="margin-top: 53px;"><label for="field_group"><xsl:value-of select="php:function('lang', 'Organization')"/></label></dt>
             <dd>
                 <div class="autocomplete">
                     <input id="field_org_id" name="organization_id" type="hidden">

@@ -379,6 +379,7 @@ copy workorder ?	property	no	Kopier bestilling ?
 correct error	property	no	Rett opp feil
 cost	property	no	kostnad
 cost estimate	property	no	Kostnadsestimat
+total cost estimate	property	no	Totalt kostnadsestimat
 cost - either budget or calculation	property	no	Beløp - enten budsjett eller kalkulalasjon
 cost (incl tax):	property	no	Kostnader (inkl mva)
 cost per unit	property	no	Enhetspris
@@ -870,6 +871,7 @@ input text	property	no	ledetekst
 input text not entered!	property	no	Input tekst er ikke angitt!
 input type	property	no	input type
 input name	property	no	input navn
+select value	property	no	Angi verdi
 insert the date for the acquisition	property	no	angi dato for anskaffelsen
 insert the date for the initial value	property	no	angi dato for initiell verdi
 insert the value at the start-date as a positive amount	property	no	angi verdie ved startdatoen som en positiv verdi
@@ -1244,7 +1246,7 @@ priority changed	property	no	prioritet er endret
 priority key	property	no	Prioriteringsnøkkel
 priority keys has been updated	property	no	prioriteringsnøkkel er oppdatert
 prizing	property	no	Priser
-probability	property	no	sansynlighet
+probability	property	no	Sansynlighet
 project	property	no	prosjekt
 .project	property	no	Prosjekt
 project.workorder	property	no	Prosjekt::Bestilling
@@ -1296,16 +1298,19 @@ re-opened	property	no	gjenåpnet
 repeat	property	no	serie
 repeat type	property	no	type serie
 repeat day	property	no	gjenta dag
-request	property	no	behov
+request	property	no	Behov
+project.request	property	no	Behov
+request attributes	property	no	Behov::attributter
 request %1 has been edited	property	no	anmodning %1 er oppdater
 request %1 has been saved	property	no	anmodning %1 er lagret
 request budget	property	no	Budsjett for tiltak
+request condition type	property	no	Behov::konsekvenstype
 request descr	property	no	Beskrivelse av tiltak
 request end date	property	no	anmodning frist
 request entry date	property	no	Registreringsdato for tiltak
 request id	property	no	Anmodnings ID
 request start date	property	no	anmodning startdato
-request status	property	no	Status anmodning
+request status	property	no	Behov::status
 request title	property	no	Tiltak tittel
 request description	property	no	Tilstand beskrivelse
 requirement	property	no	Behov/pålegg

@@ -412,7 +412,7 @@
 						),
 						'request_attribs'	=> array
 						(
-							'text'	=> lang('request Attributes'),
+							'text'	=> lang('request attributes'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'property', 'location' =>'.project.request', 'menu_selection' => 'admin::property::request_attribs') )
 						),
 						'order_dim1'	=> array
