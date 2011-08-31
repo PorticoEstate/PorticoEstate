@@ -665,7 +665,7 @@
 			$values	= $this->bocommon->validate_db_insert(array_values($value_set));
 
 			$this->db->query("INSERT INTO fm_request ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
-_debug_array($request);die();
+
 
 			if(isset($request['condition']) && is_array($request['condition']))
 			{
@@ -829,9 +829,10 @@ _debug_array($request);die();
 
 			$this->db->transaction_begin();
 
-			$this->db->query("SELECT status,category,coordinator FROM fm_request where id='" .$request['id']."'",__LINE__,__FILE__);
+			$this->db->query("SELECT budget,status,category,coordinator FROM fm_request where id='" .$request['id']."'",__LINE__,__FILE__);
 			$this->db->next_record();
 
+			$old_budget			= $this->db->f('budget');
 			$old_status = $this->db->f('status');
 			$old_category = $this->db->f('category');
 			$old_coordinator = $this->db->f('coordinator');
@@ -937,15 +938,20 @@ _debug_array($request);die();
 			{
 				if ($old_status != $request['status'])
 				{
-					$this->historylog->add('S',$request['id'],$request['status']);
+					$this->historylog->add('S',$request['id'],$request['status'],$old_status);
 				}
 				if ($old_category != $request['cat_id'])
 				{
-					$this->historylog->add('T',$request['id'],$request['cat_id']);
+					$this->historylog->add('T',$request['id'],$request['cat_id'],$old_category);
 				}
-				if ($old_coordinator != $request['coordinator'])
+				if ((int)$old_coordinator != (int)$request['coordinator'])
 				{
-					$this->historylog->add('C',$request['id'],$request['coordinator']);
+					$this->historylog->add('C',$request['id'],$request['coordinator'],$old_coordinator);
+				}
+
+				if ($old_budget != $request['budget'])
+				{
+					$this->historylog->add('B', $request['id'], $request['budget'], $old_budget);
 				}
 
 				$receipt['message'][] = array('msg'=>lang('request %1 has been edited',$request['id']));
