@@ -304,7 +304,7 @@
 					'degree' 				=> array('options' => $this->select_degree_list($conditions[$i]['degree'])),
 					'probability' 			=> array('options' => $this->select_probability_list($conditions[$i]['probability'])),
 					'consequence' 			=> array('options' => $this->select_consequence_list($conditions[$i]['consequence'])),
-					'condition_type'		=> $condition_type_list[$i]['id'],
+					'condition_type'		=> (int)$condition_type_list[$i]['id'],
 					'condition_type_name'	=> $condition_type_list[$i]['name'],
 					'condition_type_descr'	=> $condition_type_list[$i]['descr'],
 					'failure'				=> (int)$conditions[$i]['reference'] - (int)$conditions[$i]['degree'] < 0 ? 'X' : '',
@@ -536,25 +536,25 @@
 
 				switch ($value['status'])
 				{
-				case 'R': $type = lang('Re-opened'); break;
-				case 'X': $type = lang('Closed');    break;
-				case 'O': $type = lang('Opened');    break;
-				case 'A': $type = lang('Re-assigned'); break;
-				case 'P': $type = lang('Priority changed'); break;
-				case 'CO': $type = lang('Initial Coordinator'); break;
-				case 'C': $type = lang('Coordinator changed'); break;
-				case 'TO': $type = lang('Initial Category'); break;
-				case 'T': $type = lang('Category changed'); break;
-				case 'SO': $type = lang('Initial Status'); break;
-				case 'S': $type = lang('Status changed'); break;
-				default: break;
+					case 'B': $type = lang('Budget changed'); break;
+					case 'R': $type = lang('Re-opened'); break;
+					case 'X': $type = lang('Closed');    break;
+					case 'O': $type = lang('Opened');    break;
+					case 'A': $type = lang('Re-assigned'); break;
+					case 'P': $type = lang('Priority changed'); break;
+					case 'CO': $type = lang('Initial Coordinator'); break;
+					case 'C': $type = lang('Coordinator changed'); break;
+					case 'TO': $type = lang('Initial Category'); break;
+					case 'T': $type = lang('Category changed'); break;
+					case 'SO': $type = lang('Initial Status'); break;
+					case 'S': $type = lang('Status changed'); break;
+					default: break;
 				}
 
 				if($value['new_value']=='O'){$value['new_value']=lang('Opened');}
-					if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
+				if($value['new_value']=='X'){$value['new_value']=lang('Closed');}
 
-
-						$record_history[$i]['value_action']	= $type?$type:'';
+				$record_history[$i]['value_action']	= $type?$type:'';
 				unset($type);
 
 				if ($value['status'] == 'A')
@@ -568,7 +568,12 @@
 						$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 					}
 				}
-				else if ($value['status'] == 'C' || $value['status'] == 'CO')
+				else if ($value['status'] == 'C')
+				{
+					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
+					$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->id2name($value['old_value']);
+				}
+				else if ($value['status'] == 'CO')
 				{
 					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->id2name($value['new_value']);
 				}
@@ -577,9 +582,15 @@
 					$category 								= $this->cats->return_single($value['new_value']);
 					$record_history[$i]['value_new_value']	= $category[0]['name'];
 				}
+				else if ($value['status'] == 'B' && $value['new_value'])
+				{
+					$record_history[$i]['value_new_value']	=number_format($value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value']	=number_format($value['old_value'], 0, ',', ' ');
+				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
 					$record_history[$i]['value_new_value']	= $value['new_value'];
+					$record_history[$i]['value_old_value']	= $value['old_value'];
 				}
 				else
 				{
