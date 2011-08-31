@@ -13,7 +13,7 @@
 		}
 
 		$ids = array();
-		$this->db->query("SELECT id FROM $target_table WHERE location_code is NULL",__LINE__,__FILE__);
+		$this->db->query("SELECT id FROM $target_table WHERE (location_code is NULL OR location_code = '') OR (target_id IS NOT NULL AND location_id IS NOT NULL AND p_num IS NULL)",__LINE__,__FILE__);
 		while ($this->db->next_record())
 		{
 			$ids[] = $this->db->f('id');
@@ -27,6 +27,7 @@
 
 			$location_id = $this->db->f('location_id');
 			$target_id = $this->db->f('target_id');
+
 			if($location_id  && $target_id)
 			{
 				$origin = $GLOBALS['phpgw']->locations->get_name($location_id);
