@@ -348,6 +348,7 @@ not_internal	activitycalendar	no	Ekstern
 organization_id	activitycalendar	no	Organisasjon ID
 arena_type	activitycalendar	no	Arenatype
 internal_arena_id	activitycalendar	no	Intern arena ID
+internal_arena	activitycalendar	no	Intern arena
 reset	activitycalendar	no	Nullstill
 organization_number	activitycalendar	no	Organisasjonsnummer
 elements_pr_page	activitycalendar	no	elementer per side
@@ -390,3 +391,4 @@ contact_person_2_address	activitycalendar	no	Adresse for kulturkontoret
 contact_person_2_zip	activitycalendar	no	Poststed for kulturkontoret
 active_arena	activitycalendar	no	Aktiv
 inactive_arena	activitycalendar	no	Inaktiv
+change_type	activitycalendar	no	Endringstype
