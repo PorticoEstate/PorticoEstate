@@ -22,7 +22,15 @@
 			$error = false;
 			$type = $data[0];
 			$location_arr = explode('-',$data[1]);
-			$location_code = $location_arr[0] . '-' . sprintf("%02d",$data[2]); 
+			
+			if(strpos($location_arr[0], 'A') !== false )
+			{
+				$location_code = $location_arr[0] . '-' . sprintf("%04d",$data[2]);
+			}
+			else
+			{
+				$location_code = $location_arr[0] . '-' . sprintf("%02d",$data[2]);			
+			}
 
 			$location_data = execMethod('property.solocation.read_single', $location_code );
 
@@ -129,10 +137,10 @@
 					$category = 14;
 					break;
 				case 'Kombinasjon':
-					$category = 201;
+					$category = 202;
 					break;
 				default:
-					$category = 201;
+					$category = 202;
 					break;
 
 			}
@@ -155,19 +163,20 @@
 			reset($this->attrib_data);
 			foreach ( $this->attrib_data as $attrib )
 			{
-				if($attrib['datatype'] == 'LB' && $attrib['column_name'] == 'lovhjemmel')
+				if($attrib['datatype'] == 'LB' && $attrib['column_name'] == 'hjemmel')
 				{
 					foreach($attrib['choice'] as $choice)
 					{
 						if(strpos($choice['value'], $data[11]) !== false)
 						{
-							$value_set['lovhjemmel']	= $choice['id'];
+							$value_set['hjemmel']	= $choice['id'];
 							break 2;
 						}
 					}
 				}
 			}
 
+/*
 			reset($this->attrib_data);
 			foreach ( $this->attrib_data as $attrib )
 			{
@@ -183,7 +192,7 @@
 					}
 				}
 			}
-
+*/
 
 
 			$cols = implode(',', array_keys($value_set));
@@ -207,12 +216,15 @@
 			$condition = array();
 			$condition_type = (int) substr($data[14], 0, 1);
 //_debug_array($data);			
-			$condition[$condition_type] = array
-			(
-				'degree'		=> $data[13] ? (int)$data[13] : 1,
-				'probability'	=>	$data[16] ? (int)$data[16] : 1,
-				'consequence'	=>	$data[15] ? (int)$data[15] : 1,
-			);
+			if($condition_type)
+			{
+				$condition[$condition_type] = array
+				(
+					'degree'		=> $data[13] ? (int)$data[13] : 0,
+					'probability'	=>	$data[16] ? (int)$data[16] : 0,
+					'consequence'	=>	$data[15] ? (int)$data[15] : 0,
+				);
+			}
 			
 //_debug_array($condition);			
 			foreach ($condition as $condition_type => $value_type)
