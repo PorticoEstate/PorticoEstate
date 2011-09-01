@@ -68,6 +68,9 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		$id = (int)phpgw::get_var('id');
 		$type = phpgw::get_var('type');
+		unset($org_info);
+		unset($contact1);
+		unset($contact2);
 		if($type)
 		{
 			//var_dump($type);
@@ -77,7 +80,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$keys = array_keys($group_array);
 				$group = $group_array[$keys[0]];
 			}
-			if(isset($_POST['save_organization'])) // The user has pressed the save button
+			if(isset($_POST['save_group'])) // The user has pressed the save button
 			{
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
@@ -87,7 +90,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$address = phpgw::get_var('address');
 				$desc = phpgw::get_var('org_description');
 			}
-			else if(isset($_POST['store_organization'])) // The user has pressed the store button
+			else if(isset($_POST['store_group'])) // The user has pressed the store button
 			{
 				$orgno = phpgw::get_var('orgno');
 				$district = phpgw::get_var('org_district');
@@ -112,6 +115,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 			//var_dump('org');
 			$so = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
+			$so_contact = activitycalendar_socontactperson::get_instance();
 			$org_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
 			if(count($org_array)>0){
 				$keys = array_keys($org_array);
@@ -130,7 +134,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org->set_address(phpgw::get_var('address'));
 				$org->set_description(phpgw::get_var('org_description'));
 				
-				if($so->store($org))
+				if($so->update_local_org($org))
 				{
 					$message = lang('messages_saved_form');	
 				}
@@ -138,9 +142,6 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				{
 					$error = lang('messages_form_error');
 				}
-				
-				
-				
 			}
 			else if(isset($_POST['store_organization'])) // The user has pressed the store button
 			{
@@ -149,8 +150,54 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$homepage = phpgw::get_var('homepage');
 				$email = phpgw::get_var('email');
 				$phone = phpgw::get_var('phone');
-				$address = phpgw::get_var('address');
+				$address_tmp = phpgw::get_var('address');
+				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
+				$address_array = explode(",",$address_tmp);
 				$desc = phpgw::get_var('org_description');
+				
+				$org_info = array();
+				$org_info['name'] = $org->get_name(); //new
+				$orgno_tmp = $orgno;
+				if(strlen($orgno_tmp) > 9)
+				{
+					$orgno_tmp = NULL;
+				}
+				$org_info['orgnr'] = $orgno_tmp; 
+				
+				$org_info['homepage'] = $homepage;
+				$org_info['phone'] = $phone;
+				$org_info['email'] = $email;
+				$org_info['description'] = $description;
+				$org_info['street'] = $address_array[0];
+				$org_info['zip'] = $address_array[1];
+				$org_info['activity_id'] = '';
+				$org_info['district'] = $district;
+				
+				$new_org_id = $so->transfer_organization($org_info);
+				if($new_org_id)
+				{
+					//update activity with new org id
+					//add contact persons to booking
+					$contact1 = array();
+					$contact1['name'] = $contact1_name;
+					$contact1['phone'] = $contact1_phone;
+					$contact1['mail'] = $contact1_email;
+					$contact1['org_id'] = $this->decode($new_org_id);
+					$so_contact->add_contact_person_org($contact1);
+					
+					$contact2 = array();
+					$contact2['name'] = $contact2_name;
+					$contact2['phone'] = $contact2_phone;
+					$contact2['mail'] = $contact_mail_2;
+					$contact2['org_id'] = $this->decode($new_org_id);
+					$so_contact->add_contact_person_org($contact2);
+					$message = lang('messages_saved_form');	
+				}
+				else
+				{
+					$error = lang('messages_form_error');
+				}
+				
 			}
 			
 			$data = array
