@@ -388,3 +388,5 @@ arena_name	activitycalendar	no	Navn
 Send mail to selection	activitycalendar	no	Send E-post til utvalg
 contact_person_2_address	activitycalendar	no	Adresse for kulturkontoret
 contact_person_2_zip	activitycalendar	no	Poststed for kulturkontoret
+active_arena	activitycalendar	no	Aktiv
+inactive_arena	activitycalendar	no	Inaktiv
