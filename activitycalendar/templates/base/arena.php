@@ -108,6 +108,19 @@ var divcontent_end = "</select>";
 					}
 					?>
 				</dd>
+				<?php if($editable) {?>
+					<dt>
+						<label for="arena_active"><?php echo lang('active_arena') ?></label>
+					</dt>
+					<dd>
+						<input type="checkbox" name="arena_active" id="arena_active" <?php if($arena->is_active()) { echo "checked='checked'";} ?>/>
+					</dd>
+				<?php 
+				}else{ 
+				?>
+					<dt><label><?php if($arena->is_active()){?><font style="color: green;"><?php echo lang('active_arena');?></font><?php }else{ ?><font style="color: red;"><?php echo lang('inactive_arena');?></font><?php } ?></label></dt>
+					<dd>&nbsp;</dd>
+				<?php }?>
 			</dl>
 			<div class="form-buttons">
 				<?php

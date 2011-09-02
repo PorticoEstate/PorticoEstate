@@ -1544,7 +1544,7 @@ HTML;
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, true);
 				}
 				else
 				{

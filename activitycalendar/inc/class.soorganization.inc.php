@@ -317,5 +317,116 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		}
 		return $organization;
 	}
+	
+	function add_organization_local($organization)
+	{
+		$name = $organization->get_name();
+		$orgnr = $organization->get_organization_number();
+		$homepage = $organization->get_homepage();
+		$phone = $organization->get_phone();
+		$email = $organization->get_email();
+		$description = $organization->get_description();
+		$street = $organization->get_address();
+/*		$zip = $organization->get_();
+		if($zip && strlen($zip) > 5)
+		{
+			$zip_code = substr($zip,0,4);
+			$city = substr($zip, 5);
+		}
+		else
+		{
+			$zip_code = '';
+			$city = '';
+		}*/
+		$district = $organization->get_district();
+		
+		$values[] = "NAME='{$name}'";
+		$values[] = "HOMEPAGE='{$homepage}'";
+		$values[] = "PHONE='{$phone}'";
+		$values[] = "EMAIL='{$email}'";
+		$values[] = "DESCRIPTION='{$description}'";
+		$values[] = "STREET='{$street}'";
+		//$values[] = "'{$zip_code}'";
+		//$values[] = "'{$city}'";
+		$values[] = "ORGNO='{$orgnr}'";
+		$values[] = "DISTRICT='{$district}'";
+		$vals = implode(',',$values);
+		
+		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
+		$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	function transfer_organization($org_info)
+	{
+		$name = $org_info['name'];
+		$orgnr = $org_info['orgnr'];
+		$homepage = $org_info['homepage'];
+		$phone = $org_info['phone'];
+		$email = $org_info['email'];
+		$description = $org_info['description'];
+		$street = $org_info['street'];
+		$zip = $org_info['zip'];
+		if($zip && strlen($zip) > 5)
+		{
+			$zip_code = substr($zip,0,4);
+			$city = substr($zip, 5);
+		}
+		else
+		{
+			$zip_code = '';
+			$city = '';
+		}
+		$district = $org_info['district'];
+		$activity_id = $org_info['activity_id'];
+		$show_in_portal = 1; 
+		
+		$columns[] = 'name';
+		$columns[] = 'homepage';
+		$columns[] = 'phone';
+		$columns[] = 'email';
+		$columns[] = 'description';
+		$columns[] = 'street';
+		$columns[] = 'zip_code';
+		$columns[] = 'city';
+		$columns[] = 'district';
+		$columns[] = 'organization_number';
+		$columns[] = 'activity_id';
+		$columns[] = 'show_in_portal';
+		$cols = implode(',',$columns);
+		
+		$values[] = "'{$name}'";
+		$values[] = "'{$homepage}'";
+		$values[] = "'{$phone}'";
+		$values[] = "'{$email}'";
+		$values[] = "'{$description}'";
+		$values[] = "'{$street}'";
+		$values[] = "'{$zip_code}'";
+		$values[] = "'{$city}'";
+		$values[] = "'{$district}'";
+		$values[] = "'{$orgnr}'";
+		$values[] = $this->marshal($activity_id, 'int');
+		$values[] = $show_in_portal;
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO bb_organization ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return $this->db->get_last_insert_id('bb_organization', 'id');
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }
 ?>

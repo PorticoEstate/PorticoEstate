@@ -254,7 +254,8 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		$values = array(
 			'arena_name = '		. $this->marshal($arena->get_arena_name(), 'string'),
 			'address = '     . $this->marshal($arena->get_address(), 'string'),
-			'internal_arena_id =  '     . $this->marshal($arena->get_internal_arena_id(), 'int')
+			'internal_arena_id =  '     . $this->marshal($arena->get_internal_arena_id(), 'int'),
+			'active = '     . $this->marshal(($arena->is_active() ? 'true' : 'false'), 'bool'),
 		);
 		
 		$result = $this->db->query('UPDATE activity_arena SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
