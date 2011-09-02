@@ -341,7 +341,7 @@
 						$contact2['mail'] = $contact_mail_2;
 						$contact2['org_id'] = $this->decode($activity_org);
 						$soactivity->add_contact_person_org($contact2);
-						
+/*						
 						//group-stuff:
 						if($activity_group)
 						{
@@ -369,9 +369,9 @@
 							$activity_persons = activitycalendar_sogroup::get_instance()->get_contacts($new_group_id);
 						}
 						else
-						{
+						{*/
 							$activity_persons = activitycalendar_soorganization::get_instance()->get_contacts($activity_org);
-						}
+						/*}*/
 /*						
 						foreach($activity_persons as $pers)
 						{
@@ -400,7 +400,7 @@
 						*/
 						//$activity_persons = activitycalendar_soorganization::get_instance()->get_contacts($activity_org);
 					}
-					else	//add org unit
+/*					else	//add org unit
 					{
 						$org_info = array();
 						$org_info['name'] = $org_name_tmp; //new
@@ -465,9 +465,9 @@
 						{
 							$activity_persons = activitycalendar_soorganization::get_instance()->get_contacts($new_org_id);
 						}
-					}
+					}*/
 				}
-				else	//add org unit without org no
+/*				else	//add org unit without org no
 				{
 					$org_info = array();
 					if($activity_group && !$activity_group == '')
@@ -535,6 +535,7 @@
 						$activity_persons = activitycalendar_soorganization::get_instance()->get_contacts($new_org_id);
 					}
 				}
+				*/
 				
 				$activity_adapted = $this->decode($data[4]);
 				$activity_target = $this->decode($data[7]);
