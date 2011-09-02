@@ -763,6 +763,11 @@
 				{
 					if($document_entry['link'])
 					{
+						if(!preg_match('/^HTTP/i', $document_entry['link']))
+						{
+							$document_entry['link'] = 'file:///' . str_replace(':','|',$document_entry['link']);
+						}
+
 						$link_view_file=$document_entry['link'];
 						$document_entry['document_name']='link';
 						unset($link_to_files);
@@ -788,8 +793,8 @@
 						if(isset($uicols['datatype']) && isset($uicols['datatype'][$k]) && $uicols['datatype'][$k]=='link' && $document_entry[$uicols['name'][$k]])
 						{
 							$datatable['rows']['row'][$j]['column'][$k]['format'] 		= 'link';
-							$datatable['rows']['row'][$j]['column'][$k]['value']		= $document_entry[$uicols['name'][$k]];
 							$datatable['rows']['row'][$j]['column'][$k]['link']			= $link_view_file;
+							$datatable['rows']['row'][$j]['column'][$k]['value']		= $document_entry[$uicols['name'][$k]];
 							$datatable['rows']['row'][$j]['column'][$k]['target']		= '_blank';
 						}
 					}
