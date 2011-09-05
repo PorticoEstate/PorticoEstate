@@ -399,6 +399,11 @@
 
 		function add($document)
 		{
+			if(isset($document['link']) && $document['link'])
+			{
+				$document['link'] = str_replace('\\' , '/', $document['link']);	
+			}
+
 			while (is_array($document['location']) && list($input_name,$value) = each($document['location']))
 			{
 				if($value)
@@ -441,7 +446,7 @@
 
 			$values= array(
 				$this->db->db_addslashes($document['document_name']),
-				$document['link'],
+				$this->db->db_addslashes($document['link']),
 				$document['title'],
 				'public',
 				$document['doc_type'],
@@ -486,6 +491,12 @@
 
 		function edit($document)
 		{
+
+			if(isset($document['link']) && $document['link'])
+			{
+				$document['link'] = str_replace('\\' , '/', $document['link']);	
+			}
+
 			$receipt = array();
 			$value_set=array();
 			if (isset($document['location']) && is_array($document['location']))
@@ -523,7 +534,7 @@
 			$old_doc_type		= $this->db->f('category');
 			$old_coordinator	= $this->db->f('coordinator');
 			$old_document_name	= $this->db->f('document_name');
-			$old_link			= $this->db->f('link');
+			$old_link			= $this->db->f('link',true);
 			$old_location_code	= $this->db->f('location_code');
 			$old_p_entity_id	= $this->db->f('p_entity_id');
 			$old_p_cat_id		= $this->db->f('p_cat_id');
@@ -560,9 +571,9 @@
 				$document['document_name'] = $document['document_name_orig'];
 			}
 
-			if($old_link !=$document['link'] )
+			if($old_link != $document['link'] )
 			{
-				$this->historylog->add('L',$document['document_id'],$document['link'],$old_link);
+				$this->historylog->add('L',$document['document_id'],$this->db->db_addslashes($document['link']),$old_link);
 				$alter_link=true;
 			}
 
@@ -598,7 +609,7 @@
 			}
 
 			$value_set['document_name']	= $this->db->db_addslashes($document['document_name']);
-			$value_set['link']			= $document['link'];
+			$value_set['link']			= $this->db->db_addslashes($document['link']);
 			$value_set['title']			= $this->db->db_addslashes($document['title']);
 			$value_set['branch_id']		= $document['branch_id'];
 			$value_set['status']		= $document['status'];

@@ -2244,6 +2244,15 @@
 			{
 				unset($data['apply']);
 			}
+			
+			// in case of backslash characters - as in path-references
+			foreach($data as $_key => &$_value)
+			{
+				$_value = str_replace('\\' , '/', $_value);	
+			}
+			unset($_key);
+			unset($_value);
+
 
 			foreach ( $this->location_info['fields'] as $field )
 			{
@@ -2351,6 +2360,7 @@
 
 		function edit($data,$values_attribute)
 		{
+
 			$receipt = array();
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -2358,6 +2368,14 @@
 				$receipt['error'][] = array('msg' => lang('not a valid type'));
 				return $receipt;
 			}
+
+			// in case of backslash characters - as in path-references
+			foreach($data as $_key => &$_value)
+			{
+				$_value = str_replace('\\' , '/', $_value);	
+			}
+			unset($_key);
+			unset($_value);
 
 			$value_set = array();
 
