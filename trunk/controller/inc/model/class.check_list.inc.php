@@ -6,9 +6,11 @@
 		public static $so;
 
 		protected $id;
-		protected $control_item_id;
-		protected $status;
+		protected $control_id;
 		protected $check_list_id;
+		protected $status;
+		protected $comment;
+		protected $deadline;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -28,19 +30,12 @@
 		
 		public function get_id() { return $this->id; }
 
-		public function set_control_item_id($control_item_id)
+		public function set_control_id($control_id)
 		{
-			$this->control_item_id = $control_item_id;
+			$this->control_id = $control_id;
 		}
 		
-		public function get_control_item_id() { return $this->control_item_id; }
-				
-		public function set_status($status)
-		{
-			$this->status = $status;
-		}
-		
-		public function get_status() { return $this->status; }
+		public function get_control_id() { return $this->control_id; }
 		
 		public function set_check_list_id($check_list_id)
 		{
@@ -48,20 +43,28 @@
 		}
 		
 		public function get_check_list_id() { return $this->check_list_id; }
-			
-			
-		/**
-		 * Get a static reference to the storage object associated with this model object
-		 * 
-		 * @return the storage object
-		 */
-		public static function get_so()
+		
+		public function set_status($status)
 		{
-			if (self::$so == null) {
-				self::$so = CreateObject('controller.sopurpose');
-			}
-			
-			return self::$so;
+			$this->status = $status;
 		}
+		
+		public function get_status() { return $this->status; }
+		
+		public function set_comment($comment)
+		{
+			$this->comment = $comment;
+		}
+		
+		public function get_comment() { return $this->comment; }
+		
+		public function set_deadline($deadline)
+		{
+			$this->deadline = $deadline;
+		}
+		
+		public function get_deadline() { return $this->deadline; }
+		
+		
 	}
 ?>
