@@ -893,15 +893,22 @@
 							}
 		myPaginator = new YAHOO.widget.Paginator(myPaginatorConfig);
 
+		var tableHeight = (YAHOO.layout.getUnitByPosition('center').getSizes().wrap.h)/22 + "em"; 
+//		console.log(YAHOO.layout.getUnitByPosition('center').getSizes());
+//		alert(tableHeight);
+
 		var myTableConfig = {
 							initialRequest		: '',//la primera vez ya viene ordenado, por la columna respectiva y solo 15 registros
 							generateRequest		: buildQueryString,
 							dynamicData			: true,
 							sortedBy			: {key:values_ds.sort, dir:values_ds.dir/*dir:YAHOO.widget.DataTable.CLASS_DESC*/},
-							paginator			: myPaginator
+							paginator			: myPaginator,
+							width				: "100%",
+							height				: tableHeight //"30em",
 		};
 		//Create DataTable ; Second call JSON (GET)
-		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+	//	myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+		myDataTable = new YAHOO.widget.ScrollingDataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
 		myDataTable.on('cellMouseoverEvent', function (oArgs)
 		{
