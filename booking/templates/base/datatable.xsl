@@ -115,7 +115,16 @@
                 	<select name="{$name}" onMouseout="window.status='';return true;">
                         <xsl:for-each select="list">
                     		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
-		                    <option value="{$id}"><xsl:value-of select="name"/></option>
+							<xsl:if test="id = 'NEW'">
+		                    	<option value="{$id}" selected="selected">
+									<xsl:value-of select="name"/>
+								</option>
+							</xsl:if>
+							<xsl:if test="id != 'NEW'">
+		                    	<option value="{$id}">
+									<xsl:value-of select="name"/>
+								</option>
+							</xsl:if>
                         </xsl:for-each>
                 	</select>
                     </td>
