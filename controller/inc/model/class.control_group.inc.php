@@ -6,9 +6,7 @@
 		public static $so;
 
 		protected $id;
-		protected $control_item_id;
-		protected $status;
-		protected $check_list_id;
+		protected $group_name;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -28,27 +26,12 @@
 		
 		public function get_id() { return $this->id; }
 
-		public function set_control_item_id($control_item_id)
+		public function set_control_group($control_group)
 		{
-			$this->control_item_id = $control_item_id;
+			$this->control_group = $control_group;
 		}
 		
-		public function get_control_item_id() { return $this->control_item_id; }
-				
-		public function set_status($status)
-		{
-			$this->status = $status;
-		}
-		
-		public function get_status() { return $this->status; }
-		
-		public function set_check_list_id($check_list_id)
-		{
-			$this->check_list_id = $check_list_id;
-		}
-		
-		public function get_check_list_id() { return $this->check_list_id; }
-			
+		public function get_control_group(){ return $this->control_group; }
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -58,7 +41,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller.sopurpose');
+				self::$so = CreateObject('controller_check_item');
 			}
 			
 			return self::$so;
