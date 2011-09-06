@@ -78,6 +78,9 @@
 			$allrows		= phpgw::get_var('allrows', 'bool');
 			$this->p_num	= phpgw::get_var('p_num');
 
+			$start_date		= phpgw::get_var('start_date');
+			$end_date		= phpgw::get_var('end_date');
+
 			if(isset($_POST['start']) || isset($_GET['start']))
 			{
 				$this->start = $start;
@@ -118,6 +121,16 @@
 			{
 				$this->allrows = $allrows;
 			}
+
+			if(array_key_exists('start_date',$_POST) || array_key_exists('start_date',$_GET))
+			{
+				$this->start_date = $start_date;
+			}
+			if(array_key_exists('end_date',$_POST) || array_key_exists('end_date',$_GET))
+			{
+				$this->end_date = $end_date;
+			}
+
 		}
 
 		function save_sessiondata($data)
@@ -140,6 +153,9 @@
 			$this->district_id	= $data['district_id'];
 			$this->cat_id		= $data['cat_id'];
 			$this->status_id	= $data['status_id'];
+			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
+			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
+
 		}
 
 
@@ -378,7 +394,7 @@
 			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
-				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num));
+				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols	= $this->so->uicols;

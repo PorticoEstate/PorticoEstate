@@ -87,6 +87,8 @@
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
 			$this->district_id			= $this->bo->district_id;
+			$this->start_date			= $this->bo->start_date;
+			$this->end_date				= $this->bo->end_date;
 
 			$this->allrows				= $this->bo->allrows;
 			$this->p_num				= $this->bo->p_num;
@@ -104,7 +106,9 @@
 					'cat_id'		=> $this->cat_id,
 					'status_id'		=> $this->status_id,
 					'district_id'	=> $this->district_id,
-					'allrows'		=> $this->allrows
+					'allrows'		=> $this->allrows,
+					'start_date'	=> $this->start_date,
+					'end_date'		=> $this->end_date,
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -193,6 +197,9 @@
 				$lookup	= true;
 			}
 
+			$start_date 	= urldecode($this->start_date);
+			$end_date 		= urldecode($this->end_date);
+
 			$this->save_sessiondata();
 
 			$dry_run = false;
@@ -215,6 +222,9 @@
 						'project_id'	=> $project_id,
 		//				'query'		=> $this->query,
 						'p_num'		=> $this->p_num,
+						'start_date'=> $this->start_date,
+						'end_date' 	=> $this->end_date
+
 					));
 				$datatable['config']['allow_allrows'] = true;
 
@@ -226,6 +236,8 @@
 					."filter:'{$this->filter}',"
 					."status_id:'{$this->status_id}',"
 					."district_id: '{$this->district_id}',"
+					."start_date:'{$this->start_date}',"
+					."end_date: '{$this->end_date}',"
 					."cat_id:'{$this->cat_id}'";
 
 				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
@@ -259,7 +271,10 @@
 								'status_id'			=> $this->status_id,
 								'project_id'		=> $project_id,
 								'district_id'       => $this->district_id,
-								'query'				=> $this->query
+								'query'				=> $this->query,
+								'start_date'		=> $this->start_date,
+								'end_date' 			=> $this->end_date
+
 							)
 						),
 						'fields'	=> array
@@ -324,6 +339,35 @@
 									'value'	=> lang('add'),
 									'tab_index' => 7
 								),
+								array
+								(
+									'type'	=> 'hidden',
+									'id'	=> 'start_date',
+									'value'	=> $start_date
+								),
+								array
+								(
+									'type'	=> 'hidden',
+									'id'	=> 'end_date',
+									'value'	=> $end_date
+								),
+								array
+								(
+									'type'=> 'label_date'
+								),
+								array
+								(
+									'type'=> 'link',
+									'id'  => 'btn_date_search',
+									'url' => "Javascript:window.open('".$GLOBALS['phpgw']->link('/index.php',
+									array
+									(
+										'menuaction' => 'property.uiproject.date_search')
+									)."','','width=350,height=250')",
+									'value' => lang('Date search'),
+									'tab_index' => 9
+								),
+
 								array
 								( //boton     SEARCH
 									'id' => 'btn_search',

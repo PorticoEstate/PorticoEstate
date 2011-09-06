@@ -989,7 +989,7 @@
 		-->
 			<th width="5%" align="center">
 					<xsl:attribute name="title">
-						<xsl:text>Vekt = konfigurerbar verdi for hjelpeberegning av viktighet</xsl:text>
+						<xsl:text>Vekt = konfigurerbar verdi pr konsekvenstype</xsl:text>
 					</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'weight')" />
 			</th>
@@ -1001,7 +1001,7 @@
 			</th>
 			<th width="5%" align="center">
 					<xsl:attribute name="title">
-						<xsl:text>Verdi for hjelp til sortering av viktighet</xsl:text>
+						<xsl:text>Poeng = Tilstandsgrad x Risiko x Vekt</xsl:text>
 					</xsl:attribute>
 
 				<xsl:value-of select="php:function('lang', 'score')" />
