@@ -31,14 +31,20 @@
 
 	var linktoolTips =
 	[
-	    {name:'btn_priority_key', title:'Priority key', description:'To alter the Priority key'}
+	    {name:'btn_priority_key', title:'Priority key', description:'To alter the Priority key'},
+		{name:'btn_date_search', title:'Date search', description:'Narrow the search by dates'}
 	]
 
 	// define the hidden column in datatable
 	var config_values = {
-		date_search : 0 //if search has link "Data search"
+		date_search : 1 //if search has link "Data search"
 	};
 /****************************************************************************************/
+
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+YAHOO.util.Number.format(oData, {thousandsSeparator:" "})+"</div>";
+	}
 
 	this.particular_setting = function()
 	{
