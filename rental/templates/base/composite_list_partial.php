@@ -1,5 +1,9 @@
-<script type="text/javascript">
+<?php
+	$config	= CreateObject('phpgwapi.config','rental');
+	$config->read();
+?>
 
+<script type="text/javascript">
 function checkAvailabitily()
 { 
 	if(document.forms[0].availability_date_to.value == '')
@@ -53,16 +57,30 @@ function checkAvailabitily()
 			label: "<?php echo lang('status') ?>",
 		    sortable: true
 		},
-		{
-			key: "contracts",
-			label: "<?php echo lang('contract_future_info') ?>",
-		    sortable: false
-		},
-		{
-			key: "furnished_status",
-			label: "<?php echo lang('furnish_type') ?>",
-		    sortable: false
-		},
+<?php
+	if(isset($config->config_data['contract_future_info']) && $config->config_data['contract_future_info'])
+	{
+?>
+			{
+				key: "contracts",
+				label: "<?php echo lang('contract_future_info') ?>",
+			    sortable: false
+			},
+<?php
+	}
+	if(isset($config->config_data['contract_furnished_status']) && $config->config_data['contract_furnished_status'])
+	{
+
+?>
+
+			{
+				key: "furnished_status",
+				label: "<?php echo lang('furnish_type') ?>",
+			    sortable: false
+			},
+<?php
+	}
+?>
 		{
 			key: "actions",
 			hidden: true
