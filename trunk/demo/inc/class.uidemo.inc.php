@@ -26,6 +26,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.yui');
 	/**
 	 * Description
 	 * @package demo
@@ -153,6 +154,7 @@
 			$this->cat_id			= $this->bo->cat_id;
 			$this->filter			= $this->bo->filter;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'demo';
+			$this->bocommon		= CreateObject('property.bocommon');
 		}
 
 		private function save_sessiondata()
@@ -326,171 +328,333 @@
 				$this->no_access();
 				return;
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','nextmatchs',
-										'search_field'));
-
-			$demo_info = $this->bo->read2();
-
-			$uicols	= $this->bo->uicols;
-//_debug_array($uicols);
-			$j=0;
-
-			if (isset($demo_info) && is_array($demo_info))
+			if(!$this->acl_read)
 			{
-				foreach($demo_info as $entry)
-				{
-					for ($i=0;$i<count($uicols['name']);$i++)
-					{
-						if($uicols['input_type'][$i]!='hidden')
-						{
-							$content[$j]['row'][$i]['value'] 		= $entry[$uicols['name'][$i]];
-							$content[$j]['row'][$i]['name'] 		= $uicols['name'][$i];
-							if($uicols['input_type'][$i]=='link')
-							{
-								$content[$j]['row'][$i]['text']		= lang('link');
-								$content[$j]['row'][$i]['link']		= $entry[$uicols['name'][$i]];
-								$content[$j]['row'][$i]['target']	= '_blank';
-							}
-						}
-					}
-
-					if($this->acl_read)
-					{
-						$content[$j]['row'][$i]['statustext']			= lang('view the record');
-						$content[$j]['row'][$i]['text']					= lang('view');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.view','demo_id'=> $entry['id']));
-					}
-					if($this->acl_edit)
-					{
-						$content[$j]['row'][$i]['statustext']			= lang('edit the record');
-						$content[$j]['row'][$i]['text']					= lang('edit');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.edit', 'demo_id'=> $entry['id']));
-					}
-					if($this->acl_delete)
-					{
-						$content[$j]['row'][$i]['statustext']			= lang('delete the record');
-						$content[$j]['row'][$i]['text']					= lang('delete');
-						$content[$j]['row'][$i++]['link']				= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.delete', 'demo_id'=> $entry['id']));
-					}
-
-					$j++;
-				}
+				$this->bocommon->no_access();
+				return;
 			}
 
-			for ($i=0;$i<count($uicols['descr']);$i++)
+			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', "demo_receipt");
+			$this->save_sessiondata();
+
+			$datatable = array();
+
+			$dry_run = false;
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
 			{
-				if($uicols['input_type'][$i]!='hidden')
-				{
-					$table_header[$i]['header'] 	= $uicols['descr'][$i];
-					$table_header[$i]['width'] 		= '5%';
-					$table_header[$i]['align'] 		= 'center';
-					if($uicols['datatype'][$i]!='T' && $uicols['datatype'][$i]!='CH')
-					{
-						$table_header[$i]['sort_link']	=true;
-						$table_header[$i]['sort'] 		= $this->nextmatches->show_sort_order(array
+				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
+				(
+					'menuaction'	=> 'demo.uidemo.index2'
+				));
+
+				$datatable['config']['base_java_url'] = "menuaction:'demo.uidemo.index2'";
+
+				$link_data = array
+				(
+					'menuaction'	=> 'demo.uidemo.index2'
+				);
+
+
+				$datatable['config']['allow_allrows'] = true;
+
+				$values_combo_box = array();
+				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format'=>'filter','selected' => $this->cat_id,'globals' => true,'use_acl' => $this->_category_acl));
+				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
+				array_unshift ($values_combo_box[0]['cat_list'],$default_value);
+
+				$datatable['actions']['form'] = array
+					(
+						array
 						(
-							'sort'	=> $this->sort,
-							'var'	=> $uicols['name'][$i],
-							'order'	=> $this->order,
-							'extra'	=> array
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
 							(
-								 'menuaction'	=> 'demo.uidemo.index2',
-								 'query'			=> $this->query,
-								 'cat_id'		=> $this->cat_id,
-								 'filter'		=> $this->filter,
-								 'output'		=> $output,
-								 'allrows'		=> $this->allrows
+								'menuaction'	=> 'demo.uidemo.index2'
 							)
-						));
-					}
-				}
+						),
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton 	CATEGORY
+									'id' => 'btn_cat_id',
+									'name' => 'cat_id',
+									'value'	=> lang('Category'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_export',
+									'value'	=> lang('download'),
+									'tab_index' => 10
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_done',
+									'value'	=> lang('done'),
+									'tab_index' => 9
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 8
+								),
+								array
+								( //button     SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 7
+								),
+								array
+								( // TEXT INPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => $this->query,
+									'type' => 'text',
+									'onkeypress' => 'return pulsar(event)',
+									'size'    => 28,
+									'tab_index' => 6
+								)
+							),
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $this->bocommon->select2String($values_combo_box[0]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								)
+							)
+						)
+					)
+				);
+
+//				$dry_run = false;
 			}
 
-			if($this->acl_read)
+			$values = $this->bo->read2($dry_run);
+
+			$uicols = $this->bo->uicols;
+
+			$j = 0;
+			$count_uicols_name = count($uicols['name']);
+
+			foreach($values as $entry)
 			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('view');
-				$i++;
+				for ($k=0;$k<$count_uicols_name;$k++)
+				{
+					if($uicols['input_type'][$k]!='hidden')
+					{
+						$datatable['rows']['row'][$j]['column'][$k]['name'] 		= $uicols['name'][$k];
+						$datatable['rows']['row'][$j]['column'][$k]['value']		= $entry[$uicols['name'][$k]];
+						$datatable['rows']['row'][$j]['column'][$k]['format']		= $uicols['datatype'][$k];
+					}
+				}
+				$j++;
 			}
+
+			$datatable['rowactions']['action'] = array();
+
+			$parameters = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name'		=> 'demo_id',
+							'source'	=>  'id'
+						),
+					)
+				);
+
 			if($this->acl_edit)
 			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('edit');
-				$i++;
-			}
-			if($this->acl_delete)
-			{
-				$table_header[$i]['width'] 			= '5%';
-				$table_header[$i]['align'] 			= 'center';
-				$table_header[$i]['header']			= lang('delete');
-				$i++;
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 		=> 'edit',
+						'statustext' 	=> lang('edit the entry'),
+						'text'			=> lang('edit'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'demo.uidemo.edit'
+						)),
+						'parameters'	=> $parameters
+					);
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name'		=> 'edit',
+						'text' 			=> lang('open edit in new window'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'demo.uidemo.edit',
+							'target'			=> '_blank'
+						)),
+						'parameters'	=> $parameters
+					);
 			}
 
+			if($this->acl_delete)
+			{
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 		=> 'delete',
+						'statustext' 	=> lang('delete the entry'),
+						'text'			=> lang('delete'),
+						'confirm_msg'	=> lang('do you really want to delete this entry'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'demo.uidemo.delete'
+						)),
+						'parameters'	=> $parameters
+					);
+			}
+			unset($parameters);
 
 			if($this->acl_add)
 			{
-				$table_add[] = array
-				(
-					'lang_add'				=> lang('add'),
-					'lang_add_statustext'	=> lang('add a demo'),
-					'add_action'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'demo.uidemo.edit','output'=>$output)),
-				);
+				$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 			=> 'add',
+						'statustext' 	=> lang('add'),
+						'text'			=> lang('add'),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'	=> 'demo.uidemo.edit',
+							'type'			=> $this->type,
+							'type_id'		=> $this->type_id
+						))
+					);
 			}
 
-			if(!$this->allrows)
+			for ($i=0;$i<$count_uicols_name;$i++)
 			{
-				$record_limit	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+				if($uicols['input_type'][$i]!='hidden')
+				{
+					$datatable['headers']['header'][$i]['formatter'] 		= ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+					$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+					$datatable['headers']['header'][$i]['visible'] 			= true;
+					$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
+					$datatable['headers']['header'][$i]['sort_field']   	= $uicols['name'][$i];
+				}
+			}
+
+			//path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->bo->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($values);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			$appname			=  $this->location_info['name'];
+			$function_msg		= lang('list %1', $appname);
+
+			if ( ($this->start == 0) && (!$this->order))
+			{
+				$datatable['sorting']['order'] 			=  $this->location_info['id']['name']; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'asc'; // ASC / DESC
 			}
 			else
 			{
-				$record_limit	= $this->bo->total_records;
+				$datatable['sorting']['order']			= $this->order; // name of column of Database
+				$datatable['sorting']['sort'] 			= $this->sort; // ASC / DESC
 			}
 
-			$link_data = array
-			(
-				'menuaction'	=> 'demo.uidemo.index2',
-				'sort'			=> $this->sort,
-				'order'			=> $this->order,
-				'cat_id'		=> $this->cat_id,
-				'filter'		=> $this->filter,
-				'query'			=> $this->query,
-				'output'		=> $output
-			);
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+					'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+				);
 
-			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== 'link' && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='{$column['link']}' onclick='javascript:filter_data(this.id);'>{$column['value']}</a>";
+						}
+						else if(isset($column['format']) && $column['format']== 'link')
+						{
+							$json_row[$column['name']] = "<a href='{$column['value']}' target='_blank'>" .lang('link') . '</a>';
+						}
+						else if(isset($column['format']) && $column['format']== 'text')
+						{
+							$json_row[$column['name']] = nl2br($column['value']);
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
 
-			$data = array
-			(
-				'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'cat_filter'							=> $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => true,'link_data' => $link_data)),
-				'filter_data'							=> $this->nextmatches->xslt_filter(array('filter' => $this->filter,'link_data' => $link_data)),
-				'allow_allrows'							=> true,
-				'allrows'								=> $this->allrows,
-				'start_record'							=> $this->start,
-				'record_limit'							=> $record_limit,
-				'num_records'							=> ($demo_info?count($demo_info):0),
-				'all_records'							=> $this->bo->total_records,
-				'link_url'								=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'img_path'								=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
-				'lang_searchfield_statustext'			=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext'			=> lang('Submit the search string'),
-				'query'									=> $this->query,
-				'lang_search'							=> lang('search'),
-				'table_header'							=> $table_header,
-				'table_add'								=> $table_add,
-				'values'								=> (isset($content)?$content:'')
-			);
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json['rights'] = $datatable['rowactions']['action'];
+			}
 
-//_debug_array($data);
-			$function_msg= lang('list demo values');
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo'). ": {$function_msg}";
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array("list2_{$output}" => $data));
-			$this->save_sessiondata();
+			$datatable['json_data'] = json_encode($json);
+			//-------------------- JSON CODE ----------------------
+
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+			if ( !isset($GLOBALS['phpgw']->css) || !is_object($GLOBALS['phpgw']->css) )
+			{
+				$GLOBALS['phpgw']->css = createObject('phpgwapi.css');
+			}
+
+			$GLOBALS['phpgw']->css->validate_file('datatable');
+			$GLOBALS['phpgw']->css->validate_file('property');
+			$GLOBALS['phpgw']->css->add_external_file('property/templates/base/css/property.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'demo.index', 'demo' );
 		}
 
 
@@ -625,6 +789,28 @@
 				'output'		=> $output
 			);
 
+			$generic_list_1 = array();
+			for ($i=1;$i<9;$i++)
+			{
+				$generic_list_1[] = array
+				(
+					'id'	=> $i,
+					'name'	=> "Element A {$i}"
+				);
+			}
+			$generic_list_1[2]['selected'] = 1;
+
+			$generic_list_2 = array();
+			for ($i=1;$i<4;$i++)
+			{
+				$generic_list_2[] = array
+				(
+					'id'	=> $i,
+					'name'	=> "Element B {$i}"
+				);
+			}
+
+			
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
 
 			$data = array
@@ -636,34 +822,19 @@
 				'value_town'					=> (isset($values['town'])?$values['town']:''),
 				'value_remark'					=> (isset($values['remark'])?$values['remark']:''),
 
-				'lang_entry_date'				=> lang('Entry date'),
-				'lang_name'						=> lang('name'),
-				'lang_address'					=> lang('address'),
-				'lang_zip'						=> lang('zip'),
-				'lang_town'						=> lang('town'),
-				'lang_remark'					=> lang('remark'),
-
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-				'lang_id'						=> lang('training ID'),
-				'lang_save'						=> lang('save'),
-				'lang_cancel'					=> lang('cancel'),
 				'value_id'						=> $demo_id,
-				'lang_done_status_text'			=> lang('Back to the list'),
-				'lang_save_status_text'			=> lang('Save the training'),
-				'lang_apply'					=> lang('apply'),
-				'lang_apply_status_text'		=> lang('Apply the values'),
 
-				'lang_category'					=> lang('category'),
-				'lang_no_cat'					=> lang('no category'),
 				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => (isset($values['cat_id'])?$values['cat_id']:''))),
 				'attributes_values'				=> $values['attributes'],
-
-				'lang_access'					=> lang('private'),
-				'value_access'					=> (isset($values['access'])?$values['access']:''),
-				'lang_access_off_statustext'	=> lang('The note is public. If the note should be private, check this box'),
-				'lang_access_on_statustext'		=> lang('The note is private. If the note should be public, uncheck this box')
+				'value_access'					=> isset($values['access'])?$values['access']:'',
+				'generic_list_1'				=> array('options' => $generic_list_1),
+				'generic_list_2'				=> array('options' => $generic_list_2),
 			);
+
+			$GLOBALS['phpgw']->richtext->replace_element('remark');
+			$GLOBALS['phpgw']->richtext->generate_script();
 
 			$appname		= lang('demo');
 
