@@ -1314,19 +1314,19 @@
 				);
 
 
-
-			$_predisposed = 0;
+			$_consume_amount = 0;
+			$_planning_amount = 0;
 			if($this->acl_edit)
 			{
 				$_lang_delete = lang('Check to delete');
 				foreach($values['consume'] as & $consume)
 				{
-					$_predisposed = $_predisposed + $consume['amount'];
+					$_consume_amount = $_consume_amount + $consume['amount'];
 					$consume['delete'] = "<input type='checkbox' name='values[delete_consume][]' value='{$consume['id']}' title='{$_lang_delete}'>";
 				}
 				foreach($values['planning'] as & $planning)
 				{
-					$_predisposed = $_predisposed + $planning['amount'];
+					$_planning_amount = $_planning_amount + $planning['amount'];
 					$planning['delete'] = "<input type='checkbox' name='values[delete_planning][]' value='{$planning['id']}' title='{$_lang_delete}'>";
 				}
 
@@ -1481,7 +1481,8 @@
 					'lang_budget'						=> lang('Budget'),
 					'value_budget'						=> number_format($values['budget'], 0, ',', ' '),
 					'lang_budget_statustext'			=> lang('Enter the budget'),
-					'value_diff'						=> number_format(((int)$values['budget'] - $_predisposed), 0, ',', ' '),
+					'value_diff'						=> number_format(((int)$values['budget'] - ($_consume_amount + $_planning_amount)), 0, ',', ' '),
+					'value_diff2'						=> number_format(((int)$values['budget'] - $_consume_amount), 0, ',', ' '),
 
 					'location_data'						=> $location_data,
 					'location_type'						=> 'form',

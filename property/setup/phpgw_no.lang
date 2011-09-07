@@ -1098,6 +1098,7 @@ no role	property	no	Rolle ikke valgt
 no status	property	no	Status ikke valgt
 no such order: %1	property	no	Ordre %1 finnes ikke
 no supervisor	property	no	Attestant ikke valgt
+not allocated	property	no	Ikke disponert
 note	property	no	Notat
 nothing to do!	property	no	Ingen ting å gjøre
 notify	property	no	varsle
@@ -1320,6 +1321,7 @@ reserve	property	no	reserve
 reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
+residual demand	property	no	Rest behov
 responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
