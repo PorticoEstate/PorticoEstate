@@ -125,8 +125,8 @@
 				),
 				'alternative'	=> array
 				(
-					'text'	=> lang('Alternative'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index2', 'output' => 'html'))
+					'text'	=> 'YAHOO-table',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'demo.uidemo.index2'))
 				)
 			);
 			return $menus;
