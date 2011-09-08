@@ -758,13 +758,13 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','demo_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index', 'output'=> $output));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index2', 'output'=> $output));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index', 'output'=> $output));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index2', 'output'=> $output));
 				}
 			}
 
@@ -874,7 +874,7 @@
 				'value_id'						=> $demo_id,
 
 				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => (isset($values['cat_id'])?$values['cat_id']:''))),
-				'attributes_values'				=> $values['attributes'],
+				'custom_attributes'				=> array('attributes' => $values['attributes']),
 				'value_access'					=> isset($values['access'])?$values['access']:'',
 				'generic_list_1'				=> array('options' => $generic_list_1),
 				'generic_list_2'				=> array('options' => $generic_list_2),
@@ -886,7 +886,9 @@
 				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 				'datatable'						=> $datavalues,
 				'myColumnDefs'					=> $myColumnDefs,
-				'tabs'								=> self::_generate_tabs(),
+				'tabs'							=> self::_generate_tabs(),
+				'textareacols'					=> 60,
+				'textarearows'					=> 10
 			);
 
 			$GLOBALS['phpgw']->richtext->replace_element('remark');
@@ -923,6 +925,7 @@
 				'list'		=> array('label' => lang('list'), 'link' => '#list'),
 				'tables'	=> array('label' => lang('inline tables'), 'link' => '#tables'),
 				'dates'		=> array('label' => lang('dates'), 'link' => '#dates'),
+				'custom'	=> array('label' => lang('custom attributes'), 'link' => '#custom'),
 			);
 
 			phpgwapi_yui::tabview_setup('demo_tabview');

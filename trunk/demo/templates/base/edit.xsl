@@ -101,15 +101,6 @@
 									</textarea>
 								</td>
 							</tr>
-							<xsl:choose>
-								<xsl:when test="attributes_values != ''">
-									<tr>
-										<td colspan="2" align="left">				
-											<xsl:call-template name="attributes_form"/>
-										</td>
-									</tr>
-								</xsl:when>
-							</xsl:choose>
 							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'private')" />
@@ -218,6 +209,11 @@
 									<xsl:value-of disable-output-escaping="yes" select="end_date"/>
 								</td>
 							</tr>
+						</table>
+					</div>
+					<div id="custom">
+						<table>
+							<xsl:apply-templates select="custom_attributes/attributes"/>
 						</table>
 					</div>
 					<table>
