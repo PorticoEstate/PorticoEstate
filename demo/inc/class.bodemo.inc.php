@@ -122,9 +122,8 @@
 		*
 		* @return array Array with records.
 		*/
-		public function read2()
+		public function read2($dry_run = false)
 		{
-			$custom_attributes = $this->custom->find($this->currentapp, $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			$lookup = array
 			(
 				'start'		=> $this->start,
@@ -134,13 +133,13 @@
 				'cat_id'	=> $this->cat_id,
 				'allrows'	=> $this->allrows,
 				'filter'	=> $this->filter,
-				'custom_attributes' => $custom_attributes
+				'dry_run'	=> $dry_run
 			);
 
-			$demo_info = $this->so->read2($lookup);
+			$values = $this->so->read2($lookup);
 			$this->total_records = $this->so->total_records;
 			$this->uicols	= $this->so->uicols;
-			return $demo_info;
+			return $values;
 		}
 
 		public function read_single($id = 0)

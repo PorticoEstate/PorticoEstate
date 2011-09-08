@@ -81,6 +81,24 @@
 			 </select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_contract_future_info}:</td>
+			<td>
+				<select name="newsettings[contract_future_info]">
+					<option value="" {selected_contract_future_info_}>NO</option>
+					<option value="1" {selected_contract_future_info_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_contract_furnished_status}:</td>
+			<td>
+				<select name="newsettings[contract_furnished_status]">
+					<option value="" {selected_contract_furnished_status_}>NO</option>
+					<option value="1" {selected_contract_furnished_status_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_use_fellesdata}:</td>
 			<td>

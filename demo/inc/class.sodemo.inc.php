@@ -49,13 +49,15 @@
 
 		function demo_sodemo($acl_location)
 		{
-			$this->account			=& $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db 				= clone($GLOBALS['phpgw']->db);
+			$this->account			= & $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db 				= & $GLOBALS['phpgw']->db;
 
-			$this->like 			=& $this->db->like;
-			$this->join 			=& $this->db->join;
-			$this->left_join		=& $this->db->left_join;
+			$this->like 			= & $this->db->like;
+			$this->join 			= & $this->db->join;
+			$this->left_join		= & $this->db->left_join;
 			$this->acl_location 	= $acl_location;
+
+			$this->custom 	= createObject('property.custom_fields');
 
 			$this->grants			= $GLOBALS['phpgw']->acl->get_grants('demo', $this->acl_location);
 		}
@@ -157,24 +159,25 @@
 
 		function read2($data)
 		{
-			$db2 = clone($this->db);
+//_debug_array($data);
+			$start		= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$query		= isset($data['query']) ? $data['query'] : '';
+			$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order		= isset($data['order']) ? $data['order'] : '';
+			$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
+			$cat_id 	= isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
+			$filter		= isset($data['filter']) ? $data['filter'] : '';
+			$dry_run	= isset($data['dry_run']) ? $data['dry_run'] : '';
 
-			if(is_array($data))
-			{
-				$start		= isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query		= isset($data['query']) ? $data['query'] : '';
-				$query		= isset($data['query']) ? $data['query'] : '';
-				$sort		= isset($data['sort']) ? $data['sort'] : 'DESC';
-				$order		= isset($data['order']) ? $data['order'] : '';
-				$allrows	= isset($data['allrows']) ? $data['allrows'] : '';
-				$cat_id 	= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$filter		= isset($data['filter']) ? $data['filter'] : '';
-				$custom_attributes	= (isset($data['custom_attributes'])?$data['custom_attributes']:'');
-			}
-
-			$contacts			= CreateObject('phpgwapi.contacts');
+//			$custom_attributes = $this->custom->find('demo', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
 			$table = 'phpgw_demo_table';
+			$choice_table = 'phpgw_cust_choice';
+			$attribute_table = 'phpgw_cust_attribute';
+			$location_id = $GLOBALS['phpgw']->locations->get_id('demo', $this->acl_location);
+			$attribute_filter = " location_id = {$location_id}";
+
 			$where= 'WHERE';
 			$filtermethod = '';
 
@@ -230,6 +233,13 @@
 			$uicols['statustext'][]		= 'Demo ID';
 			$uicols['datatype'][]		= 'I';
 
+			$cols_return[] 				= 'name';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'name';
+			$uicols['descr'][]			= 'Name';
+			$uicols['statustext'][]		= 'Name';
+			$uicols['datatype'][]		= 'V';
+
 			$cols_return[] 				= 'entry_date';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'entry_date';
@@ -255,35 +265,54 @@
 								);
 
 
-			$i	= count($uicols['name']);
-			if(isset($custom_attributes) && is_array($custom_attributes))
-			{
-				foreach($custom_attributes as $column_info)
+				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['demo']['columns'])?$GLOBALS['phpgw_info']['user']['preferences']['demo']['columns']:array();
+				
+				$_user_columns = array();
+				foreach ($user_columns as $user_column_id)
 				{
-					if($column_info['list'])
+					if(ctype_digit($user_column_id))
 					{
-						if($column_info['datatype'] == 'link')
-						{
-							$uicols['input_type'][]		= 'link';
-						}
-						else
-						{
-							$uicols['input_type'][]		= 'text';
-						}
-						$cols_return[] 				= $column_info['column_name'];
-						$uicols['name'][]			= $column_info['column_name'];
-						$uicols['descr'][]			= $column_info['input_text'];
-						$uicols['statustext'][]		= $column_info['statustext'];
-						$uicols['datatype'][$i]		= $column_info['datatype'];
-						$cols_return_extra[]= array(
-							'name'	=> $column_info['column_name'],
-							'datatype'	=> $column_info['datatype'],
-							'attrib_id'	=> $column_info['id']
-						);
-						$i++;
+						$_user_columns[] = $user_column_id;
 					}
 				}
-			}
+				$user_column_filter = '';
+				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+				{
+					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
+				}
+
+				$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ORDER BY group_id, attrib_sort ASC");
+
+				$i	= count($uicols['name']);
+				while ($this->db->next_record())
+				{
+					$uicols['input_type'][]		= 'text';
+					$uicols['name'][]			= $this->db->f('column_name');
+					$uicols['descr'][]			= $this->db->f('input_text');
+					$uicols['statustext'][]		= $this->db->f('statustext');
+					$uicols['datatype'][$i]		= $this->db->f('datatype');
+					$uicols['sortable'][$i]		= true;
+					$uicols['exchange'][$i]		= false;
+					$uicols['formatter'][$i]	= '';
+					$uicols['classname'][$i]	= '';
+
+					$uicols['cols_return_extra'][$i] = array
+						(
+							'name'	=> $this->db->f('column_name'),
+							'datatype'	=> $this->db->f('datatype'),
+							'attrib_id'	=> $this->db->f('id')					
+						);
+
+
+					$cols_return_extra[]= array(
+						'name'	=> $this->db->f('column_name'),
+						'datatype'	=> $this->db->f('datatype'),
+						'attrib_id'	=> $this->db->f('id')
+					);
+
+					$i++;
+				}
+
 
 			$this->uicols	= $uicols;
 
@@ -291,6 +320,11 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
+
+			if($dry_run)
+			{
+				return array();
+			}
 
 			$sql = "SELECT * FROM $table $filtermethod $querymethod $ordermethod";
 			if ( $allrows )
@@ -302,84 +336,28 @@
 				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 
-			$demo_info = '';
+			$values = array();
+			$cols_return = $uicols['name'];
 
-			$j=0;
-			$n=count($cols_return);
-
+			$dataset = array();
+			$row = 0;
 			while ($this->db->next_record())
 			{
-				for ($i=0;$i<$n;$i++)
+				foreach($cols_return as $key => $field)
 				{
-					$demo_info[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$demo_info[$j]['grants'] = (int)$this->grants[$this->db->f('user_id')];
+					$dataset[$row][$field] = array
+					(
+						'value'		=> $this->db->f($field),
+						'datatype'	=> $uicols['datatype'][$key],
+						'attrib_id'	=> $uicols['cols_return_extra'][$key]['attrib_id']
+					);
 				}
-
-				for ($i=0;$i<count($cols_return_extra);$i++)
-				{
-					$value='';
-					$value=$this->db->f($cols_return_extra[$i]['name']);
-
-					if(($cols_return_extra[$i]['datatype']=='R' || $cols_return_extra[$i]['datatype']=='LB') && $value)
-					{
-						$sql="SELECT value FROM phpgw_cust_choice WHERE appname= 'demo' AND location= '{$this->acl_location}' AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $value;
-						$db2->query($sql);
-						$db2->next_record();
-						$demo_info[$j][$cols_return_extra[$i]['name']] = $db2->f('value');
-					}
-					else if($cols_return_extra[$i]['datatype']=='AB' && $value)
-					{
-						$contact_data	= $contacts->read_single_entry($value,array('n_given'=>'n_given','n_family'=>'n_family','email'=>'email'));
-						$demo_info[$j][$cols_return_extra[$i]['name']]	= $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-					}
-					else if($cols_return_extra[$i]['datatype']=='VENDOR' && $value)
-					{
-						$sql="SELECT org_name FROM fm_vendor where id=$value";
-						$db2->query($sql);
-						$db2->next_record();
-						$demo_info[$j][$cols_return_extra[$i]['name']] = $db2->f('org_name', true);
-					}
-					else if($cols_return_extra[$i]['datatype']=='CH' && $value)
-					{
-						$ch= unserialize($value);
-
-						if (isset($ch) AND is_array($ch))
-						{
-							for ($k=0;$k<count($ch);$k++)
-							{
-								$sql="SELECT value FROM phpgw_cust_choice WHERE appname= '{'demo'}' AND location= '{$this->acl_location}' AND attrib_id=" .$cols_return_extra[$i]['attrib_id']. "  AND id=" . $ch[$k];
-								$db2->query($sql);
-								while ($db2->next_record())
-								{
-									$ch_value[] = $db2->f('value');
-								}
-							}
-							$demo_info[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
-							unset($ch_value);
-						}
-					}
-					else if($cols_return_extra[$i]['datatype']=='D' && $value)
-					{
-						$demo_info[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],strtotime($value));
-					}
-					else if($cols_return_extra[$i]['datatype']=='timestamp' && $value)
-					{
-						$demo_info[$j][$cols_return_extra[$i]['name']]=date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$value);
-					}
-					else if($cols_return_extra[$i]['datatype']=='user_id' && $value)
-					{
-						$demo_info[$j][$cols_return_extra[$i]['name']]= $GLOBALS['phpgw']->accounts->get($value)->__toString();
-					}
-					else
-					{
-						$demo_info[$j][$cols_return_extra[$i]['name']]=$value;
-					}
-				}
-
-				$j++;
+				$row ++;
 			}
-//_debug_array($demo_info);
-			return $demo_info;
+
+			$values = $this->custom->translate_value($dataset, $location_id);
+
+			return $values;
 		}
 
 		/**

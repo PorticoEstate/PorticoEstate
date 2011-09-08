@@ -349,10 +349,19 @@
 							</tr>
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'at the disposal')" />
+									<xsl:value-of select="php:function('lang', 'not allocated')" />
 								</td>
 								<td>
 									<xsl:value-of select="value_diff"/>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'residual demand')" />
+								</td>
+								<td>
+									<xsl:value-of select="value_diff2"/>
 									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 								</td>
 							</tr>
@@ -989,7 +998,7 @@
 		-->
 			<th width="5%" align="center">
 					<xsl:attribute name="title">
-						<xsl:text>Vekt = konfigurerbar verdi for hjelpeberegning av viktighet</xsl:text>
+						<xsl:text>Vekt = konfigurerbar verdi pr konsekvenstype</xsl:text>
 					</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'weight')" />
 			</th>
@@ -1001,7 +1010,7 @@
 			</th>
 			<th width="5%" align="center">
 					<xsl:attribute name="title">
-						<xsl:text>Verdi for hjelp til sortering av viktighet</xsl:text>
+						<xsl:text>Poeng = Tilstandsgrad x Risiko x Vekt</xsl:text>
 					</xsl:attribute>
 
 				<xsl:value-of select="php:function('lang', 'score')" />

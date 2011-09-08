@@ -1098,6 +1098,7 @@ no role	property	no	Rolle ikke valgt
 no status	property	no	Status ikke valgt
 no such order: %1	property	no	Ordre %1 finnes ikke
 no supervisor	property	no	Attestant ikke valgt
+not allocated	property	no	Ikke disponert
 note	property	no	Notat
 nothing to do!	property	no	Ingen ting å gjøre
 notify	property	no	varsle
@@ -1320,6 +1321,7 @@ reserve	property	no	reserve
 reserve remainder	property	no	rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
+residual demand	property	no	Rest behov
 responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
@@ -1376,7 +1378,7 @@ scale	property	no	Scale
 schedule	property	no	planlegge (tid)
 scheduled events	property	no	Planlagte oppgaver
 schedule the method	property	no	Tidsplanlegging
-score	property	no	poengsum
+score	property	no	Poengsum
 search by bruk. to show all entries, empty all fields and press the submit button again	property	no	Søk etter BruksNr
 search by feste. to show all entries, empty all fields and press the submit button again	property	no	Søk etter FesteNr
 search by gaards nr. to show all entries, empty all fields and press the submit button again	property	no	Søk etter GårdsNr
@@ -1627,7 +1629,7 @@ subject changed	property	no	Emne er endret
 subject has been updated	property	no	Overskrift er oppdatert
 submit the search string	property	no	Send søkestrengen
 sum estimated cost	property	no	Sum estimert kostnad
-sum orders	property	no	Sum bestilling
+sum orders	property	no	Forpliktet, ikke betalt
 sum	property	no	Sum
 sum calculation	property	no	Sum kalkulasjon
 sum deviation	property	no	Sum avvik

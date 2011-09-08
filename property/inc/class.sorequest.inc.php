@@ -27,6 +27,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	 * Description
 	 * @package property
@@ -190,7 +192,7 @@
 
 		function read($data)
 		{
-			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$start			= isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$filter			= isset($data['filter'])?$data['filter']:'';
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -203,6 +205,8 @@
 			$list_descr		= isset($data['list_descr'])?$data['list_descr']:'';
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+			$start_date		= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
+			$end_date		= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -298,7 +302,7 @@
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
-			$uicols['formatter'][]		= '';
+			$uicols['formatter'][]		= 'FormatterRight';
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
@@ -325,7 +329,7 @@
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
-			$uicols['formatter'][]		= '';
+			$uicols['formatter'][]		= 'FormatterRight';
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
@@ -386,6 +390,15 @@
 			{
 				$filtermethod .= " $where  fm_request.status='{$status_id}' ";
 				$where = 'AND';
+			}
+
+			if ($start_date)
+			{
+				$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+				$start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+
+				$filtermethod .= " $where fm_request.start_date >= $start_date AND fm_request.start_date <= $end_date ";
+				$where= 'AND';
 			}
 
 			if ($filter)
