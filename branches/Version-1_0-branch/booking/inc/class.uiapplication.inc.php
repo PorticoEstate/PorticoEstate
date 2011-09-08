@@ -278,7 +278,7 @@
 			} else {
 				if (phpgw::get_var('status') == 'none')
 				{
-					$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED');
+					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
 				} 
 				else
 				{
@@ -311,6 +311,12 @@
 
 			foreach($applications['results'] as &$application)
 			{
+				if (strstr($application['building_name'],"%")){
+					$search = array('%2C','%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
+					$replace = array (',','Å','å','Ø','ø','Æ','æ');
+					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
+				}
+
 				$application['status'] = lang($application['status']);
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);

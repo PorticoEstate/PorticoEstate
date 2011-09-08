@@ -1347,7 +1347,8 @@
 				'planned_cost' => array('type' => 'int','precision' => '4','nullable' => True, 'default' => '0'),
 				'account_id' => array('type' => 'varchar','precision' => '20','nullable' => True),
 				'ecodimb' => array('type' => 'int','precision' => 4,'nullable' => True),
-				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True)
+				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'account_group' => array('type' => 'int','precision' => 4,'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
