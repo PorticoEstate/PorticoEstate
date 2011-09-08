@@ -893,7 +893,15 @@
 							}
 		myPaginator = new YAHOO.widget.Paginator(myPaginatorConfig);
 
-		var tableHeight = (YAHOO.layout.getUnitByPosition('center').getSizes().wrap.h)/22 + "em"; 
+		if (typeof YAHOO.layout === 'undefined')
+		{
+			var tableHeight = "30em";
+		}
+		else
+		{
+			var tableHeight = (YAHOO.layout.getUnitByPosition('center').getSizes().wrap.h)/22 + "em";
+		}
+
 //		console.log(YAHOO.layout.getUnitByPosition('center').getSizes());
 //		alert(tableHeight);
 
