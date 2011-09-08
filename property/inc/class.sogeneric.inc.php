@@ -684,7 +684,7 @@
 								'name'			=> 'member_of',
 								'descr'			=> lang('member'),
 								'type'			=> 'multiple_select',
-								'nullable'		=> false,
+								'nullable'		=> true,
 								'filter'		=> true,
 								'sortable'		=> false,
 								'hidden'		=> true,
