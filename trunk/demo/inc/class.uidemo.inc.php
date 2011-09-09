@@ -26,6 +26,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('rental.socontract');
 	phpgw::import_class('phpgwapi.yui');
 	/**
 	 * Description
@@ -857,11 +858,11 @@
 													array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
 			);
 
-
 			$msgbox_data = isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'';
 
 			$data = array
 			(
+				'contract'						=> rental_socontract::get_instance()->get_single(19)->toArray(),
 				'value_entry_date'				=> isset($values['entry_date'])?$values['entry_date']:'',
 				'value_name'					=> isset($values['name'])?$values['name']:'',
 				'value_address'					=> isset($values['address'])?$values['address']:'',
