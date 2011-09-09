@@ -18,6 +18,23 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'contract id')" />
+								</td>
+								<td>
+									<xsl:value-of select="contract/id"/>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'old contract id')" />
+								</td>
+								<td>
+									<xsl:value-of select="contract/old_contract_id"/>
+								</td>
+							</tr>
+
 							<xsl:choose>
 								<xsl:when test="value_id != ''">
 								<tr>
