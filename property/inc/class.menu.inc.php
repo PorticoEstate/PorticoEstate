@@ -665,7 +665,7 @@
 
 			if ( $acl->check('.project', PHPGW_ACL_READ, 'property') )
 			{
-
+/*
 				$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.project');
 				$cats->supress_info	= true;
 
@@ -682,7 +682,7 @@
 					
 					);	
 				}
-
+*/
 				$menus['navigation']['project'] = array
 					(
 						'url'		=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
@@ -695,7 +695,7 @@
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.index')),
 								'text'	=> lang('Project'),
 								'image'		=> array('property', 'project'),
-								'children'	=> $project_children
+						//		'children'	=> $project_children
 							),
 							'workorder'	=> array
 							(
@@ -769,12 +769,21 @@
 						'image'	=> array('property', 'invoice'),
 						'children'	=> array_merge(array
 						(
+							'deposition'	=> array
+							(
+								'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.reporting', 'type' => 'deposition')),
+								'text'	=> lang('deposition')
+							),
+							'reconciliation'	=> array
+							(
+								'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.reporting', 'type' => 'reconciliation')),
+								'text'	=> lang('reconciliation')
+							),
 							'paid'		=> array
 							(
 								'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index', 'paid'=>true)),
 								'text'	=> lang('Paid')
 							),
-							// Should this be process? skwashd jan08
 							'consume'	=> array
 							(
 								'url'	=>	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.consume')),
