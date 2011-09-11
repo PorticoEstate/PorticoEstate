@@ -71,6 +71,38 @@
 			$bill_only_one_time = false;
 		}
 		
+		public function toArray()
+		{
+
+// Alternative 1
+//			return get_object_vars($this);
+
+// Alternative 2
+			$exclude = array
+			(
+				'get_available_composites', // feiler
+				'get_contracts_for_composite', // feiler
+				'get_field', // feiler (foreldreklassen)
+				'get_so',//unødvendig
+				'get_composites', //returnerer objekt
+				'get_parties' //returnerer objekt
+			);
+			
+			$class_methods = get_class_methods($this);
+			$contract_arr = array();
+			foreach ($class_methods as $class_method)
+			{
+				if( stripos($class_method , 'get_' ) === 0  && !in_array($class_method, $exclude))
+				{
+					$_class_method_part = explode('get_', $class_method);
+					$contract_arr[$_class_method_part[1]] = $this->$class_method();
+				}
+			}
+
+//			_debug_array($contract_arr);
+			return $contract_arr;
+		}
+
 		public function set_id($id)
 		{
 			$this->id = $id;

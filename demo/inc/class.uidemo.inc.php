@@ -26,6 +26,7 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('rental.socontract');
 	phpgw::import_class('phpgwapi.yui');
 	/**
 	 * Description
@@ -683,8 +684,6 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('demo','attributes_form'));
-
 			if (isset($values) && is_array($values))
 			{
 				if(!$this->acl_edit)
@@ -706,6 +705,11 @@
 
 				if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 				{
+					if($GLOBALS['phpgw']->session->is_repost())
+					{
+						$receipt['error'][]=array('msg'=>lang('Hmm... looks like a repost!'));
+					}
+
 					if(!$values['cat_id'] || $values['cat_id'] == 'none')
 					{
 						$receipt['error'][]=array('msg'=>lang('Please select a category!'));
@@ -755,13 +759,13 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data','demo_receipt',$receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index', 'output'=> $output));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index2', 'output'=> $output));
 						}
 					}
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index', 'output'=> $output));
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'=> 'demo.uidemo.index2', 'output'=> $output));
 				}
 			}
 
@@ -810,27 +814,82 @@
 				);
 			}
 
+ 			// date 1 (jscalendar)
+ 			execMethod('phpgwapi.jscalendar.add_listener','values_start_date');
+
+			// date 2 (YUI)
+			$end_date = $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time()));
+
+
+
+
+			//inline tables
+			$values['consume'][] = array
+			(
+				'amount'	=> 123456,
+				'date'		=> 2012,
+				'delete'	=> ''
+			);
+			$values['consume'][] = array
+			(
+				'amount'	=> 6789012,
+				'date'		=> 2013,
+				'delete'	=> ''
+			);
 			
-			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
+			
+			$datavalues[0] = array
+			(
+				'name'					=> "0",
+				'values' 				=> json_encode($values['consume']),
+				'total_records'			=> count($values['consume']),
+				'edit_action'			=> "''",
+				'is_paginator'			=> 1,
+				'footer'				=> 0
+			);
+
+
+
+			$myColumnDefs[0] = array
+			(
+				'name'		=> "0",
+				'values'	=>	json_encode(array(	array('key' => 'amount','label'=>lang('amount'),'sortable'=>true,'resizeable'=>true, 'formatter' => FormatterRight),
+													array('key' => 'date','label'=>lang('date'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'delete','label'=>lang('delete'),'sortable'=>false,'resizeable'=>false)))
+			);
+
+			$msgbox_data = isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'';
 
 			$data = array
 			(
-				'value_entry_date'				=> (isset($values['entry_date'])?$values['entry_date']:''),
-				'value_name'					=> (isset($values['name'])?$values['name']:''),
-				'value_address'					=> (isset($values['address'])?$values['address']:''),
-				'value_zip'						=> (isset($values['zip'])?$values['zip']:''),
-				'value_town'					=> (isset($values['town'])?$values['town']:''),
-				'value_remark'					=> (isset($values['remark'])?$values['remark']:''),
+				'contract'						=> rental_socontract::get_instance()->get_single(19)->toArray(),
+				'value_entry_date'				=> isset($values['entry_date'])?$values['entry_date']:'',
+				'value_name'					=> isset($values['name'])?$values['name']:'',
+				'value_address'					=> isset($values['address'])?$values['address']:'',
+				'value_zip'						=> isset($values['zip'])?$values['zip']:'',
+				'value_town'					=> isset($values['town'])?$values['town']:'',
+				'value_remark'					=> isset($values['remark'])?$values['remark']:'',
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'value_id'						=> $demo_id,
 
 				'cat_select'					=> $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]','selected' => (isset($values['cat_id'])?$values['cat_id']:''))),
-				'attributes_values'				=> $values['attributes'],
+				'custom_attributes'				=> array('attributes' => $values['attributes']),
 				'value_access'					=> isset($values['access'])?$values['access']:'',
 				'generic_list_1'				=> array('options' => $generic_list_1),
 				'generic_list_2'				=> array('options' => $generic_list_2),
+
+				'value_start_date'				=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time()),
+				'img_cal'						=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'end_date'						=> $end_date,
+				//inline tables
+				'property_js'					=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
+				'datatable'						=> $datavalues,
+				'myColumnDefs'					=> $myColumnDefs,
+				'tabs'							=> self::_generate_tabs(),
+				'textareacols'					=> 60,
+				'textarearows'					=> 10
 			);
 
 			$GLOBALS['phpgw']->richtext->replace_element('remark');
@@ -839,8 +898,42 @@
 			$appname		= lang('demo');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('demo') . " - {$appname}: {$function_msg}";
+			$GLOBALS['phpgw']->xslttpl->add_file(array('edit','attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
+
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'demo.edit', 'demo' );
+
+			phpgwapi_yui::load_widget('dragdrop');
+			phpgwapi_yui::load_widget('datatable');
+		//	phpgwapi_yui::load_widget('menu');
+			phpgwapi_yui::load_widget('connection');
+			phpgwapi_yui::load_widget('loader');
+			phpgwapi_yui::load_widget('tabview');
+			phpgwapi_yui::load_widget('paginator');
+			phpgwapi_yui::load_widget('animation');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/container/assets/skins/sam/container.css');
+
 		}
+
+
+		protected function _generate_tabs()
+		{
+			$tabs = array
+			(
+				'general'	=> array('label' => lang('general'), 'link' => '#general'),
+				'list'		=> array('label' => lang('list'), 'link' => '#list'),
+				'tables'	=> array('label' => lang('inline tables'), 'link' => '#tables'),
+				'dates'		=> array('label' => lang('dates'), 'link' => '#dates'),
+				'custom'	=> array('label' => lang('custom attributes'), 'link' => '#custom'),
+			);
+
+			phpgwapi_yui::tabview_setup('demo_tabview');
+
+			return  phpgwapi_yui::tabview_generate($tabs, 'general');
+		}
+
 
 		public function view()
 		{

@@ -59,7 +59,8 @@
 				'download'		=> true,
 				'download_sub'	=> true,
 				'receipt'		=> true,
-				'edit'			=> true
+				'edit'			=> true,
+				'reporting'		=> true
 			);
 
 		function property_uiinvoice()
@@ -3296,5 +3297,80 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uis_agreement.view', 'id'=> $order_id));
 					break;
 			}
+		}
+
+		public function reporting()
+		{
+			$acl_location = '.demo_location';
+			if(!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$type	= phpgw::get_var('type', 'string', 'GET', 'deposition');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$type}";
+
+			$values	= phpgw::get_var('values');
+
+			$receipt = array();
+			if($values)
+			{
+	//		_debug_array($values);die();
+			
+				if(isset($values['export_reconciliation']) && $values['export_reconciliation'])
+				{
+					if(!isset($values['periods']))
+					{
+						$type	= 'reconciliation';
+						$receipt['error'][]=array('msg'=>lang('missing values'));
+					}
+					else
+					{
+						$this->bo->export_historical_transactions_at_periods($values['periods']);
+					
+					}
+				}
+				else if(isset($values['export_deposition']) && $values['export_deposition'])
+				{
+					if(!isset($values['deposition']))
+					{
+						$type	= 'deposition';
+						$receipt['error'][]=array('msg'=>lang('nothing to do'));
+					}
+					else
+					{
+						$this->bo->export_deposition();
+					}
+				}
+			}
+
+
+			$tab_info = array
+			(
+				'deposition'		=> array('label' => lang('deposition'), 'link' => '#deposition'),
+				'reconciliation'	=> array('label' => lang('reconciliation'), 'link' => '#reconciliation')
+			);
+
+			phpgwapi_yui::tabview_setup('reporting_tabview');
+
+			$msgbox_data = isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'';
+
+			$data = array
+			(
+				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.reporting')),
+				'accounting_periods'		=> array('options' => $this->bo->get_historical_accounting_periods()),
+				'tabs'						=> phpgwapi_yui::tabview_generate($tab_info, $type)
+			);
+
+			$function_msg = lang('reporting');
+			$appname		= lang('invoice');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice_reporting','attributes_form'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('reporting' => $data));
+
 		}
 	}
