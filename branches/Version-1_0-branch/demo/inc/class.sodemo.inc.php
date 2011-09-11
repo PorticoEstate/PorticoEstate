@@ -427,7 +427,7 @@
 				}
 			}
 
-			if (isset($values_attribute) AND is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
@@ -444,7 +444,7 @@
 							{
 								if($entry['value'] == $entry['value2'])
 								{
-									$cols[]	= $entry['column_name'];
+									$cols[]	= $entry['name'];
 									$vals[]	= md5($entry['value']);
 								}
 								else
@@ -454,7 +454,7 @@
 							}
 							else
 							{
-								$cols[]	= $entry['column_name'];
+								$cols[]	= $entry['name'];
 								$vals[]	= $entry['value'];
 							}
 
@@ -527,7 +527,7 @@
 							{
 								if($entry['value'] == $entry['value2'])
 								{
-									$value_set[$entry['column_name']]	= md5($entry['value']);
+									$value_set[$entry['name']]	= md5($entry['value']);
 								}
 								else
 								{
@@ -537,7 +537,7 @@
 						}
 						else
 						{
-							$value_set[$entry['column_name']]	= $entry['value'];
+							$value_set[$entry['name']]	= $entry['value'];
 						}
 					}
 				}

@@ -498,6 +498,7 @@ delete workorder	property	no	slett bestilling
 delivered	property	no	Levert
 delivery address	property	no	Leveringsadresse
 deposit claim	property	no	Krav mot depositum
+deposition	property	no	Avsetning
 description	property	no	Beskrivelse
 description order	property	no	Bestilling til leverandør
 descr	property	no	Beskrivelse
@@ -1155,6 +1156,7 @@ per cent	property	no	Prosent
 percentage addition	property	no	prosentvis tillegg
 performed	property	no	Utført
 period	property	no	Periode
+periods	property	no	Perioder
 permission	property	no	rettighet
 permissions	property	no	Rettigheter
 permissions are updated!	property	no	rettigheter er oppdatert
@@ -1282,6 +1284,7 @@ re-assigned	property	no	Videresendt
 re-assigned group	property	no	Tildelt ny gruppe
 receipt	property	no	Kvittering
 receipt date	property	no	Kvitteringsdato
+reconciliation	property	no	Avstemming
 record	property	no	Post
 reference level	property	no	Referanse nivå
 regulations	property	no	Forskrifter
@@ -1401,8 +1404,9 @@ select agreement	property	no	Velg avtale
 select agreement group	property	no	Velg en avtale-gruppe
 select agreement_group	property	no	Velg avtalegruppe
 select all	property	no	velg alle
-select a location	property	no	vel en lokalisering
+select a location	property	no	velg en lokalisering
 select a location!	property	no	Velg en lokalisering
+select a value	property	no	velg en verdi
 select a rental agreement type	property	no	Velg en leieavtale-type
 select a service agreement type	property	no	Velg en serviceavtale-type
 select a standard-code from the norwegian standard	property	no	velg en standard NS-kode
