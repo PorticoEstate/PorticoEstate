@@ -456,36 +456,39 @@
 
 			$oRsBilag = $this->get_voucher($voucher_id);
 
-			if(isset($oRsBilag[0]['external_ref']) && $oRsBilag[0]['external_ref'])
+			if(!isset($oRsBilag[0]['external_ref'])  || !$oRsBilag[0]['external_ref'])
 			{
-				//Bestem filnavn
-				$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_ref']);
+				$oRsBilag[0]['external_ref'] = mt_rand();
+			}
+			
+			//Bestem filnavn
+			$Filnavn = $this->LagFilnavn($oRsBilag[0]['external_ref']);
 
-				if (!$Filnavn)
-				{
-					$message='LagFilnavn: Filnavn er i bruk';
-					$this->errorhandler($batchid,$message);
-					return $message;
-				}
+			if (!$Filnavn)
+			{
+				$message='LagFilnavn: Filnavn er i bruk';
+				$this->errorhandler($batchid,$message);
+				return $message;
+			}
 
-				//Test om filen kan opprettes og skrives til
-				if (@fopen($Filnavn, "wb"))
+			//Test om filen kan opprettes og skrives til
+			if (@fopen($Filnavn, "wb"))
+			{
+				unlink($Filnavn);
+			}
+			else
+			{
+				$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
+				if($this->debug)
 				{
-					unlink($Filnavn);
+					echo $message;
 				}
 				else
 				{
-					$message='kan ikke lagre til fil: '. $Filnavn .'<br>';
-					if($this->debug)
-					{
-						echo $message;
-					}
-					else
-					{
-						return $message;
-					}
+					return $message;
 				}
 			}
+
 
 			$antall = count($oRsBilag);
 
@@ -722,11 +725,11 @@
 			//Fullfør transaksjon
 			if ($download=='on' && !$this->debug)
 			{
-				$file_written = true;
+			//	$file_written = true;
 
 			// aktiver neste blokk for a skrive filer for basware
 			// -- Start
-			/* 
+			 
 				$file_written = false;
 				$fp = fopen($Filnavn, "wb");
 				fwrite($fp,$buffer);
@@ -735,7 +738,7 @@
 				{
 					$file_written=true;
 				}
-			*/
+			
 			// -- END
 				if( $file_written && $this->config->config_data['invoice_export_method'] != 'ftp' )
 				{
