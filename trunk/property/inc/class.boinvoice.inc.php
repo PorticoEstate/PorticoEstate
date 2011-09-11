@@ -622,4 +622,31 @@
 			return $this->so->check_role();
 		}
 
+		public function get_historical_accounting_periods()
+		{
+			return $this->so->get_historical_accounting_periods();
+		}
+
+
+		public function export_historical_transactions_at_periods($data = array())
+		{
+			$values =  $this->so->get_historical_transactions_at_periods($data);
+			
+			if($values)
+			{
+				$names = $descr = array_keys($values[0]);
+				$this->bocommon->download($values,$names,$descr);
+			}
+		}
+
+		public function export_deposition()
+		{
+			$values =  $this->so->get_deposition();
+			
+			if($values)
+			{
+				$names = $descr = array_keys($values[0]);
+				$this->bocommon->download($values,$names,$descr);
+			}
+		}
 	}
