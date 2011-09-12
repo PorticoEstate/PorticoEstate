@@ -45,6 +45,7 @@
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->index_json();
 			}
+			self::add_javascript('booking', 'booking', 'allocation_list.js');
 			self::add_javascript('booking', 'booking', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -52,6 +53,24 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
+							array('type' => 'autocomplete', 
+								'name' => 'building',
+								'ui' => 'building',
+								'text' => lang('Building').':',
+								'onItemSelect' => 'updateBuildingFilter',
+								'onClearSelection' => 'clearBuildingFilter'
+							),
+							array('type' => 'autocomplete', 
+								'name' => 'season',
+								'ui' => 'season',
+								'text' => lang('Season').':',
+								'requestGenerator' => 'requestWithBuildingFilter',
+							),
+							array('type' => 'filter', 
+								'name' => 'organizations',
+                                'text' => lang('Organization').':',
+                                'list' => $this->bo->so->get_organizations(),
+							),
 							array('type' => 'text', 
 								'name' => 'query'
 							),
@@ -115,13 +134,49 @@
 						'href' => self::link(array('menuaction' => 'booking.uibooking.add'))
 				));
 			}
-			
+			$data['filters'] = $this->export_filters;
 			self::render_template('datatable', $data);
 		}
 
 		public function index_json()
 		{
-			$bookings = $this->bo->read();
+			if(isset($_SESSION['showall']))
+			{
+        		unset($filters['building_name']);
+                unset($filters['group_id']);
+                unset($filters['season_id']);
+			} else {
+                $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('organizations', 'int', 'REQUEST', null);
+                if ($testdata2 != 0) {
+                    $filters['group_id'] = $this->bo->so->get_group_of_organization(phpgw::get_var('organizations', 'int', 'REQUEST', null));        
+                } else {
+		            unset($filters['group_id']);
+                }
+                $testdata3 =  phpgw::get_var('filter_season_id', 'int', 'REQUEST', null);
+                if ($testdata3 != 0 and $testdata3 != '') {
+                    $filters['season_id'] = $this->bo->so->get_season(phpgw::get_var('filter_season_id', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['season_id']);                
+                }
+            }
+            
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
+ 			$bookings = $this->bo->so->read($params);
+
 			foreach($bookings['results'] as &$booking) {
 				$building = $this->building_bo->read_single($booking['building_id']);
 				$booking['building_name'] = $building['name'];
