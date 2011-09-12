@@ -736,7 +736,10 @@
 					'sort'				=> $datatable['sorting']['order'],
 					'dir'				=> $datatable['sorting']['sort'],
 					'currentPage'		=> $datatable['sorting']['currentPage'],
-					'records'			=> array()
+					'records'			=> array(),
+					'sum_budget'		=> $this->bo->sum_budget,
+					'sum_residual_demand'=> $this->bo->sum_residual_demand
+
 				);
 
 			// values for datatable

@@ -41,6 +41,8 @@
 		var $sort;
 		var $order;
 		var $cat_id;
+		public $sum_budget = 0;
+		public $sum_residual_demand = 0;
 
 		var $public_functions = array
 			(
@@ -395,10 +397,11 @@
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date));
-			$this->total_records = $this->so->total_records;
 
-			$this->uicols	= $this->so->uicols;
-			$cols_extra		= $this->so->cols_extra;
+			$this->total_records	= $this->so->total_records;
+			$this->sum_budget		= $this->so->sum_budget;
+			$this->uicols			= $this->so->uicols;
+			$cols_extra				= $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
