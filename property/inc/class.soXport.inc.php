@@ -316,7 +316,10 @@
 				date($this->db->datetime_format()),
 				$data['item_type'],
 				$data['item_id'],
-				$data['external_ref']
+				$data['external_ref'],
+				$data['currency'],
+				$this->db->db_addslashes($data['process_log']),
+				$data['process_code']
 			);
 
 			$values	= $this->db->validate_insert($values);
@@ -325,7 +328,7 @@
 				. " periode,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
-				. " belop,godkjentbelop,ordrebelop)"
+				. " currency,process_log,process_code,belop,godkjentbelop,ordrebelop)"
 				. "values ($values, "
 				. $this->db->money_format($data['belop']) . ","
 				. $this->db->money_format($data['godkjentbelop']) . ","
