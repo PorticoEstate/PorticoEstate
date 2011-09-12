@@ -443,6 +443,40 @@
 			return $this->db->f('name', false);
 		}
 
+		function get_season($id)
+		{
+			$this->db->limit_query("SELECT id FROM bb_season where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+		}
+
+		function get_group_of_organization($id)
+		{
+            $results = array();
+			$this->db->query("SELECT id FROM bb_group WHERE active = 1 and organization_id=". intval($id), __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->f('id', false);
+			}
+			return $results;
+		}
+
+		function get_organizations()
+		{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id, name FROM bb_organization WHERE active = 1 ORDER BY name ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+		}
+
 		public function find_expired() {
 			$table_name = $this->table_name;
 			$db = $this->db;
