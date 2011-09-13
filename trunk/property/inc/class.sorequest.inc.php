@@ -111,7 +111,7 @@
 			{
 				if($GLOBALS['phpgw_info']['server']['db_type']=='pgsql' || $GLOBALS['phpgw_info']['server']['db_type']=='postgres')
 				{
-					$sql = "UPDATE fm_request SET score = (SELECT sum(priority_key * ( degree * probability * ( consequence )))  FROM fm_request_condition"
+					$sql = "UPDATE fm_request SET score = (SELECT sum(CAST(priority_key as int4) * ( CAST(degree as int4) * CAST(probability as int4) * ( CAST(consequence as int4) )))  FROM fm_request_condition"
 						. " {$this->join}  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) WHERE request_id = {$id}) WHERE fm_request.id = {$id}";
 
 					$this->db->query($sql,__LINE__,__FILE__);
@@ -128,6 +128,7 @@
 					$this->db->query("UPDATE fm_request SET score = $score WHERE id = $id",__LINE__,__FILE__);
 				}
 			}
+			$this->db->query("UPDATE fm_request SET score = 0 WHERE score IS NULL",__LINE__,__FILE__);
 			$this->db->query("UPDATE fm_request SET score = score + {$authorities_demands} WHERE authorities_demands = 1",__LINE__,__FILE__);
 		}
 
