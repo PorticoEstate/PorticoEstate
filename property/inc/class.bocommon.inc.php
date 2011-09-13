@@ -1333,7 +1333,7 @@
 
 			$from = " FROM $paranthesis $entity_table ";
 
-			$sql = "SELECT $cols $from $joinmethod";
+			$sql = "SELECT DISTINCT $cols $from $joinmethod";
 
 			return $sql;
 
