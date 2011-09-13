@@ -46,10 +46,15 @@
 		elCell.innerHTML = "<div align=\"right\">"+YAHOO.util.Number.format(oData, {thousandsSeparator:" "})+"</div>";
 	}
 
+	var tableYUI;
+
 	this.particular_setting = function()
 	{
 		if(flag_particular_setting=='init')
 		{
+			tableYUI = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[0].parentNode;
+			tableYUI.setAttribute("id","tableYUI");
+
 //	console.log(path_values);
 			//district
 			index = locate_in_array_options(0,"value",path_values.district_id);
@@ -145,8 +150,45 @@
 
   	this.myParticularRenderEvent = function()
   	{
-  	//don't delete it
+			tableYUI.deleteTFoot();
+			addFooterDatatable();
   	}
+
+
+  	this.addFooterDatatable = function()
+  	{
+		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+//		tmp_sum_residual_demand = YAHOO.util.Number.format(values_ds.sum_residual_demand, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+
+		count_empty = 0;
+		for(i=0;i<myColumnDefs.length;i++)
+		{
+			if (myColumnDefs[i].key == 'budget')
+			{
+				count_empty = i;
+				break;
+			}
+		}
+
+		count_empty_end = myColumnDefs.length - count_empty;
+
+		//Create ROW
+		newTR = document.createElement('tr');
+
+		td_empty(count_empty);
+		td_sum(tmp_sum_budget);
+	//	td_sum(tmp_sum_residual_demand);
+		td_empty(count_empty_end);
+		//Add to Table
+
+		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR.cloneNode(true));
+
+		//clean value for values_ds.message
+		//values_ds.message = null;
+  	}
+
 
  /****************************************************************************************/
 
@@ -163,9 +205,6 @@
 		execute_ds();
 
   	}
-
-
-
 
 /****************************************************************************************/
 
