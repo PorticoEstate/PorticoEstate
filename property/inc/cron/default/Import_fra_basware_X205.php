@@ -45,7 +45,7 @@
 		var $invoice;
 		var $bestiller = 85; //cat_id for rolle
 		var $attestant = 83; //cat_id for rolle
-		var $budsjettansvarlig = 82; //cat_id for rolle
+		var $budsjettansvarlig = 146; //cat_id for rolle
 		var $default_kostra_id = 9999; //dummy
 
 		var $import = array(
@@ -325,6 +325,13 @@
 					if ($order_info['vendor_id'] != $_data['SUPPLIER.CODE'])
 					{
 						$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
+					}
+
+					$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int) $_data['SUPPLIER.CODE'];
+					$this->db->query($sql,__LINE__,__FILE__);
+					if(!$this->db->next_record())
+					{
+						$this->receipt['error'][] = array('msg' => "Ikke gyldig leverandør id: {$_data['SUPPLIER.CODE']}");
 					}
 
 					$vendor_id = $_data['SUPPLIER.CODE'];

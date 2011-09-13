@@ -222,13 +222,16 @@
 					'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 					'saksigndato'			=> $this->db->f('saksigndato'),
 					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
-					'merknad'				=> $this->db->f('merknad'),
+					'merknad'				=> $this->db->f('merknad',true),
 					'splitt'				=> $this->db->f('splitt'),
 					'ordrebelop'			=> $this->db->f('ordrebelop'),
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
 					'external_ref'			=> $this->db->f('external_ref'),
 					'currency'				=> $this->db->f('currency'),
+					'process_log'			=> $this->db->f('process_log',true),
+					'process_code'			=> $this->db->f('process_code'),					
+
 				);
 			}
 
@@ -275,7 +278,9 @@
 				$BilagOverf['external_ref'],
 				$BilagOverf['belop'],
 				$BilagOverf['godkjentbelop'],
-				$BilagOverf['currency']
+				$BilagOverf['currency'],
+				$this->db->db_addslashes($BilagOverf['process_log']),
+				$BilagOverf['process_code'],
 			);
 			
 			$values	= $this->db->validate_insert($values);
@@ -284,7 +289,7 @@
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
 			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
 			. " periode,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
-			. " item_type,item_id,external_ref,belop,godkjentbelop,currency)"
+			. " item_type,item_id,external_ref,belop,godkjentbelop,currency,process_log,process_code)"
 			. " VALUES ({$values})";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -455,7 +460,7 @@
 			//Velg ut alle hoved bilag som skal overføres
 
 			$oRsBilag = $this->get_voucher($voucher_id);
-
+//_debug_array($oRsBilag);die();
 			if(!isset($oRsBilag[0]['external_ref'])  || !$oRsBilag[0]['external_ref'])
 			{
 				$oRsBilag[0]['external_ref'] = mt_rand();
@@ -807,13 +812,16 @@
 					'oppsynsigndato'		=> $this->db->f('oppsynsigndato'),
 					'saksigndato'			=> $this->db->f('saksigndato'),
 					'budsjettsigndato'		=> $this->db->f('budsjettsigndato'),
-					'merknad'				=> $this->db->f('merknad'),
+					'merknad'				=> $this->db->f('merknad',true),
 					'splitt'				=> $this->db->f('splitt'),
 					'utbetalingid'			=> $this->db->f('utbetalingid'),
 					'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
 					'saksbehandler'			=> $this->db->f('saksbehandler'),
 					'external_ref'			=> $this->db->f('external_ref'),
-					'kostra_id'				=> $this->db->f('kostra_id')
+					'kostra_id'				=> $this->db->f('kostra_id'),
+					'currency'				=> $this->db->f('currency'),
+					'process_log'			=> $this->db->f('process_log',true),
+					'process_code'			=> $this->db->f('process_code'),					
 				);
 			}
 

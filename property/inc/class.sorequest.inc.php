@@ -36,7 +36,9 @@
 
 	class property_sorequest
 	{
-		function property_sorequest()
+		public $sum_budget = 0;
+
+		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->soproject	= CreateObject('property.soproject');
@@ -297,8 +299,8 @@
 			$cols_return[] 				= 'budget';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'budget';
-			$uicols['descr'][]			= lang('budget');
-			$uicols['statustext'][]		= lang('Request budget');
+			$uicols['descr'][]			= lang('cost estimate');
+			$uicols['statustext'][]		= lang('total cost estimate');
 			$uicols['exchange'][]		= '';
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
@@ -442,11 +444,13 @@
 			$this->cols_extra	= $this->bocommon->cols_extra;
 
 			$this->db->fetchmode = 'ASSOC';
-			$sql2 = 'SELECT count(*) as cnt ' . substr($sql,strripos($sql,'from'));
+
+			$sql2 = 'SELECT count(*) as cnt, sum(budget) as sum_budget ' . substr($sql,strripos($sql,'from'));
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
-
+			$this->sum_budget	= $this->db->f('sum_budget');
+			
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if($dry_run)
 			{
