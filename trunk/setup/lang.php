@@ -153,12 +153,14 @@ HTML;
 							. 'FROM phpgw_languages '
 							. 'WHERE lang_id IN('.implode(',', $avail_lang).') ORDER BY lang_name');
 
-			$select_box_langs = '';
+			$checkbox_langs	= '';
 			while ($GLOBALS['phpgw_setup']->db->next_record())
 			{
 				$id = $GLOBALS['phpgw_setup']->db->f('lang_id');
-				$selected = isset($GLOBALS['phpgw_info']['setup']['installed_langs'][$id]) ? ' selected' : '';
-				$select_box_langs .= "<option value=\"$id\"{$selected}>" . $GLOBALS['phpgw_setup']->db->f('lang_name') . "</option>\n";
+				$name = $GLOBALS['phpgw_setup']->db->f('lang_name');
+				$checked = isset($GLOBALS['phpgw_info']['setup']['installed_langs'][$id]) ? ' checked = "checked"' : '';
+
+				$checkbox_langs .="<label><input type=\"checkbox\" name=\"lang_selected[]\" value=\"$id\"$checked>{$name}</label><br>";
 			}
 
 			$GLOBALS['phpgw_setup']->db->query("UPDATE phpgw_languages SET available = 'Yes' WHERE lang_id IN('" . implode("','", $avail_lang) . "'"); 
@@ -188,7 +190,7 @@ HTML;
 			$setup_tpl->set_var('td_align',$td_align);
 			$setup_tpl->set_var('hidden_var1',$hidden_var1);
 			$setup_tpl->set_var('select_box_desc',$select_box_desc);
-			$setup_tpl->set_var('select_box_langs',$select_box_langs);
+			$setup_tpl->set_var('checkbox_langs',$checkbox_langs);
 
 			$setup_tpl->set_var('lang_install',lang('install'));
 			$setup_tpl->set_var('lang_cancel',lang('cancel'));
