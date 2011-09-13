@@ -252,9 +252,8 @@
 						'order'=>'descr'
 					)
 				);
-				$default_value = array ('id'=>'','name'=>lang('no category'));
+				$default_value = array ('id'=>'','name'=>lang('no type'));
 				array_unshift ($values_combo_box[0],$default_value);
-
 
 				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
 				$default_value = array ('id'=>'','name'=>lang('no district'));
