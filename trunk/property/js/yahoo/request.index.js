@@ -2,21 +2,22 @@
 // Declaration of request.index vars
 //--------------------------------------------------------
 	//define SelectButton
- 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3;
+ 	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;
  	var selectsButtons = [
-	{order:0, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
-	{order:1, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
-	{order:2, var_URL:'status_id',name:'btn_status_id',style:'districtbutton',dependiente:''},
-	{order:3, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
+    {order:0, var_URL:'property_cat_id', name:'btn_property_cat',	style:'categorybutton',	dependiente:[]},
+	{order:1, var_URL:'district_id',name:'btn_district_id',style:'districtbutton',dependiente:''},
+	{order:2, var_URL:'cat_id',name:'btn_cat_id',style:'categorybutton',dependiente:''},
+	{order:3, var_URL:'status_id',name:'btn_status_id',style:'districtbutton',dependiente:''},
+	{order:4, var_URL:'filter', name:'btn_user_id',style:'ownerIdbutton',dependiente:''}
 	]
 
 	// define buttons
 	var oNormalButton_0, oNormalButton_1, oNormalButton_2, oNormalButton_3;
 	var normalButtons = [
 	{order:0, name:'btn_search', funct:"onSearchClick"},
-	{order:1, name:'btn_export', funct:"onDownloadClick"},
-	{order:2, name:'btn_update', funct:"onUpdateProject"},
-	{order:3, name:'btn_new', funct:"onNewClick"}
+	{order:1, name:'btn_update', funct:"onUpdateProject"},
+	{order:2, name:'btn_new', funct:"onNewClick"},
+	{order:3, name:'btn_export', funct:"onDownloadClick"}
 	]
 
 	// define Text buttons
@@ -26,7 +27,8 @@
 
 	var toolTips =
 	[
-	 	{name:'btn_export', title:'Download', description:'Download table to your browser',ColumnDescription:''}
+	 	{name:'btn_export', title:'Download', description:'Download table to your browser',ColumnDescription:''},
+	 	{name:'btn_update', title:'Update Project', description:'Update project with selected',ColumnDescription:''}
 	]
 
 	var linktoolTips =
@@ -56,29 +58,36 @@
 			tableYUI.setAttribute("id","tableYUI");
 
 //	console.log(path_values);
-			//district
-			index = locate_in_array_options(0,"value",path_values.district_id);
+
+			index = locate_in_array_options(0,"value",path_values.property_cat_id);
 			if(index)
 			{
 				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
 			}
-			//category
-			index = locate_in_array_options(1,"value",path_values.cat_id);
+
+			//district
+			index = locate_in_array_options(1,"value",path_values.district_id);
 			if(index)
 			{
 				oMenuButton_1.set("label", ("<em>" + array_options[1][index][1] + "</em>"));
 			}
-			//status
-			index = locate_in_array_options(2,"value",path_values.status_id);
+			//category
+			index = locate_in_array_options(2,"value",path_values.cat_id);
 			if(index)
 			{
 				oMenuButton_2.set("label", ("<em>" + array_options[2][index][1] + "</em>"));
 			}
-			//user
-			index = locate_in_array_options(3,"value",path_values.filter);
+			//status
+			index = locate_in_array_options(3,"value",path_values.status_id);
 			if(index)
 			{
 				oMenuButton_3.set("label", ("<em>" + array_options[3][index][1] + "</em>"));
+			}
+			//user
+			index = locate_in_array_options(4,"value",path_values.filter);
+			if(index)
+			{
+				oMenuButton_4.set("label", ("<em>" + array_options[4][index][1] + "</em>"));
 			}
 
 			oMenuButton_0.focus();
@@ -158,7 +167,7 @@
   	this.addFooterDatatable = function()
   	{
 		tmp_sum_budget = YAHOO.util.Number.format(values_ds.sum_budget, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
-//		tmp_sum_residual_demand = YAHOO.util.Number.format(values_ds.sum_residual_demand, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
+		tmp_sum_consume = YAHOO.util.Number.format(values_ds.sum_consume, {decimalPlaces:0, decimalSeparator:",", thousandsSeparator:" "});
 
 		count_empty = 0;
 		for(i=0;i<myColumnDefs.length;i++)
@@ -177,7 +186,7 @@
 
 		td_empty(count_empty);
 		td_sum(tmp_sum_budget);
-	//	td_sum(tmp_sum_residual_demand);
+		td_sum(tmp_sum_consume);
 		td_empty(count_empty_end);
 		//Add to Table
 

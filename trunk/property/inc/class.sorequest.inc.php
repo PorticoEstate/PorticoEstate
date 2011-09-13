@@ -37,7 +37,7 @@
 	class property_sorequest
 	{
 		public $sum_budget = 0;
-
+		public $sum_consume = 0;
 		function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -201,6 +201,7 @@
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id'])?$data['cat_id']:0;
+			$property_cat_id= isset($data['property_cat_id'])?$data['property_cat_id']:0;
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:0;
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id']:0;
 			$project_id		= isset($data['project_id'])?$data['project_id']:'';
@@ -217,10 +218,12 @@
 
 			$entity_table = 'fm_request';
 
-			$cols .= $entity_table . '.location_code';
-			$cols_return[] = 'location_code';
+			$cols .= "{$entity_table}.location_code";
+			$cols_return[] 				= 'location_code';
+			$cols_group[] 				= "{$entity_table}.location_code";
 
-			$cols .= ",$entity_table.id as request_id";
+
+			$cols .= ",{$entity_table}.id as request_id";
 			$cols_return[] 				= 'request_id';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'request_id';
@@ -236,6 +239,7 @@
 
 			$cols.= ",fm_request_status.descr as status";
 			$cols_return[] 				= 'status';
+			$cols_group[] 				= 'status';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'status';
 			$uicols['descr'][]			= lang('status');
@@ -248,11 +252,18 @@
 			$uicols['sortable'][]		= false;
 
 			$cols.= ",$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
-			$cols_return[] 				= 'start_date';
-			$cols_return[] 				= 'entry_date';
-			$cols_return[] 				= 'closed_date';
-			$cols_return[] 				= 'in_progress_date';
-			$cols_return[] 				= 'delivered_date';
+			$cols_return[] 				= "start_date";
+			$cols_return[] 				= "entry_date";
+			$cols_return[] 				= "closed_date";
+			$cols_return[] 				= "in_progress_date";
+			$cols_return[] 				= "delivered_date";
+
+			$cols_group[] 				= "{$entity_table}.start_date";
+			$cols_group[] 				= "{$entity_table}.entry_date";
+			$cols_group[] 				= "{$entity_table}.closed_date";
+			$cols_group[] 				= "{$entity_table}.in_progress_date";
+			$cols_group[] 				= "{$entity_table}.delivered_date";
+
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'start_date';
 			$uicols['descr'][]			= lang('start date');
@@ -267,6 +278,7 @@
 
 			$cols.= ",$entity_table.title as title";
 			$cols_return[] 				= 'title';
+			$cols_group[] 				= "title";
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'title';
 			$uicols['descr'][]			= lang('title');
@@ -283,6 +295,7 @@
 			{
 				$cols.= ",$entity_table.descr as descr";
 				$cols_return[] 				= 'descr';
+				$cols_group[] 				= "$entity_table.descr";
 				$uicols['input_type'][]		= 'text';
 				$uicols['name'][]			= 'descr';
 				$uicols['descr'][]			= lang('descr');
@@ -296,8 +309,23 @@
 			}
 
 
+			$cols.= ",$entity_table.building_part";
+			$cols_return[] 				= 'building_part';
+			$cols_group[] 				= 'building_part';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'building_part';
+			$uicols['descr'][]			= lang('building part');
+			$uicols['statustext'][]		= lang('building part');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
 			$cols.= ",$entity_table.budget as budget";
 			$cols_return[] 				= 'budget';
+			$cols_group[] 				= 'budget';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'budget';
 			$uicols['descr'][]			= lang('cost estimate');
@@ -309,8 +337,24 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= true;
 
+			
+
+			$cols.= ",sum(amount) as consume";
+			$cols_return[] 				= 'consume';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'consume';
+			$uicols['descr'][]			= lang('consume');
+			$uicols['statustext'][]		= lang('consume');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= 'FormatterRight';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
 			$cols.= ",$entity_table.coordinator";
 			$cols_return[] 				= 'coordinator';
+			$cols_group[]				= 'coordinator';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'coordinator';
 			$uicols['descr'][]			= lang('Coordinator');
@@ -325,6 +369,7 @@
 
 			$cols.= ",$entity_table.score";
 			$cols_return[] 				= 'score';
+			$cols_group[]				= 'score';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'score';
 			$uicols['descr'][]			= lang('score');
@@ -342,27 +387,38 @@
 			{
 				$cols .= ",{$entity_table}." . $this->db->f('column_name');
 
-				$cols_return[] 				=  $this->db->f('column_name');
+				$cols_return[] 				= $this->db->f('column_name');
+				$cols_group[]				= $this->db->f('column_name');
 				$uicols['input_type'][]		= 'text';
-				$uicols['name'][]			=  $this->db->f('column_name');
-				$uicols['descr'][]			=  $this->db->f('input_text',true);
-				$uicols['statustext'][]		=  $this->db->f('statustext',true);
+				$uicols['name'][]			= $this->db->f('column_name');
+				$uicols['descr'][]			= $this->db->f('input_text',true);
+				$uicols['statustext'][]		= $this->db->f('statustext',true);
 				$uicols['exchange'][]		= '';
 				$uicols['align'][]			= '';
 				$uicols['datatype'][]		= $this->db->f('datatype');
 				$uicols['formatter'][]		= '';
 				$uicols['classname'][]		= '';
 				$uicols['sortable'][]		= false;
-
 			}
 
 			$paranthesis = '(';
 			$joinmethod = "{$this->left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
 
+
+			$paranthesis .= '(';
+			$joinmethod .= "{$this->left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
+
+
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
 				'query'=>$query,'force_location'=>true));
 
+			$cols_group[] = "{$entity_table}.id";
+			$cols_group[] = 'fm_request_status.descr';
+			$cols_group[] = "{$entity_table}.address";
+
+			$groupmethod = 'GROUP BY ' . implode(',', $cols_group);
+			
 			if ($order)
 			{
 				$ordermethod = " order by $order $sort";
@@ -381,6 +437,15 @@
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE fm_request.loc1 in ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
+			}
+
+
+
+
+			if ($property_cat_id > 0)
+			{
+				$filtermethod .= " $where fm_location1.category='{$property_cat_id}' ";
+				$where = 'AND';
 			}
 
 			if ($cat_id > 0)
@@ -437,7 +502,7 @@
 				}
 			}
 
-			$sql .= " $filtermethod $querymethod";
+			$sql .= " $filtermethod $querymethod $groupmethod";
 //_debug_array($sql);
 			$this->uicols		= $this->bocommon->uicols;
 			$cols_return		= $this->bocommon->cols_return;
@@ -446,11 +511,15 @@
 
 			$this->db->fetchmode = 'ASSOC';
 
-			$sql2 = 'SELECT count(*) as cnt, sum(budget) as sum_budget ' . substr($sql,strripos($sql,'from'));
+		//	$sql2 = 'SELECT count(*) as cnt, sum(budget) as sum_budget ' . substr($sql,strripos($sql,'FROM'));
+
+			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(consume) as sum_consume FROM ({$sql}) as t";
+//_debug_array($sql2);
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 			$this->sum_budget	= $this->db->f('sum_budget');
+			$this->sum_consume	= $this->db->f('sum_consume');
 			
 			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if($dry_run)

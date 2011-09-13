@@ -84,6 +84,7 @@
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
+			$this->property_cat_id		= $this->property_cat_id;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
 			$this->district_id			= $this->bo->district_id;
@@ -109,6 +110,7 @@
 					'allrows'		=> $this->allrows,
 					'start_date'	=> $this->start_date,
 					'end_date'		=> $this->end_date,
+					'property_cat_id'	=> $this->property_cat_id,
 				);
 			$this->bo->save_sessiondata($data);
 		}
@@ -235,27 +237,41 @@
 					."project_id:'{$project_id}',"
 					."filter:'{$this->filter}',"
 					."status_id:'{$this->status_id}',"
+					."property_cat_id:'{$this->property_cat_id}',"
 					."district_id: '{$this->district_id}',"
 					."start_date:'{$this->start_date}',"
 					."end_date: '{$this->end_date}',"
 					."cat_id:'{$this->cat_id}'";
 
-				$values_combo_box[0]  = $this->bocommon->select_district_list('filter',$this->district_id);
-				$default_value = array ('id'=>'','name'=>lang('no district'));
+				$values_combo_box[0]  = $this->bocommon->select_category_list(array
+					(
+						'format'=>'filter',
+				//		'selected' => $this->cat_id,
+						'type' =>'location',
+						'type_id' =>1,
+						'order'=>'descr'
+					)
+				);
+				$default_value = array ('id'=>'','name'=>lang('no category'));
 				array_unshift ($values_combo_box[0],$default_value);
 
-				$values_combo_box[1] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
+
+				$values_combo_box[1]  = $this->bocommon->select_district_list('filter',$this->district_id);
+				$default_value = array ('id'=>'','name'=>lang('no district'));
+				array_unshift ($values_combo_box[1],$default_value);
+
+				$values_combo_box[2] = $this->cats->formatted_xslt_list(array('select_name' => 'cat_id','selected' => $this->cat_id,'globals' => True));
 				$default_value = array ('cat_id'=>'','name'=> lang('no category'));
-				array_unshift ($values_combo_box[1]['cat_list'],$default_value);
+				array_unshift ($values_combo_box[2]['cat_list'],$default_value);
 
-				$values_combo_box[2]  = $this->bo->select_status_list('filter',$this->status_id);
+				$values_combo_box[3]  = $this->bo->select_status_list('filter',$this->status_id);
 				$default_value = array ('id'=>'','name'=> lang('no status'));
-				array_unshift ($values_combo_box[2],$default_value);
-
-				$values_combo_box[3]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
-				array_unshift ($values_combo_box[3],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
-				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[3],$default_value);
+
+				$values_combo_box[4]  = $this->bocommon->get_user_list('filter',$this->filter,$extra=false,$default=false,$start=-1,$sort='ASC',$order='account_lastname',$query='',$offset=-1);
+				array_unshift ($values_combo_box[4],array('user_id'=>$GLOBALS['phpgw_info']['user']['account_id'],'name'=>$GLOBALS['phpgw_info']['user']['fullname']));
+				$default_value = array ('user_id'=>'','name'=>lang('no user'));
+				array_unshift ($values_combo_box[4],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -266,6 +282,7 @@
 							(
 								'menuaction' 		=> 'property.uirequest.index',
 								'lookup'        	=> $lookup,
+								'property_cat_id'	=> $this->property_cat_id,
 								'cat_id'			=> $this->cat_id,
 								'filter'			=> $this->filter,
 								'status_id'			=> $this->status_id,
@@ -281,6 +298,15 @@
 						(
 							'field' => array
 							(
+								array
+								( //boton 	DISTRICT
+									'id' => 'btn_property_cat',
+									'name' => 'property_cat_id',
+									'value'	=> lang('property type'),
+									'type' => 'button',
+									'style' => 'filter',
+									'tab_index' => 1
+								),
 								array
 								( //boton 	DISTRICT
 									'id' => 'btn_district_id',
@@ -321,17 +347,18 @@
 								array
 								(
 									'type'	=> 'button',
-									'id'	=> 'btn_export',
-									'value'	=> lang('download'),
+									'id'	=> 'btn_update',
+									'value'	=> lang('Update project'),
 									'tab_index' => 9
 								),
 								array
 								(
 									'type'	=> 'button',
-									'id'	=> 'btn_update',
-									'value'	=> lang('Update project'),
+									'id'	=> 'btn_export',
+									'value'	=> lang('download'),
 									'tab_index' => 8
 								),
+
 								array
 								(
 									'type'	=> 'button',
@@ -427,17 +454,22 @@
 									array
 									( //div values  combo_box_1
 										'id' => 'values_combo_box_1',
-										'value'	=> $this->bocommon->select2String($values_combo_box[1]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+										'value'	=> $this->bocommon->select2String($values_combo_box[1])
 									),
 									array
 									( //div values  combo_box_2
 										'id' => 'values_combo_box_2',
-										'value'	=> $this->bocommon->select2String($values_combo_box[2])
+										'value'	=> $this->bocommon->select2String($values_combo_box[2]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
 									),
 									array
 									( //div values  combo_box_3
 										'id' => 'values_combo_box_3',
-										'value'	=> $this->bocommon->select2String($values_combo_box[3], 'user_id')
+										'value'	=> $this->bocommon->select2String($values_combo_box[3])
+									),
+									array
+									( //div values  combo_box_4
+										'id' => 'values_combo_box_4',
+										'value'	=> $this->bocommon->select2String($values_combo_box[4], 'user_id')
 									)
 								)
 							)
@@ -738,7 +770,7 @@
 					'currentPage'		=> $datatable['sorting']['currentPage'],
 					'records'			=> array(),
 					'sum_budget'		=> $this->bo->sum_budget,
-					'sum_residual_demand'=> $this->bo->sum_residual_demand
+					'sum_consume'		=> $this->bo->sum_consume
 
 				);
 

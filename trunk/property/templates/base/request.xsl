@@ -263,27 +263,23 @@
 								</tr>
 							</xsl:for-each>
 
+							<xsl:variable name="lang_request_title"><xsl:value-of select="php:function('lang', 'enter request title')" /></xsl:variable>
 							<tr>
-								<td valign="top">
+								<td valign="top" title= "{$lang_request_title}">
 									<xsl:value-of select="php:function('lang', 'request title')" />
 								</td>
 								<td>
-									<input type="text" name="values[title]" value="{value_title}" size="60">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'enter request title')" />
-										</xsl:attribute>
+									<input type="text" name="values[title]" value="{value_title}" size="60" title= "{$lang_request_title}">
 									</input>
 								</td>
 							</tr>
+							<xsl:variable name="lang_request_description"><xsl:value-of select="php:function('lang', 'enter a description of the request')" /></xsl:variable>
 							<tr>
-								<td valign="top">
+								<td valign="top" title= "{$lang_request_description}">
 									<xsl:value-of select="php:function('lang', 'request description')" />
 								</td>
 								<td>
-									<textarea cols="60" rows="6" name="values[descr]">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'enter a description of the request')" />
-										</xsl:attribute>
+									<textarea cols="60" rows="6" name="values[descr]" title= "{$lang_request_description}">
 										<xsl:value-of select="value_descr"/>
 									</textarea>
 								</td>
