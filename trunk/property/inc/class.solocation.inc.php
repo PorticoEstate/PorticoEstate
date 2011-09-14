@@ -861,9 +861,31 @@
 			$sql .= "$filtermethod $querymethod";
 
 			$values = array();
-			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' from')),__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->total_records = $this->db->f('cnt');
+//			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' from')),__LINE__,__FILE__);
+//			$this->db->next_record();
+//			$this->total_records = $this->db->f('cnt');
+
+			$cache_info = phpgwapi_cache::session_get('property',"location{$type_id}_listing_metadata");
+
+			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql))
+			{
+				$cache_info = array();
+			}
+			
+			if(!$cache_info)
+			{
+				$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' from')),__LINE__,__FILE__);
+				$this->db->next_record();
+
+				$cache_info = array
+				(
+					'total_records'		=> $this->db->f('cnt'),
+					'sql_hash'			=> md5($sql)
+				);
+				phpgwapi_cache::session_set('property',"location{$type_id}_listing_metadata",$cache_info);
+			}
+
+			$this->total_records	= $cache_info['total_records'];
 
 			//cramirez.r@ccfirst.com 23/07/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
 			if($dry_run)
