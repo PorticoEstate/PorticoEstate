@@ -154,7 +154,7 @@
 				$cols_return_extra	= array();
 				$cols_return		= array();
 				$uicols				= array();
-				$cols				= $entity_table . '.*';
+				$cols				= "{$entity_table}.*";
 
 				$cols_return[]				= 'location_code';
 				$uicols['input_type'][]		= 'hidden';
@@ -208,7 +208,7 @@
 					$uicols['classname'][]		= '';
 				}
 
-				$cols .= ", {$entity_table}.user_id";
+		//		$cols .= ", {$entity_table}.user_id";
 				$cols_return[] 				= 'user_id';
 
 				$cols_return_extra[]= array
@@ -223,7 +223,7 @@
 
 				$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 					'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'query'=>$query,'lookup'=>$lookup,'location_level'=>$category['location_level']));
-				$sql = 	str_replace('SELECT', 'SELECT DISTINCT',$sql);
+				//$sql = 	str_replace('SELECT', 'SELECT DISTINCT',$sql);
 
 				$this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $sql);
 				$this->bocommon->fm_cache("uicols_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}", $this->bocommon->uicols);
@@ -546,8 +546,34 @@
 			$sql .= " $filtermethod $querymethod";
 
 //_debug_array($sql);
-			$this->db->query("SELECT DISTINCT {$entity_table}.id " . substr($sql,strripos($sql,'from')),__LINE__,__FILE__);
-			$this->total_records = $this->db->num_rows();
+
+			$cache_info = phpgwapi_cache::session_get('property',"{$entity_table}_listing_metadata");
+
+			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql))
+			{
+				$cache_info = array();
+			}
+			
+			if(!$cache_info)
+			{
+				$sql_cnt = "SELECT DISTINCT {$entity_table}.id " . substr($sql,strripos($sql,'FROM'));
+				$sql2 = "SELECT count(*) as cnt FROM ({$sql_cnt}) as t";
+
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->next_record();
+				unset($sql2);
+				unset($sql_cnt);
+
+				$cache_info = array
+				(
+					'total_records'		=> $this->db->f('cnt'),
+					'sql_hash'			=> md5($sql)
+				);
+				phpgwapi_cache::session_set('property',"{$entity_table}_listing_metadata",$cache_info);
+			}
+
+			$this->total_records	= $cache_info['total_records'];
+
 
 			if($dry_run)
 			{
