@@ -42,7 +42,7 @@
 		var $order;
 		var $cat_id;
 		public $sum_budget = 0;
-		public $sum_residual_demand = 0;
+		public $sum_consume = 0;
 
 		var $public_functions = array
 			(
@@ -74,6 +74,7 @@
 			$sort			= phpgw::get_var('sort');
 			$order			= phpgw::get_var('order');
 			$filter			= phpgw::get_var('filter', 'int');
+			$property_cat_id= phpgw::get_var('property_cat_id', 'int');
 			$district_id	= phpgw::get_var('district_id', 'int');
 			$cat_id			= phpgw::get_var('cat_id', 'int');
 			$status_id		= phpgw::get_var('status_id');
@@ -106,6 +107,11 @@
 			if(isset($_POST['district_id']) || isset($_GET['district_id']))
 			{
 				$this->district_id = $district_id;
+			}
+
+			if(isset($_POST['property_cat_id']) || isset($_GET['property_cat_id']))
+			{
+				$this->property_cat_id = $property_cat_id;
 			}
 			if(isset($_POST['cat_id']) || isset($_GET['cat_id']))
 			{
@@ -147,14 +153,15 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data','request');
 
-			$this->start		= $data['start'];
-			$this->query		= $data['query'];
-			$this->filter		= $data['filter'];
-			$this->sort			= $data['sort'];
-			$this->order		= $data['order'];
-			$this->district_id	= $data['district_id'];
-			$this->cat_id		= $data['cat_id'];
-			$this->status_id	= $data['status_id'];
+			$this->start			= $data['start'];
+			$this->query			= $data['query'];
+			$this->filter			= $data['filter'];
+			$this->sort				= $data['sort'];
+			$this->order			= $data['order'];
+			$this->district_id		= $data['district_id'];
+			$this->cat_id			= $data['cat_id'];
+			$this->property_cat_id = $data['property_cat_id'];
+			$this->status_id		= $data['status_id'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
 
@@ -396,10 +403,12 @@
 			$request = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
-				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date));
+				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
+				'property_cat_id' => $this->property_cat_id));
 
 			$this->total_records	= $this->so->total_records;
 			$this->sum_budget		= $this->so->sum_budget;
+			$this->sum_consume		= $this->so->sum_consume;
 			$this->uicols			= $this->so->uicols;
 			$cols_extra				= $this->so->cols_extra;
 

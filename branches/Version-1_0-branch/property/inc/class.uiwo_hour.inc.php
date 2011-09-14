@@ -1198,6 +1198,8 @@
 			$print			= phpgw::get_var('print', 'bool');
 			$sent_ok		= phpgw::get_var('print', 'bool');
 			$send_as_pdf	= phpgw::get_var('send_as_pdf', 'bool');
+			$email_receipt	= phpgw::get_var('email_receipt', 'bool');
+			
 
 			if($update_email)
 			{
@@ -1544,7 +1546,7 @@ HTML;
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, true);
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
 				}
 				else
 				{
@@ -1699,6 +1701,7 @@ HTML;
 					'lang_to_email_address_statustext'	=> lang('The address to which this order will be sendt'),
 					'to_email'							=> $to_email,
 					'email_list'						=> $email_list,
+					'requst_email_receipt'				=> isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_order_email_rcpt']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_order_email_rcpt']==1 ? 1 : 0,
 					'lang_select_email'					=> lang('Select email'),
 					'send_order_action'					=> $GLOBALS['phpgw']->link('/index.php',array(
 																'menuaction'	=> 'property.uiwo_hour.view',
