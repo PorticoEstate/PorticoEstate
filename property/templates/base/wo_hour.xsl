@@ -429,6 +429,20 @@
 											</tr>
 											<tr>
 												<td class="th_text"  align="left">
+													<xsl:value-of select="lang_update_email"/>
+												</td>
+												<td  align="left">
+													<input type="checkbox" name="update_email" value="true"  onMouseout="window.status='';return true;">
+														<xsl:attribute name="title">
+															<xsl:value-of select="lang_update_email_statustext"/>
+														</xsl:attribute>
+													</input>
+												</td>
+											</tr>
+										</xsl:otherwise>
+									</xsl:choose>
+											<tr>
+												<td class="th_text"  align="left">
 													<xsl:value-of select="php:function('lang', 'request an email receipt')" />
 												</td>
 												<td  align="left">
@@ -439,18 +453,6 @@
 														<xsl:if test="requst_email_receipt != 0">
 															<xsl:attribute name="checked" value="checked" />
 														</xsl:if>
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td class="th_text"  align="left">
-													<xsl:value-of select="lang_update_email"/>
-												</td>
-												<td  align="left">
-													<input type="checkbox" name="update_email" value="true"  onMouseout="window.status='';return true;">
-														<xsl:attribute name="title">
-															<xsl:value-of select="lang_update_email_statustext"/>
-														</xsl:attribute>
 													</input>
 												</td>
 											</tr>
@@ -509,8 +511,7 @@
 													</input>
 												</td>
 											</tr>
-										</xsl:otherwise>
-									</xsl:choose>
+
 						</table></td></tr>
 					</xsl:when>
 				</xsl:choose>

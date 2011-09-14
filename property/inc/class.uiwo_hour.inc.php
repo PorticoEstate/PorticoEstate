@@ -1190,7 +1190,7 @@
 
 			$show_cost		= phpgw::get_var('show_cost', 'bool');
 			$show_details	= true;//phpgw::get_var('show_details', 'bool');
-			$to_email 		= phpgw::get_var('to_email', 'email');
+			$to_email 		= phpgw::get_var('to_email', 'string');
 			$update_email	= phpgw::get_var('update_email', 'bool');
 			$send_order		= phpgw::get_var('send_order', 'bool');
 			$no_email		= phpgw::get_var('no_email', 'bool');
@@ -1555,8 +1555,9 @@ HTML;
 
 				if ($rcpt)
 				{
+					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
 					$historylog	= CreateObject('property.historylog','workorder');
-					$historylog->add('M',$workorder_id,"{$to_email} {$attachment_log}");
+					$historylog->add('M',$workorder_id,"{$to_email}{$_attachment_log}");
 					$receipt['message'][]=array('msg'=>lang('Workorder is sent by email!'));
 					if($attachment_log)
 					{
@@ -1610,6 +1611,7 @@ HTML;
 			}
 			else
 			{
+				//FIXME
 				$email_list	= $this->bo->get_email($to_email,$workorder['vendor_id']);
 				if(count($email_list)==1)
 				{
