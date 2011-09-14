@@ -347,8 +347,7 @@
 
 				if ($upgrademethod == 'dumpold')
 				{
-					// dont delete the custom main- & loginscreen messages every time
-					$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_lang where app_name != 'mainscreen' AND app_name != 'loginscreen'",__LINE__,__FILE__);
+					$GLOBALS['phpgw']->db->query('DELETE FROM phpgw_lang',__LINE__,__FILE__);
 					$GLOBALS['phpgw_info']['server']['lang_ctimes'] = array();
 				}
 
@@ -372,7 +371,7 @@
 
 						if ($GLOBALS['phpgw']->db->f('cnt') != 0)
 						{
-							$error .= "Lang code '{$lang}' already installed: skipping<br>\n";
+							echo "<div class=\"error\">Lang code '{$lang}' already installed: skipping</div>\n";
 							continue;
 						}
 					}

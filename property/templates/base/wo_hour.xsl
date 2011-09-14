@@ -429,6 +429,21 @@
 											</tr>
 											<tr>
 												<td class="th_text"  align="left">
+													<xsl:value-of select="php:function('lang', 'request an email receipt')" />
+												</td>
+												<td  align="left">
+													<input type="checkbox" name="email_receipt" value="true">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'request a confirmation email when your email is opened by the recipient')" />
+														</xsl:attribute>
+														<xsl:if test="requst_email_receipt != 0">
+															<xsl:attribute name="checked" value="checked" />
+														</xsl:if>
+													</input>
+												</td>
+											</tr>
+											<tr>
+												<td class="th_text"  align="left">
 													<xsl:value-of select="lang_update_email"/>
 												</td>
 												<td  align="left">

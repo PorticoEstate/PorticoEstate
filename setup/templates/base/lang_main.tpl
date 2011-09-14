@@ -15,9 +15,9 @@
 		{select_box_desc}
 		<form method="POST" action="lang.php">
 		{hidden_var1}
-		<select name="lang_selected[]" multiple size="10">
-		{select_box_langs}
-		</select>
+		<p style="height: 150px; overflow: auto; border: 5px solid #eee; background: #eee; color: #000; margin-bottom: 1.5em;">
+		{checkbox_langs}
+		</p>
 	</td>
 	<!-- BEGIN B_choose_method -->
 	<td valign="top">
