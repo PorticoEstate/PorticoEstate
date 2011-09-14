@@ -408,33 +408,13 @@
 			return $receipt;
 		}
 
-		function get_email($to_email,$vendor_id)
+		function get_email($selected, $vendor_id)
 		{
-			$selected = $to_email;
+			$email_list = $this->so->get_email($vendor_id);
 
-			$email_ist = $this->so->get_email($vendor_id);
-
-			while (is_array($email_ist) && list(,$email_entry) = each($email_ist))
+			foreach( $email_list as &$email_entry )
 			{
-				$sel_email = '';
-				if ($email_entry['email']==$selected)
-				{
-					$sel_email = 'selected';
-				}
-
-				$email_list[] = array
-					(
-						'email'		=> $email_entry['email'],
-						'selected'	=> $sel_email
-					);
-			}
-
-			for ($i=0;$i<count($email_list);$i++)
-			{
-				if ($email_list[$i]['selected'] != 'selected')
-				{
-					unset($email_list[$i]['selected']);
-				}
+				$email_entry['selected'] = trim($email_entry['email']) == trim($selected) ? 1 : 0;
 			}
 
 			return  $email_list;

@@ -331,7 +331,7 @@
 	<xsl:template match="email_list">
 		<xsl:variable name="email"><xsl:value-of select="email"/></xsl:variable>
 		<xsl:choose>
-			<xsl:when test="selected">
+			<xsl:when test="selected != 0">
 				<option value="{$email}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="email"/></option>
 			</xsl:when>
 			<xsl:otherwise>
@@ -407,7 +407,7 @@
 												</td>
 												<td  align="left">
 													<xsl:variable name="lang_to_email_address_statustext"><xsl:value-of select="lang_to_email_address_statustext"/></xsl:variable>
-													<select name="to_email" class="forms" onMouseover="window.status='{$lang_to_email_address_statustext}'; return true;" onMouseout="window.status='';return true;">
+													<select name="to_email" class="forms" title="{$lang_to_email_address_statustext}">
 														<option value=""><xsl:value-of select="lang_select_email"/></option>
 														<xsl:apply-templates select="email_list"/>
 													</select>

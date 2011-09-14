@@ -1609,15 +1609,12 @@ HTML;
 			{
 				$to_email= $this->boworkorder->order_sent_adress;
 			}
-			else
+
+			$email_list	= $this->bo->get_email($to_email,$workorder['vendor_id']);
+			if(count($email_list)==1)
 			{
-				//FIXME
-				$email_list	= $this->bo->get_email($to_email,$workorder['vendor_id']);
-				if(count($email_list)==1)
-				{
-					$to_email= $email_list[0]['email'];
-					unset($email_list);
-				}
+				$to_email= $email_list[0]['email'];
+				unset($email_list);
 			}
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
