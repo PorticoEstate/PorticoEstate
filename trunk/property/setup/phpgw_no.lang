@@ -1306,6 +1306,8 @@ repeat day	property	no	gjenta dag
 request	property	no	Behov
 project.request	property	no	Behov
 request attributes	property	no	Behov::attributter
+request an email receipt	property	no	Be om kvittering
+request a confirmation email when your email is opened by the recipient	property	no	Be om epost som kvittering når mottaker åpner eposten.
 request %1 has been edited	property	no	anmodning %1 er oppdater
 request %1 has been saved	property	no	anmodning %1 er lagret
 request budget	property	no	Budsjett for tiltak
