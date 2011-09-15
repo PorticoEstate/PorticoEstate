@@ -239,7 +239,7 @@
 
 			$cols.= ",fm_request_status.descr as status";
 			$cols_return[] 				= 'status';
-			$cols_group[] 				= 'status';
+			$cols_group[] 				= 'fm_request_status.descr';
 			$uicols['input_type'][]		= 'text';
 			$uicols['name'][]			= 'status';
 			$uicols['descr'][]			= lang('status');

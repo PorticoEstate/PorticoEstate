@@ -457,13 +457,33 @@
 
 //_debug_array($sql);
 
-			$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt}) as t";
-			$this->db->query($sql2,__LINE__,__FILE__);
-			$this->db->next_record();
-			$this->total_records	= $this->db->f('cnt');
-			$this->sum_budget		= $this->db->f('sum_budget');
-			$this->sum_actual_cost	= $this->db->f('sum_actual_cost');
-			unset($sql2);
+			$cache_info = phpgwapi_cache::session_get('property','tts_listing_metadata');
+
+			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql_cnt))
+			{
+				$cache_info = array();
+			}
+			
+			if(!$cache_info)
+			{
+				$sql2 = "SELECT count(*) as cnt, sum(budget) as sum_budget, sum(actual_cost) as sum_actual_cost FROM ({$sql_cnt}) as t";
+				$this->db->query($sql2,__LINE__,__FILE__);
+				$this->db->next_record();
+				unset($sql2);
+
+				$cache_info = array
+				(
+					'total_records'		=> $this->db->f('cnt'),
+					'sum_budget'		=> $this->db->f('sum_budget'),
+					'sum_actual_cost'	=> $this->db->f('sum_actual_cost'),
+					'sql_hash'			=> md5($sql_cnt)
+				);
+				phpgwapi_cache::session_set('property','tts_listing_metadata',$cache_info);
+			}
+
+			$this->total_records	= $cache_info['total_records'];
+			$this->sum_budget		= $cache_info['sum_budget'];
+			$this->sum_actual_cost	= $cache_info['sum_actual_cost'];
 
 			$tickets = array();
 			if(!$dry_run)

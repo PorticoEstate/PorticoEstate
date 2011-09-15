@@ -2,11 +2,12 @@
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
-	phpgw::import_class('controller.soprocedure');
+	phpgw::import_class('controller.socontrol_item');
+	phpgw::import_class('controller.socontrol_group');
 	
 	include_class('controller', 'control', 'inc/model/');
 
-	class controller_uicontrol extends controller_uicommon
+	class controller_uicontrol_item extends controller_uicommon
 	{
 		private $bo; 
 		private $so;
@@ -22,7 +23,8 @@
 			parent::__construct();
 
 			$this->so = CreateObject('controller.socontrol');
-			$this->so_proc = CreateObject('controller.soprocedure');
+			$this->so_control_item = CreateObject('controller.socontrol_item');
+			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->bo = CreateObject('property.boevent',true);
 		}
 		
@@ -66,16 +68,16 @@
 				}
 			}
 			
-			$procedure_array = $this->so_proc->get_procedure_array();
+			$control_item_array = $this->so_control_item->get_control_item_array();
+			$control_group_array = $this->so_control_group->get_control_group_array();
 			
-			$this->render('control.php', array
-							(
-							'editable' => true,
-							'repeat_type' => $repeat_type,
-							'repeat_day' => $repeat_day,
-							'procedure_array' => $procedure_array 
-							)
-						);
+			$this->render('control_item.php', array
+						(
+						'editable' => true,
+						'control_item_array' => $control_item_array,
+						'control_group_array' => $control_group_array 
+						)
+					);
 		}
 					
 		public function query()
