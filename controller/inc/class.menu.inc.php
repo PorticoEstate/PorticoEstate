@@ -40,6 +40,12 @@
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								)
 							)
+				),
+				'procedure' => array
+				(
+					'text'	=> lang('Procedure'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
+		            'image'	=> array('property', 'location_1'),
 				)     
 			);
 			

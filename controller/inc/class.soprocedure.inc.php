@@ -59,7 +59,7 @@ class controller_soprocedure extends controller_socommon
 		$id = intval($procedure->get_id());
 			
 		$values = array(
-			'$purpose = ' . $this->marshal($procedure->get_purpose(), 'string'),
+			'purpose = ' . $this->marshal($procedure->get_purpose(), 'string'),
 			'responsibility = ' . $this->marshal($procedure->get_responsibility(), 'int'),
 			'description = ' . $this->marshal($procedure->get_description(), 'int'),
 			'reference = ' . $this->marshal($procedure->get_reference(), 'int'),
@@ -135,7 +135,7 @@ class controller_soprocedure extends controller_socommon
 	
 	function get_id_field_name($extended_info = false)
 	{
-		/*
+		
 		if(!$extended_info)
 		{
 			$ret = 'id';
@@ -144,12 +144,12 @@ class controller_soprocedure extends controller_socommon
 		{
 			$ret = array
 			(
-				'table'			=> 'activity', // alias
+				'table'			=> 'procedure', // alias
 				'field'			=> 'id',
 				'translated'	=> 'id'
 			);
 		}
-		*/
+		
 		return $ret;
 	}
 
