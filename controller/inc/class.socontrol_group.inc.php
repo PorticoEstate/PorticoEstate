@@ -31,7 +31,7 @@ class controller_socontrol_group extends controller_socommon
 		
 		$control_group = $control_group->get_control_group();
 		
-		$sql = "INSERT INTO controller_control_group (group_name) VALUES ('$title')";
+		$sql = "INSERT INTO controller_control_group (group_name) VALUES ('$control_group')";
 		$result = $this->db->query($sql, __LINE__,__FILE__);
 
 		if(isset($result)) {
