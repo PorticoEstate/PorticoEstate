@@ -1,9 +1,9 @@
 	<xsl:template name="yui_booking_i18n" xmlns:php="http://php.net/xsl">
 		<xsl:if test="yui_booking_i18n">
 			<script type="text/javascript">
-				YAHOO.booking.i18n = {};
+				YAHOO.portico.i18n = {};
 				<xsl:for-each select="yui_booking_i18n/*">
-					YAHOO.booking.i18n.<xsl:value-of select="local-name()"/> = function(cfg)
+					YAHOO.portico.i18n.<xsl:value-of select="local-name()"/> = function(cfg)
 					{
 						cfg = cfg || {};
 						<xsl:for-each select="./*">
