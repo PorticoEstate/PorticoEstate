@@ -131,13 +131,16 @@
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
 			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('history');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 			
-			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->url_prefix = str_replace('_', '.', get_class($this));
+
+			$this->dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
@@ -426,19 +429,46 @@
 			}
 		}
 
-		/**
-		 * Build a YUI result of the data
-		 * 
-		 * @param $data	the data
-		 * @return YUI result { ResultSet => { totalRecords => ?, Result => ?}
-		 */
-		public function yui_results($data,$field_total = 'total_records', $field_results = 'results')
+		// Add link key to a result array
+		public function _add_links(&$value, $key, $menuaction)
 		{
-             return array
-			(   
+			$unset = 0;
+			// FIXME: Fugly workaround
+			// I cannot figure out why this variable isn't set, but it is needed 
+			// by the ->link() method, otherwise we wind up in the phpgroupware 
+			// errorhandler which does lot of weird things and breaks the output
+			if (!isset($GLOBALS['phpgw_info']['server']['webserver_url'])) {
+				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
+				$unset = 1;
+			}
+
+			$value['link'] = self::link(array('menuaction' => $menuaction, 'id' => $value['id']));
+
+			// FIXME: Fugly workaround
+			// I kid you not my friend. There is something very wonky going on 
+			// in phpgroupware which I cannot figure out.
+			// If this variable isn't unset() (if it wasn't set before that is) 
+			// then it will contain extra slashes and break URLs
+			if ($unset) {
+				unset($GLOBALS['phpgw_info']['server']['webserver_url']);
+			}
+		}
+
+		// Build a YUI result style array
+		public function yui_results($results)
+		{
+			if (!$results) {
+				$results['total_records'] = 0;
+				$result['results'] = array();
+			}
+			
+			return array(   
 				'ResultSet' => array(
-					'totalRecords' => $data[$field_total], 
-					'Result' => $data[$field_results]
+					'totalResultsAvailable' => $results['total_records'], 
+					'startIndex' => $results['start'], 
+					'sortKey' => $results['sort'], 
+					'sortDir' => $results['dir'], 
+					'Result' => $results['results']
 				)   
 			);  
 		}

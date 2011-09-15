@@ -46,6 +46,15 @@
 					'text'	=> lang('Control_item') . 2,
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item2.index') ),
 		            'image'	=> array('property', 'location_1'),
+					'children'	=> array(
+								'control_item_list2' => array
+
+								(
+									'text'	=> lang('control_item_list') . 2,
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'appname' => 'controller') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								)
+							)
 		        ),
 				'procedure' => array
 				(
