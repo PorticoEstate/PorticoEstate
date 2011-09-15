@@ -35,7 +35,7 @@ calendar_weekdays	controller	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 select_date	controller	no	Velg dato
 year controller	no	År
 location_code	controller	no	Enhetsnummer
-included_units	controller	no	Leieobjektets enheter
+included_units	controller	no	Kontrollens enheter
 floor	controller	no	Etasje
 section	controller	no	Seksjon
 room	controller	no	Rom
@@ -306,7 +306,6 @@ import_reset	controller	no	Nullstill importstatus
 in_operation	controller	no	I drift
 inactive_party	controller	no	Kontraktspart er inaktiv
 inactive	controller	no	Inaktiv
-included_units	controller	no	Leieobjektets enheter
 internal	controller	no	Interne kontraktsparter
 interval	controller	no	Intervall
 Invalid location code for the building.	controller	no	Ugyldig objektnummer for bygg.
@@ -628,3 +627,5 @@ year	controller	no	År
 yes	controller	no	Ja
 your_notifications	controller	no	Dine varsler
 control_items	controller	no	Kontrollpunkt
+Control_item	controller	no	Kontrollpunkt
+
