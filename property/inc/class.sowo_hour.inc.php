@@ -683,16 +683,19 @@
 		{
 			$vendor_id=(int)$vendor_id;
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
-			$this->db->query("select column_name from phpgw_cust_attribute WHERE location_id = {$location_id} AND datatype='email'",__LINE__,__FILE__);
+			$this->db->query("SELECT column_name FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND datatype='email'",__LINE__,__FILE__);
 			$email_list = array();
 			while ($this->db->next_record())
 			{
-				$this->db2->query("select " . $this->db->f('column_name') . " from fm_vendor where id=$vendor_id",__LINE__,__FILE__);
+				$this->db2->query("SELECT " . $this->db->f('column_name') . " FROM fm_vendor WHERE id=$vendor_id",__LINE__,__FILE__);
 				while ($this->db2->next_record())
 				{
 					if($this->db2->f($this->db->f('column_name')))
 					{
-						$email_list[] = array('email' => $this->db2->f($this->db->f('column_name')));
+						$email_list[] = array
+						(
+							'email' => $this->db2->f($this->db->f('column_name'))
+						);
 					}
 				}
 			}

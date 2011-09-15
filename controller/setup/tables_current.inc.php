@@ -7,7 +7,6 @@
 				'description' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
-				'frequency_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'costResponsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -17,20 +16,8 @@
 				'equipment_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 	 			'repeat_type' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
-				'repeat_day' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'repeat_interval' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'enabled' => array('type' => 'int', 'precision' => 2, 'nullable' => True)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'controller_control_schedule' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
-				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'schedule_time' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -109,6 +96,16 @@
 				'description' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'reference' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'controller_control_type' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'title' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

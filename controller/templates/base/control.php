@@ -7,10 +7,6 @@
 
 <div class="identifier-header">
 <h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('control') ?></h1>
-	<div>
-		<button onclick="javascript:window.location.href ='<?php echo $cancel_link;?>;'">&laquo;&nbsp;<?php //echo lang('composite_back');?></button><br/>
-		<label><?php echo lang('name') ?> </label><?php //echo $composite->get_name() ?>
-	</div>
 </div>
 
 
@@ -41,7 +37,7 @@
 						<label for="description">Beskrivelse</label>
 					</dt>
 					<dd>
-						<input type="text" name="description" id="description" value="" />
+						<textarea cols="70" rows="5" name="description" id="description" value="" /></textarea>
 					</dd>
 					<dt>
 						<label for="start_date">Startdato</label>
@@ -50,7 +46,7 @@
 						<?php
 							$start_date = "-";
 							$start_date_yui = date('Y-m-d');
-							$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('date_start', $start_date);
+							$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('start_date', $start_date);
 						
 							echo $start_date_cal;
 						?>
@@ -61,26 +57,14 @@
 					<dd>
 						<?php
 							$end_date = "";
-							$end_date_yui;
-							$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('date_end');
+							$end_date_yui = date('Y-m-d');
+							$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('end_date', $end_date);
 						
 							echo $end_date_cal;
 						?>
 					</dd>
 					<dt>
-						<label>Dag</label>
-					</dt>
-					<dd>
-						<input type="checkbox" value="0" name="repeat_day[]" title="Mandag">Mandag
-						<input type="checkbox" value="1" name="repeat_day[]" title="Tirsdag">Tirsdag
-						<input type="checkbox" value="2" name="repeat_day[]" title="Onsdag">Onsdag
-						<input type="checkbox" value="3" name="repeat_day[]" title="Torsdag">Torsdag
-						<input type="checkbox" value="4" name="repeat_day[]" title="Fredag">Fredag
-						<input type="checkbox" value="5" name="repeat_day[]" title="Lørdag">Lørdag
-						<input type="checkbox" value="6" name="repeat_day[]" title="Søndag">Søndag
-					</dd>
-					<dt>
-						<label>Type</label>
+						<label>Frekvenstype</label>
 					</dt>
 					<dd>
 						<select id="repeat_type" name="repeat_type">
@@ -93,10 +77,10 @@
 						</select>
 					</dd>
 					<dt>
-						<label>Intervall</label>
+						<label>Frekvens</label>
 					</dt>
 					<dd>
-						<input type="text" name="repeat_interval" value="" />
+						<input size="2" type="text" name="repeat_interval" value="" />
 					</dd>
 					<dt>
 						<label>Prosedyre</label>
@@ -108,7 +92,6 @@
 									echo "<option value='" . $procedure->get_id() . "'>" . $procedure->get_title() . "</option>";
 								}
 							?>
-							
 						</select>
 					</dd>
 				</dl>
@@ -129,8 +112,9 @@
 					$list_id = 'included_units';
 					//$url_add_on = '&amp;control_id='.$control->get_id();
 					unset($extra_cols);
-					include('unit_list_partial.php');
+					//include('unit_list_partial.php');
 	
+				$editable = 'true';
 					
 	            if ($editable) { 
 				    echo '<h3>'.lang('all_locations').'</h3>';

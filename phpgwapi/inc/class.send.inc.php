@@ -56,6 +56,7 @@
 		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $ignored,$attachments, $receive_notification)
 		{
 			$smtp = createObject('phpgwapi.mailer_smtp');
+			$from = str_replace(array('[',']'),array('<','>'),$from);
 			$from_array = split('<', $from);
 			unset($from);
 			if ( count($from_array) == 2 )
@@ -80,6 +81,7 @@
 			
 			foreach ($to as $entry)
 			{
+				$entry = str_replace(array('[',']'),array('<','>'),$entry);
 				$to_array = split('<', $entry);
 				if ( count($to_array) == 2 )
 				{
@@ -105,6 +107,7 @@
 			
 				foreach ($cc as $entry)
 				{
+					$entry = str_replace(array('[',']'),array('<','>'),$entry);
 					$cc_array = split('<', $entry);
 					if ( count($cc_array) == 2 )
 					{
@@ -130,6 +133,7 @@
 			
 				foreach ($bcc as $entry)
 				{
+					$entry = str_replace(array('[',']'),array('<','>'),$entry);
 					$bcc_array = split('<', $entry);
 					if ( count($bcc_array) == 2 )
 					{

@@ -1163,7 +1163,7 @@
 				{
 					$type_id	= count($location_types);
 				}
-
+				$cols.= ",fm_location1.loc1_name";
 				$this->join = $this->socommon->join;
 				$joinmethod .= " $this->join  fm_location1 ON ($entity_table.loc1 = fm_location1.loc1))";
 				$paranthesis .='(';
