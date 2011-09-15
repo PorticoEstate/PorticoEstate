@@ -25,13 +25,21 @@
 				(
 					'text'	=> lang('Control'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.index') ),
-		                  'image'	=> array('property', 'location_1'),
+		            'image'	=> array('property', 'location_1'),
 				),
 				'control_item' => array
 				(
 					'text'	=> lang('Control_item'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item.index') ),
-		                  'image'	=> array('property', 'location_1'),
+		            'image'	=> array('property', 'location_1'),
+					'children'	=> array(
+								'control_item_list' => array
+								(
+									'text'	=> lang('control_item_list'),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.display_control_items', 'appname' => 'rental') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								)
+							)
 				),     
 				'control_item2' => array
 				(
