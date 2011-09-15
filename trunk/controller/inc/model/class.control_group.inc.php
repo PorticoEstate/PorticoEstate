@@ -41,7 +41,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller_control_group');
+				self::$so = CreateObject('controller.socontrol_group');
 			}
 			
 			return self::$so;

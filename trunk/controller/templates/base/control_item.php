@@ -43,7 +43,7 @@
 						<select id="control_group" name="control_group">
 							<?php 
 								foreach ($control_group_array as $control_group) {
-									echo "<option value='" . $control_group->get_id() . "'>" . $control_group->get_title() . "</option>";
+									echo "<option value='" . $control_group->get_id() . "'>" . $control_group->get_group_name() . "</option>";
 								}
 							?>
 						</select>

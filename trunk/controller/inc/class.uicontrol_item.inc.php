@@ -7,8 +7,6 @@
 	phpgw::import_class('controller.socontrol_type');
 	
 	include_class('controller', 'control', 'inc/model/');
-	include_class('controller', 'control_group', 'inc/model/');
-	include_class('controller', 'control_type', 'inc/model/');
 	
 	class controller_uicontrol_item extends controller_uicommon
 	{
@@ -37,7 +35,7 @@
 		
 		public function index()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control";
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
 			
 			$repeat_type = $this->bo->get_rpt_type_list();
 			$repeat_day = $this->bo->get_rpt_day_list();
@@ -71,14 +69,14 @@
 				}
 			}
 			
-			$control_item_type_array = $this->so_control_type->get_control_type_array();
-			$control_item_group_array = $this->so_control_group->get_control_group_array();
+			$control_type_array = $this->so_control_type->get_control_type_array();
+			$control_group_array = $this->so_control_group->get_control_group_array();
 			
 			$this->render('control_item.php', array
 						(
 						'editable' => true,
-						'control_type_array' => $control_item_type_array,
-						'control_group_array' => $control_item_group_array 
+						'control_type_array' => $control_type_array,
+						'control_group_array' => $control_group_array 
 						)
 					);
 		}
