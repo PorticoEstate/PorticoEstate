@@ -36,7 +36,7 @@
 								'control_item_list' => array
 								(
 									'text'	=> lang('control_item_list'),
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.display_control_items', 'appname' => 'rental') ),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.display_control_items', 'appname' => 'controller') ),
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								)
 							)

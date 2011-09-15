@@ -122,8 +122,8 @@ class controller_socontrol_item extends controller_socommon
 			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
 			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-			$control_item->set_what_to_desc($this->unmarshal($this->db->f('what_to_desc', true), 'string'));
-			$control_item->set_how_to_desc($this->unmarshal($this->db->f('how_to_desc', true), 'string'));
+			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
+			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			$control_item->set_control_type_id($this->unmarshal($this->db->f('control_type_id', true), 'int'));
 			
@@ -135,7 +135,6 @@ class controller_socontrol_item extends controller_socommon
 	
 	function get_id_field_name($extended_info = false)
 	{
-		/*
 		if(!$extended_info)
 		{
 			$ret = 'id';
@@ -144,46 +143,118 @@ class controller_socontrol_item extends controller_socommon
 		{
 			$ret = array
 			(
-				'table'			=> 'activity', // alias
+				'table'			=> 'controller', // alias
 				'field'			=> 'id',
 				'translated'	=> 'id'
 			);
 		}
-		*/
+		
 		return $ret;
 	}
 
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
 		
+		$clauses = array('1=1');
 		
+		$filter_clauses = array();
+		
+		// Search for based on search type
+		if($search_for)
+		{
+			$search_for = $this->marshal($search_for,'field');
+			$like_pattern = "'%".$search_for."%'";
+			$like_clauses = array();
+			switch($search_type){
+				case "title":
+					$like_clauses[] = "rental_document.title $this->like $like_pattern";
+					break;
+				case "name":
+					$like_clauses[] = "rental_document.name $this->like $like_pattern";
+					break;
+				case "all":
+					$like_clauses[] = "rental_document.title $this->like $like_pattern";
+					$like_clauses[] = "rental_document.name $this->like $like_pattern";
+					break;
+			}
+			
+			if(count($like_clauses))
+			{
+				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+			}
+		}
+		
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "rental_document.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		
+		if(isset($filters['contract_id']))
+		{
+			$filter_clauses[] = "rental_document.contract_id = {$this->marshal($filters['contract_id'],'int')}";
+		}
+		
+		if(isset($filters['party_id']))
+		{
+			$filter_clauses[] = "rental_document.party_id = {$this->marshal($filters['party_id'],'int')}";
+		}
+		
+		if(isset($filters['document_type']) && $filters['document_type'] != 'all')
+		{
+			$filter_clauses[] = "rental_document.type_id = {$this->marshal($filters['document_type'],'int')}";
+		}
+		
+		if(count($filter_clauses))
+		{
+			$clauses[] = join(' AND ', $filter_clauses);
+		}
+		
+		
+		$condition =  join(' AND ', $clauses);
+
+		$tables = "controller_control_item";
+		$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
+		
+		if($return_count)
+		{
+			$cols = 'COUNT(DISTINCT(rental_document.id)) AS count';
+		}
+		else
+		{
+			$cols = 'id, title, required, controller_control_item.what_to_do_desc as what_to_do, controller_control_item.how_to_do_desc as how_to_do, control_group_id, control_type_id';
+		}
+		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		if($sort_field == 'title')
+		{
+			$sort_field = 'rental_document.title';
+		}
+		else if($sort_field == 'type')
+		{
+			$sort_field = 'rental_document_types.title';
+		}
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+		
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
+		
+		return "SELECT {$cols} FROM {$tables}";
 	}
 	
 	function populate(int $control_item_id, &$control_item)
 	{
-		/*
+		
 		if($control_item == null) {
-			$control_item = new activitycalendar_activity((int) $activity_id);
+			$control_item = new controller_control_item((int) $control_item_id);
 
-			$control_item->set_title($this->unmarshal($this->db->f('title'), 'string'));
-			$control_item->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
-			$control_item->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
-			$control_item->set_district($this->unmarshal($this->db->f('district'), 'int'));
-			$control_item->set_office($this->unmarshal($this->db->f('office'), 'int'));
-			$control_item->set_category($this->unmarshal($this->db->f('category'), 'int'));
-			$control_item->set_state($this->unmarshal($this->db->f('state'), 'int'));
-			$control_item->set_target($this->unmarshal($this->db->f('target'), 'string'));
-			$control_item->set_description($this->unmarshal($this->db->f('description'), 'string'));
-			$control_item->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
-			$control_item->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
-			$control_item->set_time($this->unmarshal($this->db->f('time'), 'string'));
-			$control_item->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
-			$control_item->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
-			$control_item->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
-			
-			
+			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
+			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
+			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			$control_item->set_control_type_id($this->unmarshal($this->db->f('control_type_id', true), 'int'));
 		}
-		*/
+		
 		return $control_item;
 	}
 	
