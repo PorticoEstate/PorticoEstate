@@ -32,6 +32,12 @@
 					'text'	=> lang('Control_item'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item.index') ),
 		                  'image'	=> array('property', 'location_1'),
+				),     
+				'control_item2' => array
+				(
+					'text'	=> lang('Control_item') . 2,
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item2.index') ),
+		                  'image'	=> array('property', 'location_1'),
 				)     
 			);
 			
