@@ -21,7 +21,6 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->so = CreateObject('controller.socontrol');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
@@ -83,7 +82,7 @@
 				$control_type_options = array
 				(
 					'id'	=> $control_type->get_id(),
-					'name'	=> $control_type->get_title()
+					'name'	=> $control_type->get_name()
 					 
 				);
 			}
@@ -93,7 +92,7 @@
 				$control_group_options = array
 				(
 					'id'	=> $control_group->get_id(),
-					'name'	=> $control_group->get_title()
+					'name'	=> $control_group->get_name()
 					 
 				);
 			}
@@ -108,17 +107,17 @@
 			);
 
 
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
+
+/*
 			$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
 			$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
-		//	$GLOBALS['phpgw']->richtext->generate_script();
+			$GLOBALS['phpgw']->richtext->generate_script();
+*/
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
-			$GLOBALS['phpgw']->xslttpl->add_file(array('control_item'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('item' => $data));
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 
-	//		$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'common', 'controller' );
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
-
+			self::render_template_xsl('control_item', $data);
 		}
 					
 

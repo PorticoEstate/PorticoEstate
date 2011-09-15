@@ -1,6 +1,8 @@
 <!-- item  -->
-<xsl:template match="item" xmlns:php="http://php.net/xsl">
-	<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
+
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+
+<xsl:call-template name="yui_booking_i18n"/>
 <div class="identifier-header">
 <h1><img src="{img_go_home}" /> 
 		<xsl:value-of select="php:function('lang', 'Control_item')" />
