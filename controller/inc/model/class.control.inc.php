@@ -10,7 +10,11 @@
 		protected $description;
 		protected $start_date;
 		protected $end_date;
-		
+		protected $repeat_day;
+		protected $repeat_type;
+		protected $repeat_interval;
+		protected $enabled;
+				
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -57,7 +61,34 @@
 		
 		public function get_start_date() { return $this->start_date; }
 		
+		public function set_repeat_day($repeat_day)
+		{
+			$this->repeat_day = $repeat_day;
+		}
 		
+		public function get_repeat_day() { return $this->repeat_day; }
+		
+		public function set_repeat_type($repeat_type)
+		{
+			$this->repeat_type = $repeat_type;
+		}
+					
+		public function get_repeat_type() { return $this->repeat_type; }
+		
+		public function set_repeat_interval($repeat_interval)
+		{
+			$this->repeat_interval = $repeat_interval;
+		}
+		
+		public function get_repeat_interval() { return $this->repeat_interval; }
+		
+		public function set_enabled($enabled)
+		{
+			$this->enabled = $enabled;
+		}
+		
+		public function get_enabled() { return $this->enabled; }
+				
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 

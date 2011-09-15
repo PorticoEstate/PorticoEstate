@@ -35,11 +35,12 @@
 	(
 		'controller_control',
 		'controller_control_schedule',
-		'controller_control_point_list',
-		'controller_control_point',
+		'controller_control_item_list',
+		'controller_control_item',
 		'controller_control_group',
-		'controller_check_point',
-		'controller_check_list'
+		'controller_check_item',
+		'controller_check_list',
+		'controller_procedure',
+		'controller_control_type'
 	);
-	
 ?>

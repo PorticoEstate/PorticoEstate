@@ -12,7 +12,7 @@
 				'controller' => array
 				(
 					'text'	=> lang('Controller'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiactivities.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.index') ),
                     'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'
@@ -27,20 +27,12 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.index') ),
 		                  'image'	=> array('property', 'location_1'),
 				),
-				'organizationList' => array
+				'control_item' => array
 				(
-					'text'	=> lang('OrganizationList'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiorganization.index') ),
-		            'image'	=> array('property', 'location_tenant'),
-					'children'	=> array(
-								'changed_organizations' => array
-								(
-									'text'	=> lang('changed_org_group'),
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'activitycalendar.uiorganization.changed_organizations') ),
-									'image'	=> array('property', 'location_tenant')
-								)
-							)
-				)      
+					'text'	=> lang('Control_item'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item.index') ),
+		                  'image'	=> array('property', 'location_1'),
+				)     
 			);
 			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');

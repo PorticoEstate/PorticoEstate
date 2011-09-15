@@ -31,8 +31,6 @@ class controller_socontrol extends controller_socommon
 		
 		$title = $control->get_title();
 		
-		var_dump("i add");
-		
 		$sql = "INSERT INTO controller_control (title) VALUES ('$title')";
 		$result = $this->db->query($sql, __LINE__,__FILE__);
 
@@ -67,8 +65,8 @@ class controller_socontrol extends controller_socommon
 			'description = ' . $this->marshal($control->get_description(), 'string'),
 			'start_date = ' . $this->marshal($control->get_start_date(), 'int'),
 			'end_date = ' . $this->marshal($control->get_end_date(), 'int'),
-			'repeat_date = ' . $this->marshal($control->get_repeat_date(), 'int'),
 			'repeat_day = ' . $this->marshal($control->get_repeat_day(), 'int'),
+			'repeat_type = ' . $this->marshal($control->get_repeat_type(), 'int'),
 			'repeat_interval = ' . $this->marshal($control->get_repeat_interval(), 'int'),
 		
 		);
