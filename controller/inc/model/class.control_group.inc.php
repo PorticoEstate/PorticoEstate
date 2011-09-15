@@ -1,7 +1,7 @@
 <?php
 	include_class('controller', 'model', 'inc/model/');
 	
-	class controller_check_item extends controller_model
+	class controller_control_group extends controller_model
 	{
 		public static $so;
 
@@ -26,12 +26,12 @@
 		
 		public function get_id() { return $this->id; }
 
-		public function set_control_group($control_group)
+		public function set_group_name($group_name)
 		{
-			$this->control_group = $control_group;
+			$this->group_name = $group_name;
 		}
 		
-		public function get_control_group(){ return $this->control_group; }
+		public function get_group_name(){ return $this->group_name; }
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -41,7 +41,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller_check_item');
+				self::$so = CreateObject('controller_control_group');
 			}
 			
 			return self::$so;
