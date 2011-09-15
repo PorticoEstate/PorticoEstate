@@ -19,7 +19,9 @@
 		
 		public $public_functions = array
 		(
-			'index'	=>	true
+			'index'	=>	true,
+			'query'	=>	true,
+			'display_control_items'	=>	true
 		);
 
 		public function __construct()
@@ -80,10 +82,95 @@
 						)
 					);
 		}
+		
+		public function display_control_items()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item_list";
+			
+					
+			$this->render('control_item_list.php');
+		}
 					
 		public function query()
 		{
-			var_dump("Er i uicontrol");
-
+			
+			$user_rows_per_page = 10;
+			
+			// YUI variables for paging and sorting
+			$start_index	= phpgw::get_var('startIndex', 'int');
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
+			$sort_field		= phpgw::get_var('sort');
+			if($sort_field == null)
+			{
+				$sort_field = 'control_item_id';
+			}
+			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			//Create an empty result set
+			$records = array();
+			
+			//Retrieve a contract identifier and load corresponding contract
+			$control_item_id = phpgw::get_var('control_item_id');
+			if(isset($control_item_id))
+			{
+				$control_item = rental_socontract::get_instance()->get_single($control_item_id);
+			}
+			
+			/*
+			//Retrieve the type of query and perform type specific logic
+			$type = phpgw::get_var('type');
+			switch($type)
+			{
+				case 'included_price_items':
+					if(isset($contract))
+					{
+						$filters = array('contract_id' => $contract->get_id());
+						$result_objects = rental_socontract_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+						$object_count = rental_socontract_price_item::get_instance()->get_count($search_for, $search_type, $filters);
+					}
+					break;
+				case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
+					$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
+					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
+					break;
+				case 'manual_adjustment':
+					$filters = array('price_item_status' => 'active','is_adjustable' => 'false');
+					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
+					break;
+				default:
+					//$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
+					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
+					break;
+			}
+		*/
+			
+		$result_objects = controller_socontrol_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			
+			// Create an empty row set
+			$rows = array();
+			foreach ($result_objects as $record) {
+				if(isset($record))
+				{
+					// ... add a serialized record
+					$rows[] = $record->serialize();
+				}
+			}
+			$data = array('results' => $rows, 'total_records' => $object_count);
+	
+			$editable = phpgw::get_var('editable') == 'true' ? true : false;
+	
+			//Add action column to each row in result table
+			array_walk(
+				$data['results'], 
+				array($this, 'add_actions'), 
+				array(
+					$control_item_id,
+					$type,
+					$editable
+				)
+			);
+			return $this->yui_results($data, 'total_records', 'results');
 		}	
-	}
+}
