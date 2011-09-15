@@ -40,12 +40,6 @@
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								)
 							)
-				),     
-				'control_item2' => array
-				(
-					'text'	=> lang('Control_item') . 2,
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item2.index') ),
-		                  'image'	=> array('property', 'location_1'),
 				)     
 			);
 			
