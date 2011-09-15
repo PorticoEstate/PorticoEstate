@@ -2,3 +2,4 @@
  *
  */
 
+alert('dette er respons fra "controller/js/yahoo/controller.item.js"');
