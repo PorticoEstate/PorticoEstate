@@ -55,8 +55,8 @@
 			label: "control_group_id"
 		},
 		{
-			key: "control_type_id",
-			label: "control_type_id"
+			key: "control_area_id",
+			label: "control_area_id"
 		},
 		{
 			key: "ajax",
