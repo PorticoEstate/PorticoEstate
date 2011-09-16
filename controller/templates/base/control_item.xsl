@@ -48,11 +48,11 @@
 						</select>
 					</dd>
 					<dt>
-						<label for="control_type">Kontrolltype</label>
+						<label for="control_area">Kontrolltype</label>
 					</dt>
 					<dd>
-						<select id="control_type" name="control_type">
-							<xsl:apply-templates select="control_type/options"/>
+						<select id="control_area" name="control_area">
+							<xsl:apply-templates select="control_area/options"/>
 						</select>
 					</dd>				
 				</dl>

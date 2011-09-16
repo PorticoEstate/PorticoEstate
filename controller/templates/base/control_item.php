@@ -49,13 +49,13 @@
 						</select>
 					</dd>
 					<dt>
-						<label for="control_type">Kontrolltype</label>
+						<label for="control_area">Kontrolltype</label>
 					</dt>
 					<dd>
-						<select id="control_type" name="control_type">
+						<select id="control_area" name="control_area">
 							<?php 
-								foreach ($control_type_array as $control_type) {
-									echo "<option value='" . $control_type->get_id() . "'>" . $control_type->get_title() . "</option>";
+								foreach ($control_area_array as $control_area) {
+									echo "<option value='" . $control_area->get_id() . "'>" . $control_area->get_title() . "</option>";
 								}
 							?>
 						</select>
