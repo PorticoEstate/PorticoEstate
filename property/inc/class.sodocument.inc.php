@@ -174,7 +174,7 @@
 				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
 
-			$groupmethod= " GROUP BY fm_document.location_code";
+			$groupmethod= " GROUP BY fm_document.location_code, fm_location1.loc1_name";
 
 			if ($entity_id)
 			{
