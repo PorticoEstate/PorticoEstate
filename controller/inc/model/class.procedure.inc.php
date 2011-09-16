@@ -114,5 +114,18 @@
 //			_debug_array($procedure_arr);
 			return $procedure_arr;
 		}
+		
+		public function serialize()
+		{
+			return array(
+					'id' => $this->get_id(),
+					'title' => $this->get_title(),
+					'description' => $this->get_description(),
+					'purpose' => $this->get_purpose(),
+					'responsibility' => $this->get_responsibility(),
+					'reference' => $this->get_reference(),
+					'attachment' => $this->get_attachment()
+			);
+		}
 	}
 ?>
