@@ -126,6 +126,7 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
 			//self::add_stylesheet('controller/templates/base/css/base.css');
 			self::add_javascript('controller', 'yahoo', 'common.js');
+			self::add_javascript('controller', 'controller', 'common.js');
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
