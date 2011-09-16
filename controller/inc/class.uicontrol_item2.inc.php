@@ -77,12 +77,12 @@
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			}
 
-			foreach ($control_type_array as $control_type)
+			foreach ($control_area_array as $control_area)
 			{
-				$control_type_options = array
+				$control_area_options = array
 				(
-					'id'	=> $control_type->get_id(),
-					'name'	=> $control_type->get_name()
+					'id'	=> $control_area->get_id(),
+					'name'	=> $control_area->get_name()
 					 
 				);
 			}
@@ -102,7 +102,7 @@
 				'value_id'				=> !empty($control) ? $control->get_id() : 0,
 				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 				'editable' 				=> true,
-				'control_item'			=> array('options' => $control_type_options),
+				'control_item'			=> array('options' => $control_area_options),
 				'control_group'			=> array('options' => $control_group_options),
 			);
 
