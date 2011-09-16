@@ -71,6 +71,7 @@ class controller_soprocedure extends controller_socommon
 		$id = intval($procedure->get_id());
 			
 		$values = array(
+			'title = ' . $this->marshal($procedure->get_title(), 'string'),
 			'purpose = ' . $this->marshal($procedure->get_purpose(), 'string'),
 			'responsibility = ' . $this->marshal($procedure->get_responsibility(), 'string'),
 			'description = ' . $this->marshal($procedure->get_description(), 'string'),
