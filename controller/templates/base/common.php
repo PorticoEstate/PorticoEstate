@@ -568,14 +568,13 @@ function clearCalendar(event)
 
 function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitle, closeButton,clearButton,hiddenField,noPostOnSelect)
 {
-	console.log("i init!!! " + inputFieldID + " : " + divContainerID + " : " + calendarBodyId + " : " + calendarTitle );
 	var overlay = new YAHOO.widget.Dialog(
 		divContainerID,
 		{	visible: false,
 			close: true
 		}
 	);
-
+	
 	var navConfig = {
 			strings: {
 				month:"<?php echo lang('month') ?>",
@@ -586,7 +585,7 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 				},
 				initialFocus: "month"
 			}
-	
+
 	var cal = new YAHOO.widget.Calendar(
 		calendarBodyId,
 		{ 	navigator:navConfig,
@@ -597,6 +596,7 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 
 	cal.cfg.setProperty("MONTHS_LONG",<?php echo lang('calendar_months') ?>);
 	cal.cfg.setProperty("WEEKDAYS_SHORT",<?php echo lang('calendar_weekdays') ?>);
+
 	cal.render();
 
 	cal.selectEvent.subscribe(onCalendarSelect,[inputFieldID,overlay,hiddenField,noPostOnSelect],false);
@@ -606,7 +606,7 @@ function initCalendar(inputFieldID, divContainerID, calendarBodyId, calendarTitl
 	YAHOO.util.Event.addListener(closeButton,'click',closeCalender,overlay,true);
 	YAHOO.util.Event.addListener(clearButton,'click',clearCalendar,cal,true);
 	YAHOO.util.Event.addListener(inputFieldID,'click',onClickOnInput,overlay,true);
-
+	
 	return cal;
 }
 
