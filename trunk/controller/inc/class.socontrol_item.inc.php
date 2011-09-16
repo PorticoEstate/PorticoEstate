@@ -125,7 +125,7 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_type_id($this->unmarshal($this->db->f('control_type_id', true), 'int'));
+			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			
 			$results[] = $control_item;
 		}
@@ -221,7 +221,7 @@ class controller_socontrol_item extends controller_socommon
 		}
 		else
 		{
-			$cols = 'id, title, required, controller_control_item.what_to_do_desc as what_to_do, controller_control_item.how_to_do_desc as how_to_do, control_group_id, control_type_id';
+			$cols = 'id, title, required, controller_control_item.what_to_do_desc as what_to_do, controller_control_item.how_to_do_desc as how_to_do, control_group_id, control_area_id';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -252,7 +252,7 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_type_id($this->unmarshal($this->db->f('control_type_id', true), 'int'));
+			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 		}
 		
 		return $control_item;

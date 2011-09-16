@@ -4,7 +4,7 @@
 	phpgw::import_class('controller.socontrol');
 	phpgw::import_class('controller.socontrol_item');
 	phpgw::import_class('controller.socontrol_group');
-	phpgw::import_class('controller.socontrol_type');
+	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'control', 'inc/model/');
 	
@@ -15,7 +15,7 @@
 		private $so_proc;
 		private $so_control_item;
 		private $so_control_group;
-		private $so_control_type;
+		private $so_control_area;
 		
 		public $public_functions = array
 		(
@@ -31,7 +31,7 @@
 			$this->so = CreateObject('controller.socontrol');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
-			$this->so_control_type = CreateObject('controller.socontrol_type');
+			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->bo = CreateObject('property.boevent',true);
 		}
 		
@@ -51,7 +51,7 @@
 					$control_item->set_what_to_desc( strtotime( phpgw::get_var('what_to_desc')  ) );
 					$control_item->set_how_to_desc( strtotime( phpgw::get_var('how_to_desc') ) );
 					$control_item->set_control_group_id( strtotime( phpgw::get_var('control_group_id') ) );
-					$control_item->set_control_type_id( strtotime( phpgw::get_var('control_type_id') ) );
+					$control_item->set_control_area_id( strtotime( phpgw::get_var('control_area_id') ) );
 									
 					$this->so->add($control_item);
 				}
@@ -65,19 +65,19 @@
 					$control_item->set_what_to_desc( strtotime( phpgw::get_var('what_to_desc')  ) );
 					$control_item->set_how_to_desc( strtotime( phpgw::get_var('how_to_desc') ) );
 					$control_item->set_control_group_id( strtotime( phpgw::get_var('control_group_id') ) );
-					$control_item->set_control_type_id( strtotime( phpgw::get_var('control_type_id') ) );
+					$control_item->set_control_area_id( strtotime( phpgw::get_var('control_area_id') ) );
 									
 					$this->so->add($control_item);
 				}
 			}
 			
-			$control_type_array = $this->so_control_type->get_control_type_array();
+			$control_area_array = $this->so_control_area->get_control_area_array();
 			$control_group_array = $this->so_control_group->get_control_group_array();
 			
 			$this->render('control_item.php', array
 						(
 						'editable' => true,
-						'control_type_array' => $control_type_array,
+						'control_area_array' => $control_area_array,
 						'control_group_array' => $control_group_array 
 						)
 					);
