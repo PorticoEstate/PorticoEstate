@@ -302,12 +302,7 @@
 				array_walk(
 					$result_data['results'],
 					array($this, '_add_links'),
-					"controller.uiprocedure.view"); 
-/*					array(													// Parameters (non-object pointers)
-						$procedure_id,										// [1] The procedure id
-						$editable,											// [2] Editable flag			
-					)*/
-				//);
+					"controller.uiprocedure.view");
 			}
 //_debug_array($result_data);
 			return $this->yui_results($result_data, 'total_records', 'results');
