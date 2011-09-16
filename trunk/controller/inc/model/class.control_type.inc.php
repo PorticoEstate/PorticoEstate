@@ -1,7 +1,7 @@
 <?php
 	include_class('controller', 'model', 'inc/model/');
 	
-	class controller_control_type extends controller_model
+	class controller_control_area extends controller_model
 	{
 		public static $so;
 
@@ -41,7 +41,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller_control_type');
+				self::$so = CreateObject('controller_control_area');
 			}
 			
 			return self::$so;

@@ -11,7 +11,7 @@
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
-		protected $control_type_id;
+		protected $control_area_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -66,12 +66,12 @@
 		
 		public function get_control_group_id() { return $this->control_group_id; }
 		
-		public function set_control_type_id($control_type_id)
+		public function set_control_area_id($control_area_id)
 		{
-			$this->control_type_id = $control_type_id;
+			$this->control_area_id = $control_area_id;
 		}
 		
-		public function get_control_type_id() { return $this->control_type_id; }
+		public function get_control_area_id() { return $this->control_area_id; }
 		
 			
 		/**
@@ -97,7 +97,7 @@
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group_id'] = $this->get_control_group_id();
-			$result['control_type_id'] = $this->get_control_type_id();
+			$result['control_area_id'] = $this->get_control_area_id();
 						
 			return $result;
 		}
