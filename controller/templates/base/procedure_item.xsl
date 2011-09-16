@@ -99,7 +99,9 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+							<xsl:variable name="lang_cancel"><xsl:value-of select="php:function('lang', 'cancel')" /></xsl:variable>
 							<input type="submit" name="save_procedure" value="{$lang_save}" title = "{$lang_save}" />
+							<input type="submit" name="cancel_procedure" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
