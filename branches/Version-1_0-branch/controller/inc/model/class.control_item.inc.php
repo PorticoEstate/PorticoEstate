@@ -8,10 +8,10 @@
 		protected $id;
 		protected $title;
 		protected $required;
-		protected $what_to_desc;
-		protected $how_to_desc;
+		protected $what_to_do;
+		protected $how_to_do;
 		protected $control_group_id;
-		protected $control_type_id;
+		protected $control_area_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -45,19 +45,19 @@
 		
 		public function get_required() { return $this->required; }
 		
-		public function set_what_to_desc($what_to_desc)
+		public function set_what_to_do($what_to_do)
 		{
-			$this->what_to_desc = $what_to_desc;
+			$this->what_to_do = $what_to_do;
 		}
 		
-		public function get_what_to_desc() { return $this->what_to_desc; }
+		public function get_what_to_do() { return $this->what_to_do; }
 		
-		public function set_how_to_desc($how_to_desc)
+		public function set_how_to_do($how_to_do)
 		{
-			$this->how_to_desc = $how_to_desc;
+			$this->how_to_do = $how_to_do;
 		}
 		
-		public function get_how_to_desc() { return $this->how_to_desc; }
+		public function get_how_to_do() { return $this->how_to_do; }
 		
 		public function set_control_group_id($control_group_id)
 		{
@@ -66,12 +66,12 @@
 		
 		public function get_control_group_id() { return $this->control_group_id; }
 		
-		public function set_control_type_id($control_type_id)
+		public function set_control_area_id($control_area_id)
 		{
-			$this->control_type_id = $control_type_id;
+			$this->control_area_id = $control_area_id;
 		}
 		
-		public function get_control_type_id() { return $this->control_type_id; }
+		public function get_control_area_id() { return $this->control_area_id; }
 		
 			
 		/**
@@ -82,10 +82,24 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller.sopurpose');
+				self::$so = CreateObject('controller.socontrol_item');
 			}
 			
 			return self::$so;
+		}
+		
+		 public function serialize()
+		 {
+			$result = array();
+			$result['id'] = $this->get_id();
+			$result['title'] = $this->get_title();
+			$result['required'] = $this->get_required();
+			$result['what_to_do'] = $this->get_what_to_do();
+			$result['how_to_do'] = $this->get_how_to_do();
+			$result['control_group_id'] = $this->get_control_group_id();
+			$result['control_area_id'] = $this->get_control_area_id();
+						
+			return $result;
 		}
 	}
 ?>

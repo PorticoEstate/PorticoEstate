@@ -1,12 +1,12 @@
 <?php
 	include_class('controller', 'model', 'inc/model/');
 	
-	class controller_control_group extends controller_model
+	class controller_control_area extends controller_model
 	{
 		public static $so;
 
 		protected $id;
-		protected $group_name;
+		protected $title;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -26,12 +26,12 @@
 		
 		public function get_id() { return $this->id; }
 
-		public function set_group_name($group_name)
+		public function set_title($title)
 		{
-			$this->group_name = $group_name;
+			$this->title = $title;
 		}
 		
-		public function get_group_name(){ return $this->group_name; }
+		public function get_title(){ return $this->title; }
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -41,7 +41,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller.socontrol_group');
+				self::$so = CreateObject('controller_control_area');
 			}
 			
 			return self::$so;

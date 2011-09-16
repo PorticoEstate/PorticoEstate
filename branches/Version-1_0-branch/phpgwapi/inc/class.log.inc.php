@@ -279,15 +279,18 @@
 					}
 				}
 
-				echo '<h1>' . lang('Fatal Error') . "</h1>\n"
+
+				$message = '<h1>' . lang('Fatal Error') . "</h1>\n"
 					. "<h2>{$msg}</h2>\n"
 					. '<p>' . lang('file') . ': ' . $err->fname . "<br>\n"
 					. lang('line') . ': ' . $err->line . "</p>\n"
 					. $trace;
 
+				phpgwapi_cache::message_set($message, 'error');
+
 				if ( isset($GLOBALS['phpgw']->common) && is_object($GLOBALS['phpgw']->common) )
 				{
-					$GLOBALS['phpgw']->common->phpgw_exit(True);
+					$GLOBALS['phpgw']->common->phpgw_exit(true);
 				}
 			}
 		}

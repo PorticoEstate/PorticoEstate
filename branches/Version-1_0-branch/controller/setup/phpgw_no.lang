@@ -628,4 +628,13 @@ yes	controller	no	Ja
 your_notifications	controller	no	Dine varsler
 control_items	controller	no	Kontrollpunkt
 Control_item	controller	no	Kontrollpunkt
-
+Procedure	controller	no	Prosedyre
+Procedures	controller	no	Prosedyrer
+Procedure title	controller	no	Navn
+t_new_procedure	controller	no	Ny prosedyre
+f_new_procedure	controller	no	Legg til
+Procedure purpose	controller	no	Formål
+Procedure responsibility	controller	no	Ansvarlig
+Procedure description	controller	no	Beskrivelse
+Procedure reference	controller	no	Referanse
+Procedure attachment	controller	no	Vedlegg
