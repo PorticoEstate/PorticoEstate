@@ -195,7 +195,8 @@
 						),
 					),
 				),
-				'datatable' => array(
+				'datatable' => array
+				(
 					'source' => self::link(array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
@@ -247,7 +248,48 @@
 				),
 			);
 //_debug_array($data);
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
 
+
+			$actions = array
+			(
+				array
+				(
+					'my_name'		=> 'view',
+					'text' 			=> lang('view'),
+					'confirm_msg'	=> lang('do you really want to view this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'controller.uicontrol_item2.index',
+					)),
+					'parameters'	=> $parameters
+				),
+				array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'confirm_msg'	=> lang('do you really want to edit this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'controller.uicontrol_item2.index',
+					)),
+					'parameters'	=> $parameters
+				)
+			);
+
+			$data['actions'] = json_encode($actions);
+
+//_debug_array($data);die();
 			self::render_template_xsl('datatable', $data);
 		}
 

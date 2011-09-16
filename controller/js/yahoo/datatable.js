@@ -91,6 +91,32 @@ YAHOO.portico.initializeDataTable = function()
             dynamicData: true,
             sortedBy: YAHOO.portico.initialSortedBy || {key: fields[0], dir: YAHOO.widget.DataTable.CLASS_ASC}
     });
+
+//------------
+		myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
+		myContextMenu.addItems(GetMenuContext());
+
+		myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
+		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
+
+	//	myDataTable.subscribe("renderEvent", myRenderEvent);
+
+	/*
+		myDataTable.subscribe("rowClickEvent",function (oArgs)
+											   {
+													var elTarget = oArgs.target;
+													var oRecord = this.getRecord(elTarget);
+													Exchange_values(oRecord);
+											   }
+	   );*/
+
+		myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
+		myContextMenu.subscribe("hide", onContextMenuHide);
+		//Render the ContextMenu instance to the parent container of the DataTable
+		myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
+		myContextMenu.render(myDataTable);
+//--------------
+
     var handleSorting = function (oColumn) {
         var sDir = this.getColumnSortDir(oColumn);
         var newState = getState(oColumn.key, sDir);
@@ -165,6 +191,241 @@ YAHOO.portico.initializeDataTable = function()
 		handleHistoryNavigation(state);
 	});
 	History.initialize("yui-history-field", "yui-history-iframe");
+
 };
+
+	this.GetMenuContext = function()
+	{
+		var opts = new Array();
+		var p=0;
+		for(var k =0; k < actions.length; k ++)
+		{
+			//if(actions[k].my_name != 'add')
+			{	opts[p]=[{text: actions[k].text}];
+				p++;
+			}
+		}
+		return opts;
+   }
+
+	this.onContextMenuBeforeShow = function(p_sType, p_aArgs)
+	{
+		var prefixSelected = '';
+		var oTarget = this.contextEventTarget;
+		if (this.getRoot() == this)
+		{
+			if(oTarget.tagName != "TD")
+			{
+				oTarget = YAHOO.util.Dom.getAncestorByTagName(oTarget, "td");
+			}
+			oSelectedTR = YAHOO.util.Dom.getAncestorByTagName(oTarget, "tr");
+			oSelectedTR.style.backgroundColor  = '#AAC1D8' ;
+			oSelectedTR.style.color = "black";
+			YAHOO.util.Dom.addClass(oSelectedTR, prefixSelected);
+		}
+	}
+ /********************************************************************************
+ *
+ */
+	this.onContextMenuHide = function(p_sType, p_aArgs)
+	{
+		var prefixSelected = '';
+		if (this.getRoot() == this && oSelectedTR)
+		{
+			oSelectedTR.style.backgroundColor  = "" ;
+			oSelectedTR.style.color = "";
+			YAHOO.util.Dom.removeClass(oSelectedTR, prefixSelected);
+		}
+	}
+ 
+	this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
+	{
+		var task = p_aArgs[1];
+			if(task)
+			{
+				// Extract which TR element triggered the context menu
+				var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
+				if(elRow)
+				{
+					var oRecord = p_myDataTable.getRecord(elRow);
+					var url = actions[task.groupIndex].action;
+					var sUrl = "";
+					var vars2 = "";
+
+					if(actions[task.groupIndex].parameters!=null)
+					{
+						for(f=0; f<actions[task.groupIndex].parameters.parameter.length; f++)
+						{
+							param_name = actions[task.groupIndex].parameters.parameter[f].name;
+							param_source = actions[task.groupIndex].parameters.parameter[f].source;
+							vars2 = vars2 + "&"+param_name+"=" + oRecord.getData(param_source);
+						}
+						sUrl = url + vars2;
+					}
+					if(actions[task.groupIndex].parameters.parameter.length > 0)
+					{
+						//nothing
+					}
+					else //for New
+					{
+						sUrl = url;
+					}
+					//Convert all HTML entities to their applicable characters
+					sUrl=html_entity_decode(sUrl);
+
+					// look for the word "DELETE" in URL
+					if(substr_count(sUrl,'delete')>0)
+					{
+						confirm_msg = actions[task.groupIndex].confirm_msg;
+						if(confirm(confirm_msg))
+						{
+							sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
+							delete_record(sUrl);
+						}
+					}
+					else
+					{
+						if(substr_count(sUrl,'target=_blank')>0)
+						{
+							window.open(sUrl,'_blank');
+						}
+						else if(substr_count(sUrl,'target=_lightbox')>0)
+						{
+							//have to be defined as a local function. Example in invoice.list_sub.js
+							//console.log(sUrl); // firebug
+							showlightbox(sUrl);
+						}
+						else
+						{
+
+							window.open(sUrl,'_self');
+						}
+					}
+				}
+			}
+	};
+
+	this.html_entity_decode = function(string)
+	{
+		var histogram = {}, histogram_r = {}, code = 0;
+		var entity = chr = '';
+
+		histogram['34'] = 'quot';
+		histogram['38'] = 'amp';
+		histogram['60'] = 'lt';
+		histogram['62'] = 'gt';
+		histogram['160'] = 'nbsp';
+		histogram['161'] = 'iexcl';
+		histogram['162'] = 'cent';
+		histogram['163'] = 'pound';
+		histogram['164'] = 'curren';
+		histogram['165'] = 'yen';
+		histogram['166'] = 'brvbar';
+		histogram['167'] = 'sect';
+		histogram['168'] = 'uml';
+		histogram['169'] = 'copy';
+		histogram['170'] = 'ordf';
+		histogram['171'] = 'laquo';
+		histogram['172'] = 'not';
+		histogram['173'] = 'shy';
+		histogram['174'] = 'reg';
+		histogram['175'] = 'macr';
+		histogram['176'] = 'deg';
+		histogram['177'] = 'plusmn';
+		histogram['178'] = 'sup2';
+		histogram['179'] = 'sup3';
+		histogram['180'] = 'acute';
+		histogram['181'] = 'micro';
+		histogram['182'] = 'para';
+		histogram['183'] = 'middot';
+		histogram['184'] = 'cedil';
+		histogram['185'] = 'sup1';
+		histogram['186'] = 'ordm';
+		histogram['187'] = 'raquo';
+		histogram['188'] = 'frac14';
+		histogram['189'] = 'frac12';
+		histogram['190'] = 'frac34';
+		histogram['191'] = 'iquest';
+		histogram['192'] = 'Agrave';
+		histogram['193'] = 'Aacute';
+		histogram['194'] = 'Acirc';
+		histogram['195'] = 'Atilde';
+		histogram['196'] = 'Auml';
+		histogram['197'] = 'Aring';
+		histogram['198'] = 'AElig';
+		histogram['199'] = 'Ccedil';
+		histogram['200'] = 'Egrave';
+		histogram['201'] = 'Eacute';
+		histogram['202'] = 'Ecirc';
+		histogram['203'] = 'Euml';
+		histogram['204'] = 'Igrave';
+		histogram['205'] = 'Iacute';
+		histogram['206'] = 'Icirc';
+		histogram['207'] = 'Iuml';
+		histogram['208'] = 'ETH';
+		histogram['209'] = 'Ntilde';
+		histogram['210'] = 'Ograve';
+		histogram['211'] = 'Oacute';
+		histogram['212'] = 'Ocirc';
+		histogram['213'] = 'Otilde';
+		histogram['214'] = 'Ouml';
+		histogram['215'] = 'times';
+		histogram['216'] = 'Oslash';
+		histogram['217'] = 'Ugrave';
+		histogram['218'] = 'Uacute';
+		histogram['219'] = 'Ucirc';
+		histogram['220'] = 'Uuml';
+		histogram['221'] = 'Yacute';
+		histogram['222'] = 'THORN';
+		histogram['223'] = 'szlig';
+		histogram['224'] = 'agrave';
+		histogram['225'] = 'aacute';
+		histogram['226'] = 'acirc';
+		histogram['227'] = 'atilde';
+		histogram['228'] = 'auml';
+		histogram['229'] = 'aring';
+		histogram['230'] = 'aelig';
+		histogram['231'] = 'ccedil';
+		histogram['232'] = 'egrave';
+		histogram['233'] = 'eacute';
+		histogram['234'] = 'ecirc';
+		histogram['235'] = 'euml';
+		histogram['236'] = 'igrave';
+		histogram['237'] = 'iacute';
+		histogram['238'] = 'icirc';
+		histogram['239'] = 'iuml';
+		histogram['240'] = 'eth';
+		histogram['241'] = 'ntilde';
+		histogram['242'] = 'ograve';
+		histogram['243'] = 'oacute';
+		histogram['244'] = 'ocirc';
+		histogram['245'] = 'otilde';
+		histogram['246'] = 'ouml';
+		histogram['247'] = 'divide';
+		histogram['248'] = 'oslash';
+		histogram['249'] = 'ugrave';
+		histogram['250'] = 'uacute';
+		histogram['251'] = 'ucirc';
+		histogram['252'] = 'uuml';
+		histogram['253'] = 'yacute';
+		histogram['254'] = 'thorn';
+		histogram['255'] = 'yuml';
+
+		// Reverse table. Cause for maintainability purposes, the histogram is
+		// identical to the one in htmlentities.
+		for (code in histogram) {
+			entity = histogram[code];
+			histogram_r[entity] = code;
+		}
+
+		return (string+'').replace(/(\&([a-zA-Z]+)\;)/g, function(full, m1, m2){
+			if (m2 in histogram_r) {
+				return String.fromCharCode(histogram_r[m2]);
+			} else {
+				return m2;
+			}
+		});
+	}
+
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.portico.initializeDataTable);
