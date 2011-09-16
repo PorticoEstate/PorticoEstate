@@ -395,12 +395,28 @@ XSLT;
 
 			if (!$html || $html == '<?xml version="1.0"?>')
 			{
+				$message ='Systemfeil - kontakt adminstrator';
+
+				if(isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && $GLOBALS['phpgw_info']['user']['apps']['admin'])
+				{
+					phpgwapi_cache::message_set($message, 'error');
+				}
+				else
+				{
+					$message .= '<br>' . $_SERVER['SERVER_ADDR'] . $_SERVER['SCRIPT_NAME'];
+					$message .= isset($_REQUEST['menuaction']) ? "?menuaction={$_REQUEST['menuaction']}" : '';
+					echo '<div class="error">';
+					echo $message;
+					echo '</div>';
+				}
+/*
 				_debug_array(libxml_get_last_error());
 				echo "<h2>xml-data</h2>";
 				$this->list_lineno($this->xmldata, true);
 
 				echo "<h2>xsl-data</h2>";
 				$this->list_lineno($this->xsldata);
+*/
 				return '';
 			}
 			return preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
