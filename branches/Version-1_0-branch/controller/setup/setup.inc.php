@@ -34,7 +34,6 @@
 	$setup_info['controller']['tables'] = array 
 	(
 		'controller_control',
-		'controller_control_schedule',
 		'controller_control_item_list',
 		'controller_control_item',
 		'controller_control_group',

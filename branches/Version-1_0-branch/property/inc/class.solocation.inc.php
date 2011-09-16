@@ -1617,6 +1617,8 @@
 			$sql = $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols_return'=>$cols_return,'cols'=>$cols,
 				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,'no_address'=>true,'location_level'=>$type_id));
 
+			$sql = str_replace(',fm_location1.loc1_name', '', $sql);
+
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category",__LINE__,__FILE__);
 
 			$summary = array();

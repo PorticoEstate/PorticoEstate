@@ -1250,7 +1250,7 @@ priority changed	property	no	prioritet er endret
 priority key	property	no	Prioriteringsnøkkel
 priority keys has been updated	property	no	prioriteringsnøkkel er oppdatert
 prizing	property	no	Priser
-probability	property	no	Sansynlighet
+probability	property	no	Sannsynlighet
 project	property	no	prosjekt
 .project	property	no	Prosjekt
 project.workorder	property	no	Prosjekt::Bestilling
@@ -1450,7 +1450,7 @@ select the agreement the pricebook belongs to. to do not use a category select n
 select the agreement this activity belongs to.	property	no	velg avtale denne aktiviteten tilhører
 select the appropriate condition degree	property	no	velg tilstandsgrad
 select the appropriate consequence by breakdown of this component for this theme	property	no	velg konsekvens ved sammenbrudd av dennekomponenten for dette temaet
-select the appropriate propability for worsening of the condition	property	no	velg sansynlighet for forverring
+select the appropriate propability for worsening of the condition	property	no	velg sannsynlighet for forverring
 select the appropriate tax code	property	no	velg mva-kode
 select the branches for this project	property	no	velg fag for dette prosjektet
 select the branches for this request	property	no	velg fag for denne anmodningen
