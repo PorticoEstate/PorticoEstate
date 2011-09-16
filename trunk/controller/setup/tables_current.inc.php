@@ -11,7 +11,7 @@
 				'requirement_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'costResponsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'responsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'control_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'equipment_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'equipment_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -40,10 +40,10 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'title' => array('type' => 'varchar','precision' => '100','nullable' => false),
 				'required' => array('type' => 'bool','nullable' => true,'default' => 'false'),
-				'what_to_do_desc' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'how_to_do_desc' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'what_to_do' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'how_to_do' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'control_group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'control_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -102,7 +102,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_control_type' => array(
+		'controller_control_area' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'title' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False)
