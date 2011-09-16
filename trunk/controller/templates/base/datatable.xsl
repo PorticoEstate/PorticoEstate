@@ -235,5 +235,12 @@
 				</xsl:for-each>
 			];
 		}
+		
+		<xsl:choose>
+			<xsl:when test="//actions != ''">
+  				var actions = <xsl:value-of select="//actions" disable-output-escaping="yes" />;
+			</xsl:when>
+		</xsl:choose>
+
 	</script>
 </xsl:template>
