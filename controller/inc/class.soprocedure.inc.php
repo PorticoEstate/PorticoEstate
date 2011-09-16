@@ -173,7 +173,7 @@ class controller_soprocedure extends controller_socommon
 			$like_clauses = array();
 			switch($search_type){
 				default:
-					$like_clauses[] = "controller_procedure $this->like $like_pattern";
+					$like_clauses[] = "controller_procedure.title $this->like $like_pattern";
 					break;
 			}
 			if(count($like_clauses))
@@ -274,7 +274,7 @@ class controller_soprocedure extends controller_socommon
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "controller_procedure = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+			$filter_clauses[] = "controller_procedure.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
 
 		if(count($filter_clauses))
@@ -295,7 +295,7 @@ class controller_soprocedure extends controller_socommon
 		}
 		else
 		{
-			$cols .= "controller_procedure.id AS procedure_id, controller_procedure.title, controller_procedure.purpose, controller_procedure.respontibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment ";
+			$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';

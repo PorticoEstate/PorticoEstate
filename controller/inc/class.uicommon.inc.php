@@ -221,8 +221,8 @@
 		 * @param $permission
 		 * @return true if check is ok, false othewise
 		 */
-		protected function hasPermissionOn($location = activitycalendar_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
-			return $this->acl->check($location,$permission,'bkbooking');
+		protected function hasPermissionOn($location = controller_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
+			return $this->acl->check($location,$permission,'controller');
 		}
 		
 		
