@@ -126,7 +126,6 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
 			//self::add_stylesheet('controller/templates/base/css/base.css');
 			self::add_javascript('controller', 'yahoo', 'common.js');
-			self::add_javascript('controller', 'controller', 'common.js');
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
@@ -222,8 +221,8 @@
 		 * @param $permission
 		 * @return true if check is ok, false othewise
 		 */
-		protected function hasPermissionOn($location = activitycalendar_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
-			return $this->acl->check($location,$permission,'bkbooking');
+		protected function hasPermissionOn($location = controller_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
+			return $this->acl->check($location,$permission,'controller');
 		}
 		
 		
