@@ -41,6 +41,6 @@
 		'controller_check_item',
 		'controller_check_list',
 		'controller_procedure',
-		'controller_control_type'
+		'controller_control_area'
 	);
 ?>

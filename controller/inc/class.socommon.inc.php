@@ -137,7 +137,7 @@ abstract class controller_socommon
 	 * array, never null. The array keys are the respective index numbers.
 	 */
 	public function get(int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters)
-	{
+	{	
 		$results = array();			// Array to store result objects
 		$map = array();				// Array to hold number of records per target object
 		$check_map = array();		// Array to hold the actual number of record read per target object
@@ -178,7 +178,6 @@ abstract class controller_socommon
 			$start_index = 0;
 		}
 		
-
 		// test-input for break on ordered queries
 		$db2 = clone($this->db);
 
@@ -190,6 +189,7 @@ abstract class controller_socommon
 		{
 			$should_populate_object = false; // Default value - we won't populate object	
 			$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
+			
 			if(in_array($result_id, $added_object_ids)) // Object with this id already added
 			{
 				$should_populate_object = true; // We should populate this object as we already have it in our result array
@@ -248,6 +248,7 @@ abstract class controller_socommon
 				}
 			}
 		}
+		
 		return $results;
 	}
 	

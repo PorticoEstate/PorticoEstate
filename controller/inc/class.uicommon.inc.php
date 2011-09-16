@@ -9,16 +9,23 @@
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
-	
-
-	function extract_values($array, $keys)
+	function extract_values($array, $keys, $options = array())
 	{
+		static $default_options = array(
+			'prefix' => '',
+			'suffix' => '', 
+			'preserve_prefix' => false,
+			'preserve_suffix' => false
+		);
+		
+		$options = array_merge($default_options, $options);
+		
 		$result = array();
-		foreach($keys as $key)
+		foreach($keys as $write_key)
 		{
-			if(in_array($key, array_keys($array)))
-			{
-				$result[$key] = $array[$key];
+			$array_key = $options['prefix'].$write_key.$options['suffix'];
+			if(isset($array[$array_key])) {
+				$result[($options['preserve_prefix'] ? $options['prefix'] : '').$write_key.($options['preserve_suffix'] ? $options['suffix'] : '')] = $array[$array_key];
 			}
 		}
 		return $result;
@@ -28,14 +35,74 @@
 	{
 		if(!isset($array[$key])) $array[$key] = $value;
 	}
-	
-	define('MANAGER','MANAGER');
-	define('EXECUTIVE_OFFICER','EXECUTIVE_OFFICER');
-	define('ADMINISTRATOR','ADMINISTRATOR');
-	
+
+	/**
+	 * Reformat an ISO timestamp into norwegian format
+	 * 
+	 * @param string $date    date
+	 *
+	 * @return string containg timestamp in norwegian format
+	 */
+	function pretty_timestamp($date)
+	{
+		if (empty($date)) return "";
+		
+		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
+		{
+			$date = $date[0]->nodeValue;
+		}
+		preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})( ([0-9]{2}):([0-9]{2}))?/', $date, $match);
+
+		$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+		if($match[4]) 
+		{
+			$dateformat .= ' H:i';
+			$timestamp = mktime($match[5], $match[6], 0, $match[2], $match[3], $match[1]);
+		}
+		else
+		{
+			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
+		}
+		$text = date($dateformat,$timestamp);
+			
+		return $text;
+	}
+
+	/**
+	 * Generates a javascript translator object/hash for the specified fields.
+	 */
+	function js_lang()
+	{
+		$keys = func_get_args();
+		$strings = array();
+		foreach($keys as $key) { $strings[$key] = is_string($key) ? lang($key) : call_user_func_array('lang', $key); }
+		return json_encode($strings);
+	}
+
+	/**
+	 * Creates an array of translated strings.
+	 */
+	function lang_array()
+	{
+		$keys = func_get_args();
+		foreach($keys as &$key) $key = lang($key);
+		return $keys;
+	}
+
 	abstract class controller_uicommon
 	{
-		protected static $old_exception_handler;
+		const UI_SESSION_FLASH = 'flash_msgs';
+
+		protected	
+			$filesArray;
+
+		protected static 
+			$old_exception_handler;
+			
+		private 
+			$ui_session_key,
+			$flash_msgs;
+
 		
 		const LOCATION_ROOT = '.';
 		const LOCATION_IN = '.RESPONSIBILITY.INTO';
@@ -46,11 +113,11 @@
 		
 		public $type_of_user;
 		
-		public $flash_msgs;
+	//	public $flash_msgs;
 		
 		public function __construct()
 		{
-			self::set_active_menu('activitycalendar');
+			self::set_active_menu('controller');
 			self::add_stylesheet('phpgwapi/js/yahoo/calendar/assets/skins/sam/calendar.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/autocomplete/assets/skins/sam/autocomplete.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/datatable/assets/skins/sam/datatable.css');
@@ -58,19 +125,22 @@
 			self::add_stylesheet('phpgwapi/js/yahoo/paginator/assets/skins/sam/paginator.css');
 			self::add_stylesheet('phpgwapi/js/yahoo/treeview/assets/skins/sam/treeview.css');
 			//self::add_stylesheet('controller/templates/base/css/base.css');
-			self::add_javascript('controller', 'controller', 'common.js');
+			self::add_javascript('controller', 'yahoo', 'common.js');
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
 			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('history');
 			phpgwapi_yui::load_widget('paginator');
 			phpgwapi_yui::load_widget('menu');
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
 			
-			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->url_prefix = str_replace('_', '.', get_class($this));
+
+			$this->dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
@@ -81,6 +151,67 @@
 				ADMINISTRATOR => $this->isAdministrator()
 			);*/
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
+		}
+
+		private function get_ui_session_key() {
+			return $this->ui_session_key;
+		}
+		
+		private function restore_flash_msgs() {
+			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH))) {
+				if (is_array($flash_msgs)) {
+					$this->flash_msgs = $flash_msgs;
+					$this->session_set(self::UI_SESSION_FLASH, array());
+					return true;
+				}
+			}
+			
+			$this->flash_msgs = array();
+			return false;
+		}
+		
+		private function store_flash_msgs() {
+			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
+		}
+		
+		private function reset_flash_msgs() {
+			$this->flash_msgs = array();
+			$this->store_flash_msgs();
+		}
+		
+		private function session_set($key, $data) {
+			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
+		}
+		
+		private function session_get($key) {
+			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
+		}
+		
+		/**
+		 * Provides a private session cache setter per ui class.
+		 */
+		protected function ui_session_set($key, $data) {
+			return $this->session_set(get_class($this).'_'.$key, $data);
+		}
+		
+		/**
+		 * Provides a private session cache getter per ui class .
+		 */
+		protected function ui_session_get($key) {
+			return $this->session_get(get_class($this).'_'.$key);
+		}
+
+		protected function generate_secret($length = 10)
+		{
+			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
+		}
+		
+		public function add_js_event($event, $js) {
+			$GLOBALS['phpgw']->js->add_event($event, $js);
+		}
+		
+		public function add_js_load_event($js) {
+			$this->add_js_event('load', $js);
 		}
 		
 		/**
@@ -226,6 +357,68 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
         }
         	
+		public function add_yui_translation(&$data)
+		{
+			$this->add_template_file('yui_booking_i18n');
+			$previous = lang('prev');
+			$next = lang('next');
+							
+			$data['yui_booking_i18n'] = array(
+				'Calendar' => array(
+					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
+					'WEEKDAYS_FULL' => json_encode(lang_array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')),
+					'MONTHS_LONG' => json_encode(lang_array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
+				),
+				'DataTable' => array(
+					'MSG_EMPTY' => json_encode(lang('No records found.')),
+					'MSG_LOADING' => json_encode(lang("Loading...")),
+					'MSG_SORTASC' => json_encode(lang('Click to sort ascending')),
+					'MSG_SORTDESC' => json_encode(lang('Click to sort descending')),
+				),
+				'setupDatePickerHelper' => array(
+					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
+				),
+				'setupPaginator' => array(
+			        'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
+					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
+					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
+				),
+				'common' => array(
+					'LBL_NAME' => json_encode(lang('Name')),
+					'LBL_TIME' => json_encode(lang('Time')),
+					'LBL_WEEK' => json_encode(lang('Week')),
+					'LBL_RESOURCE' => json_encode(lang('Resource')),
+				),
+			);
+		}
+  
+
+		public function add_template_helpers() {
+			$this->add_template_file('helpers');
+		}
+
+  		public function render_template_xsl($files, $data)
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			if($this->flash_msgs) {
+				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
+			} else {
+				$this->add_template_file('msgbox');
+			}
+			
+			$this->reset_flash_msgs();
+			
+			$this->add_yui_translation($data);
+			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			
+			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
+			$GLOBALS['phpgw']->xslttpl->set_output($output);
+			$this->add_template_file($files);
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('data' => $data));
+		}
+
+  
         public function check_active($url)
 		{
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -236,19 +429,46 @@
 			}
 		}
 
-		/**
-		 * Build a YUI result of the data
-		 * 
-		 * @param $data	the data
-		 * @return YUI result { ResultSet => { totalRecords => ?, Result => ?}
-		 */
-		public function yui_results($data,$field_total = 'total_records', $field_results = 'results')
+		// Add link key to a result array
+		public function _add_links(&$value, $key, $menuaction)
 		{
-             return array
-			(   
+			$unset = 0;
+			// FIXME: Fugly workaround
+			// I cannot figure out why this variable isn't set, but it is needed 
+			// by the ->link() method, otherwise we wind up in the phpgroupware 
+			// errorhandler which does lot of weird things and breaks the output
+			if (!isset($GLOBALS['phpgw_info']['server']['webserver_url'])) {
+				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
+				$unset = 1;
+			}
+
+			$value['link'] = self::link(array('menuaction' => $menuaction, 'id' => $value['id']));
+
+			// FIXME: Fugly workaround
+			// I kid you not my friend. There is something very wonky going on 
+			// in phpgroupware which I cannot figure out.
+			// If this variable isn't unset() (if it wasn't set before that is) 
+			// then it will contain extra slashes and break URLs
+			if ($unset) {
+				unset($GLOBALS['phpgw_info']['server']['webserver_url']);
+			}
+		}
+
+		// Build a YUI result style array
+		public function yui_results($results)
+		{
+			if (!$results) {
+				$results['total_records'] = 0;
+				$result['results'] = array();
+			}
+			
+			return array(   
 				'ResultSet' => array(
-					'totalRecords' => $data[$field_total], 
-					'Result' => $data[$field_results]
+					'totalResultsAvailable' => $results['total_records'], 
+					'startIndex' => $results['start'], 
+					'sortKey' => $results['sort'], 
+					'sortDir' => $results['dir'], 
+					'Result' => $results['results']
 				)   
 			);  
 		}
@@ -479,12 +699,5 @@
 		public function __sleep()
 		{
 			return array('table_name', 'fields');
-		}
-		
-		protected function generate_secret($length = 10)
-		{
-			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
-		}
-		
+		}		
 	}
-?>
