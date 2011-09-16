@@ -221,7 +221,7 @@
 			$cols .= "{$entity_table}.location_code";
 			$cols_return[] 				= 'location_code';
 			$cols_group[] 				= "{$entity_table}.location_code";
-
+			$cols_group[] 				= 'fm_location1.loc1_name';
 
 			$cols .= ",{$entity_table}.id as request_id";
 			$cols_return[] 				= 'request_id';
