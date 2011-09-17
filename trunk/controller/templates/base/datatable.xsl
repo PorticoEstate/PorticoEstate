@@ -240,6 +240,9 @@
 			<xsl:when test="//actions != ''">
   				var actions = <xsl:value-of select="//actions" disable-output-escaping="yes" />;
 			</xsl:when>
+			<xsl:otherwise>
+				var actions = new Array();
+			</xsl:otherwise>	
 		</xsl:choose>
 
 	</script>
