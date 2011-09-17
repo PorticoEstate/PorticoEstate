@@ -94,7 +94,7 @@ YAHOO.portico.initializeDataTable = function()
 
 //------------
 		myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
-		myContextMenu.addItems(GetMenuContext());
+		myContextMenu.addItems(YAHOO.portico.GetMenuContext());
 
 		myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
@@ -110,10 +110,10 @@ YAHOO.portico.initializeDataTable = function()
 											   }
 	   );*/
 
-		myContextMenu.subscribe("beforeShow", onContextMenuBeforeShow);
-		myContextMenu.subscribe("hide", onContextMenuHide);
+		myContextMenu.subscribe("beforeShow", YAHOO.portico.onContextMenuBeforeShow);
+		myContextMenu.subscribe("hide", YAHOO.portico.onContextMenuHide);
 		//Render the ContextMenu instance to the parent container of the DataTable
-		myContextMenu.subscribe("click", onContextMenuClick, myDataTable);
+		myContextMenu.subscribe("click", YAHOO.portico.onContextMenuClick, myDataTable);
 		myContextMenu.render(myDataTable);
 //--------------
 
@@ -194,21 +194,19 @@ YAHOO.portico.initializeDataTable = function()
 
 };
 
-	this.GetMenuContext = function()
+	YAHOO.portico.GetMenuContext = function()
 	{
 		var opts = new Array();
 		var p=0;
 		for(var k =0; k < actions.length; k ++)
 		{
-			//if(actions[k].my_name != 'add')
-			{	opts[p]=[{text: actions[k].text}];
-				p++;
-			}
+			opts[p]=[{text: actions[k].text}];
+			p++;
 		}
 		return opts;
    }
 
-	this.onContextMenuBeforeShow = function(p_sType, p_aArgs)
+	YAHOO.portico.onContextMenuBeforeShow = function(p_sType, p_aArgs)
 	{
 		var prefixSelected = '';
 		var oTarget = this.contextEventTarget;
@@ -227,7 +225,7 @@ YAHOO.portico.initializeDataTable = function()
  /********************************************************************************
  *
  */
-	this.onContextMenuHide = function(p_sType, p_aArgs)
+	YAHOO.portico.onContextMenuHide = function(p_sType, p_aArgs)
 	{
 		var prefixSelected = '';
 		if (this.getRoot() == this && oSelectedTR)
@@ -238,11 +236,21 @@ YAHOO.portico.initializeDataTable = function()
 		}
 	}
  
-	this.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
+	YAHOO.portico.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
 	{
+		
 		var task = p_aArgs[1];
 			if(task)
 			{
+				if(actions[task.groupIndex].confirm_msg)
+				{
+					confirm_msg = actions[task.groupIndex].confirm_msg;
+					if(!confirm(confirm_msg))
+					{
+						return false;
+					}				
+				}
+
 				// Extract which TR element triggered the context menu
 				var elRow = p_myDataTable.getTrEl(this.contextEventTarget);
 				if(elRow)
@@ -271,25 +279,21 @@ YAHOO.portico.initializeDataTable = function()
 						sUrl = url;
 					}
 					//Convert all HTML entities to their applicable characters
-					sUrl=html_entity_decode(sUrl);
+					sUrl=YAHOO.portico.html_entity_decode(sUrl);
 
 					// look for the word "DELETE" in URL
-					if(substr_count(sUrl,'delete')>0)
+					if(YAHOO.portico.substr_count(sUrl,'delete')>0)
 					{
-						confirm_msg = actions[task.groupIndex].confirm_msg;
-						if(confirm(confirm_msg))
-						{
-							sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
-							delete_record(sUrl);
-						}
+						sUrl = sUrl + "&confirm=yes&phpgw_return_as=json";
+						YAHOO.portico.delete_record(sUrl);
 					}
 					else
 					{
-						if(substr_count(sUrl,'target=_blank')>0)
+						if(YAHOO.portico.substr_count(sUrl,'target=_blank')>0)
 						{
 							window.open(sUrl,'_blank');
 						}
-						else if(substr_count(sUrl,'target=_lightbox')>0)
+						else if(YAHOO.portico.substr_count(sUrl,'target=_lightbox')>0)
 						{
 							//have to be defined as a local function. Example in invoice.list_sub.js
 							//console.log(sUrl); // firebug
@@ -305,7 +309,7 @@ YAHOO.portico.initializeDataTable = function()
 			}
 	};
 
-	this.html_entity_decode = function(string)
+	YAHOO.portico.html_entity_decode = function(string)
 	{
 		var histogram = {}, histogram_r = {}, code = 0;
 		var entity = chr = '';
@@ -425,6 +429,100 @@ YAHOO.portico.initializeDataTable = function()
 				return m2;
 			}
 		});
+	}
+
+	YAHOO.portico.substr_count = function( haystack, needle, offset, length )
+	{
+		var pos = 0, cnt = 0;
+
+		haystack += '';
+		needle += '';
+		if(isNaN(offset)) offset = 0;
+		if(isNaN(length)) length = 0;
+		offset--;
+
+		while( (offset = haystack.indexOf(needle, offset+1)) != -1 )
+		{
+			if(length > 0 && (offset+needle.length) > length)
+			{
+				return false;
+			} else
+			{
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+ /********************************************************************************
+ *
+ */
+	YAHOO.portico.delete_record = function(sUrl)
+	{
+		var callback =	{success: function(o){
+							message_delete = o.responseText.toString().replace("\"","").replace("\"","");
+							//YAHOO.portico.initializeDataTable()
+							YAHOO.portico.update_datatable()
+							alert(message_delete);
+							},
+							failure: function(o){window.alert('Server or your connection is dead.')},
+							timeout: 10000
+						};
+		var request = YAHOO.util.Connect.asyncRequest('POST', sUrl, callback);
+
+	}
+
+/****************************************************************************************
+*
+*/
+
+
+	//Not working...
+	
+	YAHOO.portico.update_datatable = function()
+	{
+alert('YAHOO.portico.update_datatable');
+		//delete values of datatable
+		myDataTable.getRecordSet().reset();
+
+
+		//reset total records always to zero
+		pag.setTotalRecords(0,true);
+
+		//change PaginatorŽs configuration.
+		if(path_values.allrows == 1 )
+		{
+			pag.set("rowsPerPage",ResultSet.totalResultsAvailable)
+		}
+
+		//obtain records of the last DS and add to datatable
+		var record = values_ds.records;
+		var newTotalRecords = values_ds.totalRecords;
+
+		if(record.length)
+		{
+			myDataTable.addRows(record);
+		}
+		else
+		{
+			myDataTable.render();
+		}
+
+		//update paginator with news values
+		pag.setTotalRecords(newTotalRecords,true);
+
+		//update globals variables for pagination
+		myrowsPerPage = values_ds.recordsReturned;
+		mytotalRows = values_ds.totalRecords;
+
+		//update combo box pagination
+		pag.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
+
+		pag.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
+
+		//update "sortedBy" values
+
+		(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
+		myDataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
 	}
 
 

@@ -16,7 +16,9 @@
 		public $public_functions = array
 		(
 			'index'					=> true,
-			'display_control_items'	=> true
+			'display_control_items'	=> true,
+			'delete'				=> true,
+			'js_poll'				=> true
 		);
 
 		public function __construct()
@@ -260,14 +262,13 @@
 				)
 			);
 
-
 			$actions = array
 			(
 				array
 				(
 					'my_name'		=> 'view',
 					'text' 			=> lang('view'),
-					'confirm_msg'	=> lang('do you really want to view this entry'),
+				//	'confirm_msg'	=> lang('do you really want to view this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'controller.uicontrol_item2.index',
@@ -282,6 +283,17 @@
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
 						'menuaction'	=> 'controller.uicontrol_item2.index',
+					)),
+					'parameters'	=> $parameters
+				),
+				array
+				(
+					'my_name'		=> 'delete',
+					'text' 			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'controller.uicontrol_item2.delete',
 					)),
 					'parameters'	=> $parameters
 				)
@@ -394,10 +406,24 @@
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "controller.uicontrol_item2.index");
-
+//_debug_array($this->yui_results($applications));
 			return $this->yui_results($applications);
 		}
 					
+
+		public function delete()
+		{
+			return 'deleted';
+		}
+
+		public function js_poll()
+		{
+			if($poll = phpgw::get_var('poll'))
+			{
+				return $poll;
+			}
+			return 'hello world';
+		}
 
 		public function query()
 		{
