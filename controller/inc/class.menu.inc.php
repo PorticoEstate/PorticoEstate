@@ -53,7 +53,15 @@
 									'text'	=> lang('control_item_list') . 2,
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'appname' => 'controller') ),
 									'image'	=> array('rental', 'x-office-spreadsheet')
-								)
+								),
+								'separate_tabs' => array
+
+								(
+									'text'	=> 'example::separate_tabs',
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'default') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								),
+								
 							)
 		        ),
 				'procedure' => array

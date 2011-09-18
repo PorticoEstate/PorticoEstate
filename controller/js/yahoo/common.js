@@ -202,7 +202,7 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	
 	if(!disablePagination) {
 		options.paginator = YAHOO.portico.setupInlineTablePaginator(paginatorContainer);
-		url += 'results=' + options.paginator.getRowsPerPage() + '&';
+		url += '&results=' + options.paginator.getRowsPerPage() + '&';
 	}
 	var myDataSource = new YAHOO.util.DataSource(url);
 	myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
