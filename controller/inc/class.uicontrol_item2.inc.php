@@ -168,6 +168,7 @@
 				'tabs'	=> $GLOBALS['phpgw']->common->create_tabs($tabs, $selected),
 				'resource'	=> $resource
 			);
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'example_separate_tabs', 'controller' );
 			self::render_template_xsl('example_separate_tabs', $data);
 		}
 
