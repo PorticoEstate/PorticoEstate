@@ -17,6 +17,7 @@
 		(
 			'index'					=> true,
 			'display_control_items'	=> true,
+			'separate_tabs'			=> true,
 			'delete'				=> true,
 			'js_poll'				=> true
 		);
@@ -120,6 +121,54 @@
 //			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 
 			self::render_template_xsl('control_item', $data);
+		}
+
+
+		public function separate_tabs()
+		{
+			self::set_active_menu('controller::control_item2::separate_tabs');
+
+            $type =  phpgw::get_var('type', 'string', 'REQUEST', null);
+
+			$tabs = array();
+			$tabs[] = array(
+				'label' => lang('Your preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'user'))
+			);
+			$tabs[] = array(
+				'label' => lang('Default preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'default'))
+			);
+			$tabs[] = array(
+				'label' => lang('Forced preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'forced'))
+			);
+
+			switch($type)
+			{
+				case 'default':
+					$selected = 1;
+					$resource_id = 81;
+					break;
+				case 'forced':
+					$selected = 2;
+					$resource_id = 46;
+					break;
+				case 'user':
+				default:
+					$selected = 0;
+					$resource_id = 80;
+			}
+
+			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item2.index') );
+			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
+
+			$data = array
+			(
+				'tabs'	=> $GLOBALS['phpgw']->common->create_tabs($tabs, $selected),
+				'resource'	=> $resource
+			);
+			self::render_template_xsl('example_separate_tabs', $data);
 		}
 
 
