@@ -80,6 +80,7 @@ YAHOO.portico.initializeDataTable = function()
         fields: fields,
         metaFields : {
             totalResultsAvailable: "ResultSet.totalResultsAvailable",
+           // recordsReturned: "ResultSet.recordsReturned",
 			startIndex: 'ResultSet.startIndex',
 			sortKey: 'ResultSet.sortKey',
 			sortDir: 'ResultSet.sortDir'
@@ -460,9 +461,8 @@ YAHOO.portico.initializeDataTable = function()
 	{
 		var callback =	{success: function(o){
 							message_delete = o.responseText.toString().replace("\"","").replace("\"","");
-							//YAHOO.portico.initializeDataTable()
-							YAHOO.portico.update_datatable()
 							alert(message_delete);
+							document.getElementById('update_table_dummy').submit();//update table
 							},
 							failure: function(o){window.alert('Server or your connection is dead.')},
 							timeout: 10000
@@ -474,56 +474,6 @@ YAHOO.portico.initializeDataTable = function()
 /****************************************************************************************
 *
 */
-
-
-	//Not working...
-	
-	YAHOO.portico.update_datatable = function()
-	{
-alert('YAHOO.portico.update_datatable');
-		//delete values of datatable
-		myDataTable.getRecordSet().reset();
-
-
-		//reset total records always to zero
-		pag.setTotalRecords(0,true);
-
-		//change PaginatorŽs configuration.
-		if(path_values.allrows == 1 )
-		{
-			pag.set("rowsPerPage",ResultSet.totalResultsAvailable)
-		}
-
-		//obtain records of the last DS and add to datatable
-		var record = values_ds.records;
-		var newTotalRecords = values_ds.totalRecords;
-
-		if(record.length)
-		{
-			myDataTable.addRows(record);
-		}
-		else
-		{
-			myDataTable.render();
-		}
-
-		//update paginator with news values
-		pag.setTotalRecords(newTotalRecords,true);
-
-		//update globals variables for pagination
-		myrowsPerPage = values_ds.recordsReturned;
-		mytotalRows = values_ds.totalRecords;
-
-		//update combo box pagination
-		pag.set('rowsPerPageOptions',[myrowsPerPage,mytotalRows]);
-
-		pag.setPage(parseInt(values_ds.currentPage),true); //true no fuerza un recarge solo cambia el paginator
-
-		//update "sortedBy" values
-
-		(values_ds.dir == "asc")? dir_ds = YAHOO.widget.DataTable.CLASS_ASC : dir_ds = YAHOO.widget.DataTable.CLASS_DESC;
-		myDataTable.set("sortedBy",{key:values_ds.sort,dir:dir_ds});
-	}
 
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.portico.initializeDataTable);
