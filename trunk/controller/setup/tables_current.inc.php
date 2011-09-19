@@ -50,16 +50,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_control_group' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
-				'group_name' => array('type' => 'varchar','precision' => '255','nullable' => false)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'controller_check_item' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
@@ -96,6 +86,17 @@
 				'description' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'reference' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'controller_control_group' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'group_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
