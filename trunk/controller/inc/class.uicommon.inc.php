@@ -470,7 +470,8 @@
 			
 			return array(   
 				'ResultSet' => array(
-					'totalResultsAvailable' => $results['total_records'], 
+					'totalResultsAvailable' => $results['total_records'],
+					'recordsReturned'		=> count($result['results']),
 					'startIndex' => $results['start'], 
 					'sortKey' => $results['sort'], 
 					'sortDir' => $results['dir'], 
