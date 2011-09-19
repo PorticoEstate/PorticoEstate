@@ -80,7 +80,7 @@ YAHOO.portico.initializeDataTable = function()
         fields: fields,
         metaFields : {
             totalResultsAvailable: "ResultSet.totalResultsAvailable",
-           // recordsReturned: "ResultSet.recordsReturned",
+            recordsReturned: "ResultSet.recordsReturned",
 			startIndex: 'ResultSet.startIndex',
 			sortKey: 'ResultSet.sortKey',
 			sortDir: 'ResultSet.sortDir'
@@ -136,6 +136,7 @@ YAHOO.portico.initializeDataTable = function()
         oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
 		oPayload.pagination = { 
 			rowsPerPage: oResponse.meta.paginationRowsPerPage || 10, 
+		//	rowsPerPage: oResponse.meta.recordsReturned || 10, 
 			recordOffset: oResponse.meta.startIndex || 0 
 	    }
 		oPayload.sortedBy = { 

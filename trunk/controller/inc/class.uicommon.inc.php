@@ -467,11 +467,11 @@
 				$results['total_records'] = 0;
 				$result['results'] = array();
 			}
-			
+
 			return array(   
 				'ResultSet' => array(
 					'totalResultsAvailable' => $results['total_records'],
-					'recordsReturned'		=> count($result['results']),
+					'recordsReturned'		=> count($results['results']),
 					'startIndex' => $results['start'], 
 					'sortKey' => $results['sort'], 
 					'sortDir' => $results['dir'], 
