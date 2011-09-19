@@ -58,7 +58,7 @@
 
 								(
 									'text'	=> 'example::separate_tabs',
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'default') ),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs') ),
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								),
 								
