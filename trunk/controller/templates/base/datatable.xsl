@@ -116,7 +116,8 @@
 				<xsl:when test="type = 'filter'">
 					<td valign="top">
                     <xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-                	<select name="{$name}" onMouseout="window.status='';return true;">
+                	
+                	<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
                         <xsl:for-each select="list">
                     		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 							<xsl:if test="id = 'NEW'">
@@ -132,6 +133,34 @@
                         </xsl:for-each>
                 	</select>
                     </td>
+					<xsl:if test="onChangeSelect">
+						<script type="text/javascript">	
+							YAHOO.util.Event.onDOMReady(function() {
+							var elementid = "<xsl:value-of select="name"/>";
+							<![CDATA[
+								var oElement = document.getElementById(elementid);
+								function onChangeSelectCallback(e, oElement)
+								{
+									YAHOO.portico.dataSourceUrl;
+									
+									var myselect=document.getElementById(elementid);
+									for (var i=0; i<myselect.options.length; i++)
+									{
+										if (myselect.options[i].selected==true)
+										{
+											break;
+										}
+									}
+
+									strURL = YAHOO.portico.dataSourceUrl + '&' + elementid + '=' + myselect.options[i].value;
+									alert('datatable.xsl::' + strURL);
+									//alert("onChangeSelectCallback::Do something");
+								}
+								YAHOO.util.Event.addListener(oElement, "change", onChangeSelectCallback);
+							]]>
+							});
+						</script>
+					</xsl:if>
 				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">

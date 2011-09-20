@@ -476,5 +476,19 @@ YAHOO.portico.initializeDataTable = function()
 *
 */
 
+	this.onChangeSelect = function(type)
+	{
+alert('onChangeSelect');
+		var myselect=document.getElementById("sel_"+ type);
+		for (var i=0; i<myselect.options.length; i++)
+		{
+			if (myselect.options[i].selected==true)
+			{
+				break;
+			}
+		}
+		eval("path_values." +type +"='"+myselect.options[i].value+"'");
+		execute_ds();
+	}
 
 YAHOO.util.Event.addListener(window, "load", YAHOO.portico.initializeDataTable);

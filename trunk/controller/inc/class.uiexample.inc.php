@@ -83,6 +83,7 @@
 								'name' => 'buildings',
                                 'text' => lang('Building').':',
                                 'list' => $this->bo->so->get_buildings(),
+								'onChangeSelect'=> 'requestWithBuildingFilter',
 							),
 							array('type' => 'filter', 
 								'name' => 'activities',
