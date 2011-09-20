@@ -106,9 +106,9 @@
 				if(isset($procedure)) // Edit procedure
 				{
 					$procedure->set_title(phpgw::get_var('title'));
-					$procedure->set_purpose(phpgw::get_var('purpose'));
+					$procedure->set_purpose(phpgw::get_var('purpose','html'));
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
-					$procedure->set_description(phpgw::get_var('description'));
+					$procedure->set_description(phpgw::get_var('description','html'));
 					$procedure->set_reference(phpgw::get_var('reference'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					
