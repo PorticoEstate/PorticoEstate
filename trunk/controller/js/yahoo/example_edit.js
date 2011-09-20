@@ -2,7 +2,7 @@
  *
  */
 
-alert('dette er respons fra "controller/js/yahoo/controller.item.js"');
+//alert('dette er respons fra "controller/js/yahoo/controller.item.js"');
 
 /*
 	this.get_some_feedback = function()
