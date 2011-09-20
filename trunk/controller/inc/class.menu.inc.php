@@ -63,6 +63,13 @@
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.edit') ),
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								),
+								'normal_tabs' => array
+
+								(
+									'text'	=> 'example::normal_tabs',
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.normal_tabs') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								),
 								'separate_tabs' => array
 
 								(
