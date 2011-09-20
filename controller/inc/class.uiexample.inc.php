@@ -17,6 +17,7 @@
 		(
 			'index'					=> true,
 			'edit'					=> true,
+			'normal_tabs'			=> true,
 			'separate_tabs'			=> true,
 			'delete'				=> true,
 			'js_poll'				=> true
@@ -409,6 +410,53 @@
 			self::add_javascript('controller', 'yahoo', 'example_edit.js');
 			self::render_template_xsl('example_edit', $data);
 		}
+
+
+		public function normal_tabs()
+		{
+			self::set_active_menu('controller::example::normal_tabs');
+
+            $type =  phpgw::get_var('type', 'string', 'REQUEST', null);
+
+			switch($type)
+			{
+				case 'default':
+					$selected = 1;
+					$resource_id = 81;
+					break;
+				case 'forced':
+					$selected = 2;
+					$resource_id = 46;
+					break;
+				case 'user':
+				default:
+					$selected = 0;
+					$resource_id = 80;
+			}
+
+			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
+			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
+
+			$tabs = array
+			(
+				'general'	=> array('label' => lang('general'), 'link' => '#general'),
+				'list'		=> array('label' => lang('list'), 'link' => '#list'),
+				'dates'		=> array('label' => lang('dates'), 'link' => '#dates'),
+			);
+
+			phpgwapi_yui::tabview_setup('example_tabview');
+
+
+			$data = array
+			(
+				'tabs'		=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'resource'	=> $resource,
+				'date'		=> $GLOBALS['phpgw']->yuical->add_listener('date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time()))
+			);
+			self::add_javascript('controller', 'yahoo', 'example_normal_tabs.js');
+			self::render_template_xsl('example_normal_tabs', $data);
+		}
+					
 
 
 		public function separate_tabs()
