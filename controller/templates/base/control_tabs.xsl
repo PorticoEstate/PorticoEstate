@@ -7,13 +7,8 @@
 			<div id="details">
 				<xsl:call-template name="control" />
 			</div>
-			<div id="list">
-				<xsl:call-template name="control" />
-				<h4><xsl:value-of select="php:function('lang', 'list')" /></h4>
-			</div>
-			<div id="list">
-				<h4><xsl:value-of select="php:function('lang', 'dates')" /></h4>
-				<xsl:value-of disable-output-escaping="yes" select="date"/>
+			<div id="control_items">
+				<!--xsl:call-template name="control_items" /-->
 			</div>
 		</div>
 	</div>
