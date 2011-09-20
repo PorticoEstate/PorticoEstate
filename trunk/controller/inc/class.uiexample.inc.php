@@ -416,23 +416,7 @@
 		{
 			self::set_active_menu('controller::example::normal_tabs');
 
-            $type =  phpgw::get_var('type', 'string', 'REQUEST', null);
-
-			switch($type)
-			{
-				case 'default':
-					$selected = 1;
-					$resource_id = 81;
-					break;
-				case 'forced':
-					$selected = 2;
-					$resource_id = 46;
-					break;
-				case 'user':
-				default:
-					$selected = 0;
-					$resource_id = 80;
-			}
+			$resource_id = 80;
 
 			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
 			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
