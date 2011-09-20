@@ -27,7 +27,7 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.index') ),
 		            'image'	=> array('property', 'location_1'),
 				),
-				'control_item2' => array
+				'control_item' => array
 				(
 					'text'	=> lang('Control_item'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item.index') ),
@@ -36,7 +36,7 @@
 								'control_item_list2' => array
 
 								(
-									'text'	=> lang('control_item_list') . 2,
+									'text'	=> lang('control_item_list'),
 									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.display_control_items', 'appname' => 'controller') ),
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								),
@@ -44,7 +44,7 @@
 
 								(
 									'text'	=> 'example::separate_tabs',
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.separate_tabs') ),
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs') ),
 									'image'	=> array('rental', 'x-office-spreadsheet')
 								),
 								
