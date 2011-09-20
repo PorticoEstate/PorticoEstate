@@ -463,8 +463,16 @@
 				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
+			
+			$search_for = phpgw::get_var('query');
 
-			$user_rows_per_page = 10;
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else {
+				$user_rows_per_page = 10;
+			}
 			
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('startIndex', 'int');
@@ -482,10 +490,11 @@
 			$control_item_id = phpgw::get_var('control_item_id');
 			if(isset($control_item_id))
 			{
-				$control_item = rental_socontract::get_instance()->get_single($control_item_id);
+				$control_item = $this->so_control_item->get_single($control_item_id);
 			}
 			
-			$result_objects = controller_socontrol_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$result_objects = $this->so_control_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			//var_dump($result_objects);
 								
 			$results = array();
 			

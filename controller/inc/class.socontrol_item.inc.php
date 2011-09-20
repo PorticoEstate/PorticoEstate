@@ -180,15 +180,8 @@ class controller_socontrol_item extends controller_socommon
 			$like_pattern = "'%".$search_for."%'";
 			$like_clauses = array();
 			switch($search_type){
-				case "title":
-					$like_clauses[] = "rental_document.title $this->like $like_pattern";
-					break;
-				case "name":
-					$like_clauses[] = "rental_document.name $this->like $like_pattern";
-					break;
-				case "all":
-					$like_clauses[] = "rental_document.title $this->like $like_pattern";
-					$like_clauses[] = "rental_document.name $this->like $like_pattern";
+				default:
+					$like_clauses[] = "controller_control_item.title $this->like $like_pattern";
 					break;
 			}
 			
@@ -200,22 +193,7 @@ class controller_socontrol_item extends controller_socommon
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
-			$filter_clauses[] = "rental_document.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
-		}
-		
-		if(isset($filters['contract_id']))
-		{
-			$filter_clauses[] = "rental_document.contract_id = {$this->marshal($filters['contract_id'],'int')}";
-		}
-		
-		if(isset($filters['party_id']))
-		{
-			$filter_clauses[] = "rental_document.party_id = {$this->marshal($filters['party_id'],'int')}";
-		}
-		
-		if(isset($filters['document_type']) && $filters['document_type'] != 'all')
-		{
-			$filter_clauses[] = "rental_document.type_id = {$this->marshal($filters['document_type'],'int')}";
+			$filter_clauses[] = "controller_control_item.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
 		
 		if(count($filter_clauses))
@@ -227,11 +205,11 @@ class controller_socontrol_item extends controller_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "controller_control_item";
-		$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
+		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
 		
 		if($return_count)
 		{
-			$cols = 'COUNT(DISTINCT(rental_document.id)) AS count';
+			$cols = 'COUNT(DISTINCT(controller_control_item.id)) AS count';
 		}
 		else
 		{
@@ -241,18 +219,14 @@ class controller_socontrol_item extends controller_socommon
 		$dir = $ascending ? 'ASC' : 'DESC';
 		if($sort_field == 'title')
 		{
-			$sort_field = 'rental_document.title';
-		}
-		else if($sort_field == 'type')
-		{
-			$sort_field = 'rental_document_types.title';
+			$sort_field = 'controller_control_item.title';
 		}
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 		
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		
-		return "SELECT {$cols} FROM {$tables}";
+		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 	
 	function populate(int $control_item_id, &$control_item)

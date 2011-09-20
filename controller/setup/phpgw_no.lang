@@ -228,3 +228,12 @@ Procedure responsibility	controller	no	Ansvarlig
 Procedure description	controller	no	Beskrivelse
 Procedure reference	controller	no	Referanse
 Procedure attachment	controller	no	Vedlegg
+New control item	controller	no	Nytt kontrollpunkt
+Control item title	controller	no	Tittel
+Control_group	controller	no	Kontrollgruppe
+Control group	controller	no	Kontrollgruppe
+Control_area	controller	no	Kontrollområde
+Control area	controller	no	Kontrollområde
+Control item what to do	controller	no	Hva skal gjøres
+Not selected	controller	no	Ingen valgt
+searchfield	controller	no	Søkefelt
