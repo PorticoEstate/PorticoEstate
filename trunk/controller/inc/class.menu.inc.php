@@ -50,6 +50,29 @@
 								
 							)
 		        ),
+				'example' => array
+				(
+					'text'	=> 'example',
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') ),
+		            'image'	=> array('property', 'location_1'),
+					'children'	=> array(
+								'edit' => array
+
+								(
+									'text'	=> 'example::edit',
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.edit') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								),
+								'separate_tabs' => array
+
+								(
+									'text'	=> 'example::separate_tabs',
+									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.separate_tabs') ),
+									'image'	=> array('rental', 'x-office-spreadsheet')
+								),
+								
+							)
+		        ),
 				'procedure' => array
 				(
 					'text'	=> lang('Procedure'),
