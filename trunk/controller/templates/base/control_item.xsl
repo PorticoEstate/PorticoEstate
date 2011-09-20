@@ -48,7 +48,7 @@
 						</select>
 					</dd>
 					<dt>
-						<label for="control_area">Kontrolltype</label>
+						<label for="control_area">Kontrollområde</label>
 					</dt>
 					<dd>
 						<select id="control_area" name="control_area">
