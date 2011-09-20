@@ -237,3 +237,7 @@ Control area	controller	no	Kontrollområde
 Control item what to do	controller	no	Hva skal gjøres
 Not selected	controller	no	Ingen valgt
 searchfield	controller	no	Søkefelt
+NEW	controller	no	Ny
+PENDING	controller	no	Venter
+ACCEPTED	controller	no	Akseptert
+REJECTED	controller	no	Avvist
