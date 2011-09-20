@@ -286,7 +286,8 @@
 					. lang('line') . ': ' . $err->line . "</p>\n"
 					. $trace;
 
-				phpgwapi_cache::message_set($message, 'error');
+				echo $message;
+		//		phpgwapi_cache::message_set($message, 'error');
 
 				if ( isset($GLOBALS['phpgw']->common) && is_object($GLOBALS['phpgw']->common) )
 				{

@@ -163,7 +163,7 @@ dl.proplist-col dt {
 
 dl.proplist-col,
 dl.form-col {
-    width: 18em;
+/*    width: 18em; */
     float: left;
 }
 
@@ -459,4 +459,9 @@ p.message {
 
 th.yui-dt-sortable div{
 	background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
+}
+
+dd ol li {
+	list-style: decimal;
+	list-style-position: inside;
 }

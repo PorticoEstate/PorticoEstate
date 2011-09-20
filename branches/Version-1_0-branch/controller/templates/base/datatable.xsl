@@ -90,8 +90,10 @@
 								oAC.itemSelectEvent.subscribe(itemSelectCallback);
 							}
 
-							YAHOO.util.Event.addBlurListener('filter_'+name+'_name', function() {
-								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "") {
+							YAHOO.util.Event.addBlurListener('filter_'+name+'_name', function()
+							{
+								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
+								{
 									YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
 									if (onClearSelectionCallback) {
 										onClearSelectionCallback();
@@ -99,8 +101,10 @@
 								}
 							});
 
-							YAHOO.portico.addPreSerializeQueryFormListener(function(form) {
-								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "") {
+							YAHOO.portico.addPreSerializeQueryFormListener(function(form)
+							{
+								if (YAHOO.util.Dom.get('filter_'+name+'_name').value == "")
+								{
 									YAHOO.util.Dom.get('filter_'+name+'_id').value = "";
 								} 
 							});
@@ -196,6 +200,10 @@
 		</xsl:attribute>
         <xsl:apply-templates select="toolbar"/>
 	</form>
+
+	<form id="update_table_dummy" method='POST' action='' >
+	</form>
+
 </xsl:template>
 
 <xsl:template match="datatable">
@@ -235,5 +243,15 @@
 				</xsl:for-each>
 			];
 		}
+		
+		<xsl:choose>
+			<xsl:when test="//actions != ''">
+  				var actions = <xsl:value-of select="//actions" disable-output-escaping="yes" />;
+			</xsl:when>
+			<xsl:otherwise>
+				var actions = new Array();
+			</xsl:otherwise>	
+		</xsl:choose>
+
 	</script>
 </xsl:template>

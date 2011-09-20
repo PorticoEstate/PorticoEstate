@@ -16,7 +16,10 @@
 		public $public_functions = array
 		(
 			'index'					=> true,
-			'display_control_items'	=> true
+			'display_control_items'	=> true,
+			'separate_tabs'			=> true,
+			'delete'				=> true,
+			'js_poll'				=> true
 		);
 
 		public function __construct()
@@ -121,6 +124,55 @@
 		}
 
 
+		public function separate_tabs()
+		{
+			self::set_active_menu('controller::control_item2::separate_tabs');
+
+            $type =  phpgw::get_var('type', 'string', 'REQUEST', null);
+
+			$tabs = array();
+			$tabs[] = array(
+				'label' => lang('Your preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'user'))
+			);
+			$tabs[] = array(
+				'label' => lang('Default preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'default'))
+			);
+			$tabs[] = array(
+				'label' => lang('Forced preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'forced'))
+			);
+
+			switch($type)
+			{
+				case 'default':
+					$selected = 1;
+					$resource_id = 81;
+					break;
+				case 'forced':
+					$selected = 2;
+					$resource_id = 46;
+					break;
+				case 'user':
+				default:
+					$selected = 0;
+					$resource_id = 80;
+			}
+
+			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item2.index') );
+			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
+
+			$data = array
+			(
+				'tabs'	=> $GLOBALS['phpgw']->common->create_tabs($tabs, $selected),
+				'resource'	=> $resource
+			);
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'example_separate_tabs', 'controller' );
+			self::render_template_xsl('example_separate_tabs', $data);
+		}
+
+
 		public function display_control_items()
 		{
 			self::set_active_menu('controller::control_item2::control_item_list2');
@@ -195,7 +247,8 @@
 						),
 					),
 				),
-				'datatable' => array(
+				'datatable' => array
+				(
 					'source' => self::link(array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
@@ -247,7 +300,58 @@
 				),
 			);
 //_debug_array($data);
+			$parameters = array
+			(
+				'parameter' => array
+				(
+					array
+					(
+						'name'		=> 'id',
+						'source'	=> 'id'
+					),
+				)
+			);
 
+			$actions = array
+			(
+				array
+				(
+					'my_name'		=> 'view',
+					'text' 			=> lang('view'),
+				//	'confirm_msg'	=> lang('do you really want to view this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'controller.uicontrol_item2.index',
+					)),
+					'parameters'	=> $parameters
+				),
+				array
+				(
+					'my_name'		=> 'edit',
+					'text' 			=> lang('edit'),
+					'confirm_msg'	=> lang('do you really want to edit this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'controller.uicontrol_item2.index',
+					)),
+					'parameters'	=> $parameters
+				),
+				array
+				(
+					'my_name'		=> 'delete',
+					'text' 			=> lang('delete'),
+					'confirm_msg'	=> lang('do you really want to delete this entry'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'controller.uicontrol_item2.delete',
+					)),
+					'parameters'	=> $parameters
+				)
+			);
+
+			$data['actions'] = json_encode($actions);
+
+//_debug_array($data);die();
 			self::render_template_xsl('datatable', $data);
 		}
 
@@ -352,10 +456,24 @@
 				}
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "controller.uicontrol_item2.index");
-
+//_debug_array($this->yui_results($applications));
 			return $this->yui_results($applications);
 		}
 					
+
+		public function delete()
+		{
+			return 'deleted';
+		}
+
+		public function js_poll()
+		{
+			if($poll = phpgw::get_var('poll'))
+			{
+				return $poll;
+			}
+			return 'hello world';
+		}
 
 		public function query()
 		{
