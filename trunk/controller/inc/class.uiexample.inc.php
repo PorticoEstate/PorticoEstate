@@ -373,7 +373,7 @@
 				$control_area_options = array
 				(
 					'id'	=> $control_area->get_id(),
-					'name'	=> $control_area->get_name()
+					'name'	=> $control_area->get_title()
 					 
 				);
 			}
@@ -383,7 +383,7 @@
 				$control_group_options = array
 				(
 					'id'	=> $control_group->get_id(),
-					'name'	=> $control_group->get_name()
+					'name'	=> $control_group->get_group_name()
 					 
 				);
 			}
