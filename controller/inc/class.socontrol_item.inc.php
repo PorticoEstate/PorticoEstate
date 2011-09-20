@@ -28,23 +28,37 @@ class controller_socontrol_item extends controller_socommon
 	 */
 	function add(&$control_item)
 	{
+		$cols = array(
+				'title',
+				'required',
+				'what_to_do',
+				'how_to_do',
+				'control_group_id',
+				'control_area_id'
+		);
 		
-		$title = $control_item->get_title();
+		$values = array(
+			$this->marshal($control_item->get_title(), 'string'),
+			$this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
+			$this->marshal($control_item->get_what_to_do(), 'string'),
+			$this->marshal($control_item->get_how_to_do(), 'string'),
+			$this->marshal($control_item->get_control_group_id(), 'int'),
+			$this->marshal($control_item->get_control_area_id(), 'int')
+		);
 		
-		$sql = "INSERT INTO controller_control_item (title) VALUES ('$title')";
+		$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 		$result = $this->db->query($sql, __LINE__,__FILE__);
 
 		if(isset($result)) {
-			// Set the new party ID
-			$control_item->set_id($this->db->get_last_insert_id('controller_control_item', 'id'));
+			// return the new control item ID
+			return $this->db->get_last_insert_id('controller_control_item', 'id');
 			// Forward this request to the update method
-			return $this->update($control_item);
+			//return $this->update($control_item);
 		}
 		else
 		{
-			return false;
+			return 0;
 		}
-		
 	}
 
 	/**
@@ -75,8 +89,8 @@ class controller_socontrol_item extends controller_socommon
 	/**
 	 * Get single procedure
 	 * 
-	 * @param	$id	id of the procedure to return
-	 * @return a controller_procedure
+	 * @param	$id	id of the control_item to return
+	 * @return a controller_control_item
 	 */
 	function get_single($id)
 	{
@@ -88,11 +102,11 @@ class controller_socontrol_item extends controller_socommon
 		
 		$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
 		$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-		$control_item->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
-		$control_item->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
-		$control_item->set_description($this->unmarshal($this->db->f('description', true), 'string'));
-		$control_item->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
-		$control_item->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
+		$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
+		$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
+		$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
+		$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+		$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 		
 		return $control_item;
 	}
