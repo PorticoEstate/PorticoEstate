@@ -68,14 +68,29 @@
 			
 			$procedure_array = $this->so_proc->get_procedure_array();
 			
-			$this->render('control.php', array
-							(
-							'editable' => true,
-							'repeat_type' => $repeat_type,
-							'repeat_day' => $repeat_day,
-							'procedure_array' => $procedure_array 
-							)
-						);
+			foreach ($procedure_array as $procedure)
+			{
+				$procedure_options_array = array
+				(
+					'id'	=> $procedure->get_id(),
+					'name'	=> $procedure->get_title()
+					 
+				);
+			}
+
+			
+
+			
+			
+			$data = array
+			(
+				'value_id'					=> !empty($control) ? $control->get_id() : 0,
+				'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
+				'editable' 					=> true,
+				'procedure_options_array'	=> array('options' => $procedure_options_array)
+			);
+
+			self::render_template_xsl('control.xsl', $data);
 		}
 					
 		public function query()
