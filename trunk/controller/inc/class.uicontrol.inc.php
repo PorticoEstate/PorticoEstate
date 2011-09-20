@@ -76,7 +76,8 @@
 			(
 				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'details'),
 				'resource'					=> $resource,
-				'date'						=> $GLOBALS['phpgw']->yuical->add_listener('date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
+				'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
+				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
 				'value_id'					=> !empty($control) ? $control->get_id() : 0,
 				'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
 				'editable' 					=> true,
