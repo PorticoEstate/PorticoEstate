@@ -54,8 +54,7 @@
 			$tabs = array
 			(
 				'details'	=> array('label' => lang('Details'), 'link' => '#details'),
-				'list'		=> array('label' => lang('list'), 'link' => '#list'),
-				'dates'		=> array('label' => lang('dates'), 'link' => '#dates'),
+				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
 			);
 
 			phpgwapi_yui::tabview_setup('control_tabview');
