@@ -29,13 +29,13 @@
 						<label for="start_date">Startdato</label>
 					</dt>
 					<dd>
-						<xsl:value-of disable-output-escaping="yes" select="date"/>
+						<xsl:value-of disable-output-escaping="yes" select="start_date"/>
 					</dd>
 					<dt>
 						<label for="end_date">Sluttdato</label>
 					</dt>
 					<dd>
-						<xsl:value-of disable-output-escaping="yes" select="date"/>
+						<xsl:value-of disable-output-escaping="yes" select="end_date"/>
 					</dd>
 					<dt>
 						<label>Frekvenstype</label>
