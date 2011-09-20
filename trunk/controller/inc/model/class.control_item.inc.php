@@ -101,5 +101,33 @@
 						
 			return $result;
 		}
+		
+	public function toArray()
+		{
+
+// Alternative 1
+//			return get_object_vars($this);
+
+// Alternative 2
+			$exclude = array
+			(
+				'get_field', // feiler (foreldreklassen)
+				'get_so',//unødvendig 
+			);
+			
+			$class_methods = get_class_methods($this);
+			$control_item_arr = array();
+			foreach ($class_methods as $class_method)
+			{
+				if( stripos($class_method , 'get_' ) === 0  && !in_array($class_method, $exclude))
+				{
+					$_class_method_part = explode('get_', $class_method);
+					$control_item_arr[$_class_method_part[1]] = $this->$class_method();
+				}
+			}
+
+//			_debug_array($control_item_arr);
+			return $control_item_arr;
+		}
 	}
 ?>

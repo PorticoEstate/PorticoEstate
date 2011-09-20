@@ -465,3 +465,8 @@ dd ol li {
 	list-style: decimal;
 	list-style-position: inside;
 }
+
+dd ul li {
+	list-style: disc;
+	list-style-position: inside;
+}

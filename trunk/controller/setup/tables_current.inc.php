@@ -40,8 +40,8 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'title' => array('type' => 'varchar','precision' => '100','nullable' => false),
 				'required' => array('type' => 'bool','nullable' => true,'default' => 'false'),
-				'what_to_do' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'how_to_do' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'what_to_do' => array('type' => 'text','nullable' => false),
+				'how_to_do' => array('type' => 'text','nullable' => false),
 				'control_group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
