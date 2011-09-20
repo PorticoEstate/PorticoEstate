@@ -58,7 +58,19 @@
 				'dates'		=> array('label' => lang('dates'), 'link' => '#dates'),
 			);
 
-			phpgwapi_yui::tabview_setup('example_tabview');
+			phpgwapi_yui::tabview_setup('control_tabview');
+			
+			$procedure_array = $this->so_proc->get_procedure_array();
+			
+			foreach ($procedure_array as $procedure)
+			{
+				$procedure_options_array[] = array
+				(
+					'id'	=> $procedure->get_id(),
+					'name'	=> $procedure->get_title()
+					 
+				);
+			}
 
 			$data = array
 			(
@@ -70,8 +82,8 @@
 				'editable' 					=> true,
 				'procedure_options_array'	=> array('options' => $procedure_options_array)
 			);
-			self::add_javascript('controller', 'yahoo', 'example_normal_tabs.js');
-			self::render_template_xsl('example_normal_tabs', $data);
+			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+			self::render_template_xsl(array('control_tabs', 'control'), $data);
 		}
 		
 		public function edit()
