@@ -182,6 +182,8 @@ class controller_socontrol_item extends controller_socommon
 			switch($search_type){
 				default:
 					$like_clauses[] = "controller_control_item.title $this->like $like_pattern";
+					$like_clauses[] = "controller_control_item.what_to_do $this->like $like_pattern";
+					$like_clauses[] = "controller_control_item.how_to_do $this->like $like_pattern";
 					break;
 			}
 			
