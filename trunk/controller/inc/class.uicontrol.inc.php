@@ -24,6 +24,7 @@
 			$this->so = CreateObject('controller.socontrol');
 			$this->so_proc = CreateObject('controller.soprocedure');
 			$this->bo = CreateObject('property.boevent',true);
+			self::set_active_menu('controller::control');
 		}
 		
 		public function index()
