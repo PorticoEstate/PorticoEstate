@@ -25,31 +25,19 @@
 						<label for="description">Beskrivelse</label>
 					</dt>
 					<dd>
-						<textarea cols="70" rows="5" name="description" id="description" value="" /></textarea>
+						<textarea cols="70" rows="5" name="description" id="description" value=""></textarea>
 					</dd>
 					<dt>
 						<label for="start_date">Startdato</label>
 					</dt>
 					<dd>
-						<?php
-							$start_date = "-";
-							$start_date_yui = date('Y-m-d');
-							$start_date_cal = $GLOBALS['phpgw']->yuical->add_listener('start_date', $start_date);
-						
-							echo $start_date_cal;
-						?>
+						<xsl:value-of disable-output-escaping="yes" select="date"/>
 					</dd>
 					<dt>
 						<label for="end_date">Sluttdato</label>
 					</dt>
 					<dd>
-						<?php
-							$end_date = "";
-							$end_date_yui = date('Y-m-d');
-							$end_date_cal =  $GLOBALS['phpgw']->yuical->add_listener('end_date', $end_date);
-						
-							echo $end_date_cal;
-						?>
+						<xsl:value-of disable-output-escaping="yes" select="date"/>
 					</dd>
 					<dt>
 						<label>Frekvenstype</label>
@@ -79,6 +67,7 @@
 						</select>
 					</dd>
 				</dl>
+				
 				<div class="form-buttons">
 					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 					<input type="submit" name="save_control" value="{$lang_save}" title = "{$lang_save}">
