@@ -8,12 +8,12 @@
 	
 	include_class('controller', 'control', 'inc/model/');
 
-	class controller_uicontrol_item2 extends controller_uicommon
+	class controller_uicontrol_item extends controller_uicommon
 	{
-		private $bo; 
 		private $so;
 		private $so_control_item;
-		private $so_proc; 
+		private $so_control_group;
+		private $so_control_area;
 		
 		public $public_functions = array
 		(
@@ -29,16 +29,13 @@
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->so_control_area = CreateObject('controller.socontrol_area');
-			$this->bo = CreateObject('property.boevent',true);
 		}
 		
 		public function index()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
 			
-			self::set_active_menu('controller::control_item2');			
-			$repeat_type = $this->bo->get_rpt_type_list();
-			$repeat_day = $this->bo->get_rpt_day_list();
+			self::set_active_menu('controller::control_item');
 
 			if(isset($_POST['save_control_item'])) // The user has pressed the save button
 			{
@@ -46,10 +43,10 @@
 				{
 					$control_item->set_title(phpgw::get_var('title'));
 					$control_item->set_required(phpgw::get_var('required'));
-					$control_item->set_what_to_desc( strtotime( phpgw::get_var('what_to_desc')  ) );
-					$control_item->set_how_to_desc( strtotime( phpgw::get_var('how_to_desc') ) );
-					$control_item->set_control_group_id( strtotime( phpgw::get_var('control_group_id') ) );
-					$control_item->set_control_area_id( strtotime( phpgw::get_var('control_area_id') ) );
+					$control_item->set_what_to_do( phpgw::get_var('what_to_do') );
+					$control_item->set_how_to_do( phpgw::get_var('how_to_do') );
+					$control_item->set_control_group_id( strtoint( phpgw::get_var('control_group_id') ) );
+					$control_item->set_control_area_id( strtoint( phpgw::get_var('control_area_id') ) );
 									
 					$this->so->add($control_item);
 				}
@@ -60,10 +57,10 @@
 					
 					$control_item->set_title(phpgw::get_var('title'));
 					$control_item->set_required(phpgw::get_var('required'));
-					$control_item->set_what_to_desc( strtotime( phpgw::get_var('what_to_desc')  ) );
-					$control_item->set_how_to_desc( strtotime( phpgw::get_var('how_to_desc') ) );
-					$control_item->set_control_group_id( strtotime( phpgw::get_var('control_group_id') ) );
-					$control_item->set_control_area_id( strtotime( phpgw::get_var('control_area_id') ) );
+					$control_item->set_what_to_desc( phpgw::get_var('what_to_do') );
+					$control_item->set_how_to_desc( phpgw::get_var('how_to_do') );
+					$control_item->set_control_group_id( strtoint( phpgw::get_var('control_group_id') ) );
+					$control_item->set_control_area_id( strtoint( phpgw::get_var('control_area_id') ) );
 									
 					$this->so->add($control_item);
 				}
@@ -81,20 +78,20 @@
 
 			foreach ($control_area_array as $control_area)
 			{
-				$control_area_options = array
+				$control_area_options[] = array
 				(
 					'id'	=> $control_area->get_id(),
-					'name'	=> $control_area->get_name()
+					'name'	=> $control_area->get_title()
 					 
 				);
 			}
 
 			foreach ($control_group_array as $control_group)
 			{
-				$control_group_options = array
+				$control_group_options[] = array
 				(
 					'id'	=> $control_group->get_id(),
-					'name'	=> $control_group->get_name()
+					'name'	=> $control_group->get_group_name()
 					 
 				);
 			}
@@ -104,7 +101,7 @@
 				'value_id'				=> !empty($control) ? $control->get_id() : 0,
 				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 				'editable' 				=> true,
-				'control_item'			=> array('options' => $control_area_options),
+				'control_area'			=> array('options' => $control_area_options),
 				'control_group'			=> array('options' => $control_group_options),
 			);
 
@@ -124,14 +121,13 @@
 
 		public function display_control_items()
 		{
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item_list";
+			//$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item_list";
 			
-			self::set_active_menu('controller::control_item2::control_item_list2');
+			self::set_active_menu('controller::control_item::control_item_list');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->display_control_items_json();
 			}
-			$this->bo = CreateObject('booking.boapplication');
-			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
+			
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
@@ -143,7 +139,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New application'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_item2.index'))
+								'href' => self::link(array('menuaction' => 'controller.uicontrol_item.index'))
 							),
 							array('type' => 'filter', 
 								'name' => 'status',
@@ -199,7 +195,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_item.display_control_items', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -290,7 +286,7 @@
 				$results['results'][] = $control_item_obj->serialize();	
 			}
 
-			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_item2.index");
+			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_item.index");
 
 			return $this->yui_results($results);
 		}
