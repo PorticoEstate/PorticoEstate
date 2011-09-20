@@ -25,31 +25,20 @@
 				(
 					'text'	=> lang('Control'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.index') ),
-		            'image'	=> array('property', 'location_1'),
+		            'image'	=> array('property', 'location_1')
 				),
 				'control_item' => array
 				(
 					'text'	=> lang('Control_item'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item.index') ),
-		            'image'	=> array('property', 'location_1'),
-					'children'	=> array(
-								'control_item_list2' => array
-
-								(
-									'text'	=> lang('control_item_list'),
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item.display_control_items', 'appname' => 'controller') ),
-									'image'	=> array('rental', 'x-office-spreadsheet')
-								),
-								'separate_tabs' => array
-
-								(
-									'text'	=> 'example::separate_tabs',
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs') ),
-									'image'	=> array('rental', 'x-office-spreadsheet')
-								),
-								
-							)
+		            'image'	=> array('property', 'location_1')
 		        ),
+		        'procedure' => array
+				(
+					'text'	=> lang('Procedure'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
+		            'image'	=> array('property', 'location_1'),
+				),    
 				'example' => array
 				(
 					'text'	=> 'example',
@@ -79,13 +68,7 @@
 								),
 								
 							)
-		        ),
-				'procedure' => array
-				(
-					'text'	=> lang('Procedure'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
-		            'image'	=> array('property', 'location_1'),
-				)     
+		        ), 
 			);
 			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
