@@ -910,9 +910,9 @@
 							generateRequest		: buildQueryString,
 							dynamicData			: true,
 							sortedBy			: {key:values_ds.sort, dir:values_ds.dir/*dir:YAHOO.widget.DataTable.CLASS_DESC*/},
-							paginator			: myPaginator,
-							width				: "100%",
-							height				: tableHeight //"30em",
+							paginator			: myPaginator
+				//			width				: "100%",
+				//			height				: tableHeight //"30em",
 		};
 		//Create DataTable ; Second call JSON (GET)
 	//	myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
