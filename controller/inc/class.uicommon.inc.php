@@ -75,7 +75,10 @@
 	{
 		$keys = func_get_args();
 		$strings = array();
-		foreach($keys as $key) { $strings[$key] = is_string($key) ? lang($key) : call_user_func_array('lang', $key); }
+		foreach($keys as $key)
+		{
+			$strings[$key] = is_string($key) ? lang($key) : call_user_func_array('lang', $key);
+		}
 		return json_encode($strings);
 	}
 
@@ -85,7 +88,10 @@
 	function lang_array()
 	{
 		$keys = func_get_args();
-		foreach($keys as &$key) $key = lang($key);
+		foreach($keys as &$key)
+		{
+			$key = lang($key);
+		}
 		return $keys;
 	}
 
@@ -461,10 +467,11 @@
 				$results['total_records'] = 0;
 				$result['results'] = array();
 			}
-			
+
 			return array(   
 				'ResultSet' => array(
-					'totalResultsAvailable' => $results['total_records'], 
+					'totalResultsAvailable' => $results['total_records'],
+					'recordsReturned'		=> count($results['results']),
 					'startIndex' => $results['start'], 
 					'sortKey' => $results['sort'], 
 					'sortDir' => $results['dir'], 

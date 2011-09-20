@@ -7,27 +7,24 @@
 	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'control', 'inc/model/');
-	
-	class controller_uicontrol_item extends controller_uicommon
+
+	class controller_uicontrol_item2 extends controller_uicommon
 	{
 		private $bo; 
 		private $so;
-		private $so_proc;
 		private $so_control_item;
-		private $so_control_group;
-		private $so_control_area;
+		private $so_proc; 
 		
 		public $public_functions = array
 		(
-			'index'	=>	true,
+			'index'	=> true,
 			'query'	=>	true,
-			'display_control_items'	=>	true
+			'display_control_items'	=> true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
-
 			$this->so = CreateObject('controller.socontrol');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
@@ -39,6 +36,7 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
 			
+			self::set_active_menu('controller::control_item2');			
 			$repeat_type = $this->bo->get_rpt_type_list();
 			$repeat_day = $this->bo->get_rpt_day_list();
 
@@ -74,26 +72,194 @@
 			$control_area_array = $this->so_control_area->get_control_area_array();
 			$control_group_array = $this->so_control_group->get_control_group_array();
 			
-			$this->render('control_item.php', array
-						(
-						'editable' => true,
-						'control_area_array' => $control_area_array,
-						'control_group_array' => $control_group_array 
-						)
-					);
+
+			if($this->flash_msgs)
+			{
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+			}
+
+			foreach ($control_area_array as $control_area)
+			{
+				$control_area_options = array
+				(
+					'id'	=> $control_area->get_id(),
+					'name'	=> $control_area->get_name()
+					 
+				);
+			}
+
+			foreach ($control_group_array as $control_group)
+			{
+				$control_group_options = array
+				(
+					'id'	=> $control_group->get_id(),
+					'name'	=> $control_group->get_name()
+					 
+				);
+			}
+
+			$data = array
+			(
+				'value_id'				=> !empty($control) ? $control->get_id() : 0,
+				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+				'editable' 				=> true,
+				'control_item'			=> array('options' => $control_area_options),
+				'control_group'			=> array('options' => $control_group_options),
+			);
+
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
+
+/*
+			$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
+			$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
+			$GLOBALS['phpgw']->richtext->generate_script();
+*/
+
+//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
+
+			self::render_template_xsl('control_item', $data);
 		}
-		
+
 		public function display_control_items()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item_list";
 			
-					
-			$this->render('control_item_list.php');
-		}
-					
-		public function query()
-		{
+			self::set_active_menu('controller::control_item2::control_item_list2');
+			if(phpgw::get_var('phpgw_return_as') == 'json') {
+				return $this->display_control_items_json();
+			}
+			$this->bo = CreateObject('booking.boapplication');
+			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
+			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
 			
+			$data = array(
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('New application'),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol_item2.index'))
+							),
+							array('type' => 'filter', 
+								'name' => 'status',
+                                'text' => lang('Status').':',
+                                'list' => array(
+                                    array(
+                                        'id' => 'none',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
+                                        'id' => 'NEW',
+                                        'name' => lang('NEW')
+                                    ), 
+                                    array(
+                                        'id' => 'PENDING',
+                                        'name' =>  lang('PENDING')
+                                    ), 
+                                    array(
+                                        'id' => 'REJECTED',
+                                        'name' => lang('REJECTED')
+                                    ), 
+                                    array(
+                                        'id' => 'ACCEPTED',
+                                        'name' => lang('ACCEPTED')
+                                    )
+                                )
+                            ),
+							array('type' => 'filter',
+								'name' => 'control_groups',
+                                'text' => lang('Control_group').':',
+                                'list' => $this->so_control_group->get_control_group_select_array(),
+							),
+							array('type' => 'filter',
+								'name' => 'control_areas',
+                                'text' => lang('Control_area').':',
+                                'list' => $this->so_control_area->get_control_area_select_array(),
+							),
+							array('type' => 'text', 
+                                'text' => lang('searchfield'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable'	=> true,
+							'formatter' => 'YAHOO.portico.formatLink'
+						),						
+						array(
+							'key' => 'title',
+							'label' => lang('Title'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'required',
+							'label' => lang('Required'),
+							'sortable'	=> true
+						),
+						array(
+							'key' => 'what_to_do',
+							'label' => lang('What to do'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'how_to_do',
+							'label' => lang('How to do'),
+							'sortable'	=> true
+						),
+						array(
+							'key' => 'control_group_id',
+							'label' => lang('control_group_id'),
+							'sortable'	=> true
+						),
+						array(
+							'key' => 'control_area_id',
+							'label' => lang('control_area_id'),
+							'sortable'	=> true
+						),
+						array(
+							'key' => 'link',
+							'hidden' => true
+						)
+					)
+				),
+			);
+//_debug_array($data);
+
+			self::render_template_xsl('datatable', $data);
+		}
+
+		public function display_control_items_json()
+		{
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+
 			$user_rows_per_page = 10;
 			
 			// YUI variables for paging and sorting
@@ -115,62 +281,23 @@
 				$control_item = rental_socontract::get_instance()->get_single($control_item_id);
 			}
 			
-			/*
-			//Retrieve the type of query and perform type specific logic
-			$type = phpgw::get_var('type');
-			switch($type)
+			$result_objects = controller_socontrol_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+								
+			$results = array();
+			
+			foreach($result_objects as $control_item_obj)
 			{
-				case 'included_price_items':
-					if(isset($contract))
-					{
-						$filters = array('contract_id' => $contract->get_id());
-						$result_objects = rental_socontract_price_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-						$object_count = rental_socontract_price_item::get_instance()->get_count($search_for, $search_type, $filters);
-					}
-					break;
-				case 'not_included_price_items': // We want to show price items in the source list even after they've been added to a contract
-					$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
-					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
-					break;
-				case 'manual_adjustment':
-					$filters = array('price_item_status' => 'active','is_adjustable' => 'false');
-					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
-					break;
-				default:
-					//$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
-					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
-					break;
+				$results['results'][] = $control_item_obj->serialize();	
 			}
-		*/
-			
-		$result_objects = controller_socontrol_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			
-			// Create an empty row set
-			$rows = array();
-			foreach ($result_objects as $record) {
-				if(isset($record))
-				{
-					// ... add a serialized record
-					$rows[] = $record->serialize();
-				}
-			}
-			$data = array('results' => $rows, 'total_records' => $object_count);
+
+			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_item2.index");
+
+			return $this->yui_results($results);
+		}
+		
+		public function query()
+		{
 	
-			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-	
-			//Add action column to each row in result table
-			array_walk(
-				$data['results'], 
-				array($this, 'add_actions'), 
-				array(
-					$control_item_id,
-					$type,
-					$editable
-				)
-			);
-			return $this->yui_results($data, 'total_records', 'results');
-		}	
-}
+		}
+		
+	}

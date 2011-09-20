@@ -68,7 +68,12 @@
 						),
 						array(
 							'key' => 'title',
-							'label' => lang('Title'),
+							'label' => lang('Procedure title'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'purpose',
+							'label' => lang('Procedure purpose'),
 							'sortable'	=> false
 						),
 						array(
@@ -83,111 +88,6 @@
 			self::render_template_xsl('datatable', $data);
 		}
 
-/*		public function display_control_items_json()
-		{
-			$this->bo = CreateObject('booking.boapplication');
-			$this->resource_bo = CreateObject('booking.boresource');
-
-			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
-			     $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller') )
-			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
-			}
-			$filters['status'] = 'NEW';
-			if(isset($_SESSION['showall']))
-			{
-				$filters['status'] = array('NEW', 'PENDING','REJECTED', 'ACCEPTED');
-                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
-                if ($testdata != 0)
-                {
-                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
-                }
-                else
-                {
-                    unset($filters['building_name']);                
-                }
-                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
-                if ($testdata2 != 0)
-                {
-                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
-                }
-                else
-                {
-                    unset($filters['activity_id']);                
-                }
-                
-			}
-			else
-			{
-				if (phpgw::get_var('status') == 'none')
-				{
-					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				} 
-				else
-				{
-	                $filters['status'] = phpgw::get_var('status');
-				}
-                $testdata =  phpgw::get_var('buildings', 'int', 'REQUEST', null);
-                if ($testdata != 0)
-                {
-                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));        
-                }
-                else
-                {
-                    unset($filters['building_name']);                
-                }
-                $testdata2 =  phpgw::get_var('activities', 'int', 'REQUEST', null);
-                if ($testdata2 != 0)
-                {
-                    $filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));        
-                }
-                else
-                {
-                    unset($filters['activity_id']);                
-                }
-            }
-
-			$params = array(
-				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
-				'query'	=> phpgw::get_var('query'),
-				'sort'	=> phpgw::get_var('sort'),
-				'dir'	=> phpgw::get_var('dir'),
-				'filters' => $filters
-			);
-
-			$applications = $this->bo->so->read($params);
-
-			foreach($applications['results'] as &$application)
-			{
-				if (strstr($application['building_name'],"%"))
-				{
-					$search = array('%2C','%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
-					$replace = array (',','Å','å','Ø','ø','Æ','æ');
-					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
-				}
-
-				$application['status'] = lang($application['status']);
-				$application['created'] = pretty_timestamp($application['created']);
-				$application['modified'] = pretty_timestamp($application['modified']);
-				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('filters'=>array('id'=>$application['resources'])));
-				$application['resources'] = $application['resources']['results'];
-				if($application['resources'])
-				{
-					$names = array();
-					foreach($application['resources'] as $res)
-					{
-						$names[] = $res['name'];
-					}
-					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
-				}
-			}
-			array_walk($applications["results"], array($this, "_add_links"), "controller.uicontrol_item2.index");
-
-			return $this->yui_results($applications);
-		}	*/	
-		
 		public function edit()
 		{
 			$procedure_id = phpgw::get_var('id');
@@ -206,14 +106,15 @@
 				if(isset($procedure)) // Edit procedure
 				{
 					$procedure->set_title(phpgw::get_var('title'));
-					$procedure->set_purpose(phpgw::get_var('purpose'));
+					$procedure->set_purpose(phpgw::get_var('purpose','html'));
 					$procedure->set_responsibility(phpgw::get_var('responsibility'));
-					$procedure->set_description(phpgw::get_var('description'));
+					$procedure->set_description(phpgw::get_var('description','html'));
 					$procedure->set_reference(phpgw::get_var('reference'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
+						$proc_id = $procedure_id;
 						if($this->so->store($procedure))
 						{
 							$message = lang('messages_saved_form');
@@ -400,14 +301,10 @@
 				//Add action column to each row in result table
 				array_walk(
 					$result_data['results'],
-					array($this, 'add_actions'), 
-					array(													// Parameters (non-object pointers)
-						$procedure_id,										// [1] The procedure id
-						$editable,											// [2] Editable flag			
-					)
-				);
+					array($this, '_add_links'),
+					"controller.uiprocedure.view");
 			}
-
+//_debug_array($result_data);
 			return $this->yui_results($result_data, 'total_records', 'results');
 
 		}
