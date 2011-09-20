@@ -182,14 +182,15 @@ abstract class controller_socommon
 		$db2 = clone($this->db);
 
 		$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
+		
 		$sql_parts = explode('1=1',$sql); // Split the query to insert extra condition on test for break
 		$this->db->query($sql,__LINE__, __FILE__, false, true);
-
+		
 		while ($this->db->next_record()) // Runs through all of the results
 		{
 			$should_populate_object = false; // Default value - we won't populate object	
 			$result_id = $this->unmarshal($this->db->f($id_field_name), 'int'); // The id of object
-			
+
 			if(in_array($result_id, $added_object_ids)) // Object with this id already added
 			{
 				$should_populate_object = true; // We should populate this object as we already have it in our result array

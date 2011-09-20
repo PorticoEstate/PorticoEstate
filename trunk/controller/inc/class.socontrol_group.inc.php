@@ -117,7 +117,20 @@ class controller_socontrol_group extends controller_socommon
 		}
 		
 		return $results;
-	}	
+	}
+	
+	function get_control_group_select_array()
+	{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id, group_name as name FROM controller_control_group ORDER BY name ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+	}
 	
 	function get_id_field_name($extended_info = false)
 	{
