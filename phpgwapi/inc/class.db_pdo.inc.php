@@ -213,9 +213,16 @@
 				return false;
 			}
 
-			if($this->Halt_On_Error == 'yes')
+			switch ( $this->Halt_On_Error )
 			{
-				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				case 'yes':
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					break;
+				case 'report':
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+					break;
+				default:
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 			}
 		}
 
