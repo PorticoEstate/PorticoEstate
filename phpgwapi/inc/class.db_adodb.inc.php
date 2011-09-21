@@ -725,6 +725,7 @@
 					$this->adodb->Execute("GRANT ALL ON {$this->Database}.*"
 							. " TO {$this->User}@{$_SERVER['SERVER_NAME']}"
 							. " IDENTIFIED BY '{$this->Password}'");
+					break;
 				default:
 					//do nothing
 			}

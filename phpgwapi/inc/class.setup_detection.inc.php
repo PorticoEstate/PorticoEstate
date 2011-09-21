@@ -296,7 +296,14 @@
 
 			if(!isset($setup_info['phpgwapi']['currentver']))
 			{
-				$setup_info = $this->get_db_versions($setup_info);
+				try
+				{
+					$setup_info = $this->get_db_versions($setup_info);
+				}
+				catch(Exception $e)
+				{
+					return 1;
+				}
 			}
 
 			// _debug_array($setup_info);
