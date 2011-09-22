@@ -938,6 +938,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$city = '';
 		}
 		$district = $org_info['district'];
+		$status = $org_info['status'];
 		
 		$columns[] = 'name';
 		$columns[] = 'homepage';
@@ -949,6 +950,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		//$columns[] = 'city';
 		$columns[] = 'orgno';
 		$columns[] = 'district';
+		$columns[] = 'change_type';
 		$cols = implode(',',$columns);
 		
 		$values[] = "'{$name}'";
@@ -961,6 +963,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		//$values[] = "'{$city}'";
 		$values[] = "'{$orgnr}'";
 		$values[] = "'{$district}'";
+		$values[] = "'{$status}'";
 		$vals = implode(',',$values);
 		
 		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
@@ -1015,15 +1018,18 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$name = $group_info['name'];
 		$orgid = $group_info['organization_id'];
 		$description = $group_info['description'];
+		$status = $group_info['status'];
 		
 		$columns[] = 'name';
 		$columns[] = 'description';
 		$columns[] = 'organization_id';
+		$columns[] = 'change_type';
 		$cols = implode(',',$columns);
 		
 		$values[] = "'{$name}'";
 		$values[] = "'{$description}'";
 		$values[] = "'{$orgid}'";
+		$values[] = "'{$status}'";
 		$vals = implode(',',$values);
 		
 		$sql = "INSERT INTO activity_group ({$cols}) VALUES ({$vals})";
