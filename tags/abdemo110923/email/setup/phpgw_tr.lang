@@ -1,0 +1,368 @@
+%1 - %2 of %3 	email	tr	%1 - %2 ün %3 
+%1 messages have been deleted	email	tr	%1 mesajlar silindi
+1 message has been deleted	email	tr	1 mesaj silindi
+1 message has been moved to	email	tr	1 mesaj taşındı
+<b>*apply*</b> this filter	email	tr	<b>*UYGULA*</b> Bu Filtre
+<b>apply all</b> filters	email	tr	<b>HEPSİNİ UYGULA</b> Filter
+a scrips tag block of code, javascript or otherwise, is in an inline html message. not necessarily bad, but user may want to know. this is script ... code ... script blocks, not the "onmouseover"  stuff.	email	en	a scrips tag block of code, javascript or otherwise, is in an inline html message. Not necessarily bad, but user may want to know. This is SCRIPT ... code ... SCRIPT blocks, not the "OnMouseOver"  stuff.
+account	email	tr	hesap
+account name	email	tr	Hesap Adı
+account user name	email	tr	Hesap Kullanıcı Adı
+accounts	email	tr	Hesaplar
+accounts:	email	tr	Hesaplar:
+add to address book	email	tr	Adres defterine ekle
+add to addressbook	email	tr	Adres defterine ekle
+address book	email	tr	Adres Defteri
+after	email	tr	Sonra
+all messages	email	tr	Bütün Mesajlar
+and	email	tr	ve
+and stop filtering	email	tr	ve filtrelemeyi durdur
+answered	email	tr	cevaplandı
+apply	email	tr	uygula
+apply filters report:	email	tr	Filtre raporlarını uygula:
+apr	email	tr	Nisan
+aqua fusion	email	tr	Aqua Fusion
+arrival date	email	tr	Varış tarihi
+as	email	tr	gibi
+attach file	email	tr	Dosya ekle
+attach signature	email	tr	İmza ekle
+attachment	email	tr	Eklenti
+aug	email	tr	Ağustos
+bcc	email	tr	bcc
+bcc address	email	tr	Bcc Adres
+before	email	tr	Önce
+big	email	tr	Büyük
+bigger	email	tr	Daha Büyük
+biggest	email	tr	En Büyük
+body	email	tr	Gövde
+both	email	tr	Birlikte
+button type	email	tr	Buton çeşidi
+cache server data whenever possible	email	tr	cache server data müsait olduğunda
+cc	email	tr	CC
+cc address	email	tr	CC Adres
+change font size in your e-mail pages	email	tr	E-Mail Sayfalarınızdaki Font Büyüklüğünü Değiştirin
+check flags for type of mails	email	tr	Maillerin çeşidi için bayrakları kontrol et
+choose for rename	email	tr	Yeniden adlandır için seç
+choose to rename	email	tr	yeniden adlandır için seç
+click here for more info in a new window	email	tr	yeni bir pencerede daha fazla bilgi edinmek için burayı tıkla 
+click here to continue	email	tr	Devam etmek için burayı tıkla
+click here to edit the settings for this email account.	email	tr	Bu hesabın ayarlarını düzenlemek için burayı tıklayın.
+click here to return to your home page.	email	tr	Anasayfaya dönmek için burayı tıklayın.
+company	email	tr	Şirket
+compose	email	tr	Yazmak
+compose message	email	tr	mesaj yaz
+compose new	common	tr	yeni yaz
+contains	email	tr	Kapsamalar
+could not open this mailbox	email	tr	Mail kutusu açılamadı
+create (expert)	email	tr	oluştur (gelişmiş)
+create a folder	email	tr	Dizin oluştur
+current attachments (%1)	email	tr	En son eklentiler (%1)
+custom e-mail preferences	email	tr	Varsayılan E-Mail özellikleri
+custom e-mail settings	email	tr	Varsayılan E-Mail Ayarları
+debugging page	email	tr	Hata ayıklama sayfası
+dec	email	tr	Aralık
+default sorting order	email	tr	Varsayılan sıralama yöntemi
+default:	common	tr	varsayılan:
+delete (expert)	email	tr	Sil (Gelişmiş)
+delete a folder	email	tr	Dizin Sil
+delete account	common	tr	Hesabı Sil
+deleted	email	tr	Silindi
+deleted messages (trash) folder	email	tr	Silinen Mesajlar (Çöplük) dizin
+deleted messages folder name	email	tr	Silinen mesajların klasör adı
+deleted messages go to trash	email	tr	Silinmiş mesajlar çöpe gider
+deleted messages saved to folder:	email	tr	Silinen Mesajların kaydedileceği yer:
+discard	email	tr	Çıkarmak
+does not contain	email	tr	İçermez
+draft	email	tr	taslak
+e-mail extra account	email	tr	Ekstra E-Mail Hesabı
+e-mail extra accounts	email	tr	Ekstra E-Mail Hesapları
+e-mail extra accounts list	email	tr	Ekstra E-Mail Hesapları Listesi
+e-mail filters	common	tr	E-Mail Filtreleri
+e-mail folders	common	tr	E-mail Dizinleri
+e-mail inbox filters list	email	tr	E-Mail GELEN KUTUSU Filtre Listesi
+e-mail preferences	common	tr	E-Mail özellikleri
+each user has a summary page which can display a variety of information. this option will show a small list of email messages in the inbox of the users default email account on the users summary home page.	email	tr	Her kullanıcı bilginin çeşidini gösteren bir özet sayfasına sahiptir.  Bu seçenek kullanıcı özet anasayfası üzerindeki kullanıcı varsayılan E-mail hesabının gelen kutusundaki E-mail mesajlarının küçük bir listesini gösterir.
+edit filters	email	tr	Filtre düzenle
+email account name	email	tr	Email hesap adı
+email address	email	tr	E-Mail adresleri
+email date	email	tr	Email Tarihi
+email filters	email	tr	Email Filtreleri
+email password	email	tr	E-Mail şifreleri
+email preferences	email	tr	Email Özellikleri
+email signature	email	tr	E-Mail imzası
+email type	common	tr	E-Mail Çeşidi
+enable this email account	common	tr	Bu email hesabını aktf et
+enable utf-7 encoded folder names	email	tr	utf-7 kodlanmış dizin isimlerini aktif et
+enter the search string in the text boxes	email	tr	Aranacak kelimeyi metin kutusuna girin
+enter your default mail domain ( from: user@domain )	admin	tr	Varsayılan mail domaininizi girin ( Kimden: kullanıcı@domain )
+enter your pop	admin	tr	POP u girin
+enter your smtp server hostname or ip address	admin	tr	SMTP sunucu adını veya IP adresini girin
+enter your smtp server port	admin	tr	SMTP sunucu portunuzu girin
+error moving messages to	email	tr	Mesaj taşınırken hata oluştu
+error text not provided	email	tr	desteklenmeyen metin hatası
+error: unknown message data	email	tr	Hata: Bilinmeyen mesaj verisi
+evolution style	email	tr	Evrim Stili
+extra accounts	email	tr	Ekstra Hesaplar
+extra e-mail account	common	tr	Ekstra E-Mail Hesabı
+extra e-mail accounts	common	tr	Eksra E-Mail Hesapları
+extra e-mail preferences number %1	email	tr	Ekstra E-Mail özellikleri Numarası %1
+feb	email	tr	Şubat
+fewer actions	email	tr	Daha az faaliyet
+fewer choices	email	tr	Daha az seçim
+file	email	tr	Dosya
+file attachment	email	tr	Dosya Ekle
+file into	email	tr	Dosya içine
+fill in as much as you can	email	tr	Mümkün olduğunca doldur
+filter inbox for accounts	email	tr	Hesaplar için GELEN KUTUSUNU filtrele
+filter name	email	tr	Filtre adı
+filter name:	email	tr	filte adı:
+filter number	email	tr	Filtre Numarası
+filter [number] and name	email	tr	Filtre [numara] ve Ad
+filters	email	tr	Filtreler
+filters list	email	tr	Filtre Listeleri
+flag as important	email	tr	Önemli bayrak
+flagged	email	tr	Bayraklandı
+folder	email	tr	Klasör
+folder maintenance	email	tr	Klasör Bakımı
+folder name	email	tr	Klasör ismi
+folder size	email	tr	Klasör boyutu
+folders	email	tr	Klasörler
+for the file to actually upload	email	tr	dosya için yükleme
+for these items, fill only what is different from you default e-mail preferences	common	tr	Bu nesneler için, sadece senin varsayılan E-mail özelliklerinden farklı olanları doldur
+forward	email	tr	İlet
+from	email	tr	Kimden
+from address	email	tr	Hangi Adresten
+get size	email	tr	boyutlandırmak
+go	email	tr	git
+go back	email	tr	Geri Dön
+go back to	email	tr	Geri Dön Kime
+header field	email	tr	Sayfa Başlığı Alanı
+hidden	email	tr	gizli
+hide help	email	tr	Yardımı gizle
+html messages with the iframe  tag may be klez or other worm emails.	email	tr	html mesajlar ile IFRAME etiketi belki KLEZ veya solucan email olabilir.
+icon size	email	tr	İcon Boyutu
+icon theme	email	tr	İcon Teması
+if " deleted messages go to trash " is checked, deleted message will be sent to the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is "trash". this will be your "trash" folder, but it does not have to actually be called "trash", you can name it anything. only works with imap servers, pop servers do not have folders.	email	tr	Eğer " Silinen mesajlar çöpe giderse " işaretle, Silinen mesajlar belirlediğin klasöre yollanacak. Eğer bu klasör yoksa, bu senin için otomatik olarak oluşturulacak. Varsayılan isim "Çöplük". Bu "Çöplük" dizinin olacak, bunu "Çöplük" olarak isimlendirmek zorunda değilsin, herhangi bir isim verebilirsin. Sadece IMAP sunucularda çalışır, POP sunucuları dizinlere sahip değildir.
+if " sent messages folder " is checked, a copy of your sent mail will be stored in the folder name you type in this box. if this folder does not exist, it will be created for you automatically. default name is "sent". this will be your "sent" folder, but it does not have to actually be called "sent", you can name it anything. only works with imap servers, pop servers do not have folders.	email	tr	Eğer " Yollanmış mesajlar klasörü " kontrol edildiyse, gönderdiğin mailin bir kopyası da bu kutuda ismini yazdığın klasörde saklanacaktır. Eğer bu klasör yoksa , bu senin için otomatik olarak oluşturulacak. Bu klasörün varsayılan ismi "Yollananlar" olacak . Bu senin "Yollananlar" klasörün olacak, aslında bu klasörü "Yollananlar" klasörü olarak adlandırmak zorunda değilsin, herhangi bir isim yazabilirsin . Sadece IMAP sunucularda çalışır, POP sunucuları dizinlere sahip değildir.
+if applicable	email	tr	Uygulanabilirse
+if checked, a copy of your sent mail will be stored in the "sent" folder name which you specify in the box for "sent messages folder ". only works with imap servers, pop servers do not have folders.	email	tr	Eğer işaretlendiyse, senin gönderdiğin mailinin bir kopyası ismini "Gönderilen mesajlar klasörü" için kutuda belirlediğin "Gönderilen klasöründe" saklanacaktır. Sadece IMAP sunucularda çalışır, POP sunucuları dizinlere sahip değildir.
+if checked, a copy of your sent mail will be stored in the "sent" folder name which you specify in the box for "sent messages folder". only works with imap servers, pop servers do not have folders.	email	tr	Eğer işaretlendiyse, senin gönderdiğin mailinin bir kopyası ismini "Gönderilen mesajlar klasörü" için kutuda belirlediğin "Gönderilen klasöründe" saklanacaktır. Sadece IMAP sunucularda çalışır, POP sunucuları dizinlere sahip değildir.
+if checked, deleted message will be sent to the "trash" folder name which you specify in the box for " deleted messages (trash) folder ". only works with imap servers, pop servers do not have folders.	email	tr	Eğer işaretliyse, Silinen mesaj senin silinen mesajlar klasörü için kutucukta oluştrduğun "Çöplük" klasörüne atılacaktır. Sadece IMAP sunucularda çalışır, POP sunucuları dizinlere sahip değildir.
+if fileto then select destination folder	email	tr	Eğer fileto aktifse hedef klasörü seç
+if messages match	email	tr	Eğer mesajlar eşleşirse
+if there is no obvious error, check your username and password first.	email	tr	eğer açık bir hata yoksa, ilk olarak kullanıcı adı ve şifreni kontrol et.
+if using an imap server, what kind is it, most often this option can safely be set to "cyrus or courier". technically, this means the server uses a dot between the different parts of the folder names, such as "inbox.sent". the other major kind of imap server is the university of washington "uwash" imap server. it uses slashes instead of the dots the other servers use, and although it has a folder called "inbox", it is not considered the "namespace" for the other folder names. the "uw-maildir" is a rare combination of the two above types. this is the least used kind of imap server. if you are unsure, ask your it administrator. only applies to imap servers.	email	tr	eğer IMAP sunucu kullanılıyorsa,türünün ne olduğu, büyük sıklıkla bu seçenek güvenli bir şekilde Cyrus veya Courier olarak ayarlanabilir.Teknik olarak bunun anlamı , sunucu klasörün farklı bölümleri arasında nokta kullanır. Örneğin, "INBOX.Sent". Diğer ana IMAP sunucu türü ise Washington Üniversitesi "UWash" IMAP sunucusudur. Bu server noktalar yerine slashları kullanır.Diğer sunucular da kullanır. Ve bu sunucu "GELENLER" adında bir klasöre sahip olmasına rağmen, bu diğer klasörler için bir namespace olarak düşünülemez. "UW-Maildir" yukarıdaki iki tip sunucunun nadir kombinasyonlarından biridir. Bu IMAP sunucuların en az kullanılan türlerinden biridir. Eğer emin değilsen IT Yöneticisine danışabilirsin. Sadece IMAP sunuculara uygulanabilir.
+image	email	tr	Resim
+imap mail server hostname or ip address	admin	tr	IMAP mail sunucusu ana makinası veya IP adresi
+imap server type	common	tr	IMAP Sunucu Çeşidi
+important	email	tr	önemli
+in the email index page, the page which lists all the mails in a folder, mail may be sorted by date, author, size, or subject, however all of these need to be ordered from first to last, this options controlls what is first and last. for example, if sorting by date, the newest to oldest displays the most recent emails first, in decending order down to the oldest emails last.	email	tr	Email index sayfasında, bütün mailleri bir klasörde gösteren sayfa , mail tarihine, yazarına, boyutuna, veya konusuna göre sınıflandırılabilir. Ancak bunların hepsinin sondan başa doğru sıralanması gerekir. Bu seçenek hangisinin ilk hangisinin son olduğunu kontrol eder.Örneğin, tarihe göre sınıflandırma yaparsak en yeniden en eskiye en son emailleri ilk olarak gösterir. En eski emaili de en sonda gösterir.
+inbox	email	tr	Gelen Kutusu
+input error	email	tr	Giriş Hatası
+input error:	email	tr	Giriş Hatası:
+it is not rfc standard to base64 encode a part of a message that is not an attachment. note this check is currently done after the message is already being viewed, it should probably stop the message from being automatically displayed, i.e. give a "show this" button instead.	email	tr	It is not RFC standard to base64 encode a part of a message that is NOT an attachment. Bu mesaj görüntülenir görüntülenmez kontrol yapılır. Bu muhtemelen mesajın otomatik olarak gösterilmesini durdurur. Örneğin bunun yerine "bunu göster" butonu koyulabilir.
+jan	email	tr	Ocak
+javascript	email	tr	Javascript
+jul	email	tr	Temmuz
+jun	email	tr	Ocak
+keep	email	tr	Koru
+keyword	email	tr	anahtar kelime
+keywords	email	tr	anahtar kelimeler
+layout 1	common	tr	Plan 1
+layout 2	common	tr	Plan 2
+lines	email	tr	Çizgiler
+list messages	email	tr	listelenen mesajlar
+long names	email	tr	uzun isimler
+mail folder(uw-maildir)	email	tr	Mail Klasörü(uw-maildir)
+mail server	email	tr	Mail Sunucusu
+mail server login type	admin	tr	Mail sunucusu oturum açma tipi
+mail server type	email	tr	Mail sunucusu tipi
+mail settings	admin	tr	Mail ayarları
+mail you send will use this address as the "from" address. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. when the recipient clicks reply, this address will be used. you can leave this box blank and the default value will be used.	email	tr	Gönderdiğiniz mail bu adresi "Kimden" adresi olarak kullanacaktır. Bu muhtemelen sizin GroupWare oturum açma isminizle aynı olur veya sunucu yöneticiniz bunu sizin için ayarlamıştır. Eğer misafir cevap butonuna tıklarsa, bu adres kullanılacaktır. Bu kutuyu boş bırakabilirsiniz. Bu varsayılan değer olarak kullanılır.
+manage accounts	email	tr	Hesapları Yönet
+manage folders	email	tr	Klasörleri Yönet
+mar	email	tr	Mart
+message has an attachment that is some kind of script or exe file that windows users should be warned not to click on it. these are filenames like attachments the end with the usual "bad stuff", such as bat, inf, pif, com, exe, reg, vbs, and scr	email	tr	Mesaj Windows kullanıcılarının üzerine tıklamamaları konusunda uyarıldığı bir tür script veya exe dosyası içerir. Bunlar sonu bat, inf, pif, com, exe, reg, vbs, ve scr uzantılarıyla biten eklentiler gibi olan dosya isimleridir.
+message list layout	common	tr	Mesaj Listesi Planı
+messages	email	tr	Mesajlar
+messages found in folder	email	tr	Klasörde mesaj bulundu
+messages have been moved to	email	tr	Mesajlar taşındı
+more actions	email	en	Daha fazla Faaliyet
+more choices	email	en	Daha fazla Seçim
+most us and european users do not need to enable this. if this option is checked then your email server can handle folder names with non us-ascii charactors in them/ default is disabled, not checked. only use if you are really sure you need it. only works with imap servers, pop servers do not have folders.	email	tr	Amerikalı ve Avruplaı kullanıcıların çoğu bunu aktif etme ihtiyacı duymazlar. Eğer bu seçenek işaretlenirse email sunucunuz bu klasör isimlerini ASCII olmayan karakterlerle kullanır. Varsayılan kapatılırsa, kontrol edilemez. Eğer gerçekten ihtiyaç duyuyorsan kullan. Sadece IMAP sunucularda çalışır, POP sunucuları dizinlere sahip değildir.
+move down	email	tr	Aşağıya Taşı
+move selected messages into	email	tr	Seçilen Mesajları Taşı
+move this message into	email	tr	Bu Mesajı Taşı
+move up	email	tr	Yukarı Taşı
+mozilla modern style	email	tr	Mozilla Modern Sitil
+name of the mail server you want to access. should be a name like "mail.example.com". if you leave this box blank then the default value will be used.	email	tr	Ulaşmak istediğiniz mail sunucunuzun adı "mail.örnek.com" gibi bir isim olabilir. Eğer bu kutuyu boş bırakırsanız varsayılan değer kullanılır.
+new	email	tr	Yeni
+new account	email	tr	Yeni Hesap
+new filter	email	tr	Yeni Filtre
+new message	email	tr	Yeni Mesaj
+new messages	email	tr	Yeni Mesajlar
+newest	common	tr	en yeni
+next message	email	tr	Bir Sonraki Mesaj
+no change	email	tr	Değişiklik yok
+no error returned from server	email	tr	Sunucudan Dönen veride hata yok
+no message found in folder '%1'	email	tr	Klasörde mesaj bulunamadı '%1'
+no next message	email	tr	Bir sonraki mesaj yok
+no previous message	email	tr	Bir önceki mesaj yok
+noia @ carlitus style	email	tr	Noia @ Carlitus Sitili
+non-standard	email	tr	Standart değil
+not used	email	tr	Kullanılmadı
+notify on delivery	email	tr	Gönderilenleri haber ver
+nov	email	tr	Kasım
+number	common	tr	Sayı
+number of matches:	email	tr	Eşlenenlerin sayıları:
+oct	email	tr	Ekim
+old	email	tr	Eski
+oldest	common	tr	En eski
+on	email	tr	Üstünde
+only needed with the university of washington "uwash" imap server. the default value is "mail" which means your mail folders, other then inbox, are located in a directory called "mail" directly under your "home" directory. this box may be left empty, which means your mail folders are located in your "home" directory, not a subdirectory. if your mail folders are located in a subdirectory of "home" then put the name of that subdirectory here. generally, it is not necessary to use any special slashes or tildes, "home" is always considered the base directory, and the slash bewteen "home" and the subdirectory will be added for you automatically, do not put the slash in this box.	email	tr	Sadece Washington Üniversitesi "UWash" IMAP sunuculardas gerklidir. Varsayılan değer  "mail" dir. Bunun anlamı, Gelen Kutusu haricindeki mail klasörlerin direkt olarak "HOME" dizini altındaki "mail" dizinine konumladırılır. Bu kutu boş bırakılabilir. Bunun anlamı, mail klasörleriniz bir alt dizine değil de "HOME"   dizininin içine konumlandırılır. Eğer mail klasörleriniz "HOME" dizini altındaki bir alt dizinin içine konumlandırılırsa bu alt dizinin ismini buraya koy. Genel olarak herhangi bir özel slash veya tilde kullanma zorunluluğu yoktur. "HOME" her zaman ana dizin olarak düşünülür ve "HOME" ve alt dizin arasına otomatik olarak sizin için slash konulur. Bu kutuya slash koymayın. 
+or	common	tr	veya
+or enter text	email	tr	veya metin gir
+organization	email	tr	Organizasyon
+persistent email server session	email	tr	sürekli email sunucu oturumu
+phone	email	tr	Telefon
+please fill in everything you need	email	tr	Lütfen ihtiyaç duyduğunuz her şeyi doldurunuz
+please select a folder to rename	email	tr	Tekrar isimlendirmek için klasör seçin
+please select a message first	email	tr	Lütfen önce bir mesaj seçin
+please submit a filename to attach	email	tr	Lütfen eklemek için bir dosya ismi seçin
+please type a folder name in the text box	email	tr	Lütfen metin kutusuna bir klasör ismi girin
+previous	email	tr	Önceki
+previous message	email	tr	Önceki mesaj
+printable	email	tr	yazdırılabilir
+raw message	email	tr	ham mesaj
+read mail	email	tr	Mail Oku
+received headers	email	tr	Başlıklar Alındı
+recent	email	tr	En son
+recipient	email	tr	Alıcı
+redirect	email	tr	Yeniden Gönder
+reject	email	tr	Geri çevir
+rename (expert)	email	tr	Tekrar isimlendir (gelişmiş)
+rename a folder	email	tr	Dizini tekrar isimlendir
+reply	email	tr	Cevapla
+reply all	email	tr	Hepsini cevapla
+replyto	email	tr	Cavapla
+request delivery notification	email	tr	İstek teslim bildirimi
+requested filter action:	email	tr	filtre faaliyeti isteklendirildi:
+required	email	tr	gerekli
+reset	email	tr	Sıfırla
+result	email	tr	Sonuç
+return mails during this time period	email	tr	Bu zaman periyodu süresince mailleri geri gönder
+save deleted messages in folder named below	email	tr	Silinen mesajları aşağıda ismi verilen klasörde sakla
+save sent messages in folder named below	email	tr	Gönderilen mesajları aşağıda ismi verilen klasörde sakla
+search for mails in these folders	email	tr	Mailler için bu klasörleri ara
+search this folder	email	tr	Bu dizini ara
+section	email	tr	Bölüm
+seen	email	tr	Bakılmış
+select home email address	email	tr	Ev email adresinizi seçin
+select this box if you want the text body of the message you are forwarding to appear inline in the body of your sent message	email	tr	Eğer ilettiğin mesajın metin bölümününün gönderdiğin mesajın satır içi bölümünde görünmesini istiyorsan bu kutuyu seç
+select work email address	email	tr	İş email adresinizi seçin
+select your mail server type	admin	tr	Mail sunucu tipini seçin
+select your screensize for propper showing of the javascript addressbook	email	tr	Adres defterinizin görünümünü desteklemek için ekran genişliğini seçin
+select your style for the addressbook. the traditional, simple style. or the new javascript enabled complex addressbook	email	tr	Adres defteri için sitilinizi seçin. Genellikle basit bir sitil. 
+send	email	tr	Yolla
+send deleted messages to the trash	email	tr	Silinmiş mesajları çöp kutusuna yolla
+send forwarded mail as quoted attachment	email	tr	İletilmiş maili bilgi eklentisi olarak gönder
+sender	email	tr	Gönderen
+sent	email	tr	yollanmış
+sent folder	email	tr	Klasör yollandı
+sent messages folder	common	tr	Yollanan mesajlar Klasörü
+sent messages folder name	email	tr	Yollanan mesajlar klasör ismi
+sent messages saved in "sent" folder	common	tr	Yollanan mesajlar "yollananlar" klasörüne kaydedildi
+sent messages saved to folder:	email	tr	Yollanan mesajların kaydedildiği yer:
+sep	email	en	Eylül
+settings	email	tr	Ayarlar
+short names	email	tr	Kısa isimler
+show help	email	tr	Yardımı göster
+show long names	email	tr	Uzun isimleri göster
+show message	email	tr	mesaj göster
+show new messages in combobox	email	tr	yeni mesajları giriş kutusunda göster
+show new messages on main screen	email	tr	Yeni mesajları ekranda göster
+show sender's email address with name	email	tr	Göndericilerin email adreslerini adlarıyla beraber yolla
+show short names	email	tr	Kısa isimleri göster
+show total folder size by default	email	tr	Toplam klasör boyutunu varsayılan olarak göster
+simple	email	tr	Basit
+size	email	tr	Boyut
+size larger than	email	tr	Boyut daha büyük
+size smaller than	email	tr	Boyut daha küçük
+small	email	tr	Küçük
+smaller	email	tr	Daha küçük
+smallest	email	tr	En küçük
+somebody	email	tr	birisi
+sort by	email	tr	e göre sırala
+spell check	email	tr	Yazım kontrolü
+standard e-mail preferences	email	tr	Standart E-Mail özellikleri
+stop if matched	email	tr	Eşlendiyse durdur
+switch accounts	email	tr	Hesapları değiştir
+switch current folder to	common	tr	Mevcut klasörü değiştir
+test all filters	email	tr	Bütün filtreler 
+test or apply all filters	email	tr	Bütün filtreleri uygula veya test et
+test run this filter	email	tr	Filtre testte
+text	email	tr	Metin
+the email application offers 2 different layouts for the index page, that is the page that lists the emails in a folder. this page may be the page the user looks at the most and so different layouts, or looks, are offered.	email	tr	Email başvurusu indeks sayfası için iki farklı plan sunar. Bu sayfa bütün emailleri bir klasörde listeler. Bu sayfa kullanıcının çok sayıda ve farklı plan ve görünümlere baktığı bir sayfa olabilir.
+the email application offers different button displays, these buttons can be text, images, or both.	email	tr	Bu email uygulaması farklı buton görünümleri sunar. Bu butonlar yazı,resim yada her ikisi de olabilir.
+the email application offers different icon image themes, groups of images of a similar style which are used in this email application. currently the available themes are images based on evolution by ximian and the netscape7, mozilla browser buttons. additional themes are anticipated and welcome.	email	tr	Bu email uygulaması farklı ikon resim temaları ve bu email uygulamasında kullanılan benzer sitildeki resim gruplarını sunar. Şu anda mevcut olan temalar Evolution by Ximian ve Netscape7, Mozilla tarayıcı butonlarına dayanır. Ekstra temalar umulur ve istenir.
+the email application offers different icon image themes, these icons can be big or small.	email	tr	B email uygulaması farklı ikon resim temaları sunar. Bu ikonlar büyük yada küçük olabilir.
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you clear this box, then it goes back to the default value. if you only need some custom settings but want this one to be the default value, then leave this box blank, the default value will be used, and you will see that default value in this box the next time you come to this preferences page.	email	tr	Bu email hesabı için emailleri kontrolde kullandığınız oturum açma adınız sizin phpGroupWare oturum açma adınız ile aynı olabilir yada sunucu yöneticisi bunu sizin için ayarlayabilir. Çoklu email hesapları kurmak istiyorsan bunu doldurman gerekir. Eğer sadece bir email hesabı oluşturman gerekiyorsa muhtemelen burayı boş bırakabilirsin. Eğer bu kutuyu temizlersen o tekrar varsayılan değerine geri döner. Eğer sadece özel ayarlara ihtiyaç duyuyorsan ancak bunun varsayılan değer olmasını istiyorsan bu kutuyu boş bırak, varsayılan değer kullanılacak ve birdahaki sefer özellik sayfasına geldiğinizde bu kutuda varsayılan değer görüntülenecektir.
+the login name to use when checking mail for this email account. this may be the same as your phpgroupware login name, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the "use custom settings" option.	email	tr	Bu email hesabı için emailleri kontrolde kullandığınız oturum açma adınız sizin phpGroupWare oturum açma adınız ile aynı olabilir yada sunucu yöneticisi bunu sizin için ayarlayabilir. Çoklu email hesapları kurmak istiyorsan bunu doldurman gerekir. Eğer sadece bir email hesabı oluşturman gerekiyorsa muhtemelen burayı boş bırakabilirsin. Eğer özel bir şifre ayarlarsan bir dahaki sefere bu özellik sayfasına geldiğinde bu kutu boş olacak. Bu bir güvenlik özelliğidir. Çünkü özel email şifreniz siz onu ayarladıktan sonra tarayıcına gönderilmez. Özel şifreni değiştirmek için basit bir şekilde kutuya bir şifre gir. Ekstra email hesapları bunu ayarlamanı gerektirir. Varsayılan email hesabınız için "Özel Ayarlar Kullan" seçeneğini kontrol etmeden özel şifreni temizleyebilirsin.
+the password to use when checking mail for this email account. this may be the same as your phpgroupware password, or the server administrator may have set it for you. if your have multiple email accounts set up, you will need to fill this in. if you have only one email account set up, then you can probably leave this alone. if you do set a custom password, this box will be blank the next time you come to this settings page. this is a security feature because your custom email password is not sent to your browser after you set it. to change your custom password, simply enter a new password in the box. extra email accounts require you to set this. for your default email account, you can clear your custom password by unchecking the "use custom settings" option.	email	tr	Bu email hesabı için emailleri kontrolde kullandığınız oturum açma adınız sizin phpGroupWare oturum açma adınız ile aynı olabilir yada sunucu yöneticisi bunu sizin için ayarlayabilir. Çoklu email hesapları kurmak istiyorsan bunu doldurman gerekir. Eğer sadece bir email hesabı oluşturman gerekiyorsa muhtemelen burayı boş bırakabilirsin. Eğer özel bir şifre ayarlarsan bir dahaki sefere bu özellik sayfasına geldiğinde bu kutu boş olacak. Bu bir güvenlik özelliğidir. Çünkü özel email şifreniz siz onu ayarladıktan sonra tarayıcına gönderilmez. Özel şifreni değiştirmek için basit bir şekilde kutuya bir şifre gir. Ekstra email hesapları bunu ayarlamanı gerektirir. Varsayılan email hesabınız için "Özel Ayarlar Kullan" seçeneğini kontrol etmeden özel şifreni temizleyebilirsin.
+the type of mail server you want to access. imap mail servers have folders, such as the sent and trash folders. pop servers do not have folders. pop, pop-3, and pop3 are the same thing. you can have the server connection encrypted by using imaps or pops, only if the mailserver supports it and if your phpgroupware installation has a "ssl" capabable version of php.	email	tr	Erişmek istediğin mail sunucusunun türü. IMAP mail sunucularında yollananlar ve çöp kutusu klasörleri gibi klasörler vardır. POP sunucularında klasörler yoktur. POP, POP-3, ve POP3 aynı şeylerdir. IMAPS veya POPS ları kullanarak şifrelenmiş bir sunucu bağlantısı kurabilirsin. Ancak mail sunucusunun bunu desteklemesi ve phpGroupWare kurulumunuzun PHP nin SSL  versiyonuna sahip olması gerekir. 
+then do this	email	tr	Bunu yap
+then take this actions	email	tr	Bunları kabul et
+there is no text or other part of the email to display to the user, all part(s) are attachments.	email	tr	Kullanıcıya gösterecek herhangi bir yazı yada emailin bir bölümü yoktur. Bütün bölümler eklentidir.
+there was an error trying to connect to your imap server.<br>please contact your admin to check the servername, username or password.	email	tr	IMAP sunucunuza bağlanmayı denerken bir hata oluştu. Lütfen sunucu ismini, kullanıcı adını veya şifreyi kontrol etmek için yönmeticinizle bağlantı kurun.
+there was an error trying to connect to your mail server.<br>please, check your username and password, or contact your admin.	email	tr	IMAP sunucunuza bağlanmayı denerken bir hata oluştu. Lütfen sunucu ismini, kullanıcı adını veya şifreyi kontrol etmek için yönmeticinizle bağlantı kurun.
+there was an error trying to connect to your pop3 server.<br>please contact your admin to check the servername, username or password.	email	tr	POP3 sunucunuza bağlanmayı denerken bir hata oluştu. Lütfen sunucu ismini, kullanıcı adını veya şifreyi kontrol etmek için yönmeticinizle bağlantı kurun.
+this confusing and often misunderstood option is left over from this email apps origins as aeromail by mark cushman. when viewing a list of emails in a folder, the from column may show you a) the senders name only, if a name was provided, b) the senders from email address, in addition to the senders name, or c) the senders reply to address if it is different from the senders from address, in addition to the senders name if it was provided. typically users set this to none, which will show only the senders name. if no name was supplied by the sender, then the senders from email address will be shown, whether a seperate reply to address is provided has no effect on this, the from address is always used if the senders name is not provided.	email	tr	Bu karıştırılan ve yanlış anlaşılan seçenek daha sonra ele alınmak üzere bu email uygulamasının kökeninden Aeromail by Mark Cushman olarak daha sonra ele alınmak üzere çıkarılır. Emaillerin bir listesi bir klasörde görüntülendiği zaman KİMDEN sütunu size a)İsim desteklendiyse sadece kullanıcı isimlerini b)Kullanıcıların email adreslrini kullanıcı isimlerine göre veya c) Eğer adresten ve kullanıcılardan farklıysa gönderenler adrese cevap verir. Eğer destekleniyorsa kullanıcıların ismine göre. Tipik olarak kullanıcılar bunu sadece gönderenlerin ismini gösterecek şekilde ayarlar. Eğer kullanıcı tarafından herhangi bir isim girilmezse KİMDEN bölümünde gönderenlerin email adresleri görünür. Eğer ayrı bir cevap adresi destekleniyorsa bunun üzerinde herhangi bir etkisi yoktur. Eğer gönderenlerin isimleri sağlanmıyorsa kimden adresi her zaman kullanılır.
+this data not supplied.	email	tr	Veri sağlanamadı
+this folder is empty	email	tr	Bu dizin boş
+this is really a visual template conflict issue. the phpgw template already has it own css, and style sheets are cascading, subsequent css can be inherited by the page and totally b0rk the look of the template theme. or maybe not, only certain css tags are really capable of this such as the css body property, or the a (href) properties.	email	tr	bu gerçekten bir görrsel şablon çelişki konusudur. PhpGW şablonunun zaten kendine ait CSS i vardır ve sitil sayfaları basamaklandırılıyor, CSS sayfa tarafından varsayılan olarak eklenir.  Şablon temasının görünüşü TOTALLY B0RK tur. Veya eklenmeyebilir. Sadece belirli CSS etiketleri bu yeteneğe sahiptir. Örneğin; css BODY özelliği veya A (href) özellikleri.
+this is the name that appears in the account combobox. if for leave this blank, your accounts will be given a standard name like account[1]: jane doe, where jane doe is the name you give below as your full name. if you want to give an account a special name you can fill this in. no matter what, this is for your use, your emails will still use your full name as your from name for email messages. note that your full name for your email account 0 is the name you gave in the phpgroupware setup.	email	tr	Bu, hesap giriş kutusunda görünen bir isimdir. Eğer burayı boş bırakırsan hesaplarına Hesap[1]:Jane Doe gibi bir isim verilecek. Bu isim senin aşağıda tüm adın olarak girdiğin isimdir. Eğer bir hesaba özel bir isim vermek istersen bunu doldurabilirsin. Bu senin kullanımın için. Emaillerin tüm adınızı sanki senin emaillerinde kimden kutusuna yazdığın isim olarak kullanmaya devam edecektir. Tüm adınız, size phpgroupware kurulumunda sizin email hesap 0 için verilen isim olduğuna dikkat edin.
+this is the name that appears in the users from address. the default mail account gets this value automatically from the phpgwapi. additional accounts are created with the phpgwapi supplied fullname you can specify a different fullname for each extra email account.	email	tr	bu kullanıcıların KİMDEN adreslerinde görünen isimdir. Varsayılan mail hesabı bu değeri otomatik olarak phpgwapi den alır. Ekstra hesaplar phpgwapi tüm isim desteğiyle oluşturulur. Her ekstra mail hesabı için farklı bir tüm isim belirleyebilirsin.
+this pref currently does nothing users may have more than one email account. in the future it is anticipated that automatic actions may be performed on these accounts, such as automatic new mail checks,auto filtering, etc... perhaps the user may want to disable an account so that these automatic actions do not occur for that account. this is one possible use. also, an admin may want to disable accounts from time to time.	email	tr	BU ÖZELLİK ŞU ANDA KULLANILMIYOR. Kullanıcıların birden fazla email hesabı olabilir. Gelecekte otomatik olayların bu hesaplarda gerçekleştirileceği kestirilebilir. Örneğin, otomatik mail kontrolü, otomatik filtreleme gibi. Belki kullanıcı bir email hesabını kapatmak isteyebilir. Böylece otomatik olaylar bu hesap için gerçekleşmez. Bu muhtemel bir kullanımdır. Ayrıca yönetici zaman zaman hesapları kapatmak isteyebilir.
+this specifies whether or not to show the number of new message in the folders combo box on the index screen.	email	tr	Bu klasörlerdeki yeni mesajın görülmesine bağlı olmaksızın indeks ekranındaki bilgi kutusunu özelleştirir.
+this specifies whether or not to show the total size of folders by default. if this is not checked, you will be presented with a button allowing you to display folder size..	email	tr	Bu klasörlerin toplam boyutunun varsayılan olarak görülüp görülmemesini sağlar. Eğer bu işaretlenmezse, bu size klasör boyutunu göstermenize izin veren bir buton olarak gösterilir.
+this text will be appended to the bottom of the users emails for this email account. currently, html tags are not supported. also, forwarded email will not get this email sig appended to it for reasons such as it clutters the email, the forwarded part probably has its own email sig from the original author, which is really the information that matters the most.	email	tr	Bu metin bu email için kullanıcı emaillerin sonuna eklenecektir. Şu an HTML etiketleri desteklenmiyor. Ayrıca iletilmiş mail bu mailin sonuna eklenmiş imzayı  emaillerin düzensiz bir şekilde dağıtılmasıdır. İletilmiş bölümü muhtemelen yazarın orijinal imzası vardır. 
+to	email	tr	Kime
+to address	email	tr	Yollanacak Adres
+total messages	email	tr	Toplam Mesajlar
+trash	email	tr	Çöp Kutusu
+trash folder	email	tr	Çöp kutusu dizini
+u-wash mail folder	email	tr	U-Wash Mail Dizini
+unable to get source folder name	email	tr	Kaynak klasör ismi alamazsınız
+unable to get target folder name	email	tr	Kaynak klasör ismi alamazsınız
+unanswered	email	tr	Cevaplanmamış
+undeleted	email	tr	Silinmemiş
+undisclosed recipients	email	tr	Belli olmayan Alıcı
+undisclosed sender	email	tr	Belli olmayan Gönderici
+unflagged	email	tr	İşaretlenmemiş
+unknown action	email	tr	Bilinmeyen faaliyet
+unknown error	email	tr	Bilinmeyen hata
+unknown translation	email	tr	bilinmeyen çeviri
+unseen	email	tr	Gizli
+use custom settings	email	tr	Geleneksel ayarları kullanın
+view as html	email	tr	HTML gibi görüntüle
+view formatted	email	tr	Formatlanmışları görüntüle
+view headers	email	tr	Başlıkları görüntüle
+view unformatted	email	tr	Formatlanmamışları görüntüle
+warn_attachment_name_dangerous	email	tr	warn_attachment_name_DANGEROUS
+warn_attachment_only_mail	email	tr	warn_attachment_only_mail
+warn_b64_encoded_displayable	email	tr	warn_b64_encoded_displayable
+warn_has_iframe_maybe_klez	email	tr	warn_has_iframe_maybe_klez
+warn_script_tags	email	tr	warn_script_tags
+warn_style_sheet	email	tr	warn_style_sheet
+we have recently added this new addressbook so that users can choose to have a more complex addressbook that features a) easy, point and click searching, b) best suited for organizations with large central addressbooks with many categories. you can choose here which addressbook do you prefer.	email	tr	Bunu adres defterine yeni ekledik. Böylece kullanıcılar daha komplike adres defterleri seçebiliyorlar. Bu adres defterinin özellikleri a) Tıklayarak yada seçerek arama, b) birçok kategoriden oluşan geniş merkezli adres defterli kurumlar için uygun. Buradan hangisini isterseniz seçebilirsiniz.
+we have three sizes that tell us how to better render the addressbook for you: 800x600 (addressbook will popout in a 700 pixel wide box), 1024x768 (it will be a 800 box), 1200x1600 (will be a 900 box). the fonts for all html stuff will be, respectively set to xx-small, x-small and normal (no font setting).	email	tr	Adres defteri için 3 tip çözünürlük vardır. Bize adres defteri için en iyi çözünürlüğün ne olduğunu söyleyen 3 tip çözünürlük vardır: 800x600 (adres defteri 700 piksellik geniş bir kutuda açılacaktır.), 1024x768 (800 piksellik kutuda), 1200x1600 (900 piksellik kutuda). Bütün HTML ler için yazıtipleri xx-küçük, x-küçük ve normal olarak ayarlanacaktır.
+wrote	email	tr	yazıldı
+you have %1 new messages!	common	tr	%1 yeni mesajınız var!
+you have 1 new message!	common	tr	1 yeni mesajınız var!
+you have messages!	common	tr	Yeni mesajlarınız var!
+you have no new messages	common	tr	Yeni bir mesajınız yok!
+you must click	email	tr	Tıklamalısınız
+you must click %1 for the file to actually upload	email	tr	dosyayı yüklemek için %1 tıklamalısınız
+your full name	common	tr	İsminizin tamamı
+your message has been sent	common	tr	Mesajınız yollandı!
+your server administrator will set the default values for the following options. you may never need to change any of them. if you do need to use settings that are different from the defaults for the options below here, then check this box. default is disabled, not checked. if you fill in some of the options, but later decide to go back to the default values, unchecking this box will erase your custom values and put back the default values. all of the following options start out with the default value, so you may see some settings below even if you have never filled them in. this checkbox only shows up for the default email account. if you are setting up additional email accounts, you will be required to fill in the following options and this checkbox will not be displayed, it will be checked for all extra email accounts.	email	tr	Sunucu yöneticiniz sonraki seçenekler için varsayılan değerleri ayarlayacaktır. Siz asla bunları değiştirme ihtiyacı duymayacaksın. Eğer aşağıdaki seçenek için default değerlerden farklı seçenekler kullanmak ihtiyacı duyarsan bu kutuyu kontrol et. İşaretlenmezse varsayılan kapalıdır. Seçeneklerden birkaçını doldurursan ve daha sonra varsayılan değerlere dönmek istersen işaretlenmemiş bu kutu mevcut değerleri silecek ve varsayılan değerlere dönecektir. Ve bundan sonra gelen bütün seçenekler bu varsayılan değerle başlayacak böylece bunları doldurmamış olsanız bile ağağıda birkaç ayar görebilirsin. Kontrolo kutusu sadece varsayılan email hesabı için görülür. Eğer estyra email hesapları ayarlıyorsan takip eden seçenekleri de doldurman gerekecek ve bu kontrol kutusu görünmeyecek ve bütün ekstra emai,l hesapları için işaretlenecektir.
