@@ -231,6 +231,28 @@ class controller_socontrol_item extends controller_socommon
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 	
+	function get_control_items($control_group_id)
+	{
+		$results = array();
+		
+		$sql = "SELECT * FROM controller_control_item WHERE control_group_id=$control_group_id";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
+			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
+			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
+			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+			
+			$results[] = $control_item;
+		}
+		
+		return $results;
+	}
+	
 	function populate(int $control_item_id, &$control_item)
 	{
 		
