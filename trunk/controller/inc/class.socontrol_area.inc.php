@@ -83,7 +83,7 @@ class controller_socontrol_area extends controller_socommon
 		$this->db->next_record();
 		
 		$control_area = new controller_control_area($this->unmarshal($this->db->f('id', true), 'int'));
-		$control_area->set_type_name($this->unmarshal($this->db->f('type_name', true), 'string'));
+		$control_area->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 		
 		return $control_area;
 	}
@@ -130,7 +130,7 @@ class controller_socontrol_area extends controller_socommon
 						           'name' => $this->db->f('name', false));
 			}
 			return $results;
-	}
+	}	
 	
 	function get_id_field_name($extended_info = false)
 	{
