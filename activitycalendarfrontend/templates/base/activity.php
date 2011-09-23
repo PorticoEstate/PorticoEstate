@@ -21,12 +21,12 @@ function get_available_groups()
 	if(org_id != null && org_id == 'new_org')
 	{
 		//alert('new_org');
-		document.getElementById('new_org_group').style.display = "block";
+		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "block";
 	}
 	else
 	{
-		document.getElementById('new_org_group').style.display = "none";
+		document.getElementById('new_org').style.display = "none";
 		document.getElementById('new_org_fields').style.display = "none";
 		var divcontent_start = "<select name=\"group_id\" id=\"group_id\" onchange=\"javascript:checkNewGroup()\">";
 		var divcontent_end = "</select>";
@@ -53,12 +53,12 @@ function checkNewGroup()
 	var group_selected = document.getElementById('group_id').value;
 	if(group_selected == 'new_group')
 	{
-		document.getElementById('new_org_group').style.display = "block";
+		document.getElementById('new_group').style.display = "block";
 		document.getElementById('new_group_fields').style.display = "block";
 	}
 	else
 	{
-		document.getElementById('new_org_group').style.display = "none";
+		document.getElementById('new_group').style.display = "none";
 		document.getElementById('new_group_fields').style.display = "none";
 	}
 }
@@ -111,6 +111,17 @@ var divcontent_end = "</select>";
 
 <div class="yui-content">
 	<div id="details">
+	
+	<?php if($message){?>
+	<div class="success">
+		<?php echo $message;?>
+	</div>
+	<?php }else if($error){?>
+	<div class="error">
+		<?php echo $error;?>
+	</div>
+	<?php }?>
+	</div>
 		<h1><?php echo lang('activity') ?></h1>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
@@ -169,36 +180,7 @@ var divcontent_end = "</select>";
 					}
 					?>
 				</dd>
-				<dt>
-					<?php if($activity->get_group_id() || $editable) { ?>
-					<label for="group_id"><?php echo lang('group') ?></label>
-					<?php } ?>
-				</dt>
-				<dd>
-					<?php
-					$current_group_id = $activity->get_group_id();
-					if ($editable)
-					{
-						?>
-						<?php echo lang('group_helptext')?><br/>
-						<div id="group_select">
-							<select name="group_id" id="group_id">
-								<option value="0">Ingen gruppe valgt</option>
-							</select>
-						</div>
-						<?php
-					?>
-					<?php
-					}
-					else
-					{
-						if($activity->get_group_id()){
-							echo activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
-						}
-					}
-					?>
-				</dd>
-				<div id="new_org_group" style="display: none;">
+				<div id="new_org" style="display: none;">
 					<hr/>
 					<div id="new_org_fields" style="display: none;">
 						<label for="orgname">Organisasjonsnavn</label>
@@ -232,6 +214,60 @@ var divcontent_end = "</select>";
 						<label for="org_description">Beskrivelse</label>
 						<textarea rows="10" cols="100" name="org_description"></textarea>
 					</div>
+					<hr/>
+					<b>Kontaktperson 1</b><br/>
+					<label for="contact1_name">Navn</label>
+					<input type="text" name="contact1_name"/><br/>
+					<label for="contact1_phone">Telefon</label>
+					<input type="text" name="contact1_phone"/><br/>
+					<label for="contact1_mail">E-post</label>
+					<input type="text" name="contact1_mail"/><br/>
+					<b>Kontaktperson 2</b><br/>
+					<label for="contact2_name">Navn</label>
+					<input type="text" name="contact2_name"/><br/>
+					<label for="contact2_phone">Telefon</label>
+					<input type="text" name="contact2_phone"/><br/>
+					<label for="contact2_mail">E-post</label>
+					<input type="text" name="contact2_mail"/><br/>
+					<label for="contact2_address">Adresse</label>
+					<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
+					<div id="contact2_address_container"></div><br/>
+					<label for="contact2_number">Nummer</label>
+					<input type="text" name="contact2_number"/><br/>
+					<label for="contact2_postaddress">Postnummer / Sted</label>
+					<input type="text" name="contact2_postaddress"/>
+					<hr/>
+				</div>
+				<dt>
+					<?php if($activity->get_group_id() || $editable) { ?>
+					<label for="group_id"><?php echo lang('group') ?></label>
+					<?php } ?>
+				</dt>
+				<dd>
+					<?php
+					$current_group_id = $activity->get_group_id();
+					if ($editable)
+					{
+						?>
+						<?php echo lang('group_helptext')?><br/>
+						<div id="group_select">
+							<select name="group_id" id="group_id">
+								<option value="0">Ingen gruppe valgt</option>
+							</select>
+						</div>
+						<?php
+					?>
+					<?php
+					}
+					else
+					{
+						if($activity->get_group_id()){
+							echo activitycalendar_sogroup::get_instance()->get_group_name($activity->get_group_id());
+						}
+					}
+					?>
+				</dd>
+				<div id="new_group" style="display: none;">
 					<hr/>
 					<div id="new_group_fields" style="display: none;">
 						<label for="groupname">Gruppenavn</label>
@@ -337,12 +373,8 @@ var divcontent_end = "</select>";
 						$selected_state = $activity->get_state();
 					?>
 						<select name="state">
-							<option value="0" <?php echo ($selected_state == 0 ? 'selected="selected"' : "")?>>Ingen status valgt</option>
 							<option value="1" <?php echo ($selected_state == 1 ? 'selected="selected"' : "")?>><?php echo lang('new') ?></option>
 							<option value="2" <?php echo ($selected_state == 2 ? 'selected="selected"' : "")?>><?php echo lang('change') ?></option>
-							<option value="3" <?php echo ($selected_state == 3 ? 'selected="selected"' : "")?>><?php echo lang('accepted') ?></option>
-							<option value="4" <?php echo ($selected_state == 4 ? 'selected="selected"' : "")?>><?php echo lang('processed') ?></option>
-							<option value="5" <?php echo ($selected_state == 5 ? 'selected="selected"' : "")?>><?php echo lang('rejected') ?></option>
 						</select>
 					<?php
 					}
