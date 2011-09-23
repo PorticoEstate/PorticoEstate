@@ -38,7 +38,7 @@
 		'controller_control_item' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
-				'title' => array('type' => 'varchar','precision' => '100','nullable' => false),
+				'title' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'required' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 				'what_to_do' => array('type' => 'text','nullable' => false),
 				'how_to_do' => array('type' => 'text','nullable' => false),
