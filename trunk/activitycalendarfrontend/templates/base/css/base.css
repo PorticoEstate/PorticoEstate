@@ -239,6 +239,24 @@ li.ticket_detail {
 	margin-left: 5px;
 	}
 
+div.success {
+	font-weight: normal;
+	margin:10px;
+	padding:5px;
+	font-size:1.1em;
+	text-align: left;
+	background-color: green;
+	border:1px solid #9F6000;
+	color: white;
+}
 
-
-
+div.error {
+	font-weight: normal;
+	margin:10px;
+	padding:5px;
+	font-size:1.1em;
+	text-align: left;
+	background-color: red;
+	border:1px solid #9F6000;
+	color: white;
+}
