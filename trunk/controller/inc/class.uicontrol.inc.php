@@ -40,11 +40,7 @@
 		
 		public function index()
 		{
-			if( !isset($_POST['save_control']) )
-			{
-				$this->view_control();	
-			}
-			else if( isset($_POST['save_control']) )
+			if( isset($_POST['save_control']) )
 			{
 				$this->edit_control();	
 			}
@@ -55,6 +51,9 @@
 			else if( isset($_POST['save_control_items']) )
 			{
 				$this->edit_control_items();
+			}
+			else{
+				$this->view_control();
 			}
 		}
 		
