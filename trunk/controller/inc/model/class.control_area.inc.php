@@ -33,6 +33,14 @@
 		
 		public function get_title(){ return $this->title; }
 			
+		public function serialize()
+		{
+			return array(
+					'id' => $this->get_id(),
+					'title' => $this->get_title()
+			);
+		}
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
