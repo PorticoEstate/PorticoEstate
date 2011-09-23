@@ -7,8 +7,11 @@
 			<div id="details">
 				<xsl:call-template name="control" />
 			</div>
+			<div id="control_groups">
+				<xsl:call-template name="control_groups" />
+			</div>
 			<div id="control_items">
-				<!--xsl:call-template name="control_items" /-->
+				<xsl:call-template name="control_items" />
 			</div>
 		</div>
 	</div>
