@@ -7,6 +7,8 @@
 
 		protected $id;
 		protected $group_name;
+		protected $procedure_id;
+		protected $control_area_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -32,7 +34,32 @@
 		}
 		
 		public function get_group_name(){ return $this->group_name; }
+		
+		public function set_procedure_id($procedure_id)
+		{
+			$this->procedure_id = $procedure_id;
+		}
+		
+		public function get_procedure_id(){ return $this->procedure_id; }
+		
+		public function set_control_area_id($control_area_id)
+		{
+			$this->control_area_id = $control_area_id;
+		}
+		
+		public function get_control_area_id(){ return $this->control_area_id; }
+
+		public function serialize()
+		{
+			$result = array();
+			$result['id'] = $this->get_id();
+			$result['group_name'] = $this->get_group_name();
+			$result['procedure_id'] = $this->get_procedure_id();
+			$result['control_area_id'] = $this->get_control_area_id();
 			
+			return $result;
+		}
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
