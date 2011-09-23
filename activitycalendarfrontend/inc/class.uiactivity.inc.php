@@ -199,7 +199,7 @@
 			{
 				if(isset($activity)) // If an activity object is created
 				{
-					var_dump("lagre1");
+//					var_dump("lagre1");
 					$old_state = $activity->get_state();
 					$new_state = phpgw::get_var('state');
 //	var_dump("lagre2");
