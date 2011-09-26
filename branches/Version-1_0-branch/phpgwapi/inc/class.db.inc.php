@@ -89,9 +89,9 @@
 		var $debug = false;
 
 		/**
-		* @var string $Halt_On_Error should connection and script be terminated on error?
+		* @var string $Halt_On_Error "yes" (halt with message), "no" (ignore errors quietly), "report" (ignore errror, but spit a warning)
 		*/
-		var $Halt_On_Error = 'yes'; // should be true or false
+		var $Halt_On_Error = 'yes';
 
 		/*
 		 * @var boolean $Exception_On_Error should SQL throw exception on error ?

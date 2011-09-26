@@ -133,6 +133,7 @@
 					$org_info['street'] = phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
 					//$org_info['zip'] = phpgw::get_var('postaddress');
 					$org_info['district'] = phpgw::get_var('org_district'); 
+					$org_info['status'] = "new";
 					$o_id = $so_activity->add_organization_local($org_info);
 					
 					//add contact persons
@@ -163,6 +164,7 @@
 						$group_info['name'] = phpgw::get_var('groupname');
 						$group_info['organization_id'] = $o_id;
 						$group_info['description'] = phpgw::get_var('group_description');
+						$group_info['status'] = "new";
 						$g_id = $so_activity->add_group_local($group_info);
 						
 						//add contact persons
@@ -197,10 +199,10 @@
 			{
 				if(isset($activity)) // If an activity object is created
 				{
-					var_dump("lagre1");
+//					var_dump("lagre1");
 					$old_state = $activity->get_state();
 					$new_state = phpgw::get_var('state');
-	var_dump("lagre2");
+//	var_dump("lagre2");
 					// ... set all parameters
 					$activity->set_title(phpgw::get_var('title'));
 					//$activity->set_organization_id(phpgw::get_var('organization_id'));
@@ -220,7 +222,7 @@
 					{
 						$activity->set_state($new_state);
 					}
-					var_dump("lagre3");
+//					var_dump("lagre3");
 					$activity->set_category(phpgw::get_var('category'));
 					$target_array = phpgw::get_var('target');
 					$activity->set_target(implode(",", $target_array));
@@ -229,7 +231,7 @@
 					$activity->set_contact_persons($persons);
 					$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 					
-					var_dump("storing"); 
+//					var_dump("storing"); 
 					
 					if($so_activity->store($activity)) // ... and then try to store the object
 					{

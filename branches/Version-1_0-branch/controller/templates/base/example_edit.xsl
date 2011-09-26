@@ -1,16 +1,19 @@
-<?php 	
-	//include common logic for all templates
-	include("common.php");
-?>
+<!-- item  -->
 
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+
+<xsl:call-template name="yui_booking_i18n"/>
 <div class="identifier-header">
-<h1><img src="<?php echo RENTAL_TEMPLATE_PATH ?>images/32x32/actions/go-home.png" /> <?php echo lang('Control_item') ?></h1>
+<h1><img src="{img_go_home}" /> 
+		<xsl:value-of select="php:function('lang', 'Control_item')" />
+</h1>
 </div>
 
 <div class="yui-content">
 		<div id="details">
 			<form action="#" method="post">
-				<input type="hidden" name="id" value="<?php if(!empty($control)){ echo $control->get_id(); } else { echo '0'; }  ?>"/>
+				<input type="hidden" name="id" value = "{value_id}">
+				</input>
 				<dl class="proplist-col">
 					<dt>
 						<label for="title">Tittel</label>
@@ -41,34 +44,37 @@
 					</dt>
 					<dd>
 						<select id="control_group" name="control_group">
-							<?php 
-								foreach ($control_group_array as $control_group) {
-									echo "<option value='" . $control_group->get_id() . "'>" . $control_group->get_group_name() . "</option>";
-								}
-							?>
+							<xsl:apply-templates select="control_group/options"/>
 						</select>
 					</dd>
 					<dt>
-						<label for="control_area">Kontrollområde</label>
+						<label for="control_area">Kontrolltype</label>
 					</dt>
 					<dd>
 						<select id="control_area" name="control_area">
-							<?php 
-								foreach ($control_area_array as $control_area) {
-									echo "<option value='" . $control_area->get_id() . "'>" . $control_area->get_title() . "</option>";
-								}
-							?>
+							<xsl:apply-templates select="control_area/options"/>
 						</select>
 					</dd>				
 				</dl>
 				
 				<div class="form-buttons">
-					<?php
-						echo '<input type="submit" name="save_control" value="' . lang('save') . '"/>';
-					?>
+					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+					<input type="submit" name="save_control" value="{$lang_save}" title = "{$lang_save}">
+					</input>
 				</div>
 				
 			</form>
 						
 		</div>
-</div>
+	</div>
+</xsl:template>
+	
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>
+
