@@ -59,3 +59,5 @@ org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyt
 group_helptext	activitycalendarfrontend	no	Velg gruppe/lag aktiviteten skal knyttes til. <br/>Dersom gruppen/laget ikke finnes, velg "Ny gruppe" og fyll ut feltene som vises under.
 int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
+messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret
+messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring

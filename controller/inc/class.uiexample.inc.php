@@ -7,7 +7,7 @@
 	
 	include_class('controller', 'control', 'inc/model/');
 
-	class controller_uicontrol_item2 extends controller_uicommon
+	class controller_uiexample extends controller_uicommon
 	{
 		private $bo; 
 		private $so;
@@ -16,7 +16,8 @@
 		public $public_functions = array
 		(
 			'index'					=> true,
-			'display_control_items'	=> true,
+			'edit'					=> true,
+			'normal_tabs'			=> true,
 			'separate_tabs'			=> true,
 			'delete'				=> true,
 			'js_poll'				=> true
@@ -30,154 +31,12 @@
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->bo = CreateObject('property.boevent',true);
 		}
-		
+
 		public function index()
 		{
-			self::set_active_menu('controller::control_item2');			
-			$repeat_type = $this->bo->get_rpt_type_list();
-			$repeat_day = $this->bo->get_rpt_day_list();
-
-			if(isset($_POST['save_control'])) // The user has pressed the save button
-			{
-				if(isset($control)) // Edit control
-				{
-					$control->set_title(phpgw::get_var('title'));
-					$control->set_description(phpgw::get_var('description'));
-					$control->set_start_date( strtotime( phpgw::get_var('start_date')  ) );
-					$control->set_end_date( strtotime( phpgw::get_var('end_date') ) );
-					$control->set_repeat_day( strtotime( phpgw::get_var('repeat_day') ) );
-					$control->set_repeat_type( strtotime( phpgw::get_var('repeat_type') ) );
-					$control->set_repeat_interval( strtotime( phpgw::get_var('repeat_interval') ) );
-					$control->set_enabled( true );
-									
-					$this->so->add($control);
-				}
-				else // Add new control
-				{
-
-					$control = new controller_control();
-					
-					$control->set_title(phpgw::get_var('title'));
-					$control->set_description(phpgw::get_var('description'));
-					$control->set_start_date( strtotime( phpgw::get_var('start_date')  ) );
-					$control->set_end_date( strtotime( phpgw::get_var('end_date') ) );
-					$control->set_repeat_day( strtotime( phpgw::get_var('repeat_day') ) );
-					$control->set_repeat_type( strtotime( phpgw::get_var('repeat_type') ) );
-					$control->set_repeat_interval( strtotime( phpgw::get_var('repeat_interval') ) );
-					$control->set_enabled( true );
-									
-					$this->so->add($control);
-				}
-			}
-			
-			$control_item_array = $this->so_control_item->get_control_item_array();
-			$control_group_array = $this->so_control_group->get_control_group_array();
-			
-
-			if($this->flash_msgs)
-			{
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
-			}
-
-			foreach ($control_area_array as $control_area)
-			{
-				$control_area_options = array
-				(
-					'id'	=> $control_area->get_id(),
-					'name'	=> $control_area->get_name()
-					 
-				);
-			}
-
-			foreach ($control_group_array as $control_group)
-			{
-				$control_group_options = array
-				(
-					'id'	=> $control_group->get_id(),
-					'name'	=> $control_group->get_name()
-					 
-				);
-			}
-
-			$data = array
-			(
-				'value_id'				=> !empty($control) ? $control->get_id() : 0,
-				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
-				'editable' 				=> true,
-				'control_item'			=> array('options' => $control_area_options),
-				'control_group'			=> array('options' => $control_group_options),
-			);
-
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
-
-/*
-			$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
-			$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
-			$GLOBALS['phpgw']->richtext->generate_script();
-*/
-
-//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
-
-			self::render_template_xsl('control_item', $data);
-		}
-
-
-		public function separate_tabs()
-		{
-			self::set_active_menu('controller::control_item2::separate_tabs');
-
-            $type =  phpgw::get_var('type', 'string', 'REQUEST', null);
-
-			$tabs = array();
-			$tabs[] = array(
-				'label' => lang('Your preferences'),
-				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'user'))
-			);
-			$tabs[] = array(
-				'label' => lang('Default preferences'),
-				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'default'))
-			);
-			$tabs[] = array(
-				'label' => lang('Forced preferences'),
-				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol_item2.separate_tabs', 'type' => 'forced'))
-			);
-
-			switch($type)
-			{
-				case 'default':
-					$selected = 1;
-					$resource_id = 81;
-					break;
-				case 'forced':
-					$selected = 2;
-					$resource_id = 46;
-					break;
-				case 'user':
-				default:
-					$selected = 0;
-					$resource_id = 80;
-			}
-
-			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item2.index') );
-			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
-
-			$data = array
-			(
-				'tabs'	=> $GLOBALS['phpgw']->common->create_tabs($tabs, $selected),
-				'resource'	=> $resource
-			);
-			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'example_separate_tabs', 'controller' );
-			self::render_template_xsl('example_separate_tabs', $data);
-		}
-
-
-		public function display_control_items()
-		{
-			self::set_active_menu('controller::control_item2::control_item_list2');
+			self::set_active_menu('controller::example');
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->display_control_items_json();
+				return $this->index_json();
 			}
 			$this->bo = CreateObject('booking.boapplication');
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'booking_manual';
@@ -192,7 +51,7 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New application'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_item2.index'))
+								'href' => self::link(array('menuaction' => 'controller.uiexample.index'))
 							),
 							array('type' => 'filter', 
 								'name' => 'status',
@@ -224,6 +83,7 @@
 								'name' => 'buildings',
                                 'text' => lang('Building').':',
                                 'list' => $this->bo->so->get_buildings(),
+								'onChangeSelect'=> 'requestWithBuildingFilter',
 							),
 							array('type' => 'filter', 
 								'name' => 'activities',
@@ -249,7 +109,7 @@
 				),
 				'datatable' => array
 				(
-					'source' => self::link(array('menuaction' => 'controller.uicontrol_item2.display_control_items', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uiexample.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -321,7 +181,7 @@
 				//	'confirm_msg'	=> lang('do you really want to view this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'controller.uicontrol_item2.index',
+						'menuaction'	=> 'controller.uiexample.edit',
 					)),
 					'parameters'	=> $parameters
 				),
@@ -332,7 +192,7 @@
 					'confirm_msg'	=> lang('do you really want to edit this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'controller.uicontrol_item2.index',
+						'menuaction'	=> 'controller.uiexample.edit',
 					)),
 					'parameters'	=> $parameters
 				),
@@ -343,7 +203,7 @@
 					'confirm_msg'	=> lang('do you really want to delete this entry'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'controller.uicontrol_item2.delete',
+						'menuaction'	=> 'controller.uiexample.delete',
 					)),
 					'parameters'	=> $parameters
 				)
@@ -355,7 +215,7 @@
 			self::render_template_xsl('datatable', $data);
 		}
 
-		public function display_control_items_json()
+		public function index_json()
 		{
 			$this->bo = CreateObject('booking.boapplication');
 			$this->resource_bo = CreateObject('booking.boresource');
@@ -455,9 +315,181 @@
 					$application['what'] = $application['resources'][0]['building_name']. ' ('.join(', ', $names).')';
 				}
 			}
-			array_walk($applications["results"], array($this, "_add_links"), "controller.uicontrol_item2.index");
+			array_walk($applications["results"], array($this, "_add_links"), "controller.uiexample.edit");
 //_debug_array($this->yui_results($applications));
 			return $this->yui_results($applications);
+		}
+
+		
+		public function edit()
+		{
+			self::set_active_menu('controller::example::edit');			
+			$repeat_type = $this->bo->get_rpt_type_list();
+			$repeat_day = $this->bo->get_rpt_day_list();
+
+			if(isset($_POST['save_control'])) // The user has pressed the save button
+			{
+				if(isset($control)) // Edit control
+				{
+					$control->set_title(phpgw::get_var('title'));
+					$control->set_description(phpgw::get_var('description'));
+					$control->set_start_date( strtotime( phpgw::get_var('start_date')  ) );
+					$control->set_end_date( strtotime( phpgw::get_var('end_date') ) );
+					$control->set_repeat_day( strtotime( phpgw::get_var('repeat_day') ) );
+					$control->set_repeat_type( strtotime( phpgw::get_var('repeat_type') ) );
+					$control->set_repeat_interval( strtotime( phpgw::get_var('repeat_interval') ) );
+					$control->set_enabled( true );
+									
+					$this->so->add($control);
+				}
+				else // Add new control
+				{
+
+					$control = new controller_control();
+					
+					$control->set_title(phpgw::get_var('title'));
+					$control->set_description(phpgw::get_var('description'));
+					$control->set_start_date( strtotime( phpgw::get_var('start_date')  ) );
+					$control->set_end_date( strtotime( phpgw::get_var('end_date') ) );
+					$control->set_repeat_day( strtotime( phpgw::get_var('repeat_day') ) );
+					$control->set_repeat_type( strtotime( phpgw::get_var('repeat_type') ) );
+					$control->set_repeat_interval( strtotime( phpgw::get_var('repeat_interval') ) );
+					$control->set_enabled( true );
+									
+					$this->so->add($control);
+				}
+			}
+			
+			$control_item_array = $this->so_control_item->get_control_item_array();
+			$control_group_array = $this->so_control_group->get_control_group_array();
+			
+
+			if($this->flash_msgs)
+			{
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+			}
+
+			foreach ($control_area_array as $control_area)
+			{
+				$control_area_options = array
+				(
+					'id'	=> $control_area->get_id(),
+					'name'	=> $control_area->get_title()
+					 
+				);
+			}
+
+			foreach ($control_group_array as $control_group)
+			{
+				$control_group_options = array
+				(
+					'id'	=> $control_group->get_id(),
+					'name'	=> $control_group->get_group_name()
+					 
+				);
+			}
+
+			$data = array
+			(
+				'value_id'				=> !empty($control) ? $control->get_id() : 0,
+				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+				'editable' 				=> true,
+				'control_item'			=> array('options' => $control_area_options),
+				'control_group'			=> array('options' => $control_group_options),
+			);
+
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
+
+
+			$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
+			$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
+			$GLOBALS['phpgw']->richtext->generate_script();
+
+
+			self::add_javascript('controller', 'yahoo', 'example_edit.js');
+			self::render_template_xsl('example_edit', $data);
+		}
+
+
+		public function normal_tabs()
+		{
+			self::set_active_menu('controller::example::normal_tabs');
+
+			$resource_id = 80;
+
+			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
+			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
+
+			$tabs = array
+			(
+				'general'	=> array('label' => lang('general'), 'link' => '#general'),
+				'list'		=> array('label' => lang('list'), 'link' => '#list'),
+				'dates'		=> array('label' => lang('dates'), 'link' => '#dates'),
+			);
+
+			phpgwapi_yui::tabview_setup('example_tabview');
+
+
+			$data = array
+			(
+				'tabs'		=> phpgwapi_yui::tabview_generate($tabs, 'general'),
+				'resource'	=> $resource,
+				'date'		=> $GLOBALS['phpgw']->yuical->add_listener('date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time()))
+			);
+			self::add_javascript('controller', 'yahoo', 'example_normal_tabs.js');
+			self::render_template_xsl('example_normal_tabs', $data);
+		}
+					
+
+
+		public function separate_tabs()
+		{
+			self::set_active_menu('controller::example::separate_tabs');
+
+            $type =  phpgw::get_var('type', 'string', 'REQUEST', null);
+
+			$tabs = array();
+			$tabs[] = array(
+				'label' => lang('Your preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.separate_tabs', 'type' => 'user'))
+			);
+			$tabs[] = array(
+				'label' => lang('Default preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.separate_tabs', 'type' => 'default'))
+			);
+			$tabs[] = array(
+				'label' => lang('Forced preferences'),
+				'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.separate_tabs', 'type' => 'forced'))
+			);
+
+			switch($type)
+			{
+				case 'default':
+					$selected = 1;
+					$resource_id = 81;
+					break;
+				case 'forced':
+					$selected = 2;
+					$resource_id = 46;
+					break;
+				case 'user':
+				default:
+					$selected = 0;
+					$resource_id = 80;
+			}
+
+			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
+			$resource = array('id' => $resource_id, 'add_document_link' => $add_document_link, 'permission' => array('write' => true ) );
+
+			$data = array
+			(
+				'tabs'	=> $GLOBALS['phpgw']->common->create_tabs($tabs, $selected),
+				'resource'	=> $resource
+			);
+			self::add_javascript('controller', 'yahoo', 'example_separate_tabs.js');
+			self::render_template_xsl('example_separate_tabs', $data);
 		}
 					
 

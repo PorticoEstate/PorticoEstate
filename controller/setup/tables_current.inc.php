@@ -38,10 +38,10 @@
 		'controller_control_item' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
-				'title' => array('type' => 'varchar','precision' => '100','nullable' => false),
+				'title' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'required' => array('type' => 'bool','nullable' => true,'default' => 'false'),
-				'what_to_do' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'how_to_do' => array('type' => 'varchar','precision' => '255','nullable' => false),
+				'what_to_do' => array('type' => 'text','nullable' => false),
+				'how_to_do' => array('type' => 'text','nullable' => false),
 				'control_group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
@@ -96,7 +96,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'group_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

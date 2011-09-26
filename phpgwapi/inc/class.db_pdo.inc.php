@@ -213,9 +213,16 @@
 				return false;
 			}
 
-			if($this->Halt_On_Error == 'yes')
+			switch ( $this->Halt_On_Error )
 			{
-				$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				case 'yes':
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					break;
+				case 'report':
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+					break;
+				default:
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 			}
 		}
 
@@ -961,12 +968,34 @@
 				$this->db = null; //close the dead connection to be safe
 			}
 
-			$this->connect();
-			
+			switch ($GLOBALS['phpgw_info']['server']['db_type'])
+			{
+				case 'postgres':
+					$_database = 'postgres';
+					break;
+				default:
+					$_database = null;
+			}
+
+			$database = $this->Database;
+			try
+			{
+				$this->connect($_database);
+			}
+			catch(Exception $e)
+			{
+				if($e)
+				{
+					throw $e;
+					return false;
+				}
+			}
+
+			$this->Database = $database;
+
 			if ( !$this->db )
 			{
-				echo 'Connection FAILED<br />';
-				return False;
+				throw new Exception('ERROR: Connection FAILED');
 			}
 
 			if( !preg_match('/^[a-z0-9_]+$/i', $this->Database) )
@@ -975,8 +1004,20 @@
 			}
 
 			//create the db
-			$this->db->exec("CREATE DATABASE {$this->Database}");
-		
+			$ok = false;
+			try
+			{
+				$ok = $this->db->exec("CREATE DATABASE {$this->Database}");
+			}
+
+			catch(PDOException $e)
+			{
+				if ( $e )
+				{
+					throw $e;
+				}
+			}
+
 			//Grant rights on the db
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
@@ -984,11 +1025,12 @@
 					$this->db->exec("GRANT ALL ON {$this->Database}.*"
 							. " TO {$this->User}@{$_SERVER['SERVER_NAME']}"
 							. " IDENTIFIED BY '{$this->Password}'");
+					break;
 				default:
 					//do nothing
 			}
 			$this->db = null;
-			return True;
+			return true;
 		}
 
 		/**

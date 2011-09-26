@@ -10,7 +10,7 @@ class controller_socontrol_group extends controller_socommon
 	/**
 	 * Get a static reference to the storage object associated with this model object
 	 *
-	 * @return controller_soparty the storage object
+	 * @return controller_socontrol_group the storage object
 	 */
 	public static function get_instance()
 	{
@@ -21,30 +21,36 @@ class controller_socontrol_group extends controller_socommon
 	}
 
 	/**
-	 * Function for adding a new activity to the database. Updates the activity object.
+	 * Function for adding a new control group to the database.
 	 *
-	 * @param activitycalendar_activity $activity the party to be added
-	 * @return bool true if successful, false otherwise
+	 * @param controller_control_group $control_group the control group to be added
+	 * @return int id of the new control group object
 	 */
 	function add(&$control_group)
 	{
+		$cols = array(
+				'group_name',
+				'procedure_id',
+				'control_area_id'
+		);
+			
+		$values = array(
+			$this->marshal($control_group->get_group_name(), 'string'),
+			$this->marshal($control_group->get_procedure_id(), 'int'),
+			$this->marshal($control_group->get_control_area_id(), 'int'),
+		);
 		
-		$control_group = $control_group->get_control_group();
+		$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 		
-		$sql = "INSERT INTO controller_control_group (group_name) VALUES ('$control_group')";
-		$result = $this->db->query($sql, __LINE__,__FILE__);
-
 		if(isset($result)) {
-			// Set the new party ID
-			$control_group->set_id($this->db->get_last_insert_id('controller_control_group', 'id'));
-			// Forward this request to the update method
-			return $this->update($control_group);
+			// Get the new control group ID and return it
+			return $this->db->get_last_insert_id('controller_control_group', 'id');
 		}
 		else
 		{
-			return false;
+			return 0;
 		}
-		
+			
 	}
 
 	/**
@@ -59,7 +65,9 @@ class controller_socontrol_group extends controller_socommon
 		$id = intval($control_group->get_id());
 			
 		$values = array(
-			'$group_name = ' . $this->marshal($control_group->get_group_name(), 'string')
+			'group_name = ' . $this->marshal($control_group->get_group_name(), 'string'),
+			'procedure_id = '. $this->marshal($control_group->get_procedure_id(), 'int'),
+			'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int')
 		);
 		
 		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
@@ -84,6 +92,8 @@ class controller_socontrol_group extends controller_socommon
 		
 		$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
 		$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
+		$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'string'));
+		$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'string'));
 		
 		return $control_group;
 	}
@@ -132,9 +142,28 @@ class controller_socontrol_group extends controller_socommon
 			return $results;
 	}
 	
+	function get_control_groups($control_area_id)
+	{
+		$results = array();
+		
+		$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
+			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'string'));
+			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'string'));
+			
+			$results[] = $control_group;
+		}
+		
+		return $results;
+	}
+	
 	function get_id_field_name($extended_info = false)
 	{
-		/*
+		
 		if(!$extended_info)
 		{
 			$ret = 'id';
@@ -143,46 +172,166 @@ class controller_socontrol_group extends controller_socommon
 		{
 			$ret = array
 			(
-				'table'			=> 'activity', // alias
+				'table'			=> 'controller_control_group', // alias
 				'field'			=> 'id',
 				'translated'	=> 'id'
 			);
 		}
-		*/
+		
 		return $ret;
 	}
 
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
+		$clauses = array('1=1');
+		if($search_for)
+		{
+			$like_pattern = "'%" . $this->db->db_addslashes($search_for) . "%'";
+			$like_clauses = array();
+			switch($search_type){
+				default:
+					$like_clauses[] = "controller_control_group.group_name $this->like $like_pattern";
+					break;
+			}
+			if(count($like_clauses))
+			{
+				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+			}
+		}
+
+		$filter_clauses = array();
+		/*switch($filters['is_active']){
+			case "active":
+				$filter_clauses[] = "rental_composite.is_active = TRUE";
+				break;
+			case "non_active":
+				$filter_clauses[] = "rental_composite.is_active = FALSE";
+				break;
+			case "both":
+				break;
+		}*/
+		/*
+		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
+		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+		$availability_date_from = $ts_query;
+		$availability_date_to = $ts_query;
 		
+		if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
+			$availability_date_from = strtotime($filters['availability_date_from']); 
+		}
 		
+		if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != ''){
+			$availability_date_to = strtotime($filters['availability_date_to']); 
+		}
+		*/
+		/*switch($filters['has_contract']){
+			case "has_contract":
+				$filter_clauses[] = "NOT rental_contract_composite.contract_id IS NULL"; // Composite must have a contract
+				$filter_clauses[] = "NOT rental_contract.date_start IS NULL"; // The contract must have start date
+			*/	
+				/* The contract's start date not after the end of the period if there is no end date */
+/*				$filter_clauses[] = "
+					((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+					 OR
+					(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))";
+				$special_query=true;
+				break;
+			case "has_no_contract":
+				$filter_clauses[] = "
+				(
+					rental_contract_composite.contract_id IS NULL OR 
+					NOT rental_composite.id IN 
+					(
+						SELECT rental_composite.id FROM rental_composite 
+						LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
+						LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) 
+						WHERE  
+						(
+							NOT rental_contract_composite.contract_id IS NULL AND
+							NOT rental_contract.date_start IS NULL AND
+							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+					 		OR
+							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+						)
+					)
+				)
+				";
+				$special_query=true;
+				break;
+			case "both":
+				break;
+		}
+		
+		// Furnished, partly furnished, not furnished, not specified
+		if(isset($filters['furnished_status']) & $filters['furnished_status'] < 4){
+			// Not specified
+			if($filters['furnished_status'] == 0)
+				$filter_clauses[] = "rental_composite.furnish_type_id IS NULL";
+			else 
+				$filter_clauses[] = "rental_composite.furnish_type_id=".$filters['furnished_status'];
+		}
+
+		if(isset($filters['not_in_contract'])){
+			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
+		}
+		
+		if(isset($filters['location_code'])){
+			$filter_clauses[] = "rental_unit.location_code = '". $filters['location_code'] . "'";
+		}
+		
+		if(isset($filters['contract_id']))
+		{
+			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
+		}
+		
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}*/
+		
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "controller_control_group.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+
+		if(count($filter_clauses))
+		{
+			$clauses[] = join(' AND ', $filter_clauses);
+		}
+
+		$condition =  join(' AND ', $clauses);
+
+		$tables = "controller_control_group";
+		//$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
+		//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
+		
+		if($return_count) // We should only return a count
+		{
+			$cols = 'COUNT(DISTINCT(controller_control_group.id)) AS count';
+		}
+		else
+		{
+			$cols .= "id, group_name, procedure_id, control_area_id ";
+		}
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+
+	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");    
+	    
+		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 	}
 	
 	function populate(int $control_group_id, &$control_group)
 	{
-		/*
 		if($control_group == null) {
-			$control_group = new activitycalendar_activity((int) $activity_id);
+			$control_group = new controller_control_group((int) $control_group_id);
 
-			$control_group->set_title($this->unmarshal($this->db->f('title'), 'string'));
-			$control_group->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
-			$control_group->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
-			$control_group->set_district($this->unmarshal($this->db->f('district'), 'int'));
-			$control_group->set_office($this->unmarshal($this->db->f('office'), 'int'));
-			$control_group->set_category($this->unmarshal($this->db->f('category'), 'int'));
-			$control_group->set_state($this->unmarshal($this->db->f('state'), 'int'));
-			$control_group->set_target($this->unmarshal($this->db->f('target'), 'string'));
-			$control_group->set_description($this->unmarshal($this->db->f('description'), 'string'));
-			$control_group->set_arena($this->unmarshal($this->db->f('arena'), 'string'));
-			$control_group->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
-			$control_group->set_time($this->unmarshal($this->db->f('time'), 'string'));
-			$control_group->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
-			$control_group->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
-			$control_group->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
-			
-			
+			$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
+			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 		}
-		*/
+		//var_dump($control_group);
 		return $control_group;
 	}
 	

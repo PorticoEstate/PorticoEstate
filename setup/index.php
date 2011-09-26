@@ -244,7 +244,7 @@
 			
 			flush();
 			//ob_start();
-			$GLOBALS['phpgw_setup']->db->Halt_On_Error = 'report';
+			$GLOBALS['phpgw_setup']->db->Halt_On_Error = 'yes';
 
 			switch ($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'])
 			{
@@ -255,7 +255,10 @@
 					}
 					catch (Exception $e)
 					{
-						$setup_tpl->set_var('status',$e->getMessage());
+						if($e)
+						{
+							$setup_tpl->set_var('status','Error: ' . $e->getMessage());
+						}
 					}
 					break;
 				case 'drop':
