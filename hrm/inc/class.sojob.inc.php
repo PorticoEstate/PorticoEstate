@@ -68,7 +68,7 @@
 
 			$sql = "SELECT * FROM $table ";
 
-			$this->db->query($sql . $parent_select . $where . $querymethod . $ordermethod,__LINE__,__FILE__);
+			$this->db->query($sql . $parent_select . $ordermethod,__LINE__,__FILE__);
 			$this->total_records = $this->db->num_rows();
 
 			$jobs = array();

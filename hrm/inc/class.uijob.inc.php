@@ -277,7 +277,7 @@
 //			$pdf->line(20,760,578,760);
 //			$pdf->line(200,40,200,822);
 
-			$pdf->addText(220,770,16,'Stillings beskrivelse');
+			$pdf->addText(220,770,16,'Stillingsbeskrivelse');
 			$pdf->addText(300,34,6,$date);
 
 			$pdf->restoreState();
