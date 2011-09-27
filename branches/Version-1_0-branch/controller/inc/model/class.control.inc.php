@@ -10,9 +10,9 @@
 		protected $description;
 		protected $start_date;
 		protected $end_date;
-		protected $repeat_day;
 		protected $repeat_type;
 		protected $repeat_interval;
+		protected $procedure_uid;
 		protected $enabled;
 				
 		/**
@@ -81,6 +81,13 @@
 		}
 		
 		public function get_repeat_interval() { return $this->repeat_interval; }
+		
+		public function set_procedure_id($procedure_id)
+		{
+			$this->procedure_id = $procedure_id;
+		}
+		
+		public function get_procedure_id() { return $this->procedure_id; }
 		
 		public function set_enabled($enabled)
 		{
