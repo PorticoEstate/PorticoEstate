@@ -24,7 +24,9 @@
 		
 		public $public_functions = array
 		(
-			'index'	=>	true
+			'index'	=>	true,
+			'control_list'	=>	true,
+			'view'	=>	true
 		);
 
 		public function __construct()
@@ -40,6 +42,108 @@
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			
 			self::set_active_menu('controller::control');
+		}
+		
+		public function control_list()
+		{
+			if(phpgw::get_var('phpgw_return_as') == 'json') {
+				return $this->query();
+			}
+			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
+			$data = array(
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'link',
+								'value' => lang('New control'),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol.index'))
+							),
+							array('type' => 'filter', 
+								'name' => 'status',
+                                'text' => lang('Status').':',
+                                'list' => array(
+                                    array(
+                                        'id' => 'none',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
+                                        'id' => 'NEW',
+                                        'name' => lang('NEW')
+                                    ), 
+                                    array(
+                                        'id' => 'PENDING',
+                                        'name' =>  lang('PENDING')
+                                    ), 
+                                    array(
+                                        'id' => 'REJECTED',
+                                        'name' => lang('REJECTED')
+                                    ), 
+                                    array(
+                                        'id' => 'ACCEPTED',
+                                        'name' => lang('ACCEPTED')
+                                    )
+                                )
+                            ),
+							array('type' => 'filter',
+								'name' => 'control_areas',
+                                'text' => lang('Control_area').':',
+                                'list' => $this->so_control_area->get_control_area_select_array(),
+							),
+							array('type' => 'text', 
+                                'text' => lang('searchfield'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'controller.uicontrol.control_list', 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable'	=> true,
+							'formatter' => 'YAHOO.portico.formatLink'
+						),
+						array(
+							'key'	=>	'title',
+							'label'	=>	lang('Control title'),
+							'sortable'	=>	false
+						),
+						array(
+							'key' => 'description',
+							'label' => lang('description'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'control_area_id',
+							'label' => lang('Control area'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'link',
+							'hidden' => true
+						)
+					)
+				),
+			);
+//_debug_array($data);
+
+			self::render_template_xsl('datatable', $data);
 		}
 		
 		public function index()
@@ -91,6 +195,9 @@
 			
 			phpgwapi_yui::tabview_setup('control_tabview');
 			
+			$GLOBALS['phpgw']->richtext->replace_element('description');
+			$GLOBALS['phpgw']->richtext->generate_script();
+			
 			$data = array
 			(
 				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'details'),
@@ -98,7 +205,7 @@
 				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
 				'value_id'					=> !empty($control) ? $control->get_id() : 0,
 				'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
-				'editable' 					=> true,
+				'editable'					=> true,
 				'control_area_options'		=> array('options' => $control_area_options),
 				'procedure_options'			=> array('options' => $procedure_options)
 			);
@@ -329,21 +436,122 @@
 		
 		public function query()
 		{
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
 			
-		}	
+			$search_for = phpgw::get_var('query');
+
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else {
+				$user_rows_per_page = 10;
+			}
+			
+			// YUI variables for paging and sorting
+			$start_index	= phpgw::get_var('startIndex', 'int');
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
+			$sort_field		= phpgw::get_var('sort');
+			if($sort_field == null)
+			{
+				$sort_field = 'control_group_id';
+			}
+			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			//Create an empty result set
+			$records = array();
+			
+			//Retrieve a contract identifier and load corresponding contract
+			$control_id = phpgw::get_var('control_id');
+			if(isset($control_id))
+			{
+				$control = $this->so->get_single($control_id);
+			}
+
+			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			//var_dump($result_objects);
+								
+			$results = array();
+			
+			foreach($result_objects as $control_obj)
+			{
+				$results['results'][] = $control_obj->serialize();	
+			}
+
+			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol.view");
+
+			return $this->yui_results($results);
+		}
 		
-		public function populate($control){
-						
-			$control->set_title(phpgw::get_var('title', 'string'));
-			$control->set_description(phpgw::get_var('description', 'string'));
-			$control->set_start_date( strtotime( phpgw::get_var('start_date_hidden', 'int')));
-			$control->set_end_date( strtotime( phpgw::get_var('end_date_hidden', 'int')));
-			$control->set_repeat_type( phpgw::get_var('repeat_type', 'string'));
-			$control->set_repeat_interval( phpgw::get_var('repeat_interval', 'string'));
-			$control->set_procedure_id( phpgw::get_var('procedure_id', 'int'));
-			$control->set_enabled( true );
+		public function view()
+		{
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+			//Retrieve the procedure object
+			$control_id = (int)phpgw::get_var('id');
+			if(isset($_POST['edit_control']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol.edit_control', 'id' => $control_id));
+			}
+			else
+			{
+				if(isset($control_id) && $control_id > 0)
+				{
+					$control = $this->so->get_single($control_id);
+				}
+				else
+				{
+					$this->render('permission_denied.php',array('error' => lang('invalid_request')));
+					return;
+				}
+				
+				$control_array = $control->toArray();
+				//var_dump($control);
 			
-			return $control;
-			
+				$tabs = array
+				(
+					'details'	=> array('label' => lang('Details'), 'link' => '#details'),
+					'control_groups'		=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
+					'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
+				);
+				
+				$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
+					
+				$procedure_array = $this->so_proc->get_procedure_array();
+					
+				foreach ($procedure_array as $procedure)
+				{
+					$procedure_options[] = $procedure->toArray();
+				}
+					
+				$control_area_array = $this->so_control_area->get_control_area_array();
+				
+				foreach ($control_area_array as $control_area)
+				{
+					$control_area_options[] = $control_area->toArray();
+				}
+				
+				phpgwapi_yui::tabview_setup('control_tabview');
+				
+				$data = array
+				(
+					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'details'),
+					'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
+					'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
+					'value_id'					=> !empty($control) ? $control->get_id() : 0,
+					'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
+					'control'					=> $control_array,
+					'control_area_options'		=> array('options' => $control_area_options),
+					'procedure_options'			=> array('options' => $procedure_options)
+				);
+				
+				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+				self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items'), $data);
+			}
 		}
 	}
