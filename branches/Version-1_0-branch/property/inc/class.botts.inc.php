@@ -511,12 +511,12 @@
 				unset($ticket['location_data']['first_name']);
 			}
 
+			// Figure out when it was opened
 
-			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
-			$ticket['timestamp'] = $history_values[0]['datetime'];
-			$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
-			// Figure out when it was opened and last closed
+			$ticket['timestamp'] = $ticket['entry_date'];
+			$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'],$this->dateformat);
 
+			// Figure out when it was last closed
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','ASC',$id);
 			$ticket['last_opened'] = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime']);
 
