@@ -197,6 +197,22 @@
 
 					$buffer[$i]['referanse'] = $address;                
 
+					//FIXME - hardcoded for now
+					switch($gabinfo['district_id'])
+					{
+						case '1':
+							$saksbehandlerid = 'ho1330';
+							break;
+						case '2':
+							$saksbehandlerid = 'jl9258';
+							break;
+						case '3':
+							$saksbehandlerid = 'shl5631';
+							break;
+						default:
+							$saksbehandlerid = $invoice_common['supervisor'];
+					}
+
 					$buffer[$i]['merknad'] = 'Kemner adr: '.$address."\r\n".'BOEI adr: '.$boei_gateadresse."\r\n" .$merknad;
 					$buffer[$i]['splitt'] = $this->splitt;
 					$buffer[$i]['kildeid'] = $this->kildeid;
@@ -206,7 +222,7 @@
 					$buffer[$i]['artid'] = $invoice_common['art'];
 					$buffer[$i]['spvend_code'] = $invoice_common['vendor_id'];
 					$buffer[$i]['oppsynsmannid'] = $invoice_common['janitor'];
-					$buffer[$i]['saksbehandlerid'] = $invoice_common['supervisor'];
+					$buffer[$i]['saksbehandlerid'] = $saksbehandlerid;
 					$buffer[$i]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
 //_debug_array($bilagsnr);
 					$bilagsnr++;
