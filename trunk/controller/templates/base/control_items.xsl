@@ -57,13 +57,13 @@
 			
 			<ul class="control_items">
 				<xsl:for-each select="control_receipt_items">
-					<ul>
+				<ul>
 		    		<li>
 			         	<h4><xsl:value-of select="control_group/group_name"/></h4>
 			         	<ul>		
 							<xsl:for-each select="control_items">
 								<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-				     			<li><input type="checkbox"  name="control_item_ids[]" value="{$control_item_id}" /><xsl:value-of select="title"/></li>	
+				     			<li><xsl:number/>. <xsl:value-of select="title"/></li>	
 							</xsl:for-each>
 						</ul>
 					</li>
