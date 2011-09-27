@@ -147,12 +147,14 @@
 		function gabnr_to_objekt($Gnr,$Bnr,$sekjonnr)
 		{
 			//Finn dima fra Boei
-			$sql = "select fm_gab_location.loc1, fm_gab_location.loc2, fm_gab_location.loc3 from fm_gab_location, fm_location1, fm_owner "
-				. "where substring(fm_gab_location.gab_id,5,5)='$Gnr' and "
-				. "      substring(fm_gab_location.gab_id,10,4)='$Bnr' and "
-				. "      substring(fm_gab_location.gab_id,18,3)='$sekjonnr' and "
-				. "      fm_gab_location.loc1=fm_location1.loc1 and "
-				. "      fm_location1.owner_id=fm_owner.id ";
+			$sql = "SELECT fm_gab_location.loc1, fm_gab_location.loc2, fm_gab_location.loc3,fm_part_of_town.district_id"
+				. " FROM fm_gab_location, fm_location1, fm_owner, fm_part_of_town"
+				. " WHERE substring(fm_gab_location.gab_id,5,5)='$Gnr' AND"
+				. " substring(fm_gab_location.gab_id,10,4)='$Bnr' AND"
+				. " substring(fm_gab_location.gab_id,18,3)='$sekjonnr' AND"
+				. " fm_gab_location.loc1=fm_location1.loc1 AND"
+				. " fm_location1.owner_id=fm_owner.id AND"
+				. " fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id ";
 			//	. "      and (fm_owner.category=0 or fm_owner.category=2)";
 
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
@@ -160,6 +162,7 @@
 
 			$gabinfo['loc1']=$GLOBALS['phpgw']->db->f('loc1');
 			$gabinfo['dima']=$GLOBALS['phpgw']->db->f('loc1').$GLOBALS['phpgw']->db->f('loc2').$GLOBALS['phpgw']->db->f('loc3');
+			$gabinfo['district_id']=$GLOBALS['phpgw']->db->f('district_id');
 
 			return $gabinfo;
 		}
