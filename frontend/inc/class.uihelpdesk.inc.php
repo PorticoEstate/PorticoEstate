@@ -549,11 +549,14 @@
 
 				if(!$missingfields && !phpgw::get_var('added'))
 				{
-					$location  = array
-					(
-						'loc1'  => $location_details['loc1'],
-						'loc2'  => $location_details['loc2']
-					);
+					$location = array();
+					$_location_arr = explode('-', $this->location_code);
+					$i = 1;
+					foreach($_location_arr as $_loc)
+					{
+						$location["loc{$i}"] = $_loc;
+						$i++;
+					}
 
 					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $default_cat));
 
@@ -579,6 +582,7 @@
 						'apply'     => lang('Apply'),
 						'contact_id'=> 0,
 						'location'  => $location,
+						'location_code' => $this->location_code,
 						'street_name'   => $location_details['street_name'],
 						'street_number' => $location_details['street_number'],
 						'location_name' => $location_details['loc1_name'],
