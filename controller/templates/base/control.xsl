@@ -32,7 +32,7 @@
 					<label>Prosedyre</label>
 				</dt>
 				<dd>
-					<select id="procedure" name="procedure">
+					<select id="procedure_id" name="procedure_id">
 						<xsl:for-each select="procedure_options/options">
 							<option value="{id}">
 								<xsl:if test="selected != 0">
@@ -84,7 +84,7 @@
 					<label>Frekvens</label>
 				</dt>
 				<dd>
-					<input size="2" type="text" name="repeat_interval" value="" />
+					<input size="2" type="text" name="repeat_interval" value="2" />
 				</dd>
 			</dl>
 			
