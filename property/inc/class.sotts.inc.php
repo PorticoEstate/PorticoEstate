@@ -606,6 +606,7 @@
 				$ticket['publish_note']		= $this->db->f('publish_note');
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
 				$ticket['branch_id']		= $this->db->f('branch_id');
+				$ticket['entry_date']		= $this->db->f('entry_date');
 				$user_id=(int)$this->db->f('user_id');
 
 				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
