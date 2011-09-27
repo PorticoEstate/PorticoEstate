@@ -1,7 +1,7 @@
 <?php
 	include_class('controller', 'model', 'inc/model/');
 	
-	class controller_control_item extends controller_model
+	class controller_control_item_list extends controller_model
 	{
 		public static $so;
 		
@@ -49,7 +49,7 @@
 		public static function get_so()
 		{
 			if (self::$so == null) {
-				self::$so = CreateObject('controller.sopurpose');
+				self::$so = CreateObject('controller.socontrol_item_list');
 			}
 			
 			return self::$so;
