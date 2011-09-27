@@ -12,9 +12,15 @@
 <div class="yui-content">
 	<div id="details">
 	
-		<h1><xsl:value-of select="title"/></h1>
+		<h1><xsl:value-of select="control_area/title"/></h1>
 			
-		<form action="#" method="post">	
+		<form action="#" method="post">
+		<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
+		<input type="hidden" name="control_area_id" value="{$control_area_id}" />
+		
+		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
+		<input type="hidden" name="control_id" value="{control_id}" />
+		
 		<ul>
 		<xsl:for-each select="//control_groups">
 			<xsl:variable name="control_group_id"><xsl:value-of select="id"/></xsl:variable>

@@ -3,7 +3,7 @@ phpgw::import_class('controller.socommon');
 
 include_class('controller', 'control_item', 'inc/model/');
 
-class controller_socontrol_item extends controller_socommon
+class controller_socontrol_item_list extends controller_socommon
 {
 	protected static $so;
 
@@ -15,7 +15,7 @@ class controller_socontrol_item extends controller_socommon
 	public static function get_instance()
 	{
 		if (self::$so == null) {
-			self::$so = CreateObject('controller.socontrol_item');
+			self::$so = CreateObject('controller.socontrol_item_list');
 		}
 		return self::$so;
 	}
@@ -26,32 +26,27 @@ class controller_socontrol_item extends controller_socommon
 	 * @param activitycalendar_activity $activity the party to be added
 	 * @return bool true if successful, false otherwise
 	 */
-	function add(&$control_item)
+	function add(&$control_item_list)
 	{
 		$cols = array(
-				'title',
-				'required',
-				'what_to_do',
-				'how_to_do',
-				'control_group_id',
-				'control_area_id'
+				'control_id',
+				'control_item_id',
 		);
 		
 		$values = array(
-			$this->marshal($control_item->get_title(), 'string'),
-			$this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
-			$this->marshal($control_item->get_what_to_do(), 'string'),
-			$this->marshal($control_item->get_how_to_do(), 'string'),
-			$this->marshal($control_item->get_control_group_id(), 'int'),
-			$this->marshal($control_item->get_control_area_id(), 'int')
+			$this->marshal($control_item_list->get_control_id(), 'int'),
+			$this->marshal($control_item_list->get_control_item_id(), 'int')
 		);
+
 		
-		$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
+		var_dump("INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')' ");
+		
+		$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 		$result = $this->db->query($sql, __LINE__,__FILE__);
 
 		if(isset($result)) {
 			// return the new control item ID
-			return $this->db->get_last_insert_id('controller_control_item', 'id');
+			return $this->db->get_last_insert_id('controller_control_item_list', 'id');
 			// Forward this request to the update method
 			//return $this->update($control_item);
 		}
@@ -68,8 +63,9 @@ class controller_socontrol_item extends controller_socommon
 	 * @return boolean true if successful, false otherwise
 	 */
 
-	function update($control_item)
+	function update($control_item_list)
 	{	
+		/*
 		$id = intval($control_item->get_id());
 			
 		$values = array(
@@ -84,6 +80,7 @@ class controller_socontrol_item extends controller_socommon
 		$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		return isset($result);
+		*/
 	}
 	
 	/**
@@ -94,6 +91,7 @@ class controller_socontrol_item extends controller_socommon
 	 */
 	function get_single($id)
 	{
+		/*
 		$id = (int)$id;
 		
 		$sql = "SELECT p.* FROM controller_control_item p WHERE p.id = " . $id;
@@ -109,6 +107,8 @@ class controller_socontrol_item extends controller_socommon
 		$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 		
 		return $control_item;
+		
+		*/
 	}
 	
 	/**
@@ -123,6 +123,8 @@ class controller_socontrol_item extends controller_socommon
 	 */
 	function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{
+		/*
+		
 		$results = array();
 		
 		//$condition = $this->get_conditions($query, $filters,$search_option);
@@ -145,10 +147,13 @@ class controller_socontrol_item extends controller_socommon
 		}
 		
 		return $results;
+		
+		*/
 	}	
 	
 	function get_id_field_name($extended_info = false)
 	{
+		/*
 		if(!$extended_info)
 		{
 			$ret = 'id';
@@ -164,11 +169,12 @@ class controller_socontrol_item extends controller_socommon
 		}
 		
 		return $ret;
+		*/
 	}
 
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
-		
+		/*
 		$clauses = array('1=1');
 		
 		$filter_clauses = array();
@@ -229,10 +235,13 @@ class controller_socontrol_item extends controller_socommon
 		//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+		
+		*/
 	}
 	
 	function get_control_items($control_group_id)
 	{
+		/*
 		$results = array();
 		
 		$sql = "SELECT * FROM controller_control_item WHERE control_group_id=$control_group_id";
@@ -251,57 +260,13 @@ class controller_socontrol_item extends controller_socommon
 		}
 		
 		return $results;
-	}
-	
-	function get_control_items_by_control_id($control_id)
-	{
-		$results = array();
 		
-		$sql = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl, controller_control c ";
-		$sql .= "WHERE c.id=$control_id AND c.id=cl.control_id AND cl.control_item_id=ci.id GROUP BY ";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-		
-		while ($this->db->next_record()) {
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
-			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			
-			$results[] = $control_item;
-		}
-		
-		return $results;
-	}
-	
-	function get_control_items_by_control_id_and_group($control_id, $control_group_id)
-	{
-		$results = array();
-		
-		$sql = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl, controller_control c ";
-		$sql .= "WHERE c.id=$control_id AND c.id=cl.control_id AND cl.control_item_id=ci.id AND ci.control_group_id=$control_group_id";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-		
-		while ($this->db->next_record()) {
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
-			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			
-			$results[] = $control_item->toArray();
-		}
-		
-		return $results;
+		*/
 	}
 	
 	function populate(int $control_item_id, &$control_item)
 	{
-		
+		/*
 		if($control_item == null) {
 			$control_item = new controller_control_item((int) $control_item_id);
 
@@ -314,6 +279,7 @@ class controller_socontrol_item extends controller_socommon
 		}
 		
 		return $control_item;
+		*/
 	}
 	
 }

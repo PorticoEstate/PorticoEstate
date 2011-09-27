@@ -470,3 +470,26 @@ dd ul li {
 	list-style: disc;
 	list-style-position: inside;
 }
+
+ul.expand_list{
+	
+}
+ul.expand_list h4 {
+    cursor: pointer;
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+ul.expand_list li ul {
+    display:none;
+    margin-left:21px;
+}
+
+ul.expand_list li ul li{
+    margin-bottom: 3px;
+}
+
+ul.expand_list h4 span {
+    padding-left: 5px;
+    vertical-align: middle;
+}

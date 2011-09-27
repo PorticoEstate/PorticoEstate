@@ -9,23 +9,80 @@
 
 <div class="yui-content">
 	<div id="details">
+	
+	<xsl:choose>
+	  <xsl:when test="boolean(choose_control_items)">
+	  
+	   <!-- ===========================  CHOOSE CONTROL ITEMS  =============================== -->
+	   <h2>Velg dine kontrollpunkt</h2>
 		<form action="#" method="post">	
 		
-		<xsl:for-each select="//control_items">
-			<ul>
-				<h4><xsl:value-of select="group_name"/></h4>		
-				<xsl:for-each select="control_item">
-					<xsl:variable name="control_items_id"><xsl:value-of select="id"/></xsl:variable>
-      				<li><input type="checkbox"  name="control_items_ids[]" value="{$control_items_id}" /><xsl:value-of select="title"/></li>	
-				</xsl:for-each>
+		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
+		<input type="hidden" name="control_id" value="{control_id}" />
+		
+		<ul class="control_items">
+			<xsl:for-each select="//control_items">
+				<ul class="expand_list">
+	    		<li>
+		         	<h4><img src="controller/images/arrow_left.png" width="14"/><span><xsl:value-of select="control_group/group_name"/></span></h4>
+		         	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
+		         	<ul>		
+						<xsl:for-each select="control_item">
+							<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+							
+			     			<li><input type="checkbox"  name="control_tag_ids[]" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="title"/></li>	
+						</xsl:for-each>
+					</ul>
+				</li>
 			</ul>
-		</xsl:for-each>
+			</xsl:for-each>
+		</ul>
 		
 		<div class="form-buttons">
 			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 			<input type="submit" name="save_control_items" value="{$lang_save}" title = "{$lang_save}" />
 			</div>
-		</form>					
+		</form>
+				
+	  </xsl:when>
+	  
+	  <!-- ===========================  SHOW RECEIPT   =============================== -->
+	  <xsl:otherwise>
+	  
+	  	  <h2>Kvittering</h2>
+		  <form action="#" method="post">	
+			
+			<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
+			<input type="hidden" name="control_id" value="{control_id}" />
+			
+			<ul class="control_items">
+				<xsl:for-each select="control_receipt_items">
+				<ul>
+		    		<li>
+			         	<h4><xsl:value-of select="control_group/group_name"/></h4>
+			         	<ul>		
+							<xsl:for-each select="control_items">
+								<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+				     			<li><xsl:number/>. <xsl:value-of select="title"/></li>	
+							</xsl:for-each>
+						</ul>
+					</li>
+				</ul>      
+				</xsl:for-each>
+			</ul>
+			
+			<div class="form-buttons">
+			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+			<input type="submit" name="show_receipt" value="{$lang_save}" title = "{$lang_save}" />
+			</div>
+		</form>
+			
+	  </xsl:otherwise>
+	</xsl:choose>
+		
+		
+		
+							
 	</div>
 </div>
 </xsl:template>
