@@ -493,3 +493,6 @@ ul.expand_list h4 span {
     padding-left: 5px;
     vertical-align: middle;
 }
+#play ul li{
+	cursor: move;
+ }
