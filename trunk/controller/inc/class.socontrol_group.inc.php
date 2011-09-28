@@ -319,6 +319,8 @@ class controller_socontrol_group extends controller_socommon
 
 		$tables = "controller_control_group";
 		$joins = "	{$this->left_join} fm_building_part ON (building_part_id = CAST(fm_building_part.id AS INT))";
+		$joins .= "	{$this->left_join} controller_procedure ON (procedure_id = controller_procedure.id)";
+		$joins .= "	{$this->left_join} controller_control_area ON (control_area_id = controller_control_area.id)";
 		//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 		//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 		
@@ -328,7 +330,7 @@ class controller_socontrol_group extends controller_socommon
 		}
 		else
 		{
-			$cols .= "controller_control_group.id, group_name, procedure_id, control_area_id, building_part_id, fm_building_part.descr AS building_part_descr ";
+			$cols .= "controller_control_group.id, group_name, procedure_id, control_area_id, building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, controller_control_area.title as control_area_name ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -345,7 +347,9 @@ class controller_socontrol_group extends controller_socommon
 
 			$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
 			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
 			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
 			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 		}
