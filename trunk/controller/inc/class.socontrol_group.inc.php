@@ -31,13 +31,15 @@ class controller_socontrol_group extends controller_socommon
 		$cols = array(
 				'group_name',
 				'procedure_id',
-				'control_area_id'
+				'control_area_id',
+				'building_part_id'
 		);
 			
 		$values = array(
 			$this->marshal($control_group->get_group_name(), 'string'),
 			$this->marshal($control_group->get_procedure_id(), 'int'),
 			$this->marshal($control_group->get_control_area_id(), 'int'),
+			$this->marshal($control_group->get_building_part_id(), 'int'),
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -67,7 +69,8 @@ class controller_socontrol_group extends controller_socommon
 		$values = array(
 			'group_name = ' . $this->marshal($control_group->get_group_name(), 'string'),
 			'procedure_id = '. $this->marshal($control_group->get_procedure_id(), 'int'),
-			'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int')
+			'control_area_id = ' . $this->marshal($control_group->get_control_area_id(), 'int'),
+			'building_part_id = ' . $this->marshal($control_group->get_building_part_id(), 'int')
 		);
 		
 		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
@@ -134,6 +137,19 @@ class controller_socontrol_group extends controller_socommon
             $results = array();
 			$results[] = array('id' =>  0,'name' => lang('Not selected'));
 			$this->db->query("SELECT id, group_name as name FROM controller_control_group ORDER BY name ASC", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array('id' => $this->db->f('id', false),
+						           'name' => $this->db->f('name', false));
+			}
+			return $results;
+	}
+	
+	function get_building_part_select_array()
+	{
+            $results = array();
+			$results[] = array('id' =>  0,'name' => lang('Not selected'));
+			$this->db->query("SELECT id, descr as name FROM fm_building_part ORDER BY id ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
@@ -302,7 +318,7 @@ class controller_socontrol_group extends controller_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "controller_control_group";
-		//$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
+		$joins = "	{$this->left_join} fm_building_part ON (building_part_id = CAST(fm_building_part.id AS INT))";
 		//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 		//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 		
@@ -312,14 +328,14 @@ class controller_socontrol_group extends controller_socommon
 		}
 		else
 		{
-			$cols .= "id, group_name, procedure_id, control_area_id ";
+			$cols .= "controller_control_group.id, group_name, procedure_id, control_area_id, building_part_id, fm_building_part.descr AS building_part_descr ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
 	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");    
 	    
-		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
 	function populate(int $control_group_id, &$control_group)
@@ -330,6 +346,8 @@ class controller_socontrol_group extends controller_socommon
 			$control_group->set_group_name($this->unmarshal($this->db->f('group_name'), 'string'));
 			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 		}
 		//var_dump($control_group);
 		return $control_group;

@@ -9,6 +9,8 @@
 		protected $group_name;
 		protected $procedure_id;
 		protected $control_area_id;
+		protected $building_part_id;
+		protected $building_part_descr;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -48,6 +50,20 @@
 		}
 		
 		public function get_control_area_id(){ return $this->control_area_id; }
+		
+		public function set_building_part_id($building_part_id)
+		{
+			$this->building_part_id = $building_part_id;
+		}
+		
+		public function get_building_part_id(){ return $this->building_part_id; }
+		
+		public function set_building_part_descr($building_part_descr)
+		{
+			$this->building_part_descr = $building_part_descr;
+		}
+		
+		public function get_building_part_descr(){ return $this->building_part_descr; }
 
 		public function serialize()
 		{
@@ -56,6 +72,7 @@
 			$result['group_name'] = $this->get_group_name();
 			$result['procedure_id'] = $this->get_procedure_id();
 			$result['control_area_id'] = $this->get_control_area_id();
+			$result['building_part'] = $this->get_building_part_descr();
 			
 			return $result;
 		}

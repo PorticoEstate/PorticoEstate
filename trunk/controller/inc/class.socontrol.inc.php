@@ -65,6 +65,7 @@ class controller_socontrol extends controller_socommon
 			'description = ' . $this->marshal($control->get_description(), 'string'),
 			'start_date = ' . $this->marshal($control->get_start_date(), 'int'),
 			'end_date = ' . $this->marshal($control->get_end_date(), 'int'),
+			'control_area_id = ' . $this->marshal($control->get_control_area_id()),
 			'repeat_type = ' . $this->marshal($control->get_repeat_type(), 'string'),
 			'repeat_interval = ' . $this->marshal($control->get_repeat_interval(), 'string'),
 			'procedure_id = ' . $this->marshal($control->get_procedure_id(), 'int')

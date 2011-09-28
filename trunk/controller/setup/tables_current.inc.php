@@ -97,7 +97,8 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'group_name' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'building_part_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

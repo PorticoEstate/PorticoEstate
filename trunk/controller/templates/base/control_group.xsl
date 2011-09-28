@@ -57,7 +57,22 @@
 							<xsl:value-of select="control_group/procedure_id" />
 						</xsl:otherwise>
 					</xsl:choose>
-					</dd>				
+					</dd>
+					<dt>
+						<label for="building_part">Bygningsdel</label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<select id="building_part" name="building_part">
+								<xsl:apply-templates select="building_part/options"/>
+							</select>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="control_group/building_part_descr" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
 				</dl>
 				
 				<div class="form-buttons">
