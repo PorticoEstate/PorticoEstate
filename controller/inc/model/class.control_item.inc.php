@@ -66,12 +66,26 @@
 		
 		public function get_control_group_id() { return $this->control_group_id; }
 		
+		public function set_control_group_name($control_group_name)
+		{
+			$this->control_group_name = $control_group_name;
+		}
+		
+		public function get_control_group_name() { return $this->control_group_name; }
+		
 		public function set_control_area_id($control_area_id)
 		{
 			$this->control_area_id = $control_area_id;
 		}
 		
 		public function get_control_area_id() { return $this->control_area_id; }
+		
+		public function set_control_area_name($control_area_name)
+		{
+			$this->control_area_name = $control_area_name;
+		}
+		
+		public function get_control_area_name() { return $this->control_area_name; }
 		
 			
 		/**
@@ -96,8 +110,8 @@
 			$result['required'] = $this->get_required();
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
-			$result['control_group_id'] = $this->get_control_group_id();
-			$result['control_area_id'] = $this->get_control_area_id();
+			$result['control_group'] = $this->get_control_group_name();
+			$result['control_area'] = $this->get_control_area_name();
 						
 			return $result;
 		}
