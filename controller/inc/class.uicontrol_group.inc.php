@@ -113,12 +113,12 @@
 							'sotrable'	=>	false
 						),
 						array(
-							'key' => 'control_area_id',
+							'key' => 'control_area',
 							'label' => lang('Control area'),
 							'sortable'	=> false
 						),
 						array(
-							'key' => 'procedure_id',
+							'key' => 'procedure',
 							'label' => lang('Procedure'),
 							'sortable'	=> false
 						),
