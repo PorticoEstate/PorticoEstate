@@ -34,25 +34,7 @@
 				</li>
 			</ul>      
 			</xsl:for-each>
-		</ul>
-		
-		<!-- div id="play">
-		    <ul id="list1">
-		        <li class="list1">Item #1</li>
-		        <li class="list1">Item #2</li>
-		        <li class="list1">Item #3</li>
-		        <li class="list1">Item #4</li>
-		        <li class="list1">Item #5</li>
-		    </ul>
-		    <ul id="list2">
-		        <li class="list2">Item #1</li>
-		        <li class="list2">Item #2</li>
-		        <li class="list2">Item #3</li>
-		        <li class="list2">Item #4</li>
-		        <li class="list2">Item #5</li>
-		    </ul>
-		</div-->
-		
+		</ul>	
 		
 		<div class="form-buttons">
 		<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
