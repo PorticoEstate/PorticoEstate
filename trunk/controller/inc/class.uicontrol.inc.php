@@ -172,9 +172,10 @@
 		public function view_control(){
 			$tabs = array
 			(
-				'details'	=> array('label' => lang('Details'), 'link' => '#details'),
-				'control_groups'		=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
+				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
+				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
+				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),	
+				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
 			);
 			
 			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
@@ -211,7 +212,7 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items'), $data);
+			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
 		}
 		
 		
@@ -219,9 +220,10 @@
 			
 			$tabs = array
 			(
-				'details'	=> array('label' => lang('Details'), 'link' => '#details'),
-				'control_groups'		=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
+				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
+				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
+				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
+				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
 			);
 			
 			$control_area_id = phpgw::get_var('control_area_id', 'int');	
@@ -259,7 +261,7 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items'), $data);
+			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
 		}
 		
 		public function edit_control_groups(){
@@ -268,7 +270,8 @@
 			(
 				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
 				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
+				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
+				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
 			);
 			
 			$control_id = phpgw::get_var('control_id', 'int');	
@@ -310,7 +313,7 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items'), $data);
+			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
 		}
 		
 		public function edit_control_items(){
@@ -320,7 +323,8 @@
 			(
 				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
 				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
+				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
+				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
 			);
 				
 			$control_id = phpgw::get_var('control_id');
@@ -373,7 +377,7 @@
 					
 			$data = array
 			(
-				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, 'control_items'),
+				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, 'receipt'),
 				'value_id'				=> !empty($control) ? $control->get_id() : 0,
 				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 				'control_id'			=> $control_id,
@@ -383,7 +387,9 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items'), $data);
+			self::add_javascript('controller', 'controller', 'yui_min_3_4_3.js');
+			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
+			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
 
 		}
 		
@@ -393,8 +399,9 @@
 			(
 				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
 				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items')
-			);			
+				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
+				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
+			);		
 			
 			$control_id = phpgw::get_var('control_id');
 			
@@ -429,7 +436,7 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items'), $data);
+			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
 
 		}
 		
