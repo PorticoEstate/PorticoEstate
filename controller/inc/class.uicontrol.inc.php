@@ -230,11 +230,11 @@
 			
 			if(isset($control)) // Edit control
 			{
-				$control = $this->populate($control);
+				$control = $this->so->populate($control);
 				//$this->so->add($control);
 			}else{
 				$new_control = new controller_control();
-				$control = $this->populate($new_control);
+				$control = $this->so->populate($new_control);
 				$saved_control_id = $this->so->add($control);
 			}
 			

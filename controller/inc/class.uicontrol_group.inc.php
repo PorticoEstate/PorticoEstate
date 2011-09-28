@@ -123,6 +123,11 @@
 							'sortable'	=> false
 						),
 						array(
+							'key' => 'building_part',
+							'label' => lang('Building part'),
+							'sortable'	=> false
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -162,6 +167,7 @@
 					$control_group->set_group_name(phpgw::get_var('group_name'));
 					$control_group->set_procedure_id( phpgw::get_var('procedure') );
 					$control_group->set_control_area_id( phpgw::get_var('control_area') );
+					$control_group->set_building_part_id( phpgw::get_var('building_part') );
 									
 					//$this->so->store($control_item);
 					
@@ -236,6 +242,8 @@
 					);
 				}
 				
+				$building_part_options = $this->so->get_building_part_select_array();
+				
 				$control_group_array = $control_group->toArray();
 	
 				$data = array
@@ -246,6 +254,7 @@
 					'procedure'				=> array('options' => $procedure_options),
 					'control_area'			=> array('options' => $control_area_options),
 					'control_group'			=> $control_group_array,
+					'building_part'			=> array('options' => $building_part_options),
 				);
 	
 	
