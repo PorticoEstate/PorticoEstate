@@ -159,6 +159,7 @@ recurrence	controller	no	Gjentakelse
 remove	controller	no	Fjern
 controller	controller	no	Kontroll
 reports	controller	no	Rapporter
+Receipt	controller	no	Kvittering
 reset	controller	no	Nullstill
 responsibility	controller	no	Ansvar
 responsibility_id	controller	no	Ansvar
