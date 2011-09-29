@@ -8,7 +8,11 @@
 		protected $id;
 		protected $group_name;
 		protected $procedure_id;
+		protected $procedure_name;
 		protected $control_area_id;
+		protected $control_area_name;
+		protected $building_part_id;
+		protected $building_part_descr;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -42,20 +46,49 @@
 		
 		public function get_procedure_id(){ return $this->procedure_id; }
 		
+		public function set_procedure_name($procedure_name)
+		{
+			$this->procedure_name = $procedure_name;
+		}
+		
+		public function get_procedure_name(){ return $this->procedure_name; }
+		
 		public function set_control_area_id($control_area_id)
 		{
 			$this->control_area_id = $control_area_id;
 		}
 		
 		public function get_control_area_id(){ return $this->control_area_id; }
+		
+		public function set_control_area_name($control_area_name)
+		{
+			$this->control_area_name = $control_area_name;
+		}
+		
+		public function get_control_area_name(){ return $this->control_area_name; }
+		
+		public function set_building_part_id($building_part_id)
+		{
+			$this->building_part_id = $building_part_id;
+		}
+		
+		public function get_building_part_id(){ return $this->building_part_id; }
+		
+		public function set_building_part_descr($building_part_descr)
+		{
+			$this->building_part_descr = $building_part_descr;
+		}
+		
+		public function get_building_part_descr(){ return $this->building_part_descr; }
 
 		public function serialize()
 		{
 			$result = array();
 			$result['id'] = $this->get_id();
 			$result['group_name'] = $this->get_group_name();
-			$result['procedure_id'] = $this->get_procedure_id();
-			$result['control_area_id'] = $this->get_control_area_id();
+			$result['procedure'] = $this->get_procedure_name();
+			$result['control_area'] = $this->get_control_area_name();
+			$result['building_part'] = $this->get_building_part_descr();
 			
 			return $result;
 		}

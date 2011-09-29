@@ -65,6 +65,7 @@ class controller_socontrol extends controller_socommon
 			'description = ' . $this->marshal($control->get_description(), 'string'),
 			'start_date = ' . $this->marshal($control->get_start_date(), 'int'),
 			'end_date = ' . $this->marshal($control->get_end_date(), 'int'),
+			'control_area_id = ' . $this->marshal($control->get_control_area_id()),
 			'repeat_type = ' . $this->marshal($control->get_repeat_type(), 'string'),
 			'repeat_interval = ' . $this->marshal($control->get_repeat_interval(), 'string'),
 			'procedure_id = ' . $this->marshal($control->get_procedure_id(), 'int')
@@ -97,19 +98,158 @@ class controller_socontrol extends controller_socommon
 	
 	function get_id_field_name($extended_info = false)
 	{
+		if(!$extended_info)
+		{
+			$ret = 'id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'control', // alias
+				'field'			=> 'id',
+				'translated'	=> 'id'
+			);
+		}
 		
+		return $ret;
 	}
 
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
+		$clauses = array('1=1');
 		
+		$filter_clauses = array();
+		
+		// Search for based on search type
+		if($search_for)
+		{
+			$search_for = $this->marshal($search_for,'field');
+			$like_pattern = "'%".$search_for."%'";
+			$like_clauses = array();
+			switch($search_type){
+				default:
+					$like_clauses[] = "controller_control.title $this->like $like_pattern";
+					$like_clauses[] = "controller_control.description $this->like $like_pattern";
+					break;
+			}
+			
+			if(count($like_clauses))
+			{
+				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+			}
+		}
+		
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "controller_control.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		
+		if(count($filter_clauses))
+		{
+			$clauses[] = join(' AND ', $filter_clauses);
+		}
+		
+		
+		$condition =  join(' AND ', $clauses);
+
+		$tables = "controller_control";
+		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
+		
+		if($return_count)
+		{
+			$cols = 'COUNT(DISTINCT(controller_control.id)) AS count';
+		}
+		else
+		{
+			$cols = 'id, title, description, start_date, end_date, procedure_id, requirement_id, costresponsibility_id, responsibility_id, equipment_type_id, equipment_id, location_code, repeat_type, repeat_interval, enabled ';
+		}
+		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		if($sort_field == 'title')
+		{
+			$sort_field = 'controller_control.title';
+		}
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+		
+		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		
 	}
 	
 	function populate(int $control_id, &$control)
 	{
-	
+		if($control == null) {
+			$control = new controller_control((int) $control_id);
+
+			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+			$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+			$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
+			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+		}
+		
+		return $control;
 	}
+	
+	/**
+	 * Get single control
+	 * 
+	 * @param	$id	id of the control to return
+	 * @return a controller_control
+	 */
+	function get_single($id)
+	{
+		$id = (int)$id;
+		
+		$sql = "SELECT c.* FROM controller_control c WHERE c.id = " . $id;
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		$this->db->next_record();
+		
+		$control = new controller_control((int) $id);
+
+		$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+		$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+		$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+		$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+		$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+		$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+		$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+		$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+		$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+		$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
+		$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+		$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+		$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+		$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+		
+		return $control;
+	}
+	
+/*		public function populate($control){
+						
+			$control->set_title(phpgw::get_var('title', 'string'));
+			$control->set_description(phpgw::get_var('description', 'string'));
+			$control->set_start_date( strtotime( phpgw::get_var('start_date_hidden', 'int')));
+			$control->set_end_date( strtotime( phpgw::get_var('end_date_hidden', 'int')));
+			$control->set_repeat_type( phpgw::get_var('repeat_type', 'string'));
+			$control->set_repeat_interval( phpgw::get_var('repeat_interval', 'string'));
+			$control->set_procedure_id( phpgw::get_var('procedure_id', 'int'));
+			$control->set_enabled( true );
+			
+			return $control;
+			
+		}*/
 	
 	
 }

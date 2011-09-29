@@ -207,7 +207,8 @@ class controller_socontrol_item extends controller_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "controller_control_item";
-		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
+		$joins = " {$this->left_join} controller_control_group ON (controller_control_item.control_group_id = controller_control_group.id)";
+		$joins .= " {$this->left_join} controller_control_area ON (controller_control_item.control_area_id = controller_control_area.id)";
 		
 		if($return_count)
 		{
@@ -215,7 +216,7 @@ class controller_socontrol_item extends controller_socommon
 		}
 		else
 		{
-			$cols = 'id, title, required, what_to_do, how_to_do, control_group_id, control_area_id';
+			$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_group_id, controller_control_item.control_area_id, controller_control_group.group_name AS control_group_name, controller_control_area.title AS control_area_name';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -228,7 +229,7 @@ class controller_socontrol_item extends controller_socommon
 		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		
-		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
 	function get_control_items($control_group_id)
@@ -291,7 +292,9 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			//$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
 			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+			//$control_item->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 			
 			$results[] = $control_item->toArray();
 		}
@@ -310,7 +313,9 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
 			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+			$control_item->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 		}
 		
 		return $control_item;

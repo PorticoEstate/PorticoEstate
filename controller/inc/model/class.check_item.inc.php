@@ -57,11 +57,11 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
-				self::$so = CreateObject('controller.sopurpose');
+/*			if (self::$so == null) {
+				self::$so = CreateObject('controller.socontrol_item');
 			}
 			
-			return self::$so;
+			return self::$so;*/
 		}
 	}
 ?>

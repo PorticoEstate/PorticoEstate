@@ -13,6 +13,9 @@
 			<div id="control_items">
 				<xsl:call-template name="control_items" />
 			</div>
+			<div id="receipt">
+				<xsl:call-template name="control_items_receipt" />
+			</div>
 		</div>
 	</div>
 	<!--  script type="text/javascript">
