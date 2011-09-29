@@ -40,6 +40,7 @@
 		
 		var $debug;
 		var $client_code = 14;
+		protected $connection = false;
 		
 		function  __construct()
 		{
@@ -356,6 +357,18 @@
 				$receipt['message'][]= array('msg' => $this->transfer_voucher($batchid, $voucher_id, $download, $force_period_year));
 			}
 
+			if($this->connection)
+			{
+				switch ($this->config->config_data['invoice_export_method'])
+				{
+					case 'ftp';
+						ftp_quit($this->connection);
+						break;
+					case 'ssh';
+						ssh2_exec($this->connection, 'exit');
+						break;
+				}
+			}
 			//Lagre melding
 			if ($download=='on')
 			{
@@ -745,7 +758,7 @@
 				}
 			
 			// -- END
-				if( $file_written && $this->config->config_data['invoice_export_method'] != 'ftp' )
+				if( $file_written && ($this->config->config_data['invoice_export_method'] != 'ftp' && $this->config->config_data['invoice_export_method'] != 'ssh'))
 				{
 					$transfer_ok = true;
 				}
@@ -837,28 +850,41 @@
 
 		protected function transfer($buffer,$Filnavn,$batchid,$tranfser_bilag)
 		{			
-
-			if($this->config->config_data['invoice_export_method']=='ftp')
+			if($this->config->config_data['invoice_export_method']=='ftp' || $this->config->config_data['invoice_export_method']=='ssh')
 			{
-				$ftp	= $this->phpftp_connect();	
+				if(!$connection = $this->connection)
+				{
+					$connection	= $this->phpftp_connect();
+				}
 				
 				$basedir = $this->config->config_data['invoice_ftp_basedir'];
 				if($basedir)
 				{
-					$newfile = $basedir . '/' . basename($Filnavn);
+					$remote_file = $basedir . '/' . basename($Filnavn);
 				}
 				else
 				{
-					$newfile = basename($Filnavn);
+					$remote_file = basename($Filnavn);
 				}
 
-				if (ftp_put($ftp,$newfile, $Filnavn, FTP_BINARY))
+				switch ($this->config->config_data['invoice_export_method'])
+				{
+					case 'ftp';
+						$transfer_ok = ftp_put($connection,$remote_file, $Filnavn, FTP_BINARY);
+						break;
+					case 'ssh';
+						$transfer_ok = ssh2_scp_send($connection, $Filnavn, $remote_file );
+						break;
+					default:
+						$transfer_ok = false;
+						
+				}
+				if ($send_ok)
 				{
 				 	for ($i=0;$i<count($tranfser_bilag);$i++)
 					{				
 						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Invoice pre_transferred %1',basename($Filnavn)));
 					}
-					$transfer_ok = True;
 				}
 				else
 				{
@@ -866,33 +892,54 @@
 					{				
 						$this->soXport->log_transaction($batchid,$tranfser_bilag[$i],lang('Failed to pre_transfere %1 to agresso',basename($Filnavn)));
 					}
-					$transfer_ok = False;
 				}
 				if(!$transfer_ok)
 				{
 					unlink($Filnavn);
 				}
-			
-				ftp_quit($ftp);
 			}
 			return 	$transfer_ok;
 		}
 
 		protected function phpftp_connect() 
 		{
-			$host = $this->config->config_data['invoice_ftp_host'];
-			$user = $this->config->config_data['invoice_ftp_user'];
-			$pass = $this->config->config_data['invoice_ftp_password'];
+			$server				= $this->config->config_data['invoice_ftp_host'];
+			$user				= $this->config->config_data['invoice_ftp_user'];
+			$password			= $this->config->config_data['invoice_ftp_password'];
+			$port				= 22;
 			
-//			echo "connecting to $host with $user and $pass\n <br>";
-			$ftp = ftp_connect($host);
-			if($ftp) 
+			switch ($this->config->config_data['invoice_export_method'])
 			{
-				if (ftp_login($ftp,$user,$pass)) 
-				{
-					return $ftp;
-				}
+				case 'ftp';
+					if($connection = ftp_connect($server))
+					{
+						ftp_login($connection,$user,$password);
+					}
+					break;
+				case 'ssh';
+					if (!function_exists("ssh2_connect"))
+					{
+						die("function ssh2_connect doesn't exist");
+					}
+					if(!($connection = ssh2_connect("$server", $port)))
+					{
+						$message = "fail: unable to establish connection";
+						_debug_array($message);
+						//$receipt['error'][]= array('msg' => $message);
+					}
+					else
+					{
+						// try to authenticate with username root, password secretpassword
+						if(!ssh2_auth_password($connection, $user, $password))
+						{
+							$message = "fail: unable to authenticate";
+							_debug_array($message);
+							//$receipt['error'][]= array('msg' => $message);
+						}
+					}
+					break;
 			}
+			$this->connection = $connection;
+			return $connection;
 		}
 	}
-?>
