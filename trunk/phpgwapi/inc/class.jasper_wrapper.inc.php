@@ -99,7 +99,7 @@
 		*  unique
 		*/
 
-		public function execute($parameters = '', $output_type, $report_source) 
+		public function execute($parameters = '', $output_type, $report_source, $return_content = false) 
 		{
 			if( !$parameters )
 			{
@@ -255,14 +255,26 @@
 						$mime= 'application/octet-stream';
 						$filename ="{$report_name}.dat"; 
 					}
-
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($filename,$mime,strlen($output));
-				echo $output;
 			}
 			if(isset($error) && $error)
 			{
 				throw new Exception($error);
+			}
+			if($return_content)
+			{
+				return array
+				(
+					'content'	=> $output,
+					'mime'		=> $mime,
+					'filename'	=> $filename
+				);			
+			}
+			else
+			{
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($filename,$mime,strlen($output));
+				echo $output;
+				return false;
 			}
 		}
 	}
