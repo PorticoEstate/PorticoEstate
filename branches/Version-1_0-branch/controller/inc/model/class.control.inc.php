@@ -12,8 +12,15 @@
 		protected $end_date;
 		protected $repeat_type;
 		protected $repeat_interval;
-		protected $procedure_uid;
+		protected $procedure_id;
 		protected $enabled;
+		protected $requirement_id;
+		protected $costresponsibility_id;
+		protected $responsibility_id;
+		protected $equipment_id;
+		protected $equipment_type_id;
+		protected $location_code;
+		protected $control_area_id;
 				
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -95,7 +102,56 @@
 		}
 		
 		public function get_enabled() { return $this->enabled; }
-				
+		
+		public function set_requirement_id($requirement_id)
+		{
+			$this->requirement_id = $requirement_id;
+		}
+		
+		public function get_requirement_id() { return $this->requirement_id; }
+		
+		public function set_costresponsibility_id($costresponsibility_id)
+		{
+			$this->costresponsibility_id = $costresponsibility_id;
+		}
+		
+		public function get_costresponsibility_id() { return $this->costresponsibility_id; }
+		
+		public function set_responsibility_id($responsibility_id)
+		{
+			$this->responsibility_id = $responsibility_id;
+		}
+		
+		public function get_responsibility_id() { return $this->responsibility_id; }
+		
+		public function set_equipment_id($equipment_id)
+		{
+			$this->equipment_id = $equipment_id;
+		}
+		
+		public function get_equipment_id() { return $this->equipment_id; }
+		
+		public function set_equipment_type_id($equipment_type_id)
+		{
+			$this->equipment_type_id = $equipment_type_id;
+		}
+		
+		public function get_equipment_type_id() { return $this->equipment_type_id; }
+		
+		public function set_location_code($location_code)
+		{
+			$this->location_code = $location_code;
+		}
+		
+		public function get_location_code() { return $this->location_code; }
+		
+		public function set_control_area_id($control_area_id)
+		{
+			$this->control_area_id = $control_area_id;
+		}
+		
+		public function get_control_area_id() { return $this->control_area_id; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -108,6 +164,19 @@
 			}
 			
 			return self::$so;
+		}
+		
+		public function serialize()
+		{
+			return array(
+				'id' => $this->get_id(),
+				'title' => $this->get_title(),
+				'description' => $this->get_description(),
+				'start_date' => $this->get_start_date(),
+				'end_date' => $this->get_end_date(),
+				'procedure_id' => $this->get_procedure_id(),
+				'control_area_id' => $this->get_control_area_id()
+				);
 		}
 	}
 ?>

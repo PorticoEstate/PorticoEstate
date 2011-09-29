@@ -8,11 +8,8 @@
 </div>
 
 <div class="yui-content">
-	<div id="details">
-	
-	<xsl:choose>
-	  <xsl:when test="boolean(choose_control_items)">
-	  
+	<div>
+		  
 	   <!-- ===========================  CHOOSE CONTROL ITEMS  =============================== -->
 	   <h2>Velg dine kontrollpunkt</h2>
 		<form action="#" method="post">	
@@ -30,7 +27,7 @@
 						<xsl:for-each select="control_item">
 							<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 							
-			     			<li><input type="checkbox"  name="control_tag_ids[]" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="title"/></li>	
+			     			<li><xsl:number/>.  <input type="checkbox"  name="control_tag_ids[]" value="{$control_group_id}:{$control_item_id}" /><xsl:value-of select="title"/></li>	
 						</xsl:for-each>
 					</ul>
 				</li>
@@ -41,48 +38,9 @@
 		<div class="form-buttons">
 			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 			<input type="submit" name="save_control_items" value="{$lang_save}" title = "{$lang_save}" />
-			</div>
+		</div>
 		</form>
-				
-	  </xsl:when>
-	  
-	  <!-- ===========================  SHOW RECEIPT   =============================== -->
-	  <xsl:otherwise>
-	  
-	  	  <h2>Kvittering</h2>
-		  <form action="#" method="post">	
-			
-			<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
-			<input type="hidden" name="control_id" value="{control_id}" />
-			
-			<ul class="control_items">
-				<xsl:for-each select="control_receipt_items">
-				<ul>
-		    		<li>
-			         	<h4><xsl:value-of select="control_group/group_name"/></h4>
-			         	<ul>		
-							<xsl:for-each select="control_items">
-								<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-				     			<li><xsl:number/>. <xsl:value-of select="title"/></li>	
-							</xsl:for-each>
-						</ul>
-					</li>
-				</ul>      
-				</xsl:for-each>
-			</ul>
-			
-			<div class="form-buttons">
-			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-			<input type="submit" name="show_receipt" value="{$lang_save}" title = "{$lang_save}" />
-			</div>
-		</form>
-			
-	  </xsl:otherwise>
-	</xsl:choose>
-		
-		
-		
-							
+								
 	</div>
 </div>
 </xsl:template>

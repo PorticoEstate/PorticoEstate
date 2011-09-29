@@ -159,6 +159,7 @@ recurrence	controller	no	Gjentakelse
 remove	controller	no	Fjern
 controller	controller	no	Kontroll
 reports	controller	no	Rapporter
+Receipt	controller	no	Kvittering
 reset	controller	no	Nullstill
 responsibility	controller	no	Ansvar
 responsibility_id	controller	no	Ansvar
@@ -245,3 +246,4 @@ ACCEPTED	controller	no	Akseptert
 REJECTED	controller	no	Avvist
 New control group	controller	no	Ny kontrollgruppe
 Control group title	controller	no	Tittel
+Building part	controller	no	Bygningsdel

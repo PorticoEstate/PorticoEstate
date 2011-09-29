@@ -126,12 +126,12 @@
 							'sortable'	=> false
 						),
 						array(
-							'key' => 'control_group_id',
+							'key' => 'control_group',
 							'label' => lang('Control group'),
 							'sortable'	=> false
 						),
 						array(
-							'key' => 'control_area_id',
+							'key' => 'control_area',
 							'label' => lang('Control area'),
 							'sortable'	=> false
 						),
