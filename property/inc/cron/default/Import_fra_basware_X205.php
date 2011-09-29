@@ -76,6 +76,8 @@
 			$this->like				= & $this->db->like;
 			$this->dateformat		= $this->db->date_format();
 			$this->datetimeformat	= $this->db->datetime_format();
+			$this->config	= CreateObject('phpgwapi.config','property');
+			$this->config->read();
 		}
 
 		function pre_run($data='')
@@ -147,9 +149,8 @@
 
 		public function execute($cron='')
 		{
-			$config	= CreateObject('phpgwapi.config','property');
-			$config->read();
-			$dirname = $config->config_data['import_path'];
+			$this->get_files();
+			$dirname = $this->config->config_data['import_path'];
 			// prevent path traversal
 			if ( preg_match('/\./', $dirname) 
 			 || !is_dir($dirname) )
@@ -224,7 +225,90 @@
 
 		}
 
-		function import($file)
+		protected function get_files()
+		{
+			$server				= $this->config->config_data['invoice_ftp_host'];
+			$user				= $this->config->config_data['invoice_ftp_user'];
+			$password			= $this->config->config_data['invoice_ftp_password'];
+			$directory_remote	= rtrim($this->config->config_data['invoice_ftp_import_basedir'],'/');
+			$directory_local	= rtrim($this->config->config_data['import_path'],'/');
+			$port				= 22;
+
+			$debug = false;
+
+			if (!function_exists("ssh2_connect"))
+			{
+				die("function ssh2_connect doesn't exist");
+			}
+			if(!($connection = ssh2_connect("$server", $port)))
+			{
+				echo "fail: unable to establish connection\n";
+			}
+			else
+			{
+				// try to authenticate with username root, password secretpassword
+				if(!ssh2_auth_password($connection, $user, $password))
+				{
+					echo "fail: unable to authenticate\n";
+				}
+				else
+				{
+					// allright, we're in!
+					echo "okay: logged in...<br/>";
+
+					// execute a command
+					if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
+					{
+						echo "fail: unable to execute command\n";
+					}
+					else if ($debug)
+					{
+						// collect returning data from command
+						stream_set_blocking($stream, true);
+						$data = "";
+						while ($buf = fread($stream,4096))
+						{
+							$data .= $buf;
+						}
+						fclose($stream);
+						_debug_array($data);
+					}
+					else
+					{
+						$com ="ls {$directory_remote}";
+						$stream = ssh2_exec($connection, $com);
+						stream_set_blocking($stream,true);
+						$cmd = fread($stream,4096);
+						$arr=explode("\n",$cmd);
+						$total_files=count($arr);
+						$sftp = ssh2_sftp($connection);
+			//		_debug_array($arr);
+						for($i=0;$i<$total_files;$i++)
+						{
+							$file_name=trim($arr[$i]);
+							if($file_name!='' && stripos( $file_name, 'x205' ) === 0)
+							{
+								$file_remote = "{$directory_remote}/{$file_name}";	   
+								$file_local = "{$directory_local}/{$file_name}";
+								if(ssh2_scp_recv($connection, $file_remote,$file_local))
+								{
+									echo "File remote: ".$file_remote." was copied to local: $file_local<br/>";
+									if( ssh2_sftp_rename ($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}" ))
+									{
+										echo "File remote: ".$file_remote." was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
+									}
+								}
+							}
+						}
+						fclose($stream);
+					}
+				}
+			}
+
+		}
+
+
+		protected function import($file)
 		{
 //			$valid_data= False;
 
