@@ -2422,8 +2422,8 @@
 
 		$table = "bb_building";
 
-//		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_sendmessage int NOT NULL DEFAULT 0");
-//		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_sendmessage = 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_sendmessage int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_sendmessage = 0");
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
