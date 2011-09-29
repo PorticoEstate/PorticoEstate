@@ -224,25 +224,47 @@
 	
 				foreach ($control_area_array as $control_area)
 				{
-					$control_area_options[] = array
-					(
-						'id'	=> $control_area->get_id(),
-						'name'	=> $control_area->get_title()
-						 
-					);
+					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
+					{
+						$control_area_options[] = array
+						(
+							'id'	=> $control_area->get_id(),
+							'name'	=> $control_area->get_title(),
+							'selected' => 'yes'
+						);
+					}
+					else
+					{
+						$control_area_options[] = array
+						(
+							'id'	=> $control_area->get_id(),
+							'name'	=> $control_area->get_title()
+						);
+					}
 				}
 	
 				foreach ($procedure_array as $procedure)
 				{
-					$procedure_options[] = array
-					(
-						'id'	=> $procedure->get_id(),
-						'name'	=> $procedure->get_title()
-						 
-					);
+					if($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
+					{
+						$procedure_options[] = array
+						(
+							'id'	=> $procedure->get_id(),
+							'name'	=> $procedure->get_title(),
+							'selected' => 'yes'
+						);
+					}
+					else
+					{
+						$procedure_options[] = array
+						(
+							'id'	=> $procedure->get_id(),
+							'name'	=> $procedure->get_title()
+						);
+					}
 				}
 				
-				$building_part_options = $this->so->get_building_part_select_array();
+				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
 				
 				$control_group_array = $control_group->toArray();
 	
@@ -254,7 +276,7 @@
 					'procedure'				=> array('options' => $procedure_options),
 					'control_area'			=> array('options' => $control_area_options),
 					'control_group'			=> $control_group_array,
-					'building_part'			=> array('options' => $building_part_options),
+					'building_part'			=> array('building_part_options' => $building_part_options),
 				);
 	
 	
@@ -535,6 +557,7 @@
 				}
 				
 				$control_group_array = $control_group->toArray();
+				var_dump($control_group_array);
 	
 				$data = array
 				(

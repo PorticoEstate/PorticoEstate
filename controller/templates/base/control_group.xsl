@@ -39,7 +39,7 @@
 							</select>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="control_group/control_area_id" />
+							<xsl:value-of select="control_group/control_area_name" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -54,7 +54,7 @@
 							</select>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="control_group/procedure_id" />
+							<xsl:value-of select="control_group/procedure_name" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -65,11 +65,11 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<select id="building_part" name="building_part">
-								<xsl:apply-templates select="building_part/options"/>
+								<xsl:apply-templates select="building_part/building_part_options"/>
 							</select>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="control_group/building_part_descr" />
+							<xsl:value-of select="control_group/building_part_id" /> - <xsl:value-of select="control_group/building_part_descr" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -102,6 +102,15 @@
 			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>
+
+<xsl:template match="building_part_options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:value-of select="id"/> - <xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
 </xsl:template>
 
