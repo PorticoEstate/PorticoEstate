@@ -2933,3 +2933,20 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.534';
+	/**
+	* Need more space for filename
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_534()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cust_function','file_name', array('type' => 'varchar','precision' => 255,'nullable' => false));
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.535';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
