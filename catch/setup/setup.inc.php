@@ -27,7 +27,7 @@
 	 */
 
 	$setup_info['catch']['name']			= 'catch';
-	$setup_info['catch']['version']			= '0.9.17.510';
+	$setup_info['catch']['version']			= '0.9.17.511';
 	$setup_info['catch']['app_order']		= 20;
 	$setup_info['catch']['enable']			= 1;
 	$setup_info['catch']['globals_checked']	= True;

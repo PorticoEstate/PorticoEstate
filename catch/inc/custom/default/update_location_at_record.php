@@ -12,8 +12,16 @@
 			$target_table = "fm_{$this->type_app[$this->type]}_{$entity_id}_{$cat_id}";
 		}
 
+		$sql = "SELECT id FROM {$target_table} WHERE (location_code is NULL OR location_code = '')";
+		$metadata = $this->db->metadata($target_table);
+
+		if(isset($metadata['target_id']))
+		{
+			$sql .= 'OR (target_id IS NOT NULL AND location_id IS NOT NULL AND p_num IS NULL)';
+		}
+
 		$ids = array();
-		$this->db->query("SELECT id FROM $target_table WHERE (location_code is NULL OR location_code = '') OR (target_id IS NOT NULL AND location_id IS NOT NULL AND p_num IS NULL)",__LINE__,__FILE__);
+		$this->db->query($sql,__LINE__,__FILE__);
 		while ($this->db->next_record())
 		{
 			$ids[] = $this->db->f('id');
