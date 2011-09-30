@@ -1011,6 +1011,13 @@
 			return $receipt;
 		}
 
+		public function update_priority($data, $id = 0)
+		{
+			$receipt 	= $this->so->update_priority($data, $id);
+			$this->fields_updated = $this->so->fields_updated;
+			return $receipt;
+		}
+
 		public function update_ticket($data, $id,$receipt = array())
 		{
 			$receipt = $this->so->update_ticket($data, $id, $receipt);
