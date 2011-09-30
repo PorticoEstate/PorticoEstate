@@ -257,3 +257,39 @@ var showIfNotEmpty = function(event, fieldname) {
         YAHOO.util.Dom.replaceClass(fieldname + "_edit", "showit", "hideit");
     }
 }
+
+YAHOO.util.Event.addListener(
+		'fetchSyncData',
+		'click',
+		function(){		
+			
+			var org_enhet_id = document.getElementById('org_enhet_id').value;
+			
+			 YAHOO.util.Connect.asyncRequest (
+		                'POST',
+		                "http://portico/pe/index.php?menuaction=rental.uiparty.get_synchronize_party_info&phpgw_return_as=json&org_enhet_id=" + org_enhet_id,
+		                {
+		                	success: syncInfo,
+		                	failure: function (o) {
+		                	 	YAHOO.rental.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
+             	 				YAHOO.rental.Log( "<br><br>" );
+		                	}
+		                }
+		          	);
+		}
+);
+
+function syncInfo(o)
+{
+	var syncInfo = YAHOO.lang.JSON.parse(o.responseText);
+	 
+	var email = syncInfo.email;
+	var department = syncInfo.org_name;
+	var org_name = syncInfo.org_name;
+	var unit_leader = syncInfo.unit_leader_fullname;
+	    
+	document.getElementById('email').value = email;
+	document.getElementById('company_name').value = org_name;
+	document.getElementById('department').value = department;
+	document.getElementById('unit_leader').value = unit_leader;
+}
