@@ -23,7 +23,8 @@ class rental_uiparty extends rental_uicommon
 			'update_all_org_enhet_id'	=> true,
 			'syncronize_party'	=> true,
 			'syncronize_party_name'	=> true,
-			'create_user_based_on_email' => true
+			'create_user_based_on_email' => true,
+			'get_synchronize_party_info' => true
 	);
 
 	public function __construct()
@@ -401,7 +402,7 @@ class rental_uiparty extends rental_uicommon
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party', 'org_unit_id' => $value['org_unit_id'], 'party_id' => $value['id'])));
 						$value['labels'][] = lang('syncronize_party');
-					}
+					}			
 				}
 				break;
 		}
@@ -487,7 +488,7 @@ class rental_uiparty extends rental_uicommon
 		{
 			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
 		}
-
+		
 		if(isset($_POST['save_party'])) // The user has pressed the save button
 		{
 			if(isset($party)) // If a party object is created
@@ -514,6 +515,7 @@ class rental_uiparty extends rental_uicommon
 				$party->set_comment(phpgw::get_var('comment'));
 				//$party->set_location_id(phpgw::get_var('location_id'));
 				$party->set_org_enhet_id(phpgw::get_var('org_enhet_id'));
+				$party->set_org_unit_person(phpgw::get_var('org_unit_person'));
 				
 				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
@@ -589,6 +591,39 @@ class rental_uiparty extends rental_uicommon
 		}
 	}
 	
+	public function get_synchronize_party_info()
+	{
+		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			$org_unit_id = phpgw::get_var("org_enhet_id");
+					
+			if(isset($org_unit_id) && $org_unit_id > 0)
+			{	
+				$use_fellesdata = $config->config_data['use_fellesdata'];	
+				if(!$use_fellesdata){
+					return;
+				}
+								
+				$bofelles = rental_bofellesdata::get_instance();
+				
+				$org_unit_with_leader = $bofelles->get_result_unit_with_leader($org_unit_id);
+				$org_department = $bofelles->get_department_for_org_unit($org_unit_id);
+				
+				$org_name = $org_unit_with_leader['ORG_UNIT_NAME'];
+				$org_email = $org_unit_with_leader['ORG_EMAIL'];
+				$unit_leader_fullname = $org_unit_with_leader['LEADER_FULLNAME'];
+				
+				$dep_org_name = $org_department['DEP_ORG_NAME'];
+									
+				$jsonArr = array("email" => trim($org_email), "org_name" => trim($org_name), 
+								 "unit_leader_fullname" => trim($unit_leader_fullname), "department" => trim($dep_org_name));
+				
+				return json_decode( json_encode($jsonArr) );
+				
+			}	
+		}
+	}	
+		
 	/**
 	 * Function to create Portico Estate users based on email, first- and lastname on contract parties.
 	 */
