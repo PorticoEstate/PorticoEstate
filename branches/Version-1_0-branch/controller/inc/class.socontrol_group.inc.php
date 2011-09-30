@@ -89,14 +89,22 @@ class controller_socontrol_group extends controller_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT p.* FROM controller_control_group p WHERE p.id = " . $id;
+		$joins = "	{$this->left_join} fm_building_part ON (p.building_part_id = CAST(fm_building_part.id AS INT))";
+		$joins .= "	{$this->left_join} controller_procedure ON (p.procedure_id = controller_procedure.id)";
+		$joins .= "	{$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+		
+		$sql = "SELECT p.*, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, controller_control_area.title as control_area_name FROM controller_control_group p {$joins} WHERE p.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
 		$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
 		$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
-		$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'string'));
-		$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'string'));
+		$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+		$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title'), 'string'));
+		$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+		$control_group->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+		$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+		$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr'), 'string'));
 		
 		return $control_group;
 	}
@@ -145,15 +153,25 @@ class controller_socontrol_group extends controller_socommon
 			return $results;
 	}
 	
-	function get_building_part_select_array()
+	function get_building_part_select_array($selected_building_part_id)
 	{
             $results = array();
 			$results[] = array('id' =>  0,'name' => lang('Not selected'));
 			$this->db->query("SELECT id, descr as name FROM fm_building_part ORDER BY id ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = array('id' => $this->db->f('id', false),
-						           'name' => $this->db->f('name', false));
+				$curr_id = $this->db->f('id', false);
+				if($selected_building_part_id && $selected_building_part_id > 0 && $selected_building_part_id == $curr_id)
+				{
+					$results[] = array('id' => $this->db->f('id', false),
+							           'name' => $this->db->f('name', false),
+									   'selected' => 'yes');
+				}
+				else
+				{
+					$results[] = array('id' => $this->db->f('id', false),
+							           'name' => $this->db->f('name', false));
+				}
 			}
 			return $results;
 	}

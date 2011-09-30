@@ -42,6 +42,7 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
+			set_time_limit(1000);
 		}
 
 		function pre_run($data = array())

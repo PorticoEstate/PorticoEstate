@@ -111,7 +111,7 @@
 				'input_type' => array('type' => 'varchar', 'precision' => 10,'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => 200,'nullable' => true),
-				'value' => array('type' => 'varchar', 'precision' => 1000,'nullable' => False)
+				'value' => array('type' => 'varchar', 'precision' => 1000,'nullable' => true)
 			),
 			'pk' => array('type_id','id'),
 			'fk' => array(),
