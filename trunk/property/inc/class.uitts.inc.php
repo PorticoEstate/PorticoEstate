@@ -49,6 +49,7 @@
 			'download2'			=> true,
 			'view_file'			=> true,
 			'edit_status'		=> true,
+			'edit_priority'		=> true,
 			'update_data'		=> true,
 			'_print'			=> true,
 			'columns'			=> true
@@ -318,9 +319,29 @@
 			{
 				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 			}
-			//	$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
-			return "id ".$id." ".lang('Status has been changed');
+			return "id {$id} " . lang('Status has been changed');
 		}
+
+		function edit_priority()
+		{
+			if(!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$new_priority = phpgw::get_var('new_priority', 'string', 'GET');
+			$id 		= phpgw::get_var('id', 'int');
+
+			$ticket = $this->bo->read_single($id);
+
+			$receipt 	= $this->bo->update_priority(array('priority'=>$new_priority),$id);
+			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+			{
+				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
+			}
+			return "id {$id} " . lang('priority has been changed');
+		}
+
 
 		function delete()
 		{
@@ -1130,7 +1151,7 @@
 						(
 							'my_name' 		=> 'status',
 							'statustext' 	=> $status_info['status'],
-							'text' 			=> lang('change to') . ':  ' .$status_info['status'],
+							'text' 			=> lang('change to') . ' status:  ' .$status_info['status'],
 							'confirm_msg'	=> lang('do you really want to change the status to %1',$status_info['status']),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
@@ -1151,7 +1172,37 @@
 							'parameters'	=> $parameters
 						);
 				}
+
+				$_priorities = $this->bo->get_priority_list();
+				foreach ($_priorities as $_priority => $_priority_info)
+				{
+					$datatable['rowactions']['action'][] = array
+					(
+						'my_name' 		=> 'priority',
+						'statustext' 	=> $_priority_info['name'],
+						'text' 			=> lang('change to') . ' ' . lang('priority') .':  ' .$_priority_info['name'],
+						'confirm_msg'	=> lang('do you really want to change the priority to %1',$_priority_info['name']),
+						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+						(
+							'menuaction'		=> 'property.uitts.edit_priority',
+							'edit_status'		=> true,
+							'new_priority'		=> $_priority,
+							'second_display'	=> true,
+							'sort'				=> $this->sort,
+							'order'				=> $this->order,
+							'cat_id'			=> $this->cat_id,
+							'filter'			=> $this->filter,
+							'user_filter'		=> $this->user_filter,
+							'query'				=> $this->query,
+							'district_id'		=> $this->district_id,
+							'allrows'			=> $this->allrows,
+							'delete'			=> 'dummy'// FIXME to trigger the json in property.js.
+						)),
+						'parameters'	=> $parameters
+					);
+				}
 			}
+
 
 			if($this->acl_add)
 			{

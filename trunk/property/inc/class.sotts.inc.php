@@ -779,6 +779,7 @@
 			}
 			return $status;
 		}
+
 		function update_status($ticket,$id = 0)
 		{
 			$id = (int) $id;
@@ -839,6 +840,33 @@
 
 			return $receipt;
 
+		}
+
+		function update_priority($ticket,$id = 0)
+		{
+			$id = (int) $id;
+			$receipt = array();
+			$this->db->query("SELECT priority FROM fm_tts_tickets WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$oldpriority  = $this->db->f('priority');
+
+			$this->db->transaction_begin();
+
+			if ($oldpriority != $ticket['priority'])
+			{
+				$this->fields_updated = true;
+				$this->db->query("UPDATE fm_tts_tickets set priority='" . $ticket['priority']
+					. "' WHERE id={$id}",__LINE__,__FILE__);
+				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
+			}
+
+			$this->db->transaction_commit();
+
+			if ($this->fields_updated)
+			{
+				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
+			}
+			return $receipt;
 		}
 
 		function update_ticket($ticket,$id = 0, $receipt = array())

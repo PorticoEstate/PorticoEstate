@@ -541,6 +541,7 @@ down	property	no	Ned
 download	common	no	Last ned
 download table to your browser	common	no	Last ned tabell til din nettleser
 do you really want to change the status to %1	property	no	Vil du virkelig endre status til %1
+do you really want to change the priority to %1	property	no	Vil du virkelig endre prioritet til %1
 do you really want to delete this entry	property	no	Vil du virkelig slette denne posten
 do you really want to update the categories	property	no	vil du virkelig oppdatere kategoriene
 do you really want to update the categories again	property	no	vil du virkelig oppdatere kategoriene igjen
