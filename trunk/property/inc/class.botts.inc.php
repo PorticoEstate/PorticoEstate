@@ -1014,7 +1014,32 @@
 		public function update_ticket($data, $id,$receipt = array())
 		{
 			$receipt = $this->so->update_ticket($data, $id, $receipt);
-			$this->fields_updated = $this->so->fields_updated;		
+			$this->fields_updated = $this->so->fields_updated;
+
+			$criteria = array
+			(
+				'appname'	=> 'property',
+				'location'	=> $this->acl_location,
+				'allrows'	=> true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ( $custom_functions as $entry )
+			{
+				// prevent path traversal
+				if ( preg_match('/\.\./', $entry['file_name']) )
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ( $entry['active'] && is_file($file) )
+				{
+					require $file;
+				}
+			}
+
 			return $receipt;
 		}
 
