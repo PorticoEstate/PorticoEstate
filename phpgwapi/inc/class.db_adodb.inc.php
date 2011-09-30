@@ -355,6 +355,11 @@
 		*/
 		public function transaction_begin()
 		{
+			if(!$this->adodb)
+			{
+				$this->connect();
+			}
+
 			$this->Transaction =  $this->adodb->StartTrans();
 			return $this->Transaction;
 		}

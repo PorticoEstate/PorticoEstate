@@ -779,6 +779,7 @@
 			}
 			return $status;
 		}
+
 		function update_status($ticket,$id = 0)
 		{
 			$id = (int) $id;
@@ -841,8 +842,36 @@
 
 		}
 
+		function update_priority($ticket,$id = 0)
+		{
+			$id = (int) $id;
+			$receipt = array();
+			$this->db->query("SELECT priority FROM fm_tts_tickets WHERE id={$id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$oldpriority  = $this->db->f('priority');
+
+			$this->db->transaction_begin();
+
+			if ($oldpriority != $ticket['priority'])
+			{
+				$this->fields_updated = true;
+				$this->db->query("UPDATE fm_tts_tickets set priority='" . $ticket['priority']
+					. "' WHERE id={$id}",__LINE__,__FILE__);
+				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
+			}
+
+			$this->db->transaction_commit();
+
+			if ($this->fields_updated)
+			{
+				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
+			}
+			return $receipt;
+		}
+
 		function update_ticket($ticket,$id = 0, $receipt = array())
 		{
+			$this->fields_updated = array();
 			$id = (int) $id;
 			// DB Content is fresher than http posted value.
 			$this->db->query("select * from fm_tts_tickets where id='$id'",__LINE__,__FILE__);
@@ -943,7 +972,7 @@
 			{
 				if ($oldfinnish_date != $finnish_date)
 				{
-					$this->fields_updated = true;
+					$this->fields_updated[] = 'finnish_date';
 					$this->historylog->add('F',$id,$finnish_date,$oldfinnish_date);
 				}
 			}
@@ -953,7 +982,7 @@
 				$check_old_custom = (int) trim($old_status,'C');
 				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'status';
 				if($old_status=='X' || $this->db->f('closed'))
 				{
 					$new_status = $ticket['status'];
@@ -971,7 +1000,7 @@
 
 			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'assignedto';
 
 				$value_set=array('assignedto'	=> $ticket['assignedto']);
 				$value_set	= $this->db->validate_update($value_set);
@@ -982,7 +1011,7 @@
 
 			if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'group_id';
 
 				$value_set=array('group_id'	=> $ticket['group_id']);
 				$value_set	= $this->db->validate_update($value_set);
@@ -993,7 +1022,7 @@
 
 			if ($oldpriority != $ticket['priority'])
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'priority';
 				$this->db->query("update fm_tts_tickets set priority='" . $ticket['priority']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
@@ -1002,13 +1031,13 @@
 			if ($old_contact_id != $ticket['contact_id'])
 			{
 				$contact_id  = (int) $ticket['contact_id'];
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'contact_id';
 				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id",__LINE__,__FILE__);
 			}
 
 			if (($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore')
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'cat_id';
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('T',$id,$ticket['cat_id'],$oldcat_id);
@@ -1016,7 +1045,7 @@
 
 			if ($old_budget != $ticket['budget'])
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'budget';
 				$this->db->query("UPDATE fm_tts_tickets set budget='" . (int)$ticket['budget']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('B',$id,$ticket['budget'],$old_budget);
@@ -1024,7 +1053,7 @@
 	/*
 			if ($old_billable_rate != $ticket['billable_rate'])
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'billable_rate';
 				$this->db->query("update fm_tts_tickets set billable_rate='" . $ticket['billable_rate']
 					. "' where id='$id'",__LINE__,__FILE__);
 				$this->historylog->add('B',$id,$ticket['billable_rate'],$old_billable_rate);
@@ -1063,7 +1092,7 @@
 				$this->db->query("UPDATE fm_tts_tickets SET order_cat_id='" . (int)$ticket['order_cat_id']
 					. "' WHERE id='$id'",__LINE__,__FILE__);
 				$receipt['message'][]= array('msg' => lang('order category has been updated'));
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'order_cat_id';
 			}
 
 			if ((int)$old_order_dim1 != (int)$ticket['order_dim1'])
@@ -1071,7 +1100,7 @@
 				$this->db->query("UPDATE fm_tts_tickets SET order_dim1='" . (int)$ticket['order_dim1']
 					. "' WHERE id='$id'",__LINE__,__FILE__);
 				$receipt['message'][]= array('msg' => lang('order_dim1 has been updated'));
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'order_dim1';
 			}
 
 			if ($old_building_part != $ticket['building_part'])
@@ -1079,12 +1108,12 @@
 				$this->db->query("UPDATE fm_tts_tickets SET building_part='" . $ticket['building_part']
 					. "' WHERE id='$id'",__LINE__,__FILE__);
 				$receipt['message'][]= array('msg' => lang('building part has been updated'));
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'building_part';
 			}
 
 			if (($old_note != $ticket['note']) && $ticket['note'])
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'note';
 				$this->historylog->add('C',$id,$ticket['note'],$old_note);
 				$_history_id = $this->db->get_last_insert_id('fm_tts_history','history_id');
 				$this->db->query("UPDATE fm_tts_history SET publish = 1 WHERE history_id = $_history_id",__LINE__,__FILE__);

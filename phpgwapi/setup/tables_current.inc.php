@@ -608,7 +608,7 @@
 				'location_id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'id' => array('type' => 'int','precision' => 4,'nullable' => false),
 				'descr' => array('type' => 'text','nullable' => true),
-				'file_name ' => array('type' => 'varchar','precision' => 50,'nullable' => false),
+				'file_name' => array('type' => 'varchar','precision' => 255,'nullable' => false),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),
