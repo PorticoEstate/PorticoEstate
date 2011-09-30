@@ -324,3 +324,23 @@
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
+
+	/**
+	* Update catch version from 0.9.17.510 to 0.9.17.511
+	* Allow value is null
+	* 
+	*/
+
+	$test[] = '0.9.17.510';
+	function catch_upgrade0_9_17_510()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_catch_config_attrib','value',array('type' => 'varchar', 'precision' => 1000,'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.511';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}

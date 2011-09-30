@@ -927,6 +927,26 @@
 						<xsl:apply-templates select="sms_data"/>
 					</xsl:when>
 				</xsl:choose>
+
+				<xsl:choose>
+					<xsl:when test="order_footer_header!=''">
+						<tr>
+							<td>
+								<br/>
+								<h4><xsl:value-of select="order_footer_header"/></h4>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="order_footer!=''">
+						<tr>
+							<td>
+								<xsl:value-of select="order_footer"/>
+							</td>
+						</tr>
+					</xsl:when>
+				</xsl:choose>
 			</table>
 		</font>
 	</xsl:template>
@@ -2441,6 +2461,7 @@
 	<xsl:template match="sms_data">
 		<tr>
 			<td>
+				<br/>
 				<xsl:value-of select="heading"/>
 			</td>
 		</tr>

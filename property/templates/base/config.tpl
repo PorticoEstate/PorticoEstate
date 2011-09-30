@@ -97,6 +97,7 @@
 				<select name="newsettings[invoice_export_method]">
 					<option value="local" {selected_invoice_export_method_local}>Local</option>
 					<option value="ftp" {selected_invoice_export_method_ftp}>Local and ftp</option>
+					<option value="ssh" {selected_invoice_export_method_ssh}>Local and ssh</option>
 				</select>
 			</td>
 		</tr>
@@ -113,8 +114,12 @@
 			<td><input type ="password" name="newsettings[invoice_ftp_password]" value="{value_invoice_ftp_password}"></td>
 		</tr>
 		<tr class="row_on">
-			<td>{lang_invoice_ftp_host_basedir_with_NO_trailing_slash}:</td>
+			<td>{lang_invoice_ftp_host_export_basedir_with_NO_trailing_slash}:</td>
 			<td><input name="newsettings[invoice_ftp_basedir]" value="{value_invoice_ftp_basedir}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_invoice_ftp_host_import_basedir_with_NO_trailing_slash}:</td>
+			<td><input name="newsettings[invoice_ftp_import_basedir]" value="{value_invoice_ftp_import_basedir}"></td>
 		</tr>
 	</tr>
 	<tr class="row_off">
