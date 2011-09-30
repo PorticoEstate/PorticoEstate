@@ -543,6 +543,11 @@
 			echo "<b>db::{$bt[0]['function']} Called from file: {$bt[0]['file']} line: {$bt[0]['line']}</b><br/>";
 			unset($bt);
 */
+			if(!$this->db)
+			{
+				$this->connect();
+			}
+			
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}

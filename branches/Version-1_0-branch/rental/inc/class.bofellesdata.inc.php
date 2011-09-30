@@ -25,8 +25,8 @@
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 
-//			$db = createObject('phpgwapi.db', null, null, true);
-			$db = createObject('property.db_oci8');
+			$db = createObject('phpgwapi.db', null, null, true);
+//			$db = createObject('property.db_oci8');
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
@@ -143,6 +143,7 @@
 				}
 			}
 		}
+	
 		
 		public function get_result_units()
 		{
@@ -170,10 +171,11 @@
 		{
 			$this->log(__class__, __function__);
 
-			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_PERSON.FORNAVN, V_ORG_PERSON.ETTERNAVN, V_ORG_PERSON.BRUKERNAVN";
-			$tables = "V_ORG_ENHET";
+			$columns = 	"V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.EPOST, V_ORG_PERSON.FORNAVN, V_ORG_PERSON.ETTERNAVN, V_ORG_PERSON.BRUKERNAVN";
+			$tables = 	"V_ORG_ENHET";
 			$joins = 	"LEFT JOIN V_ORG_PERSON_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_PERSON_ENHET.ORG_ENHET_ID AND V_ORG_PERSON_ENHET.prioritet = 1) ".
 						"LEFT JOIN V_ORG_PERSON ON (V_ORG_PERSON.ORG_PERSON_ID = V_ORG_PERSON_ENHET.ORG_PERSON_ID)";
+			
 			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
 			$db = $this->get_db();
 			$db->query($sql,__LINE__,__FILE__);
@@ -185,6 +187,7 @@
 				return array(
 						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
 						"ORG_UNIT_NAME" => $db->f('ORG_NAVN'),
+						"ORG_EMAIL" => $db->f('EPOST'),
 						"LEADER_FIRSTNAME" => $db->f('FORNAVN'),
 						"LEADER_LASTNAME" => $db->f('ETTERNAVN'),
 						"LEADER_FULLNAME" => $full_name,
@@ -192,6 +195,31 @@
 					);
 			}
 		}
+			
+    	public function get_department_for_org_unit($org_unit_id)
+		{
+			$this->log(__class__, __function__);
+
+			$columns = 	"DEP_ORG_ENHET.ORG_ENHET_ID, DEP_ORG_ENHET.ORG_NAVN";
+			$tables = 	"V_ORG_ENHET";
+			$joins = 	"LEFT JOIN V_ORG_KNYTNING ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID) " .
+						"LEFT JOIN V_ORG_ENHET DEP_ORG_ENHET ON (V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING = DEP_ORG_ENHET.ORG_ENHET_ID) ";						
+			
+			$sql = "SELECT $columns FROM $tables $joins WHERE V_ORG_ENHET.ORG_NIVAA = 4 AND V_ORG_ENHET.ORG_ENHET_ID = {$org_unit_id}";
+					
+			$db = $this->get_db();
+			$db->query($sql,__LINE__,__FILE__);
+						
+			if($db->next_record())
+			{
+				
+				return array(
+						"DEP_ORG_ID" => (int)$db->f('ORG_ENHET_ID'),
+						"DEP_ORG_NAME" => $db->f('ORG_NAVN')
+					);
+			}
+		}
+		
 		
 		public function get_result_units_with_leader($start_index, $num_of_objects, $sort_field, $sort_ascending,$search_for, $search_type)
 		{

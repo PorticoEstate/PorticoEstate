@@ -1404,8 +1404,6 @@
 					'lang_contact_phone'			=> lang('Contact phone'),
 					'contact_phone'					=> $project['contact_phone'],
 
-					//				'lang_vendor'					=>	lang('vendor'),
-
 					'lang_branch'					=> lang('branch'),
 					'branch_list'					=> $this->boproject->select_branch_p_list($project['project_id']),
 					'other_branch'					=> $project['other_branch'],
