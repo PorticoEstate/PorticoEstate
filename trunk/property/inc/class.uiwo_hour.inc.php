@@ -1429,7 +1429,9 @@
 					'values_view_order'				=> $values_hour,
 					'sms_data'						=> $sms_data,
 					'use_yui_table' 				=> true,
-					'contact_data'					=> $contact_data
+					'contact_data'					=> $contact_data,
+					'order_footer_header'			=> $this->config->config_data['order_footer_header'],
+					'order_footer'					=> $this->config->config_data['order_footer']
 				);
 
 			if($send_order && !$to_email)
