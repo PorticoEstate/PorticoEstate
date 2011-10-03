@@ -599,11 +599,14 @@ class rental_uiparty extends rental_uicommon
 					
 			if(isset($org_unit_id) && $org_unit_id > 0)
 			{	
-				$use_fellesdata = $config->config_data['use_fellesdata'];	
-				if(!$use_fellesdata){
+				$config	= CreateObject('phpgwapi.config','rental');
+				$config->read();
+				
+				$use_fellesdata = $config->config_data['use_fellesdata'];
+				if(!$use_fellesdata){ 
 					return;
 				}
-								
+				
 				$bofelles = rental_bofellesdata::get_instance();
 				
 				$org_unit_with_leader = $bofelles->get_result_unit_with_leader($org_unit_id);

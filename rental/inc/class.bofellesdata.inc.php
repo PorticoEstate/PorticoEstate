@@ -25,8 +25,8 @@
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 
-			$db = createObject('phpgwapi.db', null, null, true);
-//			$db = createObject('property.db_oci8');
+//			$db = createObject('phpgwapi.db', null, null, true);
+			$db = createObject('property.db_oci8');
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
@@ -164,6 +164,7 @@
 						"UNIT_ID" => $db->f('RESULTATENHET')
 					);
 			}
+						
 			return $result_units;
 		}
 		
@@ -182,8 +183,9 @@
 	        
 			if($db->next_record())
 			{
-				$full_name = $db->f('FORNAVN')." ".$db->f('ETTERNAVN');
 				
+				$full_name = $db->f('FORNAVN')." ".$db->f('ETTERNAVN');
+								
 				return array(
 						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
 						"ORG_UNIT_NAME" => $db->f('ORG_NAVN'),
