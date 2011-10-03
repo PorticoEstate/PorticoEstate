@@ -324,6 +324,7 @@ class rental_soparty extends rental_socommon
 			'is_inactive = '    . $this->marshal(($party->is_inactive() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string'),
 			'org_enhet_id = '	. $this->marshal($party->get_org_enhet_id(), 'int'),
+			'org_unit_leader = '	. $this->marshal($party->get_org_unit_leader(), 'string'),
 			'location_id = '	. $location_id,
 			'result_unit_number = ' . $result_unit_number
 		);
@@ -377,6 +378,7 @@ class rental_soparty extends rental_socommon
 			$party->set_title(          $this->unmarshal($this->db->f('title'), 'string'));
 			$party->set_url(            $this->unmarshal($this->db->f('url'), 'string'));
 			$party->set_org_enhet_id(   $this->unmarshal($this->db->f('org_enhet_id'), 'string'));
+			$party->set_unit_leader(   $this->unmarshal($this->db->f('unit_leader'), 'string'));
 			$sync_message = $party->set_sync_data(
 				array(
 					'responsibility_id' => $this->unmarshal($this->db->f('responsibility_id'), 'string'),
