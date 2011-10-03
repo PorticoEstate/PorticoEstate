@@ -164,6 +164,7 @@
 						"UNIT_ID" => $db->f('RESULTATENHET')
 					);
 			}
+						
 			return $result_units;
 		}
 		
@@ -182,8 +183,9 @@
 	        
 			if($db->next_record())
 			{
-				$full_name = $db->f('FORNAVN')." ".$db->f('ETTERNAVN');
 				
+				$full_name = $db->f('FORNAVN')." ".$db->f('ETTERNAVN');
+								
 				return array(
 						"ORG_UNIT_ID" => (int)$db->f('ORG_ENHET_ID'),
 						"ORG_UNIT_NAME" => $db->f('ORG_NAVN'),
