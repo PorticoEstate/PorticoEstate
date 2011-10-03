@@ -340,7 +340,7 @@
 						if ($editable)
 						{
 						?>
-							<select name="location_id" id="location_id">
+							<select id="location_id" name="location_id">
 								<option value=""><?php echo lang('no_party_location') ?></option>
 								<?php 
 									$city_counsil_departments =  array_reverse(location_hierarchy::get_hierarchy());
@@ -416,11 +416,34 @@
 						}
 						?>
 					</dd>
-				</dl>
+					<dt>
+						<?php if($party->get_unit_leader() || $editable) { ?>
+						<label for="unit_leader"><?php echo lang('unit_leader') ?></label>
+						<?php  } ?>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+						?>
+							<input type="text" name="unit_leader" id="unit_leader" value="<?php echo $party->get_unit_leader() ?>" />
+						<?php
+						}
+						else
+						{
+							echo $party->get_unit_leader();
+						}
+						?>
+					</dd>
+					</dl>
 				<div class="form-buttons">
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_party" value="' . lang('save') . '"/>';
+						}
+							
+						if ($use_fellesdata) {
+							echo '<input type="button" id="fetchSyncData" name="synchronize" value="' . lang('get_synchronization_data') . '"/>';
 						}
 					?>
 				</div>
