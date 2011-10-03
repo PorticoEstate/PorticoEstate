@@ -399,6 +399,7 @@ organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
 or	rental	no	eller
 org_enhet_id	rental	no	Organisasjonsenhet
+org_unit_person	rental	no  Enhetsleder
 org_unit_name	rental	no	Navn på tilsvarende enhet i Fellesdata
 org_unit_exist	rental	no	Eksisterer
 other_guarantee	rental	no	Annen garanti
@@ -567,6 +568,7 @@ update	rental	no	Oppdatér
 upload	rental	no	Last opp
 url	rental	no	Nettsted
 Unable to get a location code for the building.	rental	no	Klarte ikke å hente objektnummer for bygget.
+unit_leader rental	no	Enhetsleder
 username	rental	no	Brukernavn
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
