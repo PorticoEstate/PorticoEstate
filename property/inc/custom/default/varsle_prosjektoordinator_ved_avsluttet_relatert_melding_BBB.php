@@ -13,7 +13,7 @@
 		{
 			$_status = (int) trim($data['status'],'C');
 			$db->query("SELECT * from fm_tts_status WHERE id = {$_status}",__LINE__,__FILE__);
-			$this->db->next_record();
+			$db->next_record();
 			if($db->f('closed'))
 			{
 				$_closed = true;
@@ -78,17 +78,21 @@
 				$from_email = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 				$cc = '';
 				$bcc ='';
-				$subject = "Status er endret tor melding tilknyttet prosjekt {$project_info['id']}";
+				$subject = "Status er endret for melding tilknyttet prosjekt {$project_info['id']}";
 				$body ="<H2>{$subject}</H2>";
-				$body .= "</br><a href='{$project_info['link']}'>{$subject}</a>";
+				$body .= "</br><a href='http://{$GLOBALS['phpgw_info']['server']['hostname']}{$project_info['link']}'>{$subject} - klikk her for å oppdatere status for prosjektet</a>";
 
 				try
 				{
-					$GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $from_email, $from_name, 'html', '');
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $from_email, $from_name, 'html', '');
 				}
 				catch (phpmailerException $e)
 				{
 					$receipt['error'][] = array('msg' => $e->getMessage());
+				}
+				if($rcpt)
+				{
+					$receipt['message'][]= array('msg' => "Epost er sendt til {$account_name} angående prosjektnr {$project_info['id']}" );
 				}
 			}
 			else
