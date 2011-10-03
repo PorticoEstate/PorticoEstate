@@ -43,6 +43,7 @@ class rental_party extends rental_model
 	protected $sync_data;
 	protected $sync_problems = array();
 	protected $org_enhet_id;
+	protected $unit_leader;
 
 	public function __construct($id = 0)
 	{
@@ -118,6 +119,13 @@ class rental_party extends rental_model
 	public function set_org_enhet_id($org_enhet_id)
 	{
 		$this->org_enhet_id = $org_enhet_id;
+	}
+	
+	public function get_unit_leader() { return $this->unit_leader; }
+
+	public function set_unit_leader($unit_leader)
+	{
+		$this->unit_leader = $unit_leader;
 	}
 
 	public function get_sync_data() { return $this->sync_data; }
@@ -388,6 +396,7 @@ class rental_party extends rental_model
 			'service_id' => $this->sync_data['service_id'],
 			'responsibility_id' => $this->sync_data['responsibility_id'],
 			'org_enhet_id' => $this->get_org_enhet_id(),
+			'unit_leader' => $this->get_unit_leader(),
 			'sync_message' => implode('<br/>',$this->get_sync_problems())
 		);
 		
