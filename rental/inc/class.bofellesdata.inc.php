@@ -25,8 +25,8 @@
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 
-			$db = createObject('phpgwapi.db', null, null, true);
-//			$db = createObject('property.db_oci8');
+//			$db = createObject('phpgwapi.db', null, null, true);
+			$db = createObject('property.db_oci8');
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
