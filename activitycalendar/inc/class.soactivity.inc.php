@@ -198,6 +198,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$columns[] = 'activity.contact_person_2_zip';
 			$columns[] = 'activity.special_adaptation';
 			$columns[] = 'activity.secret';
+			$columns[] = 'activity.frontend';
+			$columns[] = 'activity.new_org';			
 			
 			$cols = implode(',',$columns);
 		}
@@ -268,7 +270,9 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			'contact_person_2 = '          . $this->marshal($activity->get_contact_person_2(), 'int'),
 			'contact_person_2_address = '          . $this->marshal($activity->get_contact_person_2_address(), 'string'),
 			'contact_person_2_zip = '          . $this->marshal($activity->get_contact_person_2_zip(), 'string'),
-			'special_adaptation = '			.($activity->get_special_adaptation() ? "true" : "false")
+			'special_adaptation = '			.($activity->get_special_adaptation() ? "true" : "false"),
+			'frontend = '			.($activity->get_frontend() ? "true" : "false"),
+			'new_org = '			.($activity->get_new_org() ? "true" : "false")
 		);
 		
 		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
@@ -374,6 +378,8 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
 			$activity->set_contact_person_2_address($this->unmarshal($this->db->f('contact_person_2_address'), 'string'));
 			$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
+			$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
+			$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
 			
 			if($activity->get_group_id() && $activity->get_group_id() > 0)
 			{

@@ -187,7 +187,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 	function get_buildings()
 	{
 		$buildings = array();
-    	$q_buildings="SELECT id, name FROM bb_building WHERE active=1 ORDER BY id";
+    	$q_buildings="SELECT id, name FROM bb_building WHERE active=1 ORDER BY name ASC";
     	//var_dump($q_buildings);
 		$this->db->query($q_buildings, __LINE__, __FILE__);
 		while($this->db->next_record()){

@@ -82,8 +82,8 @@
 			$offices = $so_activity->select_district_list();
 			$districts = $so_activity->get_districts();
 			$buildings = $so_arena->get_buildings();
-			$arenas = $so_arena->get(null, null, null, null, null, null, null);
-			$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
+			$arenas = $so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
+			$organizations = activitycalendar_soorganization::get_instance()->get(null, null, 'org.name', true, null, null, null);
 			$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 			
 			// Retrieve the activity object or create a new one
@@ -123,6 +123,7 @@
 			{
 				if($o_id == "new_org")
 				{
+					$activity->set_new_org(true);
 					//add new organization to internal activitycalendar organization register
 					$org_info['name'] = phpgw::get_var('orgname');
 					$org_info['orgnr'] = phpgw::get_var('orgno');
@@ -156,6 +157,60 @@
 					$persons = activitycalendar_soorganization::get_instance()->get_contacts_local($o_id);
 					$desc = phpgw::get_var('org_description');
 
+				}
+				else if($o_id == "change_org")
+				{
+					$change_org_id = phpgw::get_var('change_organization_id');
+					$organization = activitycalendar_soorganization::get_instance()->get_single($change_org_id);
+				
+					$org_info['name'] = $organization->get_name();
+					$org_info['orgnr'] = $organization->get_organization_number();
+					$org_info['homepage'] = $organization->get_homepage();
+					$org_info['phone'] = $organization->get_phone();
+					$org_info['email'] = $organization->get_email();
+					$org_info['description'] = $organization->get_description();
+					$org_info['street'] = $organization->get_address();
+					$org_info['district'] = $organization->get_district(); 
+					$org_info['status'] = "change";
+					$o_id = $so_activity->add_organization_local($org_info);
+					
+					//add contact persons
+					$contact1 = array();
+					$contact1['name'] = phpgw::get_var('contact1_name');
+					$contact1['phone'] = phpgw::get_var('contact1_phone');
+					$contact1['mail'] = phpgw::get_var('contact1_email');
+					$contact1['org_id'] = $o_id;
+					$contact1['group_id'] = 0;
+					$so_activity->add_contact_person_local($contact1);
+					
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('contact2_name');
+					$contact2['phone'] = phpgw::get_var('contact2_phone');
+					$contact2['mail'] = phpgw::get_var('contact2_email');
+					$contact2['org_id'] = $o_id;
+					$contact2['group_id'] = 0;
+					$so_activity->add_contact_person_local($contact2);
+					
+					$message = lang('change_request_ok', $organization->get_name());
+					
+					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+					$this->render('activity.php', array
+						(
+							'activity' 	=> $activity,
+							'organizations' => $organizations,
+							'groups' => $groups,
+							'arenas' => $arenas,
+							'buildings' => $buildings,
+							'categories' => $categories,
+							'targets' => $targets,
+							'districts' => $districts,
+							'offices' => $offices,
+							'editable' => true,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)
+			);
 				}
 				else if(is_numeric($o_id) && $o_id > 0)
 				{
@@ -210,6 +265,7 @@
 					$activity->set_organization_id($o_id);
 					$activity->set_group_id($g_id);
 					$activity->set_arena(phpgw::get_var('arena_id'));
+					$activity->set_internal_arena(phpgw::get_var('internal_arena_id'));
 					$district_array = phpgw::get_var('district');
 					$activity->set_district(implode(",", $district_array));
 					$activity->set_office(phpgw::get_var('office'));
@@ -230,6 +286,7 @@
 					$activity->set_time(phpgw::get_var('time'));
 					$activity->set_contact_persons($persons);
 					$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
+					$activity->set_frontend(true);
 					
 //					var_dump("storing"); 
 					
