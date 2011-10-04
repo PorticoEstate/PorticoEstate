@@ -160,14 +160,17 @@
 				}
 				else if($o_id == "change_org")
 				{
-					$org_info['name'] = phpgw::get_var('orgname');
-					$org_info['orgnr'] = phpgw::get_var('orgno');
-					$org_info['homepage'] = phpgw::get_var('homepage');
-					$org_info['phone'] = phpgw::get_var('phone');
-					$org_info['email'] = phpgw::get_var('email');
-					$org_info['description'] = phpgw::get_var('org_description');
-					$org_info['street'] = phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
-					$org_info['district'] = phpgw::get_var('org_district'); 
+					$change_org_id = phpgw::get_var('change_organization_id');
+					$organization = activitycalendar_soorganization::get_instance()->get_single($change_org_id);
+				
+					$org_info['name'] = $organization->get_name();
+					$org_info['orgnr'] = $organization->get_organization_number();
+					$org_info['homepage'] = $organization->get_homepage();
+					$org_info['phone'] = $organization->get_phone();
+					$org_info['email'] = $organization->get_email();
+					$org_info['description'] = $organization->get_description();
+					$org_info['street'] = $organization->get_address();
+					$org_info['district'] = $organization->get_district(); 
 					$org_info['status'] = "change";
 					$o_id = $so_activity->add_organization_local($org_info);
 					
@@ -188,7 +191,7 @@
 					$contact2['group_id'] = 0;
 					$so_activity->add_contact_person_local($contact2);
 					
-					$message = lang('change_request_ok');
+					$message = lang('change_request_ok', $organization->get_name());
 					
 					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
