@@ -264,11 +264,10 @@ YAHOO.util.Event.addListener(
 		'click',
 		function(){		
 			
-			var org_enhet_id = null;
-			org_enhet_id = document.getElementById('org_enhet_id').value;
+			var org_enhet_id = document.getElementById('org_enhet_id').value;
 			
 			// User must select an org unit from option list
-			if( org_enhet_id == null){
+			if( org_enhet_id > 0){
 				document.getElementById('unit_errorMsg').style.display = 'none';
 				
 				YAHOO.util.Connect.asyncRequest (
