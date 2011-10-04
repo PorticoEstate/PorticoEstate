@@ -55,7 +55,7 @@ title	activitycalendarfrontend	no	Tittel
 activity_helptext	activitycalendarfrontend	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.
 building	activitycalendarfrontend	no	Kommunale bygg
 title_helptext	activitycalendarfrontend	no	Skriv inn tittel på aktiviteten slik du vil den skal vises i kommuneportalen
-org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til. <br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under.
+org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til. <br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under. <br/> For å sende inn forespørsel om å endre en organisasjon, velg "Endre organisasjon" og velg den aktuelle organisasjonen fra listen som vises. <br/>Deretter klikker du på "Lagre" for å sende inn endringsønsket. 
 group_helptext	activitycalendarfrontend	no	Velg gruppe/lag aktiviteten skal knyttes til. <br/>Dersom gruppen/laget ikke finnes, velg "Ny gruppe" og fyll ut feltene som vises under.
 int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.

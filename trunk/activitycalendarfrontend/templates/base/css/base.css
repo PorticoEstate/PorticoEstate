@@ -19,7 +19,10 @@ dl.form-col {
     float: left;
     text-align: left;
 }
-	
+
+#frontend dl.proplist-col {
+    width: 600px; !important
+}
 
 table#header {
 	margin: 2em;
