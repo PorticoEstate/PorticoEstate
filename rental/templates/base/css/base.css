@@ -178,6 +178,7 @@ div.identifier-header label {
 
 .form-buttons {
     clear: both;
+    margin: 0 0 25px 25px;
     padding-top: 2em;
 }
 .form-buttons button {
@@ -464,4 +465,5 @@ th.yui-dt-sortable div{
 #unit_errorMsg{
 	display:none;
 	color:red;	
+	margin-bottom: 10px;
 }
