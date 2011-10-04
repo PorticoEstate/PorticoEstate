@@ -33,8 +33,12 @@
 							<option value="<?php echo $d['part_of_town_id']?>" <?php echo ($curr_district == $d['part_of_town_id'])? 'selected' : '' ?>><?php echo $d['name']?></option>
 						<?php }?>
 					</select>
-				<?php }else{?>
-					<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
+				<?php }else{
+						if($organization->get_change_type() == 'new'){?>
+							<?php echo activitycalendar_soactivity::get_instance()->get_district_from_id($organization->get_district());?>
+					<?php }else{?>
+							<?php echo $organization->get_district();?>
+					<?php }?>
 				<?php }?>
 				</dd>
 				<dt><label for="homepage">Hjemmeside</label></dt>
