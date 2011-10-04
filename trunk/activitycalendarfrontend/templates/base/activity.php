@@ -18,16 +18,23 @@ function get_available_groups()
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
 <?php }?>
 
-	if(org_id != null && (org_id == 'new_org' || org_id == 'change_org'))
+	if(org_id != null && org_id == 'new_org')
 	{
 		//alert('new_org');
 		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "block";
 	}
+	else if(org_id != null && org_id == 'change_org')
+	{
+		document.getElementById('new_org').style.display = "block";
+		document.getElementById('new_org_fields').style.display = "none";
+		document.getElementById('change_org_fields').style.display = "block";
+	}
 	else
 	{
 		document.getElementById('new_org').style.display = "none";
 		document.getElementById('new_org_fields').style.display = "none";
+		document.getElementById('change_org_fields').style.display = "none";
 		var divcontent_start = "<select name=\"group_id\" id=\"group_id\" onchange=\"javascript:checkNewGroup()\">";
 		var divcontent_end = "</select>";
 		
@@ -183,6 +190,17 @@ var divcontent_end = "</select>";
 				</dd>
 				<div id="new_org" style="display: none;">
 					<hr/>
+					<div id="change_org_fields" style="display: none;">
+						<select name="change_organization_id" id="change_organization_id" >
+							<option value="">Ingen organisasjon valgt</option>
+							<?php
+							foreach($organizations as $organization)
+							{
+								echo "<option ".($current_organization_id == $organization->get_id() ? 'selected="selected"' : "")." value=\"{$organization->get_id()}\">".$organization->get_name()."</option>";
+							}
+							?>
+						</select>
+					</div>
 					<div id="new_org_fields" style="display: none;">
 						<label for="orgname">Organisasjonsnavn</label>
 						<input type="text" name="orgname"/><br/>
