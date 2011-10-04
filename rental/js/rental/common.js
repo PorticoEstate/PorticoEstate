@@ -264,13 +264,14 @@ YAHOO.util.Event.addListener(
 		'click',
 		function(){		
 			
-			var org_enhet_id = document.getElementById('org_enhet_id').value;
+			var org_enhet_id = null;
+			org_enhet_id = document.getElementById('org_enhet_id').value;
 			
-			// User must select an org unit from option list 
-			if( org_enhet_id > 0){			
-			 YAHOO.util.Connect.asyncRequest (
+			// User must select an org unit from option list
+			if( org_enhet_id == null){			
+				YAHOO.util.Connect.asyncRequest (
 		                'POST',
-		                "http://portico/pe/index.php?menuaction=rental.uiparty.get_synchronize_party_info&phpgw_return_as=json&org_enhet_id=" + org_enhet_id,
+		                "index.php?menuaction=rental.uiparty.get_synchronize_party_info&phpgw_return_as=json&org_enhet_id=" + org_enhet_id,
 		                {
 		                	success: syncInfo,
 		                	failure: function (o) {
