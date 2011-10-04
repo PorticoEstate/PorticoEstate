@@ -258,6 +258,7 @@ var showIfNotEmpty = function(event, fieldname) {
     }
 }
 
+// Syncronizes data with Fellesdata
 YAHOO.util.Event.addListener(
 		'fetchSyncData',
 		'click',
@@ -265,6 +266,8 @@ YAHOO.util.Event.addListener(
 			
 			var org_enhet_id = document.getElementById('org_enhet_id').value;
 			
+			// User must select an org unit from option list 
+			if( org_enhet_id > 0){			
 			 YAHOO.util.Connect.asyncRequest (
 		                'POST',
 		                "http://portico/pe/index.php?menuaction=rental.uiparty.get_synchronize_party_info&phpgw_return_as=json&org_enhet_id=" + org_enhet_id,
@@ -276,6 +279,9 @@ YAHOO.util.Event.addListener(
 		                	}
 		                }
 		          	);
+			}else{
+				document.getElementById('unit_errorMsg').style.visibility = 'visible'; 
+			}
 		}
 );
 
