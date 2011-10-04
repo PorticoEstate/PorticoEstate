@@ -23,6 +23,8 @@
 				'special_adaptation' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 				'contact_person_2_address' => array('type' => 'varchar','precision' => '255'),
 				'contact_person_2_zip' => array('type' => 'varchar','precision' => '255'),
+				'frontend' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'new_org' => array('type' => 'bool','nullable' => true,'default' => 'false')
 			),
 			'pk' => array('id'),
 			'fk' => array(),
