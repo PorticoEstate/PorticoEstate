@@ -75,17 +75,24 @@ YAHOO.util.Event.onDOMReady(function()
 					$current_organization_id = $activity->get_organization_id();
 					if ($editable)
 					{
+						if($activity->get_new_org())
+						{
+							echo $org_name;
+						}
+						else
+						{
 						?>
 						<select name="organization_id" id="organization_id" onchange="javascript:get_available_groups();">
 							<option value="">Ingen organisasjon valgt</option>
 							<?php
-							foreach($organizations as $organization)
-							{
-								echo "<option ".($current_organization_id == $organization->get_id() ? 'selected="selected"' : "")." value=\"{$organization->get_id()}\">".$organization->get_name()."</option>";
-							}
-							?>
+								foreach($organizations as $organization)
+								{
+									echo "<option ".($current_organization_id == $organization->get_id() ? 'selected="selected"' : "")." value=\"{$organization->get_id()}\">".$organization->get_name()."</option>";
+								}
+								?>
 						</select>
 						<?php
+						}
 					?>
 					<?php
 					}

@@ -82,8 +82,8 @@
 			$offices = $so_activity->select_district_list();
 			$districts = $so_activity->get_districts();
 			$buildings = $so_arena->get_buildings();
-			$arenas = $so_arena->get(null, null, null, null, null, null, null);
-			$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
+			$arenas = $so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
+			$organizations = activitycalendar_soorganization::get_instance()->get(null, null, 'org.name', true, null, null, null);
 			$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 			
 			// Retrieve the activity object or create a new one
@@ -123,6 +123,7 @@
 			{
 				if($o_id == "new_org")
 				{
+					$activity->set_new_org(true);
 					//add new organization to internal activitycalendar organization register
 					$org_info['name'] = phpgw::get_var('orgname');
 					$org_info['orgnr'] = phpgw::get_var('orgno');
@@ -210,6 +211,7 @@
 					$activity->set_organization_id($o_id);
 					$activity->set_group_id($g_id);
 					$activity->set_arena(phpgw::get_var('arena_id'));
+					$activity->set_internal_arena(phpgw::get_var('internal_arena_id'));
 					$district_array = phpgw::get_var('district');
 					$activity->set_district(implode(",", $district_array));
 					$activity->set_office(phpgw::get_var('office'));
@@ -230,6 +232,7 @@
 					$activity->set_time(phpgw::get_var('time'));
 					$activity->set_contact_persons($persons);
 					$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
+					$activity->set_frontend(true);
 					
 //					var_dump("storing"); 
 					

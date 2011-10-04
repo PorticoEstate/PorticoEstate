@@ -1,6 +1,6 @@
 <?php
 	$setup_info['activitycalendar']['name'] = 'activitycalendar';
-	$setup_info['activitycalendar']['version'] = '0.1.5';
+	$setup_info['activitycalendar']['version'] = '0.1.7';
 	$setup_info['activitycalendar']['app_order'] = 60;
 	$setup_info['activitycalendar']['enable'] = 1;
 	$setup_info['activitycalendar']['app_group']	= 'office';

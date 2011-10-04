@@ -31,7 +31,7 @@
 	
 	$setup_info['activitycalendarfrontend']['depends'][] = array(
 		'appname' => 'activitycalendar',
-		'versions' => Array('0.1.3','0.1.4','0.1.5')
+		'versions' => Array('0.1.3','0.1.4','0.1.5','0.1.6','0.1.7')
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
