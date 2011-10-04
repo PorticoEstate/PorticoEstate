@@ -262,7 +262,7 @@ var showIfNotEmpty = function(event, fieldname) {
 YAHOO.util.Event.addListener(
 		'fetchSyncData',
 		'click',
-		function(){		
+		function(){
 			
 			var org_enhet_id = document.getElementById('org_enhet_id').value;
 			
@@ -277,8 +277,7 @@ YAHOO.util.Event.addListener(
 		                	success: syncInfo,
 		                	failure: function (o) {
 		                	 	YAHOO.log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-             	 				YAHOO.log( "<br><br>" );
-		                	}
+             	 	         	}
 		                }
 		          	);
 			}else{
@@ -287,6 +286,7 @@ YAHOO.util.Event.addListener(
 		}
 );
 
+// Displays sync data in text fields
 function syncInfo(o)
 {
 	var syncInfo = YAHOO.lang.JSON.parse(o.responseText);
