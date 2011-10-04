@@ -251,6 +251,7 @@ gab	rental	no	GAB
 gab_id	rental	no	GAB
 Generate export	rental	no	Generér eksport
 Generate cs15	rental	no	Generér kundefil
+get_sync_data	rental	no	Hent data fra Fellesdata
 half-year	rental	no	Halvårig
 hidden	rental	no	Skjult
 hidden_for_pick	rental	no	skjult

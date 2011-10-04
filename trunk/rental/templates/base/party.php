@@ -443,7 +443,7 @@
 						}
 							
 						if ($use_fellesdata) {
-							echo '<input type="button" id="fetchSyncData" name="synchronize" value="' . lang('get_synchronization_data') . '"/>';
+							echo '<input type="button" id="fetchSyncData" name="synchronize" value="' . lang('get_sync_data') . '"/>';
 						}
 					?>
 				</div>
