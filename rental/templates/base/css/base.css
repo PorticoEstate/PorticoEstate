@@ -460,3 +460,8 @@ p.message {
 th.yui-dt-sortable div{
 	background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
 }
+
+#unit_errorMsg{
+	visibility: hidden;
+	color:red;	
+}
