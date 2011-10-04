@@ -208,6 +208,20 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_org_contact_name_local($id)
+	{
+		$result = "Ingen";
+    	if(isset($id)){
+	    	$q1="SELECT name, phone, email FROM activity_contact_person WHERE id={$id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name') . "<br/>" . $this->db->f('phone') . "<br/>" . $this->db->f('email');
+			}
+    	}
+		return $result;
+	}
+	
+	
 	function get_mailaddress_for_group_contact($contact_person_id)
 	{
 		if($contact_person_id){

@@ -97,6 +97,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$activity_id = (int)phpgw::get_var('id');
 		$so_activity = activitycalendar_soactivity::get_instance();
 		$so_arena = activitycalendar_soarena::get_instance();
+		$so_org = activitycalendar_soorganization::get_instance();
 		//var_dump($activity_id);
 		
 		$categories = $so_activity->get_categories();
@@ -123,11 +124,18 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		}
 		else if(isset($o_id) && $o_id > 0)
 		{
-			$persons = activitycalendar_soorganization::get_instance()->get_contacts($o_id);
-			$desc = activitycalendar_soorganization::get_instance()->get_description($o_id);
+			$persons = $so_org->get_contacts($o_id);
+			$desc = $so_org->get_description($o_id);
 		}
 		$arenas = $so_arena->get(null, null, null, null, null, null, null);
-		$organizations = activitycalendar_soorganization::get_instance()->get(null, null, null, null, null, null, null);
+		if($activity->get_new_org())
+		{
+			$org_name = $so_org->get_organization_name_local($activity->get_organization_id());
+		}
+		else
+		{
+			$organizations = $so_org->get(null, null, null, null, null, null, null);
+		}
 		$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 
 		if(isset($_POST['save_activity'])) // The user has pressed the save button
@@ -197,6 +205,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			(
 				'activity' 	=> $activity,
 				'organizations' => $organizations,
+				'org_name' => $org_name,
 				'groups' => $groups,
 				'arenas' => $arenas,
 				'buildings' => $buildings,
