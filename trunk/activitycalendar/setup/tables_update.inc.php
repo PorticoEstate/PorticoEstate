@@ -137,7 +137,8 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','frontend',array(
 			'type' => 'bool',
-			'default' => 'false'
+			'nullable' => 'false',
+			'nullable' => true
 		));
 		
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.6';
@@ -150,6 +151,7 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','new_org',array(
 			'type' => 'bool',
 			'default' => 'false',
+			'nullable' => true
 		));
 		
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.7';
