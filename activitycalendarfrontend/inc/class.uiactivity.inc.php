@@ -158,6 +158,57 @@
 					$desc = phpgw::get_var('org_description');
 
 				}
+				else if($o_id == "change_org")
+				{
+					$org_info['name'] = phpgw::get_var('orgname');
+					$org_info['orgnr'] = phpgw::get_var('orgno');
+					$org_info['homepage'] = phpgw::get_var('homepage');
+					$org_info['phone'] = phpgw::get_var('phone');
+					$org_info['email'] = phpgw::get_var('email');
+					$org_info['description'] = phpgw::get_var('org_description');
+					$org_info['street'] = phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
+					$org_info['district'] = phpgw::get_var('org_district'); 
+					$org_info['status'] = "change";
+					$o_id = $so_activity->add_organization_local($org_info);
+					
+					//add contact persons
+					$contact1 = array();
+					$contact1['name'] = phpgw::get_var('contact1_name');
+					$contact1['phone'] = phpgw::get_var('contact1_phone');
+					$contact1['mail'] = phpgw::get_var('contact1_email');
+					$contact1['org_id'] = $o_id;
+					$contact1['group_id'] = 0;
+					$so_activity->add_contact_person_local($contact1);
+					
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('contact2_name');
+					$contact2['phone'] = phpgw::get_var('contact2_phone');
+					$contact2['mail'] = phpgw::get_var('contact2_email');
+					$contact2['org_id'] = $o_id;
+					$contact2['group_id'] = 0;
+					$so_activity->add_contact_person_local($contact2);
+					
+					$message = lang('change_request_ok');
+					
+					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+
+					$this->render('activity.php', array
+						(
+							'activity' 	=> $activity,
+							'organizations' => $organizations,
+							'groups' => $groups,
+							'arenas' => $arenas,
+							'buildings' => $buildings,
+							'categories' => $categories,
+							'targets' => $targets,
+							'districts' => $districts,
+							'offices' => $offices,
+							'editable' => true,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)
+			);
+				}
 				else if(is_numeric($o_id) && $o_id > 0)
 				{
 					if(isset($g_id) && $g_id == "new_group")

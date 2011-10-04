@@ -18,7 +18,7 @@ function get_available_groups()
 	url = "index.php?menuaction=activitycalendarfrontend.uiactivity.get_organization_groups&amp;phpgw_return_as=json&amp;orgid=" + org_id;
 <?php }?>
 
-	if(org_id != null && org_id == 'new_org')
+	if(org_id != null && (org_id == 'new_org' || org_id == 'change_org'))
 	{
 		//alert('new_org');
 		document.getElementById('new_org').style.display = "block";
@@ -161,6 +161,7 @@ var divcontent_end = "</select>";
 						<select name="organization_id" id="organization_id" onchange="javascript:get_available_groups();">
 							<option value="">Ingen organisasjon valgt</option>
 							<option value="new_org">Ny organisasjon</option>
+							<option value="change_org">Endre organisasjon</option>
 							<?php
 							foreach($organizations as $organization)
 							{
