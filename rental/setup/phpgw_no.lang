@@ -564,7 +564,7 @@ units	rental	no	Enheter
 unit_id	rental	no	Enhetsid
 unit_name	rental	no	Enhetsnavn
 unit_leader_name	rental	no	Navn enhetsleder
-unit_leader		rental	no	Enhetsleder
+unit_leader	rental	no	Enhetsleder
 unit_no_of_delegates	rental	no	Antall delegater
 update	rental	no	Oppdatér
 upload	rental	no	Last opp
