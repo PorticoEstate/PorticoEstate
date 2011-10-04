@@ -286,7 +286,7 @@
 							</tr>
 							<tr>
 								<td>
-									<xsl:value-of select="lang_category"/>
+									<xsl:value-of select="php:function('lang', 'cost categories')" />
 								</td>
 								<td>
 									<xsl:call-template name="categories"/>

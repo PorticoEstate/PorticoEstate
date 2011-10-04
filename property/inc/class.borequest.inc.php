@@ -160,7 +160,7 @@
 			$this->order			= $data['order'];
 			$this->district_id		= $data['district_id'];
 			$this->cat_id			= $data['cat_id'];
-			$this->property_cat_id = $data['property_cat_id'];
+			$this->property_cat_id 	= $data['property_cat_id'];
 			$this->status_id		= $data['status_id'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
