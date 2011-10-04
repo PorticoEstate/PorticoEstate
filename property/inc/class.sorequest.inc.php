@@ -218,6 +218,7 @@
 
 			$entity_table = 'fm_request';
 
+			$uicols = array();
 			$cols .= "{$entity_table}.location_code";
 			$cols_return[] 				= 'location_code';
 			$cols_group[] 				= "{$entity_table}.location_code";
@@ -225,17 +226,6 @@
 
 			$cols .= ",{$entity_table}.id as request_id";
 			$cols_return[] 				= 'request_id';
-			$uicols['input_type'][]		= 'text';
-			$uicols['name'][]			= 'request_id';
-			$uicols['descr'][]			= lang('Request');
-			$uicols['statustext'][]		= lang('Request ID');
-			$uicols['exchange'][]		= '';
-			$uicols['align'][]			= '';
-			$uicols['datatype'][]		= '';
-			$uicols['formatter'][]		= '';
-			$uicols['classname'][]		= '';
-			$uicols['sortable'][]		= true;
-
 
 			$cols.= ",fm_request_status.descr as status";
 			$cols_return[] 				= 'status';
@@ -410,7 +400,7 @@
 
 
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
-				'uicols'=>$uicols,'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
+				'uicols'=>array(),'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
 				'query'=>$query,'force_location'=>true));
 
 			$cols_group[] = "{$entity_table}.id";
@@ -504,7 +494,28 @@
 
 			$sql .= " $filtermethod $querymethod $groupmethod";
 //_debug_array($sql);
-			$this->uicols		= $this->bocommon->uicols;
+			$this->uicols['input_type']	= array_merge($this->bocommon->uicols['input_type'], $uicols['input_type']);
+			$this->uicols['name']		= array_merge($this->bocommon->uicols['name'], $uicols['name']);
+			$this->uicols['descr']		= array_merge($this->bocommon->uicols['descr'], $uicols['descr']);
+			$this->uicols['statustext']	= array_merge($this->bocommon->uicols['statustext'], $uicols['statustext']);
+			$this->uicols['exchange']	= array_merge($this->bocommon->uicols['exchange'], $uicols['exchange']);
+			$this->uicols['align']		= array_merge($this->bocommon->uicols['align'], $uicols['align']);
+			$this->uicols['datatype']	= array_merge($this->bocommon->uicols['datatype'], $uicols['datatype']);
+			$this->uicols['formatter']	= array_merge($this->bocommon->uicols['formatter'], $uicols['formatter']);
+			$this->uicols['classname']	= array_merge($this->bocommon->uicols['classname'], $uicols['classname']);
+			$this->uicols['sortable']	= array_merge($this->bocommon->uicols['sortable'], $uicols['sortable']);
+
+			array_unshift($this->uicols['input_type'],'text');
+			array_unshift($this->uicols['name'],'request_id');
+			array_unshift($this->uicols['descr'],'ID');
+			array_unshift($this->uicols['statustext'],'Request ID');
+			array_unshift($this->uicols['exchange'],'');
+			array_unshift($this->uicols['align'],'');
+			array_unshift($this->uicols['datatype'],'');
+			array_unshift($this->uicols['formatter'],'');
+			array_unshift($this->uicols['classname'],'');
+			array_unshift($this->uicols['sortable'],true);
+
 			$cols_return		= $this->bocommon->cols_return;
 			$type_id			= $this->bocommon->type_id;
 			$this->cols_extra	= $this->bocommon->cols_extra;

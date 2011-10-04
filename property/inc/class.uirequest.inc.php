@@ -84,7 +84,7 @@
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->filter				= $this->bo->filter;
-			$this->property_cat_id		= $this->property_cat_id;
+			$this->property_cat_id		= $this->bo->property_cat_id;
 			$this->cat_id				= $this->bo->cat_id;
 			$this->status_id			= $this->bo->status_id;
 			$this->district_id			= $this->bo->district_id;
@@ -98,20 +98,20 @@
 		function save_sessiondata()
 		{
 			$data = array
-				(
-					'start'			=> $this->start,
-					'query'			=> $this->query,
-					'sort'			=> $this->sort,
-					'order'			=> $this->order,
-					'filter'		=> $this->filter,
-					'cat_id'		=> $this->cat_id,
-					'status_id'		=> $this->status_id,
-					'district_id'	=> $this->district_id,
-					'allrows'		=> $this->allrows,
-					'start_date'	=> $this->start_date,
-					'end_date'		=> $this->end_date,
-					'property_cat_id'	=> $this->property_cat_id,
-				);
+			(
+				'start'				=> $this->start,
+				'query'				=> $this->query,
+				'sort'				=> $this->sort,
+				'order'				=> $this->order,
+				'filter'			=> $this->filter,
+				'cat_id'			=> $this->cat_id,
+				'status_id'			=> $this->status_id,
+				'district_id'		=> $this->district_id,
+				'allrows'			=> $this->allrows,
+				'start_date'		=> $this->start_date,
+				'end_date'			=> $this->end_date,
+				'property_cat_id'	=> $this->property_cat_id,
+			);
 			$this->bo->save_sessiondata($data);
 		}
 
@@ -228,7 +228,7 @@
 						'end_date' 	=> $this->end_date
 
 					));
-				$datatable['config']['allow_allrows'] = true;
+				$datatable['config']['allow_allrows'] = false;
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uirequest.index',"
 					."p_num: '{$this->p_num}',"
@@ -742,7 +742,7 @@
 			$appname					= lang('request');
 			$function_msg				= lang('list request');
 
-			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			if ( !$this->start && !$this->order)
 			{
 				$datatable['sorting']['currentPage']	= 1;
 				$datatable['sorting']['order']	= 'request_id'; // name key Column in myColumnDef
@@ -751,10 +751,9 @@
 			else
 			{
 				$datatable['sorting']['currentPage']	= phpgw::get_var('currentPage');
-				$datatable['sorting']['order']  = phpgw::get_var('order', 'string'); // name of column of Database
-				$datatable['sorting']['sort']	= phpgw::get_var('sort', 'string'); // ASC / DESC
+				$datatable['sorting']['order']  = $this->order; // name of column of Database
+				$datatable['sorting']['sort']	= $this->sort; // ASC / DESC
 			}
-
 
 			//-- BEGIN----------------------------- JSON CODE ------------------------------
 
@@ -1522,7 +1521,6 @@
 					'location_type'						=> 'form',
 					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uirequest.index')),
-					'lang_category'						=> lang('category'),
 					'lang_save'							=> lang('save'),
 					'lang_done'							=> lang('done'),
 
