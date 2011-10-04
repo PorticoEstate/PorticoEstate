@@ -116,7 +116,7 @@ var divcontent_end = "</select>";
 
 </script>
 
-<div class="yui-content">
+<div class="yui-content" style="width: 100%;">
 	<div id="details">
 	
 	<?php if($message){?>
@@ -132,7 +132,7 @@ var divcontent_end = "</select>";
 		<h1><?php echo lang('activity') ?></h1>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
-			<dl class="proplist-col">
+			<dl class="proplist-col" style="width: 100%;">
 				<dt>
 					<?php if($activity->get_title() || $editable) { ?>
 					<label for="title"><?php echo lang('title') ?></label>
