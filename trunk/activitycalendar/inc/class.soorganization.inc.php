@@ -138,6 +138,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.description';
 				$columns[] = 'org.address';
 				$columns[] = 'org.district';
+				$columns[] = 'org.change_type';
 				$columns[] = 'org.orgno AS organization_number';
 				
 				$cols = implode(',',$columns);
@@ -349,6 +350,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$organization->set_homepage($this->unmarshal($this->db->f('homepage'), 'string'));
 			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
 			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
+			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
 		}
 		return $organization;

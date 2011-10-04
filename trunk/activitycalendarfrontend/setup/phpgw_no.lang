@@ -61,3 +61,4 @@ int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne ste
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
 messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret
 messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring
+change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn
