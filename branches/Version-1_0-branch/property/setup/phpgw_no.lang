@@ -351,7 +351,7 @@ confirm status to the history	property	no	Bekreft status til historikk
 consequence	property	no	Konsekvens
 consequence type	property	no	Konsekvenstype
 consequential damage	property	no	Følgeskader
-consume	property	no	forbruk
+consume	property	no	Forbrukt
 consume date	property	no	Dato historisk forbruk
 consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
@@ -1889,6 +1889,7 @@ internal	common	no	Intern
 in progress date	property	no	Påbegynt dato
 delivered date	property	no	Utført dato
 closed date	property	no	Avsluttet dato
+cost categories	property	no	Kostnadskategori
 no symptoms	property	no	Ingen Symptomer
 minor symptoms	property	no	Svake Symptomer
 medium symptoms	property	no	Middels Symptomer
