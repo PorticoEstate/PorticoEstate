@@ -591,6 +591,10 @@ class rental_uiparty extends rental_uicommon
 		}
 	}
 	
+	/**
+	 * Public method. Called when a user wants to sync data with Fellesdata. 
+	 * Returns a json string with the following fields: email, org_name, unit_leader_fullname and department
+	 */
 	public function get_synchronize_party_info()
 	{
 		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
