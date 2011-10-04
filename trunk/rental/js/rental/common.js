@@ -271,8 +271,8 @@ YAHOO.util.Event.addListener(
 		                {
 		                	success: syncInfo,
 		                	failure: function (o) {
-		                	 	YAHOO.rental.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-             	 				YAHOO.rental.Log( "<br><br>" );
+		                	 	YAHOO.log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
+             	 				YAHOO.log( "<br><br>" );
 		                	}
 		                }
 		          	);
