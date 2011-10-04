@@ -437,6 +437,7 @@
 					</dd>
 					</dl>
 				<div class="form-buttons">
+					<span id="unit_errorMsg">Du må velge organisasjonsenhet før du kan synkronisere</span>
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_party" value="' . lang('save') . '"/>';
