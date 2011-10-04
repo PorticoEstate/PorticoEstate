@@ -131,4 +131,29 @@
 		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.5';
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
+	
+	$test[] = '0.1.5';
+	function activitycalendar_upgrade0_1_5()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','frontend',array(
+			'type' => 'bool',
+			'default' => 'false'
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.6';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
+	
+	$test[] = '0.1.6';
+	function activitycalendar_upgrade0_1_6()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_activity','new_org',array(
+			'type' => 'bool',
+			'default' => 'false',
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.7';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
+	
 ?>

@@ -30,6 +30,8 @@
 		protected $special_adaptation;
 		protected $secret;
 		protected $internal_arena;
+		protected $frontend;
+		protected $new_org;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -213,6 +215,20 @@
 		
 		public function get_internal_arena() { return $this->internal_arena; }
 		
+		public function set_frontend(bool $frontend)
+		{
+			$this->frontend = (bool)$frontend;
+		}
+		
+		public function get_frontend() { return $this->frontend; }
+		
+		public function set_new_org(bool $new_org)
+		{
+			$this->new_org = (bool)$new_org;
+		}
+		
+		public function get_new_org() { return $this->new_org; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -232,9 +248,20 @@
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if(isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
-				$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_1());
-				$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2());
-				$desc = activitycalendar_soorganization::get_instance()->get_description($this->get_organization_id());
+				if($this->get_new_org())
+				{
+					$org_name = activitycalendar_soorganization::get_instance()->get_organization_name_local($this->get_organization_id());
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_1());
+					$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name_local($this->get_contact_person_2());
+					$desc = activitycalendar_soorganization::get_instance()->get_description_local($this->get_organization_id());
+				}
+				else
+				{
+					$org_name = activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id());
+					$contact_1 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_1());
+					$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2());
+					$desc = activitycalendar_soorganization::get_instance()->get_description($this->get_organization_id());
+				}
 			}
 			else if(isset($this->group_id) && $this->get_group_id() > 0)
 			{
@@ -256,10 +283,11 @@
 			{
 				$arena_name = activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena());
 			}
+			
 			return array(
 				'id' => $this->get_id(),
 				'title' => $this->get_title(),
-				'organization_id' => activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id()),
+				'organization_id' => $org_name,
 				'group_id' => activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id()),
 				'district' => activitycalendar_soactivity::get_instance()->get_district_name($this->get_district()),
 				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
@@ -271,7 +299,8 @@
 				'contact_person_1' => $contact_1,
 				'contact_person_2' => $contact_2,
 				'special_adaptation' => $this->get_special_adaptation(),
-				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):''
+				'last_change_date' => $this->get_last_change_date()!=NULL?date($date_format, $this->get_last_change_date()):'',
+				'frontend' => $this->get_frontend()
 			);
 		}
 	}

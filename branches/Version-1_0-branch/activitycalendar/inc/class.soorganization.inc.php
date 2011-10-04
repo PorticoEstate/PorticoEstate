@@ -42,9 +42,18 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		//Add columns to this array to include them in the query
 		$columns = array();
 
-		if($sort_field != null) {
+		if($sort_field != null && !$return_count) {
+			if($sort_field == 'identifier')
+			{
+				$sort_field = 'org.id';
+			}
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = "ORDER BY id $dir";
+			$order = "ORDER BY $sort_field $dir";
+		}
+		else if(!$return_count)
+		{
+			$dir = $ascending ? 'ASC' : 'DESC';
+			$order = "ORDER BY org.id $dir";
 		}
 		if($search_for)
 		{
@@ -129,6 +138,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.description';
 				$columns[] = 'org.address';
 				$columns[] = 'org.district';
+				$columns[] = 'org.change_type';
 				$columns[] = 'org.orgno AS organization_number';
 				
 				$cols = implode(',',$columns);
@@ -192,6 +202,20 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_organization_name_local($org_id)
+	{
+		$result = "Ingen";
+    	if(isset($org_id)){
+	    	$q1="SELECT name FROM activity_organization WHERE id={$org_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('name');
+			}
+    	}
+		
+		return $result;
+	}
+	
 	function get_contacts($organization_id)
 	{
 		$contacts = array();
@@ -234,6 +258,19 @@ class activitycalendar_soorganization extends activitycalendar_socommon
     	}
 		return $desc;
 	}
+	
+	function get_description_local($organization_id)
+	{
+    	if(isset($organization_id)){
+	    	$q1="SELECT description FROM activity_organization WHERE id={$organization_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$desc = $this->db->f('description');
+			}
+    	}
+		return $desc;
+	}
+	
 	
 	function get_district_from_name($name)
 	{
@@ -313,6 +350,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$organization->set_homepage($this->unmarshal($this->db->f('homepage'), 'string'));
 			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
 			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
+			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
 		}
 		return $organization;

@@ -437,13 +437,14 @@
 					</dd>
 					</dl>
 				<div class="form-buttons">
+					<span id="unit_errorMsg">Du må velge organisasjonsenhet før du kan synkronisere</span>
 					<?php
 						if ($editable) {
 							echo '<input type="submit" name="save_party" value="' . lang('save') . '"/>';
 						}
 							
 						if ($use_fellesdata) {
-							echo '<input type="button" id="fetchSyncData" name="synchronize" value="' . lang('get_synchronization_data') . '"/>';
+							echo '<input type="button" id="fetchSyncData" name="synchronize" value="' . lang('get_sync_data') . '"/>';
 						}
 					?>
 				</div>

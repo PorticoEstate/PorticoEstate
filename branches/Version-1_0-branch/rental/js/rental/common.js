@@ -258,27 +258,35 @@ var showIfNotEmpty = function(event, fieldname) {
     }
 }
 
+// Syncronizes data with Fellesdata
 YAHOO.util.Event.addListener(
 		'fetchSyncData',
 		'click',
-		function(){		
+		function(){
 			
 			var org_enhet_id = document.getElementById('org_enhet_id').value;
 			
-			 YAHOO.util.Connect.asyncRequest (
+			// User must select an org unit from option list
+			if( org_enhet_id > 0){
+				document.getElementById('unit_errorMsg').style.display = 'none';
+				
+				YAHOO.util.Connect.asyncRequest (
 		                'POST',
-		                "http://portico/pe/index.php?menuaction=rental.uiparty.get_synchronize_party_info&phpgw_return_as=json&org_enhet_id=" + org_enhet_id,
+		                "index.php?menuaction=rental.uiparty.get_synchronize_party_info&phpgw_return_as=json&org_enhet_id=" + org_enhet_id,
 		                {
 		                	success: syncInfo,
 		                	failure: function (o) {
-		                	 	YAHOO.rental.Log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
-             	 				YAHOO.rental.Log( "<br><br>" );
-		                	}
+		                	 	YAHOO.log( "TID: " + o.tId + ", HTTP Status: " + o.status + ", Message: " + o.StatusText );
+             	 	         	}
 		                }
 		          	);
+			}else{
+				document.getElementById('unit_errorMsg').style.display = 'block'; 
+			}
 		}
 );
 
+// Displays sync data in text fields
 function syncInfo(o)
 {
 	var syncInfo = YAHOO.lang.JSON.parse(o.responseText);

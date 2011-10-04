@@ -24,10 +24,17 @@ function get_available_groups()
 		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "block";
 	}
+	else if(org_id != null && org_id == 'change_org')
+	{
+		document.getElementById('new_org').style.display = "block";
+		document.getElementById('new_org_fields').style.display = "none";
+		document.getElementById('change_org_fields').style.display = "block";
+	}
 	else
 	{
 		document.getElementById('new_org').style.display = "none";
 		document.getElementById('new_org_fields').style.display = "none";
+		document.getElementById('change_org_fields').style.display = "none";
 		var divcontent_start = "<select name=\"group_id\" id=\"group_id\" onchange=\"javascript:checkNewGroup()\">";
 		var divcontent_end = "</select>";
 		
@@ -109,7 +116,7 @@ var divcontent_end = "</select>";
 
 </script>
 
-<div class="yui-content">
+<div class="yui-content" style="width: 100%;">
 	<div id="details">
 	
 	<?php if($message){?>
@@ -125,7 +132,7 @@ var divcontent_end = "</select>";
 		<h1><?php echo lang('activity') ?></h1>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
-			<dl class="proplist-col">
+			<dl class="proplist-col" style="width: 100%;">
 				<dt>
 					<?php if($activity->get_title() || $editable) { ?>
 					<label for="title"><?php echo lang('title') ?></label>
@@ -161,6 +168,7 @@ var divcontent_end = "</select>";
 						<select name="organization_id" id="organization_id" onchange="javascript:get_available_groups();">
 							<option value="">Ingen organisasjon valgt</option>
 							<option value="new_org">Ny organisasjon</option>
+							<option value="change_org">Endre organisasjon</option>
 							<?php
 							foreach($organizations as $organization)
 							{
@@ -182,6 +190,17 @@ var divcontent_end = "</select>";
 				</dd>
 				<div id="new_org" style="display: none;">
 					<hr/>
+					<div id="change_org_fields" style="display: none;">
+						<select name="change_organization_id" id="change_organization_id" >
+							<option value="">Ingen organisasjon valgt</option>
+							<?php
+							foreach($organizations as $organization)
+							{
+								echo "<option ".($current_organization_id == $organization->get_id() ? 'selected="selected"' : "")." value=\"{$organization->get_id()}\">".$organization->get_name()."</option>";
+							}
+							?>
+						</select>
+					</div>
 					<div id="new_org_fields" style="display: none;">
 						<label for="orgname">Organisasjonsnavn</label>
 						<input type="text" name="orgname"/><br/>

@@ -178,6 +178,7 @@ div.identifier-header label {
 
 .form-buttons {
     clear: both;
+    margin: 0 0 25px 25px;
     padding-top: 2em;
 }
 .form-buttons button {
@@ -459,4 +460,10 @@ p.message {
 
 th.yui-dt-sortable div{
 	background: url(../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png) repeat-x scroll 0pt -100px rgb(216, 216, 218);
+}
+
+#unit_errorMsg{
+	display:none;
+	color:red;	
+	margin-bottom: 10px;
 }
