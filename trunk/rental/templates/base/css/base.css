@@ -171,6 +171,10 @@ dl.form-col {
 	width:200px;	
 }
 
+.proplist-col input[type="text"] .postcode{
+	width:50px;	
+}
+
 div.identifier-header {
 	padding-left: 2em;
 	margin-bottom: 1em;	
