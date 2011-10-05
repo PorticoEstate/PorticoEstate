@@ -167,6 +167,10 @@ dl.form-col {
     float: left;
 }
 
+.proplist-col input[type="text"]{
+	width:200px;	
+}
+
 div.identifier-header {
 	padding-left: 2em;
 	margin-bottom: 1em;	
