@@ -160,7 +160,7 @@
 						?>
 							<input type="text" name="address1" id="address1" value="<?php echo $party->get_address_1() ?>" />
 							<br/>
-							<input type="text" name="address2" id="address2" value="<?php echo $party->get_address_2() ?>" />
+							<input type="text" name="address2" id="address2" class="address_2" value="<?php echo $party->get_address_2() ?>" />
 						<?php
 						}
 						else
