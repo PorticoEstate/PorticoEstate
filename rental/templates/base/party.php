@@ -398,25 +398,6 @@
 				</dl>
 		        <dl class="proplist-col">
 					<dt>
-						<?php if($party->get_comment() || $editable) { ?>
-						<label for="comment"><?php echo lang('comment') ?></label>
-						<?php } ?>
-					</dt>
-					<dd>
-						<?php
-						if ($editable)
-						{
-		                    ?>
-		                    <textarea cols="40" rows="7" name="comment" id="comment"><?php echo $party->get_comment(); ?></textarea>
-		                    <?php
-						}
-						else
-						{
-							echo $party->get_comment();
-						}
-						?>
-					</dd>
-					<dt>
 						<?php if($party->get_unit_leader() || $editable) { ?>
 						<label for="unit_leader"><?php echo lang('unit_leader') ?></label>
 						<?php  } ?>
@@ -435,7 +416,26 @@
 						}
 						?>
 					</dd>
-					</dl>
+					<dt>
+						<?php if($party->get_comment() || $editable) { ?>
+						<label for="comment"><?php echo lang('comment') ?></label>
+						<?php } ?>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+		                    ?>
+		                    <textarea cols="40" rows="7" name="comment" id="comment"><?php echo $party->get_comment(); ?></textarea>
+		                    <?php
+						}
+						else
+						{
+							echo $party->get_comment();
+						}
+						?>
+					</dd>
+				</dl>
 				<div class="form-buttons">
 					<span id="unit_errorMsg">Du må velge organisasjonsenhet før du kan synkronisere</span>
 					<?php
