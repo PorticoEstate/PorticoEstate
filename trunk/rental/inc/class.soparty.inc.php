@@ -324,7 +324,7 @@ class rental_soparty extends rental_socommon
 			'is_inactive = '    . $this->marshal(($party->is_inactive() ? 'true' : 'false'), 'bool'),
 			'comment = '        . $this->marshal($party->get_comment(), 'string'),
 			'org_enhet_id = '	. $this->marshal($party->get_org_enhet_id(), 'int'),
-			'org_unit_leader = '	. $this->marshal($party->get_org_unit_leader(), 'string'),
+			'unit_leader = '	. $this->marshal($party->get_unit_leader(), 'string'),
 			'location_id = '	. $location_id,
 			'result_unit_number = ' . $result_unit_number
 		);
