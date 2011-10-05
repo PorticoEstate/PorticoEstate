@@ -4,7 +4,6 @@ phpgw::import_class('rental.soparty');
 phpgw::import_class('rental.socontract');
 phpgw::import_class('rental.sodocument');
 phpgw::import_class('rental.bofellesdata');
-phpgw::import_class('rental.bofellesdata_lokal');
 include_class('rental', 'party', 'inc/model/');
 include_class('rental', 'unit', 'inc/model/');
 include_class('rental', 'location_hierarchy', 'inc/locations/');
@@ -612,7 +611,7 @@ class rental_uiparty extends rental_uicommon
 					return;
 				}
 				
-				$bofelles = rental_bofellesdata_lokal::get_instance();
+				$bofelles = rental_bofellesdata::get_instance();
 				
 				$org_unit_with_leader = $bofelles->get_result_unit_with_leader($org_unit_id);
 				$org_department = $bofelles->get_department_for_org_unit($org_unit_id);
