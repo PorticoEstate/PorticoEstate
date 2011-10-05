@@ -46,6 +46,10 @@ fieldset {
 	margin-top: 0.5em;	
 }
 
+input[type="submit"], input[type="button"]{
+	padding:2px 4px;	
+}
+
 legend {
 	font-weight: bolder;
 	margin-bottom: 0.2em;	
