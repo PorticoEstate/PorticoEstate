@@ -171,7 +171,7 @@ dl.form-col {
 	width:200px;	
 }
 
-.proplist-col input[type="text"] .postcode{
+.proplist-col input[type="text"].postcode{
 	width:50px;	
 }
 
