@@ -167,23 +167,23 @@ dl.form-col {
     float: left;
 }
 
-.proplist-col input[type="text"]{
+dl.proplist-col input[type="text"]{
 	width:200px;	
 }
 
-.proplist-col input[type="submit"], .proplist-col input[type="button"]{
+dl.proplist-col input[type="submit"]{
 	padding: 2px 4px;	
 }
 
-.proplist-col input.postcode{
+dl.proplist-col input.postcode{
 	width:50px;	
 }
 
-.proplist-col input.medium_number{
+dl.proplist-col input.medium_number{
 	width:100px;	
 }
 
-.proplist-col input.address_2{
+dl.proplist-col input.address_2{
 	margin-top:4px;	
 }
 
