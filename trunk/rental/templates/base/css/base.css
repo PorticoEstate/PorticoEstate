@@ -171,8 +171,12 @@ dl.form-col {
 	width:200px;	
 }
 
-.proplist-col input[type="text"].postcode{
+.proplist-col input.postcode{
 	width:50px;	
+}
+
+.proplist-col input.phone{
+	width:100px;	
 }
 
 div.identifier-header {
