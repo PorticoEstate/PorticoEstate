@@ -207,7 +207,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="phone" id="phone" value="<?php echo $party->get_phone() ?>" />
+							<input type="text" name="phone" id="phone" class="phone" value="<?php echo $party->get_phone() ?>" />
 						<?php
 						}
 						else
@@ -226,7 +226,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="mobile_phone" id="mobile_phone" value="<?php echo $party->get_mobile_phone() ?>" />
+							<input type="text" name="mobile_phone" id="mobile_phone" class="phone" value="<?php echo $party->get_mobile_phone() ?>" />
 						<?php
 						}
 						else
@@ -245,7 +245,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="fax" id="fax" value="<?php echo $party->get_fax() ?>" />
+							<input type="text" name="fax" id="fax" class="phone" value="<?php echo $party->get_fax() ?>" />
 						<?php
 						}
 						else
