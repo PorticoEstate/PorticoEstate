@@ -165,12 +165,24 @@ phpgw::import_class('booking.sopermission');
 							'formatter' => 'YAHOO.booking.formatGenericLink()',
 						),
 						array(
+							'key' => 'event_id',
+							'label' => lang('Event id'),
+						),
+						array(
+							'key' => 'event_description',
+							'label' => lang('Description'),
+						),
+						array(
 							'key' => 'building_name',
 							'label' => lang('Building'),
 						),
 						array(
 							'key' => 'organization_name',
 							'label' => lang('Organization'),
+						),
+						array(
+							'key' => 'contact_name',
+							'label' => lang('Contact'),
 						),
 						array(
 							'key' => 'customer_type',
@@ -308,7 +320,46 @@ phpgw::import_class('booking.sopermission');
 				if (empty($reservation['invoice_file_order_id'])) {
 					$reservation['invoice_file_order_id'] = lang("Not Generated");
 				}
-				
+
+				$this->db = & $GLOBALS['phpgw']->db;
+
+				if ($reservation['reservation_type']['label'] == 'Arrangement') {
+					$sql = "select description,contact_name from bb_event where id=".$reservation['reservation_id'];
+					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+					$this->db->next_record();
+					$reservation['event_id'] = $reservation['reservation_id'];
+					$reservation['event_description'] = $this->db->f('description', false);
+					$reservation['contact_name'] = $this->db->f('contact_name', false);
+
+				} elseif ($reservation['reservation_type']['label'] == 'Booking') {
+					$sql = "select  application_id from bb_booking where id=".$reservation['reservation_id'];
+					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+					$this->db->next_record();
+					if (!$this->db->f('application_id', false)) {
+						$reservation['contact_name'] = '';
+					 } else {
+						$sql = "select  contact_name from bb_application where id=".$this->db->f('application_id', false);
+						$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+						$this->db->next_record();
+						$reservation['contact_name'] = $this->db->f('contact_name', false);
+					}
+					$reservation['event_id'] = '';
+					$reservation['event_description'] = '';
+				} else {
+					$sql = "select  application_id from bb_allocation where id=".$reservation['reservation_id'];
+					$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+					$this->db->next_record();
+					if (!$this->db->f('application_id', false)) {
+						$reservation['contact_name'] = '';
+					 } else {
+						$sql = "select  contact_name from bb_application where id=".$this->db->f('application_id', false);
+						$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+						$this->db->next_record();
+						$reservation['contact_name'] = $this->db->f('contact_name', false);
+					}
+					$reservation['event_id'] = '';
+					$reservation['event_description'] = '';
+				}
 				$reservation['from_'] = substr($reservation['from_'], 0, -3);
 				$reservation['to_'] = substr($reservation['to_'], 0, -3);
 				$reservation['from_'] = pretty_timestamp($reservation['from_']);
