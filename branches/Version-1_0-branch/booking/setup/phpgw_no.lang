@@ -162,7 +162,7 @@ picture	booking	no	Bilde
 planning	booking	no	Planlegging
 prev	booking	no	Forrige
 preview	booking	no	Forhåndsvisning
-previous week	booking	no	Forige uke
+previous week	booking	no	Forrige uke
 price list	booking	no	Prisliste
 primary admin	booking	no	Kontaktperson 1
 primary contact	booking	no	Kontaktperson 1
@@ -418,7 +418,7 @@ new target audience	booking	no	Ny målgruppe
 Information about the event	booking	no	Informasjon om arrangementet
 Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	booking	no	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
 To borrow premises you must verify that you have read terms and conditions	booking	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
-In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
+In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr. Organisasjonsnr. finner du her: www.brreg.no
 Event type	booking	no	Arrangementstype
 Private event	booking	no	Privat arrangement
 Public event	booking	no	Offentlig arrangement
@@ -519,3 +519,4 @@ Backend	booking	no	Backend
 Documentation	booking	no	Dokumentasjon
 Upload manual	booking	no	Last opp dokumentasjon
 Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
+Event id	booking	no	Arrangement id

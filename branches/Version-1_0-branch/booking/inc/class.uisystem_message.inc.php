@@ -8,11 +8,9 @@
 			'index'			=>	true,
 			'show'			=>	true,
 			'edit'			=>	true,
-			'toggle_show_all_dashboard_messages' => true,
 			'toggle_show_inactive'	=>	true,
 		);
 
-		const SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY = "show_all_dashboard_messages";
 
         protected $module;
 		public function __construct()
@@ -25,21 +23,6 @@
             $this->module = 'booking';
 		}
 
-		public function toggle_show_all_dashboard_messages()
-		{
-			if($this->show_all_dashboard_messages())
-			{
-				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
-			} else {
-				$_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY] = true;
-			}
-			$this->redirect(array('menuaction' => $this->url_prefix.'.index'));
-		}
-		
-		public function show_all_dashboard_messages() {
-			return array_key_exists(self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY, $_SESSION);
-		}
-		
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -54,42 +37,42 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-#							array('type' => 'filter', 
-#								'name' => 'status',
-#                                'text' => lang('Status').':',
-#                                'list' => array(
-#                                    array(
-#                                        'id' => 'not',
-#                                        'name' => lang('Not selected')
-#                                    ), 
-#                                    array(
-#                                        'id' => 'NEW',
-#                                        'name' => lang('NEW')
-#                                    ), 
-#                                    array(
-#                                        'id' => 'CLOSED',
-#                                        'name' => lang('CLOSED')
-#                                    )
-#                                )
-#                            ),
-#							array('type' => 'filter', 
-#								'name' => 'type',
-#                                'text' => lang('Type').':',
-#                                'list' => array(
-#                                    array(
-#                                        'id' => 'not',
-#                                        'name' => lang('Not selected')
-#                                    ), 
-#                                    array(
-#                                        'id' => 'message',
-#                                        'name' => lang('Message')
-#                                    ), 
-#                                    array(
-#                                        'id' => 'cancelation',
-#                                        'name' => lang('Cancelation')
-#                                    ), 
-#                                )
-#                            ),
+							array('type' => 'filter', 
+								'name' => 'status',
+                                'text' => lang('Status').':',
+                                'list' => array(
+                                    array(
+                                        'id' => '',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
+                                        'id' => 'NEW',
+                                        'name' => lang('NEW')
+                                    ), 
+                                    array(
+                                        'id' => 'CLOSED',
+                                        'name' => lang('CLOSED')
+                                    )
+                                )
+                            ),
+							array('type' => 'filter', 
+								'name' => 'type',
+                                'text' => lang('Type').':',
+                                'list' => array(
+                                    array(
+                                        'id' => '',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
+                                        'id' => 'message',
+                                        'name' => lang('Message')
+                                    ), 
+                                    array(
+                                        'id' => 'cancelation',
+                                        'name' => lang('Cancelation')
+                                    ), 
+                                )
+                            ),
 							array('type' => 'autocomplete', 
 								'name' => 'building',
 								'ui' => 'building',
@@ -105,13 +88,8 @@
 							),
 							array(
 								'type' => 'link',
-								'value' => lang('Show applications') ,
-								'href' => self::link(array('menuaction' => 'booking.uidashboard.index'))
-							),
-							array(
-								'type' => 'link',
-								'value' => $this->show_all_dashboard_messages() ? lang('Show only messages assigned to me') : lang('Show all messages'),
-								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_all_dashboard_messages'))
+								'value' => $_SESSION['showall'] ? lang('Show only messages assigned to me') : lang('Show all messages'),
+								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
 							),
 						)
 					),
@@ -168,18 +146,45 @@
 
 		public function index_json()
 		{
-			$this->db = $GLOBALS['phpgw']->db;
+			$this->db = & $GLOBALS['phpgw']->db;
 
-			if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) &&
-			     !$this->bo->has_role(booking_sopermission::ROLE_MANAGER) )
-			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id']);
+			$current_user = $this->current_account_id();
+			$current_user_building_data = array();
+			$sql = "select object_id from bb_permission where subject_id=".$current_user." and role='case_officer';";
+			$this->db->query($sql);
+			while ($record = array_shift($this->db->resultSet)) {
+				$current_user_building_data[] = $record['object_id'];
 			}
-			$filters['status'] = 'NEW';
+			$filters['building_id'] = $current_user_building_data;
+
 			if(isset($_SESSION['showall']))
 			{
-				$filters['status'] = array('NEW', 'CLOSED');
-			}
+				unset($filters['building_id']);
+        		unset($filters['building_name']);
+        		unset($filters['type']);
+        		unset($filters['status']);
+			} else {
+
+                $testdata =  phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+                if ($testdata != 0) {
+                    $filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('filter_building_id', 'int', 'REQUEST', null));        
+                } else {
+                    unset($filters['building_name']);                
+                }
+                $testdata2 =  phpgw::get_var('type', 'str', 'REQUEST');
+                if ($testdata2 != '') {
+                    $filters['type'] = phpgw::get_var('type', 'str', 'REQUEST');        
+                } else {
+                    unset($filters['type']);
+                }
+                $testdata2 =  phpgw::get_var('status', 'str', 'REQUEST');
+                if ($testdata2 != '') {
+                    $filters['status'] = phpgw::get_var('status', 'str', 'REQUEST');        
+                } else {
+                    unset($filters['status']);
+                }
+            }
+            
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
@@ -189,22 +194,41 @@
 				'filters' => $filters
 			);
 
-			$system_messages = $this->bo->read();
+			$system_messages = $this->bo->so->read($params);
+			array_walk($system_messages["results"], array($this, "_add_links"), "booking.uisystem_message.show");
 
-			foreach($system_messages["results"] as &$system_message) {
+
+			foreach($system_messages['results'] as &$system_message)
+			{
+				$building_case_officers_data =  array(); 
+				$building_case_officers =  array(); 
+				$sql = "SELECT account_id, account_lid, account_firstname, account_lastname FROM phpgw_accounts WHERE account_id IN (SELECT subject_id FROM bb_permission WHERE object_id=".$system_message['building_id']." AND role='case_officer')";
+				$this->db->query($sql);
+				while ($record = array_shift($this->db->resultSet)) {
+					 $building_case_officers_data[] = array('account_id' => $record['account_id'], 'account_lid' => $record['account_lid'],'account_name' => $record['account_firstname']." ".$record['account_lastname']);
+					 $building_case_officers[] = $record['account_id'];
+				}
+
 				$system_message['created'] = pretty_timestamp($system_message['created']);
 				$system_message['type'] = lang($system_message['type']);
 				$system_message['status'] = lang($system_message['status']);
+				$system_message['modified'] = '';
+				$system_message['activity_name'] = '';
+				$system_message['contact_name'] = $system_message['name'];
+				$system_message['case_officer_name'] = $for_case_officer_id;
+				$system_message['what'] = $system_message['title'];
+				if (strstr($system_message['what'],"%")){
+					$search = array('%2C','%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
+					$replace = array (',','Å','å','Ø','ø','Æ','æ');
+					$system_message['what'] = str_replace($search, $replace, $system_message['what']);
+				}
+
+				while($case_officer = array_shift($building_case_officers_data)) {
+					if ($system_message['case_officer_name'] = $case_officer['account_id'])
+						$system_message['case_officer_name'] = $case_officer['account_name'];
+				}
 			}
-			array_walk($system_messages['results'], array($this, '_add_links'), $this->module.'.uisystem_message.show');
-
-            $messages = $this->bo->read_message_data($this->show_all_dashboard_messages() ? null : $this->current_account_id());
-
-    		$system_messages['results'] = $messages;
-
-			$results = $this->yui_results($system_messages);
-			
-			return $results;
+			return $this->yui_results($system_messages);
 		}
 
 		public function edit()

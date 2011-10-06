@@ -43,7 +43,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="identifier" id="identifier" value="<?php echo $party->get_identifier() ?>" />
+							<input type="text" name="identifier" id="identifier" class="medium_number" value="<?php echo $party->get_identifier() ?>" />
 						<?php
 						}
 						else
@@ -160,7 +160,7 @@
 						?>
 							<input type="text" name="address1" id="address1" value="<?php echo $party->get_address_1() ?>" />
 							<br/>
-							<input type="text" name="address2" id="address2" value="<?php echo $party->get_address_2() ?>" />
+							<input type="text" name="address2" id="address2" class="address_2" value="<?php echo $party->get_address_2() ?>" />
 						<?php
 						}
 						else
@@ -207,7 +207,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="phone" id="phone" value="<?php echo $party->get_phone() ?>" />
+							<input type="text" name="phone" id="phone" class="medium_number" value="<?php echo $party->get_phone() ?>" />
 						<?php
 						}
 						else
@@ -226,7 +226,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="mobile_phone" id="mobile_phone" value="<?php echo $party->get_mobile_phone() ?>" />
+							<input type="text" name="mobile_phone" id="mobile_phone" class="medium_number" value="<?php echo $party->get_mobile_phone() ?>" />
 						<?php
 						}
 						else
@@ -245,7 +245,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="fax" id="fax" value="<?php echo $party->get_fax() ?>" />
+							<input type="text" name="fax" id="fax" class="medium_number" value="<?php echo $party->get_fax() ?>" />
 						<?php
 						}
 						else
@@ -398,25 +398,6 @@
 				</dl>
 		        <dl class="proplist-col">
 					<dt>
-						<?php if($party->get_comment() || $editable) { ?>
-						<label for="comment"><?php echo lang('comment') ?></label>
-						<?php } ?>
-					</dt>
-					<dd>
-						<?php
-						if ($editable)
-						{
-		                    ?>
-		                    <textarea cols="40" rows="7" name="comment" id="comment"><?php echo $party->get_comment(); ?></textarea>
-		                    <?php
-						}
-						else
-						{
-							echo $party->get_comment();
-						}
-						?>
-					</dd>
-					<dt>
 						<?php if($party->get_unit_leader() || $editable) { ?>
 						<label for="unit_leader"><?php echo lang('unit_leader') ?></label>
 						<?php  } ?>
@@ -435,7 +416,26 @@
 						}
 						?>
 					</dd>
-					</dl>
+					<dt>
+						<?php if($party->get_comment() || $editable) { ?>
+						<label for="comment"><?php echo lang('comment') ?></label>
+						<?php } ?>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+		                    ?>
+		                    <textarea cols="40" rows="7" name="comment" id="comment"><?php echo $party->get_comment(); ?></textarea>
+		                    <?php
+						}
+						else
+						{
+							echo $party->get_comment();
+						}
+						?>
+					</dd>
+				</dl>
 				<div class="form-buttons">
 					<span id="unit_errorMsg">Du må velge organisasjonsenhet før du kan synkronisere</span>
 					<?php
