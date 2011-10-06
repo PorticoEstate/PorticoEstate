@@ -281,7 +281,7 @@ YAHOO.util.Event.addListener(
 		                }
 		          	);
 			}else{
-				document.getElementById('unit_errorMsg').style.display = 'block'; 
+				document.getElementById('unit_errorMsg').style.display = 'block';
 			}
 		}
 );
@@ -292,7 +292,7 @@ function syncInfo(o)
 	var syncInfo = YAHOO.lang.JSON.parse(o.responseText);
 	 
 	var email = syncInfo.email;
-	var department = syncInfo.org_name;
+	var department = syncInfo.department;
 	var org_name = syncInfo.org_name;
 	var unit_leader = syncInfo.unit_leader_fullname;
 	    

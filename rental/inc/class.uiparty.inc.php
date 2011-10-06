@@ -515,7 +515,7 @@ class rental_uiparty extends rental_uicommon
 				$party->set_comment(phpgw::get_var('comment'));
 				//$party->set_location_id(phpgw::get_var('location_id'));
 				$party->set_org_enhet_id(phpgw::get_var('org_enhet_id'));
-				$party->set_org_unit_person(phpgw::get_var('org_unit_person'));
+				$party->set_unit_leader(phpgw::get_var('unit_leader'));
 				
 				if(rental_soparty::get_instance()->store($party)) // ... and then try to store the object
 				{
