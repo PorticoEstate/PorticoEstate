@@ -1,15 +1,13 @@
 <xsl:template name="control" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
-<div class="identifier-header">
-<h1><img src="{img_go_home}" /> 
-	<xsl:value-of select="php:function('lang', 'Control')" />
-</h1>
-</div>
+<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+<xsl:variable name="control_area_id"><xsl:value-of select="control/control_area_id"/></xsl:variable>
+<xsl:variable name="control_procedure_id"><xsl:value-of select="control/procedure_id"/></xsl:variable>
+
 <div class="yui-content">
-	<div id="details">
+	<div id="control_details">
 		<form action="#" method="post">
-			<input type="hidden" name="id" value = "{value_id}" />
+			<input type="hidden" name="control_id" value="{$control_id}" />	
 	
 			<dl class="proplist-col">
 				<dt>
@@ -17,15 +15,21 @@
 				</dt>
 				<dd>
 				<xsl:choose>
-					<xsl:when test="editable">					
+					<xsl:when test="editable">
 						<select id="control_area_id" name="control_area_id">
-							<xsl:for-each select="control_area_options/options">
-								<option value="{id}">
-									<xsl:if test="selected != 0">
-										<xsl:attribute name="selected" value="selected" />
-									</xsl:if>
-									<xsl:value-of disable-output-escaping="yes" select="title"/>
-								</option>
+							<xsl:for-each select="control_areas_array">
+								<xsl:choose>
+									<xsl:when test="id != $control_area_id">
+										<option value="{id}">
+											<xsl:value-of disable-output-escaping="yes" select="title"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{id}" selected="selected">
+											<xsl:value-of disable-output-escaping="yes" select="title"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>								
 						    </xsl:for-each>
 						</select>
 					</xsl:when>
@@ -41,13 +45,19 @@
 				<xsl:choose>
 					<xsl:when test="editable">
 						<select id="procedure_id" name="procedure_id">
-							<xsl:for-each select="procedure_options/options">
-								<option value="{id}">
-									<xsl:if test="selected != 0">
-										<xsl:attribute name="selected" value="selected" />
-									</xsl:if>
-									<xsl:value-of disable-output-escaping="yes" select="title"/>
-								</option>
+							<xsl:for-each select="procedures_array">
+								<xsl:choose>
+									<xsl:when test="id != $control_procedure_id">
+										<option value="{id}">
+											<xsl:value-of disable-output-escaping="yes" select="title"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{id}" selected="selected">
+											<xsl:value-of disable-output-escaping="yes" select="title"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>								
 						    </xsl:for-each>
 						</select>
 					</xsl:when>

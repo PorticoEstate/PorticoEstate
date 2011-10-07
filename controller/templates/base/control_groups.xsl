@@ -1,18 +1,9 @@
 <xsl:template name="control_groups" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
-<div class="identifier-header">
-
-<h1><img src="{img_go_home}" /> 
-	<xsl:value-of select="php:function('lang', 'Control_groups')"/> for <xsl:value-of select="group_name" />
-</h1>
-
-</div>
-
 <div class="yui-content">
-	<div id="details">
+	<div id="control_groups">
 	
-		<h1><xsl:value-of select="control_area/title"/></h1>
+		<h2><xsl:value-of select="control_area/title"/></h2>
 			
 		<form action="#" method="post">
 		<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
@@ -21,7 +12,7 @@
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
 		<input type="hidden" name="control_id" value="{control_id}" />
 		
-		<ul>
+		<ul class="itemlist">
 		<xsl:for-each select="//control_groups">
 			<xsl:variable name="control_group_id"><xsl:value-of select="id"/></xsl:variable>
       		<li><input type="checkbox"  name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="group_name"/></li>
