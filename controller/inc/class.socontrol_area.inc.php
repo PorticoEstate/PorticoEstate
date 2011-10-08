@@ -117,7 +117,28 @@ class controller_socontrol_area extends controller_socommon
 		}
 		
 		return $results;
-	}	
+	}
+
+	function get_control_areas_as_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
+	{
+		$results = array();
+		
+		//$condition = $this->get_conditions($query, $filters,$search_option);
+		$order = $sort ? "ORDER BY $sort $dir ": '';
+		
+		//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
+		$sql = "SELECT * FROM controller_control_area $order";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			$control_area = new controller_control_area($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_area->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			
+			$results[] = $control_area->toArray();
+		}
+		
+		return $results;
+	}
 	
 	function get_control_area_select_array()
 	{

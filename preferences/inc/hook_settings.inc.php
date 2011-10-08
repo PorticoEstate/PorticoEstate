@@ -160,5 +160,6 @@
 		'Do you want your menues as sidecontent');
 	create_check_box('Show breadcrumbs','show_breadcrumbs',
 			'Should history navigation urls as breadcrumbs');
-
+	create_check_box('activate nowrap in YUI-tables','yui_table_nowrap',
+			'activate nowrap in YUI-tables');
 

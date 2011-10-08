@@ -682,7 +682,7 @@
 
 				//all colums should be have formatter
 				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
-				
+				$datatable['headers']['header'][$i]['className'] = $uicols['classname'][$i] ? $uicols['classname'][$i] : '';				
 				if($uicols['input_type'][$i]!='hidden')
 				{
 					$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
@@ -963,6 +963,7 @@
 				}
 
 				$origin		= phpgw::get_var('origin');
+
 				$origin_id	= phpgw::get_var('origin_id', 'int');
 
 				//23.jun 08: This will be handled by the interlink code - just doing a quick hack for now...

@@ -96,6 +96,10 @@ label {
 				background-color: #ffffff;
 				}
 
+.breadcrumbs{
+	margin-left: 10px;	
+}
+
 ul.pathway {
     font-weight: bolder;
     margin: 1em 0;
@@ -400,7 +404,8 @@ fieldset h3 {
 
 /* Set up common form styles.  TODO: needs refinement. */
 legend, label, input, select {
-	margin:0 13px 0px 0px;
+    margin: 0 13px 0 0;
+    padding: 2px;
 }
 	
 label {
@@ -471,9 +476,6 @@ dd ul li {
 	list-style-position: inside;
 }
 
-ul.expand_list{
-	
-}
 ul.expand_list h4 {
     cursor: pointer;
     font-size: 17px;
@@ -495,4 +497,71 @@ ul.expand_list h4 span {
 }
 #play ul li{
 	cursor: move;
+	width:600px;
+}
+
+.yui-content input[type="submit"] {
+    margin: 0 0 15px 15px;
+    padding: 1px 15px;
+}
+h1 img{
+ 	margin-right:5px;
  }
+ 
+#control_tabview .yui-navset{
+	margin:0;
+}
+
+#control_tabview .identifier-header{
+	padding-left:0;
+}
+
+ul.itemlist {
+    margin: 1em 0;
+    padding-left: 20px;
+}
+ul.itemlist li{
+    margin: 3px 0;
+}
+
+.yui-content h2{
+    margin: 1em 0;
+    padding-left: 20px;	
+}
+
+#frm_control_items{
+	clear:left;
+	margin-top:10px;	
+}
+
+.expand_all {
+    background: url("../../../images/bg_expand_blue.png") no-repeat scroll 0 0 transparent;
+    color: #FFFFFF;
+    cursor: pointer;
+    float: left;
+    font-weight: normal;
+    height: 18px;
+    margin-left: 20px;
+    padding: 5px 10px;
+    width: 56px;
+}
+.collapse_all {
+    background: url("../../../images/bg_expand_grey.png") no-repeat scroll 0 0 transparent;
+    color: #000000;
+    cursor: pointer;
+    float: left;
+    font-weight: normal;
+    height: 22px;
+    margin-left: 0;
+    padding: 6px 0 0 7px;
+    width: 59px;
+}
+
+.expand_header{
+	overflow:hidden;	
+}
+
+dl.proplist, dl.proplist-col {
+    margin: 5px 0;
+    padding-left: 15px;
+}

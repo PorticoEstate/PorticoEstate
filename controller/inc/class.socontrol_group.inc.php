@@ -195,6 +195,25 @@ class controller_socontrol_group extends controller_socommon
 		return $results;
 	}
 	
+	function get_control_groups_as_array($control_area_id = null)
+	{
+		$results = array();
+		
+		$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
+			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'string'));
+			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'string'));
+			
+			$results[] = $control_group->toArray();
+		}
+		
+		return $results;
+	}
+	
 	function get_id_field_name($extended_info = false)
 	{
 		
