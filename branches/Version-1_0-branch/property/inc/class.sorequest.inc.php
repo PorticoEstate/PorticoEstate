@@ -324,7 +324,7 @@
 			$uicols['align'][]			= '';
 			$uicols['datatype'][]		= '';
 			$uicols['formatter'][]		= 'FormatterRight';
-			$uicols['classname'][]		= '';
+			$uicols['classname'][]		= 'rightClasss';
 			$uicols['sortable'][]		= true;
 
 			

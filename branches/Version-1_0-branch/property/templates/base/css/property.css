@@ -43,5 +43,5 @@ span.yui-menu-button en {
 	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
 }
 
-.rightClasss {text-align: right!important;}
+.rightClasss {white-space:nowrap; text-align: right!important;}
 .centerClasss {text-align: center!important;}

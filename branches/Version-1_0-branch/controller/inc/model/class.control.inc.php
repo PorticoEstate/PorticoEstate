@@ -21,7 +21,15 @@
 		protected $equipment_type_id;
 		protected $location_code;
 		protected $control_area_id;
-				
+
+		/*
+		var $validate = array(
+	    	'title' => array(
+	       		'rule' => array('minLength', 0),
+	   			'message' => 'Kontrollen må ha en tittel'
+	   		));
+		*/
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -164,6 +172,16 @@
 			}
 			
 			return self::$so;
+		}
+		
+		public function populate()
+		{
+				$this->set_title(phpgw::get_var('title','string'));
+				$this->set_description(phpgw::get_var('description','html'));
+				$this->set_start_date(strtotime( phpgw::get_var('start_date_hidden','string') ));
+				$this->set_end_date(strtotime( phpgw::get_var('end_date_hidden','string') ));
+				$this->set_procedure_id(phpgw::get_var('procedure_id','int'));
+				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
 		}
 		
 		public function serialize()

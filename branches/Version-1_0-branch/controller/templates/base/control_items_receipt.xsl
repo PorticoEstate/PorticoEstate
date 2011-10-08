@@ -1,12 +1,5 @@
 <xsl:template name="control_items_receipt" xmlns:php="http://php.net/xsl">
 
-<xsl:call-template name="yui_booking_i18n"/>
-<div class="identifier-header">
-<h1><img src="{img_go_home}" /> 
-	<xsl:value-of select="php:function('lang', 'Control_items')" />
-</h1>
-</div>
-
 <div class="yui-content">
 	<div>
 	
@@ -18,7 +11,7 @@
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
 		<input type="hidden" name="control_id" value="{control_id}" />
 		
-		<ul class="control_items">
+		<ul class="proplist-col control_items">
 			<xsl:for-each select="control_receipt_items">
 			<ul>
 	    		<li>
