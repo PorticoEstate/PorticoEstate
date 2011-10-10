@@ -12,12 +12,14 @@
 		protected $description;
 		protected $reference;
 		protected $attachment;
+		protected $start_date;
+		protected $end_date;
 		
 		/**
-		 * Constructor.  Takes an optional ID.  If a contract is created from outside
+		 * Constructor.  Takes an optional ID.  If a procedure is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
 		 * 
-		 * @param int $id the id of this composite
+		 * @param int $id the id of this procedure
 		 */
 		public function __construct(int $id = null)
 		{
@@ -45,12 +47,12 @@
 		
 		public function get_purpose() { return $this->purpose; }
 		
-		public function get_responsibility() { return $this->responsibility; }
-		
 		public function set_responsibility($responsibility)
 		{
 			$this->responsibility = $responsibility;
 		}
+		
+		public function get_responsibility() { return $this->responsibility; }
 		
 		public function set_description($description)
 		{
@@ -72,6 +74,20 @@
 		}
 		
 		public function get_attachment() { return $this->attachment; }
+		
+		public function set_start_date($start_date)
+		{
+			$this->start_date = $start_date;
+		}
+		
+		public function get_start_date() { return $this->start_date; }
+		
+		public function set_end_date($end_date)
+		{
+			$this->end_date = $end_date;
+		}
+		
+		public function get_end_date() { return $this->end_date; }
 		
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -96,7 +112,9 @@
 					'purpose' => $this->get_purpose(),
 					'responsibility' => $this->get_responsibility(),
 					'reference' => $this->get_reference(),
-					'attachment' => $this->get_attachment()
+					'attachment' => $this->get_attachment(),
+					'start_date' => $this->get_start_date(),
+					'end_date' => $this->get_end_date()
 			);
 		}
 	}

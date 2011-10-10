@@ -89,11 +89,12 @@
 					<xsl:choose>
 						<xsl:when test="editable">
 							<select id="control_group" name="control_group">
+								<option value="0">Ingen valgt</option>
 								<xsl:apply-templates select="control_group/options"/>
 							</select>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="control_item/control_group_id" />
+							<xsl:value-of select="control_item/control_group_name" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
@@ -108,7 +109,7 @@
 							</select>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="control_item/control_area_id" />
+							<xsl:value-of select="control_item/control_area_name" />
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>				
