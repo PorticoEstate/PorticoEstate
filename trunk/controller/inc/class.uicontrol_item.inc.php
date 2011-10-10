@@ -176,8 +176,8 @@
 					$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
 					$control_item->set_what_to_do( phpgw::get_var('what_to_do','html') );
 					$control_item->set_how_to_do( phpgw::get_var('how_to_do','html') );
-					$control_item->set_control_group_id( phpgw::get_var('control_group_id') );
-					$control_item->set_control_area_id( phpgw::get_var('control_area_id') );
+					$control_item->set_control_group_id( phpgw::get_var('control_group') );
+					$control_item->set_control_area_id( phpgw::get_var('control_area') );
 									
 					//$this->so->store($control_item);
 					

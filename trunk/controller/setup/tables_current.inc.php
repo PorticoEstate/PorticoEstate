@@ -85,7 +85,9 @@
 				'responsibility' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'reference' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
-				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True)
+				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

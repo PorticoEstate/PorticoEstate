@@ -73,21 +73,22 @@ class controller_socontrol_item extends controller_socommon
 		$id = intval($control_item->get_id());
 			
 		$values = array(
-			'$purpose = ' . $this->marshal($control_item->get_purpose(), 'string'),
-			'responsibility = ' . $this->marshal($control_item->get_responsibility(), 'int'),
-			'description = ' . $this->marshal($control_item->get_description(), 'int'),
-			'reference = ' . $this->marshal($control_item->get_reference(), 'int'),
-			'attachment = ' . $this->marshal($control_item->get_attachment(), 'int')
+			'title = ' . $this->marshal($control_item->get_title(), 'string'),
+			'required = ' . $this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
+			'what_to_do = ' . $this->marshal($control_item->get_what_to_do(), 'string'),
+			'how_to_do = ' . $this->marshal($control_item->get_how_to_do(), 'string'),
+			'control_group_id = ' . $this->marshal($control_item->get_control_group_id(), 'int'),
+			'control_area_id = ' . $this->marshal($control_item->get_control_area_id(), 'int')
 		);
 		
-		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
+		//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
 		$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
 		return isset($result);
 	}
 	
 	/**
-	 * Get single procedure
+	 * Get single control item
 	 * 
 	 * @param	$id	id of the control_item to return
 	 * @return a controller_control_item
@@ -95,8 +96,9 @@ class controller_socontrol_item extends controller_socommon
 	function get_single($id)
 	{
 		$id = (int)$id;
-		
-		$sql = "SELECT p.* FROM controller_control_item p WHERE p.id = " . $id;
+		$joins = " {$this->left_join} controller_control_group ON (p.control_group_id = controller_control_group.id)";
+		$joins .= " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+		$sql = "SELECT p.*, controller_control_group.group_name AS control_group_name, controller_control_area.title AS control_area_name FROM controller_control_item p {$joins} WHERE p.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -106,7 +108,9 @@ class controller_socontrol_item extends controller_socommon
 		$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 		$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 		$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+		$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
 		$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+		$control_item->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 		
 		return $control_item;
 	}
@@ -130,6 +134,7 @@ class controller_socontrol_item extends controller_socommon
 		
 		//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 		$sql = "SELECT * FROM controller_control_item $order";
+		//var_dump($sql);
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
 		while ($this->db->next_record()) {
@@ -197,6 +202,10 @@ class controller_socontrol_item extends controller_socommon
 		{
 			$filter_clauses[] = "controller_control_item.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
+		if(isset($filters['available']))
+		{
+			$filter_clauses[] = "(controller_control_item.control_group_id IS NULL OR controller_control_item.control_group_id=0)";
+		}
 		
 		if(count($filter_clauses))
 		{
@@ -232,11 +241,11 @@ class controller_socontrol_item extends controller_socommon
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
-	function get_control_items($control_group_id)
+	function get_control_items(int $control_group_id)
 	{
 		$results = array();
 		
-		$sql = "SELECT * FROM controller_control_item WHERE control_group_id=$control_group_id";
+		$sql = "SELECT * FROM controller_control_item WHERE control_group_id={$control_group_id}";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
 		while ($this->db->next_record()) {
@@ -250,7 +259,6 @@ class controller_socontrol_item extends controller_socommon
 			
 			$results[] = $control_item;
 		}
-		
 		return $results;
 	}
 	
