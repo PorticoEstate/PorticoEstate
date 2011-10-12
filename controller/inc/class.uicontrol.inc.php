@@ -180,50 +180,45 @@
 			}
 		}
 		
-		public function view_control(){
-			$tabs = array
-			(
-				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
-				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),	
-				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
-			);
-			
-			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
-				
-			$procedure_array = $this->so_proc->get_procedure_array();
-				
-			foreach ($procedure_array as $procedure)
+	public function view_control()
+		{			
+			$control_id = phpgw::get_var('control_id');
+		
+			// view control details
+			if(isset($control_id) && $control_id > 0)
 			{
-				$procedure_options[] = $procedure->toArray();
+				$control = $this->so_control->get_single($control_id);	
 			}
-				
-			$control_area_array = $this->so_control_area->get_control_area_array();
+								
+			$procedures_array = $this->so_procedure->get_procedures_as_array();
+			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 			
-			foreach ($control_area_array as $control_area)
-			{
-				$control_area_options[] = $control_area->toArray();
-			}
-			
-			phpgwapi_yui::tabview_setup('control_tabview');
-			
-			$GLOBALS['phpgw']->richtext->replace_element('description');
-			$GLOBALS['phpgw']->richtext->generate_script();
+			$tabs = array( array(
+							'label' => lang('Details')
+						), array(
+							'label' => lang('Control_groups')
+						), array(
+							'label' => lang('Control_items')
+						), array(
+							'label' => lang('Receipt')
+						));
 			
 			$data = array
 			(
-				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'details'),
+				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'						=> "control_details",
+				'editable' 					=> true,
+				'control'					=> (isset($control)) ? $control->toArray(): null,
+				'control_areas_array'		=> $control_areas_array,
+				'procedures_array'			=> $procedures_array,
 				'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
-				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], '')),
-				'value_id'					=> !empty($control) ? $control->get_id() : 0,
-				'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
-				'editable'					=> true,
-				'control_area_options'		=> array('options' => $control_area_options),
-				'procedure_options'			=> array('options' => $procedure_options)
+				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time()))
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
+			self::render_template_xsl(array('control_tabs', 'control'), $data);
+			$GLOBALS['phpgw']->richtext->replace_element('description');
+			$GLOBALS['phpgw']->richtext->generate_script();
 		}
 		
 		
