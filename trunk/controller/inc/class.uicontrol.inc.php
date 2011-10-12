@@ -146,23 +146,34 @@
 			self::render_template_xsl('datatable', $data);
 		}
 		
-		public function index()
+	public function index()
 		{
-			if( isset($_POST['save_control']) )
+			$add_document_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') );
+			
+			// Show tab control details
+			if(phpgw::get_var('view') == "view_control")
+			{
+				$this->view_control();
+			}
+			// Save or update control details and show tab control groups
+			else if( isset($_POST['save_control']) || phpgw::get_var('view') == "view_control_groups")
 			{
 				$this->edit_control();	
 			}
-			else if( isset($_POST['save_control_groups']) )
+			// Save control groups and show tab control items
+			else if( isset($_POST['save_control_groups']) || phpgw::get_var('view') == "view_control_items")
 			{
 				$this->edit_control_groups();
 			}
+			// Save control items and show tab receipt
 			else if( isset($_POST['save_control_items']) )
 			{
 				$this->edit_control_items();
 			}
-			else if( isset($_POST['show_receipt']) )
+			// Save receipt
+			else if( isset($_POST['save_receipt']) )
 			{
-				$this->show_receipt();
+				$this->save_receipt();
 			}
 			else{
 				$this->view_control();
