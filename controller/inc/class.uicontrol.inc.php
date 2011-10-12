@@ -222,52 +222,59 @@
 		}
 		
 		
-		public function edit_control(){
+	public function edit_control()
+		{
+			$control_id = phpgw::get_var('control_id');		
 			
-			$tabs = array
-			(
-				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
-				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
-				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
-			);
-			
-			$control_area_id = phpgw::get_var('control_area_id', 'int');	
-			
-			if(isset($control)) // Edit control
-			{
-				$control = $this->so->populate($control);
-				//$this->so->add($control);
-			}else{
-				$new_control = new controller_control();
-				$control = $this->so->populate($new_control);
-				$saved_control_id = $this->so->add($control);
+			if(phpgw::get_var('view') == "view_control_groups"){
+				$control = $this->so_control->get_single($control_id);
 			}
-			
-			$control_group_array = $this->so_control_group->get_control_groups($control_area_id);
-			
-			$control_area = $this->so_control_area->get_single($control_area_id);
-			
-			foreach ($control_group_array as $control_group)
+			// update control details
+			else if(isset($control_id) && $control_id > 0 )
 			{
-				$control_groups[] = $control_group->serialize();
+				$control = $this->so_control->get_single($control_id);
+				$control->populate();
+				$this->so_control->store($control);
 			}
+			// add control details
+			else {
+				$control = new controller_control();
+				$control->populate();
+				$control_id = $this->so_control->store($control);
+			}
+						
+			$control_area = $this->so_control_area->get_single($control->get_control_area_id());
+						
+			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			
-			phpgwapi_yui::tabview_setup('control_tabview');
+			$tabs = array(
+						array(
+							'label' => lang('Details'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.index', 'view' => "view_control", 'control_id' => $control_id))
+						), 
+						array(
+							'label' => lang('Control_groups')
+						), 
+						array(
+							'label' => lang('Control_items')
+						), 
+						array(
+							'label' => lang('Receipt')
+						)
+					);
 			
 			$data = array
 			(
-				'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_groups'),
-				'value_id'					=> !empty($control) ? $control->get_id() : 0,
-				'img_go_home'				=> 'rental/templates/base/images/32x32/actions/go-home.png',
+				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+				'view'						=> "control_groups",
 				'editable' 					=> true,
-				'control_id'				=> $saved_control_id,
+				'control_id'				=> $control_id,
 				'control_area'				=> $control_area->toArray(),
-				'control_groups'			=> $control_groups					
+				'control_groups'			=> $control_groups_as_array
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
+			self::render_template_xsl(array('control_tabs', 'control_groups'), $data);
 		}
 		
 		public function edit_control_groups(){
