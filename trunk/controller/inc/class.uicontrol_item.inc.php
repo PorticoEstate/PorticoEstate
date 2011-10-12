@@ -3,6 +3,7 @@
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
 	phpgw::import_class('controller.socontrol_item');
+	phpgw::import_class('controller.socontrol_item_list');
 	phpgw::import_class('controller.socontrol_group');
 	phpgw::import_class('controller.socontrol_area');
 	
@@ -22,7 +23,8 @@
 			'edit'	=>	true,
 			'view'	=>	true,
 			'add'	=>	true,
-			'display_control_items'	=> true
+			'display_control_items'	=> true,
+			'save_item_order'	=> true
 		);
 
 		public function __construct()
@@ -30,6 +32,7 @@
 			parent::__construct();
 			$this->so = CreateObject('controller.socontrol');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
+			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_item";
@@ -155,6 +158,25 @@
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_item.edit'));
 		}
 		
+		public function save_item_order(){
+		
+			$control_id = phpgw::get_var('control_id');
+			$control_group_id = phpgw::get_var('control_group_id');
+			$order_nr = phpgw::get_var('order_nr');
+			
+			foreach($order_nr as $order_tag){
+				$control_item_id = 	substr($order_tag, strpos($order_tag, ":")+1, strlen($order_tag));
+				$order_nr = substr($order_tag, 0, strpos($order_tag, ":"));
+				
+				$control_item_list = $this->so_control_item_list->get_single_2($control_id, $control_item_id);
+				
+				if($order_nr != $control_item_list->get_order_nr() ){
+					$control_item_list->set_order_nr($order_nr);
+					$this->so_control_item_list->update( $control_item_list );		
+				}	
+			}				
+		}
+		
 		
 		public function edit()
 		{
@@ -176,8 +198,8 @@
 					$control_item->set_required(phpgw::get_var('required') == 'on' ? true : false);
 					$control_item->set_what_to_do( phpgw::get_var('what_to_do','html') );
 					$control_item->set_how_to_do( phpgw::get_var('how_to_do','html') );
-					$control_item->set_control_group_id( phpgw::get_var('control_group') );
-					$control_item->set_control_area_id( phpgw::get_var('control_area') );
+					$control_item->set_control_group_id( phpgw::get_var('control_group_id') );
+					$control_item->set_control_area_id( phpgw::get_var('control_area_id') );
 									
 					//$this->so->store($control_item);
 					
