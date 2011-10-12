@@ -14,9 +14,9 @@
 
 	class controller_uicontrol extends controller_uicommon
 	{
-		private $bo; 
-		private $so;
-		private $so_proc;
+		private $bo;
+		private $so_control;
+		private $so_procedure;
 		private $so_control_group;
 		private $so_control_area; 
 		private $so_control_item;
@@ -33,8 +33,8 @@
 		{
 			parent::__construct();
 
-			$this->so = CreateObject('controller.socontrol');
-			$this->so_proc = CreateObject('controller.soprocedure');
+			$this->so_control = CreateObject('controller.socontrol');
+			$this->so_procedure = CreateObject('controller.soprocedure');
 			$this->bo = CreateObject('property.boevent',true);
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->so_control_area = CreateObject('controller.socontrol_area');
