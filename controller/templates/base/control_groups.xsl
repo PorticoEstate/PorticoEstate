@@ -5,7 +5,7 @@
 	
 		<h2><xsl:value-of select="control_area/title"/></h2>
 			
-		<form action="#" method="post">
+		<form action="index.php?menuaction=controller.uicontrol.index" method="post">
 		<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
 		<input type="hidden" name="control_area_id" value="{$control_area_id}" />
 		
