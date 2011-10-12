@@ -330,49 +330,43 @@
 			self::render_template_xsl(array('control_tabs', 'control_items'), $data);
 		}
 		
-		public function edit_control_items(){
-			
-			//Setting up tab menu
-			$tabs = array
-			(
-				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
-				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
-				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
-			);
-				
+	public function edit_control_items()
+		{
 			$control_id = phpgw::get_var('control_id');
+			$control_group_ids = phpgw::get_var('control_group_ids');
 			
-			$control_item_ids = array();
 			// Fetching selected control items
 			$control_tag_ids = phpgw::get_var('control_tag_ids');
 			
-			// Saving control items
+			$control_item_ids = array();
+
+			// Saving control items if submit save control items is clicked 
 			foreach ($control_tag_ids as $control_item_tag)
 			{	
-				$control_item_id = substr($control_item_tag, 2, 2);
-				
+				// Fetch control_item_id from tag string
+				$control_item_id = substr($control_item_tag, strpos($control_item_tag, ":")+1, strlen($control_item_tag));
+							
+				// Saves control item
 				$control_item_list = new controller_control_item_list();
 				$control_item_list->set_control_id($control_id);
 				$control_item_list->set_control_item_id($control_item_id);
-				 				
 				$this->so_control_item_list->add($control_item_list);
-			}
-			
+			}	
+	
 			$control_group_ids = array();
 			
-			//Putting control_group_ids in array
+			//Putting control_group_ids in array control_group_ids
 			foreach ($control_tag_ids as $control_tag)
 			{	
-				$control_group_id = substr($control_tag, 0, 1);
+				$control_group_id = substr($control_tag, 0, strpos($control_tag, ":"));
 
 				if(!in_array($control_group_id, $control_group_ids))
 					$control_group_ids[] = $control_group_id;  
 			}
 			
-			$control_receipt_items = array();
+			$saved_groups_with_items_array = array();
 			
-			//Populating array that is displayed as receipe
+			//Populating array with saved control items for each group
 			foreach ($control_group_ids as $control_group_id)
 			{	
 				$saved_control_items = $this->so_control_item->get_control_items_by_control_id_and_group($control_id, $control_group_id);
@@ -381,68 +375,69 @@
 				
 				$control_item = $this->so_control_item->get_single($control_item_id);
 				
-				$control_receipt_items[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);  
+				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(), "control_items" => $saved_control_items);
 			}
 			
-			var_dump("Skriver ut control_receipt");
-			print_r($control_receipt_items);
-						
-			phpgwapi_yui::tabview_setup('control_tabview');
-					
+			unset($_POST['save_control_items']); 
+			
+			$tabs = array(
+						array(
+							'label' => lang('Details'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.index', 'view' => "view_control", 'control_id' => $control_id))
+						), 
+						array(
+							'label' => lang('Control_groups'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.index', 'view' => "view_control_groups", 
+																			       'control_id' => $control_id, 'control_group_ids' => $control_group_ids))
+						), 
+						array(
+							'label' => lang('Control_items'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.index', 'view' => "view_control_items", 
+																			       'control_id' => $control_id, 'control_group_ids' => $control_group_ids))
+						), 
+						array(
+							'label' => lang('Receipt')
+						)
+					);
+			
 			$data = array
 			(
-				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, 'receipt'),
-				'value_id'				=> !empty($control) ? $control->get_id() : 0,
-				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
+				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
+				'view'					=> "receipt",
 				'control_id'			=> $control_id,
-				'control_receipt_items'	=> $control_receipt_items			
+				'control_receipt_items'	=> $saved_groups_with_items_array
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::add_javascript('controller', 'controller', 'yui_min_3_4_3.js');
 			self::add_javascript('controller', 'controller', 'custom_drag_drop.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
-
+			self::render_template_xsl(array('control_tabs', 'control_items_receipt'), $data);
 		}
 		
-		public function show_receipt(){
-			
-			$tabs = array
-			(
-				'details'			=> array('label' => lang('Details'), 'link' => '#details'),
-				'control_groups'	=> array('label' => lang('Control_groups'), 'link' => '#control_groups'),
-				'control_items'		=> array('label' => lang('Control_items'), 'link' => '#control_items'),
-				'receipt'			=> array('label' => lang('Receipt'), 'link' => '#receipt')
-			);		
+	public function save_receipt(){
 			
 			$control_id = phpgw::get_var('control_id');
 			
 			$control_item_ids = array();
 			$control_item_ids = phpgw::get_var('control_item_ids');
 			
-			
-			
 			foreach ($control_item_ids as $control_item_id)
-			{	
+			{
 				$control_item = $this->so_control_item->get_single($control_item_id);
 						
 				$control_item_list = new controller_control_item_list();
 				$control_item_list->set_control_id($control_id);
 				$control_item_list->set_control_item_id($control_item->get_id());
-				 				
+				
 				$this->so_control_item_list->add($control_item_list);
 			}
 			
-			phpgwapi_yui::tabview_setup('control_tabview');
-			
 			$data = array
 			(
-				'tabs'					=> phpgwapi_yui::tabview_generate($tabs, 'control_items'),
-				'value_id'				=> !empty($control) ? $control->get_id() : 0,
-				'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
-				'edit_control_items' 	=> false,
+				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($this->getTabMenu(), 3),
 				'control_id'			=> $control_id,
 				'control_items'			=> $control_items_2D			
 			);
@@ -450,8 +445,7 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::render_template_xsl(array('control_tabs', 'control', 'control_groups', 'control_items', 'control_items_receipt'), $data);
-
+			self::render_template_xsl(array('control_tabs', 'control_items_receipt'), $data);
 		}
 		
 		
