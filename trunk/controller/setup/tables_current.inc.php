@@ -29,7 +29,7 @@
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'order_nr' => array('type' => 'int', 'precision' => 3, 'nullable' => True),
+				'order_nr' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
