@@ -63,8 +63,8 @@ abstract class controller_model
 		return true;
 	}
 	
-public function toArray()
-		{
+	public function toArray()
+	{
 
 // Alternative 1
 //			return get_object_vars($this);
