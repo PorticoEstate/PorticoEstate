@@ -1,96 +1,127 @@
-YUI().use('dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
-    //Listen for all drop:over events
-    Y.DD.DDM.on('drop:over', function(e) {
-        //Get a reference to our drag and drop nodes
-        var drag = e.drag.get('node'),
-            drop = e.drop.get('node');
-        
-        //Are we dropping on a li node?
-        if (drop.get('tagName').toLowerCase() === 'li') {
-            //Are we not going up?
-            if (!goingUp) {
-                drop = drop.get('nextSibling');
-            }
-            //Add the node to this list
-            e.drop.get('node').get('parentNode').insertBefore(drag, drop);
-            //Resize this nodes shim, so we can drop on it later.
-            e.drop.sizeShim();
-        }
-    });
-    //Listen for all drag:drag events
-    Y.DD.DDM.on('drag:drag', function(e) {
-        //Get the last y point
-        var y = e.target.lastXY[1];
-        //is it greater than the lastY var?
-        if (y < lastY) {
-            //We are going up
-            goingUp = true;
-        } else {
-            //We are going down.
-            goingUp = false;
-        }
-        //Cache for next check
-        lastY = y;
-    });
-    //Listen for all drag:start events
-    Y.DD.DDM.on('drag:start', function(e) {
-        //Get our drag object
-        var drag = e.target;
-        //Set some styles here
-        drag.get('node').setStyle('opacity', '.25');
-        drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
-        drag.get('dragNode').setStyles({
-            opacity: '.5',
-            borderColor: drag.get('node').getStyle('borderColor'),
-            backgroundColor: drag.get('node').getStyle('backgroundColor')
-        });
-    });
-    //Listen for a drag:end events
-    Y.DD.DDM.on('drag:end', function(e) {
-        var drag = e.target;
-        //Put our styles back
-        drag.get('node').setStyles({
-            visibility: '',
-            opacity: '1'
-        });
-    });
-    //Listen for all drag:drophit events
-    Y.DD.DDM.on('drag:drophit', function(e) {
-        var drop = e.drop.get('node'),
-            drag = e.drag.get('node');
+var drag_elem;
+var illusion;
+var next_elem;
+var prev_elem;
+var adj_y;
 
-        //if we are not on an li, we must have been dropped on a ul
-        if (drop.get('tagName').toLowerCase() !== 'li') {
-            if (!drop.contains(drag)) {
-                drop.appendChild(drag);
-            }
-        }
-    });
-    
-    //Static Vars
-    var goingUp = false, lastY = 0;
+$(document).ready(function(){
 
-    //Get the list of li's in the lists and make them draggable
-    var lis = Y.Node.all('#play ul li');
-    lis.each(function(v, k) {
-        var dd = new Y.DD.Drag({
-            node: v,
-            target: {
-                padding: '0 0 0 20'
-            }
-        }).plug(Y.Plugin.DDProxy, {
-            moveOnEnd: false
-        }).plug(Y.Plugin.DDConstrained, {
-            constrain2node: '#play'
-        });
-    });
-
-    //Create simple targets for the 2 lists.
-    var uls = Y.Node.all('#play ul');
-    uls.each(function(v, k) {
-        var tar = new Y.DD.Drop({
-            node: v
-        });
-    });
-    
+	$(".list_item").mousedown(function(e){
+		drag_elem = $(this);
+		
+		adj_y = e.pageY - $(drag_elem).position().top;
+		
+		next_elem = $(drag_elem).next();
+		prev_elem = $(drag_elem).prev();
+		illusion = $(drag_elem).clone();
+				
+		$(illusion).addClass("drag");
+		$(illusion).removeClass("list_item");
+		
+		$(illusion).insertAfter(drag_elem);
+		
+		$(illusion).css("left", $(drag_elem).position().left + "px");
+		$(illusion).css("top",  $(drag_elem).position().top + "px");
+									
+		start_drag();
+	});
 });
+
+
+function start_drag(){
+	$(document).bind("mouseup", stop_drag);
+
+	$(document).bind("mousemove", function(e){
+		
+		var x = 0;
+		var y = e.pageY - adj_y;
+
+		$(illusion).css("left", x + "px");
+		$(illusion).css("top", y + "px");
+		
+		// Move drag element over next element
+		if( $(next_elem).length > 0 && e.pageY > $(next_elem).offset().top + $(next_elem).height()/2 ){
+			$(drag_elem).insertAfter(next_elem);
+			
+			/* ===========  UPDATE ORDERNR FOR DRAG ELEMENT ============ */
+			
+			var hidden_order_nr = $(drag_elem).find("input");
+			var order_value = $(hidden_order_nr).attr("value");
+			
+			var span_order_nr = $(drag_elem).find("span.order_nr");
+			
+			var order_nr = order_value.substring( 0, order_value.indexOf(":") );
+			var updated_order_nr = parseInt(order_nr) + 1;
+			
+			var id = order_value.substring( order_value.indexOf(":")+1,  order_value.length );
+			var updated_order_value = updated_order_nr + ":" + id;
+			
+			$(hidden_order_nr).val(updated_order_value);
+			$(span_order_nr).text(updated_order_nr);
+						
+			/* ===========  UPDATE ORDERNR FOR PREVIOUS ELEMENT ============ */	
+		
+			next_elem = $(drag_elem).next();
+			prev_elem = $(drag_elem).prev();
+					
+			hidden_order_nr = $(prev_elem).find("input");
+			tag = $(hidden_order_nr).attr("value");
+			
+			span_order_nr = $(prev_elem).find("span.order_nr");
+			
+			order_nr = tag.substring( 0, tag.indexOf(":") );
+			updated_order_nr = parseInt(order_nr) - 1;
+			
+			id = tag.substring( tag.indexOf(":")+1,  tag.length );
+			updated_order_value = updated_order_nr + ":" + id;
+			
+			$(hidden_order_nr).val(updated_order_value);
+			$(span_order_nr).text(updated_order_nr);
+		}
+		// Move drag element over previous element
+		else if( $(prev_elem).length > 0 && e.pageY < $(prev_elem).offset().top + $(prev_elem).height()/2 ){
+			$(drag_elem).insertBefore(prev_elem);
+			
+			/* ===========  UPDATE ORDERNR FOR DRAG ELEMENT ============ */		
+			var hidden_order_nr = $(drag_elem).find("input");
+			var tag = $(hidden_order_nr).attr("value");
+			
+			var span_order_nr = $(drag_elem).find("span.order_nr");
+			
+			var order_nr = tag.substring( 0, tag.indexOf(":") );
+			var updated_order_nr = parseInt(order_nr) - 1;
+			
+			var id = tag.substring( tag.indexOf(":")+1,  tag.length );
+			var updated_order_value = updated_order_nr + ":" + id;
+			
+			$(hidden_order_nr).val(updated_order_value);
+			$(span_order_nr).text(updated_order_nr);
+			
+			/* ===========  UPDATE ORDERNR FOR NEXT ELEMENT  ============ */
+			
+			prev_elem = $(drag_elem).prev();
+			next_elem = $(drag_elem).next();
+			
+			hidden_order_nr = $(next_elem).find("input");
+			tag = $(hidden_order_nr).attr("value");
+			
+			span_order_nr = $(next_elem).find("span.order_nr");
+			
+			order_nr = tag.substring( 0, tag.indexOf(":") );
+			updated_order_nr = parseInt(order_nr) + 1;
+			
+			id = tag.substring( tag.indexOf(":")+1,  tag.length );
+			updated_order_value = updated_order_nr + ":" + id;
+			
+			$(hidden_order_nr).val(updated_order_value);
+			$(span_order_nr).text(updated_order_nr);
+		}
+	}); 
+}
+
+function stop_drag(){
+	$(illusion).remove();
+
+	$(document).unbind("mousemove");
+	$(document).unbind("mouseup");
+}
