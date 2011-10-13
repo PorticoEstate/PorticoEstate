@@ -33,11 +33,12 @@
 								</xsl:variable>
 																
 				     			<li class="list_item">
-				     				<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
-				     				
+				     				<span class="drag">
+				     					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
+				     				</span>
 				     				<a class="delete">
 										<xsl:attribute name="href">
-											<xsl:text>/index.php?menuaction=controller.uicontrol_item_list.delete_item_list</xsl:text>
+											<xsl:text>index.php?menuaction=controller.uicontrol_item.delete_item_list</xsl:text>
 											<xsl:text>&amp;control_id=</xsl:text>
 											<xsl:value-of select="//control_id"/>
 											<xsl:text>&amp;control_item_id=</xsl:text>
