@@ -32,7 +32,7 @@
 				</xsl:for-each>
 			</ul>
 			
-			<div class="form-buttons">
+			<div>
 				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 				<input type="submit" name="save_control_items" value="{$lang_save}" title = "{$lang_save}" />
 			</div>
