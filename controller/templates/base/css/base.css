@@ -571,7 +571,7 @@ dl.proplist, dl.proplist-col {
     padding-left: 15px;
 }
 
-.drag{
+.drag_elem{
   z-index: 100;
   position:absolute;
   opacity: .50;
@@ -599,4 +599,8 @@ dl.proplist, dl.proplist-col {
 .frm_save_order input[type='submit']{
 	margin: 0 0 15px 15px;
     width: 120px;
+}	
+.delete {
+    cursor: pointer;
+    margin-left: 5px;
 }
