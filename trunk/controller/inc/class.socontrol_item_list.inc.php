@@ -76,10 +76,6 @@ class controller_socontrol_item_list extends controller_socommon
 			'control_item_id = '. $this->marshal($control_item_list->get_control_item_id(), 'int'),
 			'order_nr = ' . $this->marshal($control_item_list->get_order_nr(), 'int')
 		);
-	
-		var_dump("ID: " . $id);
-		
-		print_r($values);
 		
 		$result = $this->db->query('UPDATE controller_control_item_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 				
@@ -120,6 +116,15 @@ class controller_socontrol_item_list extends controller_socommon
 		$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr', true), 'int'));
 		
 		return $control_item_list;
+	}
+	
+	function delete($control_id, $control_item_id)
+	{		
+		var_dump("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id");
+		
+		$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
+				
+		return isset($result);
 	}
 	
 	/**
