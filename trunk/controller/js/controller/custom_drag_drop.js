@@ -1,32 +1,59 @@
+var placeholder;
 var drag_elem;
-var illusion;
 var next_elem;
 var prev_elem;
 var adj_y;
 
 $(document).ready(function(){
 
-	$(".list_item").mousedown(function(e){
-		drag_elem = $(this);
+	// Drag row is clicked
+	$(".drag").mousedown(function(e){
+		placeholder = $(this).parent();
 		
-		adj_y = e.pageY - $(drag_elem).position().top;
+		adj_y = e.pageY - $(placeholder).position().top;
 		
-		next_elem = $(drag_elem).next();
-		prev_elem = $(drag_elem).prev();
-		illusion = $(drag_elem).clone();
+		next_elem = $(placeholder).next();
+		prev_elem = $(placeholder).prev();
+		drag_elem = $(placeholder).clone();
 				
-		$(illusion).addClass("drag");
-		$(illusion).removeClass("list_item");
+		$(drag_elem).addClass("drag_elem");
+		$(drag_elem).removeClass("list_item");
 		
-		$(illusion).insertAfter(drag_elem);
+		$(drag_elem).insertAfter(placeholder);
 		
-		$(illusion).css("left", $(drag_elem).position().left + "px");
-		$(illusion).css("top",  $(drag_elem).position().top + "px");
+		$(drag_elem).css("left", $(placeholder).position().left + "px");
+		$(drag_elem).css("top",  $(placeholder).position().top + "px");
 									
 		start_drag();
 	});
+	
+	// Delete a control item list 
+	$(".delete").click(function(){
+		var thisElem = $(this);
+		var thisRow = $(this).parent();
+		
+		var url = $(thisElem).attr("href");
+	
+		// Sending request for deleting a control item list
+		$.ajax({
+			type: 'POST',
+			url: url,
+			success: function() {
+				$(thisRow).fadeOut("slow");
+				
+				var next_row = $(thisRow).next();
+				
+				// Updating order numbers for rows below deleted row  
+				while( $(next_row).length > 0){
+					update_order_nr(next_row, "-");
+					next_row = $(next_row).next();
+				}		
+			}
+		});
+		
+		return false;
+	});
 });
-
 
 function start_drag(){
 	$(document).bind("mouseup", stop_drag);
@@ -36,92 +63,60 @@ function start_drag(){
 		var x = 0;
 		var y = e.pageY - adj_y;
 
-		$(illusion).css("left", x + "px");
-		$(illusion).css("top", y + "px");
+		$(drag_elem).css("left", x + "px");
+		$(drag_elem).css("top", y + "px");
 		
 		// Move drag element over next element
 		if( $(next_elem).length > 0 && e.pageY > $(next_elem).offset().top + $(next_elem).height()/2 ){
-			$(drag_elem).insertAfter(next_elem);
-			
-			/* ===========  UPDATE ORDERNR FOR DRAG ELEMENT ============ */
-			
-			var hidden_order_nr = $(drag_elem).find("input");
-			var order_value = $(hidden_order_nr).attr("value");
-			
-			var span_order_nr = $(drag_elem).find("span.order_nr");
-			
-			var order_nr = order_value.substring( 0, order_value.indexOf(":") );
-			var updated_order_nr = parseInt(order_nr) + 1;
-			
-			var id = order_value.substring( order_value.indexOf(":")+1,  order_value.length );
-			var updated_order_value = updated_order_nr + ":" + id;
-			
-			$(hidden_order_nr).val(updated_order_value);
-			$(span_order_nr).text(updated_order_nr);
-						
-			/* ===========  UPDATE ORDERNR FOR PREVIOUS ELEMENT ============ */	
-		
-			next_elem = $(drag_elem).next();
-			prev_elem = $(drag_elem).prev();
+			$(placeholder).insertAfter(next_elem);
+			next_elem = $(placeholder).next();
+			prev_elem = $(placeholder).prev();
 					
-			hidden_order_nr = $(prev_elem).find("input");
-			tag = $(hidden_order_nr).attr("value");
-			
-			span_order_nr = $(prev_elem).find("span.order_nr");
-			
-			order_nr = tag.substring( 0, tag.indexOf(":") );
-			updated_order_nr = parseInt(order_nr) - 1;
-			
-			id = tag.substring( tag.indexOf(":")+1,  tag.length );
-			updated_order_value = updated_order_nr + ":" + id;
-			
-			$(hidden_order_nr).val(updated_order_value);
-			$(span_order_nr).text(updated_order_nr);
+			// Updating order number for drag element and previous element
+			update_order_nr(placeholder, "+");
+			update_order_nr(prev_elem, "-");
 		}
 		// Move drag element over previous element
 		else if( $(prev_elem).length > 0 && e.pageY < $(prev_elem).offset().top + $(prev_elem).height()/2 ){
-			$(drag_elem).insertBefore(prev_elem);
+			$(placeholder).insertBefore(prev_elem);
+			prev_elem = $(placeholder).prev();
+			next_elem = $(placeholder).next();
 			
-			/* ===========  UPDATE ORDERNR FOR DRAG ELEMENT ============ */		
-			var hidden_order_nr = $(drag_elem).find("input");
-			var tag = $(hidden_order_nr).attr("value");
-			
-			var span_order_nr = $(drag_elem).find("span.order_nr");
-			
-			var order_nr = tag.substring( 0, tag.indexOf(":") );
-			var updated_order_nr = parseInt(order_nr) - 1;
-			
-			var id = tag.substring( tag.indexOf(":")+1,  tag.length );
-			var updated_order_value = updated_order_nr + ":" + id;
-			
-			$(hidden_order_nr).val(updated_order_value);
-			$(span_order_nr).text(updated_order_nr);
-			
-			/* ===========  UPDATE ORDERNR FOR NEXT ELEMENT  ============ */
-			
-			prev_elem = $(drag_elem).prev();
-			next_elem = $(drag_elem).next();
-			
-			hidden_order_nr = $(next_elem).find("input");
-			tag = $(hidden_order_nr).attr("value");
-			
-			span_order_nr = $(next_elem).find("span.order_nr");
-			
-			order_nr = tag.substring( 0, tag.indexOf(":") );
-			updated_order_nr = parseInt(order_nr) + 1;
-			
-			id = tag.substring( tag.indexOf(":")+1,  tag.length );
-			updated_order_value = updated_order_nr + ":" + id;
-			
-			$(hidden_order_nr).val(updated_order_value);
-			$(span_order_nr).text(updated_order_nr);
+			// Updating order number for drag element and next element
+			update_order_nr(placeholder, "-");
+			update_order_nr(next_elem, "+");
 		}
 	}); 
 }
 
+// Release binding for mouse events
 function stop_drag(){
-	$(illusion).remove();
+	$(drag_elem).remove();
 
 	$(document).unbind("mousemove");
 	$(document).unbind("mouseup");
+}
+
+// Updates order number for hidden field and number in front of row
+function update_order_nr(element, sign){
+	var hidden_order_nr = $(element).find("input");
+	var order_value = $(hidden_order_nr).attr("value");
+	
+	var span_order_nr = $(element).find("span.order_nr");
+	
+	var order_nr = order_value.substring( 0, order_value.indexOf(":") );
+	
+	if(sign == "+")
+		var updated_order_nr = parseInt(order_nr) + 1;
+	else
+		var updated_order_nr = parseInt(order_nr) - 1;
+	
+	var id = order_value.substring( order_value.indexOf(":")+1,  order_value.length );
+	updated_order_value = updated_order_nr + ":" + id;
+	
+	// Updating order number for hidden field	
+	$(hidden_order_nr).val(updated_order_value);
+	
+	// Updating order number in front of row
+	$(span_order_nr).text(updated_order_nr);
 }
