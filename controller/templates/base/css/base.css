@@ -524,7 +524,8 @@ ul.itemlist li.odd{
     background: none repeat scroll 0 0 #DBE7F5;
 }
 
-ul.itemlist h3{
+ul.itemlist h3 {
+    font-size: 18px;
     margin: 0 0 5px;
 }
 
@@ -595,6 +596,7 @@ dl.proplist, dl.proplist-col {
   cursor: move;
 }
 
-.form-buttons.ext{
-	padding:0;	
+.frm_save_order input[type='submit']{
+	margin: 0 0 15px 15px;
+    width: 120px;
 }
