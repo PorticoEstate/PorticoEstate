@@ -24,7 +24,8 @@
 			'view'	=>	true,
 			'add'	=>	true,
 			'display_control_items'	=> true,
-			'save_item_order'	=> true
+			'save_item_order'	=> true,
+			'delete_item_list'	=> true
 		);
 
 		public function __construct()
@@ -183,6 +184,15 @@
 			return status;			
 		}
 		
+		public function delete_item_list(){
+		
+			$control_id = phpgw::get_var('control_id');
+			$control_item_id = phpgw::get_var('control_item_id');			
+						
+			$status = $this->so_control_item_list->delete($control_id, $control_item_id);
+			
+			return status;			
+		}	
 		
 		public function edit()
 		{
