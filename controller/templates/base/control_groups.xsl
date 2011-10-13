@@ -18,7 +18,7 @@
       		<li><input type="checkbox"  name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="group_name"/></li>
 		</xsl:for-each>
 		</ul>
-		<div class="form-buttons">
+		<div>
 			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
 			<input type="submit" name="save_control_groups" value="{$lang_save}" title = "{$lang_save}" />
 			</div>
