@@ -164,6 +164,7 @@
 			$control_group_id = phpgw::get_var('control_group_id');
 			$order_nr = phpgw::get_var('order_nr');
 			
+			$status = true;
 			foreach($order_nr as $order_tag){
 				$control_item_id = 	substr($order_tag, strpos($order_tag, ":")+1, strlen($order_tag));
 				$order_nr = substr($order_tag, 0, strpos($order_tag, ":"));
@@ -172,9 +173,14 @@
 				
 				if($order_nr != $control_item_list->get_order_nr() ){
 					$control_item_list->set_order_nr($order_nr);
-					$this->so_control_item_list->update( $control_item_list );		
-				}	
-			}				
+					
+					if( !$this->so_control_item_list->update( $control_item_list )){
+						$status = false;	
+					}	
+				}
+			}
+			
+			return status;			
 		}
 		
 		
