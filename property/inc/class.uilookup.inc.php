@@ -62,7 +62,8 @@
 				'project_group'		=> true,
 				'ecodimb'			=> true,
 				'order_template'	=> true,
-				'response_template'	=> true
+				'response_template'	=> true,
+				'custom'			=> true
 			);
 
 		function __construct()
@@ -3300,6 +3301,227 @@ JS;
 			$this->save_sessiondata();
 		}
 
+		function custom()
+		{
+			$get_list_function		= phpgw::get_var('get_list_function');
+			$get_list_function_input 	= urlencode(phpgw::get_var('get_list_function_input'));
+			$column 				= phpgw::get_var('column');
+
+			if( phpgw::get_var('phpgw_return_as') != 'json' )
+			{
+				$datatable['config']['base_url']	= $GLOBALS['phpgw']->link('/index.php', array
+				(
+					'menuaction'			=> 'property.uilookup.custom',
+					'cat_id'				=> $this->cat_id,
+					'query'					=> $this->query,
+					'filter'				=> $this->filter,
+					'get_list_function'		=> $get_list_function,
+					'get_list_function_input' => $get_list_function_input
+				));
+				$datatable['config']['allow_allrows'] = true;
+
+				$datatable['config']['base_java_url'] = "menuaction:'property.uilookup.custom',"
+					."cat_id:'{$this->cat_id}',"
+					."query:'{$this->query}',"
+					."filter:'{$this->filter}',"
+					."get_list_function:'{$get_list_function}',"
+					."get_list_function_input:'{$get_list_function_input}'";
+		
+				$datatable['actions']['form'] = array
+					(
+						array
+						(
+							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+							array
+							(
+								'menuaction' 		=> 'property.uilookup.custom',
+								'cat_id'			=> $this->cat_id,
+								'query'				=> $this->query,
+								'filter'			=> $this->filter,
+								'get_list_function'	=> $get_list_function,
+								'get_list_function_input' => $get_list_function_input
+							)
+						),
+						'fields'	=> array
+						(
+							'field' => array
+							(
+								array
+								( //boton  SEARCH
+									'id' => 'btn_search',
+									'name' => 'search',
+									'value'    => lang('search'),
+									'type' => 'button',
+									'tab_index' => 2
+								),
+								array
+								( // TEXT IMPUT
+									'name'     => 'query',
+									'id'     => 'txt_query',
+									'value'    => '',//'',//$query,
+									'type' => 'text',
+									'size'    => 28,
+									'onkeypress' => 'return pulsar(event)',
+									'tab_index' => 1
+								)
+							),
+							'hidden_value' => array
+							(
+								)
+							)
+						)
+					);
+			}
+
+			$uicols = array (
+				'input_type'	=>	array('text','text'),
+				'name'			=>	array('id','name'),
+				'formatter'		=>	array('',''),
+				'descr'			=>	array(lang('ID'),lang('name'))
+			);
+
+			$template_list = array();
+		//	$bo	= CreateObject('property.bogeneric',true);
+		//	$template_list = $bo->read();
+
+			$template_list = execMethod($get_list_function, unserialize(urldecode($_GET['get_list_function_input'])));
+//_debug_array(unserialize(urldecode($get_list_function_input)));
+//_debug_array(unserialize(urldecode($_GET['get_list_function_input'])));
+			$content = array();
+			$j=0;
+			if (isset($template_list) && is_array($template_list))
+			{
+				foreach($template_list as $template_entry)
+				{
+					for ($i=0;$i<count($uicols['name']);$i++)
+					{
+						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $template_entry[$uicols['name'][$i]];
+						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
+					}
+					$j++;
+				}
+			}
+
+			$uicols_count	= count($uicols['descr']);
+			$datatable['rowactions']['action'] = array();
+			for ($i=0;$i<$uicols_count;$i++)
+			{
+				//all colums should be have formatter
+				$datatable['headers']['header'][$i]['formatter'] = ($uicols['formatter'][$i]==''?  '""' : $uicols['formatter'][$i]);
+
+				$datatable['headers']['header'][$i]['name'] 			= $uicols['name'][$i];
+				$datatable['headers']['header'][$i]['text'] 			= $uicols['descr'][$i];
+				$datatable['headers']['header'][$i]['visible'] 			= true;
+				$datatable['headers']['header'][$i]['sortable']			= true;
+				$datatable['headers']['header'][$i]['sort_field'] 		= $uicols['name'][$i];
+			}
+
+			$custom_id		= $column;
+			$custom_name	= $column . '_name';
+
+			$function_exchange_values = '';
+
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_id.'")[0].value = "";' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_name.'")[0].value = "";' ."\r\n";
+
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_id.'")[0].value = data.getData("id");' ."\r\n";
+			$function_exchange_values .= 'opener.document.getElementsByName("'.$custom_name.'")[0].value = data.getData("name");' ."\r\n";
+
+			$function_exchange_values .= 'window.close()';
+
+			$datatable['exchange_values'] = $function_exchange_values;
+			$datatable['valida'] = '';
+
+			// path for property.js
+			$datatable['property_js'] = $GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property.js";
+
+			// Pagination and sort values
+			$datatable['pagination']['records_start'] 	= (int)$this->start;
+			$datatable['pagination']['records_limit'] 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$datatable['pagination']['records_returned']= count($template_list);
+			$datatable['pagination']['records_total'] 	= $this->bo->total_records;
+
+			if ( (phpgw::get_var("start")== "") && (phpgw::get_var("order",'string')== ""))
+			{
+				$datatable['sorting']['order'] 			= 'id'; // name key Column in myColumnDef
+				$datatable['sorting']['sort'] 			= 'name'; // ASC / DESC
+			}
+			else
+			{
+				$datatable['sorting']['order']			= phpgw::get_var('order', 'string'); // name of column of Database
+				$datatable['sorting']['sort'] 			= phpgw::get_var('sort', 'string'); // ASC / DESC
+			}
+
+			$appname						= lang('template');
+			$function_msg					= lang('list order template');
+
+
+			//-- BEGIN----------------------------- JSON CODE ------------------------------
+
+			//values for Pagination
+			$json = array
+				(
+					'recordsReturned' 	=> $datatable['pagination']['records_returned'],
+					'totalRecords' 		=> (int)$datatable['pagination']['records_total'],
+					'startIndex' 		=> $datatable['pagination']['records_start'],
+					'sort'				=> $datatable['sorting']['order'],
+					'dir'				=> $datatable['sorting']['sort'],
+					'records'			=> array()
+				);
+
+			// values for datatable
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+				foreach( $datatable['rows']['row'] as $row )
+				{
+					$json_row = array();
+					foreach( $row['column'] as $column)
+					{
+						if(isset($column['format']) && $column['format']== "link" && $column['java_link']==true)
+						{
+							$json_row[$column['name']] = "<a href='#' id='".$column['link']."' onclick='javascript:filter_data(this.id);'>" .$column['value']."</a>";
+						}
+						else if(isset($column['format']) && $column['format']== "link")
+						{
+							$json_row[$column['name']] = "<a href='".$column['link']."' target='_blank'>" .$column['value']."</a>";
+						}
+						else
+						{
+							$json_row[$column['name']] = $column['value'];
+						}
+					}
+					$json['records'][] = $json_row;
+				}
+			}
+
+			// right in datatable
+			if(isset($datatable['rowactions']['action']) && is_array($datatable['rowactions']['action']))
+			{
+				$json['rights'] = $datatable['rowactions']['action'];
+			}
+
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				return $json;
+			}
+
+			$datatable['json_data'] = json_encode($json);
+			//-------------------- JSON CODE ----------------------
+
+			// Prepare template variables and process XSLT
+			$template_vars = array();
+			$template_vars['datatable'] = $datatable;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('datatable'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', $template_vars);
+
+
+			//Title of Page
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			// Prepare YUI Library
+			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'lookup.tenant.index', 'property' );
+
+			$this->save_sessiondata();
+		}
 
 
 	}

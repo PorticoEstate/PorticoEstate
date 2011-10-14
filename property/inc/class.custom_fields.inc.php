@@ -188,6 +188,42 @@ JS;
 					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$m++;
 				}
+				else if($attributes['datatype'] == 'custom1') // select
+				{
+					$attributes['choice'] = array();
+					if($attributes['get_list_function'])
+					{
+						$attributes['choice'] = execMethod($attributes['get_list_function'], $attributes['get_list_function_input']);
+					}
+					foreach ($attributes['choice'] as &$_choice)
+					{
+						$_choice['name'] = "{$_choice['id']} {$_choice['name']}";
+						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
+					}					
+				}
+				else if($attributes['datatype'] == 'custom2') //lookup
+				{
+					if($attributes['value'] && $attributes['get_single_function'])
+					{
+						if(!$attributes['get_single_function_input'])
+						{
+							$attributes['get_single_function_input'] = $attributes['value'];
+						}
+						$attributes['custom_name'] = execMethod($attributes['get_single_function'], $attributes['get_single_function_input']);
+					}
+
+					$insert_record_values[]			= $attributes['name'];
+					$lookup_link					= $GLOBALS['phpgw']->link('/index.php',array(
+						'menuaction'			=> 'property.uilookup.custom',
+						'column'				=> $attributes['name'],
+						'get_list_function'		=> $attributes['get_list_function'],
+						'get_list_function_input'	=> urlencode(serialize($attributes['get_list_function_input']))
+					));
+
+					$lookup_functions[$m]['name']	= 'lookup_'. $attributes['name'] .'()';
+					$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
+					$m++;
+				}
 				else if($attributes['datatype'] == 'user')
 				{
 					if($attributes['value'])
