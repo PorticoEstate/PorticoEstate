@@ -2352,17 +2352,31 @@
 			}
 
 			$link_data = array
-				(
-					'menuaction'	=> 'property.uiadmin_entity.edit_attrib',
-					'entity_id'		=> $entity_id,
-					'cat_id'		=> $cat_id,
-					'id'			=> $id,
-					'type'			=> $this->type
-				);
+			(
+				'menuaction'	=> 'property.uiadmin_entity.edit_attrib',
+				'entity_id'		=> $entity_id,
+				'cat_id'		=> $cat_id,
+				'id'			=> $id,
+				'type'			=> $this->type
+			);
 
-			if($values['column_info']['type']=='R' || $values['column_info']['type']=='CH' || $values['column_info']['type']=='LB')
+			$multiple_choice = false;
+			$custom_get_list = false;
+			$custom_get_single = false;
+			switch($values['column_info']['type'])
 			{
-				$multiple_choice= true;
+				case 'R':
+				case 'CH':
+				case 'LB':
+					$multiple_choice = true;
+					break;
+				case 'custom1';
+					$custom_get_list = true;
+					break;
+				case 'custom2';
+					$custom_get_list = true;
+					$custom_get_single = true;
+				default:
 			}
 
 			$entity = $this->bo->read_single($entity_id,false);
@@ -2371,68 +2385,37 @@
 			$msgbox_data = (isset($receipt)?$this->bocommon->msgbox_data($receipt):'');
 
 			$data = array
-				(
-					'lang_entity'						=> lang('entity'),
-					'entity_name'						=> $entity['name'],
-					'lang_category'						=> lang('category'),
-					'category_name'						=> $category['name'],
-
-					'lang_choice'						=> lang('Choice'),
-					'lang_new_value'					=> lang('New value'),
-					'lang_new_value_statustext'			=> lang('New value for multiple choice'),
-					'multiple_choice'					=> (isset($multiple_choice)?$multiple_choice:''),
-					'value_choice'						=> (isset($values['choice'])?$values['choice']:''),
-					'lang_delete_value'					=> lang('Delete value'),
-					'lang_value'						=> lang('value'),
-					'lang_delete_choice_statustext'		=> lang('Delete this value from the list of multiple choice'),
-
-					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-					'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
-					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'type' => $this->type)),
-					'lang_id'							=> lang('Attribute ID'),
-					'lang_entity_type'					=> lang('Entity type'),
-					'lang_no_entity_type'				=> lang('No entity type'),
-					'lang_save'							=> lang('save'),
-					'lang_done'							=> lang('done'),
-					'value_id'							=> $id,
-
-					'lang_column_name'					=> lang('Column name'),
-					'value_column_name'					=> $values['column_name'],
-					'lang_column_name_statustext'		=> lang('enter the name for the column'),
-
-					'lang_input_text'					=> lang('input text'),
-					'value_input_text'					=> $values['input_text'],
-					'lang_input_name_statustext'		=> lang('enter the input text for records'),
-
-					'lang_id_attribtext'				=> lang('Enter the attribute ID'),
-					'lang_entity_statustext'			=> lang('Select a entity type'),
-
-					'lang_statustext'					=> lang('Statustext'),
-					'lang_statustext_attribtext'		=> lang('Enter a statustext for the inputfield in forms'),
-					'value_statustext'					=> $values['statustext'],
-
-					'lang_done_attribtext'				=> lang('Back to the list'),
-					'lang_save_attribtext'				=> lang('Save the attribute'),
-
-					'datatype_list'						=> $this->bocommon->select_datatype($values['column_info']['type']),
-
-					'attrib_group_list'					=> $this->bo->get_attrib_group_list($entity_id,$cat_id, $values['group_id']),
-
-					'value_precision'					=> $values['column_info']['precision'],
-
-					'value_scale'						=> $values['column_info']['scale'],
-
-					'value_default'						=> $values['column_info']['default'],
-
-					'nullable_list'						=> $this->bocommon->select_nullable($values['column_info']['nullable']),
-					'value_lookup_form'					=> $values['lookup_form'],
-					'value_list'						=> $values['list'],
-					'value_search'						=> $values['search'],
-					'value_history'						=> $values['history'],
-					'value_disabled'					=> $values['disabled'],
-					'value_helpmsg'						=> $values['helpmsg'],
-				);
-			//_debug_array($values);
+			(
+				'entity_name'						=> $entity['name'],
+				'category_name'						=> $category['name'],
+				'multiple_choice'					=> $multiple_choice,
+				'value_choice'						=> (isset($values['choice'])?$values['choice']:''),
+				'custom_get_list'					=> $custom_get_list,
+				'custom_get_single'					=> $custom_get_single,
+				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+				'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'entity_id'=> $entity_id, 'cat_id'=> $cat_id, 'type' => $this->type)),
+				'value_id'							=> $id,
+				'value_column_name'					=> $values['column_name'],
+				'value_input_text'					=> $values['input_text'],
+				'value_statustext'					=> $values['statustext'],
+				'datatype_list'						=> $this->bocommon->select_datatype($values['column_info']['type']),
+				'attrib_group_list'					=> $this->bo->get_attrib_group_list($entity_id,$cat_id, $values['group_id']),
+				'value_precision'					=> $values['column_info']['precision'],
+				'value_scale'						=> $values['column_info']['scale'],
+				'value_default'						=> $values['column_info']['default'],
+				'nullable_list'						=> $this->bocommon->select_nullable($values['column_info']['nullable']),
+				'value_lookup_form'					=> $values['lookup_form'],
+				'value_list'						=> $values['list'],
+				'value_search'						=> $values['search'],
+				'value_history'						=> $values['history'],
+				'value_disabled'					=> $values['disabled'],
+				'value_helpmsg'						=> $values['helpmsg'],
+				'value_get_list_function'			=> $values['get_list_function'],
+				'value_get_list_function_input'		=> print_r($values['get_list_function_input'],true),
+				'value_get_single_function'			=> $values['get_single_function'],
+				'value_get_single_function_input'	=> print_r($values['get_single_function_input'],true)
+			);
 
 			$appname = lang('entity');
 
