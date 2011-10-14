@@ -21,12 +21,11 @@
 		
 		public function get_db()
 		{
-
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 
-//			$db = createObject('phpgwapi.db', null, null, true);
-			$db = createObject('property.db_oci8');
+			$db = createObject('phpgwapi.db', null, null, true);
+//			$db = createObject('property.db_oci8'); // this one was intended for premilay testing
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
@@ -166,6 +165,26 @@
 			}
 						
 			return $result_units;
+		}
+
+		/**
+		 * Get id/name for result unit
+		 * 
+		 * @return array values prepared for standardized select/filter
+		 */
+		public function get_result_units_wrapper()
+		{
+			$result_units = $this->get_result_units();
+			$values = array();
+			foreach($result_units as $result_unit)
+			{
+				$values[] = array
+				(
+					'id'	=> $result_unit['ORG_UNIT_ID'],
+					'name'	=> "{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}"
+				);
+			}
+			return $values;
 		}
 		
 		public function get_result_unit_with_leader($org_unit_id)
