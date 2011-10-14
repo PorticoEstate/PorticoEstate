@@ -577,7 +577,11 @@
 				'disabled' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'lookup_form' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'custom' => array('type' => 'int','precision' => 2,'nullable' => true,'default' => 1),
-				'helpmsg' => array('type' => 'text','nullable' => true)
+				'helpmsg' => array('type' => 'text','nullable' => true),
+				'get_list_function' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+				'get_list_function_input' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+				'get_single_function' => array('type' => 'varchar','precision' => 255,'nullable' => true),
+				'get_single_function_input' => array('type' => 'varchar','precision' => 255,'nullable' => true)
 			),
 			'pk' => array('location_id', 'id'),
 			'fk' => array(),
