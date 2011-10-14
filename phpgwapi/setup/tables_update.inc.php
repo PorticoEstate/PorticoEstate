@@ -2950,3 +2950,43 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.535';
+	/**
+	* Add custom attibute type that allows call to function of choice
+	*
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_535()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','get_list_function', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','get_list_function_input', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','get_single_function', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','get_single_function_input', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.536';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
