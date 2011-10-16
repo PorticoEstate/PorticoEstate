@@ -72,43 +72,48 @@
 				$sSequenceSQL = '';
 				$sTriggerSQL = '';
 				$this->m_oTranslator->indexes_sql = array();
-				if($this->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
+				
+				try
 				{
-					$sTableSQL = "CREATE TABLE $sTableName (\n$sTableSQL\n)"
-						. $this->m_oTranslator->m_sStatementTerminator;
-					if($sSequenceSQL != '')
-					{
-						$sAllTableSQL .= $sSequenceSQL . "\n";
-					}
-
-					if($sTriggerSQL != '')
-					{
-						$sAllTableSQL .= $sTriggerSQL . "\n";
-					}
-					
-					$sAllTableSQL .= $sTableSQL . "\n\n";
-
-					// postgres and mssql
-					if(isset($this->m_oTranslator->indexes_sql) && is_array($this->m_oTranslator->indexes_sql) && count($this->m_oTranslator->indexes_sql)>0)
-					{
-						foreach($this->m_oTranslator->indexes_sql as $key => $sIndexSQL)
-						{
-							$ix_name = $key.'_'.$sTableName.'_idx';
-							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
-							$sAllTableSQL .= $IndexSQL . "\n\n";
-						}
-					}
+					$this->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL);
 				}
-				else
+
+				catch(Exception $e)
 				{
 					if($bOutputHTML)
 					{
 						print('<br>SQL:<pre>' . $sAllTableSQL . '</pre><br>');
-						print('<br>Failed generating script for <b>' . $sTableName . '</b><br>');
-						echo '<pre style="text-align: left;">'.$sTableName.' = '; print_r($aTableDef); echo "</pre>\n";
 					}
 
+					print('<br>Error: Failed generating script for <b>' . $sTableName . '</b><br>');
+					echo '<pre style="text-align: left;">'.$sTableName.' = '; print_r($aTableDef); echo "</pre>\n";
+					echo $e->getMessage();
 					return false;
+				}
+				
+				$sTableSQL = "CREATE TABLE $sTableName (\n$sTableSQL\n)"
+					. $this->m_oTranslator->m_sStatementTerminator;
+				if($sSequenceSQL != '')
+				{
+					$sAllTableSQL .= $sSequenceSQL . "\n";
+				}
+
+				if($sTriggerSQL != '')
+				{
+					$sAllTableSQL .= $sTriggerSQL . "\n";
+				}
+					
+				$sAllTableSQL .= $sTableSQL . "\n\n";
+
+				// postgres and mssql
+				if(isset($this->m_oTranslator->indexes_sql) && is_array($this->m_oTranslator->indexes_sql) && count($this->m_oTranslator->indexes_sql)>0)
+				{
+					foreach($this->m_oTranslator->indexes_sql as $key => $sIndexSQL)
+					{
+						$ix_name = $key.'_'.$sTableName.'_idx';
+						$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+						$sAllTableSQL .= $IndexSQL . "\n\n";
+					}
 				}
 			}
 
@@ -321,28 +326,33 @@
 			while(list($sFieldName, $aFieldAttr) = each($aTableDef['fd']))
 			{
 				$sFieldSQL = '';
-				if($this->_GetFieldSQL($aFieldAttr, $sFieldSQL))
+				
+				try
 				{
-					if($sTableSQL != '')
-					{
-						$sTableSQL .= ",\n";
-					}
-
-					$sTableSQL .= "$sFieldName $sFieldSQL";
-
-					if($aFieldAttr['type'] == 'auto')
-					{
-						$sbufTriggerFD[] = $sFieldName;
-						if($this->m_oTranslator->GetSequenceSQL($sTableName, $sSequenceSQL))
-						{
-							$sTableSQL .= sprintf(" DEFAULT nextval('seq_%s')", $sTableName);
-						}
-					}
+					$this->_GetFieldSQL($aFieldAttr, $sFieldSQL);
 				}
-				else
+				catch(Exception $e)
 				{
-					if($DEBUG) { echo 'GetFieldSQL failed for ' . $sFieldName; }
+					$_message = "Error: GetFieldSQL failed for <b>{$sTableName}::{$sFieldName}</b>. ";
+					$_message .=  $e->getMessage();
+					throw new Exception($_message);
 					return False;
+				}
+				
+				if($sTableSQL != '')
+				{
+					$sTableSQL .= ",\n";
+				}
+
+				$sTableSQL .= "$sFieldName $sFieldSQL";
+
+				if($aFieldAttr['type'] == 'auto')
+				{
+					$sbufTriggerFD[] = $sFieldName;
+					if($this->m_oTranslator->GetSequenceSQL($sTableName, $sSequenceSQL))
+					{
+						$sTableSQL .= sprintf(" DEFAULT nextval('seq_%s')", $sTableName);
+					}
 				}
 			}
 
@@ -521,8 +531,10 @@
 				if($DEBUG) { echo '<br>_GetFieldSQL(): Outgoing SQL:   ' . $sFieldSQL; }
 				return true;
 			}
-
-			if($DEBUG) { echo '<br>Failed to translate field: type[' . $sType . '] precision[' . $iPrecision . '] scale[' . $iScale . ']<br>'; }
+			else
+			{
+				throw new Exception( 'Failed to translate field: type[' . $sType . '] precision[' . $iPrecision . '] scale[' . $iScale . ']');
+			}
 
 			return False;
 		}
