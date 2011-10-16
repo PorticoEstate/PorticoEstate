@@ -146,6 +146,14 @@ YAHOO.portico.initializeDataTable = function()
 		return true;
     }
 	 
+	YAHOO.util.Event.on(
+	    YAHOO.util.Selector.query('select'), 'change', function (e) {
+	        //var val = this.value;
+			var state = getState();
+			YAHOO.util.Dom.setStyle('list_flash', 'display', 'none');
+			History.navigate('state', state);
+	});
+
     YAHOO.util.Event.addListener('queryForm', "submit", function(e){
         YAHOO.util.Event.stopEvent(e);
 		var state = getState();
