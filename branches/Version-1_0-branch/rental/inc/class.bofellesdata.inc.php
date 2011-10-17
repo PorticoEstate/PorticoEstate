@@ -21,12 +21,11 @@
 		
 		public function get_db()
 		{
-
 			$config	= CreateObject('phpgwapi.config','rental');
 			$config->read();
 
-//			$db = createObject('phpgwapi.db', null, null, true);
-			$db = createObject('property.db_oci8');
+			$db = createObject('phpgwapi.db', null, null, true);
+//			$db = createObject('property.db_oci8'); // this one was intended for premilay testing
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];
@@ -167,6 +166,58 @@
 						
 			return $result_units;
 		}
+
+		/**
+		 * Get id/name for result unit
+		 * 
+		 * @return array values prepared for standardized select/filter
+		 */
+		public function get_result_units_wrapper()
+		{
+			$result_units = $this->get_result_units();
+			$values = array();
+			foreach($result_units as $result_unit)
+			{
+				$values[] = array
+				(
+					'id'	=> $result_unit['ORG_UNIT_ID'],
+					'name'	=> "{$result_unit['UNIT_ID']} - {$result_unit['ORG_UNIT_NAME']}"
+				);
+			}
+			return $values;
+		}
+
+
+		/**
+		 * Get id/name for org unit
+		 * @param integer $level level in organization hierarchy
+		 * 
+		 * @return array values prepared for standardized select/filter
+		 */
+		public function get_org_units($level = 1)
+		{
+			$this->log(__class__, __function__);			
+
+			$level = (int) $level;
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
+			$tables = "V_ORG_ENHET";
+			$sql = "SELECT {$columns} FROM {$tables} WHERE V_ORG_ENHET.ORG_NIVAA = {$level} ORDER BY V_ORG_ENHET.ORG_NAVN ASC";
+			$db = $this->get_db();
+			$db->query($sql,__LINE__,__FILE__);			
+	        
+			$values = array();
+			while($db->next_record())
+			{
+				$values[] = array
+				(
+					'id' 	=> (int)$db->f('ORG_ENHET_ID'),
+					'name'	=> $db->f('ORG_NAVN'),
+				);
+			}
+						
+			return $values;
+		}
+
 		
 		public function get_result_unit_with_leader($org_unit_id)
 		{

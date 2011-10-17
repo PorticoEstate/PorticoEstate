@@ -28,7 +28,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'control_item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'control_item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'order_nr' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -85,7 +86,9 @@
 				'responsibility' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'reference' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
-				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True)
+				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

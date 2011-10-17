@@ -4,6 +4,7 @@ $(document).ready(function() {
 	$("ul.control_items ul:first").find("li ul").slideDown("slow");
 	$("ul.control_items ul:first").addClass('active');
 
+	/* =============================================================================== */
 	
 	$(".expand_list h4").click(function(){
 		if( $(this).parent().parent().hasClass('active')){
@@ -16,6 +17,8 @@ $(document).ready(function() {
 			$(this).parent().parent().addClass('active');
 		}
 	});
+	
+	/* =============================================================================== */
 	
 	$(".expand_all").click(function(){
 		$(".expand_all").css("background", "url('controller/images/bg_expand_blue.png') no-repeat");
@@ -47,8 +50,8 @@ $(document).ready(function() {
 		var control_group_id = chbox_id.substring( chbox_id.indexOf("_")+1, chbox_id.indexOf(":") );
 		var control_item_id = chbox_id.substring( chbox_id.indexOf(":")+1,  chbox_id.length );
 		
-		if ($("#hid_"+control_item_id).length > 0){
-			$("#hid_"+control_item_id).remove();
+		if ($("#hid_" + control_item_id).length > 0){
+			$("#hid_" + control_item_id).remove();
 		}else{
 			$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
 		}

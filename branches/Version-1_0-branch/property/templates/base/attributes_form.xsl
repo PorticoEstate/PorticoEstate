@@ -209,6 +209,54 @@
 										</xsl:choose>
 									</input>
 								</xsl:when>
+								<xsl:when test="datatype='custom1'">
+									<select name="values_attribute[{counter}][value]" class="forms">
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select')" />
+										</option>
+										<xsl:for-each select="choice">
+											<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+											<xsl:choose>
+												<xsl:when test="selected='1'">
+													<option value="{$id}" selected="selected"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+												</xsl:when>
+												<xsl:otherwise>
+													<option value="{$id}"><xsl:value-of disable-output-escaping="yes" select="name"/></option>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:for-each>
+									</select>
+								</xsl:when>
+								<xsl:when test="datatype='custom2'">
+									<xsl:variable name="custom_name"><xsl:value-of select="name"/><xsl:text>_name</xsl:text></xsl:variable>
+									<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>
+									<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+									</input>
+									<input  size="30" type="text" name="{$custom_name}" value="{custom_name}"  onClick="{$lookup_function}" readonly="readonly"> 
+										<xsl:choose>
+											<xsl:when test="disabled!=''">
+												<xsl:attribute name="disabled">
+													<xsl:text> disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:when>
+										</xsl:choose>
+									</input>
+								</xsl:when>
+							
 								<xsl:when test="datatype='user'">
 									<xsl:variable name="user_name"><xsl:value-of select="name"/><xsl:text>_user_name</xsl:text></xsl:variable>
 									<xsl:variable name="lookup_function"><xsl:text>lookup_</xsl:text><xsl:value-of select="name"/><xsl:text>();</xsl:text></xsl:variable>

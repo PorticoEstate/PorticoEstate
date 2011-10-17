@@ -119,7 +119,9 @@
 				'pwd' 	=> lang('password'),
 				'user' 	=> 'phpgw_user',
 				'event'	=> lang('event'),
-				'bolean'	=> 'Bolean'
+				'bolean'=> 'Bolean',
+				'custom1'=> lang('Custom listbox'),//Custom listbox to generic lists
+				'custom2'=> lang('Custom lookup'),//Custom lookup to generic lists
 			);
 
 			$this->_oProc			= createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
@@ -247,6 +249,15 @@
 				return -1;
 			}
 
+ 			if(isset($attrib['get_list_function_input']) &&  $attrib['get_list_function_input'])
+ 			{
+				$attrib['get_list_function_input'] = $this->_validate_function_input($attrib['get_list_function_input']);
+  			}
+ 			if(isset($attrib['get_single_function_input']) &&  $attrib['get_single_function_input'])
+ 			{
+				$attrib['get_single_function_input'] = $this->_validate_function_input($attrib['get_single_function_input']);
+  			}
+
 			$values = array
 			(
 				'location_id'	=> $location_id,
@@ -266,7 +277,11 @@
 				'precision_'	=> (int) $attrib['column_info']['precision'],
 				'scale'			=> (int) $attrib['column_info']['scale'],
 				'default_value'	=> '',
-				'nullable'		=> $attrib['column_info']['nullable']
+				'nullable'		=> $attrib['column_info']['nullable'],
+				'get_list_function'	=> $attrib['get_list_function'],
+				'get_list_function_input' => $attrib['get_list_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_list_function_input'])) : '',
+				'get_single_function'	=> $attrib['get_single_function'],
+				'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : ''
 			);
 
 			if ( isset($attrib['search']) )
@@ -610,6 +625,15 @@
 		 */
 		function edit($attrib, $attrib_table = '', $doubled = false)
 		{
+ 			if(isset($attrib['get_list_function_input']) &&  $attrib['get_list_function_input'])
+ 			{
+				$attrib['get_list_function_input'] = $this->_validate_function_input($attrib['get_list_function_input']);
+  			}
+ 			if(isset($attrib['get_single_function_input']) &&  $attrib['get_single_function_input'])
+ 			{
+				$attrib['get_single_function_input'] = $this->_validate_function_input($attrib['get_single_function_input']);
+  			}
+
 			// Checkboxes are only present if ticked, so we declare them here to stop errors
 			$attrib['search'] = isset($attrib['search']) ? !!$attrib['search'] : false;
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
@@ -672,16 +696,20 @@
 			{
 				$value_set = array
 				(
-					'input_text'	=> $attrib['input_text'],
-					'statustext'	=> $attrib['statustext'],
-					'search'		=> isset($attrib['search']) ? $attrib['search'] : '',
-					'list'			=> isset($attrib['list']) ? $attrib['list'] : '',
-					'history'		=> isset($attrib['history']) ? $attrib['history'] : '',
-					'nullable'		=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
-					'disabled'		=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
-					'helpmsg'		=> $attrib['helpmsg'],
-					'lookup_form'	=> isset($attrib['lookup_form']) ? $attrib['lookup_form'] : '',
-					'group_id'		=> $attrib['group_id']
+					'input_text'			=> $attrib['input_text'],
+					'statustext'			=> $attrib['statustext'],
+					'search'				=> isset($attrib['search']) ? $attrib['search'] : '',
+					'list'					=> isset($attrib['list']) ? $attrib['list'] : '',
+					'history'				=> isset($attrib['history']) ? $attrib['history'] : '',
+					'nullable'				=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
+					'disabled'				=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
+					'helpmsg'				=> $attrib['helpmsg'],
+					'lookup_form'			=> isset($attrib['lookup_form']) ? $attrib['lookup_form'] : '',
+					'group_id'				=> $attrib['group_id'],
+					'get_list_function'		=> $attrib['get_list_function'],
+					'get_list_function_input' => $attrib['get_list_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_list_function_input'])) : '',
+					'get_single_function'		=> $attrib['get_single_function'],
+					'get_single_function_input' => $attrib['get_single_function_input'] ? $this->_db->db_addslashes(serialize($attrib['get_single_function_input'])) : ''
 				);
 
 				if($OldGroup != $attrib['group_id'])
@@ -959,28 +987,32 @@
 				$id = $this->_db->f('id');
 				$attribs[$id] = array
 				(
-					'id'				=> $id,
+					'id'					=> $id,
 					//'attrib_id'			=> $this->_db->f('id'), // FIXME
-					'entity_type'		=> $this->_db->f('type_id'),
-					'group_id'			=> (int) $this->_db->f('group_id'),					
-					'attrib_sort'		=> (int) $this->_db->f('attrib_sort'),
-					'list'				=> $this->_db->f('list'),
-					'lookup_form'		=> $this->_db->f('lookup_form'),
-					'entity_form'		=> $this->_db->f('entity_form'),
-					'column_name'		=> $this->_db->f('column_name'),
-					'name'				=> $this->_db->f('column_name'),
-					'size'				=> $this->_db->f('size'),
-					'statustext'		=> $this->_db->f('statustext', true),
-					'input_text'		=> $this->_db->f('input_text', true),
-					'type_name'			=> $this->_db->f('type'),
-					'datatype'			=> $this->_db->f('datatype'),
-					'search'			=> $this->_db->f('search'),
-					'trans_datatype'	=> $this->translate_datatype($this->_db->f('datatype')),
-					'nullable'			=> ($this->_db->f('nullable') == 'True'),
-					//'allow_null'		=> ($this->_db->f('nullable') == 'True'), // FIXME
-					'history'			=> $this->_db->f('history'),
-					'disabled'			=> $this->_db->f('disabled'),
-					'helpmsg'			=> !!$this->_db->f('helpmsg')
+					'entity_type'			=> $this->_db->f('type_id'),
+					'group_id'				=> (int) $this->_db->f('group_id'),					
+					'attrib_sort'			=> (int) $this->_db->f('attrib_sort'),
+					'list'					=> $this->_db->f('list'),
+					'lookup_form'			=> $this->_db->f('lookup_form'),
+					'entity_form'			=> $this->_db->f('entity_form'),
+					'column_name'			=> $this->_db->f('column_name'),
+					'name'					=> $this->_db->f('column_name'),
+					'size'					=> $this->_db->f('size'),
+					'statustext'			=> $this->_db->f('statustext', true),
+					'input_text'			=> $this->_db->f('input_text', true),
+					'type_name'				=> $this->_db->f('type'),
+					'datatype'				=> $this->_db->f('datatype'),
+					'search'				=> $this->_db->f('search'),
+					'trans_datatype'		=> $this->translate_datatype($this->_db->f('datatype')),
+					'nullable'				=> ($this->_db->f('nullable') == 'True'),
+					//'allow_null'			=> ($this->_db->f('nullable') == 'True'), // FIXME
+					'history'				=> $this->_db->f('history'),
+					'disabled'				=> $this->_db->f('disabled'),
+					'helpmsg'				=> !!$this->_db->f('helpmsg'),
+					'get_list_function'		=> $this->_db->f('get_list_function'),
+					'get_list_function_input' => $this->_db->f('get_list_function_input') ? unserialize($this->_db->f('get_list_function_input', true)) : '',
+					'get_single_function'		=> $this->_db->f('get_single_function'),
+					'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
 
 				);
 			}
@@ -1143,33 +1175,38 @@
 
 			$attrib = array
 			(
-				'id'			=> $this->_db->f('id'),
-				'group_id'		=> $this->_db->f('group_id'),
-				'column_name'	=> $this->_db->f('column_name', true),
-				'input_text'	=> $this->_db->f('input_text', true),
-				'statustext'	=> $this->_db->f('statustext', true),
-				'type_id'		=> $this->_db->f('type_id'),
-				'type_name'		=> $this->_db->f('type_name'),
-				'lookup_form'	=> $this->_db->f('lookup_form'),
-				'list'			=> !!$this->_db->f('list'),
-				'search'		=> !!$this->_db->f('search'),
-				'history'		=> !!$this->_db->f('history'),
-				'location_id'	=> $this->_db->f('location_id'),
+				'id'					=> $this->_db->f('id'),
+				'group_id'				=> $this->_db->f('group_id'),
+				'column_name'			=> $this->_db->f('column_name', true),
+				'input_text'			=> $this->_db->f('input_text', true),
+				'statustext'			=> $this->_db->f('statustext', true),
+				'type_id'				=> $this->_db->f('type_id'),
+				'type_name'				=> $this->_db->f('type_name'),
+				'lookup_form'			=> $this->_db->f('lookup_form'),
+				'list'					=> !!$this->_db->f('list'),
+				'search'				=> !!$this->_db->f('search'),
+				'history'				=> !!$this->_db->f('history'),
+				'location_id'			=> $this->_db->f('location_id'),
 				// FIXME this is broken it should be a small int and used as a bool
-				'nullable'		=> $this->_db->f('nullable') == 'True',
+				'nullable'				=> $this->_db->f('nullable') == 'True',
 				// FIXME this isn't needed
-				//'allow_null'	=> $this->_db->f('nullable') == 'True',
-				'disabled'		=> !!$this->_db->f('disabled'),
-				'helpmsg'		=> $this->_db->f('helpmsg', true),
-				'column_info'	=> array
-									(
-										'precision'	=> $this->_db->f('precision_'),
-										'scale'		=> $this->_db->f('scale'),
-										'default'	=> $this->_db->f('default_value', true),
-										// more duplicated values
-										'nullable'	=> $this->_db->f('nullable'),
-										'type'		=> $this->_db->f('datatype')
-									)
+				//'allow_null'			=> $this->_db->f('nullable') == 'True',
+				'disabled'				=> !!$this->_db->f('disabled'),
+				'helpmsg'				=> $this->_db->f('helpmsg', true),
+				'get_list_function'		=>$this->_db->f('get_list_function',true),
+				'get_list_function_input' => $this->_db->f('get_list_function_input') ? unserialize($this->_db->f('get_list_function_input', true)) : '',
+				'get_single_function'		=>$this->_db->f('get_single_function',true),
+				'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
+
+				'column_info'			=> array
+										(
+											'precision'	=> $this->_db->f('precision_'),
+											'scale'		=> $this->_db->f('scale'),
+											'default'	=> $this->_db->f('default_value', true),
+											// more duplicated values
+											'nullable'	=> $this->_db->f('nullable'),
+											'type'		=> $this->_db->f('datatype')
+										)
 			);
 
 			if ( $inc_choices )
@@ -1594,7 +1631,9 @@
 				'pwd' 		=> 'varchar',
 				'user' 		=> 'int',
 				'event'		=> 'int',
-				'bolean'	=> 'int'
+				'bolean'	=> 'int',
+				'custom1'	=> 'int',
+				'custom2'	=> 'int',
 			);
 
 			if ( !isset($datatype_text[$datatype]) )
@@ -1627,7 +1666,9 @@
 				'pwd' 		=> 32,
 				'user' 		=> 4,
 				'event'		=> 4,
-				'bolean'	=> 2
+				'bolean'	=> 2,
+				'custom1'	=> 4,
+				'custom2'	=> 4
 			);
 
 			if ( !isset($datatype_precision[$datatype]) )
@@ -1635,5 +1676,39 @@
 				return 0;
 			}
 			return $datatype_precision[$datatype];
+		}
+
+		/**
+		 * validate and translate function input
+		 *
+		 * @param string $data the data to validate
+		 *
+		 * @return input in appropriate format: array or single value
+		 */
+		protected function _validate_function_input($data)
+		{
+			if(ctype_digit($data))
+ 			{
+				return $data;
+			}
+			else
+ 			{
+ 				$_test_input = str_replace(array("\n","\r","\t", 'Array', 'array', '[', ']', '(', ')', ' ', '&gt;'), array(',','','','','','','','','','',''), stripslashes($data));
+				$_test_input= explode(',', $_test_input);
+				if(is_array($_test_input))
+				{
+					foreach($_test_input as $set)
+					{
+						$_set = explode('=', $set);
+						if(!$_set[1])
+						{
+							continue;
+						}
+						$_set[0] = str_replace(array("'", '"'), '', $_set[0]);
+						$data_set[$_set[0]] = trim(str_replace(array('"', "'"), '', $_set[1]));
+					}
+				}
+				return $data_set;
+			}
 		}
 	}

@@ -76,7 +76,7 @@
 			$this->cat_id		= isset($_REQUEST['cat_id'])  ? $cat_id :  $this->cat_id;
 			$this->allrows		= isset($allrows) ? $allrows : false;
 
-			$this->location_info = $this->so->get_location_info($type, $type_id);
+//			$this->location_info = $this->so->get_location_info($type, $type_id);
 
 		}
 
@@ -103,9 +103,11 @@
 			$this->allrows	= $data['allrows'];
 		}
 
-		public function get_location_info($type,$type_id)
+		public function get_location_info($type = '', $type_id = 0)
 		{
-			return $this->so->get_location_info($type,$type_id);
+			$type = $type ? $type : $this->type;
+			$type_id = $type_id ? $type_id : $this->type_id;
+			return $this->location_info = $this->so->get_location_info($type,$type_id);
 		}
 
 		function column_list($selected='',$allrows='')

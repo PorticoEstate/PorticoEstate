@@ -23,12 +23,7 @@ div#invoice_details dt{
 	float:left;
 	 font-weight: bolder;
 	 margin-right: 1em;
-	}
-
-div#invoice_details dd{
-	
-	}
-
+}
 div.content {
 	margin: 2em;	
 }
@@ -480,6 +475,7 @@ ul.expand_list h4 {
     cursor: pointer;
     font-size: 17px;
     margin-bottom: 6px;
+    margin-top: 0;
 }
 
 ul.expand_list li ul {
@@ -520,8 +516,17 @@ ul.itemlist {
     margin: 1em 0;
     padding-left: 20px;
 }
-ul.itemlist li{
-    margin: 3px 0;
+ul.itemlist li {
+    padding: 3px 0;
+}
+
+ul.itemlist li.odd{
+    background: none repeat scroll 0 0 #DBE7F5;
+}
+
+ul.itemlist h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
 }
 
 .yui-content h2{
@@ -564,4 +569,38 @@ ul.itemlist li{
 dl.proplist, dl.proplist-col {
     margin: 5px 0;
     padding-left: 15px;
+}
+
+.drag_elem{
+  z-index: 100;
+  position:absolute;
+  opacity: .50;
+  filter: alpha(opacity=50);
+}
+
+#list{
+  width: 650px;
+  position:relative;
+}
+
+.list_item{
+  position:relative;
+  z-index: 1;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  top: 0px;
+  left: 0px;
+}
+
+.list_item:hover{
+  cursor: move;
+}
+
+.frm_save_order input[type='submit']{
+	margin: 0 0 15px 15px;
+    width: 120px;
+}	
+.delete {
+    cursor: pointer;
+    margin-left: 5px;
 }

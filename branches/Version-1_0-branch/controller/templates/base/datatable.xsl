@@ -133,6 +133,7 @@
                         </xsl:for-each>
                 	</select>
                     </td>
+<!--
 					<xsl:if test="onChangeSelect">
 						<script type="text/javascript">	
 							YAHOO.util.Event.onDOMReady(function() {
@@ -161,6 +162,7 @@
 							});
 						</script>
 					</xsl:if>
+-->
 				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">

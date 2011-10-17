@@ -40,6 +40,7 @@ floor	controller	no	Etasje
 section	controller	no	Seksjon
 room	controller	no	Rom
 save	controller	no	Lagre
+save_order	controller	no	Lagre rekkefølge
 1-6 characters	controller	no	1-6 tegn
 6 characters	controller	no	6 tegn
 active	controller	no	Aktiv
@@ -247,3 +248,4 @@ REJECTED	controller	no	Avvist
 New control group	controller	no	Ny kontrollgruppe
 Control group title	controller	no	Tittel
 Building part	controller	no	Bygningsdel
+remove	controller	no	Fjern valgte elementer
