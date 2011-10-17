@@ -186,6 +186,38 @@
 			}
 			return $values;
 		}
+
+
+		/**
+		 * Get id/name for org unit
+		 * @param integer $level level in organization hierarchy
+		 * 
+		 * @return array values prepared for standardized select/filter
+		 */
+		public function get_org_units($level = 1)
+		{
+			$this->log(__class__, __function__);			
+
+			$level = (int) $level;
+			$columns = "V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN";
+			$tables = "V_ORG_ENHET";
+			$sql = "SELECT {$columns} FROM {$tables} WHERE V_ORG_ENHET.ORG_NIVAA = {$level} ORDER BY V_ORG_ENHET.ORG_NAVN ASC";
+			$db = $this->get_db();
+			$db->query($sql,__LINE__,__FILE__);			
+	        
+			$values = array();
+			while($db->next_record())
+			{
+				$values[] = array
+				(
+					'id' 	=> (int)$db->f('ORG_ENHET_ID'),
+					'name'	=> $db->f('ORG_NAVN'),
+				);
+			}
+						
+			return $values;
+		}
+
 		
 		public function get_result_unit_with_leader($org_unit_id)
 		{
