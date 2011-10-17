@@ -197,7 +197,6 @@ JS;
 					}
 					foreach ($attributes['choice'] as &$_choice)
 					{
-						$_choice['name'] = "{$_choice['id']} {$_choice['name']}";
 						$_choice['selected'] = $_choice['id'] == $attributes['value'] ? 1 : 0;
 					}					
 				}
