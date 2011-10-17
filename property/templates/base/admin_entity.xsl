@@ -1185,7 +1185,7 @@
 
 					<tr>
 						<td class="th_text" align="left">
-							<xsl:value-of select="lang_entity"/>
+							<xsl:value-of select="php:function('lang', 'entity')" />
 						</td>
 						<td class="th_text" align="left">
 							<xsl:value-of select="entity_name"/>
@@ -1193,7 +1193,7 @@
 					</tr>
 					<tr>
 						<td class="th_text" align="left">
-							<xsl:value-of select="lang_category"/>
+							<xsl:value-of select="php:function('lang', 'category')" />
 						</td>
 						<td class="th_text" align="left">
 							<xsl:value-of select="category_name"/>
@@ -1203,7 +1203,7 @@
 						<xsl:when test="value_id != ''">
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_id"/>
+									<xsl:value-of select="php:function('lang', 'attribute id')" />
 								</td>
 								<td>
 									<xsl:value-of select="value_id"/>
@@ -1213,36 +1213,36 @@
 					</xsl:choose>
 					<tr>
 						<td valign="top">
-							<xsl:value-of select="lang_column_name"/>
+							<xsl:value-of select="php:function('lang', 'column name')" />
 						</td>
 						<td>
 							<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="50">
 								<xsl:attribute name="title">
-									<xsl:value-of select="lang_column_name_statustext"/>
+									<xsl:value-of select="php:function('lang', 'enter the name for the column')" />
 								</xsl:attribute>
 							</input>
 						</td>
 					</tr>
 					<tr>
 						<td valign="top">
-							<xsl:value-of select="lang_input_text"/>
+							<xsl:value-of select="php:function('lang', 'input text')" />
 						</td>
 						<td>
 							<input type="text" name="values[input_text]" value="{value_input_text}" size ="60" maxlength="50">
 								<xsl:attribute name="title">
-									<xsl:value-of select="lang_input_text_statustext"/>
+									<xsl:value-of select="php:function('lang', 'enter the input text for records')" />
 								</xsl:attribute>
 							</input>
 						</td>
 					</tr>
 					<tr>
 						<td valign="top">
-							<xsl:value-of select="lang_statustext"/>
+							<xsl:value-of select="php:function('lang', 'statustext')" />
 						</td>
 						<td>
 							<textarea cols="60" rows="10" name="values[statustext]">
 								<xsl:attribute name="title">
-									<xsl:value-of select="lang_statustext_attribtext"/>
+									<xsl:value-of select="php:function('lang', 'enter a statustext for the inputfield in forms')" />
 								</xsl:attribute>
 								<xsl:value-of select="value_statustext"/>		
 							</textarea>
@@ -1417,10 +1417,10 @@
 					</tr>
 
 					<xsl:choose>
-						<xsl:when test="multiple_choice != ''">
+						<xsl:when test="multiple_choice = 1">
 							<tr>
 								<td valign="top">
-									<xsl:value-of select="lang_choice"/>
+									<xsl:value-of select="php:function('lang', 'choice')" />
 								</td>
 								<td align="right">
 									<xsl:call-template name="choice"/>
@@ -1428,30 +1428,84 @@
 							</tr>
 						</xsl:when>
 					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="custom_get_list = 1">
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'custom get list function')" />
+								</td>
+								<td>
+									<input type="text" name="values[get_list_function]" value="{value_get_list_function}" size='60'>
+										<xsl:attribute name="title">
+											<xsl:text>&lt;app&gt;.&lt;class&gt;.&lt;function&gt;</xsl:text>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'get list function input')" />
+								</td>
+								<td>
+									<textarea cols="60" rows="10" name="values[get_list_function_input]">
+										<xsl:attribute name="title">
+											<xsl:text>parameter1 = value1, parameter2 = value2...</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="value_get_list_function_input"/>		
+									</textarea>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="custom_get_single = 1">
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'custom get single function')" />
+								</td>
+								<td>
+									<input type="text" name="values[get_single_function]" value="{value_get_single_function}" size='60'>
+										<xsl:attribute name="title">
+											<xsl:text>&lt;app&gt;.&lt;class&gt;.&lt;function&gt;</xsl:text>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'get single function input')" />
+								</td>
+								<td>
+									<textarea cols="60" rows="10" name="values[get_single_function_input]">
+										<xsl:attribute name="title">
+											<xsl:text>parameter1 = value1, parameter2 = value2...</xsl:text>
+										</xsl:attribute>
+										<xsl:value-of select="value_get_single_function_input"/>		
+									</textarea>
+								</td>
+							</tr>
+						</xsl:when>
+					</xsl:choose>
+
 					<tr height="50">
 						<td>
-							<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-							<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_save_attribtext"/>
-									<xsl:text>'; return true;</xsl:text>
+							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+							<input type="submit" name="values[save]" value="{$lang_save}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'save the attribute')" />
 								</xsl:attribute>
 							</input>
 						</td>
 					</tr>
-
 				</form>
 				<tr>
 					<td>
 						<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
-						<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
+						<xsl:variable name="lang_done"><xsl:value-of select="php:function('lang', 'done')" /></xsl:variable>
 						<form method="post" action="{$done_action}">
-							<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_done_attribtext"/>
-									<xsl:text>'; return true;</xsl:text>
+							<input type="submit" name="done" value="{$lang_done}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'back to the list')" />
 								</xsl:attribute>
 							</input>
 						</form>
@@ -1808,7 +1862,7 @@
 							<xsl:value-of select="php:function('lang', 'order')" />
 						</td>
 						<td class="th_text" width="15%" align="center">
-							<xsl:value-of select="lang_delete_value"/>
+							<xsl:value-of select="php:function('lang', 'delete value')" />
 						</td>
 					</tr>
 					<xsl:for-each select="value_choice" >
@@ -1844,11 +1898,9 @@
 								</input>
 							</td>
 							<td align="center">
-								<input type="checkbox" name="values[delete_choice][]" value="{id}"  onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="//lang_delete_choice_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
+								<input type="checkbox" name="values[delete_choice][]" value="{id}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'delete this value from the list of multiple choice')" />
 									</xsl:attribute>
 								</input>
 							</td>
@@ -1858,14 +1910,12 @@
 			</xsl:choose>
 			<tr>
 				<td valign="top" colspan='2'>
-					<xsl:value-of select="lang_new_value"/>
+					<xsl:value-of select="php:function('lang', 'new value')" />
 				</td>
 				<td valign="top" colspan='2'>
-					<input type="text" name="values[new_choice]" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
-							<xsl:value-of select="lang_new_value_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
+					<input type="text" name="values[new_choice]">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'new value for multiple choice')" />
 						</xsl:attribute>
 					</input>
 				</td>

@@ -8,6 +8,7 @@
 		protected $id;
 		protected $control_id;
 		protected $control_item_id;
+		protected $order_nr;
 				
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -15,11 +16,12 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
+		    	
 		public function __construct(int $id = null)
 		{
 			$this->id = (int)$id;
 		}
-		
+    		
 		public function set_id($id)
 		{
 			$this->id = $id;
@@ -40,6 +42,13 @@
 		}
 		
 		public function get_control_item_id() { return $this->control_item_id; }
+		
+		public function set_order_nr($order_nr)
+		{
+			$this->order_nr = $order_nr;
+		}
+		
+		public function get_order_nr() { return $this->order_nr; }
 				
 		/**
 		 * Get a static reference to the storage object associated with this model object

@@ -1,7 +1,7 @@
 <?php
 phpgw::import_class('controller.socommon');
 
-include_class('controller', 'control_item', 'inc/model/');
+include_class('controller', 'control_item_list', 'inc/model/');
 
 class controller_socontrol_item_list extends controller_socommon
 {
@@ -37,9 +37,6 @@ class controller_socontrol_item_list extends controller_socommon
 			$this->marshal($control_item_list->get_control_id(), 'int'),
 			$this->marshal($control_item_list->get_control_item_id(), 'int')
 		);
-
-		
-		var_dump("INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')' ");
 		
 		$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 		$result = $this->db->query($sql, __LINE__,__FILE__);
@@ -63,52 +60,71 @@ class controller_socontrol_item_list extends controller_socommon
 	 * @return boolean true if successful, false otherwise
 	 */
 
+/**
+	 * Update the database values for an existing activity object.
+	 *
+	 * @param $activity the activity to be updated
+	 * @return boolean true if successful, false otherwise
+	 */
+
 	function update($control_item_list)
 	{	
-		/*
-		$id = intval($control_item->get_id());
+		$id = intval($control_item_list->get_id());
 			
 		$values = array(
-			'$purpose = ' . $this->marshal($control_item->get_purpose(), 'string'),
-			'responsibility = ' . $this->marshal($control_item->get_responsibility(), 'int'),
-			'description = ' . $this->marshal($control_item->get_description(), 'int'),
-			'reference = ' . $this->marshal($control_item->get_reference(), 'int'),
-			'attachment = ' . $this->marshal($control_item->get_attachment(), 'int')
+			'control_id = ' . $this->marshal($control_item_list->get_control_id(), 'int'),
+			'control_item_id = '. $this->marshal($control_item_list->get_control_item_id(), 'int'),
+			'order_nr = ' . $this->marshal($control_item_list->get_order_nr(), 'int')
 		);
 		
-		//var_dump('UPDATE activity_activity SET ' . join(',', $values) . " WHERE id=$id");
-		$result = $this->db->query('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
-		
+		$result = $this->db->query('UPDATE controller_control_item_list SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
+				
 		return isset($result);
-		*/
 	}
 	
 	/**
-	 * Get single procedure
+	 * Get single control_item_list
 	 * 
-	 * @param	$id	id of the control_item to return
-	 * @return a controller_control_item
+	 * @param	$id	id of the control_item_list to return
+	 * @return a controller_control_item_list
 	 */
 	function get_single($id)
 	{
-		/*
 		$id = (int)$id;
 		
-		$sql = "SELECT p.* FROM controller_control_item p WHERE p.id = " . $id;
+		$sql = "SELECT p.* FROM controller_control_item_list p WHERE p.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
-		$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
-		$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-		$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
-		$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-		$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-		$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-		$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+		$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id', true), 'int'));
+		$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+		$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+		$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr', true), 'int'));
 		
-		return $control_item;
+		return $control_item_list;
+	}
+	
+	function get_single_2($control_id, $control_item_id)
+	{		
+		$sql = "SELECT p.* FROM controller_control_item_list p WHERE p.control_id = " . $control_id . " AND p.control_item_id = " . $control_item_id;
+		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+		$this->db->next_record();
 		
-		*/
+		$control_item_list = new controller_control_item_list($this->unmarshal($this->db->f('id', true), 'int'));
+		$control_item_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
+		$control_item_list->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+		$control_item_list->set_order_nr($this->unmarshal($this->db->f('order_nr', true), 'int'));
+		
+		return $control_item_list;
+	}
+	
+	function delete($control_id, $control_item_id)
+	{		
+		var_dump("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id");
+		
+		$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
+				
+		return isset($result);
 	}
 	
 	/**
@@ -231,7 +247,6 @@ class controller_socontrol_item_list extends controller_socommon
 		}
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 		
-		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		
 		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";

@@ -6,7 +6,7 @@
 
 <div class="yui-content">
 	<div id="control_details">
-		<form action="#" method="post">
+		<form action="index.php?menuaction=controller.uicontrol.index" method="post">
 			<input type="hidden" name="control_id" value="{$control_id}" />	
 	
 			<dl class="proplist-col">

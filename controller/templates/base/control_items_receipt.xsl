@@ -3,38 +3,61 @@
 <div class="yui-content">
 	<div>
 	
-	  <!-- ===========================  SHOW CONTROL ITEMS RECEIPT   =============================== -->
-	 
-  	  <h2>Kvittering</h2>
-	  <form action="#" method="post">	
-		
+	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
+
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
-		<input type="hidden" name="control_id" value="{control_id}" />
+		<input type="hidden" id="control_id" name="control_id" value="{control_id}" />
 		
-		<ul class="proplist-col control_items">
+		<ul>
 			<xsl:for-each select="control_receipt_items">
-			<ul>
-	    		<li>
-		         	<h3><xsl:value-of select="control_group/group_name"/></h3>
-		         	<div id="play">
-		         	<ul>		
-						<xsl:for-each select="control_items">
-							<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-			     			<li><xsl:number/>. <xsl:value-of select="title"/></li>	
-						</xsl:for-each>
-					</ul>
-					</div>
-				</li>
-			</ul>      
+			<form action="index.php?menuaction=controller.uicontrol_item.save_item_order" class="frm_save_order">
+				<ul class="itemlist control_items">
+		    		<li>
+			         	<h3><xsl:value-of select="control_group/group_name"/></h3>
+			         	
+			         	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
+						<input type="hidden" name="control_group_id" value="{$control_group_id}" />		
+				
+			         	<ul id="list">
+							<xsl:for-each select="control_items">
+								<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
+								<xsl:variable name="order_tag">
+									<xsl:choose>
+										<xsl:when test="order_nr > 0">
+											<xsl:value-of select="order_nr"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:number/>
+										</xsl:otherwise>
+									</xsl:choose>:<xsl:value-of select="id"/>
+								</xsl:variable>
+																
+				     			<li class="list_item">
+				     				<span class="drag">
+				     					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
+				     				</span>
+				     				<a class="delete">
+										<xsl:attribute name="href">
+											<xsl:text>index.php?menuaction=controller.uicontrol_item.delete_item_list</xsl:text>
+											<xsl:text>&amp;control_id=</xsl:text>
+											<xsl:value-of select="//control_id"/>
+											<xsl:text>&amp;control_item_id=</xsl:text>
+											<xsl:value-of select="id"/>
+										</xsl:attribute>
+										<span>x</span>
+									</a>
+				     			</li>
+							</xsl:for-each>
+						</ul>
+					</li>
+				</ul>      
+				<div>
+					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_order')" /></xsl:variable>
+					<input type="submit" id="save_order" name="save_order" value="{$lang_save}" title = "{$lang_save}" />
+				</div>	
+			</form>
 			</xsl:for-each>
-		</ul>	
-		
-		<div class="form-buttons">
-		<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-		<input type="submit" name="show_receipt" value="{$lang_save}" title = "{$lang_save}" />
-		</div>
-	</form>
-						
+		</ul>					
 	</div>
 </div>
 </xsl:template>

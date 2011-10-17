@@ -58,6 +58,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo					= CreateObject('property.bogeneric',true);
+			$this->bo->get_location_info();
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->custom				= & $this->bo->custom;
 
