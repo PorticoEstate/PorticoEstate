@@ -331,37 +331,6 @@
 							</xsl:choose>
 
 							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'total cost estimate')" />
-								</td>
-								<td>
-									<input type="text" name="values[budget]" value="{value_budget}">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_budget_statustext"/>
-										</xsl:attribute>
-									</input>
-									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'not allocated')" />
-								</td>
-								<td>
-									<xsl:value-of select="value_diff"/>
-									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<xsl:value-of select="php:function('lang', 'residual demand')" />
-								</td>
-								<td>
-									<xsl:value-of select="value_diff2"/>
-									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-								</td>
-							</tr>
-							<tr>
 								<td>
 									<xsl:value-of select="php:function('lang', 'building part')" />
 								</td>
@@ -430,6 +399,38 @@
 									</tr>
 								</xsl:when>
 							</xsl:choose>
+
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'total cost estimate')" />
+								</td>
+								<td>
+									<input type="text" name="values[budget]" value="{value_budget}">
+										<xsl:attribute name="title">
+											<xsl:value-of select="lang_budget_statustext"/>
+										</xsl:attribute>
+									</input>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'not allocated')" />
+								</td>
+								<td>
+									<xsl:value-of select="value_diff"/>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<xsl:value-of select="php:function('lang', 'residual demand')" />
+								</td>
+								<td>
+									<xsl:value-of select="value_diff2"/>
+									<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+								</td>
+							</tr>
 
 							<tr>
 								<td valign="top">
