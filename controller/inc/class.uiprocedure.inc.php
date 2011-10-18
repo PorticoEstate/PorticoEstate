@@ -252,6 +252,15 @@
 					
 		public function query()
 		{
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+			
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -303,7 +312,12 @@
 			}
 			
 			// ... add result data
-			$result_data = array('results' => $rows, 'total_records' => $object_count);
+			$result_data = array('results' => $rows);
+			
+			$result_data['total_records'] = $object_count;
+			$result_data['start'] = $params['start'];
+			$result_data['sort'] = $params['sort'];
+			$result_data['dir'] = $params['dir'];
 			
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
@@ -315,7 +329,7 @@
 					"controller.uiprocedure.view");
 			}
 //_debug_array($result_data);
-			return $this->yui_results($result_data, 'total_records', 'results');
+			return $this->yui_results($result_data);
 
 		}
 
