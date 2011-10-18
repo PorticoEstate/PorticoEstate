@@ -139,10 +139,14 @@ class controller_socontrol extends controller_socommon
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
 		}
-		
+		//var_dump($filters);
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "controller_control.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		if(isset($filters['control_areas']))
+		{
+			$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
 		}
 		
 		if(count($filter_clauses))

@@ -584,6 +584,7 @@
 		
 		public function query()
 		{
+			$filters = array();
 			$params = array(
 				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
@@ -592,6 +593,12 @@
 				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
+			//var_dump(phpgw::get_var('control_areas'));
+			$ctrl_area = phpgw::get_var('control_areas');
+			if(isset($ctrl_area) && $ctrl_area > 0)
+			{
+				$filters['control_areas'] = $ctrl_area; 
+			}
 			
 			$search_for = phpgw::get_var('query');
 
@@ -623,6 +630,7 @@
 			}
 
 			$result_objects = $this->so_control->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$object_count = $this->so_control->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
 								
 			$results = array();
@@ -631,6 +639,11 @@
 			{
 				$results['results'][] = $control_obj->serialize();	
 			}
+			
+			$results['total_records'] = $object_count;
+			$results['start'] = $params['start'];
+			$results['sort'] = $params['sort'];
+			$results['dir'] = $params['dir'];
 
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol.view");
 

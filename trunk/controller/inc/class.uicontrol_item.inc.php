@@ -532,6 +532,7 @@
 			}
 			
 			$result_objects = $this->so_control_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$object_count = $this->so_control_item->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
 								
 			$results = array();
@@ -540,6 +541,11 @@
 			{
 				$results['results'][] = $control_item_obj->serialize();	
 			}
+			
+			$results['total_records'] = $object_count;
+			$results['start'] = $params['start'];
+			$results['sort'] = $params['sort'];
+			$results['dir'] = $params['dir'];
 
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_item.view");
 
