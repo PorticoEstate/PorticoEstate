@@ -199,6 +199,34 @@ HTML;
 		return $out;
 	}
 
+
+	/**
+	* Get HTML options with location levels that should be listed in a listbox
+	*
+	* @param $config
+	* @return string HTML options to be placed in a select
+	*/
+
+	function list_location_level_otions($config)
+	{
+		$location_types = execMethod('property.soadmin_location.select_location_type');
+
+		$level_assigned = isset($config['request_location_level']) ? $config['request_location_level'] : 0;
+		$out = '';
+		foreach ( $location_types as $dummy => $level)
+		{
+			$selected = '';
+			if ( ($level['id'] == $level_assigned))
+			{
+				$selected = ' selected';
+			}
+			$out .=  <<<HTML
+			<option value="{$level['id']}" {$selected}><label>{$level['name']}</label></option>
+HTML;
+		}
+		return $out;
+	}
+
 	/**
 	* Get HTML checkbox with filter buildingpart
 	*

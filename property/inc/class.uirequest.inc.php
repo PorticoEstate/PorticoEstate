@@ -90,7 +90,7 @@
 			$this->district_id			= $this->bo->district_id;
 			$this->start_date			= $this->bo->start_date;
 			$this->end_date				= $this->bo->end_date;
-
+			$this->building_part		= $this->bo->building_part;
 			$this->allrows				= $this->bo->allrows;
 			$this->p_num				= $this->bo->p_num;
 		}
@@ -111,6 +111,7 @@
 				'start_date'		=> $this->start_date,
 				'end_date'			=> $this->end_date,
 				'property_cat_id'	=> $this->property_cat_id,
+				'building_part'		=> $this->building_part
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -241,7 +242,8 @@
 					."district_id: '{$this->district_id}',"
 					."start_date:'{$this->start_date}',"
 					."end_date: '{$this->end_date}',"
-					."cat_id:'{$this->cat_id}'";
+					."cat_id:'{$this->cat_id}',"
+					."building_part:'{$this->building_part}'";
 
 				$values_combo_box[0]  = $this->bocommon->select_category_list(array
 					(
@@ -272,11 +274,22 @@
 				$default_value = array ('user_id'=>'','name'=>lang('no user'));
 				array_unshift ($values_combo_box[4],$default_value);
 
+				$_filter_buildingpart = array();
+				$filter_buildingpart = isset($this->bo->config->config_data['filter_buildingpart']) ? $this->bo->config->config_data['filter_buildingpart'] : array();
+			
+				if($filter_key = array_search('.project.request', $filter_buildingpart))
+				{
+					$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+				}
+
+				$building_part_list = $this->bocommon->select_category_list(array('type'=> 'building_part','selected' =>$this->building_part, 'order' => 'id', 'id_in_name' => 'num', 'filter' => $_filter_buildingpart));
+				array_unshift ($building_part_list, array ('id'=>'','name'=> lang('building part')));
+
 				$datatable['actions']['form'] = array
+				(
+					array
 					(
-						array
-						(
-							'action'	=> $GLOBALS['phpgw']->link('/index.php',
+						'action'	=> $GLOBALS['phpgw']->link('/index.php',
 							array
 							(
 								'menuaction' 		=> 'property.uirequest.index',
@@ -289,7 +302,8 @@
 								'district_id'       => $this->district_id,
 								'query'				=> $this->query,
 								'start_date'		=> $this->start_date,
-								'end_date' 			=> $this->end_date
+								'end_date' 			=> $this->end_date,
+								'building_part'		=> $this->building_part
 
 							)
 						),
@@ -313,7 +327,7 @@
 									'value'	=> lang('district'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 1
+									'tab_index' => 2
 								),
 								array
 								( //boton 	CATEGORY
@@ -323,7 +337,7 @@
 									'value'	=> lang('Category'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 2
+									'tab_index' => 3
 								),
 								array
 								( //boton 	STATUS
@@ -332,7 +346,18 @@
 									'value'	=> lang('Status'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 3
+									'tab_index' => 4
+								),
+								array
+								(
+									'id' => 'sel_building_part', // traditional listbox for long list
+									'name' => 'building_part',
+									'value'	=> lang('building part'),
+									'type' => 'select',
+									'style' => 'filter',
+									'values'	=> $building_part_list,
+									'onchange'=> 'onChangeSelect("building_part");',
+									'tab_index' => 5
 								),
 								array
 								( //boton 	FILTER
@@ -341,21 +366,21 @@
 									'value'	=> lang('User'),
 									'type' => 'button',
 									'style' => 'filter',
-									'tab_index' => 4
+									'tab_index' => 6
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_update',
 									'value'	=> lang('Update project'),
-									'tab_index' => 9
+									'tab_index' => 14
 								),
 								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_export',
 									'value'	=> lang('download'),
-									'tab_index' => 8
+									'tab_index' => 13
 								),
 
 								array
@@ -363,7 +388,7 @@
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
-									'tab_index' => 7
+									'tab_index' => 12
 								),
 								array
 								(
@@ -391,7 +416,7 @@
 										'menuaction' => 'property.uiproject.date_search')
 									)."','','width=350,height=250')",
 									'value' => lang('Date search'),
-									'tab_index' => 9
+									'tab_index' => 11
 								),
 
 								array
@@ -401,7 +426,7 @@
 									'value'    => lang('search'),
 									'onkeypress' => 'return pulsar(event)',
 									'type' => 'button',
-									'tab_index' => 6
+									'tab_index' => 10
 								),
 								array
 								( //hidden request
@@ -418,7 +443,7 @@
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 5
+									'tab_index' => 9
 								),
 								array
 								(
@@ -429,7 +454,7 @@
 									(
 										'menuaction' => 'property.uirequest.priority_key'))."','','left=50,top=100,width=350,height=350,scrollbars=1')",
 										'value' => lang('Priority key'),
-										'tab_index' => 4
+										'tab_index' => 8
 								),
 								array
 								(
@@ -440,54 +465,54 @@
 									(
 										'menuaction' => 'property.uirequest.columns'))."','','width=300,height=600,scrollbars=1')",
 										'value' => lang('columns'),
-										'tab_index' => 10
+										'tab_index' => 7
 								),
 							),
-								'hidden_value' => array
-								(
-									array
-									( //div values  combo_box_0
-										'id' => 'values_combo_box_0',
-										'value'	=> $this->bocommon->select2String($values_combo_box[0])
-									),
-									array
-									( //div values  combo_box_1
-										'id' => 'values_combo_box_1',
-										'value'	=> $this->bocommon->select2String($values_combo_box[1])
-									),
-									array
-									( //div values  combo_box_2
-										'id' => 'values_combo_box_2',
-										'value'	=> $this->bocommon->select2String($values_combo_box[2]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
-									),
-									array
-									( //div values  combo_box_3
-										'id' => 'values_combo_box_3',
-										'value'	=> $this->bocommon->select2String($values_combo_box[3])
-									),
-									array
-									( //div values  combo_box_4
-										'id' => 'values_combo_box_4',
-										'value'	=> $this->bocommon->select2String($values_combo_box[4], 'user_id')
-									)
+							'hidden_value' => array
+							(
+								array
+								( //div values  combo_box_0
+									'id' => 'values_combo_box_0',
+									'value'	=> $this->bocommon->select2String($values_combo_box[0])
+								),
+								array
+								( //div values  combo_box_1
+									'id' => 'values_combo_box_1',
+									'value'	=> $this->bocommon->select2String($values_combo_box[1])
+								),
+								array
+								( //div values  combo_box_2
+									'id' => 'values_combo_box_2',
+									'value'	=> $this->bocommon->select2String($values_combo_box[2]['cat_list'], 'cat_id') //i.e.  id,value/id,vale/
+								),
+								array
+								( //div values  combo_box_3
+									'id' => 'values_combo_box_3',
+									'value'	=> $this->bocommon->select2String($values_combo_box[3])
+								),
+								array
+								( //div values  combo_box_4
+									'id' => 'values_combo_box_4',
+									'value'	=> $this->bocommon->select2String($values_combo_box[4], 'user_id')
 								)
 							)
 						)
-					);
+					)
+				);
 
-				if(!$this->acl_manage)
+				if(!$this->acl_manage)//priority_key
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][9]);
+					unset($datatable['actions']['form'][0]['fields']['field'][16]);
 				}
 
-				if(!$this->acl_add)
+				if(!$this->acl_add) //add
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][5]);
+					unset($datatable['actions']['form'][0]['fields']['field'][8]);
 				}
 
-				if(!$project_id)
+				if(!$project_id) // update project
 				{
-					unset($datatable['actions']['form'][0]['fields']['field'][4]);
+					unset($datatable['actions']['form'][0]['fields']['field'][6]);
 				}
 				$dry_run = true;
 			}
@@ -1213,12 +1238,11 @@
 
 			$lookup_type = $mode == 'edit' ? 'form' : 'view';
 
-			$location_data=$this->bolocation->initiate_ui_location(array
-				(
-					'values'	=> $values['location_data'],
-					'type_id'	=> -1, // calculated from location_types
-					'no_link'	=> false, // disable lookup links for location type less than type_id
-					'tenant'	=> true,
+			$location_data=$this->bolocation->initiate_ui_location(array(
+					'values'		=> $values['location_data'],
+					'type_id'		=> isset($this->config->config_data['request_location_level']) && $this->config->config_data['request_location_level'] ? $this->config->config_data['request_location_level'] : -1,
+					'no_link'		=> false, // disable lookup links for location type less than type_id
+					'tenant'		=> true,
 					'lookup_type'	=> $lookup_type,
 					'lookup_entity'	=> $this->bocommon->get_lookup_entity('request'),
 					'entity_data'	=> $values['p']
@@ -1277,7 +1301,7 @@
 
 			$jscal->add_listener('values_consume_date');
 			$jscal->add_listener('values_planning_date');
-			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
 
 			$link_file_data = array
 				(
@@ -1365,7 +1389,17 @@
 				}
 
 			}
-			
+
+			$value_diff		= (int)$values['budget'] - ($_consume_amount + $_planning_amount);
+			$value_diff2	= (int)$values['budget'] - $_consume_amount;
+
+			if ($value_diff < 0 || $value_diff2 < 0)
+			{
+				$receipt['error'][]=array('msg'=>lang('negative value for budget'));
+			}
+
+			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+
 			$datavalues[2] = array
 				(
 					'name'					=> "2",
@@ -1515,8 +1549,8 @@
 					'lang_budget'						=> lang('Budget'),
 					'value_budget'						=> number_format($values['budget'], 0, ',', ' '),
 					'lang_budget_statustext'			=> lang('Enter the budget'),
-					'value_diff'						=> number_format(((int)$values['budget'] - ($_consume_amount + $_planning_amount)), 0, ',', ' '),
-					'value_diff2'						=> number_format(((int)$values['budget'] - $_consume_amount), 0, ',', ' '),
+					'value_diff'						=> number_format($value_diff, 0, ',', ' '),
+					'value_diff2'						=> number_format($value_diff2, 0, ',', ' '),
 
 					'location_data'						=> $location_data,
 					'location_type'						=> 'form',

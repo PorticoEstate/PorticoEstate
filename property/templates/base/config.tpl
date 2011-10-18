@@ -405,6 +405,16 @@
 			</td>
 		</tr>
 
+		<tr class="row_off">
+			<td>{lang_request_location_level}.</td>
+			<td>
+				<select name="newsettings[request_location_level]">
+					{hook_list_location_level_otions}
+				</select>
+			</td>
+		</tr>
+
+
 		<tr class="row_on">
 			<td>{lang_meter_table}:</td>
 			<td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>

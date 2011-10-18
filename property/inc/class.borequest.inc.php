@@ -83,6 +83,7 @@
 
 			$start_date		= phpgw::get_var('start_date');
 			$end_date		= phpgw::get_var('end_date');
+			$building_part	= phpgw::get_var('building_part');
 
 			if(isset($_POST['start']) || isset($_GET['start']))
 			{
@@ -125,6 +126,11 @@
 			{
 				$this->criteria_id = $criteria_id;
 			}
+			if(isset($_POST['building_part']) || isset($_GET['building_part']))
+			{
+				$this->building_part = $building_part;
+			}
+
 			if($allrows)
 			{
 				$this->allrows = $allrows;
@@ -162,9 +168,9 @@
 			$this->cat_id			= $data['cat_id'];
 			$this->property_cat_id 	= $data['property_cat_id'];
 			$this->status_id		= $data['status_id'];
+			$this->building_part	= $data['building_part'];
 			$this->start_date		= isset($data['start_date']) ? $data['start_date']: '';
 			$this->end_date			= isset($data['end_date']) ? $data['end_date']: '';
-
 		}
 
 
@@ -404,7 +410,7 @@
 				'filter' => $this->filter,'district_id' => $this->district_id,'cat_id' => $this->cat_id,'status_id' => $this->status_id,
 				'project_id' => $data['project_id'],'allrows'=>$data['allrows'],'list_descr' => $data['list_descr'],
 				'dry_run'=>$data['dry_run'], 'p_num' => $this->p_num,'start_date'=>$this->start_date,'end_date'=>$this->end_date,
-				'property_cat_id' => $this->property_cat_id));
+				'property_cat_id' => $this->property_cat_id, 'building_part' => $this->building_part));
 
 			$this->total_records	= $this->so->total_records;
 			$this->sum_budget		= $this->so->sum_budget;
