@@ -39,7 +39,7 @@ class controller_socontrol_item_list extends controller_socommon
 		);
 		
 		$result = $this->db->query( 'INSERT INTO controller_control_item_list (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
-		$result = $this->db->query($sql, __LINE__,__FILE__);
+		//$result = $this->db->query($sql, __LINE__,__FILE__);
 
 		if(isset($result)) {
 			// return the new control item ID
