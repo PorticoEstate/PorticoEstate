@@ -68,6 +68,18 @@
 					</xsl:choose>
 					</dd>
 					<dt>
+						<label for="start_date"><xsl:value-of select="php:function('lang','Procedure start date')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of disable-output-escaping="yes" select="start_date"/>
+					</dd>
+					<dt>
+						<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of disable-output-escaping="yes" select="end_date"/>
+					</dd>
+					<dt>
 						<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
 					</dt>
 					<dd>

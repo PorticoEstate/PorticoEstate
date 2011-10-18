@@ -230,6 +230,8 @@ Procedure responsibility	controller	no	Ansvarlig
 Procedure description	controller	no	Beskrivelse
 Procedure reference	controller	no	Referanse
 Procedure attachment	controller	no	Vedlegg
+Procedure start date	controller	no	Start dato
+Procedure end date	controller	no	Slutt dato
 New control item	controller	no	Nytt kontrollpunkt
 Control item title	controller	no	Tittel
 Control_group	controller	no	Kontrollgruppe
@@ -249,3 +251,8 @@ New control group	controller	no	Ny kontrollgruppe
 Control group title	controller	no	Tittel
 Building part	controller	no	Bygningsdel
 remove	controller	no	Fjern valgte elementer
+Locations	controller	no	Lokasjoner
+Equipment	controller	no	Utstyr
+Control_locations	controller	no	Lokasjoner
+Control_equipment	controller	no	Utstyr
+New control	controller	no	Ny kontroll

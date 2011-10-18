@@ -13,6 +13,7 @@
 		protected $repeat_type;
 		protected $repeat_interval;
 		protected $procedure_id;
+		protected $procedure_name;
 		protected $enabled;
 		protected $requirement_id;
 		protected $costresponsibility_id;
@@ -21,6 +22,7 @@
 		protected $equipment_type_id;
 		protected $location_code;
 		protected $control_area_id;
+		protected $control_area_name;
 
 		/*
 		var $validate = array(
@@ -104,6 +106,13 @@
 		
 		public function get_procedure_id() { return $this->procedure_id; }
 		
+		public function set_procedure_name($procedure_name)
+		{
+			$this->procedure_name = $procedure_name;
+		}
+		
+		public function get_procedure_name() { return $this->procedure_name; }
+		
 		public function set_enabled($enabled)
 		{
 			$this->enabled = $enabled;
@@ -160,6 +169,13 @@
 		
 		public function get_control_area_id() { return $this->control_area_id; }
 		
+		public function set_control_area_name($control_area_name)
+		{
+			$this->control_area_name = $control_area_name;
+		}
+		
+		public function get_control_area_name() { return $this->control_area_name; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -193,7 +209,9 @@
 				'start_date' => $this->get_start_date(),
 				'end_date' => $this->get_end_date(),
 				'procedure_id' => $this->get_procedure_id(),
-				'control_area_id' => $this->get_control_area_id()
+				'procedure_name' => $this->get_procedure_name(),
+				'control_area_id' => $this->get_control_area_id(),
+				'control_area_name' => $this->get_control_area_name()
 				);
 		}
 	}
