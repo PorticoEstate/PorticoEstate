@@ -2899,19 +2899,28 @@
 			$record_history = $this->bo->read_record_history($id);
 
 			$notes = array
+			(
+				array
 				(
-					array
-					(
-						'value_id'		=>'', //not from historytable
-						'value_count'	=> 1,
-						'value_date'	=> $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
-						'value_user'	=> $ticket['user_name'],
-						'value_note'	=> $ticket['details'],
-						'value_publish'	=> $ticket['publish_note']
-					)
-				);
+					'value_id'		=>'', //not from historytable
+					'value_count'	=> 1,
+					'value_date'	=> $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
+					'value_user'	=> $ticket['user_name'],
+					'value_note'	=> $ticket['details'],
+					'value_publish'	=> $ticket['publish_note']
+				)
+			);
 
 			$additional_notes = array_merge($notes,$additional_notes);
+
+			if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
+			{
+				foreach ($additional_notes as &$_note)
+				{
+					$_note['value_note'] = wordwrap($_note['value_note'],40);
+				}
+			}
+			unset($_note);
 
 			if(isset($values['order_text']) && $ticket['order_id'])
 			{
