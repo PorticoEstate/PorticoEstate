@@ -211,6 +211,7 @@
 			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
+			$building_part 	= isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.project.request');
 			$attribute_table = 'phpgw_cust_attribute';
@@ -398,10 +399,12 @@
 			$paranthesis .= '(';
 			$joinmethod .= "{$this->left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
 
-
+			$GLOBALS['phpgw']->config->read();
+			$_location_level = isset($GLOBALS['phpgw']->config->config_data['request_location_level']) && $GLOBALS['phpgw']->config->config_data['request_location_level'] ? $GLOBALS['phpgw']->config->config_data['request_location_level'] : 0;
 			$sql	= $this->bocommon->generate_sql(array('entity_table'=>$entity_table,'cols'=>$cols,'cols_return'=>$cols_return,
 				'uicols'=>array(),'joinmethod'=>$joinmethod,'paranthesis'=>$paranthesis,
-				'query'=>$query,'force_location'=>true));
+				'query'=>$query,'force_location'=>true, 'location_level' => $_location_level));
+			unset($_location_level);
 
 			$cols_group[] = "{$entity_table}.id";
 			$cols_group[] = 'fm_request_status.descr';
@@ -421,16 +424,12 @@
 			$where = 'WHERE';
 			$filtermethod = '';
 
-			$GLOBALS['phpgw']->config->read();
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
 				$filtermethod = " WHERE fm_request.loc1 in ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
 			}
-
-
-
 
 			if ($property_cat_id > 0)
 			{
@@ -440,13 +439,19 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_request.category='{$cat_id}' ";
+				$filtermethod .= " $where fm_request.category='{$cat_id}'";
 				$where = 'AND';
 			}
 
 			if ($status_id)
 			{
-				$filtermethod .= " $where  fm_request.status='{$status_id}' ";
+				$filtermethod .= " $where fm_request.status='{$status_id}'";
+				$where = 'AND';
+			}
+
+			if ($building_part)
+			{
+				$filtermethod .= " $where fm_request.building_part='{$building_part}'";
 				$where = 'AND';
 			}
 

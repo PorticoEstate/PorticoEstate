@@ -34,7 +34,7 @@
 						</select>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="control/control_area_id" />
+						<xsl:value-of select="control/control_area_name" />
 					</xsl:otherwise>
 				</xsl:choose>
 				</dd>
@@ -62,7 +62,7 @@
 						</select>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="control/procedure_id" />
+						<xsl:value-of select="control/procedure_name" />
 					</xsl:otherwise>
 				</xsl:choose>
 				</dd>

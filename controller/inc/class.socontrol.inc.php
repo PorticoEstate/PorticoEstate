@@ -139,10 +139,14 @@ class controller_socontrol extends controller_socommon
 				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
 			}
 		}
-		
+		//var_dump($filters);
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "controller_control.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		if(isset($filters['control_areas']))
+		{
+			$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
 		}
 		
 		if(count($filter_clauses))
@@ -155,6 +159,8 @@ class controller_socontrol extends controller_socommon
 
 		$tables = "controller_control";
 		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
+		$joins = " {$this->left_join} controller_control_area ON (controller_control.control_area_id = controller_control_area.id)";
+		$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
 		
 		if($return_count)
 		{
@@ -162,7 +168,7 @@ class controller_socontrol extends controller_socommon
 		}
 		else
 		{
-			$cols = 'id, title, description, start_date, end_date, procedure_id, requirement_id, costresponsibility_id, responsibility_id, equipment_type_id, equipment_id, location_code, repeat_type, repeat_interval, enabled ';
+			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, procedure_id, control_area_id, requirement_id, costresponsibility_id, responsibility_id, equipment_type_id, equipment_id, location_code, repeat_type, repeat_interval, enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name ';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -170,9 +176,13 @@ class controller_socontrol extends controller_socommon
 		{
 			$sort_field = 'controller_control.title';
 		}
+		else if($sort_field == 'id')
+		{
+			$sort_field = 'controller_control.id';
+		}
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 		
-		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		
 	}
 	
@@ -186,10 +196,12 @@ class controller_socontrol extends controller_socommon
 			$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
 			$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
 			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+			$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
 			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
 			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
@@ -211,7 +223,10 @@ class controller_socontrol extends controller_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT c.* FROM controller_control c WHERE c.id = " . $id;
+		$joins = " {$this->left_join} controller_control_area ON (c.control_area_id = controller_control_area.id)";
+		$joins .= " {$this->left_join} controller_procedure ON (c.procedure_id = controller_procedure.id)";
+		
+		$sql = "SELECT c.*, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name FROM controller_control c {$joins} WHERE c.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -222,10 +237,12 @@ class controller_socontrol extends controller_socommon
 		$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
 		$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
 		$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+		$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
 		$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 		$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 		$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 		$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+		$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 		$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
 		$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
