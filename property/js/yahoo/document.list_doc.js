@@ -36,6 +36,13 @@
 	{
 		if(flag_particular_setting=='init')
 		{
+			//doc_type
+			index = locate_in_array_options(0,"value",path_values.doc_type);
+			if(index)
+			{
+				oMenuButton_0.set("label", ("<em>" + array_options[0][index][1] + "</em>"));
+			}
+
 			oMenuButton_0.focus();
 			create_table_info_invoice_sub();
 		}
