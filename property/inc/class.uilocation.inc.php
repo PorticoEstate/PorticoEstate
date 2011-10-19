@@ -1713,6 +1713,7 @@ JS;
 					$this->bocommon->no_access();
 					return;
 				}
+				$mode = 'view';
 			}
 			else
 			{
@@ -1721,6 +1722,7 @@ JS;
 					$this->bocommon->no_access();
 					return;
 				}
+				$mode = 'edit';
 			}
 
 			$values = array();
@@ -2076,7 +2078,7 @@ JS;
 								(
 									'entity_link'			=> $GLOBALS['phpgw']->link('/index.php',array
 									(
-										'menuaction'=> 'property.uilocation.edit',
+										'menuaction'=> "property.uilocation.{$mode}",
 										'location_code'=>implode('-',array_slice($location, 0, $location_type['id']))
 									)
 								),
