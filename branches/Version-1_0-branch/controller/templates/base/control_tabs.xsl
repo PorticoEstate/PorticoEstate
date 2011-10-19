@@ -18,6 +18,20 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_groups" />
 		</xsl:when>
+ 		<xsl:when test="view = 'control_locations'">
+			<div class="identifier-header">
+				<h1><xsl:value-of select="php:function('lang', 'Control_locations')"/></h1>
+			</div>
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<xsl:call-template name="control_locations" />
+		</xsl:when>
+		<xsl:when test="view = 'control_equipment'">
+			<div class="identifier-header">
+				<h1><xsl:value-of select="php:function('lang', 'Control_equipment')"/></h1>
+			</div>
+			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<xsl:call-template name="control_equipment" />
+		</xsl:when>
 		<xsl:when test="view = 'control_items'">
 			<div class="identifier-header">
 				<h1><xsl:value-of select="php:function('lang', 'Control_items')"/></h1>

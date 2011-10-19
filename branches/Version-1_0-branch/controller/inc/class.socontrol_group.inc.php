@@ -346,6 +346,10 @@ class controller_socontrol_group extends controller_socommon
 		{
 			$filter_clauses[] = "controller_control_group.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
+		if(isset($filters['control_areas']))
+		{
+			$filter_clauses[] = "controller_control_group.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+		}
 
 		if(count($filter_clauses))
 		{

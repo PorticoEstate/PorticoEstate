@@ -473,6 +473,12 @@
 			);
 			
 			$search_for = phpgw::get_var('query');
+			
+			$ctrl_area = phpgw::get_var('control_areas');
+			if(isset($ctrl_area) && $ctrl_area > 0)
+			{
+				$filters['control_areas'] = $ctrl_area; 
+			}
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
@@ -502,6 +508,7 @@
 			}*/
 			//var_dump($start_index.'-'.$num_of_objects.'-'.$sort_field.'-'.$sort_ascending.'-'.$search_for.'-'.$search_type.'-'.$filters);
 			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$object_count = $this->so->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
 								
 			$results = array();
@@ -511,6 +518,11 @@
 				$results['results'][] = $control_group_obj->serialize();	
 			}
 
+			$results['total_records'] = $object_count;
+			$results['start'] = $params['start'];
+			$results['sort'] = $params['sort'];
+			$results['dir'] = $params['dir'];
+			
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_group.view");
 
 			return $this->yui_results($results);

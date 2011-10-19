@@ -111,6 +111,8 @@
 					$procedure->set_description(phpgw::get_var('description','html'));
 					$procedure->set_reference(phpgw::get_var('reference'));
 					$procedure->set_attachment(phpgw::get_var('attachment'));
+					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
+					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
@@ -164,6 +166,8 @@
 				$data = array
 				(
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
+					'start_date'			=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_start_date())?$procedure->get_start_date():time())),
+					'end_date'				=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_end_date())?$procedure->get_end_date():'')),
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
@@ -224,6 +228,10 @@
 				}
 				
 				$procedure_array = $procedure->toArray();
+				if($procedure->get_start_date() && $procedure->get_start_date() != null)
+					$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
+				if($procedure->get_end_date() && $procedure->get_end_date() != null)
+					$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
 				//_debug_array($procedure_array);
 	
 				$data = array
@@ -231,6 +239,8 @@
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
+					'start_date'			=> $procedure_start_date,
+					'end_date'				=> $procedure_end_date
 				);
 	
 	
@@ -242,6 +252,15 @@
 					
 		public function query()
 		{
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+			
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -293,7 +312,12 @@
 			}
 			
 			// ... add result data
-			$result_data = array('results' => $rows, 'total_records' => $object_count);
+			$result_data = array('results' => $rows);
+			
+			$result_data['total_records'] = $object_count;
+			$result_data['start'] = $params['start'];
+			$result_data['sort'] = $params['sort'];
+			$result_data['dir'] = $params['dir'];
 			
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
 			
@@ -305,7 +329,7 @@
 					"controller.uiprocedure.view");
 			}
 //_debug_array($result_data);
-			return $this->yui_results($result_data, 'total_records', 'results');
+			return $this->yui_results($result_data);
 
 		}
 
