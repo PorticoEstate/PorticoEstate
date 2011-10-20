@@ -56,18 +56,20 @@
 		{
 			if($pre_transfer)
 			{
-				$sql= "SELECT DISTINCT periode from fm_ecobilag WHERE utbetalingsigndato IS NULL ";
+				$sql= "SELECT DISTINCT periode from fm_ecobilag WHERE utbetalingsigndato IS NULL";
 			}
 			else
 			{
-				$sql= "SELECT DISTINCT periode from fm_ecobilag WHERE budsjettsigndato is not null and (saksigndato is not null or oppsynsigndato is not null) and utbetalingsigndato is not null ";
+				$sql= "SELECT DISTINCT periode from fm_ecobilag WHERE budsjettsigndato is not null and (saksigndato is not null or oppsynsigndato is not null) and utbetalingsigndato is not null";
 			}
 			
+			$periode = array();
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
 				$periode[]	= $this->db->f('periode');
 			}
+
 			return $periode;
 		}
 
@@ -335,31 +337,24 @@
 			}
 
 			//Velg ut alle perioder som har bilag som skal overføres
-
-
 			if ($pre_transfer)
 			{
-				$periode = $this->select_periods_with_invoice_to_transfer($pre_transfer);
+				$periodes = $this->select_periods_with_invoice_to_transfer($pre_transfer);
 
-				for ($i=0;$i<count($periode);$i++)
+				foreach ($periodes as $periode)
 				{
-	
-					$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode[$i],$download,$pre_transfer));
+					$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode,$download,$pre_transfer));
 				}
 			}
 
-
 			$pre_transfer=False;
 			
-			$periode = $this->select_periods_with_invoice_to_transfer($pre_transfer);
+			$periodes = $this->select_periods_with_invoice_to_transfer($pre_transfer);
 
-			for ($i=0;$i<count($periode);$i++)
+			foreach ($periodes as $periode)
 			{
-
-				$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode[$i],$download,$pre_transfer,$force_period_year));
+				$receipt['message'][]= array('msg' => $this->OverforPeriode($batchid,$periode,$download,$pre_transfer,$force_period_year));
 			}
-
-
 
 			//Lagre melding
 			if ($download=='on' || $pre_transfer)
@@ -607,29 +602,29 @@
 				$Valuteringsdato= date(Ymd,strtotime($oRsBilag[$k]['fakturadato']));// verdi: Dato, type: date, plass: 251 - 258
 				$Bilagsdato	= date(Ymd,strtotime($oRsBilag[$k]['fakturadato'])) ;// verdi: Dato, type: date, plass: 259 - 266
 				$Bilagsnr	= sprintf("%-9s",substr($oRsBilag[$k]['bilagsnr'],-8));// verdi: Bilagsnummer, type: i4, plass: 267 - 275
-		//		$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
+		//		$_periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 				$ESL		= sprintf("%1s",'');// verdi: Blank, type: i+C481, plass: 282 - 282
 
 				if($pre_transfer)
 				{
-					if(abs(date(m,time()) - $periode) >1)
+					if(abs(date('m',time()) - $periode) >1)
 					{
-						$temp_period = date(m,time()) -1;
+						$temp_period = date('m',time()) -1;
 					
 						if($temp_period == 0)
 						{
 							$temp_period =1;
 						}
 						
-						$temp_year = date(Y,time());
+						$temp_year = date('Y',time());
 					}
 					else
 					{
 						$temp_period = $periode;
-						$temp_year = date(Y,strtotime($oRsBilag[$k]['fakturadato']));
+						$temp_year = date('Y',strtotime($oRsBilag[$k]['fakturadato']));
 					}
 
-					$Periode	= sprintf("%06s",$temp_year . sprintf("%02d",$temp_period));// verdi: Periode, type: i4, plass: 276 - 281
+					$_periode	= sprintf("%06s",$temp_year . sprintf("%02d",$temp_period));// verdi: Periode, type: i4, plass: 276 - 281
 					$Bilagsart	= sprintf("%2s",'FF');// verdi: , type: c2, plass: 15 - 16
 					$Forfall	= '20991231';// verdi: Forfallsdato , type: date, plass: 298 - 305				
 				}
@@ -638,19 +633,19 @@
 /*				
 					if($force_period_year)
 					{
-						$Periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
+						$_periode	= sprintf("%06s",$force_period_year . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 					}
 					else
 					{
-						$Periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
+						$_periode	= sprintf("%06s",date(Y,strtotime($oRsBilag[$k]['fakturadato'])) . sprintf("%02d",$periode));// verdi: Periode, type: i4, plass: 276 - 281
 					}
 */
-					$Periode	= $periode;
+					$_periode	= $periode;
 					
 					$Bilagsart	= sprintf("%2s",'FD');// verdi: , type: c2, plass: 15 - 16
 					$Forfall	= date(Ymd,strtotime($oRsBilag[$k]['forfallsdato']));// verdi: Forfallsdato , type: date, plass: 298 - 305				
 				}
-				
+
 				$Rab_forf	= sprintf("%-8s",'');// verdi: Blank, type: date, plass: 306 - 313
 				$Rabatt		= sprintf("%020s",'');// verdi: Blank, type: money, plass: 314 - 333
 				$Avt_Kon	= sprintf("%-8s",'');// verdi: Blank, type: c8, plass: 334 - 341
@@ -827,7 +822,7 @@
 					$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 . 
 					$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop . 
 					$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato . 
-					$Bilagsnr . $Periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer . 
+					$Bilagsnr . $_periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer . 
 					$Kid . $Bet_overforing . $Status . $Resk_type . $Resk_nr . $Forskudd . $Fakturaref . $Fakturaref . 
 					$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted . 
 					$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok ."\r\n";
@@ -865,7 +860,7 @@
 						$buffer .= $Buntnr . $Forsystem . $Bilagsart . $Transtype . $Firmakode . $Konto . $Dim_1 . $Dim_2 . $Dim_3 . $Dim_4 . 
 						$Dim_5 . $Dim_6 . $Dim_7 . $Avgiftskode . $Avgiftssystem . $Valutakode . $Debet_Kredit . $Valutabelop . 
 						$Belop_i_firmavaluta . $Antall . $Belop2 . $Belop3 . $Belop4 . $Tekst . $Valuteringsdato . $Bilagsdato . 
-						$Bilagsnr . $Periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer . 
+						$Bilagsnr . $_periode . $ESL . $Fakturanr . $Forfall . $Rab_forf . $Rabatt . $Avt_Kon . $Ordrenummer . 
 						$Kid . $Bet_overforing . $Status . $Resk_type . $Resk_nr . $Forskudd . $Fakturaref . $Fakturaref . 
 						$Inkassokode . $Bet_mottager . $Att_ansvarlig . $Resk_navn . $Postadresse . $Stat_Provins . $Sted . 
 						$Bank_Postgiro_kontonr . $Betalingsmate . $Mva_reg_nr . $Postnummer . $Val_dok ."\r\n";					
@@ -911,7 +906,7 @@
 				if($transfer_ok)
 				{
 					$this->db->transaction_commit();
-					$message = 'Godkjent: periode: '.$Periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
+					$message = 'Godkjent: periode: '.$_periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
 				}
 				else
 				{
@@ -943,7 +938,7 @@
 				if($transfer_ok)
 				{
 					$this->db->transaction_commit();
-					$message = 'Ankomstregistrering: periode: '.$Periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
+					$message = 'Ankomstregistrering: periode: '.$periode.' antall bilag/underbilag overfort:'.$antall . ' , fil: ' . $Filnavn;
 				}
 				else
 				{
@@ -1022,4 +1017,3 @@
 			}
 		}
 	}
-?>
