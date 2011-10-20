@@ -331,6 +331,11 @@
 						'text'	=> lang('Asynchronous Tasks'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiasync_settings.index', 'appname' => 'booking') )
 					),
+					'settings'	=> array
+					(
+						'text'	=> lang('Settings'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uisettings.index', 'appname' => 'booking') )
+					),
 				);
 			}
 

@@ -1,3 +1,5 @@
+booking	common	no	Booking
+bookingfrontend	common	no	Bookingfrontend
 current activities	booking	no	Aktiviteter
 -- select an activity --	booking	no	Velg en aktivitet
 -- select a building --	booking	no	Velg en bygning
@@ -520,3 +522,15 @@ Documentation	booking	no	Dokumentasjon
 Upload manual	booking	no	Last opp dokumentasjon
 Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
 Event id	booking	no	Arrangement id
+Allocations deleted on	booking	no	Tildelinger slettet på
+Allocation deleted on	booking	no	Tildeling slettet på
+Booking and allocations deleted on	booking	no	Booking og tildeling er slettet på
+Booking deleted on	booking	no	Booking slettet på
+Bookings and allocations deleted on	booking	no	Bookinger og tildelinger er slettet på
+Bookings deleted on	booking	no	Bookinger slettet på
+Cancelation of booking and allocation from	booking	no	Avbestilling av booking og tildeling fra
+Cancelation of booking from	booking	no	Avbestilling av booking fra
+Cancelation of bookings and allocations from	booking	no	Avbestilling av bookinger og tildelinger fra
+Cancelation of bookings from	booking	no	Avbestilling av bookinger fra
+Booking system settings	booking	no	Bookingmodul systeminnstillinger
+Frontend users can delete bookings and allocations	booking	no	Brukere av frontend kan slettet bookinger og tildelinger direkte
