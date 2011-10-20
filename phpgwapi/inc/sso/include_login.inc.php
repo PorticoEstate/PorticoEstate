@@ -284,6 +284,7 @@
 				foreach($GLOBALS['phpgw_domain'] as $domain_name => $domain_vars)
 				{
 					$this->tmpl->set_var('domain_name', $domain_name);
+					$this->tmpl->set_var('domain_display_name', str_replace('_', ' ', $domain_name));
 
 					if (isset($_COOKIE['last_domain']) && $_COOKIE['last_domain'] == $domain_name)
 					{

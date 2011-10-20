@@ -115,7 +115,7 @@
 								<label for="logindomain">{lang_domain}</label>
 								<select name="logindomain" id="logindomain" class="inputbox">
 									<!-- BEGIN domain_option -->
-									<option value="{domain_name}" {domain_selected}>{domain_name}</option>
+									<option value="{domain_name}" {domain_selected}>{domain_display_name}</option>
 									<!-- END domain_option -->
 								</select>
 								</p>
