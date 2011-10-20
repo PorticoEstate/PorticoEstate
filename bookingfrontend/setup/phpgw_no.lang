@@ -336,8 +336,8 @@ To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk 
 To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen bruk lenken
 manual	common	no	Veiledning lag og organisasjoner
 Cancel allocation	bookingfrontend	no	Avbestill tildelinger
-Allocations deleted on	bookingfrontend	no	Tildelinger slettet på
-Allocation deleted on	bookingfrontend	no	Tildeling slettet på
+Allocations deleted on	bookingfrontend	no	Tildelinger slette på
+Allocation deleted on	bookingfrontend	no	Tildeling slette på
 Booking and allocations deleted on	bookingfrontend	no	Booking og tildeling er slettet på
 Booking deleted on	bookingfrontend	no	Booking slettet på
 Bookings and allocations deleted on	bookingfrontend	no	Bookinger og tildelinger er slettet på
