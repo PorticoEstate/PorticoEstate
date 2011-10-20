@@ -2,7 +2,7 @@
     <div id="content">
 
 	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></dt>
+    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete allocation')"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
@@ -110,13 +110,13 @@
         <dl class="form-col">
 			<dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
 			<dd class="yui-skin-sam">
-				<textarea id="field-message" name="message" type="text"><xsl:value-of select="message"/></textarea>
+				<textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
 			</dd>
         </dl>
 
         <div class="form-buttons">
             <input type="submit">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')"/></xsl:attribute>
 			</input>
             <a class="cancel">
                 <xsl:attribute name="href"><xsl:value-of select="allocation/cancel_link"/></xsl:attribute>
@@ -127,6 +127,8 @@
     </div>
     <script type="text/javascript">
         YAHOO.booking.season_id = '<xsl:value-of select="allocation/season_id"/>';
+        YAHOO.booking.initialSelection = <xsl:value-of select="allocation/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
         <![CDATA[
         var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
             height: '300px',
@@ -149,5 +151,5 @@
         });
         descEdit.render();
         ]]>
-</script>
+    </script>
 </xsl:template>
