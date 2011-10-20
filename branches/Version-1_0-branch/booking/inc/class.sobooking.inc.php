@@ -333,6 +333,7 @@
 			return $results;
 		}
 
+		
 		public function get_booking_id($booking)
         {
 			$table_name = $this->table_name;
@@ -431,6 +432,26 @@
 			} else {
 				return False;
             }
+		}
+
+		function get_organization($id)
+		{
+			$this->db->limit_query("SELECT name FROM bb_organization where id=(select organization_id from bb_group where id=($id))", 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('name', false);
+		}
+
+		function get_resource($id)
+		{
+			$this->db->limit_query("SELECT name FROM bb_resource where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			if(!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('name', false);
 		}
 
 		function get_building($id)
