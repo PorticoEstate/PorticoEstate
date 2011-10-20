@@ -2,37 +2,38 @@
     <div id="content">
 
 	<dl class="form">
-    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></dt>
+    	<dt class="heading"><xsl:value-of select="php:function('lang', 'Delete Booking')"/></dt>
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
 
     <form action="" method="POST">
-		<input type="hidden" name="application_id" value="{allocation/application_id}"/>
-        <input id="field_org_id" name="organization_id" type="hidden" value="{allocation/organization_id}" />
-        <input id="field_building_id" name="building_id" type="hidden" value="{allocation/building_id}" />
-        <input id="field_from" name="from_" type="hidden" value="{allocation/from_}" />
-        <input id="field_to" name="to_" type="hidden" value="{allocation/to_}" />
+		<input type="hidden" name="application_id" value="{booking/application_id}"/>
+        <input type="hidden" name="group_id" value="{booking/group_id}" />
+        <input type="hidden" name="building_id" value="{booking/building_id}" />
+        <input type="hidden" name="season_id" value="{booking/season_id}" />
+        <input type="hidden" name="from_" value="{booking/from_}" />
+        <input type="hidden" name="to_" value="{booking/to_}" />
 
         <dl class="form-col">
-
             <dt><label for="field_building"><xsl:value-of select="php:function('lang', 'Building')" /></label></dt>
             <dd>
-                <div class="autocomplete">
-                        <xsl:value-of select="allocation/building_name"/>
+                <div>
+                        <xsl:value-of select="booking/building_name"/>
                 </div>
             </dd>
-
-
             <dt><label for="field_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
             <dd>
                 <div>
-                    <xsl:value-of select="allocation/from_"/>
+                    <xsl:value-of select="booking/from_"/>
                 </div>
             </dd>
-			<dd>
-                <div> </div>
-			</dd>
+            <dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')"/></label></dt>
+            <dd>
+                <div>
+                    <xsl:value-of select="booking/to_"/>
+                </div>
+            </dd>
 			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label></dt>
 			<dd>
 				<label>
@@ -91,45 +92,53 @@
 			</dd>
         </dl>
         <dl class="form-col">
-            <dt><label for="field_org"><xsl:value-of select="php:function('lang', 'Organization')" /></label></dt>
+            <dt><label for="field_group"><xsl:value-of select="php:function('lang', 'Group')"/></label></dt>
             <dd>
-                <div class="autocomplete">
-                        <xsl:value-of select="allocation/organization_name"/>
-                </div>
+                        <xsl:value-of select="booking/group_name"/>
             </dd>
-            <dt><label for="field_to"><xsl:value-of select="php:function('lang', 'To')" /></label></dt>
+            <dt><label for="field_season"><xsl:value-of select="php:function('lang', 'Season')"/></label></dt>
             <dd>
-                <div>
-                    <xsl:value-of select="allocation/to_"/>
-                </div>
+                        <xsl:value-of select="booking/season_name"/>
             </dd>
-        </dl>
-
-		<div style='clear:both; padding:0; margin:0'/>
-
-        <dl class="form-col">
-			<dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
-			<dd class="yui-skin-sam">
-				<textarea id="field-message" name="message" type="text"><xsl:value-of select="message"/></textarea>
+			<dt><label for="field_repeat_until"><xsl:value-of select="php:function('lang', 'Delete allocation also')" /></label></dt>
+			<dd>
+				<label>
+					<input type="checkbox" name="delete_allocation" id="delete_allocation">
+						<xsl:if test="delete_allocation='on'">
+							<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+					</input>
+					<xsl:value-of select="php:function('lang', 'Delete allocations')" />
+				</label>
 			</dd>
         </dl>
+		<div style='clear:left; padding:0; margin:0'/>
 
+        <dl class="form-col">
+		<dt><label for="field_message"><xsl:value-of select="php:function('lang', 'Message')" /></label></dt>
+		<dd class="yui-skin-sam">
+		<textarea id="field-message" name="message" type="text"><xsl:value-of select="system_message/message"/></textarea>
+		</dd>
+        </dl>
         <div class="form-buttons">
             <input type="submit">
-				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Cancel allocation')"/></xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Delete')"/></xsl:attribute>
 			</input>
             <a class="cancel">
-                <xsl:attribute name="href"><xsl:value-of select="allocation/cancel_link"/></xsl:attribute>
-                <xsl:value-of select="php:function('lang', 'Cancel')" />
+                <xsl:attribute name="href"><xsl:value-of select="booking/cancel_link"/></xsl:attribute>
+                <xsl:value-of select="php:function('lang', 'Cancel')"/>
             </a>
         </div>
     </form>
     </div>
     <script type="text/javascript">
-        YAHOO.booking.season_id = '<xsl:value-of select="allocation/season_id"/>';
+        YAHOO.booking.season_id = '<xsl:value-of select="booking/season_id"/>';
+        YAHOO.booking.group_id = '<xsl:value-of select="booking/group_id"/>';
+        YAHOO.booking.initialSelection = <xsl:value-of select="booking/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')"/>;
         <![CDATA[
         var descEdit = new YAHOO.widget.SimpleEditor('field-message', {
-            height: '300px',
+            height: '150px',
             width: '522px',
             dompath: true,
             animate: true,
@@ -149,5 +158,5 @@
         });
         descEdit.render();
         ]]>
-</script>
+    </script>
 </xsl:template>
