@@ -256,13 +256,6 @@
 					// allright, we're in!
 					echo "okay: logged in...<br/>";
 
-					// execute a command
-/*
-					if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
-					{
-						echo "fail: unable to execute command\n";
-					}
-*/
 					// Enter "sftp" mode
 					$sftp = @ssh2_sftp($connection);
 
@@ -275,47 +268,28 @@
 					{
 						if (is_dir($file))
 						{
-							echo "Directory: $file\n";
+							echo "Directory: $file<br/>";
 							continue;
 						}
 
-						$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
-						echo "File $file Size: $size\n";
+/*						$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
+						echo "File $file Size: $size<br/>";
 
 						$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
 						$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
-						@fclose(@stream);
-
+						@fclose($stream);
 						echo "CONTENTS: $contents<br/><br/>";
+*/
 						$arr[] = $file;
 					}
 
-					echo "collect returning data from command<br/>";
 					if ($debug)
 					{
-
 						_debug_array($arr);
-/*
-						stream_set_blocking($stream, true);
-						$data = "";
-						while ($buf = fread($stream,4096))
-						{
-							$data .= $buf;
-						}
-						fclose($stream);
-						_debug_array($data);
-*/
-
 					}
 					else
 					{
-						$com ="ls {$directory_remote}";
-						$stream = ssh2_exec($connection, $com);
-						stream_set_blocking($stream,true);
-						$cmd = fread($stream,4096);
-						$arr=explode("\n",$cmd);
 						$total_files=count($arr);
-						$sftp = ssh2_sftp($connection);
 			//		_debug_array($arr);
 						for($i=0;$i<$total_files;$i++)
 						{
@@ -334,11 +308,9 @@
 								}
 							}
 						}
-						fclose($stream);
 					}
 				}
 			}
-
 		}
 
 
