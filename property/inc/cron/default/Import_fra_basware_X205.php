@@ -47,22 +47,7 @@
 		var $attestant = 83; //cat_id for rolle
 		var $budsjettansvarlig = 146; //cat_id for rolle
 		var $default_kostra_id = 9999; //dummy
-
-		var $import = array(
-			'Bilagsnr' => 'bilagsnr', 
-			'Fakturanr' => 'fakturanr', 
-			'Konto' => 'spbudact_code',
-			'Objekt' => 'dima', //objectclass: organizationalPerson
-			'DimB' => 'dimb',
-			'KID' => 'kidnr',
-			'MVA' => 'mvakode',
-			'Tjeneste'=> 'kostra_id',
-			'Belop [kr]' => 'belop',
-			'Referanse' => 'referanse',
-			'BOEI Gateadresse' => 'boei_gateadresse',
-			);
-
-		var $header = array('Bilagsnr','Fakturanr','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse');
+		var $debug = false;
 
 		function __construct()
 		{
@@ -80,9 +65,9 @@
 			$this->config->read();
 		}
 
-		function pre_run($data='')
+		function pre_run($data = array())
 		{
-			if($data['enabled']==1)
+			if(isset($data['enabled']) && $data['enabled']==1)
 			{
 				$confirm	= true;
 				$cron		= true;
@@ -91,6 +76,11 @@
 			{
 				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 				$execute	= phpgw::get_var('execute', 'bool', 'GET');
+			}
+
+			if( isset($data['debug']) && $data['debug'] )
+			{
+				$this->debug = true;
 			}
 
 			if ($confirm)
@@ -234,8 +224,6 @@
 			$directory_local	= rtrim($this->config->config_data['import_path'],'/');
 			$port				= 22;
 
-			$debug = true;
-
 			if (!function_exists("ssh2_connect"))
 			{
 				die("function ssh2_connect doesn't exist");
@@ -283,7 +271,7 @@
 						$arr[] = $file;
 					}
 
-					if ($debug)
+					if ($this->debug)
 					{
 						_debug_array($arr);
 					}
