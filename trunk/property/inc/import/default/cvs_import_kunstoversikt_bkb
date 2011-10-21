@@ -16,19 +16,38 @@
 
 		public function add($data)
 		{
+/*
+    [0] => Identifikasjonsnr
+    [1] => Betegnelse
+    [2] => Objekt-id
+    [3] => Fast plassering
+    [4] => Juridisk person
+    [5] => Datering
+    [6] => Tittel
+    [7] => Avbildet person
+    [8] => Avbildet sted
+    [9] => Teknikk
+    [10] => Mål
+    [11] => Historikk
+    [12] => Tilstand
+*/
 			$error = false;
 			$table = 'fm_entity_4_1';
-			$byggid = $data[0];
+			$plassering = explode('.', $data[3]);
+			$byggid = $plassering[1];
 			if(!$byggid)
 			{
-				$this->errors[] = "Mangler objekt, hopper over: {$data[1]}";
+				$this->errors[] = "Mangler objekt, hopper over: {$data[3]}";
 				return true;
 			}
-			if(substr($byggid,0,1) == 'B')
+/*
+			if(substr($plassering[0],0,1) == 'B')
 			{
-				$this->warnings[] = "BBB-objekt, hopper over: {$byggid}";
+				$this->warnings[] = "BBB-objekt, hopper over: {$data[3]}";
 				return true;
 			}
+*/
+
 			$location_code = substr($byggid,0,4) . '-0' . substr($byggid,-1);
 //_debug_array($location_code);
 			$location_data = execMethod('property.solocation.read_single', $location_code );
@@ -63,7 +82,6 @@ _debug_array($data);
 //_debug_array($entry_date);
 			$value_set = array();
 
-
 			$value_set['num'] 					= sprintf('%04s',$id);
     		$value_set['loc1']					= $location_data['loc1'];
     		$value_set['loc2']					= $location_data['loc2'];
@@ -71,10 +89,32 @@ _debug_array($data);
 			$value_set['location_code']			= $location_code;
 			$value_set['address']				= $address;
 			$value_set['entry_date']			= $entry_date;
-			$value_set['museumsnr']				= $this->db->db_addslashes($data[1]);
-			$value_set['betegnelse']			= $this->db->db_addslashes($data[3]);
-			$value_set['beskrivelse']			= $this->db->db_addslashes($data[4]);
-			$value_set['tilstand']				= $this->db->db_addslashes($data[5]);
+			$value_set['museumsnr']				= $this->db->db_addslashes($data[0]);
+			$value_set['betegnelse']			= $this->db->db_addslashes($data[1]);
+			$value_set['beskrivelse']			= $this->db->db_addslashes(str_replace('"', '', $data[6])); // tittel
+			$value_set['tilstand']				= $this->db->db_addslashes($data[12]);
+     		$value_set['juridisk_person']		= $this->db->db_addslashes($data[4]);
+     		$value_set['datering']				= $this->db->db_addslashes($data[5]);
+     		$value_set['avbildet_person']		= $this->db->db_addslashes($data[7]);
+     		$value_set['avbildet_sted']			= $this->db->db_addslashes($data[8]);
+     		$value_set['teknikk']				= $this->db->db_addslashes($data[9]);
+     		$value_set['maal']					= $this->db->db_addslashes($data[10]);
+     		$value_set['historikk']				= $this->db->db_addslashes($data[11]);
+/*
+*    [0] => Identifikasjonsnr
+*    [1] => Betegnelse
+*    [2] => Objekt-id
+*    [3] => Fast plassering
+*    [4] => Juridisk person
+*    [5] => Datering
+*    [6] => Tittel
+*    [7] => Avbildet person
+*    [8] => Avbildet sted
+*    [9] => Teknikk
+*    [10] => Mål
+*    [11] => Historikk
+*    [12] => Tilstand
+*/
 
 			$this->db->query("SELECT id FROM {$table} WHERE id = {$id}",__LINE__,__FILE__);
 			if($this->db->next_record())
@@ -86,6 +126,7 @@ _debug_array($data);
 			else
 			{
 				$value_set['id'] = $id;
+				$this->warnings[] = "Denne er ny: {$id}, legger til";
 				$cols = implode(',', array_keys($value_set));
 				$values	= $this->db->validate_insert(array_values($value_set));
 
