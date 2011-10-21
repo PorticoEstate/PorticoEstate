@@ -262,9 +262,9 @@
 						echo "fail: unable to execute command\n";
 					}
 
+					echo "collect returning data from command\n";
 					if ($debug)
 					{
-						echo "collect returning data from command\n";
 						stream_set_blocking($stream, true);
 						$data = "";
 						while ($buf = fread($stream,4096))
