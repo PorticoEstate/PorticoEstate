@@ -82,6 +82,10 @@
 			{
 				$this->debug = true;
 			}
+			else
+			{
+				$this->debug	= phpgw::get_var('debug', 'bool');			
+			}
 
 			if ($confirm)
 			{
@@ -100,6 +104,7 @@
 				'menuaction' => 'property.custom_functions.index',
 				'function'	=>$this->function_name,
 				'execute'	=> $execute,
+				'debug'		=> $this->debug
 			);
 
 
