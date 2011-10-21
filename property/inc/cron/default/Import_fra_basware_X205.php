@@ -261,7 +261,8 @@
 					{
 						echo "fail: unable to execute command\n";
 					}
-					else if ($debug)
+
+					if ($debug)
 					{
 						// collect returning data from command
 						stream_set_blocking($stream, true);
