@@ -268,8 +268,8 @@
 
 					// Scan directory
 					$arr = array();
-					echo "Scanning $remote_dir\n";
-					$dir = "ssh2.sftp://$sftp$remote_dir";
+					echo "Scanning {$directory_remote}<br/>";
+					$dir = "ssh2.sftp://$sftp$directory_remote";
 					$handle = opendir($dir);
 					while (false !== ($file = readdir($handle)))
 					{
@@ -279,23 +279,23 @@
 							continue;
 						}
 
-						$size = filesize("ssh2.sftp://$sftp$remote_dir/$file");
+						$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
 						echo "File $file Size: $size\n";
 
-						$stream = @fopen("ssh2.sftp://$sftp$remote_dir/$file", 'r');
-						$contents = fread($stream, filesize("ssh2.sftp://$sftp$remote_dir/$file"));
+						$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
+						$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
 						@fclose(@stream);
 
-						echo "CONTENTS: $contents\n\n";
+						echo "CONTENTS: $contents<br/><br/>";
 						$arr[] = $file;
 					}
 
-					echo "collect returning data from command\n";
+					echo "collect returning data from command<br/>";
 					if ($debug)
 					{
 
 						_debug_array($arr);
-
+/*
 						stream_set_blocking($stream, true);
 						$data = "";
 						while ($buf = fread($stream,4096))
@@ -304,6 +304,8 @@
 						}
 						fclose($stream);
 						_debug_array($data);
+*/
+
 					}
 					else
 					{
