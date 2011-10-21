@@ -257,15 +257,45 @@
 					echo "okay: logged in...<br/>";
 
 					// execute a command
-					//if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
-					if (!($stream = ssh2_exec($connection, "dir {$directory_remote}" )))
+/*
+					if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
 					{
 						echo "fail: unable to execute command\n";
+					}
+*/
+					// Enter "sftp" mode
+					$sftp = @ssh2_sftp($connection);
+
+					// Scan directory
+					$arr = array();
+					echo "Scanning $remote_dir\n";
+					$dir = "ssh2.sftp://$sftp$remote_dir";
+					$handle = opendir($dir);
+					while (false !== ($file = readdir($handle)))
+					{
+						if (is_dir($file))
+						{
+							echo "Directory: $file\n";
+							continue;
+						}
+
+						$size = filesize("ssh2.sftp://$sftp$remote_dir/$file");
+						echo "File $file Size: $size\n";
+
+						$stream = @fopen("ssh2.sftp://$sftp$remote_dir/$file", 'r');
+						$contents = fread($stream, filesize("ssh2.sftp://$sftp$remote_dir/$file"));
+						@fclose(@stream);
+
+						echo "CONTENTS: $contents\n\n";
+						$arr[] = $file;
 					}
 
 					echo "collect returning data from command\n";
 					if ($debug)
 					{
+
+						_debug_array($arr);
+
 						stream_set_blocking($stream, true);
 						$data = "";
 						while ($buf = fread($stream,4096))
