@@ -240,7 +240,7 @@
 			{
 				die("function ssh2_connect doesn't exist");
 			}
-			if(!($connection = ssh2_connect("$server", $port)))
+			if(!($connection = ssh2_connect($server, $port)))
 			{
 				echo "fail: unable to establish connection\n";
 			}
@@ -268,7 +268,7 @@
 					{
 						if (is_dir($file))
 						{
-							echo "Directory: $file<br/>";
+//							echo "Directory: $file<br/>";
 							continue;
 						}
 
@@ -290,7 +290,6 @@
 					else
 					{
 						$total_files=count($arr);
-			//		_debug_array($arr);
 						for($i=0;$i<$total_files;$i++)
 						{
 							$file_name=trim($arr[$i]);
