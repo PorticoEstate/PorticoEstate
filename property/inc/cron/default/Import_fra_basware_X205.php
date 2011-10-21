@@ -257,7 +257,8 @@
 					echo "okay: logged in...<br/>";
 
 					// execute a command
-					if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
+					//if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
+					if (!($stream = ssh2_exec($connection, "dir {$directory_remote}" )))
 					{
 						echo "fail: unable to execute command\n";
 					}
