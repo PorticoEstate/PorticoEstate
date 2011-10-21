@@ -101,10 +101,10 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
-				'debug'		=> $this->debug
+				'menuaction'	=> 'property.custom_functions.index',
+				'function'		=> $this->function_name,
+				'execute'		=> $execute,
+				'debug'			=> $this->debug
 			);
 
 
