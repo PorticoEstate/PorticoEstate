@@ -234,7 +234,7 @@
 			$directory_local	= rtrim($this->config->config_data['import_path'],'/');
 			$port				= 22;
 
-			$debug = false;
+			$debug = true;
 
 			if (!function_exists("ssh2_connect"))
 			{
