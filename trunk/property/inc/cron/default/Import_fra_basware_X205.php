@@ -264,7 +264,7 @@
 
 					if ($debug)
 					{
-						// collect returning data from command
+						echo "collect returning data from command\n";
 						stream_set_blocking($stream, true);
 						$data = "";
 						while ($buf = fread($stream,4096))
