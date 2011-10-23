@@ -40,6 +40,19 @@
 				$this->errors[] = "Mangler objekt, hopper over: {$data[3]}";
 				return true;
 			}
+
+			$plassering_descr_arr = array();
+			$count_plassering = count($plassering);
+			for ($i=3;$i<$count_plassering;$i++)
+			{
+				if($plassering[$i])
+				{
+					$plassering_descr_arr[] = $plassering[$i];
+				}
+			}
+
+			$plassering_descr = implode('.', $plassering_descr_arr);
+//_debug_array($plassering_descr);
 /*
 			if(substr($plassering[0],0,1) == 'B')
 			{
@@ -51,7 +64,7 @@
 			$location_code = substr($byggid,0,4) . '-0' . substr($byggid,-1);
 //_debug_array($location_code);
 			$location_data = execMethod('property.solocation.read_single', $location_code );
-_debug_array($data);
+//_debug_array($data);
 //_debug_array($location_data);die();
 			if(!$location_data)
 			{
@@ -71,6 +84,8 @@ _debug_array($data);
 			{
 				$address = $this->db->db_addslashes($location_data['loc1_name']);
 			}
+
+			$address .= $plassering_descr ? ", $plassering_descr" : '';
 
 			$id = (int)$data[2];
 			
