@@ -47,22 +47,7 @@
 		var $attestant = 83; //cat_id for rolle
 		var $budsjettansvarlig = 146; //cat_id for rolle
 		var $default_kostra_id = 9999; //dummy
-
-		var $import = array(
-			'Bilagsnr' => 'bilagsnr', 
-			'Fakturanr' => 'fakturanr', 
-			'Konto' => 'spbudact_code',
-			'Objekt' => 'dima', //objectclass: organizationalPerson
-			'DimB' => 'dimb',
-			'KID' => 'kidnr',
-			'MVA' => 'mvakode',
-			'Tjeneste'=> 'kostra_id',
-			'Belop [kr]' => 'belop',
-			'Referanse' => 'referanse',
-			'BOEI Gateadresse' => 'boei_gateadresse',
-			);
-
-		var $header = array('Bilagsnr','Fakturanr','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse');
+		var $debug = false;
 
 		function __construct()
 		{
@@ -80,9 +65,9 @@
 			$this->config->read();
 		}
 
-		function pre_run($data='')
+		function pre_run($data = array())
 		{
-			if($data['enabled']==1)
+			if(isset($data['enabled']) && $data['enabled']==1)
 			{
 				$confirm	= true;
 				$cron		= true;
@@ -91,6 +76,15 @@
 			{
 				$confirm	= phpgw::get_var('confirm', 'bool', 'POST');
 				$execute	= phpgw::get_var('execute', 'bool', 'GET');
+			}
+
+			if( isset($data['debug']) && $data['debug'] )
+			{
+				$this->debug = true;
+			}
+			else
+			{
+				$this->debug	= phpgw::get_var('debug', 'bool');			
 			}
 
 			if ($confirm)
@@ -107,9 +101,10 @@
 		{
 			$link_data = array
 			(
-				'menuaction' => 'property.custom_functions.index',
-				'function'	=>$this->function_name,
-				'execute'	=> $execute,
+				'menuaction'	=> 'property.custom_functions.index',
+				'function'		=> $this->function_name,
+				'execute'		=> $execute,
+				'debug'			=> $this->debug
 			);
 
 
@@ -234,13 +229,11 @@
 			$directory_local	= rtrim($this->config->config_data['import_path'],'/');
 			$port				= 22;
 
-			$debug = false;
-
 			if (!function_exists("ssh2_connect"))
 			{
 				die("function ssh2_connect doesn't exist");
 			}
-			if(!($connection = ssh2_connect("$server", $port)))
+			if(!($connection = ssh2_connect($server, $port)))
 			{
 				echo "fail: unable to establish connection\n";
 			}
@@ -256,33 +249,40 @@
 					// allright, we're in!
 					echo "okay: logged in...<br/>";
 
-					// execute a command
-					if (!($stream = ssh2_exec($connection, "ls -al {$directory_remote}" )))
+					// Enter "sftp" mode
+					$sftp = @ssh2_sftp($connection);
+
+					// Scan directory
+					$arr = array();
+					echo "Scanning {$directory_remote}<br/>";
+					$dir = "ssh2.sftp://$sftp$directory_remote";
+					$handle = opendir($dir);
+					while (false !== ($file = readdir($handle)))
 					{
-						echo "fail: unable to execute command\n";
-					}
-					else if ($debug)
-					{
-						// collect returning data from command
-						stream_set_blocking($stream, true);
-						$data = "";
-						while ($buf = fread($stream,4096))
+						if (is_dir($file))
 						{
-							$data .= $buf;
+//							echo "Directory: $file<br/>";
+							continue;
 						}
-						fclose($stream);
-						_debug_array($data);
+
+/*						$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
+						echo "File $file Size: $size<br/>";
+
+						$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
+						$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
+						@fclose($stream);
+						echo "CONTENTS: $contents<br/><br/>";
+*/
+						$arr[] = $file;
+					}
+
+					if ($this->debug)
+					{
+						_debug_array($arr);
 					}
 					else
 					{
-						$com ="ls {$directory_remote}";
-						$stream = ssh2_exec($connection, $com);
-						stream_set_blocking($stream,true);
-						$cmd = fread($stream,4096);
-						$arr=explode("\n",$cmd);
 						$total_files=count($arr);
-						$sftp = ssh2_sftp($connection);
-			//		_debug_array($arr);
 						for($i=0;$i<$total_files;$i++)
 						{
 							$file_name=trim($arr[$i]);
@@ -300,11 +300,9 @@
 								}
 							}
 						}
-						fclose($stream);
 					}
 				}
 			}
-
 		}
 
 

@@ -73,8 +73,8 @@
                                 'text' => lang('Status').':',
                                 'list' => array(
                                     array(
-                                        'id' => 'not',
-                                        'name' => lang('Not selected')
+                                        'id' => '',
+                                        'name' => lang('All')
                                     ), 
                                     array(
                                         'id' => 'NEW',
@@ -92,10 +92,6 @@
                                         'id' => 'ACCEPTED',
                                         'name' => lang('ACCEPTED')
                                     ),
-                                    array(
-                                        'id' => 'CLOSED',
-                                        'name' => lang('CLOSED')
-                                    )
                                 )
                             ),
 							array('type' => 'autocomplete', 
@@ -130,10 +126,6 @@
 						array(
 							'key' => 'status',
 							'label' => lang('Status')
-						),
-						array(
-							'key' => 'type',
-							'label' => lang('Type')
 						),
 						array(
 							'key' => 'created',
@@ -172,7 +164,7 @@
 		public function index_json()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
-			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? null : $this->current_account_id());
+			$applications = $this->bo->read_dashboard_data($this->show_all_dashboard_applications() ? array(null,$this->current_account_id()) : array(1,$this->current_account_id()));
 			foreach($applications['results'] as &$application)
 			{
 				$application['status'] = lang($application['status']);

@@ -88,26 +88,26 @@
 			return $applications;
 		}
 
-		public function read_dashboard_data($for_case_officer_id = null) {
+		public function read_dashboard_data($for_case_officer_id = array(null,null)) {
 			$params = $this->build_default_read_params();
-			
+
 			if (!isset($params['filters'])) $params['filters'] = array();
 			$where_clauses = !isset($params['filters']['where']) ? array() : (array)$params['filters']['where'];
 			
-			if (!is_null($for_case_officer_id)) {
-				$where_clauses[] = "(%%table%%.display_in_dashboard = 1 AND %%table%%.case_officer_id = ".intval($for_case_officer_id).')';
+			if (!is_null($for_case_officer_id[0])) {
+				$where_clauses[] = "(%%table%%.display_in_dashboard = 1 AND %%table%%.case_officer_id = ".intval($for_case_officer_id[1]).')';
+			} else {
+				$where_clauses[] = "(%%table%%.case_officer_id = ".intval($for_case_officer_id[1]).')';
 			}
+
 			
 			if ($building_id = phpgw::get_var('filter_building_id', 'int', 'GET', false)) {
 				$where_clauses[] = "(%%table%%.id IN (SELECT DISTINCT a.id FROM bb_application a, bb_application_resource ar, bb_resource r WHERE ar.application_id = a.id AND ar.resource_id = r.id AND r.building_id = ".intval($building_id)."))";
 			}
-#			if ($type = phpgw::get_var('type') != 'not') {
-#                    $params['filters']['type'] = phpgw::get_var('type');       
-#            }
-
-			if ($status = phpgw::get_var('status') != 'not') {
+			
+			if ( $status = phpgw::get_var('status') != '') {
                     $params['filters']['status'] = phpgw::get_var('status');       
-            }
+			}
 
 			$params['filters']['where'] = $where_clauses;
 
