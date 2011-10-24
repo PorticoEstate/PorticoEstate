@@ -874,12 +874,10 @@
 						break;
 					case 'ssh';
 						$sftp = ssh2_sftp($connection);
-						// Upload file
 						$stream = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
 						$data_to_send = @file_get_contents($Filnavn);
 						fwrite($stream, $data_to_send);
 						$transfer_ok = @fclose($stream);
-					//	$transfer_ok = ssh2_scp_send($connection, $Filnavn, $remote_file );
 						break;
 					default:
 						$transfer_ok = false;
