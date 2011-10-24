@@ -286,7 +286,7 @@
 						{
 							if( stripos( $file_name, 'x205' ) === 0)
 							{
-_debug_array($file_name);
+						//		_debug_array($file_name);
 								$file_remote = "{$directory_remote}/{$file_name}";	   
 								$file_local = "{$directory_local}/{$file_name}";
 
@@ -296,9 +296,8 @@ _debug_array($file_name);
 
 								$fp = fopen($file_local, "wb");
 								fwrite($fp,$contents);
-				
+
 								if(fclose($fp))
-//								if(ssh2_scp_recv($connection, $file_remote,$file_local))
 								{
 									echo "File remote: ".$file_remote." was copied to local: $file_local<br/>";
 									if( ssh2_sftp_rename ($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}" ))
