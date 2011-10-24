@@ -16,12 +16,6 @@
 			<div class="heading">1. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
 			<dt>
 				<label for="field_activity"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
-				<p>Informasjon om aktiviteten/arrangementet
-				Gi en kort beskrivelse av arrangementet /aktiviteten. 
-				For åpne arrangement, aktiviteter og trening i regi av 
-				organisasjoner og klubber vises denne informasjonen på internett. 
-				For faste aktiviteter oppgi intervall og til dato, 
-				f.eks. torsdager kl.19-20 frem til 23/6. Oppgi arrangør og gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett</p>
 			</dt>
 			<dd>
 				<select name="activity_id" id="field_activity">
