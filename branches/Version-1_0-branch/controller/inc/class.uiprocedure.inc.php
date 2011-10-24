@@ -141,6 +141,49 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $proc_id));
 				}
 			}
+			else if(isset($_POST['revisit_procedure'])) // The user has pressed the revisit button
+			{
+				$old_procedure = $this->so->get_single($procedure_id);
+				if(isset($procedure)) // Edit procedure
+				{
+					$revision = $procedure->get_revision_no();
+					if($revision && is_numeric($revision))
+					{
+						$revision = (int)$revision;
+						$new_revision = $revision++;
+						$procedure->set_revision_no($new_revision);
+					}
+					$procedure->set_title(phpgw::get_var('title'));
+					$procedure->set_purpose(phpgw::get_var('purpose','html'));
+					$procedure->set_responsibility(phpgw::get_var('responsibility'));
+					$procedure->set_description(phpgw::get_var('description','html'));
+					$procedure->set_reference(phpgw::get_var('reference'));
+					$procedure->set_attachment(phpgw::get_var('attachment'));
+					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
+					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
+					
+					if(isset($procedure_id) && $procedure_id > 0)
+					{
+						$proc_id = $procedure_id;
+						$old_procedure->set_id(null);
+						$old_procedure->set_end_date(time());
+						$old_procedure->set_procedure_id($proc_id);
+						if($this->so->add($old_procedure)) //add old revision of procedure to history
+						{
+							if($this->so->store($procedure))
+							{
+								$message = lang('messages_saved_form');
+							}
+							else
+							{
+								$error = lang('messages_form_error');
+							}
+						}
+					}
+
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $proc_id));
+				}
+			}
 			else if(isset($_POST['cancel_procedure'])) // The user has pressed the cancel button
 			{
 				if(isset($procedure_id) && $procedure_id > 0)

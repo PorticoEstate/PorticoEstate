@@ -88,7 +88,10 @@
 				'reference' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'attachment' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
-				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
+				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'revision_no' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'revision_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

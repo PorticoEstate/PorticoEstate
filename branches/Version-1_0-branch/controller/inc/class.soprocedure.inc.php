@@ -36,7 +36,10 @@ class controller_soprocedure extends controller_socommon
 				'reference',
 				'attachment',
 				'start_date',
-				'end_date'
+				'end_date',
+				'procedure_id',
+				'revision_no',
+				'revision_date'
 		);
 			
 		$values = array(
@@ -47,7 +50,10 @@ class controller_soprocedure extends controller_socommon
 			$this->marshal($procedure->get_reference(), 'string'),
 			$this->marshal($procedure->get_attachment(), 'string'),
 			$this->marshal($procedure->get_start_date(), 'int'),
-			$this->marshal($procedure->get_end_date(), 'int')
+			$this->marshal($procedure->get_end_date(), 'int'),
+			$this->marshal($procedure->get_procedure_id(), 'int'),
+			$this->marshal($procedure->get_revision_no(), 'int'),
+			$this->marshal($procedure->get_revision_date(), 'int')
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_procedure (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -82,7 +88,10 @@ class controller_soprocedure extends controller_socommon
 			'reference = ' . $this->marshal($procedure->get_reference(), 'string'),
 			'attachment = ' . $this->marshal($procedure->get_attachment(), 'string'),
 			'start_date = ' . $this->marshal($procedure->get_start_date(), 'int'),
-			'end_date = ' . $this->marshal($procedure->get_end_date(), 'int')
+			'end_date = ' . $this->marshal($procedure->get_end_date(), 'int'),
+			'procedure_id = ' . $this->marshal($procedure->get_procedure_id(), 'int'),
+			'revision_no = ' . $this->marshal($procedure->get_revision_no(), 'int'),
+			'revision_date = ' . $this->marshal($procedure->get_revision_date(), 'int')
 		);
 		
 		$result = $this->db->query('UPDATE controller_procedure SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -113,6 +122,9 @@ class controller_soprocedure extends controller_socommon
 		$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
 		$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 		$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+		$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+		$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+		$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 		
 		return $procedure;
 	}
@@ -138,6 +150,9 @@ class controller_soprocedure extends controller_socommon
 			$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
 			$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 			
 			$results[] = $procedure;
 		}
@@ -166,6 +181,9 @@ class controller_soprocedure extends controller_socommon
 			$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
 			$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 			
 			$results[] = $procedure->toArray();;
 		}
@@ -324,7 +342,7 @@ class controller_soprocedure extends controller_socommon
 		}
 		else
 		{
-			$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date ";
+			$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date, controller_procedure.procedure_id, controller_procedure.revision_no, controller_procedure.revision_date ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -348,6 +366,9 @@ class controller_soprocedure extends controller_socommon
 			$procedure->set_attachment($this->unmarshal($this->db->f('attachment'), 'string'));
 			$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 		}
 		
 		return $procedure;
