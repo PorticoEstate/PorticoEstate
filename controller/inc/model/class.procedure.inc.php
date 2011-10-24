@@ -14,6 +14,9 @@
 		protected $attachment;
 		protected $start_date;
 		protected $end_date;
+		protected $procedure_id;
+		protected $revision_no;
+		protected $revision_date;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a procedure is created from outside
@@ -89,6 +92,27 @@
 		
 		public function get_end_date() { return $this->end_date; }
 		
+		public function set_procedure_id($procedure_id)
+		{
+			$this->procedure_id = $procedure_id;
+		}
+		
+		public function get_procedure_id() { return $this->procedure_id; }
+		
+		public function set_revision_no($revision_no)
+		{
+			$this->revision_no = $revision_no;
+		}
+		
+		public function get_revision_no() { return $this->revision_no; }
+		
+		public function set_revision_date($revision_date)
+		{
+			$this->revision_date = $revision_date;
+		}
+		
+		public function get_revision_date() { return $this->revision_date; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -114,7 +138,10 @@
 					'reference' => $this->get_reference(),
 					'attachment' => $this->get_attachment(),
 					'start_date' => $this->get_start_date(),
-					'end_date' => $this->get_end_date()
+					'end_date' => $this->get_end_date(),
+					'procedure_id' => $this->get_procedure_id(),
+					'revision_no' => $this->get_revision_no(),
+					'revision_date' => $this->get_revision_date()
 			);
 		}
 	}
