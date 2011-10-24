@@ -175,6 +175,17 @@
 			return (false === $pos = strrpos($entity['name'], '.')) ? false : substr($entity['name'], $pos+1);
 		}
 
+		public function getMyRole($id) {
+
+			$db = $this->db;
+			$db->limit_query("SELECT role FROM bb_permission_root WHERE id=".intval($GLOBALS['phpgw_info']['user']['account_id']), 0, __LINE__, __FILE__, 1);
+			if($db->next_record())
+			{
+				return $db->f('role', false);
+			} 
+			return false;
+		}
+
 		public function getFrontendDoc()
 		{
 				$this->db->query("SELECT id,name FROM bb_documentation WHERE category='frontend' ORDER BY id DESC", __LINE__, __FILE__);
