@@ -55,9 +55,10 @@
 			'Belop [kr]' => 'belop',
 			'Referanse' => 'referanse',
 			'BOEI Gateadresse' => 'boei_gateadresse',
+			'Saksbehandler'	=>'saksbehandlerid'
 			);
 
-		var $header = array('Bilagsnr','Fakturanr','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse');
+		var $header = array('Bilagsnr','Fakturanr','Gnr/Bnr-seksjon','Konto','Objekt','DimB','KID','MVA','Tjeneste','Belop [kr]','Referanse','Saksbehandler');
 
 		function import_conv()
 		{

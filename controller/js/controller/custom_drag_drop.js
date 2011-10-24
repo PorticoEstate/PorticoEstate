@@ -27,21 +27,21 @@ $(document).ready(function(){
 		start_drag();
 	});
 	
-	// Delete a control item list 
+	// Delete a control item list
 	$(".delete").click(function(){
-		var thisElem = $(this);
-		var thisRow = $(this).parent();
+		var clickElem = $(this);
+		var clickRow = $(this).parent();
 		
-		var url = $(thisElem).attr("href");
+		var url = $(clickElem).attr("href");
 	
 		// Sending request for deleting a control item list
 		$.ajax({
 			type: 'POST',
 			url: url,
 			success: function() {
-				$(thisRow).fadeOut("slow");
+				$(clickRow).fadeOut("slow");
 				
-				var next_row = $(thisRow).next();
+				var next_row = $(clickRow).next();
 				
 				// Updating order numbers for rows below deleted row  
 				while( $(next_row).length > 0){
