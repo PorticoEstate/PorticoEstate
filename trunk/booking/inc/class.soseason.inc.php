@@ -14,7 +14,7 @@
 					'active'		=> array('type' => 'int', 'required' => true),
 					'building_id'	=> array('type' => 'int', 'required' => true),
 					'name'			=> array('type' => 'string', 'query' => true, 'required' => true),
-					'status'		=> array('type' => 'string', 'required'=> true),
+					'status'		=> array('type' => 'string', 'query' => true, 'required'=> true),
 					'from_'		=> array('type' => 'date', 'required'=> true),
 					'to_'		=> array('type' => 'date', 'required'=> true),
 					'building_name'	=> array('type' => 'string',
