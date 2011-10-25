@@ -417,8 +417,8 @@ subject_id	booking	no	Bruker
 export_configurations[external][account_code_set_id]	booking	no	Velg eksterne kontokoder
 export_configurations[internal][account_code_set_id]	booking	no	Velg interne kontokoder
 new target audience	booking	no	Ny målgruppe
-Information about the event	booking	no	Informasjon om arrangementet
-Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	booking	no	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
+Information about the event	booking	no	Informasjon om aktiviteten/arrangementet
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	booking	no	Gi en kort beskrivelse av arrangementet /aktiviteten. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett. For faste aktiviteter oppgi intervall og til dato, f.eks. torsdager kl.19-20 frem til 23/6.
 To borrow premises you must verify that you have read terms and conditions	booking	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
 In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr. Interne fra BK oppgir ressursnr. Organisasjonsnr. finner du her: www.brreg.no
 Event type	booking	no	Arrangementstype

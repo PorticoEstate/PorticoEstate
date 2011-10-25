@@ -253,7 +253,7 @@
 					$sftp = @ssh2_sftp($connection);
 
 					// Scan directory
-					$arr = array();
+					$files = array();
 					echo "Scanning {$directory_remote}<br/>";
 					$dir = "ssh2.sftp://$sftp$directory_remote";
 					$handle = opendir($dir);
@@ -273,24 +273,31 @@
 						@fclose($stream);
 						echo "CONTENTS: $contents<br/><br/>";
 */
-						$arr[] = $file;
+						$files[] = $file;
 					}
 
 					if ($this->debug)
 					{
-						_debug_array($arr);
+						_debug_array($files);
 					}
 					else
 					{
-						$total_files=count($arr);
-						for($i=0;$i<$total_files;$i++)
+						foreach($files as $file_name)
 						{
-							$file_name=trim($arr[$i]);
-							if($file_name!='' && stripos( $file_name, 'x205' ) === 0)
+							if( stripos( $file_name, 'x205' ) === 0)
 							{
+						//		_debug_array($file_name);
 								$file_remote = "{$directory_remote}/{$file_name}";	   
 								$file_local = "{$directory_local}/{$file_name}";
-								if(ssh2_scp_recv($connection, $file_remote,$file_local))
+
+								$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
+								$contents = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
+								fclose($stream);
+
+								$fp = fopen($file_local, "wb");
+								fwrite($fp,$contents);
+
+								if(fclose($fp))
 								{
 									echo "File remote: ".$file_remote." was copied to local: $file_local<br/>";
 									if( ssh2_sftp_rename ($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}" ))
