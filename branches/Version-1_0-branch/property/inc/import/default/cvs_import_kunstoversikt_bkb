@@ -107,7 +107,6 @@
 			$value_set['museumsnr']				= $this->db->db_addslashes($data[0]);
 			$value_set['betegnelse']			= $this->db->db_addslashes($data[1]);
 			$value_set['beskrivelse']			= $this->db->db_addslashes(str_replace('"', '', $data[6])); // tittel
-			$value_set['tilstand']				= $this->db->db_addslashes($data[12]);
      		$value_set['juridisk_person']		= $this->db->db_addslashes($data[4]);
      		$value_set['datering']				= $this->db->db_addslashes($data[5]);
      		$value_set['avbildet_person']		= $this->db->db_addslashes($data[7]);
@@ -115,6 +114,8 @@
      		$value_set['teknikk']				= $this->db->db_addslashes($data[9]);
      		$value_set['maal']					= $this->db->db_addslashes($data[10]);
      		$value_set['historikk']				= $this->db->db_addslashes($data[11]);
+			$value_set['tilstand']				= $this->db->db_addslashes($data[12]);
+     		$value_set['paafort_text']			= $this->db->db_addslashes($data[13]);
 /*
 *    [0] => Identifikasjonsnr
 *    [1] => Betegnelse
