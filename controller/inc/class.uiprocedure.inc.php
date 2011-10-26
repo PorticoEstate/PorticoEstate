@@ -1,12 +1,14 @@
 <?php
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('controller.soprocedure');
+	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'procedure', 'inc/model/');
 
 	class controller_uiprocedure extends controller_uicommon
 	{
 		private $so;
+		private $so_control_area;
 		
 		public $public_functions = array
 		(
@@ -22,6 +24,7 @@
 			parent::__construct();
 
 			$this->so = CreateObject('controller.soprocedure');
+			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			//$this->bo = CreateObject('property.boevent',true);
 		}
@@ -44,6 +47,11 @@
 								'type' => 'link',
 								'value' => lang('f_new_procedure'),
 								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add'))
+							),
+							array('type' => 'filter',
+								'name' => 'control_areas',
+                                'text' => lang('Control_area').':',
+                                'list' => $this->so_control_area->get_control_area_select_array(),
 							),
 							array('type' => 'text', 
                                 'text' => lang('search'),
@@ -74,6 +82,11 @@
 						array(
 							'key' => 'purpose',
 							'label' => lang('Procedure purpose'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'control_area',
+							'label' => lang('Control area'),
 							'sortable'	=> false
 						),
 						array(
@@ -119,6 +132,7 @@
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
 					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
+					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
@@ -170,6 +184,7 @@
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
+					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
@@ -211,7 +226,27 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-				
+				$control_area_array = $this->so_control_area->get_control_area_array();
+				foreach ($control_area_array as $control_area)
+				{
+					if($procedure->get_control_area_id() && $control_area->get_id() == $procedure->get_control_area_id())
+					{
+						$control_area_options[] = array
+						(
+							'id'	=> $control_area->get_id(),
+							'name'	=> $control_area->get_title(),
+							'selected' => 'yes'
+						);
+					}
+					else
+					{
+						$control_area_options[] = array
+						(
+							'id'	=> $control_area->get_id(),
+							'name'	=> $control_area->get_title()
+						);
+					}
+				}
 				$procedure_array = $procedure->toArray();
 				//_debug_array($procedure_array);
 	
@@ -224,6 +259,7 @@
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
+					'control_area'				=> array('options' => $control_area_options),
 				);
 	
 	
@@ -342,6 +378,12 @@
 				'filters' => $filters
 			);
 			
+			$ctrl_area = phpgw::get_var('control_areas');
+			if(isset($ctrl_area) && $ctrl_area > 0)
+			{
+				$filters['control_areas'] = $ctrl_area; 
+			}
+			
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -377,7 +419,7 @@
 			{
 				default: // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('controller', 'procedure_query', $search_for);
-					$filters = array();
+					//$filters = array();
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;

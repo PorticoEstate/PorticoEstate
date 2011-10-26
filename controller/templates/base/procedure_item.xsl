@@ -61,6 +61,21 @@
 					</xsl:choose>
 					</dd>
 					<dt>
+						<label for="control_area"><xsl:value-of select="php:function('lang','Control area')" /></label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<select id="control_area" name="control_area">
+								<xsl:apply-templates select="control_area/options"/>
+							</select>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="procedure/control_area_name" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					<dt>
 						<label for="description"><xsl:value-of select="php:function('lang','Procedure description')" /></label>
 					</dt>
 					<dd>
@@ -184,4 +199,13 @@
 				</xsl:for-each>
 			</tr>
 		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
