@@ -388,3 +388,15 @@ ul#menu li li
 {
 	padding-left: 20px;
 }
+
+.yui-skin-sam .yui-navset .yui-nav li.disabled
+{
+	opacity: .5;
+}
+
+.yui-skin-sam .yui-navset .yui-nav li.disabled a, .yui-skin-sam .yui-navset .yui-nav li.disabled a:hover
+{
+	background:#D8D8D8 url(sprite.png) repeat-x scroll 0% 50%;
+	cursor: default;
+}
+
