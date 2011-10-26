@@ -1,12 +1,14 @@
 <?php
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('controller.soprocedure');
+	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'procedure', 'inc/model/');
 
 	class controller_uiprocedure extends controller_uicommon
 	{
 		private $so;
+		private $so_control_area;
 		
 		public $public_functions = array
 		(
@@ -22,6 +24,7 @@
 			parent::__construct();
 
 			$this->so = CreateObject('controller.soprocedure');
+			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			//$this->bo = CreateObject('property.boevent',true);
 		}
@@ -44,6 +47,11 @@
 								'type' => 'link',
 								'value' => lang('f_new_procedure'),
 								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add'))
+							),
+							array('type' => 'filter',
+								'name' => 'control_areas',
+                                'text' => lang('Control_area').':',
+                                'list' => $this->so_control_area->get_control_area_select_array(),
 							),
 							array('type' => 'text', 
                                 'text' => lang('search'),
@@ -75,6 +83,16 @@
 							'key' => 'purpose',
 							'label' => lang('Procedure purpose'),
 							'sortable'	=> false
+						),
+						array(
+							'key' => 'control_area',
+							'label' => lang('Control area'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'revision_date',
+							'label' => lang('Procedure revision date'),
+							'sortable'	=> true
 						),
 						array(
 							'key' => 'link',
@@ -113,6 +131,8 @@
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
+					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
+					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
@@ -146,12 +166,15 @@
 				$old_procedure = $this->so->get_single($procedure_id);
 				if(isset($procedure)) // Edit procedure
 				{
-					$revision = $procedure->get_revision_no();
+					$revision = (int)$procedure->get_revision_no();
 					if($revision && is_numeric($revision))
 					{
-						$revision = (int)$revision;
-						$new_revision = $revision++;
-						$procedure->set_revision_no($new_revision);
+						$revision++;
+						$procedure->set_revision_no($revision);
+					}
+					else
+					{
+						$procedure->set_revision_no(1);
 					}
 					$procedure->set_title(phpgw::get_var('title'));
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
@@ -161,6 +184,7 @@
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
+					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
@@ -202,7 +226,27 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-				
+				$control_area_array = $this->so_control_area->get_control_area_array();
+				foreach ($control_area_array as $control_area)
+				{
+					if($procedure->get_control_area_id() && $control_area->get_id() == $procedure->get_control_area_id())
+					{
+						$control_area_options[] = array
+						(
+							'id'	=> $control_area->get_id(),
+							'name'	=> $control_area->get_title(),
+							'selected' => 'yes'
+						);
+					}
+					else
+					{
+						$control_area_options[] = array
+						(
+							'id'	=> $control_area->get_id(),
+							'name'	=> $control_area->get_title()
+						);
+					}
+				}
 				$procedure_array = $procedure->toArray();
 				//_debug_array($procedure_array);
 	
@@ -211,9 +255,11 @@
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'start_date'			=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_start_date())?$procedure->get_start_date():time())),
 					'end_date'				=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_end_date())?$procedure->get_end_date():'')),
+					'revision_date'			=> $GLOBALS['phpgw']->yuical->add_listener('revision_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_revision_date())?$procedure->get_revision_date():'')),
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
+					'control_area'				=> array('options' => $control_area_options),
 				);
 	
 	
@@ -221,9 +267,10 @@
 	
 	
 				$GLOBALS['phpgw']->richtext->replace_element('purpose');
+				//$this->use_yui_editor();
 				$GLOBALS['phpgw']->richtext->replace_element('description');
+				//$GLOBALS['phpgw']->richtext->generate_script(true);
 				$GLOBALS['phpgw']->richtext->generate_script();
-	
 	
 	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 	
@@ -246,6 +293,7 @@
 		public function view()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+			$view_revision = phpgw::get_var('view_revision');
 			//Retrieve the procedure object
 			$procedure_id = (int)phpgw::get_var('id');
 			if(isset($_POST['edit_procedure']))
@@ -275,7 +323,25 @@
 					$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
 				if($procedure->get_end_date() && $procedure->get_end_date() != null)
 					$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
+				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
+					$procedure_revision_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
 				//_debug_array($procedure_array);
+				
+				if(!$view_revision)
+				{
+					$table_header[] = array('header' => lang('Procedure revision'));
+					$table_header[] = array('header' => lang('Procedure title'));
+					$table_header[] = array('header' => lang('Procedure start date'));
+					$table_header[] = array('header' => lang('Procedure end date'));
+					
+					$revised_procedures = $this->so->get_old_revisions($procedure->get_id());
+					//var_dump($revised_procedures);
+					foreach($revised_procedures as $rev)
+					{
+						$rev['link'] = self::link(array('menuaction' => 'controller.uiprocedure.view', 'id' => $rev['id'], 'view_revision' => 'yes'));
+						$table_values[] = array('row' => $rev);
+					}
+				}
 	
 				$data = array
 				(
@@ -283,8 +349,16 @@
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
 					'start_date'			=> $procedure_start_date,
-					'end_date'				=> $procedure_end_date
+					'end_date'				=> $procedure_end_date,
+					'revision_date'			=> $procedure_revision_date,
+					'values'				=> $table_values,
+					'table_header'			=> $table_header,
 				);
+				
+				if($procedure->get_end_date())
+				{
+					$data['inactive'] = true;
+				}
 	
 	
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
@@ -303,6 +377,12 @@
 				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
+			
+			$ctrl_area = phpgw::get_var('control_areas');
+			if(isset($ctrl_area) && $ctrl_area > 0)
+			{
+				$filters['control_areas'] = $ctrl_area; 
+			}
 			
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
@@ -339,7 +419,7 @@
 			{
 				default: // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('controller', 'procedure_query', $search_for);
-					$filters = array();
+					//$filters = array();
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;

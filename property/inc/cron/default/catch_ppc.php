@@ -296,31 +296,7 @@
 
 						$i++;
 
-						// finishing
-						$criteria = array
-						(
-							'appname'	=> 'catch',
-							'location'	=> '.catch.' . str_replace('_','.',$target),
-							'allrows'	=> true
-						);
 
-						$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
-
-						foreach ( $custom_functions as $entry )
-						{
-							// prevent path traversal
-							if ( preg_match('/\.\./', $entry['file_name']) )
-							{
-								continue;
-							}
-
-							$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-							if ( $entry['active'] && is_file($file) )
-							{
-								require $file;
-							}
-						}
-						
 						$ok = false;
 						if($this->db->transaction_commit())
 						{
@@ -329,11 +305,40 @@
 								$ok = @rename($movefrom, $moveto);
 							}
 						}
+
 						if(!$ok)
 						{
 							$this->db->query("DELETE FROM $target_table WHERE id =" . (int)$id,__LINE__,__FILE__);
 							$i--;
 							$this->receipt['error'][]=array('msg'=>lang('There was a problem moving the file(s), imported records are reverted'));
+						}
+						else
+						{
+
+							// finishing
+							$criteria = array
+							(
+								'appname'	=> 'catch',
+								'location'	=> '.catch.' . str_replace('_','.',$target),
+								'allrows'	=> true
+							);
+
+							$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+							foreach ( $custom_functions as $entry )
+							{
+								// prevent path traversal
+								if ( preg_match('/\.\./', $entry['file_name']) )
+								{
+									continue;
+								}
+
+								$file = PHPGW_SERVER_ROOT . "/catch/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+								if ( $entry['active'] && is_file($file) )
+								{
+									require $file;
+								}
+							}
 						}
 					}
 				}
