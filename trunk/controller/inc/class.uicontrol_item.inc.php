@@ -502,6 +502,17 @@
 				'filters' => $filters
 			);
 			
+			$ctrl_area = phpgw::get_var('control_areas');
+			if(isset($ctrl_area) && $ctrl_area > 0)
+			{
+				$filters['control_areas'] = $ctrl_area; 
+			}
+			$ctrl_group = phpgw::get_var('control_groups');
+			if(isset($ctrl_group) && $ctrl_group > 0)
+			{
+				$filters['control_groups'] = $ctrl_group; 
+			}
+			
 			$search_for = phpgw::get_var('query');
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
