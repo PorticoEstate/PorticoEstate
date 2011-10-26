@@ -12,7 +12,7 @@
 				'controller' => array
 				(
 					'text'	=> lang('Controller'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.view_control_details') ),
                     'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'
