@@ -176,7 +176,7 @@ class controller_socontrol_group extends controller_socommon
 			return $results;
 	}
 	
-	function get_control_groups($control_area_id)
+	function get_control_groups($control_area_id, $limit)
 	{
 		$results = array();
 		
@@ -195,7 +195,7 @@ class controller_socontrol_group extends controller_socommon
 		return $results;
 	}
 	
-	function get_control_groups_as_array($control_area_id = null)
+	function get_control_groups_as_array($control_area_id = null, $limit)
 	{
 		$results = array();
 		
