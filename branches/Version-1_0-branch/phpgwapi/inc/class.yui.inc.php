@@ -225,10 +225,21 @@ HTML;
 				{
 					$_function = " onclick=\"javascript: {$tab['function']};\"";
 				}
-				$output .= <<<HTML
-					<li{$selected}><a href="{$tab['link']}"{$_function}><em>{$label}</em></a></li>
 
+				if(!isset($tab['link']) && !isset($tab['function']))
+				{
+					$selected = $selected ? $selected : ' class="disabled"';
+					$output .= <<<HTML
+						<li{$selected}><a><em>{$label}</em></a></li>
 HTML;
+				}
+				else
+				{
+					$output .= <<<HTML
+						<li{$selected}><a href="{$tab['link']}"{$_function}><em>{$label}</em></a></li>
+HTML;
+				
+				}
 			}
 			$output .= <<<HTML
 				</ul>

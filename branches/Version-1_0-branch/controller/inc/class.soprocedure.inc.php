@@ -39,7 +39,8 @@ class controller_soprocedure extends controller_socommon
 				'end_date',
 				'procedure_id',
 				'revision_no',
-				'revision_date'
+				'revision_date',
+				'control_area_id'
 		);
 			
 		$values = array(
@@ -53,7 +54,8 @@ class controller_soprocedure extends controller_socommon
 			$this->marshal($procedure->get_end_date(), 'int'),
 			$this->marshal($procedure->get_procedure_id(), 'int'),
 			$this->marshal($procedure->get_revision_no(), 'int'),
-			$this->marshal($procedure->get_revision_date(), 'int')
+			$this->marshal($procedure->get_revision_date(), 'int'),
+			$this->marshal($procedure->get_control_area_id(), 'int')
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_procedure (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -91,7 +93,8 @@ class controller_soprocedure extends controller_socommon
 			'end_date = ' . $this->marshal($procedure->get_end_date(), 'int'),
 			'procedure_id = ' . $this->marshal($procedure->get_procedure_id(), 'int'),
 			'revision_no = ' . $this->marshal($procedure->get_revision_no(), 'int'),
-			'revision_date = ' . $this->marshal($procedure->get_revision_date(), 'int')
+			'revision_date = ' . $this->marshal($procedure->get_revision_date(), 'int'),
+			'control_area_id = ' . $this->marshal($procedure->get_control_area_id(), 'int')
 		);
 		
 		$result = $this->db->query('UPDATE controller_procedure SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -109,7 +112,8 @@ class controller_soprocedure extends controller_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT p.* FROM controller_procedure p WHERE p.id = " . $id;
+		$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+		$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p {$joins} WHERE p.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -125,6 +129,8 @@ class controller_soprocedure extends controller_socommon
 		$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 		$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 		$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+		$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
+		$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 		
 		return $procedure;
 	}
@@ -191,6 +197,37 @@ class controller_soprocedure extends controller_socommon
 		return $results;
 	}
 	
+	function get_old_revisions($id)
+	{
+		$results = array();
+		
+		$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+		
+		$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p {$joins} WHERE procedure_id = {$id} ORDER BY end_date DESC";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+			$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
+			$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
+			$procedure->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+			$procedure->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
+			$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
+			$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('start_date'), 'int')));
+			$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('end_date'), 'int')));
+			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+			$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
+			$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+			
+			$results[] = $procedure->toArray();;
+		}
+		
+		return $results;
+	}
+	
 	function get_id_field_name($extended_info = false)
 	{
 		
@@ -230,98 +267,25 @@ class controller_soprocedure extends controller_socommon
 		}
 
 		$filter_clauses = array();
-		/*switch($filters['is_active']){
-			case "active":
-				$filter_clauses[] = "rental_composite.is_active = TRUE";
-				break;
-			case "non_active":
-				$filter_clauses[] = "rental_composite.is_active = FALSE";
-				break;
-			case "both":
-				break;
-		}*/
+		$filter_clauses[] = "controller_procedure.end_date IS NULL";
 		/*
-		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
-		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-		$availability_date_from = $ts_query;
-		$availability_date_to = $ts_query;
-		
-		if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
-			$availability_date_from = strtotime($filters['availability_date_from']); 
-		}
-		
-		if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != ''){
-			$availability_date_to = strtotime($filters['availability_date_to']); 
+		switch($filters['is_active']){
+			case "non_active":
+				$filter_clauses[] = "NOT controller_procedure.end_date IS NULL";
+				break;
+			default:
+				$filter_clauses[] = "controller_procedure.end_date IS NULL";
+				break;
 		}
 		*/
-		/*switch($filters['has_contract']){
-			case "has_contract":
-				$filter_clauses[] = "NOT rental_contract_composite.contract_id IS NULL"; // Composite must have a contract
-				$filter_clauses[] = "NOT rental_contract.date_start IS NULL"; // The contract must have start date
-			*/	
-				/* The contract's start date not after the end of the period if there is no end date */
-/*				$filter_clauses[] = "
-					((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 OR
-					(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))";
-				$special_query=true;
-				break;
-			case "has_no_contract":
-				$filter_clauses[] = "
-				(
-					rental_contract_composite.contract_id IS NULL OR 
-					NOT rental_composite.id IN 
-					(
-						SELECT rental_composite.id FROM rental_composite 
-						LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
-						LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) 
-						WHERE  
-						(
-							NOT rental_contract_composite.contract_id IS NULL AND
-							NOT rental_contract.date_start IS NULL AND
-							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 		OR
-							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
-						)
-					)
-				)
-				";
-				$special_query=true;
-				break;
-			case "both":
-				break;
-		}
-		
-		// Furnished, partly furnished, not furnished, not specified
-		if(isset($filters['furnished_status']) & $filters['furnished_status'] < 4){
-			// Not specified
-			if($filters['furnished_status'] == 0)
-				$filter_clauses[] = "rental_composite.furnish_type_id IS NULL";
-			else 
-				$filter_clauses[] = "rental_composite.furnish_type_id=".$filters['furnished_status'];
-		}
-
-		if(isset($filters['not_in_contract'])){
-			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
-		}
-		
-		if(isset($filters['location_code'])){
-			$filter_clauses[] = "rental_unit.location_code = '". $filters['location_code'] . "'";
-		}
-		
-		if(isset($filters['contract_id']))
-		{
-			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
-		}
-		
-		if(isset($filters[$this->get_id_field_name()]))
-		{
-			$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
-		}*/
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "controller_procedure.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		if(isset($filters['control_areas']))
+		{
+			$filter_clauses[] = "controller_procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
 		}
 
 		if(count($filter_clauses))
@@ -330,11 +294,10 @@ class controller_soprocedure extends controller_socommon
 		}
 
 		$condition =  join(' AND ', $clauses);
+		
+		$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
 		$tables = "controller_procedure";
-		//$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
-		//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
-		//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 		
 		if($return_count) // We should only return a count
 		{
@@ -342,7 +305,7 @@ class controller_soprocedure extends controller_socommon
 		}
 		else
 		{
-			$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date, controller_procedure.procedure_id, controller_procedure.revision_no, controller_procedure.revision_date ";
+			$cols .= "controller_procedure.id, controller_procedure.title, controller_procedure.purpose, controller_procedure.responsibility, controller_procedure.description, controller_procedure.reference, controller_procedure.attachment, controller_procedure.start_date, controller_procedure.end_date, controller_procedure.procedure_id, controller_procedure.revision_no, controller_procedure.revision_date, controller_control_area.title AS control_area_name ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
@@ -369,6 +332,8 @@ class controller_soprocedure extends controller_socommon
 			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+			$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
+			$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 		}
 		
 		return $procedure;

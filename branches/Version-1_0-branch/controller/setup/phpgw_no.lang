@@ -257,3 +257,5 @@ Control_locations	controller	no	Lokasjoner
 Control_equipment	controller	no	Utstyr
 New control	controller	no	Ny kontroll
 revisit	controller	no	Revidér
+Procedure revision	controller	no	Revisjon
+Procedure revision date	controller	no	Revisjonsdato

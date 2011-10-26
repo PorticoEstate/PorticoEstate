@@ -3,7 +3,7 @@
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
 	phpgw::import_class('controller.socontrol_item');
-	phpgw::import_class('controller.socontrol_group');
+	phpgw::import_class('controller.socontrol_group_list');
 	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'control_group', 'inc/model/');
@@ -14,6 +14,7 @@
 		private $so_procedure;
 		private $so_control_area;
 		private $so_control_item;
+		private $so_control_group_list;
 		
 		public $public_functions = array
 		(
@@ -21,7 +22,8 @@
 			'query'	=>	true,
 			'edit'	=>	true,
 			'view'	=>	true,
-			'add'	=>	true
+			'add'	=>	true,
+			'save_group_order'	=>	true
 		);
 
 		public function __construct()
@@ -31,6 +33,7 @@
 			$this->so_procedure = CreateObject('controller.soprocedure');
 			$this->so_control_area = CreateObject('controller.socontrol_area');
 			$this->so_control_item = CreateObject('controller.socontrol_item');
+			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_group";
 		}
 		
@@ -461,6 +464,33 @@
 			}
 		}
 
+		public function save_group_order(){
+			$control_group_id = phpgw::get_var('control_group_id');
+			$control_id = phpgw::get_var('control_id');
+			$group_order_nr = phpgw::get_var('group_order_nr');
+			
+			$status = true;
+			
+			$control_group_list = $this->so_control_group_list->get_single_2($control_id, $control_group_id);
+			
+			var_dump("Skriver ut control_group_list");
+			var_dump($control_group_list);
+			
+			if( $control_group_list == null ){
+				$control_group_list = new controller_control_group_list();
+				$control_group_list->set_control_id($control_id);
+				$control_group_list->set_control_group_id($control_group_id);
+				$control_group_list->set_order_nr( $group_order_nr );
+				$this->so_control_group_list->add( $control_group_list );
+			}else{
+				$control_group_list->set_order_nr( $group_order_nr );
+				$this->so_control_group_list->update( $control_group_list );	
+			}
+			
+			return status;			
+		}
+		
+		
 		public function query()
 		{
 			$params = array(

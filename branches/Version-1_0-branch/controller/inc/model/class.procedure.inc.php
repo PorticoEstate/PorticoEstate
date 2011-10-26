@@ -17,6 +17,8 @@
 		protected $procedure_id;
 		protected $revision_no;
 		protected $revision_date;
+		protected $control_area_id;
+		protected $control_area_name;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a procedure is created from outside
@@ -113,6 +115,20 @@
 		
 		public function get_revision_date() { return $this->revision_date; }
 		
+		public function set_control_area_id($control_area_id)
+		{
+			$this->control_area_id = $control_area_id;
+		}
+		
+		public function get_control_area_id() { return $this->control_area_id; }
+		
+		public function set_control_area_name($control_area_name)
+		{
+			$this->control_area_name = $control_area_name;
+		}
+		
+		public function get_control_area_name() { return $this->control_area_name; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -141,7 +157,8 @@
 					'end_date' => $this->get_end_date(),
 					'procedure_id' => $this->get_procedure_id(),
 					'revision_no' => $this->get_revision_no(),
-					'revision_date' => $this->get_revision_date()
+					'revision_date' => ($this->get_revision_date())?date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->get_revision_date()):'',
+					'control_area'	=> $this->get_control_area_name()
 			);
 		}
 	}

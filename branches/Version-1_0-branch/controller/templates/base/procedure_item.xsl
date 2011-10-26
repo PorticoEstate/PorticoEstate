@@ -29,6 +29,12 @@
 					</xsl:choose>
 					</dd>
 					<dt>
+						<label for="revision_no"><xsl:value-of select="php:function('lang','Procedure revision')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of select="procedure/revision_no" />
+					</dd>
+					<dt>
 						<label for="purpose"><xsl:value-of select="php:function('lang','Procedure purpose')" /></label>
 					</dt>
 					<dd>
@@ -55,6 +61,21 @@
 					</xsl:choose>
 					</dd>
 					<dt>
+						<label for="control_area"><xsl:value-of select="php:function('lang','Control area')" /></label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<select id="control_area" name="control_area">
+								<xsl:apply-templates select="control_area/options"/>
+							</select>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="procedure/control_area_name" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					<dt>
 						<label for="description"><xsl:value-of select="php:function('lang','Procedure description')" /></label>
 					</dt>
 					<dd>
@@ -74,11 +95,19 @@
 						<xsl:value-of disable-output-escaping="yes" select="start_date"/>
 					</dd>
 					<dt>
+						<label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
+					</dt>
+					<dd>
+						<xsl:value-of disable-output-escaping="yes" select="revision_date"/>
+					</dd>
+					<xsl:if test="end_date != ''">
+					<dt>
 						<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
 					</dt>
 					<dd>
 						<xsl:value-of disable-output-escaping="yes" select="end_date"/>
 					</dd>
+					</xsl:if>
 					<dt>
 						<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
 					</dt>
@@ -117,6 +146,10 @@
 							<input type="submit" name="revisit_procedure" value="{$lang_revisit}" title = "{$lang_revisit}" />
 							<input type="submit" name="cancel_procedure" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
+						<xsl:when test="inactive">
+							<xsl:variable name="lang_back"><xsl:value-of select="php:function('lang', 'back')" /></xsl:variable>
+							<input type="button" value="{$lang_back}" title="{$lang_back}" onclick="javascript: history.go(-1);" style="margin: 0 0 15px 15px; padding: 1px 15px;"/>
+						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="lang_edit"><xsl:value-of select="php:function('lang', 'edit')" /></xsl:variable>
 							<input type="submit" name="edit_procedure" value="{$lang_edit}" title = "{$lang_edit}" />
@@ -124,7 +157,55 @@
 					</xsl:choose>
 				</div>
 			</form>
-						
+			<xsl:choose>
+				<xsl:when test="values != ''">
+					<table cellpadding="10" cellspacing="10" align="left" style="margin-left: 1em;">
+						<xsl:call-template name="table_header_history"/>
+						<xsl:call-template name="values_history"/>
+					</table>
+				</xsl:when>
+			</xsl:choose>
 		</div>
 	</div>
 </xsl:template>
+
+<xsl:template name="table_header_history">
+		<tr class="th">
+			<xsl:for-each select="table_header" >
+				<td class="th_text" style="padding-right: 10px;">
+					<xsl:value-of select="header"/>
+				</td>
+			</xsl:for-each>
+		</tr>
+	</xsl:template>
+
+	<xsl:template name="values_history">
+		<xsl:for-each select="values" >
+			<tr>
+				<xsl:for-each select="row" >
+					<xsl:variable name="proc_link"><xsl:value-of select='link'/></xsl:variable>
+					<td align="right" style="padding-right: 10px;">
+						<a href="{$proc_link}"><xsl:value-of select="revision_no"/></a>
+					</td>
+					<td align="left" style="padding-right: 10px;">
+						<xsl:value-of select="title"/>
+					</td>
+					<td align="left" style="padding-right: 10px;">
+						<xsl:value-of select="start_date"/>
+					</td>
+					<td align="left" style="padding-right: 10px;">
+						<xsl:value-of select="end_date"/>
+					</td>
+				</xsl:for-each>
+			</tr>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
+	</xsl:template>
