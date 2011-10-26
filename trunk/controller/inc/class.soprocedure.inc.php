@@ -39,7 +39,8 @@ class controller_soprocedure extends controller_socommon
 				'end_date',
 				'procedure_id',
 				'revision_no',
-				'revision_date'
+				'revision_date',
+				'control_area_id'
 		);
 			
 		$values = array(
@@ -53,7 +54,8 @@ class controller_soprocedure extends controller_socommon
 			$this->marshal($procedure->get_end_date(), 'int'),
 			$this->marshal($procedure->get_procedure_id(), 'int'),
 			$this->marshal($procedure->get_revision_no(), 'int'),
-			$this->marshal($procedure->get_revision_date(), 'int')
+			$this->marshal($procedure->get_revision_date(), 'int'),
+			$this->marshal($procedure->get_control_area_id(), 'int')
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_procedure (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -91,7 +93,8 @@ class controller_soprocedure extends controller_socommon
 			'end_date = ' . $this->marshal($procedure->get_end_date(), 'int'),
 			'procedure_id = ' . $this->marshal($procedure->get_procedure_id(), 'int'),
 			'revision_no = ' . $this->marshal($procedure->get_revision_no(), 'int'),
-			'revision_date = ' . $this->marshal($procedure->get_revision_date(), 'int')
+			'revision_date = ' . $this->marshal($procedure->get_revision_date(), 'int'),
+			'control_area_id = ' . $this->marshal($procedure->get_control_area_id(), 'int')
 		);
 		
 		$result = $this->db->query('UPDATE controller_procedure SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -109,7 +112,8 @@ class controller_soprocedure extends controller_socommon
 	{
 		$id = (int)$id;
 		
-		$sql = "SELECT p.* FROM controller_procedure p WHERE p.id = " . $id;
+		$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+		$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p {$joins} WHERE p.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -125,6 +129,8 @@ class controller_soprocedure extends controller_socommon
 		$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 		$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 		$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+		$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
+		$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 		
 		return $procedure;
 	}
@@ -195,7 +201,9 @@ class controller_soprocedure extends controller_socommon
 	{
 		$results = array();
 		
-		$sql = "SELECT * FROM controller_procedure WHERE procedure_id = {$id} ORDER BY end_date DESC";
+		$joins = " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
+		
+		$sql = "SELECT p.*, controller_control_area.title AS control_area_name FROM controller_procedure p {$joins} WHERE procedure_id = {$id} ORDER BY end_date DESC";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
 		while ($this->db->next_record()) {
@@ -211,6 +219,8 @@ class controller_soprocedure extends controller_socommon
 			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 			$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
+			$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 			
 			$results[] = $procedure->toArray();;
 		}
@@ -273,6 +283,10 @@ class controller_soprocedure extends controller_socommon
 		{
 			$filter_clauses[] = "controller_procedure.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
 		}
+		if(isset($filters['control_areas']))
+		{
+			$filter_clauses[] = "controller_procedure.control_area_id = {$this->marshal($filters['control_areas'], 'int')}";
+		}
 
 		if(count($filter_clauses))
 		{
@@ -280,6 +294,8 @@ class controller_soprocedure extends controller_socommon
 		}
 
 		$condition =  join(' AND ', $clauses);
+		
+		$joins = " {$this->left_join} controller_control_area ON (controller_procedure.control_area_id = controller_control_area.id)";
 
 		$tables = "controller_procedure";
 		
@@ -316,6 +332,8 @@ class controller_soprocedure extends controller_socommon
 			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+			$procedure->set_control_area_id($this->unmarshal($this->db->f('control_aera_id', 'int')));
+			$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
 		}
 		
 		return $procedure;
