@@ -206,6 +206,14 @@ class controller_socontrol_item extends controller_socommon
 		{
 			$filter_clauses[] = "(controller_control_item.control_group_id IS NULL OR controller_control_item.control_group_id=0)";
 		}
+		if(isset($filters['control_groups']))
+		{
+			$filter_clauses[] = "controller_control_item.control_group_id = {$this->marshal($filters['control_groups'],'int')}";
+		}
+		if(isset($filters['control_areas']))
+		{
+			$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
+		}
 		
 		if(count($filter_clauses))
 		{
