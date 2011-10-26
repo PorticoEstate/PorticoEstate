@@ -77,6 +77,11 @@
 							'sortable'	=> false
 						),
 						array(
+							'key' => 'revision_date',
+							'label' => lang('Procedure revision date'),
+							'sortable'	=> true
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -113,6 +118,7 @@
 					$procedure->set_attachment(phpgw::get_var('attachment'));
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
+					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
 					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
@@ -146,12 +152,15 @@
 				$old_procedure = $this->so->get_single($procedure_id);
 				if(isset($procedure)) // Edit procedure
 				{
-					$revision = $procedure->get_revision_no();
+					$revision = (int)$procedure->get_revision_no();
 					if($revision && is_numeric($revision))
 					{
-						$revision = (int)$revision;
-						$new_revision = $revision++;
-						$procedure->set_revision_no($new_revision);
+						$revision++;
+						$procedure->set_revision_no($revision);
+					}
+					else
+					{
+						$procedure->set_revision_no(1);
 					}
 					$procedure->set_title(phpgw::get_var('title'));
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
@@ -211,6 +220,7 @@
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'start_date'			=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_start_date())?$procedure->get_start_date():time())),
 					'end_date'				=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_end_date())?$procedure->get_end_date():'')),
+					'revision_date'			=> $GLOBALS['phpgw']->yuical->add_listener('revision_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ($procedure->get_revision_date())?$procedure->get_revision_date():'')),
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'editable' 				=> true,
 					'procedure'				=> $procedure_array,
@@ -221,9 +231,10 @@
 	
 	
 				$GLOBALS['phpgw']->richtext->replace_element('purpose');
+				//$this->use_yui_editor();
 				$GLOBALS['phpgw']->richtext->replace_element('description');
+				//$GLOBALS['phpgw']->richtext->generate_script(true);
 				$GLOBALS['phpgw']->richtext->generate_script();
-	
 	
 	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 	
@@ -246,6 +257,7 @@
 		public function view()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
+			$view_revision = phpgw::get_var('view_revision');
 			//Retrieve the procedure object
 			$procedure_id = (int)phpgw::get_var('id');
 			if(isset($_POST['edit_procedure']))
@@ -275,7 +287,25 @@
 					$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
 				if($procedure->get_end_date() && $procedure->get_end_date() != null)
 					$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
+				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
+					$procedure_revision_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
 				//_debug_array($procedure_array);
+				
+				if(!$view_revision)
+				{
+					$table_header[] = array('header' => lang('Procedure revision'));
+					$table_header[] = array('header' => lang('Procedure title'));
+					$table_header[] = array('header' => lang('Procedure start date'));
+					$table_header[] = array('header' => lang('Procedure end date'));
+					
+					$revised_procedures = $this->so->get_old_revisions($procedure->get_id());
+					//var_dump($revised_procedures);
+					foreach($revised_procedures as $rev)
+					{
+						$rev['link'] = self::link(array('menuaction' => 'controller.uiprocedure.view', 'id' => $rev['id'], 'view_revision' => 'yes'));
+						$table_values[] = array('row' => $rev);
+					}
+				}
 	
 				$data = array
 				(
@@ -283,8 +313,16 @@
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
 					'start_date'			=> $procedure_start_date,
-					'end_date'				=> $procedure_end_date
+					'end_date'				=> $procedure_end_date,
+					'revision_date'			=> $procedure_revision_date,
+					'values'				=> $table_values,
+					'table_header'			=> $table_header,
 				);
+				
+				if($procedure->get_end_date())
+				{
+					$data['inactive'] = true;
+				}
 	
 	
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');

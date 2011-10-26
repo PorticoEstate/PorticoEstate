@@ -191,6 +191,33 @@ class controller_soprocedure extends controller_socommon
 		return $results;
 	}
 	
+	function get_old_revisions($id)
+	{
+		$results = array();
+		
+		$sql = "SELECT * FROM controller_procedure WHERE procedure_id = {$id} ORDER BY end_date DESC";
+		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		
+		while ($this->db->next_record()) {
+			$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+			$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
+			$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
+			$procedure->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+			$procedure->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
+			$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
+			$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('start_date'), 'int')));
+			$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('end_date'), 'int')));
+			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+			$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
+			
+			$results[] = $procedure->toArray();;
+		}
+		
+		return $results;
+	}
+	
 	function get_id_field_name($extended_info = false)
 	{
 		
@@ -230,94 +257,17 @@ class controller_soprocedure extends controller_socommon
 		}
 
 		$filter_clauses = array();
-		/*switch($filters['is_active']){
-			case "active":
-				$filter_clauses[] = "rental_composite.is_active = TRUE";
-				break;
-			case "non_active":
-				$filter_clauses[] = "rental_composite.is_active = FALSE";
-				break;
-			case "both":
-				break;
-		}*/
+		$filter_clauses[] = "controller_procedure.end_date IS NULL";
 		/*
-		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
-		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-		$availability_date_from = $ts_query;
-		$availability_date_to = $ts_query;
-		
-		if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
-			$availability_date_from = strtotime($filters['availability_date_from']); 
-		}
-		
-		if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != ''){
-			$availability_date_to = strtotime($filters['availability_date_to']); 
+		switch($filters['is_active']){
+			case "non_active":
+				$filter_clauses[] = "NOT controller_procedure.end_date IS NULL";
+				break;
+			default:
+				$filter_clauses[] = "controller_procedure.end_date IS NULL";
+				break;
 		}
 		*/
-		/*switch($filters['has_contract']){
-			case "has_contract":
-				$filter_clauses[] = "NOT rental_contract_composite.contract_id IS NULL"; // Composite must have a contract
-				$filter_clauses[] = "NOT rental_contract.date_start IS NULL"; // The contract must have start date
-			*/	
-				/* The contract's start date not after the end of the period if there is no end date */
-/*				$filter_clauses[] = "
-					((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 OR
-					(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))";
-				$special_query=true;
-				break;
-			case "has_no_contract":
-				$filter_clauses[] = "
-				(
-					rental_contract_composite.contract_id IS NULL OR 
-					NOT rental_composite.id IN 
-					(
-						SELECT rental_composite.id FROM rental_composite 
-						LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
-						LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) 
-						WHERE  
-						(
-							NOT rental_contract_composite.contract_id IS NULL AND
-							NOT rental_contract.date_start IS NULL AND
-							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 		OR
-							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
-						)
-					)
-				)
-				";
-				$special_query=true;
-				break;
-			case "both":
-				break;
-		}
-		
-		// Furnished, partly furnished, not furnished, not specified
-		if(isset($filters['furnished_status']) & $filters['furnished_status'] < 4){
-			// Not specified
-			if($filters['furnished_status'] == 0)
-				$filter_clauses[] = "rental_composite.furnish_type_id IS NULL";
-			else 
-				$filter_clauses[] = "rental_composite.furnish_type_id=".$filters['furnished_status'];
-		}
-
-		if(isset($filters['not_in_contract'])){
-			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
-		}
-		
-		if(isset($filters['location_code'])){
-			$filter_clauses[] = "rental_unit.location_code = '". $filters['location_code'] . "'";
-		}
-		
-		if(isset($filters['contract_id']))
-		{
-			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
-		}
-		
-		if(isset($filters[$this->get_id_field_name()]))
-		{
-			$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
-		}*/
 		
 		if(isset($filters[$this->get_id_field_name()]))
 		{
@@ -332,9 +282,6 @@ class controller_soprocedure extends controller_socommon
 		$condition =  join(' AND ', $clauses);
 
 		$tables = "controller_procedure";
-		//$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
-		//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
-		//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
 		
 		if($return_count) // We should only return a count
 		{

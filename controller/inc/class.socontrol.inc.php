@@ -168,7 +168,7 @@ class controller_socontrol extends controller_socommon
 		}
 		else
 		{
-			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, procedure_id, control_area_id, requirement_id, costresponsibility_id, responsibility_id, equipment_type_id, equipment_id, location_code, repeat_type, repeat_interval, enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name ';
+			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.equipment_type_id, controller_control.equipment_id, controller_control.location_code, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name ';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';

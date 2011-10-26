@@ -141,7 +141,7 @@
 					'end_date' => $this->get_end_date(),
 					'procedure_id' => $this->get_procedure_id(),
 					'revision_no' => $this->get_revision_no(),
-					'revision_date' => $this->get_revision_date()
+					'revision_date' => ($this->get_revision_date())?date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->get_revision_date()):''
 			);
 		}
 	}
