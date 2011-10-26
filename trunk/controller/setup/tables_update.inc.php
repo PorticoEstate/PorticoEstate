@@ -26,7 +26,7 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.1';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
-	
+
 	$test[] = '0.1.1';
 	function controller_upgrade0_1_1()
 	{
@@ -68,6 +68,22 @@
 		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE controller_control_group DROP COLUMN order_nr");	
 			
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.4';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
+	
+	/* Update Controller from v 0.1.4 to 0.1.5
+	 */
+
+	$test[] = '0.1.4';
+	function controller_upgrade0_1_4()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_procedure','control_area_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.5';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 ?>
