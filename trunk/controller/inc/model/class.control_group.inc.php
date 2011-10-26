@@ -13,7 +13,8 @@
 		protected $control_area_name;
 		protected $building_part_id;
 		protected $building_part_descr;
-		
+		protected $order_nr;
+				
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -80,6 +81,13 @@
 		}
 		
 		public function get_building_part_descr(){ return $this->building_part_descr; }
+		
+		public function set_order_nr($order_nr)
+		{
+			$this->order_nr = $order_nr;
+		}
+		
+		public function get_order_nr(){ return $this->order_nr; }
 
 		public function serialize()
 		{
@@ -89,6 +97,7 @@
 			$result['procedure'] = $this->get_procedure_name();
 			$result['control_area'] = $this->get_control_area_name();
 			$result['building_part'] = $this->get_building_part_descr();
+			$result['order_nr'] = $this->get_order_nr();
 			
 			return $result;
 		}
