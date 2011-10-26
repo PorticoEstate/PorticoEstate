@@ -360,7 +360,7 @@ class controller_socontrol_group extends controller_socommon
 
 		$tables = "controller_control_group";
 		$joins = "	{$this->left_join} fm_building_part ON (building_part_id = CAST(fm_building_part.id AS INT))";
-		$joins .= "	{$this->left_join} controller_procedure ON (procedure_id = controller_procedure.id)";
+		$joins .= "	{$this->left_join} controller_procedure ON (controller_control_group.procedure_id = controller_procedure.id)";
 		$joins .= "	{$this->left_join} controller_control_area ON (control_area_id = controller_control_area.id)";
 		//$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 		//$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
@@ -371,7 +371,7 @@ class controller_socontrol_group extends controller_socommon
 		}
 		else
 		{
-			$cols .= "controller_control_group.id, group_name, procedure_id, control_area_id, building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, controller_control_area.title as control_area_name ";
+			$cols .= "controller_control_group.id, group_name, controller_control_group.procedure_id, control_area_id, building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, controller_control_area.title as control_area_name ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
