@@ -120,5 +120,17 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'controller_control_group_list', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'control_group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'order_nr' => array('type' => 'varchar', 'precision' => '3', 'nullable' => false)
+				),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);
