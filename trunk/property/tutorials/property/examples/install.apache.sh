@@ -24,7 +24,7 @@
 #  * Download: http://www.freetds.org/software.html
 #  */
 FREETDSTAR="freetds-stable.tgz"
-FREETDS="freetds-0.82"
+FREETDS="freetds-0.91"
 
 # Download: http://xmlsoft.org/downloads.html
 LIBXMLTAR="libxml2-2.7.8.tar.gz"
@@ -34,8 +34,8 @@ LIBXSLTAR="libxslt-1.1.26.tar.gz"
 LIBXSL="libxslt-1.1.26"
 
 # Download: ftp://ftp.cac.washington.edu/imap/
-IMAPTAR="imap-2007e.tar.Z"
-IMAP="imap-2007e"
+IMAPTAR="imap-2007f.tar.Z"
+IMAP="imap-2007f"
 
 PHP_PREFIX="/usr/local"
 
@@ -45,8 +45,8 @@ PHP_PREFIX="/usr/local"
 #  * @var               string APACHE, APACHETAR
 #  * Download: http://php.net/
 #  */
-APACHETAR="httpd-2.2.17.tar.gz"
-APACHE="httpd-2.2.17"
+APACHETAR="httpd-2.2.21.tar.gz"
+APACHE="httpd-2.2.21"
 
 #/**
 #  * Name of the PHP tarball e.g php-5.2.tar.gz
@@ -54,8 +54,8 @@ APACHE="httpd-2.2.17"
 #  * @var               string PHP, PHPTAR
 #  * Download: http://httpd.apache.org/
 #  */
-PHPTAR="php-5.3.7.tar.bz2"
-PHP="php-5.3.7"
+PHPTAR="php-5.3.8.tar.bz2"
+PHP="php-5.3.8"
 
 #/**
 #  * Name of the EACCELERATOR tarball e.g eaccelerator-0.9.5.tar.bz2
@@ -77,9 +77,13 @@ PHP_PREFIX="/usr/local"
 #  * Download: http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
 #  */
 
-ORACLETAR="instantclient-basic-linux32-11.2.0.1.zip"
+#ORACLETAR="instantclient-basic-linux32-11.2.0.1.zip"
+#ORACLE="instantclient_11_2"
+#ORACLEDEVELTAR="instantclient-sdk-linux32-11.2.0.1.zip"
+
+ORACLETAR="instantclient-basic-linux-x86-64-11.2.0.2.0.zip"
 ORACLE="instantclient_11_2"
-ORACLEDEVELTAR="instantclient-sdk-linux32-11.2.0.1.zip"
+ORACLEDEVELTAR="instantclient-sdk-linux-x86-64-11.2.0.2.0.zip"
 
 ORACLE_PDO=""
 
@@ -139,7 +143,7 @@ fi
 function include_imap()
 {
     cd $1 &&\
-    make lmd SSLTYPE=unix.nopwd IP6=4 &&\
+    make lmd SSLTYPE=unix.nopwd IP6=4 EXTRACFLAGS=-fPIC&&\
     ln -s c-client include &&\
     mkdir lib &&\
     cd lib &&\
@@ -206,22 +210,8 @@ cd ../$LIBXSL &&\
 ./configure &&\
 make &&\
 make install &&\
-cd ../$APACHE/srclib/apr &&\
-./configure --prefix=/usr/local/apr-httpd/ &&\
-make &&\
-make install &&\
-# Build and install apr-util 1.2
-cd ../apr-util &&\
-./configure --prefix=/usr/local/apr-util-httpd/\
- --with-apr=/usr/local/apr-httpd/ &&\
-make &&\
-make install &&\
-# Configure httpd
-#cd ../../ &&\
-#./configure --with-apr=/usr/local/apr-httpd/\
-# --with-apr-util=/usr/local/apr-util-httpd/\
-cd ../../ &&\
-./configure --with-included-apr\
+cd ../$APACHE &&\
+./configure \
  --with-mpm=prefork\
  --enable-so\
  --enable-deflate\
@@ -264,6 +254,9 @@ export LDFLAGS=-lstdc++ &&\
  --with-mcrypt\
  --enable-soap\
  --with-xmlrpc \
+ --with-gettext \
+ --with-snmp \
+ --with-curl \
  $ORACLE_PDO &&\
 make &&\
 make install &&\
