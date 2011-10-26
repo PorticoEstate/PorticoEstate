@@ -6,16 +6,19 @@
 	{
 		throw new Exception("notify_accounting_by_email: missing 'notify_email' in config for this catch schema:{$schema_text}");
 	}
-	else if( !$validator->check_email_address($config_data['notify_email']) )
-	{
-		throw new Exception("notify_accounting_by_email: not a valid 'notify_email' in config for this catch schema:{$schema_text}");
-	}
 
-	$to_array = array
-	(
-		$config_data['notify_email']
-	);
-					
+	$to_array = explode(',', $config_data['notify_email']);
+
+//_debug_array($to_array);
+/*
+	foreach($to_array as $_to)
+	{
+		if( !$validator->check_email_address($_to) )
+		{
+			throw new Exception("notify_accounting_by_email: an unvalid 'notify_email': {$_to} in config for schema:{$schema_text}");
+		}
+	}
+*/					
 	$socommon		= CreateObject('property.socommon');
 	$prefs = $socommon->create_preferences('property',$user_id);
 //_debug_array($prefs);
@@ -59,7 +62,14 @@
 	//$body = "<a href='{$_link_to_item}'>{$subject}</a>";
 	unset($_link_to_item);
 
-	$body ="<H2>Det er registrert ny post i {$schema_text}</H2>";
+	if(isset($config_data['email_message']) && $config_data['email_message'])
+	{
+		$body = str_replace(array('[', ']'), array('<', '>'), $config_data['email_message']);
+	}
+	else
+	{
+		$body ="<H2>Det er registrert ny post i {$schema_text}</H2>";
+	}
 
 	$jasper_id = isset($config_data['jasper_id']) && $config_data['jasper_id'] ? $config_data['jasper_id'] : 0;
 
@@ -74,7 +84,7 @@
 		$jasper_parameters = '';
 		$_parameters = array();
 
-		$_parameters[] =  "id|{$id}";
+		$_parameters[] =  "ID|{$id}";
 		$jasper_parameters = '"' . implode(';', $_parameters) . '"';
 
 		unset($_parameters);
