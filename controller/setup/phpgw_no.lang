@@ -226,7 +226,7 @@ Procedure title	controller	no	Navn
 t_new_procedure	controller	no	Ny prosedyre
 f_new_procedure	controller	no	Legg til
 Procedure purpose	controller	no	Formål
-Procedure responsibility	controller	no	Ansvarlig
+Procedure responsibility	controller	no	Ansvar og myndighet
 Procedure description	controller	no	Beskrivelse
 Procedure reference	controller	no	Referanse
 Procedure attachment	controller	no	Vedlegg
@@ -257,5 +257,8 @@ Control_locations	controller	no	Lokasjoner
 Control_equipment	controller	no	Utstyr
 New control	controller	no	Ny kontroll
 revisit	controller	no	Revidér
-Procedure revision	controller	no	Revisjon
+Procedure revision	controller	no	Versjon
 Procedure revision date	controller	no	Revisjonsdato
+Font Style	controller	no	Font stil
+Lists	controller	no	Lister
+Insert Item	controller	no	Sett inn
