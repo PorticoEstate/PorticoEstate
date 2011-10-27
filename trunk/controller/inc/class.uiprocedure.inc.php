@@ -266,11 +266,11 @@
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 	
 	
-				$GLOBALS['phpgw']->richtext->replace_element('purpose');
-				//$this->use_yui_editor();
-				$GLOBALS['phpgw']->richtext->replace_element('description');
+				//$GLOBALS['phpgw']->richtext->replace_element('purpose');
+				$this->use_yui_editor(array('purpose','description'));
+				//$GLOBALS['phpgw']->richtext->replace_element('description');
 				//$GLOBALS['phpgw']->richtext->generate_script(true);
-				$GLOBALS['phpgw']->richtext->generate_script();
+				//$GLOBALS['phpgw']->richtext->generate_script();
 	
 	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
 	
