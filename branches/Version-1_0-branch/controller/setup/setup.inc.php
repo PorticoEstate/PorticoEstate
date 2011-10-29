@@ -40,6 +40,6 @@
 		'controller_check_item',
 		'controller_check_list',
 		'controller_procedure',
-		'controller_control_area'
+		'controller_control_area',
+		'controller_control_group_list'
 	);
-?>

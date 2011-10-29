@@ -110,11 +110,10 @@
 				<dd>
 					<select id="repeat_type" name="repeat_type">
 						<option value="0">Ikke angitt</option>
-						<option value="1">Daglig</option>
-						<option value="2">Ukentlig</option>
-						<option value="3">Månedlig pr dato</option>
-						<option value="4">Månedlig pr dag</option>
-						<option value="5">Årlig</option>
+						<option value="1">Dag</option>
+						<option value="2">Uke</option>
+						<option value="3">Måned</option>
+						<option value="5">År</option>
 					</select>
 				</dd>
 				<dt>

@@ -45,36 +45,12 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
 		            'image'	=> array('property', 'location_1'),
 				),    
-				'example' => array
+				'check_list' => array
 				(
-					'text'	=> 'example',
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiexample.index') ),
+					'text'	=> lang('Check_list'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 		            'image'	=> array('property', 'location_1'),
-					'children'	=> array(
-								'edit' => array
-
-								(
-									'text'	=> 'example::edit',
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.edit') ),
-									'image'	=> array('rental', 'x-office-spreadsheet')
-								),
-								'normal_tabs' => array
-
-								(
-									'text'	=> 'example::normal_tabs',
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.normal_tabs') ),
-									'image'	=> array('rental', 'x-office-spreadsheet')
-								),
-								'separate_tabs' => array
-
-								(
-									'text'	=> 'example::separate_tabs',
-									'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiexample.separate_tabs') ),
-									'image'	=> array('rental', 'x-office-spreadsheet')
-								),
-								
-							)
-		        ), 
+				),
 			);
 			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');

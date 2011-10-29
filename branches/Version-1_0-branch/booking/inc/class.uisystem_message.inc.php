@@ -43,7 +43,7 @@
                                 'list' => array(
                                     array(
                                         'id' => '',
-                                        'name' => lang('Not selected')
+                                        'name' => lang('All')
                                     ), 
                                     array(
                                         'id' => 'NEW',
@@ -61,7 +61,7 @@
                                 'list' => array(
                                     array(
                                         'id' => '',
-                                        'name' => lang('Not selected')
+                                        'name' => lang('All')
                                     ), 
                                     array(
                                         'id' => 'message',

@@ -480,6 +480,67 @@
 			);  
 		}
 		
+		public function use_yui_editor($targets)
+		{
+			/*
+			self::add_stylesheet('phpgwapi/js/yahoo/assets/skins/sam/skin.css');
+			self::add_javascript('yahoo', 'yahoo/editor', 'simpleeditor-min.js');
+			*/
+			$lang_font_style = lang('Font Style');
+			$lang_lists = lang('Lists');
+			$lang_insert_item = lang('Insert Item');
+			$js = '';
+			foreach ( $targets as $target )
+			{
+				$js .= <<<SCRIPT
+			(function() {
+				var Dom = YAHOO.util.Dom,
+				Event = YAHOO.util.Event;
+				
+				var editorConfig = {
+					toolbar:
+						{buttons: [
+	 						{ group: 'textstyle', label: '{$lang_font_style}',
+						        buttons: [
+						            { type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
+						        ]
+						    },
+						    { type: 'separator' },
+						    { group: 'indentlist', label: '{$lang_lists}',
+						        buttons: [
+						            { type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
+						            { type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
+						        ]
+						    },
+						    { type: 'separator' },
+						    { group: 'insertitem', label: '{$lang_insert_item}',
+								buttons: [
+									{ type: 'push', label: 'HTML Lenke CTRL + SHIFT + L', value: 'createlink', disabled: true },
+									{ type: 'push', label: 'Sett inn bilde', value: 'insertimage' }
+								]
+							}
+						]
+					},
+					height: '200px',
+					width: '700px',
+					animate: true,
+					dompath: true,
+ 					handleSubmit: true,
+				};
+				
+				var editorWidget = new YAHOO.widget.Editor('{$target}', editorConfig);
+				editorWidget.render();
+			})();
+				
+SCRIPT;
+			}
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yahoo/editor/assets/skins/sam/editor.css');
+			phpgw::import_class('phpgwapi.yui');
+			phpgwapi_yui::load_widget('editor');
+			$GLOBALS['phpgw']->js->add_event('load', $js);
+		}
+		
 		/**
 		 * Returns formatted version of gab id. The format of the string returned
 		 * is '[Cadastral unit number] / [Property unit number] / [Leasehold unit number] / [Section unit number]'.
