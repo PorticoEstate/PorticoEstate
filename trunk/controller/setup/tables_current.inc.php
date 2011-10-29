@@ -92,7 +92,7 @@
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'revision_no' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'revision_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
-				'control_area_id' => array('type' => 'int', 'presicion' => 4, 'nullable' => True)
+				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -122,13 +122,13 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_control_group_list', array(
-				'fd' => array(
-					'id' => array('type' => 'auto', 'nullable' => false),
-					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'control_group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'order_nr' => array('type' => 'varchar', 'precision' => '3', 'nullable' => false)
-				),
+		'controller_control_group_list' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'control_group_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'order_nr' => array('type' => 'varchar', 'precision' => '3', 'nullable' => false)
+			),
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
