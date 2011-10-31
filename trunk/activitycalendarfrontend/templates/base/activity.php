@@ -361,7 +361,7 @@ var divcontent_end = "</select>";
 					{
 						?>
 						<?php echo lang('arena_helptext')?><br/>
-						<select name="arena_id">
+						<select name="arena_id" style="width: 60%">
 							<option value="0">Ingen arena valgt</option>
 							<?php
 							foreach($arenas as $arena)
