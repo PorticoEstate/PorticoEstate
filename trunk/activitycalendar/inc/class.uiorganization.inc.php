@@ -167,7 +167,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org_info['homepage'] = $homepage;
 				$org_info['phone'] = $phone;
 				$org_info['email'] = $email;
-				$org_info['description'] = $description;
+				$org_info['description'] = $desc;
 				$org_info['street'] = $address_array[0];
 				$org_info['zip'] = $address_array[1];
 				$org_info['activity_id'] = '';
@@ -182,16 +182,30 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$contact1['name'] = $contact1_name;
 					$contact1['phone'] = $contact1_phone;
 					$contact1['mail'] = $contact1_email;
-					$contact1['org_id'] = $this->decode($new_org_id);
-					$so_contact->add_contact_person_org($contact1);
+					$contact1['org_id'] = $new_org_id;
+					$so_activity->add_contact_person_org($contact1);
 					
 					$contact2 = array();
 					$contact2['name'] = $contact2_name;
 					$contact2['phone'] = $contact2_phone;
 					$contact2['mail'] = $contact_mail_2;
-					$contact2['org_id'] = $this->decode($new_org_id);
-					$so_contact->add_contact_person_org($contact2);
+					$contact2['org_id'] = $new_org_id;
+					$so_activity->add_contact_person_org($contact2);
 					$message = lang('messages_saved_form');	
+					
+					//get affected activities and update with new org id
+					$update_activities = $so_activity->get_activities_for_update($new_org_id);
+					foreach($update_activities as $act)
+					{
+						$act->set_organization_id($new_org_id);
+						$act->set_new_org(false);
+						$so_activity->store($act);
+					}
+					
+					//set local organization as stored
+					$org->set_change_type("added");
+					$org->set_transferred(true);
+					$so->update_local($org);
 				}
 				else
 				{

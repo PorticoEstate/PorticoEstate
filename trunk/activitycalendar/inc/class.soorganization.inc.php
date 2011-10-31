@@ -139,6 +139,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.address';
 				$columns[] = 'org.district';
 				$columns[] = 'org.change_type';
+				$columns[] = 'org.transferred';
 				$columns[] = 'org.orgno AS organization_number';
 				
 				$cols = implode(',',$columns);
@@ -313,9 +314,41 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	 * @param $party the party to be updated
 	 * @return boolean true if successful, false otherwise
 	 */
-	function update($party)
+	function update_local($organization)
 	{
-		return false;
+		$name = $organization->get_name();
+		$orgnr = $organization->get_organization_number();
+		$homepage = $organization->get_homepage();
+		$phone = $organization->get_phone();
+		$email = $organization->get_email();
+		$description = $organization->get_description();
+		$street = $organization->get_address();
+		$district = $organization->get_district();
+		$change_type = $organization->get_change_type();
+		$transferred = $organization->get_transferred()?true:false;
+		
+		$values[] = "NAME='{$name}'";
+		$values[] = "HOMEPAGE='{$homepage}'";
+		$values[] = "PHONE='{$phone}'";
+		$values[] = "EMAIL='{$email}'";
+		$values[] = "DESCRIPTION='{$description}'";
+		$values[] = "ADDRESS='{$street}'";
+		$values[] = "ORGNO='{$orgnr}'";
+		$values[] = "DISTRICT='{$district}'";
+		$values[] = "CHANGE_TYPE='{$change_type}'";
+		$values[] = "TRANSFERRED='{$transferred}'";
+		$vals = implode(',',$values);
+		
+		$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public function get_id_field_name($extended_info = false)
@@ -351,6 +384,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
 			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
+			$organization->set_transferred($this->unmarshal($this->db->f('trnasferred'), 'bool'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
 		}
 		return $organization;
@@ -465,6 +499,11 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		{
 			return 0;
 		}
+	}
+	
+	function update($organization)
+	{
+		return false;
 	}
 }
 ?>
