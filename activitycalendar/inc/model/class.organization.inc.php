@@ -16,6 +16,7 @@
 		protected $phone;
 		protected $address;
 		protected $change_type;
+		protected $transferred;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
@@ -104,6 +105,13 @@
 		}
 		
 		public function get_district() { return $this->district; }
+		
+		public function set_transferred($transferred)
+		{
+			$this->transferred = $transferred;
+		}
+		
+		public function get_transferred() { return $this->transferred; }
 		
 		public function serialize()
 		{
