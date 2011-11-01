@@ -621,15 +621,18 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'])));
 				}
 				$value['labels'][] = lang('show');
-				$value['ajax'][] = false;
-				if($value['organization_id'] != '' && $value['organization_id'] != null){
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'], 'type' => 'group')));
-				}
-				else
+				if($value['transferred'] == false)
 				{
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'])));
+					$value['ajax'][] = false;
+					if($value['organization_id'] != '' && $value['organization_id'] != null){
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'], 'type' => 'group')));
+					}
+					else
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'])));
+					}
+					$value['labels'][] = lang('edit');
 				}
-				$value['labels'][] = lang('edit');
 				break;
 			case 'changed_groups':
 				$value['ajax'][] = false;
@@ -641,15 +644,18 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.show', 'id' => $value['id'])));
 				}
 				$value['labels'][] = lang('show');
-				$value['ajax'][] = false;
-				if($value['organization_id'] != '' && $value['organization_id'] != null){
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'], 'type' => 'group')));
-				}
-				else
+				if($value['transferred'] == false)
 				{
-					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'])));
+					$value['ajax'][] = false;
+					if($value['organization_id'] != '' && $value['organization_id'] != null){
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'], 'type' => 'group')));
+					}
+					else
+					{
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiorganization.edit', 'id' => $value['id'])));
+					}
+					$value['labels'][] = lang('edit');
 				}
-				$value['labels'][] = lang('edit');
 				break;
 		}
     }
