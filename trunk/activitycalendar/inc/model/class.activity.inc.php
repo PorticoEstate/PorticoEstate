@@ -284,12 +284,14 @@
 				$arena_name = activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena());
 			}
 			
+			$activity_district = activitycalendar_soactivity::get_instance()->get_district_name($this->get_district());
+			
 			return array(
 				'id' => $this->get_id(),
 				'title' => $this->get_title(),
 				'organization_id' => $org_name,
 				'group_id' => activitycalendar_sogroup::get_instance()->get_group_name($this->get_group_id()),
-				'district' => activitycalendar_soactivity::get_instance()->get_district_name($this->get_district()),
+				'district' => $activity_district,
 				'office' => activitycalendar_soactivity::get_instance()->get_office_name($this->get_office()),
 				'category' => $this->get_so()->get_category_name($this->get_category()),
 				'state' => lang('state_'.$this->get_state()),
