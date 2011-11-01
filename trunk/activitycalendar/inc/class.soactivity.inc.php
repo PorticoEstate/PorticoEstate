@@ -1163,10 +1163,17 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return isset($result);
 	}
 	
-	function get_activities_for_update($org_id)
+	function get_activities_for_update($org_id, $group = false)
 	{
 		$activities = array();
-		$sql = "SELECT * FROM activity_activity WHERE new_org AND organization_id={$org_id}";
+		if($group)
+		{
+			$sql = "SELECT * FROM activity_activity WHERE new_org AND group_id={$org_id}";
+		}
+		else
+		{
+			$sql = "SELECT * FROM activity_activity WHERE new_org AND organization_id={$org_id}";
+		}
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
