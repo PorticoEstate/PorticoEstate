@@ -173,7 +173,6 @@
 		 */
 		public function set_account_id($account_id = 0, $read_repo = false, $appname = '', $location = '', $account_type = 'accounts')
 		{
-_Debug_array($account_id);
 			$this->_account_id = (int) $account_id;
 
 			if ( !$this->_account_id )
