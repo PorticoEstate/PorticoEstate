@@ -392,3 +392,5 @@ contact_person_2_zip	activitycalendar	no	Poststed for kulturkontoret
 active_arena	activitycalendar	no	Aktiv
 inactive_arena	activitycalendar	no	Inaktiv
 change_type	activitycalendar	no	Endringstype
+added	activitycalendar	no	Lagt til i organisasjonsregisteret
+store	activitycalendar	no	Overfør til organisasjonsregister

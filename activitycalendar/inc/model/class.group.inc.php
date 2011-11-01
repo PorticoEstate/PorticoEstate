@@ -12,6 +12,7 @@
 		protected $show_in_portal;
 		protected $shortname;
 		protected $change_type;
+		protected $transferred;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
@@ -73,6 +74,13 @@
 		
 		public function get_shortname() { return $this->shortname; }
 		
+		public function set_transferred($transferred)
+		{
+			$this->transferred = $transferred;
+		}
+		
+		public function get_transferred() { return $this->transferred; }
+		
 		public function serialize()
 		{
 			return array(
@@ -82,7 +90,8 @@
 				'shortname' => $this->get_shortname(),
 				'description' => $this->get_description(),
 				'show_in_portal' => $this->get_show_in_portal(),
-				'change_type' => $this->get_change_type()
+				'change_type' => $this->get_change_type(),
+				'transferred' => $this->get_transferred()
 			);
 		}
 		

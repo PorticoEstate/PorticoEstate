@@ -24,7 +24,8 @@ class rental_uiparty extends rental_uicommon
 			'syncronize_party'	=> true,
 			'syncronize_party_name'	=> true,
 			'create_user_based_on_email' => true,
-			'get_synchronize_party_info' => true
+			'get_synchronize_party_info' => true,
+			'delete_party'		=> true
 	);
 
 	public function __construct()
@@ -166,7 +167,7 @@ class rental_uiparty extends rental_uicommon
 					$type,												// [2] The type of query
 					isset($contract) ? $contract->serialize() : null, 	// [3] Serialized contract
 					$editable,											// [4] Editable flag
-					$this->type_of_user									// [5] User role			
+					$this->type_of_user									// [5] User role
 				)
 			);
 		}
@@ -389,6 +390,13 @@ class rental_uiparty extends rental_uicommon
 					$value['ajax'][] = false;
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
+					
+					if(isset($value['is_inactive']) && $value['is_inactive'] == true)
+					{
+						$value['ajax'][] = true;
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.delete_party', 'id' => $value['id'])));
+						$value['labels'][] = lang('delete');
+					}
 					
 					if(isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
 					{
@@ -735,5 +743,28 @@ class rental_uiparty extends rental_uicommon
 		//Redirect to edit mode with error message if user reaches this point.
 		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit','id' => $party_id, 'error' => lang('error_create_user_based_on_email')));
 	}
+	
+	public function delete_party()
+	{
+		$party_id = phpgw::get_var('id');
+		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
+		{
+			if(isset($party_id) && $party_id > 0)
+			{
+				if(rental_soparty::get_instance()->delete_party($party_id)) // ... delete the party
+				{
+					$message = lang('messages_saved_form');	
+				}
+				else
+				{
+					$error = lang('messages_form_error');
+				} 
+			}
+		}
+		else
+		{
+			$this->render('permission_denied.php',array('error' => lang('permission_denied_edit')));
+		}
+	}	
 }
 ?>
