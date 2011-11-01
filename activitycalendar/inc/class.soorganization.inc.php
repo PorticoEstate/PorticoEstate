@@ -325,7 +325,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$street = $organization->get_address();
 		$district = $organization->get_district();
 		$change_type = $organization->get_change_type();
-		$transferred = $organization->get_transferred()?true:false;
+		$transferred = ($organization->get_transferred() == 1 || $organization->get_transferred() == true)?'true':'false';
 		
 		$values[] = "NAME='{$name}'";
 		$values[] = "HOMEPAGE='{$homepage}'";
@@ -336,7 +336,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = "ORGNO='{$orgnr}'";
 		$values[] = "DISTRICT='{$district}'";
 		$values[] = "CHANGE_TYPE='{$change_type}'";
-		$values[] = "TRANSFERRED='{$transferred}'";
+		$values[] = "TRANSFERRED={$transferred}";
 		$vals = implode(',',$values);
 		
 		$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
@@ -384,7 +384,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
 			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
-			$organization->set_transferred($this->unmarshal($this->db->f('trnasferred'), 'bool'));
+			$organization->set_transferred($this->unmarshal($this->db->f('transferred'), 'bool'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
 		}
 		return $organization;
