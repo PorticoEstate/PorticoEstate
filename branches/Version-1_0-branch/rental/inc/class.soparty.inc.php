@@ -410,5 +410,15 @@ class rental_soparty extends rental_socommon
 		return (int) $this->db->f('count',true);
 	}
 	
+	public function delete_party($party_id)
+	{
+		if($party_id)
+		{
+			$sql = "DELETE FROM rental_party WHERE id={$party_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			return true;
+		}
+	}
+	
 }
 ?>

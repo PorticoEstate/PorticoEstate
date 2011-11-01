@@ -104,6 +104,8 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 				$columns[] = 'activity_group.name';
 				$columns[] = 'activity_group.description';
 				$columns[] = 'activity_group.organization_id';
+				$columns[] = 'activity_group.change_type';
+				$columns[] = 'activity_group.transferred';
 				
 				$dir = $ascending ? 'ASC' : 'DESC';
 				$order = "ORDER BY activity_group.id $dir";
@@ -266,8 +268,71 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			$group->set_shortname($this->unmarshal($this->db->f('shortname'), 'string'));
 			$group->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$group->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
+			$group->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
+			$group->set_transferred($this->unmarshal($this->db->f('transferred')));
 		}
 		return $group;
+	}
+	
+	function update_local($group)
+	{
+		$name = $group->get_name();
+		$orgid = $group->get_organization_id();
+		$description = $group->get_description();
+		$change_type = $group->get_change_type();
+		$transferred = ($group->get_transferred() == 1 || $group->get_transferred() == true)?'true':'false';
+		
+		$values[] = "NAME='{$name}'";
+		$values[] = "DESCRIPTION='{$description}'";
+		$values[] = "ORGANIZATION_ID='{$orgid}'";
+		$values[] = "CHANGE_TYPE='{$change_type}'";
+		$values[] = "TRANSFERRED={$transferred}";
+		$vals = implode(',',$values);
+		
+		$sql = "UPDATE activity_group SET {$vals} WHERE ID={$group->get_id()}";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	function transfer_group($group_info)
+	{
+		$name = $group_info['name'];
+		$orgid = $group_info['organization_id'];
+		$description = $group_info['description'];
+		$activity_id = 0;
+		$show_in_portal = 1; 
+		
+		$columns[] = 'name';
+		$columns[] = 'description';
+		$columns[] = 'organization_id';
+		$columns[] = 'activity_id';
+		$columns[] = 'show_in_portal';
+		$cols = implode(',',$columns);
+		
+		$values[] = "'{$name}'";
+		$values[] = "'{$description}'";
+		$values[] = "'{$orgid}'";
+		$values[] = $this->marshal($activity_id, 'int');
+		$values[] = $show_in_portal;
+		$vals = implode(',',$values);
+		
+		$sql = "INSERT INTO bb_group ({$cols}) VALUES ({$vals})";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			return $this->db->get_last_insert_id('bb_group', 'id');
+		}
+		else
+		{
+			return 0;
+		}
 	}
 }
 ?>

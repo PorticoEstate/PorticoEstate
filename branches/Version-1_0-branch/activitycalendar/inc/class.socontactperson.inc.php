@@ -302,4 +302,54 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 		}
 		return $contact_person;
 	}
+	
+	function get_local_contact_persons($id, $group=false)
+	{
+		$result = array();
+    	if(isset($id)){
+    		if($group)
+    		{
+    			$q1="SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE group_id='{$id}'";
+    		}
+    		else
+    		{
+	    		$q1="SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE organization_id='{$id}'";
+    		}
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person($this->db->f('id'), 'int');
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$result[] = $contact_person;
+			}
+    	}
+		return $result;
+	}
+	
+	function update_local_contact_person($contact)
+	{
+		$id = $contact['id'];
+		$name = $contact['name'];
+		$phone = $contact['phone'];
+		$mail = $contact['mail'];
+		$org_id = $contact['org_id'];
+		$group_id = $contact['group_id'];
+		
+		$columns[] = "name='{$name}'";
+		$columns[] = "phone='{$phone}'";
+		$columns[] = "email='{$mail}'";
+		$columns[] = "organization_id={$org_id}";
+		$columns[] = "group_id={$group_id}";
+		$columns[] = "address=''";
+		$columns[] = "zipcode=''"; 
+		$columns[] = "city=''";
+		$cols = implode(',',$columns);
+
+		$sql = "UPDATE activity_contact_person SET {$cols} WHERE id={$id}";
+    	$result = $this->db->query($sql, __LINE__, __FILE__);
+		return isset($result);
+	}
 }

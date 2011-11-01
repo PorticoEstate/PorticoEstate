@@ -132,7 +132,7 @@ var divcontent_end = "</select>";
 		<h1><?php echo lang('activity') ?></h1>
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($activity->get_id()){ echo $activity->get_id(); } else { echo '0'; }  ?>"/>
-			<dl class="proplist-col" style="width: 100%;">
+			<dl class="proplist-col" style="width: 60%">
 				<dt>
 					<?php if($activity->get_title() || $editable) { ?>
 					<label for="title"><?php echo lang('title') ?></label>
@@ -144,7 +144,7 @@ var divcontent_end = "</select>";
 					{
 					?>
 						<?php echo lang('title_helptext')?><br/>
-						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" />
+						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="60"/>
 					<?php
 					}
 					else
@@ -361,7 +361,7 @@ var divcontent_end = "</select>";
 					{
 						?>
 						<?php echo lang('arena_helptext')?><br/>
-						<select name="arena_id">
+						<select name="arena_id" style="width: 60%">
 							<option value="0">Ingen arena valgt</option>
 							<?php
 							foreach($arenas as $arena)
@@ -405,6 +405,8 @@ var divcontent_end = "</select>";
 					}
 					?>
 				</dd>
+			</dl>
+			<dl class="proplist-col">
 				<dt>
 					<?php if($activity->get_category() || $editable) { ?>
 					<label for="category"><?php echo lang('category') ?></label>
