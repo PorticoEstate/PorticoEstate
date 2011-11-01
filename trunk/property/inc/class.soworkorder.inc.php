@@ -52,6 +52,7 @@
 		//	if(!$this->grants)
 			{
 				$this->acl 		= & $GLOBALS['phpgw']->acl;
+				$this->acl->set_account_id($this->account);
 				$this->grants		= $this->acl->get_grants('property','.project');
 		//		$GLOBALS['phpgw']->session->appsession('grants_project','property',$this->grants);
 			}

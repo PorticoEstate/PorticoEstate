@@ -51,6 +51,7 @@
 			$this->like			= & $this->db->like;
 
 			$this->acl 			= & $GLOBALS['phpgw']->acl;
+			$this->acl->set_account_id($this->account);
 			$this->grants		= $this->acl->get_grants('property','.project');
 		}
 
