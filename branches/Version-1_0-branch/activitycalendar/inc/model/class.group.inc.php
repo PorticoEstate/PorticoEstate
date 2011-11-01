@@ -90,7 +90,7 @@
 				'shortname' => $this->get_shortname(),
 				'description' => $this->get_description(),
 				'show_in_portal' => $this->get_show_in_portal(),
-				'change_type' => $this->get_change_type(),
+				'change_type' => lang($this->get_change_type()),
 				'transferred' => $this->get_transferred()
 			);
 		}

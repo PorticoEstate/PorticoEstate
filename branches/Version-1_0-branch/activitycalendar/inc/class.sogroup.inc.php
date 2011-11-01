@@ -269,7 +269,7 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			$group->set_description($this->unmarshal($this->db->f('description'), 'string'));
 			$group->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
 			$group->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
-			$group->set_transferred($this->unmarshal($this->db->f('transferred')));
+			$group->set_transferred($this->unmarshal($this->db->f('transferred'), 'bool'));
 		}
 		return $group;
 	}
