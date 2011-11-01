@@ -98,6 +98,123 @@
 		}
 
 
+		function get_list($data)
+		{
+			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
+			$query			= isset($data['query']) ? $data['query'] : '';
+			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order			= isset($data['order']) ? $data['order'] : '';
+			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
+			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
+			$allrows		= isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_id		= isset($data['entity_id']) ? $data['entity_id'] : '';
+			$cat_id			= isset($data['cat_id']) ? $data['cat_id'] : '';
+			$status			= isset($data['status']) ? $data['status'] : '';
+			$start_date		= isset($data['start_date']) ? $data['start_date'] : '';
+			$end_date		= isset($data['end_date']) ? $data['end_date'] : '';
+			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
+			$this->type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
+			$criteria_id	= isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$attrib_filter	= $data['attrib_filter'] ? $data['attrib_filter'] : array();
+			$p_num			= isset($data['p_num']) ? $data['p_num'] : '';
+			$custom_condition= isset($data['custom_condition']) ? $data['custom_condition'] : '';
+
+			if(!$entity_id || !$cat_id || !$this->type)
+			{
+				return;
+			}
+
+			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,$this->type_app[$this->type]);
+
+			if(!$grants)
+			{
+				$this->acl 	= & $GLOBALS['phpgw']->acl;
+				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
+				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id, $this->type_app[$this->type], $grants);
+			}
+
+			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+
+			$category = $admin_entity->read_single_category($entity_id,$cat_id);
+
+			$entity_table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
+
+
+			if ($order)
+			{
+				switch($order)
+				{
+					case 'user_id':
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+						break;
+					case 'loc1_name':
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";  // Don't work with LDAP. 
+						break;
+					default:
+						$ordermethod = " ORDER BY $entity_table.$order $sort";	
+				}
+			}
+			else
+			{
+				$ordermethod = " order by $entity_table.id DESC";
+			}
+
+			$where= 'WHERE';
+			$filtermethod = '';
+
+			$_config	= CreateObject('phpgwapi.config','property');
+			$_config->read();
+			if(isset($_config->config_data['acl_at_location'])
+				&& $_config->config_data['acl_at_location']
+				&& $category['location_level'] > 0)
+			{
+				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
+				$filtermethod = " WHERE {$entity_table}.loc1 in ('" . implode("','", $access_location) . "')";
+				$where= 'AND';
+			}
+
+			unset($_config);
+
+			if ($filter=='all')
+			{
+				if (is_array($grants))
+				{
+					foreach($grants as $user => $right)
+					{
+						$public_user_list[] = $user;
+					}
+					reset($public_user_list);
+					$filtermethod .= " $where ( $entity_table.user_id IN(" . implode(',',$public_user_list) . "))";
+
+					$where= 'AND';
+				}
+			}
+			else
+			{
+				$filtermethod = " $where $entity_table.user_id=$filter ";
+				$where= 'AND';
+			}
+			$values = array();
+			$name = 'title';
+			$sql = "SELECT id, {$name} as name FROM {$entity_table} {$filtermethod}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			while($this->db->next_record())
+			{
+
+				$values[] = array
+				(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $this->db->f('name', true)
+				);
+			}
+			return $values;
+		}
+
 		function read($data)
 		{
 			$start			= isset($data['start']) && $data['start'] ? $data['start'] : 0;
@@ -127,13 +244,14 @@
 				return;
 			}
 
-			$grants 	= $GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id,$this->type_app[$this->type]);
+			$grants 	= $GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}",$this->type_app[$this->type]);
 
 			if(!$grants)
 			{
 				$this->acl 	= & $GLOBALS['phpgw']->acl;
+				$this->acl->set_account_id($this->account);
 				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
-				$GLOBALS['phpgw']->session->appsession('grants_entity_'.$entity_id.'_'.$cat_id, $this->type_app[$this->type], $grants);
+				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
 			}
 
 			$sql = $this->bocommon->fm_cache("sql_{$this->type}_{$entity_id}_{$cat_id}_{$lookup}");

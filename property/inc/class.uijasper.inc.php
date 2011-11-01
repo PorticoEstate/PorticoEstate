@@ -598,6 +598,7 @@
 			{
 				$values = $this->bo->read_single($id);
 				$function_msg = lang('edit report');
+				$this->acl->set_account_id($this->account);
 				$grants	= $this->acl->get_grants('property','.jasper');
 				if(!$this->bocommon->check_perms($grants[$values['user_id']], PHPGW_ACL_READ))
 				{

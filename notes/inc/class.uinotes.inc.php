@@ -66,6 +66,7 @@
 			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('notes');
 			$this->grants[$this->account] = PHPGW_ACL_READ + PHPGW_ACL_ADD + PHPGW_ACL_EDIT + PHPGW_ACL_DELETE;
 			$this->bonotes		= CreateObject('notes.bonotes',true);
