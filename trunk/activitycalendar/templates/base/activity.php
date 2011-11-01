@@ -336,6 +336,7 @@ YAHOO.util.Event.onDOMReady(function()
 					{
 						if($activity->get_district()){
 							$current_district_ids = $activity->get_district();
+//							echo $current_district_ids;
 							$current_district_id_array=explode(",", $current_district_ids);
 							foreach($current_district_id_array as $curr_district)
 							{
