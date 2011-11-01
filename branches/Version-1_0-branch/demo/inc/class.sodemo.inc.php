@@ -59,6 +59,7 @@
 
 			$this->custom 	= createObject('property.custom_fields');
 
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants			= $GLOBALS['phpgw']->acl->get_grants('demo', $this->acl_location);
 		}
 

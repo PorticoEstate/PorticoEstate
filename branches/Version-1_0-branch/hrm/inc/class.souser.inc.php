@@ -29,6 +29,7 @@
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
 			$this->left_join	= & $this->db->left_join;
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('hrm','.user');
 		}
 

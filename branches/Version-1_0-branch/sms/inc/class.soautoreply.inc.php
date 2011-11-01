@@ -28,6 +28,7 @@
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db 			= clone($GLOBALS['phpgw']->db);
 
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('sms','.config');
 			$this->join			= $this->db->join;
 			$this->like			= $this->db->like;

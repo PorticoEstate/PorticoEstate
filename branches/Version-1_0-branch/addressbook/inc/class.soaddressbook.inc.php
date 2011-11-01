@@ -68,6 +68,7 @@
 
 			if($useacl)
 			{
+				$GLOBALS['phpgw']->acl->set_account_id($GLOBALS['phpgw_info']['user']['account_id']);
 				$this->grants = $GLOBALS['phpgw']->acl->get_grants('addressbook','.');				
 			}
 

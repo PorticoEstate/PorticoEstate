@@ -40,6 +40,7 @@
 			$this->db           = & $GLOBALS['phpgw']->db;
 			$this->join			= & $this->db->join;
 			$this->like			= & $this->db->like;
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants		= $GLOBALS['phpgw']->acl->get_grants('property','.jasper');
 		}
 
