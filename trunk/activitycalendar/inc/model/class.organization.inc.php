@@ -128,6 +128,7 @@
 				'address'	=>	$this->get_address(),
 				'show_in_portal' => $this->get_show_in_portal(),
 				'change_type' => lang($this->get_change_type()),
+				'transferred' => $this->get_transferred(),
 				'office' => $so_org->get_office_from_district($so_org->get_district_from_name($this->get_district()))
 			);
 		}
