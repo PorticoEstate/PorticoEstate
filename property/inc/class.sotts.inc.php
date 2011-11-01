@@ -144,6 +144,7 @@
 
 			if(!$this->grants)
 			{
+				$GLOBALS['phpgw']->acl->set_account_id($this->account);
 				$this->grants	= $GLOBALS['phpgw']->acl->get_grants('property','.ticket');
 				$GLOBALS['phpgw']->session->appsession('grants_ticket','property',$this->grants);
 			}

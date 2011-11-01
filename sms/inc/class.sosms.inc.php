@@ -43,6 +43,7 @@
 
 			if($acl_location)
 			{
+				$GLOBALS['phpgw']->acl->set_account_id($this->account);
 				$grants		= $GLOBALS['phpgw']->acl->get_grants('sms',$acl_location);
 			}
 
@@ -123,6 +124,7 @@
 
 			if($acl_location)
 			{
+				$GLOBALS['phpgw']->acl->set_account_id($this->account);
 				$grants		= $GLOBALS['phpgw']->acl->get_grants('sms',$acl_location);
 			}
 
