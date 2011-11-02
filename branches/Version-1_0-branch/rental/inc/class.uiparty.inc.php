@@ -413,9 +413,16 @@ class rental_uiparty extends rental_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 					
-					if(isset($value['is_inactive']) && $value['is_inactive'] == true)
+					if(isset($value['party_in_contract']) && $value['party_in_contract'] == false)
 					{
 						$value['ajax'][] = true;
+						$value['alert'][] = true;
+						
+						$alertMessage = "Du er i ferd med å slette en kontraktspart.\n\n";
+						$alertMessage .= "Operasjonen kan ikke angres.\n\n";
+						$alertMessage .= "Vil du gjøre dette?";
+						
+						$value['alert'][] = $alertMessage;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.delete_party', 'id' => $value['id'])));
 						$value['labels'][] = lang('delete');
 					}
