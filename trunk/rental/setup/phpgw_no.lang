@@ -400,7 +400,6 @@ organisation_or_ssn_number	rental	no	Org./fødselsnr
 orphan_units	rental	no	Ubrukte arealer
 or	rental	no	eller
 org_enhet_id	rental	no	Organisasjonsenhet
-org_unit_person	rental	no  Enhetsleder
 org_unit_name	rental	no	Navn på tilsvarende enhet i Fellesdata
 org_unit_exist	rental	no	Eksisterer
 other_guarantee	rental	no	Annen garanti
@@ -536,6 +535,10 @@ sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar (Kontrak
 sync_parties_result_unit_number	rental	no	Synkronisering: Resultatenhetsnummer (Kontraktspart)
 sync_parties_identifier	rental	no	Synkronisering: Identifikator
 sync_parties_fellesdata_id	rental	no	Synkronisering: Organisasjonsidentifikator
+sync_org_name_fellesdata	rental	no	Foretak i Fellesdata
+sync_org_email_fellesdata	rental	no	Epost i Fellesdata
+sync_org_unit_leader_fellesdata	rental	no	Enhetsleder i Fellesdata
+sync_org_department_fellesdata	rental	no	Avdeling i Fellesdata 
 syncronize_party	rental	no	Synkroniser kontraktspart
 System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
