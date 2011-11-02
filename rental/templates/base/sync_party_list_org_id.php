@@ -12,8 +12,11 @@
 	$list_id = 'sync_parties_org_unit';
 	$url_add_on = '&amp;type=sync_parties_org_unit';
 	$extra_cols = array(
-		array("key" => "sync_message", "label" => lang('sync_message'), "index" => 3),
-		array("key" => "org_unit_name", "label" => lang('org_unit_name'), "index" => 4)
+		//array("key" => "sync_message", "label" => lang('sync_message'), "index" => 3),
+		array("key" => "org_unit_name", "label" => lang('sync_org_name_fellesdata'), "index" => 4),
+		array("key" => "dep_org_name", "label" => lang('sync_org_department_fellesdata'), "index" => 5),
+		array("key" => "unit_leader", "label" => lang('sync_org_unit_leader_fellesdata'), "index" => 6),
+		array("key" => "org_email", "label" => lang('sync_org_email_fellesdata'), "index" => 7)
 	);
 	include('party_list_partial.php');
 ?>

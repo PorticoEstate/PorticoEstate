@@ -37,6 +37,10 @@
 	{
 		key: "ajax",
 		hidden: true
+	},
+	{
+		key: "alert",
+		hidden: true
 	}
 	];
 

@@ -82,7 +82,7 @@ class rental_uiparty extends rental_uicommon
 
 		$config	= CreateObject('phpgwapi.config','rental');
 		$config->read();
-		$use_fellesdata = $config->config_data['use_fellesdata'];	
+		$use_fellesdata = $config->config_data['use_fellesdata'];
 		switch($type)
 		{
 			case 'included_parties': // ... get all parties incolved in the contract
@@ -113,7 +113,6 @@ class rental_uiparty extends rental_uicommon
 		$result_objects = rental_soparty::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 		$result_count = rental_soparty::get_instance()->get_count($search_for, $search_type, $filters);
 		
-		
 		// Create an empty row set
 		$rows = array();
 		foreach ($result_objects as $party) {
@@ -143,16 +142,33 @@ class rental_uiparty extends rental_uicommon
 					{
 						$unit_id = $unit_name_and_id['UNIT_ID'];
 						$unit_name = $unit_name_and_id['UNIT_NAME'];
+						
 						if(isset($unit_id) && is_numeric($unit_id))
 						{
 							$serialized['org_unit_name'] =  isset($unit_name) ? $unit_name : lang('no_name');
 							$serialized['org_unit_id'] = $unit_id;
 						}
+
+						// Fetches data from Fellesdata
+						$org_unit_id = $sync_data['org_enhet_id'];
+				
+						$org_unit_with_leader = $bofelles->get_result_unit_with_leader($org_unit_id);
+						$org_department = $bofelles->get_department_for_org_unit($org_unit_id);
+				
+						$org_name = $org_unit_with_leader['ORG_UNIT_NAME'];
+						$org_email = $org_unit_with_leader['ORG_EMAIL'];
+						$unit_leader_fullname = $org_unit_with_leader['LEADER_FULLNAME'];
+						$dep_org_name = $org_department['DEP_ORG_NAME'];
+
+						// Fields are displayed in syncronization table
+						$serialized['org_unit_name'] = $org_name;
+						$serialized['unit_leader'] = $unit_leader_fullname;
+						$serialized['org_email'] = $org_email;
+						$serialized['dep_org_name'] = $dep_org_name;		
 					}
 				}
 				
 				//check if party is a part of a contract
-				
 				$party_in_contract = rental_soparty::get_instance()->has_contract($party->get_id());
 				$serialized['party_in_contract'] = $party_in_contract ? true : false;
 				
@@ -177,7 +193,6 @@ class rental_uiparty extends rental_uicommon
 				)
 			);
 		}
-		
 		
 		return $this->yui_results($party_data, 'total_records', 'results');
 	}
@@ -346,7 +361,8 @@ class rental_uiparty extends rental_uicommon
 		$value['ajax'] = array();
 		$value['actions'] = array();
 		$value['labels'] = array();
-
+		$value['alert'] = array();
+	
 		// Get parameters
 		$contract_id = $params[0];
 		$type = $params[1];
@@ -397,7 +413,7 @@ class rental_uiparty extends rental_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 					
-					if(isset($value['party_in_contract']) && $value['party_in_contract'] == false)
+					if(isset($value['is_inactive']) && $value['is_inactive'] == true)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.delete_party', 'id' => $value['id'])));
@@ -411,18 +427,24 @@ class rental_uiparty extends rental_uicommon
 						$value['labels'][] = lang('frontend_access');
 					}
 					
-					if(isset($value['org_unit_id']))
+					if(isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
 					{
 						$value['ajax'][] = true;
-						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party', 'org_unit_id' => $value['org_unit_id'], 'party_id' => $value['id'])));
+						$value['alert'][] = true;
+						
+						$alertMessage = "Du er i ferd med å overskrive data med informasjon hentet fra Fellesdata.\n\n";
+						$alertMessage .= "Følgende felt vil bli overskrevet: Foretak, Avdeling, Enhetsleder, Epost. \n\n";
+						$alertMessage .= "Vil du gjøre dette?";
+						
+						$value['alert'][] = $alertMessage; 
+						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party', 'org_enhet_id' => $value['org_enhet_id'], 'party_id' => $value['id'])));
 						$value['labels'][] = lang('syncronize_party');
-					}			
+					}
 				}
 				break;
 		}
 	}
-
-
+	
 	/**
 	 * Public method. View all contracts.
 	 */
@@ -592,15 +614,48 @@ class rental_uiparty extends rental_uicommon
 		if(($this->isExecutiveOfficer() || $this->isAdministrator()))
 		{
 			$party_id = phpgw::get_var('party_id');
-			$org_unit_id = phpgw::get_var('org_unit_id');
-			$org_unit_name = phpgw::get_var('org_unit_id');
+			$org_unit_id = phpgw::get_var('org_enhet_id');
+
 			if(isset($party_id) && $party_id > 0 && isset($org_unit_id) && $org_unit_id > 0)
 			{	
+				$config	= CreateObject('phpgwapi.config','rental');
+				$config->read();
+				
+				$use_fellesdata = $config->config_data['use_fellesdata'];
+				if(!$use_fellesdata){ 
+					return;
+				}
+				
+				$bofelles = rental_bofellesdata::get_instance();
+				
+				$org_unit_with_leader = $bofelles->get_result_unit_with_leader($org_unit_id);
+				$org_department = $bofelles->get_department_for_org_unit($org_unit_id);
+				
+				$org_name = $org_unit_with_leader['ORG_UNIT_NAME'];
+				$org_email = $org_unit_with_leader['ORG_EMAIL'];
+				$unit_leader_fullname = $org_unit_with_leader['LEADER_FULLNAME'];
+				$dep_org_name = $org_department['DEP_ORG_NAME'];
+					
 				$party = rental_soparty::get_instance()->get_single($party_id);
-				$party->set_org_enhet_id($org_unit_id);
-				$patry->set_company_name($org_unit_name);
-				// add log-statement for synchronization
+								
+				if(!empty($dep_org_name) & $dep_org_name != '')
+					$party->set_department($dep_org_name);
+				
+				if(!empty($unit_leader_fullname) & $unit_leader_fullname != '')
+					$party->set_unit_leader($unit_leader_fullname);
+					
+				if(!empty($org_name) & $org_name != '')
+					$party->set_company_name($org_name);
+
+				if(!empty($org_email) & $org_email != '')
+					$party->set_email($org_email);
+					
+				if(!empty($org_unit_id) & $org_unit_id != '')
+					$party->set_org_enhet_id($org_unit_id);
+	
 				rental_soparty::get_instance()->store($party);
+				
+				$party = rental_soparty::get_instance()->get_single($party_id);
 			}
 		}
 	}
@@ -639,8 +694,7 @@ class rental_uiparty extends rental_uicommon
 				$jsonArr = array("email" => trim($org_email), "org_name" => trim($org_name), 
 								 "unit_leader_fullname" => trim($unit_leader_fullname), "department" => trim($dep_org_name));
 				
-				return json_decode( json_encode($jsonArr) );
-				
+				return json_decode( json_encode($jsonArr) );		
 			}	
 		}
 	}	
