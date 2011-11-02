@@ -556,8 +556,10 @@
 
 			$periode	= $oRsBilag[0]['periode'];
 
+			$comment = array();
 			foreach ($oRsBilag as $line)
 			{
+				$comment[] = $line['process_log'];
 				//Bestem belops felt
 				if ($line['splitt'] == 0)
 				{
@@ -697,6 +699,7 @@
 			$Dim_7		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 77 - 80
 */
 
+			$invoiceheader[0]['GENERALCOMMENT'] = implode("\n",$comment);
 			$invoices = array
 			(
 				0 => array
