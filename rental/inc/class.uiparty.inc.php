@@ -150,6 +150,12 @@ class rental_uiparty extends rental_uicommon
 						}
 					}
 				}
+				
+				//check if party is a part of a contract
+				
+				$party_in_contract = rental_soparty::get_instance()->has_contract($party->get_id());
+				$serialized['party_in_contract'] = $party_in_contract ? true : false;
+				
 				$rows[] = $serialized;
 			}
 		}
@@ -391,7 +397,7 @@ class rental_uiparty extends rental_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 					
-					if(isset($value['is_inactive']) && $value['is_inactive'] == true)
+					if(isset($value['party_in_contract']) && $value['party_in_contract'] == false)
 					{
 						$value['ajax'][] = true;
 						$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.delete_party', 'id' => $value['id'])));
