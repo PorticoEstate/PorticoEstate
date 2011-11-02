@@ -537,7 +537,9 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			if(isset($values['save']))
+			$cat_id = isset($values['cat_id']) && $values['cat_id'] ? $values['cat_id'] : $default_cat;
+
+ 			if(isset($values['save']))
 			{
 				foreach($values as $key => $value)
 				{
@@ -558,11 +560,11 @@
 						$i++;
 					}
 
-					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $default_cat));
+					$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location, 'cat_id' => $cat_id));
 
 					if(!$assignedto)
 					{
-						$default_group = $config->config_data['tts_default_group'];
+						$default_group = (int)$config->config_data['tts_default_group'];
 					}
 					else
 					{
@@ -572,7 +574,7 @@
 					$ticket = array(
 						'origin'    => null,
 						'origin_id' => null,
-						'cat_id'    => $values['cat_id'],
+						'cat_id'    => $cat_id,
 						'group_id'  => ($default_group ? $default_group : null),
 						'assignedto'=> $assignedto,
 						'priority'  => 3,

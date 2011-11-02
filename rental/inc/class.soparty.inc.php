@@ -410,6 +410,20 @@ class rental_soparty extends rental_socommon
 		return (int) $this->db->f('count',true);
 	}
 	
+	public function has_contract($party_id)
+	{
+		$sql = "SELECT * FROM rental_contract_party WHERE party_id={$party_id}";
+		$result = $this->db->query($sql);
+		if($this->db->next_record())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public function delete_party($party_id)
 	{
 		if($party_id)
