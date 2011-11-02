@@ -259,6 +259,24 @@
 
 				//... check whether this action should be an AJAX call
 				if(record.getData().ajax[task.index]) {
+
+					var alertStatus = false;
+
+					// Check if confirm box should be displayed before request is executed
+					if( record.getData().alert != null )
+					    alertStatus = record.getData().alert[0];
+
+					if( alertStatus ){
+						// Display confirm box with message
+						var alertMessage = record.getData().alert[1];
+						var answer = confirm( alertMessage );
+						
+						// Abort request if user clicks the abort button
+						if (!answer){
+							return false;
+						}
+					}
+					
 					var request = YAHOO.util.Connect.asyncRequest(
 						'GET',
 						record.getData().actions[ task.index ],
