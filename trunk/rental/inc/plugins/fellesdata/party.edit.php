@@ -8,11 +8,8 @@
 	?>
 			<select name="org_enhet_id" id="org_enhet_id">
 				<option value=""><?php echo lang('no_party_location') ?></option>
-		<?php
-		var_dump("SKRIVER UT");
-					
+		<?php		
 			$result_units = rental_bofellesdata::get_instance()->get_result_units();
-			print_r($result_units);
 			$party_org_enhet_id = $party->get_org_enhet_id();
 			foreach ($result_units as $result_unit)
 			{
@@ -34,8 +31,6 @@
 			$party_org_enhet_id = $party->get_org_enhet_id();
 			if (isset($party_org_enhet_id) && is_numeric($party_org_enhet_id))
 			{
-				
-			
 				$result_unit = rental_bofellesdata::get_instance()->get_result_unit($party_org_enhet_id);
 				echo $result_unit['ORG_NAME'];
 			}
