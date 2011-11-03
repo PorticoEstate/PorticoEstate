@@ -431,7 +431,7 @@
 					<?php
 						if($use_fellesdata)
 						{
-							//include PHPGW_SERVER_ROOT . "/rental/inc/plugins/fellesdata/party.edit.php";
+							include PHPGW_SERVER_ROOT . "/rental/inc/plugins/fellesdata/party.edit.php";
 						}
 					?>
 				</dl>
