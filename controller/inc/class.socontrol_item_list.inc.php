@@ -106,7 +106,7 @@ class controller_socontrol_item_list extends controller_socommon
 	
 	function get_single_2($control_id, $control_item_id)
 	{		
-		$sql = "SELECT p.* FROM controller_control_item_list p WHERE p.control_id = " . $control_id . " AND p.control_item_id = " . $control_item_id;
+		$sql = "SELECT cil.* FROM controller_control_item_list cil WHERE cil.control_id = " . $control_id . " AND cil.control_item_id = " . $control_item_id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -139,162 +139,26 @@ class controller_socontrol_item_list extends controller_socommon
 	 */
 	function get_control_item_array($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{
-		/*
 		
-		$results = array();
-		
-		//$condition = $this->get_conditions($query, $filters,$search_option);
-		$order = $sort ? "ORDER BY $sort $dir ": '';
-		
-		//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
-		$sql = "SELECT * FROM controller_control_item $order";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-		
-		while ($this->db->next_record()) {
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
-			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			
-			$results[] = $control_item;
-		}
-		
-		return $results;
-		
-		*/
 	}	
 	
 	function get_id_field_name($extended_info = false)
 	{
-		/*
-		if(!$extended_info)
-		{
-			$ret = 'id';
-		}
-		else
-		{
-			$ret = array
-			(
-				'table'			=> 'controller', // alias
-				'field'			=> 'id',
-				'translated'	=> 'id'
-			);
-		}
-		
-		return $ret;
-		*/
 	}
 
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
 	{
-		/*
-		$clauses = array('1=1');
 		
-		$filter_clauses = array();
-		
-		// Search for based on search type
-		if($search_for)
-		{
-			$search_for = $this->marshal($search_for,'field');
-			$like_pattern = "'%".$search_for."%'";
-			$like_clauses = array();
-			switch($search_type){
-				default:
-					$like_clauses[] = "controller_control_item.title $this->like $like_pattern";
-					$like_clauses[] = "controller_control_item.what_to_do $this->like $like_pattern";
-					$like_clauses[] = "controller_control_item.how_to_do $this->like $like_pattern";
-					break;
-			}
-			
-			if(count($like_clauses))
-			{
-				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
-			}
-		}
-		
-		if(isset($filters[$this->get_id_field_name()]))
-		{
-			$filter_clauses[] = "controller_control_item.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
-		}
-		
-		if(count($filter_clauses))
-		{
-			$clauses[] = join(' AND ', $filter_clauses);
-		}
-		
-		
-		$condition =  join(' AND ', $clauses);
-
-		$tables = "controller_control_item";
-		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
-		
-		if($return_count)
-		{
-			$cols = 'COUNT(DISTINCT(controller_control_item.id)) AS count';
-		}
-		else
-		{
-			$cols = 'id, title, required, what_to_do, how_to_do, control_group_id, control_area_id';
-		}
-		
-		$dir = $ascending ? 'ASC' : 'DESC';
-		if($sort_field == 'title')
-		{
-			$sort_field = 'controller_control_item.title';
-		}
-		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
-		
-		//return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
-		
-		return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
-		
-		*/
 	}
 	
 	function get_control_items($control_group_id)
 	{
-		/*
-		$results = array();
 		
-		$sql = "SELECT * FROM controller_control_item WHERE control_group_id=$control_group_id";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
-		
-		while ($this->db->next_record()) {
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
-			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			
-			$results[] = $control_item;
-		}
-		
-		return $results;
-		
-		*/
 	}
 	
 	function populate(int $control_item_id, &$control_item)
 	{
-		/*
-		if($control_item == null) {
-			$control_item = new controller_control_item((int) $control_item_id);
-
-			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
-			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'boolean'));
-			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
-			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
-			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-		}
 		
-		return $control_item;
-		*/
 	}
 	
 }

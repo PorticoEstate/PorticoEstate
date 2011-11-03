@@ -6,12 +6,26 @@
 </div>
 
 <div class="yui-content">
-		<div id="details">
-			
+		<div id="view_check_lists">
+		
+		<ul class="th"><li>Tittel</li><li>Startdato</li><li>Planlagtdato</li><li>Utførtdato</li></ul>
 		<ul class="check_list">
 			<xsl:for-each select="check_list_array">
 				<li>
-			        <span>Tittel:<xsl:value-of select="title"/></span><span>Start dato:<xsl:value-of select="start_date"/></span>
+					<ul class="row">
+						<li>
+							<a>
+								<xsl:attribute name="href">
+									<xsl:text>index.php?menuaction=controller.uicheck_list.view_check_list_for_control</xsl:text>
+									<xsl:text>&amp;control_id=</xsl:text>
+									<xsl:value-of select="id"/>
+								</xsl:attribute>
+								<span><xsl:value-of select="title"/></span>
+							</a>
+						</li>
+						<li><xsl:value-of select="start_date"/></li>
+						<li><xsl:value-of select="end_date"/></li>
+					</ul>
 				</li>
 			</xsl:for-each>
 		</ul>		

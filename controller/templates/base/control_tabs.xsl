@@ -39,12 +39,12 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_items" />
 		</xsl:when>
-		<xsl:when test="view = 'receipt'">
+		<xsl:when test="view = 'check_list'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Receipt')"/></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Check_list')"/></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="control_items_receipt" />
+			<xsl:call-template name="sort_check_list" />
 		</xsl:when>
 	</xsl:choose>
 </div>

@@ -9,6 +9,15 @@
 </h1>
 </div>
 
+<ul class="check_list">
+			<xsl:for-each select="check_list_array">
+				<li>
+				
+			        <span>Tittel:</span><xsl:value-of select="title"/><span>Start dato:</span><xsl:value-of select="start_date"/>
+				</li>
+			</xsl:for-each>
+		</ul>					
+		
 <div class="yui-content">
 		<div id="details">
 			<form action="#" method="post">
