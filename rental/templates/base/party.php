@@ -197,6 +197,38 @@
 					</dd>
 				</dl>
 				<dl class="proplist-col">
+					<?php if($editable) {?>
+						<dt>
+							<label for="is_inactive"><?php echo lang('inactive_party') ?></label>
+						</dt>
+						<dd>
+							<input type="checkbox" name="is_inactive" id="is_inactive" <?php if($party->is_inactive()) { echo "checked='checked'";} ?>/>
+						</dd>
+					<?php 
+					}else{ 
+					?>
+						<dt><label><?php if($party->is_inactive()){?><font style="color: red;"><?php echo lang('inactive_party');?></font><?php }else{ ?><font style="color: green;"><?php echo lang('active_party');?></font><?php } ?></label></dt>
+						<dd>&nbsp;</dd>
+					<?php }?>
+					<dt>
+						<?php if($party->get_account_number	() || $editable) { ?>
+						<label for="account_number"><?php echo lang('account_number') ?></label>
+						<?php } ?>
+					</dt>
+					<dd>
+						<?php
+						if ($editable)
+						{
+						?>
+							<input type="text" class="medium_number" name="account_number" id="account_number" value="<?php echo $party->get_account_number() ?>" />
+						<?php
+						}
+						else
+						{
+							echo $party->get_account_number();
+						}
+						?>
+					</dd>
 					<dt>
 						<?php if($party->get_phone() || $editable) { ?>
 						<label for="phone"><?php echo lang('phone') ?></label>
@@ -264,7 +296,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="email" id="email" value="<?php echo $party->get_email() ?>" />
+							<input type="text" name="email" class="email" id="email" value="<?php echo $party->get_email() ?>" />
 						<?php
 							$validator = CreateObject('phpgwapi.EmailAddressValidator');
 							$email = $party->get_email();
@@ -289,7 +321,7 @@
 						if ($editable)
 						{
 						?>
-							<input type="text" name="url" id="url" value="<?php echo $party->get_url() ?>" />
+							<input type="text" class="url" name="url" id="url" value="<?php echo $party->get_url() ?>" />
 						<?php
 						}
 						else
@@ -298,39 +330,6 @@
 						}
 						?>
 					</dd>
-					<dt>
-						<?php if($party->get_account_number	() || $editable) { ?>
-						<label for="account_number"><?php echo lang('account_number') ?></label>
-						<?php } ?>
-					</dt>
-					<dd>
-						<?php
-						if ($editable)
-						{
-						?>
-							<input type="text" name="account_number" id="account_number" value="<?php echo $party->get_account_number() ?>" />
-						<?php
-						}
-						else
-						{
-							echo $party->get_account_number();
-						}
-						?>
-					</dd>
-					<?php if($editable) {?>
-						<dt>
-							<label for="is_inactive"><?php echo lang('inactive_party') ?></label>
-						</dt>
-						<dd>
-							<input type="checkbox" name="is_inactive" id="is_inactive" <?php if($party->is_inactive()) { echo "checked='checked'";} ?>/>
-						</dd>
-					<?php 
-					}else{ 
-					?>
-						<dt><label><?php if($party->is_inactive()){?><font style="color: red;"><?php echo lang('inactive_party');?></font><?php }else{ ?><font style="color: green;"><?php echo lang('active_party');?></font><?php } ?></label></dt>
-						<dd>&nbsp;</dd>
-					<?php }?>
-					
 					<dt>
 						<?php if($party->get_unit_leader() || $editable) { ?>
 						<label for="unit_leader"><?php echo lang('unit_leader') ?></label>
