@@ -46,7 +46,7 @@ fieldset {
 	margin-top: 0.5em;	
 }
 
-input[type="submit"], input[type="button"]{
+input[type="submit"], input[type="button"], button{
 	padding:2px 4px;	
 }
 
@@ -171,10 +171,6 @@ dl.form-col {
     float: left;
 }
 
-dl.proplist-col input[type="text"]{
-	width:200px;	
-}
-
 dl.proplist-col input.postcode{
 	width:50px;	
 }
@@ -190,6 +186,14 @@ dl.proplist-col input.address_2{
 div.identifier-header {
 	padding-left: 2em;
 	margin-bottom: 1em;	
+}
+
+.identifier-header button {
+	margin-bottom: 10px;	
+}
+
+.identifier-header h1 img {
+	margin-right: 5px;	
 }
 
 div.identifier-header label {
@@ -489,4 +493,12 @@ th.yui-dt-sortable div{
 	display:none;
 	color:red;	
 	margin-bottom: 10px;
+}
+
+#date_start, #date_end{
+	width: 68px;	
+}
+
+input.email, input.url, #unit_leader{
+	width: 225px;
 }
