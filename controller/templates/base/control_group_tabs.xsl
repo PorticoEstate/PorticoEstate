@@ -8,7 +8,7 @@
 				<xsl:call-template name="control_group" />
 			</div>
 			<div id="control_items">
-				<xsl:call-template name="control_items" />
+				<xsl:call-template name="control_group_items" />
 			</div>
 		</div>
 	</div>
