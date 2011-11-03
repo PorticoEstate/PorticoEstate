@@ -1,6 +1,6 @@
-<xsl:template name="view_check_list" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 
-<div class="yui-content tab_content">
+<div class="main_content">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
 
@@ -9,10 +9,9 @@
 		
 		<ul class="groups">
 			<xsl:for-each select="saved_groups_with_items_array">
-				<li class="drag_group list_item">
+				<li class="list_item">
 			        <h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
 			
-					<form action="index.php?menuaction=controller.uicontrol_item.save_item_order" class="frm_save_order">
 			           	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
 						<input type="hidden" name="control_group_id" value="{$control_group_id}" />
 				
@@ -34,24 +33,10 @@
 				     				<span class="drag">
 				     					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
 				     				</span>
-				     				<a class="delete">
-										<xsl:attribute name="href">
-											<xsl:text>index.php?menuaction=controller.uicontrol_item.delete_item_list</xsl:text>
-											<xsl:text>&amp;control_id=</xsl:text>
-											<xsl:value-of select="//control_id"/>
-											<xsl:text>&amp;control_item_id=</xsl:text>
-											<xsl:value-of select="id"/>
-										</xsl:attribute>
-										<span>x</span>
-									</a>
 				     			</li>
 							</xsl:for-each>
 						</ul>
-						<div>
-							<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_order')" /></xsl:variable>
-							<input type="submit" id="save_order" name="save_order" value="{$lang_save}" title = "{$lang_save}" />
-						</div>
-					</form>
+					
 				</li>
 			</xsl:for-each>
 		</ul>					

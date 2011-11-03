@@ -50,11 +50,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('New control group'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_group.add'))
-							),
 							array('type' => 'filter', 
 								'name' => 'status',
                                 'text' => lang('Status').':',
@@ -99,6 +94,11 @@
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix.'.toggle_show_inactive'))
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('New control group'),
+								'href' => self::link(array('menuaction' => 'controller.uicontrol_group.add'))
 							),
 						),
 					),

@@ -1,18 +1,18 @@
 <xsl:template name="control_items" xmlns:php="http://php.net/xsl">
 
-<div class="yui-content">
+<div class="yui-content tab_content">
 	<div>
 		  
 	   <!-- ===========================  CHOOSE CONTROL ITEMS  =============================== -->
 	   <h2>Velg dine kontrollpunkt</h2>
 	   
 	   	<h4 class="expand_header"><div class="expand_all">Vis alle</div><div class="collapse_all">Skjul alle</div></h4>
-		<form id="frm_control_items" action="index.php?menuaction=controller.uicontrol.index" method="post">	
+		<form id="frm_control_items" action="index.php?menuaction=controller.uicontrol.save_control_items" method="post">	
 			<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
 			<input type="hidden" name="control_id" value="{control_id}" />
 			
 			<xsl:variable name="control_group_ids"><xsl:value-of select="control_group_ids"/></xsl:variable>
-			<input type="hidden" name="control_group_ids[]" value="{control_group_ids}" />		
+			<input type="hidden" name="control_group_ids" value="{control_group_ids}" />		
 			
 			<ul class="control_items">
 				<xsl:for-each select="groups_with_control_items">

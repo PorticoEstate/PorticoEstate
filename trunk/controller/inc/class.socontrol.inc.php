@@ -84,17 +84,7 @@ class controller_socontrol extends controller_socommon
 		//return isset($result);
 	}
 	
-	
-	
-	
-	
-	
-	
-	function get_procedure_list(){
-		
-		
-	}
-	
+	function get_procedure_list(){}
 	
 	function get_id_field_name($extended_info = false)
 	{
@@ -253,20 +243,7 @@ class controller_socontrol extends controller_socommon
 		return $control;
 	}
 	
-/*		public function populate($control){
-						
-			$control->set_title(phpgw::get_var('title', 'string'));
-			$control->set_description(phpgw::get_var('description', 'string'));
-			$control->set_start_date( strtotime( phpgw::get_var('start_date_hidden', 'int')));
-			$control->set_end_date( strtotime( phpgw::get_var('end_date_hidden', 'int')));
-			$control->set_repeat_type( phpgw::get_var('repeat_type', 'string'));
-			$control->set_repeat_interval( phpgw::get_var('repeat_interval', 'string'));
-			$control->set_procedure_id( phpgw::get_var('procedure_id', 'int'));
-			$control->set_enabled( true );
-			
-			return $control;
-			
-		}*/
+
 	
 	
 }
