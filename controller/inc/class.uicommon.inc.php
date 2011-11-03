@@ -518,6 +518,13 @@
 									{ type: 'push', label: 'HTML Lenke CTRL + SHIFT + L', value: 'createlink', disabled: true },
 									{ type: 'push', label: 'Sett inn bilde', value: 'insertimage' }
 								]
+							},
+						    { type: 'separator' },
+						    { group: 'undoredo', label: 'Angre/Gjenopprett',
+								buttons: [
+									{ type: 'push', label: 'Angre', value: 'undo' },
+									{ type: 'push', label: 'Gjenopprett', value: 'redo' }
+								]
 							}
 						]
 					},
