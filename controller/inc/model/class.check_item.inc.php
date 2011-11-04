@@ -8,6 +8,7 @@
 		protected $id;
 		protected $control_item_id;
 		protected $status;
+		protected $comment;
 		protected $check_list_id;
 		
 		/**
@@ -41,6 +42,13 @@
 		}
 		
 		public function get_status() { return $this->status; }
+		
+		public function set_comment($comment)
+		{
+			$this->comment = $comment;
+		}
+		
+		public function get_comment() { return $this->comment; }
 		
 		public function set_check_list_id($check_list_id)
 		{
