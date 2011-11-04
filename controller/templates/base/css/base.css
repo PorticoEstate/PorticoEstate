@@ -92,7 +92,7 @@ label {
 				}
 
 .breadcrumbs{
-	margin-left: 10px;	
+	margin-left: 20px;	
 }
 
 ul.pathway {
@@ -420,7 +420,7 @@ h1 em {
 
 div.info, div.error, div.warning {
 	font-weight: normal;
-	margin:10px;
+	margin:20px;
 	padding:5px;
 	font-size:1.1em;
 	text-align: left;
@@ -679,10 +679,14 @@ ul.row li{
     width: 100px;
 }
 
-.main_content {
+#main_content {
 	padding:20px;	
 }
 
-.main_content.groups{
+#main_content.groups{
 	cursor: default;	
+}
+#main_content fieldset{
+	padding:0;
+	margin:0;	
 }
