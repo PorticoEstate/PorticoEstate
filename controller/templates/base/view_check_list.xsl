@@ -17,11 +17,23 @@
 		
 		<h3>Sjekklister</h3>
 		<ul class="check_list">
+			<li class="heading">
+				<div>Kommentar</div>
+				<div>Status</div>
+				<div>Skal utføres innen dato</div>
+				<div>Planlagt utført dato</div>
+				<div>Ble utført dato</div>
+			</li>
 			<xsl:choose>
 				<xsl:when test="check_list_array/child::node()">
 					<xsl:for-each select="check_list_array">
 						<li>
-					       <span><xsl:number/></span>. <xsl:value-of select="id"/><xsl:value-of select="control_id"/><xsl:value-of select="status"/><xsl:value-of select="comment"/>
+					       <div class="order_nr"><xsl:number/></div>. 
+					       <div><xsl:value-of select="comment"/></div>
+					       <div><xsl:value-of select="status"/></div>
+					       <div><xsl:value-of select="deadline"/></div>
+					       <div><xsl:value-of select="planned_date"/></div>
+					       <div><xsl:value-of select="completed_date"/></div>
 					    </li>
 					</xsl:for-each>
 				</xsl:when>
@@ -29,8 +41,6 @@
 					Ingen sjekklister for denne kontrollen
 				</xsl:otherwise>
 			</xsl:choose>
-			
-			
 		</ul>
 </div>
 </xsl:template>
