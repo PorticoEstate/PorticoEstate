@@ -68,7 +68,6 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'status' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'comment' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True)

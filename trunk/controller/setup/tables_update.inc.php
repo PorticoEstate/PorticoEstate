@@ -86,4 +86,28 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.5';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	/* Update Controller from v 0.1.5 to 0.1.6
+	 */
+	
+	$test[] = '0.1.5';
+	function controller_upgrade0_1_5()
+	{
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_check_list', array(), 'check_list_id');
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','planned_date',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => True
+		));
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','completed_date',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => True
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.6';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
 ?>
