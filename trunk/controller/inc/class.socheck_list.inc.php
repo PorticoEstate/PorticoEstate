@@ -61,63 +61,45 @@ class controller_socheck_list extends controller_socommon
 	}
 	
 	function get_check_list_for_control($control_id){
-		$sql = "SELECT cl.id as check_list_id, cl.*, ci.id as check_item_id, ci.* FROM controller_check_list cl, controller_check_item ci WHERE cl.control_id = $control_id AND cl.id = ci.check_list_id ORDER BY cl.id;";
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.control_id = $control_id AND cl.id = ci.check_list_id ORDER BY cl.id;";
 		$this->db->query($sql);
 		
 		$check_list_id = 0;
+		$check_list = null;
 		while ($this->db->next_record()) {
-			
-			print "ID: " . $this->db->f('id', true) . "<br>";
-			
-			$check_item = new controller_check_item($this->unmarshal($this->db->f('check_item_id', true), 'int'));
-			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
-			$check_item->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
-			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-			
-			if( $this->db->f('id', true) != $check_list_id){
-				$check_list = new controller_check_list($this->unmarshal($this->db->f('check_list_id', true), 'int'));	
-			}else{
-				$check_list_array[] = $check_list;	
+		
+			if( $this->db->f('cl_id', true) != $check_list_id ){
+				
+				if($check_list_id != 0){
+					$check_list->set_check_item_array($check_items_array);
+					$check_list_array[] = $check_list->toArray();
+				}
+				
+				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
+				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
+
+				$check_items_array = array();
 			}
 			
-			$check_list->set_control_id($this->unmarshal($this->db->f('control_id', true), 'int'));
-			$check_list->set_status($this->unmarshal($this->db->f('status', true), 'bool'));
-			$check_list->set_comment($this->unmarshal($this->db->f('comment', true), 'string'));
-			$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));			
+			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
+			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
-			$check_list_id =  $this->unmarshal($this->db->f('id', true), 'int');
-			$check_items_array = array();
+			$check_items_array[] = $check_item->toArray();
 			
+			$check_list_id =  $check_list->get_id();
+		}
 		
-			$check_items_array[] = $check_item;
-			
+		if(check_list != null){
 			$check_list->set_check_item_array($check_items_array);
-			
+			$check_list_array[] = $check_list->toArray();
 		}
-		
-		foreach($check_list_array as $check_list){
-			echo "Skriver ut check_list!"."<br>";
-			
-			echo "check list id: " . $check_list->get_id()."<br>";
-			echo "status: " . $check_list->get_status()."<br>";
-			echo "comment: " . $check_list->get_comment()."<br>";
-			echo "deadline: " . $check_list->get_deadline()."<br>";
-			echo "Check_item_array: " . "<br>";
-			
-			foreach($check_list->get_check_item_array() as $check_item){
-				echo "check item id:  " . $check_item->get_id()."<br>";
-				echo "status:  " . $check_item->get_status()."<br>";	
-				echo "control_item_id:  " . $check_item->get_control_item_id()."<br>";
-				echo "comment:  " . $check_item->get_comment()."<br>";
-				echo "check_list_id:  " . $check_item->get_check_list_id()."<br>";
-			}	
-			echo "<br>";
-		}
-		
-		//$check_list->set_check_item_array($check_items_array);
-				
-		//return $check_list;
+							
+		return $check_list_array;
 	}
 	
 	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
