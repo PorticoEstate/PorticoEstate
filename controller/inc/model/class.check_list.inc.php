@@ -10,6 +10,8 @@
 		protected $status;
 		protected $comment;
 		protected $deadline;
+		protected $planned_date;
+		protected $completed_date;
 		protected $check_item_array = array();
 		
 		/**
@@ -64,6 +66,20 @@
 		}
 		
 		public function get_check_item_array() { return $this->check_item_array; }
+		
+		public function set_planned_date($planned_date)
+		{
+			$this->planned_date = $planned_date;
+		}
+		
+		public function get_planned_date() { return $this->planned_date; }
+		
+		public function set_completed_date($completed_date)
+		{
+			$this->completed_date = $completed_date;
+		}
+		
+		public function get_completed_date() { return $this->completed_date; }
 		
 		public function serialize()
 		{
