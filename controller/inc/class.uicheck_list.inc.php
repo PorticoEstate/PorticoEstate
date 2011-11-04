@@ -55,15 +55,15 @@
 			$control = $this->so_control->get_single($control_id);
 
 		
-			$check_list = $this->so->get_check_list_for_control( $control_id );	
+			$check_list_array = $this->so->get_check_list_for_control( $control_id );	
 			
 			$data = array
 			(
 				'control_as_array'	=> $control->toArray(),
-				'check_list'		=> $check_list
+				'check_list_array'		=> $check_list_array
 			);
 			
-			//self::render_template_xsl('view_check_list', $data);
+			self::render_template_xsl('view_check_list', $data);
 		}
 		
 		public function view_control_items_for_control()
