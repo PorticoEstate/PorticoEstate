@@ -64,5 +64,16 @@
 		}
 		
 		public function get_check_item_array() { return $this->check_item_array; }
+		
+		public function serialize()
+		{
+			return array(
+				'id' => $this->get_id(),
+				'control_id' => $this->get_control_id(),
+				'status' => $this->get_status(),
+				'comment' => $this->get_comment(),
+				'deadline' => $this->get_deadline()
+				);
+		}
 	}
 ?>
