@@ -18,8 +18,8 @@
 		<h2>Sjekklister</h2>
 		<ul class="check_list">
 			<li class="heading">
+				<div class="status">Status</div>
 				<div>Kommentar</div>
-				<div>Status</div>
 				<div>Skal utføres innen dato</div>
 				<div>Planlagt utført dato</div>
 				<div>Ble utført dato</div>
@@ -28,10 +28,19 @@
 				<xsl:when test="check_list_array/child::node()">
 					<xsl:for-each select="check_list_array">
 						<li>
-					       <div class="icon"><img height="15" src="controller/images/status_icon_light_green.png" /></div>
 					       <div class="order_nr"><xsl:number/>.</div> 
+					       <div class="status">
+					       	 <xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>	
+					         <xsl:choose>
+								<xsl:when test="status = 1">
+									<img height="15" src="controller/images/status_icon_light_green.png" />	
+								</xsl:when>
+								<xsl:otherwise>
+									Ingen sjekklister for denne kontrollen
+								</xsl:otherwise>
+							</xsl:choose>
+					       </div>
 					       <div><xsl:value-of select="comment"/></div>
-					       <div><xsl:value-of select="status"/></div>
 					       <div><xsl:value-of select="deadline"/></div>
 					       <div><xsl:value-of select="planned_date"/></div>
 					       <div><xsl:value-of select="completed_date"/></div>
