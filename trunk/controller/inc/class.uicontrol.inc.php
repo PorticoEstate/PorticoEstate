@@ -305,7 +305,7 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::render_template_xsl(array('control_tabs', 'control_items'), $data);
+			self::render_template_xsl(array('control_tabs', 'choose_control_items'), $data);
 		}
 		
 		// Saves chosen control items through receiving a comma separated list of control tags (1:2, control_group_id:control_item_id) 
