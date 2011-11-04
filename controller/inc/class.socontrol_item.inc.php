@@ -267,6 +267,7 @@ class controller_socontrol_item extends controller_socommon
 			
 			$results[] = $control_item;
 		}
+		
 		return $results;
 	}
 	
@@ -297,8 +298,8 @@ class controller_socontrol_item extends controller_socommon
 		$results = array();
 		
 		$sql = "SELECT ci.* FROM controller_control_item ci, controller_control_item_list cl, controller_control c ";
-		$sql .= "WHERE c.id=$control_id AND c.id=cl.control_id AND cl.control_item_id=ci.id GROUP BY ";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		$sql .= "WHERE c.id=$control_id AND c.id=cl.control_id AND cl.control_item_id=ci.id";	
+		$this->db->query($sql);
 		
 		while ($this->db->next_record()) {
 			$control_item = new controller_control_item($this->unmarshal($this->db->f('id', true), 'int'));
@@ -311,7 +312,7 @@ class controller_socontrol_item extends controller_socommon
 			
 			$results[] = $control_item;
 		}
-		
+
 		return $results;
 	}
 	

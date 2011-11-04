@@ -293,7 +293,6 @@
 						array('label' => "4: " . lang('Check_list'))
 					);
 			
-			
 			$data = array
 			(
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
@@ -386,19 +385,21 @@
 			$tabs = array(
 						array(
 							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 'view' => "view_control_details", 
-																					'control_id' => $control_id))
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
+																				   'view' => "view_control_details", 'control_id' => $control_id))
 						), 
 						array(
 							'label' => "2: " . lang('Control_groups'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 'view' => "view_control_groups", 
-																			       'control_id' => $control_id, 'control_group_ids' => $control_group_ids,
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 
+																				   'view' => "view_control_groups", 'control_id' => $control_id, 
+																				   'control_group_ids' => $control_group_ids, 
 																				   'control_area_id' => $control->get_control_area_id()))
 						), 
 							array(
 							'label' => "3: " . lang('Control_items'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 'view' => "view_control_items", 
-																			       'control_id' => $control_id, 'control_group_ids' => $control_group_ids))
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_items', 
+																				   'view' => "view_control_items", 'control_id' => $control_id, 
+																				   'control_group_ids' => $control_group_ids))
 						), 
 							array(
 							'label' => "4: " . lang('Check_list')
