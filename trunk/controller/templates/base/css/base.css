@@ -508,6 +508,10 @@ h1 img{
 	padding-left:0;
 }
 
+#control_tabview .yui-content{
+	padding:20px;
+}
+
 ul.itemlist {
     position: relative;
 }
@@ -689,4 +693,20 @@ ul.row li{
 #main_content fieldset{
 	padding:0;
 	margin:0;	
+}
+.check_list li div{
+	margin:2px;
+	width:200px;
+	float:left;
+}
+.check_list li.heading{
+	font-weight:bold;
+	padding-left:18px;
+    background: url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 -100px #D8D8DA;
+}
+.check_list li div.order_nr{
+	width:15px;
+}
+.check_list li{
+	overflow:hidden;
 }
