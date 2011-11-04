@@ -1,16 +1,16 @@
 <?php
 	include_class('controller', 'model', 'inc/model/');
 	
-	class controller_check_item extends controller_model
+	class controller_check_list extends controller_model
 	{
 		public static $so;
 
 		protected $id;
 		protected $control_id;
-		protected $check_list_id;
 		protected $status;
 		protected $comment;
 		protected $deadline;
+		protected $check_item_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -37,13 +37,6 @@
 		
 		public function get_control_id() { return $this->control_id; }
 		
-		public function set_check_list_id($check_list_id)
-		{
-			$this->check_list_id = $check_list_id;
-		}
-		
-		public function get_check_list_id() { return $this->check_list_id; }
-		
 		public function set_status($status)
 		{
 			$this->status = $status;
@@ -65,6 +58,11 @@
 		
 		public function get_deadline() { return $this->deadline; }
 		
+		public function set_check_item_array($check_item_array)
+		{
+			$this->check_item_array = $check_item_array;
+		}
 		
+		public function get_check_item_array() { return $this->check_item_array; }
 	}
 ?>
