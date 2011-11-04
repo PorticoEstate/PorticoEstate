@@ -18,8 +18,9 @@
 		public $public_functions = array
 		(
 			'index'	=>	true,
-			'view_check_list_for_control'	=>	true,
-			'save_check_list'	=>	true
+			'view_check_lists_for_control'	=>	true,
+			'save_check_list'	=>	true,
+			'view_check_list'	=>	true
 		);
 
 		public function __construct()
@@ -49,13 +50,28 @@
 			self::render_template_xsl('control_check_lists', $data);
 		}
 		
-		public function view_check_list_for_control()
+		public function view_check_list()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
+	
+			$data = array
+			(
+				'check_list' => $check_list
+			);
+			
+			//print_r($check_list);
+			
+			self::render_template_xsl('view_check_list', $data);
+		}
+		
+		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
 
 		
-			$check_list_array = $this->so->get_check_list_for_control( $control_id );	
+			$check_list_array = $this->so->get_check_lists_for_control( $control_id );	
 			
 			$data = array
 			(
@@ -63,7 +79,7 @@
 				'check_list_array'		=> $check_list_array
 			);
 			
-			self::render_template_xsl('view_check_list', $data);
+			self::render_template_xsl('view_check_lists', $data);
 		}
 		
 		public function view_control_items_for_control()

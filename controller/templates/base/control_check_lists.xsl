@@ -16,7 +16,7 @@
 						<li>
 							<a>
 								<xsl:attribute name="href">
-									<xsl:text>index.php?menuaction=controller.uicheck_list.view_check_list_for_control</xsl:text>
+									<xsl:text>index.php?menuaction=controller.uicheck_list.view_check_lists_for_control</xsl:text>
 									<xsl:text>&amp;control_id=</xsl:text>
 									<xsl:value-of select="id"/>
 								</xsl:attribute>
