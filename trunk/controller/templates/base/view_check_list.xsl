@@ -16,81 +16,11 @@
 		</fieldset>
 		
 		<ul class="check_list">
-			<xsl:for-each select="saved_groups_with_items_array">
+			<xsl:for-each select="check_list_array">
 				<li>
-			        <h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
-			
-		           	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
-					<input type="hidden" name="control_group_id" value="{$control_group_id}" />
-			
-		         	<ul id="list">
-						<xsl:for-each select="control_items">
-							<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-							<xsl:variable name="order_tag">
-								<xsl:choose>
-									<xsl:when test="order_nr > 0">
-										<xsl:value-of select="order_nr"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:number/>
-									</xsl:otherwise>
-								</xsl:choose>:<xsl:value-of select="id"/>
-							</xsl:variable>
-															
-			     			<li>
-			     				<span class="drag">
-			     					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
-			     				</span>
-			     			</li>
-						</xsl:for-each>
-					</ul>
-				</li>
+			       <span><xsl:number/></span>. <xsl:value-of select="id"/><xsl:value-of select="control_id"/><xsl:value-of select="status"/><xsl:value-of select="comment"/>
+			    </li>
 			</xsl:for-each>
 		</ul>
-		
-		<!--  
-		<ul class="check_list">
-			<xsl:for-each select="saved_groups_with_items_array">
-				<li>
-			        <h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
-			
-		           	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
-					<input type="hidden" name="control_group_id" value="{$control_group_id}" />
-			
-		         	<ul id="list">
-						<xsl:for-each select="control_items">
-							<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-							<xsl:variable name="order_tag">
-								<xsl:choose>
-									<xsl:when test="order_nr > 0">
-										<xsl:value-of select="order_nr"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:number/>
-									</xsl:otherwise>
-								</xsl:choose>:<xsl:value-of select="id"/>
-							</xsl:variable>
-															
-			     			<li>
-			     				<span class="drag">
-			     					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
-			     				</span>
-			     			</li>
-						</xsl:for-each>
-					</ul>
-				</li>
-			</xsl:for-each>
-		</ul>
-		<div style="margin:20px 0;">
-			<a  style="text-decoration:underline;font-size:20px;color:#333;">
-				<xsl:attribute name="href">
-					<xsl:text>index.php?menuaction=controller.uicheck_list.save_check_list</xsl:text>
-					<xsl:text>&amp;control_id=</xsl:text>
-						<xsl:value-of select="control_as_array/id"/>
-				</xsl:attribute>
-				Lag sjekkliste for kontroll
-			</a>		
-		</div>
-		-->
 </div>
 </xsl:template>
