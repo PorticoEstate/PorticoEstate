@@ -6,7 +6,7 @@
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>	
 		<input type="hidden" id="control_id" name="control_id" value="{control_id}" />
 		
-		<h1>Detaljer for kontroll</h1>
+		<h1>Sjekklister for kontroll</h1>
 		<fieldset class="control_details">
 			<label>Tittel</label><xsl:value-of select="control_as_array/title"/><br/>
 			<label>Startdato</label><xsl:value-of select="control_as_array/start_date"/><br/>

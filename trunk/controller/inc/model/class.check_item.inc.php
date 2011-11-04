@@ -10,6 +10,7 @@
 		protected $status;
 		protected $comment;
 		protected $check_list_id;
+		protected $control_item;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -56,6 +57,13 @@
 		}
 		
 		public function get_check_list_id() { return $this->check_list_id; }
+		
+		public function set_control_item($control_item)
+		{
+			$this->control_item = $control_item;
+		}
+		
+		public function get_control_item() { return $this->control_item; }
 			
 			
 		/**

@@ -20,6 +20,79 @@ class controller_socheck_list extends controller_socommon
 		return self::$so;
 	}
 	
+	public function get_single($check_list_id){
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
+		$this->db->query($sql);
+		
+		$counter = 0;
+		$check_list = null;
+		while ($this->db->next_record()) {
+			
+			if($counter == 0){
+				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
+				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
+			}
+			
+			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
+			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+			
+			$check_items_array[] = $check_item->toArray();
+			
+			$counter++;
+		}
+		
+		if($check_list != null){
+			$check_list->set_check_item_array($check_items_array);
+			return $check_list->toArray();
+		}else {
+			return null;
+		}
+	}
+	
+	public function get_single_with_control_item($check_list_id){
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, coi.title as control_item_title FROM controller_check_list cl, controller_check_item ci, controller_control_item as coi WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id AND ci.control_item_id=coi.id;";
+		$this->db->query($sql);
+		
+		$counter = 0;
+		$check_list = null;
+		while ($this->db->next_record()) {
+			
+			if($counter == 0){
+				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
+				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
+			}
+			
+			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
+			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+			
+			$control_item = new controller_control_item($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+			$control_item->set_title($this->db->f('control_item_title', true), 'string');
+			
+			$check_item->set_control_item($control_item->toArray());
+			
+			$check_items_array[] = $check_item->toArray();
+			
+			$counter++;
+		}
+		
+		if($check_list != null){
+			$check_list->set_check_item_array($check_items_array);
+			return $check_list->toArray();
+		}else {
+			return null;
+		}
+	}
+	
 	public function get_check_list(){
 
 		$current_time = time();
@@ -60,7 +133,7 @@ class controller_socheck_list extends controller_socommon
 		return $results;
 	}
 	
-	function get_check_list_for_control($control_id){
+	function get_check_lists_for_control($control_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.control_id = $control_id AND cl.id = ci.check_list_id ORDER BY cl.id;";
 		$this->db->query($sql);
 		
