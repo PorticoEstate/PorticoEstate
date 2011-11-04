@@ -3,7 +3,6 @@
 <div id="main_content">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
-
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>	
 		<input type="hidden" id="control_id" name="control_id" value="{control_id}" />
 		
@@ -18,11 +17,20 @@
 		
 		<h3>Sjekklister</h3>
 		<ul class="check_list">
-			<xsl:for-each select="check_list_array">
-				<li>
-			       <span><xsl:number/></span>. <xsl:value-of select="id"/><xsl:value-of select="control_id"/><xsl:value-of select="status"/><xsl:value-of select="comment"/>
-			    </li>
-			</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="check_list_array/child::node()">
+					<xsl:for-each select="check_list_array">
+						<li>
+					       <span><xsl:number/></span>. <xsl:value-of select="id"/><xsl:value-of select="control_id"/><xsl:value-of select="status"/><xsl:value-of select="comment"/>
+					    </li>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					Ingen sjekklister for denne kontrollen
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			
 		</ul>
 </div>
 </xsl:template>
