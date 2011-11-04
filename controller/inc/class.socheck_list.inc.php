@@ -94,12 +94,15 @@ class controller_socheck_list extends controller_socommon
 			$check_list_id =  $check_list->get_id();
 		}
 		
-		if(check_list != null){
+		if($check_list != null){
 			$check_list->set_check_item_array($check_items_array);
 			$check_list_array[] = $check_list->toArray();
+		
+			return $check_list_array;
+		}else {
+			return null;
 		}
-							
-		return $check_list_array;
+		
 	}
 	
 	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
