@@ -33,8 +33,7 @@ class controller_socontrol_item extends controller_socommon
 				'required',
 				'what_to_do',
 				'how_to_do',
-				'control_group_id',
-				'control_area_id'
+				'control_group_id'
 		);
 		
 		$values = array(
@@ -42,8 +41,7 @@ class controller_socontrol_item extends controller_socommon
 			$this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
 			$this->marshal($control_item->get_what_to_do(), 'string'),
 			$this->marshal($control_item->get_how_to_do(), 'string'),
-			$this->marshal($control_item->get_control_group_id(), 'int'),
-			$this->marshal($control_item->get_control_area_id(), 'int')
+			$this->marshal($control_item->get_control_group_id(), 'int')
 		);
 		
 		$result = $this->db->query('INSERT INTO controller_control_item (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
@@ -77,8 +75,7 @@ class controller_socontrol_item extends controller_socommon
 			'required = ' . $this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
 			'what_to_do = ' . $this->marshal($control_item->get_what_to_do(), 'string'),
 			'how_to_do = ' . $this->marshal($control_item->get_how_to_do(), 'string'),
-			'control_group_id = ' . $this->marshal($control_item->get_control_group_id(), 'int'),
-			'control_area_id = ' . $this->marshal($control_item->get_control_area_id(), 'int')
+			'control_group_id = ' . $this->marshal($control_item->get_control_group_id(), 'int')
 		);
 		
 		//var_dump('UPDATE controller_control_item SET ' . join(',', $values) . " WHERE id=$id");
@@ -97,8 +94,7 @@ class controller_socontrol_item extends controller_socommon
 	{
 		$id = (int)$id;
 		$joins = " {$this->left_join} controller_control_group ON (p.control_group_id = controller_control_group.id)";
-		$joins .= " {$this->left_join} controller_control_area ON (p.control_area_id = controller_control_area.id)";
-		$sql = "SELECT p.*, controller_control_group.group_name AS control_group_name, controller_control_area.title AS control_area_name FROM controller_control_item p {$joins} WHERE p.id = " . $id;
+		$sql = "SELECT p.*, controller_control_group.group_name AS control_group_name FROM controller_control_item p {$joins} WHERE p.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -109,8 +105,6 @@ class controller_socontrol_item extends controller_socommon
 		$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 		$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 		$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
-		$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-		$control_item->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 		
 		return $control_item;
 	}
@@ -144,7 +138,6 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			
 			$results[] = $control_item;
 		}
@@ -210,11 +203,7 @@ class controller_socontrol_item extends controller_socommon
 		{
 			$filter_clauses[] = "controller_control_item.control_group_id = {$this->marshal($filters['control_groups'],'int')}";
 		}
-		if(isset($filters['control_areas']))
-		{
-			$filter_clauses[] = "controller_control_item.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
-		}
-		
+			
 		if(count($filter_clauses))
 		{
 			$clauses[] = join(' AND ', $filter_clauses);
@@ -225,7 +214,6 @@ class controller_socontrol_item extends controller_socommon
 
 		$tables = "controller_control_item";
 		$joins = " {$this->left_join} controller_control_group ON (controller_control_item.control_group_id = controller_control_group.id)";
-		$joins .= " {$this->left_join} controller_control_area ON (controller_control_item.control_area_id = controller_control_area.id)";
 		
 		if($return_count)
 		{
@@ -233,7 +221,7 @@ class controller_socontrol_item extends controller_socommon
 		}
 		else
 		{
-			$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_group_id, controller_control_item.control_area_id, controller_control_group.group_name AS control_group_name, controller_control_area.title AS control_area_name';
+			$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_group_id, controller_control_item.control_area_id, controller_control_group.group_name AS control_group_name';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -263,7 +251,6 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			
 			$results[] = $control_item;
 		}
@@ -285,7 +272,6 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			
 			$results[] = $control_item->toArray();
 		}
@@ -308,7 +294,6 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			
 			$results[] = $control_item;
 		}
@@ -332,8 +317,6 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			//$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			//$control_item->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 			
 			$results[] = $control_item->toArray();
 		}
@@ -352,8 +335,6 @@ class controller_socontrol_item extends controller_socommon
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 			$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
 			$control_item->set_control_group_name($this->unmarshal($this->db->f('control_group_name', true), 'string'));
-			$control_item->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
-			$control_item->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 		}
 		
 		return $control_item;
