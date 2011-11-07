@@ -31,6 +31,9 @@
 					<dt>
 						<label for="revision_no"><xsl:value-of select="php:function('lang','Procedure revision')" /></label>
 					</dt>
+					<dd>
+						<xsl:value-of select="procedure/revision_no" />
+					</dd>
 					<dt>
 						<label for="control_area"><xsl:value-of select="php:function('lang','Control area')" /></label>
 					</dt>
@@ -67,9 +70,6 @@
 						<xsl:value-of disable-output-escaping="yes" select="end_date"/>
 					</dd>
 					</xsl:if>
-					<dd>
-						<xsl:value-of select="procedure/revision_no" />
-					</dd>
 					<dt>
 						<label for="purpose"><xsl:value-of select="php:function('lang','Procedure purpose')" /></label>
 					</dt>
