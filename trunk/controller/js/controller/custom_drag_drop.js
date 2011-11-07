@@ -156,6 +156,7 @@ function stop_drag(){
 	var thisForm = $(this);
 	var this_submit_btn = $(thisForm).find("input[type='submit']");
 	$(this_submit_btn).css({opacity: 1 });
+	$(this_submit_btn).removeAttr('disabled');
 }
 
 //Release binding for mouse events

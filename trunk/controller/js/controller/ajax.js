@@ -29,6 +29,7 @@ $(document).ready(function(){
 					 }, 1000);
 				  
 				  $(this_submit_btn).css({opacity: 0.5 });
+				  $(this_submit_btn).attr('disabled', 'disabled');
 				}
 			});	
 	});
