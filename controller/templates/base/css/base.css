@@ -734,3 +734,7 @@ ul.row li{
 fieldset.control_details label{
 	font-weight:bold;
 }
+.new_item a#innertoolbar-button{
+	background: grey;
+	font-weight: bold;
+}

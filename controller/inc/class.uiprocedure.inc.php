@@ -43,11 +43,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('f_new_procedure'),
-								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add'))
-							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
                                 'text' => lang('Control_area').':',
@@ -61,6 +56,12 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('t_new_procedure'),
+								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add')),
+								'class' => 'new_item'
 							),
 						),
 					),

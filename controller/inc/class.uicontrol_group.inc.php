@@ -98,7 +98,8 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New control group'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol_group.add'))
+								'href' => self::link(array('menuaction' => 'controller.uicontrol_group.add')),
+								'class' => 'new_item'
 							),
 						),
 					),

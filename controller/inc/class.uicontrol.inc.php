@@ -115,7 +115,8 @@
 							array(
 								'type' => 'link',
 								'value' => lang('New control'),
-								'href' => self::link(array('menuaction' => 'controller.uicontrol.view_control_details'))
+								'href' => self::link(array('menuaction' => 'controller.uicontrol.view_control_details')),
+								'class' => 'new_item'
 							),
 						),
 					),
