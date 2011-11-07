@@ -660,7 +660,7 @@
 							$values_combo_box[$i][]  = array
 							(
 								'id' 	=> '',
-								'name'	=> $attrib['input_text'],
+								'name'	=> lang('select') . " '{$attrib['input_text']}'"
 							);
 
 
