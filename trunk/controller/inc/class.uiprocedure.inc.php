@@ -265,7 +265,7 @@
 	
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 	
-				$this->use_yui_editor(array('purpose','description'));
+				$this->use_yui_editor(array('responsibility','description'));
 	
 				self::render_template_xsl('procedure_item', $data);
 			}
