@@ -296,5 +296,18 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		$result = implode(' ' , $result_arr);
 		return $result;
 	}
+	
+	public function get_arena_id_by_name($arena_name)
+	{
+		$result = 0;
+		if(isset($arena_name) && $arena_name != ''){
+	    	$q1="SELECT id FROM activity_arena WHERE UPPER(arena_name) = UPPER('{$arena_name}')";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$result = $this->db->f('id');
+			}
+    	}
+    	return $result;
+	}
 }
 ?>

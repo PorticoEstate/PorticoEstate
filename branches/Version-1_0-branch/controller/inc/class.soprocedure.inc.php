@@ -143,7 +143,9 @@ class controller_soprocedure extends controller_socommon
 		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
 		//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
-		$sql = "SELECT * FROM controller_procedure $order";
+		
+		$condition = "WHERE end_date IS NULL";
+		$sql = "SELECT * FROM controller_procedure $condition $order";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
 		while ($this->db->next_record()) {
@@ -174,7 +176,9 @@ class controller_soprocedure extends controller_socommon
 		$order = $sort ? "ORDER BY $sort $dir ": '';
 		
 		//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
-		$sql = "SELECT * FROM controller_procedure $order";
+		
+		$condition = "WHERE end_date IS NULL";
+		$sql = "SELECT * FROM controller_procedure $condition $order";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
 		while ($this->db->next_record()) {

@@ -43,11 +43,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('f_new_procedure'),
-								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add'))
-							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
                                 'text' => lang('Control_area').':',
@@ -61,6 +56,12 @@
 								'type' => 'submit',
 								'name' => 'search',
 								'value' => lang('Search')
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('t_new_procedure'),
+								'href' => self::link(array('menuaction' => 'controller.uiprocedure.add')),
+								'class' => 'new_item'
 							),
 						),
 					),
@@ -134,6 +135,16 @@
 					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 					
+					$revision = (int)$procedure->get_revision_no();
+					if($revision && is_numeric($revision) && $revision > 0)
+					{
+						$procedure->set_revision_no($revision);
+					}
+					else
+					{
+						$procedure->set_revision_no(1);
+					}
+					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
@@ -174,7 +185,7 @@
 					}
 					else
 					{
-						$procedure->set_revision_no(1);
+						$procedure->set_revision_no(2);
 					}
 					$procedure->set_title(phpgw::get_var('title'));
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
@@ -265,14 +276,7 @@
 	
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
 	
-	
-				//$GLOBALS['phpgw']->richtext->replace_element('purpose');
-				$this->use_yui_editor(array('purpose','description'));
-				//$GLOBALS['phpgw']->richtext->replace_element('description');
-				//$GLOBALS['phpgw']->richtext->generate_script(true);
-				//$GLOBALS['phpgw']->richtext->generate_script();
-	
-	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
+				$this->use_yui_editor(array('responsibility','description'));
 	
 				self::render_template_xsl('procedure_item', $data);
 			}
@@ -348,9 +352,7 @@
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
 					'img_go_home'			=> 'rental/templates/base/images/32x32/actions/go-home.png',
 					'procedure'				=> $procedure_array,
-					'start_date'			=> $procedure_start_date,
-					'end_date'				=> $procedure_end_date,
-					'revision_date'			=> $procedure_revision_date,
+					'dateformat'			=> $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 					'values'				=> $table_values,
 					'table_header'			=> $table_header,
 				);

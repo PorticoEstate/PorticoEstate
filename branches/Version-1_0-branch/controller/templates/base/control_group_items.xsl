@@ -1,4 +1,4 @@
-<xsl:template name="control_items" xmlns:php="http://php.net/xsl">
+<xsl:template name="control_group_items" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_booking_i18n"/>
 <div class="identifier-header">
