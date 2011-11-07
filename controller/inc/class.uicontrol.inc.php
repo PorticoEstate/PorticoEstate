@@ -192,8 +192,8 @@
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::render_template_xsl(array('control_tabs', 'control'), $data);
-			$GLOBALS['phpgw']->richtext->replace_element('description');
-			$GLOBALS['phpgw']->richtext->generate_script();
+			
+			$this->use_yui_editor(array('description'));
 		}
 		
 		public function save_control_details(){
