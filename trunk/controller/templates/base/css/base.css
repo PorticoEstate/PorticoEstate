@@ -721,6 +721,13 @@ ul.row li{
     padding-left: 10px;
     width: 50px;
 }
+.check_list li div.title{
+    width: 600px;
+    text-align:left;
+}
+.check_list li.heading div.title{
+    text-align:center;
+}
 .check_list li{
 	overflow:hidden;
 }
