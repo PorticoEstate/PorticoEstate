@@ -1,16 +1,18 @@
 <?php
 	include_class('controller', 'model', 'inc/model/');
 	
-	class controller_check_item extends controller_model
+	class controller_check_list extends controller_model
 	{
 		public static $so;
 
 		protected $id;
 		protected $control_id;
-		protected $check_list_id;
 		protected $status;
 		protected $comment;
 		protected $deadline;
+		protected $planned_date;
+		protected $completed_date;
+		protected $check_item_array = array();
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -37,13 +39,6 @@
 		
 		public function get_control_id() { return $this->control_id; }
 		
-		public function set_check_list_id($check_list_id)
-		{
-			$this->check_list_id = $check_list_id;
-		}
-		
-		public function get_check_list_id() { return $this->check_list_id; }
-		
 		public function set_status($status)
 		{
 			$this->status = $status;
@@ -65,6 +60,36 @@
 		
 		public function get_deadline() { return $this->deadline; }
 		
+		public function set_check_item_array($check_item_array)
+		{
+			$this->check_item_array = $check_item_array;
+		}
 		
+		public function get_check_item_array() { return $this->check_item_array; }
+		
+		public function set_planned_date($planned_date)
+		{
+			$this->planned_date = $planned_date;
+		}
+		
+		public function get_planned_date() { return $this->planned_date; }
+		
+		public function set_completed_date($completed_date)
+		{
+			$this->completed_date = $completed_date;
+		}
+		
+		public function get_completed_date() { return $this->completed_date; }
+		
+		public function serialize()
+		{
+			return array(
+				'id' => $this->get_id(),
+				'control_id' => $this->get_control_id(),
+				'status' => $this->get_status(),
+				'comment' => $this->get_comment(),
+				'deadline' => $this->get_deadline()
+				);
+		}
 	}
 ?>

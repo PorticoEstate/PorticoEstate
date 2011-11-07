@@ -2,6 +2,7 @@
 phpgw::import_class('controller.socommon');
 
 include_class('controller', 'control_group_list', 'inc/model/');
+include_class('controller', 'control_group', 'inc/model/');
 
 class controller_socontrol_group_list extends controller_socommon
 {
@@ -121,6 +122,27 @@ class controller_socontrol_group_list extends controller_socommon
 			return null;
 		}
 	}
+	
+	function get_control_groups_by_control_id($control_id)
+	{
+		$this->db->query("SELECT cg.*, cgl.order_nr FROM controller_control_group_list cgl, controller_control_group cg WHERE cgl.control_id=$control_id AND cgl.control_group_id=cg.id ORDER BY cgl.order_nr", __LINE__, __FILE__);
+
+		$control_group_list = array();
+		
+		while($this->db->next_record()){
+			
+			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
+			$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
+			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'int'));
+				
+			$control_group_list[] = $control_group;
+		}
+		
+		return $control_group_list;
+	}
+	
 	
 	protected function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
 	

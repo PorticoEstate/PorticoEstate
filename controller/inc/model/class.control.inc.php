@@ -24,14 +24,6 @@
 		protected $control_area_id;
 		protected $control_area_name;
 
-		/*
-		var $validate = array(
-	    	'title' => array(
-	       		'rule' => array('minLength', 0),
-	   			'message' => 'Kontrollen må ha en tittel'
-	   		));
-		*/
-		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.

@@ -92,7 +92,7 @@ label {
 				}
 
 .breadcrumbs{
-	margin-left: 10px;	
+	margin-left: 20px;	
 }
 
 ul.pathway {
@@ -196,7 +196,7 @@ div.identifier-header label {
     background-color: #eee;
     border: 1px solid #bbb;
     margin-bottom: 0em;
-    padding: .3em;
+    padding: 10px 30px;
 }
 
 #datatableToolbar {
@@ -420,7 +420,7 @@ h1 em {
 
 div.info, div.error, div.warning {
 	font-weight: normal;
-	margin:10px;
+	margin:20px;
 	padding:5px;
 	font-size:1.1em;
 	text-align: left;
@@ -491,13 +491,9 @@ ul.expand_list h4 span {
     padding-left: 5px;
     vertical-align: middle;
 }
-#play ul li{
-	cursor: move;
-	width:600px;
-}
 
 .yui-content input[type="submit"] {
-    margin: 0 0 15px 15px;
+    margin: 15px 0 0;
     padding: 1px 15px;
 }
 h1 img{
@@ -512,9 +508,12 @@ h1 img{
 	padding-left:0;
 }
 
+#control_tabview .yui-content{
+	padding:20px;
+}
+
 ul.itemlist {
-    margin: 1em 0;
-    padding-left: 20px;
+    position: relative;
 }
 ul.itemlist li {
     padding: 3px 0;
@@ -529,9 +528,28 @@ ul.itemlist h3 {
     margin: 0 0 5px;
 }
 
+ul.groups {
+    position: relative;
+}
+ul.groups li {
+    padding: 3px 0;
+}
+
+ul.groups li.odd{
+    background: none repeat scroll 0 0 #DBE7F5;
+}
+
+ul.groups h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+.drag_group {
+	width: 650px;
+}
+
 .yui-content h2{
-    margin: 1em 0;
-    padding-left: 20px;	
+    margin:0 0 10px;
 }
 
 #frm_control_items{
@@ -567,8 +585,8 @@ ul.itemlist h3 {
 }
 
 dl.proplist, dl.proplist-col {
-    margin: 5px 0;
-    padding-left: 15px;
+    margin: 0;
+    padding-left: 0;
 }
 
 .drag_elem{
@@ -592,15 +610,131 @@ dl.proplist, dl.proplist-col {
   left: 0px;
 }
 
-.list_item:hover{
+.list_item:hover, .drag_group:hover{
   cursor: move;
 }
 
 .frm_save_order input[type='submit']{
-	margin: 0 0 15px 15px;
+	margin: 10px 0 15px 0;
     width: 120px;
-}	
+}
 .delete {
     cursor: pointer;
     margin-left: 5px;
+}
+.yui-navset .yui-content.tab_content {
+	padding: 20px;
+}
+
+#datatable-container {
+    margin: 20px;
+}
+
+#paginator {
+	margin: 20px;
+}
+
+#paginator.top {
+	 margin: 20px 0 0 20px;
+}
+
+.yui-skin-sam .yui-button button, .yui-skin-sam .yui-button a, .yui-skin-sam .yui-button a:visited {
+ 	height: 24px;
+}
+
+#toolbar {
+    padding: 10px 20px;
+}
+
+#innertoolbar-button{
+	/*background: none repeat scroll 0 0 #CCCCCC;*/
+    color: #111111;
+}
+
+.yui-button.yui-link-button.new_button{
+	margin-left:30px;	
+}
+
+#view_check_lists {
+    padding: 30px;
+    width: 600px;
+}
+
+ul.th {
+	font-weight: bold;
+	overflow:hidden;	
+}
+
+ul.th li {
+    float: left;
+    margin-right: 20px;
+    padding: 3px 6px;
+    width: 100px;
+}
+
+ul.row{
+	overflow: hidden;	
+}
+
+ul.row li{
+	float:left;	
+	margin-right: 20px;
+    padding: 3px 6px;
+    width: 100px;
+}
+
+#main_content {
+	padding:20px;	
+}
+
+#main_content.groups{
+	cursor: default;	
+}
+#main_content fieldset{
+	padding:0;
+	margin:0;	
+}
+
+#main_content h1{
+	margin-top:0;
+}
+
+.check_list li div{
+	margin:3px;
+	width:200px;
+	float:left;
+	padding:2px;
+	text-align:center; 	
+}
+.check_list li.heading{
+	font-weight:bold;
+	padding-left:25px;
+    background: url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 -100px #D8D8DA;
+}
+.check_list li.heading div{
+	padding:1px;
+}
+.check_list li div.order_nr{
+	width:15px;
+}
+.check_list li div.status {
+    padding-left: 10px;
+    width: 50px;
+}
+.check_list li div.title{
+    width: 600px;
+    text-align:left;
+}
+.check_list li.heading div.title{
+    text-align:center;
+}
+.check_list li{
+	overflow:hidden;
+}
+fieldset.control_details label{
+	font-weight:bold;
+}
+.new_item a#innertoolbar-button{
+	background: grey;
+	font-weight: bold;
 }

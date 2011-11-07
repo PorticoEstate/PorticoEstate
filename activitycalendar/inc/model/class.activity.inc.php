@@ -284,7 +284,7 @@
 				$arena_name = activitycalendar_soarena::get_instance()->get_arena_name($this->get_arena());
 			}
 			
-			$activity_district = activitycalendar_soactivity::get_instance()->get_district_name($this->get_district());
+			$activity_district = $this->get_so()->get_district_name($this->get_district());
 			
 			return array(
 				'id' => $this->get_id(),

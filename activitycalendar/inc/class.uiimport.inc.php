@@ -232,20 +232,29 @@
 					$arena_name = $this->decode($data[8]);
 					$arena_address = $this->decode($data[10]);
 					$curr_arena_id = 0;
+					$existing_arena_id = 0;
 					$internal_arena_id = "";
 	
 					if($arena_name){
-						$arena->set_arena_name($arena_name);
-						$arena->set_address($arena_address);
-		
-						// All is good, store notification
-						if ($soarena->store($arena)) {
-							$this->messages[] = "Successfully imported arena: Name ({$arena_name})";
-							$curr_arena_id = $arena->get_id();
-						} else {
-							$this->errors[] = "Error importing arena: Name ({$arena_name})";
-							$curr_arena_id = 0;
-							$arenaOK = false;
+						$existing_arena_id = $soarena->get_arena_id_by_name($arena_name);
+						if($existing_arena_id > 0)
+						{
+							$curr_arena_id = $existing_arena_id;
+						}
+						else
+						{
+							$arena->set_arena_name($arena_name);
+							$arena->set_address($arena_address);
+			
+							// All is good, store notification
+							if ($soarena->store($arena)) {
+								$this->messages[] = "Successfully imported arena: Name ({$arena_name})";
+								$curr_arena_id = $arena->get_id();
+							} else {
+								$this->errors[] = "Error importing arena: Name ({$arena_name})";
+								$curr_arena_id = 0;
+								$arenaOK = false;
+							}
 						}
 					}
 					else

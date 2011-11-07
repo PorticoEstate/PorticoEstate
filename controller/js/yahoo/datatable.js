@@ -13,7 +13,7 @@ YAHOO.portico.renderUiFormItems = function(container) {
        if(type == 'link') {
            new YAHOO.widget.Button(items[i], 
                                    {type: 'link', 
-                                    href: items[i].getAttribute('href')});
+                                    href: items[i].getAttribute('href')}).addClass(items[i].getAttribute('class'));
        }
        else if(type == 'submit') {
            new YAHOO.widget.Button(items[i], {type: 'submit'});

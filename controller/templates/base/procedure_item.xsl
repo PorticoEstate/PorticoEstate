@@ -3,6 +3,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_booking_i18n"/>
+<xsl:variable name="dateformat"><xsl:value-of select="dateformat" /></xsl:variable>
 <div class="identifier-header">
 <h1><img src="{img_go_home}" /> 
 		<xsl:value-of select="php:function('lang', 'Procedure')" />
@@ -21,7 +22,7 @@
 					<dd>
 					<xsl:choose>
 						<xsl:when test="editable">
-							<input type="text" name="title" id="title" value="{procedure/title}" />
+							<input type="text" name="title" id="title" value="{procedure/title}" size="100"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="procedure/title" />
@@ -34,6 +35,68 @@
 					<dd>
 						<xsl:value-of select="procedure/revision_no" />
 					</dd>
+					<dt>
+						<label for="control_area"><xsl:value-of select="php:function('lang','Control area')" /></label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<select id="control_area" name="control_area">
+								<option value="0">Ingen valgt</option>
+								<xsl:apply-templates select="control_area/options"/>
+							</select>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="procedure/control_area_name" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					<dt>
+						<label for="start_date"><xsl:value-of select="php:function('lang','Procedure start date')" /></label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<xsl:value-of disable-output-escaping="yes" select="start_date"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="startdate"><xsl:value-of select="procedure/start_date" /></xsl:variable>
+							<xsl:value-of select="php:function('date', $dateformat, $startdate)" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					<dt>
+						<label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<xsl:value-of disable-output-escaping="yes" select="revision_date"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="procedure/revision_date != 0">
+								<xsl:variable name="revisiondate"><xsl:value-of select="procedure/revision_date" /></xsl:variable>
+								<xsl:value-of select="php:function('date', $dateformat, $revisiondate)" />
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					<xsl:if test="procedure/end_date != 0">
+					<dt>
+						<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
+					</dt>
+					<dd>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<xsl:value-of disable-output-escaping="yes" select="end_date"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="enddate"><xsl:value-of select="procedure/end_date" /></xsl:variable>
+							<xsl:value-of select="php:function('date', $dateformat, $enddate)" />
+						</xsl:otherwise>
+					</xsl:choose>
+					</dd>
+					</xsl:if>
 					<dt>
 						<label for="purpose"><xsl:value-of select="php:function('lang','Procedure purpose')" /></label>
 					</dt>
@@ -61,22 +124,6 @@
 					</xsl:choose>
 					</dd>
 					<dt>
-						<label for="control_area"><xsl:value-of select="php:function('lang','Control area')" /></label>
-					</dt>
-					<dd>
-					<xsl:choose>
-						<xsl:when test="editable">
-							<select id="control_area" name="control_area">
-								<option value="0">Ingen valgt</option>
-								<xsl:apply-templates select="control_area/options"/>
-							</select>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="procedure/control_area_name" />
-						</xsl:otherwise>
-					</xsl:choose>
-					</dd>
-					<dt>
 						<label for="description"><xsl:value-of select="php:function('lang','Procedure description')" /></label>
 					</dt>
 					<dd>
@@ -89,26 +136,6 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					</dd>
-					<dt>
-						<label for="start_date"><xsl:value-of select="php:function('lang','Procedure start date')" /></label>
-					</dt>
-					<dd>
-						<xsl:value-of disable-output-escaping="yes" select="start_date"/>
-					</dd>
-					<dt>
-						<label for="revision_date"><xsl:value-of select="php:function('lang','Procedure revision date')" /></label>
-					</dt>
-					<dd>
-						<xsl:value-of disable-output-escaping="yes" select="revision_date"/>
-					</dd>
-					<xsl:if test="end_date != ''">
-					<dt>
-						<label for="end_date"><xsl:value-of select="php:function('lang','Procedure end date')" /></label>
-					</dt>
-					<dd>
-						<xsl:value-of disable-output-escaping="yes" select="end_date"/>
-					</dd>
-					</xsl:if>
 					<dt>
 						<label for="reference"><xsl:value-of select="php:function('lang','Procedure Reference')" /></label>
 					</dt>

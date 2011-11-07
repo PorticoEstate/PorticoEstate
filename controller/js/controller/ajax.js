@@ -27,6 +27,9 @@ $(document).ready(function(){
 				  window.setTimeout(function() {
 					  $(this_submit_btn).val('Lagre rekkefølge');
 					 }, 1000);
+				  
+				  $(this_submit_btn).css({opacity: 0.5 });
+				  $(this_submit_btn).attr('disabled', 'disabled');
 				}
 			});	
 	});

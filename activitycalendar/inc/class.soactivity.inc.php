@@ -456,14 +456,17 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values = array();
 		if($district_id != null)
 		{
-			$sql = "SELECT name FROM fm_part_of_town where part_of_town_id in ($district_id)";
+			$sql = "SELECT district_id, name FROM fm_part_of_town where part_of_town_id in ($district_id)";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while($this->db->next_record()){
-				$values[] = $this->db->f('name');
+				$name = $this->db->f('name');
+				$values[] = $name;
+				//$result .= $name . ',';
 			}
+			$result = implode(", ",$values);
+			return $result;
     	}
-    	$result = implode(",",$values);
-		return $result;
+    	return "";
 	}
 	
 	function get_districts()
