@@ -213,8 +213,9 @@
 			
 			$control->populate();
 			$control_id = $this->so->store($control);
+			$control_title = $control->get_title();
 		
-			$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id'=>$control_id, 'control_area_id'=>$control->get_control_area_id()));	
+			$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id'=>$control_id, 'control_area_id'=>$control->get_control_area_id(), 'control_title'=>$control_title));	
 		}
 						
 		// Displays control groups based on which chosen control area
@@ -222,6 +223,7 @@
 			
 			$control_id = phpgw::get_var('control_id');
 			$control_area_id = phpgw::get_var('control_area_id');
+			$control_title = phpgw::get_var('control_title');
 			
 			$control_area = $this->so_control_area->get_single( $control_area_id );
 						
@@ -250,6 +252,7 @@
 				'view'						=> "control_groups",
 				'editable' 					=> true,
 				'control_id'				=> $control_id,
+				'control_title'				=> $control_title,
 				'control_area'				=> $control_area->toArray(),
 				'control_groups'			=> $control_groups_as_array
 			);
@@ -262,6 +265,7 @@
 		public function view_control_items(){
 			$control_id = phpgw::get_var('control_id', 'int');
 			$control = $this->so->get_single($control_id);
+			$control_title = $control->get_title();
 			
 			$control_group_ids = array();
 			$control_group_ids = phpgw::get_var('control_group_ids');
@@ -300,6 +304,7 @@
 				'view'						=> 'control_items',
 				'control_group_ids'			=> implode($control_group_ids, ","),
 				'control_id'				=> $control_id,
+				'control_title'				=> $control_title,
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			
@@ -312,6 +317,7 @@
 		// Saves chosen control items through receiving a comma separated list of control tags (1:2, control_group_id:control_item_id) 
 		public function save_control_items(){
 			$control_id = phpgw::get_var('control_id');
+			$control_title = phpgw::get_var('control_title');
 			$control_group_ids = explode(",", phpgw::get_var('control_group_ids'));
 			
 			// Fetching selected control items. Tags are on the format 1:2 (group:item). 
@@ -345,12 +351,13 @@
 				$this->so_control_item_list->add($control_item_list);
 			}	
 	
-			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list', 'control_id'=>$control_id, 'control_group_ids'=>$control_group_ids, 'control_tag_ids'=>$control_tag_ids ));	
+			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list', 'control_id'=>$control_id, 'control_title'=>$control_title, 'control_group_ids'=>$control_group_ids, 'control_tag_ids'=>$control_tag_ids ));	
 		}
 		
 		public function view_check_list(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);
+			$control_title = $control->get_title();
 			
 			$control_group_ids = phpgw::get_var('control_group_ids');
 			
@@ -411,7 +418,8 @@
 			(
 				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 3),
 				'view'					=> "check_list",
-				'control_id'				=> $control_id,
+				'control_id'			=> $control_id,
+				'control_title'			=> $control_title,
 				'saved_groups_with_items_array'	=> $saved_groups_with_items_array
 			);
 			
