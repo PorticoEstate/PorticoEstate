@@ -152,6 +152,10 @@ function stop_drag(){
 
 	$(document).unbind("mousemove");
 	$(document).unbind("mouseup");
+	
+	var thisForm = $(this);
+	var this_submit_btn = $(thisForm).find("input[type='submit']");
+	$(this_submit_btn).css({opacity: 1 });
 }
 
 //Release binding for mouse events
