@@ -65,15 +65,14 @@
 	$test[] = '0.1.3';
 	function controller_upgrade0_1_3()
 	{
-		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE controller_control_group DROP COLUMN order_nr");	
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('controller_control_group', array(), 'order_nr');
 			
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.4';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 	
-	/* Update Controller from v 0.1.4 to 0.1.5
-	 */
-
+	/* Update Controller from v 0.1.4 to 0.1.5 */
+	
 	$test[] = '0.1.4';
 	function controller_upgrade0_1_4()
 	{
@@ -87,8 +86,7 @@
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
 	
-	/* Update Controller from v 0.1.5 to 0.1.6
-	 */
+	/* Update Controller from v 0.1.5 to 0.1.6 */
 	
 	$test[] = '0.1.5';
 	function controller_upgrade0_1_5()
