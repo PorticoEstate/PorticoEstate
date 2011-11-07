@@ -134,6 +134,16 @@
 					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 					
+					$revision = (int)$procedure->get_revision_no();
+					if($revision && is_numeric($revision) && $revision > 0)
+					{
+						$procedure->set_revision_no($revision);
+					}
+					else
+					{
+						$procedure->set_revision_no(1);
+					}
+					
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
@@ -174,7 +184,7 @@
 					}
 					else
 					{
-						$procedure->set_revision_no(1);
+						$procedure->set_revision_no(2);
 					}
 					$procedure->set_title(phpgw::get_var('title'));
 					$procedure->set_purpose(phpgw::get_var('purpose','html'));
