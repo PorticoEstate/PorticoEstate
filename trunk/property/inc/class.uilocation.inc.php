@@ -2390,10 +2390,32 @@ JS;
 								$_keys[] = $_substitute;
 								$_values[] = urlencode($values[trim($_substitute, '_')]);
 							}
-							$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
+							//$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
+							$integration_src .= 'ctittel=5374.019%';
 						}
 
 						$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
+						
+						//FIXME NOT WORKING!! test for webservice, auth...
+						if(isset($_config_section_data['method']) && $_config_section_data['method'] == 'POST')
+						{
+							$aContext = array
+							(
+								'http' => array
+								(
+									'method'			=> 'POST',
+									'request_fulluri'	=> true,
+								),
+							);
+	
+							if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+							{
+								$aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+							}
+	
+							$cxContext = stream_context_create($aContext);
+							$response = trim(file_get_contents($integration_src, False, $cxContext));
+						}
 						//_debug_array($values);
 						//_debug_array($integration_src);die();
 
