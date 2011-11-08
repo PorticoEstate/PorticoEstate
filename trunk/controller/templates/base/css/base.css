@@ -388,7 +388,7 @@ input.postcode {
 h1 img, li img {
 	vertical-align: middle;
 }
-
+/*
 fieldset h3 {
 	display:block;
 	float:left;
@@ -396,7 +396,7 @@ fieldset h3 {
 	margin:0;
 	width:120px;
 }
-
+*/
 /* Set up common form styles.  TODO: needs refinement. */
 legend, label, input, select {
     margin: 0 13px 0 0;
@@ -706,6 +706,18 @@ ul.row li{
 	padding:2px;
 	text-align:center; 	
 }
+#main_content fieldset.check_list_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    padding: 15px;
+}
+
+#main_content fieldset.check_item_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    padding: 15px;
+}
+
 .check_list li.heading{
 	font-weight:bold;
 	padding-left:25px;
@@ -734,7 +746,65 @@ ul.row li{
 fieldset.control_details label{
 	font-weight:bold;
 }
+fieldset.check_list_details{
+	clear: both;
+}
+fieldset.check_list_details label{
+	font-weight:bold;
+	float:left;
+	width:150px;
+}
+fieldset.check_list_details div{
+	clear:left;
+	margin:5px 0;
+}
+fieldset.check_list_details textarea{
+	width:400px;
+	height:100px;
+}
+fieldset.check_item_details label{
+	font-weight:normal;
+	vertical-align:top;
+	float:left;
+}
+fieldset.check_item_details h3 {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.check_item{
+    margin: 25px 0;
+}
+.check_item div{
+    margin: 5px 0;
+    clear:left;
+}
+h2.check_item_details{
+	margin-bottom:5px;	
+}
+.check_item textarea{
+	width:400px;
+	height:100px;	
+}
+.check_item label{
+	width:150px;	
+}
 .new_item a#innertoolbar-button{
 	background: grey;
 	font-weight: bold;
+}
+#frm_save_check_items input[type="submit"]{
+	padding: 3px 30px;	
+}
+.form-buttons-top{
+	float: right;
+	margin-bottom:5px;
+}
+.form-buttons-top input[type="submit"]{
+	margin:0;
+}
+#frm_save_check_items h1 {
+    float: left;
+    margin: 5px 0;
 }
