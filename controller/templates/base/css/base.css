@@ -808,3 +808,6 @@ h2.check_item_details{
     float: left;
     margin: 5px 0;
 }
+ul.check_list {
+	width: 925px;	
+}
