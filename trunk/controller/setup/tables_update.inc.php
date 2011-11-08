@@ -108,4 +108,25 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.6';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	/* Update Controller from v 0.1.6 to 0.1.7 */
+	
+	$test[] = '0.1.6';
+	function controller_upgrade0_1_6()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','location_code',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','equipment_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+		
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.7';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
 ?>

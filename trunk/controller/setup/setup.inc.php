@@ -1,6 +1,6 @@
 <?php
 	$setup_info['controller']['name'] = 'controller';
-	$setup_info['controller']['version'] = '0.1.6';
+	$setup_info['controller']['version'] = '0.1.7';
 	$setup_info['controller']['app_order'] = 100;
 	$setup_info['controller']['enable'] = 1;
 	$setup_info['controller']['app_group']	= 'office';
