@@ -1,4 +1,4 @@
-<xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
+<xsl:template name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
 <div id="main_content">
