@@ -20,7 +20,9 @@
 			'index'	=>	true,
 			'view_check_lists_for_control'	=>	true,
 			'save_check_list'	=>	true,
-			'view_check_list'	=>	true
+			'view_check_list'	=>	true,
+			'edit_check_list'	=>	true,
+			'save_check_items'	=>	true
 		);
 
 		public function __construct()
@@ -54,29 +56,48 @@
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
+			
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
 			$data = array
 			(
-				'check_list' => $check_list
+				'check_list' => $check_list,
+				'date_format' => $date_format
 			);
 			
-			//print_r($check_list);
-			
 			self::render_template_xsl('view_check_list', $data);
+		}
+		
+		public function edit_check_list()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
+			
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+	
+			$data = array
+			(
+				'check_list' 	=> $check_list,
+				'date_format' 	=> $date_format
+			);
+			
+			self::render_template_xsl('edit_check_list', $data);
 		}
 		
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
-
+			
+			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		
 			$check_list_array = $this->so->get_check_lists_for_control( $control_id );	
 			
 			$data = array
 			(
 				'control_as_array'	=> $control->toArray(),
-				'check_list_array'		=> $check_list_array
+				'check_list_array'	=> $check_list_array,
+				'date_format' 		=> $date_format
 			);
 			
 			self::render_template_xsl('view_check_lists', $data);
@@ -106,6 +127,25 @@
 			);
 								
 			self::render_template_xsl('view_check_list', $data);
+		}
+		
+		public function save_check_items(){
+			$check_item_ids = phpgw::get_var('check_item_ids');
+			$check_list_id = phpgw::get_var('check_list_id');
+			
+			forEach($check_item_ids as $check_item_id){
+				$status = phpgw::get_var('status_' . $check_item_id);
+				$comment = phpgw::get_var('comment_' . $check_item_id);
+				
+				$check_item = $this->so_check_item->get_single($check_item_id);
+				
+				$check_item->set_status( $status );
+				$check_item->set_comment( $comment );
+				
+				$this->so_check_item->store( $check_item );
+			}
+			
+			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list', 'check_list_id'=>$check_list_id));	
 		}
 		
 		public function save_check_list(){
