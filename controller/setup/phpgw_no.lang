@@ -1,5 +1,11 @@
 control	controller	no	Kontroll
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
+Check_list	controller	no	Sjekkliste
+Check_lists	controller	no	Sjekklister
+Choose_control_groups	controller	no	Velg kontrollgrupper
+Choose_control_items	controller	no	Velg kontrollpunkt
+Sort_check_list	controller	no	Sorter sjekkliste
+Show_check_lists	controller	no	Vis sjekklister
 title	controller	no	kontroll
 close	controller	no	Lukk
 clear	controller	no	Nullstill
