@@ -133,7 +133,7 @@
 			$check_item_ids = phpgw::get_var('check_item_ids');
 			$check_list_id = phpgw::get_var('check_list_id');
 			
-			forEach($check_item_ids as $check_item_id){
+			foreach($check_item_ids as $check_item_id){
 				$status = phpgw::get_var('status_' . $check_item_id);
 				$comment = phpgw::get_var('comment_' . $check_item_id);
 				
@@ -149,6 +149,49 @@
 		}
 		
 		public function save_check_list(){
+			$control_id = phpgw::get_var('control_id');
+			$control = $this->so_control->get_single($control_id);
+
+			$start_date = $control->get_start_date();
+			$end_date = $control->get_end_date();
+			$repeat_type = $control->get_repeat_type();
+			$repeat_interval = $control->get_repeat_interval();
+			
+			$status = true;
+			$comment = "Kommentar for sjekkliste";
+			$deadline = $start_date;
+			
+			// Saving check_list
+			$new_check_list = new controller_check_list();
+			$new_check_list->set_control_id( $control_id );
+			$new_check_list->set_status( $status );
+			$new_check_list->set_comment( $comment );
+			$new_check_list->set_deadline( $deadline );
+			
+			$check_list_id = $this->so_check_list->store( $new_check_list );
+			
+			$control_items_list = $this->so_control_item->get_control_items_by_control_id($control_id);
+			
+			foreach($control_items_list as $control_item){
+				
+				$status = true;
+				$comment = "Kommentar for sjekk item";
+				
+				// Saving check_items for a list
+				$new_check_item = new controller_check_item();
+				$new_check_item->set_check_list_id( $check_list_id );
+				
+				$new_check_item->set_control_item_id( $control_item->get_id() );
+				$new_check_item->set_status( $status );
+				$new_check_item->set_comment( $comment );
+
+				$saved_check_item = $this->so_check_item->store( $new_check_item );
+			}
+			
+			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));	
+		}
+		
+		public function make_check_list_for_control(){
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
 
