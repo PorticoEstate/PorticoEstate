@@ -54,8 +54,25 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
+	
+		protected $id;
+		protected $title;
+		protected $required;
+		protected $what_to_do;
+		protected $how_to_do;
+		protected $control_group_id;
+		
+	
 	public function get_single_with_control_item($check_list_id){
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, coi.title as control_item_title FROM controller_check_list cl, controller_check_item ci, controller_control_item as coi WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id AND ci.control_item_id=coi.id;";
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ";
+		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
+		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
+		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id "; 
+		$sql .= "FROM controller_check_list cl, controller_check_item ci, controller_control_item as coi "; 
+		$sql .= "WHERE cl.id = $check_list_id ";
+		$sql .= "AND cl.id = ci.check_list_id ";
+		$sql .= "AND ci.control_item_id=coi.id;";
+		
 		$this->db->query($sql);
 		
 		$counter = 0;
@@ -75,8 +92,12 @@ class controller_socheck_list extends controller_socommon
 			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
 			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
 			
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$control_item->set_title($this->db->f('control_item_title', true), 'string');
+			$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
+			$control_item->set_title($this->db->f('coi_title', true), 'string');
+			$control_item->set_required($this->db->f('coi_required', true), 'string');
+			$control_item->set_what_to_do($this->db->f('coi_what_to_do', true), 'string');
+			$control_item->set_how_to_do($this->db->f('coi_how_to_do', true), 'string');
+			$control_item->set_control_group_id($this->db->f('coi_control_group_id', true), 'string');
 			
 			$check_item->set_control_item($control_item->toArray());
 			
