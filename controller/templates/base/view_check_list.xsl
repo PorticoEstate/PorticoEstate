@@ -1,4 +1,5 @@
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
+<xsl:variable name="date_format">d/m-Y</xsl:variable>
 
 <div id="main_content">
 		
@@ -7,8 +8,11 @@
 		<h1>Sjekkliste</h1>
 		<fieldset class="control_details">
 			<label>Tittel</label><xsl:value-of select="check_list/status"/><br/>
-			<label>Startdato</label><xsl:value-of select="check_list/comment"/><br/>
-			<label>Sluttdato</label><xsl:value-of select="check_list/deadline"/><br/>
+			<label>Kommentar</label><xsl:value-of select="check_list/comment"/><br/>
+			<label>Skal utføres innen</label>
+			<xsl:if test="check_list/deadline != ''">
+				<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/><br/>
+			</xsl:if>
 		</fieldset>
 				
 		<h2>Sjekkpunkter</h2>
@@ -30,6 +34,9 @@
 								<xsl:when test="status = 1">
 									<img height="15" src="controller/images/status_icon_light_green.png" />	
 								</xsl:when>
+								<xsl:otherwise>
+									<img height="15" src="controller/images/status_icon_red.png" />
+								</xsl:otherwise>
 							</xsl:choose>
 					       </div>
 					       <div class="title"><xsl:value-of select="control_item/title"/></div>
@@ -42,5 +49,15 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</ul>
+		
+		<a>
+			<xsl:attribute name="href">
+			<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+			</xsl:attribute>
+			<div>Registrer sjekkliste</div>
+		</a>
+		
 </div>
 </xsl:template>
