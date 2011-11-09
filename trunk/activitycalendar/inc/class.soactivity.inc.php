@@ -450,6 +450,16 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_district_from_id($d_id)
+	{
+		$this->db->query("SELECT name FROM fm_part_of_town where part_of_town_id={$d_id} ", __LINE__, __FILE__);
+		while($this->db->next_record()){
+			$result = $this->db->f('name');
+		}	
+		return $result;
+	}
+	
+	
 	function get_district_name($district_id)
 	{
 		//$result = "Ingen";
