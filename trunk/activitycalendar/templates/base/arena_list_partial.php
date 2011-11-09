@@ -22,11 +22,6 @@
 	    sortable: true
 	},
 	{
-		key: "internal_arena_id",
-		label: "<?php echo lang('internal_arena_id') ?>",
-	    sortable: true
-	},
-	{
 		key: "address",
 		label: "<?php echo lang('address') ?>",
 	    sortable: true
@@ -92,7 +87,6 @@
         window.location = 'index.php?menuaction=activitycalendar.uiarena.download'+
             '<?php echo $url_add_on; ?>'+
             '&amp;query='+query+
-            '&amp;arena_type='+aType+
             '&amp;active='+active+
         	'&amp;export=true';
     }
@@ -114,12 +108,6 @@
 
 	<fieldset>
 		<!-- Filters -->
-		<label class="toolbar_element_label" for="ctrl_toggle_arena_type"><?php echo lang('arena_type') ?></label>
-		<select name="arena_type" id="<?php echo $list_id ?>_ctrl_toggle_arena_type">
-			<option value="all"><?php echo lang('all') ?></option>
-			<option value="internal"><?php echo lang('internal') ?></option>
-			<option value="not_internal" ><?php echo lang('not_internal') ?></option>
-		</select>
 		<label class="toolbar_element_label" for="<?php echo $list_id ?>_ctrl_toggle_active"><?php echo lang('marked_as') ?></label>
 		<select name="active" id="<?php echo $list_id ?>_ctrl_toggle_active">
 			<option value="all" <?php echo ($status == 'all') ? 'selected' : ''?>><?php echo lang('all') ?></option>
