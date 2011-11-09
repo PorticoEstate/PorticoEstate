@@ -699,12 +699,12 @@ ul.row li{
 	margin-top:0;
 }
 
-.check_list li div{
-	margin:3px;
-	width:200px;
-	float:left;
-	padding:2px;
-	text-align:center; 	
+.check_list li div {
+    float: left;
+    margin: 5px;
+    padding: 2px;
+    text-align: center;
+    width: 190px;
 }
 #main_content fieldset.check_list_details{
 	background: none repeat scroll 0 0 #EDF5FF;
@@ -718,13 +718,14 @@ ul.row li{
     padding: 15px;
 }
 
-.check_list li.heading{
-	font-weight:bold;
-	padding-left:25px;
-    background: url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 -100px #D8D8DA;
+.check_list li.heading {
+    background: url("/pe/phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 0 #D8D8D8;
+    height: 20px;
+    padding-left: 25px;
 }
-.check_list li.heading div{
-	padding:1px;
+.check_list li.heading div {
+    margin: 0 5px;
+    padding: 2px;
 }
 .check_list li div.order_nr{
 	width:15px;
@@ -743,21 +744,28 @@ ul.row li{
 .check_list li{
 	overflow:hidden;
 }
-fieldset.control_details label{
-	font-weight:bold;
-}
 fieldset.check_list_details{
 	clear: both;
 }
 fieldset.check_list_details label{
 	font-weight:bold;
-	float:left;
 	width:150px;
 }
 fieldset.check_list_details div{
 	clear:left;
 	margin:5px 0;
 }
+
+fieldset.tab_check_list_details label {
+    display: inline-block;
+    font-weight: bold;
+    width: 100px;
+}
+fieldset.tab_check_list_details {
+    padding: 0 0 10px 0;
+}
+
+
 fieldset.check_list_details textarea{
 	width:400px;
 	height:100px;
@@ -772,7 +780,11 @@ fieldset.check_item_details h3 {
     font-weight: bold;
     margin: 10px 0;
 }
-
+fieldset.check_list_details label{
+	display: inline-block;
+    font-weight: bold;
+    width: 100px;
+}
 .check_item{
     margin: 25px 0;
 }
