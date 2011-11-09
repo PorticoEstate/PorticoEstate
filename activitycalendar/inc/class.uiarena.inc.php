@@ -63,6 +63,11 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 
 		$errorMsgs = array();
 		$infoMsgs = array();
+		$saved_OK = phpgw::get_var('saved_ok');
+		if($saved_OK)
+		{
+			$message = lang('arena_saved_form');
+		}
 		$arena = activitycalendar_soarena::get_instance()->get_single((int)phpgw::get_var('id'));
 		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiarena.index'));
 		
@@ -74,6 +79,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		(
 			'arena' => $arena,
 			'cancel_link' => $cancel_link,
+			'message' => $message,
 			'errorMsgs' => $errorMsgs,
 			'infoMsgs' => $infoMsgs
 		);
@@ -119,7 +125,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 					$error = lang('messages_form_error');
 				}
 			}
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $arena->get_id()));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $arena->get_id(), 'saved_ok' => 'yes'));
 		}
 
 		return $this->render('arena.php', array
