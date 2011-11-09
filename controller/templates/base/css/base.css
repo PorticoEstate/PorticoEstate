@@ -388,7 +388,7 @@ input.postcode {
 h1 img, li img {
 	vertical-align: middle;
 }
-
+/*
 fieldset h3 {
 	display:block;
 	float:left;
@@ -396,7 +396,7 @@ fieldset h3 {
 	margin:0;
 	width:120px;
 }
-
+*/
 /* Set up common form styles.  TODO: needs refinement. */
 legend, label, input, select {
     margin: 0 13px 0 0;
@@ -699,20 +699,33 @@ ul.row li{
 	margin-top:0;
 }
 
-.check_list li div{
-	margin:3px;
-	width:200px;
-	float:left;
-	padding:2px;
-	text-align:center; 	
+.check_list li div {
+    float: left;
+    margin: 5px;
+    padding: 2px;
+    text-align: center;
+    width: 190px;
 }
-.check_list li.heading{
-	font-weight:bold;
-	padding-left:25px;
-    background: url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 -100px #D8D8DA;
+#main_content fieldset.check_list_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    padding: 15px;
 }
-.check_list li.heading div{
-	padding:1px;
+
+#main_content fieldset.check_item_details{
+	background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    padding: 15px;
+}
+
+.check_list li.heading {
+    background: url("/pe/phpgwapi/js/yahoo/assets/skins/sam/sprite.png") repeat-x scroll 0 0 #D8D8D8;
+    height: 20px;
+    padding-left: 25px;
+}
+.check_list li.heading div {
+    margin: 0 5px;
+    padding: 2px;
 }
 .check_list li div.order_nr{
 	width:15px;
@@ -731,10 +744,82 @@ ul.row li{
 .check_list li{
 	overflow:hidden;
 }
-fieldset.control_details label{
+fieldset.check_list_details{
+	clear: both;
+}
+fieldset.check_list_details label{
 	font-weight:bold;
+	width:150px;
+}
+fieldset.check_list_details div{
+	clear:left;
+	margin:5px 0;
+}
+
+fieldset.tab_check_list_details label {
+    display: inline-block;
+    font-weight: bold;
+    width: 100px;
+}
+fieldset.tab_check_list_details {
+    padding: 0 0 10px 0;
+}
+
+
+fieldset.check_list_details textarea{
+	width:400px;
+	height:100px;
+}
+fieldset.check_item_details label{
+	font-weight:normal;
+	vertical-align:top;
+	float:left;
+}
+fieldset.check_item_details h3 {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+fieldset.check_list_details label{
+	display: inline-block;
+    font-weight: bold;
+    width: 100px;
+}
+.check_item{
+    margin: 25px 0;
+}
+.check_item div{
+    margin: 5px 0;
+    clear:left;
+}
+h2.check_item_details{
+	margin-bottom:5px;	
+}
+.check_item textarea{
+	width:400px;
+	height:100px;	
+}
+.check_item label{
+	width:150px;	
 }
 .new_item a#innertoolbar-button{
 	background: grey;
 	font-weight: bold;
+}
+#frm_save_check_items input[type="submit"]{
+	padding: 3px 30px;	
+}
+.form-buttons-top{
+	float: right;
+	margin-bottom:5px;
+}
+.form-buttons-top input[type="submit"]{
+	margin:0;
+}
+#frm_save_check_items h1 {
+    float: left;
+    margin: 5px 0;
+}
+ul.check_list {
+	width: 925px;	
 }

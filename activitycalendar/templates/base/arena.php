@@ -14,10 +14,11 @@ function get_address_search()
 
 var divcontent_start = "<select name=\"address\" id=\"address\" size\"5\">";
 var divcontent_end = "</select>";
+var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo lang('address_number') ?></label><input type=\"text\" name=\"address_no\" id=\"address_no\" size=\"6\"/>"
 	
 	var callback = {
 		success: function(response){
-					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end; 
+					div_address.innerHTML = divcontent_start + JSON.parse(response.responseText) + divcontent_end + divcontent_number; 
 				},
 		failure: function(o) {
 					 alert("AJAX doesn't work"); //FAILURE
@@ -27,7 +28,7 @@ var divcontent_end = "</select>";
 	
 }
 </script>
-
+<?php echo activitycalendar_uicommon::get_page_message($message) ?>
 <div class="identifier-header">
 	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('arena') ?></h1>
 	<div>
@@ -60,34 +61,6 @@ var divcontent_end = "</select>";
 					?>
 				</dd>
 				<dt>
-					<?php if($arena->get_internal_arena_id() || $editable) { ?>
-					<label for="internal_arena_id"><?php echo lang('internal_arena') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
-					<?php
-					$current_building_id = $arena->get_internal_arena_id();
-					if ($editable)
-					{
-						?>
-						<select name="internal_arena_id">
-							<option value="0">Ingen arena valgt</option>
-							<?php
-							foreach($buildings as $building_id => $building_name)
-							{
-								echo "<option ".($current_building_id == $building_id? 'selected="selected"' : "")." value=\"{$building_id}\">".$building_name."</option>";
-							}
-							?>
-						</select>
-						<?php
-					}
-					else
-					{
-						echo activitycalendar_soarena::get_instance()->get_building_name($arena->get_internal_arena_id());
-					}
-					?>
-				</dd>
-				<dt>
 					<?php if($arena->get_address() || $editable) { ?>
 					<label for="address"><?php echo lang('address') ?></label>
 					<?php  } ?>
@@ -99,7 +72,6 @@ var divcontent_end = "</select>";
 					?>
 					 	<input type="text" name="address" id="address_txt" value="<?php echo $arena->get_address() ?>" onkeyup="javascript:get_address_search()"/>
 					 	<div id="address_container"></div>
-					 	<label for="address_number"><?php echo lang('address_number') ?></label><input type="text" name="address_no" id="address_no"/>
 					<?php
 					}
 					else
@@ -113,7 +85,10 @@ var divcontent_end = "</select>";
 						<label for="arena_active"><?php echo lang('active_arena') ?></label>
 					</dt>
 					<dd>
-						<input type="checkbox" name="arena_active" id="arena_active" <?php if($arena->is_active()) { echo "checked='checked'";} ?>/>
+						<select name="arena_active" id="arena_active">
+							<option value="yes" <?php if($arena->is_active()) { echo "selected";} ?>><?php echo lang('active')?></option>
+							<option value="no" <?php if(!$arena->is_active()) { echo "selected";} ?>><?php echo lang('inactive')?></option>
+						</select>
 					</dd>
 				<?php 
 				}else{ 
@@ -126,6 +101,11 @@ var divcontent_end = "</select>";
 				<?php
 					if ($editable) {
 						echo '<input type="submit" name="save_arena" value="' . lang('save') . '"/>';
+						echo '<a href="'.$cancel_link.'">' . lang('cancel') . '</a>';
+					}
+					else
+					{
+						echo '<a href="'.$cancel_link.'">' . lang('back') . '</a>';
 					}
 				?>
 			</div>

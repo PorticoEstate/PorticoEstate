@@ -245,6 +245,7 @@
 						{
 							$arena->set_arena_name($arena_name);
 							$arena->set_address($arena_address);
+							$arena->set_active(true);
 			
 							// All is good, store notification
 							if ($soarena->store($arena)) {

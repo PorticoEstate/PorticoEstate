@@ -127,6 +127,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 			$persons = $so_org->get_contacts($o_id);
 			$desc = $so_org->get_description($o_id);
 		}
+		
+		if(strlen($desc) > 254)
+		{
+			$desc = substr($desc,0,254);
+		}
 		$arenas = $so_arena->get(null, null, null, null, null, null, null);
 		if($activity->get_new_org())
 		{

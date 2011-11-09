@@ -380,7 +380,7 @@ mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i komm
 mail_body_state_5	activitycalendar	no	Ditt tips er behandlet, men vil ikke bli publisert i kommuneportalen. Mvh %1 kulturkontor
 send_mail	activitycalendar	no	Send e-post
 marked_as	activitycalendar	no	Status
-address_number	activitycalendar	no	Nummer
+address_number	activitycalendar	no	Husnummer
 changed_organizations_groups	activitycalendar	no	Endrede organisasjoner/grupper
 changed_org_group	activitycalendar	no	Endringer
 building	activitycalendar	no	Kommunale bygg
@@ -394,3 +394,8 @@ inactive_arena	activitycalendar	no	Inaktiv
 change_type	activitycalendar	no	Endringstype
 added	activitycalendar	no	Lagt til i organisasjonsregisteret
 store	activitycalendar	no	Overfør til organisasjonsregister
+back	activitycalendar	no	Tilbake
+arena_saved_form	activitycalendar	no	Arena ble lagret
+activity_saved_form	activitycalendar	no	Aktiviteten ble lagret
+organization_saved_form	activitycalendar	no	Organisasjonen ble lagret
+group_saved_form	activitycalendar	no	Gruppen ble lagret
