@@ -28,7 +28,7 @@ var divcontent_number = "&nbsp;&nbsp;<label for=\"address_number\"><?php echo la
 	
 }
 </script>
-
+<?php echo activitycalendar_uicommon::get_page_message($message) ?>
 <div class="identifier-header">
 	<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('arena') ?></h1>
 	<div>

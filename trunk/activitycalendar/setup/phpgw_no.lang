@@ -395,3 +395,7 @@ change_type	activitycalendar	no	Endringstype
 added	activitycalendar	no	Lagt til i organisasjonsregisteret
 store	activitycalendar	no	Overfør til organisasjonsregister
 back	activitycalendar	no	Tilbake
+arena_saved_form	activitycalendar	no	Arena ble lagret
+activity_saved_form	activitycalendar	no	Aktiviteten ble lagret
+organization_saved_form	activitycalendar	no	Organisasjonen ble lagret
+group_saved_form	activitycalendar	no	Gruppen ble lagret
