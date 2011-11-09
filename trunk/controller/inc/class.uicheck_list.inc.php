@@ -42,7 +42,7 @@
 		
 		public function index()
 		{
-			$check_list_array = $this->so->get_check_list();
+/*			$check_list_array = $this->so->get_check_list();
 			
 			$data = array
 			(
@@ -50,6 +50,95 @@
 			);
 			
 			self::render_template_xsl('control_check_lists', $data);
+			*/
+			if(phpgw::get_var('phpgw_return_as') == 'json') {
+				return $this->query();
+			}
+			self::add_javascript('controller', 'yahoo', 'datatable.js');
+			phpgwapi_yui::load_widget('datatable');
+			phpgwapi_yui::load_widget('paginator');
+
+			$data = array(
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array('type' => 'filter', 
+								'name' => 'status',
+                                'text' => lang('Status'),
+                                'list' => array(
+                                    array(
+                                        'id' => 'none',
+                                        'name' => lang('Not selected')
+                                    ), 
+                                    array(
+                                        'id' => 'NEW',
+                                        'name' => lang('NEW')
+                                    ), 
+                                    array(
+                                        'id' => 'PENDING',
+                                        'name' =>  lang('PENDING')
+                                    ), 
+                                    array(
+                                        'id' => 'REJECTED',
+                                        'name' => lang('REJECTED')
+                                    ), 
+                                    array(
+                                        'id' => 'ACCEPTED',
+                                        'name' => lang('ACCEPTED')
+                                    )
+                                )
+                            ),
+							array('type' => 'text', 
+                                'text' => lang('searchfield'),
+								'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+						),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'controller.uicheck_list.index', 'phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable'	=> true,
+							'formatter' => 'YAHOO.portico.formatLink'
+						),
+						array(
+							'key'	=>	'title',
+							'label'	=>	lang('Control title'),
+							'sortable'	=>	false
+						),
+						array(
+							'key' => 'start_date',
+							'label' => lang('start_date'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'planned_date',
+							'label' => lang('planned_date'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'end_date',
+							'label' => lang('end_date'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'link',
+							'hidden' => true
+						)
+					)
+				),
+			);
+//_debug_array($data);
+
+			self::render_template_xsl('datatable', $data);
 		}
 		
 		public function view_check_list()
@@ -234,5 +323,64 @@
 			$this->redirect(array('menuaction' => 'controller.uicheck_list.view_check_list_for_control', 'control_id'=>$control_id));	
 		}
 		
-		public function query(){}
+		public function query()
+		{
+			$params = array(
+				'start' => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', null),
+				'query'	=> phpgw::get_var('query'),
+				'sort'	=> phpgw::get_var('sort'),
+				'dir'	=> phpgw::get_var('dir'),
+				'filters' => $filters
+			);
+			
+			$search_for = phpgw::get_var('query');
+
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			{
+				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+			else {
+				$user_rows_per_page = 10;
+			}
+			
+			// YUI variables for paging and sorting
+			$start_index	= phpgw::get_var('startIndex', 'int');
+			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
+			$sort_field		= phpgw::get_var('sort');
+			if($sort_field == null)
+			{
+				$sort_field = 'control_id';
+			}
+			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
+			//Create an empty result set
+			$records = array();
+			
+			//Retrieve a contract identifier and load corresponding contract
+/*			$control_id = phpgw::get_var('control_id');
+			if(isset($control_id))
+			{
+				$control = $this->so->get_single($control_id);
+			}
+*/
+			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$object_count = $this->so->get_count($search_for, $search_type, $filters);
+			//var_dump($result_objects);
+								
+			$results = array();
+			
+			foreach($result_objects as $check_list_obj)
+			{
+				$results['results'][] = $check_list_obj->serialize();	
+			}
+			
+			$results['total_records'] = $object_count;
+			$results['start'] = $params['start'];
+			$results['sort'] = $params['sort'];
+			$results['dir'] = $params['dir'];
+
+			array_walk($results["results"], array($this, "_add_links"), "controller.uicheck_list.view_check_lists_for_control");
+
+			return $this->yui_results($results);
+		}
 	}
