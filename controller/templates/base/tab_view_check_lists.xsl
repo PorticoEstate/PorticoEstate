@@ -1,15 +1,15 @@
-<xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
+<xsl:template name="tab_view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
-<div id="main_content">
+<div class="yui-content tab_content">
 		
 	  <!-- ===========================  SHOWS CONTROL ITEMS RECEIPT   =============================== -->
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>	
 		<input type="hidden" id="control_id" name="control_id" value="{control_id}" />
 		
-		<h1>Sjekklister for kontroll</h1>
+		<h2>Sjekklister</h2>
+		
 		<fieldset class="control_details">
-			<label>Tittel</label><xsl:value-of select="control_as_array/title"/><br/>
 			<label>Startdato</label>
 			<xsl:if test="control_as_array/start_date != ''">
 				<xsl:value-of select="php:function('date', $date_format, number(control_as_array/start_date))"/><br/>
@@ -22,7 +22,6 @@
 			<label>Syklusfrekvens</label><xsl:value-of select="control_as_array/repeat_interval"/><br/>
 		</fieldset>
 		
-		<h2>Sjekklister</h2>
 		<ul class="check_list">
 			<li class="heading">
 				<div class="status">Status</div>
