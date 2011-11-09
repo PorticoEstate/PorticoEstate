@@ -4,7 +4,7 @@
 <div class="yui-navset yui-navset-top" id="control_tabview">
 	<xsl:choose>
 		<xsl:when test="view = 'control_details'">
-		<xsl:call-template name="yui_booking_i18n"/>		
+		<xsl:call-template name="yui_booking_i18n"/>
 			<div class="identifier-header">
 				<h1><xsl:value-of select="php:function('lang', 'Control')"/></h1>
 			</div>
@@ -51,7 +51,7 @@
 				<h1><xsl:value-of select="php:function('lang', 'Check_list')"/> for <xsl:value-of select="control_title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="view_check_lists" />
+			<xsl:call-template name="tab_view_check_lists" />
 		</xsl:when>
 	</xsl:choose>
 </div>
