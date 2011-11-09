@@ -33,7 +33,7 @@
       // Should of course be replaced with some config option for the image
       // or using the tmpl_search_path. Need to work a little mor on this system
       // to find the right option. - thomasez
-			$params = is_null($search) ? array('frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/images/newlayout/forsidebilde.jpg") : array('search' => $search);
+			$params = is_null($search) ? array('frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/images/nsf/forsidebilde.png") : array('search' => $search);
 
 			self::render_template('search', $params);
 		}
