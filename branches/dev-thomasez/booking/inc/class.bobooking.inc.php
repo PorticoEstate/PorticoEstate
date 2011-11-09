@@ -302,6 +302,17 @@ function array_minus($a, $b)
 			
 			$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($bookings, array($resource));
+
+			$delete = array ("time" => '23:59-00:00',"_from" => '23:59',"_to" => '00:00');
+
+			foreach ($results as  $array) {
+				if (array_diff($array, $delete) != array())
+					$filtered_result[] = array_diff($array, $delete);
+			}
+			
+			return array('total_records'=>count($filtered_result), 'results'=>$filtered_result);
+
+
 			return array('total_records'=>count($results), 'results'=>$results);
 		}
 
