@@ -7,9 +7,7 @@
 		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>	
 		<input type="hidden" id="control_id" name="control_id" value="{control_id}" />
 		
-		<h2>Sjekklister</h2>
-		
-		<fieldset class="control_details">
+		<fieldset class="tab_check_list_details">
 			<label>Startdato</label>
 			<xsl:if test="control_as_array/start_date != ''">
 				<xsl:value-of select="php:function('date', $date_format, number(control_as_array/start_date))"/><br/>
