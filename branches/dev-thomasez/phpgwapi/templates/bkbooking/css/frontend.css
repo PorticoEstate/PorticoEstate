@@ -283,7 +283,8 @@ margin:0;
 padding:0;
 width:100%;
 height:100%;
-background: #fff url('../images/newlayout/bodyBg.gif') repeat-x;text-align: center;width:100%;
+/*background: white url('../images/newlayout/bodyBg.gif') repeat-x;text-align: center;width:100%;*/
+background: #8494A5;
 }
 
 #wrapper{
@@ -314,21 +315,24 @@ line-height: 1.2em;
 }
 
 #logo{
-background: url(../images/newlayout/logo.png) no-repeat;
+background: url(../images/nsf/forbundsmerke.png) no-repeat;
 float: left;
-height: 75px;
-width: 102px;
-margin: 14px 0 0 49px !important;
+height: 145px!important;
+width: 212px!important;
+margin: 0px 0 0 0px !important;
 }
 
 #centerimage{
-display: block !important;
+display: none;
+position: relative;
+right: 0px;
+top: 0px;
 margin-right: 5px !important;
-width: 172px !important;
-height: 108px !important;
-background: url(../images/newlayout/aktivby_logo.jpg) no-repeat !important;
+width: 730px !important;
+height: 145px !important;
+background: url(../images/nsf/toppbanner_forside_kartsidene.png) no-repeat !important;
 background-position: bottom center !important;
-padding: 22px 0px 0px 100px !important;
+padding: 0px 0px 0px 0px !important;
 }
 
 #header-search{
@@ -351,9 +355,12 @@ margin-left: 20px;
 text-align:left;
 }
 
-#cloud{
+#cloud {
 text-align:left;
-margin-left: 280px;
+margin-left: 0px;
+}
+#cloud div {
+text-align: center;
 }
 
 #footer{
@@ -366,6 +373,7 @@ height:160px;
 
 #footer_address{
 padding-top: 1.5em;
+font-size: 0.9em;
 }
 
 

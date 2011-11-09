@@ -544,6 +544,7 @@
 
 		function add($entry)
 		{			
+
 			$values = $this->marshal_field_values($this->get_table_values($entry, __FUNCTION__));
 			
 			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($values)) . ') VALUES(' . join(',', $values) . ')', __LINE__,__FILE__);

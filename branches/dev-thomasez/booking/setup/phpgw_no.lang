@@ -38,15 +38,15 @@ audience	booking	no	Målgruppe
 aug	booking	no	august
 bookable resources	booking	no	Bookbare ressurser
 booking	booking	no	Booking
-booking district	booking	no	Bydel
+booking district	booking	no	Fylke
 booking name	booking	no	Navn på booking
 bookings	booking	no	Bookinger
 boundaries	booking	no	Rammetid
-building	booking	no	Objektgruppe
-building name	booking	no	Objektgruppe
+building	booking	no	Sted/utstyr
+building name	booking	no	Sted/utstyr
 building schedule	booking	no	Kalender
-buildings	booking	no	Objektgruppe
-bygning	booking	no	Objektgruppe
+buildings	booking	no	Sted/utstyr
+bygning	booking	no	Sted/utstyr
 cancel	booking	no	Avbryt
 cancelled	booking	no	Avbestilt
 case officer	booking	no	Saksbehandler
@@ -68,7 +68,7 @@ dashboard	booking	no	Skrivebord
 day of the week	booking	no	Ukedag
 dec	booking	no	desember
 description	booking	no	Beskrivelse
-district	booking	no	Bydel
+district	booking	no	Fylke
 document	booking	no	Dokument
 document name	booking	no	Dokumentnavn
 documents	booking	no	Dokumenter
@@ -108,7 +108,7 @@ jul	booking	no	juli
 jun	booking	no	juni
 last modified	booking	no	Sist endret
 joading...	booking	no	Laster...
-location	booking	no	Lokale
+location	booking	no	Møtelokale
 male	booking	no	Mann
 mar	booking	no	mars
 may	booking	no	mai
@@ -124,8 +124,8 @@ new application	booking	no	Ny søknad
 new audience group	booking	no	Ny målgruppe
 new booking	booking	no	Ny booking
 new booking application	booking	no	Ny søknad
-new building	booking	no	Ny objektgruppe
-new building permission	booking	no	Nye rettigheter objektgruppe
+new building	booking	no	Nytt sted/utstyr
+new building permission	booking	no	Nye rettigheter sted/utstyr
 New Resource Permission	booking	no	Nye rettigheter objekt
 new contact	booking	no	Ny kontakt
 new document	booking	no	Nye dokumenter
@@ -182,7 +182,7 @@ season	booking	no	Sesong
 season name	booking	no	Sesong
 seasons	booking	no	Sesonger
 secondary admin	booking	no	Kontaktperson 2
-select a building first	booking	no	Velg objektgruppe først
+select a building first	booking	no	Velg sted/utstyr først
 select category...	booking	no	Velg en kategori...
 select role...	booking	no	Velg rolle...
 sep	booking	no	september
@@ -357,7 +357,7 @@ Type	booking	no	Type
 Participants	booking	no	Deltagere
 Format	booking	no	Format
 Create report	booking	no	Lag rapport
-No buildings selected	booking	no	Du må velge minst en objektgruppe
+No buildings selected	booking	no	Du må velge minst et sted/utstyr
 Reports	booking	no	Rapporter
 Unable to set classpath	booking	no	Kunne ikke sette classpath
 Unable to perform chdir	booking	no	Kunne ikke utføre chdir
@@ -410,7 +410,7 @@ from_	booking	no	Fra
 to_	booking	no	Til
 owner_id	booking	no	Eier
 object_id	booking	no	Objekt
-building_id	booking	no	Objektgruppe
+building_id	booking	no	Sted/utstyr
 subject_id	booking	no	Bruker
 export_configurations[external][account_code_set_id]	booking	no	Velg eksterne kontokoder
 export_configurations[internal][account_code_set_id]	booking	no	Velg interne kontokoder
@@ -519,3 +519,5 @@ Backend	booking	no	Backend
 Documentation	booking	no	Dokumentasjon
 Upload manual	booking	no	Last opp dokumentasjon
 Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
+House	booking	no	Hytte/hus
+Campsite	booking	no	Leirplass

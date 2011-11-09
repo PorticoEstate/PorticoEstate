@@ -2592,7 +2592,6 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'bb_documentation', array(
 				'fd' => array(
@@ -2626,11 +2625,38 @@
 	function booking_upgrade0_2_08()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ALTER COLUMN sort DROP NOT NULL");
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.09';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	* Update booking version from 0.2.09 to 0.2.10
+	* Update bb_building with som new fields.
+	* 
+	*/
+  $test[] = '0.2.09';
+	function booking_upgrade0_2_09()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN campsites integer DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN bedspaces integer DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN heating varchar(20) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN kitchen varchar(20) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN water varchar(20) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN location varchar(20) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN communication varchar(20) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN usage_time varchar(20) DEFAULT NULL");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.10';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

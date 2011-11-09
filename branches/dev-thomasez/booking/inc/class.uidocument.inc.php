@@ -296,7 +296,6 @@
 				if(!$errors)
 				{
 					try {
-
 						$receipt = $this->bo->add($document);
 						$this->redirect_to_parent_if_inline();
 						$this->redirect($this->get_owner_typed_link_params('index'));

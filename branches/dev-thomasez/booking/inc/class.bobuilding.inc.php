@@ -80,6 +80,7 @@
 				$building['days'][] = array('label' => sprintf('%s<br/>%s %s', lang($date->format('l')), lang($date->format('M')), $date->format('d')), 'key' => $date->format('D'));
 				$date->modify('+1 day');
 			}
+
 			return $building;
 		}
 		

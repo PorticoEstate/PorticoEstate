@@ -4,7 +4,9 @@
 	class booking_soresource extends booking_socommon
 	{
 		const TYPE_LOCATION = 'Location';
+		const TYPE_HOUSE = 'House';
 		const TYPE_EQUIPMENT = 'Equipment';
+		const TYPE_CAMPSITE = 'Campsite';
 		
 		function __construct()
 		{
@@ -64,7 +66,7 @@
 		
 		public static function allowed_types()
 		{
-			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT);
+			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT, self::TYPE_HOUSE, self::TYPE_CAMPSITE);
 		}
 		
 		function doValidate($entity, booking_errorstack $errors)

@@ -23,21 +23,20 @@
           <input id="search" type="text" name="searchterm" value="{search/searchterm}"/>
         </xsl:when>
         <xsl:otherwise>
-          <input id="search" type="text" name="searchterm" value="Søk hall, klubb eller aktivitet" onclick="value=''" />
+          <input id="search" type="text" name="searchterm" value="Søk leirplass, hytte, utstyr eller aktivitet" onclick="value=''" />
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
       <div class="hint">
-        F.eks. "<i>Haukelandshallen</i>", "<i>Nordnes bydelshus</i>", "<i>idrett</i>" eller "<i>kor</i>".
+        F.eks. "<i>Solstølen</i>", "<i>Tredalen</i>", "<i>kano</i>" eller "<i>leir</i>" 
       </div>
     </form>
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-		<div>Velkommen til Bergen kommune og AktivBy.<br />
-			Her finner du informasjon om bygg, anlegg<br />
-			som leies ut av Idrett, Kultur og Grønn etat.</div>
-		
+		<div>Velkommen til Norges Speiderforbund sitt hytte- og aktivitetsbookingsystem.<br /> 
+			Her finner du informasjon om leirplasser, hytter og utstyr som leies ut av Norges Speiderforbund.
+		</div>
 		</div>
 		<div style="text-align:center;">
 			<img alt="" >

@@ -37,7 +37,7 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		YAHOO.util.Dom.addClass(elCell, color);
 		YAHOO.util.Dom.addClass(elCell, booking.type);
 		if (booking.is_public == 0) {
-			elCell.innerHTML = YAHOO.booking.shorten('Privat arr.', 9);
+			elCell.innerHTML = YAHOO.booking.shorten('Opptatt', 9);
 		} else {
 			if (booking.shortname)
 				elCell.innerHTML = YAHOO.booking.shorten(booking.shortname, 9);
@@ -47,7 +47,8 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
 	}
 	else {
-		elCell.innerHTML = '...';
+		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		elCell.innerHTML = 'Ledig';
 		var data = oRecord.getData();
 		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };
 	}
@@ -107,7 +108,8 @@ YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn,
 		elCell.innerHTML = YAHOO.booking.bookingToHtml(booking);
 	}
 	else {
-		elCell.innerHTML = '...';
+		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		elCell.innerHTML = 'Ledig';
 	}
 };
 
@@ -124,7 +126,8 @@ YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, bookin
 			elCell.innerHTML = YAHOO.booking.link(booking.name, null, 9);
 	}
 	else {
-		elCell.innerHTML = '...';
+		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		elCell.innerHTML = 'Ledig';
 	}
 };
 
@@ -141,6 +144,7 @@ YAHOO.booking.scheduleRowFormatter = function(elTr, oRecord) {
 
 YAHOO.booking.renderSchedule = function(container, url, date, colFormatter, includeResource) {
 	// Make sure date is a Monday
+
 	while(date.getDay() != 1)
 		date.setDate(date.getDate()-1);
 	var container = YAHOO.util.Dom.get(container);

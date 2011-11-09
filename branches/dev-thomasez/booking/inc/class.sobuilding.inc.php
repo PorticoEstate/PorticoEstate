@@ -21,7 +21,14 @@
 					'zip_code' 		=> array('type' => 'string'),
 					'district' 		=> array('type' => 'string', 'query' => true),
 					'city' 			=> array('type' => 'string', 'query' => true),
-					'active' => array('type' => 'int')
+					'active' => array('type' => 'int'),
+					'campsites'  => array('type' => 'int'),
+					'bedspaces'  => array('type' => 'int'),
+					'heating' 		=> array('type' => 'string', 'query' => true),
+					'water' 		=> array('type' => 'string', 'query' => true),
+					'location' 		=> array('type' => 'string', 'query' => true),
+					'communication' => array('type' => 'string', 'query' => true),
+					'usage_time' 	=> array('type' => 'string', 'query' => true)
 				)
 			);
 		}

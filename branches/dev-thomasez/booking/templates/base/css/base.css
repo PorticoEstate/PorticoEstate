@@ -202,6 +202,7 @@ dl.proplist-col dd.address {
 #schedule_container .color18 { background-color: #bdb76b;} /* darkkhaki */
 #schedule_container .color19 { background-color: #32cd32;} /* limegreen */
 #schedule_container .color20 { background-color: #ffe4b5;} /* moccasin */
+#schedule_container .freegreen { color: #339933; font-weight: bold;} /* Green */
 
 #boundary-table td, #boundary-table th { 
     padding: .1em .2em;

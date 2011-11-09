@@ -78,6 +78,36 @@
 			</dl>
 			<div class="clr"/>
 			<dl class="form-col">
+				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
+				<dd><input id="field_campsites" name="campsites" type="text" value="{building/campsites}"/></dd>
+
+				<dt><label for="field_bedspaces"><xsl:value-of select="php:function('lang', 'Bedspaces')"/></label></dt>
+				<dd><input id="field_bedspaces" name="bedspaces" type="text" value="{building/bedspaces}"/></dd>
+
+
+				<dt><label for="field_heating"><xsl:value-of select="php:function('lang', 'Heating')"/></label></dt>
+				<dd><input type="text" name="heating" id="field_heating" value="{building/heating}"/></dd>
+
+				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
+				<dd><input type="text" name="kitchen" id="field_kitchen" value="{building/kitchen}"/></dd>
+				
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
+				<dd><input type="text" name="water" id="field_water" value="{building/water}"/></dd>
+
+				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Location')"/></label></dt>
+				<dd><input type="text" name="location" id="field_location" value="{building/location}"/></dd>
+
+				<dt><label for='field_communication'><xsl:value-of select="php:function('lang', 'Communication')"/></label></dt>
+				<dd><input type="text" name="communication" id="field_communication" value="{building/communication}"/></dd>
+
+				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
+				<dd><input type="text" name="usage_time" id="field_usage_time" value="{building/usage_time}"/></dd>
+				
+			</dl>
+			<div class="clr"/>
+			<dl class="form-col">
 				<xsl:if test="not(new_form)">
 					<dt><label for="field_deactivate_application"><xsl:value-of select="php:function('lang', 'Deactivate application')"/></label></dt>
 					<dd>

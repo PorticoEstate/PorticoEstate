@@ -37,15 +37,15 @@ audience	bookingfrontend	no	Målgruppe
 aug	bookingfrontend	no	august
 bookable resources	bookingfrontend	no	Bookbare ressurser
 booking	bookingfrontend	no	Booking
-booking district	bookingfrontend	no	Bydel
+booking district	bookingfrontend	no	Fylke
 booking name	bookingfrontend	no	Navn på booking
 bookings	bookingfrontend	no	Bookinger
 boundaries	bookingfrontend	no	Rammetid
-building	bookingfrontend	no	Objektgruppe
-building name	bookingfrontend	no	Objektgruppe
+building	bookingfrontend	no	Sted/utstyr
+building name	bookingfrontend	no	Sted/utstyr
 building schedule	bookingfrontend	no	Kalender
-buildings	bookingfrontend	no	Objektgruppe
-bygning	bookingfrontend	no	Objektgruppe
+buildings	bookingfrontend	no	Sted/utstyr
+bygning	bookingfrontend	no	Sted/utstyr
 cancel	bookingfrontend	no	Avbryt
 cancelled	bookingfrontend	no	Avbestilt
 case officer	bookingfrontend	no	Saksbehandler
@@ -68,7 +68,7 @@ dashboard	bookingfrontend	no	Skrivebord
 day of the week	bookingfrontend	no	Ukedag
 dec	bookingfrontend	no	desember
 description	bookingfrontend	no	Beskrivelse
-district	bookingfrontend	no	Bydel
+district	bookingfrontend	no	Fylke
 document	bookingfrontend	no	Dokument
 documents	bookingfrontend	no	Dokumenter
 document name	bookingfrontend	no	Dokumentnavn
@@ -107,7 +107,7 @@ jan	bookingfrontend	no	januar
 jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
 last modified	bookingfrontend	no	Sist endret
-location	bookingfrontend	no	Lokale
+location	bookingfrontend	no	Møtelokale
 log on	bookingfrontend	no	Logg inn
 log off	bookingfrontend	no	Logg ut
 male	bookingfrontend	no	Mann
@@ -125,8 +125,8 @@ new application	bookingfrontend	no	Ny søknad
 new audience group	bookingfrontend	no	Ny målgruppe
 new booking	bookingfrontend	no	Ny booking
 new booking application	bookingfrontend	no	Ny søknad
-new building	bookingfrontend	no	Ny objektgruppe
-new building permission	bookingfrontend	no	Nye rettigheter objektgruppe
+new building	bookingfrontend	no	Nytt sted/utstyr
+new building permission	bookingfrontend	no	Nye rettigheter sted/utstyr
 new contact	bookingfrontend	no	Ny kontakt
 new document	bookingfrontend	no	Nye dokumenter
 new equipment	bookingfrontend	no	Nytt utstyr
@@ -183,7 +183,7 @@ season	bookingfrontend	no	Sesong
 season name	bookingfrontend	no	Sesong
 seasons	bookingfrontend	no	Sesonger
 secondary admin	bookingfrontend	no	Kontaktperson 2
-select a building first	bookingfrontend	no	Velg objektgruppe først
+select a building first	bookingfrontend	no	Velg sted/utstyr først
 select a grooup	bookingfrontend	no	Velg en Gruppe
 select category...	bookingfrontend	no	Velg en kategori...
 select role...	bookingfrontend	no	Velg rolle...
@@ -236,7 +236,7 @@ Account Codes	bookingfrontend	no	Konteringsstrenger
 Account Codes	bookingfrontend	no	Konteringsstreng
 Field %1 is required	bookingfrontend	no	Feltet '%1' må fylles ut
 Field %1: Invalid format	bookingfrontend	no	Feltet '%1': ugyldig format
-Building users	bookingfrontend	no	Brukere av objektgrupper
+Building users	bookingfrontend	no	Brukere av sted/utstyr
 Ssn	bookingfrontend	no	Fødselsnummer (11 siffer)
 Date of birth or SSN	bookingfrontend	no	Fødselsdato eller fødselsnummer
 Interval	bookingfrontend	no	Interval
@@ -264,7 +264,7 @@ A Case officer will review your application as soon as possible.	bookingfrontend
 Loading...	bookingfrontend	no	Laster...
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	no	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer er ugyldig
-Used buildings	bookingfrontend	no	Objektgrupper som brukes
+Used buildings	bookingfrontend	no	Sted/utstyr som brukes
 Add group	bookingfrontend	no	Ny gruppe
 Internal Customer	bookingfrontend	no	Intern kunde
 Customer number	bookingfrontend	no	Ressursnummer
@@ -335,3 +335,6 @@ To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk 
 To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen bruk lenken
 manual	common	no	Veiledning lag og organisasjoner
 Cancel allocation	bookingfrontend	no	Avbestill tildelinger
+House	booking	no	Hytte/hus
+Campsite	booking	no	Leirplass
+
