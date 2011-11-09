@@ -199,9 +199,100 @@ class controller_socheck_list extends controller_socommon
 		
 	}
 	
-	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count){}
+	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
+	{
+		$current_time = time();
+		$buffer_in_days = 3600*24*7*5;
+		$buffer_time = $current_time - $buffer_in_days;
 
-	function populate(int $object_id, &$object){}
+		$clauses = array('1=1');
+		$clauses[] = "{$current_time} >= p.start_date AND p.start_date > {$buffer_time}"; 
+		
+		$filter_clauses = array();
+		
+		// Search for based on search type
+		if($search_for)
+		{
+			$search_for = $this->marshal($search_for,'field');
+			$like_pattern = "'%".$search_for."%'";
+			$like_clauses = array();
+			switch($search_type){
+				default:
+					$like_clauses[] = "p.title $this->like $like_pattern";
+					break;
+			}
+			
+			if(count($like_clauses))
+			{
+				$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+			}
+		}
+		//var_dump($filters);
+		if(isset($filters[$this->get_id_field_name()]))
+		{
+			$filter_clauses[] = "p.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
+		}
+		
+		if(count($filter_clauses))
+		{
+			$clauses[] = join(' AND ', $filter_clauses);
+		}
+		
+		$condition =  join(' AND ', $clauses);
+
+		$tables = "controller_control p";
+		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
+		//$joins = " {$this->left_join} controller_control_area ON (controller_control.control_area_id = controller_control_area.id)";
+		//$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
+		
+		if($return_count)
+		{
+			$cols = 'COUNT(DISTINCT(p.id)) AS count';
+		}
+		else
+		{
+			$cols = 'p.* ';
+		}
+		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		if($sort_field == 'id')
+		{
+			$sort_field = 'p.id';
+		}
+		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
+		
+		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
+	}
+
+	function populate(int $control_id, &$control)
+	{
+		$start_date = date("d.m.Y",  $this->db->f('start_date'));
+		$end_date = date("d.m.Y",  $this->db->f('end_date'));
+			
+		if($control == null) {
+			$control = new controller_control((int) $control_id);
+
+			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+			$control->set_start_date($start_date);
+			$control->set_end_date($end_date);
+			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+			$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
+			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
+//			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
+			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
+			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+		}
+		
+		return $control;
+	}
 	
 	function add(&$check_list)
 	{
