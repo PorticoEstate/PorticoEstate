@@ -1,5 +1,11 @@
 control	controller	no	Kontroll
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
+Check_list	controller	no	Sjekkliste
+Check_lists	controller	no	Sjekklister
+Choose_control_groups	controller	no	Velg kontrollgrupper
+Choose_control_items	controller	no	Velg kontrollpunkt
+Sort_check_list	controller	no	Sorter sjekkliste
+Show_check_lists	controller	no	Vis sjekklister
 title	controller	no	kontroll
 close	controller	no	Lukk
 clear	controller	no	Nullstill
@@ -262,3 +268,7 @@ Procedure revision date	controller	no	Revisjonsdato
 Font Style	controller	no	Font stil
 Lists	controller	no	Lister
 Insert Item	controller	no	Sett inn
+Control title	controller	no	Tittel
+start_date	controller	no	Start dato
+planned_date	controller	no	Planlagt dato
+end_date	controller	no	Slutt dato

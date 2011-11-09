@@ -54,6 +54,15 @@
 					</form>
 				</li>
 			</xsl:for-each>
-		</ul>					
+		</ul>
+		
+		<a>
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicontrol.generate_check_lists_for_control</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+				<xsl:value-of select="//control_id"/>
+			</xsl:attribute>
+			<div>Vis sjekklister</div>
+		</a>
 </div>
 </xsl:template>

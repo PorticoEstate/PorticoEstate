@@ -11,7 +11,6 @@
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
-		protected $control_area_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -72,21 +71,6 @@
 		}
 		
 		public function get_control_group_name() { return $this->control_group_name; }
-		
-		public function set_control_area_id($control_area_id)
-		{
-			$this->control_area_id = $control_area_id;
-		}
-		
-		public function get_control_area_id() { return $this->control_area_id; }
-		
-		public function set_control_area_name($control_area_name)
-		{
-			$this->control_area_name = $control_area_name;
-		}
-		
-		public function get_control_area_name() { return $this->control_area_name; }
-		
 			
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -111,7 +95,6 @@
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();
-			$result['control_area'] = $this->get_control_area_name();
 						
 			return $result;
 		}

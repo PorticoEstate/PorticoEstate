@@ -63,7 +63,13 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 
 		$errorMsgs = array();
 		$infoMsgs = array();
+		$saved_OK = phpgw::get_var('saved_ok');
+		if($saved_OK)
+		{
+			$message = lang('arena_saved_form');
+		}
 		$arena = activitycalendar_soarena::get_instance()->get_single((int)phpgw::get_var('id'));
+		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiarena.index'));
 		
 		if($arena == null) // Not found
 		{
@@ -72,6 +78,8 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		$data = array
 		(
 			'arena' => $arena,
+			'cancel_link' => $cancel_link,
+			'message' => $message,
 			'errorMsgs' => $errorMsgs,
 			'infoMsgs' => $infoMsgs
 		);
@@ -83,6 +91,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 		$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('edit');
 		// Get the contract part id
 		$arena_id = (int)phpgw::get_var('id');
+		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiarena.index'));
 		
 		$buildings = activitycalendar_soarena::get_instance()->get_buildings();
 		//var_dump($buildings);
@@ -105,7 +114,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 				$arena->set_internal_arena_id(phpgw::get_var('internal_arena_id'));
 				$arena->set_arena_name(phpgw::get_var('arena_name'));
 				$arena->set_address(phpgw::get_var('address') . ' ' . phpgw::get_var('address_no'));
-				$arena->set_active(phpgw::get_var('arena_active') == 'on' ? true : false);
+				$arena->set_active(phpgw::get_var('arena_active') == 'yes' ? true : false);
 				
 				if(activitycalendar_soarena::get_instance()->store($arena)) // ... and then try to store the object
 				{
@@ -116,6 +125,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 					$error = lang('messages_form_error');
 				}
 			}
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiarena.view', 'id' => $arena->get_id(), 'saved_ok' => 'yes'));
 		}
 
 		return $this->render('arena.php', array
@@ -123,6 +133,7 @@ class activitycalendar_uiarena extends activitycalendar_uicommon
 				'arena' 	=> $arena,
 				'buildings' => $buildings,
 				'editable' => true,
+				'cancel_link' => $cancel_link,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')
 			)	

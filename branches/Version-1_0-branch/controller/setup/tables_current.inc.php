@@ -72,7 +72,9 @@
 				'comment' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
-				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True)
+				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'equipment_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
