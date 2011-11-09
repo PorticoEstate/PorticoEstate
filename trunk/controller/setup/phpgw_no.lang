@@ -268,3 +268,7 @@ Procedure revision date	controller	no	Revisjonsdato
 Font Style	controller	no	Font stil
 Lists	controller	no	Lister
 Insert Item	controller	no	Sett inn
+Control title	controller	no	Tittel
+start_date	controller	no	Start dato
+planned_date	controller	no	Planlagt dato
+end_date	controller	no	Slutt dato
