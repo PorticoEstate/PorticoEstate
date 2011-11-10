@@ -38,7 +38,7 @@ YAHOO.util.Event.onDOMReady(function()
 	get_available_groups();
 });
 </script>
-
+<?php echo activitycalendar_uicommon::get_page_message($message) ?>
 <div class="yui-content">
 	<div id="details">
 		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
@@ -56,12 +56,39 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 					?>
-						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" />
+						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="100"/>
 					<?php
 					}
 					else
 					{
 						echo $activity->get_title();
+					}
+					?>
+				</dd>
+								<dt>
+					<?php if($activity->get_state() || $editable) { ?>
+					<label for="state"><?php echo lang('state') ?></label>
+					<?php  } ?>
+				</dt>
+				<dd>
+					<?php
+					if ($editable)
+					{
+						$selected_state = $activity->get_state();
+					?>
+						<select name="state">
+							<option value="3" <?php echo ($selected_state == 3 ? 'selected="selected"' : "")?>><?php echo lang('published') ?></option>
+							<option value="5" <?php echo ($selected_state == 5 ? 'selected="selected"' : "")?>><?php echo lang('rejected') ?></option>
+							<option value="1" <?php echo ($selected_state == 1 ? 'selected="selected"' : "")?>><?php echo lang('new') ?></option>
+							<option value="2" <?php echo ($selected_state == 2 ? 'selected="selected"' : "")?>><?php echo lang('change') ?></option>
+						</select>
+					<?php
+					}
+					else
+					{
+						if($activity->get_state() && $activity->get_state() > 0){
+							echo lang('state_'.$activity->get_state());
+						}
 					}
 					?>
 				</dd>
@@ -132,6 +159,48 @@ YAHOO.util.Event.onDOMReady(function()
 					}
 					?>
 				</dd>
+				<?php if($activity->get_contact_person_1() || $editable) { ?>
+				<dt>
+					<label for="contact_person_1"><?php echo lang('contact_person_1') ?></label>
+				</dt>
+				<dd>
+					<?php
+						if($activity->get_group_id())
+						{
+							echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+						}
+						else if($activity->get_organization_id())
+						{
+							echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+						}
+						else
+						{
+							echo lang('contactperson_not_set');
+						}
+					?>
+				</dd>
+				<?php  } ?>
+				<?php if($activity->get_contact_person_2() || $editable) { ?>
+				<dt>
+					<label for="contact_person_2"><?php echo lang('contact_person_2') ?></label>
+				</dt>
+				<dd>
+					<?php
+						if($activity->get_group_id())
+						{
+							echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+						}
+						else if($activity->get_organization_id())
+						{
+							echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
+						}
+						else
+						{
+							echo lang('contactperson_not_set');
+						}
+					?>
+				</dd>
+				<?php  } ?>
 				<dt>
 					<?php if($activity->get_internal_arena() || $editable) { ?>
 					<label for="arena"><?php echo lang('building') ?></label>
@@ -193,31 +262,21 @@ YAHOO.util.Event.onDOMReady(function()
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_state() || $editable) { ?>
-					<label for="state"><?php echo lang('state') ?></label>
+					<?php if($activity->get_time() || $editable) { ?>
+					<label for="time"><?php echo lang('time') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
 					<?php
 					if ($editable)
 					{
-						$selected_state = $activity->get_state();
 					?>
-						<select name="state">
-							<option value="0" <?php echo ($selected_state == 0 ? 'selected="selected"' : "")?>>Ingen status valgt</option>
-							<option value="1" <?php echo ($selected_state == 1 ? 'selected="selected"' : "")?>><?php echo lang('new') ?></option>
-							<option value="2" <?php echo ($selected_state == 2 ? 'selected="selected"' : "")?>><?php echo lang('change') ?></option>
-							<option value="3" <?php echo ($selected_state == 3 ? 'selected="selected"' : "")?>><?php echo lang('accepted') ?></option>
-							<option value="4" <?php echo ($selected_state == 4 ? 'selected="selected"' : "")?>><?php echo lang('processed') ?></option>
-							<option value="5" <?php echo ($selected_state == 5 ? 'selected="selected"' : "")?>><?php echo lang('rejected') ?></option>
-						</select>
+						<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" />
 					<?php
 					}
 					else
 					{
-						if($activity->get_state() && $activity->get_state() > 0){
-							echo lang('state_'.$activity->get_state());
-						}
+						echo $activity->get_time();
 					}
 					?>
 				</dd>
@@ -284,36 +343,6 @@ YAHOO.util.Event.onDOMReady(function()
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_office() || $editable) { ?>
-					<label for="office"><?php echo lang('office') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
-					<?php
-					if ($editable)
-					{
-						$selected_office = $activity->get_office();
-					?>
-						<select name="office">
-							<option value="0">Ingen kontor valgt</option>
-							<?php
-							foreach($offices as $office)
-							{
-								echo "<option ".($selected_office == $office['id'] ? 'selected="selected"' : "")." value=\"{$office['id']}\">".$office['name']."</option>";
-							}
-							?>
-						</select>
-					<?php
-					}
-					else
-					{
-						if($activity->get_office()){
-							echo $act_so->get_office_name($activity->get_office());
-						}
-					}
-					?>
-				</dd>
-				<dt>
 					<?php if($activity->get_district() || $editable) { ?>
 					<label for="district"><?php echo lang('district') ?></label>
 					<?php  } ?>
@@ -347,65 +376,61 @@ YAHOO.util.Event.onDOMReady(function()
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_description()) { ?>
-					<label for="description"><?php echo lang('description') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
-					<?php echo $activity->get_description(); ?>
-				</dd>
-				<dt>
-					<?php if($activity->get_time() || $editable) { ?>
-					<label for="time"><?php echo lang('time') ?></label>
+					<?php if($activity->get_office() || $editable) { ?>
+					<label for="office"><?php echo lang('office') ?></label>
 					<?php  } ?>
 				</dt>
 				<dd>
 					<?php
 					if ($editable)
 					{
+						$selected_office = $activity->get_office();
 					?>
-						<input type="text" name="time" id="time" value="<?php echo $activity->get_time() ?>" />
+						<select name="office">
+							<option value="0">Ingen kontor valgt</option>
+							<?php
+							foreach($offices as $office)
+							{
+								echo "<option ".($selected_office == $office['id'] ? 'selected="selected"' : "")." value=\"{$office['id']}\">".$office['name']."</option>";
+							}
+							?>
+						</select>
 					<?php
 					}
 					else
 					{
-						echo $activity->get_time();
+						if($activity->get_office()){
+							echo $act_so->get_office_name($activity->get_office());
+						}
 					}
 					?>
 				</dd>
 				<dt>
-					<?php if($activity->get_contact_person_1() || $editable) { ?>
-					<label for="contact_person_1"><?php echo lang('contact_person_1') ?></label>
-					<?php  } ?>
+					<label for="description"><?php echo lang('description') ?></label>
 				</dt>
 				<dd>
 					<?php
 						if($activity->get_group_id())
 						{
-							echo $contpers_so->get_group_contact_name($activity->get_contact_person_1());
+							$group =  $act_so->get_group_info($activity->get_group_id());
+							if($group)
+							{
+								echo $group['description'];
+							}
 						}
 						else if($activity->get_organization_id())
 						{
-							echo $contpers_so->get_org_contact_name($activity->get_contact_person_1());
+							$org = $act_so->get_org_info($activity->get_organization_id());
+							if($org)
+							{
+								echo $org['description'];
+							}
 						}
-					?>
-				</dd>
-				<dt>
-					<?php if($activity->get_contact_person_2() || $editable) { ?>
-					<label for="contact_person_2"><?php echo lang('contact_person_2') ?></label>
-					<?php  } ?>
-				</dt>
-				<dd>
-					<?php
-						if($activity->get_group_id())
+						else
 						{
-							echo $contpers_so->get_group_contact_name($activity->get_contact_person_2());
+							echo lang('description_not_set');
 						}
-						else if($activity->get_organization_id())
-						{
-							echo $contpers_so->get_org_contact_name($activity->get_contact_person_2());
-						}
-					?>
+					 ?>
 				</dd>
 				<dt>
 					<?php if($activity->get_contact_person_2_address() || $editable) { ?>
@@ -456,6 +481,12 @@ YAHOO.util.Event.onDOMReady(function()
 				<?php
 					if ($editable) {
 						echo '<input type="submit" name="save_activity" value="' . lang('save') . '"/>';
+						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
+					}
+					else
+					{
+						echo '<input type="submit" name="edit_activity" value="' . lang('edit') . '"/>';
+						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
 					}
 				?>
 			</div>

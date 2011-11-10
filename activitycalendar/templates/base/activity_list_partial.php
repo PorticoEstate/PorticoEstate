@@ -191,8 +191,7 @@
 			<option value="all"><?php echo lang('all') ?></option>
 			<option value="1"><?php echo lang('new') ?></option>
 			<option value="2" ><?php echo lang('change') ?></option>
-			<option value="3" ><?php echo lang('accepted') ?></option>
-			<option value="4" ><?php echo lang('processed') ?></option>
+			<option value="3" ><?php echo lang('published') ?></option>
 			<option value="5" ><?php echo lang('rejected') ?></option>
 		</select>
 		<label class="toolbar_element_label" for="ctrl_toggle_activity_district"><?php echo lang('office') ?></label>
