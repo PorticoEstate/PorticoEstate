@@ -26,7 +26,7 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time');
 		}
 		
 		public function properties()
@@ -179,6 +179,12 @@
 				$building = array_merge($building, extract_values($_POST, $this->fields));
 			
 				$errors = $this->bo->validate($building);
+				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50)
+				{
+					$errors['extrafields'] = lang('Max 50 characters in text fields');
+				}	
+
+
 				if(!$errors)
 				{
 					$receipt = $this->bo->update($building);

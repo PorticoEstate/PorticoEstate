@@ -45,7 +45,6 @@
 				</xsl:attribute>
 			</img>
 		</div>	
-
 	</xsl:if>
 	
 	<xsl:if test="search">	

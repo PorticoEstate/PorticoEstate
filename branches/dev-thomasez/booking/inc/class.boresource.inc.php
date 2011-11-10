@@ -58,7 +58,7 @@
 					),
 					booking_sopermission::ROLE_CASE_OFFICER => array
 					(
-						'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type'), true),
+						'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time'), true),
 					),
 					'parent_role_permissions' => array
 					(

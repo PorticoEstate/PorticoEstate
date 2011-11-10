@@ -96,7 +96,7 @@
 				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
 				<dd><input type="text" name="water" id="field_water" value="{building/water}"/></dd>
 
-				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Location')"/></label></dt>
+				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Locality')"/></label></dt>
 				<dd><input type="text" name="location" id="field_location" value="{building/location}"/></dd>
 
 				<dt><label for='field_communication'><xsl:value-of select="php:function('lang', 'Communication')"/></label></dt>

@@ -78,8 +78,43 @@
 			</dl>
 			<dl class="proplist-col images">	
 				<div id="images_container"></div>
+
+			<xsl:if test="not(campsites='')">				
+				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
+				<dd><xsl:value-of select="campsites"/></dd>
+			</xsl:if>
+			<xsl:if test="not(bedspaces='')">				
+				<dt><label for="field_bedspaces"><xsl:value-of select="php:function('lang', 'Bedspaces')"/></label></dt>
+				<dd><xsl:value-of select="bedspaces"/></dd>
+			</xsl:if>
+			<xsl:if test="not(heating='')">				
+				<dt><label for="field_heating"><xsl:value-of select="php:function('lang', 'Heating')"/></label></dt>
+				<dd><xsl:value-of select="heating"/></dd>
+			</xsl:if>
+			<xsl:if test="not(kitchen='')">				
+				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
+				<dd><xsl:value-of select="kitchen"/></dd>
+			</xsl:if>
+			<xsl:if test="not(water='')">				
+				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
+				<dd><xsl:value-of select="water"/></dd>
+			</xsl:if>
+			<xsl:if test="not(location='')">				
+				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Locality')"/></label></dt>
+				<dd><xsl:value-of select="location"/></dd>
+			</xsl:if>
+			<xsl:if test="not(communication='')">				
+				<dt><label for='field_communication'><xsl:value-of select="php:function('lang', 'Communication')"/></label></dt>
+				<dd><xsl:value-of select="communication"/></dd>
+			</xsl:if>
+			<xsl:if test="not(usage_time='')">				
+				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
+				<dd><xsl:value-of select="usage_time"/></dd>
+			</xsl:if>
+
+				
+
 			</dl>
-			
 			<script type="text/javascript">
 				var building_id = <xsl:value-of select="id"/>;
 				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity', 'Resource Type')"/>;

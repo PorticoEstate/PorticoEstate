@@ -11,7 +11,7 @@
 			</li>
 		</ul>
 
-		<xsl:for-each select="building">	
+		<xsl:for-each select="building">
 
 			<xsl:if test="deactivate_calendar=0">
 			<div>

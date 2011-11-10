@@ -26,6 +26,7 @@
 					'bedspaces'  => array('type' => 'int'),
 					'heating' 		=> array('type' => 'string', 'query' => true),
 					'water' 		=> array('type' => 'string', 'query' => true),
+					'kitchen' 		=> array('type' => 'string', 'query' => true),
 					'location' 		=> array('type' => 'string', 'query' => true),
 					'communication' => array('type' => 'string', 'query' => true),
 					'usage_time' 	=> array('type' => 'string', 'query' => true)

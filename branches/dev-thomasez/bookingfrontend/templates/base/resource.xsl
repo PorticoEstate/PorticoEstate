@@ -38,8 +38,41 @@
 			<div id="documents_container"/>
 		</dl>
 		<dl class="proplist-col images">	
-			<div id="images_container">
-			</div>
+			<div id="images_container"></div>
+
+			<xsl:if test="not(resource/campsites='')">				
+				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
+				<dd><xsl:value-of select="resource/campsites"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/bedspaces='')">				
+				<dt><label for="field_bedspaces"><xsl:value-of select="php:function('lang', 'Bedspaces')"/></label></dt>
+				<dd><xsl:value-of select="resource/bedspaces"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/heating='')">				
+				<dt><label for="field_heating"><xsl:value-of select="php:function('lang', 'Heating')"/></label></dt>
+				<dd><xsl:value-of select="resource/heating"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/kitchen='')">				
+				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
+				<dd><xsl:value-of select="resource/kitchen"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/water='')">				
+				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
+				<dd><xsl:value-of select="resource/water"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/location='')">				
+				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Locality')"/></label></dt>
+				<dd><xsl:value-of select="resource/location"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/communication='')">				
+				<dt><label for='field_communication'><xsl:value-of select="php:function('lang', 'Communication')"/></label></dt>
+				<dd><xsl:value-of select="resource/communication"/></dd>
+			</xsl:if>
+			<xsl:if test="not(resource/usage_time='')">				
+				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
+				<dd><xsl:value-of select="resource/usage_time"/></dd>
+			</xsl:if>
+
 		</dl>
 	</div>
 

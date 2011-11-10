@@ -521,3 +521,13 @@ Upload manual	booking	no	Last opp dokumentasjon
 Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
 House	booking	no	Hytte/hus
 Campsite	booking	no	Leirplass
+Campsites	booking	no	Teltplasser
+Bedspaces	booking	no	Sengeplasser
+Heating	booking	no	Oppvarming
+Kitchen	booking	no	Kjøkken
+Water	booking	no	Vann
+Locality	booking	no	Beliggenhet
+communication	booking	no	Kommunikasjon
+Usage time	booking	no	Brukstid
+
+

@@ -23,7 +23,7 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -172,6 +172,13 @@
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = array_merge($resource, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($building);
+
+				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50)
+				{
+					$errors['extrafields'] = lang('Max 50 characters in text fields');
+				}	
+	
 				$errors = $this->bo->validate($resource);
 				if(!$errors)
 				{

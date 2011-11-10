@@ -57,6 +57,44 @@
             <dd><xsl:value-of select="building/phone"/></dd>
         </dl>
 
+		<div class="clr"/>
+		<dl class="form-col">
+			<xsl:if test="not(building/campsites='')">				
+				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
+				<dd><xsl:value-of select="building/campsites"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/bedspaces='')">				
+				<dt><label for="field_bedspaces"><xsl:value-of select="php:function('lang', 'Bedspaces')"/></label></dt>
+				<dd><xsl:value-of select="building/bedspaces"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/heating='')">				
+				<dt><label for="field_heating"><xsl:value-of select="php:function('lang', 'Heating')"/></label></dt>
+				<dd><xsl:value-of select="building/heating"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/kitchen='')">				
+				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
+				<dd><xsl:value-of select="building/kitchen"/></dd>
+			</xsl:if>
+			</dl>
+			<dl class="form-col">
+			<xsl:if test="not(building/water='')">				
+				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
+				<dd><xsl:value-of select="building/water"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/location='')">				
+				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Locality')"/></label></dt>
+				<dd><xsl:value-of select="building/location"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/communication='')">				
+				<dt><label for='field_communication'><xsl:value-of select="php:function('lang', 'Communication')"/></label></dt>
+				<dd><xsl:value-of select="building/communication"/></dd>
+			</xsl:if>
+			<xsl:if test="not(building/usage_time='')">				
+				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
+				<dd><xsl:value-of select="building/usage_time"/></dd>
+			</xsl:if>
+		</dl>
+
         <div class="form-buttons">
 			<xsl:if test="building/permission/write">
 				<button>
