@@ -74,16 +74,30 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	{
 		$errorMsgs = array();
 		$infoMsgs = array();
+
 		$activity = activitycalendar_soactivity::get_instance()->get_single((int)phpgw::get_var('id'));
+		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
+		$saved_OK = phpgw::get_var('saved_ok');
+		if($saved_OK)
+		{
+			$message = lang('activity_saved_form');
+		}
 		
 		if($activity == null) // Not found
 		{
 			$errorMsgs[] = lang('Could not find specified activity.');
 		}
+		
+		if(isset($_POST['edit_activity'])) // The user has pressed the save button
+		{
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.edit','id' => phpgw::get_var('id')));
+		}
 
 		$data = array
 		(
 			'activity' => $activity,
+			'cancel_link' => $cancel_link,
+			'message' => $message,
 			'errorMsgs' => $errorMsgs,
 			'infoMsgs' => $infoMsgs
 		);
@@ -99,7 +113,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		$so_arena = activitycalendar_soarena::get_instance();
 		$so_org = activitycalendar_soorganization::get_instance();
 		//var_dump($activity_id);
-		
+		$cancel_link = self::link(array('menuaction' => 'activitycalendar.uiactivities.index'));
 		$categories = $so_activity->get_categories();
 		$targets = $so_activity->get_targets();
 		$offices = $so_activity->select_district_list();
@@ -188,7 +202,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 					$error = lang('messages_form_error');
 				}
 
-				if($new_state == 3 || $new_state == 4 || $new_state == 5 )
+				if($new_state == 3 || $new_state == 5 )
 				{
 					$kontor = $so_activity->get_office_name($activity->get_office());
 					$subject = "Melding fra AktivBy";
@@ -203,6 +217,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 						activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
 					}
 				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id(), 'saved_ok' => 'yes'));
 			}
 		}
 
@@ -219,6 +234,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				'districts' => $districts,
 				'offices' => $offices,
 				'editable' => true,
+				'cancel_link' => $cancel_link,
 				'message' => isset($message) ? $message : phpgw::get_var('message'),
 				'error' => isset($error) ? $error : phpgw::get_var('error')
 			)	
@@ -265,6 +281,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		switch($query_type)
 		{
+			case 'new_activities':
+				$filters = array('activity_state' => 1, 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);
+				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
 			case 'all_activities':
 			default:
 				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);

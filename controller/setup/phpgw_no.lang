@@ -1,4 +1,5 @@
 control	controller	no	Kontroll
+controller	common	no	Kontroll
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
 Check_list	controller	no	Sjekkliste
 Check_lists	controller	no	Sjekklister

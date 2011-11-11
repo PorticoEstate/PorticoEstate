@@ -440,8 +440,16 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$filters = array('changed_orgs' => 'true');
 				$changed_org = true;
 				break;
+			case 'new_organizations':
+				$filters = array('new_orgs' => 'true');
+				$changed_org = true;
+				break;
 			case 'changed_groups':
 				$filters = array('changed_groups' => 'true');
+				$changed_group = true;
+				break;
+			case 'new_groups':
+				$filters = array('new_groups' => 'true');
 				$changed_group = true;
 				break;
 			default: // ... get all parties of a given type
