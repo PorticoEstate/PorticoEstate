@@ -2364,11 +2364,11 @@ JS;
 						{
 							$_sep = '&';
 						}
-						$_param = str_replace($_keys, $_values, $_config_section_data['parametres']);
+						$_param = $_config_section_data['parametres'] ? $_sep . str_replace($_keys, $_values, $_config_section_data['parametres']) : '';
 						unset($_keys);
 						unset($_values);
 		//				$integration_src = phpgw::safe_redirect("{$_config_section_data['url']}{$_sep}{$_param}");
-						$integration_src = "{$_config_section_data['url']}{$_sep}{$_param}";
+						$integration_src = "{$_config_section_data['url']}{$_param}";
 						if($_config_section_data['action'])
 						{
 							$_sep = '?';
@@ -2376,7 +2376,7 @@ JS;
 							{
 								$_sep = '&';
 							}
-							$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
+							//$integration_src .= "{$_sep}{$_config_section_data['action']}=" . $_config_section_data["action_{$mode}"];
 						}
 
 						$arguments = array($_config_section_data['auth_key_name'] => $response);
@@ -2387,15 +2387,23 @@ JS;
 							parse_str($_config_section_data['location_data'], $output);
 							foreach ($output as $_dummy => $_substitute)
 							{
-								$_keys[] = $_substitute;
-								$_values[] = urlencode($values[trim($_substitute, '_')]);
+								//$_substitute = '__loc1__.__loc4__%';
+								$regex = "/__([\w]+)__/";
+								preg_match_all($regex, $_substitute, $matches);
+								
+								foreach($matches[1] as $__substitute)
+								{
+									$_values[] = urlencode($values[$__substitute]);									
+								}
 							}
-							//$integration_src .= '&' . str_replace($_keys, $_values, $_config_section_data['location_data']);
-							$integration_src .= 'ctittel=5374.019%';
+							$integration_src .= '&' . str_replace($matches[0], $_values, $_config_section_data['location_data']);
 						}
 
-						$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
-						
+						if(isset($_config_section_data['auth_key_name']) && $_config_section_data['auth_key_name'])
+						{
+							$integration_src .= "&{$_config_section_data['auth_key_name']}={$response}";
+						}
+
 						//FIXME NOT WORKING!! test for webservice, auth...
 						if(isset($_config_section_data['method']) && $_config_section_data['method'] == 'POST')
 						{

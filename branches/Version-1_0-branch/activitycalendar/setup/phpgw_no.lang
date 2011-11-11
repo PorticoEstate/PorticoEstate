@@ -64,7 +64,7 @@ contact information	activitycalendar	no	Kontaktinformasjon
 cost	activitycalendar	no	Pris
 create	activitycalendar	no	Lagre
 created	activitycalendar	no	Opprettet
-dashboard	activitycalendar	no	Skrivebord
+dashboard	activitycalendar	no	Skrivebord - Innkomne endringer
 day of the week	activitycalendar	no	Ukedag
 dec	activitycalendar	no	desember
 description	activitycalendar	no	Beskrivelse
@@ -371,7 +371,7 @@ state_3	activitycalendar	no	Akseptert
 state_4	activitycalendar	no	Behandlet
 state_5	activitycalendar	no	Avvist
 activity_import	activitycalendar	no	Importer aktiviteter
-office	activitycalendar	no	Kontor
+office	activitycalendar	no	Hovedansvarlig kulturkontor
 activity_helptext	activitycalendar	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.
 mail_subject_update	activitycalendar	no	Melding om oppdatering av aktivitet
 mail_body_update	activitycalendar	no	Du må oppdatere informasjonen som er registrert på aktivitet %1 . Bruk følgende lenke for å gå inn på aktiviteten: %2
@@ -399,3 +399,7 @@ arena_saved_form	activitycalendar	no	Arena ble lagret
 activity_saved_form	activitycalendar	no	Aktiviteten ble lagret
 organization_saved_form	activitycalendar	no	Organisasjonen ble lagret
 group_saved_form	activitycalendar	no	Gruppen ble lagret
+published	activitycalendar	no	Publisert
+contactperson_not_set	activitycalendar	no	Kontaktpersoner hentes fra valgt organisasjon/gruppe ved lagring.
+description_not_set	activitycalendar	no	Beskrivelse hentes fra valgt organisasjon/gruppe ved lagring (Max 255 tegn).
+back_to_list	activitycalendar	no	Tilbake til oversikt

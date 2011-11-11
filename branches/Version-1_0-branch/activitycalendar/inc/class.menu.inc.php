@@ -12,7 +12,7 @@
 				'activitycalendar' => array
 				(
 					'text'	=> lang('Activitycalendar'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uiactivities.index') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uidashboard.index') ),
                     'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'
@@ -21,6 +21,12 @@
 
 			$menus['navigation'] =  array
 			(
+				'dashboard' => array
+				(
+					'text'	=> lang('dashboard'),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'activitycalendar.uidashboard.index') ),
+                    'image'	=> array('property', 'location_tenant'),
+				),
 				'activities' => array
 				(
 					'text'	=> lang('Activities'),

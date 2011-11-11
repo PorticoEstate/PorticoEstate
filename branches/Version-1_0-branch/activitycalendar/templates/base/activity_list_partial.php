@@ -189,10 +189,9 @@
 		<label class="toolbar_element_label" for="ctrl_toggle_activity_state"><?php echo lang('activity_state') ?></label>
 		<select name="activity_state" id="<?php echo $list_id ?>_ctrl_toggle_activity_state">
 			<option value="all"><?php echo lang('all') ?></option>
-			<option value="1"><?php echo lang('new') ?></option>
+			<option value="1" <?php if($list_id == 'new_activities'){ echo 'selected="selected"';}?>><?php echo lang('new') ?></option>
 			<option value="2" ><?php echo lang('change') ?></option>
-			<option value="3" ><?php echo lang('accepted') ?></option>
-			<option value="4" ><?php echo lang('processed') ?></option>
+			<option value="3" ><?php echo lang('published') ?></option>
 			<option value="5" ><?php echo lang('rejected') ?></option>
 		</select>
 		<label class="toolbar_element_label" for="ctrl_toggle_activity_district"><?php echo lang('office') ?></label>
@@ -215,7 +214,8 @@
 <?php
 	}
 ?>
-
+<?php if($list_id != 'new_activities')
+{?>
 <fieldset>
 	<h3><?php echo lang('export_to') ?></h3>
 	<?php 
@@ -225,6 +225,7 @@
 		<a href="javascript:activity_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>&nbsp;&nbsp;<a href="javascript:activity_email('<?php echo $list_id ?>')" title="<?php echo lang('Send email to selection') ?>"><button><?php echo lang('Send mail to selection') ?></button></a>
 	</div>
 </fieldset>
+<?php }?>
 
 <div id="<?php echo $list_id ?>_paginator" class="paginator"></div>
 <div id="<?php echo $list_id ?>_container" class="datatable_container"></div>

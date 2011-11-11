@@ -102,6 +102,17 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$filter_clauses[] = "org.id = {$id}";
 			}
 		}
+		if(isset($filters['new_orgs'])){
+			$use_local_org = true;
+			//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+			//$filter_clauses[] = "org.id = {$id}";
+			unset($filter_clauses);
+			$filter_clauses[] = "org.change_type = 'new'";
+			if(isset($filters[$this->get_id_field_name()])){
+				$id = $this->marshal($filters[$this->get_id_field_name()],'int');
+				$filter_clauses[] = "org.id = {$id}";
+			}
+		}
 
 /*
 		// All parties with contracts of type X
