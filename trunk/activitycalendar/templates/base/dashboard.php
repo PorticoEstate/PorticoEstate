@@ -7,8 +7,8 @@
 <h2><?php echo lang('organization')?></h2>
 <?php
 	$list_form = true;
-	$list_id = 'changed_organizations';
-	$url_add_on = '&amp;type=changed_organizations';
+	$list_id = 'new_organizations';
+	$url_add_on = '&amp;type=new_organizations';
 	$nosearch = true;
 	$extra_cols = array(array("key" => "change_type", "label" => lang('change_type'), "sortable" => true, "index" => 5));
 	include('organization_list_partial.php');
@@ -16,8 +16,8 @@
 <h2><?php echo lang('group')?></h2>
 <?php
 	$list_form = true;
-	$list_id = 'changed_groups';
-	$url_add_on = '&amp;type=changed_groups';
+	$list_id = 'new_groups';
+	$url_add_on = '&amp;type=new_groups';
 	$nosearch = true;
 	$extra_cols = array(array("key" => "change_type", "label" => lang('change_type'), "sortable" => true, "index" => 5));
 	include('organization_list_partial.php');
