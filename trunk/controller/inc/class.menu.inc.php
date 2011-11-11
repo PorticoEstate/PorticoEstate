@@ -19,8 +19,8 @@
 				)
 			);
 			
-/*			if($GLOBALS['phpgw']->acl->check(controller_uicommon::LOCATION_SUPERUSER,PHPGW_ACL_ADD,'controller'))
-			{*/
+			if($GLOBALS['phpgw']->acl->check('.usertype.superuser',PHPGW_ACL_ADD,'controller'))
+			{
 				$menus['navigation'] =  array
 				(
 					'control' => array
@@ -54,7 +54,7 @@
 			            'image'	=> array('property', 'location_1'),
 					),
 				);
-/*			}
+			}
 			else
 			{
 				$menus['navigation'] =  array
@@ -66,7 +66,7 @@
 			            'image'	=> array('property', 'location_1'),
 					),
 				);
-			}*/
+			}
 			
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
 				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
