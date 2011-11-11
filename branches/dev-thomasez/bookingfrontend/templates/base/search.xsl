@@ -34,8 +34,7 @@
 	
 	<xsl:if test="not(search)">	
 		<div id="cloud">
-		<div>Velkommen til Norges Speiderforbund sitt hytte- og aktivitetsbookingsystem.<br /> 
-			Her finner du informasjon om leirplasser, hytter og utstyr som leies ut av Norges Speiderforbund.
+		<div>Velkommen til Norges speiderforbunds bookingsystem for eiendommer og utstyr. Her finner du oversikt over og informasjon om hytter, leirplasser og andre speidereiendommer, samt utstyr som kanoer o.l. som også leies ut.
 		</div>
 		</div>
 		<div style="text-align:center;">
