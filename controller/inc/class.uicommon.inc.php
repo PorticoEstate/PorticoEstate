@@ -111,9 +111,9 @@
 
 		
 		const LOCATION_ROOT = '.';
-		const LOCATION_SUPERUSER = '.USERTYPE.SUPERUSER';
+		const LOCATION_SUPERUSER = '.usertype.superuser';
 //		const LOCATION_ADMINISTRATOR = '.RESPONSIBILITY.ADMIN';
-		const LOCATION_USER = '.USERTYPE.USER';
+		const LOCATION_USER = '.usertype.user';
 		
 		public $dateFormat;
 		
