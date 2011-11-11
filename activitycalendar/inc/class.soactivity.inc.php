@@ -144,6 +144,10 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 			$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 			$filter_clauses[] = "activity.id = {$id}";
 		}
+		if(isset($filters['new_activities']))
+		{
+			$filter_clauses = "activity.state=1";
+		}
 		if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
 			$activity_state = $this->marshal($filters['activity_state'],'int');
 			$filter_clauses[] = "activity.state = {$activity_state}";

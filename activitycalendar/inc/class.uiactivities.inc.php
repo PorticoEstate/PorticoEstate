@@ -281,6 +281,11 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		switch($query_type)
 		{
+			case 'new_activities':
+				$filters = array('activity_state' => 1, 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);
+				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
+				break;
 			case 'all_activities':
 			default:
 				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);
