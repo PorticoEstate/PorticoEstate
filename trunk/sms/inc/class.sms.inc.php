@@ -427,10 +427,11 @@
 
 				if ($uid)
 				{
+					$message = $this->db->db_addslashes($message);
 					$db_query = "
 					INSERT INTO phpgw_sms_tbluserinbox
 					(in_sender,in_uid,in_msg,in_datetime)
-					VALUES ('$sms_sender','$uid','$message','$sms_datetime')
+					VALUES ('$sms_sender',$uid,'$message','$sms_datetime')
 					";
 
 					$this->db->query($db_query,__LINE__,__FILE__);
@@ -834,6 +835,11 @@
 		// and sets the action
 		function setsmsincomingaction($sms_datetime,$sms_sender,$target_code,$message)
 		{
+			if(!strtotime($sms_datetime))
+			{
+				$sms_datetime = $this->datetime_now();
+			}
+
 			$message = utf8_encode($message);
 			$target_code = utf8_encode($target_code);
 			$ok = false;
@@ -919,7 +925,7 @@
 			}
 			if (!$ok)
 			{
-				$message = $target_code." ".$message;
+				$message = "{$target_code} {$message}";
 				if ($this->insertsmstoinbox($sms_datetime,$sms_sender,"Admins",$message))
 				{
 					$ok = true;
