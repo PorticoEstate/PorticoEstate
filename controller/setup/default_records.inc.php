@@ -34,7 +34,7 @@ unset($locations);
 
 //Create groups, users, add users to groups and set preferences
 $GLOBALS['phpgw']->locations->add('.',				'Root',			'controller',false);
-
+$GLOBALS['phpgw']->locations->add('.admin',			'Admin',		'controller',false);
 $GLOBALS['phpgw']->locations->add('.usertype',				'Usertypes',						'controller',false);
 $GLOBALS['phpgw']->locations->add('.usertype.superuser',	'Usertype: Superuser',				'controller',false);
 $GLOBALS['phpgw']->locations->add('.usertype.user',			'Usertype: User',					'controller',false);
