@@ -68,8 +68,9 @@
 				);
 			}*/
 			
-//			if($GLOBALS['phpgw']->acl->check(controller_uicommon::LOCATION_SUPERUSER,PHPGW_ACL_ADD,'controller'))
-//			{
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
+			{
 				$menus['admin'] = array
 				(
 					'acl'	=> array
@@ -78,7 +79,7 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'controller') )
 					)
 				);
-//			}
+			}
 			
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
