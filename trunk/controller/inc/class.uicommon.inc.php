@@ -111,9 +111,9 @@
 
 		
 		const LOCATION_ROOT = '.';
-		const LOCATION_IN = '.RESPONSIBILITY.INTO';
-		const LOCATION_OUT = '.RESPONSIBILITY.OUT';
-		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
+		const LOCATION_SUPERUSER = '.USERTYPE.SUPERUSER';
+//		const LOCATION_ADMINISTRATOR = '.RESPONSIBILITY.ADMIN';
+		const LOCATION_USER = '.USERTYPE.USER';
 		
 		public $dateFormat;
 		
@@ -151,11 +151,12 @@
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
 			
-/*			$this->type_of_user = array(
-			MANAGER => $this->isManager(),
+			$this->type_of_user = array(
+				MANAGER => $this->isManager(),
 				EXECUTIVE_OFFICER => $this->isExecutiveOfficer(),
 				ADMINISTRATOR => $this->isAdministrator()
-			);*/
+			);
+			//var_dump($this->type_of_user);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		}
 
@@ -248,9 +249,8 @@
 		 */
 		protected function isExecutiveOfficer(){
 			return (
-				$this->acl->check(controller_uicommon::LOCATION_IN,PHPGW_ACL_ADD,'controller')	||
-				$this->acl->check(controller_uicommon::LOCATION_OUT,PHPGW_ACL_ADD,'controller')	||
-				$this->acl->check(controller_uicommon::LOCATION_INTERNAL,PHPGW_ACL_ADD,'controller')
+				$this->acl->check(controller_uicommon::LOCATION_SUPERUSER,PHPGW_ACL_ADD,'controller')	||
+				$this->acl->check(controller_uicommon::LOCATION_USER,PHPGW_ACL_ADD,'controller')
 			);
 		}
 		
