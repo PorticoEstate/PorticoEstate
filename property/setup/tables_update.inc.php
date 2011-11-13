@@ -5457,6 +5457,26 @@
 
 
 	/**
+	* Update property version from 0.9.17.624 to 0.9.17.625
+	* Add flag for eav modelling
+	*/
+
+	$test[] = '0.9.17.624';
+	function property_upgrade0_9_17_624()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_entity_category','is_eav',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.625';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 

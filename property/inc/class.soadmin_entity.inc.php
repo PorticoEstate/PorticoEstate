@@ -176,14 +176,15 @@
 			{
 				$id	= $this->db2->f('id');
 				$category = array
-					(
-						'id'		=> $id,
-						'name'		=> $this->db2->f('name'),
-						'prefix'	=> $this->db2->f('prefix'),
-						'descr'		=> $this->db2->f('descr'),
-						'level'		=> $this->db2->f('level'),
-						'parent_id'	=> $this->db2->f('parent_id')
-					);
+				(
+					'id'		=> $id,
+					'name'		=> $this->db2->f('name'),
+					'prefix'	=> $this->db2->f('prefix'),
+					'descr'		=> $this->db2->f('descr'),
+					'level'		=> $this->db2->f('level'),
+					'parent_id'	=> $this->db2->f('parent_id'),
+					'is_eav'	=> $this->db2->f('is_eav'),
+				);
 
 				if($required)
 				{
@@ -440,6 +441,7 @@
 						'loc_link'					=> $this->db->f('loc_link'),
 						'start_project'				=> $this->db->f('start_project'),
 						'start_ticket'				=> $this->db->f('start_ticket'),
+						'is_eav'					=> $this->db->f('is_eav'),
 						'jasperupload'				=> $this->db->f('jasperupload'),
 						'parent_id'					=> $this->db->f('parent_id'),
 						'level'						=> $this->db->f('level')
@@ -553,6 +555,7 @@
 					$values['loc_link'],
 					$values['start_project'],
 					$values['start_ticket'],
+					$values['is_eav'],
 					$values['jasperupload'],
 					$values['parent_id'],
 					$level
@@ -560,13 +563,34 @@
 
 			$values_insert	= $this->db->validate_insert($values_insert);
 
-			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,jasperupload,parent_id,level ) "
+			$this->db->query("INSERT INTO {$table} (entity_id,id,name, descr,prefix,lookup_tenant,tracking,location_level,location_link_level,fileupload,loc_link,start_project,start_ticket,is_eav,jasperupload,parent_id,level ) "
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
 
 			$receipt['id']= $values['id'];
 
+			if($values['is_eav']) // if modelles as eav - we are good
+			{
+				$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true);
+				$values_insert = array
+				(
+					'location_id'	=> $location_id,
+					'name'			=> ".{$this->type}.{$values['entity_id']}.{$values['id']}::{$values['name']}",
+					'description'	=> $values['descr'],
+					'is_ifc'		=> 0
+				);
+
+				$this->db->query('INSERT INTO fm_bim_type (' . implode(',',array_keys($values_insert)) . ') VALUES (' . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+
+				$this->db->transaction_commit();			
+
+				$receipt['message'][] = array('msg'	=> lang('%1 has been saved as an eav-model',$values['name']));
+				return $receipt;
+			}
+			
+			
+			// if not eav - we need a table to hold the attributes
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'],  $this->type_app[$this->type], true, "fm_{$this->type}_{$values['entity_id']}_{$values['id']}");
 			$this->init_process();
 
 			$fd = $this->get_default_column_def();
@@ -752,6 +776,7 @@
 						'loc_link'					=> $entity['loc_link'],
 						'start_project'				=> $entity['start_project'],
 						'start_ticket'				=> $entity['start_ticket'],
+						'is_eav'					=> $entity['is_eav'],
 						'jasperupload'				=> $entity['jasperupload'],
 						'parent_id'					=> $entity['parent_id'],
 						'level'						=> $level

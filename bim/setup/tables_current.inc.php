@@ -15,6 +15,8 @@
 		'fm_bim_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => True),
+				'is_ifc' => array('type' => 'int','precision' => 2,'default' => 1,'nullable' => True),
 				'name' => array('type' => 'varchar', 'precision' => 64,'nullable' => False),
 				'description' => array('type' => 'varchar', 'precision' => 512,'nullable' => True)
 			),
@@ -50,10 +52,17 @@
 				'guid' => array('type' => 'varchar', 'precision' => 24,'nullable' => False),
 				'xml_representation' => array('type' => 'xml','nullable' => False),
 				'model' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'p_location_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'p_id' => array('type' => 'int','precision' => '4','nullable' => True),
+				'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
+				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
+				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
 			'pk' => array('id'),
-			'fk' => array('fm_bim_model' => array('model' => 'id'),
-							'fm_bim_type' => array('type' => 'id')),
+			'fk' => array('fm_bim_type' => array('type' => 'id')),
+//			'fk' => array('fm_bim_model' => array('model' => 'id'),
+//							'fm_bim_type' => array('type' => 'id')),
 			'ix' => array(),
 			'uc' => array('guid')
 		)
