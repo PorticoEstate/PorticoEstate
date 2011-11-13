@@ -681,6 +681,23 @@
 									</input>
 								</td>
 							</tr>
+							<tr>
+								<td>
+									<xsl:value-of select="php:function('lang', 'is eav')"/>
+								</td>
+								<td>
+									<input type="checkbox" name="values[is_eav]" value="1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'This category is modelled in the database as a xml adapted entity attribute value model')"/>
+										</xsl:attribute>
+										<xsl:if test="value_is_eav = '1'">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+								</td>
+							</tr>
 						</xsl:when>
 					</xsl:choose>
 

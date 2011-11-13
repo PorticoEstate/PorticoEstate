@@ -243,12 +243,6 @@
 				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
 			}
 
-			// Need a table to operate on
-			if ( !$attrib_table )
-			{
-				return -1;
-			}
-
  			if(isset($attrib['get_list_function_input']) &&  $attrib['get_list_function_input'])
  			{
 				$attrib['get_list_function_input'] = $this->_validate_function_input($attrib['get_list_function_input']);
@@ -380,6 +374,21 @@
 			unset($cols, $vals);
 
 			$receipt['id'] = $values['id'];
+
+			// if no table: assume eav-model
+			if ( !$attrib_table )
+			{
+				if ( !$this->global_lock )
+				{
+					if ( $this->_db->transaction_commit() )
+					{
+						return $values['id'];
+					}
+				}
+
+				return 0;
+			}
+
 
 			if ( !$values['precision_'] > 0)
 			{
@@ -688,8 +697,6 @@
 			$OldPrecision		= $this->_db->f('precision_');
 			$OldGroup			= (int) $this->_db->f('group_id');			
 
-			$table_def = $this->get_table_def($attrib_table);	
-
 			$this->_db->transaction_begin();
 
 			if( !$doubled )
@@ -749,6 +756,17 @@
 
 			}
 
+			if(!$attrib_table) // Assume EAV-model
+			{
+				if ( $this->_db->transaction_commit() )
+				{
+					return true;
+				}
+
+				return false;
+			}
+
+			$table_def = $this->get_table_def($attrib_table);	
 			$this->_oProc->m_aTables = $table_def;
 
 			if($OldColumnName !=$attrib['column_name'])

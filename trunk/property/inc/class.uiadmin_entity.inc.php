@@ -546,6 +546,8 @@
 			$uicols['descr'][4]	= lang('Prefix');
 			$uicols['name'][5]	= 'entity_id';
 			$uicols['descr'][5]	= lang('id');
+			$uicols['name'][5]	= 'is_eav';
+			$uicols['descr'][5]	= lang('is_eav');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1176,6 +1178,7 @@
 					'value_start_project'				=> $values['start_project'],
 					'start_ticket'						=> true,
 					'value_start_ticket'				=> $values['start_ticket'],
+					'value_is_eav'						=> $values['is_eav'],
 					'jasperupload'						=> true,
 					'category_list'						=> $category_list,
 					'parent_list'						=> $parent_list
