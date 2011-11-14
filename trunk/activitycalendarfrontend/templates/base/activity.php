@@ -23,12 +23,16 @@ function get_available_groups()
 		//alert('new_org');
 		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "block";
+		document.getElementById('group_label').style.display = "none";
+		document.getElementById('group_select').style.display = "none";
 	}
 	else if(org_id != null && org_id == 'change_org')
 	{
 		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "none";
 		document.getElementById('change_org_fields').style.display = "block";
+		document.getElementById('group_label').style.display = "none";
+		document.getElementById('group_select').style.display = "none";
 	}
 	else
 	{
@@ -267,7 +271,7 @@ function allOK()
 						<div id="address_container"></div><br/>
 						<label for="number">Nummer</label>
 						<input type="text" name="number"/><br/>
-						<label for="postaddress">Postnummer / Sted</label>
+						<label for="postaddress">Postnummer og Sted</label>
 						<input type="text" name="postaddress"/>
 						<label for="org_description">Beskrivelse</label>
 						<textarea rows="10" cols="100" name="org_description"></textarea>
@@ -292,13 +296,13 @@ function allOK()
 					<div id="contact2_address_container"></div><br/>
 					<label for="contact2_number">Nummer</label>
 					<input type="text" name="contact2_number"/><br/>
-					<label for="contact2_postaddress">Postnummer / Sted</label>
+					<label for="contact2_postaddress">Postnummer og Sted</label>
 					<input type="text" name="contact2_postaddress"/>
 					<hr/>
 				</div>
 				<dt>
 					<?php if($activity->get_group_id() || $editable) { ?>
-					<label for="group_id"><?php echo lang('group') ?></label>
+					<label for="group_id" id="group_label"><?php echo lang('group') ?></label>
 					<?php } ?>
 				</dt>
 				<dd>
