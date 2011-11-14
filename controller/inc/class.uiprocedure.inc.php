@@ -290,7 +290,10 @@
 			
 			$procedures_array = $this->so->get_procedures_by_control_area_id($control_area_id);
 			
-			return json_encode( $procedures_array );
+			if(count($procedures_array)>0)
+				return json_encode( $procedures_array );
+			else
+				return null;
 		}
 		
 		

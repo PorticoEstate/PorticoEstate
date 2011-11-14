@@ -1,28 +1,34 @@
 $(document).ready(function(){
 	
-	
-
-	// When control area is chosen in control.xsl select procedure is populated
+	// Control.xsl when control area is selected procedures related to control area is fetched form db 
+	// and procedure select list is populated
 	$("#control_area_id option").click(function () {
 		 var control_area_id = $(this).val();
          var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
+         
+         var htmlString = "";
          
          $.ajax({
 			  type: 'POST',
 			  dataType: 'json',
 			  url: requestUrl + "&control_area_id=" + control_area_id,
 			  success: function(data) {
-				  var obj = jQuery.parseJSON(data);
-				  var htmlString = "";
-	
-				  $.each(obj, function(i) {
-					  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
-	    			});
-				 				  				  
-				  $("#procedure_id").html( htmlString );
-				}
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
+		    			});
+					 				  				  
+					  $("#procedure_id").html( htmlString );
+					}
+         		  	else
+         		  	{
+         		  		htmlString  += "<option>Ingen prosedyrer</option>"
+					  $("#procedure_id").html( htmlString );			  
+         		  	}
+			  }  
 			});	
-         
     });
 	
 	// Saves order of control items for a group
