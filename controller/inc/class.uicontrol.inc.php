@@ -165,17 +165,18 @@
 		}
 		
 		public function view_control_details()
-		{			
+		{
 			$control_id = phpgw::get_var('id');
 		
 			if(isset($control_id) && $control_id > 0)
 			{
 				$control = $this->so->get_single($control_id);	
 			}
-								
-			$procedures_array = $this->so_procedure->get_procedures_as_array();
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 
+			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+			$control_area_id = $control_areas_array[0]['id'];
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			
 			$tabs = array( array(
 							'label' => "1: " . lang('Details')
 						), array(
