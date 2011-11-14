@@ -915,8 +915,15 @@
 
 			if($category['is_eav'])
 			{
+ 				if(isset($values_insert['p_num']) && $values_insert['p_num'])
+				{
+					$p_category = $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
+					$values_insert['p_id']			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
+					$values_insert['p_location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+				}
+
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}");
-				$this->_save_eav($values_insert, $location_id);
+				$values['id'] = $this->_save_eav($values_insert, $location_id);
 			}
 			else
 			{
@@ -983,7 +990,7 @@
 			$doc->formatOutput = true;
 			$xml = $doc->saveXML();
 
-			_debug_array($xml);
+		//	_debug_array($xml);
 
 			if (function_exists('com_create_guid') === true)
 			{
@@ -997,11 +1004,11 @@
 			$values_insert = array
 			(
   				'type'					=> $type,
-  				'guid'					=> $guid,// character varying(24) NOT NULL,
+  				'guid'					=> $guid,
 				'xml_representation'	=> $this->db->db_addslashes($xml),
-				'model'					=> 0,//integer
-				'p_location_id'			=> '',//integer
-				'p_id'					=> '',//integer
+				'model'					=> 0,
+				'p_location_id'			=> isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id'					=> isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
 				'location_code'			=> $data['location_code'],//character varying(20),
 				'address'				=> $data['address'],//character varying(150),
 				'entry_date'			=> time(),
@@ -1010,8 +1017,8 @@
 
 			$this->db->query("INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
 			 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
-			$this->db->transaction_commit();
-			die();
+
+			return $this->db->get_last_insert_id('fm_bim_item','id');
 		}
 
 		function edit($values,$values_attribute,$entity_id,$cat_id)

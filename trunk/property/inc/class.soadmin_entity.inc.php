@@ -134,7 +134,7 @@
 				$sort		= isset($data['sort'])?$data['sort']:'DESC';
 				$order		= isset($data['order'])?$data['order']:'';
 				$allrows	= isset($data['allrows'])?$data['allrows']:'';
-				$entity_id	= isset($data['entity_id'])?$data['entity_id']:'';
+				$entity_id	= isset($data['entity_id'])? (int)$data['entity_id']:0;
 				$type		= isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 				$required	= isset($data['required'])?$data['required']:'';
 			}
@@ -177,6 +177,7 @@
 				$id	= $this->db2->f('id');
 				$category = array
 				(
+					'entity_id'	=> $entity_id,
 					'id'		=> $id,
 					'name'		=> $this->db2->f('name'),
 					'prefix'	=> $this->db2->f('prefix'),
@@ -950,9 +951,17 @@
 				}
 			}
 
-			$this->oProc->DropTable("fm_{$this->type}_{$entity_id}_{$id}");
-
 			$location_id = $GLOBALS['phpgw']->locations->get_id( $this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$id}");
+
+			$category = $this->read_single_category($entity_id, $id);
+			if($category['is_eav'])
+			{
+				$this->db->query("DELETE FROM fm_bim_type WHERE location_id= {$location_id}",__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->oProc->DropTable("fm_{$this->type}_{$entity_id}_{$id}");
+			}
 
 			$this->db->query("DELETE FROM fm_{$this->type}_category WHERE entity_id= {$entity_id} AND id= {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}",__LINE__,__FILE__);
