@@ -396,6 +396,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.send_mail', 'activity_id' => $value['id'],'message_type' => 'update')));
 				$value['labels'][] = lang('send_mail');
 				break;
+			
+			case 'new_activities':
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.edit', 'id' => $value['id'])));
+				$value['labels'][] = lang('edit');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $value['id'])));
+				$value['labels'][] = lang('show');
+				break;
 		}
     }
     
