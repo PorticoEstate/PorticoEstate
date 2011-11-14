@@ -367,8 +367,8 @@ state	activitycalendar	no	Status
 state_0	activitycalendar	no	Ingen
 state_1	activitycalendar	no	Ny
 state_2	activitycalendar	no	Endring
-state_3	activitycalendar	no	Akseptert
-state_4	activitycalendar	no	Behandlet
+state_3	activitycalendar	no	Publisert
+state_4	activitycalendar	no	Publisert
 state_5	activitycalendar	no	Avvist
 activity_import	activitycalendar	no	Importer aktiviteter
 office	activitycalendar	no	Hovedansvarlig kulturkontor
