@@ -259,7 +259,7 @@ function allOK()
 							<option value="<?php echo $d['part_of_town_id']?>"><?php echo $d['name']?></option>
 						<?php
 						}?>
-							</select>
+							</select><br/>
 						<label for="homepage">Hjemmeside</label>
 						<input type="text" name="homepage"/><br/>
 						<label for="email">E-post</label>
