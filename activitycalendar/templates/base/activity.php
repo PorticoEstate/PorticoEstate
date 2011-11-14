@@ -70,7 +70,7 @@ function allOK()
 	}
 	if(document.getElementById('office').value == null || document.getElementById('office').value == 0)
 	{
-		alert("Hocedansvarlig kulturkontor må fylles ut!");
+		alert("Hovedansvarlig kulturkontor må fylles ut!");
 		return false;
 	}
 	else
@@ -78,6 +78,7 @@ function allOK()
 }
 </script>
 <?php echo activitycalendar_uicommon::get_page_message($message) ?>
+<?php echo activitycalendar_uicommon::get_page_error($error) ?>
 <div class="yui-content">
 	<div id="details">
 		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>

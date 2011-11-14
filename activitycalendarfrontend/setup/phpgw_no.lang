@@ -62,3 +62,5 @@ arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted p�
 messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret
 messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lagring
 change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn for organisasjon %1
+target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
+district_not_selected	activitycalendarfrontend	no	Distrikt må velges!

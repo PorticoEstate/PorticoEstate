@@ -403,3 +403,5 @@ published	activitycalendar	no	Publisert
 contactperson_not_set	activitycalendar	no	Kontaktpersoner hentes fra valgt organisasjon/gruppe ved lagring.
 description_not_set	activitycalendar	no	Beskrivelse hentes fra valgt organisasjon/gruppe ved lagring (Max 255 tegn).
 back_to_list	activitycalendar	no	Tilbake til oversikt
+target_not_selected	activitycalendar	no	Målgruppe må velges!
+district_not_selected	activitycalendar	no	Distrikt må velges!
