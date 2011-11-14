@@ -619,7 +619,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	function get_activities()
 	{
 		$activities = array();
-		$sql = "SELECT * FROM activity_activity";
+		$sql = "SELECT * FROM activity_activity where state=3";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while ($this->db->next_record())
 		{			
