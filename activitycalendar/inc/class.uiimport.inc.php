@@ -480,14 +480,14 @@
 				else	//add org unit without org no
 				{
 					$org_info = array();
-					if($activity_group && !$activity_group == '')
-					{
-						$org_info['name'] = $activity_group;
-					}
-					else
-					{
+					//if($activity_group && !$activity_group == '')
+					//{
+					//	$org_info['name'] = $activity_group;
+					//}
+					//else
+					//{
 						$org_info['name'] = $org_name_tmp;
-					}
+					//}
 					 
 					//$org_info['orgnr'] = $this->decode($data[2]);
 					$org_info['homepage'] = $this->decode($data[16]);
