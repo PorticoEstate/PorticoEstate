@@ -580,7 +580,8 @@
 					'is_ifc'		=> 0
 				);
 
-				$this->db->query('INSERT INTO fm_bim_type (' . implode(',',array_keys($values_insert)) . ') VALUES (' . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+				$this->db->query('INSERT INTO fm_bim_type (' . implode(',',array_keys($values_insert)) . ') VALUES ('
+				 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
 
 				$this->db->transaction_commit();			
 
