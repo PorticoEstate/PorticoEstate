@@ -494,9 +494,13 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$i = 0;
 		while ($this->db->next_record())
 		{
-			$district[$i]['part_of_town_id'] = $this->db->f('part_of_town_id');
-			$district[$i]['name'] = stripslashes($this->db->f('name'));
-			$i++;
+			$name = $this->db->f('name');
+			if($name != 'ØVRIGE')
+			{
+				$district[$i]['part_of_town_id'] = $this->db->f('part_of_town_id');
+				$district[$i]['name'] = stripslashes($this->db->f('name'));
+				$i++;
+			}
 		}
 
 		return $district;
@@ -553,10 +557,14 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$sql = "SELECT * FROM bb_agegroup where active=1 ORDER BY sort";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
-			$target = new activitycalendar_target($this->db->f('id'));
-			$target->set_description($this->db->f('description'));
-			$target->set_name($this->db->f('name'));
-			$targets[] = $target;
+			$name = $this->db->f('name');
+			if($name != 'Tilskuere')
+			{
+				$target = new activitycalendar_target($this->db->f('id'));
+				$target->set_description($this->db->f('description'));
+				$target->set_name($this->db->f('name'));
+				$targets[] = $target;
+			}
 		}
 		return $targets;
 	}
