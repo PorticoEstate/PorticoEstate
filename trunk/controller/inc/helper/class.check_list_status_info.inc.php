@@ -1,16 +1,12 @@
 <?php
-	class calendar_cell
+	class check_list_status_info
 	{		
 		private $id;
 		private $status;
+		private $status_text;
 		private $deadline;
 
-		public function __construct(int $id, $status, $deadline)
-		{
-			$this->id = (int)$id;
-			$this->status = $status;
-			$this->deadline = $deadline;
-		}
+		public function __construct(){}
 		
 		public function set_id($id)
 		{
@@ -26,6 +22,13 @@
 		
 		public function get_status() { return $this->status; }
 		
+		public function set_status_text($status_text)
+		{
+			$this->status_text = $status_text;
+		}
+		
+		public function get_status_text() { return $this->status_text; }
+		
 		public function set_deadline($deadline)
 		{
 			$this->deadline = $deadline;
@@ -39,6 +42,7 @@
 			return array(
 				'id' => $this->get_id(),
 				'status' => $this->get_status(),
+				'status_text' => $this->get_status_text(),
 				'deadline' => $this->get_deadline()			
 			);
 		}

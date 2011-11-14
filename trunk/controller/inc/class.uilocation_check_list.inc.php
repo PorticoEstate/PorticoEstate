@@ -4,8 +4,9 @@
 	
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
-	
-	class controller_uicheck_list extends controller_uicommon
+	include_class('controller', 'check_list_status_info', 'inc/helper/');
+		
+	class controller_uilocation_check_list extends controller_uicommon
 	{
 		private $so;
 		private $so_control;
@@ -18,12 +19,12 @@
 		public $public_functions = array
 		(
 			'index'	=>	true,
-			'view_check_lists_for_control'	=>	true,
-			'save_check_list'				=>	true,
-			'view_check_list'				=>	true,
-			'edit_check_list'				=>	true,
-			'save_check_items'				=>	true,
-			'get_check_list_info'			=>	true
+			'view_check_lists_for_control'		=>	true,
+			'save_check_list'					=>	true,
+			'view_check_list'					=>	true,
+			'edit_check_list'					=>	true,
+			'save_check_items'					=>	true,
+			'view_check_lists_for_location'		=>	true
 		);
 
 		public function __construct()
@@ -40,169 +41,72 @@
 			
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::check_list";
 		}
-		
-		public function index()
-		{
-/*			$check_list_array = $this->so->get_check_list();
 			
-			$data = array
-			(
-				'check_list_array'	=> $check_list_array
-			);
-			
-			self::render_template_xsl('control_check_lists', $data);
-			*/
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
-				return $this->query();
-			}
-			self::add_javascript('controller', 'yahoo', 'datatable.js');
-			phpgwapi_yui::load_widget('datatable');
-			phpgwapi_yui::load_widget('paginator');
-
-			$data = array(
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(
-							array('type' => 'filter', 
-								'name' => 'status',
-                                'text' => lang('Status'),
-                                'list' => array(
-                                    array(
-                                        'id' => 'none',
-                                        'name' => lang('Not selected')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    )
-                                )
-                            ),
-							array('type' => 'text', 
-                                'text' => lang('searchfield'),
-								'name' => 'query'
-							),
-							array(
-								'type' => 'submit',
-								'name' => 'search',
-								'value' => lang('Search')
-							),
-						),
-					),
-				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicheck_list.index', 'phpgw_return_as' => 'json')),
-					'field' => array(
-						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'sortable'	=> true,
-							'formatter' => 'YAHOO.portico.formatLink'
-						),
-						array(
-							'key'	=>	'title',
-							'label'	=>	lang('Control title'),
-							'sortable'	=>	false
-						),
-						array(
-							'key' => 'start_date',
-							'label' => lang('start_date'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'planned_date',
-							'label' => lang('planned_date'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'end_date',
-							'label' => lang('end_date'),
-							'sortable'	=> false
-						),
-						array(
-							'key' => 'link',
-							'hidden' => true
-						)
-					)
-				),
-			);
-//_debug_array($data);
-
-			self::render_template_xsl('datatable', $data);
-		}
-		
-		public function view_check_list()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
-			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
-			$data = array
-			(
-				'check_list' => $check_list,
-				'date_format' => $date_format
-			);
-			
-			self::render_template_xsl('view_check_list', $data);
-		}
-		
-		// Returns check list info as JSON
-		public function get_check_list_info()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_control_items($check_list_id);
-			
-			return json_encode( $check_list );
-		}
-		
-		public function edit_check_list()
-		{
-			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
-			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-	
-			$data = array
-			(
-				'check_list' 	=> $check_list,
-				'date_format' 	=> $date_format
-			);
-			
-			self::render_template_xsl('edit_check_list', $data);
-		}
-		
-		public function control_calendar_status_overview()
+		public function view_check_lists_for_location()
 		{
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so_control->get_single($control_id);
 			
-			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-		
-			$check_list_array = $this->so->get_check_lists_for_control( $control_id );	
+			$view = "VIEW_YEAR";
 			
+			$location_code = "1101";
+			
+			// Gets an array of controls that contains check_lists for the specified location 
+			$control_array = $this->so->get_check_lists_for_location( $location_code );
+			
+			$controls_calendar_array = $this->build_calendar_array( $control_array );
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				
 			$data = array
 			(
-				'control_as_array'	=> $control->toArray(),
-				'check_list_array'	=> $check_list_array,
-				'date_format' 		=> $date_format
+				'location_array'		  => $location_array,
+				'controls_calendar_array' => $controls_calendar_array,
+				'date_format' 			  => $date_format
 			);
 			
-			self::render_template_xsl('control_calendar_status_overview', $data);
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::render_template_xsl('view_check_lists_for_location', $data);
 		}
 		
-		
+		// Function receives array with control objects that each contain check_lists for a certain period
+		public function build_calendar_array( $control_array ){
+						
+			$calendar_array = array();
+					
+			foreach($control_array as $control){
+				
+				$start_date = $control->get_start_date();
+				$end_date = $control->get_end_date();
+				
+				// Initialises twelve_months_array
+				for($i=0;$i<12;$i++){
+					$calendar_array[$i] = null;
+				}
+				
+				// Inserts check_list object on deadline month in twelve_months_array
+				foreach($control->get_check_lists_array() as $check_list){
+					
+					$check_list_status_info = new check_list_status_info();
+					$check_list_status_info->set_id($check_list->get_id());
+					$check_list_status_info->set_status_text($check_list->get_status());
+					if($check_list->get_status() == 'Ikke utført'){
+						$check_list_status_info->set_status(0);
+					}
+					
+					$check_list_status_info->set_deadline( date("d/m-Y", $check_list->get_deadline()) );
+					
+									
+					$calendar_array[ date("m", $check_list->get_deadline()) - 1 ] = $check_list_status_info->serialize();
+				}
+				
+				$control_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+			}
+			
+			return $control_calendar_array;
+		}
+				
 		public function view_check_lists_for_control()
 		{
 			$control_id = phpgw::get_var('id');
@@ -276,7 +180,7 @@
 			$repeat_type = $control->get_repeat_type();
 			$repeat_interval = $control->get_repeat_interval();
 			
-			$status = "FALSE";
+			$status = true;
 			$comment = "Kommentar for sjekkliste";
 			$deadline = $start_date;
 			
@@ -293,7 +197,7 @@
 			
 			foreach($control_items_list as $control_item){
 				
-				$status = 0;
+				$status = true;
 				$comment = "Kommentar for sjekk item";
 				
 				// Saving check_items for a list
