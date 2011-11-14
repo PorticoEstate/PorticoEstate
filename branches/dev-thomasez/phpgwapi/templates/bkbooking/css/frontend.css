@@ -301,7 +301,7 @@ overflow: hidden;
 line-height: 1;
 width: 1000px;
 background-image: none !important;
-height: 130px !important;
+height: 140px !important;
 }
 
 #login-bar{
@@ -315,7 +315,7 @@ line-height: 1.2em;
 }
 
 #logo{
-background: url(../images/nsf/forbundsmerke.png) no-repeat;
+background: url(../images/nsf/Alltidberedt_farger.png) no-repeat;
 float: left;
 height: 145px!important;
 width: 212px!important;
