@@ -114,6 +114,45 @@ var divcontent_end = "</select>";
 	
 }
 
+function allOK()
+{
+	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
+	{
+		alert("Tittel må fylles ut!");
+		return false;
+	} 
+	if(document.getElementById('organization_id').value == null || document.getElementById('organization_id').value == '')
+	{
+		alert("Organisasjon må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0)
+	{
+		if(document.getElementById('arena_id').value == null || document.getElementById('arena_id').value == 0)
+		{
+			alert("Arena må fylles ut!");
+			return false;
+		}
+	}
+	if(document.getElementById('time').value == null || document.getElementById('time').value == '')
+	{
+		alert("Tid må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('category').value == null || document.getElementById('category').value == 0)
+	{
+		alert("Kategori må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('office').value == null || document.getElementById('office').value == 0)
+	{
+		alert("Hovedansvarlig kulturkontor må fylles ut!");
+		return false;
+	}
+	else
+		return true;
+}
+
 </script>
 
 <div class="yui-content" style="width: 100%;">
@@ -330,7 +369,7 @@ var divcontent_end = "</select>";
 					{
 						?>
 						<?php echo lang('int_arena_helptext')?><br/>
-						<select name="internal_arena_id">
+						<select name="internal_arena_id" id="internal_arena_id">
 							<option value="0">Ingen kommunale bygg valgt</option>
 							<?php
 							foreach($buildings as $building_id => $building_name)
@@ -361,7 +400,7 @@ var divcontent_end = "</select>";
 					{
 						?>
 						<?php echo lang('arena_helptext')?><br/>
-						<select name="arena_id" style="width: 60%">
+						<select name="arena_id" id="arena_id" style="width: 60%">
 							<option value="0">Ingen arena valgt</option>
 							<?php
 							foreach($arenas as $arena)
@@ -418,7 +457,7 @@ var divcontent_end = "</select>";
 					if ($editable)
 					{
 						?>
-						<select name="category">
+						<select name="category" id="category">
 							<option value="0">Ingen kategori valgt</option>
 							<?php
 							foreach($categories as $category)
@@ -480,7 +519,7 @@ var divcontent_end = "</select>";
 					{
 						$selected_office = $activity->get_office();
 					?>
-						<select name="office">
+						<select name="office" id="office">
 							<option value="0">Ingen kontor valgt</option>
 							<?php
 							foreach($offices as $office)
@@ -602,7 +641,7 @@ var divcontent_end = "</select>";
 			<div class="form-buttons">
 				<?php
 					if ($editable) {
-						echo '<input type="submit" name="save_activity" value="' . lang('save') . '"/>';
+						echo '<input type="submit" name="save_activity" value="' . lang('save') . '" onclick="return allOK();"/>';
 					}
 				?>
 			</div>
