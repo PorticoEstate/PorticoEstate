@@ -12,11 +12,12 @@
 		
 		public $public_functions = array
 		(
-			'index'	=>	true,
-			'query'	=>	true,
-			'edit'	=>	true,
-			'view'	=>	true,
-			'add'	=>	true
+			'index'				=>	true,
+			'query'				=>	true,
+			'edit'				=>	true,
+			'view'				=>	true,
+			'add'				=>	true,
+			'get_procedures'	=>	true
 		);
 
 		public function __construct()
@@ -281,6 +282,17 @@
 				self::render_template_xsl('procedure_item', $data);
 			}
 		}
+		
+		// Returns check list info as JSON
+		public function get_procedures()
+		{
+			$control_area_id = phpgw::get_var('control_area_id');
+			
+			$procedures_array = $this->so->get_procedures_by_control_area_id($control_area_id);
+			
+			return json_encode( $procedures_array );
+		}
+		
 		
 		/**
 	 	* Public method. Forwards the user to edit mode.

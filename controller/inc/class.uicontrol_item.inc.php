@@ -303,17 +303,12 @@
 					'control_group'			=> array('options' => $control_group_options),
 				);
 	
-	
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_item');
-	
 	
 				$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
 				$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
 				$GLOBALS['phpgw']->richtext->generate_script();
-	
-	
-	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
-	
+
 				self::render_template_xsl('control_item', $data);
 			}
 		}

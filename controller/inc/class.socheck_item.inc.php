@@ -48,10 +48,10 @@ class controller_socheck_item extends controller_socommon
 	function update($check_item){
 		
 		$id = $check_item->get_id();
-		
+
 		$values = array(
 			'control_item_id = ' . $this->marshal($check_item->get_control_item_id(), 'int'),
-			'status = ' . $this->marshal($check_item->get_status(), 'string'),
+			'status = ' . $this->marshal($check_item->get_status(), 'bool'),
 			'comment = ' . $this->marshal($check_item->get_comment(), 'string'),
 			'check_list_id = ' . $this->marshal($check_item->get_check_list_id(), 'int')
 		);

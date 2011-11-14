@@ -135,6 +135,39 @@ class controller_soprocedure extends controller_socommon
 		return $procedure;
 	}
 	
+	function get_procedures_by_control_area_id($control_area_id)
+	{
+		$results = array();
+		
+		$sql = "SELECT * FROM controller_procedure WHERE control_area_id=$control_area_id";
+		$this->db->query($sql);
+		
+		while($this->db->next_record()) {
+			$procedure = new controller_procedure($this->unmarshal($this->db->f('id', true), 'int'));
+			$procedure->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$procedure->set_purpose($this->unmarshal($this->db->f('purpose', true), 'string'));
+			$procedure->set_responsibility($this->unmarshal($this->db->f('responsibility', true), 'string'));
+			$procedure->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+			$procedure->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
+			$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
+			$procedure->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+			$procedure->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+			$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+			$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
+			$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+			
+			$procedures_array[] = $procedure->toArray();
+		}
+		
+		if( count( $procedures_array ) > 0 ){
+			return $procedures_array; 
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	function get_procedures($start = 0, $results = 1000, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array())
 	{
 		$results = array();
@@ -177,7 +210,7 @@ class controller_soprocedure extends controller_socommon
 		
 		//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 		
-		$condition = "WHERE end_date IS NULL";
+		//$condition = "WHERE end_date IS NULL";
 		$sql = "SELECT * FROM controller_procedure $condition $order";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
