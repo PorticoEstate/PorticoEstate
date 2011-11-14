@@ -49,7 +49,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'type' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'guid' => array('type' => 'varchar', 'precision' => 24,'nullable' => False),
+				'guid' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'xml_representation' => array('type' => 'xml','nullable' => False),
 				'model' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'p_location_id' => array('type' => 'int','precision' => '4','nullable' => True),
