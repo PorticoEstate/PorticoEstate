@@ -114,7 +114,7 @@
 		'index.php?menuaction=activitycalendar.uiactivities.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_search_query'],
+		['<?php echo $list_id ?>_ctrl_toggle_activity_state', '<?php echo $list_id ?>_ctrl_toggle_activity_district', '<?php echo $list_id ?>_ctrl_toggle_activity_category', '<?php echo $list_id ?>_ctrl_search_query'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -204,6 +204,19 @@
 			foreach($districts as $district)
 			{
 				echo "<option value=\"{$district['id']}\"". ($user_office == $district['id']? 'selected':'') . ">".$district['name']."</option>";
+			}
+			?>
+		</select>
+		<label class="toolbar_element_label" for="ctrl_toggle_activity_category"><?php echo lang('category') ?></label>
+		<?php
+			$categories = activitycalendar_soactivity::get_instance()->get_categories(); 
+		?>
+		<select name="activity_category" id="<?php echo $list_id ?>_ctrl_toggle_activity_category">
+			<option value="all"><?php echo lang('all') ?></option>
+			<?php
+			foreach($categories as $category)
+			{
+				echo "<option value=\"{$category->get_id()}\">".$category->get_name()."</option>";
 			}
 			?>
 		</select>

@@ -165,17 +165,18 @@
 		}
 		
 		public function view_control_details()
-		{			
+		{
 			$control_id = phpgw::get_var('id');
 		
 			if(isset($control_id) && $control_id > 0)
 			{
 				$control = $this->so->get_single($control_id);	
 			}
-								
-			$procedures_array = $this->so_procedure->get_procedures_as_array();
-			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 
+			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+			$control_area_id = $control_areas_array[0]['id'];
+			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			
 			$tabs = array( array(
 							'label' => "1: " . lang('Details')
 						), array(
@@ -201,6 +202,8 @@
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('control_tabs', 'control'), $data);
 			
 			$this->use_yui_editor(array('description'));
@@ -227,15 +230,16 @@
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups', 'control_id'=>$control_id, 'control_area_id'=>$control->get_control_area_id(), 'control_title'=>$control_title));	
 		}
 						
-		// Displays control groups based on which chosen control area
+		// Displays control groups based on previously chosen control area
 		public function view_control_groups(){
 			
 			$control_id = phpgw::get_var('control_id');
 			$control_area_id = phpgw::get_var('control_area_id');
 			$control_title = phpgw::get_var('control_title');
-			
+			$control_group_ids = phpgw::get_var('control_group_ids');
+					
 			$control_area = $this->so_control_area->get_single( $control_area_id );
-						
+			
 			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control_area->get_id(), 25);
 			
 			$tabs = array(
@@ -266,7 +270,8 @@
 				'control_id'				=> $control_id,
 				'control_title'				=> $control_title,
 				'control_area'				=> $control_area->toArray(),
-				'control_groups'			=> $control_groups_as_array
+				'control_groups'			=> $control_groups_as_array,
+				'chosen_control_groups'		=> $control_group_ids
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
@@ -452,7 +457,7 @@
 			$repeat_type = $control->get_repeat_type();
 			$repeat_interval = $control->get_repeat_interval();
 			
-			$status = false;
+			$status = FALSE;
 			$comment = "Kommentar for sjekkliste";
 			$deadline = $start_date;
 			
@@ -469,7 +474,7 @@
 			
 			foreach($control_items_list as $control_item){
 				
-				$status = true;
+				$status = '0';
 				$comment = "Kommentar for sjekk item";
 				
 				// Saving check_items for a list
@@ -479,7 +484,7 @@
 				$new_check_item->set_control_item_id( $control_item->get_id() );
 				$new_check_item->set_status( $status );
 				$new_check_item->set_comment( $comment );
-
+								
 				$saved_check_item = $this->so_check_item->store( $new_check_item );
 			}	
 			

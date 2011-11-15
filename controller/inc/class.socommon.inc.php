@@ -42,6 +42,7 @@ abstract class controller_socommon
 		{
 			return $this->db->db_addslashes($value);
 		}
+				
 		return "'" . $this->db->db_addslashes($value) . "'";
 	}
 

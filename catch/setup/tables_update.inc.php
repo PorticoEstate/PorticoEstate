@@ -344,3 +344,23 @@
 			return $GLOBALS['setup_info']['catch']['currentver'];
 		}
 	}
+
+	/**
+	* Update catch version from 0.9.17.511 to 0.9.17.512
+	* Add flag for eav modelling
+	*/
+
+	$test[] = '0.9.17.511';
+	function catch_upgrade0_9_17_511()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_catch_category','is_eav',array('type' => 'int','precision' => 2,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['catch']['currentver'] = '0.9.17.512';
+			return $GLOBALS['setup_info']['catch']['currentver'];
+		}
+	}
+

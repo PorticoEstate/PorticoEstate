@@ -52,7 +52,7 @@
 						'text'	=> lang('Check_list'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 			            'image'	=> array('property', 'location_1'),
-					),
+					)
 				);
 			}
 			else
@@ -64,6 +64,12 @@
 						'text'	=> lang('Check_list'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 			            'image'	=> array('property', 'location_1'),
+					),
+					'location_check_list' => array
+					(
+						'text'	=> lang('Check_list_location'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_check_lists_for_location') ),
+		            	'image'	=> array('property', 'location_1'),
 					),
 				);
 			}

@@ -37,8 +37,48 @@ YAHOO.util.Event.onDOMReady(function()
 {
 	get_available_groups();
 });
+
+function allOK()
+{
+	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
+	{
+		alert("Tittel må fylles ut!");
+		return false;
+	} 
+	if(document.getElementById('organization_id').value == null || document.getElementById('organization_id').value == '')
+	{
+		alert("Organisasjon må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0)
+	{
+		if(document.getElementById('arena_id').value == null || document.getElementById('arena_id').value == 0)
+		{
+			alert("Arena må fylles ut!");
+			return false;
+		}
+	}
+	if(document.getElementById('time').value == null || document.getElementById('time').value == '')
+	{
+		alert("Tid må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('category').value == null || document.getElementById('category').value == 0)
+	{
+		alert("Kategori må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('office').value == null || document.getElementById('office').value == 0)
+	{
+		alert("Hovedansvarlig kulturkontor må fylles ut!");
+		return false;
+	}
+	else
+		return true;
+}
 </script>
 <?php echo activitycalendar_uicommon::get_page_message($message) ?>
+<?php echo activitycalendar_uicommon::get_page_error($error) ?>
 <div class="yui-content">
 	<div id="details">
 		<h1><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/32x32/custom/contact.png" /><?php echo lang('activity') ?></h1>
@@ -212,7 +252,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
-						<select name="internal_arena_id">
+						<select name="internal_arena_id" id="internal_arena_id">
 							<option value="0">Ingen kommunale bygg valgt</option>
 							<?php
 							foreach($buildings as $building_id => $building_name)
@@ -242,7 +282,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
-						<select name="arena_id">
+						<select name="arena_id" id="arena_id">
 							<option value="0">Ingen arena valgt</option>
 							<?php
 							foreach($arenas as $arena)
@@ -291,7 +331,7 @@ YAHOO.util.Event.onDOMReady(function()
 					if ($editable)
 					{
 						?>
-						<select name="category">
+						<select name="category" id="category">
 							<option value="0">Ingen kategori valgt</option>
 							<?php
 							foreach($categories as $category)
@@ -325,7 +365,7 @@ YAHOO.util.Event.onDOMReady(function()
 						foreach($targets as $t)
 						{
 						?>
-							<input name="target[]" type="checkbox" value="<?php echo $t->get_id()?>" <?php echo (in_array($t->get_id(), $current_target_id_array) ? 'checked' : "")?>/><?php echo $t->get_name()?><br/>
+							<input name="target[]" id="target[]" type="checkbox" value="<?php echo $t->get_id()?>" <?php echo (in_array($t->get_id(), $current_target_id_array) ? 'checked' : "")?>/><?php echo $t->get_name()?><br/>
 						<?php
 						}
 					}
@@ -386,7 +426,7 @@ YAHOO.util.Event.onDOMReady(function()
 					{
 						$selected_office = $activity->get_office();
 					?>
-						<select name="office">
+						<select name="office" id="office">
 							<option value="0">Ingen kontor valgt</option>
 							<?php
 							foreach($offices as $office)
@@ -480,7 +520,7 @@ YAHOO.util.Event.onDOMReady(function()
 			<div class="form-buttons">
 				<?php
 					if ($editable) {
-						echo '<input type="submit" name="save_activity" value="' . lang('save') . '"/>';
+						echo '<input type="submit" name="save_activity" value="' . lang('save') . '" onclick="return allOK();"/>';
 						echo '<a href="' . $cancel_link . '">' . lang('back_to_list') . '</a>';
 					}
 					else

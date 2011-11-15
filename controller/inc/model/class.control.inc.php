@@ -24,6 +24,9 @@
 		protected $control_area_id;
 		protected $control_area_name;
 
+		protected $check_lists_array = array();
+		
+		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
 		 * the database the ID should be empty so the database can add one according to its logic.
@@ -69,13 +72,6 @@
 		}
 		
 		public function get_start_date() { return $this->start_date; }
-		
-		public function set_repeat_day($repeat_day)
-		{
-			$this->repeat_day = $repeat_day;
-		}
-		
-		public function get_repeat_day() { return $this->repeat_day; }
 		
 		public function set_repeat_type($repeat_type)
 		{
@@ -168,6 +164,13 @@
 		
 		public function get_control_area_name() { return $this->control_area_name; }
 		
+		public function set_check_lists_array($check_lists_array)
+		{
+			$this->check_lists_array = $check_lists_array;
+		}
+		
+		public function get_check_lists_array() { return $this->check_lists_array; }
+		
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 * 
@@ -190,6 +193,8 @@
 				$this->set_end_date(strtotime( phpgw::get_var('end_date_hidden','string') ));
 				$this->set_procedure_id(phpgw::get_var('procedure_id','int'));
 				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
+				$this->set_repeat_type(phpgw::get_var('repeat_type','int'));
+				$this->set_repeat_interval(phpgw::get_var('repeat_interval','int'));
 		}
 		
 		public function serialize()
@@ -203,7 +208,10 @@
 				'procedure_id' => $this->get_procedure_id(),
 				'procedure_name' => $this->get_procedure_name(),
 				'control_area_id' => $this->get_control_area_id(),
-				'control_area_name' => $this->get_control_area_name()
+				'control_area_name' => $this->get_control_area_name(),
+			   	'repeat_type' => $this->get_repeat_type(),
+				'repeat_interval' => $this->get_repeat_interval(),
+			
 				);
 		}
 	}

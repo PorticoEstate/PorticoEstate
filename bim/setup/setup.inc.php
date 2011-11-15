@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['bim']['name']			= 'bim';
-	$setup_info['bim']['version']		= '0.9.17.500';
+	$setup_info['bim']['version']		= '0.9.17.501';
 	$setup_info['bim']['app_order']		= 8;
 	$setup_info['bim']['enable']		= 1;
 	$setup_info['bim']['app_group']		= 'office';

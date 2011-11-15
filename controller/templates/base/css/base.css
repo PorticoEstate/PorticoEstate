@@ -818,8 +818,64 @@ h2.check_item_details{
 }
 #frm_save_check_items h1 {
     float: left;
-    margin: 5px 0;
+    margin: 5px;
 }
 ul.check_list {
 	width: 925px;	
+}
+ul.calendar li{
+	clear:left;	
+}
+ul.calendar li.heading div {
+    font-weight: bold;
+}
+ul.calendar li div {
+    float: left;
+    text-align: center;
+    width: 50px;
+    padding: 3px;
+}
+
+ul.calendar li div.date {
+    width: 80px;
+}
+
+ul.calendar div.title{
+	width: 200px;	
+}
+
+#info_box {
+    background: none repeat scroll 0 0 #EDF5FF;
+    border: 1px solid #243356;
+    left: 40px;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    top: 3px;
+    width: 350px;
+    z-index: 1;
+    font-size:12px;
+}
+
+#info_box label{
+	font-weight:bold;
+	margin-right:2px;
+	font-size:12px;
+	display: inline-block;
+	width: 70px;
+}
+
+#info_box ul li ul label{
+	display: inline;
+}
+
+#info_box ul li ul {
+    margin: 5px 0;
+    padding-left: 5px;
+}
+#info_box h5 {
+ 	font-size: 15px;
+    font-weight: bold;
+    padding: 0 0 8px;
+    text-align: center;
 }

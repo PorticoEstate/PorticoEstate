@@ -53,17 +53,8 @@ class controller_socheck_list extends controller_socommon
 			return null;
 		}
 	}
-	
-	
-		protected $id;
-		protected $title;
-		protected $required;
-		protected $what_to_do;
-		protected $how_to_do;
-		protected $control_group_id;
 		
-	
-	public function get_single_with_control_item($check_list_id){
+	public function get_single_with_control_items($check_list_id){
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
@@ -155,7 +146,12 @@ class controller_socheck_list extends controller_socommon
 	}
 	
 	function get_check_lists_for_control($control_id){
-		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.control_id = $control_id AND cl.id = ci.check_list_id ORDER BY cl.id;";
+		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ";
+		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id ";
+		$sql .= "FROM controller_check_list cl, controller_check_item ci ";
+		$sql .= "WHERE cl.control_id = $control_id ";
+		$sql .= "AND cl.id = ci.check_list_id "; 
+		$sql .= "ORDER BY cl.id;";
 		$this->db->query($sql);
 		
 		$check_list_id = 0;
@@ -196,7 +192,70 @@ class controller_socheck_list extends controller_socommon
 		}else {
 			return null;
 		}
+	}
+	
+	function get_check_lists_for_location($location_code){
+		$sql = 	"SELECT c.id as c_id, cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, cl.location_code as cl_loc, c.* ";
+		$sql .= "FROM controller_check_list cl, controller_control c ";
+		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "AND cl.control_id = c.id ";
+		$sql .= "ORDER BY c.id;";
 		
+		$this->db->query($sql);
+		
+		$control_id = 0;
+		$control = null;
+		while ($this->db->next_record()) {
+			
+			if( $this->db->f('c_id', true) != $control_id ){
+				
+				if($control_id != 0){
+					$control->set_check_lists_array($check_lists_array);
+					$controls_array[] = $control;
+				}
+			
+				$control = new controller_control($this->unmarshal($this->db->f('c_id', true), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
+				$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
+				$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+								
+				$check_lists_array = array();
+			}
+
+			$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
+			$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'string'));
+			$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
+			$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
+			$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
+			$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));
+			$check_list->set_location_code($this->unmarshal($this->db->f('cl_loc', true), 'int'));
+		
+			$check_lists_array[] = $check_list;
+
+			$control_id =  $control->get_id();
+		}
+		
+		if($control != null){
+			$control->set_check_lists_array($check_lists_array);
+			$controls_array[] = $control;
+			
+			return $controls_array;
+		}else {
+			return null;
+		}	
 	}
 	
 	function get_query(string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count)
@@ -266,10 +325,11 @@ class controller_socheck_list extends controller_socommon
 
 	function populate(int $control_id, &$control)
 	{
-		$start_date = date("d.m.Y",  $this->db->f('start_date'));
-		$end_date = date("d.m.Y",  $this->db->f('end_date'));
+		
 			
 		if($control == null) {
+			$start_date = date("d.m.Y",  $this->db->f('start_date'));
+			$end_date = date("d.m.Y",  $this->db->f('end_date'));
 			$control = new controller_control((int) $control_id);
 
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
@@ -317,5 +377,22 @@ class controller_socheck_list extends controller_socommon
 	
 	function update($object){}
 	
-	function get_id_field_name(){}	
+	function get_id_field_name($extended_info = false)
+	{
+		if(!$extended_info)
+		{
+			$ret = 'id';
+		}
+		else
+		{
+			$ret = array
+			(
+				'table'			=> 'control', // alias
+				'field'			=> 'id',
+				'translated'	=> 'id'
+			);
+		}
+		
+		return $ret;
+	}	
 }

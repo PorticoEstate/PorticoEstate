@@ -367,8 +367,8 @@ state	activitycalendar	no	Status
 state_0	activitycalendar	no	Ingen
 state_1	activitycalendar	no	Ny
 state_2	activitycalendar	no	Endring
-state_3	activitycalendar	no	Akseptert
-state_4	activitycalendar	no	Behandlet
+state_3	activitycalendar	no	Publisert
+state_4	activitycalendar	no	Publisert
 state_5	activitycalendar	no	Avvist
 activity_import	activitycalendar	no	Importer aktiviteter
 office	activitycalendar	no	Hovedansvarlig kulturkontor
@@ -403,3 +403,5 @@ published	activitycalendar	no	Publisert
 contactperson_not_set	activitycalendar	no	Kontaktpersoner hentes fra valgt organisasjon/gruppe ved lagring.
 description_not_set	activitycalendar	no	Beskrivelse hentes fra valgt organisasjon/gruppe ved lagring (Max 255 tegn).
 back_to_list	activitycalendar	no	Tilbake til oversikt
+target_not_selected	activitycalendar	no	Målgruppe må velges!
+district_not_selected	activitycalendar	no	Distrikt må velges!
