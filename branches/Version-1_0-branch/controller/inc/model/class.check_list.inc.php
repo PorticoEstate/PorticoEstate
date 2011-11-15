@@ -12,7 +12,10 @@
 		protected $deadline;
 		protected $planned_date;
 		protected $completed_date;
+		protected $location_code;
+		protected $equipment_id;
 		protected $check_item_array = array();
+		protected $control;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -80,6 +83,27 @@
 		}
 		
 		public function get_completed_date() { return $this->completed_date; }
+		
+		public function set_location_code($location_code)
+		{
+			$this->location_code = $location_code;
+		}
+		
+		public function get_location_code() { return $this->location_code; }
+		
+		public function set_equipment_id($equipment_id)
+		{
+			$this->equipment_id = $equipment_id;
+		}
+		
+		public function get_equipment_id() { return $this->equipment_id; }
+		
+		public function set_control($control)
+		{
+			$this->control = $control;
+		}
+		
+		public function get_control() { return $this->control; }
 		
 		public function serialize()
 		{

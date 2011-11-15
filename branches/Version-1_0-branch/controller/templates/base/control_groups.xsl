@@ -4,23 +4,28 @@
 	<div id="control_groups">
 	
 		<h2><xsl:value-of select="control_area/title"/></h2>
-			
+		
 		<form action="index.php?menuaction=controller.uicontrol.view_control_items" method="post">
-		<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
-		<input type="hidden" name="control_area_id" value="{$control_area_id}" />
-		
-		<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
-		<input type="hidden" name="control_id" value="{control_id}" />
-		
-		<ul class="itemlist">
-		<xsl:for-each select="//control_groups">
-			<xsl:variable name="control_group_id"><xsl:value-of select="id"/></xsl:variable>
-      		<li><input type="checkbox"  name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="group_name"/></li>
-		</xsl:for-each>
-		</ul>
-		<div>
-			<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
-			<input type="submit" name="save_control_groups" value="{$lang_save}" title = "{$lang_save}" />
+			<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
+			<input type="hidden" name="control_area_id" value="{$control_area_id}" />
+			
+			<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
+			<input type="hidden" name="control_id" value="{control_id}" />
+			
+			<ul class="itemlist">
+				<xsl:for-each select="//control_groups">
+					<xsl:variable name="control_group_id"><xsl:value-of select="id"/></xsl:variable>
+				
+					<xsl:for-each select="chosen_control_groups">
+						<xsl:value-of select="."/>
+					</xsl:for-each>
+				
+		      		<li><input type="checkbox"  name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="group_name"/></li>
+				</xsl:for-each>
+			</ul>
+			<div>
+				<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
+				<input type="submit" name="save_control_groups" value="{$lang_save}" title = "{$lang_save}" />
 			</div>
 		</form>					
 	</div>

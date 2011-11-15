@@ -839,10 +839,9 @@
 		}
 
 
-		function add($values,$values_attribute,$entity_id,$cat_id)
+		public function add($values,$values_attribute,$entity_id,$cat_id)
 		{
-			$cols = array();
-			$vals = array();
+			$values_insert = array();
 
 			if(isset($values['street_name']) && $values['street_name'])
 			{
@@ -858,14 +857,12 @@
 
 			if(isset($address) && $address)
 			{
-				$cols[] = 'address';
-				$vals[] = $address;
+				$values_insert['address'] = $address;
 			}
 
 			if (isset($values['location_code']) && $values['location_code'])
 			{
-				$cols[] = 'location_code';
-				$vals[] = $values['location_code'];			
+				$values_insert['location_code'] = $values['location_code'];
 			}
 
 			if(isset($values['location']) && is_array($values['location']))
@@ -874,8 +871,7 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$values_insert[$input_name] = $value;
 					}
 				}
 			}
@@ -886,13 +882,12 @@
 				{
 					if(isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$values_insert[$input_name] = $value;
 					}
 				}
 			}
 
-			if (isset($values_attribute) AND is_array($values_attribute))
+			if (isset($values_attribute) && is_array($values_attribute))
 			{
 				foreach($values_attribute as $entry)
 				{
@@ -902,9 +897,7 @@
 						{
 							$entry['value'] = $this->db->db_addslashes($entry['value']);
 						}
-
-						$cols[]	= $entry['name'];
-						$vals[]	= $entry['value'];
+						$values_insert[$entry['name']] = $entry['value'];
 
 						if($entry['history'] == 1)
 						{
@@ -914,28 +907,38 @@
 				}
 			}
 
-			if($cols)
+			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+			$category = $admin_entity->read_single_category($entity_id, $cat_id);
+
+			$this->db->transaction_begin();
+
+			if($category['is_eav'])
 			{
-				$cols	= "," . implode(",", $cols);
-				$vals	= "," . $this->bocommon->validate_db_insert($vals);
+ 				if(isset($values_insert['p_num']) && $values_insert['p_num'])
+				{
+					$p_category = $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
+					$values_insert['p_id']			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
+					$values_insert['p_location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+				}
+
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}");
+				$values['id'] = $this->_save_eav($values_insert, $location_id);
 			}
 			else
 			{
-				$cols = '';
-				$vals = '';
+				$table = "fm_{$this->type}_{$entity_id}_$cat_id";
+				$values['id'] = $this->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
+				$num=$this->generate_num($entity_id,$cat_id,$values['id']);
+				$values_insert['id'] = $values['id'];
+				$values_insert['num'] = $num;
+				$values_insert['entry_date'] =  time();
+				$values_insert['user_id'] = $this->account;
+
+				$this->db->query("INSERT INTO {$table} (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+				 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+
 			}
-
-			$table = "fm_{$this->type}_{$entity_id}_$cat_id";
-			$this->db->transaction_begin();
-			$values['id'] = $this->generate_id(array('entity_id'=>$entity_id,'cat_id'=>$cat_id));
-			$num=$this->generate_num($entity_id,$cat_id,$values['id']);
-
-			$this->db->query("INSERT INTO $table (id,num,entry_date,user_id $cols) "
-				. "VALUES ("
-				. $values['id']. ",'"
-				. $num . "',"
-				. time() . ","
-				. $this->account. " $vals)",__LINE__,__FILE__);
 
 			if(isset($values['origin']) && is_array($values['origin']))
 			{
@@ -970,6 +973,52 @@
 			$receipt['id'] = $values['id'];
 			$receipt['message'][] = array('msg'=>lang('Entity %1 has been saved',$values['id']));
 			return $receipt;
+		}
+
+		protected function _save_eav($data = array(),$location_id)
+		{
+			$location_id = (int) $location_id;
+			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
+			$this->db->next_record();
+			$type = $this->db->f('type');
+
+			phpgw::import_class('phpgwapi.xmlhelper');
+			$xmldata = phpgwapi_xmlhelper::toXML($data, 'PHPGW');
+			$doc = new DOMDocument;
+			$doc->preserveWhiteSpace = true;
+			$doc->loadXML( $xmldata );
+			$doc->formatOutput = true;
+			$xml = $doc->saveXML();
+
+		//	_debug_array($xml);
+
+			if (function_exists('com_create_guid') === true)
+			{
+				$guid = trim(com_create_guid(), '{}');
+			}
+			else
+			{
+				$guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+			}
+
+			$values_insert = array
+			(
+  				'type'					=> $type,
+  				'guid'					=> $guid,
+				'xml_representation'	=> $this->db->db_addslashes($xml),
+				'model'					=> 0,
+				'p_location_id'			=> isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id'					=> isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+				'location_code'			=> $data['location_code'],//character varying(20),
+				'address'				=> $data['address'],//character varying(150),
+				'entry_date'			=> time(),
+				'user_id'				=> $this->account
+			);
+
+			$this->db->query("INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+			 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+
+			return $this->db->get_last_insert_id('fm_bim_item','id');
 		}
 
 		function edit($values,$values_attribute,$entity_id,$cat_id)

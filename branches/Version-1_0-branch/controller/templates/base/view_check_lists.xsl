@@ -18,8 +18,8 @@
 			<xsl:if test="control_as_array/end_date != ''">
 				<xsl:value-of select="php:function('date', $date_format, number(control_as_array/end_date))"/><br/>
 			</xsl:if>
-			<label>Syklustype</label><xsl:value-of select="control_as_array/repeat_type"/><br/>
-			<label>Syklusfrekvens</label><xsl:value-of select="control_as_array/repeat_interval"/><br/>
+			<label>Frekvenstype</label><xsl:value-of select="control_as_array/repeat_type"/><br/>
+			<label>Frekvens</label><xsl:value-of select="control_as_array/repeat_interval"/><br/>
 		</fieldset>
 		
 		<h2>Sjekklister</h2>
@@ -78,5 +78,15 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</ul>
+		 <a>
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list.control_calendar_status_overview</xsl:text>
+				<xsl:text>&amp;control_id=</xsl:text>
+					<xsl:value-of select="control_as_array/id"/>
+			</xsl:attribute>
+			<div style="margin-top:30px">
+				Se kalenderoversikt for kontroll
+			</div>
+		</a>
 </div>
 </xsl:template>

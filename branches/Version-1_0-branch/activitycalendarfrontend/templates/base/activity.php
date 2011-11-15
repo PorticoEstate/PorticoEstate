@@ -23,12 +23,16 @@ function get_available_groups()
 		//alert('new_org');
 		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "block";
+		document.getElementById('group_label').style.display = "none";
+		document.getElementById('group_select').style.display = "none";
 	}
 	else if(org_id != null && org_id == 'change_org')
 	{
 		document.getElementById('new_org').style.display = "block";
 		document.getElementById('new_org_fields').style.display = "none";
 		document.getElementById('change_org_fields').style.display = "block";
+		document.getElementById('group_label').style.display = "none";
+		document.getElementById('group_select').style.display = "none";
 	}
 	else
 	{
@@ -112,6 +116,45 @@ var divcontent_end = "</select>";
 	}
 	var trans = YAHOO.util.Connect.asyncRequest('GET', url, callback, null);
 	
+}
+
+function allOK()
+{
+	if(document.getElementById('title').value == null || document.getElementById('title').value == '')
+	{
+		alert("Tittel må fylles ut!");
+		return false;
+	} 
+	if(document.getElementById('organization_id').value == null || document.getElementById('organization_id').value == '')
+	{
+		alert("Organisasjon må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('internal_arena_id').value == null || document.getElementById('internal_arena_id').value == 0)
+	{
+		if(document.getElementById('arena_id').value == null || document.getElementById('arena_id').value == 0)
+		{
+			alert("Arena må fylles ut!");
+			return false;
+		}
+	}
+	if(document.getElementById('time').value == null || document.getElementById('time').value == '')
+	{
+		alert("Tid må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('category').value == null || document.getElementById('category').value == 0)
+	{
+		alert("Kategori må fylles ut!");
+		return false;
+	}
+	if(document.getElementById('office').value == null || document.getElementById('office').value == 0)
+	{
+		alert("Hovedansvarlig kulturkontor må fylles ut!");
+		return false;
+	}
+	else
+		return true;
 }
 
 </script>
@@ -216,7 +259,7 @@ var divcontent_end = "</select>";
 							<option value="<?php echo $d['part_of_town_id']?>"><?php echo $d['name']?></option>
 						<?php
 						}?>
-							</select>
+							</select><br/>
 						<label for="homepage">Hjemmeside</label>
 						<input type="text" name="homepage"/><br/>
 						<label for="email">E-post</label>
@@ -228,7 +271,7 @@ var divcontent_end = "</select>";
 						<div id="address_container"></div><br/>
 						<label for="number">Nummer</label>
 						<input type="text" name="number"/><br/>
-						<label for="postaddress">Postnummer / Sted</label>
+						<label for="postaddress">Postnummer og Sted</label>
 						<input type="text" name="postaddress"/>
 						<label for="org_description">Beskrivelse</label>
 						<textarea rows="10" cols="100" name="org_description"></textarea>
@@ -253,13 +296,13 @@ var divcontent_end = "</select>";
 					<div id="contact2_address_container"></div><br/>
 					<label for="contact2_number">Nummer</label>
 					<input type="text" name="contact2_number"/><br/>
-					<label for="contact2_postaddress">Postnummer / Sted</label>
+					<label for="contact2_postaddress">Postnummer og Sted</label>
 					<input type="text" name="contact2_postaddress"/>
 					<hr/>
 				</div>
 				<dt>
 					<?php if($activity->get_group_id() || $editable) { ?>
-					<label for="group_id"><?php echo lang('group') ?></label>
+					<label for="group_id" id="group_label"><?php echo lang('group') ?></label>
 					<?php } ?>
 				</dt>
 				<dd>
@@ -330,7 +373,7 @@ var divcontent_end = "</select>";
 					{
 						?>
 						<?php echo lang('int_arena_helptext')?><br/>
-						<select name="internal_arena_id">
+						<select name="internal_arena_id" id="internal_arena_id">
 							<option value="0">Ingen kommunale bygg valgt</option>
 							<?php
 							foreach($buildings as $building_id => $building_name)
@@ -361,7 +404,7 @@ var divcontent_end = "</select>";
 					{
 						?>
 						<?php echo lang('arena_helptext')?><br/>
-						<select name="arena_id" style="width: 60%">
+						<select name="arena_id" id="arena_id" style="width: 60%">
 							<option value="0">Ingen arena valgt</option>
 							<?php
 							foreach($arenas as $arena)
@@ -418,7 +461,7 @@ var divcontent_end = "</select>";
 					if ($editable)
 					{
 						?>
-						<select name="category">
+						<select name="category" id="category">
 							<option value="0">Ingen kategori valgt</option>
 							<?php
 							foreach($categories as $category)
@@ -480,7 +523,7 @@ var divcontent_end = "</select>";
 					{
 						$selected_office = $activity->get_office();
 					?>
-						<select name="office">
+						<select name="office" id="office">
 							<option value="0">Ingen kontor valgt</option>
 							<?php
 							foreach($offices as $office)
@@ -602,7 +645,7 @@ var divcontent_end = "</select>";
 			<div class="form-buttons">
 				<?php
 					if ($editable) {
-						echo '<input type="submit" name="save_activity" value="' . lang('save') . '"/>';
+						echo '<input type="submit" name="save_activity" value="' . lang('save') . '" onclick="return allOK();"/>';
 					}
 				?>
 			</div>

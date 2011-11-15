@@ -57,26 +57,10 @@
 
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$action = phpgw::get_var('action', 'GET');
-			//var_dump($id);
+
 			$so_activity = activitycalendar_soactivity::get_instance();
 			$so_arena = activitycalendar_soarena::get_instance();
-			//$activity = $so->get_single($id);
-			
-			//var_dump(phpgw::get_var('secret', 'GET'));
-			//var_dump($activity->get_secret());
 
-			
-			
-			//var_dump($activity->get_title());
-			//$this->redirect(array('menuaction' => 'activitycalendar.uiactivities.edit', 'id' => $id, 'frontend' => 'true'));
-						
-/*			$application['resource_ids'] = $resource_ids;
-			$agegroups = $this->agegroup_bo->fetch_age_groups();
-			$agegroups = $agegroups['results'];
-			$audience = $this->audience_bo->fetch_target_audience();
-			$audience = $audience['results'];
-			self::render_template('application', array('application' => $application, 'audience' => $audience, 'agegroups' => $agegroups, 'frontend'=>'true'));
-*/
 			$categories = $so_activity->get_categories();
 			$targets = $so_activity->get_targets();
 			$offices = $so_activity->select_district_list();
@@ -254,14 +238,11 @@
 			{
 				if(isset($activity)) // If an activity object is created
 				{
-//					var_dump("lagre1");
+
 					$old_state = $activity->get_state();
 					$new_state = phpgw::get_var('state');
-//	var_dump("lagre2");
 					// ... set all parameters
 					$activity->set_title(phpgw::get_var('title'));
-					//$activity->set_organization_id(phpgw::get_var('organization_id'));
-					//$activity->set_group_id(phpgw::get_var('group_id'));
 					$activity->set_organization_id($o_id);
 					$activity->set_group_id($g_id);
 					$activity->set_arena(phpgw::get_var('arena_id'));
@@ -278,7 +259,6 @@
 					{
 						$activity->set_state($new_state);
 					}
-//					var_dump("lagre3");
 					$activity->set_category(phpgw::get_var('category'));
 					$target_array = phpgw::get_var('target');
 					$activity->set_target(implode(",", $target_array));
@@ -287,32 +267,91 @@
 					$activity->set_contact_persons($persons);
 					$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 					$activity->set_frontend(true);
-					
-//					var_dump("storing"); 
-					
-					if($so_activity->store($activity)) // ... and then try to store the object
+
+					$target_ok = false;
+					$district_ok = false;
+					if($activity->get_target() && $activity->get_target() != '')
 					{
-						$message = lang('messages_saved_form');	
+						$target_ok = true;
+					}
+					if($activity->get_district() && $activity->get_district() != '')
+					{
+						$district_ok = true;
+					}
+					
+					if($target_ok && $district_ok)
+					{
+						
+						if($so_activity->store($activity)) // ... and then try to store the object
+						{
+							$message = lang('messages_saved_form');	
+						}
+						else
+						{
+							$error = lang('messages_form_error');
+						}
+		
+						if($new_state == 3 || $new_state == 4 || $new_state == 5 )
+						{
+							$kontor = $so_activity->get_office_name($activity->get_office());
+							$subject = "Melding fra AktivBy";
+							$body = lang('mail_body_state_' . $new_state, $kontor);
+							
+							if(isset($g_id) && $g_id > 0)
+							{
+								activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+							}
+							else if (isset($o_id) && $o_id > 0)
+							{
+								activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+							}
+						}
+						$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+	
+						$this->render('activity.php', array
+									(
+										'activity' 	=> $activity,
+										'organizations' => $organizations,
+										'groups' => $groups,
+										'arenas' => $arenas,
+										'buildings' => $buildings,
+										'categories' => $categories,
+										'targets' => $targets,
+										'districts' => $districts,
+										'offices' => $offices,
+										'message' => isset($message) ? $message : phpgw::get_var('message'),
+										'error' => isset($error) ? $error : phpgw::get_var('error')
+									)
+						);
 					}
 					else
 					{
-						$error = lang('messages_form_error');
-					}
-	
-					if($new_state == 3 || $new_state == 4 || $new_state == 5 )
-					{
-						$kontor = $so_activity->get_office_name($activity->get_office());
-						$subject = "Melding fra AktivBy";
-						$body = lang('mail_body_state_' . $new_state, $kontor);
-						
-						if(isset($g_id) && $g_id > 0)
+						if(!$target_ok)
 						{
-							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+							$error .= "<br/>" . lang('target_not_selected');
 						}
-						else if (isset($o_id) && $o_id > 0)
+						if(!$district_ok)
 						{
-							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+							$error .= "<br/>" . lang('district_not_selected');
 						}
+						return $this->render('activity.php', array
+							(
+								'activity' 	=> $activity,
+								'organizations' => $organizations,
+								'org_name' => $org_name,
+								'groups' => $groups,
+								'arenas' => $arenas,
+								'buildings' => $buildings,
+								'categories' => $categories,
+								'targets' => $targets,
+								'districts' => $districts,
+								'offices' => $offices,
+								'editable' => true,
+								'cancel_link' => $cancel_link,
+								'message' => isset($message) ? $message : phpgw::get_var('message'),
+								'error' => isset($error) ? $error : phpgw::get_var('error')
+							)	
+						);
 					}
 				}
 			}

@@ -246,7 +246,13 @@
 		public function serialize()
 		{
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			if(isset($this->organization_id) && $this->get_organization_id() > 0)
+			if(isset($this->group_id) && $this->get_group_id() > 0)
+			{
+				$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_1());
+				$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2());
+				$desc = activitycalendar_sogroup::get_instance()->get_description($this->get_group_id());
+			}
+			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
 			{
 				if($this->get_new_org())
 				{
@@ -262,13 +268,7 @@
 					$contact_2 = activitycalendar_socontactperson::get_instance()->get_org_contact_name($this->get_contact_person_2());
 					$desc = activitycalendar_soorganization::get_instance()->get_description($this->get_organization_id());
 				}
-			}
-			else if(isset($this->group_id) && $this->get_group_id() > 0)
-			{
-				$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_1());
-				$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2());
-				$desc = activitycalendar_sogroup::get_instance()->get_description($this->get_group_id());
-			}
+			} 
 			else
 			{
 				$contact_1 = "";

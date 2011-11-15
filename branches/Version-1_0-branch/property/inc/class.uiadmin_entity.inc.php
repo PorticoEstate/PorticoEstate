@@ -533,7 +533,6 @@
 			{
 				$entry['location_id'] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$entry['id']}");
 			}			
-
 			$uicols['name'][0]	= 'location_id';
 			$uicols['descr'][0]	= 'location_id';
 			$uicols['name'][1]	= 'id';
@@ -546,6 +545,8 @@
 			$uicols['descr'][4]	= lang('Prefix');
 			$uicols['name'][5]	= 'entity_id';
 			$uicols['descr'][5]	= lang('id');
+			$uicols['name'][6]	= 'is_eav';
+			$uicols['descr'][6]	= lang('is_eav');
 			$j = 0;
 			$count_uicols_name = count($uicols['name']);
 
@@ -1176,6 +1177,7 @@
 					'value_start_project'				=> $values['start_project'],
 					'start_ticket'						=> true,
 					'value_start_ticket'				=> $values['start_ticket'],
+					'value_is_eav'						=> $values['is_eav'],
 					'jasperupload'						=> true,
 					'category_list'						=> $category_list,
 					'parent_list'						=> $parent_list

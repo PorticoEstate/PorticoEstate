@@ -193,31 +193,74 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$activity->set_contact_person_2_zip(phpgw::get_var('contact_person_2_zip'));
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				
-				if($so_activity->store($activity)) // ... and then try to store the object
+				$target_ok = false;
+				$district_ok = false;
+				if($activity->get_target() && $activity->get_target() != '')
 				{
-					$message = lang('messages_saved_form');	
+					$target_ok = true;
+				}
+				if($activity->get_district() && $activity->get_district() != '')
+				{
+					$district_ok = true;
+				}
+				
+				if($target_ok && $district_ok)
+				{
+					if($so_activity->store($activity)) // ... and then try to store the object
+					{
+						$message = lang('messages_saved_form');	
+					}
+					else
+					{
+						$error = lang('messages_form_error');
+					}
+	
+					if($new_state == 3 || $new_state == 5 )
+					{
+						$kontor = $so_activity->get_office_name($activity->get_office());
+						$subject = "Melding fra AktivBy";
+						$body = lang('mail_body_state_' . $new_state, $kontor);
+						
+						if(isset($g_id) && $g_id > 0)
+						{
+							activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+						}
+						else if (isset($o_id) && $o_id > 0)
+						{
+							activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+						}
+					}
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id(), 'saved_ok' => 'yes'));
 				}
 				else
 				{
-					$error = lang('messages_form_error');
-				}
-
-				if($new_state == 3 || $new_state == 5 )
-				{
-					$kontor = $so_activity->get_office_name($activity->get_office());
-					$subject = "Melding fra AktivBy";
-					$body = lang('mail_body_state_' . $new_state, $kontor);
-					
-					if(isset($g_id) && $g_id > 0)
+					if(!$target_ok)
 					{
-						activitycalendar_uiactivities::send_mailnotification_to_group($activity->get_contact_person_2(),$subject,$body);
+						$error .= "<br/>" . lang('target_not_selected');
 					}
-					else if (isset($o_id) && $o_id > 0)
+					if(!$district_ok)
 					{
-						activitycalendar_uiactivities::send_mailnotification_to_organization($activity->get_contact_person_2(),$subject,$body);
+						$error .= "<br/>" . lang('district_not_selected');
 					}
+					return $this->render('activity.php', array
+						(
+							'activity' 	=> $activity,
+							'organizations' => $organizations,
+							'org_name' => $org_name,
+							'groups' => $groups,
+							'arenas' => $arenas,
+							'buildings' => $buildings,
+							'categories' => $categories,
+							'targets' => $targets,
+							'districts' => $districts,
+							'offices' => $offices,
+							'editable' => true,
+							'cancel_link' => $cancel_link,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)	
+					);
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $activity->get_id(), 'saved_ok' => 'yes'));
 			}
 		}
 
@@ -288,7 +331,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				break;
 			case 'all_activities':
 			default:
-				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);
+				$filters = array('activity_state' => phpgw::get_var('activity_state'), 'activity_category' => phpgw::get_var('activity_category'), 'activity_district' => phpgw::get_var('activity_district'), 'user_id' => $uid);
 				$result_objects = activitycalendar_soactivity::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 				$object_count = activitycalendar_soactivity::get_instance()->get_count($search_for, $search_type, $filters);
 				break;
@@ -352,6 +395,15 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.send_mail', 'activity_id' => $value['id'],'message_type' => 'update')));
 				$value['labels'][] = lang('send_mail');
+				break;
+			
+			case 'new_activities':
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.edit', 'id' => $value['id'])));
+				$value['labels'][] = lang('edit');
+				$value['ajax'][] = false;
+				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $value['id'])));
+				$value['labels'][] = lang('show');
 				break;
 		}
     }
