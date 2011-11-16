@@ -374,7 +374,8 @@
 					}
 				}
 				$user_column_filter = '';
-				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+
+				if ($_user_columns)
 				{
 					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
 				}
@@ -459,7 +460,7 @@
 			{
 				$ordermethod = "  ORDER BY $entity_table.id DESC";
 			}
-
+_debug_array($ordermethod);
 			$filtermethod = "WHERE fm_bim_type.location_id = {$location_id}";
 			$where= 'AND';
 
@@ -470,7 +471,7 @@
 				&& $category['location_level'] > 0)
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
-				$filtermethod = " $where {$entity_table}.loc1 in ('" . implode("','", $access_location) . "')";
+				$filtermethod = " $where {$entity_table}.loc1 IN ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
 			}
 
@@ -498,8 +499,8 @@
 
 			if ($status)
 			{
-				$filtermethod .= " $where $entity_table.status='$status' ";
-				$where= 'AND';
+	//			$filtermethod .= " $where $entity_table.status='$status' ";
+	//			$where= 'AND';
 			}
 
 			if ($district_id > 0 && $category['location_level'])
@@ -546,6 +547,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$query = str_replace(",",'.',$query);
+				$_int_query = (int) $query;
 				if(stristr($query, '.'))
 				{
 					$query=explode(".",$query);
@@ -555,7 +557,7 @@
 				{
 					if(!$criteria_id)
 					{
-						$_querymethod[] .= "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.num {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
+						$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.id = {$_int_query} OR address {$this->like} '%{$query}%')";
 //						$where= 'OR';
 					}
 					else
@@ -637,7 +639,7 @@
 							default:
 								if(!$criteria_id)
 								{
-									$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
+									//$_querymethod[]= "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
 									$_querymethod[]= "xmlexists('//" . $this->db->f('column_name') . "[text() = ''$query'']' PASSING BY REF xml_representation)";
 									$__querymethod = array(); // remove block
 								}
@@ -675,7 +677,7 @@
 				$cache_info = array();
 			}
 			
-			if(!$cache_info)
+//			if(!$cache_info)
 			{
 				$sql_cnt = "SELECT DISTINCT fm_bim_item.id " . substr($sql,strripos($sql,'FROM'));
 				$sql2 = "SELECT count(*) as cnt FROM ({$sql_cnt}) as t";
@@ -935,7 +937,7 @@
 					}
 				}
 				$user_column_filter = '';
-				if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+				if ($_user_columns)
 				{
 					$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',',$_user_columns) .'))';
 				}
