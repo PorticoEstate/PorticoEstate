@@ -305,6 +305,8 @@
 			$custom	= createObject('phpgwapi.custom_fields');
 			$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
 
+			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+
 			$attrib_filter = array();
 			if($attrib_data)
 			{
@@ -314,14 +316,28 @@
 					{
 						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
-							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+							if($category['is_eav'])
+							{
+								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[text() = ''$_attrib_filter_value'']' PASSING BY REF xml_representation)";
+							}
+							else
+							{
+								$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+							}
 						}
 					}
 					else if($attrib['datatype'] == 'CH')
 					{
 						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
-							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
+							if($category['is_eav'])
+							{
+								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[contains(.,'',$_attrib_filter_value,'')]' PASSING BY REF xml_representation)";
+							}
+							else
+							{
+								$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
+							}
 						}
 					}
 				}
