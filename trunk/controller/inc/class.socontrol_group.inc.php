@@ -195,12 +195,12 @@ class controller_socontrol_group extends controller_socommon
 		return $results;
 	}
 	
-	function get_control_groups_as_array($control_area_id = null, $limit)
+	function get_control_groups_as_array($control_area_id)
 	{
 		$results = array();
 		
 		$sql = "SELECT * FROM controller_control_group WHERE control_area_id=$control_area_id";
-		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
+		$this->db->query($sql);
 		
 		while ($this->db->next_record()) {
 			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
@@ -253,95 +253,7 @@ class controller_socontrol_group extends controller_socommon
 		}
 
 		$filter_clauses = array();
-		/*switch($filters['is_active']){
-			case "active":
-				$filter_clauses[] = "rental_composite.is_active = TRUE";
-				break;
-			case "non_active":
-				$filter_clauses[] = "rental_composite.is_active = FALSE";
-				break;
-			case "both":
-				break;
-		}*/
-		/*
-		$special_query = false;	//specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
-		$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-		$availability_date_from = $ts_query;
-		$availability_date_to = $ts_query;
-		
-		if(isset($filters['availability_date_from']) && $filters['availability_date_from'] != ''){
-			$availability_date_from = strtotime($filters['availability_date_from']); 
-		}
-		
-		if(isset($filters['availability_date_to']) && $filters['availability_date_to'] != ''){
-			$availability_date_to = strtotime($filters['availability_date_to']); 
-		}
-		*/
-		/*switch($filters['has_contract']){
-			case "has_contract":
-				$filter_clauses[] = "NOT rental_contract_composite.contract_id IS NULL"; // Composite must have a contract
-				$filter_clauses[] = "NOT rental_contract.date_start IS NULL"; // The contract must have start date
-			*/	
-				/* The contract's start date not after the end of the period if there is no end date */
-/*				$filter_clauses[] = "
-					((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 OR
-					(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))";
-				$special_query=true;
-				break;
-			case "has_no_contract":
-				$filter_clauses[] = "
-				(
-					rental_contract_composite.contract_id IS NULL OR 
-					NOT rental_composite.id IN 
-					(
-						SELECT rental_composite.id FROM rental_composite 
-						LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
-						LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) 
-						WHERE  
-						(
-							NOT rental_contract_composite.contract_id IS NULL AND
-							NOT rental_contract.date_start IS NULL AND
-							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 		OR
-							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
-						)
-					)
-				)
-				";
-				$special_query=true;
-				break;
-			case "both":
-				break;
-		}
-		
-		// Furnished, partly furnished, not furnished, not specified
-		if(isset($filters['furnished_status']) & $filters['furnished_status'] < 4){
-			// Not specified
-			if($filters['furnished_status'] == 0)
-				$filter_clauses[] = "rental_composite.furnish_type_id IS NULL";
-			else 
-				$filter_clauses[] = "rental_composite.furnish_type_id=".$filters['furnished_status'];
-		}
-
-		if(isset($filters['not_in_contract'])){
-			$filter_clauses[] = "(rental_contract_composite.contract_id != ".$filters['not_in_contract']." OR rental_contract_composite.contract_id IS NULL)";
-		}
-		
-		if(isset($filters['location_code'])){
-			$filter_clauses[] = "rental_unit.location_code = '". $filters['location_code'] . "'";
-		}
-		
-		if(isset($filters['contract_id']))
-		{
-			$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'],'int')}";
-		}
-		
-		if(isset($filters[$this->get_id_field_name()]))
-		{
-			$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
-		}*/
-		
+			
 		if(isset($filters[$this->get_id_field_name()]))
 		{
 			$filter_clauses[] = "controller_control_group.id = {$this->marshal($filters[$this->get_id_field_name()],'int')}";
@@ -371,7 +283,9 @@ class controller_socontrol_group extends controller_socommon
 		}
 		else
 		{
-			$cols .= "controller_control_group.id, group_name, controller_control_group.procedure_id, controller_control_group.control_area_id, building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, controller_control_area.title as control_area_name ";
+			$cols .= "controller_control_group.id, group_name, controller_control_group.procedure_id, controller_control_group.control_area_id as control_area_id, ";
+			$cols .= "building_part_id, fm_building_part.descr AS building_part_descr, controller_procedure.title as procedure_title, "; 
+			$cols .= "controller_control_area.title as control_area_name ";
 		}
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';

@@ -236,23 +236,26 @@
 						
 		// Displays control groups based on previously chosen control area
 		public function view_control_groups(){
-			
 			$control_id = phpgw::get_var('control_id');
 			$control = $this->so->get_single($control_id);	
-			$control_area_id = phpgw::get_var('control_area_id');
+									
+			// Fetches saved control groups from db
+			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control_id($control_id);
+			$saved_control_group_ids = array();
 			
-			// Contains earlier selected control_groups
-			$selected_control_group_ids = phpgw::get_var('control_group_ids');
-				
-			$control_area = $this->so_control_area->get_single( $control_area_id );		
-			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control_area->get_id(), 25);
+			foreach($saved_control_groups as $control_group){
+				$saved_control_group_ids[] = $control_group->get_id();
+			}
+			
+			// Fetches  control groups based on selected control area						
+			$control_area = $this->so_control_area->get_single( $control->get_control_area_id );		
+			$control_groups_as_array = $this->so_control_group->get_control_groups_as_array($control->get_control_area_id());
 			
 			$control_groups = array();
-			
 			foreach($control_groups_as_array as $control_group){
 				$control_group_id = $control_group['id'];
 				
-				if( in_array($control_group_id, $selected_control_group_ids )){
+				if( in_array($control_group_id, $saved_control_group_ids )){
 					$control_groups[] = array("checked" => 1, "control_group" => $control_group);
 				}
 				else
@@ -264,8 +267,8 @@
 			$tabs = array(
 						array(
 							'label' => "1: " . lang('Details'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 'view' => "view_control_details", 
-																				   'id' => $control_id))
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_details', 
+																				   'view' => "view_control_details", 'id' => $control_id))
 						), 
 						array(
 							'label' => "2: " . lang('Choose_control_groups')
@@ -293,9 +296,11 @@
 		
 		public function save_control_groups(){
 			$control_id = phpgw::get_var('control_id');
-			$control_area_id = phpgw::get_var('control_area_id');
 			$control_group_ids = phpgw::get_var('control_group_ids');		
 
+			// Deleting earlier saved control groups
+			$this->so_control_group_list->delete_control_groups($control_id);
+			
 			$group_order_nr = 1;
 
 			// Saving control groups 
@@ -309,10 +314,10 @@
 				$this->so_control_group_list->add($control_group_list);
 				$group_order_nr++;
 			}
-			
+
+			// Redirect: view_control_items
 			$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_items', 
-								  'control_id'=>$control_id, 'control_area_id'=>$control_area_id, 
-								  'control_title'=>$control_title, 'control_group_ids'=>$control_group_ids));	
+								  'control_id'=>$control_id, 'control_group_ids'=>$control_group_ids));	
 		}
 		
 		// Gets a comma separated list of control groups, and displays control items for these groups
@@ -323,11 +328,11 @@
 			$control_group_ids = phpgw::get_var('control_group_ids');
 		
 			// Fetches saved control items from db
-			$selected_control_items = $this->so_control_item->get_control_items_by_control_id($control_id);
-			$selected_control_item_ids = array();
+			$saved_control_items = $this->so_control_item->get_control_items_by_control_id($control_id);
+			$saved_control_item_ids = array();
 			
-			foreach($selected_control_items as $control_item){
-				$selected_control_item_ids[] = $control_item->get_id();
+			foreach($saved_control_items as $control_item){
+				$saved_control_item_ids[] = $control_item->get_id();
 			}
 			
 			// Array with selected control groups and items
@@ -343,7 +348,7 @@
 				foreach($group_control_items_array as $control_item){
 					$control_item_id = $control_item['id'];
 					
-					if( in_array($control_item_id, $selected_control_item_ids )){
+					if( in_array($control_item_id, $saved_control_item_ids )){
 						$control_items_for_group_array[] = array("checked" => 1, "control_item" => $control_item);
 					}
 					else
@@ -371,7 +376,10 @@
 																			       'control_id' => $control_id, 'control_group_ids' => $control_group_ids, 
 																			       'control_area_id' => $control->get_control_area_id()))
 						),
-						array('label' => "3: " . lang('Choose_control_items')));
+						array('label' => "3: " . lang('Choose_control_items')),
+						array(
+							'label' => "4: " . lang('Sort_check_list')
+						));
 					
 			$data = array
 			(
