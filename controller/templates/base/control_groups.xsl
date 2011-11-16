@@ -9,18 +9,22 @@
 			<xsl:variable name="control_area_id"><xsl:value-of select="control_area/id"/></xsl:variable>
 			<input type="hidden" name="control_area_id" value="{$control_area_id}" />
 			
-			<xsl:variable name="control_id"><xsl:value-of select="control_id"/></xsl:variable>
-			<input type="hidden" name="control_id" value="{control_id}" />
+			<xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
+			<input type="hidden" name="control_id" value="{$control_id}" />
 			
 			<ul class="itemlist">
 				<xsl:for-each select="//control_groups">
-					<xsl:variable name="control_group_id"><xsl:value-of select="id"/></xsl:variable>
-				
-					<xsl:for-each select="chosen_control_groups">
-						<xsl:value-of select="."/>
-					</xsl:for-each>
-				
-		      		<li><input type="checkbox"  name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="group_name"/></li>
+					<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
+					
+					<xsl:choose>
+						<xsl:when test="checked = 1">
+							<li><input type="checkbox" checked="checked" name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="control_group/group_name"/></li>
+						</xsl:when>
+						<xsl:otherwise>
+							<li><input type="checkbox" name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="control_group/group_name"/></li>
+						</xsl:otherwise>
+					</xsl:choose>
+		      		
 				</xsl:for-each>
 			</ul>
 			<div>

@@ -879,3 +879,8 @@ ul.calendar div.title{
     padding: 0 0 8px;
     text-align: center;
 }
+.empty_list{
+	font-size: 16px;
+    font-weight: bold;
+    padding: 0 0 5px;
+}
