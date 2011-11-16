@@ -221,7 +221,7 @@ class controller_socontrol_item extends controller_socommon
 		}
 		else
 		{
-			$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_group_id, controller_control_item.control_area_id, controller_control_group.group_name AS control_group_name';
+			$cols = 'controller_control_item.id, controller_control_item.title, required, what_to_do, how_to_do, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
