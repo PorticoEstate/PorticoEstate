@@ -120,9 +120,14 @@ class controller_socontrol_item_list extends controller_socommon
 	
 	function delete($control_id, $control_item_id)
 	{		
-		var_dump("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id");
-		
 		$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id AND control_item_id = $control_item_id", __LINE__,__FILE__);
+				
+		return isset($result);
+	}
+	
+	function delete_control_items($control_id)
+	{		
+		$result = $this->db->query("DELETE FROM controller_control_item_list WHERE control_id = $control_id");
 				
 		return isset($result);
 	}
