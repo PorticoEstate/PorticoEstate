@@ -94,6 +94,41 @@
 				<dd><xsl:value-of select="building/usage_time"/></dd>
 			</xsl:if>
 		</dl>
+		<div class="clr"/>
+			<dl class="form-col">
+				<dt><label for="field_map_url"><xsl:value-of select="php:function('lang', 'Map url')"/></label></dt>
+				<dd><a target="_blank">
+                <xsl:attribute name="href"><xsl:value-of select="building/map_url"/></xsl:attribute>
+                <xsl:value-of select="php:function('lang', 'Click here')" /></a>
+				</dd>
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_weather_url"><xsl:value-of select="php:function('lang', 'Weather url')"/></label></dt>
+				<dd><a target="_blank">
+                <xsl:attribute name="href"><xsl:value-of select="building/weather_url"/></xsl:attribute>
+                <xsl:value-of select="php:function('lang', 'Click here')" /></a>
+				</dd>
+			</dl>
+		<div class='clr'/>
+		<dl class="form-col">
+			<xsl:if test="building/internal_cost!=''">				
+				<dt><label for="field_internal_cost"><xsl:value-of select="php:function('lang', 'Internal cost')"/></label></dt>
+				<dd><xsl:value-of select="building/internal_cost"/></dd>
+			</xsl:if>
+		</dl>
+		<dl class="form-col">
+			<xsl:if test="building/external_cost!=''">				
+				<dt><label for="field_external_cost"><xsl:value-of select="php:function('lang', 'External cost')"/></label></dt>
+				<dd><xsl:value-of select="building/external_cost"/></dd>
+			</xsl:if>
+		</dl>
+		<dl class="form-col">
+			<xsl:if test="building/cost_type!=''">				
+				<dt><label for="field_cost_type"><xsl:value-of select="php:function('lang', 'Cost type')"/></label></dt>
+	            <dd><xsl:value-of select="php:function('lang', string(building/cost_type))"/></dd>
+			</xsl:if>
+		</dl>
+		<div class='clr'/>
 
         <div class="form-buttons">
 			<xsl:if test="building/permission/write">
@@ -126,11 +161,11 @@
 
 <script type="text/javascript">
 var building_id = <xsl:value-of select="building/id"/>;
-	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order','Internal Cost','External Cost','Cost Type')"/>;
     <![CDATA[
 YAHOO.util.Event.addListener(window, "load", function() {
     var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-    var colDefs = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
+    var colDefs = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']},{key: 'internal_cost', label: lang['Internal Cost']},{key: 'external_cost', label: lang['External Cost']},{key: 'cost_type', label: lang['Cost Type']}];
     YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 
 	var url = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';

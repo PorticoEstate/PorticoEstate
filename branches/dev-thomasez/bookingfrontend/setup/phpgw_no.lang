@@ -335,6 +335,11 @@ To cancel booking use this link	bookingfrontend	no	For å slette bookingen bruk 
 To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen bruk lenken
 manual	common	no	Veiledning lag og organisasjoner
 Cancel allocation	bookingfrontend	no	Avbestill tildelinger
-House	booking	no	Hytte/hus
-Campsite	booking	no	Leirplass
-
+House	bookingfrontend	no	Hytte/hus
+Campsite	bookingfrontend	no	Leirplass
+Internal Cost	bookingfrontend	no	Medlems pris
+External Cost	bookingfrontend	no	Pris
+Cost Type	bookingfrontend	no	Pris type
+Perhour	bookingfrontend	no	Per time
+Perday	bookingfrontend	no	Per dag
+Perweek	bookingfrontend	no	Per uke

@@ -67,6 +67,7 @@
 				<div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
 			</dd>
 		</dl>
+		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading">3. <xsl:value-of select="php:function('lang', 'When?')" /></div>
 			<div id="dates-container">
@@ -87,6 +88,8 @@
 				</div></xsl:for-each>
 			</div>
 			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+		</dl>
+		<dl class="form-col">
 		</dl>
 		<dl class="form-col">
 			<div class="heading">4. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
@@ -178,6 +181,6 @@
 		YAHOO.booking.initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		YAHOO.booking.initialAcceptAllTerms = true;
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.','Internal Cost','External Cost','Cost Type')"/>;
 	</script>
 </xsl:template>

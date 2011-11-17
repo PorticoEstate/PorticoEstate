@@ -2662,7 +2662,7 @@
 	}
 
 	/**
-	* Update booking version from 0.2.09 to 0.2.10
+	* Update booking version from 0.2.10 to 0.2.11
 	* Update bb_building with som new fields.
 	* 
 	*/
@@ -2679,6 +2679,14 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN location varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN communication varchar(50) DEFAULT NULL");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN usage_time varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN internal_cost integer DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN external_cost integer DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN cost_type varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN internal_cost integer DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN external_cost integer DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN cost_type varchar(50) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN map_url varchar(250) DEFAULT NULL");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_building ADD COLUMN weather_url varchar(250) DEFAULT NULL");
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

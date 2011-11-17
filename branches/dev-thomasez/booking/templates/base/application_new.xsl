@@ -95,6 +95,7 @@
 				<div id="resources_container"><xsl:value-of select="php:function('lang', 'Select a building first')" /></div>
 			</dd>
 		</dl>
+		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
 			<p>Velg fra dato og angi fra klokkeslett. Velg til dato og angi klokkeslett. Dato velges fra kalender. Klokkeslett angis med 				timer:minutter. Du kan søke om flere tider ved å velge Legg til dato. For søknad om fast tid i en gitt periode legg inn startdato og 				klokkeslett for den første gangen her og oppgi intervall og sluttdato i felt 1: "Informasjon om aktiviteten"</p>
@@ -120,6 +121,8 @@
 
 
 			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
+		</dl>
+		<dl class="form-col">
 		</dl>
 		<dl class="form-col">
 			<div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
@@ -191,6 +194,6 @@
 		YAHOO.booking.initialAcceptAllTerms = false;
 		YAHOO.booking.initialSelection = <xsl:value-of select="application/resources_json"/>;
 		YAHOO.booking.initialAudience = <xsl:value-of select="application/audience_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.','Internal Cost','External Cost','Cost Type')"/>;
 	</script>
 </xsl:template>

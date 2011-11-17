@@ -78,6 +78,17 @@
 			</dl>
 			<div class="clr"/>
 			<dl class="form-col">
+				<dt><label for="field_map_url"><xsl:value-of select="php:function('lang', 'Map url')"/></label></dt>
+				<dd><input id="field_map_url" name="map_url" type="text" value="{building/map_url}"/></dd>
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_weather_url"><xsl:value-of select="php:function('lang', 'Weather ul')"/></label></dt>
+				<dd><input type="text" name="weather_url" id="field_weather_url" value="{building/weather_url}"/></dd>
+			</dl>
+			<div class="clr"/>
+			
+			<div class="clr"/>
+			<dl class="form-col">
 				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
 				<dd><input id="field_campsites" name="campsites" type="text" value="{building/campsites}"/></dd>
 
@@ -107,6 +118,34 @@
 				
 			</dl>
 			<div class="clr"/>
+
+			<dl class="form-col">
+				<dt><label for="field_internal_cost"><xsl:value-of select="php:function('lang', 'Internal cost')"/></label></dt>
+				<dd><input id="field_internal_cost" name="internal_cost" type="text" value="{building/internal_cost}"/></dd>
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_external_cost"><xsl:value-of select="php:function('lang', 'External cost')"/></label></dt>
+				<dd><input id="field_external_cost" name="external_cost" type="text" value="{building/external_cost}"/></dd>
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_cost_type"><xsl:value-of select="php:function('lang', 'Cost type')"/></label></dt>
+				<dd>
+					<select name='cost_type' id='field_cost_type'>
+						<option value=''><xsl:value-of select="php:function('lang', 'Select Cost type')" />...</option>
+						<xsl:for-each select="building/cost_types/*">
+							<option value="{local-name()}">
+								<xsl:if test="../../cost_type = local-name()">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+
+								<xsl:value-of select="php:function('lang', string(node()))"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</dd>
+			</dl>
+			<div class="clr"/>
+
 			<dl class="form-col">
 				<xsl:if test="not(new_form)">
 					<dt><label for="field_deactivate_application"><xsl:value-of select="php:function('lang', 'Deactivate application')"/></label></dt>

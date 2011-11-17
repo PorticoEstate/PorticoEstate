@@ -3,6 +3,10 @@
 	
 	class booking_sobuilding extends booking_socommon
 	{
+		const COST_TYPE_PH	= 'Perhour';
+		const COST_TYPE_PD	= 'Perday';
+		const COST_TYPE_PW	= 'Perweek';
+
 		function __construct()
 		{
 			parent::__construct('bb_building', 
@@ -22,6 +26,9 @@
 					'district' 		=> array('type' => 'string', 'query' => true),
 					'city' 			=> array('type' => 'string', 'query' => true),
 					'active' => array('type' => 'int'),
+					'internal_cost'		=> array('type' => 'int'),
+					'external_cost'		=> array('type' => 'int'),
+					'cost_type'		=> array('type' => 'string'),
 					'campsites'  => array('type' => 'int'),
 					'bedspaces'  => array('type' => 'int'),
 					'heating' 		=> array('type' => 'string', 'query' => true),
@@ -29,11 +36,18 @@
 					'kitchen' 		=> array('type' => 'string', 'query' => true),
 					'location' 		=> array('type' => 'string', 'query' => true),
 					'communication' => array('type' => 'string', 'query' => true),
-					'usage_time' 	=> array('type' => 'string', 'query' => true)
+					'usage_time' 	=> array('type' => 'string', 'query' => true),
+					'weather_url'		=> array('type' => 'string'),
+					'map_url'		=> array('type' => 'string')
 				)
 			);
 		}
-		
+
+		public static function allowed_cost_types()
+		{
+			return array(self::COST_TYPE_PH, self::COST_TYPE_PD, self::COST_TYPE_PW);
+		}
+	
 		/**
 		 * Returns buildings used by the organization with the specified id
 		 * within the last 300 days.

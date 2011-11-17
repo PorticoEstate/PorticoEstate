@@ -107,7 +107,7 @@ jan	booking	no	januar
 jul	booking	no	juli
 jun	booking	no	juni
 last modified	booking	no	Sist endret
-joading...	booking	no	Laster...
+loading...	booking	no	Laster...
 location	booking	no	Møtelokale
 male	booking	no	Mann
 mar	booking	no	mars
@@ -529,5 +529,13 @@ Water	booking	no	Vann
 Locality	booking	no	Beliggenhet
 communication	booking	no	Kommunikasjon
 Usage time	booking	no	Brukstid
-
-
+Internal Cost	booking	no	Pris medlem
+External Cost	booking	no	Pris ikke-medlem
+Cost Type	booking	no	Pristype
+Perhour	booking	no	Per time
+Perday	booking	no	Per dag
+Perweek	booking	no	Per uke
+Select Cost type	booking	no	Velg pristype
+Map url	booking	no	Kart
+Weather url	booking	no	Været
+Click here	booking	no	Klikk her

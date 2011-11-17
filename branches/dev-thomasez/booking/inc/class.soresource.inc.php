@@ -7,7 +7,11 @@
 		const TYPE_HOUSE = 'House';
 		const TYPE_EQUIPMENT = 'Equipment';
 		const TYPE_CAMPSITE = 'Campsite';
-		
+		const COST_TYPE_PH	= 'Perhour';
+		const COST_TYPE_PD	= 'Perday';
+		const COST_TYPE_PW	= 'Perweek';
+			
+
 		function __construct()
 		{
 			parent::__construct('bb_resource', 
@@ -28,6 +32,9 @@
 					'location' 		=> array('type' => 'string', 'query' => true),
 					'communication' => array('type' => 'string', 'query' => true),
 					'usage_time' 	=> array('type' => 'string', 'query' => true),
+					'internal_cost'		=> array('type' => 'int'),
+					'external_cost'		=> array('type' => 'int'),
+					'cost_type'		=> array('type' => 'string'),
 					'building_name'	=> array('type' => 'string',
 						  'query'		=> true,
 						  'join' 		=> array(
@@ -75,6 +82,11 @@
 		public static function allowed_types()
 		{
 			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT, self::TYPE_HOUSE, self::TYPE_CAMPSITE);
+		}
+
+		public static function allowed_cost_types()
+		{
+			return array(self::COST_TYPE_PH, self::COST_TYPE_PD, self::COST_TYPE_PW);
 		}
 		
 		function doValidate($entity, booking_errorstack $errors)

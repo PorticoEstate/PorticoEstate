@@ -92,35 +92,63 @@
 			<div class="clr"/>
 			<dl class="form-col">
 				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
-				<dd><input id="field_campsites" name="campsites" type="text" value="{building/campsites}"/></dd>
+				<dd><input id="field_campsites" name="campsites" type="text" value="{resource/campsites}"/></dd>
 
 				<dt><label for="field_bedspaces"><xsl:value-of select="php:function('lang', 'Bedspaces')"/></label></dt>
-				<dd><input id="field_bedspaces" name="bedspaces" type="text" value="{building/bedspaces}"/></dd>
+				<dd><input id="field_bedspaces" name="bedspaces" type="text" value="{resource/bedspaces}"/></dd>
 
 
 				<dt><label for="field_heating"><xsl:value-of select="php:function('lang', 'Heating')"/></label></dt>
-				<dd><input type="text" name="heating" id="field_heating" value="{building/heating}"/></dd>
+				<dd><input type="text" name="heating" id="field_heating" value="{resource/heating}"/></dd>
 
 				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
-				<dd><input type="text" name="kitchen" id="field_kitchen" value="{building/kitchen}"/></dd>
+				<dd><input type="text" name="kitchen" id="field_kitchen" value="{resource/kitchen}"/></dd>
 				
 			</dl>
 			<dl class="form-col">
 				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
-				<dd><input type="text" name="water" id="field_water" value="{building/water}"/></dd>
+				<dd><input type="text" name="water" id="field_water" value="{resource/water}"/></dd>
 
 				<dt><label for="field_location"><xsl:value-of select="php:function('lang', 'Locality')"/></label></dt>
-				<dd><input type="text" name="location" id="field_location" value="{building/location}"/></dd>
+				<dd><input type="text" name="location" id="field_location" value="{resource/location}"/></dd>
 
 				<dt><label for='field_communication'><xsl:value-of select="php:function('lang', 'Communication')"/></label></dt>
-				<dd><input type="text" name="communication" id="field_communication" value="{building/communication}"/></dd>
+				<dd><input type="text" name="communication" id="field_communication" value="{resource/communication}"/></dd>
 
 				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
-				<dd><input type="text" name="usage_time" id="field_usage_time" value="{building/usage_time}"/></dd>
+				<dd><input type="text" name="usage_time" id="field_usage_time" value="{resource/usage_time}"/></dd>
 				
 			</dl>
 			<div class="clr"/>
 
+			<dl class="form-col">
+				<dt><label for="field_internal_cost"><xsl:value-of select="php:function('lang', 'Internal cost')"/></label></dt>
+				<dd><input id="field_internal_cost" name="internal_cost" type="text" value="{resource/internal_cost}"/></dd>
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_external_cost"><xsl:value-of select="php:function('lang', 'External cost')"/></label></dt>
+				<dd><input id="field_external_cost" name="external_cost" type="text" value="{resource/external_cost}"/></dd>
+			</dl>
+			<dl class="form-col">
+				<dt><label for="field_cost_type"><xsl:value-of select="php:function('lang', 'Cost type')"/></label></dt>
+				<dd>
+					<select name='cost_type' id='field_cost_type'>
+						<option value=''><xsl:value-of select="php:function('lang', 'Select Cost type')" />...</option>
+						<xsl:for-each select="resource/cost_types/*">
+							<option value="{local-name()}">
+								<xsl:if test="../../cost_type = local-name()">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+
+								<xsl:value-of select="php:function('lang', string(node()))"/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</dd>
+			</dl>
+
+			<div class="clr"/>
+			
 			<dl class="form-col">
 				<dt><label for="field_description"><xsl:value-of select="php:function('lang', 'Description')" /></label></dt>
 				<dd class="yui-skin-sam">

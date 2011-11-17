@@ -64,6 +64,21 @@
 								<xsl:value-of select="district"/>
 							</dd>
 						</xsl:if>
+						<xsl:if test="map_url">
+							<dt><label for="field_map_url"><xsl:value-of select="php:function('lang', 'Map url')"/></label></dt>
+							<dd><a target="_blank">
+			                <xsl:attribute name="href"><xsl:value-of select="map_url"/></xsl:attribute>
+			                <xsl:value-of select="php:function('lang', 'Click here')" /></a>
+							</dd>
+						</xsl:if>
+						<xsl:if test="weather_url">
+							<dt><label for="field_weather_url"><xsl:value-of select="php:function('lang', 'Weather url')"/></label></dt>
+							<dd><a target="_blank">
+			                <xsl:attribute name="href"><xsl:value-of select="weather_url"/></xsl:attribute>
+			                <xsl:value-of select="php:function('lang', 'Click here')" /></a>
+							</dd>
+						</xsl:if>
+
 					</dl>
 				</xsl:if>
 				
@@ -117,12 +132,12 @@
 			</dl>
 			<script type="text/javascript">
 				var building_id = <xsl:value-of select="id"/>;
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity', 'Resource Type')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity', 'Resource Type','Internal Cost','External Cost','Cost Type')"/>;
 				<![CDATA[
 				
 				YAHOO.util.Event.addListener(window, "load", function() {
 				var url = 'index.php?menuaction=bookingfrontend.uiresource.index_json&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
+				var colDefs = [{key: 'name', label: lang['Name'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']},{key: 'internal_cost', label: lang['Internal Cost']},{key: 'external_cost', label: lang['External Cost']},{key: 'cost_type', label: lang['Cost Type']}];
 				YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 				});
 				

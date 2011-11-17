@@ -44,11 +44,18 @@ YAHOO.booking.frontendScheduleColorFormatter = function(elCell, oRecord, oColumn
 			else	
 				elCell.innerHTML = YAHOO.booking.shorten(booking.name, 9);
 		}
-		elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
+		if (booking.name == 'Ledig tid' || booking.name == 'Ledig' || booking.name == 'Åpen' || booking.name == 'Åpent') {
+			var data = oRecord.getData();
+			YAHOO.util.Dom.addClass(elCell, 'freegreen');
+			elCell.onclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };
+		} else {
+			elCell.onclick = function() {YAHOO.booking.showBookingInfo(booking,elCell); return false; };
+		}
+
 	}
 	else {
-		YAHOO.util.Dom.addClass(elCell, 'freegreen');
-		elCell.innerHTML = 'Ledig';
+//		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		elCell.innerHTML = '...';
 		var data = oRecord.getData();
 		elCell.ondblclick = function() {YAHOO.booking.newApplicationForm(YAHOO.booking.dates[oColumn.field], data._from, data._to, elCell); return false; };
 	}
@@ -108,8 +115,8 @@ YAHOO.booking.backendScheduleColorFormatter = function(elCell, oRecord, oColumn,
 		elCell.innerHTML = YAHOO.booking.bookingToHtml(booking);
 	}
 	else {
-		YAHOO.util.Dom.addClass(elCell, 'freegreen');
-		elCell.innerHTML = 'Ledig';
+//		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		elCell.innerHTML = '...';
 	}
 };
 
@@ -126,8 +133,8 @@ YAHOO.booking.scheduleColorFormatter = function(elCell, oRecord, oColumn, bookin
 			elCell.innerHTML = YAHOO.booking.link(booking.name, null, 9);
 	}
 	else {
-		YAHOO.util.Dom.addClass(elCell, 'freegreen');
-		elCell.innerHTML = 'Ledig';
+//		YAHOO.util.Dom.addClass(elCell, 'freegreen');
+		elCell.innerHTML = '...';
 	}
 };
 

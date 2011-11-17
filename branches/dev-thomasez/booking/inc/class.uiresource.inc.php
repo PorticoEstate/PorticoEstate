@@ -23,7 +23,7 @@
 			
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time');
+			$this->fields = array('name', 'building_id', 'building_name','description','activity_id', 'active', 'type', 'sort','internal_cost','external_cost','cost_type','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time');
 			self::set_active_menu('booking::resources');
 		}
 		
@@ -146,6 +146,7 @@
 			phpgwapi_yui::load_widget('autocomplete');
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['types'] = $this->resource_types();
+			$resource['cost_types'] = $this->resource_cost_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$this->use_yui_editor();
 			self::render_template('resource_form', array('resource' => $resource, 'activitydata' => $activity_data, 'new_form' => true));
@@ -158,6 +159,13 @@
 			return $types;
 		}
 
+		protected function resource_cost_types()
+		{
+			$types = array();
+			foreach($this->bo->allowed_cost_types() as $type) { $types[$type] = self::humanize($type); }
+			return $types;
+		}
+
 		public function edit()
 		{
 			$id = intval(phpgw::get_var('id', 'GET'));
@@ -167,6 +175,7 @@
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$resource['types'] = $this->resource_types();
+			$resource['cost_types'] = $this->resource_cost_types();
 			
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')

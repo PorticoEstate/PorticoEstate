@@ -52,8 +52,8 @@
 				<dt><label for='field_kitchen'><xsl:value-of select="php:function('lang', 'Kitchen')"/></label></dt>
 				<dd><xsl:value-of select="resource/kitchen"/></dd>
 			</xsl:if>
-			</dl>
-			<dl class="form-col">
+		</dl>
+		<dl class="form-col">
 			<xsl:if test="not(resource/water='')">				
 				<dt><label for="field_water"><xsl:value-of select="php:function('lang', 'Water')"/></label></dt>
 				<dd><xsl:value-of select="resource/water"/></dd>
@@ -71,7 +71,26 @@
 				<dd><xsl:value-of select="resource/usage_time"/></dd>
 			</xsl:if>
 		</dl>
-		
+	
+		<div class='clr'/>
+		<dl class="form-col">
+			<xsl:if test="resource/internal_cost!=''">				
+				<dt><label for="field_internal_cost"><xsl:value-of select="php:function('lang', 'Internal cost')"/></label></dt>
+				<dd><xsl:value-of select="resource/internal_cost"/></dd>
+			</xsl:if>
+		</dl>
+		<dl class="form-col">
+			<xsl:if test="resource/external_cost!=''">				
+				<dt><label for="field_external_cost"><xsl:value-of select="php:function('lang', 'External cost')"/></label></dt>
+				<dd><xsl:value-of select="resource/external_cost"/></dd>
+			</xsl:if>
+		</dl>
+		<dl class="form-col">
+			<xsl:if test="resource/cost_type!=''">				
+				<dt><label for="field_cost_type"><xsl:value-of select="php:function('lang', 'Cost type')"/></label></dt>
+	            <dd><xsl:value-of select="php:function('lang', string(resource/cost_type))"/></dd>
+			</xsl:if>
+		</dl>
 		<div class='clr'/>
 		
 		<div class="form-buttons">

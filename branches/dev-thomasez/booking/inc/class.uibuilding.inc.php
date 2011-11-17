@@ -26,9 +26,17 @@
 			
 			$this->bo = CreateObject('booking.bobuilding');
 			self::set_active_menu('booking::buildings');
-			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','campsites','bedspaces','heating','kitchen','water','location','communication','usage_time');
+			$this->fields = array('name', 'homepage', 'description', 'email', 'street', 'zip_code', 'city', 'district', 'phone', 'active', 'location_code','deactivate_application','deactivate_calendar','deactivate_sendmessage','internal_cost','external_cost','cost_type','campsites','bedspaces',
+'heating','kitchen','water','location','communication','usage_time','weather_url','map_url');
 		}
 		
+		protected function building_cost_types()
+		{
+			$types = array();
+			foreach($this->bo->allowed_cost_types() as $type) { $types[$type] = self::humanize($type); }
+			return $types;
+		}
+
 		public function properties()
 		{
 			$q = phpgw::get_var('query', 'str', 'REQUEST', null);
@@ -152,6 +160,15 @@
 				$building = extract_values($_POST, $this->fields);
 				$building['active'] = '1';
 				$errors = $this->bo->validate($building);
+				if (strlen($_POST['heating']) > 50 ||  strlen($_POST['kitchen']) > 50 || strlen($_POST['water']) > 50  ||  strlen($_POST['location']) > 50  ||  strlen($_POST['communication']) > 50  ||  strlen($_POST['usage_time']) > 50)
+				{
+					$errors['extrafields'] = lang('Max 50 characters in text fields');
+				}	
+				if (strlen($_POST['map_url']) > 250 || strlen($_POST['weather_url']) > 250)
+				{
+					$errors['urlfields'] = lang('Max 250 characters in url fields');
+				}
+
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($building);
@@ -159,6 +176,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
+			$building['cost_types'] = $this->building_cost_types();
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$this->use_yui_editor();
@@ -170,6 +188,7 @@
 			$id = intval(phpgw::get_var('id', 'GET'));
 			$building = $this->bo->read_single($id);
 			$building['id'] = $id;
+			$building['cost_types'] = $this->building_cost_types();
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 			$building['top-nav-bar-buildings'] = lang('Buildings');
@@ -183,7 +202,10 @@
 				{
 					$errors['extrafields'] = lang('Max 50 characters in text fields');
 				}	
-
+				if (strlen($_POST['map_url']) > 250 || strlen($_POST['weather_url']) > 250)
+				{
+					$errors['urlfields'] = lang('Max 250 characters in url fields');
+				}
 
 				if(!$errors)
 				{

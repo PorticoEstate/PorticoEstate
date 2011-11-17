@@ -126,6 +126,7 @@
 						      return false;"><xsl:value-of select="php:function('lang', 'Building schedule')" /></a>)</dd>
             <dd><div id="resources_container"/></dd>
         </dl>
+        <div class="clr"/>
         <dl class="proplist-col">
             <dt class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></dt>
 			<script type="text/javascript">
@@ -155,6 +156,8 @@
 				</xsl:if>
 			</xsl:for-each>
         </dl>
+        <dl class="proplist-col">
+		</dl>
         <dl class="proplist-col">
             <dt class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></dt>
             <dt><xsl:value-of select="php:function('lang', 'Target audience')" /></dt>
@@ -310,7 +313,7 @@
 	 if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 	 }
-	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document')"/>;
+	var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'ID', 'Type', 'From', 'To', 'Document','Internal Cost','External Cost','Cost Type')"/>;
 	var app_id = <xsl:value-of select="application/id"/>;
 	var building_id = <xsl:value-of select="application/building_id"/>;	
 	var resources = <xsl:value-of select="application/resources"/>;
@@ -328,7 +331,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    var url = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 	    var url2 = 'index.php?menuaction=booking.uiapplication.associated&phpgw_return_as=json&filter_application_id=' + app_id;
 		]]>
-	    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']}];
+	    var colDefs = [{key: 'name', label: lang['Resources'], formatter: YAHOO.booking.formatLink}, {key: 'type', label: lang['Resource Type']},{key: 'internal_cost', label: lang['Internal Cost']},{key: 'external_cost', label: lang['External Cost']},{key: 'cost_type', label: lang['Cost Type']}];
 	    YAHOO.booking.inlineTableHelper('resources_container', url, colDefs);
 	    var colDefs = [
 		{key: 'id', label: lang['ID'], formatter: YAHOO.booking.formatLink},
