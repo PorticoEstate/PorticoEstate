@@ -956,6 +956,10 @@
 			$category = $this->read_single_category($entity_id, $id);
 			if($category['is_eav'])
 			{
+				$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id= {$location_id}",__LINE__,__FILE__);
+				$this->db->next_record();
+				$type = (int)$this->db->f('type');
+				$this->db->query("DELETE FROM fm_bim_item WHERE type = {$type}",__LINE__,__FILE__);
 				$this->db->query("DELETE FROM fm_bim_type WHERE location_id= {$location_id}",__LINE__,__FILE__);
 			}
 			else

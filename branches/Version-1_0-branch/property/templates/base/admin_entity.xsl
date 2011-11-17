@@ -695,7 +695,18 @@
 												<xsl:text>checked</xsl:text>
 											</xsl:attribute>
 										</xsl:if>
+										<xsl:if test="value_is_eav = '1' or value_id != ''">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+
 									</input>
+									<xsl:choose>
+										<xsl:when test="value_is_eav = '1'">
+											<input type="hidden" name="values[is_eav]" value="1"/>
+										</xsl:when>
+									</xsl:choose>
 								</td>
 							</tr>
 						</xsl:when>

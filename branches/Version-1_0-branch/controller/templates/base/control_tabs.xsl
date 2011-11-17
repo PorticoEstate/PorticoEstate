@@ -13,45 +13,38 @@
 		</xsl:when>
 		<xsl:when test="view = 'control_groups'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Control_groups')"/> for <xsl:value-of select="control_title" /></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Control_groups')"/> for <xsl:value-of select="control/title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_groups" />
 		</xsl:when>
  		<xsl:when test="view = 'control_locations'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Control_locations')"/> for <xsl:value-of select="control_title" /></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Control_locations')"/> for <xsl:value-of select="control/title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_locations" />
 		</xsl:when>
 		<xsl:when test="view = 'control_equipment'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Control_equipment')"/> for <xsl:value-of select="control_title" /></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Control_equipment')"/> for <xsl:value-of select="control/title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_equipment" />
 		</xsl:when>
 		<xsl:when test="view = 'control_items'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Control_items')"/> for <xsl:value-of select="control_title" /></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Control_items')"/> for <xsl:value-of select="control/title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_items" />
 		</xsl:when>
 		<xsl:when test="view = 'sort_check_list'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Check_list')"/> for <xsl:value-of select="control_title" /></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Check_list')"/> for <xsl:value-of select="control/title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="sort_check_list" />
-		</xsl:when>
-		<xsl:when test="view = 'view_check_lists'">
-			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Check_list')"/> for <xsl:value-of select="control_title" /></h1>
-			</div>
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="tab_view_check_lists" />
 		</xsl:when>
 	</xsl:choose>
 </div>

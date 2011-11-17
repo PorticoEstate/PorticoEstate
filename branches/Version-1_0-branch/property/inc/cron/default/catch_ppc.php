@@ -177,17 +177,31 @@
 					throw new Exception(lang('no valid target'));
 				}
 			
-				$xmlparse = CreateObject('property.XmlToArray');
-				$xmlparse->setEncoding('UTF-8');
+//				$xmlparse = CreateObject('property.XmlToArray');
+//				$xmlparse->setEncoding('UTF-8');
 
 				$file_list = $this->get_files();
 
  				$i = 0;
 				foreach ($file_list as $file)
 				{
-					$var_result = $xmlparse->parseFile($file);
-					$var_result = array_change_key_case($var_result, CASE_LOWER);
-				
+					$xml = new DOMDocument('1.0', 'utf-8');
+					$xml->load($file);
+
+					$var_result = array();
+					
+					//_debug_array($xml->getElementsByTagName('PPCC')->item(0)->getattribute('UUID'));die();
+					
+					foreach($metadata as $field => $field_info)
+					{
+						$var_result[$field] = $xml->getElementsByTagName($field)->item(0)->nodeValue;
+					}
+					$var_result['unitid'] = $xml->getElementsByTagName('UnitID')->item(0)->nodeValue;
+//					_debug_array($var_result);die();
+
+//					$var_result = $xmlparse->parseFile($file);
+//					$var_result = array_change_key_case($var_result, CASE_LOWER);
+
 					//data
 					$insert_values	= array();
 					$cols		= array();

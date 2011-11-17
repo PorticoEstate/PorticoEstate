@@ -123,6 +123,20 @@ class controller_socontrol_group_list extends controller_socommon
 		}
 	}
 	
+	function delete($control_id, $control_group_id)
+	{		
+		$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id AND control_group_id = $control_group_id");
+				
+		return isset($result);
+	}
+	
+	function delete_control_groups($control_id)
+	{		
+		$result = $this->db->query("DELETE FROM controller_control_group_list WHERE control_id = $control_id");
+				
+		return isset($result);
+	}
+	
 	function get_control_groups_by_control_id($control_id)
 	{
 		$this->db->query("SELECT cg.*, cgl.order_nr FROM controller_control_group_list cgl, controller_control_group cg WHERE cgl.control_id=$control_id AND cgl.control_group_id=cg.id ORDER BY cgl.order_nr", __LINE__, __FILE__);

@@ -332,8 +332,8 @@ date_start	activitycalendar	no	Startdato
 date_end	activitycalendar	no	Sluttdato
 special_adaptation	activitycalendar	no	Spesielt tilpasset for utviklingshemmede
 target	activitycalendar	no	Målgruppe
-contact_person_1	activitycalendar	no	Kontaktperson 1
-contact_person_2	activitycalendar	no	Kontaktperson 2
+contact_person_1	activitycalendar	no	Kontaktperson 1 (Navn, e-post)
+contact_person_2	activitycalendar	no	Kontaktperson 2 (Navn, e-post)
 Activities	activitycalendar	no	Aktiviteter
 activities	activitycalendar	no	Aktiviteter
 Arena	activitycalendar	no	Arena
@@ -372,7 +372,7 @@ state_4	activitycalendar	no	Publisert
 state_5	activitycalendar	no	Avvist
 activity_import	activitycalendar	no	Importer aktiviteter
 office	activitycalendar	no	Hovedansvarlig kulturkontor
-activity_helptext	activitycalendar	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.
+activity_helptext	activitycalendar	no	Aktivitetsoversikten henter kontaktinformasjon og beskrivelse fra bookingmodulen.<br/>Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert,<br/>og at arena finnes og er oppdatert. Feltet vis i portal skal være satt til JA, i organisasjonsregisteret og evt. lag/gruppe. For nye aktiviteter vil dette bli satt automatisk.
 mail_subject_update	activitycalendar	no	Melding om oppdatering av aktivitet
 mail_body_update	activitycalendar	no	Du må oppdatere informasjonen som er registrert på aktivitet %1 . Bruk følgende lenke for å gå inn på aktiviteten: %2
 mail_body_state_3	activitycalendar	no	Ditt tips er publisert i kommuneportalen. Mvh %1 kulturkontor
@@ -401,7 +401,26 @@ organization_saved_form	activitycalendar	no	Organisasjonen ble lagret
 group_saved_form	activitycalendar	no	Gruppen ble lagret
 published	activitycalendar	no	Publisert
 contactperson_not_set	activitycalendar	no	Kontaktpersoner hentes fra valgt organisasjon/gruppe ved lagring.
-description_not_set	activitycalendar	no	Beskrivelse hentes fra valgt organisasjon/gruppe ved lagring (Max 255 tegn).
+description_helptext	activitycalendar	no	Hentes fra booking/organisasjonsregister ved lagring/oppdatering.
 back_to_list	activitycalendar	no	Tilbake til oversikt
 target_not_selected	activitycalendar	no	Målgruppe må velges!
 district_not_selected	activitycalendar	no	Distrikt må velges!
+title_helptext	activitycalendar	no	Oppgi tittelen for aktiviteten. Kort og beskrivende.
+state_helptext	activitycalendar	no	Status for aktiviteten. For at den skal vises i portalen må status settes til publisert.
+organization_helptext	activitycalendar	no	Velg organisasjon eller registrer inn ny.<br/>Stå i feltet og skriv inn første bokstav for å få opp oversikt.
+group_helptext	activitycalendar	no	Velg gruppe/lag, eller ingen.<br/>Feltet vis i portal må være satt til JA om lag/gruppe skal komme opp i listen.
+criteria_label	activitycalendar	no	Valgkriterier/søkeord i portalen
+criteria_helptext	activitycalendar	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
+what	activitycalendar	no	HVA
+where_when	activitycalendar	no	HVOR/NÅR
+who	activitycalendar	no	HVEM
+arena_helptext	activitycalendar	no	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.
+external_arena	activitycalendar	no	Eksterne bygg
+category_helptext	activitycalendar	no	Velg kategori
+target_helptext	activitycalendar	no	Velg målgruppe(r)
+district_helptext	activitycalendar	no	Velg bydel(er) hvor aktiviteten foregår
+adaptation_helptext	activitycalendar	no	Kryss av om aktiviteten er spesielt tilpasset
+time_helptext	activitycalendar	no	Oppgi tidspunkt for aktiviteten, f.eks. onsdag kl. 20-21
+office_helptext	activitycalendar	no	Oppgi kontor som saksbehandler aktiviteten
+contact_info	activitycalendar	no	Kontaktinformasjon for kulturkontoret
+contact_info_helptext	activitycalendar	no	Hentes fra booking/organisasjonsregister ved lagring.
