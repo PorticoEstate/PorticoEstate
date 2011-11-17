@@ -126,7 +126,7 @@ function allOK()
 					if ($editable)
 					{
 					?>
-						<input type="text" name="title" id="title" value="<?php echo $activity->get_title() ?>" size="100"/>
+						<input type="text" name="title" id="title" value='<?php echo $activity->get_title() ?>' size="100"/>
 					<?php
 					}
 					else
