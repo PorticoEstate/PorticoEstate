@@ -413,7 +413,7 @@ class rental_uiparty extends rental_uicommon
 					$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.edit', 'id' => $value['id'])));
 					$value['labels'][] = lang('edit');
 					
-					if(isset($value['party_in_contract']) && $value['party_in_contract'] == false)
+					if((isset($value['party_in_contract']) && $value['party_in_contract'] == false) && (!isset($value['org_enhet_id']) || $value['org_enhet_id'] == ''))
 					{
 						$value['ajax'][] = true;
 						$value['alert'][] = true;

@@ -832,7 +832,7 @@ ul.calendar li.heading div {
 ul.calendar li div {
     float: left;
     text-align: center;
-    width: 50px;
+    width: 40px;
     padding: 3px;
 }
 
@@ -878,4 +878,9 @@ ul.calendar div.title{
     font-weight: bold;
     padding: 0 0 8px;
     text-align: center;
+}
+.empty_list{
+	font-size: 16px;
+    font-weight: bold;
+    padding: 0 0 5px;
 }

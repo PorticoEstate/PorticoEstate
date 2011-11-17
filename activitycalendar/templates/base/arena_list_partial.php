@@ -59,7 +59,7 @@
 		'index.php?menuaction=activitycalendar.uiarena.query&amp;phpgw_return_as=json<?php echo $url_add_on; ?>&amp;editable=<?php echo $editable ? "true" : "false"; ?>',
 		columnDefs,
 		'<?php echo $list_id ?>_form',
-		['<?php echo $list_id ?>_ctrl_search_query','<?php echo $list_id ?>_ctrl_toggle_arena_type','<?php echo $list_id ?>_ctrl_toggle_active'],
+		['<?php echo $list_id ?>_ctrl_search_query','<?php echo $list_id ?>_ctrl_toggle_active'],
 		'<?php echo $list_id ?>_container',
 		'<?php echo $list_id ?>_paginator',
 		'<?php echo $list_id ?>',
@@ -75,7 +75,6 @@
     function arena_export(ptype) {
 
         var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
-        var aType = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_arena_type').value;
         var active = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_active').value;
         <?php
         /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting

@@ -305,6 +305,8 @@
 			$custom	= createObject('phpgwapi.custom_fields');
 			$attrib_data = $custom->find($this->type_app[$this->type],".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '','','',true, true);
 
+			$category = $this->soadmin_entity->read_single_category($this->entity_id,$this->cat_id);
+
 			$attrib_filter = array();
 			if($attrib_data)
 			{
@@ -314,14 +316,28 @@
 					{
 						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
-							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+							if($category['is_eav'])
+							{
+								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[text() = ''$_attrib_filter_value'']' PASSING BY REF xml_representation)";
+							}
+							else
+							{
+								$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} = '{$_attrib_filter_value}'";
+							}
 						}
 					}
 					else if($attrib['datatype'] == 'CH')
 					{
 						if($_attrib_filter_value = phpgw::get_var($attrib['column_name'], 'int'))
 						{
-							$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
+							if($category['is_eav'])
+							{
+								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[contains(.,'',$_attrib_filter_value,'')]' PASSING BY REF xml_representation)";
+							}
+							else
+							{
+								$attrib_filter[] = "fm_{$this->type}_{$this->entity_id}_{$this->cat_id}.{$attrib['column_name']} {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
+							}
 						}
 					}
 				}
@@ -409,17 +425,28 @@
 				}
 			}
 
+			//old
 			if($values['p_num'])
 			{
 				$soadmin_entity 			= CreateObject('property.soadmin_entity');
 				$soadmin_entity->type		= 'entity';
 				$soadmin_entity->type_app	= 'property';
 				$category = $soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
-//				$category = $this->soadmin_entity->read_single_category($values['p_entity_id'],$values['p_cat_id']);
 				$values['p'][$values['p_entity_id']]['p_num']=$values['p_num'];
 				$values['p'][$values['p_entity_id']]['p_entity_id']=$values['p_entity_id'];
 				$values['p'][$values['p_entity_id']]['p_cat_id']=$values['p_cat_id'];
 				$values['p'][$values['p_entity_id']]['p_cat_name'] = $category['name'];
+			}
+
+			//new
+			if($values['p_id'] && $values['p_location_id'])
+			{
+				$p_location = $GLOBALS['phpgw']->locations->get_name($values['p_location_id']);
+				$p__location = explode('.', $p_location['location']);
+				$values['p'][$p__location[2]]['p_num']=$values['p_id'];
+				$values['p'][$p__location[2]]['p_entity_id']=$p__location[2];
+				$values['p'][$p__location[2]]['p_cat_id']=$p__location[3];
+				$values['p'][$p__location[2]]['p_cat_name'] = $p_location['descr'];
 			}
 
 			$vfs = CreateObject('phpgwapi.vfs');

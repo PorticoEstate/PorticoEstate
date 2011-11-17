@@ -39,7 +39,7 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
 			
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::check_list";
+			self::set_active_menu('controller::location_check_list');
 		}
 			
 		public function view_check_lists_for_location()

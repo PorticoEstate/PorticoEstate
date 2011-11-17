@@ -212,6 +212,7 @@
 				unset($activity_persons);
 				unset($activity_description);
 				unset($org_info);
+				unset($group_info);
 				unset($contact_person);
 				unset($contact1);
 				unset($contact2);
