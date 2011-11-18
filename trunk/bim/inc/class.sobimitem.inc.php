@@ -77,7 +77,7 @@ class sobimitem_impl implements sobimitem
 			throw new Exception('ModelId not set');
 		}
 		
-		$this->db->query("SELECT id as type FROM ".self::bimTypeTable." WHERE name = '".$bimItem->getType()),__LINE__,__FILE__);
+		$this->db->query("SELECT id as type FROM ".self::bimTypeTable." WHERE name = '".$bimItem->getType(),__LINE__,__FILE__);
 		$this->db->next_record();
 		$type = $this->db->f('type');
 		$id = $this->db->next_id('fm_bim_item',array('type'	=> $type));
