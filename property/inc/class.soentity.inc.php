@@ -221,7 +221,7 @@
 			$filter			= isset($data['filter']) && $data['filter'] ? $data['filter'] : 'all';
 			$query			= isset($data['query']) ? $data['query'] : '';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order			= isset($data['order']) ? $data['order'] : '';
+			$order			= isset($data['order']) && $data['order'] ? $data['order'] : 'id';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$district_id	= isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
 			$lookup			= isset($data['lookup']) ? $data['lookup'] : '';
@@ -253,6 +253,11 @@
 				$grants		= $this->acl->get_grants($this->type_app[$this->type],".{$this->type}.{$entity_id}.{$cat_id}");
 				$GLOBALS['phpgw']->session->appsession("grants_entity_{$entity_id}_{$cat_id}", $this->type_app[$this->type], $grants);
 			}
+
+			$admin_entity	= CreateObject('property.soadmin_entity');
+			$admin_entity->type = $this->type;
+
+			$category = $admin_entity->read_single_category($entity_id,$cat_id);
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			$entity_table = 'fm_bim_item';
@@ -440,27 +445,9 @@
 			}
 
 			$this->uicols	= $uicols;
+
 			//_debug_array($cols_return_extra);
 
-			if ($order)
-			{
-				switch($order)
-				{
-					case 'user_id':
-		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
-						break;
-					case 'loc1_name':
-						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
-						break;
-					default:
-						$ordermethod = " ORDER BY $entity_table.$order $sort";	
-				}
-			}
-			else
-			{
-				$ordermethod = "  ORDER BY $entity_table.id DESC";
-			}
-_debug_array($ordermethod);
 			$filtermethod = "WHERE fm_bim_type.location_id = {$location_id}";
 			$where= 'AND';
 
@@ -648,7 +635,13 @@ _debug_array($ordermethod);
 				}
 			}
 
-			$sql = "SELECT fm_bim_item.* FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)";
+			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)";
+			if(isset($category['location_level']) && $category['location_level'])
+			{
+				$sql .= "{$this->join} fm_location1 ON (fm_bim_item.loc1 = fm_location1.loc1)";
+				$sql .= "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.part_of_town_id)";
+				$sql .= "{$this->join} fm_owner ON (fm_location1.owner_id = fm_owner.id)";
+			}
 
 			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
 			foreach($_joinmethod_datatype as $_joinmethod)
@@ -656,6 +649,7 @@ _debug_array($ordermethod);
 				$sql .= $_joinmethod;
 			}
 
+_debug_array($sql);
 			$querymethod = '';
 
 			$_querymethod = array_merge($__querymethod, $_querymethod);
@@ -669,17 +663,18 @@ _debug_array($ordermethod);
 			
 			$sql .= " $filtermethod $querymethod";
 
+			$_sql = str_replace('__XML-ORDER__', '', $sql);
 
 //			$cache_info = phpgwapi_cache::session_get('property',"{$location_id}_listing_metadata");
 
-			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($sql))
+			if (!isset($cache_info['sql_hash']) || $cache_info['sql_hash'] != md5($_sql))
 			{
 				$cache_info = array();
 			}
 			
 //			if(!$cache_info)
 			{
-				$sql_cnt = "SELECT DISTINCT fm_bim_item.id " . substr($sql,strripos($sql,'FROM'));
+				$sql_cnt = "SELECT DISTINCT fm_bim_item.id " . substr($_sql,strripos($_sql,'FROM'));
 				$sql2 = "SELECT count(*) as cnt FROM ({$sql_cnt}) as t";
 
 				$this->db->query($sql2,__LINE__,__FILE__);
@@ -690,7 +685,7 @@ _debug_array($ordermethod);
 				$cache_info = array
 				(
 					'total_records'		=> $this->db->f('cnt'),
-					'sql_hash'			=> md5($sql)
+					'sql_hash'			=> md5($_sql)
 				);
 				phpgwapi_cache::session_set('property',"{$location_id}_listing_metadata",$cache_info);
 			}
@@ -702,14 +697,43 @@ _debug_array($ordermethod);
 				return array();
 			}
 
-//$sql . $ordermethod
-			if(!$allrows)
+			$ordermethod = '';
+			$xml_order = '';
+			if ($order)
 			{
-				$this->db->limit_query($sql, $start,__LINE__,__FILE__);
+				switch($order)
+				{
+					case 'user_id':
+		//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP. 
+						break;
+					case 'loc1_name':
+						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
+						break;
+					case 'id':
+						$ordermethod = " ORDER BY {$entity_table}.id {$sort}";
+						break;
+					default:
+						$xml_order = ',cast (_order_field[1] as text) as _order_field_text';
+						$sql = str_replace('FROM fm_bim_item', "FROM (SELECT fm_bim_item.*, xpath('$order/text()', xml_representation) as _order_field FROM fm_bim_item", $sql);
+						$sql .= ") as fm_bim_item ORDER BY _order_field_text {$sort}";
+				}
 			}
 			else
 			{
-				$this->db->query($sql,__LINE__,__FILE__);
+				$ordermethod = "  ORDER BY {$entity_table}.id DESC";
+			}
+
+			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
+
+			//SELECT id, cast (order_field[1] as text) as order_field_text FROM (SELECT id, xpath('address/text()', xml_representation) as order_field FROM fm_bim_item) as t ORDER BY order_field_text asc
+
+			if(!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start,__LINE__,__FILE__);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
 
 			$j=0;
@@ -1002,6 +1026,7 @@ _debug_array($ordermethod);
 			}
 
 			$this->uicols	= $uicols;
+
 			//_debug_array($cols_return_extra);
 
 			if ($order)
@@ -1610,8 +1635,9 @@ _debug_array($ordermethod);
 				'model'					=> 0,
 				'p_location_id'			=> isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id'					=> isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
-				'location_code'			=> $data['location_code'],//character varying(20),
-				'address'				=> $data['address'],//character varying(150),
+				'location_code'			=> $data['location_code'],
+				'loc1'					=> $data['loc1'],
+				'address'				=> $data['address'],
 				'entry_date'			=> time(),
 				'user_id'				=> $this->account
 			);
@@ -1621,7 +1647,6 @@ _debug_array($ordermethod);
 
 			return $this->db->get_last_insert_id('fm_bim_item','id');
 		}
-
 
 		protected function _edit_eav($data = array(),$location_id, $id)
 		{
@@ -1643,8 +1668,9 @@ _debug_array($ordermethod);
 				'xml_representation'	=> $this->db->db_addslashes($xml),
 				'p_location_id'			=> isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id'					=> isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
-				'location_code'			=> $data['location_code'],//character varying(20),
-				'address'				=> $data['address'],//character varying(150),
+				'location_code'			=> $data['location_code'],
+				'loc1'					=> $data['loc1'],
+				'address'				=> $data['address'],
 			);
 
 			$value_set	= $this->db->validate_update($value_set);
