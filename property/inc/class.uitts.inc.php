@@ -908,6 +908,8 @@
 			$location_types = execMethod('property.soadmin_location.select_location_type');
 			$level_assigned = isset($this->bo->config->config_data['list_location_level']) && $this->bo->config->config_data['list_location_level'] ? $this->bo->config->config_data['list_location_level'] : array();
 
+			static $location_cache = array();
+
 			foreach ( $location_types as $dummy => $level)
 			{
 				if ( in_array($level['id'], $level_assigned))
@@ -918,8 +920,23 @@
 					{
 						foreach ($ticket_list as & $_ticket)
 						{
-							$location_data = execMethod('property.solocation.read_single', $_ticket['location_code']);
-							$_ticket["loc{$level['id']}_name"] = $location_data["loc{$level['id']}_name"];
+							$_location_code_arr = explode('-', $_ticket['location_code']);
+							$__location_code_arr = array();
+							for ($k=0; $k<$level['id']; $k++)
+							{
+								if(isset($_location_code_arr[$k]))
+								{
+									$__location_code_arr[] = $_location_code_arr[$k];
+								}
+							}
+							$_location_code = implode('-', $__location_code_arr);
+
+							if(!$_ticket["loc{$level['id']}_name"] = $location_cache[$_location_code])
+							{
+								$location_data = execMethod('property.solocation.read_single', $_location_code);
+								$_ticket["loc{$level['id']}_name"] = $location_data["loc{$level['id']}_name"];
+								$location_cache[$_location_code] = $location_data["loc{$level['id']}_name"];
+							}
 						}
 						unset($_ticket);
 					}
