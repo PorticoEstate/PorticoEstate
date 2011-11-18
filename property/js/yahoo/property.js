@@ -916,8 +916,8 @@
 				//			height				: tableHeight //"30em",
 		};
 		//Create DataTable ; Second call JSON (GET)
-	//	myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
-		myDataTable = new YAHOO.widget.ScrollingDataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+		myDataTable = new YAHOO.widget.DataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
+	//	myDataTable = new YAHOO.widget.ScrollingDataTable(container[0], myColumnDefs, myDataSource, myTableConfig);
 
 		myDataTable.on('cellMouseoverEvent', function (oArgs)
 		{
