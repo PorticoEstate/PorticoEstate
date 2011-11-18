@@ -55,6 +55,7 @@
 				'p_location_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'p_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'location_code' => array('type' => 'varchar','precision' => '20','nullable' => True),
+				'loc1' => array('type' => 'varchar','precision' => '6','nullable' => True),
 				'address' => array('type' => 'varchar','precision' => '150','nullable' => True),
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
