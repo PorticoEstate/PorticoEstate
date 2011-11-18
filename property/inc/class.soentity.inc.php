@@ -1607,6 +1607,7 @@ _debug_array($sql);
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$type = $this->db->f('type');
+			$id = $this->db->next_id('fm_bim_item',array('type'	=> $type));
 
 			phpgw::import_class('phpgwapi.xmlhelper');
 			$xmldata = phpgwapi_xmlhelper::toXML($data, 'PHPGW');
@@ -1629,6 +1630,7 @@ _debug_array($sql);
 
 			$values_insert = array
 			(
+  				'id'					=> $id,
   				'type'					=> $type,
   				'guid'					=> $guid,
 				'xml_representation'	=> $this->db->db_addslashes($xml),
@@ -1645,7 +1647,7 @@ _debug_array($sql);
 			$this->db->query("INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
 			 . $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
 
-			return $this->db->get_last_insert_id('fm_bim_item','id');
+			return $id;
 		}
 
 		protected function _edit_eav($data = array(),$location_id, $id)

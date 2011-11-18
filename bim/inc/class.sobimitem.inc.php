@@ -77,8 +77,13 @@ class sobimitem_impl implements sobimitem
 			throw new Exception('ModelId not set');
 		}
 		
-		$sql = "INSERT INTO ".self::bimItemTable." (type, guid, xml_representation, model) values (";
-		$sql = $sql."(select id from ".self::bimTypeTable." where name = '".$bimItem->getType()."'),";
+		$this->db->query("SELECT id as type FROM ".self::bimTypeTable." WHERE name = '".$bimItem->getType()),__LINE__,__FILE__);
+		$this->db->next_record();
+		$type = $this->db->f('type');
+		$id = $this->db->next_id('fm_bim_item',array('type'	=> $type));
+
+		$sql = "INSERT INTO ".self::bimItemTable." (type, id, guid, xml_representation, model) values ($type, $id,";
+	//	$sql = $sql."(select id from ".self::bimTypeTable." where name = '".$bimItem->getType()."'),";
 		$sql = $sql."'".$bimItem->getGuid()."', '".$this->db->db_addslashes($bimItem->getXml())."', ".$bimItem->getModelId().")";
 		try {
 			if(is_null($this->db->query($sql,__LINE__,__FILE__))) {

@@ -47,8 +47,8 @@
 		),
 		'fm_bim_item' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'type' => array('type' => 'int', 'precision' => 4,'nullable' => False),
+				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'guid' => array('type' => 'varchar', 'precision' => 50,'nullable' => False),
 				'xml_representation' => array('type' => 'xml','nullable' => False),
 				'model' => array('type' => 'int', 'precision' => 4,'nullable' => False),
@@ -60,7 +60,7 @@
 				'entry_date' => array('type' => 'int','precision' => '4','nullable' => True),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 			),
-			'pk' => array('id'),
+			'pk' => array('type','id'),
 			'fk' => array('fm_bim_type' => array('type' => 'id')),
 //			'fk' => array('fm_bim_model' => array('model' => 'id'),
 //							'fm_bim_type' => array('type' => 'id')),
