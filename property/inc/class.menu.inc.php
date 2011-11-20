@@ -101,6 +101,11 @@
 					 */
 					}
 				}
+				$admin_children_entity['convert_to_eav'] = array
+				(
+						'text'	=> lang('convert to eav'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.convert_to_eav') )
+				);
 
 				$admin_children_tenant = array
 					(
