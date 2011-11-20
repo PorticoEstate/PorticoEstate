@@ -57,7 +57,8 @@
 				'edit_attrib' 			=> true,
 				'list_custom_function'	=> true,
 				'edit_custom_function'	=> true,
-				'get_template_attributes'=> true
+				'get_template_attributes'=> true,
+				'convert_to_eav'		=> true
 			);
 
 		function property_uiadmin_entity()
@@ -2922,5 +2923,51 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit_custom_function' => $data));
+		}
+		
+		function convert_to_eav()
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->type_app[$this->type]}::entity::convert_to_eav";
+			$function = 'list_attribute';
+			if ( $custom_function_id )
+			{
+				$function = 'list_custom_function';
+			}
+
+			$redirect_args = array
+			(
+				'menuaction'	=> 'admin.uimainscreen.mainscreen'
+			);
+
+			if ( phpgw::get_var('delete', 'bool', 'POST') )
+			{
+				$this->bo->convert_to_eav();
+				$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_args);
+			}
+
+			if ( phpgw::get_var('cancel', 'bool', 'POST') )
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_args);
+			}
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('delete'));
+
+			$link_data = array
+			(
+				'menuaction'			=> 'property.uiadmin_entity.convert_to_eav',
+			);
+
+			$data = array
+			(
+				'delete_url'				=> $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'lang_confirm_msg'			=> lang('do you really want to convert to eav'),
+				'lang_delete'				=> lang('yes'),
+				'lang_cancel'				=> lang('no')
+			);
+
+			$function_msg	= lang('convert to eav');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property'). '::' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('delete' => $data));
 		}
 	}

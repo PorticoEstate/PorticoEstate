@@ -1044,4 +1044,121 @@
 			$this->oProc->m_odb			= & $this->db;
 			$this->oProc->m_odb->Halt_On_Error	= 'yes';
 		}
+
+ 
+		/**
+		 * Reduserer fra 684 til 265 tabeller for Nordlandssykehuset
+		 *
+		 * @return bool true on success
+		 */
+		function convert_to_eav()
+		{
+			die('vent litt med denne');
+
+			phpgw::import_class('phpgwapi.xmlhelper');			
+			$this->type = 'entity';
+			$entity_list 	= $this->read(array('allrows' => true));
+
+			$this->db->transaction_begin();
+
+			foreach($entity_list as $entry)
+			{
+				$cat_list = $this->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
+
+				foreach($cat_list as $category)
+				{
+					if(!$category['is_eav'])
+					{
+
+						$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$category['entity_id']}.{$category['id']}");
+						$values_insert = array
+						(
+							'location_id'	=> $location_id,
+							'name'			=> ".{$this->type}.{$category['entity_id']}.{$category['id']}::{$category['name']}",
+							'description'	=> $category['descr'],
+							'is_ifc'		=> 0
+						);
+
+						$this->db->query('INSERT INTO fm_bim_type (' . implode(',',array_keys($values_insert)) . ') VALUES ('
+				 		. $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+				 		
+						$sql = "UPDATE fm_{$this->type}_category SET is_eav = 1 WHERE entity_id =" . (int)$category['entity_id'] . ' AND id = ' . (int)$category['id'];
+						$this->db->query($sql,__LINE__,__FILE__);
+						
+						$sql = "UPDATE phpgw_locations SET c_attrib_table = NULL WHERE location_id = {$location_id}";
+						$this->db->query($sql,__LINE__,__FILE__);
+
+				 		$type = $this->db->get_last_insert_id('fm_bim_type', 'id');
+				 		
+				 		$sql = "SELECT * FROM fm_{$this->type}_{$category['entity_id']}_{$category['id']}";
+				 		$this->db->query($sql,__LINE__,__FILE__);
+						while ($this->db->next_record())
+						{
+							$data = $this->db->Record;
+
+							$xmldata = phpgwapi_xmlhelper::toXML($data, "_{$this->type}_{$category['entity_id']}_{$category['id']}");
+							$doc = new DOMDocument;
+							$domElement = $doc->getElementsByTagName("_{$this->type}_{$category['entity_id']}_{$category['id']}")->item(0);
+							$domAttribute = $doc->createAttribute('appname');
+							$domAttribute->value = 'property';
+
+							// Don't forget to append it to the element
+							$domElement->appendChild($domAttribute);
+	
+							// Append it to the document itself
+							$doc->appendChild($domElement);
+
+							$doc->preserveWhiteSpace = true;
+							$doc->loadXML( $xmldata );
+							$doc->formatOutput = true;
+							$xml = $doc->saveXML();
+
+							$p_location_id = '';
+							if($data['p_cat_id'])
+							{
+								$p_location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$data['p_entity_id']}.{$data['p_cat_id']}");
+							}
+
+							$p_id ='';
+							if($data['p_num'])
+							{
+								$p_id		= (int) ltrim($data['p_num'], $category['prefix']);
+							}
+							if (function_exists('com_create_guid') === true)
+							{
+								$guid = trim(com_create_guid(), '{}');
+							}
+							else
+							{
+								$guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+							}
+
+							$values_insert = array
+							(
+				  				'id'					=> $data['id'],
+				  				'type'					=> $type,
+				  				'guid'					=> $guid,
+								'xml_representation'	=> $this->db->db_addslashes($xml),
+								'model'					=> 0,
+								'p_location_id'			=> $p_location_id,
+								'p_id'					=> isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num'] : '',
+								'location_code'			=> $data['location_code'],
+								'loc1'					=> $data['loc1'],
+								'address'				=> $data['address'],
+								'entry_date'			=> $data['entry_date'],
+								'user_id'				=> $data['user_id']
+							);
+							
+							$this->db->query("INSERT INTO fm_bim_item (" . implode(',',array_keys($values_insert)) . ') VALUES ('
+			 					. $this->db->validate_insert(array_values($values_insert)) . ')',__LINE__,__FILE__);
+						}
+
+				 		$sql = "DROP TABLE fm_{$this->type}_{$category['entity_id']}_{$category['id']}";
+				 		_debug_array($sql);
+				 		$this->db->query($sql,__LINE__,__FILE__);
+					}
+				}
+			}
+			return $this->db->transaction_commit();
+		}
 	}

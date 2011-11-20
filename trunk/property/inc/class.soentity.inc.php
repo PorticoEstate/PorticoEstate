@@ -649,7 +649,7 @@
 				$sql .= $_joinmethod;
 			}
 
-_debug_array($sql);
+//_debug_array($sql);
 			$querymethod = '';
 
 			$_querymethod = array_merge($__querymethod, $_querymethod);
@@ -1549,7 +1549,7 @@ _debug_array($sql);
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}");
-				$values['id'] = $this->_save_eav($values_insert, $location_id);
+				$values['id'] = $this->_save_eav($values_insert, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}");
 			}
 			else
 			{
@@ -1601,20 +1601,32 @@ _debug_array($sql);
 			return $receipt;
 		}
 
-		protected function _save_eav($data = array(),$location_id)
+		protected function _save_eav($data = array(),$location_id, $location_name)
 		{
 			$location_id = (int) $location_id;
+			$location_name = str_replace('.', '_', $location_name);			
+
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}",__LINE__,__FILE__);
 			$this->db->next_record();
 			$type = $this->db->f('type');
 			$id = $this->db->next_id('fm_bim_item',array('type'	=> $type));
 
 			phpgw::import_class('phpgwapi.xmlhelper');
-			$xmldata = phpgwapi_xmlhelper::toXML($data, 'PHPGW');
+			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
 			$doc = new DOMDocument;
 			$doc->preserveWhiteSpace = true;
 			$doc->loadXML( $xmldata );
+			$domElement = $doc->getElementsByTagName($location_name)->item(0);
+			$domAttribute = $doc->createAttribute('appname');
+			$domAttribute->value = 'property';
+
+			// Don't forget to append it to the element
+			$domElement->appendChild($domAttribute);
+
+			// Append it to the document itself
+			$doc->appendChild($domElement);
 			$doc->formatOutput = true;
+			
 			$xml = $doc->saveXML();
 
 		//	_debug_array($xml);
@@ -1650,20 +1662,32 @@ _debug_array($sql);
 			return $id;
 		}
 
-		protected function _edit_eav($data = array(),$location_id, $id)
+		protected function _edit_eav($data = array(),$location_id, $location_name, $id)
 		{
 			$location_id = (int) $location_id;
-			$id = (int) $id;			
+			$id = (int) $id;
+			$location_name = str_replace('.', '_', $location_name);			
 
 			phpgw::import_class('phpgwapi.xmlhelper');
-			$xmldata = phpgwapi_xmlhelper::toXML($data, 'PHPGW');
+
+			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
 			$doc = new DOMDocument;
 			$doc->preserveWhiteSpace = true;
 			$doc->loadXML( $xmldata );
+			$domElement = $doc->getElementsByTagName($location_name)->item(0);
+			$domAttribute = $doc->createAttribute('appname');
+			$domAttribute->value = 'property';
+
+			// Don't forget to append it to the element
+			$domElement->appendChild($domAttribute);
+
+			// Append it to the document itself
+			$doc->appendChild($domElement);
+
 			$doc->formatOutput = true;
 			$xml = $doc->saveXML();
 
-		//	_debug_array($xml);
+//			_debug_array($xml);
 
 			$value_set = array
 			(
@@ -1805,7 +1829,7 @@ _debug_array($sql);
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$entity_id}.{$cat_id}");
-				$this->_edit_eav($value_set, $location_id, $values['id']);
+				$this->_edit_eav($value_set, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}", $values['id']);
 			}
 			else
 			{
