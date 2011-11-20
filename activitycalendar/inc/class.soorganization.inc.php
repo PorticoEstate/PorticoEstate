@@ -3,6 +3,7 @@
 phpgw::import_class('activitycalendar.socommon');
 
 include_class('activitycalendar', 'organization', 'inc/model/');
+include_class('activitycalendar', 'contact_person', 'inc/model/');
 
 class activitycalendar_soorganization extends activitycalendar_socommon
 {
@@ -85,6 +86,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 		$filter_clauses = array();
 		$filter_clauses[] = "show_in_portal=1";
+		$filter_clauses[] = "NOT org.name=''";
 		
 		$use_local_org = false;
 		
@@ -242,6 +244,26 @@ class activitycalendar_soorganization extends activitycalendar_socommon
     	}
 		return $contacts;
 	}
+	
+	function get_contacts_as_objects($organization_id)
+	{
+		$contacts = array();
+    	if(isset($organization_id)){
+	    	$q1="SELECT * FROM bb_organization_contact WHERE organization_id={$organization_id}";
+	    	//var_dump($q1);
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person((int) $this->db->f('id'));
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$contacts[] = $contact_person;			}
+    	}
+		return $contacts;
+	}
+	
 	
 	function get_contacts_local($organization_id)
 	{
