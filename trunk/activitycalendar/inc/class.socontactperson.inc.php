@@ -107,6 +107,16 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 				
 			}
 		}
+		if(isset($filters['organization_id']))
+		{
+			$org_id = $this->marshal($filters['organization_id'],'int');
+			if(isset($org_id) && $org_id > 0)
+			{
+				$filter_clauses[] = "organization_contact.organization_id = {$org_id}";
+				$table = "bb_organization_contact organization_contact";
+				
+			}
+		}
 		else if(isset($filters['group_id']))
 		{
 			$group_id = $this->marshal($filters['group_id'],'int');
@@ -136,7 +146,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 
 		$condition =  join(' AND ', $clauses);
 
-		if($table == "bb_organization_contact")
+		if($table == "bb_organization_contact organization_contact")
 		{
 			if($return_count) // We should only return a count
 			{
