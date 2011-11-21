@@ -84,3 +84,7 @@ save_activity	activitycalendarfrontend	no	Send
 org_helptext_step1	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon"<br/>Klikk deretter på "Neste" for å registrere aktivitet.
 next	activitycalendarfrontend	no	Neste
 new_activity	activitycalendarfrontend	no	Ny aktivitet
+change_activity	activitycalendarfrontend	no	Endre aktivitet
+change_request	activitycalendarfrontend	no	Send endringsønske
+edit_helptext	activitycalendarfrontend	no	Velg aktivitet du ønsker å endre fra listen under og klikk på "Send endringsønske"	
+update_request_sent	activitycalendarfrontend	no	Oppdateringsforespørsel er sendt for aktiviteten "%1"
