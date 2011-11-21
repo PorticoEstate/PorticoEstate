@@ -120,8 +120,8 @@
 			}
 			else if(isset($_POST['save_activity']))
 			{
-				$persons = $this->so_organization->get_contacts($o_id);				
-				$organization = $this->so_organization->get_single($o_id);
+				//$persons = $this->so_organization->get_contacts($o_id);				
+				//$organization = $this->so_organization->get_single($o_id);
 				
 				if($o_id == "new_org")
 				{
@@ -141,23 +141,24 @@
 					
 					//add contact persons
 					$contact1 = array();
-					$contact1['name'] = phpgw::get_var('contact1_name');
-					$contact1['phone'] = phpgw::get_var('contact1_phone');
-					$contact1['mail'] = phpgw::get_var('contact1_email');
+					$contact1['name'] = phpgw::get_var('org_contact1_name');
+					$contact1['phone'] = phpgw::get_var('org_contact1_phone');
+					$contact1['mail'] = phpgw::get_var('org_contact1_email');
 					$contact1['org_id'] = $o_id;
 					$contact1['group_id'] = 0;
 					$this->so_activity->add_contact_person_local($contact1);
 					
 					$contact2 = array();
-					$contact2['name'] = phpgw::get_var('contact2_name');
-					$contact2['phone'] = phpgw::get_var('contact2_phone');
-					$contact2['mail'] = phpgw::get_var('contact2_email');
+					$contact2['name'] = phpgw::get_var('org_contact2_name');
+					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
+					$contact2['mail'] = phpgw::get_var('org_contact2_email');
 					$contact2['org_id'] = $o_id;
 					$contact2['group_id'] = 0;
 					$this->so_activity->add_contact_person_local($contact2);
 					
 					$persons = $this->so_organization->get_contacts_local($o_id);
 					$desc = phpgw::get_var('org_description');
+					$organization = $this->so_organization->get_organization_local($o_id);
 				}
 				else if(is_numeric($o_id) && $o_id > 0)
 				{
@@ -171,46 +172,37 @@
 						
 						//add contact persons
 						$contact1 = array();
-						$contact1['name'] = phpgw::get_var('contact1_name');
-						$contact1['phone'] = phpgw::get_var('contact1_phone');
-						$contact1['mail'] = phpgw::get_var('contact1_email');
+						$contact1['name'] = phpgw::get_var('group_contact1_name');
+						$contact1['phone'] = phpgw::get_var('group_contact1_phone');
+						$contact1['mail'] = phpgw::get_var('group_contact1_email');
 						$contact1['org_id'] = 0;
 						$contact1['group_id'] = $g_id;
 						$this->so_activity->add_contact_person_local($contact1);
 						
 						$contact2 = array();
-						$contact2['name'] = phpgw::get_var('contact2_name');
-						$contact2['phone'] = phpgw::get_var('contact2_phone');
-						$contact2['mail'] = phpgw::get_var('contact2_email');
+						$contact2['name'] = phpgw::get_var('group_contact2_name');
+						$contact2['phone'] = phpgw::get_var('group_contact2_phone');
+						$contact2['mail'] = phpgw::get_var('group_contact2_email');
 						$contact2['org_id'] = 0;
 						$contact2['group_id'] = $g_id;
 						$this->so_activity->add_contact_person_local($contact2);
 						
-						$activity_persons = $this->so_group->get_contacts_local($g_id);
+						$persons = $this->so_group->get_contacts_local($g_id);
 						$desc = phpgw::get_var('group_description');
+						$group = $this->so_group>get_group_local($g_id);
 					}
 					else if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 					{
 						$persons = $this->so_group->get_contacts($g_id);
 						$desc = $this->so_group->get_description($g_id);
+						$organization = $this->so_organization->get_single($o_id);
+						$group = $this->so_group->get_single($g_id);
 					}
 					else if(isset($o_id) && is_numeric($o_id) && $o_id > 0)
 					{
 						$persons = $this->so_organization->get_contacts($o_id);
 						$desc = $this->so_organization->get_description($o_id);
-					}
-				}
-				else
-				{
-					if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
-					{
-						$persons = $this->so_group->get_contacts($g_id);
-						$desc = $this->so_group->get_description($g_id);
-					}
-					else if(isset($o_id) && is_numeric($o_id) && $o_id > 0)
-					{
-						$persons = $this->so_organization->get_contacts($o_id);
-						$desc = $this->so_organization->get_description($o_id);
+						$organization = $this->so_organization->get_single($o_id);
 					}
 				}
 				
@@ -260,8 +252,10 @@
 					$this->render('activity.php', array
 								(
 									'activity' 	=> $activity,
-									'organizations' => $organizations,
-									'groups' => $groups,
+									'organization' => $organization,
+									'group' => $group,
+									'contact1' => $persons[0],
+									'contact2' => $persons[1],
 									'arenas' => $arenas,
 									'buildings' => $buildings,
 									'categories' => $categories,
