@@ -239,6 +239,27 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 		return $contacts;
 	}
 	
+	function get_contacts_as_objects($group_id)
+	{
+		$contacts = array();
+    	if(isset($group_id)){
+	    	$q1="SELECT * FROM bb_group_contact WHERE group_id={$group_id}";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person((int) $this->db->f('id'));
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$contacts[] = $contact_person;
+			}
+			//$result = $contacts;
+    	}
+		
+		return $contacts;
+	}
+	
 	function get_contacts_local($group_id)
 	{
 		$contacts = array();
@@ -247,6 +268,27 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$contacts[] = $this->db->f('id');
+			}
+			//$result = $contacts;
+    	}
+		
+		return $contacts;
+	}
+	
+	function get_contacts_local_as_objects($group_id)
+	{
+		$contacts = array();
+    	if(isset($group_id)){
+	    	$q1="SELECT * FROM activity_contact_person WHERE group_id='{$group_id}'";
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person((int) $this->db->f('id'));
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$contacts[] = $contact_person;
 			}
 			//$result = $contacts;
     	}

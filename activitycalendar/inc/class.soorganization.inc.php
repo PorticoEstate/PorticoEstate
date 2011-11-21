@@ -281,6 +281,26 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		return $contacts;
 	}
 	
+	function get_contacts_local_as_objects($organization_id)
+	{
+		$contacts = array();
+    	if(isset($organization_id)){
+	    	$q1="SELECT * FROM activity_contact_person WHERE organization_id='{$organization_id}'";
+	    	//var_dump($q1);
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person((int) $this->db->f('id'));
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$contacts[] = $contact_person;
+			}
+    	}
+		return $contacts;
+	}
+	
 	function get_description($organization_id)
 	{
     	if(isset($organization_id)){
@@ -536,26 +556,12 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 	
 	function get_organization_local($org_id)
 	{
-		$columns[] = 'org.id';
-		$columns[] = 'org.name';
-		$columns[] = 'org.homepage';
-		$columns[] = 'org.phone';
-		$columns[] = 'org.email';
-		$columns[] = 'org.description';
-		$columns[] = 'org.address';
-		$columns[] = 'org.district';
-		$columns[] = 'org.change_type';
-		$columns[] = 'org.transferred';
-		$columns[] = 'org.orgno AS organization_number';
-				
-		$cols = implode(',',$columns);	
-		$table = "activity_organization org";
-		
-		$sql = "SELECT ${cols} FROM {$table} WHERE org.id={$org_id}";
-		$result = $this->db->query($sql, __LINE__, __FILE__);
-		if(isset($result))
+		$sql = "SELECT * FROM activity_organization WHERE id={$org_id}";
+		//var_dump($sql);
+		$this->db->query($sql, __LINE__, __FILE__);
+		while($this->db->next_record())
 		{
-			$organization = new activitycalendar_organization((int) $org_id);
+			$organization = new activitycalendar_organization((int) $this->db->f('id'));
 	
 			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
 			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
