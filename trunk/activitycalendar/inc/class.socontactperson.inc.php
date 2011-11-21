@@ -339,6 +339,37 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 		return $result;
 	}
 	
+	function get_booking_contact_persons($id, $group=false)
+	{
+		$result = array();
+    	if(isset($id)){
+    		$columns[] = 'group_contact.id';
+				$columns[] = 'group_contact.name';
+				$columns[] = 'group_contact.phone';
+				$columns[] = 'group_contact.email';
+				$columns[] = 'group_contact.group_id';
+    		if($group)
+    		{
+    			$q1="SELECT id, group_id, name, phone, email FROM bb_group_contact WHERE group_id='{$id}'";
+    		}
+    		else
+    		{
+	    		$q1="SELECT id, organization_id, name, phone, email, ssn FROM bb_organization_contact WHERE organization_id='{$id}'";
+    		}
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person($this->db->f('id'), 'int');
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$result[] = $contact_person;
+			}
+    	}
+		return $result;
+	}
+	
 	function update_local_contact_person($contact)
 	{
 		$id = $contact['id'];
