@@ -343,5 +343,39 @@ class activitycalendar_sogroup extends activitycalendar_socommon
 			return 0;
 		}
 	}
+	
+	function get_group_local($g_id)
+	{
+		$columns[] = 'activity_group.id';
+		$columns[] = 'activity_group.name';
+		$columns[] = 'activity_group.description';
+		$columns[] = 'activity_group.organization_id';
+		$columns[] = 'activity_group.change_type';
+		$columns[] = 'activity_group.transferred';
+		
+		$dir = $ascending ? 'ASC' : 'DESC';
+		$order = "ORDER BY activity_group.id $dir";
+		
+		$cols = implode(',',$columns);
+		$table = "activity_group";
+		
+		$sql = "SELECT {$cols} FROM {$table} WHERE activity_group.id={$g_id}";
+		$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			$group = new activitycalendar_group((int) $group_id);
+
+			$group->set_name($this->unmarshal($this->db->f('name'), 'string'));
+			$group->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+			$group->set_shortname($this->unmarshal($this->db->f('shortname'), 'string'));
+			$group->set_description($this->unmarshal($this->db->f('description'), 'string'));
+			$group->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
+			$group->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
+			$group->set_transferred($this->unmarshal($this->db->f('transferred'), 'bool'));
+			
+			return $group;
+		}
+		
+	}
 }
 ?>
