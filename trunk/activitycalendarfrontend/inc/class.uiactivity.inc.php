@@ -164,6 +164,7 @@
 						//var_dump($p);
 						$persons[] = $p;
 					}
+					$person_ids = $this->so_organization->get_contacts_local($o_id);
 					$desc = phpgw::get_var('org_description');
 					$organization = $this->so_organization->get_organization_local($o_id);
 					//var_dump($organization);
@@ -204,10 +205,11 @@
 						}
 						$desc = phpgw::get_var('group_description');
 						$group = $this->so_group>get_group_local($g_id);
+						$person_ids = $this->so_group->get_contacts_local($g_id);
 					}
 					else if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 					{
-						//$persons = $this->so_group->get_contacts_as_objects($g_id);
+						$person_ids = $this->so_group->get_contacts($g_id);
 						$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
 						foreach($person_arr as $p)
 						{
@@ -220,7 +222,7 @@
 					}
 					else if(isset($o_id) && is_numeric($o_id) && $o_id > 0)
 					{
-						//$persons = $this->so_organization->get_contacts_as_objects($o_id);
+						$person_ids = $this->so_organization->get_contacts($o_id);
 						$person_arr = $this->so_contact->get_local_contact_persons($o_id);
 						foreach($person_arr as $p)
 						{
@@ -247,7 +249,7 @@
 				$activity->set_target(implode(",", $target_array));
 				$activity->set_description($desc);
 				$activity->set_time(phpgw::get_var('time'));
-				$activity->set_contact_persons($persons);
+				$activity->set_contact_persons($person_ids);
 				$activity->set_special_adaptation(phpgw::get_var('special_adaptation'));
 				$activity->set_frontend(true);
 				
@@ -439,31 +441,31 @@
 					
 					if($activity->get_group_id())
 					{
-						/*$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
+						$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_group_id(), true);
 						foreach($person_arr as $p)
 						{
 							$persons[] = $p;
-						}*/
+						}
 						$desc = $this->so_group->get_description($activity->get_group_id());
 						$group = $this->so_group->get_single($activity->get_group_id());
+						$person_ids = $this->so_group->get_contacts($activity->get_group_id());
 					}
 					else if($activity->get_organization_id())
 					{
-						/*$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_organization_id());
+						$person_arr = $this->so_contact->get_booking_contact_persons($activity->get_organization_id());
 						foreach($person_arr as $p)
 						{
-							$persons[] = $p;
-						}*/
+							$persons_array[] = $p;
+						}
 						$desc = $this->so_organization->get_description($activity->get_organization_id());
+						$person_ids = $this->so_organization->get_contacts($activity->get_organization_id());
 					}
 					$organization = $this->so_organization->get_single($activity->get_organization_id());
-					var_dump($activity->get_organization_id());
 					
 					if(isset($_POST['save_activity'])) // The user has pressed the save button
 					{
 						if(isset($activity)) // If an activity object is created
 						{
-		
 							$old_state = $activity->get_state();
 							$new_state = phpgw::get_var('state');
 							// ... set all parameters
