@@ -1,10 +1,10 @@
 <?php ?>
 <div class="yui-content" style="width: 100%;">
-	<h1><?php echo lang('change_activity');?></h1>
+	<h1><?php echo lang('edit_activity');?></h1>
 	<form action="#" method="post">
 		<dl class="proplist-col" style="width: 200%">
 			<dt>
-				<?php echo lang('edit_helptext');?><br/><br/>
+				<?php echo lang('activity_edit_helptext');?><br/><br/>
 			</dt>
 			<dd>
 			<?php if($message){?>
@@ -24,7 +24,7 @@
 			</dd>
 			<?php if(!$message){?>
 			<div class="form-buttons">
-				<input type="submit" name="step_1" value="<?php echo lang('change_request') ?>" />
+				<input type="submit" name="step_1" value="<?php echo lang('send_change_request') ?>" />
 			</div>
 			<?php }?>
 		</dl>
