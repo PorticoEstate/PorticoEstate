@@ -380,7 +380,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$org = $org_array[$keys[0]];
 			}
 			
-			var_dump($org);
+			//var_dump($org);
 			
 			$data = array
 			(

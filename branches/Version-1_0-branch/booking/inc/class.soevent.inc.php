@@ -266,6 +266,22 @@
 			return $this->db->f('name', false);
 		}
 
+		function get_org($orgnumber)
+		{
+			$sql = "SELECT id,name FROM bb_organization WHERE customer_organization_number='".$orgnumber."'";
+
+			$this->db->limit_query($sql,0, __LINE__, __FILE__, 1);
+			if($this->db->next_record())
+			{
+				$results = array('id' => $this->db->f('id', false),
+						         'name' => $this->db->f('name', false));
+			} else {
+				return array();
+			}
+
+			return $results;
+		}
+
 		function get_buildings()
 		{
             $results = array();

@@ -1,6 +1,6 @@
 activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
 Activitycalendarfrontend	common	no	Aktivitetsoversikt Frontend
-office	activitycalendarfrontend	no	Kontor
+office	activitycalendarfrontend	no	Hovedansvarlig kulturkontor
 arena	activitycalendarfrontend	no	Arena
 description	activitycalendarfrontend	no	Beskrivelse
 date_start	activitycalendarfrontend	no	Startdato
@@ -49,14 +49,12 @@ accepted	activitycalendarfrontend	no	Akseptert
 rejected	activitycalendarfrontend	no	Avvist
 activity	activitycalendarfrontend	no	Aktivitet
 organization	activitycalendarfrontend	no	Organisasjon
-group	activitycalendarfrontend	no	Gruppe
+group	activitycalendarfrontend	no	Gruppe/Lag
 district	activitycalendarfrontend	no	Bydel
 title	activitycalendarfrontend	no	Tittel
 activity_helptext	activitycalendarfrontend	no	Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert, og at arena finnes og er oppdatert.
 building	activitycalendarfrontend	no	Kommunale bygg
 title_helptext	activitycalendarfrontend	no	Skriv inn tittel på aktiviteten slik du vil den skal vises i kommuneportalen
-org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til. <br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under. <br/> For å sende inn forespørsel om å endre en organisasjon, velg "Endre organisasjon" og velg den aktuelle organisasjonen fra listen som vises. <br/>Deretter klikker du på "Lagre" for å sende inn endringsønsket. 
-group_helptext	activitycalendarfrontend	no	Velg gruppe/lag aktiviteten skal knyttes til. <br/>Dersom gruppen/laget ikke finnes, velg "Ny gruppe" og fyll ut feltene som vises under.
 int_arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted i et kommunalt bygg velges dette fra listen her.
 arena_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal finne sted på en ikke-kommunal arena, velges dette her.<br/>Dersom aktiviteten finner sted på flere arenaer, velg hovedarena her.
 messages_saved_form	activitycalendarfrontend	no	Aktiviteten ble lagret
@@ -64,3 +62,29 @@ messages_form_error	activitycalendarfrontend	no	Det oppstod et problem under lag
 change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er sendt inn for organisasjon %1
 target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
 district_not_selected	activitycalendarfrontend	no	Distrikt må velges!
+org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under. 
+group_helptext	activitycalendarfrontend	no	Om aktiviteten skal knyttes til en spesiell gruppe/lag velger du det her.<br/>Dersom gruppen/laget ikke finnes, velg "Ny gruppe" og fyll ut feltene som vises under. Du trenger ikke velge en gruppe.
+criteria_label	activitycalendarfrontend	no	Valgkriterier/søkeord i portalen
+criteria_helptext	activitycalendarfrontend	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
+what	activitycalendarfrontend	no	HVA
+where_when	activitycalendarfrontend	no	HVOR/NÅR
+who	activitycalendarfrontend	no	HVEM
+arena_helptext	activitycalendarfrontend	no	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.
+external_arena	activitycalendarfrontend	no	Eksterne bygg
+category_helptext	activitycalendarfrontend	no	Velg kategori
+target_helptext	activitycalendarfrontend	no	Velg målgruppe(r)
+district_helptext	activitycalendarfrontend	no	Velg bydel(er) hvor aktiviteten foregår
+adaptation_helptext	activitycalendarfrontend	no	Kryss av om aktiviteten er spesielt tilpasset
+time_helptext	activitycalendarfrontend	no	Oppgi tidspunkt for aktiviteten, f.eks. onsdag kl. 20-21
+office_helptext	activitycalendarfrontend	no	Oppgi kontor som saksbehandler aktiviteten
+contact_info	activitycalendarfrontend	no	Kontaktinformasjon for kulturkontoret
+contact_info_helptext	activitycalendarfrontend	no	Hentes fra booking/organisasjonsregister ved lagring.
+store_org_group	activitycalendarfrontend	no	Lagre organisasjon/gruppe
+save_activity	activitycalendarfrontend	no	Send
+org_helptext_step1	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon"<br/>Klikk deretter på "Neste" for å registrere aktivitet.
+next	activitycalendarfrontend	no	Neste
+new_activity	activitycalendarfrontend	no	Ny aktivitet
+update_request_sent	activitycalendarfrontend	no	Oppdateringsforespørsel er sendt for aktiviteten "%1"
+edit_activity	activitycalendarfrontend	no	Endre aktivitet
+activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker å endre fra listen under.
+send_change_request	activitycalendarfrontend	no	Send inn endringsønske
