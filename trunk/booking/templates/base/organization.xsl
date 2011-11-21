@@ -9,9 +9,7 @@
                 </a>
             </li>
             <li>
-                <a href="">
                     <xsl:value-of select="organization/name"/>
-                </a>
             </li>
         </ul>
         <dl class="proplist-col">

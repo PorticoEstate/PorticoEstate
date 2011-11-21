@@ -2,7 +2,7 @@
     <div id="content">
         <ul class="pathway">
             <li><xsl:value-of select="php:function('lang', 'Events')" /></li>
-            <li><a href="">#<xsl:value-of select="event/id"/></a></li>
+            <li>#<xsl:value-of select="event/id"/></li>
         </ul>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
