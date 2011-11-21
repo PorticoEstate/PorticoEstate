@@ -458,7 +458,7 @@
 				&& $category['location_level'] > 0)
 			{
 				$access_location = $this->bocommon->get_location_list(PHPGW_ACL_READ);
-				$filtermethod = " $where {$entity_table}.loc1 IN ('" . implode("','", $access_location) . "')";
+				$filtermethod .= " $where {$entity_table}.loc1 IN ('" . implode("','", $access_location) . "')";
 				$where= 'AND';
 			}
 
@@ -480,7 +480,7 @@
 			}
 			else
 			{
-				$filtermethod = " $where $entity_table.user_id=$filter ";
+				$filtermethod .= " $where $entity_table.user_id=$filter ";
 				$where= 'AND';
 			}
 
@@ -671,7 +671,7 @@
 			{
 				$cache_info = array();
 			}
-			
+//_debug_array($_sql);die();			
 //			if(!$cache_info)
 			{
 				$sql_cnt = "SELECT DISTINCT fm_bim_item.id " . substr($_sql,strripos($_sql,'FROM'));

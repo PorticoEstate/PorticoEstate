@@ -2,7 +2,7 @@
     <div id="content">
         <ul class="pathway">
             <li><a href="{booking/bookings_link}"><xsl:value-of select="php:function('lang', 'Bookings')" /></a></li>
-            <li><a href="">#<xsl:value-of select="booking/id"/> (<xsl:value-of select="booking/activity_name"/>)</a></li>
+            <li>#<xsl:value-of select="booking/id"/> (<xsl:value-of select="booking/activity_name"/>)</li>
         </ul>
 
         <xsl:call-template name="msgbox"/>

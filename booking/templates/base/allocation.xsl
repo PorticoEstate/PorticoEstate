@@ -7,7 +7,7 @@
                     <xsl:value-of select="php:function('lang', 'Allocations')" />
                 </a>
             </li>
-            <li><a href=""><xsl:value-of select="allocation/organization_name"/></a></li>
+            <li><xsl:value-of select="allocation/organization_name"/></li>
         </ul>
 
         <xsl:call-template name="msgbox"/>

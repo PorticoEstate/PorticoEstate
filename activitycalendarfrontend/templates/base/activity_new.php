@@ -276,7 +276,6 @@ function allOK()
 				</dt>
 					<?php if($new_organization){?>
 					<input type="hidden" name="organization_id" id="organization_id" value="new_org" />
-					<div id="new_org_fields">
 						<dt><label for="orgname">Organisasjonsnavn</label></dt>
 						<dd><input type="text" name="orgname"/></dd>
 						<dt><label for="orgno">Organisasjonsnummer</label></dt>
@@ -307,7 +306,6 @@ function allOK()
 						<input type="text" name="postaddress"/></dd>
 						<dt><label for="org_description">Beskrivelse</label></dt>
 						<dd><textarea rows="10" cols="100" name="org_description"></textarea></dd>
-					</div>
 					<hr/>
 					<b>Kontaktperson 1</b><br/>
 					<dt><label for="contact1_name">Navn</label>
@@ -362,13 +360,6 @@ function allOK()
 					<dd><?php echo isset($contact2)?$contact2->get_phone():''?></dd>
 					<dt><label for="contact2_mail">E-post</label></dt>
 					<dd><?php echo isset($contact2)?$contact2->get_email():''?></dd>
-					<dt><label for="contact2_address">Adresse</label></dt>
-					<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
-					<div id="contact2_address_container"></div><br/>
-					<label for="contact2_number">Nummer</label>
-					<input type="text" name="org_contact2_number"/><br/>
-					<label for="contact2_postaddress">Postnummer og Sted</label>
-					<input type="text" name="org_contact2_postaddress"/></dd>
 					<hr/>
 					<?php }?>
 				<?php if(!$new_organization){?>
@@ -385,35 +376,35 @@ function allOK()
 					<?php }?>
 					</select>
 				</dd>
-				<div id="new_group_fields" style="display: none;">
-					<dt><label for="groupname">Gruppenavn</label></dt>
+				<span id="new_group_fields" style="display: none;">
+					<dt><label for="groupname">Navn</label></dt>
 					<dd><input type="text" name="groupname"/><br/></dd>
-					<dt><label for="group_description">Beskrivelse</label></dt>
+					<dt><label for="group_description">Beskrivelse av aktiviteten</label></dt>
 					<dd><textarea rows="10" cols="100" name="group_description"></textarea></dd>
-				<hr/>
-				<dt>Kontaktperson 1</dt>
-				<dt><label for="contact1_name">Navn</label></dt>
-				<dd><input type="text" name="group_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/></dd>
-				<dt><label for="contact1_phone">Telefon</label></dt>
-				<dd><input type="text" name="group_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/></dd>
-				<dt><label for="contact1_mail">E-post</label></dt>
-				<dd><input type="text" name="group_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/></dd>
-				<dt>Kontaktperson 2</dt>
-				<dt><label for="contact2_name">Navn</label></dt>
-				<dd><input type="text" name="group_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/></dd>
-				<dt><label for="contact2_phone">Telefon</label></dt>
-				<dd><input type="text" name="group_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/></dd>
-				<dt><label for="contact2_mail">E-post</label></dt>
-				<dd><input type="text" name="group_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/></dd>
-				<dt><label for="contact2_address">Adresse</label></dt>
-				<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()" />
-				<div id="contact2_address_container"></div><br/>
-				<label for="contact2_number">Nummer</label>
-				<input type="text" name="group_contact2_number"/><br/>
-				<label for="contact2_postaddress">Postnummer og Sted</label>
-				<input type="text" name="group_contact2_postaddress"/></dd>
-				<hr/>
-				</div>
+					<hr/>
+					<dt>Kontaktperson 1</dt>
+					<dt><label for="contact1_name">Navn</label></dt>
+					<dd><input type="text" name="group_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/></dd>
+					<dt><label for="contact1_phone">Telefon</label></dt>
+					<dd><input type="text" name="group_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/></dd>
+					<dt><label for="contact1_mail">E-post</label></dt>
+					<dd><input type="text" name="group_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/></dd>
+					<dt>Kontaktperson 2</dt>
+					<dt><label for="contact2_name">Navn</label></dt>
+					<dd><input type="text" name="group_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/></dd>
+					<dt><label for="contact2_phone">Telefon</label></dt>
+					<dd><input type="text" name="group_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/></dd>
+					<dt><label for="contact2_mail">E-post</label></dt>
+					<dd><input type="text" name="group_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/></dd>
+					<dt><label for="contact2_address">Adresse</label></dt>
+					<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()" />
+					<div id="contact2_address_container"></div><br/>
+					<label for="contact2_number">Nummer</label>
+					<input type="text" name="group_contact2_number"/><br/>
+					<label for="contact2_postaddress">Postnummer og Sted</label>
+					<input type="text" name="group_contact2_postaddress"/></dd>
+					<hr/>
+				</span>
 				<?php }?>
 				<div class="form-buttons">
 					<input type="submit" name="save_activity" value="<?php echo lang('save_activity') ?>" onclick="return allOK();"/>

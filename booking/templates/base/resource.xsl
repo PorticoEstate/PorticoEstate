@@ -15,9 +15,7 @@
             </li>
             <li><xsl:value-of select="php:function('lang', 'Resources')" /></li>
             <li>
-                <a href="">
                     <xsl:value-of select="resource/name"/>
-                </a>
             </li>
         </ul>
         <xsl:call-template name="msgbox"/>

@@ -63,7 +63,7 @@ change_request_ok	activitycalendarfrontend	no	Endringsønske for organisasjon er
 target_not_selected	activitycalendarfrontend	no	Målgruppe må velges!
 district_not_selected	activitycalendarfrontend	no	Distrikt må velges!
 org_helptext	activitycalendarfrontend	no	Velg organisasjon aktiviteten skal knyttes til i nedtrekksmenyen, du kan søke ved å skrive inn navnet.<br/>Dersom din organisasjon ikke finnes, velg "Ny organisasjon" og fyll ut feltene som vises under. 
-group_helptext	activitycalendarfrontend	no	Om aktiviteten skal knyttes til en spesiell gruppe/lag velger du det her.<br/>Dersom gruppen/laget ikke finnes, velg "Ny gruppe" og fyll ut feltene som vises under. Du trenger ikke velge en gruppe.
+group_helptext	activitycalendarfrontend	no	Dersom aktiviteten skal registreres med andre kontaktpersoner og beskrivelse, kan du gjøre det ved å velge «Ny gruppe» og fylle ut feltene under.<br/>Du kan også velge en eksisterende  gruppe/lag fra listen, eller ikke velge en gruppe/lag.<br/>Ønsker du å redigere/endre eksisterende informasjonen om organisasjon eller beskrivelse,<br/>vil du etter at du har valgt Lagre-knappen få opp et nytt bilde hvor du du kan velge Rediger.
 criteria_label	activitycalendarfrontend	no	Valgkriterier/søkeord i portalen
 criteria_helptext	activitycalendarfrontend	no	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking. 
 what	activitycalendarfrontend	no	HVA
