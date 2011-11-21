@@ -270,7 +270,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$contacts = array();
     	if(isset($organization_id)){
 	    	$q1="SELECT id FROM activity_contact_person WHERE organization_id='{$organization_id}'";
-	    	var_dump($q1);
+	    	//var_dump($q1);
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){
 				$cont_id = $this->db->f('id');
@@ -531,6 +531,45 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		else
 		{
 			return 0;
+		}
+	}
+	
+	function get_organization_local($org_id)
+	{
+		$columns[] = 'org.id';
+		$columns[] = 'org.name';
+		$columns[] = 'org.homepage';
+		$columns[] = 'org.phone';
+		$columns[] = 'org.email';
+		$columns[] = 'org.description';
+		$columns[] = 'org.address';
+		$columns[] = 'org.district';
+		$columns[] = 'org.change_type';
+		$columns[] = 'org.transferred';
+		$columns[] = 'org.orgno AS organization_number';
+				
+		$cols = implode(',',$columns);	
+		$table = "activity_organization org";
+		
+		$sql = "SELECT ${cols} FROM {$table} WHERE org.id={$org_id}";
+		$result = $this->db->query($sql, __LINE__, __FILE__);
+		if(isset($result))
+		{
+			$organization = new activitycalendar_organization((int) $org_id);
+	
+			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
+			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
+			$organization->set_address($this->unmarshal($this->db->f('address'), 'string'));
+			$organization->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+			$organization->set_email($this->unmarshal($this->db->f('email'), 'string'));
+			$organization->set_homepage($this->unmarshal($this->db->f('homepage'), 'string'));
+			$organization->set_district($this->unmarshal($this->db->f('district'), 'string'));
+			$organization->set_description($this->unmarshal($this->db->f('description'), 'string'));
+			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
+			$organization->set_transferred($this->unmarshal($this->db->f('transferred'), 'bool'));
+			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
+			
+			return $organization;
 		}
 	}
 	
