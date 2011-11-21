@@ -1,4 +1,18 @@
 <?php ?>
+ <script type="text/javascript">
+function isOK()
+{
+	if(document.getElementById('organization_id').value == null || document.getElementById('organization_id').value == '')
+	{
+		alert("Du må velge om aktiviteten skal knyttes mot en eksisterende\norganisasjon, eller om det skal registreres en ny organisasjon!");
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+</script>
 <div class="yui-content" style="width: 100%;">
 	<h1><?php echo lang('new_activity') ?></h1>
 	<form action="#" method="post">
@@ -20,7 +34,7 @@
 				<br/><br/>
 			</dd>
 			<div class="form-buttons">
-				<input type="submit" name="step_1" value="<?php echo lang('next') ?>" />
+				<input type="submit" name="step_1" value="<?php echo lang('next') ?>" onclick="return isOK();"/>
 			</div>
 		</dl>
 		

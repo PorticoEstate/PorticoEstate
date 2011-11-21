@@ -1,4 +1,18 @@
 <?php ?>
+<script type="text/javascript">
+function isOK()
+{
+	if(document.getElementById('activity_id').value == null || document.getElementById('activity_id').value == '')
+	{
+		alert("Du må velge en aktivitet som skal endres!");
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+</script>
 <div class="yui-content" style="width: 100%;">
 	<h1><?php echo lang('edit_activity');?></h1>
 	<form action="#" method="post">
@@ -24,7 +38,7 @@
 			</dd>
 			<?php if(!$message){?>
 			<div class="form-buttons">
-				<input type="submit" name="step_1" value="<?php echo lang('send_change_request') ?>" />
+				<input type="submit" name="step_1" value="<?php echo lang('send_change_request') ?>" onclick="return isOK();"/>
 			</div>
 			<?php }?>
 		</dl>
