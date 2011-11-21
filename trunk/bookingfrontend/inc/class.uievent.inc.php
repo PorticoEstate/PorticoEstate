@@ -23,6 +23,15 @@
 		{
 			$event = $this->bo->read_single(intval(phpgw::get_var('id', 'GET')));
 			$resources = $this->resource_bo->so->read(array('filters'=>array('id'=>$event['resources']), 'sort'=>'name'));
+			if ($event['customer_organization_number'] != '')
+			{
+				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);		
+				if ($orginfo != array()) { 
+					$orginfo['link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $orginfo['id']));
+				}
+			} else {
+				$orginfo = array();
+			}
 			$event['resources'] = $resources['results'];
 			$res_names = array();
 			foreach($event['resources'] as $res)
@@ -32,7 +41,7 @@
 			$event['resource_info'] = join(', ', $res_names);
 			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $event['resources'][0]['building_id']));
 			$event['when'] = pretty_timestamp($event['from_']).' - '.pretty_timestamp($event['to_']);
-			self::render_template('event_info', array('event'=>$event));
+			self::render_template('event_info', array('event'=>$event,'orginfo' => $orginfo));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 

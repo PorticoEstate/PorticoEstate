@@ -98,14 +98,6 @@
 		 * Normalizes data on entity.
 		 */
 		public function initialize_entity(&$entity) {
-			ob_start();
-			$myFile = "/tmp/debug2.txt";
-			$fh = fopen($myFile, 'w') or die("can't open file");
-			echo '<pre>';print_r($entity);
-			$op = ob_get_contents();
-			fwrite($fh, $op);
-			fclose($fh);
-			ob_end_clean();
         	if (isset($entity['__initialized__']) && $entity['__initialized__'] === true) { return $entity; }
 			
 			$entity['__initialized__'] = true;
@@ -262,13 +254,23 @@
 		}
 		
 		public function select_external($reservation) {
-			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_EXTERNAL;
+
+            if ($config->config_data['output_files'] == 'single')
+			{
+				return true;
+			} else {
+				return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_EXTERNAL;
+			}
 		}
 		
 		public function select_internal($reservation) {
-			return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_INTERNAL;
+            if ($config->config_data['output_files'] == 'single')
+			{
+				return false;
+			} else {
+				return $reservation['customer_type'] == booking_socompleted_reservation::CUSTOMER_TYPE_INTERNAL;
+			}
 		}
-		
 		/**
 		 * @return array with three elements where index 0: total_rows, index 1: total_cost, index 2: formatted data
 		 */
@@ -286,7 +288,7 @@
 						$export_format,
 						count(array_filter($external_reservations, array($this, 'not_free'))),
 						$this->calculate_total_cost($external_reservations),
-						$this->format_agresso($external_reservations, $account_codes, $number_generator,'external')
+						$this->format_agresso($external_reservations, $account_codes, $number_generator)
 					);
 				}
 			}
@@ -307,7 +309,7 @@
             elseif ($config->config_data['internal_format'] == 'AGGRESSO')
             {
     			$export_format = 'agresso';
-            } 
+			} 
 			
 			if (is_array($reservations)) {
 				if (count($internal_reservations = array_filter($reservations, array($this, 'select_internal'))) > 0) {
@@ -330,7 +332,7 @@
     						$export_format,
     						count(array_filter($internal_reservations, array($this, 'not_free'))),
     						$this->calculate_total_cost($internal_reservations),
-    						$this->format_agresso($internal_reservations, $account_codes, $number_generator,'internal')
+    						$this->format_agresso($internal_reservations, $account_codes, $number_generator)
         					);
                         }
 				}
@@ -588,7 +590,7 @@
 			}
 		}
 		
-		public function format_agresso(array &$reservations, array $account_codes, $sequential_number_generator,$type) {
+		public function format_agresso(array &$reservations, array $account_codes, $sequential_number_generator) {
 			//$orders = array();
 			$export_info = array();
 			$output = array();
@@ -639,7 +641,7 @@
 				if ($this->get_cost_value($reservation['cost']) <= 0) {
 					continue; //Don't export costless rows
 				}
-				
+				$type = $reservation['customer_type'];
 				$order_id = $sequential_number_generator->increment()->get_current();
 				$export_info[] = $this->create_export_item_info($reservation, $order_id);
 				
