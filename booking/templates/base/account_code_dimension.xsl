@@ -100,6 +100,23 @@
 		           </option>
 		        </select>
 			</dd>
+            <dt><label for="field_output_files"><xsl:value-of select="php:function('lang', 'File output')"/></label></dt>
+			<dd>
+				<select id="field_output_files" name="output_files">
+                    <option value="seperated">
+                        <xsl:if test="config_data/output_files='seperated'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        Records splited between two files internal and external.
+                    </option>
+                    <option value="single">
+                        <xsl:if test="config_data/output_files='single'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        All records in the external file.
+		           </option>
+		        </select>
+			</dd>
         </dl>
 		<div class="form-buttons">
 			<input type="submit">

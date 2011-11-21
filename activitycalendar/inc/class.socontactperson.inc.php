@@ -107,6 +107,16 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 				
 			}
 		}
+		if(isset($filters['organization_id']))
+		{
+			$org_id = $this->marshal($filters['organization_id'],'int');
+			if(isset($org_id) && $org_id > 0)
+			{
+				$filter_clauses[] = "organization_contact.organization_id = {$org_id}";
+				$table = "bb_organization_contact organization_contact";
+				
+			}
+		}
 		else if(isset($filters['group_id']))
 		{
 			$group_id = $this->marshal($filters['group_id'],'int');
@@ -136,7 +146,7 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
 
 		$condition =  join(' AND ', $clauses);
 
-		if($table == "bb_organization_contact")
+		if($table == "bb_organization_contact organization_contact")
 		{
 			if($return_count) // We should only return a count
 			{
@@ -314,6 +324,37 @@ class activitycalendar_socontactperson extends activitycalendar_socommon
     		else
     		{
 	    		$q1="SELECT id, organization_id, group_id, name, phone, email FROM activity_contact_person WHERE organization_id='{$id}'";
+    		}
+			$this->db->query($q1, __LINE__, __FILE__);
+			while($this->db->next_record()){
+				$contact_person = new activitycalendar_contact_person($this->db->f('id'), 'int');
+				$contact_person->set_organization_id($this->unmarshal($this->db->f('organization_id'), 'int'));
+				$contact_person->set_group_id($this->unmarshal($this->db->f('group_id'), 'int'));
+				$contact_person->set_name($this->unmarshal($this->db->f('name'), 'string'));
+				$contact_person->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
+				$contact_person->set_email($this->unmarshal($this->db->f('email'), 'string'));
+				$result[] = $contact_person;
+			}
+    	}
+		return $result;
+	}
+	
+	function get_booking_contact_persons($id, $group=false)
+	{
+		$result = array();
+    	if(isset($id)){
+    		$columns[] = 'group_contact.id';
+				$columns[] = 'group_contact.name';
+				$columns[] = 'group_contact.phone';
+				$columns[] = 'group_contact.email';
+				$columns[] = 'group_contact.group_id';
+    		if($group)
+    		{
+    			$q1="SELECT id, group_id, name, phone, email FROM bb_group_contact WHERE group_id='{$id}'";
+    		}
+    		else
+    		{
+	    		$q1="SELECT id, organization_id, name, phone, email, ssn FROM bb_organization_contact WHERE organization_id='{$id}'";
     		}
 			$this->db->query($q1, __LINE__, __FILE__);
 			while($this->db->next_record()){

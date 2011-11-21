@@ -571,4 +571,9 @@
 		{
 			return $this->so->get_children2($entity_id, $parent, $level,$reset);
 		}
+
+		function convert_to_eav()
+		{
+			return $this->so->convert_to_eav();
+		}
 	}

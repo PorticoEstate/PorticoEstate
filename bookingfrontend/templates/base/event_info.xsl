@@ -17,6 +17,9 @@
 		<dt><xsl:value-of select="php:function('lang', 'Who')"/></dt>
 		<xsl:if test="event/is_public=1">
 			<dd>
+			<xsl:if test="orginfo">
+				<a href="{orginfo/link}"><xsl:value-of select="orginfo/name"/></a>:
+			</xsl:if>
 				<xsl:value-of select="event/contact_name"/>
 			</dd>
 		</xsl:if>
