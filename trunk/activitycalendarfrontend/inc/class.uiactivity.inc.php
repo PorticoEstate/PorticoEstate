@@ -156,9 +156,17 @@
 					$contact2['group_id'] = 0;
 					$this->so_activity->add_contact_person_local($contact2);
 					
-					$persons = $this->so_organization->get_contacts_local($o_id);
+					//$persons = $this->so_organization->get_contacts_local_as_objects($o_id);
+					//var_dump($persons);
+					$person_arr = $this->so_contact->get_local_contact_persons($o_id);
+					foreach($person_arr as $p)
+					{
+						//var_dump($p);
+						$persons[] = $p;
+					}
 					$desc = phpgw::get_var('org_description');
 					$organization = $this->so_organization->get_organization_local($o_id);
+					//var_dump($organization);
 				}
 				else if(is_numeric($o_id) && $o_id > 0)
 				{
@@ -187,20 +195,38 @@
 						$contact2['group_id'] = $g_id;
 						$this->so_activity->add_contact_person_local($contact2);
 						
-						$persons = $this->so_group->get_contacts_local($g_id);
+						//$persons = $this->so_group->get_contacts_local_as_objects($g_id);
+						$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
+						foreach($person_arr as $p)
+						{
+							//var_dump($p);
+							$persons[] = $p;
+						}
 						$desc = phpgw::get_var('group_description');
 						$group = $this->so_group>get_group_local($g_id);
 					}
 					else if(isset($g_id) && is_numeric($g_id) && $g_id > 0)
 					{
-						$persons = $this->so_group->get_contacts($g_id);
+						//$persons = $this->so_group->get_contacts_as_objects($g_id);
+						$person_arr = $this->so_contact->get_local_contact_persons($g_id, true);
+						foreach($person_arr as $p)
+						{
+							//var_dump($p);
+							$persons[] = $p;
+						}
 						$desc = $this->so_group->get_description($g_id);
 						$organization = $this->so_organization->get_single($o_id);
 						$group = $this->so_group->get_single($g_id);
 					}
 					else if(isset($o_id) && is_numeric($o_id) && $o_id > 0)
 					{
-						$persons = $this->so_organization->get_contacts($o_id);
+						//$persons = $this->so_organization->get_contacts_as_objects($o_id);
+						$person_arr = $this->so_contact->get_local_contact_persons($o_id);
+						foreach($person_arr as $p)
+						{
+							//var_dump($p);
+							$persons[] = $p;
+						}
 						$desc = $this->so_organization->get_description($o_id);
 						$organization = $this->so_organization->get_single($o_id);
 					}
