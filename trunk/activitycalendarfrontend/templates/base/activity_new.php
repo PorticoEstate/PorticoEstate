@@ -204,7 +204,7 @@ function allOK()
 					<label for="special_adaptation"><?php echo lang('special_adaptation') ?></label>
 				</dt>
 				<dd>
-					<input type="checkbox" name="special_adaptation" id="special_adaptation"<?php echo $activity->get_special_adaptation() ? ' checked="checked"' : '' ?> />
+					<input type="checkbox" name="special_adaptation" id="special_adaptation" />
 				</dd>
 				<hr />
 				<h2><?php echo lang('where_when')?></h2>
@@ -312,25 +312,25 @@ function allOK()
 					<hr/>
 					<b>Kontaktperson 1</b><br/>
 					<label for="contact1_name">Navn</label>
-					<input type="text" name="contact1_name"/><br/>
+					<input type="text" name="org_contact1_name"/><br/>
 					<label for="contact1_phone">Telefon</label>
-					<input type="text" name="contact1_phone"/><br/>
+					<input type="text" name="org_contact1_phone"/><br/>
 					<label for="contact1_mail">E-post</label>
-					<input type="text" name="contact1_mail"/><br/>
+					<input type="text" name="org_contact1_mail"/><br/>
 					<b>Kontaktperson 2</b><br/>
 					<label for="contact2_name">Navn</label>
-					<input type="text" name="contact2_name"/><br/>
+					<input type="text" name="org_contact2_name"/><br/>
 					<label for="contact2_phone">Telefon</label>
-					<input type="text" name="contact2_phone"/><br/>
+					<input type="text" name="org_contact2_phone"/><br/>
 					<label for="contact2_mail">E-post</label>
-					<input type="text" name="contact2_mail"/><br/>
+					<input type="text" name="org_contact2_mail"/><br/>
 					<label for="contact2_address">Adresse</label>
 					<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
 					<div id="contact2_address_container"></div><br/>
 					<label for="contact2_number">Nummer</label>
-					<input type="text" name="contact2_number"/><br/>
+					<input type="text" name="org_contact2_number"/><br/>
 					<label for="contact2_postaddress">Postnummer og Sted</label>
-					<input type="text" name="contact2_postaddress"/>
+					<input type="text" name="org_contact2_postaddress"/>
 					<hr/>
 					<?php }else{?>
 						<input type="hidden" name="organization_id" id="organization_id" value="<?php echo $organization->get_id()?>" />
@@ -353,25 +353,25 @@ function allOK()
 					<hr/>
 					<b>Kontaktperson 1</b><br/>
 					<label for="contact1_name">Navn</label>
-					<input type="text" name="contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/><br/>
+					<input type="text" name="org_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/><br/>
 					<label for="contact1_phone">Telefon</label>
-					<input type="text" name="contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/><br/>
+					<input type="text" name="org_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/><br/>
 					<label for="contact1_mail">E-post</label>
-					<input type="text" name="contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/><br/>
+					<input type="text" name="org_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/><br/>
 					<b>Kontaktperson 2</b><br/>
 					<label for="contact2_name">Navn</label>
-					<input type="text" name="contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/><br/>
+					<input type="text" name="org_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/><br/>
 					<label for="contact2_phone">Telefon</label>
-					<input type="text" name="contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/><br/>
+					<input type="text" name="org_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/><br/>
 					<label for="contact2_mail">E-post</label>
-					<input type="text" name="contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/><br/>
+					<input type="text" name="org_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/><br/>
 					<label for="contact2_address">Adresse</label>
 					<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
 					<div id="contact2_address_container"></div><br/>
 					<label for="contact2_number">Nummer</label>
-					<input type="text" name="contact2_number"/><br/>
+					<input type="text" name="org_contact2_number"/><br/>
 					<label for="contact2_postaddress">Postnummer og Sted</label>
-					<input type="text" name="contact2_postaddress"/>
+					<input type="text" name="org_contact2_postaddress"/>
 					<hr/>
 					<?php }?>
 				</dd>
@@ -397,25 +397,25 @@ function allOK()
 				<hr/>
 				<b>Kontaktperson 1</b><br/>
 				<label for="contact1_name">Navn</label>
-				<input type="text" name="contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/><br/>
+				<input type="text" name="group_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/><br/>
 				<label for="contact1_phone">Telefon</label>
-				<input type="text" name="contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/><br/>
+				<input type="text" name="group_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/><br/>
 				<label for="contact1_mail">E-post</label>
-				<input type="text" name="contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/><br/>
+				<input type="text" name="group_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/><br/>
 				<b>Kontaktperson 2</b><br/>
 				<label for="contact2_name">Navn</label>
-				<input type="text" name="contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/><br/>
+				<input type="text" name="group_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/><br/>
 				<label for="contact2_phone">Telefon</label>
-				<input type="text" name="contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/><br/>
+				<input type="text" name="group_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/><br/>
 				<label for="contact2_mail">E-post</label>
-				<input type="text" name="contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/><br/>
+				<input type="text" name="group_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/><br/>
 				<label for="contact2_address">Adresse</label>
 				<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()" />
 				<div id="contact2_address_container"></div><br/>
 				<label for="contact2_number">Nummer</label>
-				<input type="text" name="contact2_number"/><br/>
+				<input type="text" name="group_contact2_number"/><br/>
 				<label for="contact2_postaddress">Postnummer og Sted</label>
-				<input type="text" name="contact2_postaddress"/>
+				<input type="text" name="group_contact2_postaddress"/>
 				<hr/>
 				</div>
 				<?php }?>
