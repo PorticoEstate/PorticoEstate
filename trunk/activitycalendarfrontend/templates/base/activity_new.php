@@ -274,16 +274,15 @@ function allOK()
 				<dt>
 					<label for="organization_id"><?php echo lang('organization') ?></label>
 				</dt>
-				<dd>
 					<?php if($new_organization){?>
 					<input type="hidden" name="organization_id" id="organization_id" value="new_org" />
 					<div id="new_org_fields">
-						<label for="orgname">Organisasjonsnavn</label>
-						<input type="text" name="orgname"/><br/>
-						<label for="orgno">Organisasjonsnummer</label>
-						<input type="text" name="orgno"/><br/>
-						<label for="district">Bydel</label>
-							<select name="org_district">
+						<dt><label for="orgname">Organisasjonsnavn</label></dt>
+						<dd><input type="text" name="orgname"/></dd>
+						<dt><label for="orgno">Organisasjonsnummer</label></dt>
+						<dd><input type="text" name="orgno"/></dd>
+						<dt><label for="district">Bydel</label></dt>
+						<dd><select name="org_district">
 								<option value="0">Ingen bydel valgt</option>
 						<?php 
 						foreach($districts as $d)
@@ -292,89 +291,86 @@ function allOK()
 							<option value="<?php echo $d['part_of_town_id']?>"><?php echo $d['name']?></option>
 						<?php
 						}?>
-							</select><br/>
-						<label for="homepage">Hjemmeside</label>
-						<input type="text" name="homepage"/><br/>
-						<label for="email">E-post</label>
-						<input type="text" name="email"/><br/>
-						<label for="phone">Telefon</label>
-						<input type="text" name="phone"/><br/>
-						<label for="street">Gate</label>
-						<input type="text" name="address_txt" id="address_txt" onkeyup="javascript:get_address_search()"/>
-						<div id="address_container"></div><br/>
+						</select></dd>
+						<dt><label for="homepage">Hjemmeside</label></dt>
+						<dd><input type="text" name="homepage"/></dd>
+						<dt><label for="email">E-post</label></dt>
+						<dd><input type="text" name="email"/></dd>
+						<dt><label for="phone">Telefon</label></dt>
+						<dd><input type="text" name="phone"/></dd>
+						<dt><label for="street">Gate</label></dt>
+						<dd><input type="text" name="address_txt" id="address_txt" onkeyup="javascript:get_address_search()"/>
+						<div id="address_container"></div>
 						<label for="number">Nummer</label>
 						<input type="text" name="number"/><br/>
 						<label for="postaddress">Postnummer og Sted</label>
-						<input type="text" name="postaddress"/>
-						<label for="org_description">Beskrivelse</label>
-						<textarea rows="10" cols="100" name="org_description"></textarea>
+						<input type="text" name="postaddress"/></dd>
+						<dt><label for="org_description">Beskrivelse</label></dt>
+						<dd><textarea rows="10" cols="100" name="org_description"></textarea></dd>
 					</div>
 					<hr/>
 					<b>Kontaktperson 1</b><br/>
-					<label for="contact1_name">Navn</label>
+					<dt><label for="contact1_name">Navn</label>
 					<input type="text" name="org_contact1_name"/><br/>
-					<label for="contact1_phone">Telefon</label>
+					<dt><label for="contact1_phone">Telefon</label>
 					<input type="text" name="org_contact1_phone"/><br/>
-					<label for="contact1_mail">E-post</label>
+					<dt><label for="contact1_mail">E-post</label>
 					<input type="text" name="org_contact1_mail"/><br/>
 					<b>Kontaktperson 2</b><br/>
-					<label for="contact2_name">Navn</label>
+					<dt><label for="contact2_name">Navn</label>
 					<input type="text" name="org_contact2_name"/><br/>
-					<label for="contact2_phone">Telefon</label>
+					<dt><label for="contact2_phone">Telefon</label>
 					<input type="text" name="org_contact2_phone"/><br/>
-					<label for="contact2_mail">E-post</label>
+					<dt><label for="contact2_mail">E-post</label>
 					<input type="text" name="org_contact2_mail"/><br/>
-					<label for="contact2_address">Adresse</label>
+					<dt><label for="contact2_address">Adresse</label>
 					<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
 					<div id="contact2_address_container"></div><br/>
 					<label for="contact2_number">Nummer</label>
 					<input type="text" name="org_contact2_number"/><br/>
-					<label for="contact2_postaddress">Postnummer og Sted</label>
+					<dt><label for="contact2_postaddress">Postnummer og Sted</label>
 					<input type="text" name="org_contact2_postaddress"/>
 					<hr/>
 					<?php }else{?>
 						<input type="hidden" name="organization_id" id="organization_id" value="<?php echo $organization->get_id()?>" />
-						<div id="new_org_fields">
-						<label for="orgname">Organisasjonsnavn</label>
-						<?php echo $organization->get_name()?><br/>
-						<label for="orgno">Organisasjonsnummer</label>
-						<?php echo $organization->get_organization_number()?><br/>
-						<label for="homepage">Hjemmeside</label>
-						<?php echo $organization->get_homepage()?><br/>
-						<label for="email">E-post</label>
-						<?php echo $organization->get_email()?><br/>
-						<label for="phone">Telefon</label>
-						<?php echo $organization->get_phone()?><br/>
-						<label for="street">Adresse</label>
-						<?php echo $organization->get_address()?><br/>
-						<label for="org_description">Beskrivelse</label>
-						<textarea rows="10" cols="100" name="org_description" size="254"><?php echo $organization->get_description()?></textarea>
-					</div>
+						<dt><label for="orgname">Organisasjonsnavn</label></dt>
+						<dd><?php echo $organization->get_name()?></dd>
+						<dt><label for="orgno">Organisasjonsnummer</label></dt>
+						<dd><?php echo $organization->get_organization_number()?></dd>
+						<dt><label for="homepage">Hjemmeside</label></dt>
+						<dd><?php echo $organization->get_homepage()?></dd>
+						<dt><label for="email">E-post</label></dt>
+						<dd><?php echo $organization->get_email()?></dd>
+						<dt><label for="phone">Telefon</label></dt>
+						<dd><?php echo $organization->get_phone()?></dd>
+						<dt><label for="street">Adresse</label></dt>
+						<dd><?php echo $organization->get_address()?></dd>
+						<dt><label for="org_description">Beskrivelse</label></dt>
+						<dd><?php echo $organization->get_description()?></dd>
 					<hr/>
-					<b>Kontaktperson 1</b><br/>
-					<label for="contact1_name">Navn</label>
-					<input type="text" name="org_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/><br/>
-					<label for="contact1_phone">Telefon</label>
-					<input type="text" name="org_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/><br/>
-					<label for="contact1_mail">E-post</label>
-					<input type="text" name="org_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/><br/>
-					<b>Kontaktperson 2</b><br/>
-					<label for="contact2_name">Navn</label>
-					<input type="text" name="org_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/><br/>
-					<label for="contact2_phone">Telefon</label>
-					<input type="text" name="org_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/><br/>
-					<label for="contact2_mail">E-post</label>
-					<input type="text" name="org_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/><br/>
-					<label for="contact2_address">Adresse</label>
-					<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
+					<dt>Kontaktperson 1</dt>
+					<dt><label for="contact1_name">Navn</label></dt>
+					<dd><?php echo isset($contact1)?$contact1->get_name():''?></dd>
+					<dt><label for="contact1_phone">Telefon</label></dt>
+					<dd><?php echo isset($contact1)?$contact1->get_phone():''?></dd>
+					<dt><label for="contact1_mail">E-post</label></dt>
+					<dd><?php echo isset($contact1)?$contact1->get_email():''?></dd>
+					<dt>Kontaktperson 2</dt>
+					<dt><label for="contact2_name">Navn</label></dt>
+					<dd><?php echo isset($contact2)?$contact2->get_name():''?></dd>
+					<dt><label for="contact2_phone">Telefon</label></dt>
+					<dd><?php echo isset($contact2)?$contact2->get_phone():''?></dd>
+					<dt><label for="contact2_mail">E-post</label></dt>
+					<dd><?php echo isset($contact2)?$contact2->get_email():''?></dd>
+					<dt><label for="contact2_address">Adresse</label></dt>
+					<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()"/>
 					<div id="contact2_address_container"></div><br/>
 					<label for="contact2_number">Nummer</label>
 					<input type="text" name="org_contact2_number"/><br/>
 					<label for="contact2_postaddress">Postnummer og Sted</label>
-					<input type="text" name="org_contact2_postaddress"/>
+					<input type="text" name="org_contact2_postaddress"/></dd>
 					<hr/>
 					<?php }?>
-				</dd>
 				<?php if(!$new_organization){?>
 				<dt>
 					<label for="group_id" id="group_label"><?php echo lang('group') ?></label>
@@ -390,32 +386,32 @@ function allOK()
 					</select>
 				</dd>
 				<div id="new_group_fields" style="display: none;">
-					<label for="groupname">Gruppenavn</label>
-					<input type="text" name="groupname"/><br/>
-					<label for="group_description">Beskrivelse</label>
-					<textarea rows="10" cols="100" name="group_description"></textarea>
+					<dt><label for="groupname">Gruppenavn</label></dt>
+					<dd><input type="text" name="groupname"/><br/></dd>
+					<dt><label for="group_description">Beskrivelse</label></dt>
+					<dd><textarea rows="10" cols="100" name="group_description"></textarea></dd>
 				<hr/>
-				<b>Kontaktperson 1</b><br/>
-				<label for="contact1_name">Navn</label>
-				<input type="text" name="group_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/><br/>
-				<label for="contact1_phone">Telefon</label>
-				<input type="text" name="group_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/><br/>
-				<label for="contact1_mail">E-post</label>
-				<input type="text" name="group_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/><br/>
-				<b>Kontaktperson 2</b><br/>
-				<label for="contact2_name">Navn</label>
-				<input type="text" name="group_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/><br/>
-				<label for="contact2_phone">Telefon</label>
-				<input type="text" name="group_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/><br/>
-				<label for="contact2_mail">E-post</label>
-				<input type="text" name="group_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/><br/>
-				<label for="contact2_address">Adresse</label>
-				<input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()" />
+				<dt>Kontaktperson 1</dt>
+				<dt><label for="contact1_name">Navn</label></dt>
+				<dd><input type="text" name="group_contact1_name" value="<?php echo isset($contact1)?$contact1->get_name():''?>"/></dd>
+				<dt><label for="contact1_phone">Telefon</label></dt>
+				<dd><input type="text" name="group_contact1_phone" value="<?php echo isset($contact1)?$contact1->get_phone():''?>"/></dd>
+				<dt><label for="contact1_mail">E-post</label></dt>
+				<dd><input type="text" name="group_contact1_mail" value="<?php echo isset($contact1)?$contact1->get_email():''?>"/></dd>
+				<dt>Kontaktperson 2</dt>
+				<dt><label for="contact2_name">Navn</label></dt>
+				<dd><input type="text" name="group_contact2_name" value="<?php echo isset($contact2)?$contact2->get_name():''?>"/></dd>
+				<dt><label for="contact2_phone">Telefon</label></dt>
+				<dd><input type="text" name="group_contact2_phone" value="<?php echo isset($contact2)?$contact2->get_phone():''?>"/></dd>
+				<dt><label for="contact2_mail">E-post</label></dt>
+				<dd><input type="text" name="group_contact2_mail" value="<?php echo isset($contact2)?$contact2->get_email():''?>"/></dd>
+				<dt><label for="contact2_address">Adresse</label></dt>
+				<dd><input type="text" name="contact2_address_txt" id="contact2_address_txt" onkeyup="javascript:get_address_search_cp2()" />
 				<div id="contact2_address_container"></div><br/>
 				<label for="contact2_number">Nummer</label>
 				<input type="text" name="group_contact2_number"/><br/>
 				<label for="contact2_postaddress">Postnummer og Sted</label>
-				<input type="text" name="group_contact2_postaddress"/>
+				<input type="text" name="group_contact2_postaddress"/></dd>
 				<hr/>
 				</div>
 				<?php }?>
