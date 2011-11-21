@@ -146,7 +146,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		if(isset($filters['new_activities']))
 		{
-			$filter_clauses = "activity.state=1";
+			$filter_clauses[] = "activity.state=1 OR activity.state=2";
 		}
 		if(isset($filters['activity_state']) && $filters['activity_state'] != 'all'){
 			$activity_state = $this->marshal($filters['activity_state'],'int');
