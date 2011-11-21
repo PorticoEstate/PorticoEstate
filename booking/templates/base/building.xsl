@@ -8,10 +8,8 @@
 				</a>
             </li>
             <li>
-                <a>
-                    <xsl:attribute name="href"><xsl:value-of select="building/building_link"/></xsl:attribute>
+                    
                     <xsl:value-of select="building/name"/>
-                </a>
             </li>
         </ul>
 
