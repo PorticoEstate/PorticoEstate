@@ -105,6 +105,11 @@
                                 'text' => lang('Control_area'),
                                 'list' => $this->so_control_area->get_control_area_select_array(),
 							),
+							array('type' => 'filter',
+								'name' => 'responsibilities',
+                                'text' => lang('Responsibility'),
+                                'list' => $this->so->get_roles(),
+							),
 							array('type' => 'text', 
                                 'text' => lang('searchfield'),
 								'name' => 'query'
@@ -150,6 +155,11 @@
 						array(
 							'key' => 'control_area_name',
 							'label' => lang('Control area'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'responsibility_name',
+							'label' => lang('Responsibility'),
 							'sortable'	=> false
 						),
 						array(
@@ -617,6 +627,11 @@
 			if(isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area; 
+			}
+			$responsibility = phpgw::get_var('responsibilities');
+			if(isset($responsibility) && $responsibility > 0)
+			{
+				$filters['responsibilities'] = $responsibility; 
 			}
 			
 			$search_for = phpgw::get_var('query');
