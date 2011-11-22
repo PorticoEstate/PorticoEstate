@@ -381,7 +381,7 @@
 
 					if($order_id)
 					{
-						$buffer[$id]['project_id'] = $this->soXport->get_project(intval($order_id));	
+						$buffer[$i]['project_id'] = $this->soXport->get_project($order_id);	
 					}
 					
 					$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
