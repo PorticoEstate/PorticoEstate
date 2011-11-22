@@ -139,6 +139,10 @@ class controller_socontrol extends controller_socommon
 		{
 			$filter_clauses[] = "controller_control.control_area_id = {$this->marshal($filters['control_areas'],'int')}";
 		}
+		if(isset($filters['responsibilities']))
+		{
+			$filter_clauses[] = "controller_control.responsibility_id = {$this->marshal($filters['responsibilities'],'int')}";
+		}
 		
 		if(count($filter_clauses))
 		{
@@ -152,6 +156,7 @@ class controller_socontrol extends controller_socommon
 		//$joins = " {$this->left_join} rental_document_types ON (rental_document.type_id = rental_document_types.id)";
 		$joins = " {$this->left_join} controller_control_area ON (controller_control.control_area_id = controller_control_area.id)";
 		$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
+		$joins .= " {$this->left_join} fm_responsibility_role ON (controller_control.responsibility_id = fm_responsibility_role.id)";
 		
 		if($return_count)
 		{
@@ -159,7 +164,7 @@ class controller_socontrol extends controller_socommon
 		}
 		else
 		{
-			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.equipment_type_id, controller_control.equipment_id, controller_control.location_code, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name ';
+			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.equipment_type_id, controller_control.equipment_id, controller_control.location_code, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -191,6 +196,7 @@ class controller_socontrol extends controller_socommon
 			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
@@ -216,8 +222,9 @@ class controller_socontrol extends controller_socommon
 		
 		$joins = " {$this->left_join} controller_control_area ON (c.control_area_id = controller_control_area.id)";
 		$joins .= " {$this->left_join} controller_procedure ON (c.procedure_id = controller_procedure.id)";
+		$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
 		
-		$sql = "SELECT c.*, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name FROM controller_control c {$joins} WHERE c.id = " . $id;
+		$sql = "SELECT c.*, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name FROM controller_control c {$joins} WHERE c.id = " . $id;
 		$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 		$this->db->next_record();
 		
@@ -232,6 +239,7 @@ class controller_socontrol extends controller_socommon
 		$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
 		$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
 		$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+		$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 		$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 		$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
@@ -247,9 +255,10 @@ class controller_socontrol extends controller_socommon
 	function get_roles()
 	{
 		$ret_array = array();
+		$ret_array[0] = array('id' =>  0,'name' => lang('Not selected'));
 		$sql = "select * from fm_responsibility_role ORDER BY name";
 		$this->db->query($sql, __LINE__, __FILE__);
-		$i = 0;
+		$i = 1;
 		while($this->db->next_record())
 		{
 			$ret_array[$i]['id'] = $this->db->f('id');
