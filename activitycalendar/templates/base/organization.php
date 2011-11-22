@@ -9,6 +9,7 @@
 	<div id="details">
 		<form action="#" method="post">
 			<input type="hidden" name="id" value="<?php if($organization->get_id()){ echo $organization->get_id(); } else { echo '0'; }  ?>"/>
+			<input type="hidden" name="original_org_id" value="<?php if($organization->get_original_org_id()){ echo $organization->get_original_org_id(); } else { echo '0'; }  ?>"/>
 			<dl class="proplist-col">
 				<dt><label for="orgname">Organisasjonsnavn</label></dt>
 				<dd><?php echo $organization->get_name();?></dd>
@@ -25,7 +26,12 @@
 				<dt><label for="district">Bydel</label></dt>
 				<dd>
 				<?php if($editable){?>
-				<?php $curr_district = $organization->get_district();?>
+				<?php $curr_district = $organization->get_district();
+					if(!is_numeric($curr_district))
+					{
+						$curr_district = activitycalendar_soactivity::get_instance()->get_district_from_name($organization->get_district()); 
+					}
+				?>
 					<select name="org_district">
 						<option value="0">Ingen bydel valgt</option>
 					<?php 
@@ -122,7 +128,14 @@
 				<?php
 					if ($editable) {
 						echo '<input type="submit" name="save_organization" value="' . lang('save') . '"/>';
-						echo '<input type="submit" name="store_organization" value="' . lang('store') . '"/>';
+						if($organization->get_original_org_id() && $organization->get_original_org_id() > 0)
+						{
+							echo '<input type="submit" name="update_organization" value="' . lang('update_org') . '"/>';
+						}
+						else
+						{
+							echo '<input type="submit" name="store_organization" value="' . lang('store') . '"/>';
+						}
 					}
 				?>
 			</div>

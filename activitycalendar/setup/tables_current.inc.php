@@ -56,7 +56,8 @@
 				'address' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'orgno' => array('type' => 'varchar','precision' => '255','nullable' => false),
 				'change_type' => array('type' => 'varchar','precision' => '255','nullable' => false),
-				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false')
+				'transferred' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'original_org_id' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

@@ -158,4 +158,17 @@
 		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
 	}
 	
+	$test[] = '0.1.7';
+	function activitycalendar_upgrade0_1_7()
+	{
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('activity_organization','original_org_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+		
+		$GLOBALS['setup_info']['activitycalendar']['currentver'] = '0.1.8';
+		return $GLOBALS['setup_info']['activitycalendar']['currentver'];
+	}
+	
 ?>
