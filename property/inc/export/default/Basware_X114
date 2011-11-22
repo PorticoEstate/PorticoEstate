@@ -668,8 +668,8 @@
 					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
 					'AMOUNT'				=> $amount, // 312500
 					'APPROVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], //Batch 04 - 14
-					'DIMENSION.D1.CODE'		=> $line['dima'], // 1111
-					'DIMENSION.D2.CODE'		=> $line['dimb'], // 62000
+					'DIMENSION.D1.CODE'		=> $line['dimb'], // 1111
+					'DIMENSION.D2.CODE'		=> '',//$line['dima'], // 62000
 					'DIMENSION.D3.CODE'		=> $dim3, // dummy
 					'DIMENSION.D4.CODE'		=> $dim4, // dummy
 					'DIMENSION.D5.CODE'		=> $dim5, // dummy
