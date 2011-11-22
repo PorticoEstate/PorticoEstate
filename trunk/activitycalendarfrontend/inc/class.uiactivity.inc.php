@@ -25,7 +25,8 @@
 			'view'			=>	true,
 			'index'			=>	true,
 			'get_organization_groups'	=>	true,
-			'get_address_search'	=> true
+			'get_address_search'	=> true,
+			'edit_organization_values' => true
 		);
 		
 		public function __construct()
@@ -274,6 +275,7 @@
 					{
 						$error = lang('messages_form_error');
 					}
+					//$org_info_edit_url = self::link('/index.php' ,array('menuaction' => 'activitycalendarfrontend.uiactivity.edit_organization_values'));
 
 					$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
@@ -633,5 +635,78 @@
 			$search_string = phpgw::get_var('search');
 			//var_dump($search_string);
 			return activitycalendar_soarena::get_instance()->get_address($search_string);
+		}
+		
+		function edit_organization_values()
+		{
+			$org_id = phpgw::get_var('organization_id');
+			if(isset($org_id))
+			{
+				if(isset($_POST['save_org'])) //save updated organization info
+				{
+					$organization = $this->so_organization->get_single($org_id);
+					
+					$org_info['name'] = phpgw::get_var('orgname');
+					$org_info['orgnr'] = phpgw::get_var('orgno');
+					$org_info['homepage'] = phpgw::get_var('homepage');
+					$org_info['phone'] = phpgw::get_var('phone');
+					$org_info['email'] = phpgw::get_var('email');
+					$org_info['description'] = phpgw::get_var('org_description');
+					$org_info['street'] = phpgw::get_var('address');
+					//$org_info['zip'] = phpgw::get_var('postaddress');
+					$org_info['district'] = $organization->get_district();
+					$org_info['status'] = "change";
+					$org_info['original_org_id'] = $org_id;
+					$o_id = $this->so_activity->add_organization_local($org_info);
+					
+					//add contact persons
+					$contact1 = array();
+					$contact1['name'] = phpgw::get_var('org_contact1_name');
+					$contact1['phone'] = phpgw::get_var('org_contact1_phone');
+					$contact1['mail'] = phpgw::get_var('org_contact1_email');
+					$contact1['org_id'] = $o_id;
+					$contact1['group_id'] = 0;
+					$this->so_activity->add_contact_person_local($contact1);
+					
+					$contact2 = array();
+					$contact2['name'] = phpgw::get_var('org_contact2_name');
+					$contact2['phone'] = phpgw::get_var('org_contact2_phone');
+					$contact2['mail'] = phpgw::get_var('org_contact2_email');
+					$contact2['org_id'] = $o_id;
+					$contact2['group_id'] = 0;
+					$this->so_activity->add_contact_person_local($contact2);
+					
+					$message = lang('change_request_ok', $org_info['name']);
+					
+					$this->render('organization_reciept.php', array
+						(
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)
+					);
+					 
+				}
+				else
+				{
+					$organization = $this->so_organization->get_single($org_id);
+					$person_arr = $this->so_contact->get(null, null, null, null, null, null, array('organization_id' => $org_id));
+					foreach($person_arr as $p)
+					{
+						$persons[] = $p;
+					}
+					
+					$this->render('organization_edit.php', array
+						(
+							'organization' => $organization,
+							'contact1' => $persons[0],
+							'contact2' => $persons[1],
+							'districts' => $districts,
+							'editable' => true,
+							'message' => isset($message) ? $message : phpgw::get_var('message'),
+							'error' => isset($error) ? $error : phpgw::get_var('error')
+						)
+					);
+				}
+			}
 		}
 	}

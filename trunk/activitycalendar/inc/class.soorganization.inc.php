@@ -153,6 +153,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.district';
 				$columns[] = 'org.change_type';
 				$columns[] = 'org.transferred';
+				$columns[] = 'org.original_org_id';
 				$columns[] = 'org.orgno AS organization_number';
 				
 				$cols = implode(',',$columns);
@@ -175,7 +176,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 				$columns[] = 'org.email';
 				$columns[] = 'org.description';
 				$columns[] = 'org.active';
-				$columns[] = 'org.street';
+				$columns[] = 'org.street AS address';
 				$columns[] = 'org.zip_code';
 				$columns[] = 'org.city';
 				$columns[] = 'org.district';
@@ -379,6 +380,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$district = $organization->get_district();
 		$change_type = $organization->get_change_type();
 		$transferred = ($organization->get_transferred() == 1 || $organization->get_transferred() == true)?'true':'false';
+		$original_org_id = ($organization->get_original_org_id() && $organization->get_original_org_id() != '')?$organization->get_original_org_id():0;
 		
 		$values[] = "NAME='{$name}'";
 		$values[] = "HOMEPAGE='{$homepage}'";
@@ -390,6 +392,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		$values[] = "DISTRICT='{$district}'";
 		$values[] = "CHANGE_TYPE='{$change_type}'";
 		$values[] = "TRANSFERRED={$transferred}";
+		$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
 		$vals = implode(',',$values);
 		
 		$sql = "UPDATE activity_organization SET {$vals} WHERE ID={$organization->get_id()}";
@@ -430,7 +433,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 
 			$organization->set_name($this->unmarshal($this->db->f('name'), 'string'));
 			$organization->set_organization_number($this->unmarshal($this->db->f('organization_number'), 'int'));
-			$organization->set_address($this->unmarshal($this->db->f('address'), 'string'));
+			$organization->set_address($this->unmarshal($this->db->f('address'), 'string').','.$this->unmarshal($this->db->f('zip_code'), 'string').' '.$this->unmarshal($this->db->f('city'), 'string'));
 			$organization->set_phone($this->unmarshal($this->db->f('phone'), 'string'));
 			$organization->set_email($this->unmarshal($this->db->f('email'), 'string'));
 			$organization->set_homepage($this->unmarshal($this->db->f('homepage'), 'string'));
@@ -439,6 +442,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
 			$organization->set_transferred($this->unmarshal($this->db->f('transferred'), 'bool'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
+			$organization->set_original_org_id($this->unmarshal($this->db->f('original_org_id'), 'int'));
 		}
 		return $organization;
 	}
@@ -464,6 +468,15 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$city = '';
 		}*/
 		$district = $organization->get_district();
+		if($organization->get_original_org_id() && $organization->get_original_org_id() != '')
+		{
+			$original_org_id = $organization->get_original_org_id(); 
+		}
+		else
+		{
+			$original_org_id = 0;
+		}
+		
 		
 		$values[] = "NAME='{$name}'";
 		$values[] = "HOMEPAGE='{$homepage}'";
@@ -475,6 +488,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		//$values[] = "'{$city}'";
 		$values[] = "ORGNO='{$orgnr}'";
 		$values[] = "DISTRICT='{$district}'";
+		$values[] = "ORIGINAL_ORG_ID={$original_org_id}";
 		$vals = implode(',',$values);
 		
 		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
@@ -574,9 +588,75 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 			$organization->set_change_type($this->unmarshal($this->db->f('change_type'), 'string'));
 			$organization->set_transferred($this->unmarshal($this->db->f('transferred'), 'bool'));
 			$organization->set_show_in_portal($this->unmarshal($this->db->f('show_in_portal'), 'int'));
+			$organization->set_original_org_id($this->unmarshal($this->db->f('original_org_id'), 'int'));
 			
 			return $organization;
 		}
+	}
+	
+	function update_organization($org_info)
+	{
+		$name = $org_info['name'];
+		$orgid = (int)$org_info['orgid'];
+		$homepage = $org_info['homepage'];
+		if(!$homepage)
+		{
+			$homepage = '';
+		}
+		$phone = $org_info['phone'];
+		if(!$phone)
+		{
+			$phone = '';
+		}
+		$email = $org_info['email'];
+		if(!$email)
+		{
+			$email = '';
+		}
+		$description = $org_info['description'];
+		if(!$description)
+		{
+			$description = '';
+		}
+		$street = $org_info['street'];
+		if(!$street)
+		{
+			$street = '';
+		}
+		$zip = $org_info['zip'];
+		if($zip && strlen($zip) > 5)
+		{
+			$zip_code = substr($zip,0,4);
+			$city = substr($zip, 5);
+		}
+		else
+		{
+			$zip_code = '';
+			$city = '';
+		}
+		$district = $org_info['district'];
+		if(!$district)
+		{
+			$district = '';
+		}
+		$activity_id = $org_info['activity_id'];
+		$show_in_portal = 1; 
+		
+		$values = array(
+			'name = ' . $this->marshal($name, 'string'),
+			'homepage = ' . $this->marshal($homepage, 'string'),
+			'phone = ' . $this->marshal($phone, 'string'),
+			'email = ' . $this->marshal($email, 'string'),
+			'description = ' . $this->marshal($description, 'string'),
+			'street = ' . $this->marshal($street, 'string'),
+			'zip_code = ' . $this->marshal($zip_code, 'string'),
+			'city = ' . $this->marshal($city, 'string'),
+			'district = ' . $this->marshal($district),
+			'activity_id = ' . $this->marshal($activity_id, 'int'),
+			'show_in_portal = 1'
+		);
+		
+		$result = $this->db->query('UPDATE bb_organization SET ' . join(',', $values) . " WHERE id=$orgid", __LINE__,__FILE__);
 	}
 	
 	function update($organization)

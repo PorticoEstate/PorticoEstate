@@ -9,6 +9,11 @@ include_class('activitycalendar', 'group', 'inc/model/');
 
 class activitycalendar_uiorganization extends activitycalendar_uicommon
 {
+	protected $so_org;
+	protected $so_group;
+	protected $so_contact;
+	protected $so_activity;
+	
 	public $public_functions = array
 	(
 		'index'				=> true,
@@ -22,6 +27,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 	public function __construct()
 	{
 		parent::__construct();
+		$so_org = activitycalendar_soorganization::get_instance();
+		$so_group = activitycalendar_sogroup::get_instance();
+		$so_contact = activitycalendar_socontactperson::get_instance();
+		$so_activity = activitycalendar_soactivity::get_instance();
 		self::set_active_menu('activitycalendar::organizationList');
 		$config	= CreateObject('phpgwapi.config','activitycalendar');
 		$config->read();
@@ -32,7 +41,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		if(phpgw::get_var('phpgw_return_as') == 'json') {
 			return $this->index_json();
 		}
-			
+		
 		$this->render('organization_list.php');
 	}
 	
@@ -74,10 +83,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		if($type)
 		{
 			//var_dump($type);
-			$so = activitycalendar_sogroup::get_instance();
-			$so_contact = activitycalendar_socontactperson::get_instance();
-			$so_activity = activitycalendar_soactivity::get_instance();
-			$group_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
+			$group_array = $so_group->get(null, null, null, null, null, null, array('id' => $id, 'changed_groups' => 'true'));
 			if(count($group_array) > 0){
 				$keys = array_keys($group_array);
 				$group = $group_array[$keys[0]];
@@ -103,7 +109,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact2['org_id'] = 0;
 				$contact2['group_id'] = $group->get_id();
 				
-				if($so->update_local($group))
+				if($so_group->update_local($group))
 				{
 					$so_contact->update_local_contact_person($contact1);
 					$so_contact->update_local_contact_person($contact2);
@@ -137,7 +143,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact2_email = phpgw::get_var('contact2_email');
 
 				
-				$new_group_id = $so->transfer_group($group_info);
+				$new_group_id = $so_group->transfer_group($group_info);
 				if($new_group_id)
 				{
 					//update activity with new org id
@@ -170,7 +176,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					//set local group as stored
 					$group->set_change_type('added');
 					$group->set_transferred(true);
-					$so->update_local($group);
+					$so_group->update_local($group);
 				}
 				else
 				{
@@ -196,10 +202,10 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 		else
 		{
 			//var_dump('org');
-			$so = activitycalendar_soorganization::get_instance();
+			$so_org = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
 			$so_contact = activitycalendar_socontactperson::get_instance();
-			$org_array = $so->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
+			$org_array = $so_org->get(null, null, null, null, null, null, array('id' => $id, 'changed_orgs' => 'true'));
 			if(count($org_array)>0){
 				$keys = array_keys($org_array);
 				$org = $org_array[$keys[0]];
@@ -233,7 +239,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact2['org_id'] = $org->get_id();
 				$contact2['group_id'] = 0;
 				
-				if($so->update_local($org))
+				if($so_org->update_local($org))
 				{
 					$so_contact->update_local_contact_person($contact1);
 					$so_contact->update_local_contact_person($contact2);
@@ -286,7 +292,7 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 				$contact2_email = phpgw::get_var('contact2_email');
 
 				
-				$new_org_id = $so->transfer_organization($org_info);
+				$new_org_id = $so_org->transfer_organization($org_info);
 				if($new_org_id)
 				{
 					//update activity with new org id
@@ -319,13 +325,82 @@ class activitycalendar_uiorganization extends activitycalendar_uicommon
 					//set local organization as stored
 					$org->set_change_type("added");
 					$org->set_transferred(true);
-					$so->update_local($org);
+					$so_org->update_local($org);
 				}
 				else
 				{
 					$error = lang('messages_form_error');
 				}
 				
+			}
+			else if(isset($_POST['update_organization'])) // The user has pressed the store button
+			{
+				$original_org_id = phpgw::get_var('original_org_id');
+				$org_info['orgid'] = $original_org_id;
+				$orgno = phpgw::get_var('orgno');
+				$district = phpgw::get_var('org_district');
+				$homepage = phpgw::get_var('homepage');
+				$email = phpgw::get_var('email');
+				$phone = phpgw::get_var('phone');
+				$address_tmp = phpgw::get_var('address');
+				//phpgw::get_var('address') . ' ' . phpgw::get_var('number') . ', ' . phpgw::get_var('postaddress');
+				$address_array = explode(",",$address_tmp);
+				$desc = phpgw::get_var('org_description');
+				
+				$org_info = array();
+				$org_info['name'] = $org->get_name(); //new
+				$orgno_tmp = $orgno;
+				if(strlen($orgno_tmp) > 9)
+				{
+					$orgno_tmp = NULL;
+				}
+				$org_info['orgnr'] = $orgno_tmp; 
+				
+				$org_info['homepage'] = $homepage;
+				$org_info['phone'] = $phone;
+				$org_info['email'] = $email;
+				$org_info['description'] = $desc;
+				$org_info['street'] = $address_array[0];
+				$org_info['zip'] = $address_array[1];
+				$org_info['activity_id'] = '';
+				$org_info['district'] = $district;
+				
+				$contact1_id = phpgw::get_var('contact1_id');
+				$contact2_id = phpgw::get_var('contact2_id');
+				
+				$contact1_name = phpgw::get_var('contact1_name');
+				$contact1_phone = phpgw::get_var('contact1_phone');
+				$contact1_email = phpgw::get_var('contact1_email');
+				
+				$contact2_name = phpgw::get_var('contact2_name');
+				$contact2_phone = phpgw::get_var('contact2_phone');
+				$contact2_email = phpgw::get_var('contact2_email');
+
+				
+				$so_org->update_organization($org_info);
+				$so_activity->delete_contact_persons($original_org_id);
+
+				//add contact persons to booking
+				$contact1 = array();
+				$contact1['name'] = $contact1_name;
+				$contact1['phone'] = $contact1_phone;
+				$contact1['mail'] = $contact1_email;
+				$contact1['org_id'] = $original_org_id;
+				$so_activity->add_contact_person_org($contact1);
+				
+				$contact2 = array();
+				$contact2['name'] = $contact2_name;
+				$contact2['phone'] = $contact2_phone;
+				$contact2['mail'] = $contact_mail_2;
+				$contact2['org_id'] = $original_org_id;
+				$so_activity->add_contact_person_org($contact2);
+					
+				$message = lang('messages_saved_form');	
+				
+				//set local organization as stored
+				$org->set_change_type("added");
+				$org->set_transferred(true);
+				$so_org->update_local($org);
 			}
 			
 			$contact_persons = $so_contact->get_local_contact_persons($org->get_id());
