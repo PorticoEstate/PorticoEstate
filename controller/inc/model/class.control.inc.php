@@ -195,6 +195,7 @@
 				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
 				$this->set_repeat_type(phpgw::get_var('repeat_type','int'));
 				$this->set_repeat_interval(phpgw::get_var('repeat_interval','int'));
+				$this->set_responsibility_id(phpgw::get_var('responsibility_id','int'));
 		}
 		
 		public function serialize()
@@ -211,6 +212,7 @@
 				'control_area_name' => $this->get_control_area_name(),
 			   	'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
+				'responsibility' => $this->get_responsibility_id(),
 			
 				);
 		}
