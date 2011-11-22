@@ -178,6 +178,7 @@
 			// Fetches prosedures that are related to first control area in list
 			$control_area_id = $control_areas_array[0]['id'];
 			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			$role_array = $this->so->get_roles();
 			
 			$tabs = array( array(
 							'label' => "1: " . lang('Details')
@@ -197,6 +198,7 @@
 				'control'					=> (isset($control)) ? $control->toArray(): null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
+				'role_array'				=> $role_array,
 				'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
 				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ''))
 			);

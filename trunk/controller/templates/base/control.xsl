@@ -117,6 +117,25 @@
 				</xsl:choose>
 				</dd>
 				<dt>
+					<label>Rolle</label>
+				</dt>
+				<dd>
+				<xsl:choose>
+					<xsl:when test="editable">
+						<select id="responsibility_id" name="responsibility_id">
+							<xsl:for-each select="role_array">
+								<option value="{id}">
+									<xsl:value-of disable-output-escaping="yes" select="name"/>
+								</option>
+						    </xsl:for-each>
+						</select>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="control/role_name" />
+					</xsl:otherwise>
+				</xsl:choose>
+				</dd>
+				<dt>
 					<label for="description">Beskrivelse</label>
 				</dt>
 				<dd>

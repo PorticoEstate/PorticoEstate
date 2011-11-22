@@ -68,7 +68,8 @@ class controller_socontrol extends controller_socommon
 			'control_area_id = ' . $this->marshal($control->get_control_area_id()),
 			'repeat_type = ' . $this->marshal($control->get_repeat_type(), 'string'),
 			'repeat_interval = ' . $this->marshal($control->get_repeat_interval(), 'string'),
-			'procedure_id = ' . $this->marshal($control->get_procedure_id(), 'int')
+			'procedure_id = ' . $this->marshal($control->get_procedure_id(), 'int'),
+			'responsibility_id = ' . $this->marshal($control->get_responsibility_id(), 'int')
 		);
 		
 		$result = $this->db->query('UPDATE controller_control SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
@@ -242,8 +243,19 @@ class controller_socontrol extends controller_socommon
 		
 		return $control;
 	}
-	
 
-	
-	
+	function get_roles()
+	{
+		$ret_array = array();
+		$sql = "select * from fm_responsibility_role ORDER BY name";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$i = 0;
+		while($this->db->next_record())
+		{
+			$ret_array[$i]['id'] = $this->db->f('id');
+			$ret_array[$i]['name'] = $this->db->f('name');
+			$i++;
+		}
+		return $ret_array;
+	}
 }
