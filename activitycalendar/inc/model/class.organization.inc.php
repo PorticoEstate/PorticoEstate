@@ -17,6 +17,7 @@
 		protected $address;
 		protected $change_type;
 		protected $transferred;
+		protected $original_org_id;
 		
 		/**
 		 * Constructor.  Takes an optional ID.  If a organization is created from outside
@@ -112,6 +113,13 @@
 		}
 		
 		public function get_transferred() { return $this->transferred; }
+		
+		public function set_original_org_id($original_org_id)
+		{
+			$this->original_org_id = $original_org_id;
+		}
+		
+		public function get_original_org_id() { return $this->original_org_id; }
 		
 		public function serialize()
 		{

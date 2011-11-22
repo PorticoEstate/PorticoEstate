@@ -974,6 +974,11 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		}
 		$district = $org_info['district'];
 		$status = $org_info['status'];
+		$original_org_id = $org_info['original_org_id'];
+		if(!isset($original_org_id) || $original_org_id == '')
+		{
+			$original_org_id = 0;
+		}
 		
 		$columns[] = 'name';
 		$columns[] = 'homepage';
@@ -986,6 +991,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$columns[] = 'orgno';
 		$columns[] = 'district';
 		$columns[] = 'change_type';
+		$columns[] = 'original_org_id';
 		$cols = implode(',',$columns);
 		
 		$values[] = "'{$name}'";
@@ -999,6 +1005,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$values[] = "'{$orgnr}'";
 		$values[] = "'{$district}'";
 		$values[] = "'{$status}'";
+		$values[] = $original_org_id;
 		$vals = implode(',',$values);
 		
 		//var_dump("INSERT INTO activity_organization ({$cols}) VALUES ({$vals})");
