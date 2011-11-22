@@ -343,7 +343,7 @@ function allOK()
 						<dd><?php echo $organization->get_phone()?></dd>
 						<dt><label for="street">Adresse</label></dt>
 						<dd><?php echo $organization->get_address()?></dd>
-						<dt><label for="org_description">Beskrivelse</label></dt>
+						<dt><label for="org_description">Beskrivelse av aktiviteten</label></dt>
 						<dd><?php echo $organization->get_description()?></dd>
 					<hr/>
 					<dt>Kontaktperson 1</dt>

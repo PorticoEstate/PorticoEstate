@@ -88,3 +88,4 @@ update_request_sent	activitycalendarfrontend	no	Oppdateringsforespørsel er send
 edit_activity	activitycalendarfrontend	no	Endre aktivitet
 activity_edit_helptext	activitycalendarfrontend	no	Velg aktiviteten du ønsker å endre fra listen under.
 send_change_request	activitycalendarfrontend	no	Send inn endringsønske
+edit_organization	activitycalendarfrontend	no	Rediger organisasjonsinformasjon
