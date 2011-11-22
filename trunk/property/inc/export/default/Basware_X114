@@ -807,6 +807,7 @@
 					'kidnr'					=> $this->db->f('kidnr'),
 					'typeid'				=> $this->db->f('typeid'),
 					'kildeid'				=> $this->db->f('kildeid'),
+					'project_id'			=> $this->db->f('project_id'),
 					'order_id'				=> $this->db->f('pmwrkord_code'),
 					'belop'					=> $this->db->f('belop'),
 					'fakturadato'			=> $this->db->f('fakturadato'),
