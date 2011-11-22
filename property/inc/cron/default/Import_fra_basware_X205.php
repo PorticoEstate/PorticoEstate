@@ -379,6 +379,11 @@
 
 					$kidnr 	= $_data['KIDNO'];
 
+					if($order_id)
+					{
+						$buffer[$id]['project_id'] = $this->soXport->get_project(intval($order_id));	
+					}
+					
 					$buffer[$i]['external_ref']		= $_data['SCANNINGNO'];
 					$buffer[$i]['pmwrkord_code']	= $order_id;
 					$buffer[$i]['fakturanr']		= $fakturanr;
