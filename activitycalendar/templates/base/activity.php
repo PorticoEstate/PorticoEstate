@@ -118,7 +118,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_title() || $editable) { ?>
 					<label for="title"><?php echo lang('title') ?></label>
-					<br/><?php echo lang('title_helptext')?>
+					<?php if($editable){?><br/><?php echo lang('title_helptext')?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -143,19 +143,11 @@ function allOK()
 					<?php
 						if($activity->get_group_id())
 						{
-							$group =  $act_so->get_group_info($activity->get_group_id());
-							if($group)
-							{
-								echo $group['description'];
-							}
+							echo activitycalendar_sogroup::get_instance()->get_description($activity->get_group_id());
 						}
 						else if($activity->get_organization_id())
 						{
-							$org = $act_so->get_org_info($activity->get_organization_id());
-							if($org)
-							{
-								echo $org['description'];
-							}
+							echo activitycalendar_soorganization::get_instance()->get_description($activity->get_organization_id());
 						}
 					 ?>
 				</dd>
@@ -196,7 +188,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_category() || $editable) { ?>
 					<label for="category"><?php echo lang('category') ?></label>
-					<br/><?php echo lang('category_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('category_helptext') ?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -227,7 +219,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_target() || $editable) { ?>
 					<label for="target"><?php echo lang('target') ?></label>
-					<br/><?php echo lang('target_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('target_helptext') ?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -260,7 +252,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_district() || $editable) { ?>
 					<label for="district"><?php echo lang('district') ?></label>
-					<br/><?php echo lang('district_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('district_helptext') ?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -300,7 +292,7 @@ function allOK()
 				</dd>
 				<h2><?php echo lang('where_when')?></h2>
 				<dt>
-					<?php if($activity->get_arena() || $editable) { ?>
+					<?php if($activity->get_arena() || $activity->get_internal_arena() || $editable) { ?>
 					<label for="arena"><?php echo lang('arena') ?></label>
 					<br/><?php echo lang('arena_helptext')?>
 					<?php  } ?>
@@ -416,7 +408,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_organization_id() || $editable) { ?>
 					<label for="organization_id"><?php echo lang('organization') ?></label>
-					<br/><?php echo lang('organization_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('organization_helptext') ?><?php }?>
 					<?php } ?>
 				</dt>
 				<dd>
@@ -440,6 +432,9 @@ function allOK()
 								}
 								?>
 						</select>
+						<?php if($current_organization_id){?>
+							<br/><?php echo lang('edit_contact_info')?> <a href="index.php?menuaction=booking.uiorganization.show&id=<?php echo $current_organization_id ?>"><?php echo lang('edit_contact_info_org')?></a>
+						<?php }?>
 						<?php
 						}
 					?>
@@ -456,7 +451,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_group_id() || $editable) { ?>
 					<label for="group_id"><?php echo lang('group') ?></label>
-					<br/><?php echo lang('group_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('group_helptext') ?><?php }?>
 					<?php } ?>
 				</dt>
 				<dd>
@@ -470,6 +465,9 @@ function allOK()
 								<option value="0">Ingen gruppe valgt</option>
 							</select>
 						</div>
+						<?php if($current_group_id){?>
+							<br/><?php echo lang('edit_contact_info')?> <a href="index.php?menuaction=booking.uigroup.show&id=<?php echo $current_group_id ?>"><?php echo lang('edit_contact_info_group')?></a>
+						<?php }?>
 						<?php
 					?>
 					<?php

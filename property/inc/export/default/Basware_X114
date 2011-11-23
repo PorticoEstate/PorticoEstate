@@ -58,11 +58,11 @@
 		{
 			if(isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval']== 1)
 			{
-				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL';
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL ORDER BY bilagsnr asc';
 			}
 			else
 			{
-				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL';
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL ORDER BY bilagsnr asc';
 			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			$vouchers = array();
@@ -153,7 +153,7 @@
 		}
 
 
-		protected function select_invoice_rollback($date, $Filnavn)
+		protected function select_invoice_rollback($date, $Filnavn,$rollback_voucher)
 		{
 			$date_array = phpgwapi_datetime::date_array($date);
 	 		$day = $date_array['day'];
@@ -184,7 +184,15 @@
 					break;
 			}
 
-			$sql="SELECT * FROM fm_ecobilagoverf WHERE filnavn='$Filnavn' AND $datepart_year=$year AND $datepart_month=$month AND $datepart_day= $day";
+			if($rollback_voucher)
+			{
+				$rollback_voucher = (int)$rollback_voucher;
+				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_voucher}";
+			}
+			else
+			{
+				$sql="SELECT * FROM fm_ecobilagoverf WHERE filnavn='$Filnavn' AND $datepart_year=$year AND $datepart_month=$month AND $datepart_day= $day";
+			}
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$invoice_rollback = array();
@@ -201,6 +209,8 @@
 					'belop'					=> $this->db->f('belop'),
 					'fakturadato'			=> $this->db->f('fakturadato'),
 					'periode'				=> $this->db->f('periode'),
+					'periodization'			=> $this->db->f('periodization'),
+					'periodization_start'	=> $this->db->f('periodization_start'),
 					'forfallsdato'			=> $this->db->f('forfallsdato'),
 					'fakturanr'				=> $this->db->f('fakturanr'),
 					'spbudact_code'			=> $this->db->f('spbudact_code'),
@@ -268,6 +278,8 @@
 				$BilagOverf['dimd'],
 				$BilagOverf['mvakode'],
 				$BilagOverf['periode'],
+				$BilagOverf['periodization'],
+				$BilagOverf['periodization_start'],
 				$this->db->db_addslashes($BilagOverf['merknad']),
 				$BilagOverf['utbetalingid'],
 				$BilagOverf['oppsynsigndato'],
@@ -289,7 +301,7 @@
 			$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,"
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
 			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
-			. " periode,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
+			. " periode,periodization,periodization_start,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
 			. " item_type,item_id,external_ref,belop,godkjentbelop,currency,process_log,process_code)"
 			. " VALUES ({$values})";
 
@@ -394,9 +406,9 @@
 			$this->log_error($batchid,$error_desr);
 		}
 		
-		public function RullTilbake($Filnavn, $date)
+		public function RullTilbake($Filnavn, $date,$rollback_voucher)
 		{								
-			$voucher = $this->select_invoice_rollback($date, $Filnavn);
+			$voucher = $this->select_invoice_rollback($date, $Filnavn,$rollback_voucher);
 			$this->db->transaction_begin();
 
 			foreach ($voucher as $line)
@@ -433,7 +445,12 @@
 			{		
 				$fil_katalog = $this->config->config_data['export_path'];			
 			
-				if(unlink ($fil_katalog. '/' . $Filnavn))
+				if($rollback_voucher)
+				{
+					$this->db->transaction_commit();
+					$receipt['message'][]= array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
+				}
+				else if(unlink ($fil_katalog. '/' . $Filnavn))
 				{
 					$this->db->transaction_commit();
 					$receipt['message'][]= array('msg' => $antall . ' ' . lang('bilag/underbilag rullet tilbake'));
@@ -442,7 +459,7 @@
 				else
 				{
 					$this->db->transaction_abort();
-					$receipt['message'][]= array('msg' => 'Noe gikk galt!');
+					$receipt['error'][]= array('msg' => 'Noe gikk galt!');
 				}							
 			}
 			else
@@ -507,7 +524,6 @@
 				}
 			}
 
-
 			$antall = count($oRsBilag);
 
 			$this->db->transaction_begin();
@@ -560,6 +576,10 @@
 			foreach ($oRsBilag as $line)
 			{
 				$comment[] = $line['process_log'];
+
+				$BelopFelt = 'godkjentbelop';
+
+/*
 				//Bestem belops felt
 				if ($line['splitt'] == 0)
 				{
@@ -579,7 +599,9 @@
 					}
 				}
 				
+*/
 				//Bilaget er splittet
+/*
 				if ($line['godkjentbelop'] == $line['belop'])
 				{
 					$BelopFelt = 'godkjentbelop';
@@ -591,7 +613,7 @@
 					$this->errorhandler($batchid,$message);
 					return $message;
 				}
-
+*/
 				$amount =  $line[$BelopFelt] * 100; 
 
 				if($line['order_id'])
@@ -812,12 +834,14 @@
 					'belop'					=> $this->db->f('belop'),
 					'fakturadato'			=> $this->db->f('fakturadato'),
 					'periode'				=> $this->db->f('periode'),
+					'periodization'			=> $this->db->f('periodization'),
+					'periodization_start'	=> $this->db->f('periodization_start'),
 					'forfallsdato'			=> $this->db->f('forfallsdato'),
 					'fakturanr'				=> $this->db->f('fakturanr'),
 					'spbudact_code'			=> $this->db->f('spbudact_code'),
 					'regtid'				=> $this->db->f('regtid'),
 					'artid'					=> $this->db->f('artid'),
-					'godkjentbelop'			=> $this->db->f('belop'),
+					'godkjentbelop'			=> $this->db->f('godkjentbelop'),
 					'spvend_code'			=> $this->db->f('spvend_code'),
 					'dima'					=> $this->db->f('dima'),
 					'dimb'					=> $this->db->f('dimb'),

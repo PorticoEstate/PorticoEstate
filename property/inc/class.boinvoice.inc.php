@@ -257,11 +257,19 @@
 			return $this->so->update_period($voucher_id,$period);
 		}
 
+		function update_periodization($voucher_id='',$periodization='')
+		{
+			return $this->so->update_periodization($voucher_id,$periodization);
+		}
+
+		function update_periodization_start($voucher_id='',$period='')
+		{
+			return $this->so->update_periodization_start($voucher_id,$period);
+		}
+
 		function increment_bilagsnr()
 		{
-
 			return $this->so->increment_bilagsnr();
-
 		}
 
 		function next_bilagsnr()

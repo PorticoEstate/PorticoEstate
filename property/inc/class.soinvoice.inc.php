@@ -229,11 +229,11 @@
 
 					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-						. " forfallsdato,periode,artid,kidnr,kreditnota,currency "
+						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency "
 						. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
 						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-						. " forfallsdato,periode,artid,kidnr,kreditnota,currency";
+						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
@@ -294,6 +294,9 @@
 					$invoice[$i]['voucher_date'] 			= $GLOBALS['phpgw']->common->show_date($timestamp_voucher_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$invoice[$i]['payment_date'] 			= $GLOBALS['phpgw']->common->show_date($timestamp_payment_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$invoice[$i]['period']					= $this->db->f('periode');
+					$invoice[$i]['periodization']			= $this->db->f('periodization');
+					$invoice[$i]['periodization_start']		= $this->db->f('periodization_start');
+					
 					$invoice[$i]['type']					= $art_list[$this->db->f('artid')];
 					$invoice[$i]['kidnr']					= $this->db->f('kidnr');
 					$invoice[$i]['kreditnota']				= $this->db->f('kreditnota');
@@ -412,6 +415,7 @@
 						'remark' 				=> !!$this->db->f('merknad'),
 						'tax_code'				=> $this->db->f('mvakode'),
 						'amount'				=> $this->db->f('belop'),
+						'approved_amount'		=> $this->db->f('godkjentbelop'),
 						'charge_tenant'			=> $this->db->f('charge_tenant'),
 						'vendor'				=> $this->db->f('org_name'),
 						'paid_percent'			=> $this->db->f('paid_percent'),
@@ -658,6 +662,7 @@
 					$id			= $values['id'][$n];
 					$tax_code	= $values['tax_code'][$n];
 					$dimb		= isset($values['dimb'][$n]) && $values['dimb'][$n] ? (int)$values['dimb'][$n] : 'NULL';
+					$approved_amount = isset($values['approved_amount'][$n]) && $values['approved_amount'][$n] ? str_replace(',', '.', $values['approved_amount'][$n]) : 0;
 					$workorder_id=$values['workorder_id'][$n];
 					if(isset($values['close_order'][$n]) && $values['close_order'][$n] && !$values['close_order_orig'][$n])
 					{
@@ -674,7 +679,7 @@
 						$update_paid_percent[$workorder_id] = $values['paid_percent'][$n];
 					}
 
-					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set $dima_field ,$kostra_field,$dimd_field, mvakode = '$tax_code',spbudact_code = '$budget_account',dimb = $dimb where id='$id'");
+					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,$dimd_field, mvakode = '$tax_code',spbudact_code = '$budget_account',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='$id'");
 
 					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
 				}
@@ -900,6 +905,32 @@
 			return $receipt;
 		}
 
+		function update_periodization($voucher_id='',$periodization='')
+		{
+			$receipt = array();
+			$this->db->transaction_begin();
+
+			$this->db->query("UPDATE fm_ecobilag set periodization='$periodization' where bilagsnr='$voucher_id'");
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg'=>lang('voucher periodization is updated'));
+			return $receipt;
+		}
+
+		function update_periodization_start($voucher_id='',$periodization_start='')
+		{
+			$receipt = array();
+			$this->db->transaction_begin();
+
+			$this->db->query("UPDATE fm_ecobilag set periodization_start='$periodization_start' where bilagsnr='$voucher_id'");
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg'=>lang('voucher periodization start is updated'));
+			return $receipt;
+		}
+
 
 		function increment_bilagsnr()
 		{
@@ -1083,6 +1114,7 @@
 						'merknad'				=> $this->db->f('merknad'),
 						'b_account_id'			=> $this->db->f('spbudact_code'),
 						'amount'				=> $this->db->f('belop'),
+						'approved_amount'		=> $this->db->f('godkjentbelop'),
 						'order'					=> $this->db->f('pmwrkord_code'),
 						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'kostra_id'				=> $this->db->f('kostra_id'),
@@ -1439,6 +1471,63 @@
 		*/
 		public function get_deposition()
 		{		
+
+
+			$sql = "SELECT "
+//			." fm_project.location_code as location,"
+			. "fm_project.loc1 as eiendom,"
+//			. "fm_workorder.address as adresse,"
+//			. "fm_workorder.*,"
+			. "bilagsnr,"
+//			. "kidnr,"
+			. "belop,"
+			. "godkjentbelop,"
+			. "fakturadato,"
+			. "periode,"
+			. "forfallsdato,"
+			. "fakturanr,"
+			. "spvend_code as vendor,"
+//			. "dima,"
+//			. "fm_ecobilag.loc1 as eiendom,"
+			. "dimb as kostnadssted,"
+//			. "mvakode,"
+//			. "dimd,"
+			. "saksbehandlerid,"
+			. "budsjettansvarligid,"
+			. "utbetalingid,"
+			. "oppsynsigndato,"
+			. "saksigndato,"
+			. "budsjettsigndato,"
+			. "utbetalingsigndato,"
+			. "merknad,"
+			. "kreditnota"
+//			. "kostra_id,"
+//			. "item_type,"
+//			. "item_id"
+//			. "external_ref,"
+//			. "currency,"
+//			. "process_log'"
+			. ' FROM fm_workorder'
+			. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
+			. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)"
+			. " ORDER BY periode ASC";
+			$this->db->query($sql,__LINE__,__FILE__);
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+					$orders[] = $this->db->f('id');
+					$values[] = $this->db->Record;
+			}
+
+			return $values;
+
+
+
+
+
+
+
 			$this->db->query("SELECT id FROM fm_workorder_status WHERE delivered IS NOT NULL");
 			$delivered = array();
 			while ($this->db->next_record())
