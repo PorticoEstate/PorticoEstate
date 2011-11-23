@@ -654,18 +654,242 @@
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
 
 			$uicols = array (
-				'input_type'	=>	array('hidden','hidden'	,'hidden'	,'hidden'	,'hidden','hidden','hidden','hidden','hidden'	,'link','link'		,'hidden','hidden','hidden',$paid?'varchar':'input','varchar','varchar','varchar'  ,'hidden','varchar','varchar','varchar',$paid?'hidden':'input',$paid?'hidden':'input','special','special','special','special2'),
-				'type'			=>	array('number',''		,''		,''		,'number','number',''	  ,'number',''	,'url' ,'msg_box'	,''    ,''    ,''    ,$paid?'':'text'	   	,''     ,'text','text',''    ,''     ,''     ,''     ,$paid?'':'checkbox' ,$paid?'':'radio'	 ,''     ,''     ,''     ,''  	 ),
+				'input_type'	=>	array
+									(
+										'hidden',
+										'hidden',
+										'hidden',
+										'hidden',
+										'hidden',
+										'hidden',
+										'hidden',
+										'hidden',
+										'hidden',
+										'link',
+										'link',
+										'hidden',
+										'hidden',
+										'hidden',
+										$paid?'varchar':'input',
+										'varchar',
+										'varchar',
+										'varchar',
+										'hidden',
+										'varchar',
+										'varchar',
+										'varchar',
+										'varchar',
+										'varchar',
+										$paid?'hidden':'input',
+										$paid?'hidden':'input',
+										'special',
+										'special',
+										'special',
+										'special2'
+										),
+				'type'			=>	array
+									(
+										'number',
+										'',
+										'',
+										'',
+										'number',
+										'number',
+										'',
+										'number',
+										'',
+										'url',
+										'msg_box',
+										'',
+										'',
+										'',
+										$paid?'':'text',
+										'',
+										'text',
+										'text',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										$paid?'':'checkbox',
+										$paid?'':'radio',
+										'',
+										'',
+										'',
+										''
+									),
+				'col_name'		=>	array
+									(
+										'payment_date',
+										'transfer',
+										'kreditnota',
+										'sign',
+										'vendor_name',
+										'counter_num',
+										'counter',
+										'voucher_id_num',
+										'voucher_id',
+										'voucher_id_lnk',
+										'voucher_date_lnk',
+										'sign_orig',
+										'num_days_orig',
+										'timestamp_voucher_date',
+										'num_days',
+										'amount_lnk',
+										'currency',
+										'vendor',
+										'invoice_count',
+										'invoice_count_lnk',
+										'type_lnk',
+										'period',
+										'periodization',
+										'periodization_start',
+										'kreditnota_tmp',
+										'sign_tmp',
+										'janitor_lnk',
+										'supervisor_lnk',
+										'budget_responsible_lnk',
+										'transfer_lnk'
+									),
+				'name'			=>	array
+									(
+										'payment_date',
+										'dummy',
+										'dummy',
+										'dummy',
+										'vendor',
+										'counter',
+										'counter',
+										'voucher_id',
+										'voucher_id',
+										'voucher_id',
+										'voucher_date',
+										'sign_orig',
+										'num_days',
+										'timestamp_voucher_date',
+										'num_days',
+										'amount',
+										'currency',
+										'vendor',
+										'invoice_count',
+										'invoice_count',
+										'type',
+										'period',
+										'periodization',
+										'periodization_start',
+										'kreditnota',
+										'empty_fild',
+										'janitor',
+										'supervisor',
+										'budget_responsible',
+										'transfer_id'
+									),
 
-				'col_name'		=>	array('payment_date','transfer','kreditnota','sign','vendor_name','counter_num','counter','voucher_id_num','voucher_id','voucher_id_lnk','voucher_date_lnk','sign_orig' ,'num_days_orig','timestamp_voucher_date','num_days','amount_lnk','currency','vendor','invoice_count','invoice_count_lnk','type_lnk','period','kreditnota_tmp','sign_tmp' ,'janitor_lnk','supervisor_lnk','budget_responsible_lnk','transfer_lnk'),
-				'name'			=>	array('payment_date','dummy','dummy','dummy','vendor','counter','counter','voucher_id'    ,'voucher_id','voucher_id'    ,'voucher_date'    ,'sign_orig','num_days'     ,'timestamp_voucher_date','num_days','amount'    ,'currency','vendor'    ,'invoice_count','invoice_count'    ,'type'    ,'period','kreditnota','empty_fild','janitor'    ,'supervisor'    ,'budget_responsible'    ,'transfer_id'),
+				'formatter'		=>	array
+									(
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'myFormatDate',
+										'',
+										'',
+										'',
+										'',
+										'',
+										$paid?'':'myPeriodDropDown',
+										$paid?'':'myPeriodizationDropDown',
+										$paid?'':'myPeriodization_startDropDown',
+										'',
+										'',
+										'',
+										'',
+										'',
+										''
+									),
 
-				'formatter'		=>	array('','','','','','','','','','','','','','','','myFormatDate','','','','','',$paid?'':'myPeriodDropDown','','','','','',''),
-
-				'descr'			=>	array('dummy','dummy','dummy','dummy','dummy','dummy','dummy','dummy','dummy',lang('voucher'),lang('Voucher Date'),'dummy','dummy','dummy',lang('Days'),lang('Sum'),lang('currency'),lang('Vendor'),'dummy',lang('Count'),lang('Type'),lang('Period'),lang('KreditNota'),lang('None'),lang('Janitor'),lang('Supervisor'),lang('Budget Responsible'),lang('Transfer')),
-				'className'		=> 	array('','','','','','','','','','','centerClasss','','','',$paid?'rightClasss':'','rightClasss','','','','rightClasss','',$paid?'centerClasss':'comboClasss','centerClasss','centerClasss','','','centerClasss','centerClasss')
+				'descr'			=>	array
+									(
+										'dummy',
+										'dummy',
+										'dummy',
+										'dummy',
+										'dummy',
+										'dummy',
+										'dummy',
+										'dummy',
+										'dummy',
+										lang('voucher'),
+										lang('Voucher Date'),
+										'dummy',
+										'dummy',
+										'dummy',
+										lang('Days'),
+										lang('Sum'),
+										lang('currency'),
+										lang('Vendor'),
+										'dummy',
+										lang('Count'),
+										lang('Type'),
+										lang('Period'),
+										lang('periodization'),
+										lang('periodization start'),
+										lang('KreditNota'),
+										lang('None'),
+										lang('Janitor'),
+										lang('Supervisor'),
+										lang('Budget Responsible'),
+										lang('Transfer')
+									),
+				'className'		=> 	array
+									(
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'',
+										'centerClasss',
+										'',
+										'',
+										'',
+										$paid?'rightClasss':'',
+										'rightClasss',
+										'',
+										'',
+										'',
+										'rightClasss',
+										'',
+										$paid?'centerClasss':'comboClasss',
+										$paid?'centerClasss':'comboClasss',
+										$paid?'centerClasss':'comboClasss',
+										'centerClasss',
+										'centerClasss',
+										'',
+										'',
+										'centerClasss',
+										'centerClasss'
+									)
 			);
 
+//_debug_array($uicols);
 			//url to detail of voucher
 			$link_sub 	= 	$GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.list_sub','user_lid'=>$this->user_lid));
 
@@ -1339,6 +1563,8 @@
 				array(
 					'col_name'=>'sum',				'label'=>lang('Sum'),			'className'=>'rightClasss', 'sortable'=>true,	'sort_field'=>'belop',			'visible'=>true),
 				array(
+					'col_name'=>'approved_amount',	'label'=>lang('approved amount'),'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',	'visible'=>true),
+				array(
 					'col_name'=>'currency',			'label'=>lang('currency'),		'className'=>'centerClasss', 'sortable'=>false,	'sort_field'=>'',			'visible'=>true),
 				array(
 					'col_name'=>'dim_A',			'label'=>lang('Dim A'),			'className'=>'centerClasss', 'sortable'=>true,	'sort_field'=>'dima',			'visible'=>true),
@@ -1473,10 +1699,25 @@
 
 						else if(($i == 8))
 						{
-							$json_row[$uicols[$i]['col_name']]  .= $invoices['currency'];
+
+							if($invoices['paid'] == true)
+							{
+								$json_row[$uicols[$i]['col_name']] .= $invoices['approved_amount'];
+							}
+							else
+							{
+								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[approved_amount][".$j."]' id='values[approved_amount][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['approved_amount']."'/>";
+							}
+
+
 						}
 
 						else if(($i == 9))
+						{
+							$json_row[$uicols[$i]['col_name']]  .= $invoices['currency'];
+						}
+
+						else if(($i == 10))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1487,7 +1728,7 @@
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dima][".$j."]' id='values[dima][".$j."]'  class='myValuesForPHP'  type='text' size='7' value='".$invoices['dima']."'/>";
 							}
 						}
-						else if(($i == 10))
+						else if(($i == 11))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1514,7 +1755,7 @@
 
 							}
 						}
-						else if(($i == 11))
+						else if(($i == 12))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1525,7 +1766,7 @@
 								$json_row[$uicols[$i]['col_name']]  .= " <input name='values[dimd][".$j."]' id='values[dimd][".$j."]'  class='myValuesForPHP'  type='text' size='4' value='".$invoices['dimd']."'/>";
 							}
 						}
-						else if(($i == 12))
+						else if(($i == 13))
 						{
 							if($invoices['paid'] == true)
 							{
@@ -1552,7 +1793,7 @@
 
 							}
 						}
-						else if(($i == 13))
+						else if(($i == 14))
 						{
 							if($invoices['remark'] == true)
 							{
@@ -1568,7 +1809,7 @@
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						else if(($i == 14))
+						else if(($i == 15))
 						{
 							if(isset($invoices['external_ref']) && $invoices['external_ref'])
 							{
@@ -1580,11 +1821,11 @@
 								$json_row[$uicols[$i]['col_name']]  .= "<b>-</b>";
 							}
 						}
-						else if($i == 15)
+						else if($i == 16)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['counter'];
 						}					
-						else if($i == 16)
+						else if($i == 17)
 						{
 							$json_row[$uicols[$i]['col_name']]  = $invoices['id'];
 						}					

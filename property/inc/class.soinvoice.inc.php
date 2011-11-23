@@ -658,6 +658,7 @@
 					$id			= $values['id'][$n];
 					$tax_code	= $values['tax_code'][$n];
 					$dimb		= isset($values['dimb'][$n]) && $values['dimb'][$n] ? (int)$values['dimb'][$n] : 'NULL';
+					$approved_amount = isset($values['approved_amount'][$n]) && $values['approved_amount'][$n] ? str_replace(',', '.', $values['approved_amount'][$n]) : 0;
 					$workorder_id=$values['workorder_id'][$n];
 					if(isset($values['close_order'][$n]) && $values['close_order'][$n] && !$values['close_order_orig'][$n])
 					{
@@ -674,7 +675,7 @@
 						$update_paid_percent[$workorder_id] = $values['paid_percent'][$n];
 					}
 
-					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag set $dima_field ,$kostra_field,$dimd_field, mvakode = '$tax_code',spbudact_code = '$budget_account',dimb = $dimb where id='$id'");
+					$GLOBALS['phpgw']->db->query("UPDATE fm_ecobilag SET $dima_field ,$kostra_field,$dimd_field, mvakode = '$tax_code',spbudact_code = '$budget_account',dimb = $dimb,godkjentbelop = $approved_amount WHERE id='$id'");
 
 					$receipt['message'][] = array('msg'=>lang('Voucher is updated '));
 				}
@@ -1083,6 +1084,7 @@
 						'merknad'				=> $this->db->f('merknad'),
 						'b_account_id'			=> $this->db->f('spbudact_code'),
 						'amount'				=> $this->db->f('belop'),
+						'approved_amount'		=> $this->db->f('godkjentbelop'),
 						'order'					=> $this->db->f('pmwrkord_code'),
 						'order_id'				=> $this->db->f('pmwrkord_code'),
 						'kostra_id'				=> $this->db->f('kostra_id'),

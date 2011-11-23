@@ -5475,6 +5475,43 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.625 to 0.9.17.626
+	* Add periodization to voucher handling
+	*/
+
+	$test[] = '0.9.17.625';
+	function property_upgrade0_9_17_625()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_eco_periodization', array(
+				'fd' => array(
+					'id' => array('type' => 'int','precision' => '4','nullable' => False),
+					'descr' => array('type' => 'varchar','precision' => '64','nullable' => False)
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','periodization',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','periodization_start',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periodization',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','periodization_start',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.626';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608

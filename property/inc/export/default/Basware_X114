@@ -560,6 +560,10 @@
 			foreach ($oRsBilag as $line)
 			{
 				$comment[] = $line['process_log'];
+
+				$BelopFelt = 'godkjentbelop';
+
+/*
 				//Bestem belops felt
 				if ($line['splitt'] == 0)
 				{
@@ -579,7 +583,9 @@
 					}
 				}
 				
+*/
 				//Bilaget er splittet
+/*
 				if ($line['godkjentbelop'] == $line['belop'])
 				{
 					$BelopFelt = 'godkjentbelop';
@@ -591,7 +597,7 @@
 					$this->errorhandler($batchid,$message);
 					return $message;
 				}
-
+*/
 				$amount =  $line[$BelopFelt] * 100; 
 
 				if($line['order_id'])
