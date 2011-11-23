@@ -605,9 +605,9 @@
 					$receipt['error'][] = array('msg'=> lang('No conversion type could be located.') .' - ' . lang('Please choose a conversion type from the list'));
 				}
 
-				if(!$values['file'])
+				if(!$values['file'] && !$values['voucher_id'])
 				{
-					$receipt['error'][] = array('msg'=>lang('Please choose a file'));
+					$receipt['error'][] = array('msg'=>lang('Please choose a file or a voucher'));
 				}
 
 				if(!$receipt['error'])

@@ -294,6 +294,8 @@
 				$data['pmwrkord_code'],
 				$data['fakturadato'],
 				$data['periode'],
+				$data['periodization'],
+				$data['periodization_start'],
 				$data['forfallsdato'],
 				$data['fakturanr'],
 				$data['spbudact_code'],
@@ -328,7 +330,7 @@
 			$values	= $this->db->validate_insert($values);
 
 			$sql="INSERT INTO fm_ecobilagoverf (id,bilagsnr,kidnr,typeid,kildeid,project_id,kostra_id,pmwrkord_code,fakturadato,"
-				. " periode,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
+				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
 				. " currency,process_log,process_code,belop,godkjentbelop,ordrebelop)"
