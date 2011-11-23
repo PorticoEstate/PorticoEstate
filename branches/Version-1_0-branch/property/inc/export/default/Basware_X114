@@ -670,8 +670,8 @@
 					'APPROVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], //Batch 04 - 14
 					'DIMENSION.D1.CODE'		=> $line['dimb'], // 1111
 					'DIMENSION.D2.CODE'		=> '',//$line['dima'], // 62000
-					'DIMENSION.D3.CODE'		=> $line['project_id'], // dummy
-					'DIMENSION.D4.CODE'		=> $dim4, // dummy
+					'DIMENSION.D3.CODE'		=> '',
+					'DIMENSION.D4.CODE'		=> $line['project_id'], // dummy
 					'DIMENSION.D5.CODE'		=> $dim5, // dummy
 					'DIMENSION.D6.CODE'		=> $dim6, // dummy
 					'DIMENSION.D7.CODE'		=> $dim7, // dummy

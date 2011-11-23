@@ -105,6 +105,11 @@
                                 'text' => lang('Control_area'),
                                 'list' => $this->so_control_area->get_control_area_select_array(),
 							),
+							array('type' => 'filter',
+								'name' => 'responsibilities',
+                                'text' => lang('Responsibility'),
+                                'list' => $this->so->get_roles(),
+							),
 							array('type' => 'text', 
                                 'text' => lang('searchfield'),
 								'name' => 'query'
@@ -153,6 +158,11 @@
 							'sortable'	=> false
 						),
 						array(
+							'key' => 'responsibility_name',
+							'label' => lang('Responsibility'),
+							'sortable'	=> false
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -178,6 +188,7 @@
 			// Fetches prosedures that are related to first control area in list
 			$control_area_id = $control_areas_array[0]['id'];
 			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
+			$role_array = $this->so->get_roles();
 			
 			$tabs = array( array(
 							'label' => "1: " . lang('Details')
@@ -197,6 +208,7 @@
 				'control'					=> (isset($control)) ? $control->toArray(): null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
+				'role_array'				=> $role_array,
 				'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
 				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ''))
 			);
@@ -615,6 +627,11 @@
 			if(isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area; 
+			}
+			$responsibility = phpgw::get_var('responsibilities');
+			if(isset($responsibility) && $responsibility > 0)
+			{
+				$filters['responsibilities'] = $responsibility; 
 			}
 			
 			$search_for = phpgw::get_var('query');

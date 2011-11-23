@@ -215,7 +215,7 @@
 							continue;
 						}
 
-						$insert_value = trim($var_result[$field]);
+						$insert_value = html_entity_decode(trim($var_result[$field]));
 						switch ( $field_info->type )
 						{
 							case 'string':
