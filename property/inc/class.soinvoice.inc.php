@@ -229,11 +229,11 @@
 
 					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-						. " forfallsdato,periode,artid,kidnr,kreditnota,currency "
+						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency "
 						. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
 						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
-						. " forfallsdato,periode,artid,kidnr,kreditnota,currency";
+						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency";
 
 					$this->db->query($sql,__LINE__,__FILE__);
 
@@ -294,6 +294,9 @@
 					$invoice[$i]['voucher_date'] 			= $GLOBALS['phpgw']->common->show_date($timestamp_voucher_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$invoice[$i]['payment_date'] 			= $GLOBALS['phpgw']->common->show_date($timestamp_payment_date,$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					$invoice[$i]['period']					= $this->db->f('periode');
+					$invoice[$i]['periodization']			= $this->db->f('periodization');
+					$invoice[$i]['periodization_start']		= $this->db->f('periodization_start');
+					
 					$invoice[$i]['type']					= $art_list[$this->db->f('artid')];
 					$invoice[$i]['kidnr']					= $this->db->f('kidnr');
 					$invoice[$i]['kreditnota']				= $this->db->f('kreditnota');
@@ -902,6 +905,32 @@
 			return $receipt;
 		}
 
+		function update_periodization($voucher_id='',$periodization='')
+		{
+			$receipt = array();
+			$this->db->transaction_begin();
+
+			$this->db->query("UPDATE fm_ecobilag set periodization='$periodization' where bilagsnr='$voucher_id'");
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg'=>lang('voucher periodization is updated'));
+			return $receipt;
+		}
+
+		function update_periodization_start($voucher_id='',$periodization_start='')
+		{
+			$receipt = array();
+			$this->db->transaction_begin();
+
+			$this->db->query("UPDATE fm_ecobilag set periodization_start='$periodization_start' where bilagsnr='$voucher_id'");
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg'=>lang('voucher periodization start is updated'));
+			return $receipt;
+		}
+
 
 		function increment_bilagsnr()
 		{
@@ -1442,6 +1471,63 @@
 		*/
 		public function get_deposition()
 		{		
+
+
+			$sql = "SELECT "
+//			." fm_project.location_code as location,"
+			. "fm_project.loc1 as eiendom,"
+//			. "fm_workorder.address as adresse,"
+//			. "fm_workorder.*,"
+			. "bilagsnr,"
+//			. "kidnr,"
+			. "belop,"
+			. "godkjentbelop,"
+			. "fakturadato,"
+			. "periode,"
+			. "forfallsdato,"
+			. "fakturanr,"
+			. "spvend_code as vendor,"
+//			. "dima,"
+//			. "fm_ecobilag.loc1 as eiendom,"
+			. "dimb as kostnadssted,"
+//			. "mvakode,"
+//			. "dimd,"
+			. "saksbehandlerid,"
+			. "budsjettansvarligid,"
+			. "utbetalingid,"
+			. "oppsynsigndato,"
+			. "saksigndato,"
+			. "budsjettsigndato,"
+			. "utbetalingsigndato,"
+			. "merknad,"
+			. "kreditnota"
+//			. "kostra_id,"
+//			. "item_type,"
+//			. "item_id"
+//			. "external_ref,"
+//			. "currency,"
+//			. "process_log'"
+			. ' FROM fm_workorder'
+			. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
+			. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)"
+			. " ORDER BY periode ASC";
+			$this->db->query($sql,__LINE__,__FILE__);
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+					$orders[] = $this->db->f('id');
+					$values[] = $this->db->Record;
+			}
+
+			return $values;
+
+
+
+
+
+
+
 			$this->db->query("SELECT id FROM fm_workorder_status WHERE delivered IS NOT NULL");
 			$delivered = array();
 			while ($this->db->next_record())

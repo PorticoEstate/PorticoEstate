@@ -523,6 +523,11 @@
 			$budget_responsible_contact_id		= $this->responsible->get_responsible($criteria_budget_responsible);
 			$budget_responsible_user_id			= $this->responsible->get_contact_user_id($budget_responsible_contact_id);
 			$order_info['budget_responsible']	= $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+			//FIXME - this should be configurable
+			if(!$order_info['budget_responsible'])
+			{
+				$order_info['budget_responsible'] = 'karhal';
+			}
 
 			return $order_info;
 		}

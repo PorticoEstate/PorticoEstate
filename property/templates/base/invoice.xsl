@@ -1086,7 +1086,7 @@
 
 <!-- rollback -->
 
-	<xsl:template match="rollback">
+	<xsl:template match="rollback" xmlns:php="http://php.net/xsl">
 		<xsl:apply-templates select="menu"/> 
 		<div align="left">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -1123,10 +1123,22 @@
 						<td valign="top">
 							<xsl:variable name="lang_file_statustext"><xsl:value-of select="lang_file_statustext"/></xsl:variable>
 							<xsl:variable name="select_file"><xsl:value-of select="select_file"/></xsl:variable>
-							<select name="{$select_file}" class="forms" onMouseover="window.status='{$lang_file_statustext}'; return true;" onMouseout="window.status='';return true;">
+							<select name="{$select_file}" class="forms" title="{$lang_file_statustext}">
 								<option value=""><xsl:value-of select="lang_no_file"/></option>
 								<xsl:apply-templates select="rollback_file_list"/>
 							</select>
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							<xsl:value-of select="php:function('lang', 'voucher')" />
+						</td>
+						<td valign="top">
+							<input type="text" id="voucher_id" name="values[voucher_id]" value="">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'voucher')" />
+								</xsl:attribute>
+							</input>
 						</td>
 					</tr>
 					<tr>

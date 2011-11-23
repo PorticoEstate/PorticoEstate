@@ -246,6 +246,23 @@
 				$receipt	= $this->bo->update_period($voucher_id_for_period,$period);
 			}
 
+			// Edit Periodization
+			$periodization  = phpgw::get_var('periodization');
+			$voucher_id_for_periodization  = phpgw::get_var('voucher_id_for_periodization');
+			if( phpgw::get_var('phpgw_return_as') == 'json' &&  isset($periodization) &&  $periodization != '')
+			{
+				$receipt	= $this->bo->update_periodization($voucher_id_for_periodization,$periodization);
+			}
+
+			// Edit Periodization
+			$periodization_start  = phpgw::get_var('periodization_start');
+			$voucher_id_for_periodization_start  = phpgw::get_var('voucher_id_for_periodization_start');
+			if( phpgw::get_var('phpgw_return_as') == 'json' &&  isset($periodization_start) &&  $periodization_start != '')
+			{
+				$receipt	= $this->bo->update_periodization_start($voucher_id_for_periodization_start,$periodization_start);
+			}
+
+
 			$datatable = array();
 			$values_combo_box = array();
 
@@ -1253,8 +1270,10 @@
 					'dir'				=> $datatable['sorting']['sort'],
 					'currentPage'		=> $datatable['sorting']['currentPage'],
 					'records'			=> array(),
-					'sum_amount'		=> $this->bo->sum_amount
+					'sum_amount'		=> $this->bo->sum_amount,
+					'periodization'		=> $paid ? array() : execMethod('property.bogeneric.get_list', array('type'=>'periodization'))
 				);
+
 			// values for datatable
 			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
 			{
