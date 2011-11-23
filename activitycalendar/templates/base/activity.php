@@ -143,19 +143,11 @@ function allOK()
 					<?php
 						if($activity->get_group_id())
 						{
-							$group =  $act_so->get_group_info($activity->get_group_id());
-							if($group)
-							{
-								echo $group['description'];
-							}
+							echo activitycalendar_sogroup::get_instance()->get_description($activity->get_group_id());
 						}
 						else if($activity->get_organization_id())
 						{
-							$org = $act_so->get_org_info($activity->get_organization_id());
-							if($org)
-							{
-								echo $org['description'];
-							}
+							echo activitycalendar_soorganization::get_instance()->get_description($activity->get_organization_id());
 						}
 					 ?>
 				</dd>
