@@ -118,7 +118,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_title() || $editable) { ?>
 					<label for="title"><?php echo lang('title') ?></label>
-					<br/><?php echo lang('title_helptext')?>
+					<?php if($editable){?><br/><?php echo lang('title_helptext')?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -188,7 +188,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_category() || $editable) { ?>
 					<label for="category"><?php echo lang('category') ?></label>
-					<br/><?php echo lang('category_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('category_helptext') ?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -219,7 +219,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_target() || $editable) { ?>
 					<label for="target"><?php echo lang('target') ?></label>
-					<br/><?php echo lang('target_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('target_helptext') ?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -252,7 +252,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_district() || $editable) { ?>
 					<label for="district"><?php echo lang('district') ?></label>
-					<br/><?php echo lang('district_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('district_helptext') ?><?php }?>
 					<?php  } ?>
 				</dt>
 				<dd>
@@ -292,7 +292,7 @@ function allOK()
 				</dd>
 				<h2><?php echo lang('where_when')?></h2>
 				<dt>
-					<?php if($activity->get_arena() || $editable) { ?>
+					<?php if($activity->get_arena() || $activity->get_internal_arena() || $editable) { ?>
 					<label for="arena"><?php echo lang('arena') ?></label>
 					<br/><?php echo lang('arena_helptext')?>
 					<?php  } ?>
@@ -408,7 +408,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_organization_id() || $editable) { ?>
 					<label for="organization_id"><?php echo lang('organization') ?></label>
-					<br/><?php echo lang('organization_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('organization_helptext') ?><?php }?>
 					<?php } ?>
 				</dt>
 				<dd>
@@ -448,7 +448,7 @@ function allOK()
 				<dt>
 					<?php if($activity->get_group_id() || $editable) { ?>
 					<label for="group_id"><?php echo lang('group') ?></label>
-					<br/><?php echo lang('group_helptext') ?>
+					<?php if($editable){?><br/><?php echo lang('group_helptext') ?><?php }?>
 					<?php } ?>
 				</dt>
 				<dd>
