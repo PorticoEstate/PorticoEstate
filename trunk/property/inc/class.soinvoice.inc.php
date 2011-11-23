@@ -412,6 +412,7 @@
 						'remark' 				=> !!$this->db->f('merknad'),
 						'tax_code'				=> $this->db->f('mvakode'),
 						'amount'				=> $this->db->f('belop'),
+						'approved_amount'		=> $this->db->f('godkjentbelop'),
 						'charge_tenant'			=> $this->db->f('charge_tenant'),
 						'vendor'				=> $this->db->f('org_name'),
 						'paid_percent'			=> $this->db->f('paid_percent'),
