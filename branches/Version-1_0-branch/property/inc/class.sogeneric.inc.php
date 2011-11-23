@@ -464,6 +464,28 @@
 						'menu_selection' => 'admin::property::accounting::accounting_dimd'
 					);
 				break;
+			case 'periodization':
+				$info = array
+					(
+						'table' => 'fm_eco_periodization',
+						'id'				=> array('name' => 'id', 'type' => 'int'),
+						'fields'			=> array
+						(
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'varchar'
+							)
+						),
+						'edit_msg'	=> lang('edit'),
+						'add_msg'	=> lang('add'),
+						'name'		=> lang('periodization'),
+						'acl_app' 			=> 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::accounting::periodization'
+					);
+				break;
 			case 'tax':
 				$info = array
 					(

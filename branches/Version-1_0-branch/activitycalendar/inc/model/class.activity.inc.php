@@ -251,6 +251,7 @@
 				$contact_1 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_1());
 				$contact_2 = activitycalendar_socontactperson::get_instance()->get_group_contact_name($this->get_contact_person_2());
 				$desc = activitycalendar_sogroup::get_instance()->get_description($this->get_group_id());
+				$org_name = activitycalendar_soorganization::get_instance()->get_organization_name($this->get_organization_id());
 			}
 			else if(isset($this->organization_id) && $this->get_organization_id() > 0)
 			{

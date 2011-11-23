@@ -152,6 +152,7 @@
 							    { text:  Year +"02", value: Year +"02", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
 							    { text:  Year +"03", value: Year +"03", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
 							    { text:  Year +"04", value: Year +"04", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
+
 							    { text:  Year +"05", value: Year +"05", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
 							    { text:  Year +"06", value: Year +"06", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
 							    { text:  Year +"07", value: Year +"07", onclick: { fn: onPeriodDropDownItemClick, idvoucher: voucher_id} },
@@ -166,7 +167,62 @@
     }
 
 	/********************************************************************************
+	* Format column myPeriodizationDropDown
+	*/
+    var myPeriodizationDropDown = function(elCell, oRecord, oColumn, oData)
+   	{
+		var periodization = values_ds.periodization;
+
+		for(i=0; i<periodization.length; i++)
+		{
+//			alert(periodization[i].name);
+		}
+
+		var _label = new String(oData);
+
+//alert(_label);
+		tmp_count = oRecord._oData.counter_num;
+		voucher_id = oRecord._oData.voucher_id_num
+	    elCell.innerHTML = "<div id=\"divPeriodizationDropDown"+tmp_count+"\"></div>";
+
+  	    var tmp_button = new YAHOO.widget.Button({
+                 type:"menu",
+                 id:"oPeriodizationDropDown"+tmp_count,
+//                 label: "<en>" +periodization[0].id+"</en>",
+                 label: "<en>" +_label+"</en>",
+                 value: oData,
+                 container: "divPeriodizationDropDown"+tmp_count,
+                 menu: [
+        	       		{ text: periodization[0].name, value: periodization[0].id, onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: periodization[0].id} },
+					    { text: periodization[1].name, value: periodization[1].id, onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: periodization[1].id} },
+					    { text: periodization[2].name, value: periodization[2].id, onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: periodization[2].id} }
+					    ]});
+	    //Define this variable in the window scope (GLOBAL)
+        eval("window.oPeriodizationDropDown"+tmp_count+" = tmp_button");
+
+    }
+
+	/********************************************************************************
+	 * CLick option combobox Periodization
+
+	 */
+    this.onPeriodizationDropDownItemClick = function(p_sType, p_aArgs, p_oItem)
+	{
+	 //  	 alert(p_oItem.cfg.getProperty("onclick").id);
+	 //  	 console.log(p_oItem.id);
+	   	 //Use a diferente id for voucher. This variables wil be empty in PARTICULAR_SETTING
+	   	 path_values.voucher_id_for_periodization = p_oItem.cfg.getProperty("onclick").idvoucher;
+	   	 //'text' is the option selected
+//	   	 path_values.periodization = p_oItem.cfg.getProperty('value');
+	   	 path_values.periodization =  p_oItem.cfg.getProperty("onclick").id;
+	   	 maintain_pagination_order();
+	   	 //call INDEX. Update Periodization Method is inside of INDEX
+	   	 execute_ds();
+
+	}
+	/********************************************************************************
 	 * CLick option combobox PERIOD
+
 	 */
     this.onPeriodDropDownItemClick = function(p_sType, p_aArgs, p_oItem)
 	{
@@ -177,6 +233,61 @@
 	   	 
 	   	 maintain_pagination_order();
 	   	 //call INDEX. Update PERIOD Method is inside of INDEX
+	   	 execute_ds();
+
+	}
+
+
+	/********************************************************************************
+	* Format column myPeriodization_startDropDown
+	*/
+    var myPeriodization_startDropDown = function(elCell, oRecord, oColumn, oData)
+   	{
+		var d = new Date();
+		Year = d.getFullYear();
+		var _label = new String(oData);
+
+		tmp_count = oRecord._oData.counter_num;
+		voucher_id = oRecord._oData.voucher_id_num
+	    elCell.innerHTML = "<div id=\"divPeriodization_startDropDown"+tmp_count+"\"></div>";
+
+  	    	var tmp_button = new YAHOO.widget.Button({
+                          type:"menu",
+                          id:"oPeriodization_startDropDown"+tmp_count,
+                          label: "<en>" +_label.substring(4)+"</en>",
+                          value: oData,
+                          container: "divPeriodization_startDropDown"+tmp_count,
+                          menu: [
+                          		{ text: Year +"01", value: Year +"01", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"02", value: Year +"02", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"03", value: Year +"03", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"04", value: Year +"04", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"05", value: Year +"05", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"06", value: Year +"06", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"07", value: Year +"07", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"08", value: Year +"08", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"09", value: Year +"09", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"10", value: Year +"10", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"11", value: Year +"11", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+							    { text: Year +"12", value: Year +"12", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} },
+                          		{ text: Year+1 +"01", value: Year+1 +"01", onclick: { fn: onPeriodization_startDropDownItemClick, idvoucher: voucher_id} }	]});
+	    //Define this variable in the window scope (GLOBAL)
+           eval("window.oPeriodization_startDropDown"+tmp_count+" = tmp_button");
+
+    }
+
+	/********************************************************************************
+	 * CLick option combobox Periodization_start
+	 */
+    this.onPeriodization_startDropDownItemClick = function(p_sType, p_aArgs, p_oItem)
+	{
+	   	 //Use a diferente id for voucher. This variables wil be empty in PARTICULAR_SETTING
+	   	 path_values.voucher_id_for_periodization_start = p_oItem.cfg.getProperty("onclick").idvoucher;
+	   	 //'text' is the option selected
+	   	 path_values.periodization_start = p_oItem.cfg.getProperty('text');
+	   	 
+	   	 maintain_pagination_order();
+	   	 //call INDEX. Update Periodization_start Method is inside of INDEX
 	   	 execute_ds();
 
 	}
@@ -288,7 +399,7 @@
 		td_empty(14);
 		td_sum('Total');
 		td_sum(tmp_sum);
-		td_empty(7);
+		td_empty(9);
 		//RowChecked
 		CreateRowChecked("signClass");
 		CreateRowChecked("janitorClass");

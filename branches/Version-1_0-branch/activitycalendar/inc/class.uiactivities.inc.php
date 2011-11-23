@@ -153,7 +153,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		}
 		else
 		{
-			$organizations = $so_org->get(null, null, null, null, null, null, null);
+			$organizations = $so_org->get(null, null, 'org.name', true, null, null, null);
 		}
 		$groups = activitycalendar_sogroup::get_instance()->get(null, null, null, null, null, null, null);
 

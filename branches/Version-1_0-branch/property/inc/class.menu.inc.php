@@ -190,6 +190,11 @@
 							'text'	=> lang('Accounting dim d'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'dimd') )
 						),
+						'periodization'	=> array
+						(
+							'text'	=> lang('periodization'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization') )
+						),
 						'accounting_tax'	=> array
 						(
 							'text'	=> lang('Accounting tax'),
