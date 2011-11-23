@@ -58,11 +58,11 @@
 		{
 			if(isset($this->config->config_data['invoice_approval']) && $this->config->config_data['invoice_approval']== 1)
 			{
-				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL';
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND utbetalingsigndato IS NOT NULL ORDER BY bilagsnr asc';
 			}
 			else
 			{
-				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL';
+				$sql= 'SELECT DISTINCT bilagsnr from fm_ecobilag WHERE budsjettsigndato IS NOT NULL AND (saksigndato IS NOT NULL OR oppsynsigndato IS NOT NULL) AND utbetalingsigndato IS NOT NULL ORDER BY bilagsnr asc';
 			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			$vouchers = array();
@@ -507,7 +507,6 @@
 				}
 			}
 
-
 			$antall = count($oRsBilag);
 
 			$this->db->transaction_begin();
@@ -823,7 +822,7 @@
 					'spbudact_code'			=> $this->db->f('spbudact_code'),
 					'regtid'				=> $this->db->f('regtid'),
 					'artid'					=> $this->db->f('artid'),
-					'godkjentbelop'			=> $this->db->f('belop'),
+					'godkjentbelop'			=> $this->db->f('godkjentbelop'),
 					'spvend_code'			=> $this->db->f('spvend_code'),
 					'dima'					=> $this->db->f('dima'),
 					'dimb'					=> $this->db->f('dimb'),
