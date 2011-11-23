@@ -18,6 +18,7 @@
 		protected $requirement_id;
 		protected $costresponsibility_id;
 		protected $responsibility_id;
+		protected $responsibility_name;
 		protected $equipment_id;
 		protected $equipment_type_id;
 		protected $location_code;
@@ -129,6 +130,13 @@
 		
 		public function get_responsibility_id() { return $this->responsibility_id; }
 		
+		public function set_responsibility_name($responsibility_name)
+		{
+			$this->responsibility_name = $responsibility_name;
+		}
+		
+		public function get_responsibility_name() { return $this->responsibility_name; }
+		
 		public function set_equipment_id($equipment_id)
 		{
 			$this->equipment_id = $equipment_id;
@@ -195,6 +203,7 @@
 				$this->set_control_area_id(phpgw::get_var('control_area_id','int'));
 				$this->set_repeat_type(phpgw::get_var('repeat_type','int'));
 				$this->set_repeat_interval(phpgw::get_var('repeat_interval','int'));
+				$this->set_responsibility_id(phpgw::get_var('responsibility_id','int'));
 		}
 		
 		public function serialize()
@@ -211,6 +220,7 @@
 				'control_area_name' => $this->get_control_area_name(),
 			   	'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
+				'responsibility_name' => $this->get_responsibility_name(),
 			
 				);
 		}
