@@ -425,3 +425,6 @@ office_helptext	activitycalendar	no	Oppgi kontor som saksbehandler aktiviteten
 contact_info	activitycalendar	no	Kontaktinformasjon for kulturkontoret
 contact_info_helptext	activitycalendar	no	Hentes fra booking/organisasjonsregister ved lagring.
 update_org	activitycalendar	no	Oppdater organisasjonsregister
+edit_contact_info	activitycalendar	no	For å redigere kontaktopplysninger:
+edit_contact_info_org	activitycalendar	no	Gå til organisasjonsopplysninger
+edit_contact_info_group	activitycalendar	no	Gå til gruppeopplysninger

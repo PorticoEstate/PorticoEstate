@@ -432,6 +432,9 @@ function allOK()
 								}
 								?>
 						</select>
+						<?php if($current_organization_id){?>
+							<br/><?php echo lang('edit_contact_info')?> <a href="index.php?menuaction=booking.uiorganization.show&id=<?php echo $current_organization_id ?>"><?php echo lang('edit_contact_info_org')?></a>
+						<?php }?>
 						<?php
 						}
 					?>
@@ -462,6 +465,9 @@ function allOK()
 								<option value="0">Ingen gruppe valgt</option>
 							</select>
 						</div>
+						<?php if($current_group_id){?>
+							<br/><?php echo lang('edit_contact_info')?> <a href="index.php?menuaction=booking.uigroup.show&id=<?php echo $current_group_id ?>"><?php echo lang('edit_contact_info_group')?></a>
+						<?php }?>
 						<?php
 					?>
 					<?php
