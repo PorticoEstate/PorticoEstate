@@ -1054,6 +1054,8 @@
 				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True),
 				'process_log' => array('type' => 'text','nullable' => True),
 				'process_code' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'periodization' => array('type' => 'int','precision' => '4','nullable' => True),
+				'periodization_start' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1105,6 +1107,8 @@
 				'currency' => array('type' => 'varchar','precision' => '3','nullable' => True),
 				'process_log' => array('type' => 'text','nullable' => True),
 				'process_code' => array('type' => 'varchar','precision' => '10','nullable' => True),
+				'periodization' => array('type' => 'int','precision' => '4','nullable' => True),
+				'periodization_start' => array('type' => 'int','precision' => '4','nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1146,6 +1150,16 @@
 			'fd' => array(
 				'id' => array('type' => 'varchar','precision' => '5','nullable' => False),
 				'descr' => array('type' => 'varchar','precision' => '25','nullable' => False)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
+		'fm_eco_periodization' => array(
+			'fd' => array(
+				'id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'descr' => array('type' => 'varchar','precision' => '64','nullable' => False)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

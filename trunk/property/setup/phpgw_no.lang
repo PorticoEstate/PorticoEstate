@@ -355,11 +355,12 @@ consume	property	no	Forbrukt
 consume date	property	no	Dato historisk forbruk
 consume value	property	no	Beløp historisk forbruk
 consume history	property	no	Historisk forbruk
+periodization	property	no	Periodisering
+periodization start	property	no	Startperiode
 planning	property	no	Planlagt
 planning date	property	no	Dato planlagt disponering
 planning value	property	no	Beløp planlagt disponering
 planning serie	property	no	Planlagt disponering
-
 check to delete	property	no	Merk for å slette
 contact	property	no	Kontakt
 contact email	property	no	Epost
