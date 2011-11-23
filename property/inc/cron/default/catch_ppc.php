@@ -215,7 +215,7 @@
 							continue;
 						}
 
-						$insert_value = html_entity_decode(trim($var_result[$field]));
+						$insert_value = trim($var_result[$field]);
 						switch ( $field_info->type )
 						{
 							case 'string':
@@ -246,7 +246,7 @@
 								$insert_value = date( $this->db->date_format(), strtotime( $insert_value ) );
 								break;
 						}
-						$insert_values[] = utf8_encode($insert_value);
+						$insert_values[] = $insert_value;
 						$cols[]	= $field;
 					}
 
