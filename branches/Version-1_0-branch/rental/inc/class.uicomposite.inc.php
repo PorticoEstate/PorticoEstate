@@ -247,6 +247,18 @@
 		 */
 		public function index()
 		{
+			$search_for = phpgw::get_var('search_for');
+			if($search_for)
+			{
+				phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
+				$s_type = phpgw::get_var('search_type');
+				if($s_type && $s_type == 'location_id')
+				{
+					$s_type = "property_id";
+				}
+				phpgwapi_cache::session_set('rental', 'composite_search_type', $s_type);
+				phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('contract_status'));
+			}
 			$this->render('composite_list.php');
 		}
 		
