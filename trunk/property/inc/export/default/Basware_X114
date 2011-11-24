@@ -392,7 +392,7 @@
 		
 		protected function errorhandler($batchid,$error_desr)
 		{
-			if($this->db->Transaction)
+			if($this->db->get_transaction())
 			{
 				$this->db->transaction_abort();
 			}
@@ -400,7 +400,7 @@
 			$meld = $error_desr;
 		
 			//Vis feilmelding
-//			echo $meld;
+			echo $meld;
 		
 			//Lagre feilmelding
 			$this->log_error($batchid,$error_desr);
