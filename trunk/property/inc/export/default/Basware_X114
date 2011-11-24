@@ -490,7 +490,7 @@
 			//Velg ut alle hoved bilag som skal overføres
 
 			$oRsBilag = $this->get_voucher($voucher_id);
-//_debug_array($oRsBilag);die();
+
 			if(!isset($oRsBilag[0]['external_ref'])  || !$oRsBilag[0]['external_ref'])
 			{
 				$oRsBilag[0]['external_ref'] = mt_rand();
@@ -570,7 +570,14 @@
 
 			$accountline = array();
 
-			$periode	= $oRsBilag[0]['periode'];
+			if($oRsBilag[0]['periode'])
+			{
+				$periode = $oRsBilag[0]['periode'];
+			}
+			else
+			{		
+				$periode = date('Ym',time());
+			}
 
 			$comment = array();
 			foreach ($oRsBilag as $line)
@@ -649,31 +656,6 @@
 					$this->soXport->add_OverfBilag($oRsOverfBilag);
 				}
 
-/*
-				$Resk_nr	= sprintf("%-9s",$oRsBilag[$k]['spvend_code']);// verdi: Blank., type: i4, plass: 382 - 390
-				$Att_ansvarlig	= sprintf("%-6s",utf8_decode($oRsBilag[$k]['saksbehandler']));// verdi: Blank, type: c6, plass: 424 - 429
-
-				$vendor_info = $this->get_vendor_info($oRsBilag[$k]['spvend_code']);
-				
-				if(!$vendor_info['org_nr'])
-				{
-					$message = 'mangler org_nr for reskontronr: ' . $oRsBilag[$k]['spvend_code'];
-					$this->errorhandler($batchid,$message);
-					return $message;
-				}
-
-				if(!$vendor_info['konto_nr'])
-				{
-					$message = 'mangler konto for reskontronr: ' . $oRsBilag[$k]['spvend_code'];
-					$this->errorhandler($batchid,$message);
-					return $message;
-				}
-
-				$Resk_navn	= sprintf("%-50s",$vendor_info['org_nr']);// verdi: Fødselsnr, type: c50, plass: 430 - 479
-				$Bank_Postgiro_kontonr = sprintf("%-35s",str_replace(" ","",$vendor_info['konto_nr']));// verdi: konto_nr, type: c35, plass: 740 - 774
-
-*/
-
 				$descr = '';
 				if($line['merknad'])
 				{
@@ -705,21 +687,11 @@
 					'RECEIVER.FULLNAME'		=> $GLOBALS['phpgw_info']['user']['fullname'], // Batch 04 - 14
 					'STATUS'				=> 5,
 					'SUBACCOUNT'			=> $periode, //200905 Accounting period YYYYMM
-					'ALLOCATION.KEY'		=> 0,//$distribution_code, //0
-					'ALLOCATION.PERIOD'		=> '' //dummy
+					'ALLOCATION.KEY'		=> $line['periodization'],//0
+					'ALLOCATION.PERIOD'		=> $line['periodization_start'] //dummy
 				);		
 
 			}
-	
-/*
-			$Dim_1		= sprintf("%8s",$oRsOverfBilag['district_id']);// verdi: Ansvarssted, type: c8, plass: 29 - 36
-			$Dim_2		= sprintf("%-8s",$oRsOverfBilag['kostra_id']);// verdi: Tjeneste, type: c8, plass: 37 - 44
-			$Dim_3		= sprintf("%-8s",substr($oRsOverfBilag['dima'],0,6));// verdi: Objekt-bygg, type: c8, plass: 45 - 52
-			$Dim_4		= sprintf("%-8s",'');// verdi: Ressurs, type: c8, plass: 53 - 60
-			$Dim_5		= sprintf("%-12s",$oRsOverfBilag['project_id']);// verdi: Prosjekt, type: c12, plass: 61 - 72
-			$Dim_6		= sprintf("%-4s",$oRsOverfBilag['dimd']);// verdi: Blank, type: c4, plass: 73 - 76
-			$Dim_7		= sprintf("%-4s",'');// verdi: Blank, type: c4, plass: 77 - 80
-*/
 
 			$invoiceheader[0]['GENERALCOMMENT'] = implode("\n",$comment);
 			$invoices = array
