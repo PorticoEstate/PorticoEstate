@@ -40,7 +40,8 @@
 			'save_control_items'				=>	true,
 			'view_check_list'					=>	true,
 			'generate_check_lists_for_control'	=>	true,
-			'view_check_lists_for_control'		=>	true
+			'view_check_lists_for_control'		=>	true,
+			'get_controls_by_control_area'		=>	true
 		);
 
 		public function __construct()
@@ -610,7 +611,18 @@
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 		}
 		
-		
+		// Returns control list info as JSON
+		public function get_controls_by_control_area()
+		{
+			$control_area_id = phpgw::get_var('control_area_id');
+			
+			$controls_array = $this->so->get_controls_by_control_area($control_area_id);
+			
+			if(count($controls_array)>0)
+				return json_encode( $controls_array );
+			else
+				return null;
+		}
 		
 		public function query()
 		{
@@ -633,7 +645,7 @@
 			{
 				$filters['responsibilities'] = $responsibility; 
 			}
-			
+										
 			$search_for = phpgw::get_var('query');
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
