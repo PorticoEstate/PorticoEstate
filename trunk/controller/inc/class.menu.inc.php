@@ -29,6 +29,12 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.control_list') ),
 			            'image'	=> array('property', 'location_1')
 					),
+					'location_for_check_list' => array
+					(
+						'text'	=> lang('Location'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+			            'image'	=> array('property', 'location_1')
+			        ),
 					'control_item' => array
 					(
 						'text'	=> lang('Control_item'),
@@ -52,6 +58,12 @@
 						'text'	=> lang('Check_list'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 			            'image'	=> array('property', 'location_1'),
+					),
+					'location_check_list' => array
+					(
+						'text'	=> lang('Check_list_location'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_agg_check_lists_for_location', 'year' => '2011', 'month' => '10') ),
+		            	'image'	=> array('property', 'location_1'),
 					)
 				);
 			}
