@@ -464,7 +464,7 @@
 			}
 			else
 			{
-				$receipt['error'][]= array('msg' => lang('Sorry - None hits'));
+				$receipt['error'][]= array('msg' => lang('Sorry - No hits'));
 			}
 			return $receipt;
 		}
@@ -476,12 +476,12 @@
 			$Filnavn = $fil_katalog . "/x114_14_{$external_ref}.xml";
 
 			//Sjekk om filen eksisterer
-			If (!file_exists($Filnavn))
+			if (file_exists($Filnavn))
 			{
-				return $Filnavn;
+				unlink($Filnavn);
 			}
 
-			return False;
+			return $Filnavn;
 		}
 		
 		protected function transfer_voucher($batchid, $voucher_id, $download, $force_period_year = '')
