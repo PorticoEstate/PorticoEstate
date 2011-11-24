@@ -85,7 +85,46 @@ class controller_socontrol extends controller_socommon
 		//return isset($result);
 	}
 	
-	function get_procedure_list(){}
+	
+	
+	function get_controls_by_control_area($control_area_id)
+	{
+		$results = array();
+		
+		$sql = "SELECT * FROM controller_control WHERE control_area_id=$control_area_id";
+		$this->db->query($sql);
+		
+		while($this->db->next_record()) {
+			$control = new controller_control($this->unmarshal($this->db->f('id', true), 'int'));
+			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+			$control->set_description($this->unmarshal($this->db->f('description', true), 'boolean'));
+			$control->set_start_date($this->unmarshal($this->db->f('start_date', true), 'int'));
+			$control->set_end_date($this->unmarshal($this->db->f('end_date', true), 'int'));
+			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id', true), 'int'));
+			$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
+			$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id', true), 'int'));
+			$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id', true), 'int'));
+			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
+			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
+			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
+			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
+			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
+			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
+			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
+			
+			$controls_array[] = $control->toArray();
+		}
+		
+		if( count( $controls_array ) > 0 ){
+			return $controls_array; 
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
 	
 	function get_id_field_name($extended_info = false)
 	{
