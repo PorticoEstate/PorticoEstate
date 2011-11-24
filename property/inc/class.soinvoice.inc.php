@@ -1470,105 +1470,23 @@
 		*  - And orders related to active (not processed) invoices.
 		*/
 		public function get_deposition()
-		{		
-
-
+		{
 			$sql = "SELECT "
-//			." fm_project.location_code as location,"
-			. "fm_project.loc1 as eiendom,"
-//			. "fm_workorder.address as adresse,"
-//			. "fm_workorder.*,"
-			. "bilagsnr,"
-//			. "kidnr,"
-			. "belop,"
-			. "godkjentbelop,"
-			. "fakturadato,"
-			. "periode,"
-			. "forfallsdato,"
-			. "fakturanr,"
-			. "spvend_code as vendor,"
-//			. "dima,"
-//			. "fm_ecobilag.loc1 as eiendom,"
-			. "dimb as kostnadssted,"
-//			. "mvakode,"
-//			. "dimd,"
-			. "saksbehandlerid,"
-			. "budsjettansvarligid,"
-			. "utbetalingid,"
-			. "oppsynsigndato,"
-			. "saksigndato,"
-			. "budsjettsigndato,"
-			. "utbetalingsigndato,"
-			. "merknad,"
-			. "kreditnota"
-//			. "kostra_id,"
-//			. "item_type,"
-//			. "item_id"
-//			. "external_ref,"
-//			. "currency,"
-//			. "process_log'"
+			. "spbudact_code as art,"
+			. "sum(belop) as belop,"
+			. "dimb as kostnadssted"
 			. ' FROM fm_workorder'
 			. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
 			. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)"
-			. " ORDER BY periode ASC";
+			. " GROUP BY kostnadssted, art ORDER BY kostnadssted, art ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 			
 			$values = array();
 			while ($this->db->next_record())
 			{
-					$orders[] = $this->db->f('id');
 					$values[] = $this->db->Record;
 			}
 
-			return $values;
-
-
-
-
-
-
-
-			$this->db->query("SELECT id FROM fm_workorder_status WHERE delivered IS NOT NULL");
-			$delivered = array();
-			while ($this->db->next_record())
-			{
-				$delivered[] = "'" . $this->db->f('id') . "'";
-			}
-
-			$orders = array();
-			$values = array();
-
-			$sql = 'SELECT fm_project.location_code as location, fm_project.address as adresse,fm_workorder.*, bilagsnr,kidnr,belop as invoice_amount,fakturadato,periode,forfallsdato,fakturanr,spvend_code as vendor,'
-			. ' dima, fm_ecobilag.loc1 as loc1, dimb, mvakode, dimd, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato,'
-			. ' utbetalingsigndato, merknad, kreditnota, kostra_id, item_type, item_id, external_ref, currency, process_log'
-			. ' FROM fm_workorder'
-			. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
-			. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)";
-			$this->db->query($sql,__LINE__,__FILE__);
-			
-			while ($this->db->next_record())
-			{
-					$orders[] = $this->db->f('id');
-					$values[] = $this->db->Record;
-			}
-
-			if($delivered)
-			{
-				$sql = 'SELECT fm_project.location_code as location, fm_project.address as adresse,fm_workorder.* FROM fm_workorder'
-				. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
-				. " {$this->left_join} fm_ecobilagoverf ON (fm_workorder.id = fm_ecobilagoverf.pmwrkord_code)"
-				. ' WHERE fm_workorder.status IN(' . implode(",", $delivered) . ')'
-				. ' AND pmwrkord_code IS NULL';
-				$this->db->query($sql,__LINE__,__FILE__);
-
-				while ($this->db->next_record())
-				{
-					if( !in_array($this->db->f('id'),$orders ) )
-					{
-						$values[] = $this->db->Record;
-					}
-				}
-			}
 			return $values;
 		}
 	}
