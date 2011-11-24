@@ -38,6 +38,8 @@ month 11 capitalized	controller	no	November
 month 12 capitalized	controller	no	Desember
 monthly	controller	no	Månedlig
 month	controller	no	Måned
+no part of town	controller	no	Bydel ikke valgt
+no district	controller	no	Distrikt ikke valgt
 calendar_months	controller	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
 calendar_weekdays	controller	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
 select_date	controller	no	Velg dato

@@ -194,11 +194,65 @@ class controller_socheck_list extends controller_socommon
 		}
 	}
 	
-	function get_check_lists_for_location($location_code){
-		$sql = 	"SELECT c.id as c_id, cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, cl.location_code as cl_loc, c.* ";
+	function get_agg_check_lists_for_location( $location_code, $from_date, $to_date ){
+		
+		$sql = 	"SELECT c.id as c_id, title, cl.id as cl_id, c.repeat_type, c.repeat_interval, deadline, count(ci.id) ";
+		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
+		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "AND c.repeat_type < 2 ";
+		$sql .= "AND cl.control_id = c.id ";
+		$sql .= "AND cl.id = ci.check_list_id ";
+		$sql .= "AND deadline BETWEEN $from_date AND $to_date ";
+		$sql .= "GROUP BY c.id, title, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
+		$sql .= "ORDER BY c.id";
+
+		$this->db->query($sql);
+		
+		$control_id = 0;
+		$controls_array = array();
+		$check_list_array = array();
+		while ($this->db->next_record()) {
+			
+			if( $this->db->f('c_id', true) != $control_id ){
+				if($control_id != 0){
+					$controls_array[] = array( "control" => $control_array, "check_list" => $check_list_array);
+					$check_list_array = array();
+				}
+				
+				$control_array = array(
+										"id" 			  => $this->unmarshal($this->db->f('c_id', true), 'int'),
+										"title" 		  => $this->unmarshal($this->db->f('title', true), 'string'),
+										"repeat_type" 	  => $this->unmarshal($this->db->f('repeat_type', true), 'int'),
+										"repeat_interval" => $this->unmarshal($this->db->f('repeat_interval', true), 'int')
+									);
+			}
+
+			$check_list_array[] = array(
+										"cl_id" 	=> $this->db->f('cl_id', true),
+										"deadline" 	=> $this->db->f('deadline', true),
+										"count" 	=> $this->db->f('count', true)
+									);
+			
+			$control_id = $this->db->f('c_id', true);
+		}		
+		
+		if( !empty( $control_array ) ){
+			$controls_array[] = array( "control" => $control_array, "check_list" => $check_list_array);
+			
+			return $controls_array;
+		}else {
+			return null;
+		}	
+	}
+
+	function get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type ){
+		$sql = 	"SELECT c.id as c_id, cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, ";
+		$sql .= "deadline, planned_date, completed_date, cl.location_code as cl_loc, c.* "; 
 		$sql .= "FROM controller_check_list cl, controller_control c ";
 		$sql .= "WHERE cl.location_code = $location_code ";
+		$sql .= "AND c.repeat_type = $repeat_type ";
 		$sql .= "AND cl.control_id = c.id ";
+		$sql .= "AND deadline BETWEEN $from_date AND $to_date";
 		$sql .= "ORDER BY c.id;";
 		
 		$this->db->query($sql);
