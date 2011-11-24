@@ -412,7 +412,7 @@
 				'lang_datatype_statustext'			=> lang('Select a datatype'),
 				'lang_no_datatype'					=> lang('No datatype'),
 				'datatype_list'						=> $this->bo->select_datatype((isset($values['column_info']['type'])?$values['column_info']['type']:'')),
-
+				'attrib_group_list'					=> array('options' => $this->bo->get_attrib_group_list($this->appname,$this->location, $values['group_id'])),
 				'lang_precision'					=> lang('Precision'),
 				'lang_precision_statustext'			=> lang('enter the record length'),
 				'value_precision'					=> (isset($values['column_info']['precision'])?$values['column_info']['precision']:''),

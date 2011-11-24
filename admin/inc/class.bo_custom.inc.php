@@ -405,4 +405,35 @@
 			}
 			return $entry_list;
 		}
+
+		function get_attrib_group_list($app,$location, $selected)
+		{
+			$group_list = $this->read_attrib_group($app, $location, true);
+
+			foreach($group_list as &$group)
+			{
+				if( $group['id'] == $selected )
+				{
+					$group['selected'] = true;
+				}
+			}
+			//_debug_array($group_list);die();
+			return $group_list;
+		}
+
+		function read_attrib_group($app, $location, $allrows = false)
+		{
+			if($allrows)
+			{
+				$this->allrows = $allrows;
+			}
+
+			$attrib = $this->so->find_group($app, $location, $this->start, $this->query, $this->sort, $this->order, $this->allrows);
+
+			$this->total_records = $this->so->total_records;
+
+			return $attrib;
+		}
+
+
 	}

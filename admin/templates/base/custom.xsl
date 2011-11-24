@@ -178,7 +178,7 @@
 
 <!-- add attribute / edit attribute -->
 
-	<xsl:template match="edit_attrib">
+	<xsl:template match="edit_attrib" xmlns:php="http://php.net/xsl">
 		<div align="left">
 		
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
@@ -273,6 +273,22 @@
 						<xsl:value-of select="value_statustext"/>		
 					</textarea>
 
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<xsl:value-of select="php:function('lang', 'group')" />
+				</td>
+				<td valign="top">
+					<select name="values[group_id]" class="forms">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'select a group')" />
+						</xsl:attribute>
+							<option value="">
+							<xsl:value-of select="php:function('lang', 'no group')" />
+						</option>
+						<xsl:apply-templates select="attrib_group_list/options"/>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -899,4 +915,12 @@
 				</td>
 			</tr>
 			</table>
+	</xsl:template>
+	<xsl:template match="options">
+		<option value="{id}">
+			<xsl:if test="selected != 0">
+				<xsl:attribute name="selected" value="selected" />
+			</xsl:if>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</option>
 	</xsl:template>
