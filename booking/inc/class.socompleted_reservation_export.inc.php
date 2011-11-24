@@ -254,7 +254,8 @@
 		}
 		
 		public function select_external($reservation) {
-
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
             if ($config->config_data['output_files'] == 'single')
 			{
 				return true;
@@ -264,6 +265,8 @@
 		}
 		
 		public function select_internal($reservation) {
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
             if ($config->config_data['output_files'] == 'single')
 			{
 				return false;
