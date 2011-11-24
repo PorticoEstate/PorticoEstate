@@ -612,7 +612,7 @@
 
 				if(!$receipt['error'])
 				{
-					$receipt = $this->bo->rollback($values['conv_type'],$values['file'],$date);
+					$receipt = $this->bo->rollback($values['conv_type'],$values['file'],$date,$values['voucher_id']);
 				}
 			}
 			else
