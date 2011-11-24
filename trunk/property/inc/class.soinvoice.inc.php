@@ -1474,11 +1474,12 @@
 			$sql = "SELECT "
 			. "spbudact_code as art,"
 			. "sum(belop) as belop,"
-			. "dimb as kostnadssted"
+			. "dimb as kostnadssted,"
+			. "currency"
 			. ' FROM fm_workorder'
 			. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
 			. " {$this->join} fm_ecobilag ON (fm_workorder.id = fm_ecobilag.pmwrkord_code)"
-			. " GROUP BY kostnadssted, art ORDER BY kostnadssted, art ASC";
+			. " GROUP BY kostnadssted, art, currency ORDER BY kostnadssted, art, currency ASC";
 			$this->db->query($sql,__LINE__,__FILE__);
 			
 			$values = array();
