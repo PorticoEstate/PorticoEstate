@@ -278,6 +278,16 @@
 									)
 								)
 							),
+							'mail_settings'	=> array
+							(
+								'text'	=> lang('Mail Settings'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uimail_settings.index', 'appname' => 'booking') )
+							),
+							'application_settings'	=> array
+							(
+								'text'	=> lang('Application Settings'),
+								'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication_settings.index', 'appname' => 'booking') )
+							),
 						)
 					);
 					if ($manual !== null)

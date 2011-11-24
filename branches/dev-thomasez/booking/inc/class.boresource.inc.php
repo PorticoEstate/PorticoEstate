@@ -121,6 +121,10 @@
 				$resource['link']        = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type']		 = lang($resource['type']);
 				$resource['full_name'] = $resource['building_name'] . ' / ' . $resource['name'];
+				if ($resource['cost_type'] != '') 
+				{
+					$resource['cost_type']		 = lang($resource['cost_type']);
+				}
 			}
 			$data = array(
 				 'ResultSet' => array(

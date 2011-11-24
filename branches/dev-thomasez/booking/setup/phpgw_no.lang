@@ -162,7 +162,7 @@ picture	booking	no	Bilde
 planning	booking	no	Planlegging
 prev	booking	no	Forrige
 preview	booking	no	Forhåndsvisning
-previous week	booking	no	Forige uke
+previous week	booking	no	Forrige uke
 price list	booking	no	Prisliste
 primary admin	booking	no	Kontaktperson 1
 primary contact	booking	no	Kontaktperson 1
@@ -420,7 +420,7 @@ Short description. For public events, activities and training under the directio
 To borrow premises you must verify that you have read terms and conditions	booking	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
 In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
 Event type	booking	no	Arrangementstype
-Private event	booking	no	Privat arrangement
+Private event	booking	no	Opptatt
 Public event	booking	no	Offentlig arrangement
 customer_ssn contains an invalid Norwegian social security number (11 digits)	booking	no	Fødselsnummer er ugyldig (11 siffer)
 show only unexported	booking	no	Vis bare ikke-eksporterte
@@ -532,10 +532,13 @@ Usage time	booking	no	Brukstid
 Internal Cost	booking	no	Pris medlem
 External Cost	booking	no	Pris ikke-medlem
 Cost Type	booking	no	Pristype
-Perhour	booking	no	Per time
-Perday	booking	no	Per dag
-Perweek	booking	no	Per uke
+Perhour	booking	no	Pr time
+Perday	booking	no	Pr dag
+Perweek	booking	no	Pr uke
 Select Cost type	booking	no	Velg pristype
 Map url	booking	no	Kart
 Weather url	booking	no	Været
 Click here	booking	no	Klikk her
+Mail Settings	booking	no	E-post oppsett
+Application Settings	booking	no	Søknads oppsett
+

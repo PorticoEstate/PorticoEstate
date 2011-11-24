@@ -278,7 +278,7 @@ Information about the event	bookingfrontend	no	Informasjon om arrangementet
 Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	no	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
 To borrow premises you must verify that you have read terms and conditions	bookingfrontend	no	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
 In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	no	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
-Private event	bookingfrontend	no	Privat arrangement
+Private event	bookingfrontend	no	Opptatt
 Mass update	bookingfrontend	no	Masseoppdatering
 You are now about to update all bookings from this date and to the end of the season.	bookingfrontend	no	Du er nå i ferd med å oppdatere alle bookinger fra dagens dato og ut sesongen.
 Please update the data and click the Next-button.	bookingfrontend	no	Vennligst oppdater dataene og klikk på Neste-knappen.
@@ -340,6 +340,6 @@ Campsite	bookingfrontend	no	Leirplass
 Internal Cost	bookingfrontend	no	Medlems pris
 External Cost	bookingfrontend	no	Pris
 Cost Type	bookingfrontend	no	Pris type
-Perhour	bookingfrontend	no	Per time
-Perday	bookingfrontend	no	Per dag
-Perweek	bookingfrontend	no	Per uke
+Perhour	bookingfrontend	no	Pr time
+Perday	bookingfrontend	no	Pr dag
+Perweek	bookingfrontend	no	Pr uke

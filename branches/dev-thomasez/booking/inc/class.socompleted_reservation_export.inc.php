@@ -98,14 +98,6 @@
 		 * Normalizes data on entity.
 		 */
 		public function initialize_entity(&$entity) {
-			ob_start();
-			$myFile = "/tmp/debug2.txt";
-			$fh = fopen($myFile, 'w') or die("can't open file");
-			echo '<pre>';print_r($entity);
-			$op = ob_get_contents();
-			fwrite($fh, $op);
-			fclose($fh);
-			ob_end_clean();
         	if (isset($entity['__initialized__']) && $entity['__initialized__'] === true) { return $entity; }
 			
 			$entity['__initialized__'] = true;

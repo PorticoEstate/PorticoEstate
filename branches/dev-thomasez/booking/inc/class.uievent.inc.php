@@ -298,6 +298,7 @@
 		{
 			$errors = array();
 			$event = array('customer_internal' => 0); 
+			$event['is_public'] = 0;
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 
@@ -312,7 +313,6 @@
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
-				$event['is_public'] = 1;
 				$event['building_name'] = $_POST['building_name'];
 
 				if (!$_POST['application_id'])

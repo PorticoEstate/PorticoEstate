@@ -295,4 +295,9 @@ div.info:hover {
 #overlay-info .close { float: right; }
 #overlay-info .actions { margin-top: 1em;}
 
-
+.settings {
+	padding: 5px;
+}
+span.space {
+	padding-right: 8px;
+}

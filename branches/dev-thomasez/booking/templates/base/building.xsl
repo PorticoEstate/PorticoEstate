@@ -95,6 +95,7 @@
 			</xsl:if>
 		</dl>
 		<div class="clr"/>
+			<xsl:if test="not (building/map_url='')">
 			<dl class="form-col">
 				<dt><label for="field_map_url"><xsl:value-of select="php:function('lang', 'Map url')"/></label></dt>
 				<dd><a target="_blank">
@@ -102,6 +103,8 @@
                 <xsl:value-of select="php:function('lang', 'Click here')" /></a>
 				</dd>
 			</dl>
+			</xsl:if>
+			<xsl:if test="not (building/weather_url='')">
 			<dl class="form-col">
 				<dt><label for="field_weather_url"><xsl:value-of select="php:function('lang', 'Weather url')"/></label></dt>
 				<dd><a target="_blank">
@@ -109,6 +112,7 @@
                 <xsl:value-of select="php:function('lang', 'Click here')" /></a>
 				</dd>
 			</dl>
+			</xsl:if>
 		<div class='clr'/>
 		<dl class="form-col">
 			<xsl:if test="building/internal_cost!=''">				
