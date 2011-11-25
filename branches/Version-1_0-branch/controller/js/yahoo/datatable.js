@@ -96,20 +96,10 @@ YAHOO.portico.initializeDataTable = function()
 //------------
 		myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
 		myContextMenu.addItems(YAHOO.portico.GetMenuContext());
-
+		myContextMenu.addItem("Hei du!!");
+		
 		myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
-
-	//	myDataTable.subscribe("renderEvent", myRenderEvent);
-
-	/*
-		myDataTable.subscribe("rowClickEvent",function (oArgs)
-											   {
-													var elTarget = oArgs.target;
-													var oRecord = this.getRecord(elTarget);
-													Exchange_values(oRecord);
-											   }
-	   );*/
 
 		myContextMenu.subscribe("beforeShow", YAHOO.portico.onContextMenuBeforeShow);
 		myContextMenu.subscribe("hide", YAHOO.portico.onContextMenuHide);
@@ -247,8 +237,7 @@ YAHOO.portico.initializeDataTable = function()
 	}
  
 	YAHOO.portico.onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable)
-	{
-		
+	{	
 		var task = p_aArgs[1];
 			if(task)
 			{

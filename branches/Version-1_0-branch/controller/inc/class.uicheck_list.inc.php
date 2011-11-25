@@ -18,12 +18,13 @@
 		public $public_functions = array
 		(
 			'index'	=>	true,
-			'view_check_lists_for_control'	=>	true,
-			'save_check_list'				=>	true,
-			'view_check_list'				=>	true,
-			'edit_check_list'				=>	true,
-			'save_check_items'				=>	true,
-			'get_check_list_info'			=>	true
+			'view_check_lists_for_control'		=>	true,
+			'save_check_list'					=>	true,
+			'view_check_list'					=>	true,
+			'edit_check_list'					=>	true,
+			'save_check_items'					=>	true,
+			'get_check_list_info'				=>	true,
+			'control_calendar_status_overview'	=>	true
 		);
 
 		public function __construct()
@@ -145,7 +146,7 @@
 		public function view_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
+			$check_list = $this->so_check_list->get_single_with_control_items($check_list_id);
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
@@ -170,7 +171,7 @@
 		public function edit_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_control_item($check_list_id);
+			$check_list = $this->so_check_list->get_single_with_control_items($check_list_id);
 			
 			$date_format = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 	
