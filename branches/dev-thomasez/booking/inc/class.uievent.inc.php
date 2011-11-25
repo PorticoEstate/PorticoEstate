@@ -480,6 +480,9 @@
 			$event['building_name'] = $building_info['name'];
 			$errors = array();
 			$customer = array();
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+
 			if ($event['customer_identifier_type'])
 			{
 				$customer['customer_identifier_type'] = $event['customer_identifier_type'];
@@ -591,7 +594,7 @@
 								} else {
 									$comment_text_log = $event['contact_name'];
 								}
-								$comment_text_log = $comment_text_log.' har fått innvilget et arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_'])).".\nFor mer opplysinger slå opp i AktivBy.";
+								$comment_text_log = $comment_text_log.' har fått innvilget et arrangement i '.$event['building_name'].' '.date('d-m-Y H:i', strtotime($event['from_'])).".\nFor mer opplysinger slå opp i".$config->config_data['application_mail_systemname'].".";
 //								$comment_text_log = phpgw::get_var('mail', 'POST');
 								$sendt = 0;
 								$mail_sendt_to = '';
