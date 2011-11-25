@@ -604,25 +604,27 @@
 
 			$fm_ids = $this->bo->read_fm_id();
 
+			$content = array();
 			for ($i=0;$i<count($fm_ids);$i++)
 			{
 
 				$content[] = array
-					(
-						'descr' 	=> $fm_ids[$i]['descr'],
-						'value' 	=> $fm_ids[$i]['value'],
-						'remark' 	=> $fm_ids[$i]['remark'],
-						'key_id' 	=> $i
-					);
+				(
+					'name' 		=> $fm_ids[$i]['name'],
+					'descr' 	=> $fm_ids[$i]['descr'],
+					'value' 	=> $fm_ids[$i]['value'],
+					'remark' 	=> $fm_ids[$i]['remark'],
+					'key_id' 	=> $i
+				);
 			}
 
-			$table_header[] = array
-				(
-					'lang_select'		=> lang('Select'),
-					'lang_descr'		=> lang('Descr'),
-					'lang_value'		=> lang('Value'),
-					'lang_remark'		=> lang('Remark'),
-				);
+			$table_header = array
+			(
+				'lang_select'		=> lang('Select'),
+				'lang_descr'		=> lang('Descr'),
+				'lang_value'		=> lang('Value'),
+				'lang_remark'		=> lang('Remark'),
+			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 

@@ -187,7 +187,7 @@
 			if($rollback_voucher)
 			{
 				$rollback_voucher = (int)$rollback_voucher;
-				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_voucher}";
+				$sql="SELECT * FROM fm_ecobilagoverf WHERE bilagsnr_ut = {$rollback_voucher}";
 			}
 			else
 			{
@@ -202,6 +202,7 @@
 				(
 					'id'					=> $this->db->f('id'),
 					'bilagsnr'				=> $this->db->f('bilagsnr'),
+					'bilagsnr_ut'			=> $this->db->f('bilagsnr_ut'),
 					'kidnr'					=> $this->db->f('kidnr'),
 					'typeid'				=> $this->db->f('typeid'),
 					'kildeid'				=> $this->db->f('kildeid'),
@@ -258,6 +259,7 @@
 				$BilagOverf['kostra_id'],
 				$BilagOverf['pmwrkord_code'],
 				$BilagOverf['bilagsnr'],
+				$BilagOverf['bilagsnr_ut'],
 				$BilagOverf['splitt'],
 				$BilagOverf['kildeid'],
 				$BilagOverf['kidnr'],
@@ -298,7 +300,7 @@
 			
 			$values	= $this->db->validate_insert($values);
 
-			$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,"
+			$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,"
 			. " fakturadato,forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,"
 			. " saksbehandlerid,budsjettansvarligid,fakturanr,spbudact_code,dima,loc1,dimd,mvakode,"
 			. " periode,periodization,periodization_start,merknad,utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,"
@@ -528,7 +530,30 @@
 
 			$this->db->transaction_begin();
 
-			$tranfser_bilag = array($oRsBilag[0]['bilagsnr']);
+			$get_bilagsnr_ut = false;
+			if(!$bilagsnr_ut = $oRsBilag[0]['external_ref'])
+			{
+				foreach ($oRsBilag as $line)
+				{
+					if(abs($line['godkjentbelop']) > 0)
+					{
+						$get_bilagsnr_ut = true;
+					}
+				}
+
+				if($get_bilagsnr_ut)
+				{
+					$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = 'bilagsnr_ut'");
+					$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'bilagsnr_ut'");
+					$this->db->next_record();
+					$bilagsnr_ut = $this->db->f('value');
+
+					$this->db->query("UPDATE fm_ecobilag SET bilagsnr_ut = {$bilagsnr_ut} WHERE bilagsnr = '$voucher_id'");
+				}
+			}
+
+			$tranfser_bilag = array($bilagsnr_ut);
+
 			$localtime = phpgwapi_datetime::user_localtime();
 
 			$transactioninformation = array
@@ -553,7 +578,7 @@
 				(
 					'TRANSACTIONTYPE'			=> 'X114',
 					'KEY'						=> '', //dummy
-					'VOUCHERID'					=> $oRsBilag[0]['bilagsnr'], // 70903541
+					'VOUCHERID'					=> $bilagsnr_ut,
 					'SCANNINGNO'				=> $oRsBilag[0]['external_ref'], // 11E28NJINL3VR6
 					'PROFILE'					=> 'TRAINVPOMA',
 					'CLIENT.CODE'				=> $this->client_code, //14,
@@ -787,7 +812,6 @@
 		
     	protected function get_voucher($bilagsnr)
     	{
-  	  		$bilagsnr = $bilagsnr;
   	  		$sql= "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser ON fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr = {$bilagsnr}";
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -798,6 +822,7 @@
 				(
 					'id'					=> $this->db->f('id'),
 					'bilagsnr'				=> $bilagsnr,
+					'bilagsnr_ut'			=> $this->db->f('bilagsnr_ut'),
 					'kidnr'					=> $this->db->f('kidnr'),
 					'typeid'				=> $this->db->f('typeid'),
 					'kildeid'				=> $this->db->f('kildeid'),

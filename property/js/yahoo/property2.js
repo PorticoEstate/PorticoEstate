@@ -31,6 +31,27 @@
 
 /********************************************************************************/
 
+	this.getTotalSum = function(name_column,round,paginator,datatable)
+	{
+		if(!paginator.getPageRecords())
+		{
+			return;
+		}
+		begin = end = 0;
+		end = datatable.getRecordSet().getLength();
+
+		tmp_sum = 0;
+		for(i = begin; i < end; i++)
+		{
+			tmp_sum = tmp_sum + parseFloat(datatable.getRecordSet().getRecords(0)[i].getData(name_column));
+		}
+
+		return tmp_sum = YAHOO.util.Number.format(tmp_sum, {decimalPlaces:round, decimalSeparator:",", thousandsSeparator:" "});
+	}
+
+
+/********************************************************************************/
+
   	this.td_empty = function(colspan)
   	{
 		newTD = document.createElement('td');

@@ -1015,6 +1015,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => '4','nullable' => False),
 				'bilagsnr' => array('type' => 'int','precision' => '4','nullable' => False),
+				'bilagsnr_ut' => array('type' => 'int','precision' => '4','nullable' => False),
 				'kidnr' => array('type' => 'varchar','precision' => '30','nullable' => True),
 				'typeid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'kildeid' => array('type' => 'int','precision' => '2','nullable' => False),
@@ -1066,6 +1067,7 @@
 			'fd' => array(
 				'id' => array('type' => 'int','precision' => '4','nullable' => False),
 				'bilagsnr' => array('type' => 'int','precision' => '4','nullable' => False),
+				'bilagsnr_ut' => array('type' => 'int','precision' => '4','nullable' => False),
 				'kidnr' => array('type' => 'varchar','precision' => '30','nullable' => True),
 				'typeid' => array('type' => 'int','precision' => '2','nullable' => False),
 				'kildeid' => array('type' => 'int','precision' => '2','nullable' => False),

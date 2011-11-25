@@ -68,15 +68,17 @@
 
 		function read_fm_id()
 		{
-			$sql = "select * from fm_idgenerator ";
+			$sql = "SELECT * FROM fm_idgenerator ORDER BY descr asc";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$fm_ids = array();
 			while ($this->db->next_record())
 			{
-				$fm_ids[] = array(
-					'descr'		=> $this->db->f('name'),
+				$fm_ids[] = array
+				(
+					'name'		=> $this->db->f('name'),
+					'descr'		=> $this->db->f('descr'),
 					'value'		=> $this->db->f('value'),
-					'remark'	=> $this->db->f('remark')
 				);
 
 			}

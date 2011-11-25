@@ -26,7 +26,8 @@ var  myPaginator_2, myDataTable_2;
   	this.addFooterDatatable = function(paginator,datatable)
   	{
   		//call getSumPerPage(name of column) in property.js
-  		tmp_sum1 = getSumPerPage('amount',2,paginator,datatable);
+  		tmp_sum1 = getTotalSum('amount',2,paginator,datatable);
+  		tmp_sum2 = getTotalSum('approved_amount',2,paginator,datatable);
 
   		if(typeof(tableYUI)=='undefined')
   		{
@@ -44,7 +45,8 @@ var  myPaginator_2, myDataTable_2;
 		td_sum('Sum');
 		td_empty(2);
 		td_sum(tmp_sum1);
-		td_empty(3);
+		td_sum(tmp_sum2);
+		td_empty(4);
 
 		myfoot = tableYUI.createTFoot();
 		myfoot.setAttribute("id","myfoot");
@@ -53,6 +55,13 @@ var  myPaginator_2, myDataTable_2;
 
  /********************************************************************************/
 
+/********************************************************************************/	
+	var FormatterRight = function(elCell, oRecord, oColumn, oData)
+	{
+		elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+	}	
+	
+/********************************************************************************/	
 
 
 YAHOO.util.Event.addListener(window, "load", function()

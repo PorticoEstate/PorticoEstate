@@ -32,17 +32,18 @@ var  myPaginator_2, myDataTable_2;
 /********************************************************************************/	
 	this.myParticularRenderEvent = function()
 	{
-		this.addFooterDatatable(myPaginator_0,myDataTable_0);
+		this.addFooterDatatable0(myPaginator_0,myDataTable_0);
+		this.addFooterDatatable1(myPaginator_2,myDataTable_2);
 	}
 
 /********************************************************************************/
-  	this.addFooterDatatable = function(paginator,datatable)
+  	this.addFooterDatatable0 = function(paginator,datatable)
   	{
-  		//call getSumPerPage(name of column) in property.js
-  		tmp_sum1 = getSumPerPage('budget',2,paginator,datatable);
-  		tmp_sum2 = getSumPerPage('calculation',2,paginator,datatable);
-  		tmp_sum3 = getSumPerPage('actual_cost',2,paginator,datatable);
-  		tmp_sum4 = getSumPerPage('contract_sum',2,paginator,datatable);
+  		//call getTotalSum(name of column) in property.js
+  		tmp_sum1 = getTotalSum('budget',2,paginator,datatable);
+  		tmp_sum2 = getTotalSum('calculation',2,paginator,datatable);
+  		tmp_sum3 = getTotalSum('actual_cost',2,paginator,datatable);
+  		tmp_sum4 = getTotalSum('contract_sum',2,paginator,datatable);
 
   		if(typeof(tableYUI)=='undefined')
   		{
@@ -63,9 +64,40 @@ var  myPaginator_2, myDataTable_2;
 		td_sum(tmp_sum1);
 		td_sum(tmp_sum2);
 		td_sum(tmp_sum3);
-		td_empty(3);
+		td_empty(5);
 
 		myfoot = tableYUI.createTFoot();
+		myfoot.setAttribute("id","myfoot");
+		myfoot.appendChild(newTR);
+	}
+
+/********************************************************************************/
+  	this.addFooterDatatable1 = function(paginator,datatable)
+  	{
+  		//call getTotalSum(name of column) in property.js
+  		tmp_sum1 = getTotalSum('amount',2,paginator,datatable);
+  		tmp_sum2 = getTotalSum('approved_amount',2,paginator,datatable);
+
+  		if(typeof(tableYUI2)=='undefined')
+  		{
+			tableYUI2 = YAHOO.util.Dom.getElementsByClassName("yui-dt-data","tbody")[1].parentNode;
+			tableYUI2.setAttribute("id","tableYUI");
+  		}
+ 		else
+  		{
+  			tableYUI2.deleteTFoot();
+  		}
+
+		//Create ROW
+		newTR = document.createElement('tr');
+
+		td_sum('Sum');
+		td_empty(3);
+		td_sum(tmp_sum1);
+		td_sum(tmp_sum2);
+		td_empty(4);
+
+		myfoot = tableYUI2.createTFoot();
 		myfoot.setAttribute("id","myfoot");
 		myfoot.appendChild(newTR);
 	}
