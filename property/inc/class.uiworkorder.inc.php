@@ -1172,6 +1172,7 @@
 				}
 			}
 
+
 			if($id)
 			{
 				$record_history = $this->bo->read_record_history($id);
@@ -1478,7 +1479,7 @@
 					'transfer_time'			=> $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']),$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);	
 			}
-
+//_debug_array($content_invoice);
 			$datavalues[2] = array
 				(
 					'name'					=> "2",
@@ -1497,6 +1498,7 @@
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),

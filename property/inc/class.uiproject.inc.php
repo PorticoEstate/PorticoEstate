@@ -1642,6 +1642,7 @@
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),

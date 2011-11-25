@@ -24,7 +24,8 @@
 			'view_check_list'					=>	true,
 			'edit_check_list'					=>	true,
 			'save_check_items'					=>	true,
-			'view_check_lists_for_location'		=>	true
+			'view_check_lists_for_location'		=>	true,
+			'view_agg_check_lists_for_location'	=>	true
 		);
 
 		public function __construct()
@@ -41,47 +42,96 @@
 			
 			self::set_active_menu('controller::location_check_list');
 		}
-			
-		public function view_check_lists_for_location()
+		
+		public function view_agg_check_lists_for_location()
 		{
 			$control_id = phpgw::get_var('control_id');
-			$control = $this->so_control->get_single($control_id);
+			$location_code = phpgw::get_var('location_code');
+			$year = phpgw::get_var('year');
+			$month = phpgw::get_var('month');
 			
-			$view = "VIEW_YEAR";
+			if( empty($month) ){
+				$year = intval($year);
 			
-			$location_code = "1101";
-			
-			// Gets an array of controls that contains check_lists for the specified location 
-			$control_array = $this->so->get_check_lists_for_location( $location_code );
-			
-			$controls_calendar_array = $this->build_calendar_array( $control_array );
-			
-			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				$from_date = strtotime("01/01/$year");
+				$to_year = $year + 1;
+				$to_date = strtotime("01/01/$to_year");	
+			}
+			else{
+				$year = intval($year);
+				$from_month = intval($month);
 				
-			$data = array
-			(
-				'location_array'		  => $location_array,
-				'controls_calendar_array' => $controls_calendar_array,
-				'date_format' 			  => $date_format
-			);
+				$from_date = strtotime("$from_month/01/$year");
+				$to_month = $from_month + 1;
+				$to_date = strtotime("$to_month/01/$year+1");
+			}
+			
+			$control = $this->so_control->get_single($control_id);
+					
+			if(empty($location_code)){
+				$location_code = "1101";	
+			}
+			
+			if( empty($month) )
+			{
+				// Gets an array of controls that contains check_lists for the specified location
+				$controls_array = $this->so->get_agg_check_lists_for_location( $location_code, $from_date, $to_date );
+				$controls_calendar_array = $this->build_agg_calendar_array( $controls_array );
+				
+				$repeat_type = 2;
+				$control_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type );
+				$controls_calendar_array = $this->build_calendar_array( $control_array, $controls_calendar_array, 12, "view_months" );
+				
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				
+				$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
+								
+				$data = array
+				(
+					'location_array'		  => $location_array,
+					'heading_array'		  	  => $heading_array,
+					'controls_calendar_array' => $controls_calendar_array,
+					'date_format' 			  => $date_format,
+					'period' 			  	  => $year,
+					'year' 			  	  	  => $year
+				);
+				self::render_template_xsl('view_agg_check_lists_for_location_year', $data);	
+			}
+			else
+			{
+				$repeat_type = 0;
+				$control_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type);
+				$controls_calendar_array = $this->build_calendar_array( $control_array, null, 31, "view_days" );
+								
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+				
+				for($i=1;$i<=31;$i++){
+					$heading_array[$i] = "$i";	
+				}
+								
+				$data = array
+				(
+					
+					'location_array'		  => $location_array,
+					'heading_array'		  	  => $heading_array,
+					'controls_calendar_array' => $controls_calendar_array,
+					'date_format' 			  => $date_format,
+					'period' 			  	  => $month,
+					'year' 			  	  	  => $year
+				);
+				self::render_template_xsl('view_agg_check_lists_for_location_month', $data);	
+			}
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::render_template_xsl('view_check_lists_for_location', $data);
 		}
 		
-		// Function receives array with control objects that each contain check_lists for a certain period
-		public function build_calendar_array( $control_array ){
-						
-			$calendar_array = array();
-					
+		public function build_calendar_array( $control_array, $controls_calendar_array, $num, $period_type ){
+			
 			foreach($control_array as $control){
-				
-				$start_date = $control->get_start_date();
-				$end_date = $control->get_end_date();
-				
+							
 				// Initialises twelve_months_array
-				for($i=0;$i<12;$i++){
+				for($i=1;$i<=$num;$i++){
 					$calendar_array[$i] = null;
 				}
 				
@@ -91,20 +141,86 @@
 					$check_list_status_info = new check_list_status_info();
 					$check_list_status_info->set_id($check_list->get_id());
 					$check_list_status_info->set_status_text($check_list->get_status());
+
 					if($check_list->get_status() == 'Ikke utført'){
 						$check_list_status_info->set_status(0);
 					}
 					
 					$check_list_status_info->set_deadline( date("d/m-Y", $check_list->get_deadline()) );
 					
-									
-					$calendar_array[ date("m", $check_list->get_deadline()) - 1 ] = $check_list_status_info->serialize();
+					if($period_type == "view_months")
+					{
+						$calendar_array[ date("n", $check_list->get_deadline()) ] = $check_list_status_info->serialize();	
+					}
+					else{
+						$calendar_array[ date("j", $check_list->get_deadline()) ] = $check_list_status_info->serialize();	
+					}
 				}
 				
-				$control_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+				$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 			}
 			
+			return $controls_calendar_array;
+		}
+		
+		// Function receives array with control objects that each contain check_lists for a certain period
+		public function build_agg_calendar_array( $controls_array ){
+						
+			$calendar_array = array();
+			
+			foreach($controls_array as $control_array){
+				
+				$control_info = $control_array['control'];
+				$check_list_array = $control_array['check_list'];
+				
+				$control_id = $control_info['id'];
+				 
+				// Initialises twelve_months_array
+				for($i=0;$i<12;$i++){
+					$calendar_array[$i] = null;
+				}
+				
+				// Inserts check_list object on deadline month in twelve_months_array
+				foreach($check_list_array as $check_list){
+					$calendar_array[ date("m", $check_list['deadline']) - 1 ] += $check_list['count'];
+				}
+				
+				$control_calendar_array[] = array("control" => $control_info, "calendar_array" => $calendar_array);
+			}
+
 			return $control_calendar_array;
+		}
+
+		public function view_check_lists_for_location()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$control = $this->so_control->get_single($control_id);
+			
+			$location_code = "1101";
+						
+			$from_date = strtotime("01/01/2011");
+			$num_days_in_dec = cal_days_in_month(CAL_GREGORIAN, 12, 2011);
+			$to_date =  strtotime("12/$num_days_in_dec/2011");
+			
+			// Gets an array of controls that contains check_lists for the specified location 
+			$control_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date );
+			
+			$controls_calendar_array = $this->build_calendar_array( $control_array, $from_date, $to_date );
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$data = array
+			(
+				'location_array'		  => $location_array,
+				'controls_calendar_array' => $controls_calendar_array,
+				'date_format' 			  => $date_format,
+				'from_date' 			  => $from_date,
+				'to_date' 			  	  => $to_date
+			);
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::render_template_xsl('view_check_lists_for_location', $data);
 		}
 				
 		public function view_check_lists_for_control()

@@ -5,7 +5,8 @@
 			
 		<h1>Kalenderoversikt</h1>
 		<fieldset class="check_list_details">
-			Oversikt for <xsl:value-of select="location_array/loc1_name"/>
+			<div><xsl:value-of select="location_array/loc1_name"/></div>
+			<div>Periode: <xsl:value-of select="php:function('date', 'd/m-Y', number(from_date))"/> - <xsl:value-of select="php:function('date', 'd/m-Y', number(to_date))"/></div>
 		</fieldset>
 		
 		<h2>Sjekklister</h2>
@@ -13,6 +14,7 @@
 		<ul class="calendar">
 			<li class="heading">
 				<div>Id</div><div class="title">Tittel</div><div class="date">Startdato</div><div class="date">Sluttdato</div>
+				<div class="frequency">Frekvenstype</div><div class="frequency">Frekvensintervall</div>
 				<div>Jan</div><div>Feb</div><div>Mar</div><div>Apr</div><div>Mai</div><div>Jun</div>
 				<div>Jul</div><div>Aug</div><div>Sep</div><div>Okt</div><div>Nov</div><div>Des</div>
 			</li>
@@ -38,6 +40,12 @@
 										Løpende
 									</xsl:otherwise>
 								</xsl:choose>
+							</div>
+							<div class="frequency">
+				      			<xsl:value-of select="control/repeat_type"/>
+							</div>
+							<div class="frequency">
+				      			<xsl:value-of select="control/repeat_interval"/>
 							</div>
 							<xsl:for-each select="calendar_array">
 					    		<div style="position:relative;">

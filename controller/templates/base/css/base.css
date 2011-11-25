@@ -836,12 +836,22 @@ ul.calendar li div {
     padding: 3px;
 }
 
-ul.calendar li div.date {
+ul.calendar.days li div {
+    float: left;
+    text-align: center;
+    width: 30px;
+    padding: 3px;
+}
+
+ul.calendar li div.date, ul.calendar.days div.date {
     width: 80px;
 }
 
-ul.calendar div.title{
+ul.calendar div.title, ul.calendar.days div.title {
 	width: 200px;	
+}
+ul.calendar div.frequency, ul.calendar.days div.frequency {
+	width: 120px;	
 }
 
 #info_box {

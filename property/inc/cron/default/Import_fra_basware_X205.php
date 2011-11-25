@@ -365,7 +365,7 @@
 					$fakturanr		= $_data['KEY'];
 					$fakturadato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 					$forfallsdato	= date($this->dateformat,strtotime(str_replace('.', '-', $_data['MATURITY'])));
-					$periode 		= date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+					$periode 		= '';//date('Ym',strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
 					$belop 			= $_data['AMOUNT']/100;
 
 					if( $belop < 0 )
