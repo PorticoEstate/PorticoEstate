@@ -167,42 +167,6 @@
     }
 
 	/********************************************************************************
-	* Format column myPeriodizationDropDown
-	*/
-    var myPeriodizationDropDown = function(elCell, oRecord, oColumn, oData)
-   	{
-		var periodization = values_ds.periodization;
-
-		for(i=0; i<periodization.length; i++)
-		{
-//			alert(periodization[i].name);
-		}
-
-		var _label = new String(oData);
-
-//alert(_label);
-		tmp_count = oRecord._oData.counter_num;
-		voucher_id = oRecord._oData.voucher_id_num
-	    elCell.innerHTML = "<div id=\"divPeriodizationDropDown"+tmp_count+"\"></div>";
-
-  	    var tmp_button = new YAHOO.widget.Button({
-                 type:"menu",
-                 id:"oPeriodizationDropDown"+tmp_count,
-//                 label: "<en>" +periodization[0].id+"</en>",
-                 label: "<en>" +_label+"</en>",
-                 value: oData,
-                 container: "divPeriodizationDropDown"+tmp_count,
-                 menu: [
-        	       		{ text: periodization[0].name, value: periodization[0].id, onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: periodization[0].id} },
-					    { text: periodization[1].name, value: periodization[1].id, onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: periodization[1].id} },
-					    { text: periodization[2].name, value: periodization[2].id, onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: periodization[2].id} }
-					    ]});
-	    //Define this variable in the window scope (GLOBAL)
-        eval("window.oPeriodizationDropDown"+tmp_count+" = tmp_button");
-
-    }
-
-	/********************************************************************************
 	 * CLick option combobox Periodization
 
 	 */

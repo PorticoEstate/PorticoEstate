@@ -757,6 +757,7 @@
 		<xsl:variable name="value"><xsl:value-of select="value"/></xsl:variable>
 		<xsl:variable name="key_id"><xsl:value-of select="key_id"/></xsl:variable>
 		<xsl:variable name="descr"><xsl:value-of select="descr"/></xsl:variable>
+		<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
 		<tr>
 			<xsl:attribute name="class">
 				<xsl:choose>
@@ -779,7 +780,7 @@
 				<xsl:value-of select="descr"/>
 			</td>
 			<td>
-				<INPUT type="hidden" name="values[field][{$key_id}]" value="{$descr}" ></INPUT>
+				<INPUT type="hidden" name="values[field][{$key_id}]" value="{$name}" ></INPUT>
 				<INPUT type="text" name="values[{$key_id}]" value="{$value}" ></INPUT>
 			</td>
 			<td align="center">
