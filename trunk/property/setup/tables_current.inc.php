@@ -1423,12 +1423,12 @@
 		'fm_idgenerator' => array(
 			'fd' => array(
 				'name' => array('type' => 'varchar','precision' => '30','nullable' => False),
+				'start_date' => array('type' => 'int','precision' => '4','nullable' => False,'default' => '0'),
 				'value' => array('type' => 'int','precision' => '4','nullable' => False),
 				'increment' => array('type' => 'int','precision' => '4','nullable' => True),
-				'maxvalue' => array('type' => 'int','precision' => '2','nullable' => True),
-				'descr' => array('type' => 'varchar','precision' => '30','nullable' => True)
+				'descr' => array('type' => 'varchar','precision' => '30','nullable' => True),
 			),
-			'pk' => array('name'),
+			'pk' => array('name','start_date'),
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()

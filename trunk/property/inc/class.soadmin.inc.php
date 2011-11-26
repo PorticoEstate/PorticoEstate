@@ -26,6 +26,7 @@
 	* @subpackage admin
  	* @version $Id$
 	*/
+	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Description
@@ -68,37 +69,80 @@
 
 		function read_fm_id()
 		{
-			$sql = "SELECT * FROM fm_idgenerator ORDER BY descr asc";
+			$sql = "SELECT * FROM fm_idgenerator ORDER BY descr DESC,start_date DESC";
 			$this->db->query($sql,__LINE__,__FILE__);
 
+			$name = '';
 			$fm_ids = array();
 			while ($this->db->next_record())
 			{
+				$old = false;
+				if($name == $this->db->f('name'))
+				{
+					$old = true;
+				}
+				$new_name = $this->db->f('name');
 				$fm_ids[] = array
 				(
-					'name'		=> $this->db->f('name'),
-					'descr'		=> $this->db->f('descr'),
-					'value'		=> $this->db->f('value'),
+					'name'			=> $new_name,
+					'descr'			=> $this->db->f('descr'),
+					'value'			=> $this->db->f('value'),
+					'start_date'	=> $this->db->f('start_date'),
+					'old'			=> $old
 				);
-
+				$name = $new_name;
 			}
 
-			return $fm_ids;
+			return array_reverse($fm_ids);
 		}
 
-		function edit_id($values='')
+		function edit_id($values=array())
 		{
-			$field=$values['field'];
-			$select=$values['select'];
-
-			while($entry=each($select))
+			if(!isset($values['select']) || !is_array($values['select']))
 			{
-				$n=$entry[0];
-
-				$sql = "update  fm_idgenerator set value='$values[$n]' where name='$field[$n]'";
-				$this->db->query($sql,__LINE__,__FILE__);
+				return $receipt['message'][] = array('msg' => lang('Nothing to do'));
 			}
 
+			$this->db->transaction_begin();
+			foreach($values['select'] as $field)
+			{
+				$start_date = phpgwapi_datetime::date_to_timestamp($values['start_date'][$field]);
+				
+				if($start_date < time())
+				{
+					$receipt['error'][] = array('msg' => lang('Cannot alter historical values for %1', $field));
+					continue;
+				}
+
+				$sql = "SELECT value,descr, max(start_date) as start_date FROM fm_idgenerator WHERE name='{$field}' GROUP BY value, descr ORDER BY start_date ASC";
+				$this->db->query($sql,__LINE__,__FILE__);
+				while ($this->db->next_record())
+				{
+					$value			= $this->db->f('value');
+					$descr			= $this->db->f('descr');
+					$old_start_date	= $this->db->f('start_date');
+				}
+
+				if($start_date > $old_start_date)
+				{
+					$sql = "INSERT INTO fm_idgenerator (name, descr, value, start_date ) VALUES ('{$field}','{$descr}', '{$values[$field]}','{$start_date}')";
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+				else if ($start_date < $old_start_date)
+				{
+					$sql = "DELETE FROM fm_idgenerator WHERE name = name AND start_date > {$start_date}";
+					$this->db->query($sql,__LINE__,__FILE__);
+					$sql = "INSERT INTO fm_idgenerator (name, descr, value, start_date ) VALUES ('{$field}','{$descr}', '{$values[$field]}','{$start_date}')";
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+				else
+				{
+					$sql = "UPDATE fm_idgenerator SET value = '{$values[$field]}' WHERE name='{$field}' AND start_date  = {$start_date}";
+					$this->db->query($sql,__LINE__,__FILE__);
+				}
+			}
+
+			$this->db->transaction_commit();
 			$receipt['message'][] = array('msg' => lang('ID is updated'));
 			return $receipt;
 		}

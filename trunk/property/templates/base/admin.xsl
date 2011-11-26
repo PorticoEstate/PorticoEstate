@@ -753,7 +753,7 @@
 
 <!-- edit_id -->	
 
-	<xsl:template match="id_values">
+	<xsl:template match="id_values" xmlns:php="http://php.net/xsl">
 		<xsl:variable name="value"><xsl:value-of select="value"/></xsl:variable>
 		<xsl:variable name="key_id"><xsl:value-of select="key_id"/></xsl:variable>
 		<xsl:variable name="descr"><xsl:value-of select="descr"/></xsl:variable>
@@ -773,46 +773,62 @@
 				</xsl:choose>
 			</xsl:attribute>
 
-			<td align="right">
-				<INPUT type="checkbox" name="values[select][{$key_id}]" value="true"></INPUT>
+			<td align="center">
+				<INPUT type="checkbox" name="values[select][]" value="{$name}">
+					<xsl:if test="old = '1'">
+						<xsl:attribute name="disabled">
+							<xsl:text>disabled</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
+				</INPUT>
 			</td>
-			<td align="right">
+			<td align="left">
 				<xsl:value-of select="descr"/>
 			</td>
 			<td>
-				<INPUT type="hidden" name="values[field][{$key_id}]" value="{$name}" ></INPUT>
-				<INPUT type="text" name="values[{$key_id}]" value="{$value}" ></INPUT>
+				<INPUT type="text" name="values[{$name}]" value="{$value}" ></INPUT>
 			</td>
-			<td align="center">
-				<xsl:value-of select="remark"/>
+			<td>
+			<xsl:choose>
+				<xsl:when test="old != '1'">
+					<input type="text" id="date_{$name}" name="values[start_date][{$name}]" size="10" value="{start_date}" readonly="readonly">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_date_statustext"/>
+						</xsl:attribute>
+					</input>
+					<img id="date_{$name}-trigger" src="{//img_cal}" alt="{//lang_datetitle}" title="{//lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="start_date"/>
+				</xsl:otherwise>
+			</xsl:choose>
 			</td>
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="id_table_header">
+	<xsl:template name="id_table_header" xmlns:php="http://php.net/xsl">
 		<tr class="th">
-			<td class="th_text" width="10%" align="right">
-				<xsl:value-of select="lang_select"/>
+			<td class="th_text" width="10%" align="center">
+				<xsl:value-of select="php:function('lang', 'select')" />
 			</td>
-			<td class="th_text" width="10%" align="right">
-				<xsl:value-of select="lang_descr"/>
+			<td class="th_text" width="40%" align="left">
+				<xsl:value-of select="php:function('lang', 'descr')" />
 			</td>
-			<td class="th_text" width="40%">
-				<xsl:value-of select="lang_value"/>
+			<td class="th_text" width="30%">
+				<xsl:value-of select="php:function('lang', 'value')" />
 			</td>
 			<td class="th_text" width="20%" align="center">
-				<xsl:value-of select="lang_remark"/>
+				<xsl:value-of select="php:function('lang', 'date')" />
 			</td>
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="edit_id">
-
-		<table cellpadding="2" cellspacing="2" width="100%" align="center">
+	<xsl:template match="edit_id" xmlns:php="http://php.net/xsl">
+		<table cellpadding="2" cellspacing="2" width="90%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
 					<tr>
-						<td align="left" colspan="3">
+						<td align="left" colspan="4">
 							<xsl:call-template name="msgbox"/>
 						</td>
 					</tr>
@@ -820,16 +836,14 @@
 			</xsl:choose>
 			<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
 			<form method="post" action="{$form_action}">
-				<xsl:apply-templates select="id_table_header"/> 
+				<xsl:call-template name="id_table_header"/> 
 				<xsl:apply-templates select="id_values"/> 
 				<tr height="50">
 					<td>
 						<xsl:variable name="lang_save"><xsl:value-of select="lang_save"/></xsl:variable>
-						<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<input type="submit" name="values[save]" value="{$lang_save}">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_save_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
 					</td>
@@ -840,11 +854,9 @@
 					<xsl:variable name="done_action"><xsl:value-of select="done_action"/></xsl:variable>
 					<xsl:variable name="lang_done"><xsl:value-of select="lang_done"/></xsl:variable>
 					<form method="post" action="{$done_action}">
-						<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<input type="submit" name="done" value="{$lang_done}">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_done_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
 					</form>
