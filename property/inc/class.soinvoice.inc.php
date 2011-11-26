@@ -934,16 +934,22 @@
 
 		function increment_bilagsnr()
 		{
-			$this->db->query("UPDATE fm_idgenerator set value = value + 1 where name = 'Bilagsnummer'");
-			$this->db->query("select value from fm_idgenerator where name = 'Bilagsnummer'");
+			$name = 'Bilagsnummer';
+			$now = time();
+			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$bilagsnr = $this->db->f('value');
+			$bilagsnr = $this->db->f('value') +1;
+			$start_date = (int)$this->db->f('start_date');
+
+			$this->db->query("UPDATE fm_idgenerator SET value = value + 1 WHERE name = '{$name}' AND start_date = $start_date");
 			return $bilagsnr;
 		}
 
 		function next_bilagsnr()
 		{
-			$this->db->query("select value from fm_idgenerator where name = 'Bilagsnummer'");
+			$name = 'Bilagsnummer';
+			$now = time();
+			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC" );
 			$this->db->next_record();
 			$bilagsnr = $this->db->f('value')+1;
 

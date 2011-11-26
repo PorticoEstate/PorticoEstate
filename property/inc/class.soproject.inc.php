@@ -681,15 +681,23 @@
 
 		function increment_project_id()
 		{
-			$this->db->query("update fm_idgenerator set value = value + 1 where name = 'project'");
+			$name = 'project';
+			$now = time();
+			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
+			$this->db->next_record();
+			$next_id = $this->db->f('value') +1;
+			$start_date = (int)$this->db->f('start_date');
+			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 		}
 
 		function next_project_id()
 		{
-			$this->db->query("select value from fm_idgenerator where name = 'project'");
+			$name = 'project';
+			$now = time();
+			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = '{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$project_id = $this->db->f('value')+1;
-			return $project_id;
+			$id = $this->db->f('value')+1;
+			return $id;
 		}
 
 		function add($project, $values_attribute = array())

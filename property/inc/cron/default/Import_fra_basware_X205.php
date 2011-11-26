@@ -359,7 +359,7 @@
 //					$_data['SUPPLIERREF']; // => 7869
 					$_data['VATAMOUNT']; // => 62500
 					
-					$bilagsnr = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
+					$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
 					$order_id 		= $_data['PURCHASEORDERNO'];
 					$fakturanr		= $_data['KEY'];
@@ -395,7 +395,7 @@
 					$buffer[$i]['godkjentbelop']	= $belop;
 					
 					$buffer[$i]['kidnr']			= $kidnr;
-					$buffer[$i]['bilagsnr']			= $bilagsnr;
+					$buffer[$i]['bilagsnr_ut']		= $bilagsnr_ut;
 					$buffer[$i]['referanse']		= "ordre: {$order_id}";
 
 					$order_info = $this->get_order_info($order_id);
