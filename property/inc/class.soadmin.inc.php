@@ -108,9 +108,9 @@
 			{
 				$start_date = phpgwapi_datetime::date_to_timestamp($values['start_date'][$field]);
 				
-				if($start_date < time())
+				if($start_date && $start_date < time())
 				{
-					$receipt['error'][] = array('msg' => lang('Cannot alter historical values for %1', $field));
+					$receipt['error'][] = array('msg' => lang('Cannot go back in time for "%1"', $field));
 					continue;
 				}
 
