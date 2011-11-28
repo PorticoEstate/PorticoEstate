@@ -610,7 +610,7 @@
 			self::render_template_xsl(array('control_tabs', 'tab_view_check_lists'), $data);
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 		}
-		
+			
 		// Returns control list info as JSON
 		public function get_controls_by_control_area()
 		{
