@@ -801,7 +801,7 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 	
 	function get_targetgroups()
 	{
-		$sql = "SELECT * FROM bb_agegroup where active=1 ORDER BY sort";
+		$sql = "SELECT * FROM bb_agegroup where active=1 AND NOT name like 'Tilskuer%' ORDER BY sort";
 		$this->db->query($sql, __LINE__, __FILE__);
 		while($this->db->next_record()){
 			$targets[] = array(
