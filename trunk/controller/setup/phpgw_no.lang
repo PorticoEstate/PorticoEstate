@@ -1,3 +1,4 @@
+Assign location to control	controller	no	Knytte kontrol til bygg
 control	controller	no	Kontroll
 controller	common	no	Kontroll
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
