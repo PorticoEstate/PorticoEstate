@@ -147,4 +147,27 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.8';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	/* Update Controller from v 0.1.8 to 0.1.9 */
+	
+	$test[] = '0.1.8';
+	function controller_upgrade0_1_8()
+	{
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_location_list', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'location_code' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);	
+			
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.9';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
 ?>
