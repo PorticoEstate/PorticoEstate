@@ -695,13 +695,18 @@ class activitycalendar_soactivity extends activitycalendar_socommon
 		$this->db->query("SELECT * FROM bb_organization WHERE show_in_portal=1", __LINE__, __FILE__);
 		while($this->db->next_record())
 		{
+			$homepage = $this->db->f('homepage');
+			if ( trim($homepage) != '' && !preg_match("/^http|https:\/\//", trim($homepage)) )
+			{
+				$homepage = 'http://'.$homepage;
+			}
 			$organizations[] = array
 			(
 				'id'			=> (int) $this->db->f('id'),
 				'name'			=> utf8_decode($this->db->f('name')),
 				'shortname'		=> utf8_decode($this->db->f('shortname')),
 				'description'	=> utf8_decode($this->db->f('description')),
-				'homepage'		=> $this->db->f('homepage'),
+				'homepage'		=> $homepage,
 				'phone'			=> $this->db->f('phone'),
 				'email'			=> $this->db->f('email')
 			);
