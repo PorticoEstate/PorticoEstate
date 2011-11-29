@@ -205,18 +205,23 @@
 
 		//...create a handler for context menu clicks
 		var onContextMenuClick = function(eventString, args, table) {
-
 			//... the argument holds the selected index number in the context menu
 			var task = args[1];
+			
 			//... only act on a data table
 			if(table instanceof YAHOO.widget.DataTable) {
 				//... retrieve the record based on the selected table row
 				var row = table.getTrEl(this.contextEventTarget);
 				var record = table.getRecord(row);
-
+												
 				//... check whether this action should be an AJAX call
-				if(record.getData().ajax[task.index]) {
-														
+				if( record.getData().ajax[task.index] ) {
+				
+					if(task.index == 1) {
+						
+						
+					}
+					
 					var alertStatus = false;
 
 					// Check if confirm box should be displayed before request is executed
@@ -508,7 +513,7 @@
 	 */
 	function formListener(event){
 		YAHOO.util.Event.stopEvent(event);
-		var qs = YAHOO.controller.serializeForm(this.properties.form);
+		var qs = YAHOO.portico.serializeForm(this.properties.form);
 	    this.source.liveData = this.url + qs + '&';
 	    this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
 	    	this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);

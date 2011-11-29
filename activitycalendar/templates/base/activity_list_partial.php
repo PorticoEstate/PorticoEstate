@@ -151,24 +151,28 @@
 
     function activity_email(ptype) {
 
-        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
-        var office = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_district').value;
-        var state = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_state').value;
-        var category = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_category').value;
-        <?php
-        /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
-         * even though the search only affects one of the data tables.
-         * F.ex on /index.php?menuaction=rental.uicontract.edit&id=1 -> Parties
-         */
-        ?>
-        
-        window.location = 'index.php?menuaction=activitycalendar.uiactivities.query'+
-            '<?php echo $url_add_on; ?>'+
-            '&amp;query='+query+
-            '&amp;activity_district='+office+
-            '&amp;activity_state='+state+
-            '&amp;activity_category='+category+
-        	'&amp;email=true';
+    	var confirm_res = confirm("Du er i ferd med å sende e-post til flere mottakere.\n\nVil du gjøre dette?");
+        if(confirm_res==true)
+        {	
+	        var query = document.getElementById('<?php echo $list_id ?>_ctrl_search_query').value;
+	        var office = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_district').value;
+	        var state = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_state').value;
+	        var category = document.getElementById('<?php echo $list_id ?>_ctrl_toggle_activity_category').value;
+	        <?php
+	        /* FIXME Search queries will affect ALL data tables listed on one page (of that type) when exporting
+	         * even though the search only affects one of the data tables.
+	         * F.ex on /index.php?menuaction=rental.uicontract.edit&id=1 -> Parties
+	         */
+	        ?>
+	        
+	        window.location = 'index.php?menuaction=activitycalendar.uiactivities.query'+
+	            '<?php echo $url_add_on; ?>'+
+	            '&amp;query='+query+
+	            '&amp;activity_district='+office+
+	            '&amp;activity_state='+state+
+	            '&amp;activity_category='+category+
+	        	'&amp;email=true';
+        }
     }
 
 </script>
@@ -239,7 +243,7 @@
 	$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
 	?>
 	<div id="export">
-		<a href="javascript:activity_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>&nbsp;&nbsp;<a href="javascript:activity_email('<?php echo $list_id ?>')" title="<?php echo lang('Send email to selection') ?>"><button><?php echo lang('Send mail to selection') ?></button></a>
+		<a href="javascript:activity_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>&nbsp;&nbsp;<button onclick="javascript:activity_email('<?php echo $list_id ?>')"><?php echo lang('Send mail to selection') ?></button>
 	</div>
 </fieldset>
 <?php }?>

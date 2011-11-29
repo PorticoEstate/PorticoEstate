@@ -602,28 +602,18 @@
 				$receipt = $this->bo->edit_id($values);
 			}
 
-			$fm_ids = $this->bo->read_fm_id();
+			$content = $this->bo->read_fm_id();
 
-			for ($i=0;$i<count($fm_ids);$i++)
+			$jscal = CreateObject('phpgwapi.jscalendar');
+
+			$dateformat	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach($content as $i => & $entry)
 			{
-
-				$content[] = array
-					(
-						'descr' 	=> $fm_ids[$i]['descr'],
-						'value' 	=> $fm_ids[$i]['value'],
-						'remark' 	=> $fm_ids[$i]['remark'],
-						'key_id' 	=> $i
-					);
+				$jscal->add_listener("date_{$entry['name']}");
+				$entry['key_id'] = $i;
+				$entry['start_date']	= $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
 			}
-
-			$table_header[] = array
-				(
-					'lang_select'		=> lang('Select'),
-					'lang_descr'		=> lang('Descr'),
-					'lang_value'		=> lang('Value'),
-					'lang_remark'		=> lang('Remark'),
-				);
-
+//_debug_array($content);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
@@ -636,12 +626,9 @@
 					'lang_add_statustext'	=> lang('Edit ID'),
 					'lang_done'				=> lang('done'),
 					'lang_done_statustext'	=> lang('Back to Admin'),
-					'lang_select'			=> lang('Select'),
-					'lang_descr'			=> lang('Descr'),
-					'lang_value'			=> lang('Value'),
-					'lang_remark'			=> lang('Remark'),
-					'id_table_header'		=> $table_header,
 					'id_values'				=> $content,
+					'img_cal'				=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+					'lang_datetitle'		=> lang('Select date'),
 				);
 
 			$appname	= lang('ID');

@@ -5514,6 +5514,55 @@
 	}
 
 	/**
+	* Update property version from 0.9.17.626 to 0.9.17.627
+	* Add assign voucher id on export from system
+	*/
+	$test[] = '0.9.17.626';
+	function property_upgrade0_9_17_626()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilag','bilagsnr_ut',array('type' => 'int','precision' => 4,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf','bilagsnr_ut',array('type' => 'int','precision' => 4,'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_idgenerator',array(),'maxvalue');
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_idgenerator','date_from',array('type' => 'int','precision' => 4,'nullable' => True,'default' => '0'));
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator(name,value,descr) "
+			. "VALUES('bilagsnr_ut', 0, 'Bilagsnummer utgående')",__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.627';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.626 to 0.9.17.627
+	* Add assign voucher id on export from system
+	*/
+	$test[] = '0.9.17.627';
+	function property_upgrade0_9_17_627()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_idgenerator','date_from','start_date');
+		$GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE fm_idgenerator DROP CONSTRAINT fm_idgenerator_pkey',__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query('ALTER TABLE fm_idgenerator ADD CONSTRAINT fm_idgenerator_pkey PRIMARY KEY(name,start_date)',__LINE__,__FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.628';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+
+
+
+	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608
 	* Add more room for address at tickets
 	* 

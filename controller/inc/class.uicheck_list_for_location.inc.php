@@ -17,8 +17,9 @@
 		var $type_id;
 		var $location_code;
 		
-		private $so_control_area; 
-
+		private $so_control_area;
+		private $so_control;
+	
 		var $public_functions = array(
 										'index' => true,
 									);
@@ -33,7 +34,8 @@
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control_area 		= CreateObject('controller.socontrol_area');
-
+			$this->so_control 			= CreateObject('controller.socontrol');
+	
 			$this->type_id				= $this->bo->type_id;
 			
 			$this->start				= $this->bo->start;
@@ -87,10 +89,15 @@
 			array_unshift ($responsibility_roles,$default_value);
 			
 			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
-
-			// Fetches prosedures that are related to first control area in list
-			$control_area_id = $control_areas_array[0]['id'];
 			
+			$control_id = 186;
+			
+			$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
+						
+			
+			
+			
+		/*
 			$lists = array
 			(
 				'building_types'			=> $building_types,
@@ -100,11 +107,48 @@
 				'responsibility_roles_list'	=> $responsibility_roles_list,
 				'control_area_list'			=> $control_areas_array,
 			);
-
-		
-			
+*/
 
 			$data = array(
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array('type' => 'filter',
+								'name' => 'building_types',
+                                'text' => lang('Building_types').':',
+                                'list' => $building_types
+							),
+							array('type' => 'filter',
+								'name' => 'cat_id',
+                                'text' => lang('Category_types').':',
+                                'list' => $category_types
+							),
+							array('type' => 'filter',
+								'name' => 'district_id',
+                                'text' => lang('District_list').':',
+                                'list' => $district_list
+							),
+							array('type' => 'filter',
+								'name' => 'part_of_town_list',
+                                'text' => lang('Part_of_town_list').':',
+                                'list' => $part_of_town_list
+							),
+							array('type' => 'filter',
+								'name' => 'responsibility_roles_list',
+                                'text' => lang('responsibility_roles_list').':',
+                                'list' => $responsibility_roles_list
+							),
+							array('type' => 'text', 
+                                  'name' => 'query'
+							),
+							array(
+								'type' => 'submit',
+								'name' => 'search',
+								'value' => lang('Search')
+							),
+						),
+					),
+				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_location.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
@@ -151,7 +195,9 @@
 						)
 					)
 				),
-				'lists' => $lists
+				'lists' 				=> $lists,
+				'locations_for_control' => $locations_for_control_array,
+				'control_area_list'		=> $control_areas_array
 			);			
 			
 			//self::add_javascript('controller', 'yahoo', 'datatable.js');
@@ -174,8 +220,6 @@
 			$location_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
 												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
 
-			$uicols = $this->bo->uicols;
-		
 			$results = array();
 
 			foreach($location_list as $location)
@@ -205,7 +249,7 @@
 			$value['labels'][] = lang('show');
 			
 			$value['ajax'][] = true;
-			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'location_code' => $value['location_code'])));
+			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'controller.uilocation_check_list', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_location');
 		}
 	}

@@ -54,7 +54,7 @@ class activitycalendar_soorganization extends activitycalendar_socommon
 		else if(!$return_count)
 		{
 			$dir = $ascending ? 'ASC' : 'DESC';
-			$order = "ORDER BY org.id $dir";
+			$order = "ORDER BY org.name $dir";
 		}
 		if($search_for)
 		{

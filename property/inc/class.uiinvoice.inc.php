@@ -664,11 +664,49 @@
 					)
 				);
 
+			$periodization_list = execMethod('property.bogeneric.get_list', array('type'=>'periodization'));
+
+			$jscode = <<<JS
+			    var myPeriodizationDropDown = function(elCell, oRecord, oColumn, oData)
+			   	{
+JS;
+			$jscode .= <<<JS
+				var _label = new String(oData);
+				tmp_count = oRecord._oData.counter_num;
+				voucher_id = oRecord._oData.voucher_id_num
+			    elCell.innerHTML = "<div id=\"divPeriodizationDropDown"+tmp_count+"\"></div>";
+
+		  	    var tmp_button = new YAHOO.widget.Button({
+		                 type:"menu",
+		                 id:"oPeriodizationDropDown"+tmp_count,
+		                 label: "<en>" +_label+"</en>",
+		                 value: oData,
+		                 container: "divPeriodizationDropDown"+tmp_count,
+		                 menu: [
+
+JS;
+       	    foreach ($periodization_list as $key => $periodization_entry)
+        	{
+	 			$jscode_arr[] = "{ text: '{$periodization_entry['name']}', value: '{$periodization_entry['id']}', onclick: { fn: onPeriodizationDropDownItemClick, idvoucher: voucher_id, id: '{$periodization_entry['id']}'} }";
+        	}
+
+			$jscode_inner = implode(",\n",  $jscode_arr);
+			$jscode .= <<<JS
+			$jscode_inner
+			]});
+
+					//Define this variable in the window scope (GLOBAL)
+					eval("window.oPeriodizationDropDown"+tmp_count+" = tmp_button");
+				}
+JS;
+				$GLOBALS['phpgw']->js->add_code('', $jscode);
+
 			} //-- of if( phpgw::get_var('phpgw_return_as') != 'json' )
 
 			$content = array();
 			//the first time, $content is empty, because $user_lid=''.In the seconfd time, user_lid=all; It is done using  base_java_url.
 			$content = $this->bo->read_invoice($paid,$start_date,$end_date,$vendor_id,$loc1,$workorder_id,$voucher_id);
+			
 
 			$uicols = array (
 				'input_type'	=>	array
@@ -1271,7 +1309,7 @@
 					'currentPage'		=> $datatable['sorting']['currentPage'],
 					'records'			=> array(),
 					'sum_amount'		=> $this->bo->sum_amount,
-					'periodization'		=> $paid ? array() : execMethod('property.bogeneric.get_list', array('type'=>'periodization'))
+					'periodization'		=> $paid ? array() : $periodization_list
 				);
 
 			// values for datatable

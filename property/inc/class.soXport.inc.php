@@ -227,6 +227,7 @@
 						$fields['kostra_id'],
 						$fields['pmwrkord_code'],
 						$fields['bilagsnr'],
+						$fields['bilagsnr_ut'],
 						$fields['splitt'],
 						$fields['kildeid'],
 						$fields['kidnr'],
@@ -262,7 +263,7 @@
 
 					$values	= $this->db->validate_insert($values);
 
-					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,splitt,kildeid,kidnr,typeid,fakturadato,"
+					$sql= "INSERT INTO fm_ecobilag (project_id,kostra_id,pmwrkord_code,bilagsnr,bilagsnr_ut,splitt,kildeid,kidnr,typeid,fakturadato,"
 						. " forfallsdato,regtid,artid,spvend_code,dimb,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " fakturanr,spbudact_code,loc1,dima,dimd,mvakode,periode,merknad,oppsynsigndato,saksigndato,"
 						. " budsjettsigndato,utbetalingsigndato,item_type,item_id,external_ref,currency,belop,godkjentbelop)"
@@ -274,7 +275,11 @@
 				}
 			}
 
-			$this->db->query("UPDATE fm_idgenerator set value = {$bilagsnr} WHERE name = 'Bilagsnummer'");
+			$now = time();
+			$this->db->query("SELECT start_date FROM fm_idgenerator WHERE name='Bilagsnummer' AND start_date < {$now} ORDER BY start_date DESC");
+			$this->db->next_record();
+			$start_date = (int)$this->db->f('start_date');
+			$this->db->query("UPDATE fm_idgenerator set value = {$bilagsnr} WHERE name = 'Bilagsnummer' AND start_date = {$start_date}");
 
 			$this->db->transaction_commit();
 
@@ -286,6 +291,7 @@
 			$values= array(
 				$data['id'],
 				$data['bilagsnr'],
+				$data['bilagsnr_ut'],
 				$data['kidnr'],
 				$data['typeid'],
 				$data['kildeid'],
@@ -329,7 +335,7 @@
 
 			$values	= $this->db->validate_insert($values);
 
-			$sql="INSERT INTO fm_ecobilagoverf (id,bilagsnr,kidnr,typeid,kildeid,project_id,kostra_id,pmwrkord_code,fakturadato,"
+			$sql="INSERT INTO fm_ecobilagoverf (id,bilagsnr,bilagsnr_ut,kidnr,typeid,kildeid,project_id,kostra_id,pmwrkord_code,fakturadato,"
 				. " periode,periodization,periodization_start,forfallsdato,fakturanr,spbudact_code,regtid,artid,spvend_code,dima,loc1,"
 				. " dimb,mvakode,dimd,oppsynsmannid,saksbehandlerid,budsjettansvarligid,oppsynsigndato,saksigndato,"
 				. " budsjettsigndato,merknad,splitt,utbetalingid,utbetalingsigndato,filnavn,overftid,item_type,item_id,external_ref,"
@@ -553,21 +559,24 @@
 
 		function increment_batchid()
 		{
-			$this->db->query("update fm_idgenerator  set value = value + 1 where name = 'Ecobatchid'");
-			$this->db->query("select value from fm_idgenerator  where name = 'Ecobatchid'");
+			$name = 'Ecobatchid';
+			$now = time();
+			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$bilagsnr = $this->db->f('value');
-			return $bilagsnr;
+			$next_id = $this->db->f('value') +1;
+			$start_date = (int)$this->db->f('start_date');
+			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
+
+			return $next_id;
 		}
 
 		function next_batchid()
 		{
-
-			$this->db->query("select value from fm_idgenerator  where name = 'Ecobatchid'");
+			$now = time();
+			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'Ecobatchid' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$batchid = $this->db->f('value')+1;
-
-			return $batchid;
+			$next_id = $this->db->f('value') +1;
+			return $next_id;
 		}
 
 		function get_responsible($b_abbount_id)
