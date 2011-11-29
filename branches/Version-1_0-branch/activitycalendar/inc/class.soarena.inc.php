@@ -139,7 +139,7 @@ class activitycalendar_soarena extends activitycalendar_socommon
 		//{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
 
 		$joins = $join_contracts;
-		var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
