@@ -306,13 +306,29 @@
 
 		function select_input_type_list($selected='')
 		{
-			$input_type[0]['id'] = 'text';
-			$input_type[0]['name'] = 'text';
-			$input_type[1]['id'] = 'listbox';
-			$input_type[1]['name'] = 'listbox';
-			$input_type[2]['id'] = 'password';
-			$input_type[2]['name'] = 'Password';
-
+			$input_type = array
+			(
+				array
+				(
+					'id' => 'text',
+					'name' => 'text'
+				),
+				array
+				(
+					'id' => 'listbox',
+					'name' => 'listbox'
+				),
+				array
+				(
+					'id' => 'password',
+					'name' => lang('password')
+				),
+				array
+				(
+					'id' => 'date',
+					'name' => lang('date')
+				),
+			);
 			return $this->select_list($selected,$input_type);
 
 		}
