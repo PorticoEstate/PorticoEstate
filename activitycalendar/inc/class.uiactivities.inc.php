@@ -146,7 +146,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		{
 			$desc = substr($desc,0,254);
 		}
-		$arenas = $so_arena->get(null, null, null, null, null, null, null);
+		$arenas = $so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
 		if($activity->get_new_org())
 		{
 			$org_name = $so_org->get_organization_name_local($activity->get_organization_id());
@@ -218,7 +218,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 					if($new_state == 3 || $new_state == 5 )
 					{
 						$kontor = $so_activity->get_office_name($activity->get_office());
-						$subject = "Melding fra AktivBy";
+						$subject = lang('mail_subject_update');
 						$body = lang('mail_body_state_' . $new_state, $kontor);
 						
 						if(isset($g_id) && $g_id > 0)
@@ -392,7 +392,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 				$value['ajax'][] = false;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.view', 'id' => $value['id'])));
 				$value['labels'][] = lang('show');
-				$value['ajax'][] = false;
+				$value['ajax'][] = true;
 				$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'activitycalendar.uiactivities.send_mail', 'activity_id' => $value['id'],'message_type' => 'update')));
 				$value['labels'][] = lang('send_mail');
 				break;
@@ -415,7 +415,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 	    	
 	    	//$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
     		$subject = lang('mail_subject_update');
-    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title());
+    		$link_text = "http://www.bergen.kommune.no/portico/activitycalendarfrontend/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
+    		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title(), $link_text, $office_name);
 	    	
 	    	//var_dump($subject);
 	    	//var_dump($body);
@@ -450,7 +452,8 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		//$subject = lang('mail_subject_update', $avtivity->get_id() . '-' . $activity->get_title(), $activity->get_link());
     		$subject = lang('mail_subject_update');
     		$link_text = "http://www.bergen.kommune.no/portico/activitycalendarfrontend/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
-    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title(), $link_text);
+    		$office_name = activitycalendar_soactivity::get_instance()->get_office_name($activity->get_office());
+    		$body = lang('mail_body_update', $activity->get_id() . ', ' . $activity->get_title(), $link_text, $office_name);
     	}
     	else
     	{
@@ -458,9 +461,9 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     		$body = "testmelding fra Aktivitetsoversikt";
     	}
     	
-    	//var_dump($subject);
-    	//var_dump($body);
-    	//var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
+    	var_dump($subject);
+    	var_dump($body);
+    	var_dump($activity->get_organization_id() . " ; " . $activity->get_group_id());
     	
     	if($activity->get_group_id() && $activity->get_group_id() > 0)
     	{
