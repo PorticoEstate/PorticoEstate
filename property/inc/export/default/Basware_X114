@@ -52,6 +52,7 @@
 			$this->soXport 			= CreateObject('property.soXport');	
 			$this->config			= CreateObject('phpgwapi.config','property');
 			$this->config->read_repository();
+			$this->custom_config	= CreateObject('admin.soconfig',$GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
 		protected function select_vouchers_to_transfer()
@@ -599,11 +600,22 @@
 			{
 				$periode = $oRsBilag[0]['periode'];
 			}
-			else
+			else if (isset($this->custom_config->config_data['export']['dato_aarsavslutning']) && time() < $this->custom_config->config_data['export']['dato_aarsavslutning'])
 			{		
-				$periode = date('Ym',time());
+				if(date('Y',time()) == date('Y', $this->custom_config->config_data['export']['dato_aarsavslutning']))
+				{
+					$periode = date('Y',time()) - 1 . '11';
+				}
+				else
+				{
+					$periode = date('Ym',time());
+				}
 			}
-
+			else
+			{
+				$periode = date('Ym',time());			
+			}
+		
 			$comment = array();
 			foreach ($oRsBilag as $line)
 			{

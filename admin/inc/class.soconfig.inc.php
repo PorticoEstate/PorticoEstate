@@ -11,6 +11,7 @@
  	* @version $Id: class.soconfig.inc.php 3613 2009-09-18 16:19:49Z sigurd $
 	*/
 
+	phpgw::import_class('phpgwapi.datetime');
 	/**
 	 * Description
 	 * @package admin
@@ -242,17 +243,29 @@
 			{
 				$this->db->query($sql . $ordermethod,__LINE__,__FILE__);
 			}
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$config_info = array();
 			while ($this->db->next_record())
 			{
 				$input_type	= $this->db->f('input_type');
+				switch($input_type)
+				{
+					case 'password':
+						$value = '****';
+						break;
+					case 'date':
+						$value = $GLOBALS['phpgw']->common->show_date($this->db->f('value'),$dateformat);
+						break;
+					default:
+						$value = $this->db->f('value', true);
+				}
 				$config_info[] = array
 				(
-					'id'		=> $this->db->f('id'),
+					'id'			=> $this->db->f('id'),
 					'section_id'	=> $this->db->f('section_id'),
-					'value_id'	=> $this->db->f('value_id'),
-					'name'		=> $this->db->f('name', true),
-					'value'		=> $input_type == 'password' && $this->db->f('value') ? '****' : $this->db->f('value', true)
+					'value_id'		=> $this->db->f('value_id'),
+					'name'			=> $this->db->f('name', true),
+					'value'			=> $value
 				);
 			}
 			return $config_info;
@@ -472,6 +485,11 @@
 
 		function add_value($values)
 		{
+			if(isset($values['input_type']) && $values['input_type'] == 'date')
+			{
+				$values['value'] = phpgwapi_datetime::date_to_timestamp($values['value']);
+			}
+
 			$this->db->transaction_begin();
 
 			$values['value'] = $this->db->db_addslashes($values['value']);
@@ -499,6 +517,11 @@
 
 		function edit_value($values)
 		{
+			if(isset($values['input_type']) && $values['input_type'] == 'date')
+			{
+				$values['value'] = phpgwapi_datetime::date_to_timestamp($values['value']);
+			}
+
 			if(!$values['value'])
 			{
 				$this->delete_value($values['section_id'],$values['attrib_id'],$values['id']);

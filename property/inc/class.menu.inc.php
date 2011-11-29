@@ -163,6 +163,7 @@
 						)
 					);
 
+
 				$admin_children_accounting = array
 					(
 						'accounting_cats'	=> array
@@ -194,6 +195,11 @@
 						(
 							'text'	=> lang('periodization'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'periodization') )
+						),
+						'accounting_config'	=> array
+						(
+							'text'	=> lang('accounting config'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index', 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')) )
 						),
 						'accounting_tax'	=> array
 						(
