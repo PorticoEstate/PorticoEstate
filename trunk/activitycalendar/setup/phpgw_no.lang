@@ -375,7 +375,7 @@ office	activitycalendar	no	Hovedansvarlig kulturkontor
 activity_helptext	activitycalendar	no	Aktivitetsoversikten henter kontaktinformasjon og beskrivelse fra bookingmodulen.<br/>Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert,<br/>og at arena finnes og er oppdatert. Feltet vis i portal skal være satt til JA, i organisasjonsregisteret og evt. lag/gruppe. For nye aktiviteter vil dette bli satt automatisk.
 mail_subject_update	activitycalendar	no	Melding fra AktivBy - aktivitetsoversikt
 mail_body_update	activitycalendar	no	Dette er en melding fra Bergen kommune/AktivBy.<br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Ber om at du kontrollerer at data er korrekt, og eventuelt endrer.<br/>%2<br/><br/><br/> Mvh %3 kulturkontor
-mail_body_state_3	activitycalendar	no	Informasjon om din aktivitet er publisert i kommuneportalen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden. https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %1 kulturkontor
+mail_body_state_3	activitycalendar	no	Informasjon om din aktivitet vil bli publisert i kommuneportalen i løpet av dagen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden. https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %1 kulturkontor
 mail_body_state_4	activitycalendar	no	Ditt tips er behandlet og publisert i kommuneportalen. Mvh %1 kulturkontor
 mail_body_state_5	activitycalendar	no	Ditt tips er behandlet, men vil ikke bli publisert i kommuneportalen. Mvh %1 kulturkontor
 send_mail	activitycalendar	no	Send e-post
