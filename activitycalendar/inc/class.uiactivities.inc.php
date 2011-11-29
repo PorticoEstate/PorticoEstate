@@ -359,6 +359,7 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		}
 		if($email)
 		{
+			//var_dump($mail_rows);
 			$this->send_email_to_selection($mail_rows);	
 		}
 		else
@@ -412,7 +413,6 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     {
     	foreach($activities as $activity)
     	{
-	    	
 	    	//$activity = activitycalendar_soactivity::get_instance()->get_single($activity_id);
     		$subject = lang('mail_subject_update');
     		$link_text = "http://www.bergen.kommune.no/portico/activitycalendarfrontend/?menuaction=activitycalendarfrontend.uiactivity.edit&amp;id={$activity->get_id()}&amp;secret={$activity->get_secret()}";
@@ -503,12 +503,13 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		//$mailtoAddress = "erik.holm-larsen@bouvet.no";
 		
 		//var_dump($mailtoAddress);
-
+//var_dump($mailtoAddress.';'.$from.';'.$subject);
 		if (strlen($mailtoAddress) > 0) 
 		{
 			try
 			{
 				//var_dump('inne i try');
+//				var_dump('inne i try - org;');
 				$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
 			}
 			catch (phpmailerException $e)
@@ -520,7 +521,10 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
     
 	function send_mailnotification_to_group($contact_person_id, $subject, $body)
 	{
-		$send = CreateObject('phpgwapi.send');
+		if (!is_object($GLOBALS['phpgw']->send))
+		{
+			$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+		}
 
 		$config	= CreateObject('phpgwapi.config','booking');
 		$config->read();
@@ -534,12 +538,14 @@ class activitycalendar_uiactivities extends activitycalendar_uicommon
 		
 		$mailtoAddress = activitycalendar_socontactperson::get_instance()->get_mailaddress_for_group_contact($contact_person_id);
 		//$mailtoaddress = "erik.holm-larsen@bouvet.no";
-
+//var_dump($mailtoAddress.';'.$from.';'.$subject);
 		if (strlen($mailtoAddress) > 0) 
 		{
 			try
 			{
-				$send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
+//				var_dump('inne i try - group;');
+//				$send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
+				$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
 			}
 			catch (phpmailerException $e)
 			{
