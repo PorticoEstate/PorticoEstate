@@ -243,7 +243,7 @@
 	$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
 	?>
 	<div id="export">
-		<a href="javascript:activity_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>&nbsp;&nbsp;<a href="javascript:activity_email('<?php echo $list_id ?>')" title="<?php echo lang('Send email to selection') ?>"><button><?php echo lang('Send mail to selection') ?></button></a>
+		<a href="javascript:activity_export('<?php echo $list_id ?>')" title="<?php echo lang('Download as excel') ?>"><img src="<?php echo ACTIVITYCALENDAR_IMAGE_PATH ?>images/16x16/mimetypes/x-office-spreadsheet.png"/></a>&nbsp;&nbsp;<button onclick="javascript:activity_email('<?php echo $list_id ?>')"><?php echo lang('Send mail to selection') ?></button>
 	</div>
 </fieldset>
 <?php }?>
