@@ -1613,6 +1613,7 @@
 					'dimb'					=> $entry['dimb'],
 					'dimd'					=> $entry['dimd'],
 					'amount'				=> $entry['amount'],
+					'approved_amount'		=> $entry['approved_amount'],
 					'vendor'				=> $entry['vendor'],
 					'paid_percent'			=> $entry['paid_percent'],
 					'project_group'			=> $entry['project_id'],
@@ -1633,7 +1634,6 @@
 					'footer'				=> 0
 				);
 
-
 			$myColumnDefs[2] = array
 				(
 					'name'		=> "2",
@@ -1641,7 +1641,8 @@
 														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_voucher'),
 														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true),
+														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
+														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
 														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
 														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),

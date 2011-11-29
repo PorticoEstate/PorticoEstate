@@ -125,6 +125,36 @@ class controller_socontrol extends controller_socommon
 		}
 	}
 	
+	function get_locations_for_control($control_id)
+	{
+		$results = array();
+		
+		$sql =  "SELECT DISTINCT c.id, c.title, cl.location_code "; 
+		$sql .= "FROM controller_control c, controller_check_list cl ";
+		$sql .= "WHERE c.id = $control_id ";
+		$sql .= "AND cl.control_id = c.id";
+
+		$this->db->query($sql);
+		
+		while($this->db->next_record()) {
+			$control_id = $this->unmarshal($this->db->f('id', true), 'int');
+			$title = $this->unmarshal($this->db->f('title', true), 'string');
+			$location_code = $this->unmarshal($this->db->f('location_code', true), 'int');
+						
+			$controls_array[] = array("id" => $control_id, "title" => $title, "location_code" => $location_code);
+		}
+		
+		if( count( $controls_array ) > 0 ){
+			return $controls_array; 
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	
+	
 	
 	function get_id_field_name($extended_info = false)
 	{
