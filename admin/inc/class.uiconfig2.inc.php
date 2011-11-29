@@ -543,7 +543,6 @@
 				$multiple_choice= true;
 			}
 
-
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
 
 			$data = array
@@ -814,25 +813,34 @@
 				$values['value'] = '';
 			}
 
+			if($attrib['input_type'] == 'date')
+			{
+				$values['value'] = $GLOBALS['phpgw']->common->show_date($values['value'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+				$jscal = CreateObject('phpgwapi.jscalendar');
+				$jscal->add_listener("date_value");
+			}
+
 			$data = array
 			(
-				'lang_section'					=> lang('section'),
-				'value_section_name'			=> $section['name'],
+				'lang_section'				=> lang('section'),
+				'value_section_name'		=> $section['name'],
 				'lang_attrib'				=> lang('attribute'),
 				'value_attrib_name'			=> $attrib['name'],
-
-				'value_value'				=> $values['value'],
+				'value_input_type'			=> $attrib['input_type'],
+				'value_attrib_value'		=> $values['value'],
 				'lang_value'				=> lang('value'),
 				'choice_list'				=> $choice_list,
 				'lang_no_value'				=> lang('no value'),
 				'lang_value_status_text'	=> lang('select value'),
+				'img_cal'					=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
+				'lang_datetitle'			=> lang('Select date'),
 
 				'msgbox_data'				=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'lang_id'					=> lang('ID'),
 				'lang_save'					=> lang('save'),
 				'lang_cancel'				=> lang('cancel'),
-				'lang_section'					=> lang('section'),
+				'lang_section'				=> lang('section'),
 				'value_section'				=> $section['name'],
 				'lang_attrib'				=> lang('attribute'),
 				'value_attrib'				=> $attrib['name'],

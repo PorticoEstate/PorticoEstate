@@ -633,19 +633,29 @@
 				</td>
 				<td>
 				<xsl:choose>
-					<xsl:when test="choice_list = ''">
-						<input type="text" size="20" name="values[value]" value="{value_value}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_value_status_text"/>
-							</xsl:attribute>
-						</input>
-					</xsl:when>
-					<xsl:otherwise>
+					<xsl:when test="value_input_type = 'listbox'">
 						<xsl:variable name="lang_value_status_text"><xsl:value-of select="lang_value_status_text"/></xsl:variable>
 						<select name="values[value]" class="forms" title="{$lang_value_status_text}">
 							<option value=""><xsl:value-of select="lang_no_value"/></option>
 							<xsl:apply-templates select="choice_list"/>
 						</select>
+					</xsl:when>
+					<xsl:when test="value_input_type = 'date'">
+						<input type="text" id="date_value" name="values[value]" size="10" value="{value_attrib_value}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_date_statustext"/>
+							</xsl:attribute>
+						</input>
+						<img id="date_value-trigger" src="{img_cal}" alt="{lang_datetitle}" title="{lang_datetitle}" style="cursor:pointer; cursor:hand;" />
+						<input type="hidden" name="values[input_type]" value="date"></input>
+					</xsl:when>
+					<xsl:otherwise>
+						<input type="text" size="20" name="values[value]" value="{value_attrib_value}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_value_status_text"/>
+							</xsl:attribute>
+						</input>
+
 					</xsl:otherwise>
 				</xsl:choose>
 				</td>
