@@ -604,7 +604,7 @@
 			{		
 				if(date('Y',time()) == date('Y', $this->custom_config->config_data['export']['dato_aarsavslutning']))
 				{
-					$periode = date('Y',time()) - 1 . '11';
+					$periode = date('Y',time()) - 1 . '12';
 				}
 				else
 				{
