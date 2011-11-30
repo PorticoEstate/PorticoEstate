@@ -9,6 +9,7 @@ phpgw::import_class('booking.uicommon');
 			'show'			=>	true,
 			'add'				=> true,
 			'download'  	=> true,
+			'upload'	=> true,
 		);
 
 		protected 
@@ -18,8 +19,10 @@ phpgw::import_class('booking.uicommon');
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bocompleted_reservation_export_file');
+			$this->export_agresso = CreateObject('booking.export_agresso');
 			self::set_active_menu('booking::invoice_center::generated_files');
 			$this->url_prefix = 'booking.uicompleted_reservation_export_file';
+
 		}
 		
 		public function link_to($action, $params = array())
@@ -112,6 +115,12 @@ phpgw::import_class('booking.uicommon');
 							'sortable' => false,
 						),
 						array(
+							'key' => 'upload',
+							'label' => lang('Export'),
+							'formatter' => 'YAHOO.booking.formatGenericLink()',
+							'sortable' => false,
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						),
@@ -125,6 +134,9 @@ phpgw::import_class('booking.uicommon');
 		public function index_json()
 		{
 			$this->db = $GLOBALS['phpgw']->db;
+            $config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+            if ($config->config_data['output_files'] == 'single')
 			$export_files = $this->bo->read();
 			array_walk($export_files["results"], array($this, "_add_links"), $this->module.".uicompleted_reservation_export_file.show");
 			foreach($export_files["results"] as &$export_file) {
@@ -135,7 +147,18 @@ phpgw::import_class('booking.uicommon');
 					'label' => lang('Download'), 
 					'href' => $this->link_to('download', array('id' => $export_file['id']))
 				);
-
+				if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
+				{
+					$export_file['upload'] = array(
+						'label' => lang('Upload'), 
+						'href' => $this->link_to('upload', array('id' => $export_file['id']))
+					);
+				} else {
+					$export_file['upload'] = array(
+						'label' => ' ', 
+						'href' => '#'
+					);
+				}
 				$sql = "SELECT account_lastname, account_firstname FROM phpgw_accounts WHERE account_lid = '".$export_file['created_by_name']."'";
 				$this->db->query($sql);
 				while ($record = array_shift($this->db->resultSet)) {
@@ -165,5 +188,18 @@ phpgw::import_class('booking.uicommon');
 			$file = $this->bo->get_file($export_file);
 			
 			$this->send_file($file->get_system_identifier(), array('filename' => $file->get_identifier()));
+		}
+		public function upload() {
+			$id = phpgw::get_var('id', 'GET');
+			$export_file = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			
+			if (!is_array($export_file)) {
+				$this->redirect_to('index');
+			}
+		
+			$file = $this->bo->get_file($export_file);
+			$content = file_get_contents($file->get_system_identifier(),false);
+			$this->export_agresso->do_your_magic($content,$id);
+			$this->redirect_to('index');
 		}
 	}
