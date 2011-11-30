@@ -431,7 +431,11 @@
 					}
 				}
 			}
+			if($allocation['cost'] > 0) {
+				$errors['cost'] = lang('There is a cost of %1 assosiated with the allocation you are useing',$allocation['cost']);
+			}
 			$this->flash_form_errors($errors);
+			unset($errors['cost']);
 			self::add_javascript('booking', 'booking', 'booking.js');
 			array_set_default($booking, 'resources', array());
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
