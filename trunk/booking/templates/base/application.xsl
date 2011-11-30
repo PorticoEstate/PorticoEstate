@@ -24,7 +24,7 @@
 					<xsl:value-of select="php:function('lang', 'Applications')" />
                 </a>
             </li>
-            <li><a href="">#<xsl:value-of select="application/id"/></a></li> 
+            <li>#<xsl:value-of select="application/id"/></li> 
 			<li>
 				<xsl:if test="frontend and application/status='ACCEPTED'">
 						<form method="POST">
