@@ -118,6 +118,72 @@
 		        </select>
 			</dd>
         </dl>
+
+        <div class="clr"/>
+
+    	<dl class="form">
+    		<dt class="heading"><xsl:value-of select="php:function('lang', 'Export aggresso')"/></dt>
+    	</dl>
+
+     	<p><xsl:value-of select="php:function('lang', 'export_help_text')"/></p>
+
+       <dl class="form-col">
+            <dt><label for="field_invoice_export_method"><xsl:value-of select="php:function('lang', 'Export method')"/></label></dt>
+			<dd>
+				<select id="field_invoice_export_method" name="invoice_export_method">
+                    <option value="local">
+                        <xsl:if test="config_data/invoice_export_method='local'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+						local
+                    </option>
+                    <option value="ftp">
+                        <xsl:if test="config_data/invoice_export_method='ftp'">
+                            <xsl:attribute name="selected">checked</xsl:attribute>
+                        </xsl:if>
+                        ftp
+		           </option>
+		        </select>
+			</dd>
+            <dt><label for="field_invoice_export_path"><xsl:value-of select="php:function('lang', 'Export path')"/></label></dt>
+            <dd>
+				<input id="field_invoice_export_path" name="invoice_export_path" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/invoice_export_path"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_invoice_ftp_host"><xsl:value-of select="php:function('lang', 'Ftp host')"/></label></dt>
+            <dd>
+				<input id="field_invoice_ftp_host" name="invoice_ftp_host" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/invoice_ftp_host"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_invoice_ftp_basedir"><xsl:value-of select="php:function('lang', 'Ftp basedir')"/></label></dt>
+            <dd>
+				<input id="field_invoice_ftp_basedir" name="invoice_ftp_basedir" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/invoice_ftp_basedir"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_invoice_ftp_user"><xsl:value-of select="php:function('lang', 'Ftp user')"/></label></dt>
+            <dd>
+				<input id="field_invoice_ftp_user" name="invoice_ftp_user" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/invoice_ftp_user"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_invoice_ftp_password"><xsl:value-of select="php:function('lang', 'Ftp password')"/></label></dt>
+            <dd>
+				<input id="field_invoice_ftp_password" name="invoice_ftp_password" type="password">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/invoice_ftp_password"/></xsl:attribute>
+				</input>
+            </dd>
+            <dt><label for="field_invoice_last_id"><xsl:value-of select="php:function('lang', 'last id')"/></label></dt>
+	     	<p><xsl:value-of select="php:function('lang', 'Do not edit!')"/></p>
+            <dd>
+				<input id="field_invoice_last_id" name="invoice_last_id" type="text">
+					<xsl:attribute name="value"><xsl:value-of select="config_data/invoice_last_id"/></xsl:attribute>
+				</input>
+            </dd>
+       </dl>
+
 		<div class="form-buttons">
 			<input type="submit">
 			<xsl:attribute name="value"><xsl:value-of select="php:function('lang', 'Save')"/></xsl:attribute>
