@@ -73,7 +73,7 @@
 			$i = 1;
 			do
 			{
-				$filnavn = $fil_katalog . '/FDB' . date("dmy") . '_' . sprintf("%02s",$i) . '.TXT';
+				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s",$i) . '.TXT';
 				
 				//Sjekk om filen eksisterer
 				If (!file_exists($filnavn))
