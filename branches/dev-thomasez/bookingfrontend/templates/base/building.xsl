@@ -16,7 +16,7 @@
 			<xsl:if test="deactivate_calendar=0">
 			<div>
 	        	<button onclick="window.location.href='{schedule_link}'"><xsl:value-of select="php:function('lang', 'Building schedule')" /></button>
-- 				Søk ledig tid/informasjon om hva som skjer
+- 				Søk ledig tid / gå til booking
 			</div>
 			</xsl:if>
 
@@ -34,7 +34,7 @@
 
 			<div>
 	        	<button onclick="window.location.href='{message_link}'"><xsl:value-of select="php:function('lang', 'Send message')" /></button>
-- 				Meldig til saksbehandler for bygg
+- 				Meldig til saksbehandler for sted/utstyr
 			</div>
 			</xsl:if>
 
@@ -85,8 +85,10 @@
 				<h3><xsl:value-of select="php:function('lang', 'Bookable resources')" /></h3>
 				<div id="resources_container"/>
 
-				<h3><xsl:value-of select="php:function('lang', 'Building users')" /></h3>
-				<div id="building_users_container"/>
+				<xsl:if test="layout='bergen'">
+					<h3><xsl:value-of select="php:function('lang', 'Building users')" /></h3>
+					<div id="building_users_container"/>
+				</xsl:if>
 
 				<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 				<div id="documents_container"/>

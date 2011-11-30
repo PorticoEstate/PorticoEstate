@@ -16,7 +16,7 @@
 
 		<div>
         	<button onclick="window.location.href='{resource/schedule_link}'"><xsl:value-of select="php:function('lang', 'Resource schedule')" /></button>
-- 				Søk ledig tid/informasjon om hva som skjer
+- 				Søk ledig tid / gå til booking
 		</div>
 
 		<dl class="proplist-col main">
@@ -34,13 +34,17 @@
 			<dt><xsl:value-of select="php:function('lang', 'Resource Type')" /></dt>
 			<dd><xsl:value-of select="php:function('lang', string(resource/type))"/></dd>
 
-			<dt><xsl:value-of select="php:function('lang', 'Internal cost')"/></dt>
-			<dd><span class="space"><xsl:value-of select="resource/internal_cost"/></span>
-				<xsl:value-of select="php:function('lang', string(resource/cost_type))"/></dd>
-
-			<dt><xsl:value-of select="php:function('lang', 'External cost')"/></dt>
-			<dd><span class="space"><xsl:value-of select="resource/external_cost"/></span>
-				<xsl:value-of select="php:function('lang', string(resource/cost_type))"/></dd>
+			
+			<xsl:if test="not (resource/internal_cost='')">
+				<dt><xsl:value-of select="php:function('lang', 'Internal cost')"/></dt>
+				<dd><span class="space"><xsl:value-of select="resource/internal_cost"/></span>
+					<xsl:value-of select="php:function('lang', string(resource/cost_type))"/></dd>
+			</xsl:if>
+			<xsl:if test="not (resource/external_cost='')">
+				<dt><xsl:value-of select="php:function('lang', 'External cost')"/></dt>
+				<dd><span class="space"><xsl:value-of select="resource/external_cost"/></span>
+					<xsl:value-of select="php:function('lang', string(resource/cost_type))"/></dd>
+			</xsl:if>
 			
 			<h3><xsl:value-of select="php:function('lang', 'Documents')" /></h3>
 			<div id="documents_container"/>

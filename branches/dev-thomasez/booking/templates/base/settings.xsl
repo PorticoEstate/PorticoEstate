@@ -11,20 +11,20 @@
     <form action="" method="POST">
 
        <dl class="form-col">
-            <dt><label for="field_user_can_delete"><xsl:value-of select="php:function('lang', 'NSF site setup')"/></label></dt>
+            <dt><label for="field_layout_settings"><xsl:value-of select="php:function('lang', 'Layout')"/></label></dt>
 			<dd>
-				<select id="field_nsf_setup" name="nsf_setup">
-                    <option value="no">
-                        <xsl:if test="config_data/nsf_setup='no'">
+				<select id="field_layout_settings" name="layout_settings">
+                    <option value="bergen">
+                        <xsl:if test="config_data/layout_settings='bergen'">
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
-                        <xsl:value-of select="php:function('lang', 'No')" />
+						Bergen Kommune
                     </option>
-                    <option value="yes">
-                        <xsl:if test="config_data/nsf_setup='yes'">
+                    <option value="nsf">
+                        <xsl:if test="config_data/layout_settings='nsf'">
                             <xsl:attribute name="selected">checked</xsl:attribute>
                         </xsl:if>
-                        <xsl:value-of select="php:function('lang', 'Yes')" />
+						Norsk Speider forbund
 		           </option>
 		        </select>
 			</dd>

@@ -43,6 +43,9 @@
 		public function show()
 		{
 			$this->check_active('booking.uibuilding.show');
+			$config	= CreateObject('phpgwapi.config','booking');
+			$config->read();
+			$layout = $config->config_data['layout_settings'];
 			$building                  = $this->bo->read_single(phpgw::get_var('id', 'GET'));
 			$building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule', 'id' => $building['id']));
 			$building['message_link']  = self::link(array('menuaction' => 'bookingfrontend.uisystem_message.edit', 'building_id' => $building['id'],'building_name' => $building['name']));
@@ -51,7 +54,7 @@
 			{
 				$building['homepage'] = 'http://'.$building['homepage'];
 			}
-			self::render_template('building', array("building" => $building));
+			self::render_template('building', array("building" => $building,'layout' => $check));
 		}
 		
 	}

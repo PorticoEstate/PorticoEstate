@@ -45,7 +45,7 @@
 			</img>
 		</div>	
 	</xsl:if>
-	
+	<xsl:variable name="layout"><xsl:value-of select="layout" /></xsl:variable>
 	<xsl:if test="search">	
  	   <div id="result">
 	      <h5>
@@ -59,12 +59,16 @@
 	            <li>
 	              <div class="header">
 	                <a class="bui_single_view_link"><xsl:attribute name="href"><xsl:value-of select="link"/></xsl:attribute><xsl:value-of select="name"/></a>
-	                (<xsl:value-of select="php:function('lang', string(type))"/>)
+					<xsl:if test="$layout='bergen'">
+	                	(<xsl:value-of select="php:function('lang', string(type))"/>)
+					</xsl:if>
 	              </div>
 	              <div class="details">
 	                <div>
 	                  <dl>
-	                    <dt><h4><xsl:value-of select="php:function('lang', 'Description')" /></h4></dt>
+						<xsl:if test="$layout='bergen'">
+		                    <dt><h4><xsl:value-of select="php:function('lang', 'Description')" /></h4></dt>
+						</xsl:if>
 	                    <dd class="description">
 							<xsl:variable name="tag_stripped_description">
 								<xsl:call-template name="strip-tags">
@@ -75,8 +79,11 @@
 	                      <xsl:choose>
 	                        <xsl:when test="string-length($tag_stripped_description) &gt; 1">
 	                          <xsl:choose>
-	                            <xsl:when test="string-length($tag_stripped_description) &gt; 100">
+	                            <xsl:when test="string-length($tag_stripped_description) &gt; 100 and $layout='bergen'">
 								  <xsl:value-of select="substring($tag_stripped_description, 0, 97)"/>...
+	                            </xsl:when>
+	                            <xsl:when test="string-length($tag_stripped_description) &gt; 280 and $layout='nsf'">
+								  <xsl:value-of select="substring($tag_stripped_description, 0, 277)"/>...
 	                            </xsl:when>
 	                            <xsl:otherwise>
 	                              <xsl:value-of select="$tag_stripped_description"/>
@@ -87,7 +94,8 @@
 	                          <xsl:value-of select="php:function('lang', 'No description yet')" />
 	                        </xsl:otherwise>
 	                      </xsl:choose>
-						<div id="{img_container}"/>
+
+						<div class="image_container" id="{img_container}"/>
 						<script type="text/javascript">
 						YAHOO.util.Event.addListener(window, "load", function() {
 							YAHOO.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
@@ -95,7 +103,7 @@
 						</script>
 
 	                    </dd>
-	                    <xsl:if test="string-length(homepage) &gt; 1">
+	                    <xsl:if test="string-length(homepage) &gt; 1 and $layout='bergen'">
 	                      <dt><h4><xsl:value-of select="php:function('lang', 'Homepage')" /></h4></dt>
 	                      <dd class="description">
 	                        <a><xsl:attribute name="href"><xsl:value-of select="homepage"/></xsl:attribute><xsl:value-of select="homepage"/></a>

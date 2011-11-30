@@ -15,13 +15,12 @@
             </li>
             <li><xsl:value-of select="php:function('lang', 'Resources')" /></li>
             <li>
-                <a href="">
                     <xsl:value-of select="resource/name"/>
-                </a>
             </li>
         </ul>
         <xsl:call-template name="msgbox"/>
 		<xsl:call-template name="yui_booking_i18n"/>
+	
 
 		<h4><xsl:value-of select="php:function('lang', 'Description')" /></h4>
         <div class="description"><xsl:value-of select="resource/description" disable-output-escaping="yes"/></div>
