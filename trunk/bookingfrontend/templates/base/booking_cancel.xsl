@@ -6,7 +6,11 @@
 	</dl>
     <xsl:call-template name="msgbox"/>
 	<xsl:call-template name="yui_booking_i18n"/>
-
+	<dl class="form">
+    	<dd><xsl:value-of select="php:function('lang', 'Booking Cancel Information')"/></dd>
+    	<dd><xsl:value-of select="php:function('lang', 'Booking Cancel Information2')"/></dd>
+	</dl>
+    <div class="clr"/>
     <form action="" method="POST">
 		<input type="hidden" name="application_id" value="{booking/application_id}"/>
         <input type="hidden" name="group_id" value="{booking/group_id}" />
