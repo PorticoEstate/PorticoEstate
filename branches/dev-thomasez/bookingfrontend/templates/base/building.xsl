@@ -94,7 +94,6 @@
 				<div id="documents_container"/>
 			</dl>
 			<dl class="proplist-col images">	
-				<div id="images_container"></div>
 
 			<xsl:if test="not(campsites='')">				
 				<dt><label for="field_campsites"><xsl:value-of select="php:function('lang', 'Campsites')"/></label></dt>
@@ -128,6 +127,7 @@
 				<dt><label for='field_usage_time'><xsl:value-of select="php:function('lang', 'Usage time')"/></label></dt>
 				<dd><xsl:value-of select="usage_time"/></dd>
 			</xsl:if>
+			<div id="images_container"></div>
 
 				
 
