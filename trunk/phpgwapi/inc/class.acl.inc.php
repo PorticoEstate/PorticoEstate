@@ -1321,6 +1321,12 @@
 		*/
 		public function get_grants($app = '', $location = '')
 		{
+			$grant_rights = phpgwapi_cache::session_get('phpgwapi', "get_grants_type_{$app}_{$location}");
+			if ( !is_null($grants) )
+			{
+				return $grants; // nothing more to do
+			}
+
 			$grant_rights	= $this->get_grants_type($app, $location, 0);
 			$grant_mask		= $this->get_grants_type($app, $location, 1);
 			if ( is_array($grant_mask) )
@@ -1337,6 +1343,7 @@
 					}
 				}
 			}
+			phpgwapi_cache::session_set('phpgwapi', "get_grants_type_{$app}_{$location}_{$mask}", $grant_rights);
 			return $grant_rights;
 		}
 		/**
