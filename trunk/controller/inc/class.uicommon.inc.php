@@ -462,20 +462,20 @@
 
 		// Build a YUI result style array
 		public function yui_results($results)
-		{
-			if (!$results) {
+		{ 
+			if (!$results) { 
 				$results['total_records'] = 0;
 				$result['results'] = array();
 			}
 
 			return array(   
 				'ResultSet' => array(
-					'totalResultsAvailable' => $results['total_records'],
-					'recordsReturned'		=> count($results['results']),
-					'startIndex' => $results['start'], 
-					'sortKey' => $results['sort'], 
-					'sortDir' => $results['dir'], 
-					'Result' => $results['results']
+					'totalRecords' 		=> $results['total_records'],
+					'recordsReturned'	=> count($results['results']),
+					'startIndex' 		=> $results['start'], 
+					'sortKey' 			=> $results['sort'], 
+					'sortDir' 			=> $results['dir'], 
+					'Result' 			=> $results['results']
 				)   
 			);  
 		}

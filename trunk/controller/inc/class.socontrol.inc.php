@@ -138,8 +138,10 @@ class controller_socontrol extends controller_socommon
 			$control_id = $this->unmarshal($this->db->f('id', true), 'int');
 			$title = $this->unmarshal($this->db->f('title', true), 'string');
 			$location_code = $this->unmarshal($this->db->f('location_code', true), 'int');
-						
-			$controls_array[] = array("id" => $control_id, "title" => $title, "location_code" => $location_code);
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$controls_array[] = array("id" => $control_id, "title" => $title, "location_code" => $location_code, "loc1_name" => $location_array["loc1_name"]);
 		}
 		
 		if( count( $controls_array ) > 0 ){
