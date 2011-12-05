@@ -27,14 +27,22 @@
 					(
 						'text'	=> lang('Control'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.control_list') ),
-			            'image'	=> array('property', 'location_1')
+			            'image'	=> array('property', 'location_1'),
+						'children' => array(
+											'location_for_check_list' => array
+											(
+												'text'	=> lang('Location'),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+									            'image'	=> array('property', 'location_1')
+									        ),
+									        'equipment_for_check_list' => array
+											(
+												'text'	=> lang('Equipment'),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_equipment.index') ),
+									            'image'	=> array('property', 'entity_1')
+									        )
+										)
 					),
-					'location_for_check_list' => array
-					(
-						'text'	=> lang('Location'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
-			            'image'	=> array('property', 'location_1')
-			        ),
 					'control_item' => array
 					(
 						'text'	=> lang('Control_item'),
