@@ -36,27 +36,26 @@
 			}
 		);
 	}
-
 	
-
 	// Reloads all data sources that are necessary based on the selected related datatable
 	function reloadDataSources(selected_datatable){
-
+				
 		//... hooks into  the regular callback function (onDataReturnInitializeTable) call to set empty payload array
 		var loaded =  function  ( sRequest , oResponse , oPayload ) {
 			var payload = new Array();
 			this.onDataReturnInitializeTable( sRequest , oResponse , payload );
 		}
-
+		
 		//... refresh the selected data tables
 		selected_datatable.getDataSource().sendRequest('',{success:loaded, scope:selected_datatable});
-
+		
 		//... traverse all datatables and refresh related (to the selected) data tables
 		for(var i=0; i<YAHOO.controller.datatables.length; i++){
 			var datatable = YAHOO.controller.datatables[i];
 
 			for(var j=0;j<selected_datatable.related.length;j++){
 				var curr_related = selected_datatable.related[j];
+			
 				if(datatable.tid == curr_related){
 					datatable.getDataSource().sendRequest('',{success:loaded,scope: datatable});
 				}
@@ -216,12 +215,7 @@
 												
 				//... check whether this action should be an AJAX call
 				if( record.getData().ajax[task.index] ) {
-				
-					if(task.index == 1) {
-						
-						
-					}
-					
+									
 					var alertStatus = false;
 
 					// Check if confirm box should be displayed before request is executed
@@ -238,14 +232,14 @@
 							return false;
 						}
 					}
-					
+				
 					var request = YAHOO.util.Connect.asyncRequest(
 						'GET',
 						record.getData().actions[ task.index ],
 						{
 							success: ajaxResponseSuccess,
 							success: ajaxResponseFailure,
-							args:table
+							args: table
 						});
 				} else {
 					window.location = record.getData().actions[task.index];
@@ -371,11 +365,12 @@
 ?>
 */
 			// ... create a paginator for this datasource
+
 			var pag = new YAHOO.widget.Paginator({
 				rowsPerPage: 10,
 				alwaysVisible: true,
 				rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-				firstPageLinkLabel: "<< <?php echo lang('first') ?>",
+				firstPageLinkLabel: "<<asdasd <?php echo lang('first') ?>",
 				previousPageLinkLabel: "< <?php echo lang('previous') ?>",
 				nextPageLinkLabel: "<?php echo lang('next') ?> >",
 				lastPageLinkLabel: "<?php echo lang('last') ?> >>",
@@ -383,7 +378,7 @@
 				pageReportTemplate	: "<?php echo lang('shows_from') ?> {startRecord} <?php echo lang('to') ?> {endRecord} <?php echo lang('of_total') ?> {totalRecords}.",
 				containers: [source_properties.paginator]
 			});
-
+			
 			pag.render();
 
 			//... send data source properties and paginator to wrapper function
