@@ -47,6 +47,8 @@
 			$this->allrows				= $this->bo->allrows;
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
+			
+			self::set_active_menu('controller::control::location_for_check_list');
 		}	
 	
 		function index()
