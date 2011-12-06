@@ -43,6 +43,12 @@
 									        )
 										)
 					),
+					'location_for_check_list' => array
+					(
+						'text'	=> lang('location_connections'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
+			            'image'	=> array('property', 'location_1')
+			        ),
 					'control_item' => array
 					(
 						'text'	=> lang('Control_item'),
