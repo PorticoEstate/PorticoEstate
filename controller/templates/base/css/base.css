@@ -839,28 +839,41 @@ ul.calendar li{
 ul.calendar li.heading div {
     font-weight: bold;
 }
+ul.calendar{
+    float: left;
+}
 ul.calendar li div {
     float: left;
-    text-align: center;
-    width: 40px;
-    padding: 3px;
-}
-
-ul.calendar.days li div {
-    float: left;
-    text-align: center;
     width: 30px;
     padding: 3px;
+    text-align: center;
+}
+ul.calendar.info {
+    background:none;
+    border:0;
+    float: left;
 }
 
-ul.calendar li div.date, ul.calendar.days div.date {
+#days_wrp {
+    float: left;
+    position: relative;
+    width: 500px;
+    overflow-x: hidden;
+    height: 800px;
+}
+ul.calendar.days {
+   	position: absolute;
+    width: 1120px;
+}
+
+ul.calendar li div.date, ul.calendar.info div.date {
     width: 80px;
 }
 
-ul.calendar div.title, ul.calendar.days div.title {
+ul.calendar div.title, ul.calendar.info div.title {
 	width: 200px;	
 }
-ul.calendar div.frequency, ul.calendar.days div.frequency {
+ul.calendar div.frequency, ul.calendar.info div.frequency {
 	width: 120px;	
 }
 
