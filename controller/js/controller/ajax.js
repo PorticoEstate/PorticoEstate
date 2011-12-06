@@ -99,7 +99,7 @@ $(document).ready(function(){
 	
 	// file: view_check_lists_for_location.xsl
 	// Fetches info about a check list on hover status image icon
-	$("a.view_list").mouseover(function(){
+	$("a.view_check_list").click(function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		var requestUrl = $(thisA).attr("href");
@@ -148,9 +148,11 @@ $(document).ready(function(){
 	    		  }
 	    	  }
 		   });
+		
+		return false;
 	});
 	
-	$("a.view_list").mouseout(function(){
+	$("a.view_check_list").mouseout(function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		var requestUrl = $(thisA).attr("href");
