@@ -70,16 +70,16 @@
 					<label for="title">Tittel</label>
 				</dt>
 				<dd>
-				<xsl:choose>
-					<xsl:when test="editable">
-						<input type="text" name="title" id="title" value="{control/title}" size="80"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="control/title" />
-					</xsl:otherwise>
-				</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<input type="text" name="title" id="title" value="{control/title}" size="80"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="control/title" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</dd>
-<dt>
+				<dt>
 					<label for="start_date">Startdato</label>
 				</dt>
 				<dd>

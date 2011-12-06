@@ -28,7 +28,6 @@ class controller_socontrol extends controller_socommon
 	 */
 	function add(&$control)
 	{
-		
 		$title = $control->get_title();
 		
 		$sql = "INSERT INTO controller_control (title) VALUES ('$title')";
@@ -45,8 +44,7 @@ class controller_socontrol extends controller_socommon
 		else
 		{
 			return false;
-		}
-		
+		}	
 	}
 
 	/**
@@ -89,7 +87,7 @@ class controller_socontrol extends controller_socommon
 	
 	function get_controls_by_control_area($control_area_id)
 	{
-		$results = array();
+		$controls_array = array();
 		
 		$sql = "SELECT * FROM controller_control WHERE control_area_id=$control_area_id";
 		$this->db->query($sql);
@@ -127,12 +125,12 @@ class controller_socontrol extends controller_socommon
 	
 	function get_locations_for_control($control_id)
 	{
-		$results = array();
+		$controls_array = array();
 		
-		$sql =  "SELECT DISTINCT c.id, c.title, cl.location_code "; 
-		$sql .= "FROM controller_control c, controller_check_list cl ";
-		$sql .= "WHERE c.id = $control_id ";
-		$sql .= "AND cl.control_id = c.id";
+		$sql =  "SELECT c.id, c.title, cll.location_code "; 
+		$sql .= "FROM controller_control c, controller_control_location_list cll ";
+		$sql .= "WHERE cll.control_id = $control_id ";
+		$sql .= "AND cll.control_id = c.id";
 
 		$this->db->query($sql);
 		
@@ -140,8 +138,10 @@ class controller_socontrol extends controller_socommon
 			$control_id = $this->unmarshal($this->db->f('id', true), 'int');
 			$title = $this->unmarshal($this->db->f('title', true), 'string');
 			$location_code = $this->unmarshal($this->db->f('location_code', true), 'int');
-						
-			$controls_array[] = array("id" => $control_id, "title" => $title, "location_code" => $location_code);
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$controls_array[] = array("id" => $control_id, "title" => $title, "location_code" => $location_code, "loc1_name" => $location_array["loc1_name"]);
 		}
 		
 		if( count( $controls_array ) > 0 ){
@@ -153,9 +153,12 @@ class controller_socontrol extends controller_socommon
 		}
 	}
 	
-	
-	
-	
+	function add_location_to_control($control_id, $location_code)
+	{
+		$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) values($control_id, $location_code)";
+		$this->db->query($sql);
+	}
+		
 	function get_id_field_name($extended_info = false)
 	{
 		if(!$extended_info)

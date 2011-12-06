@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	
-	// uicheck_list_for_location.xsl when control area is selected control list with control area is fetched form db 
-	// and control select list is populated
+	// file: uicheck_list_for_location.xsl
+	// When control area is selected, controls are fetched from db and control select list is populated
 	$("#control_area_list option").click(function () {
 		 var control_area_id = $(this).val();
 		 
@@ -21,20 +21,18 @@ $(document).ready(function(){
 						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].title + "</option>";
 		    			});
 					 				  				  
-					  $("#control_list").html( htmlString );
-					}
-         		  	else
-         		  	{
+					  $("#control_id").html( htmlString );
+					}else {
          		  		htmlString  += "<option>Ingen kontroller</option>"
-					  $("#control_list").html( htmlString );			  
+         		  		$("#control_id").html( htmlString );
          		  	}
 			  }  
 			});
 			
     });
 	
-	// Control.xsl when control area is selected procedures related to control area is fetched form db 
-	// and procedure select list is populated
+	// file: control.xsl 
+	// When control area is selected, procedures are fetched from db and procedure select list is populated
 	$("#control_area_id option").click(function () {
 		 var control_area_id = $(this).val();
          var requestUrl = "index.php?menuaction=controller.uiprocedure.get_procedures&phpgw_return_as=json"
@@ -64,6 +62,7 @@ $(document).ready(function(){
 			});	
     });
 	
+	// file: sort_check_list.xsl
 	// Saves order of control items for a group
 	$(".frm_save_order").submit(function(e){
 		e.preventDefault();
@@ -98,9 +97,9 @@ $(document).ready(function(){
 			});	
 	});
 	
-	// Used in file: view_check_lists_for_location.xsl
-	// Fetches info about a check list when one hovers over an a tag
-	$("a.view_list").mouseover(function(){
+	// file: view_check_lists_for_location.xsl
+	// Fetches info about a check list on hover status image icon
+	$("a.view_check_list").click(function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		var requestUrl = $(thisA).attr("href");
@@ -149,9 +148,11 @@ $(document).ready(function(){
 	    		  }
 	    	  }
 		   });
+		
+		return false;
 	});
 	
-	$("a.view_list").mouseout(function(){
+	$("a.view_check_list").mouseout(function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		var requestUrl = $(thisA).attr("href");
