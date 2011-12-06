@@ -170,4 +170,29 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.9';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
+	
+	/* Update Controller from v 0.1.9 to 0.1.10 
+	 * Add table for connecting equipment (BIM) and control 
+	*/
+	
+	$test[] = '0.1.9';
+	function controller_upgrade0_1_9()
+	{
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_equipment_list', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'equipment_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);	
+			
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.10';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
 ?>

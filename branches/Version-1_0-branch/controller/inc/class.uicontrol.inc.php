@@ -41,7 +41,9 @@
 			'view_check_list'					=>	true,
 			'generate_check_lists_for_control'	=>	true,
 			'view_check_lists_for_control'		=>	true,
-			'get_controls_by_control_area'		=>	true
+			'get_controls_by_control_area'		=>	true,
+			'get_locations_for_control'			=>	true,
+			'add_location_to_control'			=>	true
 		);
 
 		public function __construct()
@@ -622,6 +624,34 @@
 				return json_encode( $controls_array );
 			else
 				return null;
+		}
+		
+		// Returns locations for a control
+		public function get_locations_for_control()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$locations_for_control_array = $this->so->get_locations_for_control($control_id);
+			
+			foreach($locations_for_control_array as $location)
+			{
+				$results['results'][]= $location;	
+			}
+			
+			$results['total_records'] = count( $locations_for_control_array );
+			$results['start'] = 1;
+			$results['sort'] = 'location_code';
+						
+			array_walk($results['results'], array($this, 'add_actions'), array($type));
+							
+			return $this->yui_results($results);
+		}
+		
+		public function add_location_to_control()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$location_code = phpgw::get_var('location_code');
+			
+			$this->so->add_location_to_control($control_id, $location_code);
 		}
 		
 		public function query()

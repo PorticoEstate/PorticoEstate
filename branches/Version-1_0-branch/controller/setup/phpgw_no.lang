@@ -1,4 +1,4 @@
-Assign location to control	controller	no	Knytte kontrol til bygg
+location_connections	controller	no	Byggknytning
 control	controller	no	Kontroll
 controller	common	no	Kontroll
 control_helptext	controller	no	Her kommer hjelpetekst for å opprette en kontroll
@@ -7,6 +7,13 @@ Check_list_location	controller	no	Sjekkliste for bygg
 Check_lists	controller	no	Sjekklister
 Choose_control_groups	controller	no	Velg kontrollgrupper
 Choose_control_items	controller	no	Velg kontrollpunkt
+Choose_building_type	controller	no	Velg byggtype
+Choose_building_category	controller	no	Velg byggkategori
+Choose_district	controller	no	Velg distrikt
+Choose_part_of_town	controller	no	Velg bydel
+DATATABLE_MSG_EMPTY	controller	no	Ingen data
+DATATABLE_MSG_ERROR	controller	no	Datafeil
+DATATABLE_MSG_LOADING	controller	no	Laster data
 Sort_check_list	controller	no	Sorter sjekkliste
 Show_check_lists	controller	no	Vis sjekklister
 title	controller	no	kontroll
@@ -118,6 +125,7 @@ last	controller	no	Siste
 last_updated	controller	no	Sist oppdatert
 level	controller	no	Nivå
 link	controller	no	Lenke
+Locations_for_control	controller	no	Bygg tilknyttet kontroll
 make_pdf	controller	no	Lag PDF for utskrift
 message	controller	no	Melding
 messages_form_error	controller	no	Skjemaet inneholder en feil.
@@ -212,7 +220,7 @@ target_none	controller	no	Ingen
 third_quarter	controller	no	3. kvartal
 t_functions	controller	no	Funksjoner
 title	controller	no	Tittel
-to	controller	no	Til
+to	controller	no	til
 to_the_top	controller	no	Til toppen
 type	controller	no	Type
 units	controller	no	Enheter
@@ -277,3 +285,5 @@ Control title	controller	no	Tittel
 start_date	controller	no	Start dato
 planned_date	controller	no	Planlagt dato
 end_date	controller	no	Slutt dato
+View_locations_for_control	controller	no	Vis bygg/kontroll-knytning	
+Add_locations_for_control	controller	no	Legg til knytning for bygg
