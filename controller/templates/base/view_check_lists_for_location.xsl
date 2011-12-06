@@ -59,7 +59,7 @@
 													<img height="15" src="controller/images/status_icon_light_green.png" />	
 												</xsl:when>
 												<xsl:otherwise>
-												 <a class="view_list">
+												 <a class="view_check_list">
 													<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
 														<xsl:text>&amp;phpgw_return_as=json</xsl:text>

@@ -225,8 +225,6 @@
 				//... check whether this action should be an AJAX call
 				if( record.getData().ajax[task.index] ) {
 					
-					//var control_id = YAHOO.util.Dom.get("control_id").value;
-										
 					var alertStatus = false;
 
 					// Check if confirm box should be displayed before request is executed
@@ -244,16 +242,26 @@
 						}
 					}
 					
-					var requestUrl = record.getData().actions[ task.index ] + "&control_id=" + control_id;
-					alert(requestUrl)
-					var request = YAHOO.util.Connect.asyncRequest(
-						'GET',
-						requestUrl,
-						{
-							success: ajaxResponseSuccess,
-							success: ajaxResponseFailure,
-							args: table
-						});
+					if(record.getData().labels[task.index] == "Legg enhet til kontrollen"){
+						var control_id = YAHOO.util.Dom.get("control_id").value;
+						
+						if(control_id > 0){
+							var requestUrl = record.getData().actions[ task.index ] + "&control_id=" + control_id;
+						}
+					}else{
+						var requestUrl = record.getData().actions[ task.index ];
+					}				
+				
+					if(requestUrl){
+						var request = YAHOO.util.Connect.asyncRequest(
+							'GET',
+							requestUrl,
+							{
+								success: ajaxResponseSuccess,
+								success: ajaxResponseFailure,
+								args: table
+							});
+					}	
 				} else {
 					window.location = record.getData().actions[task.index];
 				}
