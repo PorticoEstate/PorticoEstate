@@ -138,8 +138,8 @@
 			'uc' => array()
 		),
 		'controller_control_location_list', array(
-				'fd' => array(
-					'id' => array('type' => 'auto', 'nullable' => false),
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
 					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 					'location_code' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
 				),
