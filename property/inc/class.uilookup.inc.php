@@ -2957,6 +2957,8 @@ JS;
 
 			$template_list = array();
 			$bo	= CreateObject('property.bogeneric',true);
+			$bo->get_location_info('order_template');
+
 			$template_list = $bo->read();
 
 			$content = array();
@@ -3167,6 +3169,7 @@ JS;
 
 			$template_list = array();
 			$bo	= CreateObject('property.bogeneric',true);
+			$bo->get_location_info('response_template');
 			$template_list = $bo->read();
 
 			$content = array();
