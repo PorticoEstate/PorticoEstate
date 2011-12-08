@@ -242,6 +242,19 @@
 			$uicols['classname'][]		= '';
 			$uicols['sortable'][]		= false;
 
+			$cols.= ",max(fm_request_condition.degree) as condition_degree";
+			$cols_return[] 				= 'condition_degree';
+			$uicols['input_type'][]		= 'text';
+			$uicols['name'][]			= 'condition_degree';
+			$uicols['descr'][]			= lang('condition degree');
+			$uicols['statustext'][]		= lang('condition degree');
+			$uicols['exchange'][]		= '';
+			$uicols['align'][]			= '';
+			$uicols['datatype'][]		= '';
+			$uicols['formatter'][]		= '';
+			$uicols['classname'][]		= '';
+			$uicols['sortable'][]		= true;
+
 			$cols.= ",$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
 			$cols_return[] 				= "start_date";
 			$cols_return[] 				= "entry_date";
@@ -394,10 +407,10 @@
 
 			$paranthesis = '(';
 			$joinmethod = "{$this->left_join} fm_request_status ON {$entity_table}.status = fm_request_status.id)";
-
-
 			$paranthesis .= '(';
 			$joinmethod .= "{$this->left_join} fm_request_consume ON {$entity_table}.id = fm_request_consume.request_id)";
+			$paranthesis .= '(';
+			$joinmethod .= "{$this->left_join} fm_request_condition ON {$entity_table}.id = fm_request_condition.request_id)";
 
 			$GLOBALS['phpgw']->config->read();
 			$_location_level = isset($GLOBALS['phpgw']->config->config_data['request_location_level']) && $GLOBALS['phpgw']->config->config_data['request_location_level'] ? $GLOBALS['phpgw']->config->config_data['request_location_level'] : 0;
