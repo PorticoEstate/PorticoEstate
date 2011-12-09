@@ -654,6 +654,11 @@
 			$this->so->add_location_to_control($control_id, $location_code);
 		}
 		
+		public function get_bim_types()
+		{
+			return $this->so->get_bim_types();
+		}
+		
 		public function query()
 		{
 			$params = array(

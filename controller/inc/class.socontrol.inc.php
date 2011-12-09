@@ -158,6 +158,12 @@ class controller_socontrol extends controller_socommon
 		$sql =  "INSERT INTO controller_control_location_list (control_id, location_code) values($control_id, $location_code)";
 		$this->db->query($sql);
 	}
+	
+	function add_equipment_to_control($control_id, $equipment_id)
+	{
+		$sql =  "INSERT INTO controller_control_equipment_list (control_id, equipment_id) values($control_id, $equipment_id)";
+		$this->db->query($sql);
+	}
 		
 	function get_id_field_name($extended_info = false)
 	{
@@ -338,5 +344,104 @@ class controller_socontrol extends controller_socommon
 			$i++;
 		}
 		return $ret_array;
+	}
+	
+	function get_bim_types($ifc = null)
+	{
+		$ret_array = array();
+		if($ifc != null)
+		{
+			if($ifc == 1)
+				$where_clause = "WHERE is_ifc";
+			else
+				$where_clause = "WHERE NOT is_ifc";
+		}
+		$sql = "select * from fm_bim_type {$where_clause} ORDER BY name";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$i = 1;
+		while($this->db->next_record())
+		{
+			$ret_array[$i]['id'] = $this->db->f('id');
+			$ret_array[$i]['name'] = $this->db->f('name');
+			$i++;
+		}
+		return $ret_array;
+	}
+	
+	public function getAllBimItems($noOfObjects = null, $bim_type = null) {
+		$filters = array();
+		if($noOfObjects != null && is_numeric($noOfObjects))
+		{
+			$limit = "LIMIT {$noOfObjects}";
+		}
+		else
+		{
+			$limit = "LIMIT 10";
+		}
+		if($bim_type != null && is_numeric($bim_type))
+		{
+			$filter = " AND fm_bim_type.id = {$bim_type}";
+		}
+		$sql  = "SELECT fm_bim_item.id, fm_bim_type.name AS type, fm_bim_item.guid FROM public.fm_bim_item,  public.fm_bim_type WHERE fm_bim_item.type = fm_bim_type.id {$filter} {$limit}";
+		$bimItemArray = array();
+		$this->db->query($sql, __LINE__, __FILE__);
+		$i=1;
+		while($this->db->next_record())
+		{
+			$bimItemArray[$i]['id'] = $this->db->f('id');
+			$bimItemArray[$i]['guid'] = $this->db->f('guid');
+			$bimItemArray[$i]['type'] = $this->db->f('type');
+			//$bimItemArray[$i]['xml_representation'] = $this->db->f('xml_representation',true);
+			//$bimItemArray[] = $bimItem;
+			$i++;
+		}
+
+		return $bimItemArray;
+	}
+	
+	public function get_control_equipment($noOfObjects = null, $bim_type = null)
+	{
+		$filters = array();
+		if($noOfObjects != null && is_numeric($noOfObjects))
+		{
+			$limit = "LIMIT {$noOfObjects}";
+		}
+		else
+		{
+			$limit = "LIMIT 10";
+		}
+
+		$joins = " {$this->left_join} controller_control_equipment_list ON (c.id = controller_control_equipment_list.control_id)";
+		$joins .= " {$this->left_join} fm_bim_item ON (controller_control_equipment_list.equipment_id = fm_bim_item.id)";
+		$joins .= " {$this->left_join} fm_bim_type ON (fm_bim_item.type= fm_bim_type.id)";
+		//$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
+		$sql  = "SELECT c.id AS control_id, c.title AS control_title, fm_bim_type.name AS type_name, fm_bim_item.id AS bim_id, fm_bim_item.guid as bim_item_guid FROM controller_control c {$joins} {$limit}";
+		$controlArray = array();
+		$this->db->query($sql, __LINE__, __FILE__);
+		$i=1;
+		while($this->db->next_record())
+		{
+			$controlArray[$i]['id'] = $this->db->f('control_id');
+			$controlArray[$i]['title'] = $this->db->f('control_title');
+			$controlArray[$i]['bim_id'] = $this->db->f('bim_id');
+			$controlArray[$i]['bim_item_guid'] = $this->db->f('bim_item_guid');
+			$controlArray[$i]['bim_type'] = $this->db->f('type_name');
+			$i++;
+		}
+
+		return $controlArray;
+	}
+
+	public function getBimItemAttributeValue($bimItemGuid, $attribute) 
+	{
+		$columnAlias = "attribute_values";
+		$sql = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
+		$this->db->query($sql,__LINE__,__FILE__);
+		if($this->db->num_rows() > 0)
+		{
+			$this->db->next_record();
+			$result = $this->db->f($columnAlias,true);
+			return preg_split('/,/', $result);
+		}
 	}
 }

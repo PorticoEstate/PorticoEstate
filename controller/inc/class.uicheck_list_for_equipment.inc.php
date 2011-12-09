@@ -3,10 +3,10 @@
 	phpgw::import_class('phpgwapi.yui');
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('controller.socontrol_area');
+	//phpgw::import_class('bim.sobimitem');
 
 	class controller_uicheck_list_for_equipment extends controller_uicommon
 	{
-		var $grants;
 		var $cat_id;
 		var $start;
 		var $query;
@@ -17,23 +17,27 @@
 		var $type_id;
 		var $location_code;
 		
-		private $so_control_area; 
+		private $so_control_area;
+		private $so_control; 
+		private $so_bim;
 
 		var $public_functions = array(
 										'index' => true,
+										'add_equipment_to_control' => true,
+										'get_equipment_types_by_category' => true
 									);
 
 		function __construct()
 		{
 			parent::__construct();
 			
-			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			
 			$this->bo					= CreateObject('property.bolocation',true);
 			$this->bocommon				= & $this->bo->bocommon;
 			$this->so_control_area 		= CreateObject('controller.socontrol_area');
-
+			$this->so_control 			= CreateObject('controller.socontrol');
+			//$this->so_bim				= CreateObject('bim.sobimitem_impl');
+			//$this->so_bim				= new sobimitem_impl();
+	
 			$this->type_id				= $this->bo->type_id;
 			
 			$this->start				= $this->bo->start;
@@ -54,7 +58,7 @@
 	
 		function index()
 		{
-			if(phpgw::get_var('phpgw_return_as') == 'json') {
+/*			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
 			}
 			$building_types  = execMethod('property.soadmin_location.read',array());
@@ -169,40 +173,246 @@
 			self::add_javascript('controller', 'controller', 'ajax.js');
 			//self::add_javascript('controller', 'yahoo', 'equipment_location.js');
 			
-			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'location.responsiblility_role', 'property' );
+			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'equipmens_location', 'controller' );
 
 			//self::render_template_xsl('datatable', $data);
 			self::render_template_xsl('equipment', $data);		
+*/
+			if(phpgw::get_var('phpgw_return_as') == 'json') {
+				return $this->query();
+			}
+			$bim_types = $this->so_control->get_bim_types();
+
+			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+			$controls_array = $this->so_control->get_controls_by_control_area($control_areas_array[0]['id']);
+			$control_id = $control_areas_array[0]['id'];
+			
+			if($control_id == null)
+				$control_id = 0;
+			
+			$tabs = array( array(
+						'label' => lang('View_equipment_for_control')
+					), array(
+						'label' => lang('Add_equipment_for_control'),
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_equipment.add_equipment_to_control'))
+					));
+			
+			$data = array(
+				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
+				'view'					=> "view_equipment_for_control",
+				'control_area_array' 	=> $control_areas_array,
+				'control_array'			=> $control_array,
+				'locations_table' => array(
+					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_equipment.index','phpgw_return_as' => 'json')),
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ControlId'),
+							'sortable'	=> true,
+						),
+						array(
+							'key'	=>	'title',
+							'label'	=>	lang('Title'),
+							'sortable'	=>	false
+						),
+						array(
+							'key' => 'bim_id',
+							'label' => lang('Bim_id'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'bim_name',
+							'label' => lang('Bim_name'),
+							'sortable'	=> false
+						),
+						array(
+							'key' => 'bim_type',
+							'label' => lang('Bim_type'),
+							'sortable'	=> false
+						)
+					)
+				)
+			);
+			
+			
+			phpgwapi_yui::load_widget('paginator');
+			
+			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+
+			self::render_template_xsl(array('control_equipment_tabs', 'common', 'view_equipment_for_control'), $data);
 		}
 		
-		public function query(){
-					
-			$type_id = 1;
-			
-			$location_list = array();
-
-			$this->bo->sort = "ASC";
-						
-			$location_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
-												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
-
-			$uicols = $this->bo->uicols;
-		
-			$results = array();
-
-			foreach($location_list as $location)
+		function add_equipment_to_control()
+		{
+			if(phpgw::get_var('save_equipment'))
 			{
-				//var_dump($location);
-				$location['checked'] = true;
-				$results['results'][]= $location;
+				//add equipment to control using equipment item ID
+				$items_checked = array();
+				$items = phpgw::get_var('values_assign');
+				$item_arr = explode('|',$items);
+				foreach($item_arr as $item)
+				{
+					$items_checked[] = explode(';',$item);
+				}
+				//var_dump($items_checked);
 				
+				$control_id = phpgw::get_var('control_id');
+				//var_dump($control_id);
+				if($control_id != null && is_numeric($control_id))
+				{
+					//add chosen equipment to control
+					foreach($items_checked as $it)
+					{
+						$this->so_control->add_equipment_to_control($control_id, $it[0]);
+					}
+				}
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicheck_list_for_equipment.index'));
+				
+			}
+			else
+			{
+				if(phpgw::get_var('phpgw_return_as') == 'json') {
+					return $this->get_equipment();
+				}
+				
+				$bim_types = $this->so_control->get_bim_types();
+				
+				$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+				
+				$tabs = array( array(
+							'label' => lang('View_equipment_for_control'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_equipment.index'))
+				
+						), array(
+							'label' => lang('Add_equipment_for_control')
+						));
+						
+				$data = array(
+					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
+					'view'						=> "add_equipment_to_control",
+					'control_filters'			=> array(
+						'control_area_array' 		=> $control_areas_array,
+						'control_array' 			=> $control_array
+					),
+					'filter_form' 				=> array(
+						'bim_types' 			=> $bim_types
+					),
+					'datatable' => array(
+						'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_equipment.add_equipment_to_control', 'phpgw_return_as' => 'json')),
+						'field' => array(
+							array(
+								'key' => 'id',
+								'label' => lang('ID'),
+								'sortable'	=> true,
+								'formatter' => 'YAHOO.portico.formatLink'
+							),
+							array(
+								'key'	=>	'guid',
+								'label'	=>	lang('GUID'),
+								'sortable'	=>	false
+							),
+							array(
+								'key' => 'type',
+								'label' => lang('type'),
+								'sortable'	=> false
+							),
+							array(
+								'key' => 'checked',
+								'label' => 'Velg',
+								'sortable' => false,
+								'formatter' => 'YAHOO.widget.DataTable.formatCheckbox',
+								'className' => 'mychecks'
+							),
+							array(
+								'key' => 'actions',
+								'hidden' => true
+							),
+							array(
+								'key' => 'labels',
+								'hidden' => true
+							),
+							array(
+								'key' => 'ajax',
+								'hidden' => true
+							)						
+						)
+					)
+				);
+				
+				
+				phpgwapi_yui::load_widget('paginator');
+				
+				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
+				self::add_javascript('controller', 'controller', 'jquery.js');
+				self::add_javascript('controller', 'controller', 'ajax.js');
+	
+				self::render_template_xsl(array('control_equipment_tabs', 'common', 'add_equipment_to_control'), $data);
+			}
+		}
+		
+		public function query()
+		{
+			$control_list = $this->so_control->get_control_equipment();
+					
+			foreach($control_list as $control)
+			{
+				$control['bim_name'] = $this->so_control->getBimItemAttributeValue($control['bim_item_guid'], 'description');
+				$results['results'][]= $control;
 			}
 			
 			$results['total_records'] = 10;
 			$results['start'] = 1;
-			$results['sort'] = 'location_code';
+			$results['sort'] = 'id';
+			array_walk($results['results'], array($this, 'add_links'), array($type));
+							
+			return $this->yui_results($results);
+		}
+		
+		public function get_equipment()
+		{
+			
+			/*$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query					= phpgw::get_var('query');
+			$sort					= phpgw::get_var('sort');
+			$order					= phpgw::get_var('order');
+			$filter					= phpgw::get_var('filter', 'int');
+			$cat_id					= phpgw::get_var('cat_id');
+			$lookup_tenant			= phpgw::get_var('lookup_tenant', 'bool');
+			$district_id			= phpgw::get_var('district_id', 'int');
+			$part_of_town_id		= phpgw::get_var('part_of_town_id', 'int');
+			$status					= phpgw::get_var('status');
+			$type_id				= phpgw::get_var('type_id', 'int');
+			$allrows				= phpgw::get_var('allrows', 'bool');
+			$location_code			= phpgw::get_var('location_code');*/
+					
+			$type_id = phpgw::get_var('bim_type_id');
+			
+			$start = phpgw::get_var('startIndex');
+			
+			$equipment_list = array();
+
+			$sort = "ASC";
+
+			$equipment_list = $this->so_control->getAllBimItems(10,$type_id);
+			//var_dump($equipment_list); 
+
+		
+			$results = array();
+			foreach($equipment_list as $equipment)
+			{
+				$equipment['checked'] = false;
+				$results['results'][]= $equipment;
+				$i++;
+			}
+			
+			$results['total_records'] = count($equipment_list);
+			$results['start'] = $start;
+			$results['sort'] = 'id';
+			$results['dir'] = "ASC";
 						
-			array_walk($results['results'], array($this, 'add_actions'), array($type));
+			array_walk($results['results'], array($this, 'add_links'), array($type));
 							
 			return $this->yui_results($results);
 		}
@@ -222,5 +432,24 @@
 			$value['ajax'][] = true;
 			$value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.add_unit', 'location_code' => $value['location_code'])));
 			$value['labels'][] = lang('add_location');
+		}
+		
+		public function get_equipment_types_by_category()
+		{
+			$category = phpgw::get_var('ifc');
+			if($ifc != null)
+			{
+				if($ifc = 1)
+					$ifc = true;
+				else
+					$ifc = false;
+			}
+			
+			
+			$bim_types = $this->so_control->get_bim_types($ifc);
+			if(count($bim_types)>0)
+				return json_encode( $bim_types );
+			else
+				return null;
 		}
 	}
