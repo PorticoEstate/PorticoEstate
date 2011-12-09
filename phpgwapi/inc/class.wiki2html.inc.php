@@ -50,7 +50,10 @@
 
 		public function set_syntax($syntax)
 		{
-			$this->syntax = $syntax;
+			if($syntax)
+			{
+				$this->syntax = $syntax;
+			}
 		}
 
 		public function process($content, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
