@@ -17,9 +17,12 @@
 		$syntax 		= phpgw::get_var('syntax');
 		$wiki_parser->set_syntax($syntax);
 		$html			.=  $wiki_parser->process($content);
+
+//		Alternative call - given default syntax textile
+//		$html			=  execMethod('phpgwapi.wiki2html.process',$content);
 	}
 
-	$checked_textile = $syntax == 'textile' ? 'checked' : '';
+	$checked_textile = $syntax == 'textile' || !$syntax ? 'checked' : ''; //default
 	$checked_markdown = $syntax == 'markdown' ? 'checked' : '';
 
 	$content = $_POST ? $content : <<<content
