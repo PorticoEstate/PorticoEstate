@@ -287,3 +287,16 @@ planned_date	controller	no	Planlagt dato
 end_date	controller	no	Slutt dato
 View_locations_for_control	controller	no	Vis bygg/kontroll-knytning	
 Add_locations_for_control	controller	no	Legg til knytning for bygg
+View_equipment_for_control	controller	no	Vis bygg/utstyr-knytning
+Add_equipment_for_control	controller	no	Legg til knytning mot utstyr
+equipment_for_control	controller	no	Utstyr tilknyttet kontroll
+Choose_equipment_type	controller	no	Velg utstyrstype
+Choose_equipment_category	controller	no	Velg utstyrskategori
+equipment_category_internal	controller	no	Internt utstyrsregister
+equipment_category_ifc	controller	no	IFC
+invert_checkboxes	controller	no	Inverter merking
+ControlId	controller	no	Kontroll ID
+Bim_id	controller	no	Utstyr ID
+Bim_name	controller	no	Utstyrsnavn
+Bim_type	controller	no	Utstyrstype
+GUID	controller	no	GUID
