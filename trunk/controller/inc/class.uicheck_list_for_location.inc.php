@@ -252,14 +252,12 @@
 			self::render_template_xsl(array('control_location_tabs', 'common', 'add_location_to_control'), $data);		
 		}
 		
-		public function query(){
-					
-			
-			$type_id = phpgw::get_var('type_id');
-			
-			if( empty($type_id) | $type_id == "" ){
-				$type_id = 1;
-			}
+		public function query()
+		{
+			$type_id = phpgw::get_var('type_id', 'int');
+			$return_results	= phpgw::get_var('results', 'int', 'REQUEST', 0);
+
+			$type_id = $type_id ? $type_id : 1;
 			
 			$location_list = array();
 
@@ -267,16 +265,14 @@
 			$this->bo->start = phpgw::get_var('startIndex');
 			
 			$location_list = $this->bo->read(array('user_id' => $user_id, 'role_id' =>$role_id, 'type_id'=>$type_id,'lookup_tenant'=>$lookup_tenant,
-												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run));
+												   'lookup'=>$lookup,'allrows'=>$this->allrows,'dry_run' =>$dry_run,'results' => $return_results));
 
-			$rows_total = $this->bo->read(array('type_id' => $type_id, 'allrows' => true));
-			
 			foreach($location_list as $location)
 			{
 				$results['results'][]= $location;	
 			}
 			
-			$results['total_records'] = count($rows_total);
+			$results['total_records'] = $this->bo->total_records;
 			$results['start'] = $this->start;
 			$results['sort'] = 'location_code';
 			$results['dir'] = "ASC";

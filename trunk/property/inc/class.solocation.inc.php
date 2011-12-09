@@ -278,6 +278,7 @@
 			$location_code			= isset($data['location_code']) ? $data['location_code'] : '';
 			$filter_role_on_contact = $data['filter_role_on_contact'] ? (int)$data['filter_role_on_contact'] : 0;
 			$role_id				= $data['role_id'] ? (int)$data['role_id'] : 0;
+			$results				= $data['results'] ? (int)$data['results'] : 0;
 
 			if (!$type_id)
 			{
@@ -895,7 +896,7 @@
 
 			if(!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+				$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__,$results);
 			}
 			else
 			{
