@@ -1097,7 +1097,8 @@
 							$data = $this->db->Record;
 
 							$xmldata = phpgwapi_xmlhelper::toXML($data, "_{$this->type}_{$category['entity_id']}_{$category['id']}");
-							$doc = new DOMDocument;
+							$doc = new DOMDocument('1.0', 'utf-8');
+							$doc->loadXML($xmldata);
 							$domElement = $doc->getElementsByTagName("_{$this->type}_{$category['entity_id']}_{$category['id']}")->item(0);
 							$domAttribute = $doc->createAttribute('appname');
 							$domAttribute->value = 'property';
@@ -1109,7 +1110,6 @@
 							$doc->appendChild($domElement);
 
 							$doc->preserveWhiteSpace = true;
-							$doc->loadXML( $xmldata );
 							$doc->formatOutput = true;
 							$xml = $doc->saveXML();
 
