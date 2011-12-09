@@ -31,6 +31,37 @@ $(document).ready(function(){
 			
     });
 	
+	// file: add_equipment_to_control.xsl
+	// When equipment category is selected, corresponding equipment types are fetched from db and equipment type select list is populated
+	$("#ifc option").click(function () {
+		 var ifc_id = $(this).val();
+		 
+         var requestUrl = "index.php?menuaction=controller.uicheck_list_for_equipment.get_equipment_types_by_category&phpgw_return_as=json"
+         
+         var htmlString = "";
+         
+         $.ajax({
+			  type: 'POST',
+			  dataType: 'json',
+			  url: requestUrl + "&ifc=" + ifc_id,
+			  success: function(data) {
+				  if( data != null){
+					  var obj = jQuery.parseJSON(data);
+						
+					  $.each(obj, function(i) {
+						  htmlString  += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+		    			});
+					 				  				  
+					  $("#bim_type_id").html( htmlString );
+					}else {
+         		  		htmlString  += "<option>Ingen typer</option>"
+         		  		$("#bim_type_id").html( htmlString );
+         		  	}
+			  }  
+			});
+			
+    });
+	
 	// file: control.xsl 
 	// When control area is selected, procedures are fetched from db and procedure select list is populated
 	$("#control_area_id option").click(function () {
