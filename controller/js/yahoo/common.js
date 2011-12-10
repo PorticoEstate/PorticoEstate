@@ -38,16 +38,16 @@ YAHOO.portico.weeknumber = function(when) {
 	var daynum = ((Date.UTC(y2k(year),when.getMonth(),when.getDate(),0,0,0) - Date.UTC(y2k(year),0,1,0,0,0)) /1000/60/60/24) + 1;
 
   if (modDay < 4 ) {
-    var weeknum = Math.floor((daynum+modDay-1)/7)+1;
+	var weeknum = Math.floor((daynum+modDay-1)/7)+1;
   } else {
-    var weeknum = Math.floor((daynum+modDay-1)/7);
-    if (weeknum == 0) {
-      year--;
-      var prevNewYear = new Date(year,0,1);
-      var prevmodDay = prevNewYear.getDay();
-      if (prevmodDay == 0) prevmodDay = 6; else prevmodDay--;
-      if (prevmodDay < 4) weeknum = 53; else weeknum = 52;
-    }
+	var weeknum = Math.floor((daynum+modDay-1)/7);
+	if (weeknum == 0) {
+	  year--;
+	  var prevNewYear = new Date(year,0,1);
+	  var prevmodDay = prevNewYear.getDay();
+	  if (prevmodDay == 0) prevmodDay = 6; else prevmodDay--;
+	  if (prevmodDay < 4) weeknum = 53; else weeknum = 52;
+	}
   }
   return + weeknum;
 }
@@ -173,12 +173,12 @@ YAHOO.portico.autocompleteHelper = function(url, field, hidden, container, label
 
 YAHOO.portico.setupInlineTablePaginator = function(container) {
 	var paginatorConfig = {
-        rowsPerPage: 10,
-        alwaysVisible: false,
-        template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
-        pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
-        containers: [YAHOO.util.Dom.get(container)]
-    };
+		rowsPerPage: 10,
+		alwaysVisible: false,
+		template: "{PreviousPageLink} <strong>{CurrentPageReport}</strong> {NextPageLink}",
+		pageReportTemplate: "Showing items {startRecord} - {endRecord} of {totalRecords}",
+		containers: [YAHOO.util.Dom.get(container)]
+	};
 	
 	YAHOO.portico.lang('setupPaginator', paginatorConfig);
 	var pag = new YAHOO.widget.Paginator(paginatorConfig);
@@ -215,8 +215,8 @@ YAHOO.portico.inlineTableHelper = function(container, url, colDefs, options, dis
 	var myDataTable = new YAHOO.widget.DataTable(dataTableContainer, colDefs, myDataSource, options);
 	
 	myDataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
-       oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
-       return oPayload;
+	   oPayload.totalRecords = oResponse.meta.totalResultsAvailable;
+	   return oPayload;
    }
 	
 	myDataTable.doBeforeLoadData = function(nothing, data) {
@@ -253,7 +253,7 @@ YAHOO.portico.inlineImages = function(container, url, options)
 		
 		var displayContainer = false;
 		
-        for(var key in oResponse.results) { 
+		for(var key in oResponse.results) { 
 			displayContainer = true;
 			var imgEl = dlImages.appendChild(document.createElement('dd')).appendChild(document.createElement('img'));
 			var captionEl = dlImages.appendChild(document.createElement('dt'));
@@ -267,7 +267,7 @@ YAHOO.portico.inlineImages = function(container, url, options)
 		} else {
 			new YAHOO.util.Element(container).setStyle('display', 'none');
 		}
-    }});
+	}});
 };
 
 
@@ -552,20 +552,20 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	YAHOO.portico.setupDatePickers();
 });
 var showIfNotEmpty = function(event, fieldname) {
-    if (document.getElementById(fieldname).value.length > 1) {
-        YAHOO.util.Dom.replaceClass(fieldname + "_edit", "hideit", "showit");
-    } else {
-        YAHOO.util.Dom.replaceClass(fieldname + "_edit", "showit", "hideit");
-    }
+	if (document.getElementById(fieldname).value.length > 1) {
+		YAHOO.util.Dom.replaceClass(fieldname + "_edit", "hideit", "showit");
+	} else {
+		YAHOO.util.Dom.replaceClass(fieldname + "_edit", "showit", "hideit");
+	}
 };
 
 YAHOO.portico.rtfEditorHelper = function(textarea_id, options) {
 	options = YAHOO.lang.merge({width:522, height:300}, (options || {}));
 	var descEdit = new YAHOO.widget.SimpleEditor(textarea_id, {
-	    height: options.height+'px',
-	    width: options.width+'px',
-	    dompath: true,
-	    animate: true,
+		height: options.height+'px',
+		width: options.width+'px',
+		dompath: true,
+		animate: true,
 		handleSubmit: true
 	});
 	descEdit.render();
@@ -573,33 +573,33 @@ YAHOO.portico.rtfEditorHelper = function(textarea_id, options) {
 };
 
 YAHOO.portico.postToUrl = function(path, params, method) {
-    method = method || "post"; // Set method to post by default, if not specified.
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
+	method = method || "post"; // Set method to post by default, if not specified.
+	var form = document.createElement("form");
+	form.setAttribute("method", method);
+	form.setAttribute("action", path);
 
-    for(var key in params) {
-        var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", params[key][0]);
-        hiddenField.setAttribute("value", params[key][1]);
-        form.appendChild(hiddenField);
-    }
-    document.body.appendChild(form);    // Not entirely sure if this is necessary
-    form.submit();
+	for(var key in params) {
+		var hiddenField = document.createElement("input");
+		hiddenField.setAttribute("type", "hidden");
+		hiddenField.setAttribute("name", params[key][0]);
+		hiddenField.setAttribute("value", params[key][1]);
+		form.appendChild(hiddenField);
+	}
+	document.body.appendChild(form);	// Not entirely sure if this is necessary
+	form.submit();
 };
 
 (function(){
-    var Dom = YAHOO.util.Dom,
-        Event = YAHOO.util.Event,
-        Panel = YAHOO.widget.Panel,
+	var Dom = YAHOO.util.Dom,
+		Event = YAHOO.util.Event,
+		Panel = YAHOO.widget.Panel,
 		Lang = YAHOO.lang;
 
 	var CSS_PREFIX = 'booking_number_range_';
  
 	var InputNumberRange = function(oConfigs) {
-	    InputNumberRange.superclass.constructor.call(this, document.createElement('span'), oConfigs);
-	    this.createEvent('updateEvent');
+		InputNumberRange.superclass.constructor.call(this, document.createElement('span'), oConfigs);
+		this.createEvent('updateEvent');
 		this.refresh(['id'],true);
 	};
 
@@ -612,20 +612,20 @@ YAHOO.portico.postToUrl = function(path, params, method) {
 			var container = this.get('element');
 		
 			this.setAttributeConfig('inputEl', {
-		        readOnly: true,
-		        value: container.appendChild(document.createElement('span'))
-		    });
+				readOnly: true,
+				value: container.appendChild(document.createElement('span'))
+			});
 	
 			this.setAttributeConfig('id', {
-		        writeOnce: true,
-		        validator: function (value) {
-		            return /^[a-zA-Z][\w0-9\-_.:]*$/.test(value);
-		        },
-		        value: Dom.generateId(),
-		        method: function (value) {
-		            this.get('inputEl').id = value;
-		        }
-		    });
+				writeOnce: true,
+				validator: function (value) {
+					return /^[a-zA-Z][\w0-9\-_.:]*$/.test(value);
+				},
+				value: Dom.generateId(),
+				method: function (value) {
+					this.get('inputEl').id = value;
+				}
+			});
 	
 			this.setAttributeConfig('value', {
 				value: 0,
@@ -654,8 +654,8 @@ YAHOO.portico.postToUrl = function(path, params, method) {
 	
 		destroy: function () { 
 			var el = this.get('element');
-		    Event.purgeElement(el, true);
-		    el.parentNode.removeChild(el);
+			Event.purgeElement(el, true);
+			el.parentNode.removeChild(el);
 		},
 		
 		_padValue: function(value)
@@ -708,7 +708,7 @@ YAHOO.portico.postToUrl = function(path, params, method) {
 		
 		render: function (parentEl) {
 			parentEl = Dom.get(parentEl);
-	    
+		
 			if (!parentEl) {
 				YAHOO.log('Missing mandatory argument in YAHOO.portico.InputNumberRange.render:  parentEl','error','Field');
 				return null;

@@ -2,14 +2,14 @@
 // Declaration of event.index vars
 //--------------------------------------------------------
 	//define SelectButton
-    var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;//, oMenuButton_5;
+	var oMenuButton_0, oMenuButton_1, oMenuButton_2, oMenuButton_3, oMenuButton_4;//, oMenuButton_5;
  	var selectsButtons = [
-    {order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[], reload:1},
-    {order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
-    {order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3]},
-    {order:3, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
-    {order:4, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
-//    {order:5, var_URL:'user_id',		name:'btn_user_id',	style:'userIdbutton',			dependiente:[]}, // dummy - changed to select
+	{order:0, var_URL:'type_id',		name:'btn_type_id',		style:'typebutton',			dependiente:[], reload:1},
+	{order:1, var_URL:'cat_id',			name:'btn_cat_id',		style:'categorybutton',		dependiente:[]},
+	{order:2, var_URL:'district_id',	name:'btn_district_id',	style:'districtbutton',		dependiente:[3]},
+	{order:3, var_URL:'part_of_town_id',name:'btn_part_of_town_id',style:'partOFTownbutton',dependiente:[]},
+	{order:4, var_URL:'role_id',		name:'btn_role_id',	style:'roleIdbutton',			dependiente:[]}
+//	{order:5, var_URL:'user_id',		name:'btn_user_id',	style:'userIdbutton',			dependiente:[]}, // dummy - changed to select
 	];
 
 	// define buttons
@@ -191,9 +191,9 @@
 		if (mydiv.hasChildNodes())
 		{
 			while ( mydiv.childNodes.length >= 1 )
-		    {
-		        mydiv.removeChild( mydiv.firstChild );
-		    }
+			{
+				mydiv.removeChild( mydiv.firstChild );
+			}
 		}
 		// styles for dont show
 		mydiv.style.display = "none";
@@ -310,14 +310,14 @@
 		loader.addModule({
 			name: "anyone", //module name; must be unique
 			type: "js", //can be "js" or "css"
-		    fullpath: property_js //'property_js' have the path for property.js, is render in HTML
-		    });
+			fullpath: property_js //'property_js' have the path for property.js, is render in HTML
+			});
 
 		loader.require("anyone");
 
 		//Insert JSON utility on the page
 
-	    loader.insert();
+		loader.insert();
 
 	});
 

@@ -12,8 +12,8 @@
 				'costResponsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'responsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'equipment_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'equipment_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'component_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 	 			'repeat_type' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'repeat_interval' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
@@ -73,7 +73,7 @@
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
-				'equipment_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'location_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
@@ -148,11 +148,11 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'controller_control_equipment_list' => array(
+		'controller_control_component_list' => array(
 				'fd' => array(
 					'id' => array('type' => 'auto', 'nullable' => false),
 					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-					'equipment_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+					'component_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
 				),
 			'pk' => array('id'),
 			'fk' => array(),

@@ -19,8 +19,8 @@
 		protected $costresponsibility_id;
 		protected $responsibility_id;
 		protected $responsibility_name;
-		protected $equipment_id;
-		protected $equipment_type_id;
+		protected $component_id;
+		protected $component_type_id;
 		protected $location_code;
 		protected $control_area_id;
 		protected $control_area_name;
@@ -137,19 +137,19 @@
 		
 		public function get_responsibility_name() { return $this->responsibility_name; }
 		
-		public function set_equipment_id($equipment_id)
+		public function set_component_id($component_id)
 		{
-			$this->equipment_id = $equipment_id;
+			$this->component_id = $component_id;
 		}
 		
-		public function get_equipment_id() { return $this->equipment_id; }
+		public function get_component_id() { return $this->component_id; }
 		
-		public function set_equipment_type_id($equipment_type_id)
+		public function set_component_type_id($component_type_id)
 		{
-			$this->equipment_type_id = $equipment_type_id;
+			$this->component_type_id = $component_type_id;
 		}
 		
-		public function get_equipment_type_id() { return $this->equipment_type_id; }
+		public function get_component_type_id() { return $this->component_type_id; }
 		
 		public function set_location_code($location_code)
 		{

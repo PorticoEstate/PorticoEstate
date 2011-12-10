@@ -14,7 +14,8 @@ class controller_socontrol_area extends controller_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+		if (self::$so == null)
+		{
 			self::$so = CreateObject('controller.socontrol_area');
 		}
 		return self::$so;
@@ -142,13 +143,13 @@ class controller_socontrol_area extends controller_socommon
 	
 	function get_control_area_select_array()
 	{
-            $results = array();
+			$results = array();
 			$results[] = array('id' =>  0,'name' => lang('Not selected'));
 			$this->db->query("SELECT id, title as name FROM controller_control_area ORDER BY name ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-						           'name' => $this->db->f('name', false));
+								   'name' => $this->db->f('name', false));
 			}
 			return $results;
 	}	

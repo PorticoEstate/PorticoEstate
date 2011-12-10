@@ -45,8 +45,8 @@ class controller_socheck_item extends controller_socommon
 		return isset($result) ? $this->db->get_last_insert_id('controller_check_item', 'id') : 0;
 	}
 	
-	function update($check_item){
-		
+	function update($check_item)
+	{	
 		$id = $check_item->get_id();
 
 		$values = array(
@@ -58,14 +58,18 @@ class controller_socheck_item extends controller_socommon
 		
 		$result = $this->db->query('UPDATE controller_check_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__,__FILE__);
 		
-		if( isset($result) ){
+		if( isset($result) )
+		{
 			return $id;	
-		}else{
+		}
+		else
+		{
 			return 0;
 		}
 	}
 	
-	public function get_single($check_item_id){
+	public function get_single($check_item_id)
+	{
 		$sql = "SELECT ci.*, coi.id as coi_id, coi.* ";
 		$sql .= "FROM controller_check_item ci, controller_control_item coi "; 
 		$sql .= "WHERE ci.id = $check_item_id ";
@@ -90,7 +94,9 @@ class controller_socheck_item extends controller_socommon
 			$check_item->set_control_item($control_item->toArray());
 			
 			return $check_item;
-		}else{
+		}
+		else
+		{
 			return null;
 		}
 	}

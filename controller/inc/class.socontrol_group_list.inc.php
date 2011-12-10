@@ -143,8 +143,8 @@ class controller_socontrol_group_list extends controller_socommon
 
 		$control_group_list = array();
 		
-		while($this->db->next_record()){
-			
+		while($this->db->next_record())
+		{	
 			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
 			$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 			$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));

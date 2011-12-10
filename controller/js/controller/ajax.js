@@ -31,12 +31,12 @@ $(document).ready(function(){
 			
     });
 	
-	// file: add_equipment_to_control.xsl
-	// When equipment category is selected, corresponding equipment types are fetched from db and equipment type select list is populated
+	// file: add_component_to_control.xsl
+	// When component category is selected, corresponding component types are fetched from db and component type select list is populated
 	$("#ifc option").click(function () {
 		 var ifc_id = $(this).val();
 		 
-         var requestUrl = "index.php?menuaction=controller.uicheck_list_for_equipment.get_equipment_types_by_category&phpgw_return_as=json"
+         var requestUrl = "index.php?menuaction=controller.uicheck_list_for_component.get_component_types_by_category&phpgw_return_as=json"
          
          var htmlString = "";
          

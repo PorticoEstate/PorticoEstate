@@ -18,12 +18,12 @@
 		<ul class="check_list">
 			<xsl:for-each select="saved_groups_with_items_array">
 				<li>
-			        <h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
+					<h3><span class="group_order_nr"><xsl:number/></span>. <xsl:value-of select="control_group/group_name"/></h3>
 			
-		           	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
+				   	<xsl:variable name="control_group_id"><xsl:value-of select="control_group/id"/></xsl:variable>
 					<input type="hidden" name="control_group_id" value="{$control_group_id}" />
 			
-		         	<ul id="list">
+				 	<ul id="list">
 						<xsl:for-each select="control_items">
 							<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
 							<xsl:variable name="order_tag">
@@ -37,11 +37,11 @@
 								</xsl:choose>:<xsl:value-of select="id"/>
 							</xsl:variable>
 															
-			     			<li>
-			     				<span class="drag">
-			     					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
-			     				</span>
-			     			</li>
+				 			<li>
+				 				<span class="drag">
+				 					<span class="order_nr"><xsl:number/></span>. <xsl:value-of select="title"/><input type="hidden" name="order_nr[]" value="{$order_tag}" />
+				 				</span>
+				 			</li>
 						</xsl:for-each>
 					</ul>
 				</li>

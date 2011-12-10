@@ -8,7 +8,7 @@ abstract class controller_socommon
 	
 	public function __construct()
 	{
-		$this->db           = clone $GLOBALS['phpgw']->db;
+		$this->db		   = clone $GLOBALS['phpgw']->db;
 		$this->like			= & $this->db->like;
 		$this->join			= & $this->db->join;
 		$this->left_join	= & $this->db->left_join;
@@ -68,10 +68,10 @@ abstract class controller_socommon
 		{
 			return intval($value);
 		}
-        elseif($type == 'float')
-        {
-            return floatval($value);
-        }
+		elseif($type == 'float')
+		{
+			return floatval($value);
+		}
 		return $value;
 	}
 

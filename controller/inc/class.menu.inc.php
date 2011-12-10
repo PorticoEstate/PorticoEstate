@@ -13,7 +13,7 @@
 				(
 					'text'	=> lang('Controller'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.view_control_details') ),
-                    'image'	=> array('property', 'location'),
+					'image'	=> array('property', 'location'),
 					'order'	=> 10,
 					'group'	=> 'office'
 				)
@@ -27,75 +27,75 @@
 					(
 						'text'	=> lang('Control'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol.control_list') ),
-			            'image'	=> array('property', 'location_1'),
+						'image'	=> array('property', 'location_1'),
 						'children' => array(
 											'location_for_check_list' => array
 											(
 												'text'	=> lang('Location'),
 												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
-									            'image'	=> array('property', 'location_1')
-									        ),
-									        'equipment_for_check_list' => array
+												'image'	=> array('property', 'location_1')
+											),
+											'component_for_check_list' => array
 											(
-												'text'	=> lang('Equipment'),
-												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_equipment.index') ),
-									            'image'	=> array('property', 'entity_1')
-									        )
+												'text'	=> lang('component'),
+												'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_component.index') ),
+												'image'	=> array('property', 'entity_1')
+											)
 										)
 					),
 					'location_for_check_list' => array
 					(
 						'text'	=> lang('location_connections'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list_for_location.index') ),
-			            'image'	=> array('property', 'location_1')
-			        ),
+						'image'	=> array('property', 'location_1')
+					),
 					'control_item' => array
 					(
 						'text'	=> lang('Control_item'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_item.index') ),
-			            'image'	=> array('property', 'location_1')
-			        ),
-			        'control_group' => array
+						'image'	=> array('property', 'location_1')
+					),
+					'control_group' => array
 					(
 						'text'	=> lang('Control_group'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicontrol_group.index') ),
-			            'image'	=> array('property', 'location_1')
-			        ),
-			        'procedure' => array
+						'image'	=> array('property', 'location_1')
+					),
+					'procedure' => array
 					(
 						'text'	=> lang('Procedure'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
-			            'image'	=> array('property', 'location_1'),
-					),    
+						'image'	=> array('property', 'location_1'),
+					),	
 					'check_list' => array
 					(
 						'text'	=> lang('Check_list'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
-			            'image'	=> array('property', 'location_1'),
+						'image'	=> array('property', 'location_1'),
 					),
 					'location_check_list' => array
 					(
 						'text'	=> lang('Check_list_location'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_agg_check_lists_for_location', 'year' => '2011', 'month' => '10') ),
-		            	'image'	=> array('property', 'location_1'),
+						'image'	=> array('property', 'location_1'),
 					)
 				);
 			}
 			else
 			{
 				$menus['navigation'] =  array
-				(    
+				(	
 					'check_list' => array
 					(
 						'text'	=> lang('Check_list'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
-			            'image'	=> array('property', 'location_1'),
+						'image'	=> array('property', 'location_1'),
 					),
 					'location_check_list' => array
 					(
 						'text'	=> lang('Check_list_location'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_check_lists_for_location') ),
-		            	'image'	=> array('property', 'location_1'),
+						'image'	=> array('property', 'location_1'),
 					),
 				);
 			}

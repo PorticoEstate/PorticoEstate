@@ -79,42 +79,42 @@
 						'item' => array(
 							array('type' => 'filter', 
 								'name' => 'status',
-                                'text' => lang('Status'),
-                                'list' => array(
-                                    array(
-                                        'id' => 'none',
-                                        'name' => lang('Not selected')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    )
-                                )
-                            ),
+								'text' => lang('Status'),
+								'list' => array(
+									array(
+										'id' => 'none',
+										'name' => lang('Not selected')
+									), 
+									array(
+										'id' => 'NEW',
+										'name' => lang('NEW')
+									), 
+									array(
+										'id' => 'PENDING',
+										'name' =>  lang('PENDING')
+									), 
+									array(
+										'id' => 'REJECTED',
+										'name' => lang('REJECTED')
+									), 
+									array(
+										'id' => 'ACCEPTED',
+										'name' => lang('ACCEPTED')
+									)
+								)
+							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
-                                'text' => lang('Control_area'),
-                                'list' => $this->so_control_area->get_control_area_select_array(),
+								'text' => lang('Control_area'),
+								'list' => $this->so_control_area->get_control_area_select_array(),
 							),
 							array('type' => 'filter',
 								'name' => 'responsibilities',
-                                'text' => lang('Responsibility'),
-                                'list' => $this->so->get_roles(),
+								'text' => lang('Responsibility'),
+								'list' => $this->so->get_roles(),
 							),
 							array('type' => 'text', 
-                                'text' => lang('searchfield'),
+								'text' => lang('searchfield'),
 								'name' => 'query'
 							),
 							array(
@@ -388,8 +388,8 @@
 							array(
 							'label' => "2: " . lang('Choose_control_groups'),
 							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.view_control_groups', 'view' => "view_control_groups", 
-																			       'control_id' => $control_id, 'control_group_ids' => $control_group_ids, 
-																			       'control_area_id' => $control->get_control_area_id()))
+																				   'control_id' => $control_id, 'control_group_ids' => $control_group_ids, 
+																				   'control_area_id' => $control->get_control_area_id()))
 						),
 						array('label' => "3: " . lang('Choose_control_items')),
 						array(
@@ -401,7 +401,7 @@
 				'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 2),
 				'view'						=> 'control_items',
 				'control_group_ids'			=> implode($control_group_ids, ","),
-				'control'				    => $control->toArray(),
+				'control'					=> $control->toArray(),
 				'groups_with_control_items'	=> $groups_with_control_items			
 			);
 			

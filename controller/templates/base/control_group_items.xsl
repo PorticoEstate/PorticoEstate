@@ -15,7 +15,7 @@
 	   			<ul class="control_items">
 					<xsl:for-each select="selected_control_items">
 						<xsl:variable name="control_item_id"><xsl:value-of select="id"/></xsl:variable>
-	    				<li><xsl:if test="//editable"><input type="checkbox"  name="item_remove_ids[]" value="{$control_item_id}"/></xsl:if><xsl:value-of select="title"/></li>
+						<li><xsl:if test="//editable"><input type="checkbox"  name="item_remove_ids[]" value="{$control_item_id}"/></xsl:if><xsl:value-of select="title"/></li>
 					</xsl:for-each>
 				</ul>
 				<xsl:if test="//editable">

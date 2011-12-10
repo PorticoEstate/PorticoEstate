@@ -6,7 +6,7 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
@@ -42,7 +42,7 @@
 				<option value="{$control_area_id}">
 					<xsl:value-of select="title"/>
 				</option>			
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		 
 		 <form id="loc_form" action="" method="GET">
@@ -54,7 +54,7 @@
 							<option value="{$control_id}">
 								<xsl:value-of select="title"/>
 							</option>				
-					    </xsl:for-each>
+						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
 						<option>
@@ -76,7 +76,7 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:call-template name="filter_list"/>
+		<xsl:call-template name="filter_list"/>
 	</form>
 	
 	<form id="update_table_dummy" method='POST' action='' >
@@ -85,7 +85,7 @@
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
-    <div>
+	<div>
 	  <ul id="filters">
 	  	<li>
 		  <select id="type_id" name="type_id">
@@ -97,10 +97,10 @@
 				<option value="{$building_type_id}">
 					<xsl:value-of select="name"/>
 				</option>
-		    </xsl:for-each>
+			</xsl:for-each>
 		  </select>
-	    </li>
-	    <li>
+		</li>
+		<li>
 		  <select id="cat_id" name="cat_id">
 		  	<option value="">
 				<xsl:value-of select="php:function('lang', 'Choose_building_category')"/>
@@ -110,10 +110,10 @@
 				<option value="{$category_type_id}">
 					<xsl:value-of select="name"/>
 				</option>
-		    </xsl:for-each>
+			</xsl:for-each>
 		  </select>
-	    </li>
-	    <li>
+		</li>
+		<li>
 		  <select id="district_id" name="district_id">
 		  	<option value="">
 					<xsl:value-of select="php:function('lang', 'Choose_district')"/>
@@ -123,10 +123,10 @@
 				<option value="{$district_id}">
 					<xsl:value-of select="name"/>
 				</option>
-		    </xsl:for-each>
+			</xsl:for-each>
 		  </select>
-	    </li>
-	    <li>
+		</li>
+		<li>
 		  <select id="part_of_town_id" name="part_of_town_id">
 		  	<option value="">
 					<xsl:value-of select="php:function('lang', 'Choose_part_of_town')"/>
@@ -136,9 +136,9 @@
 				<option value="{$part_of_town_id}">
 					<xsl:value-of select="name"/>
 				</option>
-		    </xsl:for-each>
+			</xsl:for-each>
 		  </select>
-	    </li>	    
+		</li>		
 	  </ul>
 	  <ul id="search_list">
 		  <li>
@@ -147,15 +147,15 @@
 		  <li>
 		  	<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
 		  	<input type="submit" name="search" value="{$lang_search}" title = "{$lang_search}" />
-		  </li>	  	    
+		  </li>	  		
 	  </ul>
 	
-    </div>
+	</div>
 </xsl:template>
 
 <xsl:template match="datatable">
-    <div id="data_paginator"/>
-    <div id="datatable-container"/>
+	<div id="data_paginator"/>
+	<div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
 </xsl:template>
 
@@ -170,14 +170,14 @@
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
+						</xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
 						hidden: true,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
+						</xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>

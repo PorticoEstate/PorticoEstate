@@ -6,7 +6,7 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
@@ -15,7 +15,7 @@
   	</func:result>
 </func:function>
 
-<xsl:template name="add_equipment_to_control" xmlns:php="http://php.net/xsl">
+<xsl:template name="add_component_to_control" xmlns:php="http://php.net/xsl">
 	<!-- IMPORTANT!!! Loads YUI javascript -->
 	<xsl:call-template name="common"/>
 
@@ -42,7 +42,7 @@
 				<option value="{$control_area_id}">
 					<xsl:value-of select="title"/>
 				</option>			
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		 
 		 <form id="loc_form" action="" method="GET">
@@ -54,7 +54,7 @@
 							<option value="{$control_id}">
 								<xsl:value-of select="title"/>
 							</option>				
-					    </xsl:for-each>
+						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
 						<option>
@@ -76,7 +76,7 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:call-template name="filter_list"/>
+		<xsl:call-template name="filter_list"/>
 	</form>
 	
 	<form id="update_table_dummy" method='POST' action='' >
@@ -85,34 +85,34 @@
 </xsl:template>
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
-    <div>
+	<div>
 	  <ul id="filters">
 	  	<li>
 		  <select id="ifc" name="ifc">
 		  	<option value="">
-				<xsl:value-of select="php:function('lang', 'Choose_equipment_category')"/>
+				<xsl:value-of select="php:function('lang', 'Choose_component_category')"/>
 			</option>
 			<option value="0">
-				<xsl:value-of select="php:function('lang', 'equipment_category_internal')"/>
+				<xsl:value-of select="php:function('lang', 'component_category_internal')"/>
 			</option>
 			<option value="1">
-				<xsl:value-of select="php:function('lang', 'equipment_category_ifc')"/>
+				<xsl:value-of select="php:function('lang', 'component_category_ifc')"/>
 			</option>
 		  </select>
-	    </li>
+		</li>
 	  	<li>
 		  <select id="bim_type_id" name="bim_type_id">
 		  	<option value="">
-				<xsl:value-of select="php:function('lang', 'Choose_equipment_type')"/>
+				<xsl:value-of select="php:function('lang', 'Choose_component_type')"/>
 			</option>
 			<xsl:for-each select="bim_types">
 				<xsl:variable name="bim_type_id"><xsl:value-of select="id"/></xsl:variable>
 				<option value="{$bim_type_id}">
 					<xsl:value-of select="name"/>
 				</option>
-		    </xsl:for-each>
+			</xsl:for-each>
 		  </select>
-	    </li>
+		</li>
 	  </ul>
 	  <ul id="search_list">
 		  <li>
@@ -121,10 +121,10 @@
 		  <li>
 		  	<xsl:variable name="lang_search"><xsl:value-of select="php:function('lang', 'Search')" /></xsl:variable>
 		  	<input type="submit" name="search" value="{$lang_search}" title = "{$lang_search}" />
-		  </li>	  	    
+		  </li>	  		
 	  </ul>
 	
-    </div>
+	</div>
 </xsl:template>
 
 <xsl:template match="datatable">
@@ -156,9 +156,9 @@
 		}
 	}
 	
-	function saveEquipmentToControl()
+	function savecomponentToControl()
 	{
-		var divs = YAHOO.util.Dom.getElementsByClassName('equipment_submit');
+		var divs = YAHOO.util.Dom.getElementsByClassName('component_submit');
 		var mydiv = divs[divs.length-1];
 
 		// styles for dont show
@@ -196,14 +196,14 @@
 	}
 	]]>
 	</script>
-    <div id="data_paginator"/>
-    <div id="datatable-container"/>
+	<div id="data_paginator"/>
+	<div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
   	<xsl:variable name="label_submit"><xsl:value-of select="php:function('lang', 'save')" /></xsl:variable>
   	<xsl:variable name="label_checkAll"><xsl:value-of select="php:function('lang', 'invert_checkboxes')" /></xsl:variable>
   	<div><input type="button" id="select_all" value="{$label_checkAll}" onclick="checkAll('mychecks')"/></div>
-  	<form action="#" name="equipment_form" id="equipment_form" method="post">
-  		<div class="equipment_submit"><input type="submit" name="save_equipment" id="save_equipment" value="{$label_submit}" onclick="return saveEquipmentToControl()"/></div>
+  	<form action="#" name="component_form" id="component_form" method="post">
+  		<div class="component_submit"><input type="submit" name="save_component" id="save_component" value="{$label_submit}" onclick="return savecomponentToControl()"/></div>
   	</form>
 </xsl:template>
 
@@ -218,14 +218,14 @@
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
+						</xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
 						hidden: true,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
+						</xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>

@@ -5,7 +5,7 @@
 	phpgw::import_class('controller.socontrol_area');
 	//phpgw::import_class('bim.sobimitem');
 
-	class controller_uicheck_list_for_equipment extends controller_uicommon
+	class controller_uicheck_list_for_component extends controller_uicommon
 	{
 		var $cat_id;
 		var $start;
@@ -23,8 +23,8 @@
 
 		var $public_functions = array(
 										'index' => true,
-										'add_equipment_to_control' => true,
-										'get_equipment_types_by_category' => true
+										'add_component_to_control' => true,
+										'get_component_types_by_category' => true
 									);
 
 		function __construct()
@@ -53,7 +53,7 @@
 			$this->lookup				= $this->bo->lookup;
 			$this->location_code		= $this->bo->location_code;
 			
-			self::set_active_menu('controller::control::equipment_for_check_list');
+			self::set_active_menu('controller::control::component_for_check_list');
 		}	
 	
 		function index()
@@ -112,7 +112,7 @@
 
 			$data = array(
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_equipment.index', 'phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'location_code',
@@ -171,12 +171,12 @@
 			self::add_javascript('controller', 'controller', 'controller_datatable_test.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
-			//self::add_javascript('controller', 'yahoo', 'equipment_location.js');
+			//self::add_javascript('controller', 'yahoo', 'component_location.js');
 			
 			//$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'equipmens_location', 'controller' );
 
 			//self::render_template_xsl('datatable', $data);
-			self::render_template_xsl('equipment', $data);		
+			self::render_template_xsl('component', $data);		
 */
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
 				return $this->query();
@@ -191,19 +191,19 @@
 				$control_id = 0;
 			
 			$tabs = array( array(
-						'label' => lang('View_equipment_for_control')
+						'label' => lang('View_component_for_control')
 					), array(
-						'label' => lang('Add_equipment_for_control'),
-						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_equipment.add_equipment_to_control'))
+						'label' => lang('Add_component_for_control'),
+						'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_component.add_component_to_control'))
 					));
 			
 			$data = array(
 				'tabs'					=> $GLOBALS['phpgw']->common->create_tabs($tabs, 0),
-				'view'					=> "view_equipment_for_control",
+				'view'					=> "view_component_for_control",
 				'control_area_array' 	=> $control_areas_array,
 				'control_array'			=> $control_array,
 				'locations_table' => array(
-					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_equipment.index','phpgw_return_as' => 'json')),
+					'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.index','phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -241,14 +241,14 @@
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
-			self::render_template_xsl(array('control_equipment_tabs', 'common', 'view_equipment_for_control'), $data);
+			self::render_template_xsl(array('control_component_tabs', 'common', 'view_component_for_control'), $data);
 		}
 		
-		function add_equipment_to_control()
+		function add_component_to_control()
 		{
-			if(phpgw::get_var('save_equipment'))
+			if(phpgw::get_var('save_component'))
 			{
-				//add equipment to control using equipment item ID
+				//add component to control using component item ID
 				$items_checked = array();
 				$items = phpgw::get_var('values_assign');
 				$item_arr = explode('|',$items);
@@ -262,19 +262,19 @@
 				//var_dump($control_id);
 				if($control_id != null && is_numeric($control_id))
 				{
-					//add chosen equipment to control
+					//add chosen component to control
 					foreach($items_checked as $it)
 					{
-						$this->so_control->add_equipment_to_control($control_id, $it[0]);
+						$this->so_control->add_component_to_control($control_id, $it[0]);
 					}
 				}
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicheck_list_for_equipment.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicheck_list_for_component.index'));
 				
 			}
 			else
 			{
 				if(phpgw::get_var('phpgw_return_as') == 'json') {
-					return $this->get_equipment();
+					return $this->get_component();
 				}
 				
 				$bim_types = $this->so_control->get_bim_types();
@@ -282,16 +282,16 @@
 				$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 				
 				$tabs = array( array(
-							'label' => lang('View_equipment_for_control'),
-							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_equipment.index'))
+							'label' => lang('View_component_for_control'),
+							'link'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list_for_component.index'))
 				
 						), array(
-							'label' => lang('Add_equipment_for_control')
+							'label' => lang('Add_component_for_control')
 						));
 						
 				$data = array(
 					'tabs'						=> $GLOBALS['phpgw']->common->create_tabs($tabs, 1),
-					'view'						=> "add_equipment_to_control",
+					'view'						=> "add_component_to_control",
 					'control_filters'			=> array(
 						'control_area_array' 		=> $control_areas_array,
 						'control_array' 			=> $control_array
@@ -300,7 +300,7 @@
 						'bim_types' 			=> $bim_types
 					),
 					'datatable' => array(
-						'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_equipment.add_equipment_to_control', 'phpgw_return_as' => 'json')),
+						'source' => self::link(array('menuaction' => 'controller.uicheck_list_for_component.add_component_to_control', 'phpgw_return_as' => 'json')),
 						'field' => array(
 							array(
 								'key' => 'id',
@@ -348,13 +348,13 @@
 				self::add_javascript('controller', 'controller', 'jquery.js');
 				self::add_javascript('controller', 'controller', 'ajax.js');
 	
-				self::render_template_xsl(array('control_equipment_tabs', 'common', 'add_equipment_to_control'), $data);
+				self::render_template_xsl(array('control_component_tabs', 'common', 'add_component_to_control'), $data);
 			}
 		}
 		
 		public function query()
 		{
-			$control_list = $this->so_control->get_control_equipment();
+			$control_list = $this->so_control->get_control_component();
 					
 			foreach($control_list as $control)
 			{
@@ -370,7 +370,7 @@
 			return $this->yui_results($results);
 		}
 		
-		public function get_equipment()
+		public function get_component()
 		{
 			
 			/*$start					= phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -391,23 +391,23 @@
 			
 			$start = phpgw::get_var('startIndex');
 			
-			$equipment_list = array();
+			$component_list = array();
 
 			$sort = "ASC";
 
-			$equipment_list = $this->so_control->getAllBimItems(10,$type_id);
-			//var_dump($equipment_list); 
+			$component_list = $this->so_control->getAllBimItems(10,$type_id);
+			//var_dump($component_list); 
 
 		
 			$results = array();
-			foreach($equipment_list as $equipment)
+			foreach($component_list as $component)
 			{
-				$equipment['checked'] = false;
-				$results['results'][]= $equipment;
+				$component['checked'] = false;
+				$results['results'][]= $component;
 				$i++;
 			}
 			
-			$results['total_records'] = count($equipment_list);
+			$results['total_records'] = count($component_list);
 			$results['start'] = $start;
 			$results['sort'] = 'id';
 			$results['dir'] = "ASC";
@@ -434,7 +434,7 @@
 			$value['labels'][] = lang('add_location');
 		}
 		
-		public function get_equipment_types_by_category()
+		public function get_component_types_by_category()
 		{
 			$category = phpgw::get_var('ifc');
 			if($ifc != null)

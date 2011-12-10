@@ -13,7 +13,7 @@
 		protected $planned_date;
 		protected $completed_date;
 		protected $location_code;
-		protected $equipment_id;
+		protected $component_id;
 		protected $check_item_array = array();
 		protected $control;
 		
@@ -91,12 +91,12 @@
 		
 		public function get_location_code() { return $this->location_code; }
 		
-		public function set_equipment_id($equipment_id)
+		public function set_component_id($component_id)
 		{
-			$this->equipment_id = $equipment_id;
+			$this->component_id = $component_id;
 		}
 		
-		public function get_equipment_id() { return $this->equipment_id; }
+		public function get_component_id() { return $this->component_id; }
 		
 		public function set_control($control)
 		{
