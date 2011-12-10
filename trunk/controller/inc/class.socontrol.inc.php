@@ -105,8 +105,8 @@ class controller_socontrol extends controller_socommon
 			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
-			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
+			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -159,9 +159,9 @@ class controller_socontrol extends controller_socommon
 		$this->db->query($sql);
 	}
 	
-	function add_equipment_to_control($control_id, $equipment_id)
+	function add_component_to_control($control_id, $component_id)
 	{
-		$sql =  "INSERT INTO controller_control_equipment_list (control_id, equipment_id) values($control_id, $equipment_id)";
+		$sql =  "INSERT INTO controller_control_component_list (control_id, component_id) values($control_id, $component_id)";
 		$this->db->query($sql);
 	}
 		
@@ -242,7 +242,7 @@ class controller_socontrol extends controller_socommon
 		}
 		else
 		{
-			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.equipment_type_id, controller_control.equipment_id, controller_control.location_code, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
+			$cols = 'controller_control.id, controller_control.title, controller_control.description, controller_control.start_date, controller_control.end_date, controller_control.procedure_id, controller_control.control_area_id, controller_control.requirement_id, controller_control.costresponsibility_id, controller_control.responsibility_id, controller_control.component_type_id, controller_control.component_id, controller_control.location_code, controller_control.repeat_type, controller_control.repeat_interval, controller_control.enabled, controller_control_area.title AS control_area_name, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ';
 		}
 		
 		$dir = $ascending ? 'ASC' : 'DESC';
@@ -278,8 +278,8 @@ class controller_socontrol extends controller_socommon
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
-			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
+			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -321,8 +321,8 @@ class controller_socontrol extends controller_socommon
 		$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 		$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-		$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
-		$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+		$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
+		$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 		$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 		$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 		$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -399,7 +399,7 @@ class controller_socontrol extends controller_socommon
 		return $bimItemArray;
 	}
 	
-	public function get_control_equipment($noOfObjects = null, $bim_type = null)
+	public function get_control_component($noOfObjects = null, $bim_type = null)
 	{
 		$filters = array();
 		if($noOfObjects != null && is_numeric($noOfObjects))
@@ -411,8 +411,8 @@ class controller_socontrol extends controller_socommon
 			$limit = "LIMIT 10";
 		}
 
-		$joins = " {$this->left_join} controller_control_equipment_list ON (c.id = controller_control_equipment_list.control_id)";
-		$joins .= " {$this->left_join} fm_bim_item ON (controller_control_equipment_list.equipment_id = fm_bim_item.id)";
+		$joins = " {$this->left_join} controller_control_component_list ON (c.id = controller_control_component_list.control_id)";
+		$joins .= " {$this->left_join} fm_bim_item ON (controller_control_component_list.component_id = fm_bim_item.id)";
 		$joins .= " {$this->left_join} fm_bim_type ON (fm_bim_item.type= fm_bim_type.id)";
 		//$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
 		$sql  = "SELECT c.id AS control_id, c.title AS control_title, fm_bim_type.name AS type_name, fm_bim_item.id AS bim_id, fm_bim_item.guid as bim_item_guid FROM controller_control c {$joins} {$limit}";

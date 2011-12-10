@@ -66,32 +66,32 @@
 						'item' => array(
 							array('type' => 'filter', 
 								'name' => 'status',
-                                'text' => lang('Status'),
-                                'list' => array(
-                                    array(
-                                        'id' => 'none',
-                                        'name' => lang('Not selected')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    )
-                                )
-                            ),
+								'text' => lang('Status'),
+								'list' => array(
+									array(
+										'id' => 'none',
+										'name' => lang('Not selected')
+									), 
+									array(
+										'id' => 'NEW',
+										'name' => lang('NEW')
+									), 
+									array(
+										'id' => 'PENDING',
+										'name' =>  lang('PENDING')
+									), 
+									array(
+										'id' => 'REJECTED',
+										'name' => lang('REJECTED')
+									), 
+									array(
+										'id' => 'ACCEPTED',
+										'name' => lang('ACCEPTED')
+									)
+								)
+							),
 							array('type' => 'text', 
-                                'text' => lang('searchfield'),
+								'text' => lang('searchfield'),
 								'name' => 'query'
 							),
 							array(

@@ -14,21 +14,24 @@ class controller_socheck_list extends controller_socommon
 	 */
 	public static function get_instance()
 	{
-		if (self::$so == null) {
+		if (self::$so == null)
+		{
 			self::$so = CreateObject('controller.socheck_list');
 		}
 		return self::$so;
 	}
 	
-	public function get_single($check_list_id){
+	public function get_single($check_list_id)
+	{
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id FROM controller_check_list cl, controller_check_item ci WHERE cl.id = $check_list_id AND cl.id = ci.check_list_id;";
 		$this->db->query($sql);
 		
 		$counter = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
-			
-			if($counter == 0){
+		while ($this->db->next_record())
+		{
+			if($counter == 0)
+			{
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
@@ -46,15 +49,19 @@ class controller_socheck_list extends controller_socommon
 			$counter++;
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list->set_check_item_array($check_items_array);
 			return $check_list->toArray();
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
 		
-	public function get_single_with_control_items($check_list_id){
+	public function get_single_with_control_items($check_list_id)
+	{
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
@@ -68,9 +75,10 @@ class controller_socheck_list extends controller_socommon
 		
 		$counter = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
-			
-			if($counter == 0){
+		while ($this->db->next_record())
+		{
+			if($counter == 0)
+			{
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
@@ -97,16 +105,19 @@ class controller_socheck_list extends controller_socommon
 			$counter++;
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list->set_check_item_array($check_items_array);
 			return $check_list->toArray();
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
 	
-	public function get_check_list(){
-
+	public function get_check_list()
+	{
 		$current_time = time();
 	
 		$buffer_in_days = 3600*24*7*5;
@@ -116,7 +127,8 @@ class controller_socheck_list extends controller_socommon
 		$sql = "SELECT p.* FROM controller_control p WHERE $current_time >= p.start_date AND p.start_date > $buffer_time";
 		$this->db->query($sql);
 			
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 			$start_date = date("d.m.Y",  $this->db->f('start_date'));
 			$end_date = date("d.m.Y",  $this->db->f('end_date'));
 			
@@ -133,8 +145,8 @@ class controller_socheck_list extends controller_socommon
 			$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
-			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
+			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -145,7 +157,8 @@ class controller_socheck_list extends controller_socommon
 		return $results;
 	}
 	
-	function get_check_lists_for_control($control_id){
+	function get_check_lists_for_control($control_id)
+	{
 		$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id ";
 		$sql .= "FROM controller_check_list cl, controller_check_item ci ";
@@ -156,11 +169,12 @@ class controller_socheck_list extends controller_socommon
 		
 		$check_list_id = 0;
 		$check_list = null;
-		while ($this->db->next_record()) {
-		
-			if( $this->db->f('cl_id', true) != $check_list_id ){
-				
-				if($check_list_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('cl_id', true) != $check_list_id )
+			{	
+				if($check_list_id != 0)
+				{
 					$check_list->set_check_item_array($check_items_array);
 					$check_list_array[] = $check_list->toArray();
 				}
@@ -184,18 +198,21 @@ class controller_socheck_list extends controller_socommon
 			$check_list_id =  $check_list->get_id();
 		}
 		
-		if($check_list != null){
+		if($check_list != null)
+		{
 			$check_list->set_check_item_array($check_items_array);
 			$check_list_array[] = $check_list->toArray();
 		
 			return $check_list_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}
 	}
 	
-	function get_agg_check_lists_for_location( $location_code, $from_date, $to_date ){
-		
+	function get_agg_check_lists_for_location( $location_code, $from_date, $to_date )
+	{	
 		$sql = 	"SELECT c.id as c_id, title, cl.id as cl_id, c.repeat_type, c.repeat_interval, deadline, count(ci.id) ";
 		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
 		$sql .= "WHERE cl.location_code = $location_code ";
@@ -211,10 +228,12 @@ class controller_socheck_list extends controller_socommon
 		$control_id = 0;
 		$controls_array = array();
 		$check_list_array = array();
-		while ($this->db->next_record()) {
-			
-			if( $this->db->f('c_id', true) != $control_id ){
-				if($control_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('c_id', true) != $control_id )
+			{
+				if($control_id != 0)
+				{
 					$controls_array[] = array( "control" => $control_array, "check_list" => $check_list_array);
 					$check_list_array = array();
 				}
@@ -236,16 +255,20 @@ class controller_socheck_list extends controller_socommon
 			$control_id = $this->db->f('c_id', true);
 		}		
 		
-		if( !empty( $control_array ) ){
+		if( !empty( $control_array ) )
+		{
 			$controls_array[] = array( "control" => $control_array, "check_list" => $check_list_array);
 			
 			return $controls_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}	
 	}
 
-	function get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type ){
+	function get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type )
+	{
 		$sql = 	"SELECT c.id as c_id, cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, ";
 		$sql .= "deadline, planned_date, completed_date, cl.location_code as cl_loc, c.* "; 
 		$sql .= "FROM controller_check_list cl, controller_control c ";
@@ -259,11 +282,12 @@ class controller_socheck_list extends controller_socommon
 		
 		$control_id = 0;
 		$control = null;
-		while ($this->db->next_record()) {
-			
-			if( $this->db->f('c_id', true) != $control_id ){
-				
-				if($control_id != 0){
+		while ($this->db->next_record())
+		{
+			if( $this->db->f('c_id', true) != $control_id )
+			{	
+				if($control_id != 0)
+				{
 					$control->set_check_lists_array($check_lists_array);
 					$controls_array[] = $control;
 				}
@@ -280,8 +304,8 @@ class controller_socheck_list extends controller_socommon
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
-				$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
-				$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+				$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
+				$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));
@@ -302,12 +326,15 @@ class controller_socheck_list extends controller_socommon
 			$control_id =  $control->get_id();
 		}
 		
-		if($control != null){
+		if($control != null)
+		{
 			$control->set_check_lists_array($check_lists_array);
 			$controls_array[] = $control;
 			
 			return $controls_array;
-		}else {
+		}
+		else
+		{
 			return null;
 		}	
 	}
@@ -378,10 +405,9 @@ class controller_socheck_list extends controller_socommon
 	}
 
 	function populate(int $control_id, &$control)
-	{
-		
-			
-		if($control == null) {
+	{			
+		if($control == null)
+		{
 			$start_date = date("d.m.Y",  $this->db->f('start_date'));
 			$end_date = date("d.m.Y",  $this->db->f('end_date'));
 			$control = new controller_control((int) $control_id);
@@ -398,8 +424,8 @@ class controller_socheck_list extends controller_socommon
 			$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id', true), 'int'));
 			$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
 //			$control->set_control_group_id($this->unmarshal($this->db->f('control_group_id', true), 'int'));
-			$control->set_equipment_type_id($this->unmarshal($this->db->f('equipment_type_id', true), 'int'));
-			$control->set_equipment_id($this->unmarshal($this->db->f('equipment_id', true), 'int'));
+			$control->set_component_type_id($this->unmarshal($this->db->f('component_type_id', true), 'int'));
+			$control->set_component_id($this->unmarshal($this->db->f('component_id', true), 'int'));
 			$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'int'));
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type', true), 'int'));
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval', true), 'int'));

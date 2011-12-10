@@ -4,8 +4,8 @@
 	/**
 	 * Cherry pick selected values into a new array
 	 * 
-	 * @param array $array    input array
-	 * @param array $keys     array of keys to pick
+	 * @param array $array	input array
+	 * @param array $keys	 array of keys to pick
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
@@ -39,7 +39,7 @@
 	/**
 	 * Reformat an ISO timestamp into norwegian format
 	 * 
-	 * @param string $date    date
+	 * @param string $date	date
 	 *
 	 * @return string containg timestamp in norwegian format
 	 */
@@ -313,10 +313,10 @@
   			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
 		}
 
-        public function set_active_menu($item)
-        {
-            $GLOBALS['phpgw_info']['flags']['menu_selection'] = $item;
-        }
+		public function set_active_menu($item)
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $item;
+		}
 
 		/**
 		* A more flexible version of xslttemplate.add_file
@@ -345,8 +345,8 @@
 			die;
 		}
 
-        public function render_template($output)
-        {
+		public function render_template($output)
+		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			if($this->flash_msgs)
 			{
@@ -361,8 +361,8 @@
 			}
 			echo htmlspecialchars_decode($output);
 			$GLOBALS['phpgw']->common->phpgw_exit();
-        }
-        	
+		}
+			
 		public function add_yui_translation(&$data)
 		{
 			$this->add_template_file('yui_booking_i18n');
@@ -385,7 +385,7 @@
 					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
 				),
 				'setupPaginator' => array(
-			        'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
+					'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
 					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
 					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
 				),
@@ -425,7 +425,7 @@
 		}
 
   
-        public function check_active($url)
+		public function check_active($url)
 		{
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -501,26 +501,26 @@
 					toolbar:
 						{buttons: [
 	 						{ group: 'textstyle', label: '{$lang_font_style}',
-						        buttons: [
-						            { type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
-						        ]
-						    },
-						    { type: 'separator' },
-						    { group: 'indentlist', label: '{$lang_lists}',
-						        buttons: [
-						            { type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
-						            { type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
-						        ]
-						    },
-						    { type: 'separator' },
-						    { group: 'insertitem', label: '{$lang_insert_item}',
+								buttons: [
+									{ type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
+								]
+							},
+							{ type: 'separator' },
+							{ group: 'indentlist', label: '{$lang_lists}',
+								buttons: [
+									{ type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
+									{ type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
+								]
+							},
+							{ type: 'separator' },
+							{ group: 'insertitem', label: '{$lang_insert_item}',
 								buttons: [
 									{ type: 'push', label: 'HTML Lenke CTRL + SHIFT + L', value: 'createlink', disabled: true },
 									{ type: 'push', label: 'Sett inn bilde', value: 'insertimage' }
 								]
 							},
-						    { type: 'separator' },
-						    { group: 'undoredo', label: 'Angre/Gjenopprett',
+							{ type: 'separator' },
+							{ group: 'undoredo', label: 'Angre/Gjenopprett',
 								buttons: [
 									{ type: 'push', label: 'Angre', value: 'undo' },
 									{ type: 'push', label: 'Gjenopprett', value: 'redo' }
@@ -726,45 +726,45 @@ SCRIPT;
 			return self::get_messages($messages, 'info');
 		}
 
-        /**
+		/**
 		 * Download xls, csv or similar file representation of a data table
 		 */
-        public function download()
-        {
-            $list = $this->query();
-            $list = $list['ResultSet']['Result'];
+		public function download()
+		{
+			$list = $this->query();
+			$list = $list['ResultSet']['Result'];
 
-            $keys = array();
+			$keys = array();
 
-            if(count($list[0]) > 0) {
-                foreach($list[0] as $key => $value) {
-                    if(!is_array($value)) {
-                        array_push($keys, $key);
-                    }
-                }
-            }
-            
-            // Remove newlines from output
-            $count = count($list);
-            for($i = 0; $i < $count; $i++)
-            {
+			if(count($list[0]) > 0) {
+				foreach($list[0] as $key => $value) {
+					if(!is_array($value)) {
+						array_push($keys, $key);
+					}
+				}
+			}
+			
+			// Remove newlines from output
+			$count = count($list);
+			for($i = 0; $i < $count; $i++)
+			{
  				foreach ($list[$i] as $key => &$data)
  				{
 	 				$data = str_replace(array("\n","\r\n", "<br>"),'',$data);
  				}
-            }
+			}
 
-             // Use keys as headings
-            $headings = array();
-            $count_keys = count($keys);
-            for($j=0;$j<$count_keys;$j++)
-            {
-            	array_push($headings, lang($keys[$j]));
-            }
+			 // Use keys as headings
+			$headings = array();
+			$count_keys = count($keys);
+			for($j=0;$j<$count_keys;$j++)
+			{
+				array_push($headings, lang($keys[$j]));
+			}
 
-            $property_common = CreateObject('property.bocommon');
-            $property_common->download($list, $keys, $headings);
-        }
+			$property_common = CreateObject('property.bocommon');
+			$property_common->download($list, $keys, $headings);
+		}
 		
 		/**
 		 * Added because error reporting facilities in phpgw tries to serialize the PDO

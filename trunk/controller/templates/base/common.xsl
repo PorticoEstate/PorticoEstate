@@ -229,7 +229,7 @@
 
 					// Check if confirm box should be displayed before request is executed
 					if( record.getData().alert != null )
-					    alertStatus = record.getData().alert[0];
+						alertStatus = record.getData().alert[0];
 
 					if( alertStatus ){
 						// Display confirm box with message
@@ -403,10 +403,10 @@
 				$populate = phpgw::get_var('populate_form');
 				if(isset($populate)){?>
 					var qs = YAHOO.controller.serializeForm(source_properties.form);
-				    this.wrapper.source.liveData = this.wrapper.url + qs + '&';
-				    this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-				    	this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
-				    }, scope: this});
+					this.wrapper.source.liveData = this.wrapper.url + qs + '&';
+					this.wrapper.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+						this.wrapper.table.onDataReturnInitializeTable(sRequest, oResponse, this.wrapper.paginator);
+					}, scope: this});
 			<?php }
 			?>
 */
@@ -523,10 +523,10 @@
 	function formListener(event){
 		YAHOO.util.Event.stopEvent(event);
 		var qs = YAHOO.portico.serializeForm(this.properties.form);
-	    this.source.liveData = this.url + qs + '&';
-	    this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
-	    	this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
-	    }, scope: this});
+		this.source.liveData = this.url + qs + '&';
+		this.source.sendRequest('', {success: function(sRequest, oResponse, oPayload) {
+			this.table.onDataReturnInitializeTable(sRequest, oResponse, this.paginator);
+		}, scope: this});
 	}
 
 ]]>

@@ -46,11 +46,11 @@
 						'item' => array(
 							array('type' => 'filter',
 								'name' => 'control_areas',
-                                'text' => lang('Control_area').':',
-                                'list' => $this->so_control_area->get_control_area_select_array(),
+								'text' => lang('Control_area').':',
+								'list' => $this->so_control_area->get_control_area_select_array(),
 							),
 							array('type' => 'text', 
-                                'text' => lang('search'),
+								'text' => lang('search'),
 								'name' => 'query'
 							),
 							array(

@@ -1,6 +1,6 @@
 <?php
 	$setup_info['controller']['name'] = 'controller';
-	$setup_info['controller']['version'] = '0.1.10';
+	$setup_info['controller']['version'] = '0.1.11';
 	$setup_info['controller']['app_order'] = 100;
 	$setup_info['controller']['enable'] = 1;
 	$setup_info['controller']['app_group']	= 'office';
@@ -28,7 +28,8 @@
 	$setup_info['controller']['hooks'] = array
 	(
 		'menu'	=> 'controller.menu.get_menu',
-		'config'
+		'config',
+		'home',
 	);
 	
 	$setup_info['controller']['tables'] = array 
@@ -43,5 +44,5 @@
 		'controller_control_area',
 		'controller_control_group_list',
 		'controller_control_location_list',
-		'controller_control_equipment_list'
+		'controller_control_component_list'
 	);

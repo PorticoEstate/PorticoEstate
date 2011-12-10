@@ -44,7 +44,8 @@ class controller_socontrol_group extends controller_socommon
 		
 		$result = $this->db->query('INSERT INTO controller_control_group (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__,__FILE__);
 		
-		if(isset($result)) {
+		if(isset($result))
+		{
 			// Get the new control group ID and return it
 			return $this->db->get_last_insert_id('controller_control_group', 'id');
 		}
@@ -130,7 +131,8 @@ class controller_socontrol_group extends controller_socommon
 		$sql = "SELECT * FROM controller_control_group $order";
 		$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit);
 		
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 			$control_group = new controller_control_group($this->unmarshal($this->db->f('id', true), 'int'));
 			$control_group->set_group_name($this->unmarshal($this->db->f('group_name', true), 'string'));
 			
@@ -142,20 +144,20 @@ class controller_socontrol_group extends controller_socommon
 	
 	function get_control_group_select_array()
 	{
-            $results = array();
+			$results = array();
 			$results[] = array('id' =>  0,'name' => lang('Not selected'));
 			$this->db->query("SELECT id, group_name as name FROM controller_control_group ORDER BY name ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-						           'name' => $this->db->f('name', false));
+								   'name' => $this->db->f('name', false));
 			}
 			return $results;
 	}
 	
 	function get_building_part_select_array($selected_building_part_id)
 	{
-            $results = array();
+			$results = array();
 			$results[] = array('id' =>  0,'name' => lang('Not selected'));
 			$this->db->query("SELECT id, descr as name FROM fm_building_part ORDER BY id ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
@@ -164,13 +166,13 @@ class controller_socontrol_group extends controller_socommon
 				if($selected_building_part_id && $selected_building_part_id > 0 && $selected_building_part_id == $curr_id)
 				{
 					$results[] = array('id' => $this->db->f('id', false),
-							           'name' => $this->db->f('name', false),
+									   'name' => $this->db->f('name', false),
 									   'selected' => 'yes');
 				}
 				else
 				{
 					$results[] = array('id' => $this->db->f('id', false),
-							           'name' => $this->db->f('name', false));
+									   'name' => $this->db->f('name', false));
 				}
 			}
 			return $results;
@@ -290,8 +292,8 @@ class controller_socontrol_group extends controller_socommon
 		$dir = $ascending ? 'ASC' : 'DESC';
 		$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir ": '';
 
-	    //var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");    
-	    
+		//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");	
+		
 		return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 	}
 	
@@ -310,6 +312,5 @@ class controller_socontrol_group extends controller_socommon
 		}
 		//var_dump($control_group);
 		return $control_group;
-	}
-	
+	}	
 }

@@ -37,29 +37,29 @@
 			  	<xsl:for-each select="controls_calendar_array">
 			  		<xsl:variable name="repeat_type"><xsl:value-of select="control/repeat_type"/></xsl:variable>
 					<li>
-			    		<div class="id">
-			      			<xsl:value-of select="control/id"/>
+						<div class="id">
+				  			<xsl:value-of select="control/id"/>
 						</div>
 						<div class="title">
-			      			<xsl:value-of select="control/title"/>
+				  			<xsl:value-of select="control/title"/>
 						</div>
 						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_type"/>
+				  			<xsl:value-of select="control/repeat_type"/>
 						</div>
 						<div class="frequency">
-			      			<xsl:value-of select="control/repeat_interval"/>
+				  			<xsl:value-of select="control/repeat_interval"/>
 						</div>							
 						<xsl:for-each select="calendar_array">
-				    		<div>
-				    		<xsl:choose>
-					    		<xsl:when test="$repeat_type = 0">
-					    			<xsl:value-of select="." />
-					    		</xsl:when>
-					    		<xsl:otherwise>
-					    			<div style="position:relative;">
-							    		<div id="info_box" style="position:absolute;display:none;">
-							    		</div>
-							    		<xsl:choose>
+							<div>
+							<xsl:choose>
+								<xsl:when test="$repeat_type = 0">
+									<xsl:value-of select="." />
+								</xsl:when>
+								<xsl:otherwise>
+									<div style="position:relative;">
+										<div id="info_box" style="position:absolute;display:none;">
+										</div>
+										<xsl:choose>
 												<xsl:when test="id">
 													<xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>
 													<xsl:choose>
@@ -84,8 +84,8 @@
 												</xsl:otherwise>
 											</xsl:choose>
 										</div>
-					    		</xsl:otherwise>
-				    		</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>
 							</div>
 						</xsl:for-each>
 					</li>	

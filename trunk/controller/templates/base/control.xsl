@@ -30,7 +30,7 @@
 										</option>
 									</xsl:otherwise>
 								</xsl:choose>								
-						    </xsl:for-each>
+							</xsl:for-each>
 						</select>
 					</xsl:when>
 					<xsl:otherwise>
@@ -58,7 +58,7 @@
 										</option>
 									</xsl:otherwise>
 								</xsl:choose>								
-						    </xsl:for-each>
+							</xsl:for-each>
 						</select>
 					</xsl:when>
 					<xsl:otherwise>
@@ -127,7 +127,7 @@
 								<option value="{id}">
 									<xsl:value-of disable-output-escaping="yes" select="name"/>
 								</option>
-						    </xsl:for-each>
+							</xsl:for-each>
 						</select>
 					</xsl:when>
 					<xsl:otherwise>

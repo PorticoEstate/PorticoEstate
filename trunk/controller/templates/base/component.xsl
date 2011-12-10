@@ -6,7 +6,7 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
@@ -25,7 +25,7 @@
 					<div><xsl:value-of select="title"/></div>
 					<div><xsl:value-of select="location_code"/></div>
 				</li>			
-		    </xsl:for-each>
+			</xsl:for-each>
 		</ul>
 	</div>
 	
@@ -51,7 +51,7 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:apply-templates select="toolbar"/>
+		<xsl:apply-templates select="toolbar"/>
 	</form>
 
 	<form id="update_table_dummy" method='POST' action='' >
@@ -61,10 +61,10 @@
 
 
 <xsl:template match="toolbar">
-    <div id="toolbar">
+	<div id="toolbar">
 		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
 			<tr>
-        <xsl:for-each select="item">
+		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 			<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 			<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
@@ -73,10 +73,10 @@
 				<xsl:when test="type = 'date-picker'">
 					<td valign="top">
 					<div class="date-picker">
-                	<input id="filter_{name}" name="filter_{name}" type="text">
+					<input id="filter_{name}" name="filter_{name}" type="text">
 							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
 						</input>
-                </div>
+				</div>
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
@@ -112,7 +112,7 @@
 
 							<![CDATA[
 							var oAC = YAHOO.portico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
-					                                         'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+															 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
 
 							if (requestGenerator) {
 								oAC.generateRequest = requestGenerator;
@@ -147,24 +147,24 @@
 				</xsl:when>
 				<xsl:when test="type = 'filter'">
 					<td valign="top">
-                    <xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-                	
-                	<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
-                        <xsl:for-each select="list">
-                    		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+					<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+					
+					<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
+						<xsl:for-each select="list">
+							<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 							<xsl:if test="id = 'NEW'">
-		                    	<option value="{$id}" selected="selected">
+								<option value="{$id}" selected="selected">
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:if>
 							<xsl:if test="id != 'NEW'">
-		                    	<option value="{$id}">
+								<option value="{$id}">
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:if>
-                        </xsl:for-each>
-                	</select>
-                    </td>
+						</xsl:for-each>
+					</select>
+					</td>
 				</xsl:when>
 				<xsl:otherwise>
 					<td valign="top">
@@ -179,7 +179,7 @@
 					</td>
 				</xsl:otherwise>
 			</xsl:choose>
-        </xsl:for-each>
+		</xsl:for-each>
 		  </tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
 				<thead style="background:none">
@@ -198,12 +198,12 @@
 				</thead>
 			</xsl:if>
 		</table>
-    </div>
+	</div>
 </xsl:template>
 
 <xsl:template match="datatable">
-    <div id="paginator"/>
-    <div id="datatable-container"/>
+	<div id="paginator"/>
+	<div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
 </xsl:template>
 
@@ -218,14 +218,14 @@
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
+						</xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
 						hidden: true,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
+						</xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
@@ -251,7 +251,7 @@
 				<option value="{$control_area_id}">
 					<xsl:value-of select="title"/>
 				</option>			
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		
 		<select id="control_list" name="control_list">
@@ -261,7 +261,7 @@
 					<xsl:value-of select="title"/>
 				</option>
 										
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 	</div>
 	
@@ -273,7 +273,7 @@
 					<xsl:value-of select="name"/>
 				</option>
 										
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		
 		<select id="category_types" name="category_types">
@@ -283,7 +283,7 @@
 					<xsl:value-of select="name"/>
 				</option>
 										
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		
 		<select id="district_list" name="district_list">
@@ -293,7 +293,7 @@
 					<xsl:value-of select="name"/>
 				</option>
 										
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		
 		<select id="part_of_town_list" name="part_of_town_list">
@@ -303,7 +303,7 @@
 					<xsl:value-of select="name"/>
 				</option>
 										
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 		<select id="responsibility_roles" name="responsibility_roles">
 			<xsl:for-each select="responsibility_roles_list">
@@ -312,7 +312,7 @@
 					<xsl:value-of select="name"/>
 				</option>
 										
-		    </xsl:for-each>
+			</xsl:for-each>
 		</select>
 	</div>
 </xsl:template>
