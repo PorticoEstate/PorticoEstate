@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
 	<table border="0" align="center" width="85%">
