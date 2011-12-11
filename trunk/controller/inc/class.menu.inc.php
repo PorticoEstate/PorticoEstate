@@ -134,10 +134,20 @@
 			{
 				$menus['admin'] = array
 				(
+					'index'	=> array
+					(
+						'text'	=> lang('Configuration'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'controller') )
+					),
 					'acl'	=> array
 					(
 						'text'	=> lang('Configure Access Permissions'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'controller') )
+					),
+					'control_cats'	=> array
+					(
+						'text'	=> lang('Control area'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'controller', 'location' => '.control', 'global_cats' => 'true', 'menu_selection' => 'admin::controller::control_cats') )
 					)
 				);
 			}

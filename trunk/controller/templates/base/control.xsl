@@ -33,6 +33,9 @@
 								</xsl:choose>								
 							</xsl:for-each>
 						</select>
+						<select id="control_area_id" name="control_area_id">
+							<xsl:apply-templates select="control_areas_array2/options"/>
+						</select>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/control_area_name" />
@@ -167,3 +170,13 @@
 	</div>
 </div>
 </xsl:template>
+
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected" />
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>
+

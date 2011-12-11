@@ -55,6 +55,7 @@
 		private $so_control_group_list;
 		private $so_check_list_list;
 		private $so_check_item;
+		private $_category_acl;
 
 		public $public_functions = array
 		(
@@ -90,6 +91,10 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
 
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
+
 			self::set_active_menu('controller::control');
 		}
 
@@ -101,6 +106,25 @@
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+
+
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+
+
 
 			$data = array(
 				'form' => array(
@@ -136,6 +160,13 @@
 								'name' => 'control_areas',
 								'text' => lang('Control_area'),
 								'list' => $this->so_control_area->get_control_area_select_array(),
+							),
+							
+							//as categories
+							array('type' => 'filter',
+								'name' => 'control_areas',
+								'text' => lang('Control_area') . 2,
+								'list' => $control_areas_array2,
 							),
 							array('type' => 'filter',
 								'name' => 'responsibilities',
@@ -216,6 +247,24 @@
 			}
 
 			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
+			
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END as categories
+
 
 			// Fetches prosedures that are related to first control area in list
 			$control_area_id = $control_areas_array[0]['id'];
@@ -239,6 +288,7 @@
 				'editable' 					=> true,
 				'control'					=> (isset($control)) ? $control->toArray(): null,
 				'control_areas_array'		=> $control_areas_array,
+				'control_areas_array2'		=> array('options' => $control_areas_array2),
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array,
 				'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),

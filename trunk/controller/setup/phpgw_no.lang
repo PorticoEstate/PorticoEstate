@@ -259,6 +259,7 @@ Control_groups	controller	no	Kontrollgrupper
 Control_area	controller	no	Kontrollområde
 Control area	controller	no	Kontrollområde
 Control_areas	controller	no	Kontrollområder
+Use ACL for control areas	common	no	Bruk rettighetsstyring på kontrollområder
 Control item what to do	controller	no	Hva skal gjøres
 Not selected	controller	no	Ingen valgt
 searchfield	controller	no	Søkefelt
