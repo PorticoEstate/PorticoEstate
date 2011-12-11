@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="control_groups" xmlns:php="http://php.net/xsl">
 
 <div class="yui-content tab_content">

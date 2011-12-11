@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="control" xmlns:php="http://php.net/xsl">
 
 <xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>

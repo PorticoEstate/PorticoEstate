@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="sort_check_list" xmlns:php="http://php.net/xsl">
 
 <div class="yui-content tab_content">

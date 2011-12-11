@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="control_items" xmlns:php="http://php.net/xsl">
 
 <div class="yui-content tab_content">

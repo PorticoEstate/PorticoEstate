@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 
 <div id="main_content">

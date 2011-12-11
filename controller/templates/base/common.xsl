@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="common" xmlns:php="http://php.net/xsl">
 
 

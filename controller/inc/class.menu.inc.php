@@ -1,4 +1,33 @@
 <?php
+	/**
+	* phpGroupWare - controller: a part of a Facilities Management System.
+	*
+	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/
+	* @package property
+	* @subpackage controller
+ 	* @version $Id$
+	*/
+
 	class controller_menu
 	{
 		function get_menu()
@@ -18,7 +47,7 @@
 					'group'	=> 'office'
 				)
 			);
-			
+
 			if($GLOBALS['phpgw']->acl->check('.usertype.superuser',PHPGW_ACL_ADD,'controller'))
 			{
 				$menus['navigation'] =  array
@@ -66,7 +95,7 @@
 						'text'	=> lang('Procedure'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uiprocedure.index') ),
 						'image'	=> array('property', 'location_1'),
-					),	
+					),
 					'check_list' => array
 					(
 						'text'	=> lang('Check_list'),
@@ -84,7 +113,7 @@
 			else
 			{
 				$menus['navigation'] =  array
-				(	
+				(
 					'check_list' => array
 					(
 						'text'	=> lang('Check_list'),
@@ -99,7 +128,7 @@
 					),
 				);
 			}
-			
+
 			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
 				|| $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{
@@ -112,7 +141,7 @@
 					)
 				);
 			}
-			
+
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
