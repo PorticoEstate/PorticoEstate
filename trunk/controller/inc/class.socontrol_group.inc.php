@@ -26,7 +26,7 @@
 	* @package property
 	* @subpackage controller
  	* @version $Id$
-	*/	
+	*/
 
 	phpgw::import_class('controller.socommon');
 
