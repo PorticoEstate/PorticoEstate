@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
 	<xsl:param name="true"/>

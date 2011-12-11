@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="tab_view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 

@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="control_group_items" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_booking_i18n"/>
