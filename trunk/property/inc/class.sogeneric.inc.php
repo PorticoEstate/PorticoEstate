@@ -1928,7 +1928,7 @@
 								(
 									'valueset'		=> false,
 									'method'		=> 'property.boresponsible.get_responsibilities',
-									'method_input'	=> array('acl_app' => 'property',	'selected' => '##responsibility_id##')
+									'method_input'	=> array('appname' => '$this->appname',	'selected' => '##responsibility_id##')
 								)
 							)
 						),

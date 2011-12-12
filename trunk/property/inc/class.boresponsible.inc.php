@@ -209,16 +209,16 @@
 			$selected	= isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
 			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
 				'order' => $this->order, 'location' => '', 'allrows'=>true,
-				'filter' => $filter));
+				'filter' => $filter, 'appname' => $data['appname']));
 			$responsibilities = array();
 			foreach($values as  $value)
 			{
 				$responsibilities[] = array
-					(
-						'id'		=> $value['id'],
-						'name'		=> $value['name'],
-						'selected'	=> $value['id'] == $selected ? 1 : 0
-					);
+				(
+					'id'		=> $value['id'],
+					'name'		=> $value['name'],
+					'selected'	=> $value['id'] == $selected ? 1 : 0
+				);
 			}
 
 			return $responsibilities;

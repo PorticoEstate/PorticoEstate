@@ -317,9 +317,13 @@
 									$_argument_value_name = trim($_argument_value,'#');
 									$_argument_value = $values[$_argument_value_name];
 								}
+								if(preg_match('/^\$this->/', $_argument_value))
+								{
+									$_argument_value_name = ltrim($_argument_value,'$this->');
+									$_argument_value = $this->$_argument_value_name;
+								}								
 								$method_input[$_argument] = $_argument_value;
 							}
-
 							$values_combo_box[] = execMethod($field['values_def']['method'],$method_input);
 						}
 						$default_value = array ('id'=>'','name'=> lang('select') . ' ' . $field['descr']);
@@ -815,6 +819,12 @@
 								$_argument_value_name = trim($_argument_value,'#');
 								$_argument_value = $values[$_argument_value_name];
 							}
+							if(preg_match('/^\$this->/', $_argument_value))
+							{
+								$_argument_value_name = ltrim($_argument_value,'$this->');
+								$_argument_value = $this->$_argument_value_name;
+							}
+
 							$method_input[$_argument] = $_argument_value;
 						}
 
