@@ -44,7 +44,7 @@
 		public $total_records = 0;
 		public $cat_id;
 		public $allrows;
-		public $acl_location = '.admin';
+		protected $acl_location = '.admin';
 
 		/**
 		 * Constructor
@@ -54,7 +54,10 @@
 
 		public function __construct($session = false)
 		{
+			$this->appname = phpgw::get_var('appname', 'string', 'REQUEST', 'property');
+
 			$this->so				= CreateObject('property.soresponsible');
+			$this->so->appname = $this->appname;
 			$this->so->acl_location = $this->acl_location;
 
 			if ($session)
@@ -94,15 +97,21 @@
 
 			switch ($this->location)
 			{
-			case '.project.workorder':
-				$location = '.project';
-				break;
-			default:
-				$location = $this->location;
+				case '.project.workorder':
+					$location = '.project';
+					break;
+				default:
+					$location = $this->location;
 			}
 
-			$this->cats					= CreateObject('phpgwapi.categories', -1,'property', $location);
-			$this->dateformat 			= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->cats			= CreateObject('phpgwapi.categories', -1, $this->appname, $location);
+			$this->dateformat 	= $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+		}
+
+
+		public function get_acl_location()
+		{
+			return $this->acl_location;
 		}
 
 		/**
@@ -170,13 +179,13 @@
 			}
 
 			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query, 'sort' => $this->sort,
-				'order' => $this->order, 'location' => $this->location, 'allrows'=>$this->allrows,
+				'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
 				'filter' => $filter));
 			$this->total_records = $this->so->total_records;
 
-			if($value['cat_id'])
+			foreach($values as & $value)
 			{
-				foreach($values as & $value)
+				if($value['cat_id'])
 				{
 					$category = $this->cats->return_single($value['cat_id']);
 					$value['category']		= $category[0]['name'];
