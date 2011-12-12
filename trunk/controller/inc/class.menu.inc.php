@@ -148,7 +148,17 @@
 					(
 						'text'	=> lang('Control area'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'controller', 'location' => '.control', 'global_cats' => 'true', 'menu_selection' => 'admin::controller::control_cats') )
-					)
+					),
+					'responsible_matrix'	=> array
+					(
+						'text'		=> lang('responsible matrix'),
+						'url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index', 'appname' => 'controller') )
+					),
+					'responsibility_role'	=> array
+					(
+						'text'	=> lang('responsibility role'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'responsibility_role', 'appname' => 'controller') )
+					),
 				);
 			}
 
