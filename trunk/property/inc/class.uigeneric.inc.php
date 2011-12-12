@@ -35,6 +35,7 @@
 
 	class property_uigeneric
 	{
+		protected $appname = 'property';
 		var $grants;
 		var $start;
 		var $query;
@@ -81,6 +82,12 @@
 			$this->type 		= $this->bo->type;
 			$this->type_id 		= $this->bo->type_id;
 
+			$appname = phpgw::get_var('appname', 'string');
+			if($appname)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$this->appname = $appname;
+			}
 		}
 
 		function save_sessiondata()
@@ -172,18 +179,21 @@
 				$datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
 					(
 						'menuaction'	=> 'property.uigeneric.index',
-						'type'		=> $this->type,
+						'appname'		=> $this->appname,
+						'type'			=> $this->type,
 						'type_id'		=> $this->type_id
 					));
 
 				$datatable['config']['base_java_url'] = "menuaction:'property.uigeneric.index',"
+					."appname:'{$this->appname}',"
 					."type:'{$this->type}',"
 					."type_id:'{$this->type_id}'";
 
 				$link_data = array
 					(
 						'menuaction'	=> 'property.uigeneric.index',
-						'type'		=> $this->type,
+						'appname'		=> $this->appname,
+						'type'			=> $this->type,
 						'type_id'		=> $this->type_id
 					);
 
@@ -198,6 +208,7 @@
 							array
 							(
 								'menuaction'	=> 'property.uigeneric.index',
+								'appname'		=> $this->appname,
 								'type'			=> $this->type,
 								'type_id'		=> $this->type_id
 							)
@@ -261,6 +272,7 @@
 							array
 							(
 								'menuaction' => 'property.uigeneric.columns',
+								'appname'		=> $this->appname,
 								'type'			=> $this->type,
 								'type_id'		=> $this->type_id
 							)
@@ -392,6 +404,7 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'		=> 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
 							'type'				=> $this->type,
 							'type_id'			=> $this->type_id
 						)),
@@ -404,6 +417,7 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'		=> 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
 							'type'				=> $this->type,
 							'type_id'			=> $this->type_id,
 							'target'			=> '_blank'
@@ -423,6 +437,7 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uigeneric.delete',
+							'appname'		=> $this->appname,
 							'type'			=> $this->type,
 							'type_id'		=> $this->type_id
 						)),
@@ -441,6 +456,7 @@
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
 							'menuaction'	=> 'property.uigeneric.edit',
+							'appname'		=> $this->appname,
 							'type'			=> $this->type,
 							'type_id'		=> $this->type_id
 						))
@@ -677,7 +693,10 @@
 						if (isset($values['save']) && $values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', "general_receipt_{$this->type}_{$this->type_id}", $receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type,	'type_id' => $this->type_id));
+							$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index',
+													'appname'		=> $this->appname,
+													'type'			=> $this->type,
+													'type_id'		=> $this->type_id));
 						}
 						$id = $receipt['id'];
 					}
@@ -685,7 +704,10 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 'type'=> $this->type, 'type_id' => $this->type_id));
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uigeneric.index', 
+														'appname'		=> $this->appname,
+														'type'			=> $this->type,
+														'type_id' 		=> $this->type_id));
 				}
 			}
 
@@ -720,6 +742,7 @@
 				(
 					'menuaction'	=> 'property.uigeneric.edit',
 					'id'			=> $id,
+					'appname'		=> $this->appname,
 					'type'			=> $this->type,
 					'type_id'		=> $this->type_id
 				);
@@ -735,6 +758,7 @@
 						$link_history_data = array
 							(
 								'menuaction'	=> 'property.uigeneric.attrib_history',
+								'appname'		=> $this->appname,
 								'attrib_id'	=> $attribute['id'],
 								'actor_id'	=> $actor_id,
 								'role'		=> $this->role,
@@ -866,4 +890,3 @@
 			}
 		}
 	}
-

@@ -81,7 +81,7 @@
 				$allrows	= isset($data['allrows']) ? !!$data['allrows'] : '';
 				$filter		= $data['filter'] ? $data['filter'] : '';
 				$location	= isset($data['location']) ? $data['location'] : '';
-
+				$appname	= isset($data['appname'])  && $data['appname'] ? $data['appname'] : 'property';
 			}
 
 			if ($order)
@@ -93,7 +93,7 @@
 				$ordermethod = ' order by fm_responsibility.id DESC';
 			}
 
-			$where= 'WHERE';
+			$where= 'AND';
 			$filtermethod = '';
 
 /*
@@ -115,7 +115,10 @@
 				$querymethod = "$where (fm_responsibility.name $this->like '%$query%' OR fm_responsibility.descr $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_responsibility.*, phpgw_locations.name as location FROM fm_responsibility $this->join phpgw_locations ON fm_responsibility.location_id = phpgw_locations.location_id $filtermethod $querymethod";
+			$sql = "SELECT fm_responsibility.*, phpgw_locations.name as location FROM fm_responsibility"
+			. " {$this->join} phpgw_locations ON fm_responsibility.location_id = phpgw_locations.location_id"
+			. " {$this->join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+			. " WHERE app_name = '{$appname}' $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -164,15 +167,15 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$insert_values = array
-				(
-					$values['name'],
-					$values['descr'],
-					$GLOBALS['phpgw']->locations->get_id($this->appname, $values['location']),
-					(int) $values['cat_id'],
-					isset($values['active']) ? !!$values['active'] : '',
-					$this->account,
-					time()
-				);
+			(
+				$values['name'],
+				$values['descr'],
+				$GLOBALS['phpgw']->locations->get_id($this->appname, $values['location']),
+				(int) $values['cat_id'],
+				isset($values['active']) ? !!$values['active'] : '',
+				$this->account,
+				time()
+			);
 
 			$insert_values	= $this->db->validate_insert($insert_values);
 
