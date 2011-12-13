@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 <xsl:call-template name="yui_booking_i18n"/>

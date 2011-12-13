@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 	<xsl:template name="yui_booking_i18n" xmlns:php="http://php.net/xsl">
 		<xsl:if test="yui_booking_i18n">
 			<script type="text/javascript">

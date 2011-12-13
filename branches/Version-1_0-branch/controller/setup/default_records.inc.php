@@ -7,7 +7,7 @@
  */
 
 // clean up from previous install
-$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'controller'");
+/*$GLOBALS['phpgw_setup']->oProc->query("SELECT app_id FROM phpgw_applications WHERE app_name = 'controller'");
 $GLOBALS['phpgw_setup']->oProc->next_record();
 $app_id = $GLOBALS['phpgw_setup']->oProc->f('app_id');
 
@@ -30,14 +30,18 @@ $GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_locations WHERE app_id 
 
 
 unset($locations);
-
+*/
 
 //Create groups, users, add users to groups and set preferences
-$GLOBALS['phpgw']->locations->add('.',				'Root',			'controller',false);
-$GLOBALS['phpgw']->locations->add('admin',			'Admin',		'controller',false);
-$GLOBALS['phpgw']->locations->add('.usertype',				'Usertypes',						'controller',false);
-$GLOBALS['phpgw']->locations->add('.usertype.superuser',	'Usertype: Superuser',				'controller',false);
-$GLOBALS['phpgw']->locations->add('.usertype.user',			'Usertype: User',					'controller',false);
+$GLOBALS['phpgw']->locations->add('.',	'Root',	'controller',false);
+$GLOBALS['phpgw']->locations->add('admin',	'Admin', 'controller',false);
+$GLOBALS['phpgw']->locations->add('.usertype', 'Usertypes',	'controller',false);
+$GLOBALS['phpgw']->locations->add('.usertype.superuser','Usertype: Superuser', 'controller',false);
+$GLOBALS['phpgw']->locations->add('.usertype.user',	'Usertype: User', 'controller',false);
+
+$GLOBALS['phpgw']->locations->add('.control', 'Control', 'controller');
+$GLOBALS['phpgw']->locations->add('.checklist', 'Checklist', 'controller');
+$GLOBALS['phpgw']->locations->add('.procedure', 'Procedure', 'controller');
 
 /*
 // Default groups and users

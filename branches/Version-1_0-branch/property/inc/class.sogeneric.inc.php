@@ -39,6 +39,7 @@
 		var $location_info = array();
 		var $tree = array();
 		protected $table;
+		var $appname = 'property';
 
 		function __construct()
 		{
@@ -176,6 +177,33 @@
 			{
 				$filtermethod = "{$where} user_id = {$this->account} OR public = 1";
 				$where = 'AND';
+			}
+
+			if(isset($this->location_info['filter']) && $this->location_info['filter'] && is_array($this->location_info['filter']))
+			{
+				$_filtermethod = array();
+				foreach($this->location_info['filter'] as $_argument => $_argument_value)
+				{
+					if(preg_match('/^##/', $_argument_value))
+					{
+						$_argument_value_name = trim($_argument_value,'#');
+						$_argument_value = $values[$_argument_value_name];
+					}
+					if(preg_match('/^\$this->/', $_argument_value))
+					{
+						$_argument_value_name = ltrim($_argument_value,'$this->');
+						$_argument_value = $this->$_argument_value_name;
+					}								
+					
+					$_filtermethod[] = "{$_argument} = '{$_argument_value}'";
+				}
+
+
+				if($_filtermethod)
+				{
+					$filtermethod = "{$where} " . implode(' AND ', $_filtermethod);
+					$where = 'AND';
+				}
 			}
 
 			if($_filter_array)
@@ -1928,7 +1956,7 @@
 								(
 									'valueset'		=> false,
 									'method'		=> 'property.boresponsible.get_responsibilities',
-									'method_input'	=> array('acl_app' => 'property',	'selected' => '##responsibility_id##')
+									'method_input'	=> array('appname' => '$this->appname',	'selected' => '##responsibility_id##')
 								)
 							)
 						),
@@ -1940,11 +1968,13 @@
 						'menu_selection'	=> 'admin::property::responsibility_role',
 						'default'			=> array
 						(
+							'appname'		=> array('add'	=> '$this->appname'),
 							'user_id' 		=> array('add'	=> '$this->account'),
 							'entry_date'	=> array('add'	=> 'time()'),
 							'modified_date'	=> array('edit'	=> 'time()'),
 						),
-						'check_grant'		=> false
+						'check_grant'		=> false,
+						'filter'			=> array('appname' => '$this->appname')
 					);
 
 				break;

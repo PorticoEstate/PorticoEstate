@@ -1,11 +1,40 @@
 <?php
+	/**
+	* phpGroupWare - controller: a part of a Facilities Management System.
+	*
+	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/
+	* @package property
+	* @subpackage controller
+ 	* @version $Id$
+	*/	
+
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
 	phpgw::import_class('controller.socontrol_item');
 	phpgw::import_class('controller.socontrol_group_list');
 	phpgw::import_class('controller.socontrol_area');
-	
+
 	include_class('controller', 'control_group', 'inc/model/');
 
 	class controller_uicontrol_group extends controller_uicommon
@@ -15,7 +44,7 @@
 		private $so_control_area;
 		private $so_control_item;
 		private $so_control_group_list;
-		
+
 		public $public_functions = array
 		(
 			'index'	=>	true,
@@ -36,7 +65,7 @@
 			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::control_group";
 		}
-		
+
 		public function index()
 		{
 			if(phpgw::get_var('phpgw_return_as') == 'json') {
@@ -52,37 +81,37 @@
 						'item' => array(
 							array('type' => 'filter', 
 								'name' => 'status',
-                                'text' => lang('Status').':',
-                                'list' => array(
-                                    array(
-                                        'id' => 'none',
-                                        'name' => lang('Not selected')
-                                    ), 
-                                    array(
-                                        'id' => 'NEW',
-                                        'name' => lang('NEW')
-                                    ), 
-                                    array(
-                                        'id' => 'PENDING',
-                                        'name' =>  lang('PENDING')
-                                    ), 
-                                    array(
-                                        'id' => 'REJECTED',
-                                        'name' => lang('REJECTED')
-                                    ), 
-                                    array(
-                                        'id' => 'ACCEPTED',
-                                        'name' => lang('ACCEPTED')
-                                    )
-                                )
-                            ),
+								'text' => lang('Status').':',
+								'list' => array(
+									array(
+										'id' => 'none',
+										'name' => lang('Not selected')
+									), 
+									array(
+										'id' => 'NEW',
+										'name' => lang('NEW')
+									), 
+									array(
+										'id' => 'PENDING',
+										'name' =>  lang('PENDING')
+									), 
+									array(
+										'id' => 'REJECTED',
+										'name' => lang('REJECTED')
+									), 
+									array(
+										'id' => 'ACCEPTED',
+										'name' => lang('ACCEPTED')
+									)
+								)
+							),
 							array('type' => 'filter',
 								'name' => 'control_areas',
-                                'text' => lang('Control_area').':',
-                                'list' => $this->so_control_area->get_control_area_select_array(),
+								'text' => lang('Control_area').':',
+								'list' => $this->so_control_area->get_control_area_select_array(),
 							),
 							array('type' => 'text', 
-                                'text' => lang('searchfield'),
+								'text' => lang('searchfield'),
 								'name' => 'query'
 							),
 							array(
@@ -144,7 +173,7 @@
 
 			self::render_template_xsl('datatable', $data);
 		}
-		
+
 		/**
 	 	* Public method. Forwards the user to edit mode.
 	 	*/
@@ -152,8 +181,8 @@
 		{
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.edit'));
 		}
-		
-		
+
+
 		public function edit()
 		{
 			$tabs = array
@@ -182,9 +211,9 @@
 					$control_group->set_procedure_id( phpgw::get_var('procedure') );
 					$control_group->set_control_area_id( phpgw::get_var('control_area') );
 					$control_group->set_building_part_id( phpgw::get_var('building_part') );
-									
+
 					//$this->so->store($control_item);
-					
+
 					if(isset($control_group_id) && $control_group_id > 0)
 					{
 						$ctrl_group_id = $control_group_id;
@@ -223,7 +252,7 @@
 			{
 				if(isset($control_group_id) && $control_group_id > 0)
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.view', 'id' => $control_group_id));					
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.view', 'id' => $control_group_id));
 				}
 				else
 				{
@@ -235,25 +264,25 @@
 				$control_item_ids = array();
 				// Fetching selected control items
 				$control_tag_ids = phpgw::get_var('item_remove_ids');
-				
+
 				foreach ($control_tag_ids as $control_item_id)
 				{
 					$curr_control_item = $this->so_control_item->get_single($control_item_id);
 					$curr_control_item->set_control_group_id(null);
-					 				
+					 
 					$this->so_control_item->store($curr_control_item);
 				}
-				
+
 				$control_area_array = $this->so_control_area->get_control_area_array();
 				$procedure_array = $this->so_procedure->get_procedures();
-				
-	
+
+
 				if($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-	
+
 				foreach ($control_area_array as $control_area)
 				{
 					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
@@ -274,7 +303,7 @@
 						);
 					}
 				}
-	
+
 				foreach ($procedure_array as $procedure)
 				{
 					if($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
@@ -295,29 +324,29 @@
 						);
 					}
 				}
-				
+
 				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
-				
+
 				$control_group_array = $control_group->toArray();
 				$control_items_array = $this->so_control_item->get(null,null,'controller_control_item.control_area_id',true,null,null,array('available' => 'yes'));
-				
+
 				$control_items = array();
-				
+
 				foreach ($control_items_array as $control_item)
 				{
 					$control_items[] = $control_item->serialize();
 				}
-				
+
 				$selected_control_items_array = controller_socontrol_item::get_instance()->get_control_items($control_group->get_id());
-				
+
 				$selected_control_items = array();
-				
+
 				foreach ($selected_control_items_array as $ctrl_item)
 				{
 					$selected_control_items[] = $ctrl_item->serialize();
 				}
 				phpgwapi_yui::tabview_setup('control_group_tabview');
-	
+
 				$data = array
 				(
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_items'),
@@ -331,10 +360,10 @@
 					'selected_control_items'	=> $selected_control_items,
 					'building_part'				=> array('building_part_options' => $building_part_options),
 				);
-	
-	
+
+
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_group');
-	
+
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::render_template_xsl(array('control_group_tabs','control_group','control_group_items'), $data);
 			}
@@ -343,34 +372,34 @@
 				$tab_to_display = 'control_group_items';
 				//update control items with control group id
 				//$control_group_id = phpgw::get_var('control_group_id');
-				
+
 				$control_item_ids = array();
 				// Fetching selected control items
 				$control_tag_ids = phpgw::get_var('control_tag_ids');
-				
+
 				foreach ($control_tag_ids as $control_item_id)
 				{
 					$curr_control_item = $this->so_control_item->get_single($control_item_id);
 					$curr_control_item->set_control_group_id($control_group_id);
-					 				
+					 
 					$this->so_control_item->store($curr_control_item);
 				}
-				
+
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.view', 'id' => $control_group_id));
 			}
 			else
 			{
-			
+
 				$control_area_array = $this->so_control_area->get_control_area_array();
 				$procedure_array = $this->so_procedure->get_procedures();
-				
-	
+
+
 				if($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-	
+
 				foreach ($control_area_array as $control_area)
 				{
 					if($control_group->get_control_area_id() && $control_area->get_id() == $control_group->get_control_area_id())
@@ -391,7 +420,7 @@
 						);
 					}
 				}
-	
+
 				foreach ($procedure_array as $procedure)
 				{
 					if($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
@@ -412,29 +441,29 @@
 						);
 					}
 				}
-				
+
 				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
-				
+
 				$control_group_array = $control_group->toArray();
 				$control_items_array = $this->so_control_item->get(null,null,'controller_control_item.control_area_id',true,null,null,array('available' => 'yes'));
-				
+
 				$control_items = array();
-				
+
 				foreach ($control_items_array as $control_item)
 				{
 					$control_items[] = $control_item->serialize();
 				}
-				
+
 				$selected_control_items_array = controller_socontrol_item::get_instance()->get_control_items($control_group->get_id());
-				
+
 				$selected_control_items = array();
-				
+
 				foreach ($selected_control_items_array as $ctrl_item)
 				{
 					$selected_control_items[] = $ctrl_item->serialize();
 				}
 				phpgwapi_yui::tabview_setup('control_group_tabview');
-	
+
 				$data = array
 				(
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, $tab_to_display),
@@ -448,18 +477,18 @@
 					'selected_control_items'	=> $selected_control_items,
 					'building_part'				=> array('building_part_options' => $building_part_options),
 				);
-	
-	
+
+
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control_group');
-	
-/*	
+
+/*
 				$GLOBALS['phpgw']->richtext->replace_element('what_to_do');
 				$GLOBALS['phpgw']->richtext->replace_element('how_to_do');
 				$GLOBALS['phpgw']->richtext->generate_script();
-*/	
-	
+*/
+
 	//			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'controller.item', 'controller' );
-	
+
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::render_template_xsl(array('control_group_tabs','control_group','control_group_items'), $data);
 			}
@@ -469,14 +498,14 @@
 			$control_group_id = phpgw::get_var('control_group_id');
 			$control_id = phpgw::get_var('control_id');
 			$group_order_nr = phpgw::get_var('group_order_nr');
-			
+
 			$status = true;
-			
+
 			$control_group_list = $this->so_control_group_list->get_single_2($control_id, $control_group_id);
-			
+
 			var_dump("Skriver ut control_group_list");
 			var_dump($control_group_list);
-			
+
 			if( $control_group_list == null ){
 				$control_group_list = new controller_control_group_list();
 				$control_group_list->set_control_id($control_id);
@@ -485,13 +514,13 @@
 				$this->so_control_group_list->add( $control_group_list );
 			}else{
 				$control_group_list->set_order_nr( $group_order_nr );
-				$this->so_control_group_list->update( $control_group_list );	
+				$this->so_control_group_list->update( $control_group_list );
 			}
-			
-			return status;			
+
+			return status;
 		}
-		
-		
+
+
 		public function query()
 		{
 			$params = array(
@@ -502,9 +531,9 @@
 				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
-			
+
 			$search_for = phpgw::get_var('query');
-			
+
 			$ctrl_area = phpgw::get_var('control_areas');
 			if(isset($ctrl_area) && $ctrl_area > 0)
 			{
@@ -518,7 +547,7 @@
 			else {
 				$user_rows_per_page = 10;
 			}
-			
+
 			// YUI variables for paging and sorting
 			$start_index	= phpgw::get_var('startIndex', 'int');
 			$num_of_objects	= phpgw::get_var('results', 'int', 'GET', $user_rows_per_page);
@@ -530,7 +559,7 @@
 			$sort_ascending	= phpgw::get_var('dir') == 'desc' ? false : true;
 			//Create an empty result set
 			$records = array();
-			
+
 			//Retrieve a contract identifier and load corresponding contract
 			$control_group_id = phpgw::get_var('control_group_id');
 			/*if(isset($control_group_id))
@@ -541,24 +570,24 @@
 			$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$object_count = $this->so->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
-								
+
 			$results = array();
-			
+
 			foreach($result_objects as $control_group_obj)
 			{
-				$results['results'][] = $control_group_obj->serialize();	
+				$results['results'][] = $control_group_obj->serialize();
 			}
 
 			$results['total_records'] = $object_count;
 			$results['start'] = $params['start'];
 			$results['sort'] = $params['sort'];
 			$results['dir'] = $params['dir'];
-			
+
 			array_walk($results["results"], array($this, "_add_links"), "controller.uicontrol_group.view");
 
 			return $this->yui_results($results);
 		}
-		
+
 		/**
 		 * Public method. Called when a user wants to view information about a control group.
 		 * @param HTTP::id	the control_group ID
@@ -566,7 +595,7 @@
 		public function view()
 		{
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::'.lang('view');
-			
+
 			$tabs = array
 			(
 				'control_group'		=> array('label' => lang('Control_group'), 'link' => '#control_group'),
@@ -591,27 +620,27 @@
 					return;
 				}
 				//var_dump($control_group);
-				
+
 				if($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-				
+
 				$control_group_array = $control_group->toArray();
 				//var_dump($control_group_array);
-				
+
 				$control_items_array = $this->so_control_item->get_control_items($control_group_id);
-				
+
 				$control_items = array();
-				
+
 				foreach ($control_items_array as $control_item)
 				{
 					$control_items[] = $control_item->serialize();
 				}
-				
+
 				phpgwapi_yui::tabview_setup('control_group_tabview');
-	
+
 				$data = array
 				(
 					'tabs'						=> phpgwapi_yui::tabview_generate($tabs, 'control_group'),
@@ -620,14 +649,14 @@
 					'control_group'				=> $control_group_array,
 					'selected_control_items'	=> $control_items,
 				);
-	
-	
+
+
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Control group');
-	
+
 				self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 				self::render_template_xsl(array('control_group_tabs','control_group','control_group_items'), $data);
 			}
 		}
-		
-		
+
+
 	}

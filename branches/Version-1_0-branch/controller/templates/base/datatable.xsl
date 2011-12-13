@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
 	<xsl:param name="true"/>
@@ -6,7 +7,7 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
@@ -29,10 +30,10 @@
 </xsl:template>
 
 <xsl:template match="toolbar">
-    <div id="toolbar">
+	<div id="toolbar">
 		  <table class='yui-skin-sam' border="0" cellspacing="0" cellpadding="0" style="padding:0px; margin:0px;">
 			<tr>
-        <xsl:for-each select="item">
+		<xsl:for-each select="item">
 			<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 			<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 			<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
@@ -41,10 +42,10 @@
 				<xsl:when test="type = 'date-picker'">
 					<td valign="top">
 					<div class="date-picker">
-                	<input id="filter_{name}" name="filter_{name}" type="text">
+					<input id="filter_{name}" name="filter_{name}" type="text">
 							<xsl:attribute name="value"><xsl:value-of select="../../../filters/*[local-name() = $filter_key]"/></xsl:attribute>
 						</input>
-                </div>
+				</div>
 					</td>
 				</xsl:when>
 				<xsl:when test="type = 'autocomplete'">
@@ -80,7 +81,7 @@
 
 							<![CDATA[
 							var oAC = YAHOO.portico.autocompleteHelper('index.php?menuaction=booking.ui'+ui+'.index&phpgw_return_as=json&', 
-					                                         'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
+															 'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container');
 
 							if (requestGenerator) {
 								oAC.generateRequest = requestGenerator;
@@ -115,24 +116,24 @@
 				</xsl:when>
 				<xsl:when test="type = 'filter'">
 					<td valign="top">
-                    <xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
-                	
-                	<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
-                        <xsl:for-each select="list">
-                    		<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
+					<xsl:variable name="name"><xsl:value-of select="name"/></xsl:variable>
+					
+					<select id="{$name}" name="{$name}" onMouseout="window.status='';return true;">
+						<xsl:for-each select="list">
+							<xsl:variable name="id"><xsl:value-of select="id"/></xsl:variable>
 							<xsl:if test="id = 'NEW'">
-		                    	<option value="{$id}" selected="selected">
+								<option value="{$id}" selected="selected">
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:if>
 							<xsl:if test="id != 'NEW'">
-		                    	<option value="{$id}">
+								<option value="{$id}">
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:if>
-                        </xsl:for-each>
-                	</select>
-                    </td>
+						</xsl:for-each>
+					</select>
+					</td>
 <!--
 					<xsl:if test="onChangeSelect">
 						<script type="text/javascript">	
@@ -177,7 +178,7 @@
 					</td>
 				</xsl:otherwise>
 			</xsl:choose>
-        </xsl:for-each>
+		</xsl:for-each>
 		  </tr>
 			<xsl:if test="item/text and normalize-space(item/text)">
 				<thead style="background:none">
@@ -196,7 +197,7 @@
 				</thead>
 			</xsl:if>
 		</table>
-    </div>
+	</div>
 </xsl:template>
 
 <xsl:template match="form/list_actions">
@@ -230,7 +231,7 @@
 		<xsl:attribute name="action">
 			<xsl:value-of select="phpgw:conditional(not(action), '', action)"/>
 		</xsl:attribute>
-        <xsl:apply-templates select="toolbar"/>
+		<xsl:apply-templates select="toolbar"/>
 	</form>
 
 	<form id="update_table_dummy" method='POST' action='' >
@@ -239,8 +240,8 @@
 </xsl:template>
 
 <xsl:template match="datatable">
-    <div id="paginator"/>
-    <div id="datatable-container"/>
+	<div id="paginator"/>
+	<div id="datatable-container"/>
   	<xsl:call-template name="datasource-definition" />
 </xsl:template>
 
@@ -248,13 +249,13 @@
 	<script>
 		YAHOO.portico.setupDatasource = function() {
 			<xsl:if test="source">
-	            YAHOO.portico.dataSourceUrl = '<xsl:value-of select="source"/>';
+				YAHOO.portico.dataSourceUrl = '<xsl:value-of select="source"/>';
 					YAHOO.portico.initialSortedBy = false;
 					YAHOO.portico.initialFilters = false;
 					<xsl:if test="sorted_by">
 						YAHOO.portico.initialSortedBy = {key: '<xsl:value-of select="sorted_by/key"/>', dir: '<xsl:value-of select="sorted_by/dir"/>'};
 					</xsl:if>
-	        </xsl:if>
+			</xsl:if>
 
 			YAHOO.portico.columnDefs = [
 				<xsl:for-each select="//datatable/field">
@@ -262,14 +263,14 @@
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
+						</xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
 						hidden: true,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
+						</xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>
