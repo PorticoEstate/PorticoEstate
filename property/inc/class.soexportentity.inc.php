@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage helpdesk
- 	* @version $Id: class.sotts.inc.php 7196 2011-04-07 12:13:40Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	phpgw::import_class('phpgwapi.datetime');
