@@ -82,8 +82,7 @@
 			$this->type 		= $this->bo->type;
 			$this->type_id 		= $this->bo->type_id;
 
-			$appname = phpgw::get_var('appname', 'string');
-			if($appname)
+			if($appname = $this->bo->appname)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$this->appname = $appname;
