@@ -569,6 +569,7 @@
 					<!--  DATATABLE DEFINITIONS-->
 					<script type="text/javascript">
 						var property_js = <xsl:value-of select="property_js" />;
+						var base_java_url = <xsl:value-of select="base_java_url" />;
 						var datatable = new Array();
 						var myColumnDefs = new Array();
 
@@ -606,12 +607,20 @@
 						</a>
 					</td>
 					<td><table><tr><td>
-						<input size="5" type="text" id = "notify_contact" name="notify_contact" value="0" title="{$lang_contact_statustext}">
+						<input size="5" type="text" id = "notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
 						</input>
 						<input size="30" type="text" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly = 'readonly' title="{$lang_contact_statustext}"/>
 					</td></tr></table></td>
 				</tr>
-
+				<tr>
+					<td valign = "top" class="th_text">
+						<xsl:value-of select="php:function('lang', 'notify')" />
+					</td>
+					<td >
+						<div id="paging_3"> </div>
+						<div id="datatable-container_3"></div>
+					</td>
+				</tr>
 				<tr>
 					<td valign="top">
 						<xsl:value-of select="lang_branch"/>
