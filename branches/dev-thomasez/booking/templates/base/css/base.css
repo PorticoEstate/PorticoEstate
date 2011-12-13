@@ -301,8 +301,12 @@ div.info:hover {
 span.space {
 	padding-right: 8px;
 }
+.details .description {
+	padding-top: 8px; 
+}
 .image_container {
-	margin-top: 8px;
+	margin-top: 16px;
+	margin-bottom: 8px;
 }
 em {
 	font-style:italic;
@@ -340,5 +344,8 @@ input#searchterm {
     font-size: 120%;
     color: #666;
     width: 20em;
+}
+.login {
+	display: none;
 }
 

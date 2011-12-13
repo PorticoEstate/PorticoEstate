@@ -15,7 +15,7 @@ ul#metanav {
 ul#metanav a, ul#sidebar a { color: #700; }
 div#content {
     margin: 0 2em;
-    min-height: 500px;
+    min-height: 400px;
 }
 #header-search  { 
     float: right;
@@ -66,7 +66,7 @@ ul.nav li:first-child:before { display: none; }
 }
 form#search {
     text-align: center;
-    padding-top: 5em;
+    padding-top: 0em;
 }
 input#search {
     font-size: 120%;
@@ -183,7 +183,7 @@ div#help h2 {
     list-style-type: none;
     padding-left: 0;
     color: #888;
-    margin: 3em 0;
+    margin: 1.5em 0;
     font-size: 120%;
 }
 #cloud div { padding: .2em};

@@ -164,8 +164,7 @@
 
 			<dt><a href="#" id="add-date-link"><xsl:value-of select="php:function('lang', 'Add another date')" /></a></dt>
 		</dl>
-		<dl class="form-col">
-		</dl>
+		<div class="clr"/>
 		<dl class="form-col">
 			<div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
 			<xsl:if test="config/application_who">
@@ -258,8 +257,10 @@
 				<xsl:attribute name="href"><xsl:value-of select="application/cancel_link"/></xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'Cancel')" />
 			</a>
-			<p style="width: 750px; margin-top: 10px;">Trykker du <strong>SEND</strong>-knappen får du opp en rød melding øverst om noen opplysninger mangler, er alt OK kommer det opp en grønn melding. Det blir sendt en bekreftelse til din e-post, og en lenke hvor du kan gå inn og se status og legge til ekstra opplysninger i saken.<br /><br />
-				Trykker du <strong>Avbryt</strong> blir søknaden ikke sendt eller lagret, og du går tilbake til kalenderen.</p>
+<!--			<p style="width: 750px; margin-top: 10px;">Trykker du <strong>SEND</strong>-knappen får du opp en rød melding øverst om noen opplysninger mangler, er alt OK kommer det opp en grønn melding. Det blir sendt en bekreftelse til din e-post, og en lenke hvor du kan gå inn og se status og legge til ekstra opplysninger i saken.<br /><br />-->
+<!--				Trykker du <strong>Avbryt</strong> blir søknaden ikke sendt eller lagret, og du går tilbake til kalenderen.</p>-->
+
+<p style="width: 750px; margin-top: 10px;">Trykk <strong>SEND</strong> for å lagre. En grønn melding bekrefter at alt er i orden. Du vil også få en bekreftelse på e-post. En rød melding betyr at noe mangler. Trykker du <strong>Avbryt</strong>, slettes søknaden.</p>
 		</div>
 	</form>
 	</div>

@@ -36,7 +36,7 @@ YAHOO.booking.initializeDataTable = function()
 			if(['House','Campsite','Boat'].indexOf(val) >= 0) {
 				YAHOO.util.Dom.setStyle('extrafields', 'display', 'block');	
 			} 
-			else if (['Equipment','Location'].indexOf(val) >= 0)		
+			else if (['Equipment','Location',''].indexOf(val) >= 0)		
 			{
 				YAHOO.util.Dom.setStyle('extrafields', 'display', 'none');	
 			}

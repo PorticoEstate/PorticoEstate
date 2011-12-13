@@ -33,7 +33,7 @@
     <div id="wrapper">
     <div id="header">
 	<div id="login-bar">
-		<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a href="{login_url}">{login_text}</a>
+		<a href="{manual_url}">{manual_text}</a> <a href="{help_url}">{help_text}</a> <a class="login" href="{login_url}">{login_text}</a>
 	</div>
         <a href="index.php?menuaction=bookingfrontend.uisearch.index"><div id="logo"></div></a>
 		<div id="centerimage"></div>
