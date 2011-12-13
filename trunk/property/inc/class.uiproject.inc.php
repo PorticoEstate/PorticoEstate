@@ -944,6 +944,8 @@
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 			$auto_create 				= false;
 
+			$values['notify_contact_id'] = phpgw::get_var('notify_contact_id', 'int', 'POST');
+
 			$datatable = array();
 
 			/*$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.edit',"

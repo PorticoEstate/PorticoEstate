@@ -595,7 +595,23 @@
 	<xsl:when test="suppresscoordination =''">
 
 		<div id="coordination">
+		<script type="text/javascript">
+		</script>
+		<xsl:variable name="lang_contact_statustext"><xsl:value-of select="php:function('lang', 'click this link to select')" /></xsl:variable>
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
+				<tr>
+					<td valign="top">
+						<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
+							<xsl:value-of select="php:function('lang', 'contact')" />
+						</a>
+					</td>
+					<td><table><tr><td>
+						<input size="5" type="text" id = "notify_contact" name="notify_contact" value="0" title="{$lang_contact_statustext}">
+						</input>
+						<input size="30" type="text" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly = 'readonly' title="{$lang_contact_statustext}"/>
+					</td></tr></table></td>
+				</tr>
+
 				<tr>
 					<td valign="top">
 						<xsl:value-of select="lang_branch"/>

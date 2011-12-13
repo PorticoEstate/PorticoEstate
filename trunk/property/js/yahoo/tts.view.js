@@ -179,14 +179,14 @@ YAHOO.util.Event.addListener(window, "load", function()
 	d = document.getElementById('vendor_id');
 	if(d)
 	{
-	if (d.attachEvent)
-	{
-		d.attachEvent('onpropertychange', onDOMAttrModified, false);
-	}
-	else
-	{
-		d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
-	}
+		if (d.attachEvent)
+		{
+			d.attachEvent('onpropertychange', onDOMAttrModified, false);
+		}
+		else
+		{
+			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+		}
 	}
 });
 

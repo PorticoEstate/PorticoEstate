@@ -104,6 +104,48 @@ var  myPaginator_2, myDataTable_2;
 
  /********************************************************************************/
 
+	this.notify_contact_lookup = function()
+	{
+		//self.name ="first_Window";
+		var oArgs = {menuaction:'property.uilookup.addressbook',column:'notify_contact'};
+		var strURL = phpGWLink('index.php', oArgs);
+		Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+	}		
+
+
+
+	this.refresh_notify_contact=function()
+	{
+		if(document.getElementById('notify_contact').value)
+		{
+			base_java_url['notify_contact'] = document.getElementById('notify_contact').value;
+		}
+
+		if(document.getElementById('notify_contact').value != notify_contact)
+		{
+			base_java_url['action'] = 'refresh_notify_contact';
+alert('refresh_notify_contact');
+//			execute_async(myDataTable_3);
+			notify_contact = document.getElementById('notify_contact').value;
+		}
+	}
+
+
+	this.onDOMAttrModified = function(e)
+	{
+alert('refresh_notify_contact');
+		var attr = e.attrName || e.propertyName
+		var target = e.target || e.srcElement;
+		if (attr.toLowerCase() == 'notify_contact')
+		{
+
+			refresh_notify_contact();
+		}
+	}
+
+
+
+
 YAHOO.util.Event.addListener(window, "load", function()
 {
 	loader = new YAHOO.util.YUILoader();
@@ -117,5 +159,20 @@ YAHOO.util.Event.addListener(window, "load", function()
     loader.insert();
 });
 
+YAHOO.util.Event.addListener(window, "load", function()
+{
+	d = document.getElementById('notify_contact');
+	if(d)
+	{
+		if (d.attachEvent)
+		{
+			d.attachEvent('onpropertychange', onDOMAttrModified, false);
+		}
+		else
+		{
+			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
+		}
+	}
+});
 
 

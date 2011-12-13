@@ -1,6 +1,11 @@
 //--------------------------------------------------------
 // Declaration of lookup.vendor.index vars
 //--------------------------------------------------------
+	this.myParticularRenderEvent = function()
+	{
+	}
+
+	var toolTips = [{}]
 
 	//define SelectButton
  	var oMenuButton_0;
