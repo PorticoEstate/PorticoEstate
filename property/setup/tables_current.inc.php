@@ -2131,6 +2131,7 @@
 				'remark' => array('type' => 'text','nullable' => True),
 				'location' => array('type' => 'varchar', 'precision' => 200,'nullable' => False),
 				'responsibility_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
+				'appname' => array('type' => 'varchar', 'precision' => 25,'nullable' => False),
 				'user_id' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => 4,'nullable' => True),

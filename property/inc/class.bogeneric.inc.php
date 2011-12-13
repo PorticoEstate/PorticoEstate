@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $location_info = array();
+		var $appname;
 
 
 		function __construct($session=false)
@@ -56,9 +57,16 @@
 			$filter				= phpgw::get_var('filter', 'int');
 			$cat_id				= phpgw::get_var('cat_id', 'int');
 			$allrows			= phpgw::get_var('allrows', 'bool');
+			$appname 			= phpgw::get_var('appname', 'string');
+
+			if($appname)
+			{
+				$this->appname		= $appname;
+				$this->so->appname	= $appname;
+			}
+
 			$type				= phpgw::get_var('type');
 			$type_id			= phpgw::get_var('type_id', 'int', 'REQUEST', 0);
-
 			$this->type 		= $type;
 			$this->type_id 		= $type_id;
 
