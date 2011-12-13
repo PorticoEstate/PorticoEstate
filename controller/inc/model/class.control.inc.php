@@ -1,4 +1,33 @@
 <?php
+	/**
+	* phpGroupWare - controller: a part of a Facilities Management System.
+	*
+	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/
+	* @package property
+	* @subpackage controller
+ 	* @version $Id$
+	*/
+
 	include_class('controller', 'model', 'inc/model/');
 
 	class controller_control extends controller_model
@@ -19,8 +48,8 @@
 		protected $costresponsibility_id;
 		protected $responsibility_id;
 		protected $responsibility_name;
-		protected $equipment_id;
-		protected $equipment_type_id;
+		protected $component_id;
+		protected $component_type_id;
 		protected $location_code;
 		protected $control_area_id;
 		protected $control_area_name;
@@ -137,19 +166,19 @@
 		
 		public function get_responsibility_name() { return $this->responsibility_name; }
 		
-		public function set_equipment_id($equipment_id)
+		public function set_component_id($component_id)
 		{
-			$this->equipment_id = $equipment_id;
+			$this->component_id = $component_id;
 		}
 		
-		public function get_equipment_id() { return $this->equipment_id; }
+		public function get_component_id() { return $this->component_id; }
 		
-		public function set_equipment_type_id($equipment_type_id)
+		public function set_component_type_id($component_type_id)
 		{
-			$this->equipment_type_id = $equipment_type_id;
+			$this->component_type_id = $component_type_id;
 		}
 		
-		public function get_equipment_type_id() { return $this->equipment_type_id; }
+		public function get_component_type_id() { return $this->component_type_id; }
 		
 		public function set_location_code($location_code)
 		{
@@ -186,7 +215,8 @@
 		 */
 		public static function get_so()
 		{
-			if (self::$so == null) {
+			if (self::$so == null)
+			{
 				self::$so = CreateObject('controller.socontrol');
 			}
 			
@@ -225,4 +255,3 @@
 				);
 		}
 	}
-?>

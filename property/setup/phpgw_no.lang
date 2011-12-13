@@ -1171,6 +1171,8 @@ picture	property	no	Bilde
 plain	property	no	Vanlig
 planned cost	property	no	Planlagt
 pleace select a location - or an equipment !	property	no	velg en lokalisering - eller et utstyr
+Please select a condition!	property	no	Angi tilstand
+Please select a building part!	property	no	Angi bygningsdel
 please choose a conversion type	property	no	Velg eksport type
 please choose a conversion type from the list	property	no	velg eksport type fra listen
 please choose a file	property	no	Velg en fil
@@ -1190,22 +1192,22 @@ please enter a new index for calkulating next value(s)!	property	no	angi en ny i
 please enter an integer !	property	no	Angi heltall
 please enter an integer for order!	property	no	Angi heltall for bestillingsnr
 Please - enter a invoice number	property	no	Angi FakturaNr
-please enter a project name !	property	no	angi prosjekt navn
-please enter a property id !	property	no	angi eiendoms ID
-please enter a request title !	property	no	angi tittel for anmodning
+please enter a project name !	property	no	Angi prosjekt navn
+please enter a property id !	property	no	Angi eiendoms ID
+please enter a request title !	property	no	Angi tittel for anmodning
 please enter a sql query !	property	no	Angi en sql-spørring
 please enter a value for either material cost, labour cost or both !	property	no	angi enten material kostnader, arbeidskostnader eller begge
-please enter a workorder title !	property	no	angi en bestillings tittel
+please enter a workorder title !	property	no	Angi en bestillings tittel
 please enter precision as integer !	property	no	Angi heltall for presisjon
 please enter scale as integer !	property	no	Angi heltall for skalering
-please give som details !	property	no	angi detaljer
-please select a branch !	property	no	velg fag
+please give som details !	property	no	Angi detaljer
+please select a branch !	property	no	Velg fag
 please select a budget account !	property	no	Velg en budsjettkonto
 please select a budget reponsible!	property	no	Velg en anviser
-please select a building id !	property	no	velg bygnings ID
+please select a building id !	property	no	Velg bygnings ID
 please select a category !	property	no	velg kategori
 please select a coordinator !	property	no	Velg en koordinator
-please select a date !	property	no	velg dato
+please select a date !	property	no	Velg dato
 please select a district !	property	no	Velg et distrikt
 please select a entrance id !	property	no	velg inngangs ID
 please - select a file to import from !	property	no	velg en fil å importere fra

@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
@@ -20,16 +21,16 @@
   			$(".move_cal_left").click(function(){
   			
   				$("#days_view").animate({
-	                    left: '-=502' 
-	                    }, 800);			
+						left: '-=502' 
+						}, 800);			
   			});
   			
   			
   			$(".move_cal_right").click(function(){
 
   				$("#days_view").animate({
-	                    left: '+=502' 
-	                    }, 800);
+						left: '+=502' 
+						}, 800);
   			});
   			
   		
@@ -53,17 +54,17 @@
 				
 				  	<xsl:for-each select="controls_calendar_array">
 						<li>
-				    		<div class="id">
-				      			<xsl:value-of select="control/id"/>
+							<div class="id">
+					  			<xsl:value-of select="control/id"/>
 							</div>
 							<div class="title">
-				      			<xsl:value-of select="control/title"/>
+					  			<xsl:value-of select="control/title"/>
 							</div>
 							<div class="frequency">
-				      			<xsl:value-of select="control/repeat_type"/>
+					  			<xsl:value-of select="control/repeat_type"/>
 							</div>
 							<div class="frequency">
-				      			<xsl:value-of select="control/repeat_interval"/>
+					  			<xsl:value-of select="control/repeat_interval"/>
 							</div>							
 						</li>
 					</xsl:for-each>
@@ -79,16 +80,16 @@
 						</li>				
 						<li>	
 							<xsl:for-each select="controls_calendar_array/calendar_array">
-					    		<div>
-						    		<xsl:choose>
-							    		<xsl:when test="calendar_array/child::node() = 1">
-							    			<xsl:value-of select="." />
-							    		</xsl:when>
-							    		<xsl:otherwise>
-							    			<div style="position:relative;">
-									    		<div id="info_box" style="position:absolute;display:none;">
-									    		</div>
-									    		<xsl:choose>
+								<div>
+									<xsl:choose>
+										<xsl:when test="calendar_array/child::node() = 1">
+											<xsl:value-of select="." />
+										</xsl:when>
+										<xsl:otherwise>
+											<div style="position:relative;">
+												<div id="info_box" style="position:absolute;display:none;">
+												</div>
+												<xsl:choose>
 														<xsl:when test="id">
 															<xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>
 															<xsl:choose>
@@ -113,8 +114,8 @@
 														</xsl:otherwise>
 													</xsl:choose>
 												</div>
-							    		</xsl:otherwise>
-						    		</xsl:choose>
+										</xsl:otherwise>
+									</xsl:choose>
 								</div>
 							</xsl:for-each>
 						</li>

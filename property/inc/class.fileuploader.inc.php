@@ -24,7 +24,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
 	* @subpackage location
- 	* @version $Id: class.fileuploader.inc.php 5083 2010-03-19 14:29:26Z sigurd $
+ 	* @version $Id$
 	*/
 
 	/**

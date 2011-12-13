@@ -1,11 +1,40 @@
 <?php
+	/**
+	* phpGroupWare - controller: a part of a Facilities Management System.
+	*
+	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/
+	* @package property
+	* @subpackage controller
+ 	* @version $Id$
+	*/	
+
 	phpgw::import_class('phpgwapi.yui');
-	
+
 	/**
 	 * Cherry pick selected values into a new array
 	 * 
-	 * @param array $array    input array
-	 * @param array $keys     array of keys to pick
+	 * @param array $array	input array
+	 * @param array $keys	 array of keys to pick
 	 *
 	 * @return array containg values from $array for the keys in $keys.
 	 */
@@ -17,9 +46,9 @@
 			'preserve_prefix' => false,
 			'preserve_suffix' => false
 		);
-		
+
 		$options = array_merge($default_options, $options);
-		
+
 		$result = array();
 		foreach($keys as $write_key)
 		{
@@ -30,7 +59,7 @@
 		}
 		return $result;
 	}
-	
+
 	function array_set_default(&$array, $key, $value)
 	{
 		if(!isset($array[$key])) $array[$key] = $value;
@@ -39,14 +68,14 @@
 	/**
 	 * Reformat an ISO timestamp into norwegian format
 	 * 
-	 * @param string $date    date
+	 * @param string $date	date
 	 *
 	 * @return string containg timestamp in norwegian format
 	 */
 	function pretty_timestamp($date)
 	{
 		if (empty($date)) return "";
-		
+
 		if(is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
 		{
 			$date = $date[0]->nodeValue;
@@ -64,7 +93,7 @@
 			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
 		}
 		$text = date($dateformat,$timestamp);
-			
+
 		return $text;
 	}
 
@@ -99,28 +128,28 @@
 	{
 		const UI_SESSION_FLASH = 'flash_msgs';
 
-		protected	
+		protected
 			$filesArray;
 
 		protected static 
 			$old_exception_handler;
-			
+
 		private 
 			$ui_session_key,
 			$flash_msgs;
 
-		
+
 		const LOCATION_ROOT = '.';
 		const LOCATION_SUPERUSER = '.usertype.superuser';
 //		const LOCATION_ADMINISTRATOR = '.RESPONSIBILITY.ADMIN';
 		const LOCATION_USER = '.usertype.user';
-		
+
 		public $dateFormat;
-		
+
 		public $type_of_user;
-		
+
 	//	public $flash_msgs;
-		
+
 		public function __construct()
 		{
 			self::set_active_menu('controller');
@@ -143,14 +172,14 @@
 			phpgwapi_yui::load_widget('calendar');
 			phpgwapi_yui::load_widget('autocomplete');
 			phpgwapi_yui::load_widget('animation');
-			
+
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 
 			$this->dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			
+
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->locations = & $GLOBALS['phpgw']->locations;
-			
+
 			$this->type_of_user = array(
 				MANAGER => $this->isManager(),
 				EXECUTIVE_OFFICER => $this->isExecutiveOfficer(),
@@ -163,7 +192,7 @@
 		private function get_ui_session_key() {
 			return $this->ui_session_key;
 		}
-		
+
 		private function restore_flash_msgs() {
 			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH))) {
 				if (is_array($flash_msgs)) {
@@ -172,35 +201,35 @@
 					return true;
 				}
 			}
-			
+
 			$this->flash_msgs = array();
 			return false;
 		}
-		
+
 		private function store_flash_msgs() {
 			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
 		}
-		
+
 		private function reset_flash_msgs() {
 			$this->flash_msgs = array();
 			$this->store_flash_msgs();
 		}
-		
+
 		private function session_set($key, $data) {
 			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
 		}
-		
+
 		private function session_get($key) {
 			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
 		}
-		
+
 		/**
 		 * Provides a private session cache setter per ui class.
 		 */
 		protected function ui_session_set($key, $data) {
 			return $this->session_set(get_class($this).'_'.$key, $data);
 		}
-		
+
 		/**
 		 * Provides a private session cache getter per ui class .
 		 */
@@ -212,15 +241,15 @@
 		{
 			return substr(base64_encode(rand(1000000000,9999999999)),0, $length);
 		}
-		
+
 		public function add_js_event($event, $js) {
 			$GLOBALS['phpgw']->js->add_event($event, $js);
 		}
-		
+
 		public function add_js_load_event($js) {
 			$this->add_js_event('load', $js);
 		}
-		
+
 		/**
 		 * Permission check. Proxy method for method check in phpgwapi->acl
 		 * 
@@ -231,8 +260,8 @@
 		protected function hasPermissionOn($location = controller_uicommon::LOCATION_ROOT, $permission = PHPGW_ACL_PRIVATE){
 			return $this->acl->check($location,$permission,'controller');
 		}
-		
-		
+
+
 		/**
 		 * Check to see if this user is an administrator
 		 * 
@@ -241,7 +270,7 @@
 		protected function isAdministrator(){
 			return $this->acl->check(controller_uicommon::LOCATION_ROOT,PHPGW_ACL_PRIVATE,'controller');
 		}
-		
+
 		/**
 		 * Check to see if the user is an executive officer
 		 * 
@@ -253,7 +282,7 @@
 				$this->acl->check(controller_uicommon::LOCATION_USER,PHPGW_ACL_ADD,'controller')
 			);
 		}
-		
+
 		/**
 		 * Check to see if the user is a manager
 		 * 
@@ -262,12 +291,12 @@
 		protected function isManager(){
 			return !$this->isExecutiveOfficer();
 		}
-		
+
 		public static function process_controller_unauthorized_exceptions()
 		{
 			self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_controller_unauthorized_exception'));
 		}
-		
+
 		public static function handle_controller_unauthorized_exception(Exception $e)
 		{
 			if ($e instanceof controller_unauthorized_exception)
@@ -313,10 +342,10 @@
   			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
 		}
 
-        public function set_active_menu($item)
-        {
-            $GLOBALS['phpgw_info']['flags']['menu_selection'] = $item;
-        }
+		public function set_active_menu($item)
+		{
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = $item;
+		}
 
 		/**
 		* A more flexible version of xslttemplate.add_file
@@ -345,8 +374,8 @@
 			die;
 		}
 
-        public function render_template($output)
-        {
+		public function render_template($output)
+		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			if($this->flash_msgs)
 			{
@@ -361,14 +390,14 @@
 			}
 			echo htmlspecialchars_decode($output);
 			$GLOBALS['phpgw']->common->phpgw_exit();
-        }
-        	
+		}
+
 		public function add_yui_translation(&$data)
 		{
 			$this->add_template_file('yui_booking_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
-							
+			
 			$data['yui_booking_i18n'] = array(
 				'Calendar' => array(
 					'WEEKDAYS_SHORT' => json_encode(lang_array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa')),
@@ -385,7 +414,7 @@
 					'LBL_CHOOSE_DATE' => json_encode(lang('Choose a date')),
 				),
 				'setupPaginator' => array(
-			        'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
+					'pageReportTemplate' => json_encode(lang("Showing items {startRecord} - {endRecord} of {totalRecords}")),
 					'previousPageLinkLabel' => json_encode("&lt; {$previous}"),
 					'nextPageLinkLabel' => json_encode("{$next} &gt;"),
 				),
@@ -412,12 +441,12 @@
 			} else {
 				$this->add_template_file('msgbox');
 			}
-			
+
 			$this->reset_flash_msgs();
-			
+
 			$this->add_yui_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
-			
+
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			$this->add_template_file($files);
@@ -425,7 +454,7 @@
 		}
 
   
-        public function check_active($url)
+		public function check_active($url)
 		{
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -479,7 +508,7 @@
 				)   
 			);  
 		}
-		
+
 		public function use_yui_editor($targets)
 		{
 			/*
@@ -496,31 +525,31 @@
 			(function() {
 				var Dom = YAHOO.util.Dom,
 				Event = YAHOO.util.Event;
-				
+
 				var editorConfig = {
 					toolbar:
 						{buttons: [
 	 						{ group: 'textstyle', label: '{$lang_font_style}',
-						        buttons: [
-						            { type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
-						        ]
-						    },
-						    { type: 'separator' },
-						    { group: 'indentlist', label: '{$lang_lists}',
-						        buttons: [
-						            { type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
-						            { type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
-						        ]
-						    },
-						    { type: 'separator' },
-						    { group: 'insertitem', label: '{$lang_insert_item}',
+								buttons: [
+									{ type: 'push', label: 'Fet CTRL + SHIFT + B', value: 'bold' }
+								]
+							},
+							{ type: 'separator' },
+							{ group: 'indentlist', label: '{$lang_lists}',
+								buttons: [
+									{ type: 'push', label: 'Opprett punktliste', value: 'insertunorderedlist' },
+									{ type: 'push', label: 'Opprett nummerert liste', value: 'insertorderedlist' }
+								]
+							},
+							{ type: 'separator' },
+							{ group: 'insertitem', label: '{$lang_insert_item}',
 								buttons: [
 									{ type: 'push', label: 'HTML Lenke CTRL + SHIFT + L', value: 'createlink', disabled: true },
 									{ type: 'push', label: 'Sett inn bilde', value: 'insertimage' }
 								]
 							},
-						    { type: 'separator' },
-						    { group: 'undoredo', label: 'Angre/Gjenopprett',
+							{ type: 'separator' },
+							{ group: 'undoredo', label: 'Angre/Gjenopprett',
 								buttons: [
 									{ type: 'push', label: 'Angre', value: 'undo' },
 									{ type: 'push', label: 'Gjenopprett', value: 'redo' }
@@ -534,11 +563,11 @@
 					dompath: true,
  					handleSubmit: true,
 				};
-				
+
 				var editorWidget = new YAHOO.widget.Editor('{$target}', editorConfig);
 				editorWidget.render();
 			})();
-				
+
 SCRIPT;
 			}
 
@@ -547,7 +576,7 @@ SCRIPT;
 			phpgwapi_yui::load_widget('editor');
 			$GLOBALS['phpgw']->js->add_event('load', $js);
 		}
-		
+
 		/**
 		 * Returns formatted version of gab id. The format of the string returned
 		 * is '[Cadastral unit number] / [Property unit number] / [Leasehold unit number] / [Section unit number]'.
@@ -563,16 +592,16 @@ SCRIPT;
 				$gab_id = substr($gab_id,4,5).' / '.substr($gab_id,9,4).' / '.substr($gab_id,13,4).' / '.substr($gab_id,17,3);
 			}
 			return $gab_id;
-		}	
-	
+		}
+
 		public function render($template,$local_variables = array())
 		{
 			foreach($local_variables as $name => $value)
 			{
-				$$name = $value;	
-					
+				$$name = $value;
+	
 			}
-			
+
 			ob_start();
 			foreach(array_reverse($this->tmpl_search_path) as $path)
 			{
@@ -587,14 +616,14 @@ SCRIPT;
 			ob_end_clean();
 			self::render_template($output);
 		}
-		
+
 		/**
 		 * Method for JSON queries.
 		 * 
 		 * @return YUI result
 		 */
 		public abstract function query();
-		
+
 		/**
 		 * Generate javascript for the extra column definitions for a partial list
 		 * 
@@ -605,7 +634,7 @@ SCRIPT;
 		public static function get_extra_column_defs($array_name, $extra_cols = array())
 		{
 			$result = "";
-			
+
 			foreach($extra_cols as $col){
 				$literal  = '{';
 				$literal .= 'key: "' . $col['key'] . '",';
@@ -617,17 +646,17 @@ SCRIPT;
 					$literal .= ',parser: ' . $col['parser'];
 				}
 				$literal .= '}';
-				
+
 				if($col["index"]){
 					$result .= "{$array_name}.splice(".$col["index"].", 0,".$literal.");";
 				} else {
 					$result .= "{$array_name}.push($literal);";
 				}
 			}
-			
+
 			return $result;
 		}
-		
+
 		/**
 		 * Generate javascript definitions for any editor widgets set on columns for 
 		 * a partial list.
@@ -647,10 +676,10 @@ SCRIPT;
 			}
 			$result .= " }\n";
 			$result .= "}";
-			
+
 			return $result;
 		}
-		
+
 		/**
 		 * Returns a html-formatted error message if one is defined in the
 		 * list of validation errors on the object we're given.  If no
@@ -665,14 +694,14 @@ SCRIPT;
 			if(isset($object))
 			{
 				$errors = $object->get_validation_errors();
-				
+
 				if ($errors[$field]) {
 					return '<label class="error" for="' . $field . '">' . $errors[$field] . '</label>';
 				}
 				return '';
 			}
 		}
-		
+
 		public static function get_messages($messages, $message_type)
 		{
 			$output = '';
@@ -701,7 +730,7 @@ SCRIPT;
 		{
 			return self::get_messages($errors, 'error');
 		}
-		
+
 		/**
 		 * Returns a html-formatted error message to display on top of the page.  If
 		 * no error is defined, an empty string is returned.
@@ -713,7 +742,7 @@ SCRIPT;
 		{
 			return self::get_messages($warnings, 'warning');
 		}
-		
+
 		/**
 		 * Returns a html-formatted info message to display on top of the page.  If
 		 * no message is defined, an empty string is returned.
@@ -726,46 +755,46 @@ SCRIPT;
 			return self::get_messages($messages, 'info');
 		}
 
-        /**
+		/**
 		 * Download xls, csv or similar file representation of a data table
 		 */
-        public function download()
-        {
-            $list = $this->query();
-            $list = $list['ResultSet']['Result'];
+		public function download()
+		{
+			$list = $this->query();
+			$list = $list['ResultSet']['Result'];
 
-            $keys = array();
+			$keys = array();
 
-            if(count($list[0]) > 0) {
-                foreach($list[0] as $key => $value) {
-                    if(!is_array($value)) {
-                        array_push($keys, $key);
-                    }
-                }
-            }
-            
-            // Remove newlines from output
-            $count = count($list);
-            for($i = 0; $i < $count; $i++)
-            {
+			if(count($list[0]) > 0) {
+				foreach($list[0] as $key => $value) {
+					if(!is_array($value)) {
+						array_push($keys, $key);
+					}
+				}
+			}
+
+			// Remove newlines from output
+			$count = count($list);
+			for($i = 0; $i < $count; $i++)
+			{
  				foreach ($list[$i] as $key => &$data)
  				{
 	 				$data = str_replace(array("\n","\r\n", "<br>"),'',$data);
  				}
-            }
+			}
 
-             // Use keys as headings
-            $headings = array();
-            $count_keys = count($keys);
-            for($j=0;$j<$count_keys;$j++)
-            {
-            	array_push($headings, lang($keys[$j]));
-            }
+			 // Use keys as headings
+			$headings = array();
+			$count_keys = count($keys);
+			for($j=0;$j<$count_keys;$j++)
+			{
+				array_push($headings, lang($keys[$j]));
+			}
 
-            $property_common = CreateObject('property.bocommon');
-            $property_common->download($list, $keys, $headings);
-        }
-		
+			$property_common = CreateObject('property.bocommon');
+			$property_common->download($list, $keys, $headings);
+		}
+
 		/**
 		 * Added because error reporting facilities in phpgw tries to serialize the PDO
 		 * instance in $this->db which causes an error. This method removes $this->db from the 
@@ -774,5 +803,5 @@ SCRIPT;
 		public function __sleep()
 		{
 			return array('table_name', 'fields');
-		}		
+		}
 	}

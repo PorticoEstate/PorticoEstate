@@ -195,4 +195,50 @@
 		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.10';
 		return $GLOBALS['setup_info']['controller']['currentver'];
 	}
-?>
+
+	/* Update Controller from v 0.1.10 to 0.1.11
+	 * Alter from naming from equipment to more generic component 
+	*/
+	
+	$test[] = '0.1.10';
+	function controller_upgrade0_1_10()
+	{
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_component_list', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'control_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'component_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+				),
+				'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);	
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('controller_check_list','equipment_id','component_id');
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('controller_control_equipment_list');			
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.11';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}
+
+	/* Update Controller from v 0.1.11 to 0.1.12
+	 * Add locations for control and checklist
+	*/
+	
+	$test[] = '0.1.11';
+	function controller_upgrade0_1_11()
+	{
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('controller_control','equipment_type_id','component_type_id');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('controller_control','equipment_id','component_id');
+				
+		$GLOBALS['phpgw']->locations->add('.control', 'Control', 'controller');
+		$GLOBALS['phpgw']->locations->add('.checklist', 'Checklist', 'controller');
+		$GLOBALS['phpgw']->locations->add('.procedure', 'Procedure', 'controller');
+
+		$GLOBALS['setup_info']['controller']['currentver'] = '0.1.12';
+		return $GLOBALS['setup_info']['controller']['currentver'];
+	}

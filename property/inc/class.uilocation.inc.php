@@ -1083,7 +1083,6 @@ JS;
 
 		function responsiblility_role()
 		{
-
 			$type_id = phpgw::get_var('type_id', 'int');
 
 			$dry_run=false;
@@ -1093,7 +1092,14 @@ JS;
 				$type_id = 1;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsibility_role';
+			if($_menu_selection = phpgw::get_var('menu_selection'))
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = $_menu_selection;
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::responsibility_role';
+			}
 
 			if (!$this->acl_read)
 			{
@@ -1161,7 +1167,8 @@ JS;
 						'lookup_name'        	=> $lookup_name,
 						'cat_id'        		=> $this->cat_id,
 						'status'        		=> $this->status,
-						'location_code'			=> $this->location_code
+						'location_code'			=> $this->location_code,
+						'menu_selection'		=> $_menu_selection
 					));
 
 				$datatable['config']['allow_allrows'] = true;
@@ -1178,7 +1185,8 @@ JS;
 					."cat_id:'{$this->cat_id}',"
 					."status:'{$this->status}',"
 					."location_code:'{$this->location_code}',"
-					."block_query:'{$block_query}'";
+					."block_query:'{$block_query}',"
+					."menu_selection:'{$_menu_selection}'";
 
 
 				$values_combo_box[0]  = execMethod('property.soadmin_location.read',array());
@@ -1259,7 +1267,8 @@ JS;
 								'query'				=> $this->query,
 								'filter'			=> $this->filter,
 								'sort'				=> $this->sort,
-								'order'				=> $this->order
+								'order'				=> $this->order,
+								'menu_selection'	=> $_menu_selection
 							)
 						),
 						'fields'	=> array
@@ -1573,7 +1582,8 @@ JS;
 
 
 			// values for datatable
-			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row'])){
+			if(isset($datatable['rows']['row']) && is_array($datatable['rows']['row']))
+			{
 				foreach( $datatable['rows']['row'] as $row )
 				{
 					$json_row = array();

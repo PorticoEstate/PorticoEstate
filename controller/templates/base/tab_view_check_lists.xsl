@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="tab_view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
@@ -32,10 +33,10 @@
 				<xsl:when test="check_list_array/child::node()">
 					<xsl:for-each select="check_list_array">
 						<li>
-					       <div class="order_nr"><xsl:number/>.</div>
-					       <div class="status">
-					       	 <xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>	
-					         <xsl:choose>
+						   <div class="order_nr"><xsl:number/>.</div>
+						   <div class="status">
+						   	 <xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>	
+							 <xsl:choose>
 								<xsl:when test="status = 1">
 									<img height="15" src="controller/images/status_icon_light_green.png" />	
 								</xsl:when>
@@ -43,31 +44,31 @@
 									<img height="15" src="controller/images/status_icon_red.png" />
 								</xsl:otherwise>
 							</xsl:choose>
-					       </div>
-					       <div>
-						       <a>
+						   </div>
+						   <div>
+							   <a>
 									<xsl:attribute name="href">
 										<xsl:text>index.php?menuaction=controller.uicheck_list.view_check_list</xsl:text>
 										<xsl:text>&amp;check_list_id=</xsl:text>
 											<xsl:value-of select="id"/>
 									</xsl:attribute>
 									<xsl:if test="deadline != ''">
-					      				<xsl:value-of select="php:function('date', $date_format, number(deadline))"/>
-					      			</xsl:if>
+						  				<xsl:value-of select="php:function('date', $date_format, number(deadline))"/>
+						  			</xsl:if>
 								</a>	
 							</div>
-					       <div>
-					      		<xsl:if test="planned_date != ''">
-					      			<xsl:value-of select="php:function('date', $date_format, number(planned_date))"/>
-					      		</xsl:if>  		
-					       </div>
-					       <div>
-					       		<xsl:if test="completed_date != ''">
-					      			<xsl:value-of select="php:function('date', $date_format, number(completed_date))"/>
-					      		</xsl:if>
-					       </div>
-					       <div><xsl:value-of select="comment"/></div>
-					    </li>
+						   <div>
+						  		<xsl:if test="planned_date != ''">
+						  			<xsl:value-of select="php:function('date', $date_format, number(planned_date))"/>
+						  		</xsl:if>  		
+						   </div>
+						   <div>
+						   		<xsl:if test="completed_date != ''">
+						  			<xsl:value-of select="php:function('date', $date_format, number(completed_date))"/>
+						  		</xsl:if>
+						   </div>
+						   <div><xsl:value-of select="comment"/></div>
+						</li>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>

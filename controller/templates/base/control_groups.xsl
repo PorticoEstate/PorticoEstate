@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template name="control_groups" xmlns:php="http://php.net/xsl">
 
 <div class="yui-content tab_content">
@@ -24,7 +25,7 @@
 							<li><input type="checkbox" name="control_group_ids[]" value="{$control_group_id}" /><xsl:value-of select="control_group/group_name"/></li>
 						</xsl:otherwise>
 					</xsl:choose>
-		      		
+			  		
 				</xsl:for-each>
 			</ul>
 			<div>

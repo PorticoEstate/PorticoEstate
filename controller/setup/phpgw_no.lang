@@ -259,6 +259,7 @@ Control_groups	controller	no	Kontrollgrupper
 Control_area	controller	no	Kontrollområde
 Control area	controller	no	Kontrollområde
 Control_areas	controller	no	Kontrollområder
+Use ACL for control areas	common	no	Bruk rettighetsstyring på kontrollområder
 Control item what to do	controller	no	Hva skal gjøres
 Not selected	controller	no	Ingen valgt
 searchfield	controller	no	Søkefelt
@@ -271,9 +272,9 @@ Control group title	controller	no	Tittel
 Building part	controller	no	Bygningsdel
 remove	controller	no	Fjern valgte elementer
 Locations	controller	no	Lokasjoner
-Equipment	controller	no	Utstyr
+component	controller	no	Utstyr
 Control_locations	controller	no	Lokasjoner
-Control_equipment	controller	no	Utstyr
+Control_component	controller	no	Utstyr
 New control	controller	no	Ny kontroll
 revisit	controller	no	Revidér
 Procedure revision	controller	no	Versjon
@@ -287,3 +288,16 @@ planned_date	controller	no	Planlagt dato
 end_date	controller	no	Slutt dato
 View_locations_for_control	controller	no	Vis bygg/kontroll-knytning	
 Add_locations_for_control	controller	no	Legg til knytning for bygg
+View_component_for_control	controller	no	Vis bygg/utstyr-knytning
+Add_component_for_control	controller	no	Legg til knytning mot utstyr
+component_for_control	controller	no	Utstyr tilknyttet kontroll
+Choose_component_type	controller	no	Velg utstyrstype
+Choose_component_category	controller	no	Velg utstyrskategori
+component_category_internal	controller	no	Internt utstyrsregister
+component_category_ifc	controller	no	IFC
+invert_checkboxes	controller	no	Inverter merking
+ControlId	controller	no	Kontroll ID
+Bim_id	controller	no	Utstyr ID
+Bim_name	controller	no	Utstyrsnavn
+Bim_type	controller	no	Utstyrstype
+GUID	controller	no	GUID

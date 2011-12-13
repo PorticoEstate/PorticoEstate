@@ -1,4 +1,4 @@
-<!-- $Id: demo.xsl 7561 2011-09-07 14:01:50Z sigurdne $ -->
+<!-- $Id$ -->
 
 <!-- add / edit  -->
 	<xsl:template match="reporting" xmlns:php="http://php.net/xsl">

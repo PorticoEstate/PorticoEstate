@@ -5540,7 +5540,7 @@
 
 	/**
 	* Update property version from 0.9.17.626 to 0.9.17.627
-	* Add assign voucher id on export from system
+	* Alter primary key
 	*/
 	$test[] = '0.9.17.627';
 	function property_upgrade0_9_17_627()
@@ -5558,9 +5558,25 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.627 to 0.9.17.628
+	* Add appname to responsibility_role in order to filter by defining app.
+	*/
+	$test[] = '0.9.17.628';
+	function property_upgrade0_9_17_628()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_responsibility_role', 'appname',array('type' => 'varchar','precision' => 25,'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_responsibility_role SET appname = 'property'",__LINE__,__FILE__);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_role','appname',array('type' => 'varchar','precision' => '25','nullable' => false));
 
-
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.629';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
 	/**
 	* Update property version from 0.9.17.607 to 0.9.17.608

@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <func:function name="phpgw:conditional">
 	<xsl:param name="test"/>
 	<xsl:param name="true"/>
@@ -6,7 +7,7 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
@@ -33,7 +34,7 @@
 						<option value="{$control_area_id}">
 							<xsl:value-of select="title"/>
 						</option>			
-				    </xsl:for-each>
+					</xsl:for-each>
 				 </select>
 				 
 				 <form id="loc_form" action="" method="GET">
@@ -46,7 +47,7 @@
 								<option value="{$control_id}">
 									<xsl:value-of select="title"/>
 								</option>				
-						    </xsl:for-each>
+							</xsl:for-each>
 						</xsl:when>
 						<xsl:otherwise>
 							<option>
@@ -67,7 +68,7 @@
 							<div><xsl:value-of select="title"/></div>
 							<div><xsl:value-of select="location_code"/></div>
 						</li>			
-				    </xsl:for-each>
+					</xsl:for-each>
 				</ul>
 			</div>
 			
@@ -81,9 +82,9 @@
 </xsl:template>
 
 <xsl:template match="locations_table" xmlns:php="http://php.net/xsl">
-    
-    <div id="loc_paginator"/>
-    <div style="margin:20px;" id="locations-container"/>
+	
+	<div id="loc_paginator"/>
+	<div style="margin:20px;" id="locations-container"/>
   	<xsl:call-template name="locations-definition" />
 </xsl:template>
 
@@ -96,14 +97,14 @@
 						key: "<xsl:value-of select="key"/>",
 						<xsl:if test="label">
 						label: "<xsl:value-of select="label"/>",
-					    </xsl:if>
+						</xsl:if>
 						sortable: <xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 						<xsl:if test="hidden">
 						hidden: true,
-					    </xsl:if>
+						</xsl:if>
 						<xsl:if test="formatter">
 						formatter: <xsl:value-of select="formatter"/>,
-					    </xsl:if>
+						</xsl:if>
 						className: "<xsl:value-of select="className"/>"
 					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 				</xsl:for-each>

@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <!-- separate tabs and  inline tables-->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
@@ -25,12 +26,12 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			<xsl:call-template name="control_locations" />
 		</xsl:when>
-		<xsl:when test="view = 'control_equipment'">
+		<xsl:when test="view = 'control_component'">
 			<div class="identifier-header">
-				<h1><xsl:value-of select="php:function('lang', 'Control_equipment')"/> for <xsl:value-of select="control/title" /></h1>
+				<h1><xsl:value-of select="php:function('lang', 'Control_component')"/> for <xsl:value-of select="control/title" /></h1>
 			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
-			<xsl:call-template name="control_equipment" />
+			<xsl:call-template name="control_component" />
 		</xsl:when>
 		<xsl:when test="view = 'control_items'">
 			<div class="identifier-header">

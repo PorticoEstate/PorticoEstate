@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template match="data" name="view_check_lists" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
@@ -20,16 +21,16 @@
 			</li>
 			<xsl:choose>
 				<xsl:when test="controls_calendar_array/child::node()">
-				    <xsl:for-each select="controls_calendar_array">
-				    	<li>
-				    		<div>
-				      			<xsl:value-of select="control/id"/>
+					<xsl:for-each select="controls_calendar_array">
+						<li>
+							<div>
+					  			<xsl:value-of select="control/id"/>
 							</div>
 							<div class="title">
-				      			<xsl:value-of select="control/title"/>
+					  			<xsl:value-of select="control/title"/>
 							</div>
 							<div class="date">
-				      			<xsl:value-of select="php:function('date', 'd/m-Y', number(control/start_date))"/>
+					  			<xsl:value-of select="php:function('date', 'd/m-Y', number(control/start_date))"/>
 							</div>
 							<div class="date">
 								<xsl:choose>
@@ -42,16 +43,16 @@
 								</xsl:choose>
 							</div>
 							<div class="frequency">
-				      			<xsl:value-of select="control/repeat_type"/>
+					  			<xsl:value-of select="control/repeat_type"/>
 							</div>
 							<div class="frequency">
-				      			<xsl:value-of select="control/repeat_interval"/>
+					  			<xsl:value-of select="control/repeat_interval"/>
 							</div>
 							<xsl:for-each select="calendar_array">
-					    		<div style="position:relative;">
-					    		<div id="info_box" style="position:absolute;display:none;">
-					    		</div>
-					    		<xsl:choose>
+								<div style="position:relative;">
+								<div id="info_box" style="position:absolute;display:none;">
+								</div>
+								<xsl:choose>
 										<xsl:when test="id">
 											<xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>
 											<xsl:choose>

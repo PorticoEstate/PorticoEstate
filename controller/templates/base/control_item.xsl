@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <!-- item  -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
@@ -12,7 +13,7 @@
 <ul class="check_list">
 			<xsl:for-each select="check_list_array">
 				<li>
-			        <span>Tittel:</span><xsl:value-of select="title"/><span>Start dato:</span><xsl:value-of select="start_date"/>
+					<span>Tittel:</span><xsl:value-of select="title"/><span>Start dato:</span><xsl:value-of select="start_date"/>
 				</li>
 			</xsl:for-each>
 		</ul>					

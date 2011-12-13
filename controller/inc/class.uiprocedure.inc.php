@@ -1,15 +1,44 @@
 <?php
+	/**
+	* phpGroupWare - controller: a part of a Facilities Management System.
+	*
+	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/
+	* @package property
+	* @subpackage controller
+ 	* @version $Id$
+	*/	
+
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('controller.soprocedure');
 	phpgw::import_class('controller.socontrol_area');
-	
+
 	include_class('controller', 'procedure', 'inc/model/');
 
 	class controller_uiprocedure extends controller_uicommon
 	{
 		private $so;
 		private $so_control_area;
-		
+
 		public $public_functions = array
 		(
 			'index'				=>	true,
@@ -29,7 +58,7 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "controller::procedure";
 			//$this->bo = CreateObject('property.boevent',true);
 		}
-		
+
 		public function index()
 		{
 			//self::set_active_menu('controller::control_item2::control_item_list2');
@@ -46,11 +75,11 @@
 						'item' => array(
 							array('type' => 'filter',
 								'name' => 'control_areas',
-                                'text' => lang('Control_area').':',
-                                'list' => $this->so_control_area->get_control_area_select_array(),
+								'text' => lang('Control_area').':',
+								'list' => $this->so_control_area->get_control_area_select_array(),
 							),
 							array('type' => 'text', 
-                                'text' => lang('search'),
+								'text' => lang('search'),
 								'name' => 'query'
 							),
 							array(
@@ -119,7 +148,7 @@
 			{
 				$procedure = new controller_procedure();
 			}
-			
+
 
 			if(isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
@@ -135,7 +164,7 @@
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
 					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date_hidden')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
-					
+
 					$revision = (int)$procedure->get_revision_no();
 					if($revision && is_numeric($revision) && $revision > 0)
 					{
@@ -145,7 +174,7 @@
 					{
 						$procedure->set_revision_no(1);
 					}
-					
+
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
@@ -197,7 +226,7 @@
 					$procedure->set_start_date(strtotime(phpgw::get_var('start_date_hidden')));
 					$procedure->set_end_date(strtotime(phpgw::get_var('end_date_hidden')));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
-					
+
 					if(isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
@@ -224,7 +253,7 @@
 			{
 				if(isset($procedure_id) && $procedure_id > 0)
 				{
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure_id));					
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view', 'id' => $procedure_id));
 				}
 				else
 				{
@@ -261,7 +290,7 @@
 				}
 				$procedure_array = $procedure->toArray();
 				//_debug_array($procedure_array);
-	
+
 				$data = array
 				(
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
@@ -273,30 +302,30 @@
 					'procedure'				=> $procedure_array,
 					'control_area'				=> array('options' => $control_area_options),
 				);
-	
-	
+
+
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
-	
+
 				$this->use_yui_editor(array('responsibility','description'));
-	
+
 				self::render_template_xsl('procedure_item', $data);
 			}
 		}
-		
+
 		// Returns check list info as JSON
 		public function get_procedures()
 		{
 			$control_area_id = phpgw::get_var('control_area_id');
-			
+
 			$procedures_array = $this->so->get_procedures_by_control_area_id($control_area_id);
-			
+
 			if(count($procedures_array)>0)
 				return json_encode( $procedures_array );
 			else
 				return null;
 		}
-		
-		
+
+
 		/**
 	 	* Public method. Forwards the user to edit mode.
 	 	*/
@@ -304,7 +333,7 @@
 		{
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit'));
 		}
-		
+
 		/**
 		 * Public method. Called when a user wants to view information about a procedure.
 		 * @param HTTP::id	the procedure ID
@@ -330,13 +359,13 @@
 					$this->render('permission_denied.php',array('error' => lang('invalid_request')));
 					return;
 				}
-				
+
 				if($this->flash_msgs)
 				{
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
-				
+
 				$procedure_array = $procedure->toArray();
 				if($procedure->get_start_date() && $procedure->get_start_date() != null)
 					$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
@@ -345,14 +374,14 @@
 				if($procedure->get_revision_date() && $procedure->get_revision_date() != null)
 					$procedure_revision_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
 				//_debug_array($procedure_array);
-				
+
 				if(!$view_revision)
 				{
 					$table_header[] = array('header' => lang('Procedure revision'));
 					$table_header[] = array('header' => lang('Procedure title'));
 					$table_header[] = array('header' => lang('Procedure start date'));
 					$table_header[] = array('header' => lang('Procedure end date'));
-					
+
 					$revised_procedures = $this->so->get_old_revisions($procedure->get_id());
 					//var_dump($revised_procedures);
 					foreach($revised_procedures as $rev)
@@ -361,7 +390,7 @@
 						$table_values[] = array('row' => $rev);
 					}
 				}
-	
+
 				$data = array
 				(
 					'value_id'				=> !empty($procedure) ? $procedure->get_id() : 0,
@@ -371,19 +400,19 @@
 					'values'				=> $table_values,
 					'table_header'			=> $table_header,
 				);
-				
+
 				if($procedure->get_end_date())
 				{
 					$data['inactive'] = true;
 				}
-	
-	
+
+
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
-	
+
 				self::render_template_xsl('procedure_item', $data);
 			}
 		}
-					
+
 		public function query()
 		{
 			$params = array(
@@ -394,13 +423,13 @@
 				'dir'	=> phpgw::get_var('dir'),
 				'filters' => $filters
 			);
-			
+
 			$ctrl_area = phpgw::get_var('control_areas');
 			if(isset($ctrl_area) && $ctrl_area > 0)
 			{
 				$filters['control_areas'] = $ctrl_area; 
 			}
-			
+
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
 				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
@@ -419,17 +448,17 @@
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
-			
+
 			//Retrieve a contract identifier and load corresponding contract
 			$procedure_id = phpgw::get_var('procedure_id');
-			
+
 			$exp_param 	= phpgw::get_var('export');
 			$export = false;
 			if(isset($exp_param)){
 				$export=true;
 				$num_of_objects = null;
 			}
-			
+
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
 			switch($query_type)
@@ -450,17 +479,17 @@
 					$rows[] = $result->serialize();
 				}
 			}
-			
+
 			// ... add result data
 			$result_data = array('results' => $rows);
-			
+
 			$result_data['total_records'] = $object_count;
 			$result_data['start'] = $params['start'];
 			$result_data['sort'] = $params['sort'];
 			$result_data['dir'] = $params['dir'];
-			
+
 			$editable = phpgw::get_var('editable') == 'true' ? true : false;
-			
+
 			if(!$export){
 				//Add action column to each row in result table
 				array_walk(
@@ -483,7 +512,7 @@
 			// Get parameters
 			$procedure_id = $params[0];
 			$editable = $params[1];
-			
+
 			// Depending on the type of query: set an ajax flag and define the action and label for each row
 			switch($type)
 			{

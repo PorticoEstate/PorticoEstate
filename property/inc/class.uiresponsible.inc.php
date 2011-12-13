@@ -76,6 +76,11 @@
 		protected $acl_location;
 
 		/**
+		 * @var string $appname the application name
+		 */
+		protected $appname;
+
+		/**
 		 * @var bool $acl_read does the current user have read access to the current location
 		 */
 		protected $acl_read;
@@ -115,17 +120,18 @@
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::responsible_matrix';
+
 			$this->bo					= CreateObject('property.boresponsible', true);
 			$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
 			$this->acl 					= & $GLOBALS['phpgw']->acl;
-			$this->acl_location 		= $this->bo->acl_location;
+			$this->acl_location 		= $this->bo->get_acl_location();
 			$this->acl_read 			= $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
 			$this->acl_add 				= $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit 			= $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete 			= $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->bolocation			= CreateObject('preferences.boadmin_acl');
-			$this->bolocation->acl_app 	= 'property';
+			$this->appname				= $this->bo->appname;
+			$this->bolocation->acl_app 	= $this->appname;
 			$this->location				= $this->bo->location;
 			$this->cats					= & $this->bo->cats;
 			$this->query				= $this->bo->query;
@@ -133,6 +139,8 @@
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->cat_id				= $this->bo->cat_id;
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}::responsible_matrix";
 		}
 
 		/**
@@ -189,7 +197,8 @@
 						'menuaction'=> 'property.uiresponsible.index',
 						'query'		=> $this->query,
 						'location'	=> $this->location,
-						'lookup'	=> $lookup
+						'lookup'	=> $lookup,
+						'appname'	=> $this->appname
 
 					));
 
@@ -198,15 +207,23 @@
 				$datatable['config']['base_java_url'] = "menuaction:'property.uiresponsible.index',"	    											
 					."query:'{$this->query}',"
 					."location:'{$this->location}',"
-					."lookup:'{$lookup}'";          
+					."lookup:'{$lookup}',"          
+					."appname:'{$this->appname}'";          
 
-				$values_combo_box[0]  = $this->bolocation->select_location('filter', $this->location);
-				$default_value = array ('id'=>'','descr'=>lang('No location'));
-				array_unshift ($values_combo_box[0],$default_value);
-				foreach($values_combo_box[0] as &$_location)
+				$values_combo_box = array();
+
+				$locations = $GLOBALS['phpgw']->locations->get_locations(false, $this->appname, false, false, true);
+				foreach ( $locations as $loc_id => $loc_descr )
 				{
-					$_location['name'] = $_location['descr'];
+					$values_combo_box[0][] = array
+					(
+						'id'	=> $loc_id,
+						'name'	=> "{$loc_id} [{$loc_descr}]",
+					);
 				}
+
+				$default_value = array ('id'=>'','name'=>lang('No location'));
+				array_unshift ($values_combo_box[0],$default_value);
 
 				$datatable['actions']['form'] = array
 					(
@@ -218,7 +235,8 @@
 								'menuaction' 	=> 'property.uiresponsible.index',
 								'query'		=> $this->query,
 								'location'	=> $this->location,
-								'lookup'	=> $lookup
+								'lookup'	=> $lookup,
+								'appname'	=> $this->appname
 							)
 						),
 						'fields'	=> array
@@ -267,7 +285,7 @@
 								array
 								( //div values  combo_box_0
 									'id' => 'values_combo_box_0',
-									'value'	=> $bocommon->select2String($values_combo_box[0], 'id','descr') //i.e.  id,value/id,vale/
+									'value'	=> $bocommon->select2String($values_combo_box[0], 'id','name') //i.e.  id,value/id,vale/
 								)
 							)
 						)
@@ -282,7 +300,7 @@
 				'input_type'	=>	array('hidden','text','text','text','text','hidden','text','text','hidden','hidden'),
 				'name'			=>	array('id','name','descr','category','created_by','created_on','app_name','active','loc','location'),
 				'formatter'		=>	array('','','','','','','','','',''),
-				'descr'			=>	array('',lang('name'),lang('descr'),lang('category'),lang('supervisor'),'',lang('location'),lang('active'),'','')
+				'descr'			=>	array('',lang('name'),lang('descr'),lang('category'),lang('user'),'',lang('application'),lang('active'),'','')
 			);
 
 			$j=0;
@@ -400,7 +418,8 @@
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uiresponsible.edit_type',
-								//											'location'		=> $this->location
+								'appname'	=> $this->appname
+//								'location'		=> $this->location
 							)),
 							'parameters'	=> $parameters3
 						);
@@ -415,7 +434,8 @@
 							'confirm_msg'	=> lang('do you really want to delete this entry'),
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
-								'menuaction'	=> 'property.uiresponsible.delete_type'
+								'menuaction'	=> 'property.uiresponsible.delete_type',
+								'appname'	=> $this->appname
 							)),
 							'parameters'	=> $parameters
 						);
@@ -427,7 +447,8 @@
 						'text' 			=> lang('contacts'),
 						'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 						(
-							'menuaction'	=> 'property.uiresponsible.contact'
+							'menuaction'	=> 'property.uiresponsible.contact',
+							'appname'	=> $this->appname
 						)),
 						'parameters'	=> $parameters2
 					);
@@ -441,6 +462,7 @@
 							'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 							(
 								'menuaction'	=> 'property.uiresponsible.edit_type',
+								'appname'		=> $this->appname,
 								'location'		=> $this->location
 							))
 						);
@@ -596,7 +618,7 @@
 				return;
 			}
 
-			if(!$GLOBALS['phpgw']->locations->get_id('property', $this->location))
+			if(!$GLOBALS['phpgw']->locations->get_id($this->appname, $this->location))
 			{
 				$receipt['error'][]=array('msg'=>lang('not a valid location!'));
 			}
@@ -642,6 +664,7 @@
 							$GLOBALS['phpgw']->redirect_link('/index.php', array
 								(
 									'menuaction'=> 'property.uiresponsible.index',
+									'appname'	=> $this->appname,
 									'location' => $this->location
 								));
 						}
@@ -652,6 +675,7 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php', array
 						(
 							'menuaction'=> 'property.uiresponsible.index',
+							'appname'	=> $this->appname,
 							'location' => $this->location
 						));
 				}
@@ -672,6 +696,7 @@
 				(
 					'menuaction'	=> 'property.uiresponsible.edit_type',
 					'id'			=> $id,
+					'appname'		=> $this->appname,
 					'location'		=> $this->location
 				);
 
@@ -747,7 +772,8 @@
 						(
 							'menuaction'	=> 'property.uiresponsible.edit_contact',
 							'id'			=> $entry['id'],
-							'location'		=> str_replace('property', '', $entry['app_name']),
+							'appname'		=> $this->appname,
+							'location'		=> str_replace($this->appname, '', $entry['app_name']),
 							'type_id'		=> $type_id
 						));
 					$lang_edit_text			= lang('edit type');
@@ -800,6 +826,7 @@
 						(
 							'menuaction'	=> 'property.uiresponsible.contact',
 							'allrows'		=> $this->allrows,
+							'appname'		=> $this->appname,
 							'location'		=> $this->location,
 							'type_id'		=> $type_id
 						)
@@ -813,6 +840,7 @@
 						(
 							'menuaction'	=> 'property.uiresponsible.contact',
 							'allrows'		=> $this->allrows,
+							'appname'		=> $this->appname,
 							'location'		=> $this->location,
 							'type_id'		=> $type_id
 						)
@@ -826,6 +854,7 @@
 						(
 							'menuaction'	=> 'property.uiresponsible.contact',
 							'allrows'		=> $this->allrows,
+							'appname'		=> $this->appname,
 							'location'		=> $this->location,
 							'type_id'		=> $type_id
 						)
@@ -839,6 +868,7 @@
 						(
 							'menuaction'	=> 'property.uiresponsible.contact',
 							'allrows'		=> $this->allrows,
+							'appname'		=> $this->appname,
 							'location'		=> $this->location,
 							'type_id'		=> $type_id
 						)
@@ -871,6 +901,7 @@
 					'sort'			=> $this->sort,
 					'order'			=> $this->order,
 					'query'			=> $this->query,
+					'appname'		=> $this->appname,
 					'location'		=> $this->location,
 					'type_id'		=> $type_id
 
@@ -879,6 +910,7 @@
 			$link_add_action = array
 				(
 					'menuaction'	=> 'property.uiresponsible.edit_contact',
+					'appname'		=> $this->appname,
 					'location'		=> $this->location,
 					'type_id'		=> $type_id
 				);
@@ -891,8 +923,11 @@
 					'lang_cancel'				=> lang('cancel'),
 					'lang_cancel_statustext'	=> lang('back to list type'),
 					'cancel_action'				=> $GLOBALS['phpgw']->link('/index.php', array
-					('menuaction'	=> 'property.uiresponsible.index'
-				))
+						(
+							'menuaction'	=> 'property.uiresponsible.index',
+							'appname'		=> $this->appname
+						)
+					)
 			);
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible_contact_receipt');
@@ -1044,6 +1079,7 @@
 							$GLOBALS['phpgw']->redirect_link('/index.php', array
 								(
 									'menuaction'=> 'property.uiresponsible.contact',
+									'appname'		=> $this->appname,
 									'location'	=> $this->location,
 									'type_id'	=> $type_id
 								));
@@ -1053,6 +1089,7 @@
 							$GLOBALS['phpgw']->redirect_link('/index.php', array
 								(
 									'menuaction'=> 'property.uiresponsible.edit_contact',
+									'appname'		=> $this->appname,
 									'location'	=> $this->location,
 									'type_id'	=> $type_id,
 									'id'		=> $id
@@ -1080,6 +1117,7 @@
 					$GLOBALS['phpgw']->redirect_link('/index.php', array
 						(
 							'menuaction'=> 'property.uiresponsible.contact',
+							'appname'		=> $this->appname,
 							'location' => $this->location,
 							'type_id' => $type_id
 						));
@@ -1119,6 +1157,7 @@
 				(
 					'menuaction'	=> 'property.uiresponsible.edit_contact',
 					'id'			=> $id,
+					'appname'		=> $this->appname,
 					'location'		=> $this->location,
 					'type_id'		=> $type_id
 				);

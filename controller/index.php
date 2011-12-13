@@ -23,7 +23,7 @@
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package property
- 	* @version $Id: index.php 6445 2010-10-05 21:52:58Z sigurdne $
+ 	* @version $Id$
 	*/
 
 	/**

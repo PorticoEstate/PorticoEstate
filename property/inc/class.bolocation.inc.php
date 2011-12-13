@@ -674,12 +674,14 @@ JS;
 
 		function read($data = array())
 		{
+//_debug_array($data);
 			$locations = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 				'filter' => $this->filter,'cat_id' => $this->cat_id,'type_id' => $data['type_id'],
 				'lookup_tenant'=>$data['lookup_tenant'],'lookup'=>$data['lookup'],
 				'district_id'=>$this->district_id,'allrows'=>$data['allrows'],
 				'status'=>$this->status,'part_of_town_id'=>$this->part_of_town_id,'dry_run'=>$data['dry_run'],
-				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id']));
+				'location_code' => $this->location_code, 'filter_role_on_contact' => $data['filter_role_on_contact'], 'role_id' => $data['role_id'],
+				'results' => $data['results']));
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;

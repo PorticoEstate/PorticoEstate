@@ -1043,7 +1043,7 @@
 
 
 
-			//_debug_array($values);
+//			_debug_array($values);die();
 
 			if ($values['save'] && $mode == 'edit')
 			{
@@ -1070,6 +1070,11 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a status !'));
 				}
 
+				if(!$values['building_part'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a building part!'));
+				}
+
 				if($values['consume_value'] && !$values['consume_date'])
 				{
 					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
@@ -1079,7 +1084,6 @@
 					$receipt['error'][]=array('msg'=>lang('Please select a date !'));
 				}
 
-
 				if(isset($values['budget']) && $values['budget'])
 				{
 					$values['budget'] = str_replace(' ', '', $values['budget']);
@@ -1088,6 +1092,11 @@
 						$receipt['error'][]=array('msg'=>lang('budget') . ': ' . lang('Please enter an integer !'));
 						$error_id=true;
 					}
+				}
+
+ 				if(!isset($values['condition'][0]['condition_type']) || !$values['condition'][0]['degree'])
+				{
+					$receipt['error'][]=array('msg'=>lang('Please select a condition!'));
 				}
 
 				if(is_array($values_attribute))
