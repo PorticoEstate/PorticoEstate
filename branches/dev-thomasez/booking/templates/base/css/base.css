@@ -304,3 +304,41 @@ span.space {
 .image_container {
 	margin-top: 8px;
 }
+em {
+	font-style:italic;
+}
+ul {
+	margin-left:0em; 
+	padding-left:1.2em; 
+  	margin-bottom:1em; 
+}
+ul li {
+	padding-left: 0.2em; 
+  	list-style: disc;
+}
+ol {
+	margin-left:0em; 
+	padding-left:1.6em; 
+  	margin-bottom:1em; 
+}
+ol li {
+	list-style:decimal; 
+	background-image:none; 
+	padding-left:0em; 
+}
+#field_type {
+	margin-left: 5px;
+}
+#regions input {
+	margin: 0px 5px 0px 3px;
+}
+form#searchterm {
+    text-align: center;
+    padding-top: 5em;
+}
+input#searchterm {
+    font-size: 120%;
+    color: #666;
+    width: 20em;
+}
+

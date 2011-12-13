@@ -54,7 +54,20 @@
 				<dd><input type="text" name="city" id="field_city" value="{building/city}"/></dd>
 
 				<dt><label for='field_district'><xsl:value-of select="php:function('lang', 'District')"/></label></dt>
-				<dd><input type="text" name="district" id="field_district" value="{building/district}"/></dd>
+				<dd>
+				<select name='district' id='field_district'>
+				<option value=''><xsl:value-of select="php:function('lang', 'Select County')" />...</option>
+					<xsl:for-each select="building/fylker/*">
+						<option value="{local-name()}">
+							<xsl:if test="../../district = local-name()">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="string(node())"/>
+						</option>
+					</xsl:for-each>
+				</select>
+				</dd>
+<!--				<dd><input type="text" name="district" id="field_district" value="{building/district}"/></dd>-->
 				
 				<xsl:if test="not(new_form)">
 					<dt><label for="field_active"><xsl:value-of select="php:function('lang', 'Active')"/></label></dt>

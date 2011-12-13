@@ -520,8 +520,8 @@ Documentation	booking	no	Dokumentasjon
 Upload manual	booking	no	Last opp dokumentasjon
 Are you sure you want to delete?	booking	no	Er du sikker på at søknad skal avvises?
 House	booking	no	Hytte/hus
-Campsite	booking	no	Leirplass
-Campsites	booking	no	Teltplasser
+Campsites	booking	no	Teltplass
+Boat	booking	no	Seilbåt
 Bedspaces	booking	no	Sengeplasser
 Heating	booking	no	Oppvarming
 Kitchen	booking	no	Kjøkken
@@ -541,4 +541,23 @@ Weather url	booking	no	Været
 Click here	booking	no	Klikk her
 Mail Settings	booking	no	E-post oppsett
 Application Settings	booking	no	Søknads oppsett
-
+Select County	booking	no	Velg Fylke
+akerhus	booking	no	Akershus
+austagder	booking	no	Aust-Agder
+buskerud	booking	no	Buskerud
+finnmark	booking	no	Finnmark
+hedemark	booking	no	Hedmark
+hordaland	booking	no	Hordaland
+moreogromsdal	booking	no	Møre og Romsdal
+nordland	booking	no	Nordland
+nordtrodelag	booking	no	Nord-Trøndelag
+oppland	booking	no	Oppland
+rogaland	booking	no	Rogaland
+songogfjordane	booking	no	Sogn og Fjordane
+sortrondelag	booking	no	Sør-Trøndelag
+telemark	booking	no	Telemark
+troms	booking	no	Troms
+vestagder	booking	no	Vest-Agder
+vestfold	booking	no	Vestfold
+ostfold	booking	no	Østfold
+You must choose a county	booking	no	Du må velge et fylke

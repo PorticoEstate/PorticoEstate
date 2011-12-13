@@ -336,10 +336,36 @@ To cancel allocation use this link	bookingfrontend	no	For å slette tildelingen 
 manual	common	no	Veiledning lag og organisasjoner
 Cancel allocation	bookingfrontend	no	Avbestill tildelinger
 House	bookingfrontend	no	Hytte/hus
-Campsite	bookingfrontend	no	Leirplass
+Campsite	bookingfrontend	no	Teltplass
+Boat	bookingfrontend	no	Seilbåt
 Internal Cost	bookingfrontend	no	Medlems pris
 External Cost	bookingfrontend	no	Pris
 Cost Type	bookingfrontend	no	Pris type
 Perhour	bookingfrontend	no	Pr time
 Perday	bookingfrontend	no	Pr dag
 Perweek	bookingfrontend	no	Pr uke
+Select County	bookingfrontend	no	Velg Fylke
+East	bookingfrontend	no	Østlandet
+South	bookingfrontend	no	Sørlandet
+West	bookingfrontend	no	Vestlandet
+Middle	bookingfrontend	no	Midt-Norge
+North	bookingfrontend	no	Nord-Norge
+Select bedspaces	bookingfrontend	no	Velg antall sengeplasser
+akerhus	booking	no	Akershus
+austagder	booking	no	Aust-Agder
+buskerud	booking	no	Buskerud
+finnmark	booking	no	Finnmark
+hedemark	booking	no	Hedmark
+hordaland	booking	no	Hordaland
+moreogromsdal	booking	no	Møre og Romsdal
+nordland	booking	no	Nordland
+nordtrodelag	booking	no	Nord-Trøndelag
+oppland	booking	no	Oppland
+rogaland	booking	no	Rogaland
+songogfjordane	booking	no	Sogn og Fjordane
+sortrondelag	booking	no	Sør-Trøndelag
+telemark	booking	no	Telemark
+troms	booking	no	Troms
+vestagder	booking	no	Vest-Agder
+vestfold	booking	no	Vestfold
+ostfold	booking	no	Østfold

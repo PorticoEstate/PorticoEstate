@@ -11,15 +11,19 @@
 			$this->soresource = CreateObject('booking.soresource');
 		}
 		
-		function search($searchterm)
+		function search($searchterm,$resource)
 		{
 			$type = phpgw::get_var('type', 'GET');
             $bui_result = $org_result = $res_result = array();
 
-            if (!$type || $type == "building") {
-                $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
+            if ((!$type || $type == "building") && $resource['res'] == 'House') {
+		
+				$conditions = '(bedspaces > 10 and bedspaces < 25)';
+                $bui_result = $this->sobuilding->read(array("query"=>$searchterm, "filters" => array('where' => $conditions,"active" => "1")));
+
                 foreach($bui_result['results'] as &$bui)
                 {
+
                     $bui['type'] = "building";
                     $bui['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $bui['id']));
                     $bui['img_container'] = "building-" . $bui['id'];
@@ -30,21 +34,36 @@
 					}
                 }
             }
-            if (!$type || $type == "organization") {
-                $org_result = $this->soorganization->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
-                foreach($org_result['results'] as &$org)
-                {
-                    $org['type'] = "organization";
-                    $org['description'] = nl2br(strip_tags($org['description']));
-                    $org['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $org['id']));
-					if ( trim($org['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($org['homepage'])) )
-					{
-						$org['homepage'] = 'http://'.$org['homepage'];
-					}
-                }
-            }
+#            if (!$type || $type == "organization") {
+#                $org_result = $this->soorganization->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
+#                foreach($org_result['results'] as &$org)
+#                {
+#                    $org['type'] = "organization";
+#                    $org['description'] = nl2br(strip_tags($org['description']));
+#                    $org['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $org['id']));
+#					if ( trim($org['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($org['homepage'])) )
+#					{
+#						$org['homepage'] = 'http://'.$org['homepage'];
+#					}
+#                }
+#            }
             if(!$type || $type == "resource") {
-                $res_result = $this->soresource->read(array("query"=>$searchterm, "filters" => array("active" => "1")));
+
+						
+				$filters = array();
+
+#				if($resource['campsite'] != '') {
+#					$filters['where'] = "(campsites > ".$resource['campsite'].")";
+#				}
+				if($resource['res'] != '') {
+					$filters['type'] = $resource['res'];
+				}
+				$filters['active'] = "1";
+
+#				echo "<pre>";print_r($filters);exit;
+
+                $res_result = $this->soresource->read(array("query"=>$searchterm, "filters" => $filters));
+
                 foreach($res_result['results'] as &$res)
                 {
                     $res['name'] = $res['building_name']. ' / ' . $res['name'];

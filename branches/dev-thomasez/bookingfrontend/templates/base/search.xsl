@@ -12,24 +12,75 @@
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="yui_booking_i18n"/>
+	<xsl:variable name="resource"><xsl:value-of select="resource" /></xsl:variable>
   <div id="content">
     <form action="" method="GET" id="search">
       <input type="hidden" name="menuaction" value="bookingfrontend.uisearch.index" />
       <xsl:choose>
         <xsl:when test="search and string-length(search/searchterm) &gt; 0">
-          <input id="search" type="text" name="searchterm" value="{search/searchterm}"/>
+          <input id="searchterm" type="text" name="searchterm" value="{search/searchterm}"/>
         </xsl:when>
         <xsl:otherwise>
-          <input id="search" type="text" name="searchterm" value="Søk leirplass, hytte, utstyr eller aktivitet" onclick="value=''" />
+          <input id="searchterm" type="text" name="searchterm" value="Søk leirplass, hytte, utstyr eller aktivitet" onclick="value=''" />
         </xsl:otherwise>
       </xsl:choose>
       <xsl:text> </xsl:text><input type="submit" value="{php:function('lang', 'Search')}"/>
-      <div class="hint">
+      <div class="hint" id="hint">
         F.eks. "<i>Solstølen</i>", "<i>Tredalen</i>", "<i>kano</i>" eller "<i>leir</i>" 
       </div>
+	  <div class="settings" id="regions">
+		Region: 
+			<xsl:for-each select="resource/regions/*">
+				<input type="checkbox" name="{local-name()}" id="{local-name()}" /> 
+				<xsl:value-of select="string(node())"/>
+			</xsl:for-each> 
+	  </div>
+	  <div>
+			<select name='res' id='field_type'>
+			<option value=''><xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
+				<xsl:for-each select="resource/types/*">
+					<option value="{local-name()}">
+						<xsl:if test="../../res = local-name()">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="php:function('lang', string(node()))"/>
+					</option>
+				</xsl:for-each>
+
+			</select>
+			<select name='fylker' id='field_type'>
+			<option value=''><xsl:value-of select="php:function('lang', 'Select County')" />...</option>
+				<xsl:for-each select="resource/fylker/*">
+					<option value="{local-name()}">
+						<xsl:if test="../../fylke = local-name()">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="string(node())"/>
+					</option>
+				</xsl:for-each>
+			</select>
+	 </div>
+	<div class="settings" id="extrafields">
+		Minimum antall plasser: 
+		<input type="text" size="3" id="campsites" name="campsites">
+			<xsl:if test="resource/campsite">
+				<xsl:attribute name="value"><xsl:value-of select="resource/campsite"/></xsl:attribute>
+			</xsl:if>
+		</input>						
+		<select name='bedspaces' id='field_type'>
+			<option value=''><xsl:value-of select="php:function('lang', 'Select bedspaces')" />...</option>
+			<xsl:for-each select="resource/bedspaces/*">
+				<option value="{local-name()}">
+					<xsl:if test="../../beds = local-name()">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="string(node())"/>
+				</option>
+			</xsl:for-each>
+		</select>
+	</div>
     </form>
 	
 	<xsl:if test="not(search)">	

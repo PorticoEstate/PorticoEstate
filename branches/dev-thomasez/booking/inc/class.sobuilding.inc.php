@@ -43,6 +43,28 @@
 			);
 		}
 
+		function fylker()
+		{
+			return array( "akerhus" => "Akershus",
+				"austagder" => "Aust-Agder",
+				"buskerud" => "Buskerud",
+				"finnmark" => "Finnmark",
+				"hedemark" => "Hedmark",
+				"hordaland" => "Hordaland",
+				"moreogromsdal" => "Møre og Romsdal",
+				"nordland" => "Nordland",
+				"nordtrodelag" => "Nord-Trøndelag",
+				"oppland" => "Oppland",
+				"rogaland" => "Rogaland",
+				"songogfjordane" => "Sogn og Fjordane",
+				"sortrondelag" => "Sør-Trøndelag",
+				"telemark" => "Telemark",
+				"troms" => "Troms",
+				"vestagder" => "Vest-Agder",
+				"vestfold" => "Vestfold",
+				"ostfold" => "Østfold");
+		}	
+
 		public static function allowed_cost_types()
 		{
 			return array(self::COST_TYPE_PH, self::COST_TYPE_PD, self::COST_TYPE_PW);

@@ -146,6 +146,7 @@
 			$buildings = $this->bo->read();
 			foreach($buildings['results'] as &$building)
 			{
+				$building['district'] =lang($building['district']);
 				$building['link'] = $this->link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
@@ -168,7 +169,9 @@
 				{
 					$errors['urlfields'] = lang('Max 250 characters in url fields');
 				}
-
+				if($_POST['district'] == ''){
+					$errors['district'] = lang('Du må velge et fylke');
+				}
 				if(!$errors)
 				{
 					$receipt = $this->bo->add($building);
@@ -176,6 +179,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
+			$building['fylker'] = $this->bo->so->fylker();
 			$building['cost_types'] = $this->building_cost_types();
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
@@ -192,6 +196,7 @@
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show', 'id' => $building['id']));
 			$building['top-nav-bar-buildings'] = lang('Buildings');
+			$building['fylker'] = $this->bo->so->fylker();
 			$errors = array();
 			if($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -205,6 +210,9 @@
 				if (strlen($_POST['map_url']) > 250 || strlen($_POST['weather_url']) > 250)
 				{
 					$errors['urlfields'] = lang('Max 250 characters in url fields');
+				}
+				if($_POST['district'] == ''){
+					$errors['district'] = lang('You must choose a county');
 				}
 
 				if(!$errors)
@@ -221,6 +229,7 @@
 		public function show()
 		{
 			$building = $this->bo->read_single(phpgw::get_var('id', 'GET'));
+			$building['district'] =lang($building['district']);
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit', 'id' => $building['id']));
 			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule', 'id' => $building['id']));

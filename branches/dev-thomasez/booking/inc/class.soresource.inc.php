@@ -6,6 +6,7 @@
 		const TYPE_LOCATION = 'Location';
 		const TYPE_HOUSE = 'House';
 		const TYPE_EQUIPMENT = 'Equipment';
+		const TYPE_BOAT = 'Boat';
 		const TYPE_CAMPSITE = 'Campsite';
 		const COST_TYPE_PH	= 'Perhour';
 		const COST_TYPE_PD	= 'Perday';
@@ -81,7 +82,7 @@
 		
 		public static function allowed_types()
 		{
-			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT, self::TYPE_HOUSE, self::TYPE_CAMPSITE);
+			return array(self::TYPE_HOUSE, self::TYPE_CAMPSITE, self::TYPE_BOAT, self::TYPE_EQUIPMENT,self::TYPE_LOCATION);
 		}
 
 		public static function allowed_cost_types()

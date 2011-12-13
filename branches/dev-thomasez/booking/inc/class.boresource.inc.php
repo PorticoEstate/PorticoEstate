@@ -121,6 +121,7 @@
 				$resource['link']        = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type']		 = lang($resource['type']);
 				$resource['full_name'] = $resource['building_name'] . ' / ' . $resource['name'];
+				$resource['building_district'] =lang($resource['building_district']); 
 				if ($resource['cost_type'] != '') 
 				{
 					$resource['cost_type']		 = lang($resource['cost_type']);
