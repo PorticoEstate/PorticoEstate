@@ -3,7 +3,7 @@
 	* phpGroupWare - property: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2008 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2011 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package phpgroupware
@@ -28,7 +28,7 @@
 	 */
 
 	/**
-	 * interlink - handles information of relations of items across locations.
+	 * Notify - handles notification to contacts related to items across locations.
 	 *
 	 * @package phpgroupware
 	 * @subpackage property
@@ -110,9 +110,11 @@
 
 			foreach ($values as &$entry)
 			{
-				$entry['comms'] = execMethod('addressbook.boaddressbook.get_comm_contact_data',$entry['contact_id']);
+				$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$entry['contact_id']);
+				$entry['email'] = $comms[$entry['contact_id']]['work email'];
+				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];				
 			}
-_debug_array($values);
+//_debug_array($values);
 			return $values;
 		}
 
@@ -153,9 +155,13 @@ _debug_array($values);
 			(
 				'name'		=> "{$count}",
 				'values'	=>	json_encode(array(	array('key' => 'id','hidden' => true),
+											//		array('key' => 'email','hidden' => true),
+											//		array('key' => 'sms','hidden' => true),
 													array('key' => 'contact_id','label'=>lang('id'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_notify'),
 													array('key' => 'first_name','label'=>lang('first name'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'last_name','label'=>lang('last name'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'email','label'=>lang('email'),'sortable'=>false,'resizeable'=>true),
+													array('key' => 'sms','label'=>'SMS','sortable'=>false,'resizeable'=>true),
 													array('key' => 'notification_method','label'=>lang('method'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'is_active','label'=>lang('active'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'entry_date','label'=>lang('entry_date'),'sortable'=>true,'resizeable'=>true),
@@ -250,7 +256,7 @@ JS;
 			}
 		}
 
-		function refresh_notify_contact()
+		protected function refresh_notify_contact()
 		{
 			$location_id		= (int)phpgw::get_var('location_id', 'int');
 			$location_item_id	= (int)phpgw::get_var('location_item_id', 'int');
@@ -258,7 +264,7 @@ JS;
 
 			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-			if( !$GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_READ, $location_info['appname']))
+			if( !$GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_EDIT, $location_info['appname']))
 			{
 				return;
 			}
@@ -339,6 +345,4 @@ JS;
 			}
 			return $content;
 		}
-
-
 	}
