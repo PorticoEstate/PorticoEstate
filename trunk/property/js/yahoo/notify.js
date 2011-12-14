@@ -7,10 +7,11 @@ var Button_0_0, Button_0_1, Button_0_2;
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
 	{
-	//	YAHOO.util.Dom.get('hd_values[set_receipt]').value = '';
-		YAHOO.util.Dom.get('hd_values[delete_receipt]').value = '';
-		YAHOO.util.Dom.get('hd_values[enable_alarm]').value = '';
-		YAHOO.util.Dom.get('hd_values[disable_alarm]').value = '';
+		YAHOO.util.Dom.get('hd_notify[email]').value = '';
+		YAHOO.util.Dom.get('hd_notify[sms]').value = '';
+		YAHOO.util.Dom.get('hd_notify[enable]').value = '';
+		YAHOO.util.Dom.get('hd_notify[disable]').value = '';
+		YAHOO.util.Dom.get('hd_notify[delete]').value = '';
 	}
 
 
@@ -29,7 +30,8 @@ var Button_0_0, Button_0_1, Button_0_2;
 
 	var myFormatterCheck_notify = function(elCell, oRecord, oColumn, oData)
 	{
-		elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks\"  value=\"\" name=\"values[notify]["+oRecord.getData('id')+"]\"/></center>";
+		var id = oRecord.getData('id');
+		elCell.innerHTML = "<center><input type=\"checkbox\" class=\"mychecks\"  value=\""+id+"\" name=\"notify[ids][]\"/></center>";
 	}
 
   	check_all_notify = function()
