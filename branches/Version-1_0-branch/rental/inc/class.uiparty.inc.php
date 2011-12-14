@@ -285,7 +285,7 @@ class rental_uiparty extends rental_uicommon
 			return;
 		}
 		$bofelles = rental_bofellesdata::get_instance();
-		
+
 		$parties = rental_soparty::get_instance()->get();
 		$result_count = rental_soparty::get_instance()->get_count();
 		$updated_parties;
@@ -329,24 +329,24 @@ class rental_uiparty extends rental_uicommon
 
 			$updated_parties[] = "Number of parties found through result unit number {$count_result_unit_number}";
 			$updated_parties[] = "Number of parties that have been updated {$count}";
-			log_sync_messages($updated_parties);
+			$this->log_sync_messages($updated_parties);
 		}
  	}
  	
-        private function log_sync_messages($messages) {
-        	
-            $msgs = array_merge(
-            	array('---------------Messages-------------------'),
-            	$messages
-            );
-            
-            //use PHPGW tmp-catalog to store log-file
-            $path = $GLOBALS['phpgw_info']['server']['temp_dir'];
-            
-            //Write to the log-file
-            $date_now = date('Y-m-d');
-            file_put_contents("{$path}/FD_name_sync_{$date_now}.log", implode(PHP_EOL, $msgs));
-        }
+	private function log_sync_messages($messages)
+	{
+		$msgs = array_merge(
+			array('---------------Messages-------------------'),
+			$messages
+		);
+			
+		//use PHPGW tmp-catalog to store log-file
+		$path = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			
+		//Write to the log-file
+		$date_now = date('Y-m-d');
+		file_put_contents("{$path}/FD_name_sync_{$date_now}.log", implode(PHP_EOL, $msgs));
+	}
 	
 
 	/**
