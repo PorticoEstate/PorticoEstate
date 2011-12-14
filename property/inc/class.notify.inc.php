@@ -70,6 +70,11 @@
 
 		public function read($data = array())
 		{
+			if(!isset($data['location_id']) || !isset($data['location_item_id']))
+			{
+				throw new Exception("property_notify::read() - Missing location info in input");
+			}	
+
 			$location_id = (int) $data['location_id'];
 			$location_item_id = (int) $data['location_item_id'];
 			
@@ -80,7 +85,7 @@
 			. " {$this->_join} phpgw_contact_person ON phpgw_notification.contact_id = phpgw_contact_person.person_id"
 			. " WHERE location_id = {$location_id} AND location_item_id = {$location_item_id}";
 			$this->_db->query($sql,__LINE__,__FILE__);
-//_debug_array($sql);
+
 			$values		= array();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$lang_yes	= lang('yes');
@@ -102,6 +107,12 @@
 					'last_name'				=> $this->_db->f('last_name', true)
 				);
 			}
+
+			foreach ($values as &$entry)
+			{
+				$entry['comms'] = execMethod('addressbook.boaddressbook.get_comm_contact_data',$entry['contact_id']);
+			}
+_debug_array($values);
 			return $values;
 		}
 
@@ -117,12 +128,12 @@
 //_debug_array($data);die();
 			if(!isset($data['location_id']) || !isset($data['location_item_id']))
 			{
-				throw new Exception("property_notify::get_yui_table_def - Missing location info in input");
+				throw new Exception("property_notify::get_yui_table_def() - Missing location info in input");
 			}	
 
 			if(!isset($data['count']))
 			{
-				throw new Exception("property_notify::get_yui_table_def - Missing count in input");			
+				throw new Exception("property_notify::get_yui_table_def() - Missing count in input");			
 			}	
 
 			$content = $this->read($data);
@@ -146,7 +157,7 @@
 													array('key' => 'first_name','label'=>lang('first name'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'last_name','label'=>lang('last name'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'notification_method','label'=>lang('method'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'is_active','label'=>lang('is active'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'is_active','label'=>lang('active'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'entry_date','label'=>lang('entry_date'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck_notify','width'=>30)
 													))
@@ -156,20 +167,23 @@
 			(
 				'name'   => "{$count}",
 				'values'  => json_encode(array(
-					array('id' =>'values[check_all]','type'=>'buttons', 'value'=>'Receipt', 'label'=> lang('check all'), 'funct'=> 'check_all_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[delete_receipt]','type'=>'buttons', 'value'=>'Delete Receipt', 'label'=> lang('Delete receipt'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[enable_alarm]','type'=>'buttons', 'value'=>'Enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
-					array('id' =>'values[disable_alarm]','type'=>'buttons', 'value'=>'Disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'check_all','type'=>'buttons', 'value'=>'', 'label'=> lang('check all'), 'funct'=> 'check_all_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'notify[email]','type'=>'buttons', 'value'=>'email', 'label'=> lang('email'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'notify[sms]','type'=>'buttons', 'value'=>'sms', 'label'=> 'SMS', 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'notify[enable]','type'=>'buttons', 'value'=>'enable', 'label'=> lang('enable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'notify[disable]','type'=>'buttons', 'value'=>'disable', 'label'=>lang('disable'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
+					array('id' =>'notify[delete]','type'=>'buttons', 'value'=>'delete', 'label'=> lang('Delete'), 'funct'=> 'onActionsClick_notify' , 'classname'=> 'actionButton', 'value_hidden'=>""),
 				))
 			);
 
 
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'notify', 'property' );
 
+			$lang_view = lang('view');
 			$code = <<<JS
 	YAHOO.widget.DataTable.formatLink_notify = function(elCell, oRecord, oColumn, oData)
 	{
-	  	elCell.innerHTML = "<a href="+datatable[{$count}][0]["edit_action"]+"&ab_id="+oData+">" + oData + "</a>";
+	  	elCell.innerHTML = "<a href="+datatable[{$count}][0]["edit_action"]+"&ab_id="+oData+" title='"+oData+"'>{$lang_view}</a>";
 	};
 
 	this.refresh_notify_contact=function()
@@ -248,6 +262,44 @@ JS;
 			{
 				return;
 			}
+
+			if($notify = phpgw::get_var('notify'))
+			{
+				$ids = $notify['ids'];
+				if($ids)
+				{
+					$value_set = array();
+
+					if($notify['email'])
+					{
+						$value_set['notification_method'] = 'email';
+					}	
+					else if($notify['sms'])
+					{
+						$value_set['notification_method'] = 'sms';
+					}	
+					else if($notify['enable'])
+					{
+						$value_set['is_active'] = 1;
+					}	
+					else if($notify['disable'])
+					{
+						$value_set['is_active'] = '';
+					}	
+					else if($notify['delete'])
+					{
+						$sql = "DELETE FROM phpgw_notification WHERE id IN (". implode(',', $ids) . ')';
+					}	
+					
+					if($value_set)
+					{
+						$value_set	= $this->_db->validate_update($value_set);
+						$sql = "UPDATE phpgw_notification SET {$value_set} WHERE id IN (". implode(',', $ids) . ')';
+					}
+					$this->_db->query($sql,__LINE__,__FILE__);			
+				}
+			}
+
 
 			if($location_id && $location_item_id && $contact_id)
 			{

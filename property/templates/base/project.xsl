@@ -613,16 +613,6 @@
 						<input size="5" type="hidden" id = "notify_contact" name="notify_contact" value="" title="{$lang_contact_statustext}">
 						</input>
 						<input size="30" type="text" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly = 'readonly' title="{$lang_contact_statustext}"/>
-						<select id="notify_contact_method" name="notify_contact_method">
-							<option value="email"><xsl:value-of select="php:function('lang', 'email')" /></option>
-							<option value="sms">SMS</option>						
-						</select>
-						<select id="notify_contact_edit" name="notify_contact_edit">
-							<option value="add"><xsl:value-of select="php:function('lang', 'add')" /></option>
-							<option value="edit"><xsl:value-of select="php:function('lang', 'edit')" /></option>
-							<option value="delete"><xsl:value-of select="php:function('lang', 'delete')" /></option>
-						</select>
-						
 					</td></tr></table></td>
 				</tr>
 				<tr>

@@ -227,12 +227,12 @@
 			}
 
 			$uicols = array (
-				'input_type'	=>	array('text','text','text','text','text'),
-				'name'			=>	array('contact_id','contact_name','email','wphone','is_user'),
-				'sort_field'	=>	array('person_id','last_name','','',''),
-				'sortable'		=>	array(true,true,false,false,false),
-				'formatter'		=>	array('','','','',''),
-				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'), lang('is user'))
+				'input_type'	=>	array('text','text','text','text','text','text'),
+				'name'			=>	array('contact_id','contact_name','email','wphone','mobile','is_user'),
+				'sort_field'	=>	array('person_id','last_name','','','',''),
+				'sortable'		=>	array(true,true,false,false,false,false),
+				'formatter'		=>	array('','','','','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'),lang('mobile'), lang('is user'))
 			);
 
 			$addressbook_list = array();
