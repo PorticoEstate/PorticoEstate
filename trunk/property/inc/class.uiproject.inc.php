@@ -945,8 +945,6 @@
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 			$auto_create 				= false;
 
-			$values['notify_contact_id'] = phpgw::get_var('notify_contact_id', 'int', 'POST');
-
 			$datatable = array();
 
 			/*$datatable['config']['base_java_url'] = "menuaction:'property.uiproject.edit',"
@@ -1656,33 +1654,26 @@
 
 			
 			$content_notify = array();
-			$datavalues[3] = array
-				(
-					'name'					=> "3",
-					'values' 				=> json_encode($content_notify),
-					'total_records'			=> count($content_notify),
-					'edit_action'			=> json_encode($GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiinvoice.index'))),
-					'is_paginator'			=> 1,
-					'footer'				=> 0
-				);
 
-			$myColumnDefs[3] = array
-				(
-					'name'		=> "3",
-					'values'	=>	json_encode(array(	array('key' => 'workorder_id','label'=>lang('Workorder'),'sortable'=>true,'resizeable'=>true),
-														array('key' => 'voucher_id','label'=>lang('bilagsnr'),'sortable'=>false,'resizeable'=>true,'formatter'=>'YAHOO.widget.DataTable.formatLink_voucher'),
-														array('key' => 'invoice_id','label'=>lang('invoice number'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'vendor','label'=>lang('vendor'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'amount','label'=>lang('amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'approved_amount','label'=>lang('approved amount'),'sortable'=>false,'resizeable'=>true,'formatter'=>'FormatterRight'),
-														array('key' => 'currency','label'=>lang('currency'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budget_responsible','label'=>lang('budget responsible'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'budsjettsigndato','label'=>lang('budsjettsigndato'),'sortable'=>false,'resizeable'=>true),
-														array('key' => 'transfer_time','label'=>lang('transfer time'),'sortable'=>false,'resizeable'=>true),
-														))
+			$notify				= CreateObject('property.notify');
+			
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+			$notify_info = $notify->get_yui_table_def(array
+								(
+									'location_id'		=> $location_id,
+									'location_item_id'	=> $id,
+									'count'				=> count($myColumnDefs)
+								)
+							);
+			
+			$datavalues[] = $notify_info['datavalues'];
 
-				);
+			$myColumnDefs[] = $notify_info['column_defs'];
 
+			$myButtons = array();
+			$myButtons[] = $notify_info['buttons'];
+
+//	_debug_array($myButtons);die();
 			//----------------------------------------------datatable settings--------
 
 
@@ -1701,6 +1692,7 @@
 					'property_js'						=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
+					'myButtons'							=> $myButtons,
 					'tabs'								=> self::_generate_tabs($tabs,array('coordination' => $suppresscoordination)),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
@@ -1822,7 +1814,7 @@
 					'value_approval_mail_address'		=> $supervisor_email,
 
 					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-					'base_java_url'					=> "{menuaction:'property.uiproject.update_data',id:{$id}}",
+					'base_java_url'					=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:{$id}}",
 				);
 			//_debug_array($data);die;
 
@@ -2143,66 +2135,4 @@
 
 			return  phpgwapi_yui::tabview_generate($tabs, 'general');
 		}
-
-		function update_data()
-		{
-			$action = phpgw::get_var('action', 'string', 'GET');
-			switch($action)
-			{
-				case 'refresh_notify_contact':
-					return $this->refresh_notify_contact();
-					break;
-				default:
-			}
-		}
-
-		function refresh_notify_contact()
-		{
-			$id 	= phpgw::get_var('id', 'int');
-
-			if( !$this->acl_read)
-			{
-				return;
-			}
-
-//FIXME
-			$link_file_data = array
-			(
-				'menuaction'	=> 'property.uitts.view_file',
-				'id'			=> $id
-			);
-
-			$link_to_files = isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url']:'';
-
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php',$link_file_data);
-			$values	= $this->bo->read_single($id);
-
-			$content_files = array();
-
-			foreach($values['files'] as $_entry )
-			{
-				$content_files[] = array
-				(
-					'file_name' => '<a href="'.$link_view_file.'&amp;file_name='.$_entry['name'].'" target="_blank" title="'.lang('click to view file').'">'.$_entry['name'].'</a>',
-					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="'.$_entry['name'].'" title="'.lang('Check to delete file').'">',
-					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="'.$_entry['name'].'" title="'.lang('Check to attach file').'">'
-				);
-			}							
-
-			if( phpgw::get_var('phpgw_return_as') == 'json' )
-			{
-
-				if(count($content_files))
-				{
-					return json_encode($content_files);
-				}
-				else
-				{
-					return "";
-				}
-			}
-			return $content_files;
-		}
-
-
 	}
