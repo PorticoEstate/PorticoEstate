@@ -13,8 +13,8 @@ class rental_uiadjustment extends rental_uicommon {
 		'edit'					=> true,
 		'view'					=> true,
 		'show_affected_contracts' =>	true,
-		'delete'				=> true
-//		'run_adjustments'		=> true
+		'delete'				=> true,
+		'run_adjustments'		=> true
 	);
 	
 	public function __construct()
