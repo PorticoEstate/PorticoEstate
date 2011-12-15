@@ -56,7 +56,8 @@
 			'edit_check_list'					=>	true,
 			'save_check_items'					=>	true,
 			'view_check_lists_for_location'		=>	true,
-			'view_calendar'						=>	true
+			'view_calendar_for_month'			=>	true,
+			'view_calendar_for_year'			=>	true
 		);
 
 		public function __construct()
@@ -74,28 +75,65 @@
 			self::set_active_menu('controller::location_check_list');
 		}
 		
-		public function view_calendar()
+		public function view_calendar_for_month()
 		{
 			$control_id = phpgw::get_var('control_id');
 			$location_code = phpgw::get_var('location_code');
 			$year = phpgw::get_var('year');
 			$month = phpgw::get_var('month');
 			
-			if( empty($month) ){
-				$year = intval($year);
-			
-				$from_date = strtotime("01/01/$year");
-				$to_year = $year + 1;
-				$to_date = strtotime("01/01/$to_year");	
-			}
-			else{
-				$year = intval($year);
-				$from_month = intval($month);
+			$year = intval( $year );
+			$from_month = intval( $month );
 				
-				$from_date = strtotime("$from_month/01/$year");
-				$to_month = $from_month + 1;
-				$to_date = strtotime("$to_month/01/$year+1");
+			$from_date = strtotime("$from_month/01/$year");
+			$to_month = $from_month + 1;
+			$to_date = strtotime("$to_month/01/$year+1");
+						
+			$control = $this->so_control->get_single($control_id);
+			
+			if(empty($location_code)){
+				$location_code = "1101";	
 			}
+			
+			$this->calendar_builder = new calendar_builder($from_date, $to_date);
+				
+			$repeat_type = 0;
+			$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type);
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, null, 31, "view_days" );
+							
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			for($i=1;$i<=31;$i++){
+				$heading_array[$i] = "$i";	
+			}
+							
+			$data = array
+			(		
+				'location_array'		  => $location_array,
+				'heading_array'		  	  => $heading_array,
+				'controls_calendar_array' => $controls_calendar_array,
+				'date_format' 			  => $date_format,
+				'period' 			  	  => $month,
+				'year' 			  	  	  => $year
+			);
+			
+			self::add_javascript('controller', 'controller', 'jquery.js');
+			self::add_javascript('controller', 'controller', 'ajax.js');
+			
+			self::render_template_xsl('view_calendar_month', $data);
+		}
+		
+		public function view_calendar_for_year()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$location_code = phpgw::get_var('location_code');
+			$year = phpgw::get_var('year');
+			
+			$year = intval($year);
+			
+			$from_date = strtotime("01/01/$year");
+			$to_year = $year + 1;
+			$to_date = strtotime("01/01/$to_year");	
 			
 			$control = $this->so_control->get_single($control_id);
 			
@@ -103,61 +141,32 @@
 				$location_code = "1101";	
 			}
 			
-			// Get check lists for a YEAR
-			if( empty($month) )
-			{
-				$this->calendar_builder = new calendar_builder($from_date, $to_date);
-				
-				// Gets an array of controls that contains check_lists for the specified location
-				$agg_check_list_array = $this->so->get_agg_check_lists_for_location( $location_code, $from_date, $to_date );
-				$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array( $agg_check_list_array );
+			$this->calendar_builder = new calendar_builder($from_date, $to_date);
 			
-				$repeat_type = 2;
-				$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type );
-				$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, $controls_calendar_array, 12, "view_months" );
-				
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-				
-				$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
-								
-				$data = array
-				(
-					'location_array'		  => $location_array,
-					'heading_array'		  	  => $heading_array,
-					'controls_calendar_array' => $controls_calendar_array,
-					'date_format' 			  => $date_format,
-					'period' 			  	  => $year,
-					'year' 			  	  	  => $year
-				);
-				self::render_template_xsl('view_calendar_year', $data);
-			}
-			// Get check lists for a MONTH
-			else
-			{
-				$this->calendar_builder = new calendar_builder($from_date, $to_date);
-				
-				$repeat_type = 0;
-				$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type);
-				$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, null, 31, "view_days" );
-								
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
-				
-				for($i=1;$i<=31;$i++){
-					$heading_array[$i] = "$i";	
-				}
-								
-				$data = array
-				(
-					
-					'location_array'		  => $location_array,
-					'heading_array'		  	  => $heading_array,
-					'controls_calendar_array' => $controls_calendar_array,
-					'date_format' 			  => $date_format,
-					'period' 			  	  => $month,
-					'year' 			  	  	  => $year
-				);
-				self::render_template_xsl('view_calendar_month', $data);	
-			}
+			// Gets an array of controls that contains check_lists for the specified location
+			$agg_check_list_array = $this->so->get_agg_check_lists_for_location( $location_code, $from_date, $to_date );
+			$controls_calendar_array = $this->calendar_builder->build_agg_calendar_array( $agg_check_list_array );
+		
+			$repeat_type = 2;
+			$check_list_array = $this->so->get_check_lists_for_location( $location_code, $from_date, $to_date, $repeat_type );
+			$controls_calendar_array = $this->calendar_builder->build_calendar_array( $check_list_array, $controls_calendar_array, 12, "view_months" );
+			
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+			
+			$heading_array = array("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des");
+							
+			$data = array
+			(
+				'location_array'		  => $location_array,
+				'heading_array'		  	  => $heading_array,
+				'controls_calendar_array' => $controls_calendar_array,
+				'date_format' 			  => $date_format,
+				'period' 			  	  => $year,
+				'year' 			  	  	  => $year
+			);
+			
+			self::render_template_xsl('view_calendar_year', $data);
+			
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
