@@ -1,6 +1,6 @@
 <?php
 
-include_class('controller', 'date_generator', 'inc/components/');
+include_class('controller', 'date_generator', 'inc/component/');
 
 class calendar_builder {
 	
@@ -26,12 +26,12 @@ class calendar_builder {
 			
 			// Inserts dates on behalf of repeat type and repeat interval
 			foreach($dates_array as $date){
-				
 				if( $period_type == "view_months" )
 				{
 					$calendar_array[ date("n", $date) ]	= "";
 				}
-				else if( $period_type == "view_days" ){
+				else if( $period_type == "view_days" )
+				{
 					$calendar_array[ date("j", $date) ]  = array( "date" => $date );	
 				}
 			}
@@ -46,7 +46,7 @@ class calendar_builder {
 				if( $check_list->get_status() == 0 ){
 					$check_list_status_info->set_status(0);
 				}
-				else if( $check_list->get_status() == 1 & $check_list->get_planned_date() == '' )
+				else if( $check_list->get_status() == 1 & $check_list->get_planned_date() == 0)
 				{
 					$check_list_status_info->set_status(1);
 				}
