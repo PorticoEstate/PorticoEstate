@@ -235,6 +235,11 @@
 					}
 				}
 				
+				if(strlen($desc) > 254)
+				{
+					$desc = substr($desc,0,254);
+				}
+				
 				//... set all parameters
 				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id($o_id);
@@ -461,6 +466,10 @@
 						}
 						$desc = $this->so_organization->get_description($activity->get_organization_id());
 						$person_ids = $this->so_organization->get_contacts($activity->get_organization_id());
+					}
+					if(strlen($desc) > 254)
+					{
+						$desc = substr($desc,0,254);
 					}
 					$organization = $this->so_organization->get_single($activity->get_organization_id());
 					
