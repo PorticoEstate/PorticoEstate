@@ -475,7 +475,6 @@ YAHOO.portico.initializeDataTable = function()
 
 	this.onChangeSelect = function(type)
 	{
-alert('onChangeSelect');
 		var myselect=document.getElementById("sel_"+ type);
 		for (var i=0; i<myselect.options.length; i++)
 		{

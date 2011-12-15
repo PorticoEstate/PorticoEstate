@@ -1,5 +1,23 @@
 $(document).ready(function() {
 
+	$("#calendar_dates span").click(function(){
+		var thisSpan = $(this);
+		
+		$("#calendar_dates span").css("border", "2px solid black");
+		$(thisSpan).css("border", "2px solid red");
+		
+		var date = $(thisSpan).text();
+		var day = date.substring(0, date.indexOf("/"));
+		var month = date.substring(date.indexOf("/")+1, date.indexOf("-"));
+		var year = date.substring(date.indexOf("-")+1, date.length);
+		
+		var valid_save_date = year + "-" + month + "-" + day;  
+		
+		$("#deadline_date").val(valid_save_date);
+		
+		
+	});
+	
 	$("ul.control_items ul:first").find("h4 img").attr("src", "controller/images/arrow_down.png");
 	$("ul.control_items ul:first").find("li ul").slideDown("slow");
 	$("ul.control_items ul:first").addClass('active');
@@ -13,6 +31,30 @@ $(document).ready(function() {
 			$(this).parent().parent().removeClass('active');
 		}else{
 			$(this).parent().find("ul").slideDown("slow");
+			$(this).find("img").attr("src", "controller/images/arrow_down.png");
+			$(this).parent().parent().addClass('active');
+		}
+	});
+	
+	$("ul.check_items h4.expand_list").click(function(){
+		if( $(this).parent().parent().hasClass('expanded')){
+			$(this).parent().find("div.check_item").slideUp("slow");
+			$(this).find("img").attr("src", "controller/images/arrow_left.png");
+			$(this).parent().parent().removeClass('expanded');
+		}else{
+			$(this).parent().find("div.check_item").slideDown("slow");
+			$(this).find("img").attr("src", "controller/images/arrow_down.png");
+			$(this).parent().parent().addClass('expanded');
+		}
+	});
+	
+	$("ul.check_items h4.expand_list").load(function(){
+		if( $(this).parent().parent().hasClass('expanded')){
+			$(this).parent().find("div.check_item").slideUp("slow");
+			$(this).find("img").attr("src", "controller/images/arrow_left.png");
+			$(this).parent().parent().removeClass('expanded');
+		}else{
+			$(this).parent().find("div.check_item").slideDown("slow");
 			$(this).find("img").attr("src", "controller/images/arrow_down.png");
 			$(this).parent().parent().addClass('active');
 		}
