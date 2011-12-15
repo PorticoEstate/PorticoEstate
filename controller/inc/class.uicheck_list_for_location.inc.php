@@ -33,7 +33,7 @@
 	phpgw::import_class('controller.socontrol_area');
 	
 	include_class('controller', 'check_list', 'inc/model/');
-	include_class('controller', 'date_generator', 'inc/components/');
+	include_class('controller', 'date_generator', 'inc/component/');
 		
 	class controller_uicheck_list_for_location extends controller_uicommon
 	{
