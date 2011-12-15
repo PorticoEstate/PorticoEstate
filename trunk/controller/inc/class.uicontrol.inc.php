@@ -211,14 +211,16 @@
 				'control'					=> (isset($control)) ? $control->toArray(): null,
 				'control_areas_array'		=> $control_areas_array,
 				'procedures_array'			=> $procedures_array,
-				'role_array'				=> $role_array,
-				'start_date'				=> $GLOBALS['phpgw']->yuical->add_listener('start_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], time())),
-				'end_date'					=> $GLOBALS['phpgw']->yuical->add_listener('end_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ''))
+				'role_array'				=> $role_array
 			);
 			
 			self::add_javascript('controller', 'yahoo', 'control_tabs.js');
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
+			
 			self::render_template_xsl(array('control_tabs', 'control'), $data);
 			
 			$this->use_yui_editor(array('description'));

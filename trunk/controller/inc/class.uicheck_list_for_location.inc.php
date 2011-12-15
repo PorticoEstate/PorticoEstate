@@ -341,7 +341,8 @@
 			(
 				'location_array'	=> $location_array,
 				'control_array'		=> $control->toArray(),
-				'calendar_array'	=> $calendar_array,				
+				'calendar_array'	=> $calendar_array
+				'date_format' 		=> $date_format			
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
