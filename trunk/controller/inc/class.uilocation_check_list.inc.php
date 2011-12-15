@@ -34,7 +34,7 @@
 	include_class('controller', 'check_list', 'inc/model/');
 	include_class('controller', 'check_item', 'inc/model/');
 	include_class('controller', 'check_list_status_info', 'inc/helper/');
-	include_class('controller', 'calendar_builder', 'inc/components/');
+	include_class('controller', 'calendar_builder', 'inc/component/');
 		
 	class controller_uilocation_check_list extends controller_uicommon
 	{
