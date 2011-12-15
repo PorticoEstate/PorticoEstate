@@ -270,6 +270,7 @@ JS;
 				return;
 			}
 
+			$update = false;
 			if($notify = phpgw::get_var('notify'))
 			{
 				$ids = $notify['ids'];
@@ -305,10 +306,10 @@ JS;
 					}
 					$this->_db->query($sql,__LINE__,__FILE__);			
 				}
+				$update = true;
 			}
 
-
-			if($location_id && $location_item_id && $contact_id)
+			if($location_id && $location_item_id && $contact_id && !$update)
 			{
 				$sql = "SELECT id FROM phpgw_notification WHERE location_id = {$location_id} AND location_item_id = {$location_item_id} AND contact_id = {$contact_id}";
 				$this->_db->query($sql,__LINE__,__FILE__);
