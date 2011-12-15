@@ -130,7 +130,7 @@ $(document).ready(function(){
 	
 	// file: view_check_lists_for_location.xsl
 	// Fetches info about a check list on hover status image icon
-	$("a.view_check_list").click(function(){
+	$('a.view_check_list').bind('contextmenu', function(){
 		var thisA = $(this);
 		var divWrp = $(this).parent();
 		var requestUrl = $(thisA).attr("href");
@@ -182,13 +182,20 @@ $(document).ready(function(){
 		
 		return false;
 	});
+
+	$("a.view_check_list").click(function(){
+		var thisA = $(this);
+		
+		var check_list_id = $(thisA).find("span").text();
+		
+		location.href = "http://portico/pe/index.php?menuaction=controller.uicheck_list_for_location.edit_check_list_for_location&check_list_id=" + check_list_id;
+		
+		return false;
+	});
 	
 	$("a.view_check_list").mouseout(function(){
-		var thisA = $(this);
-		var divWrp = $(this).parent();
-		var requestUrl = $(thisA).attr("href");
+		var infoBox = $(this).parent().find("#info_box");
 		
-		var infoBox = $(divWrp).find("#info_box");
 		$(infoBox).hide();
 	});
 });
