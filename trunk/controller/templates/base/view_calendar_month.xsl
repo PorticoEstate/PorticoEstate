@@ -11,7 +11,7 @@
 		</fieldset>
 				
 		<h2 style="float:left;">Sjekklister</h2>
-		<div style="float:left;margin-top: 30px;margin-left: 585px;"><a class="move_cal_right" href="#">&lt;&lt;</a></div>
+		<div style="float:left;margin-top: 30px;margin-left: 760px;"><a class="move_cal_right" href="#">&lt;&lt;</a></div>
 		<div style="float:left;margin-top: 30px;margin-left: 95px;"><a class="move_cal_left" href="#">&gt;&gt;</a></div>
 		
 		<script>
@@ -62,6 +62,8 @@
 				<li class="heading">
 					<div class="id">ID</div>
 					<div class="title">Tittel</div>
+					<div class="date">Start dato</div>
+					<div class="date">Slutt dato</div>
 					<div class="frequency">Frekvenstype</div>
 					<div class="frequency">Frekvensintervall</div>
 				</li>
@@ -73,6 +75,19 @@
 						</div>
 						<div class="title">
 			      			<xsl:value-of select="control/title"/>
+						</div>
+						<div class="date">
+			      			<xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/>
+						</div>
+						<div class="date">
+							<xsl:choose>
+								<xsl:when test="control/end_date != 0">
+				      				<xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/>
+				      			</xsl:when>
+				      			<xsl:otherwise>
+				      				Løpende
+				      			</xsl:otherwise>
+			      			</xsl:choose>
 						</div>
 						<div class="frequency">
 			      			<xsl:value-of select="control/repeat_type"/>
