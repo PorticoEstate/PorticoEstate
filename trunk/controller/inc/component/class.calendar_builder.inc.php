@@ -32,7 +32,8 @@ class calendar_builder {
 				}
 				else if( $period_type == "view_days" )
 				{
-					$calendar_array[ date("j", $date) ]  = array( "date" => $date );	
+					$calendar_array[ date("j", $date) ]["status"]  = 0;
+					$calendar_array[ date("j", $date) ]["info"]  = array("date" => $date);	
 				}
 			}
 			
@@ -69,13 +70,18 @@ class calendar_builder {
 				{
 					$calendar_array[ date("n", $check_list->get_deadline()) ] = $check_list_status_info->serialize();	
 				}
-				else{
-					$calendar_array[ date("j", $check_list->get_deadline()) ] = $check_list_status_info->serialize();	
+				else if( $period_type == "view_days" )
+				{
+					$calendar_array[ date("j", $check_list->get_deadline()) ]["status"] = 1;
+					$calendar_array[ date("j", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();
 				}
 			}
 			
 			$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 		}
+		
+		
+		print_r( $controls_calendar_array );
 		
 		return $controls_calendar_array;
 	}
