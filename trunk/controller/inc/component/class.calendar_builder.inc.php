@@ -79,10 +79,7 @@ class calendar_builder {
 			
 			$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 		}
-		
-		
-		print_r( $controls_calendar_array );
-		
+
 		return $controls_calendar_array;
 	}
 	

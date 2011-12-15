@@ -15,46 +15,41 @@
 		<div style="float:left;margin-top: 30px;margin-left: 95px;"><a class="move_cal_left" href="#">&gt;&gt;</a></div>
 		
 		<script>
+			$(document).ready(function() {
+			  			
+	  			$(".move_cal_left").click(function(){
+	  			  	var leftStrVal = $("#days_view").css("left");
+	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
+	  			  	
+	  				if(leftNumVal == -502){
+						$("#days_view").animate({
+		                    left: '-=118' 
+		                    }, 800);
+					}else if(leftNumVal > -502){
+						$("#days_view").animate({
+		                    left: '-=502' 
+		                    }, 800);
+					}
+	  			});
+	  			
+	  			$(".move_cal_right").click(function(){
 		
-		$(document).ready(function() {
-  			
-  			$(".move_cal_left").click(function(){
-  			  	var leftStrVal = $("#days_view").css("left");
-  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
-  			  	
-  				if(leftNumVal == -502){
-					$("#days_view").animate({
-	                    left: '-=118' 
-	                    }, 800);
-				}else if(leftNumVal > -502){
-					$("#days_view").animate({
-	                    left: '-=502' 
-	                    }, 800);
-				}
-  			});
-  			
-  			
-  			$(".move_cal_right").click(function(){
-	
-				var leftStrVal = $("#days_view").css("left");
-  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
-  			  	
-  				if(leftNumVal == -118){
-					$("#days_view").animate({
-	                    left: '+=118' 
-	                    }, 800);
-				}else if(-502 > leftNumVal){
-					$("#days_view").animate({
-	                    left: '+=502' 
-	                    }, 800);
-				}
-  			});
-  			
-  		
-  		
-		});
-		
+					var leftStrVal = $("#days_view").css("left");
+	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
+	  			  	
+	  				if(leftNumVal == -118){
+						$("#days_view").animate({
+		                    left: '+=118' 
+		                    }, 800);
+					}else if(-502 > leftNumVal){
+						$("#days_view").animate({
+		                    left: '+=502' 
+		                    }, 800);
+					}
+	  			});
+			});
 		</script>
+		
 		<xsl:choose>
 			<xsl:when test="controls_calendar_array/child::node()">
 			
@@ -100,65 +95,55 @@
 			</ul>
 			
 			<div id="days_wrp">
-			
 				<ul id="days_view" class="calendar days">
 					<li>
 						<xsl:for-each select="heading_array">
 							<div><xsl:value-of select="."/></div>
 						</xsl:for-each>
 					</li>				
-					<li>	
-						<xsl:for-each select="controls_calendar_array/calendar_array">
-				    		<div>
+							
+					<xsl:for-each select="controls_calendar_array">
+					<li>
+						<xsl:for-each select="calendar_array">
 					    		<xsl:choose>
-						    		<xsl:when test="calendar_array/child::node() = 1">
-						    			<xsl:value-of select="." />
-						    		</xsl:when>
-						    		<xsl:otherwise>
-						    			<div style="position:relative;">
-								    		<div id="info_box" style="position:absolute;display:none;"></div>
-								    		<xsl:choose>
-												<xsl:when test="id">
-													<xsl:variable name="status"><xsl:value-of select="status"/></xsl:variable>
-													<xsl:choose>
-														<xsl:when test="status = 1">
-															<img height="15" src="controller/images/status_icon_light_green.png" />	
-														</xsl:when>
-														<xsl:otherwise>
-														 <a class="view_check_list">
-														 	<xsl:attribute name="href">
-																<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
-																<xsl:text>&amp;phpgw_return_as=json</xsl:text>
-																<xsl:text>&amp;check_list_id=</xsl:text>
-																<xsl:value-of select="id"/>
-															</xsl:attribute>
-															<span style="display:none"><xsl:value-of select="id"/></span>
-															<img height="15" src="controller/images/status_icon_red.png" />
-														</a>
-														</xsl:otherwise>
-													</xsl:choose>	
-												</xsl:when>
-												<xsl:when test="date">
-														<a>
-														<xsl:attribute name="href">
-															<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
-															<xsl:text>&amp;date=</xsl:text>
-															<xsl:value-of select="date"/>
-															<xsl:text>&amp;control_id=</xsl:text>
-															<xsl:value-of select="//control/id"/>
-															<xsl:text>&amp;location_code=</xsl:text>
-															<xsl:value-of select="//location_array/location_code"/>
-														</xsl:attribute>
-														<img height="15" src="controller/images/status_icon_yellow.png" />
-													</a>
-												</xsl:when>
-											</xsl:choose>
+									<xsl:when test="status = 0">
+										<div>
+										<a>
+											<xsl:attribute name="href">
+												<xsl:text>index.php?menuaction=controller.uicheck_list_for_location.add_check_list_for_location</xsl:text>
+												<xsl:text>&amp;date=</xsl:text>
+												<xsl:value-of select="info/date"/>
+												<xsl:text>&amp;control_id=</xsl:text>
+												<xsl:value-of select="//control/id"/>
+												<xsl:text>&amp;location_code=</xsl:text>
+												<xsl:value-of select="//location_array/location_code"/>
+											</xsl:attribute>
+											<img height="15" src="controller/images/status_icon_yellow.png" />
+										</a>
 										</div>
-						    		</xsl:otherwise>
-					    		</xsl:choose>
-							</div>
-						</xsl:for-each>
-					</li>
+									</xsl:when>
+									<xsl:when test="status = 1">
+										<div style="position:relative;">
+					    					<div id="info_box" style="position:absolute;display:none;"></div>
+											<a class="view_check_list">
+											 	<xsl:attribute name="href">
+													<xsl:text>index.php?menuaction=controller.uicheck_list.get_check_list_info</xsl:text>
+													<xsl:text>&amp;phpgw_return_as=json</xsl:text>
+													<xsl:text>&amp;check_list_id=</xsl:text>
+													<xsl:value-of select="info/id"/>
+												</xsl:attribute>
+												<span style="display:none"><xsl:value-of select="info/id"/></span>
+												<img height="15" src="controller/images/status_icon_red.png" />
+											</a>
+										</div>
+									</xsl:when>
+									<xsl:otherwise>
+									<div></div>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</li>
+					</xsl:for-each>
 				</ul>
 			</div>
 		</xsl:when>

@@ -192,7 +192,7 @@
 		public function get_check_list_info()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_control_items($check_list_id);
+			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id);
 
 			return json_encode( $check_list );
 		}
