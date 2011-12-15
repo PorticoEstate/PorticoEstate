@@ -25,7 +25,7 @@
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/
 	* @package property
 	* @subpackage controller
- 	* @version 
+ 	* @version $Id$
 	*/
 
 phpgw::import_class('controller.socommon');
@@ -110,12 +110,7 @@ class controller_sodocument extends controller_socommon
 		{
 			$filter_clauses[] = "controller_document.procedure_id = {$this->marshal($filters['procedure_id'],'int')}";
 		}
-/*		
-		if(isset($filters['party_id']))
-		{
-			$filter_clauses[] = "controller_document.party_id = {$this->marshal($filters['party_id'],'int')}";
-		}
-*/		
+		
 		if(isset($filters['document_type']) && $filters['document_type'] != 'all')
 		{
 			$filter_clauses[] = "controller_document.type_id = {$this->marshal($filters['document_type'],'int')}";
