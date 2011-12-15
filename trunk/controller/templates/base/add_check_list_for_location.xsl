@@ -1,6 +1,23 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 
+
+<script>
+	$(function() {
+		$( "#planned_date" ).datepicker({ 
+			monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
+			dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
+			dateFormat: 'd/m-yy' 
+		});
+		$( "#completed_date" ).datepicker({ 
+			monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
+			dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
+			dateFormat: 'd/m-yy' 
+		});		
+	});
+</script>
+		
+
 <div id="main_content">
 	
 	<h1>Registrere sjekkliste for <xsl:value-of select="location_array/loc1_name"/></h1>
@@ -46,8 +63,28 @@
 					<option value="0">Ikke utført</option>
 				</select>
 			</div>
-			<div><label>Planlagtdato</label><xsl:value-of disable-output-escaping="yes" select="planned_date"/></div>
-			<div><label>Utført dato</label><xsl:value-of disable-output-escaping="yes" select="completed_date"/></div>
+			<div>
+				<label>Planlagt dato</label>
+				<input>
+			      <xsl:attribute name="id">planned_date</xsl:attribute>
+			      <xsl:attribute name="name">planned_date</xsl:attribute>
+			      <xsl:attribute name="type">text</xsl:attribute>
+			      <xsl:if test="check_list/planned_date != ''">
+			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/></xsl:attribute>
+			      </xsl:if>
+			    </input>
+		    </div>
+		    <div>
+				<label>Utført dato</label>
+				<input>
+			      <xsl:attribute name="id">completed_date</xsl:attribute>
+			      <xsl:attribute name="name">completed_date</xsl:attribute>
+			      <xsl:attribute name="type">text</xsl:attribute>
+				  <xsl:if test="check_list/completed_date != ''">
+			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/></xsl:attribute>
+			      </xsl:if>
+			    </input>
+		    </div>
 			<div><label>Utstyr</label><input name="equipment_id" /></div>
 		</fieldset>
 		<div>
