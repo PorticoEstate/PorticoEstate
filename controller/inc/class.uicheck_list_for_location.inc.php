@@ -341,13 +341,14 @@
 			(
 				'location_array'	=> $location_array,
 				'control_array'		=> $control->toArray(),
-				'calendar_array'	=> $calendar_array,
-				'planned_date'		=> $GLOBALS['phpgw']->yuical->add_listener('planned_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], '')),
-				'completed_date'	=> $GLOBALS['phpgw']->yuical->add_listener('completed_date',date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], ''))
+				'calendar_array'	=> $calendar_array,				
 			);
 			
 			self::add_javascript('controller', 'controller', 'jquery.js');
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
+			self::add_javascript('controller', 'controller', 'jquery-ui.custom.min.js');
+			
+			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/jquery-ui.custom.css');
 			
 			self::render_template_xsl(array('add_check_list_for_location'), $data);
 		}
