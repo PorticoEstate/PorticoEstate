@@ -102,9 +102,9 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 						'image'	=> array('property', 'location_1'),
 					),
-					'Calendar_overview' => array
+					'calendar_overview' => array
 					(
-						'text'	=> lang('Check_list_location'),
+						'text'	=> lang('Calendar_overview'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_calendar', 'year' => '2011', 'month' => '10') ),
 						'image'	=> array('property', 'location_1'),
 					)
