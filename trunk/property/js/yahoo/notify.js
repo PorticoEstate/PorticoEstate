@@ -2,7 +2,6 @@ var d;
 var notify_contact = 0;
 
 var Button_0_0, Button_0_1, Button_0_2;
-//var tableYUI;
 
 /********************************************************************************/
 	this.cleanValuesHiddenActionsButtons=function()
@@ -18,7 +17,7 @@ var Button_0_0, Button_0_1, Button_0_2;
 /* This one is added dynamically from php-class property_notify::get_yui_table_def()
 	YAHOO.widget.DataTable.formatLink_notify = function(elCell, oRecord, oColumn, oData)
 	{
-	  	elCell.innerHTML = "<a href="+datatable[0][0]["edit_action"]+"&ab_id="+oData+">" + oData + "</a>";
+
 	};
 */
 
@@ -68,6 +67,11 @@ var Button_0_0, Button_0_1, Button_0_2;
 
 	this.notify_contact_lookup = function()
 	{
+		if(!base_java_url['location_item_id'])
+		{
+			alert('Posten må lagres før kontakter kan tilordnes');
+			return;
+		}	
 		var oArgs = {menuaction:'property.uilookup.addressbook',column:'notify_contact'};
 		var strURL = phpGWLink('index.php', oArgs);
 		Window1=window.open(strURL,"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
@@ -76,17 +80,6 @@ var Button_0_0, Button_0_1, Button_0_2;
 /* This one is added dynamically from php-class property_notify::get_yui_table_def()
 	this.refresh_notify_contact=function()
 	{
-		if(document.getElementById('notify_contact').value)
-		{
-			base_java_url['contact_id'] = document.getElementById('notify_contact').value;
-		}
-
-		if(document.getElementById('notify_contact').value != notify_contact)
-		{
-			base_java_url['action'] = 'refresh_notify_contact';
-			execute_async(myDataTable_3);
-			notify_contact = document.getElementById('notify_contact').value;
-		}
 	}
 */
 	this.onDOMAttrModified = function(e)
