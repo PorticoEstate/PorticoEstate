@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format">d/m-Y</xsl:variable>
 

@@ -1,4 +1,33 @@
 <?php 
+	/**
+	* phpGroupWare - controller: a part of a Facilities Management System.
+	*
+	* @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	* @author Torstein Vadla <torstein.vadla@bouvet.no>
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* This file is part of phpGroupWare.
+	*
+	* phpGroupWare is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* phpGroupWare is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with phpGroupWare; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	*
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @internal Development of this application was funded by http://www.bergen.kommune.no/
+	* @package property
+	* @subpackage controller
+ 	* @version $Id$
+	*/	
+
 	phpgw::import_class('controller.uicommon');
 	phpgw::import_class('property.boevent');
 	phpgw::import_class('controller.socontrol');
@@ -26,7 +55,8 @@
 		private $so_control_group_list;
 		private $so_check_list_list;
 		private $so_check_item;
-		
+		private $_category_acl;		
+
 		public $public_functions = array
 		(
 			'index'	=>	true,
@@ -61,6 +91,10 @@
 			$this->so_check_list = CreateObject('controller.socheck_list');
 			$this->so_check_item = CreateObject('controller.socheck_item');
 			
+			$config	= CreateObject('phpgwapi.config','controller');
+			$config->read();
+			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
+
 			self::set_active_menu('controller::control');
 		}
 		
@@ -72,6 +106,23 @@
 			self::add_javascript('controller', 'yahoo', 'datatable.js');
 			phpgwapi_yui::load_widget('datatable');
 			phpgwapi_yui::load_widget('paginator');
+
+			// Sigurd: Start categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END categories
 
 			$data = array(
 				'form' => array(
@@ -107,6 +158,12 @@
 								'name' => 'control_areas',
                                 'text' => lang('Control_area'),
                                 'list' => $this->so_control_area->get_control_area_select_array(),
+							),
+							//as categories
+							array('type' => 'filter',
+								'name' => 'control_areas',
+								'text' => lang('Control_area') . 2,
+								'list' => $control_areas_array2,
 							),
 							array('type' => 'filter',
 								'name' => 'responsibilities',
@@ -188,6 +245,23 @@
 
 			$control_areas_array = $this->so_control_area->get_control_areas_as_array();
 
+			// Sigurd: START as categories
+			$cats	= CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	= true;
+
+			$control_areas = $cats->formatted_xslt_list(array('format'=>'filter','selected' => $control_area_id,'globals' => true,'use_acl' => $this->_category_acl));
+			array_unshift($control_areas['cat_list'],array ('cat_id'=>'','name'=> lang('select value')));
+			$control_areas_array2 = array();
+			foreach($control_areas['cat_list'] as $cat_list)
+			{
+				$control_areas_array2[] = array
+				(
+					'id' 	=> $cat_list['cat_id'],
+					'name'	=> $cat_list['name'],
+				);		
+			}
+			// END as categories
+
 			// Fetches prosedures that are related to first control area in list
 			$control_area_id = $control_areas_array[0]['id'];
 			$procedures_array = $this->so_procedure->get_procedures_by_control_area_id($control_area_id);
@@ -210,6 +284,7 @@
 				'editable' 					=> true,
 				'control'					=> (isset($control)) ? $control->toArray(): null,
 				'control_areas_array'		=> $control_areas_array,
+				'control_areas_array2'		=> array('options' => $control_areas_array2),
 				'procedures_array'			=> $procedures_array,
 				'role_array'				=> $role_array
 			);
