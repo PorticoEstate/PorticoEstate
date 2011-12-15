@@ -212,13 +212,13 @@
 									'onkeypress' => 'return pulsar(event)',
 									'tab_index' => 3
 								),
-					/*			array
+								array
 								(
 									'type'	=> 'button',
 									'id'	=> 'btn_new',
 									'value'	=> lang('add'),
 									'tab_index' => 4
-								),*/
+								),
 							),
 							'hidden_value' => array
 							(
@@ -285,8 +285,8 @@
 					'text' 			=> lang('add'),
 					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
 					(
-						'menuaction'	=> 'addressbook.uiaddressbook.edit_person',
-						'noframe'		=> true
+						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
+						'nonavbar'		=> true
 					))
 				);
 
