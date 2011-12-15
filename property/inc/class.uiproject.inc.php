@@ -928,7 +928,7 @@
 
 		function edit()
 		{
-			$id = phpgw::get_var('id', 'int');
+			$id = (int)phpgw::get_var('id', 'int');
 
 			if(!$this->acl_add && !$this->acl_edit)
 			{
@@ -944,6 +944,8 @@
 			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
 			$values['contact_id']		= phpgw::get_var('contact', 'int', 'POST');
 			$auto_create 				= false;
+
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 
 			$datatable = array();
 
@@ -1229,6 +1231,8 @@
 							}
 						}
 
+						$toarray = array();
+						$toarray_sms = array();
 						if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) )
 						{
 							if($this->account!=$values['coordinator']
@@ -1237,35 +1241,70 @@
 							)
 							{
 								$prefs_coordinator = $this->bocommon->create_preferences('property',$values['coordinator']);
-								$to = $prefs_coordinator['email'];
+								$to[] = $prefs_coordinator['email'];
+							}
+						}
+						
+						$notify_list = execMethod('property.notify.read', array
+								(
+									'location_id'		=> $location_id,
+									'location_item_id'	=> $id
+								)
+							);
+						
+						$subject=lang('project %1 has been edited',$id);
+						$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+						$sms	= CreateObject('sms.sms');
 
-								$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-								$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						foreach($notify_list as $entry)
+						{
+							if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+							{
+								$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+							}
+							else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+							{
+								$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+								$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+								$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+							}
+						}
+						unset($entry);
 
-								$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id)).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
-								foreach($receipt['notice_owner'] as $notice)
-								{
-									$body .= $notice . "\n";
-								}
+						if($toarray_sms)
+						{
+							$historylog->add('MS',$id,implode(',',$toarray_sms));						
+						}
+						
+						if ($toarray)
+						{
+							$to = implode(';',$toarray);
+							$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+							$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-								$body .= lang('Altered by') . ': ' . $from_name . "\n";
-								$body .= lang('remark') . ': ' . $values['remark'] . "\n";
+							$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit', 'id'=> $id)).'">' . lang('project %1 has been edited',$id) .'</a>' . "\n";
+							foreach($receipt['notice_owner'] as $notice)
+							{
+								$body .= $notice . "\n";
+							}
 
-								$body = nl2br($body);
+							$body .= lang('Altered by') . ': ' . $from_name . "\n";
+							$body .= lang('remark') . ': ' . $values['remark'] . "\n";
 
-								$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('project %1 has been edited',$id),$body, false,false,false, $from_email, $from_name, 'html');
+							$body = nl2br($body);
 
-								if (!$returncode)	// not nice, but better than failing silently
-								{
-									$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
-									$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-									$bypass_error=true;
-								}
-								else
-								{
-									$historylog->add('ON', $id, lang('%1 is notified',$to));
-									$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
-								}
+							$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+
+							if (!$returncode)	// not nice, but better than failing silently
+							{
+								$receipt['error'][]=array('msg'=>"uiproject::edit: sending message to '$to' subject='$subject' failed !!!");
+								$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+								$bypass_error=true;
+							}
+							else
+							{
+								$historylog->add('ON', $id, lang('%1 is notified',$to));
+								$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
 							}
 						}
 					}
@@ -1656,8 +1695,7 @@
 			$content_notify = array();
 
 			$notify				= CreateObject('property.notify');
-			
-			$location_id	= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+
 			$notify_info = $notify->get_yui_table_def(array
 								(
 									'location_id'		=> $location_id,
@@ -1693,7 +1731,7 @@
 					'datatable'							=> $datavalues,
 					'myColumnDefs'						=> $myColumnDefs,
 					'myButtons'							=> $myButtons,
-					'tabs'								=> self::_generate_tabs($tabs,array('coordination' => $suppresscoordination)),
+					'tabs'								=> self::_generate_tabs($tabs),
 					'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'						=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'					=> isset($origin)?$origin:'',

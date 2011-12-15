@@ -5,7 +5,7 @@
 	{
 	}
 
-	var toolTips = [{}]
+	var toolTips = new Array();
 
 	//define SelectButton
  	var oMenuButton_0;
@@ -14,9 +14,10 @@
 	]
 
 	// define buttons
-	var oNormalButton_0;
+	var oNormalButton_0,oNormalButton_1;
 	var normalButtons = [
-	{order:0, name:'btn_search', funct:"onSearchClick"}
+	{order:0, name:'btn_search', funct:"onSearchClick"},
+	{order:1, name:'btn_new', funct:"onNewClick"}
 	]
 
 	// define Text buttons

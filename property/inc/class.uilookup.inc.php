@@ -200,7 +200,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 3
+									'tab_index' => 2
 								),
 								array
 								( // TEXT IMPUT
@@ -210,8 +210,15 @@
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 2
-								)
+									'tab_index' => 3
+								),
+					/*			array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 4
+								),*/
 							),
 							'hidden_value' => array
 							(
@@ -272,6 +279,16 @@
 				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
 				$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['sort_field'][$i];
 			}
+			$datatable['rowactions']['action'][] = array
+				(
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'addressbook.uiaddressbook.edit_person',
+						'noframe'		=> true
+					))
+				);
 
 			if($column)
 			{

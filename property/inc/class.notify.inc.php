@@ -99,7 +99,7 @@
 					'location_id'			=> $location_id,
 					'location_item_id'		=> $location_item_id,
 					'contact_id'			=> $this->_db->f('contact_id'),
-					'is_active'				=> $this->_db->f('is_active') ? $lang_yes : $lang_no,
+					'is_active'				=> $this->_db->f('is_active'),
 					'notification_method'	=> $this->_db->f('notification_method',true),
 					'user_id'				=> $this->_db->f('user_id'),
 					'entry_date'			=> $GLOBALS['phpgw']->common->show_date($this->_db->f('entry_date'),$dateformat),
@@ -112,7 +112,8 @@
 			{
 				$comms = execMethod('addressbook.boaddressbook.get_comm_contact_data',$entry['contact_id']);
 				$entry['email'] = $comms[$entry['contact_id']]['work email'];
-				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];				
+				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];
+				$entry['is_active_text'] = $entry['is_active'] ? $lang_yes : $lang_no;
 			}
 //_debug_array($values);
 			return $values;
@@ -163,7 +164,7 @@
 													array('key' => 'email','label'=>lang('email'),'sortable'=>false,'resizeable'=>true),
 													array('key' => 'sms','label'=>'SMS','sortable'=>false,'resizeable'=>true),
 													array('key' => 'notification_method','label'=>lang('method'),'sortable'=>true,'resizeable'=>true),
-													array('key' => 'is_active','label'=>lang('active'),'sortable'=>true,'resizeable'=>true),
+													array('key' => 'is_active_text','label'=>lang('active'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'entry_date','label'=>lang('entry_date'),'sortable'=>true,'resizeable'=>true),
 													array('key' => 'select','label'=> lang('select'), 'sortable'=>false,'resizeable'=>false,'formatter'=>'myFormatterCheck_notify','width'=>30)
 													))
