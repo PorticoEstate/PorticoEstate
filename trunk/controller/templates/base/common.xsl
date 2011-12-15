@@ -222,7 +222,15 @@
 				//... retrieve the record based on the selected table row
 				var row = table.getTrEl(this.contextEventTarget);
 				var record = table.getRecord(row);
-												
+				var requestUrl = "";
+
+				if(record.getData().parameters[task.index]){
+				 	var parameter_id = record.getData().parameters[0];
+					 
+					var parameter_value = YAHOO.util.Dom.get(parameter_id).value;				
+					requestUrl = record.getData().actions[ task.index ] + "&" + parameter_id + "=" + parameter_value;
+				}
+
 				//... check whether this action should be an AJAX call
 				if( record.getData().ajax[task.index] ) {
 					
@@ -243,16 +251,6 @@
 						}
 					}
 					
-					if(record.getData().labels[task.index] == "Legg enhet til kontrollen"){
-						var control_id = YAHOO.util.Dom.get("control_id").value;
-						
-						if(control_id > 0){
-							var requestUrl = record.getData().actions[ task.index ] + "&control_id=" + control_id;
-						}
-					}else{
-						var requestUrl = record.getData().actions[ task.index ];
-					}				
-				
 					if(requestUrl){
 						var request = YAHOO.util.Connect.asyncRequest(
 							'GET',
@@ -264,7 +262,8 @@
 							});
 					}	
 				} else {
-					window.location = record.getData().actions[task.index];
+					
+					window.location = requestUrl;
 				}
 			}
 		};
