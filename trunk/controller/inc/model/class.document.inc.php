@@ -5,7 +5,7 @@
 	* @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	* @author Torstein Vadla <torstein.vadla@bouvet.no>
 	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
-	* This file is part of phpGroupWare.
+	* This file is part of phpGroupWare. 
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
 	* it under the terms of the GNU General Public License as published by
