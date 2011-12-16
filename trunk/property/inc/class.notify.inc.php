@@ -72,7 +72,7 @@
 		{
 			if(!isset($data['location_id']) || !isset($data['location_item_id']) || !$data['location_item_id'])
 			{
-				throw new Exception("property_notify::read() - Missing location info in input");
+				return array();
 			}	
 
 			$location_id = (int) $data['location_id'];
