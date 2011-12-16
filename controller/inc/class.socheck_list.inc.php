@@ -85,44 +85,49 @@ class controller_socheck_list extends controller_socommon
 	}
 		
 	public function get_single_with_check_items($check_list_id){
-		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, ";
+		$sql  = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, ";
 		$sql .= "ci.id as ci_id, ci.status as ci_status, control_item_id, ci.comment as ci_comment, check_list_id, "; 
 		$sql .= "coi.title as coi_id, coi.title as coi_title, coi.required as coi_required, coi.required as coi_required, ";
 		$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id "; 
-		$sql .= "FROM controller_check_list cl, controller_check_item ci, controller_control_item as coi "; 
-		$sql .= "WHERE cl.id = $check_list_id ";
-		$sql .= "AND cl.id = ci.check_list_id ";
-		$sql .= "AND ci.control_item_id=coi.id;";
-		
+		$sql .= "FROM controller_check_list cl "; 
+		$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
+		$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id=coi.id ";
+		$sql .= "WHERE cl.id = $check_list_id;";
+				
 		$this->db->query($sql);
 		
 		$counter = 0;
 		$check_list = null;
+	
 		while ($this->db->next_record()) {
 			
 			if($counter == 0){
 				$check_list = new controller_check_list($this->unmarshal($this->db->f('cl_id', true), 'int'));
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status', true), 'bool'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
-				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));	
+				$check_list->set_deadline($this->unmarshal($this->db->f('deadline', true), 'int'));
+				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date', true), 'int'));
+				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date', true), 'int'));	
 			}
-			
-			$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
-			$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
-			$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
-			$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
-			$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
-			
-			$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
-			$control_item->set_title($this->db->f('coi_title', true), 'string');
-			$control_item->set_required($this->db->f('coi_required', true), 'string');
-			$control_item->set_what_to_do($this->db->f('coi_what_to_do', true), 'string');
-			$control_item->set_how_to_do($this->db->f('coi_how_to_do', true), 'string');
-			$control_item->set_control_group_id($this->db->f('coi_control_group_id', true), 'string');
-			
-			$check_item->set_control_item($control_item->toArray());
-			
-			$check_items_array[] = $check_item->toArray();
+						
+			if($this->db->f('ci_id', true) != ''){
+				$check_item = new controller_check_item($this->unmarshal($this->db->f('ci_id', true), 'int'));
+				$check_item->set_control_item_id($this->unmarshal($this->db->f('control_item_id', true), 'int'));
+				$check_item->set_status($this->unmarshal($this->db->f('ci_status', true), 'bool'));
+				$check_item->set_comment($this->unmarshal($this->db->f('ci_comment', true), 'string'));
+				$check_item->set_check_list_id($this->unmarshal($this->db->f('check_list_id', true), 'int'));
+				
+				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id', true), 'int'));
+				$control_item->set_title($this->db->f('coi_title', true), 'string');
+				$control_item->set_required($this->db->f('coi_required', true), 'string');
+				$control_item->set_what_to_do($this->db->f('coi_what_to_do', true), 'string');
+				$control_item->set_how_to_do($this->db->f('coi_how_to_do', true), 'string');
+				$control_item->set_control_group_id($this->db->f('coi_control_group_id', true), 'string');
+				
+				$check_item->set_control_item($control_item->toArray());
+				
+				$check_items_array[] = $check_item->toArray();
+			}
 			
 			$counter++;
 		}
@@ -226,14 +231,14 @@ class controller_socheck_list extends controller_socommon
 	
 	function get_agg_check_lists_for_location( $location_code, $from_date, $to_date ){
 		
-		$sql = 	"SELECT c.id as c_id, title, cl.id as cl_id, c.repeat_type, c.repeat_interval, deadline, count(ci.id) ";
+		$sql = 	"SELECT c.id as c_id, title, start_date, end_date, cl.id as cl_id, c.repeat_type, c.repeat_interval, cl.deadline, count(ci.id) ";
 		$sql .= "FROM controller_check_list cl, controller_control c, controller_check_item ci ";
 		$sql .= "WHERE cl.location_code = $location_code ";
 		$sql .= "AND c.repeat_type < 2 ";
 		$sql .= "AND cl.control_id = c.id ";
 		$sql .= "AND cl.id = ci.check_list_id ";
 		$sql .= "AND deadline BETWEEN $from_date AND $to_date ";
-		$sql .= "GROUP BY c.id, title, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
+		$sql .= "GROUP BY c.id, title, start_date, end_date, cl.id, cl.deadline, c.repeat_type, c.repeat_interval ";
 		$sql .= "ORDER BY c.id";
 
 		$this->db->query($sql);
@@ -253,7 +258,9 @@ class controller_socheck_list extends controller_socommon
 										"id" 			  => $this->unmarshal($this->db->f('c_id', true), 'int'),
 										"title" 		  => $this->unmarshal($this->db->f('title', true), 'string'),
 										"repeat_type" 	  => $this->unmarshal($this->db->f('repeat_type', true), 'int'),
-										"repeat_interval" => $this->unmarshal($this->db->f('repeat_interval', true), 'int')
+										"repeat_interval" => $this->unmarshal($this->db->f('repeat_interval', true), 'int'),
+										"start_date" => $this->unmarshal($this->db->f('start_date', true), 'int'),
+										"end_date" => $this->unmarshal($this->db->f('end_date', true), 'int')
 									);
 			}
 
