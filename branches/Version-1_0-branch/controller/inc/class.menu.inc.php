@@ -102,10 +102,10 @@
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicheck_list.index') ),
 						'image'	=> array('property', 'location_1'),
 					),
-					'location_check_list' => array
+					'calendar_overview' => array
 					(
-						'text'	=> lang('Check_list_location'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_agg_check_lists_for_location', 'year' => '2011', 'month' => '10') ),
+						'text'	=> lang('Calendar_overview'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uilocation_check_list.view_calendar_for_month', 'year' => '2011', 'month' => '10') ),
 						'image'	=> array('property', 'location_1'),
 					)
 				);
@@ -148,11 +148,6 @@
 					(
 						'text'	=> lang('Control area'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'controller', 'location' => '.control', 'global_cats' => 'true', 'menu_selection' => 'admin::controller::control_cats') )
-					),
-					'responsible_matrix'	=> array
-					(
-						'text'		=> lang('responsible matrix'),
-						'url'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiresponsible.index', 'appname' => 'controller') )
 					),
 					'responsibility_role'	=> array
 					(

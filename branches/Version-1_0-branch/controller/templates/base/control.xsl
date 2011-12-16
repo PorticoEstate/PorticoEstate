@@ -4,6 +4,22 @@
 <xsl:variable name="control_id"><xsl:value-of select="control/id"/></xsl:variable>
 <xsl:variable name="control_area_id"><xsl:value-of select="control/control_area_id"/></xsl:variable>
 <xsl:variable name="control_procedure_id"><xsl:value-of select="control/procedure_id"/></xsl:variable>
+<xsl:variable name="date_format">d/m-Y</xsl:variable>
+
+<script>
+		$(function() {
+			$( "#start_date" ).datepicker({ 
+				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
+				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
+				dateFormat: 'd/m-yy' 
+			});
+			$( "#end_date" ).datepicker({ 
+				monthNames: ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'],
+				dayNamesMin: ['Sø', 'Ma', 'Ti', 'On', 'To', 'Fr', 'Lø'],
+				dateFormat: 'd/m-yy' 
+			});	
+		});
+	</script>
 
 <div class="yui-content">
 	<div id="control_details">
@@ -87,13 +103,27 @@
 					<label for="start_date">Startdato</label>
 				</dt>
 				<dd>
-					<xsl:value-of disable-output-escaping="yes" select="start_date"/>
+					<input>
+				      <xsl:attribute name="id">start_date</xsl:attribute>
+				      <xsl:attribute name="name">start_date</xsl:attribute>
+				      <xsl:attribute name="type">text</xsl:attribute>
+				      <xsl:if test="control/start_date != ''">
+				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/start_date))"/></xsl:attribute>
+				      </xsl:if>
+				    </input>
 				</dd>
 				<dt>
 					<label for="end_date">Sluttdato</label>
 				</dt>
 				<dd>
-					<xsl:value-of disable-output-escaping="yes" select="end_date"/>
+					<input>
+				      <xsl:attribute name="id">end_date</xsl:attribute>
+				      <xsl:attribute name="name">end_date</xsl:attribute>
+				      <xsl:attribute name="type">text</xsl:attribute>
+				      <xsl:if test="control/end_date != 0">
+				      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(control/end_date))"/></xsl:attribute>
+				      </xsl:if>
+				    </input>
 				</dd>
 				<dt>
 					<label>Frekvenstype</label>

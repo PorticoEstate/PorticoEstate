@@ -96,8 +96,7 @@ YAHOO.portico.initializeDataTable = function()
 //------------
 		myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
 		myContextMenu.addItems(YAHOO.portico.GetMenuContext());
-		myContextMenu.addItem("Hei du!!");
-		
+				
 		myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
 
@@ -475,7 +474,6 @@ YAHOO.portico.initializeDataTable = function()
 
 	this.onChangeSelect = function(type)
 	{
-alert('onChangeSelect');
 		var myselect=document.getElementById("sel_"+ type);
 		for (var i=0; i<myselect.options.length; i++)
 		{

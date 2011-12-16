@@ -557,33 +557,6 @@ ul.groups h3 {
 	margin-top:10px;	
 }
 
-.expand_all {
-    background: url("../../../images/bg_expand_blue.png") no-repeat scroll 0 0 transparent;
-    color: #FFFFFF;
-    cursor: pointer;
-    float: left;
-    font-weight: normal;
-    height: 18px;
-    margin-left: 20px;
-    padding: 5px 10px;
-    width: 56px;
-}
-.collapse_all {
-    background: url("../../../images/bg_expand_grey.png") no-repeat scroll 0 0 transparent;
-    color: #000000;
-    cursor: pointer;
-    float: left;
-    font-weight: normal;
-    height: 22px;
-    margin-left: 0;
-    padding: 6px 0 0 7px;
-    width: 59px;
-}
-
-.expand_header{
-	overflow:hidden;	
-}
-
 dl.proplist, dl.proplist-col {
     margin: 0;
     padding-left: 0;
@@ -793,7 +766,7 @@ fieldset.check_item_details h3 {
 fieldset.check_list_details label{
 	display: inline-block;
     font-weight: bold;
-    width: 100px;
+    width: 135px;
 }
 .check_item{
     margin: 25px 0;
@@ -838,6 +811,7 @@ ul.calendar li{
 }
 ul.calendar li.heading div {
     font-weight: bold;
+    font-size:16px;
 }
 ul.calendar{
     float: left;
@@ -860,18 +834,26 @@ ul.calendar.info {
     width: 500px;
     overflow-x: hidden;
     height: 800px;
+    margin-left: 40px;
 }
 ul.calendar.days {
    	position: absolute;
     width: 1120px;
 }
-
 ul.calendar li div.date, ul.calendar.info div.date {
     width: 80px;
 }
-
 ul.calendar div.title, ul.calendar.info div.title {
-	width: 200px;	
+	width: 200px;
+}
+ul.calendar div.id, ul.calendar.info div.id {
+	width: 50px;
+}
+ul.calendar div.title{
+	text-align: left;
+}
+ul.calendar .heading div.title{
+	text-align: center;
 }
 ul.calendar div.frequency, ul.calendar.info div.frequency {
 	width: 120px;	
@@ -942,4 +924,69 @@ ul#search_list input[type="text"] {
 #queryForm{
 	overflow:hidden;
 	margin: 20px;
+}
+fieldset.add_check_list div{
+	padding:2px; 
+}
+fieldset.add_check_list label{
+	display:inline-table;
+	width:120px;
+}
+#calendar_dates{
+	margin:25px 0;	
+}
+#calendar_dates p{
+	font-weight: bold;
+	margin: 5px 0;	
+}
+#calendar_dates span {
+    border: 2px solid black;
+    margin-right: 10px;
+    padding: 1px 4px;
+    cursor: pointer;
+}
+textarea{
+	padding: 4px;	
+}
+.expand_menu div.focus{
+	background: url('../../../images/bg_expand_blue.png') no-repeat;
+	color: #FFF;
+}
+.expand_menu {
+    margin: 15px 0 20px;
+    overflow: hidden;
+}
+.expand_menu div{
+	background: url('../../../images/bg_expand_grey.png') no-repeat;
+	color: #000;	
+	padding: 7px 10px;
+	cursor: pointer;
+    float: left;
+    font-weight: normal;
+    height: 18px;
+    width: 56px;
+}
+.expand_menu div.collapse_all{
+	padding: 7px;
+}
+
+label.comment{
+	vertical-align:top;	
+}
+.check_item {
+	display: none;	
+}
+.check_item label{
+	width: 150px;
+	display: inline-block;	
+}
+
+.check_items h4 img{
+	padding-bottom:2px;	
+}
+.check_items.expand_list h4{
+	font-size: 15px;	
+}
+#days_view div{
+	font-weight:bold;
 }

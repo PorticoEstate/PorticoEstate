@@ -698,5 +698,21 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'phpgw_notification' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'location_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'location_item_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'contact_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'is_active' => array('type' => 'int', 'precision' => 2,'nullable' => true),
+				'notification_method' => array('type' => 'varchar', 'precision' => 20,'nullable' => true),
+				'user_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'entry_date' => array('type' => 'int','precision' => 4,'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array('phpgw_contact' => array('contact_id' => 'contact_id')),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);

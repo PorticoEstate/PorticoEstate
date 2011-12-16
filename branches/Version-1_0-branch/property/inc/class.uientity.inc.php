@@ -64,7 +64,7 @@
 
 		function property_uientity()
 		{
-			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
+		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];

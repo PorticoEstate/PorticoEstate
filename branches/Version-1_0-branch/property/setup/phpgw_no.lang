@@ -363,6 +363,7 @@ planning date	property	no	Dato planlagt disponering
 planning value	property	no	Beløp planlagt disponering
 planning serie	property	no	Planlagt disponering
 check to delete	property	no	Merk for å slette
+check all	common	no	Merk alle
 contact	property	no	Kontakt
 contact email	property	no	Epost
 contact phone	property	no	kontakt telefon

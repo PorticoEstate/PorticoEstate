@@ -595,22 +595,25 @@
 		//delete quotes in myButtons, field: "fn"
 		for(k=0;k<myButtons.length;k++)
 		{
-			for(m=0;m<myButtons[k].length;m++)
+			if(typeof(myButtons[k])!="undefined")
 			{
-				if(myButtons[k][m]['type']=='menu')
+				for(m=0;m<myButtons[k].length;m++)
 				{
-					for(p=0;p<myButtons[k][m]['value'].length;p++)
+					if(myButtons[k][m]['type']=='menu')
 					{
-						try
-						  {
-							this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
-						  }
-						catch(err)
-						  {
-							txt="There was an error on this page.\n\n";
-							txt+="Error description: " + err.description + "\n\n";
-							alert(txt);
-						  }
+						for(p=0;p<myButtons[k][m]['value'].length;p++)
+						{
+							try
+							  {
+								this.deletes_quotes(myButtons[k][m]['value'][p]['onclick'],"fn");
+							  }
+							catch(err)
+							  {
+								txt="There was an error on this page.\n\n";
+								txt+="Error description: " + err.description + "\n\n";
+								alert(txt);
+							  }
+						}
 					}
 				}
 			}

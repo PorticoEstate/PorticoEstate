@@ -781,12 +781,11 @@
 			$event['event_name'] = $data['event_name']; // Human readable description
 			if( isset($data['type']) && $data['type']=='view')
 			{
+				$GLOBALS['phpgw']->xslttpl->add_file(array('event_view'), $this->xsl_rootdir);
 				if(!isset($data['event']) || !$data['event'])
 				{
-					//					return $event;
+			//		return $event;
 				}
-
-				$GLOBALS['phpgw']->xslttpl->add_file(array('event_view'), $this->xsl_rootdir);
 			}
 			else
 			{

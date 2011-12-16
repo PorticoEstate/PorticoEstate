@@ -136,7 +136,7 @@ class uiaddressbook
 		$this->tab_address			= lang('Address');
 		$this->tab_others			= lang('Others');
 		$this->tab_extra			= lang('More data');
-
+		$this->nonavbar 			= phpgw::get_var('nonavbar','bool');
 		$this->_set_sessiondata();
 	}
 
@@ -202,11 +202,11 @@ class uiaddressbook
 		$tabs = array();
 		$tabs[] = array(
 			'label' => lang('persons'),
-			'link'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_persons))
+			'link'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_persons, 'nonavbar' => $this->nonavbar))
 		);
 		$tabs[] = array(
 			'label' => lang('Organizations'),
-			'link'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_organizations))
+			'link'  => $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_organizations, 'nonavbar' => $this->nonavbar))
 		);
 
 		switch($this->section)
@@ -306,7 +306,7 @@ class uiaddressbook
 			$count_function = 'get_count_persons';
 			$get_data_function = 'get_persons';
 
-			$this->template->set_var('add_url', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_person')));
+			$this->template->set_var('add_url', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_person', 'nonavbar' => $this->nonavbar)));
 
 			$search_obj=array('query' => $this->query,
 					'search_obj' => array(
@@ -336,7 +336,7 @@ class uiaddressbook
 			$count_function = 'get_count_orgs';
 			$get_data_function = 'get_orgs';
 
-			$this->template->set_var('add_url',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.add_org')));
+			$this->template->set_var('add_url',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.add_org', 'nonavbar' => $this->nonavbar)));
 
 			$search_obj=array('query' => $this->query,
 					'search_obj' => array(
@@ -395,7 +395,7 @@ class uiaddressbook
 			$cols .= '<td>';
 			$cols .= $GLOBALS['phpgw']->nextmatchs->show_sort_order($this->sort,
 					$column[0],$this->order,"/index.php",$showcol,
-					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id);
+					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id.'&nonavbar='.$this->nonavbar);
 			$cols .= '</td>';
 			$cols .= "\n";
 		}
@@ -406,18 +406,18 @@ class uiaddressbook
 			$cols .= '<td>';
 			$cols .= $GLOBALS['phpgw']->nextmatchs->show_sort_order($this->sort,
 					$column[0],$this->order,"/index.php",$showcol,
-					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id);
+					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id .'&nonavbar='.$this->nonavbar);
 			$cols .= '</td>';
 			$cols .= "\n";
 		}
 
 		/* set basic vars and parse the header */
 		//$this->template->set_var('principal_tab',$this->get_principal_tabs($this->section));
-		$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_persons),
+		$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_persons, 'nonavbar' => $this->nonavbar),
 								$this->get_class_css($this->tab_main_persons, $this->section), 
 								$this->tab_main_persons);
 
-		$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_organizations),
+		$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->tab_main_organizations, 'nonavbar' => $this->nonavbar),
 								$this->get_class_css($this->tab_main_organizations, $this->section),
 								$this->tab_main_organizations);
 
@@ -428,7 +428,7 @@ class uiaddressbook
 		//FIXME make show_tpl stop using theme values
 		$search_filter = $this->nextmatchs->show_tpl(
 				'/index.php', $this->start, $total_all_persons,
-				array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section),
+				array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section, 'nonavbar' => $this->nonavbar),
 				'90%', '',
 				$search_obj,1,True,array('filter'=>$this->filter,'yours'=>1),$this->cat_id);
 		$query = $filter = '';
@@ -457,22 +457,22 @@ class uiaddressbook
 		$this->template->set_var('lang_showing',$lang_showing);
 		$this->template->set_var('search_filter',$search_filter);
 		$this->template->set_var('cats',lang('Category'));
-		$this->template->set_var('cats_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section)));
+		$this->template->set_var('cats_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section, 'nonavbar' => $this->nonavbar)));
 		/* $this->template->set_var('cats_link',$this->cat_option($this->cat_id)); */
 		$this->template->set_var('lang_cats',lang('Select'));
 		//			$this->template->set_var('lang_addressbook',lang('Address book'));
 		$this->template->set_var('lang_add',lang('Add'));
 		$this->template->set_var('lang_cat_cont',lang('Categorize'));
-		$this->template->set_var('cat_cont_url', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index')));
+		$this->template->set_var('cat_cont_url', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index', 'nonavbar' => $this->nonavbar)));
 
 		$this->template->set_var('lang_addvcard',lang('AddVCard'));
-		$this->template->set_var('vcard_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.in')));
+		$this->template->set_var('vcard_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.in', 'nonavbar' => $this->nonavbar)));
 		$this->template->set_var('lang_import',lang('Import Contacts'));
-		$this->template->set_var('import_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.import')));
+		$this->template->set_var('import_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.import', 'nonavbar' => $this->nonavbar)));
 		$this->template->set_var('lang_import_alt',lang('Alt. CSV Import'));
 		$this->template->set_var('import_alt_url',$GLOBALS['phpgw']->link('/addressbook/csv_import.php'));
 		$this->template->set_var('lang_export',lang('Export Contacts'));
-		$this->template->set_var('export_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.export')));
+		$this->template->set_var('export_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.export', 'nonavbar' => $this->nonavbar)));
 
 		$export_vars = array
 		(
@@ -529,7 +529,7 @@ class uiaddressbook
 						if ( is_array($org_data) && count($org_data) )
 						{
 							$ref = '<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.view_org',
-																		'ab_id'=>$org_data[0]['my_org_id'])) . '">' ;
+																		'ab_id'=>$org_data[0]['my_org_id'], 'nonavbar' => $this->nonavbar)) . '">' ;
 						}
 						else
 						{
@@ -539,7 +539,7 @@ class uiaddressbook
 					else
 					{
 						$ref = '<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.view_org',
-																		'ab_id'=> $myid)) . '">' ;
+																		'ab_id'=> $myid, 'nonavbar' => $this->nonavbar)) . '">' ;
 					}
 					$data = 	htmlspecialchars($coldata) . '</a>';
 				}
@@ -573,13 +573,13 @@ class uiaddressbook
 				$this->template->set_var('col_data',$ref.$data);
 				$this->template->parse('columns','column',True);
 			}
-			$this->template->set_var('row_view_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.{$this->view_mode}", 'ab_id' => $entry['contact_id'] ) ) );
-			$this->template->set_var('row_vcard_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.out', 'ab_id' => $entry['contact_id'] ) ) );
+			$this->template->set_var('row_view_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.{$this->view_mode}", 'ab_id' => $entry['contact_id'], 'nonavbar' => $this->nonavbar ) ) );
+			$this->template->set_var('row_vcard_link',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.out', 'ab_id' => $entry['contact_id'], 'nonavbar' => $this->nonavbar ) ) );
 
 			if($this->bo->check_edit($entry['contact_id'], $myowner))
 			{
 				$this->template->set_var('row_edit','<a href="' 
-					. $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.{$this->edit_mode}", 'ab_id' => $entry['contact_id']) )
+					. $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.{$this->edit_mode}", 'ab_id' => $entry['contact_id'], 'nonavbar' => $this->nonavbar) )
 					. '">' . lang('Edit') . '</a>');
 			}				
 			else
@@ -615,7 +615,7 @@ class uiaddressbook
 	{
 		$contact_id = phpgw::get_var('ab_id');
 		$new_contact_id = $this->bo->copy_contact($contact_id);
-		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.edit_person', 'ab_id' => $new_contact_id));
+		$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.edit_person', 'ab_id' => $new_contact_id, 'nonavbar' => $this->nonavbar));
 	}
 
 	/*************************************************************\
@@ -633,8 +633,8 @@ class uiaddressbook
 		//set some variables which will be used
 		$this->mode = 'add';
 		$this->section = $this->tab_main_persons;
-		$this->form_action = array('menuaction' => 'addressbook.uiaddressbook.add_person');
-		$this->form_index = array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section);
+		$this->form_action = array('menuaction' => 'addressbook.uiaddressbook.add_person', 'nonavbar' => $this->nonavbar);
+		$this->form_index = array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section, 'nonavbar' => $this->nonavbar);
 		//get all vars which was send in post or get
 		$this->get_vars();
 
@@ -666,6 +666,13 @@ class uiaddressbook
 		{
 			case 'save':
 				$fields = $this->get_all_entry();
+				
+				if(!$fields['tab_person_data']['per_first_name'] && !$fields['tab_person_data']['per_last_name'])
+				{				
+					$message ='Need at least First Name or Last Name';
+					phpgwapi_cache::message_set($message, 'error');
+					break;
+				}
 
 				$fields['owner'] = $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -674,7 +681,7 @@ class uiaddressbook
 						(
 						 'menuaction'	=> 'addressbook.uiaddressbook.view_person',
 						 'ab_id'		=> $ab_id,
-						 'referer'	=> $this->referer
+						 'referer'	=> $this->referer, 'nonavbar' => $this->nonavbar
 						));
 				$GLOBALS['phpgw']->common->phpgw_exit();
 				break;
@@ -712,8 +719,8 @@ class uiaddressbook
 		//set some variables which will be used
 		$this->mode = 'edit';
 		$this->section = $this->tab_main_persons;
-		$this->form_action = array('menuaction' => 'addressbook.uiaddressbook.edit_person');
-		$this->form_index = array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section);
+		$this->form_action = array('menuaction' => 'addressbook.uiaddressbook.edit_person', 'nonavbar' => $this->nonavbar);
+		$this->form_index = array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section, 'nonavbar' => $this->nonavbar);
 
 		//get all vars which was send in post or get
 		$this->get_vars();
@@ -763,7 +770,8 @@ class uiaddressbook
 				(
 					'menuaction'	=> 'addressbook.uiaddressbook.view_person',
 					'ab_id'		=> $this->contact_id,
-					'referer'	=> $this->referer
+					'referer'	=> $this->referer,
+					'nonavbar' => $this->nonavbar
 				));
 				break;
 			case 'cancel':
@@ -774,7 +782,8 @@ class uiaddressbook
 				array
 				(
 					'menuaction'	=> 'addressbook.uiaddressbook.delete_person',
-					'ab_id'		=> $this->contact_id
+					'ab_id'		=> $this->contact_id,
+					'nonavbar' => $this->nonavbar
 				));
 				//$this->delete_person($this->contact_id);
 				break;
@@ -835,7 +844,8 @@ class uiaddressbook
 		$GLOBALS['phpgw']->redirect_link('/index.php', array
 				(
 				 'menuaction'	=> 'addressbook.uiaddressbook.edit_person',
-				 'ab_id'		=> $new_contact_id
+				 'ab_id'		=> $new_contact_id,
+				 'nonavbar' => $this->nonavbar
 				));
 	}
 
@@ -854,8 +864,8 @@ class uiaddressbook
 		//set some variables which will be used
 		$this->mode = 'add';
 		$this->section = $this->tab_main_organizations;
-		$this->form_action = array('menuaction' => 'addressbook.uiaddressbook.add_org');
-		$this->form_index = array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section);
+		$this->form_action = array('menuaction' => 'addressbook.uiaddressbook.add_org', 'nonavbar' => $this->nonavbar);
+		$this->form_index = array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => $this->section, 'nonavbar' => $this->nonavbar);
 		//get all vars which was send in post or get
 		$this->get_vars();
 
@@ -893,7 +903,8 @@ class uiaddressbook
 				$GLOBALS['phpgw']->redirect_link('/index.php', array
 						(
 						 'menuaction'	=> 'addressbook.uiaddressbook.view_org',
-						 'ab_id'		=> $ab_id
+						 'ab_id'		=> $ab_id,
+						 'nonavbar' => $this->nonavbar
 						));
 				break;
 			case 'cancel':
@@ -930,8 +941,8 @@ class uiaddressbook
 		//set some variables which will be used
 		$this->mode = 'edit';
 		$this->section = $this->tab_main_organizations;
-		$this->form_action = array('menuaction'=>'addressbook.uiaddressbook.edit_org');
-		$this->form_index = array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$this->section);
+		$this->form_action = array('menuaction'=>'addressbook.uiaddressbook.edit_org', 'nonavbar' => $this->nonavbar);
+		$this->form_index = array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$this->section, 'nonavbar' => $this->nonavbar);
 
 		//get all vars which was send in post or get
 		$this->get_vars();
@@ -969,7 +980,8 @@ class uiaddressbook
 				$GLOBALS['phpgw']->redirect_link('/index.php', array
 						(
 						 'menuaction'	=> 'addressbook.uiaddressbook.view_org',
-						 'ab_id'		=> $this->contact_id
+						 'ab_id'		=> $this->contact_id,
+						 'nonavbar' => $this->nonavbar
 						));
 				break;
 			case 'cancel':
@@ -979,7 +991,8 @@ class uiaddressbook
 				$GLOBALS['phpgw']->redirect_link('/index.php', array
 						(
 						 'menuaction'	=> 'addressbook.uiaddressbook.delete_org',
-						 'ab_id'		=> $this->contact_id
+						 'ab_id'		=> $this->contact_id,
+						 'nonavbar' => $this->nonavbar
 						));
 				break;
 			case 'clear':
@@ -1050,7 +1063,8 @@ class uiaddressbook
 		$GLOBALS['phpgw']->redirect_link('/index.php', array
 				(
 				 'menuaction'	=> 'addressbook.uiaddressbook.edit_org',
-				 'ab_id'		=> $new_contact_id
+				 'ab_id'		=> $new_contact_id,
+				 'nonavbar' => $this->nonavbar
 				));
 	}
 
@@ -1068,6 +1082,7 @@ class uiaddressbook
 	{
 		$this->jscal = CreateObject('phpgwapi.jscalendar');	// before phpgw_header()
 
+		$GLOBALS['phpgw_info']['flags']['nonavbar'] = phpgw::get_var('nonavbar','bool');
 		$GLOBALS['phpgw']->common->phpgw_header(true);
 		$this->template->set_root(PHPGW_APP_TPL);
 
@@ -1093,11 +1108,11 @@ class uiaddressbook
 			$this->template->set_block('principal_tabs','principal_tab','principal_tab');
 			$this->template->set_block('principal_tabs', 'principal_button', 'principal_button');
 
-			$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.add_person'),
+			$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.add_person', 'nonavbar' => $this->nonavbar),
 								$this->get_class_css($this->tab_main_persons, $this->section), 
 								'principal_persons', $this->tab_main_persons);
 
-			$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.add_org'),
+			$this->get_principal_tabs( array('menuaction' => 'addressbook.uiaddressbook.add_org', 'nonavbar' => $this->nonavbar),
 								$this->get_class_css($this->tab_main_organizations, $this->section),
 								'principal_orgs', $this->tab_main_organizations);
 
@@ -2751,7 +2766,8 @@ class uiaddressbook
 			$GLOBALS['phpgw']->redirect_link('/index.php', array
 					(
 					 'menuaction'	=> 'addressbook.uiaddressbook.index',
-					 'section'	=> $contact_type
+					 'section'	=> $contact_type,
+					 'nonavbar' => $this->nonavbar
 					));
 		}
 		//LEX: Calling the  delete_addressbook hook to make
@@ -2781,7 +2797,7 @@ class uiaddressbook
 			$this->template->set_var('lang_reason',lang('reason'));
 			$this->template->set_var('lang_go_back',lang('Go back'));
 			$this->template->set_var('link_go_back',
-					$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$contact_type)));
+					$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$contact_type, 'nonavbar' => $this->nonavbar)));
 			$this->template->set_block('cant_delete_apps',
 					'apps',
 					'apps_l');
@@ -2805,11 +2821,12 @@ class uiaddressbook
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 		//	echo parse_navbar();
 			$this->template->set_var('lang_sure',lang('Are you sure you want to delete this entry ?'));
-			$this->template->set_var('no_link',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$contact_type)));
+			$this->template->set_var('no_link',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.index','section'=>$contact_type, 'nonavbar' => $this->nonavbar)));
 			$this->template->set_var('lang_no',lang('NO'));
 			$this->template->set_var('yes_link',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'addressbook.uiaddressbook.delete_' . $type,
 															 							'ab_id'=> $contact_id,
-															 							'confirm'=>'true')));
+															 							'confirm'=>'true',
+															 							'nonavbar' => $this->nonavbar)));
 			$this->template->set_var('lang_yes',lang('YES'));
 			$this->template->pparse('out','delete');
 		}
@@ -2819,7 +2836,8 @@ class uiaddressbook
 			$GLOBALS['phpgw']->redirect_link('/index.php', array
 					(
 					 'menuaction'	=> 'addressbook.uiaddressbook.index',
-					 'section'	=> $contact_type
+					 'section'	=> $contact_type,
+					 'nonavbar' => $this->nonavbar
 					));
 		}
 
@@ -2848,7 +2866,8 @@ class uiaddressbook
 						array
 						(
 						 'menuaction'	=> 'addressbook.uiaddressbook.index',
-						 'section'	=> 'Persons'
+						 'section'	=> 'Persons',
+						 'nonavbar' => $this->nonavbar
 						)
 						);
 
@@ -2861,7 +2880,8 @@ class uiaddressbook
 					array
 					(
 					 'menuaction'	=> 'addressbook.uiaddressbook.index',
-					 'section'	=> 'Organizations'
+					 'section'	=> 'Organizations',
+					 'nonavbar' => $this->nonavbar
 					)
 					);
 			$type = 'org';
@@ -2888,7 +2908,8 @@ class uiaddressbook
 			$GLOBALS['phpgw']->redirect_link('/index.php', array
 					(
 					 'menuaction'	=> 'addressbook.uiaddressbook.index',
-					 'section'	=> $contact_type
+					 'section'	=> $contact_type,
+					 'nonavbar' => $this->nonavbar
 					));
 		}
 
@@ -3018,7 +3039,7 @@ class uiaddressbook
 			if($persons && is_array($persons))
 			{
 				$per_link = $GLOBALS['phpgw']->link('/index.php', 
-						array('menuaction'	=> 'addressbook.uiaddressbook.view_person'));
+						array('menuaction'	=> 'addressbook.uiaddressbook.view_person', 'nonavbar' => $this->nonavbar));
 
 				$ppl = array();
 
@@ -3083,7 +3104,7 @@ class uiaddressbook
 		if($this->bo->check_edit($contact_id))
 		{				
 			$this->template->set_var('edit_button',$this->html_1button_form('edit','Edit',
-				$GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.edit_{$type}", 'ab_id' => $contact_id) ) ) );
+				$GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.edit_{$type}", 'ab_id' => $contact_id, 'nonavbar' => $this->nonavbar) ) ) );
 		}
 		else
 		{
@@ -3091,12 +3112,12 @@ class uiaddressbook
 		}
 
 		$this->template->set_var('copy_button',$this->html_1button_form('submit','copy',
-				$GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.copy_{$type}", 'ab_id' => $contact_id) ) ) );
+				$GLOBALS['phpgw']->link('/index.php', array('menuaction' => "addressbook.uiaddressbook.copy_{$type}", 'ab_id' => $contact_id, 'nonavbar' => $this->nonavbar) ) ) );
 
 		if ($contacts['per_first_name'] && $contacts['per_last_name'])
 		{
 			$this->template->set_var('vcard_button',$this->html_1button_form('VCardForm','VCard',
-				$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.out', 'ab_id' => $contact_id) ) ) );
+				$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.out', 'ab_id' => $contact_id, 'nonavbar' => $this->nonavbar) ) ) );
 		}
 		else
 		{
@@ -3106,7 +3127,7 @@ class uiaddressbook
 		$this->template->set_var('done_button',$this->html_1button_form('DoneForm','Done',
 			isset($referer) && $referer 
 				? $referer 
-				: $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index', 'action' => $contact_type) ) ) );
+				: $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index', 'action' => $contact_type, 'nonavbar' => $this->nonavbar) ) ) );
 
 		$this->template->pparse('out','view_t');
 
@@ -3523,7 +3544,8 @@ JS;
 				(
 				 'menuaction'	=> 'addressbook.uiaddressbook.view_person',
 				 'ab_id'		=> $contact_id,
-				 'referer'	=> $referer
+				 'referer'	=> $referer,
+				 'nonavbar' => $this->nonavbar
 				));
 	}
 }
