@@ -96,7 +96,7 @@
 			
 			<div id="days_wrp">
 				<ul id="days_view" class="calendar days">
-					<li>
+					<li class="heading">
 						<xsl:for-each select="heading_array">
 							<div><xsl:value-of select="."/></div>
 						</xsl:for-each>

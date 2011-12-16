@@ -811,6 +811,7 @@ ul.calendar li{
 }
 ul.calendar li.heading div {
     font-weight: bold;
+    font-size:16px;
 }
 ul.calendar{
     float: left;
