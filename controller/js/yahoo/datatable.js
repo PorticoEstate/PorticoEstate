@@ -96,8 +96,7 @@ YAHOO.portico.initializeDataTable = function()
 //------------
 		myContextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", {trigger:myDataTable.getTbodyEl()});
 		myContextMenu.addItems(YAHOO.portico.GetMenuContext());
-		myContextMenu.addItem("Hei du!!");
-		
+				
 		myDataTable.subscribe("rowMouseoverEvent", myDataTable.onEventHighlightRow);
 		myDataTable.subscribe("rowMouseoutEvent", myDataTable.onEventUnhighlightRow);
 

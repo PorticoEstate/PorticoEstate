@@ -28,7 +28,8 @@ class calendar_builder {
 			foreach($dates_array as $date){
 				if( $period_type == "view_months" )
 				{
-					$calendar_array[ date("n", $date) ]	= "";
+					$calendar_array[ date("n", $date) ]["status"]  = 0;
+					$calendar_array[ date("n", $date) ]["info"]  = array("date" => $date);
 				}
 				else if( $period_type == "view_days" )
 				{
@@ -68,7 +69,8 @@ class calendar_builder {
 				
 				if($period_type == "view_months")
 				{
-					$calendar_array[ date("n", $check_list->get_deadline()) ] = $check_list_status_info->serialize();	
+					$calendar_array[ date("n", $check_list->get_deadline()) ]["status"] = 1;
+					$calendar_array[ date("n", $check_list->get_deadline()) ]["info"] = $check_list_status_info->serialize();	
 				}
 				else if( $period_type == "view_days" )
 				{
@@ -102,7 +104,9 @@ class calendar_builder {
 			
 			// Inserts check_list object on deadline month in twelve_months_array
 			foreach($check_list_array as $check_list){
-				$calendar_array[ date("m", $check_list['deadline']) - 1 ] += $check_list['count'];
+				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["status"] = 2;
+				$calendar_array[ date("m", $check_list['deadline']) - 1 ] ["info"] = $check_list['count']; 
+				
 			}
 			
 			$control_calendar_array[] = array("control" => $control_info, "calendar_array" => $calendar_array);

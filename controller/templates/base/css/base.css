@@ -557,33 +557,6 @@ ul.groups h3 {
 	margin-top:10px;	
 }
 
-.expand_all {
-    background: url("../../../images/bg_expand_blue.png") no-repeat scroll 0 0 transparent;
-    color: #FFFFFF;
-    cursor: pointer;
-    float: left;
-    font-weight: normal;
-    height: 18px;
-    margin-left: 20px;
-    padding: 5px 10px;
-    width: 56px;
-}
-.collapse_all {
-    background: url("../../../images/bg_expand_grey.png") no-repeat scroll 0 0 transparent;
-    color: #000000;
-    cursor: pointer;
-    float: left;
-    font-weight: normal;
-    height: 22px;
-    margin-left: 0;
-    padding: 6px 0 0 7px;
-    width: 59px;
-}
-
-.expand_header{
-	overflow:hidden;	
-}
-
 dl.proplist, dl.proplist-col {
     margin: 0;
     padding-left: 0;
@@ -860,6 +833,7 @@ ul.calendar.info {
     width: 500px;
     overflow-x: hidden;
     height: 800px;
+    margin-left: 40px;
 }
 ul.calendar.days {
    	position: absolute;
@@ -969,4 +943,49 @@ fieldset.add_check_list label{
     margin-right: 10px;
     padding: 1px 4px;
     cursor: pointer;
+}
+textarea{
+	padding: 4px;	
+}
+.expand_menu div.focus{
+	background: url('../../../images/bg_expand_blue.png') no-repeat;
+	color: #FFF;
+}
+.expand_menu {
+    margin: 15px 0 20px;
+    overflow: hidden;
+}
+.expand_menu div{
+	background: url('../../../images/bg_expand_grey.png') no-repeat;
+	color: #000;	
+	padding: 7px 10px;
+	cursor: pointer;
+    float: left;
+    font-weight: normal;
+    height: 18px;
+    width: 56px;
+}
+.expand_menu div.collapse_all{
+	padding: 7px;
+}
+
+label.comment{
+	vertical-align:top;	
+}
+.check_item {
+	display: none;	
+}
+.check_item label{
+	width: 150px;
+	display: inline-block;	
+}
+
+.check_items h4 img{
+	padding-bottom:2px;	
+}
+.check_items.expand_list h4{
+	font-size: 15px;	
+}
+#days_view div{
+	font-weight:bold;
 }

@@ -11,8 +11,8 @@
 		</fieldset>
 				
 		<h2 style="float:left;">Sjekklister</h2>
-		<div style="float:left;margin-top: 30px;margin-left: 760px;"><a class="move_cal_right" href="#">&lt;&lt;</a></div>
-		<div style="float:left;margin-top: 30px;margin-left: 95px;"><a class="move_cal_left" href="#">&gt;&gt;</a></div>
+		<div style="float:left;margin-top: 30px;margin-left: 636px;"><a class="move_cal_right" href="#"><img src="controller/images/arrow_left.png" width="16"/></a></div>
+		<div style="float:left;margin-top: 30px;margin-left: 454px;"><a class="move_cal_left" href="#"><img src="controller/images/arrow_right.png" width="16"/></a></div>
 		
 		<script>
 			$(document).ready(function() {
@@ -23,7 +23,7 @@
 	  			  	
 	  				if(leftNumVal == -502){
 						$("#days_view").animate({
-		                    left: '-=118' 
+		                    left: '-=110' 
 		                    }, 800);
 					}else if(leftNumVal > -502){
 						$("#days_view").animate({
@@ -37,9 +37,9 @@
 					var leftStrVal = $("#days_view").css("left");
 	  			  	var leftNumVal = leftStrVal.substring(0, leftStrVal.indexOf('px'));
 	  			  	
-	  				if(leftNumVal == -118){
+	  				if(leftNumVal == -110){
 						$("#days_view").animate({
-		                    left: '+=118' 
+		                    left: '+=110' 
 		                    }, 800);
 					}else if(-502 > leftNumVal){
 						$("#days_view").animate({
