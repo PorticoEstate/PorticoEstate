@@ -9,6 +9,7 @@
 	include_class('activitycalendar', 'activity', 'inc/model/');
 	include_class('activitycalendar', 'group', 'inc/model/');
 	include_class('activitycalendar', 'organization', 'inc/model/');
+	include_class('activitycalendar', 'arena', 'inc/model/');
 
 	class activitycalendarfrontend_uiactivity extends activitycalendar_uiactivities
 	{
@@ -240,11 +241,28 @@
 					$desc = substr($desc,0,254);
 				}
 				
+				$arena_id = phpgw::get_var('arena_id');
+				if($arena_id != null && $arena_id == 'new_arena')
+				{				
+					$arena = new activitycalendar_arena();
+					$arena_name = phpgw::get_var('arena_name');
+					$arena_address = phpgw::get_var('arena_address') . ' ' . phpgw::get_var('arena_number') . ', ' . phpgw::get_var('arena_postaddress');
+	
+					$arena->set_arena_name($arena_name);
+					$arena->set_address($arena_address);
+					$arena->set_active(true);
+			
+					// All is good, store arena
+					if ($this->so_arena->store($arena)) {
+						$arena_id = $arena->get_id();
+					}
+				}
+				
 				//... set all parameters
 				$activity->set_title(phpgw::get_var('title'));
 				$activity->set_organization_id($o_id);
 				$activity->set_group_id($g_id);
-				$activity->set_arena(phpgw::get_var('arena_id'));
+				$activity->set_arena($arena_id);
 				$activity->set_internal_arena(phpgw::get_var('internal_arena_id'));
 				$district_array = phpgw::get_var('district');
 				$activity->set_district(implode(",", $district_array));
