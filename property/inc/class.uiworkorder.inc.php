@@ -1631,11 +1631,6 @@
 					'b_group_data'							=> $b_group_data,
 					'b_account_data'						=> $b_account_data,
 
-					'lang_no_workorders'					=> lang('No workorder budget'),
-					'workorder_link'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.w_edit')),
-					'lang_history'							=> lang('History'),
-					'lang_no_history'						=> lang('No history'),
-
 					'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 					'lang_datetitle'						=> lang('Select date'),
 
@@ -1686,7 +1681,7 @@
 					'vendor_data'							=> $vendor_data,
 					'location_data'							=> $location_data,
 					'location_template_type'				=> $location_template_type,
-					'form_action'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'form_action'							=> $mode == 'edit' ? $GLOBALS['phpgw']->link('/index.php',$link_data) : $GLOBALS['phpgw']->link('/home.php'),//avoid accidents
 					'done_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 					'lang_year'								=> lang('Year'),
 					'lang_save'								=> lang('save'),
