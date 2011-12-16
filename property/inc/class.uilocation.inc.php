@@ -63,7 +63,7 @@
 
 		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
+		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::location';
 			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -1120,7 +1120,7 @@ JS;
 
 			if($values_assign && $this->acl_edit)
 			{
-				$values_assign = phpgw::clean_value(json_decode($values_assign,true));
+				$values_assign = phpgw::clean_value(json_decode(stripslashes($values_assign),true)); //json_decode has issues with magic_quotes_gpc
 				$user_id = abs($user_id);
 				$account = $GLOBALS['phpgw']->accounts->get($user_id);
 				$contact_id = $account->person_id;

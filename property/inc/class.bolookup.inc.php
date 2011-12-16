@@ -158,6 +158,7 @@
 				{
 					$contact['email'] = isset($comms[$contact['contact_id']]['work email']) ? $comms[$contact['contact_id']]['work email'] : '';
 					$contact['wphone'] = isset($comms[$contact['contact_id']]['work phone']) ?  $comms[$contact['contact_id']]['work phone'] : '';
+					$contact['mobile'] = isset($comms[$contact['contact_id']]['mobile (cell) phone']) ?  $comms[$contact['contact_id']]['mobile (cell) phone'] : '';
 				}
 				if (in_array($contact['contact_id'], $user_contacts) )
 				{

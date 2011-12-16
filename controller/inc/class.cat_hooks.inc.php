@@ -3,7 +3,7 @@
 	* phpGroupWare - controller: a part of a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -33,7 +33,15 @@
 	*/
 	class controller_cat_hooks
 	{
-		
+		protected $soresponsible;
+		protected $_db;
+
+		function __construct()
+		{
+			$this->_db 				=& $GLOBALS['phpgw']->db;
+			$this->soresponsible	= CreateObject('property.soresponsible');
+			$this->soresponsible->appname = 'controller';
+		}		
 		/**
 		 * Handle a new category being added, create location to hold ACL-data
 		 */
@@ -51,7 +59,16 @@
 				$location = $location_info['location'];
 			}
 			$GLOBALS['phpgw']->locations->add("{$location}.category.{$data['cat_id']}", $data['cat_name'], 'controller');
-
+			
+			$this->soresponsible->add_type(array
+				(
+					'name'	=> $data['cat_name'],
+					'descr'	=> $data['cat_name'],
+					'location'	=> "{$location}.category.{$data['cat_id']}",
+					'cat_id'	=> $data['cat_id'],
+					'active'	=> true
+				)
+			);
 		}
 
 		/**
@@ -68,6 +85,7 @@
 				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->delete('controller', $location, false);
+				$this->_db->query("DELETE FROM fm_responsibility WHERE cat_id = " . (int) $data['cat_id'], __LINE__, __FILE__);
 			}
 		}
 
@@ -86,6 +104,12 @@
 				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
 				$location = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'controller');
+
+				$value_set['name']		= $this->_db->db_addslashes($data['cat_name']);
+				$value_set['descr']		= $value_set['name'];
+
+				$value_set	= $this->_db->validate_update($value_set);
+				$this->_db->query("UPDATE fm_responsibility SET $value_set WHERE cat_id = " . (int) $data['cat_id'], __LINE__, __FILE__);
 			}
 		}
 	}

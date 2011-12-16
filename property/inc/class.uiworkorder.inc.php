@@ -62,7 +62,7 @@
 
 		function property_uiworkorder()
 		{
-			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
+		//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true; // menus added where needed via bocommon::get_menu
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::project::workorder';
 
@@ -823,79 +823,103 @@
 			$GLOBALS['phpgw']->js->validate_file( 'yahoo', 'workorder.index', 'property' );
 		}
 
-		function edit()
+		function edit($mode = 'edit')
 		{
 			$id = phpgw::get_var('id'); // in case of bigint
 
-			if(!$this->acl_add && !$this->acl_edit)
+			if($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=> $id));
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'	=> 'property.uiworkorder.view', 'id'=> $id));
 			}
+
+			if($mode == 'view')
+			{
+				if( !$this->acl_read)
+				{
+					$this->bocommon->no_access();
+					return;
+				}
+
+				if(!$id)
+				{
+					phpgwapi_cache::message_set('ID is required for the function uiworkorder::view()', 'error'); 
+					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.index'));
+				}
+			}
+			else
+			{
+				if(!$this->acl_add && !$this->acl_edit)
+				{
+					$this->bocommon->no_access();
+					return;
+				}
+			}
+
 			$boproject					= CreateObject('property.boproject');
 			$bolocation					= CreateObject('property.bolocation');
 			$config						= CreateObject('phpgwapi.config','property');
-
-			$project_id 				= phpgw::get_var('project_id', 'int');
-			$values						= phpgw::get_var('values');
-			$values['ecodimb']			= phpgw::get_var('ecodimb');
-
-			$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
-			$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
-			$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
-			$values['event_id']			= phpgw::get_var('event_id', 'int', 'POST');
-
+			$location_id				= $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
 			$config->read();
 
-
-			$origin						= phpgw::get_var('origin');
-			$origin_id					= phpgw::get_var('origin_id', 'int');
-
-			if($origin == '.ticket' && $origin_id && !$values['descr'])
+			if($mode == 'edit')
 			{
-				$boticket= CreateObject('property.botts');
-				$ticket = $boticket->read_single($origin_id);
-				$values['descr'] = $ticket['details'];
-				$values['title'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
-				$ticket_notes = $boticket->read_additional_notes($origin_id);
-				$i = count($ticket_notes)-1;
-				if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+				$project_id 				= phpgw::get_var('project_id', 'int');
+				$values						= phpgw::get_var('values');
+				$values['ecodimb']			= phpgw::get_var('ecodimb');
+				$values['vendor_id']		= phpgw::get_var('vendor_id', 'int', 'POST');
+				$values['vendor_name']		= phpgw::get_var('vendor_name', 'string', 'POST');
+				$values['b_account_id']		= phpgw::get_var('b_account_id', 'int', 'POST');
+				$values['b_account_name']	= phpgw::get_var('b_account_name', 'string', 'POST');
+				$values['event_id']			= phpgw::get_var('event_id', 'int', 'POST');
+				$origin						= phpgw::get_var('origin');
+				$origin_id					= phpgw::get_var('origin_id', 'int');
+
+				if($origin == '.ticket' && $origin_id && !$values['descr'])
 				{
-					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+					$boticket= CreateObject('property.botts');
+					$ticket = $boticket->read_single($origin_id);
+					$values['descr'] = $ticket['details'];
+					$values['title'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+					$ticket_notes = $boticket->read_additional_notes($origin_id);
+					$i = count($ticket_notes)-1;
+					if(isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+					{
+						$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+					}
+
+					$values['location_data'] = $ticket['location_data'];
 				}
 
-				$values['location_data'] = $ticket['location_data'];
-			}
+				if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
+				{
+					$_origin = explode('.', $origin);
+					$_boentity= CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
+					$_entity = $_boentity->read_single(array('entity_id'=> $_origin[2],'cat_id'=>$_origin[3],'id'=>$origin_id, 'view' => true));
+					$values['location_data'] = $_entity['location_data'];
+					unset($_origin);
+					unset($_boentity);
+					unset($_entity);
+				}
 
-			if ( preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id )
-			{
-				$_origin = explode('.', $origin);
-				$_boentity= CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
-				$_entity = $_boentity->read_single(array('entity_id'=> $_origin[2],'cat_id'=>$_origin[3],'id'=>$origin_id, 'view' => true));
-				$values['location_data'] = $_entity['location_data'];
-				unset($_origin);
-				unset($_boentity);
-				unset($_entity);
-			}
+				if(isset($values['origin']) && $values['origin'])
+				{
+					$origin		= $values['origin'];
+					$origin_id	= $values['origin_id'];
+				}
 
-			if(isset($values['origin']) && $values['origin'])
-			{
-				$origin		= $values['origin'];
-				$origin_id	= $values['origin_id'];
-			}
-
-			$interlink 	= & $this->bo->interlink;
-			if(isset($origin) && $origin)
-			{
-				unset($values['origin']);
-				unset($values['origin_id']);
-				$values['origin'][0]['location']= $origin;
-				$values['origin'][0]['descr']= $interlink->get_location_name($origin);
-				$values['origin'][0]['data'][]= array
+				$interlink 	= & $this->bo->interlink;
+				if(isset($origin) && $origin)
+				{
+					unset($values['origin']);
+					unset($values['origin_id']);
+					$values['origin'][0]['location']= $origin;
+					$values['origin'][0]['descr']= $interlink->get_location_name($origin);
+					$values['origin'][0]['data'][]= array
 					(
 						'id'	=> $origin_id,
 						'link'	=> $interlink->get_relation_link(array('location' => $origin), $origin_id),
 					);
+				}
 			}
 
 			if (isset($values['save']))
@@ -1056,6 +1080,84 @@
 							$receipt['error'][]=array('msg'=>lang('SMTP server is not set! (admin section)'));
 						}
 					}
+					$toarray = array();
+					$toarray_sms = array();
+
+					if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
+//				 		&& $config->config_data['mailnotification'])
+						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
+					)
+					{
+						if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
+						{
+							$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
+							$toarray[] = $prefs_coordinator['email'];
+						}
+					}
+
+						$notify_list = execMethod('property.notify.read', array
+							(
+								'location_id'		=> $location_id,
+								'location_item_id'	=> $id
+							)
+						);
+
+					$subject=lang('workorder %1 has been edited',$id);
+					$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+					$sms	= CreateObject('sms.sms');
+
+					foreach($notify_list as $entry)
+					{
+						if($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+						{
+							$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+						}
+						else if($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+						{
+							$sms->websend2pv($this->account,$entry['sms'],$sms_text);
+							$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',"{$entry['first_name']} {$entry['last_name']}"));
+						}
+					}
+					unset($entry);
+
+					if($toarray_sms)
+					{
+						$historylog->add('MS',$id,implode(',',$toarray_sms));						
+					}
+						
+					if ($toarray)
+					{
+						$to = implode(';',$toarray);
+						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
+						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
+						foreach($receipt['notice_owner'] as $notice)
+						{
+							$body .= $notice . "\n";
+						}
+						$body .= lang('Altered by') . ': ' . $from_name . "\n";
+						$body .= lang('remark') . ': ' . $values['remark'] . "\n";
+						$body = nl2br($body);
+
+						if (!is_object($GLOBALS['phpgw']->send))
+						{
+							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+						}
+
+						$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject,$body, false,false,false, $from_email, $from_name, 'html');
+
+						if (!$returncode)	// not nice, but better than failing silently
+						{
+							$receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
+							$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
+						}
+						else
+						{
+							$historylog->add('ON', $id, lang('%1 is notified',$to));
+							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
+						}
+					}
 				}
 			}
 
@@ -1087,51 +1189,14 @@
 					$project	= $boproject->read_single_mini($values['project_id']);
 				}
 
-				if (!$this->bocommon->check_perms($project['grants'],PHPGW_ACL_EDIT))
+				$acl_required = $mode == 'edit' ? PHPGW_ACL_EDIT : PHPGW_ACL_READ;
+				if (!$this->bocommon->check_perms($project['grants'],$acl_required))
 				{
 					$receipt['error'][]=array('msg'=>lang('You have no edit right for this project'));
 					$GLOBALS['phpgw']->session->appsession('receipt','property',$receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.view', 'id'=>$id));
 				}
-				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner'])
-					//				 		&& $config->config_data['mailnotification'])
-					&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
-				)
-				{
-					if($this->account!=$project['coordinator'] && $config->config_data['workorder_approval'])
-					{
-						$prefs_coordinator = $this->bocommon->create_preferences('property',$project['coordinator']);
-						$to = $prefs_coordinator['email'];
-						$from_name=$GLOBALS['phpgw_info']['user']['fullname'];
-						$from_email=$GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-						$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.edit','id'=> $id)).'">' . lang('workorder %1 has been edited',$id) .'</a>' . "\n";
-						foreach($receipt['notice_owner'] as $notice)
-						{
-							$body .= $notice . "\n";
-						}
-						$body .= lang('Altered by') . ': ' . $from_name . "\n";
-						$body .= lang('remark') . ': ' . $values['remark'] . "\n";
-						$body = nl2br($body);
 
-						if (!is_object($GLOBALS['phpgw']->send))
-						{
-							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-						}
-
-						$returncode = $GLOBALS['phpgw']->send->msg('email',$to,$subject=lang('workorder %1 has been edited',$id),$body, false,false,false, $from_email, $from_name, 'html');
-
-						if (!$returncode)	// not nice, but better than failing silently
-						{
-							$receipt['error'][]=array('msg'=>"uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
-							$receipt['error'][]=array('msg'=> $GLOBALS['phpgw']->send->err['desc']);
-						}
-						else
-						{
-							$historylog->add('ON', $id, lang('%1 is notified',$to));
-							$receipt['message'][]=array('msg'=>lang('%1 is notified',$to));
-						}
-					}
-				}
 
 				if( $project['key_fetch'] && !$values['key_fetch'])
 				{
@@ -1182,25 +1247,9 @@
 				$record_history = array();
 			}
 
-			//_debug_array($hour_data);
-			$table_header_history[] = array
-				(
-					'lang_date'		=> lang('Date'),
-					'lang_user'		=> lang('User'),
-					'lang_action'		=> lang('Action'),
-					'lang_new_value'	=> lang('New value')
-				);
-
-			$table_header_workorder_budget[] = array
-				(
-					'lang_workorder_id'	=> lang('Workorder'),
-
-					'lang_sum'		=> lang('Sum')
-				);
-
 			if ($id)
 			{
-				$function_msg = lang('Edit Workorder');
+				$function_msg = lang("{$mode} workorder");
 			}
 			else
 			{
@@ -1241,9 +1290,14 @@
 					}
 				}
 
+				if($mode == 'view')
+				{
+					$location_template_type='view';
+				}
+				
 				$location_data=$bolocation->initiate_ui_location(array(
 					'values'			=> $_location_data,
-					'type_id'			=> $max_level,
+					'type_id'			=> $mode == 'edit' ? $max_level : count(explode('-',$_location_data['location_data']['location_code'])),
 					'no_link'			=> false, // disable lookup links for location type less than type_id
 					'tenant'			=> true,
 					'block_parent' 		=> $location_level,
@@ -1279,26 +1333,27 @@
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id'		=> $values['vendor_id'],
-				'vendor_name'		=> $values['vendor_name']));
+				'vendor_name'	=> $values['vendor_name'],
+				'type'			=> $mode));
 
 
 			$b_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'		=> $project['b_account_id'],
-				'role'				=> 'group'
-			));
+				'role'				=> 'group',
+				'type'				=> $mode));
 
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
 				'b_account_id'		=> $values['b_account_id'],
 				'b_account_name'	=> $values['b_account_name'],
 				'disabled'			=> '',
-				'parent'			=> $project['b_account_id']
-			));
+				'parent'			=> $project['b_account_id'],
+				'type'				=> $mode));
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 				(
 					'ecodimb'			=> $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'],
 					'ecodimb_descr'		=> $values['ecodimb_descr'],
-					'disabled'			=> !!$project['ecodimb']
+					'disabled'			=> $project['ecodimb'] || $mode == 'view'
 				)
 			);
 
@@ -1308,7 +1363,8 @@
 					'name'			=> 'event_id',
 					'event_name'	=> lang('schedule'),
 					'event_id'		=> $values['event_id'],
-					'item_id'		=> $id
+					'item_id'		=> $id,
+					'type'			=> $mode
 				);
 			$event_data = $this->bocommon->initiate_event_lookup($event_criteria);
 
@@ -1507,8 +1563,21 @@
 														))
 				);
 
-
-
+			$notify_info = execMethod('property.notify.get_yui_table_def',array
+								(
+									'location_id'		=> $location_id,
+									'location_item_id'	=> $id,
+									'count'				=> count($myColumnDefs)
+								)
+							);
+			
+			$datavalues[] 	= $notify_info['datavalues'];
+			$myColumnDefs[]	= $notify_info['column_defs'];
+			$myButtons		= array();
+			if($mode == 'edit')
+			{
+				$myButtons[]	= $notify_info['buttons'];
+			}
 
 			$link_claim = '';
 			if(isset($values['charge_tenant'])?$values['charge_tenant']:'')
@@ -1533,6 +1602,7 @@
 			$value_user = isset($values['user_id']) ? $GLOBALS['phpgw']->accounts->get($values['user_id'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 			$data = array
 				(
+					'mode'									=> $mode,
 					'value_user'							=> $value_user,
 					'event_data'							=> $event_data,
 					'link_claim'							=> $link_claim,
@@ -1541,8 +1611,9 @@
 					'suppresscoordination'					=> $suppresscoordination,
 					'property_js'							=> json_encode($GLOBALS['phpgw_info']['server']['webserver_url']."/property/js/yahoo/property2.js"),
 					'datatable'								=> $datavalues,
-					'myColumnDefs'							=> $myColumnDefs,		
-					'tabs'									=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
+					'myColumnDefs'							=> $myColumnDefs,
+					'myButtons'								=> $myButtons,
+					'tabs'									=> self::_generate_tabs(array(),array('documents' => $id?false:true, 'history' => $id?false:true)),
 					'msgbox_data'							=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 					'value_origin'							=> isset($values['origin']) ? $values['origin'] : '',
 					'value_origin_type'						=> isset($origin)?$origin:'',
@@ -1559,13 +1630,6 @@
 					'project_link'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.edit')),
 					'b_group_data'							=> $b_group_data,
 					'b_account_data'						=> $b_account_data,
-					'table_header_workorder_budget'			=> $table_header_workorder_budget,
-					'lang_no_workorders'					=> lang('No workorder budget'),
-					'workorder_link'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.w_edit')),
-					'record_history'						=> $record_history,
-					'table_header_history'					=> $table_header_history,
-					'lang_history'							=> lang('History'),
-					'lang_no_history'						=> lang('No history'),
 
 					'img_cal'								=> $GLOBALS['phpgw']->common->image('phpgwapi','cal'),
 					'lang_datetitle'						=> lang('Select date'),
@@ -1617,7 +1681,7 @@
 					'vendor_data'							=> $vendor_data,
 					'location_data'							=> $location_data,
 					'location_template_type'				=> $location_template_type,
-					'form_action'							=> $GLOBALS['phpgw']->link('/index.php',$link_data),
+					'form_action'							=> $mode == 'edit' ? $GLOBALS['phpgw']->link('/index.php',$link_data) : $GLOBALS['phpgw']->link('/home.php'),//avoid accidents
 					'done_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
 					'lang_year'								=> lang('Year'),
 					'lang_save'								=> lang('save'),
@@ -1709,6 +1773,10 @@
 					'lang_upload_file'						=> lang('Upload file'),
 					'lang_file_statustext'					=> lang('Select file to upload'),
 					'value_billable_hours'					=> $values['billable_hours'],
+					'base_java_url'							=> "{menuaction:'property.notify.update_data',location_id:{$location_id},location_item_id:'{$id}'}",
+					'edit_action'							=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
+					'lang_edit_statustext'					=> lang('Edit this entry workorder'),
+					'lang_edit'								=> lang('Edit'),
 				);
 
 			$appname						= lang('Workorder');
@@ -1830,228 +1898,10 @@
 		{
 			if(!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uilocation.stop','perm'=>1, 'acl_location'=> $this->acl_location));
+				$this->bocommon->no_access();
+				return;
 			}
-
-			$boproject			= CreateObject('property.boproject');
-			$bolocation			= CreateObject('property.bolocation');
-
-			$receipt = $GLOBALS['phpgw']->session->appsession('receipt','property');
-			$GLOBALS['phpgw']->session->appsession('receipt','property','');
-
-			if(!$id	= phpgw::get_var('id'))
-			{
-				phpgwapi_cache::message_set('ID is required for the function uiworkorder::view()', 'error'); 
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'property.uiworkorder.index'));
-			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('workorder', 'hour_data_view', 'files'));
-
-			$uiwo_hour	= CreateObject('property.uiwo_hour');
-			$hour_data	= $uiwo_hour->common_data($id,$view=true);
-			$values		= $this->bo->read_single($id);
-			$project	= $boproject->read_single($values['project_id']);
-			$record_history = $this->bo->read_record_history($id);
-
-			$table_header_history[] = array
-				(
-					'lang_date'		=> lang('Date'),
-					'lang_user'		=> lang('User'),
-					'lang_action'		=> lang('Action'),
-					'lang_new_value'	=> lang('New value')
-				);
-
-			$table_header_workorder_budget[] = array
-				(
-					'lang_workorder_id'	=> lang('Workorder'),
-					'lang_sum'		=> lang('Sum')
-				);
-
-			$function_msg = lang('View Workorder');
-
-			$_location_data = array();
-			$_tenant = 0;
-			$_level = 0;
-			if(isset($values['location_data']) && $values['location_data'])
-			{
-				$_location_data = $values['location_data'];
-				$_tenant = isset($values['location_data']['tenant_id']) ? $values['location_data']['tenant_id'] : 0;
-				$_level = count(explode('-',$values['location_data']['location_code']));
-			}
-			else
-			{
-				if(isset($project['location_data']) && $project['location_data'])
-				{
-					$_location_data = $project['location_data'];
-					$_tenant = isset($project['location_data']['tenant_id']) ? $project['location_data']['tenant_id'] : 0;
-					$_level = count(explode('-',$project['location_data']['location_code']));
-				}
-			}
-
-			$location_data=$bolocation->initiate_ui_location(array(
-				'values'	=> $_location_data,
-				'type_id'	=> $_level,
-				'no_link'	=> false, // disable lookup links for location type less than type_id
-				'tenant'	=> $_tenant,
-				'lookup_type'	=> 'view'
-			));
-
-			$ecodimb_data=$this->bocommon->initiate_ecodimb_lookup(array(
-				'ecodimb'			=> $values['ecodimb'],
-				'ecodimb_descr'		=> $values['ecodimb_descr'],
-				'type'				=>'view'));
-
-
-			if($project['contact_phone'])
-			{
-				for ($i=0;$i<count($location_data['location']);$i++)
-				{
-					if($location_data['location'][$i]['input_name'] == 'contact_phone')
-					{
-						unset($location_data['location'][$i]['value']);
-					}
-				}
-			}
-
-			$link_file_data = array
-				(
-					'menuaction'	=> 'property.uiworkorder.view_file',
-					'id'		=> $id
-				);
-
-			$categories = $this->cats->formatted_xslt_list(array('selected' => $project['cat_id']));
-
-			$config				= CreateObject('phpgwapi.config','property');
-			$config->read();
-
-
-			$suppresscoordination			= isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
-
-			$data = array
-				(
-					'suppressmeter'						=> isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
-					'suppresscoordination'				=> $suppresscoordination,
-					'tabs'								=> self::_generate_tabs(array(),array('coordination' => $suppresscoordination)),
-					'project_link'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiproject.view')),
-					'table_header_workorder_budget'		=> $table_header_workorder_budget,
-					'lang_no_workorders'				=> lang('No workorder budget'),
-					'workorder_link'					=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.view')),
-					'record_history'					=> $record_history,
-					'table_header_history'				=> $table_header_history,
-					'lang_history'						=> lang('History'),
-					'lang_no_history'					=> lang('No history'),
-
-					'lang_project_name'					=> lang('Project name'),
-					'value_project_name'				=> $project['name'],
-
-					'value_origin'						=> $values['origin'],
-
-					'lang_vendor'						=> lang('Vendor'),
-					'value_vendor_id'					=> $values['vendor_id'],
-					'value_vendor_name'					=> $values['vendor_name'],
-					'ecodimb_data'						=> $ecodimb_data,
-					'lang_b_account'					=> lang('Budget account'),
-					'value_b_account_id'				=> $values['b_account_id'],
-					'value_b_account_name'				=> $values['b_account_name'],
-
-					'lang_start_date'					=> lang('Project start date'),
-					'value_start_date'					=> $values['start_date'],
-
-					'lang_end_date'						=> lang('Project end date'),
-					'value_end_date'					=> $values['end_date'],
-
-					'lang_charge_tenant'				=> lang('Charge tenant'),
-					'charge_tenant'						=> $values['charge_tenant'],
-
-					'lang_power_meter'					=> lang('Power meter'),
-					'value_power_meter'					=> $project['power_meter'],
-
-					'lang_addition_rs'					=> lang('Rig addition'),
-					'lang_addition_rs_statustext'		=> lang('Enter any round sum addition per order'),
-					'value_addition_rs'					=> $values['addition_rs'],
-
-					'lang_addition_percentage'			=> lang('Percentage addition'),
-					'lang_addition_percentage_statustext'	=> lang('Enter any persentage addition per unit'),
-					'value_addition_percentage'			=> $values['addition_percentage'],
-
-					'lang_budget'						=> lang('Budget'),
-					'value_budget'						=> $values['budget'],
-
-					'actual_cost'						=> $values['actual_cost'],
-					'lang_actual_cost'					=> lang('Actual cost'),
-
-					'location_data'						=> $location_data,
-					'location_type'						=> 'view',
-					'done_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiworkorder.index')),
-					'lang_year'							=> lang('Year'),
-					'lang_category'						=> lang('category'),
-					'lang_save'							=> lang('save'),
-					'lang_done'							=> lang('done'),
-					'lang_name'							=> lang('Name'),
-
-					'lang_title'						=> lang('Title'),
-					'value_title'						=> $values['title'],
-
-					'lang_project_id'					=> lang('Project ID'),
-					'value_project_id'					=> $values['project_id'],
-					'value_name'						=> $values['name'],
-
-					'lang_other_branch'					=> lang('Other branch'),
-					'value_other_branch'				=> $project['other_branch'],
-
-					'lang_descr'						=> lang('Description'),
-					'value_descr'						=> $values['descr'],
-					'lang_done_statustext'				=> lang('Back to the list'),
-
-					'cat_list'							=> $categories['cat_list'],
-					'lang_workorder_id'					=> lang('Workorder ID'),
-					'value_workorder_id'				=> $values['workorder_id'],
-
-					'lang_coordinator'					=> lang('Coordinator'),
-					'lang_sum'							=> lang('Sum'),
-					'user_list'							=> $this->bocommon->get_user_list('select',$project['coordinator'],$extra=false,$default=false,$start=-1,$sort=false,$order=false,$query='',$offset=-1),
-
-					'status_list'						=> $this->bo->select_status_list('select',$values['status']),
-					'lang_no_status'					=> lang('Select status'),
-					'lang_status'						=> lang('Status'),
-
-					'branch_list'						=> $this->bo->select_branch_p_list($values['project_id']),
-					'lang_branch'						=> lang('branch'),
-
-					'key_responsible_list'				=> $this->bo->select_branch_list($project['key_responsible']),
-					'lang_key_responsible'				=> lang('key responsible'),
-
-					'key_fetch_list'					=> $this->bo->select_key_location_list($values['key_fetch']),
-					'lang_key_fetch'					=> lang('key fetch location'),
-
-					'key_deliver_list'					=> $this->bo->select_key_location_list($values['key_deliver']),
-					'lang_key_deliver'					=> lang('key deliver location'),
-
-					'edit_action'						=> $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'property.uiworkorder.edit', 'id' => $id)),
-					'lang_edit_statustext'				=> lang('Edit this entry workorder'),
-					'lang_edit'							=> lang('Edit'),
-					'currency'							=> $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
-					'lang_total_records'				=> lang('Total records'),
-					'total_hours_records'				=> $hour_data['total_hours_records'],
-					'table_header_hour'					=> $hour_data['table_header'],
-					'values_hour'						=> $hour_data['content'],
-					'table_sum'							=> $hour_data['table_sum'],
-					'lang_contact_phone'				=> lang('Contact phone'),
-					'contact_phone'						=> $project['contact_phone'],
-
-					'link_view_file'					=> $GLOBALS['phpgw']->link('/index.php',$link_file_data),
-					'files'								=> $values['files'],
-					'lang_files'						=> lang('files'),
-					'lang_filename'						=> lang('Filename'),
-					'lang_view_file_statustext'			=> lang('click to view file'),
-					'lang_remark'						=> lang('remark'),
-					'value_remark'						=> isset($values['remark'])?$values['remark']:''
-				);
-
-			$appname					= lang('Workorder');
-
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('view' => $data));
+			$this->edit('view');
 		}
 
 		protected function _generate_tabs($tabs_ = array(), $suppress = array())

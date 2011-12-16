@@ -9,7 +9,7 @@ $(document).ready(function() {
 	$(".expand_list h4").click(function(){
 		if( $(this).parent().parent().hasClass('active')){
 			$(this).parent().find("ul").slideUp("slow");
-			$(this).find("img").attr("src", "controller/images/arrow_left.png");
+			$(this).find("img").attr("src", "controller/images/arrow_right.png");
 			$(this).parent().parent().removeClass('active');
 		}else{
 			$(this).parent().find("ul").slideDown("slow");
@@ -18,31 +18,74 @@ $(document).ready(function() {
 		}
 	});
 	
-	/* =============================================================================== */
-	
 	$(".expand_all").click(function(){
-		$(".expand_all").css("background", "url('controller/images/bg_expand_blue.png') no-repeat");
-		$(".expand_all").css("color", "#FFFFFF");
-		$(".collapse_all").css("background", "url('controller/images/bg_expand_grey.png') no-repeat");
-		$(".collapse_all").css("color", "#000000");	
-		
+		$(this).addClass("focus");
+		$(".collapse_all").removeClass("focus");
+			
 		$("ul.expand_list").find("li ul").slideDown("slow");
 		$("ul.expand_list").find("li ul").addClass("active");
 		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_down.png");
 	});
 	
 	$(".collapse_all").click(function(){
-		$(".collapse_all").css("background", "url('controller/images/bg_expand_blue.png') no-repeat");
-		$(".collapse_all").css("color", "#FFFFFF");
-		$(".expand_all").css("background", "url('controller/images/bg_expand_grey.png') no-repeat");
-		$(".expand_all").css("color", "#000000");
+		$(this).addClass("focus");
+		$(".expand_all").removeClass("focus");
 		
 		$("ul.expand_list").find("li ul").slideUp("slow");
 		$("ul.expand_list").find("li ul").removeClass("active");
-		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_left.png");
+		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_right.png");
 	});
 	
 	/* =============================================================================== */
+	
+	$("ul.check_items.expand_list h4").click(function(){
+		if( $(this).parent().hasClass('expanded')){
+			$(this).parent().find(".check_item").slideUp("slow");
+			$(this).find("img").attr("src", "controller/images/arrow_right.png");
+			$(this).parent().removeClass('expanded');
+		}else{
+			$(this).parent().find(".check_item").slideDown("slow");
+			$(this).find("img").attr("src", "controller/images/arrow_down.png");
+			$(this).parent().addClass('expanded');
+		}
+	});
+	
+	$(".expand_all").click(function(){
+		$(this).addClass("focus");
+		$(".collapse_all").removeClass("focus");
+			
+		$("ul.check_items.expand_list").find("div.check_item").slideDown("slow");
+		$("ul.check_items.expand_list").find("div.check_item").addClass("expanded");
+		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_down.png");
+	});
+	
+	$(".collapse_all").click(function(){
+		$(this).addClass("focus");
+		$(".expand_all").removeClass("focus");
+		
+		$("ul.check_items.expand_list").find("div.check_item").slideUp("slow");
+		$("ul.check_items.expand_list").find("div.check_item").removeClass("expanded");
+		$("ul.expand_list").find("li h4 img").attr("src", "controller/images/arrow_right.png");
+	});
+	
+	
+	/* =============================================================================== */
+	
+	$("#calendar_dates span").click(function(){
+		var thisSpan = $(this);
+		
+		$("#calendar_dates span").css("border", "2px solid black");
+		$(thisSpan).css("border", "2px solid red");
+		
+		var date = $(thisSpan).text();
+		var day = date.substring(0, date.indexOf("/"));
+		var month = date.substring(date.indexOf("/")+1, date.indexOf("-"));
+		var year = date.substring(date.indexOf("-")+1, date.length);
+		
+		var valid_save_date = year + "-" + month + "-" + day;  
+		
+		$("#deadline_date").val(valid_save_date);
+	});
 	
 	if( $("#frm_control_items").length > 0 ){
 		var check_box_arr = $("#frm_control_items").find("input[type='checkbox']");
@@ -75,6 +118,15 @@ $(document).ready(function() {
 			$("#frm_control_items").prepend("<input type='hidden' id=hid_" + control_item_id +  " name='control_tag_ids[]' value=" + control_group_id + ":" +  control_item_id + " />");
 		}
 	});
-		
 });
+
+function slide_up(elem){
+	
+	
+}
+
+function slide_down(elem){
+	
+	
+}
 		

@@ -675,6 +675,9 @@
 				case 'ON':
 					$type = lang('Owner notified');
 					break;
+				case 'MS':
+					$type = lang('Sent by sms');
+					break;
 				default:
 					break;
 				}

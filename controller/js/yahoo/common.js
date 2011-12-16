@@ -270,7 +270,6 @@ YAHOO.portico.inlineImages = function(container, url, options)
 	}});
 };
 
-
 YAHOO.portico.radioTableHelper = function(container, url, name, selection) {
 	return YAHOO.portico.checkboxTableHelper(container, url, name, selection, {type: 'radio'});
 };
@@ -354,7 +353,7 @@ YAHOO.portico.checkboxTableHelper = function(container, url, name, selection, op
 	});
 };
 
-YAHOO.portico.setupDatePickers = function() {
+YAHOO.portico.setupDatePickers = function() { 
 	YAHOO.util.Dom.getElementsByClassName('date-picker', null, null, YAHOO.portico.setupDatePickerHelper, [true, false]);
 	YAHOO.util.Dom.getElementsByClassName('time-picker', null, null, YAHOO.portico.setupDatePickerHelper, [false, true]);
 	YAHOO.util.Dom.getElementsByClassName('datetime-picker', null, null, YAHOO.portico.setupDatePickerHelper, [true, true]);
@@ -549,7 +548,7 @@ YAHOO.portico.setupDatePickerHelper = function(field, args) {
 
 // Executed on all booking.uicommon-based pages
 YAHOO.util.Event.addListener(window, "load", function() {
-	YAHOO.portico.setupDatePickers();
+	YAHOO.portico.setupDatePickers(); 
 });
 var showIfNotEmpty = function(event, fieldname) {
 	if (document.getElementById(fieldname).value.length > 1) {

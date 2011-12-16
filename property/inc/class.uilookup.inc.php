@@ -200,7 +200,7 @@
 									'name' => 'search',
 									'value'    => lang('search'),
 									'type' => 'button',
-									'tab_index' => 3
+									'tab_index' => 2
 								),
 								array
 								( // TEXT IMPUT
@@ -210,8 +210,15 @@
 									'type' => 'text',
 									'size'    => 28,
 									'onkeypress' => 'return pulsar(event)',
-									'tab_index' => 2
-								)
+									'tab_index' => 3
+								),
+								array
+								(
+									'type'	=> 'button',
+									'id'	=> 'btn_new',
+									'value'	=> lang('add'),
+									'tab_index' => 4
+								),
 							),
 							'hidden_value' => array
 							(
@@ -227,12 +234,12 @@
 			}
 
 			$uicols = array (
-				'input_type'	=>	array('text','text','text','text','text'),
-				'name'			=>	array('contact_id','contact_name','email','wphone','is_user'),
-				'sort_field'	=>	array('person_id','last_name','','',''),
-				'sortable'		=>	array(true,true,false,false,false),
-				'formatter'		=>	array('','','','',''),
-				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'), lang('is user'))
+				'input_type'	=>	array('text','text','text','text','text','text'),
+				'name'			=>	array('contact_id','contact_name','email','wphone','mobile','is_user'),
+				'sort_field'	=>	array('person_id','last_name','','','',''),
+				'sortable'		=>	array(true,true,false,false,false,false),
+				'formatter'		=>	array('','','','','',''),
+				'descr'			=>	array(lang('ID'),lang('Name'),lang('email'),lang('phone'),lang('mobile'), lang('is user'))
 			);
 
 			$addressbook_list = array();
@@ -272,6 +279,16 @@
 				$datatable['headers']['header'][$i]['sortable']			= $uicols['sortable'][$i];
 				$datatable['headers']['header'][$i]['sort_field'] 	= $uicols['sort_field'][$i];
 			}
+			$datatable['rowactions']['action'][] = array
+				(
+					'my_name' 		=> 'add',
+					'text' 			=> lang('add'),
+					'action'		=> $GLOBALS['phpgw']->link('/index.php',array
+					(
+						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
+						'nonavbar'		=> true
+					))
+				);
 
 			if($column)
 			{
@@ -291,6 +308,10 @@
 
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_id.'")[0].value = data.getData("contact_id");' ."\r\n";
 			$function_exchange_values .= 'opener.document.getElementsByName("'.$contact_name.'")[0].value = data.getData("contact_name");' ."\r\n";
+			//trigger ajax-call
+			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].setAttribute('{$contact_id}','{$contact_id}',0);\r\n";
+			//Reset - waiting for next change
+			$function_exchange_values .= "opener.document.getElementsByName('{$contact_id}')[0].removeAttribute('{$contact_id}');\r\n";
 
 			$function_exchange_values .= 'window.close()';
 
